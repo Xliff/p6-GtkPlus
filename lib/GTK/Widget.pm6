@@ -10,8 +10,11 @@ class GTK::Widget {
   has GTK::Class::Widget $!gwc;
   has GtkWidget          $!w;
 
+  has @!signals;
+
   method BUILD(:$widget) {
     $!w = $widget;
+    @!signals;
 
     $!gwc = nativecast(
       GTK::Class::Widget,

@@ -10,14 +10,12 @@ use MONKEY-SEE-NO-EVAL;
 
 use CompileTestLib;
 use GTK::Class::Pointers;
+use GTK::Class::Subs :app, :window, :widget, :button;
 use GTK::Class::Widget;
 
-compile_test_lib('00-structures');
+use GTK::Application;
 
-#sub gtk_button_new()
-#  returns OpaquePointer
-#  is native('gtk-3')
-#  { * }
+compile_test_lib('00-structures');
 
 sub sizeof_GTypeClass()
   returns uint64
@@ -34,15 +32,6 @@ sub sizeof_GtkWidgetClass()
   is native('./00-structures')
   { * }
 
-sub gtk_button_new()
-  returns GtkWidget
-  is native('gtk-3')
-  { * }
-
-sub gtk_init(Pointer[uint32], Str)
-  is native('gtk-3')
-  { * }
-
 ok
   nativesizeof(GTypeClass) == sizeof_GTypeClass(),
   "GTypeClass matches that of native struct";
@@ -55,39 +44,62 @@ ok
   nativesizeof(GTK::Class::Widget) == sizeof_GtkWidgetClass(),
   "GTK::Class::Widget size matches that of native struct";
 
-gtk_init(Pointer, Nil);
-my $w = gtk_button_new();
-my $c = GTK::Class::Widget.new(:widget($w));
+my $a = GTK::Application.new(
+  title  => 'org.genex.test.widget',
+  width  => 200,
+  height => 200
+);
 
-#gtk_app()
+#$a.activate.tap({
+#  my $win = gtk_application_window_new($a.app);
+#  gtk_window_set_title($win, $a.title);
+#  gtk_window_set_default_size($win, $a.width, $a.height);
+#  gtk_application_add_window($a.app, $win);
+#  gtk_widget_show_all($win);
+#});
 
-for $c.^attributes {
-  my $n = .name.substr(2);#
+$a.startup.tap({
+  my @p;
+  my $w = gtk_button_new();
+  my $c = GTK::Class::Widget.new(:widget($w));
 
-  next if $n eq <
-    parent_class
-  >.any;
+  for $c.^attributes {
+    my $n = .name.substr(2);
 
-  given $n {
-    when 'parent_class' {
+    next if $n eq <
+      parent_class
+    >.any;
+
+    given $n {
+      when 'parent_class' {
+      }
+
+      when 'activate_signal' {
+        ok
+          $c.activate_signal ~~ Int,
+          ".activate_signal is an Integer";
+      }
+
+      when /^gtk_reserved\d/ {
+        pass "Found $_";
+      }
+
+      default {
+        my $p = EVAL( "\$c.$n.^name" );
+        ok
+          $p ~~ NativeCall::Types::Pointer.^name,
+          "$n is a native pointer";
+
+        ok
+          $p.gist ne @p.any,
+          "$n ({ $p.gist }) is not a duplicate";
+
+        @p.push: $p.gist;
+      }
     }
 
-    when 'activate_signal' {
-      ok
-        $c.activate_signal ~~ Int,
-        ".activate_signal is an Integer";
-    }
-
-    when /^gtk_reserved\d/ {
-      pass "Found $_";
-    }
-
-    default {
-      ok
-        EVAL( "\$c.$n.^name" ) ~~ NativeCall::Types::Pointer.^name,
-        "$n is a native pointer";
-    }
+    $a.exit;
   }
-}
+});
 
-#gtk_app_exit()
+$a.run;
