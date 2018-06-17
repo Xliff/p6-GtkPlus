@@ -38,6 +38,7 @@ sub MAIN ($filename, :$classname, :$attrname, :$acname) {
       };
       $match = ($l ~~ /<class_def>/).Bool;
       if $match {
+        $match.gist.say;
         if $classname {
             $match = $/<class_def>[0].trim eq $classname;
         }
