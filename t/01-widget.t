@@ -58,6 +58,9 @@ ok
 gtk_init(Pointer, Nil);
 my $w = gtk_button_new();
 my $c = GTK::Class::Widget.new(:widget($w));
+
+#gtk_app()
+
 for $c.^attributes {
   my $n = .name.substr(2);#
 
@@ -86,3 +89,5 @@ for $c.^attributes {
     }
   }
 }
+
+#gtk_app_exit()

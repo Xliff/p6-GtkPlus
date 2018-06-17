@@ -2,6 +2,19 @@ use v6.c;
 
 use NativeCall;
 
+our enum GApplicationFlags is export (
+  G_APPLICATION_FLAGS_NONE           => 0,
+  G_APPLICATION_IS_SERVICE           => 1,
+  G_APPLICATION_IS_LAUNCHER          => 2,
+  G_APPLICATION_HANDLES_OPEN         => 4,
+  G_APPLICATION_HANDLES_COMMAND_LINE => 8,
+  G_APPLICATION_SEND_ENVIRONMENT     => 16,
+  G_APPLICATION_NON_UNIQUE           => 32
+);
+
+class GApplication        is repr('CPointer') is export { }
+class GtkApplication      is repr('CPointer') is export { }
+
 class AtkObject           is repr('CPointer') is export { }
 class GdkScreen           is repr('CPointer') is export { }
 class GdkTouchEvent       is repr('CPointer') is export { }
@@ -15,6 +28,7 @@ class GtkStateType        is repr('CPointer') is export { }
 class GtkStyle            is repr('CPointer') is export { }
 class GtkTextDirection    is repr('CPointer') is export { }
 class GtkToolTip          is repr('CPointer') is export { }
+class GtkWindow           is repr('CPointer') is export { }
 class GtkWidget           is repr('CPointer') is export { }
 class GtkWidgetHelpType   is repr('CPointer') is export { }
 

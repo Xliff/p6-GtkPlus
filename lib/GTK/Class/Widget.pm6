@@ -39,11 +39,10 @@ class GObjectClass is repr('CStruct') is export {
 }
 
 class GTK::Class::Widget is repr('CStruct') {
-
   HAS GObjectClass  $.parent_class;
   has uint64        $.activate_signal;
 
-  has OpaquePointer $.dispatch_child_properties_changed; #(GtkWidget $w, int32 $np, OpaquePointer $p);
+  has OpaquePointer $.dispatch_child_properties_changed; # (GtkWidget $w, int32 $np, OpaquePointer $p);
 
   has OpaquePointer $.destroy             ; #(GtkWidget $w);
   has OpaquePointer $.show                ; #(GtkWidget $w);
@@ -155,5 +154,4 @@ class GTK::Class::Widget is repr('CStruct') {
 
   has OpaquePointer $.gtk_reserved6;
   has OpaquePointer $.gtk_reserved7;
-
 }
