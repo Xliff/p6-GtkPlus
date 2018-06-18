@@ -1,5 +1,7 @@
 use v6.c;
 
+use Data::Dump::Tree;
+
 sub MAIN ($filename) {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
 
@@ -29,26 +31,31 @@ sub MAIN ($filename) {
           |
           '('
             [
-              $<type>=[ 'const'? \w+]
-  #            $<var>=[ '*'? \w <+[\w \d _]>+ ]
-              $<var>=[ ['*'+]? \w+ ]
+              $<type>=[ 'const'? \w+ ]
+#             $<var>=[ '*'? \w <+[\w \d _]>+ ]
+              $<var>=[ ['*'+]? <[ \w _ ]>+ ]
             ]+ % [ ',' \s* ]
-            [','\s*'...']?
+#           [','\s*'...']?
           ')'
         ]
-        [ <[ A..Z '_' ]>+ ]?';'
+        #[ <[ A..Z _ ]>+ ]?';'
       }
 
       if $fd ~~ /<func_def>/ {
         my @p;
 
-        @p.push: [ $/<func_def><type>[$_], $/<func_def><var>[$_] ]
-          for (^$/<func_def><types>.elems);
-        @detected.push: {
+        my @tv = ($/<func_def><type> [Z] $/<func_def><var>);
+        #say dump @tv;
+
+        @p.push: [ $_[0], $_[1] ] for @tv;
+
+        my $h = {
           returns => $/<func_def><returns>,
-              sub => $/<func_def><sub>,
+            'sub' => $/<func_def><sub>,
            params => @p
         };
+
+        @detected.push: $h;
       } else {
         say "Function definition finished, but detected no match: \n'$fd'";
       }
@@ -57,5 +64,40 @@ sub MAIN ($filename) {
     }
   }
 
-  @detected.gist.say;
+  my %methods;
+  my %getset;
+  for @detected -> $d {
+    if $d<sub> ~~ / '_' ( [ 'get' || 'set' ] ) '_' ( .+ ) / {
+      %getset{$/[1]}{$/[0]} = $d;
+    } else {
+      %methods{$d<sub>} = $d;
+    }
+  }
+
+  for %getset.keys -> $gs {
+    unless
+      %getset{$gs}<get>                     &&
+      %getset{$gs}<get><params>.elems == 1  &&
+      %getset{$gs}<set>                     &&
+      %getset{$gs}<set><params>.elems == 2
+    {
+      say "Removing non-conforming get:set {$gs}...";
+      if %getset{$gs}<get>.defined {
+        %methods{%getset{$gs}<get><sub>} = %getset{$gs}<get>;
+      }
+      if %getset{$gs}<set>.defined {
+        %methods{%getset{$gs}<set><sub>} = %getset{$gs}<set>
+      }
+      %getset{$gs}:delete;
+    }
+  }
+
+  say "\nGETSET\n------";
+  dump %getset;
+
+  say "\nMETHODS\n-------";
+  dump %methods;
+
+
+
 }
