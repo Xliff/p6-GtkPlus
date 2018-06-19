@@ -12,6 +12,44 @@ our enum GApplicationFlags is export (
   G_APPLICATION_NON_UNIQUE           => 32
 );
 
+enum GtkWindowPosition is export (
+    GTK_WIN_POS_NONE               => 0,
+    GTK_WIN_POS_CENTER             => 1,
+    GTK_WIN_POS_MOUSE              => 2,
+    GTK_WIN_POS_CENTER_ALWAYS      => 3,
+    GTK_WIN_POS_CENTER_ON_PARENT   => 4,
+);
+
+enum GtkFileChooserAction is export (
+    GTK_FILE_CHOOSER_ACTION_OPEN           => 0,
+    GTK_FILE_CHOOSER_ACTION_SAVE           => 1,
+    GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER  => 2,
+    GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER  => 3,
+);
+
+enum GtkPlacesOpenFlags is export (
+    GTK_PLACES_OPEN_NORMAL     => 0,
+    GTK_PLACES_OPEN_NEW_TAB    => 1,
+    GTK_PLACES_OPEN_NEW_WINDOW => 2,
+);
+
+enum GtkLevelBarMode is export (
+    GTK_LEVEL_BAR_MODE_CONTINUOUS => 0,
+    GTK_LEVEL_BAR_MODE_DISCRETE   => 1,
+);
+
+#Determines how the size should be computed to achieve the one of the visibility mode for the scrollbars.
+enum GtkPolicyType is export (
+    GTK_POLICY_ALWAYS => 0,     #The scrollbar is always visible.
+                                #The view size is independent of the content.
+    GTK_POLICY_AUTOMATIC => 1,  #The scrollbar will appear and disappear as necessary.
+                                #For example, when all of a Gtk::TreeView can not be seen.
+    GTK_POLICY_NEVER => 2,      #The scrollbar should never appear.
+                                #In this mode the content determines the size.
+    GTK_POLICY_EXTERNAL => 3,   #Don't show a scrollbar, but don't force the size to follow the content.
+                                #This can be used e.g. to make multiple scrolled windows share a scrollbar.
+);
+
 class GApplication        is repr('CPointer') is export { }
 class GtkApplication      is repr('CPointer') is export { }
 

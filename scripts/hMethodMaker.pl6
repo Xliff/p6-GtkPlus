@@ -2,7 +2,7 @@ use v6.c;
 
 use Data::Dump::Tree;
 
-sub MAIN ($filename) {
+sub MAIN ($filename, $remove?) {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
 
   my $contents = $filename.IO.open.slurp-rest;
@@ -23,36 +23,49 @@ sub MAIN ($filename) {
     #say "FD[{ $i++ }]: $fd";
 
     if $fd && $fd ~~ /';'$$/ {
+      my token   p { '*'+ }
+      my rule type { 'const'? \w+ }
+      my rule  var { <p>?$<t>=[ <[\w _]>+ ] }
+
       my rule func_def {
-        $<returns>=[ \w+ [ '*'+ ]? ]
+        $<returns>=[ $<t>=\w+ <p>? ]
         $<sub>=[ \w+ ]
         [
           '(void)'
           |
-          '('
-            [
-              $<type>=[ 'const'? \w+ ]
-#             $<var>=[ '*'? \w <+[\w \d _]>+ ]
-              $<var>=[ ['*'+]? <[ \w _ ]>+ ]
-            ]+ % [ ',' \s* ]
-#           [','\s*'...']?
-          ')'
+          '(' [ <type> <var> ]+ % [ ',' \s* ] ')'
         ]
         #[ <[ A..Z _ ]>+ ]?';'
       }
 
+      my @tv;
       if $fd ~~ /<func_def>/ {
         my @p;
 
         my @tv = ($/<func_def><type> [Z] $/<func_def><var>);
-        #say dump @tv;
 
         @p.push: [ $_[0], $_[1] ] for @tv;
 
+        my @v = @p.map({ '$' ~ $_[1]<t>.Str.trim });
+        my @t = @p.map({
+          my $t = $_[0].Str.trim;
+          if $_[1]<p> {
+            $t = "CArray[{ $t.Str.trim }]" for ^($_[1]<p>.Str.trim.chars - 1);
+          }
+          $t;
+        });
+
+        my $call = @v.join(', ');
+        my $sig = (@t [Z] @v).map( *.join(' ') ).join(', ');
+        my $sub = $/<func_def><sub>.Str.trim;
+
+        $sub ~~ s/^$remove// if $remove;
         my $h = {
-          returns => $/<func_def><returns>,
-            'sub' => $/<func_def><sub>,
-           params => @p
+          returns => $/<func_def><returns>.Str.trim,
+            'sub' => $sub,
+           params => @p,
+             call => $call,
+              sig => $sig
         };
 
         @detected.push: $h;
@@ -67,6 +80,12 @@ sub MAIN ($filename) {
   my %methods;
   my %getset;
   for @detected -> $d {
+    if $d<p> {
+      $d<returns> = "CPointer[{ $d<returns> }]" for ^($d<p>.Str.chars - 1);
+    }
+
+    # Convert signatures to perl6.
+    #
     if $d<sub> ~~ / '_' ( [ 'get' || 'set' ] ) '_' ( .+ ) / {
       %getset{$/[1]}{$/[0]} = $d;
     } else {
@@ -92,12 +111,28 @@ sub MAIN ($filename) {
     }
   }
 
+  my @subs;
+
   say "\nGETSET\n------";
-  dump %getset;
+  for %getset.keys -> $gs {
+
+    say qq:to/METHOD/;
+      method %getset{$gs}<get><sub> is rw \{
+        Proxy,new(
+          FETCH => \{
+            { %getset{$gs}<get><sub> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
+          \},
+          STORE => \{
+            { %getset{$gs}<set><sub> ~ '(' ~ %getset{$gs}<set><call> ~ ')'};
+          \}
+        );
+      \}
+    METHOD
+
+  }
+
 
   say "\nMETHODS\n-------";
   dump %methods;
-
-
 
 }
