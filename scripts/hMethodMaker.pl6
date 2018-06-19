@@ -146,6 +146,39 @@ sub MAIN ($filename, :$remove) {
 
   }
 
-  #say "\nNC DEFS\n------";
+  say "\nNC DEFS\n------";
+  for %getset.keys -> $gs {
+
+    # TODO -- Test routine name between:
+    #  gtk_<klass>_  [gtk-3]     AND
+    #  gtk_          [gtk-3]     AND
+    #  g_            [glib-2.0]
+    # and emit the proper library.
+
+    say qq:to/SUBS/;
+      sub %getset{$gs}<get><sub> { '(' ~ %getset{$gs}<get><sig> ~ ')' }
+        is native('gtk-3')
+        is export
+        \{ * \}
+
+      sub %getset{$gs}<get><sub> { '(' ~ %getset{$gs}<get><sig> ~ ')' }
+        is native('gtk-3')
+        is export
+        \{ * \}
+    SUBS
+
+  }
+
+  for %methods.keys -> $m {
+
+    say qq:to/SUB/;
+      sub %methods{$m}<sub> { '(' ~ %methods{$m}<sig> ~ ')' }
+        is native('gtk-3')
+        is export
+        \{ * \}
+    SUB
+
+  }
+
 
 }
