@@ -115,8 +115,6 @@ sub MAIN ($filename, :$remove) {
     }
   }
 
-  my @subs;
-
   say "\nGETSET\n------";
   for %getset.keys -> $gs {
 
@@ -136,8 +134,18 @@ sub MAIN ($filename, :$remove) {
 
   }
 
-
   say "\nMETHODS\n-------";
-  #dump %methods;
+  for %methods.keys -> $m {
+    my $s = %methods{$m}<sub>.substr($prechop);
+
+    say qq:to/METHOD/;
+      method $s { '(' ~ %methods{$m}<sig> ~ ')' } \{
+        { %methods{$m}<sub> }({ %methods{$m}<call> });
+      \}
+    METHOD
+
+  }
+
+  #say "\nNC DEFS\n------";
 
 }
