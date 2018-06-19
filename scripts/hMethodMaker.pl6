@@ -2,8 +2,12 @@ use v6.c;
 
 use Data::Dump::Tree;
 
-sub MAIN ($filename, $remove?) {
+my $prechop = 11;
+
+sub MAIN ($filename, :$remove) {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
+
+  say $remove;
 
   my $contents = $filename.IO.open.slurp-rest;
 
@@ -59,7 +63,6 @@ sub MAIN ($filename, $remove?) {
         my $sig = (@t [Z] @v).map( *.join(' ') ).join(', ');
         my $sub = $/<func_def><sub>.Str.trim;
 
-        $sub ~~ s/^$remove// if $remove;
         my $h = {
           returns => $/<func_def><returns>.Str.trim,
             'sub' => $sub,
@@ -86,6 +89,7 @@ sub MAIN ($filename, $remove?) {
 
     # Convert signatures to perl6.
     #
+    #$d<sub> = substr($d<sub>, $prechop);
     if $d<sub> ~~ / '_' ( [ 'get' || 'set' ] ) '_' ( .+ ) / {
       %getset{$/[1]}{$/[0]} = $d;
     } else {
@@ -116,8 +120,9 @@ sub MAIN ($filename, $remove?) {
   say "\nGETSET\n------";
   for %getset.keys -> $gs {
 
+    ( my $s = %getset{$gs}<get><sub>.substr($prechop) ) ~~ s/['get' | 'set']_//;
     say qq:to/METHOD/;
-      method %getset{$gs}<get><sub> is rw \{
+      method { $s } is rw \{
         Proxy,new(
           FETCH => \{
             { %getset{$gs}<get><sub> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
@@ -133,6 +138,6 @@ sub MAIN ($filename, $remove?) {
 
 
   say "\nMETHODS\n-------";
-  dump %methods;
+  #dump %methods;
 
 }
