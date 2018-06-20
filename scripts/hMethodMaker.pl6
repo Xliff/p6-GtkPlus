@@ -4,13 +4,16 @@ use Data::Dump::Tree;
 
 my $prechop = 11;
 
-sub MAIN ($filename, :$remove) {
+sub MAIN ($filename, :$remove, :$output = 'all') {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
+
+  die "Output can only be one of 'attributes', 'methods', 'subs' or 'all'"
+    unless $output eq <all attributes methods subs>.any;
 
   my $contents = $filename.IO.open.slurp-rest;
 
   my $la;
-  my $fd;
+  my $fd = '';
   my $i = 1;
   my @detected;
   for $contents.lines -> $l {
@@ -22,13 +25,15 @@ sub MAIN ($filename, :$remove) {
       $fd ~= ' ' ~ $l.chomp;
     }
 
-    if $fd && $fd ~~ /';'$$/ {
-      my token   p { '*'+ }
-      my rule type { 'const'? \w+ }
-      my rule  var { <p>?$<t>=[ <[\w _]>+ ] }
+    if $fd ~~ /';' [ \s* '//' \s* .+? ]? \s* $$/ {
+      my token      p { '*'+ }
+      my token      t { <[\w _]>+ }
+      my rule    type { 'const'? \w+ }
+      my rule     var { <p>?<t> }
+      my rule returns { :!s <t> \s* <p>? }
 
       my rule func_def {
-        $<returns>=[ $<t>=\w+ <p>? ]
+        <returns>
         $<sub>=[ \w+ ]
         [
           '(void)'
@@ -40,6 +45,7 @@ sub MAIN ($filename, :$remove) {
 
       my @tv;
       if $fd ~~ /<func_def>/ {
+
         my @p;
         my $orig = $/<func_def><sub>.Str.trim;
         my $mo = $/;
@@ -69,33 +75,48 @@ sub MAIN ($filename, :$remove) {
         }
 
         my $h = {
-         original => $orig.trim,
-          returns => $mo<func_def><returns>,
-            'sub' => $sub,
-           params => @p,
-             call => $call,
-              sig => $sig
+          original => $orig.trim,
+           returns => $mo<func_def><returns>,
+             'sub' => $sub,
+            params => @p,
+              call => $call,
+               sig => $sig
         };
 
-        #dump $h;
+        my $p = 1;
+        my $p6r = do given $h<returns><t>.Str.trim {
+          when 'gboolean' {
+            'uint32';
+          }
+          when 'gchar' {
+            $p++;
+            'Str'
+          }
+          default {
+            $_;
+          }
+        }
+        if $h<returns><p> {
+          $p6r = "CPointer[{ $p6r }]" for ^($h<returns><p>.Str.trim.chars - $p);
+        }
+        $h<p6_return> = $p6r;
 
         @detected.push: $h;
       } else {
-        say "Function definition finished, but detected no match: \n'$fd'";
+        $*ERR.say: "Function definition finished, but detected no match: \n'$fd'";
       }
       $fd = '';
       $la = False;
     }
   }
 
+  dump @detected;
+  exit;
+
+  my %collider;
   my %methods;
   my %getset;
   for @detected -> $d {
-    if $d<returns><p> {
-      $d<returns> = "CPointer[{ $d<returns><t>.Str.trim }]"
-        for ^($d<returns><p>.Str.trim.chars - 1);
-    }
-
     # Convert signatures to perl6.
     #
     #$d<sub> = substr($d<sub>, $prechop);
@@ -103,99 +124,124 @@ sub MAIN ($filename, :$remove) {
       %getset{$/[1]}{$/[0]} = $d;
     } else {
       %methods{$d<sub>} = $d;
+      %collider{$d<sub>}++;
     }
   }
 
+  exit;
+
   for %getset.keys -> $gs {
-    unless
+    if !(
       %getset{$gs}<get>                     &&
       %getset{$gs}<get><params>.elems == 1  &&
       %getset{$gs}<set>                     &&
       %getset{$gs}<set><params>.elems == 2
-    {
+    ) {
       say "Removing non-conforming get:set {$gs}...";
       if %getset{$gs}<get>.defined {
         %methods{%getset{$gs}<get><sub>} = %getset{$gs}<get>;
+        %collider{%getset{$gs}<get><sub>}++;
       }
       if %getset{$gs}<set>.defined {
         %methods{%getset{$gs}<set><sub>} = %getset{$gs}<set>;
+        %collider{%getset{$gs}<set><sub>}++;
       }
       %getset{$gs}:delete;
+    } else {
+      %getset{$gs}<get><sub> ~~ s/['get' | 'set']_//;
+      %collider{ %getset{$gs}<get><sub> }++;
     }
   }
 
-  my %collider;
+  if $output eq <all attributes>.any {
+    say "\nGETSET\n------";
+    for %getset.keys -> $gs {
 
-  say "\nGETSET\n------";
-  for %getset.keys -> $gs {
+      my $sp = %getset{$gs}<set><call>.split(', ')[*-1];
 
-    my $s = %getset{$gs}<get><sub>;
-    $s ~~ s/['get' | 'set']_//;
-    %collider{$s}++;
+      say qq:to/METHOD/;
+        method { %getset{$gs}<get><sub> } is rw \{
+          Proxy,new(
+            FETCH => sub (\$) \{
+              { %getset{$gs}<get><original> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
+            \},
+            STORE => -> sub (\$, { $sp } is copy) \{
+              { %getset{$gs}<set><original> ~ '(' ~ %getset{$gs}<set><call> ~ ')'};
+            \}
+          );
+        \}
+      METHOD
 
-    say qq:to/METHOD/;
-      method { $s } is rw \{
-        Proxy,new(
-          FETCH => \{
-            { %getset{$gs}<get><original> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
-          \},
-          STORE => \{
-            { %getset{$gs}<set><original> ~ '(' ~ %getset{$gs}<set><call> ~ ')'};
-          \}
-        );
-      \}
-    METHOD
-
+    }
   }
 
-  say "\nMETHODS\n-------";
+  if $output eq <all methods>.any {
+    say "\nMETHODS\n-------";
+    for %methods.keys -> $m {
+
+      say qq:to/METHOD/;
+        method { %methods{$m}<sub> } { '(' ~ %methods{$m}<sig> ~ ')' } \{
+          { %methods{$m}<original> }({ %methods{$m}<call> });
+        \}
+      METHOD
+
+    }
+  }
+
+  if $output eq <all subs>.any {
+    say "\nNC DEFS\n------";
+    for %getset.keys -> $gs {
+
+      # TODO -- Test routine name between:
+      #  gtk_<klass>_  [gtk-3]     AND
+      #  gtk_          [gtk-3]     AND
+      #  g_            [glib-2.0]
+      # and emit the proper library.
+
+      say qq:to/SUBS/;
+        sub %getset{$gs}<get><original> { '(' ~ %getset{$gs}<get><sig> ~ ')' }
+          returns %getset{$gs}<get><p6_return>
+          is native('gtk-3')
+          is export
+          \{ * \}
+
+        sub %getset{$gs}<set><original> { '(' ~ %getset{$gs}<set><sig> ~ ')' }
+          is native('gtk-3')
+          is export
+          \{ * \}
+      SUBS
+
+    }
+  }
+
   for %methods.keys -> $m {
-    %collider{ %methods{$m}<sub> }++;
-    say qq:to/METHOD/;
-      method { %methods{$m}<sub> } { '(' ~ %methods{$m}<sig> ~ ')' } \{
-        { %methods{$m}<original> }({ %methods{$m}<call> });
-      \}
-    METHOD
+    my $subcall = "sub %methods{$m}<original> (%methods{$m}<sig>)";
 
-  }
+    if %methods{$m}<p6_return> && %methods{$m}<p6_return> ne 'void' {
 
-  say "\nNC DEFS\n------";
-  for %getset.keys -> $gs {
+      say qq:to/SUB/;
+        $subcall
+          returns %methods{$m}<p6_return>
+          is native('gtk-3')
+          is export
+          \{ * \}
+      SUB
 
-    # TODO -- Test routine name between:
-    #  gtk_<klass>_  [gtk-3]     AND
-    #  gtk_          [gtk-3]     AND
-    #  g_            [glib-2.0]
-    # and emit the proper library.
+    }  else {
 
-    say qq:to/SUBS/;
-      sub %getset{$gs}<get><sub> { '(' ~ %getset{$gs}<get><sig> ~ ')' }
-        is native('gtk-3')
-        is export
-        \{ * \}
+        say qq:to/SUB/;
+          $subcall
+            is native('gtk-3')
+            is export
+            \{ * \}
+        SUB
 
-      sub %getset{$gs}<get><sub> { '(' ~ %getset{$gs}<get><sig> ~ ')' }
-        is native('gtk-3')
-        is export
-        \{ * \}
-    SUBS
-
-  }
-
-  for %methods.keys -> $m {
-
-    say qq:to/SUB/;
-      sub %methods{$m}<original> { '(' ~ %methods{$m}<sig> ~ ')' }
-        is native('gtk-3')
-        is export
-        \{ * \}
-    SUB
-
+    }
   }
 
   for %collider.pairs.grep( *.value > 1 ) -> $d {
-    say "DUPLICATES\n----------" if !$++;
-    say $d.key;
+    $*ERR.say: "DUPLICATES\n----------" if !$++;
+    $*ERR.say: "$d";
   }
 
 }
