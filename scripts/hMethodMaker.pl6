@@ -7,8 +7,6 @@ my $prechop = 11;
 sub MAIN ($filename, :$remove) {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
 
-  say $remove;
-
   my $contents = $filename.IO.open.slurp-rest;
 
   my $la;
@@ -23,8 +21,6 @@ sub MAIN ($filename, :$remove) {
     if $la {
       $fd ~= ' ' ~ $l.chomp;
     }
-
-    #say "FD[{ $i++ }]: $fd";
 
     if $fd && $fd ~~ /';'$$/ {
       my token   p { '*'+ }
@@ -45,8 +41,9 @@ sub MAIN ($filename, :$remove) {
       my @tv;
       if $fd ~~ /<func_def>/ {
         my @p;
-
-        my @tv = ($/<func_def><type> [Z] $/<func_def><var>);
+        my $orig = $/<func_def><sub>.Str.trim;
+        my $mo = $/;
+        my @tv = ($mo<func_def><type> [Z] $mo<func_def><var>);
 
         @p.push: [ $_[0], $_[1] ] for @tv;
 
@@ -61,15 +58,26 @@ sub MAIN ($filename, :$remove) {
 
         my $call = @v.join(', ');
         my $sig = (@t [Z] @v).map( *.join(' ') ).join(', ');
-        my $sub = $/<func_def><sub>.Str.trim;
+        my $sub = $mo<func_def><sub>.Str.trim;
+
+        if $remove {
+          unless $sub ~~ s/ $remove // {
+            unless $sub ~~ s/ { $remove.split('_')[0] ~ '_' } // {
+              $sub ~~ s/ 'g_' //;
+            }
+          }
+        }
 
         my $h = {
-          returns => $/<func_def><returns>.Str.trim,
+         original => $orig.trim,
+          returns => $mo<func_def><returns>,
             'sub' => $sub,
            params => @p,
              call => $call,
               sig => $sig
         };
+
+        #dump $h;
 
         @detected.push: $h;
       } else {
@@ -83,14 +91,15 @@ sub MAIN ($filename, :$remove) {
   my %methods;
   my %getset;
   for @detected -> $d {
-    if $d<p> {
-      $d<returns> = "CPointer[{ $d<returns> }]" for ^($d<p>.Str.chars - 1);
+    if $d<returns><p> {
+      $d<returns> = "CPointer[{ $d<returns><t>.Str.trim }]"
+        for ^($d<returns><p>.Str.trim.chars - 1);
     }
 
     # Convert signatures to perl6.
     #
     #$d<sub> = substr($d<sub>, $prechop);
-    if $d<sub> ~~ / '_' ( [ 'get' || 'set' ] ) '_' ( .+ ) / {
+    if $d<sub> ~~ / ( [ 'get' || 'set' ] ) '_' ( .+ ) / {
       %getset{$/[1]}{$/[0]} = $d;
     } else {
       %methods{$d<sub>} = $d;
@@ -109,24 +118,29 @@ sub MAIN ($filename, :$remove) {
         %methods{%getset{$gs}<get><sub>} = %getset{$gs}<get>;
       }
       if %getset{$gs}<set>.defined {
-        %methods{%getset{$gs}<set><sub>} = %getset{$gs}<set>
+        %methods{%getset{$gs}<set><sub>} = %getset{$gs}<set>;
       }
       %getset{$gs}:delete;
     }
   }
 
+  my %collider;
+
   say "\nGETSET\n------";
   for %getset.keys -> $gs {
 
-    ( my $s = %getset{$gs}<get><sub>.substr($prechop) ) ~~ s/['get' | 'set']_//;
+    my $s = %getset{$gs}<get><sub>;
+    $s ~~ s/['get' | 'set']_//;
+    %collider{$s}++;
+
     say qq:to/METHOD/;
       method { $s } is rw \{
         Proxy,new(
           FETCH => \{
-            { %getset{$gs}<get><sub> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
+            { %getset{$gs}<get><original> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
           \},
           STORE => \{
-            { %getset{$gs}<set><sub> ~ '(' ~ %getset{$gs}<set><call> ~ ')'};
+            { %getset{$gs}<set><original> ~ '(' ~ %getset{$gs}<set><call> ~ ')'};
           \}
         );
       \}
@@ -136,11 +150,10 @@ sub MAIN ($filename, :$remove) {
 
   say "\nMETHODS\n-------";
   for %methods.keys -> $m {
-    my $s = %methods{$m}<sub>.substr($prechop);
-
+    %collider{ %methods{$m}<sub> }++;
     say qq:to/METHOD/;
-      method $s { '(' ~ %methods{$m}<sig> ~ ')' } \{
-        { %methods{$m}<sub> }({ %methods{$m}<call> });
+      method { %methods{$m}<sub> } { '(' ~ %methods{$m}<sig> ~ ')' } \{
+        { %methods{$m}<original> }({ %methods{$m}<call> });
       \}
     METHOD
 
@@ -172,7 +185,7 @@ sub MAIN ($filename, :$remove) {
   for %methods.keys -> $m {
 
     say qq:to/SUB/;
-      sub %methods{$m}<sub> { '(' ~ %methods{$m}<sig> ~ ')' }
+      sub %methods{$m}<original> { '(' ~ %methods{$m}<sig> ~ ')' }
         is native('gtk-3')
         is export
         \{ * \}
@@ -180,5 +193,9 @@ sub MAIN ($filename, :$remove) {
 
   }
 
+  for %collider.pairs.grep( *.value > 1 ) -> $d {
+    say "DUPLICATES\n----------" if !$++;
+    say $d.key;
+  }
 
 }
