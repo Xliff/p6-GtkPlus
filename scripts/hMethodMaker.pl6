@@ -25,11 +25,13 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
       $fd ~= ' ' ~ $l.chomp;
     }
 
-    if $fd ~~ /';' [ \s* '//' \s* .+? ]? \s* $$/ {
+    #[ \s* '//' \s* .+? ]?
+
+    if $fd ~~ /';' \s* $$/ {
       my token      p { '*'+ }
       my token      t { <[\w _]>+ }
-      my rule    type { 'const'? \w+ }
-      my rule     var { <p>?<t> }
+      my rule    type { 'const'? $<n>=\w+ <p>? }
+      my rule     var { <t> }
       my rule returns { :!s <t> \s* <p>? }
 
       my rule func_def {
@@ -38,7 +40,7 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
         [
           '(void)'
           |
-          '(' [ <type> <var> ]+ % [ ',' \s* ] ')'
+          '(' [ <type> <var> ]+ % [ \s* ',' \s* ] ')'
         ]
         #[ <[ A..Z _ ]>+ ]?';'
       }
@@ -55,15 +57,15 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
 
         my @v = @p.map({ '$' ~ $_[1]<t>.Str.trim });
         my @t = @p.map({
-          my $t = $_[0].Str.trim;
+          my $t = $_[0]<n>.Str.trim;
           if $_[1]<p> {
-            $t = "CArray[{ $t.Str.trim }]" for ^($_[1]<p>.Str.trim.chars - 1);
+            $t = "CArray[{ $t }]" for ^($_[1]<p>.Str.trim.chars - 1);
           }
           $t;
         });
 
-        my $call = @v.join(', ');
-        my $sig = (@t [Z] @v).map( *.join(' ') ).join(', ');
+        my $call = @v.map( *.trim ).join(', ');
+        my $sig = (@t [Z] @v).join(', ');
         my $sub = $mo<func_def><sub>.Str.trim;
 
         if $remove {
@@ -83,21 +85,28 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
                sig => $sig
         };
 
-        my $p = 1;
+        #my $p = 1;
+
+        # This will eventually go into a separate CompUnit
         my $p6r = do given $h<returns><t>.Str.trim {
+          when 'gpointer' {
+            'OpaquePointer';
+          }
           when 'gboolean' {
             'uint32';
           }
           when 'gchar' {
-            $p++;
+            # This logic may no longer be necessary.
+            #$p++;
             'Str'
           }
           default {
             $_;
           }
         }
+
         if $h<returns><p> {
-          $p6r = "CPointer[{ $p6r }]" for ^($h<returns><p>.Str.trim.chars - $p);
+          $p6r = "CArray[{ $p6r }]" for ^($h<returns><p>.Str.trim.chars - 1);
         }
         $h<p6_return> = $p6r;
 
@@ -109,9 +118,6 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
       $la = False;
     }
   }
-
-  dump @detected;
-  exit;
 
   my %collider;
   my %methods;
@@ -127,8 +133,6 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
       %collider{$d<sub>}++;
     }
   }
-
-  exit;
 
   for %getset.keys -> $gs {
     if !(
