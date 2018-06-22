@@ -2,13 +2,20 @@ use v6.c;
 
 use Data::Dump::Tree;
 
-my $prechop = 11;
+my %do_output;
 
 sub MAIN ($filename, :$remove, :$output = 'all') {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
 
-  die "Output can only be one of 'attributes', 'methods', 'subs' or 'all'"
-    unless $output eq <all attributes methods subs>.any;
+  if $output ne 'all' {
+    for $output.split(',') -> $o {
+      die "Output can only be one of 'attributes', 'methods', 'subs' or 'all'"
+        unless $o eq <all attributes methods subs>.any;
+      %do_output{$o} = 1;
+    }
+  } else {
+    %do_output<all> = 1;
+  }
 
   my $contents = $filename.IO.open.slurp-rest;
 
@@ -92,13 +99,16 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
           when 'gpointer' {
             'OpaquePointer';
           }
+          when 'va_list' {
+            'OpaquePointer';
+          }
           when 'gboolean' {
             'uint32';
           }
           when 'gchar' {
             # This logic may no longer be necessary.
             #$p++;
-            'Str'
+            'Str';
           }
           default {
             $_;
@@ -134,7 +144,7 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
     }
   }
 
-  for %getset.keys -> $gs {
+  for %getset.keys.sort -> $gs {
     if !(
       %getset{$gs}<get>                     &&
       %getset{$gs}<get><params>.elems == 1  &&
@@ -144,11 +154,11 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
       say "Removing non-conforming get:set {$gs}...";
       if %getset{$gs}<get>.defined {
         %methods{%getset{$gs}<get><sub>} = %getset{$gs}<get>;
-        %collider{%getset{$gs}<get><sub>}++;
+        %collider{ %getset{$gs}<get><sub> }++;
       }
       if %getset{$gs}<set>.defined {
         %methods{%getset{$gs}<set><sub>} = %getset{$gs}<set>;
-        %collider{%getset{$gs}<set><sub>}++;
+        %collider{ %getset{$gs}<set><sub> }++;
       }
       %getset{$gs}:delete;
     } else {
@@ -157,9 +167,9 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
     }
   }
 
-  if $output eq <all attributes>.any {
+  if %do_output<all> || %do_output<attributes> {
     say "\nGETSET\n------";
-    for %getset.keys -> $gs {
+    for %getset.keys.sort -> $gs {
 
       my $sp = %getset{$gs}<set><call>.split(', ')[*-1];
 
@@ -179,9 +189,9 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
     }
   }
 
-  if $output eq <all methods>.any {
-    say "\nMETHODS\n-------";
-    for %methods.keys -> $m {
+  say "\nMETHODS\n-------";
+  if %do_output<all> || %do_output<methods> {
+    for %methods.keys.sort -> $m {
 
       say qq:to/METHOD/;
         method { %methods{$m}<sub> } { '(' ~ %methods{$m}<sig> ~ ')' } \{
@@ -192,54 +202,30 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
     }
   }
 
-  if $output eq <all subs>.any {
-    say "\nNC DEFS\n------";
-    for %getset.keys -> $gs {
+  if %do_output<all> || %do_output<subs> {
+    for %methods.keys.sort -> $m {
+      my $subcall = "sub %methods{$m}<original> (%methods{$m}<sig>)";
 
-      # TODO -- Test routine name between:
-      #  gtk_<klass>_  [gtk-3]     AND
-      #  gtk_          [gtk-3]     AND
-      #  g_            [glib-2.0]
-      # and emit the proper library.
+      if %methods{$m}<p6_return> && %methods{$m}<p6_return> ne 'void' {
 
-      say qq:to/SUBS/;
-        sub %getset{$gs}<get><original> { '(' ~ %getset{$gs}<get><sig> ~ ')' }
-          returns %getset{$gs}<get><p6_return>
-          is native('gtk-3')
-          is export
-          \{ * \}
+         say qq:to/SUB/;
+         $subcall
+           returns %methods{$m}<p6_return>
+           is native('gtk-3')
+           is export
+           \{ * \}
+         SUB
 
-        sub %getset{$gs}<set><original> { '(' ~ %getset{$gs}<set><sig> ~ ')' }
-          is native('gtk-3')
-          is export
-          \{ * \}
-      SUBS
+      }  else {
 
-    }
-  }
-
-  for %methods.keys -> $m {
-    my $subcall = "sub %methods{$m}<original> (%methods{$m}<sig>)";
-
-    if %methods{$m}<p6_return> && %methods{$m}<p6_return> ne 'void' {
-
-      say qq:to/SUB/;
-        $subcall
-          returns %methods{$m}<p6_return>
-          is native('gtk-3')
-          is export
-          \{ * \}
-      SUB
-
-    }  else {
-
-        say qq:to/SUB/;
+          say qq:to/SUB/;
           $subcall
             is native('gtk-3')
             is export
             \{ * \}
-        SUB
+          SUB
 
+      }
     }
   }
 

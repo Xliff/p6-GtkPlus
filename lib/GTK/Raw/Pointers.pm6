@@ -2,6 +2,13 @@ use v6.c;
 
 use NativeCall;
 
+
+constant gpointer is export := OpaquePointer;
+constant gboolean is export := uint32;
+constant va_list  is export := OpaquePointer;
+constant gint     is export := int32;
+constant gchar    is export := Str
+
 our enum GApplicationFlags is export (
   G_APPLICATION_FLAGS_NONE           => 0,
   G_APPLICATION_IS_SERVICE           => 1,
