@@ -48,7 +48,7 @@ unit class GTK::Window is GTK::Container {
 
 
   method accept_focus is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_accept_focus($!win);
       },
@@ -59,7 +59,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method application is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_application($!win);
       },
@@ -70,7 +70,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method attached_to is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_attached_to($!win);
       },
@@ -81,7 +81,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method decorated is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_decorated($!win);
       },
@@ -92,7 +92,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method deletable is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_deletable($!win);
       },
@@ -103,7 +103,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method destroy_with_parent is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_destroy_with_parent($!win);
       },
@@ -114,7 +114,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method focus is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_focus($!win);
       },
@@ -125,7 +125,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method focus_on_map is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_focus_on_map($!win);
       },
@@ -136,7 +136,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method focus_visible is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_focus_visible($!win);
       },
@@ -147,7 +147,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method gravity is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_gravity($!win);
       },
@@ -158,7 +158,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method has_resize_grip is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_has_resize_grip($!win);
       },
@@ -169,7 +169,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method hide_titlebar_when_maximized is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_hide_titlebar_when_maximized($!win);
       },
@@ -180,7 +180,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method icon is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_icon($!win);
       },
@@ -191,7 +191,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method icon_list is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_icon_list($!win);
       },
@@ -202,7 +202,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method icon_name is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_icon_name($!win);
       },
@@ -213,7 +213,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method mnemonic_modifier is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_mnemonic_modifier($!win);
       },
@@ -224,7 +224,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method mnemonics_visible is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_mnemonics_visible($!win);
       },
@@ -235,7 +235,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method modal is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_modal($!win);
       },
@@ -246,7 +246,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method opacity is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_opacity($!win);
       },
@@ -257,7 +257,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method resizable is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_resizable($!win);
       },
@@ -268,7 +268,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method role is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_role($!win);
       },
@@ -279,7 +279,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method screen is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_screen($!win);
       },
@@ -290,7 +290,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method skip_pager_hint is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_skip_pager_hint($!win);
       },
@@ -301,7 +301,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method skip_taskbar_hint is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_skip_taskbar_hint($!win);
       },
@@ -312,7 +312,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method title is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_title($!win);
       },
@@ -323,7 +323,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method titlebar is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_titlebar($!win);
       },
@@ -334,7 +334,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method transient_for is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_transient_for($!win);
       },
@@ -345,7 +345,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method type_hint is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_type_hint($!win);
       },
@@ -356,7 +356,7 @@ unit class GTK::Window is GTK::Container {
   }
 
   method urgency_hint is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_urgency_hint($!win);
       },

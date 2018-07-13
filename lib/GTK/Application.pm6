@@ -87,7 +87,7 @@ class GTK::Application is GTK::Window {
   }
 
   method app_menu is rw {
-    Proxy,new(
+    Proxy.new(
     FETCH => sub ($) {
       gtk_application_get_app_menu($!app);
     },
@@ -98,7 +98,7 @@ class GTK::Application is GTK::Window {
   }
 
   method menubar is rw {
-    Proxy,new(
+    Proxy.new(
     FETCH => sub ($) {
       gtk_application_get_menubar($!app);
     },

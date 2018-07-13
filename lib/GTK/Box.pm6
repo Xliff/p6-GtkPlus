@@ -19,7 +19,7 @@ class GTK::Box is GTK::Container {
   }
 
   method baseline_position is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_box_get_baseline_position($box);
       },
@@ -30,7 +30,7 @@ class GTK::Box is GTK::Container {
   }
 
   method center_widget is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_box_get_center_widget($box);
       },
@@ -41,7 +41,7 @@ class GTK::Box is GTK::Container {
   }
 
   method homogeneous is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_box_get_homogeneous($box);
       },
@@ -52,7 +52,7 @@ class GTK::Box is GTK::Container {
   }
 
   method spacing is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_box_get_spacing($box);
       },

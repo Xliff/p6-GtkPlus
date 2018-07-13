@@ -62,7 +62,7 @@ class GTK::Container is GTK::Widget {
 #Backtrace::Frame.new(file => "-e", line => 1, code => sub a () { #`(Sub|93842260662800) ... }, subname => "a")
 
   method resize_mode is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_container_get_resize_mode($!c);
       },
@@ -73,7 +73,7 @@ class GTK::Container is GTK::Widget {
   }
 
   method focus_vadjustment is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_container_get_focus_vadjustment($!c);
       },
@@ -84,7 +84,7 @@ class GTK::Container is GTK::Widget {
   }
 
   method focus_child is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_container_get_focus_child($!c);
       },
@@ -95,7 +95,7 @@ class GTK::Container is GTK::Widget {
   }
 
   method focus_hadjustment is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_container_get_focus_hadjustment($!c);
       },
@@ -106,7 +106,7 @@ class GTK::Container is GTK::Widget {
   }
 
   method border_width is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_container_get_border_width($!c);
       },

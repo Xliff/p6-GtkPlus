@@ -4,7 +4,7 @@ use Data::Dump::Tree;
 
 my %do_output;
 
-sub MAIN ($filename, :$remove, :$output = 'all') {
+sub MAIN ($filename, :$remove, :$var, :$output = 'all') {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
 
   if $output ne 'all' {
@@ -16,6 +16,8 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
   } else {
     %do_output<all> = 1;
   }
+
+  die "Var should be an attribute" unless $var.defined && $var ~~ /^ '$!' /;
 
   my $contents = $filename.IO.open.slurp-rest;
 
@@ -70,6 +72,12 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
           }
           $t;
         });
+
+        if $var {
+          @v.shift;
+          @t.shift;
+          @v.unshift: $var;
+        }
 
         my $call = @v.map( *.trim ).join(', ');
         my $sig = (@t [Z] @v).join(', ');
@@ -175,7 +183,7 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
 
       say qq:to/METHOD/;
         method { %getset{$gs}<get><sub> } is rw \{
-          Proxy,new(
+          Proxy.new(
             FETCH => sub (\$) \{
               { %getset{$gs}<get><original> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
             \},
@@ -192,7 +200,6 @@ sub MAIN ($filename, :$remove, :$output = 'all') {
   say "\nMETHODS\n-------";
   if %do_output<all> || %do_output<methods> {
     for %methods.keys.sort -> $m {
-
       say qq:to/METHOD/;
         method { %methods{$m}<sub> } { '(' ~ %methods{$m}<sig> ~ ')' } \{
           { %methods{$m}<original> }({ %methods{$m}<call> });

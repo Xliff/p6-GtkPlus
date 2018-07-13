@@ -368,7 +368,7 @@ class GTK::Widget {
   }
 
   method receives_default is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_receives_default($!w);
       },
@@ -379,7 +379,7 @@ class GTK::Widget {
   }
 
   method name is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_name($!w);
       },
@@ -390,7 +390,7 @@ class GTK::Widget {
   }
 
   method app_paintable is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_app_paintable($!w);
       },
@@ -401,7 +401,7 @@ class GTK::Widget {
   }
 
   method font_map is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_font_map($!w);
       },
@@ -412,7 +412,7 @@ class GTK::Widget {
   }
 
   method tooltip_markup is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_tooltip_markup($!w);
       },
@@ -423,7 +423,7 @@ class GTK::Widget {
   }
 
   method tooltip_text is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_tooltip_text($!w);
       },
@@ -434,7 +434,7 @@ class GTK::Widget {
   }
 
   method direction is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_direction($!w);
       },
@@ -445,7 +445,7 @@ class GTK::Widget {
   }
 
   method margin_top is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_margin_top($!w);
       },
@@ -456,7 +456,7 @@ class GTK::Widget {
   }
 
   method focus_on_click is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_focus_on_click($!w);
       },
@@ -467,7 +467,7 @@ class GTK::Widget {
   }
 
   method child_visible is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_child_visible($!w);
       },
@@ -478,7 +478,7 @@ class GTK::Widget {
   }
 
   method hexpand is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_hexpand($!w);
       },
@@ -489,7 +489,7 @@ class GTK::Widget {
   }
 
   method margin_right is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_margin_right($!w);
       },
@@ -500,7 +500,7 @@ class GTK::Widget {
   }
 
   method margin_left is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_margin_left($!w);
       },
@@ -511,7 +511,7 @@ class GTK::Widget {
   }
 
   method parent_window is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_parent_window($!w);
       },
@@ -522,7 +522,7 @@ class GTK::Widget {
   }
 
   method state_flags is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_state_flags($!w);
       },
@@ -533,7 +533,7 @@ class GTK::Widget {
   }
 
   method sensitive is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_sensitive($!w);
       },
@@ -544,7 +544,7 @@ class GTK::Widget {
   }
 
   method visible is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_visible($!w);
       },
@@ -555,7 +555,7 @@ class GTK::Widget {
   }
 
   method window is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_window($!w);
       },
@@ -566,7 +566,7 @@ class GTK::Widget {
   }
 
   method events is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_events($!w);
       },
@@ -577,7 +577,7 @@ class GTK::Widget {
   }
 
   method opacity is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_opacity($!w);
       },
@@ -588,7 +588,7 @@ class GTK::Widget {
   }
 
   method tooltip_window is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_tooltip_window($!w);
       },
@@ -599,7 +599,7 @@ class GTK::Widget {
   }
 
   method font_options is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_font_options($!w);
       },
@@ -610,7 +610,7 @@ class GTK::Widget {
   }
 
   method class_css_name is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_class_get_css_name($widget_class);
       },
@@ -621,7 +621,7 @@ class GTK::Widget {
   }
 
   method margin_start is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_margin_start($!w);
       },
@@ -632,7 +632,7 @@ class GTK::Widget {
   }
 
   method realized is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_realized($!w);
       },
@@ -643,7 +643,7 @@ class GTK::Widget {
   }
 
   method visual is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_visual($!w);
       },
@@ -654,7 +654,7 @@ class GTK::Widget {
   }
 
   method vexpand is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_vexpand($!w);
       },
@@ -665,7 +665,7 @@ class GTK::Widget {
   }
 
   method margin_bottom is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_margin_bottom($!w);
       },
@@ -676,7 +676,7 @@ class GTK::Widget {
   }
 
   method margin_end is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_margin_end($!w);
       },
@@ -687,7 +687,7 @@ class GTK::Widget {
   }
 
   method valign is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_valign($!w);
       },
@@ -698,7 +698,7 @@ class GTK::Widget {
   }
 
   method has_window is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_has_window($!w);
       },
@@ -709,7 +709,7 @@ class GTK::Widget {
   }
 
   method double_buffered is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_double_buffered($!w);
       },
@@ -720,7 +720,7 @@ class GTK::Widget {
   }
 
   method parent is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_parent($!w);
       },
@@ -731,7 +731,7 @@ class GTK::Widget {
   }
 
   method has_tooltip is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_has_tooltip($!w);
       },
@@ -742,7 +742,7 @@ class GTK::Widget {
   }
 
   method halign is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_halign($!w);
       },
@@ -753,7 +753,7 @@ class GTK::Widget {
   }
 
   method no_show_all is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_no_show_all($!w);
       },
@@ -764,7 +764,7 @@ class GTK::Widget {
   }
 
   method state is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_state($!w);
       },
@@ -775,7 +775,7 @@ class GTK::Widget {
   }
 
   method can_default is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_can_default($!w);
       },
@@ -786,7 +786,7 @@ class GTK::Widget {
   }
 
   method vexpand_set is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_vexpand_set($!w);
       },
@@ -797,7 +797,7 @@ class GTK::Widget {
   }
 
   method hexpand_set is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_hexpand_set($!w);
       },
@@ -808,7 +808,7 @@ class GTK::Widget {
   }
 
   method mapped is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_mapped($!w);
       },
@@ -819,7 +819,7 @@ class GTK::Widget {
   }
 
   method composite_name is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_composite_name($!w);
       },
@@ -830,7 +830,7 @@ class GTK::Widget {
   }
 
   method can_focus is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_can_focus($!w);
       },
@@ -841,7 +841,7 @@ class GTK::Widget {
   }
 
   method support_multidevice is rw {
-    Proxy,new(
+    Proxy.new(
       FETCH => sub ($) {
         gtk_widget_get_support_multidevice($!w);
       },
