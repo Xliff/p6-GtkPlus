@@ -6,38 +6,21 @@ use GTK::Class::Pointers;
 use GTK::Raw::Widget;
 
 class GTK::Widget {
-  has GtkWidget  $!w;
+  also does GTK::Roles::Signal;
 
-  has %!signals;
+  has GtkWidget  $!w;
 
   submethod BUILD (GtkWidget :$widget) {
     $!w = $widget;
   }
 
   submethod DESTROY {
-    self.disconnect($_) for %!signals.keys;
+    self.disconnect_all;
+    g_object_unref($!w);
   }
 
-  method setWidget(GtkWidget $widget) {
+  method setWidget($widget) {
     $!w = $widget;
-  }
-
-  method connect($signal, {
-      %!signal{$signal} //= do {
-          my $s = Supplier.new;
-          g_signal_connect_wd($!w, $signal,
-              -> $, $ {
-                  $s.emit(self);
-                  CATCH { default { note $_; } }
-              },
-              OpaquePointer, 0);
-          $s.Supply;
-      }
-  );
-
-  method disconnect($signal) {
-    g_signal_handler_disconnect(self, %!signals{$signal});
-    %!signals{$signal}:delete;
   }
 
   method receives_default is rw {

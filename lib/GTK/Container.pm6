@@ -12,12 +12,16 @@ class GTK::Container is GTK::Widget {
   has %!signals;
 
   submethod BUILD (GtkContainer :$container) {
-    self.setWidget($!c = $container);
+    self.setContainer($container);
   }
-
 
   method new(:$container) {
     self.bless(:$container);
+  }
+
+  # cw: Should check caller to insure call comes from proper object chain.
+  method setContainer(GtkContainer :$container) {
+    self.setWidget($!c = $container);
   }
 
 #Function definition finished, but detected no match:
