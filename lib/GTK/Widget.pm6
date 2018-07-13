@@ -2,25 +2,369 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Class::Pointers;
+use GTK::Raw::Pointers;
 use GTK::Raw::Widget;
 
 class GTK::Widget {
   also does GTK::Roles::Signal;
 
-  has GtkWidget  $!w;
+  has GtkWidget $!w;
 
   submethod BUILD (GtkWidget :$widget) {
     $!w = $widget;
   }
 
-  submethod DESTROY {
-    self.disconnect_all;
-    g_object_unref($!w);
+  #submethod DESTROY {
+  #  self.disself.connect_all;
+  #  g_object_unref($!w);
+  #}
+
+  #method setWidget($widget) {
+  #  $!w = $widget;
+  #}
+
+  # Signal
+  method accel-closures-changed {
+    self.connect($!w, 'accel-closures-changed');
   }
 
-  method setWidget($widget) {
-    $!w = $widget;
+  # Signal
+  method button-press-event {
+    self.connect($!w, 'button-press-event');
+  }
+
+  # Signal
+  method button-release-event {
+    self.connect($!w, 'button-release-event');
+  }
+
+  # Signal --> Boolean
+  method can-activate-accel {
+    self.connect($!w, 'can-activate-accel');
+  }
+
+  # Signal --> No Hooks
+  method child-notify {
+    self.connect($!w, 'child-notify');
+  }
+
+  # Signal
+  method composited-changed {
+    self.connect($!w, 'composited-changed');
+  }
+
+  # Signal gboolean Run Last
+  method configure-event {
+    self.connect($!w, 'configure-event');
+  }
+
+  # Signal gboolean Run Last
+  method damage-event {
+    self.connect($!w, 'damage-event');
+  }
+
+  # Signal gboolean Run Last
+  method delete-event {
+    self.connect($!w, 'delete-event');
+  }
+
+  # Signal void No Hooks
+  method destroy {
+    self.connect($!w, 'destroy');
+  }
+
+  # Signal gboolean Run Last
+  method destroy-event {
+    self.connect($!w, 'destroy-event');
+  }
+
+  # Signal void Run First
+  method direction-changed {
+    self.connect($!w, 'direction-changed');
+  }
+
+  # Signal void Run Last
+  method drag-begin {
+    self.connect($!w, 'drag-begin');
+  }
+
+  # Signal void Run Last
+  method drag-data-delete {
+    self.connect($!w, 'drag-data-delete');
+  }
+
+  # Signal void Run Last
+  method drag-data-get {
+    self.connect($!w, 'drag-data-get');
+  }
+
+  # Signal void Run Last
+  method drag-data-received {
+    self.connect($!w, 'drag-data-received');
+  }
+
+  # Signal gboolean Run Last
+  method drag-drop {
+    self.connect($!w, 'drag-drop');
+  }
+
+  # Signal void Run Last
+  method drag-end {
+    self.connect($!w, 'drag-end');
+  }
+
+  # Signal gboolean Run Last
+  method drag-failed {
+    self.connect($!w, 'drag-failed');
+  }
+
+  # Signal void Run Last
+  method drag-leave {
+    self.connect($!w, 'drag-leave');
+  }
+
+  # Signal gboolean Run Last
+  method drag-motion {
+    self.connect($!w, 'drag-motion');
+  }
+
+  # Signal gboolean Run Last
+  method draw {
+    self.connect($!w, 'draw');
+  }
+
+  # Signal gboolean Run Last
+  method enter-notify-event {
+    self.connect($!w, 'enter-notify-event');
+  }
+
+  # Signal gboolean Run Last
+  method event {
+    self.connect($!w, 'event');
+  }
+
+  # Signal Run
+  method event-after {
+    self.connect($!w, 'event-after');
+  }
+
+  # Signal gboolean Run Last
+  method focus {
+    self.connect($!w, 'focus');
+  }
+
+  # Signal gboolean Run Last
+  method focus-in-event {
+    self.connect($!w, 'focus-in-event');
+  }
+
+  # Signal gboolean Run Last
+  method focus-out-event {
+    self.connect($!w, 'focus-out-event');
+  }
+
+  # Signal gboolean Run Last
+  method grab-broken-event {
+    self.connect($!w, 'grab-broken-event');
+  }
+
+  # Signal  Action
+  method grab-focus {
+    self.connect($!w, 'grab-focus');
+  }
+
+  # Signal void Run First
+  method grab-notify {
+    self.connect($!w, 'grab-notify');
+  }
+
+  # Signal void Run First
+  method hide {
+    self.connect($!w, 'hide');
+  }
+
+  # Signal void Run Last
+  method hierarchy-changed {
+    self.connect($!w, 'hierarchy-changed');
+  }
+
+  # Signal gboolean Run Last
+  method key-press-event {
+    self.connect($!w, 'key-press-event');
+  }
+
+  # Signal gboolean Run Last
+  method key-release-event {
+    self.connect($!w, 'key-release-event');
+  }
+
+  # Signal gboolean Run Last
+  method keynav-failed {
+    self.connect($!w, 'keynav-failed');
+  }
+
+  # Signal gboolean Run Last
+  method leave-notify-event {
+    self.connect($!w, 'leave-notify-event');
+  }
+
+  # Signal void Run First
+  method map {
+    self.connect($!w, 'map');
+  }
+
+  # Signal gboolean Run Last
+  method map-event {
+    self.connect($!w, 'map-event');
+  }
+
+  # Signal gboolean Run Last
+  method mnemonic-activate {
+    self.connect($!w, 'mnemonic-activate');
+  }
+
+  # Signal gboolean Run Last
+  method motion-notify-event {
+    self.connect($!w, 'motion-notify-event');
+  }
+
+  # Signal Action
+  method move-focus {
+    self.connect($!w, 'move-focus');
+  }
+
+  # Signal void Run First
+  method parent-set {
+    self.connect($!w, 'parent-set');
+  }
+
+  # Signal gboolean
+  method popup-menu {
+    self.connect($!w, 'popup-menu');
+  }
+
+  # Signal gboolean Run Last
+  method property-notify-event {
+    self.connect($!w, 'property-notify-event');
+  }
+
+  # Signal gboolean Run Last
+  method proximity-in-event {
+    self.connect($!w, 'proximity-in-event');
+  }
+
+  # Signal gboolean Run Last
+  method proximity-out-event {
+    self.connect($!w, 'proximity-out-event');
+  }
+
+  # Signal gboolean Run Last
+  method query-tooltip {
+    self.connect($!w, 'query-tooltip');
+  }
+
+  # Signal void Run First
+  method realize {
+    self.connect($!w, 'realize');
+  }
+
+  # Signal void Run Last
+  method screen-changed {
+    self.connect($!w, 'screen-changed');
+  }
+
+  # Signal gboolean Run Last
+  method scroll-event {
+    self.connect($!w, 'scroll-event');
+  }
+
+  # Signal gboolean Run Last
+  method selection-clear-event {
+    self.connect($!w, 'selection-clear-event');
+  }
+
+  # Signal void Run Last
+  method selection-get {
+    self.connect($!w, 'selection-get');
+  }
+
+  # Signal gboolean Run Last
+  method selection-notify-event {
+    self.connect($!w, 'selection-notify-event');
+  }
+
+  # Signal void Run Last
+  method selection-received {
+    self.connect($!w, 'selection-received');
+  }
+
+  # Signal gboolean Run Last
+  method selection-request-event {
+    self.connect($!w, 'selection-request-event');
+  }
+
+  # Signal void Run First
+  method show {
+    self.connect($!w, 'show');
+  }
+
+  method show-help {
+    self.connect($!w, 'show-help');
+  }
+
+  # Signal void Run First
+  method size-allocate {
+    self.connect($!w, 'size-allocate');
+  }
+
+  # Signal void Run First
+  method state-changed {
+    self.connect($!w, 'state-changed');
+  }
+
+  # Signal void Run First
+  method state-flags-changed {
+    self.connect($!w, 'state-flags-changed');
+  }
+
+  # Signal void Run First
+  method style-set {
+    self.connect($!w, 'style-set');
+  }
+
+  # Signal void Run First
+  method style-updated {
+    self.connect($!w, 'style-updated');
+  }
+
+  # Signal gboolean Run Last
+  method touch-event {
+    self.connect($!w, 'touch-event');
+  }
+
+  # Signal void Run First
+  method unmap {
+    self.connect($!w, 'unmap');
+  }
+
+  # Signal gboolean Run Last
+  method unmap-event {
+    self.connect($!w, 'unmap-event');
+  }
+
+  # Signal void Run Last
+  method unrealize {
+    self.connect($!w, 'unrealize');
+  }
+
+  # Signal gboolean Run Last
+  method visibility-notify-event {
+    self.connect($!w, 'visibility-notify-event');
+  }
+
+  # Signal gboolean Run Last
+  method window-state-event {
+    self.connect($!w, 'window-state-event');
   }
 
   method receives_default is rw {
@@ -1059,8 +1403,8 @@ class GTK::Widget {
     gtk_widget_add_mnemonic_label($!w, $label);
   }
 
-  method class_set_connect_func (GtkWidgetClass $widget_class, GtkBuilderConnectFunc $connect_func, gpointer $connect_data, GDestroyNotify $connect_data_destroy) {
-    gtk_widget_class_set_connect_func($widget_class, $connect_func, $connect_data, $connect_data_destroy);
+  method class_set_self.connect_func (GtkWidgetClass $widget_class, GtkBuilderself.connectFunc $self.connect_func, gpointer $self.connect_data, GDestroyNotify $self.connect_data_destroy) {
+    gtk_widget_class_set_self.connect_func($widget_class, $self.connect_func, $self.connect_data, $self.connect_data_destroy);
   }
 
   method set_accel_path (GtkWidget $!w, gchar $accel_path, GtkAccelGroup $accel_group) {

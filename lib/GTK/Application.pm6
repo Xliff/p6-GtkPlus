@@ -118,15 +118,15 @@ class GTK::Application is GTK::Window {
   }
 
   method activate {
-    self.connect("activate");
+    self.connect($!app, "activate");
   }
 
   method startup {
-    self.connect("startup");
+    self.connect($!app, "startup");
   }
 
   method shutdown {
-    self.connect("shutdown");
+    self.connect($!app, "shutdown");
   }
 
  method add_accelerator (gchar $accelerator, gchar $action_name, GVariant $parameter) {

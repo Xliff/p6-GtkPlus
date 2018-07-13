@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Class::Pointers;
+use GTK::Raw::Pointers;
 
 #
 # DEFAULT
@@ -34,12 +34,12 @@ sub g_signal_connect_object(
 )
   returns uint64
   is native('gobject-2.0')
-  is export(:app)
+  is export
   { * }
 
 sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
   is native('gobject-2.0')
-  is export(:app)
+  is export
   { * }
 
 
