@@ -5,6 +5,18 @@ use GTK::Raw::Types;
 unit class GTK::Window is GTK::Container {
   has GtkWindow $!win;
 
+  submethod BUILD(:$window) {
+    $!win = $win;
+  }
+
+  method new(GtkWindowType $type, :$title, :$width, :$height) {
+    my $window = gtk_window_new($type);
+    gtk_window_set_title($window, $title);
+    gtk_window_set_default_size($window, $width, $height);
+
+    self.bless(:$window, :container($win), :widget($win));
+  }
+
   # *
   # * STATIC METHODS
   # *
@@ -34,9 +46,6 @@ unit class GTK::Window is GTK::Container {
 
   # ****************************************************************I
 
-  method new($window) {
-    self.bless(:container($!win = $window));
-  }
 
   method accept_focus is rw {
     Proxy,new(
