@@ -9,7 +9,7 @@ sub MAIN ($filename) {
       say qq:to/SIG/;
 # Signal { $m<line>[0] // '' } { $m<line>[2] // '' } { $m<line>[3] // '' }
 method { $m<line>[1].trim } \{
-  connect(\$!w, '{ $m<line>[1].trim }');
+  self.connect(\$!w, '{ $m<line>[1].trim }');
 \}
 SIG
     } else {
