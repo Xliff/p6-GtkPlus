@@ -17,7 +17,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all') {
     %do_output<all> = 1;
   }
 
-  die "Var should be an attribute" unless $var.defined && $var ~~ /^ '$!' /;
+  die "Var should be an attribute" unless !$var.defined || $var ~~ /^ '$!' /;
 
   my $contents = $filename.IO.open.slurp-rest;
 
@@ -74,14 +74,21 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all') {
         });
 
         if $var {
-          @v.shift;
-          @t.shift;
-          @v.unshift: $var;
+          @v.shift if +@v;
+          @t.shift if +@t;
         }
 
         my $call = @v.map( *.trim ).join(', ');
         my $sig = (@t [Z] @v).join(', ');
         my $sub = $mo<func_def><sub>.Str.trim;
+
+        if $var {
+          if $call.chars {
+            $call = "{$var}, {$call}";
+          } else {
+            $call = $var;
+          }
+        }
 
         if $remove {
           unless $sub ~~ s/ $remove // {

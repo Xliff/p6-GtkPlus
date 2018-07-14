@@ -1,8 +1,11 @@
 use v6.c;
 
-use GTK::Raw::Types;
+use GTK::Bin;
 
-unit class GTK::Window is GTK::Container {
+use GTK::Raw::Pointers;
+use GTK::Raw::Window;
+
+unit class GTK::Window is GTK::Bin {
   has GtkWindow $!win;
 
   submethod BUILD(:$window) {
@@ -14,7 +17,7 @@ unit class GTK::Window is GTK::Container {
     gtk_window_set_title($window, $title);
     gtk_window_set_default_size($window, $width, $height);
 
-    self.bless(:$window, :container($win), :widget($win));
+    self.bless(:$window, :bin($win), :container($win), :widget($win));
   }
 
   # *
