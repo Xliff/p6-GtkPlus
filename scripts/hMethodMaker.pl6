@@ -1,6 +1,6 @@
 use v6.c;
 
-use Data::Dump::Tree;
+#use Data::Dump::Tree;
 
 my %do_output;
 
