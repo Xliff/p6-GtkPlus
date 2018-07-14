@@ -1,5 +1,8 @@
 use v6.c;
 
+use NativeCall;
+
+use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
 role GTK::Roles::Signals {

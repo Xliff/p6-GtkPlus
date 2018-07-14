@@ -2,9 +2,9 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Pointers;
+use GTK::Raw::Types;
 
-unit class GTK::Raw::Button;
+unit package GTK::Raw::Button;
 
 sub gtk_button_clicked (GtkButton $button)
   is native('gtk-3')

@@ -194,7 +194,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
             FETCH => sub (\$) \{
               { %getset{$gs}<get><original> ~ '(' ~ %getset{$gs}<get><call> ~ ')' };
             \},
-            STORE => -> sub (\$, { $sp } is copy) \{
+            STORE => sub (\$, { $sp } is copy) \{
               { %getset{$gs}<set><original> ~ '(' ~ %getset{$gs}<set><call> ~ ')'};
             \}
           );
@@ -204,9 +204,35 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
     }
   }
 
+  sub outputSub($m) {
+    my $subcall = "sub $m<original> ($m<sig>)";
+
+    if $m<p6_return> && $m<p6_return> ne 'void' {
+
+       say qq:to/SUB/;
+       $subcall
+         returns $m<p6_return>
+         is native('{ $lib }')
+         is export
+         \{ * \}
+       SUB
+
+    }  else {
+
+      say qq:to/SUB/;
+      $subcall
+        is native('{ $lib }')
+        is export
+        \{ * \}
+      SUB
+
+    }
+  }
+
   say "\nMETHODS\n-------";
   if %do_output<all> || %do_output<methods> {
     for %methods.keys.sort -> $m {
+
       say qq:to/METHOD/;
         method { %methods{$m}<sub> } { '(' ~ %methods{$m}<sig> ~ ')' } \{
           { %methods{$m}<original> }({ %methods{$m}<call> });
@@ -217,30 +243,9 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
   }
 
   if %do_output<all> || %do_output<subs> {
-    for %methods.keys.sort -> $m {
-      my $subcall = "sub %methods{$m}<original> (%methods{$m}<sig>)";
-
-      if %methods{$m}<p6_return> && %methods{$m}<p6_return> ne 'void' {
-
-         say qq:to/SUB/;
-         $subcall
-           returns %methods{$m}<p6_return>
-           is native('{ $lib }')
-           is export
-           \{ * \}
-         SUB
-
-      }  else {
-
-          say qq:to/SUB/;
-          $subcall
-            is native('{ $lib }')
-            is export
-            \{ * \}
-          SUB
-
-      }
-    }
+    outputSub( %methods{$_} )     for %methods.keys.sort;
+    outputSub( %getset{$_}<get> ) for %getset.keys;
+    outputSub( %getset{$_}<set> ) for %getset.keys;
   }
 
   for %collider.pairs.grep( *.value > 1 ) -> $d {

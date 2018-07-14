@@ -22,6 +22,10 @@ class Gtk::Compat::GList {
     self.bless(:$list);
   }
 
+  method new($list) {
+    self.bless(:$list);
+  }
+
   method data {
     $!list.data;
   }

@@ -16,10 +16,7 @@ class GTK::Container is GTK::Widget {
   }
 
   submethod DESTROY {
-    # cw: This is for top level.
-    #self.disconnect_all;
-
-    # Get all children and unref.
+    g_object_unref($_.data) for self.get_children.Array;
     g_object_unref($!c);
   }
 

@@ -1,5 +1,8 @@
 use v6.c;
 
+use NativeCall;
+
+use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 unit package GTK::Raw::Widget;
@@ -14,7 +17,7 @@ sub gtk_widget_style_get_valist (GtkWidget $widget, gchar $first_property_name, 
   is export
   { * }
 
-sub gtk_widget_get_allocated_size (GtkWidget $widget, GtkAllocation $allocation, int $baseline)
+sub gtk_widget_get_allocated_size (GtkWidget $widget, GtkAllocation $allocation, int32 $baseline)
   is native('gtk-3')
   is export
   { * }
@@ -31,7 +34,7 @@ sub gtk_widget_override_cursor (GtkWidget $widget, GdkRGBA $cursor, GdkRGBA $sec
   { * }
 
 sub gtk_widget_get_allocated_height (GtkWidget $widget)
-  returns int
+  returns int32
   is native('gtk-3')
   is export
   { * }
@@ -42,15 +45,15 @@ sub gtk_widget_set_redraw_on_allocate (GtkWidget $widget, gboolean $redraw_on_al
   { * }
 
 sub gtk_widget_get_allocated_baseline (GtkWidget $widget)
-  returns int
+  returns int32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_widget_class_set_template_from_resource (GtkWidgetClass $widget_class, gchar $resource_name)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_set_template_from_resource (GtkWidgetClass $widget_class, gchar $resource_name)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_queue_compute_expand (GtkWidget $widget)
   is native('gtk-3')
@@ -79,7 +82,8 @@ sub gtk_widget_queue_allocate (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_keynav_failed (GtkWidget $widget, GtkDirectionType $direction)
+# GtkDirectionType $direction
+sub gtk_widget_keynav_failed (GtkWidget $widget, uint32 $direction)
   returns uint32
   is native('gtk-3')
   is export
@@ -189,10 +193,10 @@ sub gtk_widget_add_mnemonic_label (GtkWidget $widget, GtkWidget $label)
   is export
   { * }
 
-sub gtk_widget_class_bind_template_child_full (GtkWidgetClass $widget_class, gchar $name, gboolean $internal_child, gssize $struct_offset)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_bind_template_child_full (GtkWidgetClass $widget_class, gchar $name, gboolean $internal_child, gssize $struct_offset)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_requisition_get_type ()
   returns GType
@@ -216,19 +220,20 @@ sub gtk_widget_error_bell (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_class_install_style_property_parser (GtkWidgetClass $klass, GParamSpec $pspec, GtkRcPropertyParser $parser)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_install_style_property_parser (GtkWidgetClass $klass, GParamSpec $pspec, GtkRcPropertyParser $parser)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_get_allocated_width (GtkWidget $widget)
-  returns int
+  returns int32
   is native('gtk-3')
   is export
   { * }
 
+# --> GtkAlign
 sub gtk_widget_get_valign_with_baseline (GtkWidget $widget)
-  returns GtkAlign
+  returns uint32
   is native('gtk-3')
   is export
   { * }
@@ -238,7 +243,8 @@ sub gtk_widget_get_preferred_width_for_height (GtkWidget $widget, gint $height, 
   is export
   { * }
 
-sub gtk_widget_set_default_direction (GtkTextDirection $dir)
+# GtkTextDirection $dir
+sub gtk_widget_set_default_direction (uint32 $dir)
   is native('gtk-3')
   is export
   { * }
@@ -248,10 +254,10 @@ sub gtk_widget_size_allocate_with_baseline (GtkWidget $widget, GtkAllocation $al
   is export
   { * }
 
-sub gtk_widget_class_set_template (GtkWidgetClass $widget_class, GBytes $template_bytes)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_set_template (GtkWidgetClass $widget_class, GBytes $template_bytes)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_is_visible (GtkWidget $widget)
   returns uint32
@@ -265,7 +271,8 @@ sub gtk_widget_hide_on_delete (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_render_icon_pixbuf (GtkWidget $widget, gchar $stock_id, GtkIconSize $size)
+# GtkIconSize $size
+sub gtk_widget_render_icon_pixbuf (GtkWidget $widget, gchar $stock_id, uint32 $size)
   returns GdkPixbuf
   is native('gtk-3')
   is export
@@ -293,7 +300,8 @@ sub gtk_widget_queue_draw (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_child_focus (GtkWidget $widget, GtkDirectionType $direction)
+# GtkDirectionType $direction
+sub gtk_widget_child_focus (GtkWidget $widget, uint32 $direction)
   returns uint32
   is native('gtk-3')
   is export
@@ -320,10 +328,10 @@ sub gtk_widget_unmap (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_class_install_style_property (GtkWidgetClass $klass, GParamSpec $pspec)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_install_style_property (GtkWidgetClass $klass, GParamSpec $pspec)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_get_ancestor (GtkWidget $widget, GType $widget_type)
   returns GtkWidget
@@ -342,10 +350,10 @@ sub gtk_widget_set_allocation (GtkWidget $widget, GtkAllocation $allocation)
   is export
   { * }
 
-sub gtk_widget_class_set_accessible_type (GtkWidgetClass $widget_class, GType $type)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_set_accessible_type (GtkWidgetClass $widget_class, GType $type)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_get_device_enabled (GtkWidget $widget, GdkDevice $device)
   returns uint32
@@ -387,10 +395,10 @@ sub gtk_widget_get_settings (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_class_set_accessible_role (GtkWidgetClass $widget_class, AtkRole $role)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_set_accessible_role (GtkWidgetClass $widget_class, AtkRole $role)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_queue_draw_area (GtkWidget $widget, gint $x, gint $y, gint $width, gint $height)
   is native('gtk-3')
@@ -440,7 +448,8 @@ sub gtk_widget_destroy (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_compute_expand (GtkWidget $widget, GtkOrientation $orientation)
+# GtkOrientation $orientation
+sub gtk_widget_compute_expand (GtkWidget $widget, uint32 $orientation)
   returns uint32
   is native('gtk-3')
   is export
@@ -458,7 +467,8 @@ sub gtk_widget_list_action_prefixes (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_override_color (GtkWidget $widget, GtkStateFlags $state, GdkRGBA $color)
+# GtkStateFlag $state
+sub gtk_widget_override_color (GtkWidget $widget,uint32 $state, GdkRGBA $color)
   is native('gtk-3')
   is export
   { * }
@@ -549,10 +559,10 @@ sub gtk_widget_in_destruction (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_class_bind_template_callback_full (GtkWidgetClass $widget_class, gchar $callback_name, GCallback $callback_symbol)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_bind_template_callback_full (GtkWidgetClass $widget_class, gchar $callback_name, GCallback $callback_symbol)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_set_clip (GtkWidget $widget, GtkAllocation $clip)
   is native('gtk-3')
@@ -584,11 +594,11 @@ sub gtk_widget_override_symbolic_color (GtkWidget $widget, gchar $name, GdkRGBA 
   is export
   { * }
 
-sub gtk_widget_class_find_style_property (GtkWidgetClass $klass, gchar $property_name)
-  returns GParamSpec
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_find_style_property (GtkWidgetClass $klass, gchar $property_name)
+#  returns GParamSpec
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_get_frame_clock (GtkWidget $widget)
   returns GdkFrameClock
@@ -629,19 +639,21 @@ sub gtk_widget_activate (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_class_set_connect_func (GtkWidgetClass $widget_class, GtkBuilderConnectFunc $connect_func, gpointer $connect_data, GDestroyNotify $connect_data_destroy)
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_set_connect_func (GtkWidgetClass $widget_class, GtkBuilderConnectFunc $connect_func, gpointer $connect_data, GDestroyNotify $connect_data_destroy)
+#  is native('gtk-3')
+#  is export
+#  { * }
 
+# --> GtkStyleContext
 sub gtk_widget_get_style_context (GtkWidget $widget)
-  returns GtkStyleContext
+  returns uint32
   is native('gtk-3')
   is export
   { * }
 
+# --> GtkSizeRequestMode
 sub gtk_widget_get_request_mode (GtkWidget $widget)
-  returns GtkSizeRequestMode
+  returns uint32
   is native('gtk-3')
   is export
   { * }
@@ -651,8 +663,9 @@ sub gtk_widget_set_accel_path (GtkWidget $widget, gchar $accel_path, GtkAccelGro
   is export
   { * }
 
+# --> GtkTextDirection
 sub gtk_widget_get_default_direction ()
-  returns GtkTextDirection
+  returns uint32
   is native('gtk-3')
   is export
   { * }
@@ -684,7 +697,8 @@ sub gtk_widget_can_activate_accel (GtkWidget $widget, guint $signal_id)
   is export
   { * }
 
-sub gtk_widget_override_background_color (GtkWidget $widget, GtkStateFlags $state, GdkRGBA $color)
+# GtkStateFlags $state
+sub gtk_widget_override_background_color (GtkWidget $widget, uint32 $state, GdkRGBA $color)
   is native('gtk-3')
   is export
   { * }
@@ -695,11 +709,11 @@ sub gtk_widget_create_pango_context (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_class_list_style_properties (GtkWidgetClass $klass, guint $n_properties)
-  returns CArray[GParamSpec]
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_widget_class_list_style_properties (GtkWidgetClass $klass, guint $n_properties)
+#  returns CArray[GParamSpec]
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_widget_get_preferred_height (GtkWidget $widget, gint $minimum_height, gint $natural_height)
   is native('gtk-3')
@@ -789,7 +803,8 @@ sub gtk_widget_send_expose (GtkWidget $widget, GdkEvent $event)
   is export
   { * }
 
-sub gtk_widget_add_accelerator (GtkWidget $widget, gchar $accel_signal, GtkAccelGroup $accel_group, guint $accel_key, GdkModifierType $accel_mods, GtkAccelFlags $accel_flags)
+# GtkAccelGroup $accel_group
+sub gtk_widget_add_accelerator (GtkWidget $widget, gchar $accel_signal, GtkAccelGroup $accel_group, guint $accel_key, GdkModifierType $accel_mods, uint32 $accel_flags)
   is native('gtk-3')
   is export
   { * }
@@ -810,6 +825,500 @@ sub gtk_widget_queue_resize_no_redraw (GtkWidget $widget)
   { * }
 
 sub gtk_widget_get_pointer (GtkWidget $widget, gint $x, gint $y)
+  is native('gtk-3')
+  is export
+  { * }
+
+  sub gtk_widget_get_child_visible (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_margin_top (GtkWidget $widget)
+  returns gint
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_can_focus (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_support_multidevice (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_parent_window (GtkWidget $widget)
+  returns GdkWindow
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_realized (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+# --> GtkAlign
+sub gtk_widget_get_halign (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+# --> GtkAlign
+sub gtk_widget_get_valign (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_tooltip_text (GtkWidget $widget)
+  returns Str
+  is native('gtk-3')
+  is export
+  { * }
+
+# --> GtkStateFlags
+sub gtk_widget_get_state_flags (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_composite_name (GtkWidget $widget)
+  returns Str
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_hexpand_set (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_margin_bottom (GtkWidget $widget)
+  returns gint
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_visible (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_parent (GtkWidget $widget)
+  returns GtkWidget
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_margin_right (GtkWidget $widget)
+  returns gint
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_has_tooltip (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_can_default (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_opacity (GtkWidget $widget)
+  returns num64
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_double_buffered (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_sensitive (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_hexpand (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_window (GtkWidget $widget)
+  returns GdkWindow
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_app_paintable (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_visual (GtkWidget $widget)
+  returns GdkVisual
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_font_map (GtkWidget $widget)
+  returns PangoFontMap
+  is native('gtk-3')
+  is export
+  { * }
+
+# --> GtkStateType
+sub gtk_widget_get_state (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_receives_default (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_tooltip_window (GtkWidget $widget)
+  returns GtkWindow
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_name (GtkWidget $widget)
+  returns Str
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_no_show_all (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_vexpand (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_has_window (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_focus_on_click (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_mapped (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_margin_start (GtkWidget $widget)
+  returns gint
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_events (GtkWidget $widget)
+  returns gint
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_vexpand_set (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_margin_left (GtkWidget $widget)
+  returns gint
+  is native('gtk-3')
+  is export
+  { * }
+
+#sub gtk_widget_class_get_css_name (GtkWidgetClass $widget_class)
+#  returns char
+#  is native('gtk-3')
+#  is export
+#  { * }
+
+# --> GtkTextDirection
+sub gtk_widget_get_direction (GtkWidget $widget)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_font_options (GtkWidget $widget)
+  returns cairo_font_options_t
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_tooltip_markup (GtkWidget $widget)
+  returns Str
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_get_margin_end (GtkWidget $widget)
+  returns gint
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_child_visible (GtkWidget $widget, gboolean $is_visible)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_margin_top (GtkWidget $widget, gint $margin)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_can_focus (GtkWidget $widget, gboolean $can_focus)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_support_multidevice (GtkWidget $widget, gboolean $support_multidevice)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_parent_window (GtkWidget $widget, GdkWindow $parent_window)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_realized (GtkWidget $widget, gboolean $realized)
+  is native('gtk-3')
+  is export
+  { * }
+
+# GtkAlign $align
+sub gtk_widget_set_halign (GtkWidget $widget, uint32 $align)
+  is native('gtk-3')
+  is export
+  { * }
+
+# GtkAlign $align
+sub gtk_widget_set_valign (GtkWidget $widget, uint32 $align)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_tooltip_text (GtkWidget $widget, gchar $text)
+  is native('gtk-3')
+  is export
+  { * }
+
+# GtkStateFlags $flags
+sub gtk_widget_unset_state_flags (GtkWidget $widget, uint32 $flags)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_composite_name (GtkWidget $widget, gchar $name)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_hexpand_set (GtkWidget $widget, gboolean $set)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_margin_bottom (GtkWidget $widget, gint $margin)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_visible (GtkWidget $widget, gboolean $visible)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_parent (GtkWidget $widget, GtkWidget $parent)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_margin_right (GtkWidget $widget, gint $margin)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_has_tooltip (GtkWidget $widget, gboolean $has_tooltip)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_can_default (GtkWidget $widget, gboolean $can_default)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_opacity (GtkWidget $widget, num64 $opacity)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_double_buffered (GtkWidget $widget, gboolean $double_buffered)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_sensitive (GtkWidget $widget, gboolean $sensitive)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_hexpand (GtkWidget $widget, gboolean $expand)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_window (GtkWidget $widget, GdkWindow $window)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_app_paintable (GtkWidget $widget, gboolean $app_paintable)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_visual (GtkWidget $widget, GdkVisual $visual)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_font_map (GtkWidget $widget, PangoFontMap $font_map)
+  is native('gtk-3')
+  is export
+  { * }
+
+# GtkStateType $state
+sub gtk_widget_set_state (GtkWidget $widget, uint32 $state)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_receives_default (GtkWidget $widget, gboolean $receives_default)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_tooltip_window (GtkWidget $widget, GtkWindow $custom_window)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_name (GtkWidget $widget, gchar $name)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_no_show_all (GtkWidget $widget, gboolean $no_show_all)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_vexpand (GtkWidget $widget, gboolean $expand)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_has_window (GtkWidget $widget, gboolean $has_window)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_focus_on_click (GtkWidget $widget, gboolean $focus_on_click)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_mapped (GtkWidget $widget, gboolean $mapped)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_margin_start (GtkWidget $widget, gint $margin)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_events (GtkWidget $widget, gint $events)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_vexpand_set (GtkWidget $widget, gboolean $set)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_margin_left (GtkWidget $widget, gint $margin)
+  is native('gtk-3')
+  is export
+  { * }
+
+#sub gtk_widget_class_set_css_name (GtkWidgetClass $widget_class, char $name)
+#  is native('gtk-3')
+#  is export
+#  { * }
+
+# GtkTextDirection $dir
+sub gtk_widget_set_direction (GtkWidget $widget, uint32 $dir)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_font_options (GtkWidget $widget, cairo_font_options_t $options)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_tooltip_markup (GtkWidget $widget, gchar $markup)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_widget_set_margin_end (GtkWidget $widget, gint $margin)
   is native('gtk-3')
   is export
   { * }

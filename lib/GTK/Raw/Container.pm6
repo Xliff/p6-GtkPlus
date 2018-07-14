@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::Pointers;
+use GTK::Raw::Types;
 
 unit package GTK::Raw::Container;
 

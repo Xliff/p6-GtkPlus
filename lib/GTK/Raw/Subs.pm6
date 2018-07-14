@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Pointers;
+use GTK::Raw::Types;
 
 #
 # DEFAULT
@@ -23,16 +23,15 @@ sub g_signal_connect_data(
   is export
   { * }
 
-constant &g_signal_connect is export := &g_signal_connect_data;
 
-sub g_signal_connect_object(
+sub g_signal_connect_wd(
   OpaquePointer $app,
   Str $name,
   &handler (GtkWidget $h_widget, OpaquePointer $h_data),
   OpaquePointer $data,
   uint32 $connect_flags
 )
-  returns uint64
+  returns uint32
   is native('gobject-2.0')
   is export
   { * }

@@ -2,10 +2,14 @@ use v6.c;
 
 use GTK::Bin;
 
-use GTK::Raw::Pointers;
+use GTK::Raw::Types;
 use GTK::Raw::Window;
 
+use GTK::Roles::Signals;
+
 unit class GTK::Window is GTK::Bin {
+  also does GTK::Roles::Signals;
+
   has GtkWindow $!win;
 
   submethod BUILD(:$window) {
@@ -18,6 +22,31 @@ unit class GTK::Window is GTK::Bin {
     gtk_window_set_default_size($window, $width, $height);
 
     self.bless(:$window, :bin($win), :container($win), :widget($win));
+  }
+
+  # Signal void Action
+  method activate-default {
+    self.connect($!w, 'activate-default');
+  }
+
+  # Signal void Action
+  method activate-focus {
+    self.connect($!w, 'activate-focus');
+  }
+
+  # Signal gboolean Action
+  method enable-debugging {
+    self.connect($!w, 'enable-debugging');
+  }
+
+  # Signal void Run First
+  method keys-changed {
+    self.connect($!w, 'keys-changed');
+  }
+
+  # Signal void Run Last
+  method set-focus {
+    self.connect($!w, 'set-focus');
   }
 
   # *

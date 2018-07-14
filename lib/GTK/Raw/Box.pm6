@@ -2,6 +2,8 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Raw::Types;
+
 unit package GTK::Raw::Box;
 
 sub gtk_box_get_type ()
