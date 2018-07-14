@@ -448,11 +448,14 @@ enum GtkPolicyType is export (
 class GApplication        is repr('CPointer') is export { }
 class GtkApplication      is repr('CPointer') is export { }
 
+class GtkCallback         is repr('CPointer') is export { }
+
 class AtkObject           is repr('CPointer') is export { }
 class GdkScreen           is repr('CPointer') is export { }
 class GdkTouchEvent       is repr('CPointer') is export { }
 class GParamSpec          is repr('CPointer') is export { }
 class GtkAllocation       is repr('CPointer') is export { }
+class GtkContainer        is repr('CPointer') is export { }
 class GtkDragContext      is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
 class GtkStyle            is repr('CPointer') is export { }

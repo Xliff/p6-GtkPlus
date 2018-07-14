@@ -1,17 +1,22 @@
 use v6.c;
 
-use GTK::Raw::Types;
+use NativeCall;
+
+use GTK::Compat::Types;
+use GTK::Raw::Pointers;
+
+unit package GTK::Raw::Container;
 
 sub gtk_container_unset_focus_chain (GtkContainer $container)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_container_class_list_child_properties (GObjectClass $cclass, guint $n_properties)
-  returns CArray[GParamSpec]
-  is native('gtk-3')
-  is export
-  { * }
+#sub gtk_container_class_list_child_properties (GObjectClass $cclass, guint $n_properties)
+#  returns CArray[GParamSpec]
+#  is native('gtk-3')
+#  is export
+#  { * }
 
 sub gtk_container_check_resize (GtkContainer $container)
   is native('gtk-3')
