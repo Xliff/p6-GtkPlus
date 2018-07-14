@@ -7,19 +7,17 @@ role GTK::Roles::Signals {
 
   # Signal handling code thank to jnthn
   method connect($obj, $signal) {
-    %!signals{$signal} //= do [
-      {
-        my $s = Supplier.new;
-        g_signal_connect_wd($obj, $signal,
-          -> $, $ {
-              $s.emit(self);
-              CATCH { default { note $_; } }
-          },
-          OpaquePointer, 0);
-        $s.Supply;
-      },
-      $obj
-    ]
+    %!signals{$signal} //= do {
+      my $s = Supplier.new;
+      g_signal_connect_wd($obj, $signal,
+        -> $, $ {
+            $s.emit(self);
+            CATCH { default { note $_; } }
+        },
+        OpaquePointer, 0
+      );
+      [ $s.Supply, $obj ];
+    };
     %!signals{$signal}[0];
   }
 
