@@ -10,9 +10,8 @@ use GTK::Window;
 class GTK::Application is GTK::Window {
   also does GTK::Roles::Signals;
 
-  has GTK::Window $!win;
-
-  has GtkApplication $!app;
+  has $!win; # GtkWindow
+  has $!app; # GtkApplication
 
   has $!title;
 
@@ -27,13 +26,13 @@ class GTK::Application is GTK::Window {
     #gtk_init(Pointer, Nil);
   }
 
-  method p {
-    nativecast(OpaquePointer, $!gtk_app);
-  }
+  #method p {
+  #  nativecast(OpaquePointer, $!app);
+  #}
 
-  method app {
-    $!gtk_app;
-  }
+  #method app {
+  #  $!app;
+  #}
 
   method title {
     $!title;
@@ -67,7 +66,7 @@ class GTK::Application is GTK::Window {
     my uint32 $w = $width;
     my uint32 $h = $height;
 
-    die "Application must have a title." unless $title;
+    die 'Application must have a title.' unless $title;
 
     my $app = gtk_application_new($title, $f);
     my $window = gtk_application_window_new($app);
@@ -81,30 +80,31 @@ class GTK::Application is GTK::Window {
       :width($w),
       :height($h),
       :$window,
+      :bin($window),
       :container($window),
-      :Widget($window)
+      :widget($window)
     );
   }
 
   method app_menu is rw {
     Proxy.new(
-    FETCH => sub ($) {
-      gtk_application_get_app_menu($!app);
-    },
-    STORE => -> sub ($, $app_menu is copy) {
-      gtk_application_set_app_menu($!app, $app_menu);
-    }
+      FETCH => sub ($) {
+        gtk_application_get_app_menu($!app);
+      },
+      STORE => -> sub ($, $app_menu is copy) {
+        gtk_application_set_app_menu($!app, $app_menu);
+      }
     );
   }
 
   method menubar is rw {
     Proxy.new(
-    FETCH => sub ($) {
-      gtk_application_get_menubar($!app);
-    },
-    STORE => -> sub ($, $menubar is copy) {
-      gtk_application_set_menubar($!app, $menubar);
-    }
+      FETCH => sub ($) {
+        gtk_application_get_menubar($!app);
+      },
+      STORE => -> sub ($, $menubar is copy) {
+        gtk_application_set_menubar($!app, $menubar);
+      }
     );
   }
 
@@ -118,15 +118,15 @@ class GTK::Application is GTK::Window {
   }
 
   method activate {
-    self.connect($!app, "activate");
+    self.connect($!app, 'activate');
   }
 
   method startup {
-    self.connect($!app, "startup");
+    self.connect($!app, 'startup');
   }
 
   method shutdown {
-    self.connect($!app, "shutdown");
+    self.connect($!app, 'shutdown');
   }
 
  method add_accelerator (gchar $accelerator, gchar $action_name, GVariant $parameter) {

@@ -4,7 +4,7 @@ use v6.c;
 
 my %do_output;
 
-sub MAIN ($filename, :$remove, :$var, :$output = 'all') {
+sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
   die "Cannot fine '$filename'\n" unless $filename.IO.e;
 
   if $output ne 'all' {
@@ -26,7 +26,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all') {
   my $i = 1;
   my @detected;
   for $contents.lines -> $l {
-    if $l ~~ /^ 'GDK_' [ 'AVAILABLE' | 'DEPRECATED' ] '_'.+ / {
+    if $l ~~ /^ [ 'GDK_' | 'GLIB_' ] [ 'AVAILABLE' | 'DEPRECATED' ] '_'.+ / {
       $la = True;
       next;
     }
@@ -225,7 +225,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all') {
          say qq:to/SUB/;
          $subcall
            returns %methods{$m}<p6_return>
-           is native('gtk-3')
+           is native('{ $lib }')
            is export
            \{ * \}
          SUB
@@ -234,7 +234,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all') {
 
           say qq:to/SUB/;
           $subcall
-            is native('gtk-3')
+            is native('{ $lib }')
             is export
             \{ * \}
           SUB

@@ -7,7 +7,7 @@ use GTK::Container;
 class GTK::Box is GTK::Container {
   also does GTK::Roles::Signals;
 
-  has GtkBox $!b;
+  has $!b;
 
   submethod BUILD(:$box) {
     $!b = $box;

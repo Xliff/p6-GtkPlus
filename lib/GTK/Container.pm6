@@ -12,11 +12,14 @@ class GTK::Container is GTK::Widget {
   has GtkContainer $!c;
 
   submethod BUILD (GtkContainer :$container) {
-    self.setContainer($container);
+    $!c = $container;
   }
 
   submethod DESTROY {
-    self.disconnect_all;
+    # cw: This is for top level.
+    #self.disconnect_all;
+
+    # Get all children and unref.
     g_object_unref($!c);
   }
 
@@ -24,29 +27,24 @@ class GTK::Container is GTK::Widget {
     self.bless(:$container);
   }
 
-  # cw: Should check caller to insure call comes from proper object chain.
-  method setContainer(GtkContainer :$container) {
-    self.setWidget($!c = $container);
-  }
-
   # Signal - First
   method add {
-    self.connect($!c, "add");
+    self.connect($!c, 'add');
   }
 
   # Signal - Last
   method remove {
-    self.connect($!c, "remove");
+    self.connect($!c, 'remove');
   }
 
   # Signal - Last
   method check-resize {
-    self.connect($!c, "check-resize");
+    self.connect($!c, 'check-resize');
   }
 
   # Signal - Last
   method set-focus-child {
-    self.connect($!c, "set-focus-child");
+    self.connect($!c, 'set-focus-child');
   }
 
 
@@ -204,9 +202,9 @@ class GTK::Container is GTK::Widget {
     gtk_container_remove($!c, $widget);
   }
 
-  method get_type {
-    gtk_container_get_type();
-  }
+  #method get_type {
+  #  gtk_container_get_type();
+  #}
 
   method child_notify_by_pspec (GtkWidget $child, GParamSpec $pspec) {
     gtk_container_child_notify_by_pspec($!c, $child, $pspec);

@@ -6,7 +6,7 @@ use GTK::Raw::Bin;
 use GTK::Raw::Pointers;
 
 class GTK::Bin is GTK::Container {
-  has $!bin;
+  has $!bin; # GtkBin
 
   submethod BUILD(:$bin) {
     $!bin = $bin;
