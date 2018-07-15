@@ -43,6 +43,13 @@ our enum GtkArrowType is export <
   GTK_ARROW_NONE
 >;
 
+our enum GtkApplicationInhibitFlags is export <
+  GTK_APPLICATION_INHIBIT_LOGOUT
+  GTK_APPLICATION_INHIBIT_SWITCH
+  GTK_APPLICATION_INHIBIT_SUSPEND
+  GTK_APPLICATION_INHIBIT_IDLE
+>;
+
 our enum GtkBaselinePosition is export <
   GTK_BASELINE_POSITION_TOP
   GTK_BASELINE_POSITION_CENTER

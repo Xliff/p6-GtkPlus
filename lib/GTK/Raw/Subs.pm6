@@ -57,7 +57,7 @@ sub g_type_check_class_cast (OpaquePointer $tc, int32 $it)
 sub gtk_application_window_new (GtkApplication $app)
   returns GtkWindow
   is native('gtk-3')
-  is export(:window)
+  is export(:app)
   { * }
 
 sub gtk_window_set_title (GtkWindow $win, Str $title)
@@ -101,17 +101,6 @@ sub gtk_button_new()
 
 sub g_application_run(OpaquePointer, Pointer[uint32], CArray[Str])
   is native('gio-2.0')
-  is export(:app)
-  { * }
-
-sub gtk_application_new(Str $app_name, uint32 $f)
-  returns GtkApplication
-  is native('gtk-3')
-  is export(:app)
-  { * }
-
-sub gtk_application_add_window(GtkApplication $app, GtkWindow $win)
-  is native('gtk-3')
   is export(:app)
   { * }
 

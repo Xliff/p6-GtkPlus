@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::Types;
+use GTK::Raw::Subs :app;
 use GTK::Raw::Types;
 use GTK::Raw::Application;
+use GTK::Raw::Window;
 
 use GTK::Window;
 
@@ -35,15 +38,15 @@ class GTK::Application is GTK::Window {
   #}
 
   method title {
-    $!title;
+    $!win.title;
   }
 
   method width {
-    $!width;
+    $!win.width;
   }
 
   method height {
-    $!height;
+    $!win.height;
   }
 
   method init(GTK::Application:U: Int $ac, Str @av) {
@@ -68,6 +71,7 @@ class GTK::Application is GTK::Window {
 
     die 'Application must have a title.' unless $title;
 
+    # Use raw GTK calls here since the object model will be used by the callers.
     my $app = gtk_application_new($title, $f);
     my $window = gtk_application_window_new($app);
     gtk_window_set_title($window, $title);
@@ -91,7 +95,7 @@ class GTK::Application is GTK::Window {
       FETCH => sub ($) {
         gtk_application_get_app_menu($!app);
       },
-      STORE => -> sub ($, $app_menu is copy) {
+      STORE => sub ($, $app_menu is copy) {
         gtk_application_set_app_menu($!app, $app_menu);
       }
     );
@@ -102,7 +106,7 @@ class GTK::Application is GTK::Window {
       FETCH => sub ($) {
         gtk_application_get_menubar($!app);
       },
-      STORE => -> sub ($, $menubar is copy) {
+      STORE => sub ($, $menubar is copy) {
         gtk_application_set_menubar($!app, $menubar);
       }
     );
@@ -145,7 +149,7 @@ class GTK::Application is GTK::Window {
     gtk_application_get_actions_for_accel($!app, $accel);
   }
 
-  method get_active_window (GtkApplication $!app) {
+  method get_active_window {
     gtk_application_get_active_window($!app);
   }
 

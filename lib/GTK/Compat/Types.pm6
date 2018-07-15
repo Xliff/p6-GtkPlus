@@ -36,6 +36,27 @@ class GValue is repr('CStruct') is export {
   HAS GTypeValueList  $.data2;
 }
 
+our enum GVariant is export <
+  G_VARIANT_CLASS_BOOLEAN
+  G_VARIANT_CLASS_BYTE
+  G_VARIANT_CLASS_INT16
+  G_VARIANT_CLASS_UINT16
+  G_VARIANT_CLASS_INT32
+  G_VARIANT_CLASS_UINT32
+  G_VARIANT_CLASS_INT64
+  G_VARIANT_CLASS_UINT64
+  G_VARIANT_CLASS_HANDLE
+  G_VARIANT_CLASS_DOUBLE
+  G_VARIANT_CLASS_STRING
+  G_VARIANT_CLASS_OBJECT_PATH
+  G_VARIANT_CLASS_SIGNATURE
+  G_VARIANT_CLASS_VARIANT
+  G_VARIANT_CLASS_MAYBE
+  G_VARIANT_CLASS_ARRAY
+  G_VARIANT_CLASS_TUPLE
+  G_VARIANT_CLASS_DICT_ENTRY
+>;
+
 our enum GApplicationFlags is export (
   G_APPLICATION_FLAGS_NONE           => 0,
   G_APPLICATION_IS_SERVICE           => 1,
@@ -88,6 +109,7 @@ class GActionGroup          is repr('CPointer') is export { }
 class GApplication          is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
 class GDestroyNotify        is repr('CPointer') is export { }
+class GMenu                 is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }
@@ -111,6 +133,7 @@ class GdkEventWindowState   is repr('CPointer') is export { }
 class GdkFrameClock         is repr('CPointer') is export { }
 class GdkGeometry           is repr('CPointer') is export { }
 class GdkGravity            is repr('CPointer') is export { }
+class GMenuModel            is repr('CPointer') is export { }
 class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkModifierType       is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }
