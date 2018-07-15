@@ -20,7 +20,11 @@ class GTK::Container is GTK::Widget {
 
   submethod DESTROY {
     g_object_unref($_.data) for self.get_children.Array;
-    g_object_unref($!c);
+    g_object_unref(self.p);
+  }
+
+  method p {
+    nativecast(OpaquePointer, $!c);
   }
 
   method new(:$container) {

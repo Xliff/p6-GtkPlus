@@ -461,6 +461,7 @@ class GtkAccelGroup       is repr('CPointer') is export { }
 class GtkAdjustment       is repr('CPointer') is export { }
 class GtkAllocation       is repr('CPointer') is export { }
 class GtkApplication      is repr('CPointer') is export { }
+class GtkBin              is repr('CPointer') is export { }
 class GtkCallback         is repr('CPointer') is export { }
 class GtkClipboard        is repr('CPointer') is export { }
 class GtkContainer        is repr('CPointer') is export { }

@@ -1,9 +1,9 @@
 use v6.c;
 
-use GTK::Container;
-
 use GTK::Raw::Bin;
-use GTK::Raw::Pointers;
+use GTK::Raw::Types;
+
+use GTK::Container;
 
 class GTK::Bin is GTK::Container {
   has $!bin; # GtkBin
