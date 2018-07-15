@@ -4,6 +4,14 @@ use NativeCall;
 
 unit package GTK::Compat::Types;
 
+constant gdouble is export := num32;
+
+class GError is repr('CStruct') is export {
+  has uint32        $.domain;
+  has int32         $.code;
+  has Str           $.message;
+}
+
 class GList is repr('CStruct') is export {
   has OpaquePointer $.data;
   has GList         $.next;
@@ -37,6 +45,35 @@ our enum GApplicationFlags is export (
   G_APPLICATION_SEND_ENVIRONMENT     => 16,
   G_APPLICATION_NON_UNIQUE           => 32
 );
+
+our enum GdkWindowHints is export <
+  GDK_HINT_POS
+  GDK_HINT_MIN_SIZE
+  GDK_HINT_MAX_SIZE
+  GDK_HINT_BASE_SIZE
+  GDK_HINT_ASPECT
+  GDK_HINT_RESIZE_INC
+  GDK_HINT_WIN_GRAVITY
+  GDK_HINT_USER_POS
+  GDK_HINT_USER_SIZE
+>;
+
+our enum GdkWindowTypeHint is export <
+  GDK_WINDOW_TYPE_HINT_NORMAL
+  GDK_WINDOW_TYPE_HINT_DIALOG
+  GDK_WINDOW_TYPE_HINT_MENU
+  GDK_WINDOW_TYPE_HINT_TOOLBAR
+  GDK_WINDOW_TYPE_HINT_SPLASHSCREEN
+  GDK_WINDOW_TYPE_HINT_UTILITY
+  GDK_WINDOW_TYPE_HINT_DOCK
+  GDK_WINDOW_TYPE_HINT_DESKTOP
+  GDK_WINDOW_TYPE_HINT_DROPDOWN_MENU
+  GDK_WINDOW_TYPE_HINT_POPUP_MENU
+  GDK_WINDOW_TYPE_HINT_TOOLTIP
+  GDK_WINDOW_TYPE_HINT_NOTIFICATION
+  GDK_WINDOW_TYPE_HINT_COMBO
+  GDK_WINDOW_TYPE_HINT_DND
+>;
 
 class cairo_font_options_t  is repr('CPointer') is export { }
 
@@ -72,6 +109,8 @@ class GdkEventSelection     is repr('CPointer') is export { }
 class GdkEventVisibility    is repr('CPointer') is export { }
 class GdkEventWindowState   is repr('CPointer') is export { }
 class GdkFrameClock         is repr('CPointer') is export { }
+class GdkGeometry           is repr('CPointer') is export { }
+class GdkGravity            is repr('CPointer') is export { }
 class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkModifierType       is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }
@@ -81,3 +120,4 @@ class GdkScreen             is repr('CPointer') is export { }
 class GdkTouchEvent         is repr('CPointer') is export { }
 class GdkVisual             is repr('CPointer') is export { }
 class GdkWindow             is repr('CPointer') is export { }
+class GdkWindowEdge         is repr('CPointer') is export { }

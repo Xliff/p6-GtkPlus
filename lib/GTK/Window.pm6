@@ -2,51 +2,61 @@ use v6.c;
 
 use GTK::Bin;
 
+use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
 use GTK::Roles::Signals;
 
-unit class GTK::Window is GTK::Bin {
+class GTK::Window is GTK::Bin {
   also does GTK::Roles::Signals;
 
   has GtkWindow $!win;
 
   submethod BUILD(:$window) {
-    $!win = $win;
+    $!win = $window;
   }
 
-  method new(GtkWindowType $type, :$title, :$width, :$height) {
+  multi method new (
+    GtkWindowType $type,
+                 :$title = 'Window',
+                 :$width  = 200,
+                 :$height = 200
+  ) {
     my $window = gtk_window_new($type);
     gtk_window_set_title($window, $title);
     gtk_window_set_default_size($window, $width, $height);
 
-    self.bless(:$window, :bin($win), :container($win), :widget($win));
+    self.bless(:$window, :bin($window), :container($window), :widget($window));
+  }
+
+  multi method new (:$window) {
+    self.bless(:$window, :bin($window), :container($window), :widget($window));
   }
 
   # Signal void Action
   method activate-default {
-    self.connect($!w, 'activate-default');
+    self.connect($!win, 'activate-default');
   }
 
   # Signal void Action
   method activate-focus {
-    self.connect($!w, 'activate-focus');
+    self.connect($!win, 'activate-focus');
   }
 
   # Signal gboolean Action
   method enable-debugging {
-    self.connect($!w, 'enable-debugging');
+    self.connect($!win, 'enable-debugging');
   }
 
   # Signal void Run First
   method keys-changed {
-    self.connect($!w, 'keys-changed');
+    self.connect($!win, 'keys-changed');
   }
 
   # Signal void Run Last
   method set-focus {
-    self.connect($!w, 'set-focus');
+    self.connect($!win, 'set-focus');
   }
 
   # *
@@ -84,7 +94,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_accept_focus($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_accept_focus($!win, $setting);
       }
     );
@@ -95,7 +105,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_application($!win);
       },
-      STORE => -> sub ($, $application is copy) {
+      STORE => sub ($, $application is copy) {
         gtk_window_set_application($!win, $application);
       }
     );
@@ -106,7 +116,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_attached_to($!win);
       },
-      STORE => -> sub ($, $attach_widget is copy) {
+      STORE => sub ($, $attach_widget is copy) {
         gtk_window_set_attached_to($!win, $attach_widget);
       }
     );
@@ -117,7 +127,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_decorated($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_decorated($!win, $setting);
       }
     );
@@ -128,7 +138,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_deletable($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_deletable($!win, $setting);
       }
     );
@@ -139,7 +149,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_destroy_with_parent($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_destroy_with_parent($!win, $setting);
       }
     );
@@ -150,7 +160,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_focus($!win);
       },
-      STORE => -> sub ($, $focus is copy) {
+      STORE => sub ($, $focus is copy) {
         gtk_window_set_focus($!win, $focus);
       }
     );
@@ -161,7 +171,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_focus_on_map($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_focus_on_map($!win, $setting);
       }
     );
@@ -172,7 +182,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_focus_visible($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_focus_visible($!win, $setting);
       }
     );
@@ -183,7 +193,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_gravity($!win);
       },
-      STORE => -> sub ($, $gravity is copy) {
+      STORE => sub ($, $gravity is copy) {
         gtk_window_set_gravity($!win, $gravity);
       }
     );
@@ -194,7 +204,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_has_resize_grip($!win);
       },
-      STORE => -> sub ($, $value is copy) {
+      STORE => sub ($, $value is copy) {
         gtk_window_set_has_resize_grip($!win, $value);
       }
     );
@@ -205,7 +215,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_hide_titlebar_when_maximized($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_hide_titlebar_when_maximized($!win, $setting);
       }
     );
@@ -216,7 +226,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_icon($!win);
       },
-      STORE => -> sub ($, $icon is copy) {
+      STORE => sub ($, $icon is copy) {
         gtk_window_set_icon($!win, $icon);
       }
     );
@@ -227,7 +237,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_icon_list($!win);
       },
-      STORE => -> sub ($, $list is copy) {
+      STORE => sub ($, $list is copy) {
         gtk_window_set_icon_list($!win, $list);
       }
     );
@@ -238,7 +248,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_icon_name($!win);
       },
-      STORE => -> sub ($, $name is copy) {
+      STORE => sub ($, $name is copy) {
         gtk_window_set_icon_name($!win, $name);
       }
     );
@@ -249,7 +259,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_mnemonic_modifier($!win);
       },
-      STORE => -> sub ($, $modifier is copy) {
+      STORE => sub ($, $modifier is copy) {
         gtk_window_set_mnemonic_modifier($!win, $modifier);
       }
     );
@@ -260,7 +270,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_mnemonics_visible($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_mnemonics_visible($!win, $setting);
       }
     );
@@ -271,7 +281,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_modal($!win);
       },
-      STORE => -> sub ($, $modal is copy) {
+      STORE => sub ($, $modal is copy) {
         gtk_window_set_modal($!win, $modal);
       }
     );
@@ -282,7 +292,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_opacity($!win);
       },
-      STORE => -> sub ($, $opacity is copy) {
+      STORE => sub ($, $opacity is copy) {
         gtk_window_set_opacity($!win, $opacity);
       }
     );
@@ -293,7 +303,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_resizable($!win);
       },
-      STORE => -> sub ($, $resizable is copy) {
+      STORE => sub ($, $resizable is copy) {
         gtk_window_set_resizable($!win, $resizable);
       }
     );
@@ -304,7 +314,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_role($!win);
       },
-      STORE => -> sub ($, $role is copy) {
+      STORE => sub ($, $role is copy) {
         gtk_window_set_role($!win, $role);
       }
     );
@@ -315,7 +325,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_screen($!win);
       },
-      STORE => -> sub ($, $screen is copy) {
+      STORE => sub ($, $screen is copy) {
         gtk_window_set_screen($!win, $screen);
       }
     );
@@ -326,7 +336,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_skip_pager_hint($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_skip_pager_hint($!win, $setting);
       }
     );
@@ -337,7 +347,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_skip_taskbar_hint($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_skip_taskbar_hint($!win, $setting);
       }
     );
@@ -348,7 +358,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_title($!win);
       },
-      STORE => -> sub ($, $title is copy) {
+      STORE => sub ($, $title is copy) {
         gtk_window_set_title($!win, $title);
       }
     );
@@ -359,7 +369,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_titlebar($!win);
       },
-      STORE => -> sub ($, $titlebar is copy) {
+      STORE => sub ($, $titlebar is copy) {
         gtk_window_set_titlebar($!win, $titlebar);
       }
     );
@@ -370,7 +380,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_transient_for($!win);
       },
-      STORE => -> sub ($, $parent is copy) {
+      STORE => sub ($, $parent is copy) {
         gtk_window_set_transient_for($!win, $parent);
       }
     );
@@ -381,7 +391,7 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_type_hint($!win);
       },
-      STORE => -> sub ($, $hint is copy) {
+      STORE => sub ($, $hint is copy) {
         gtk_window_set_type_hint($!win, $hint);
       }
     );
@@ -392,233 +402,229 @@ unit class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_urgency_hint($!win);
       },
-      STORE => -> sub ($, $setting is copy) {
+      STORE => sub ($, $setting is copy) {
         gtk_window_set_urgency_hint($!win, $setting);
       }
     );
   }
 
-  method activate_default (GtkWindow $!win) {
+  method activate_default {
     gtk_window_activate_default($!win);
   }
 
-  method activate_focus (GtkWindow $!win) {
+  method activate_focus {
     gtk_window_activate_focus($!win);
   }
 
-  method activate_key (GtkWindow $!win, GdkEventKey $event) {
+  method activate_key (GdkEventKey $event) {
     gtk_window_activate_key($!win, $event);
   }
 
-  method add_accel_group (GtkWindow $!win, GtkAccelGroup $accel_group) {
+  method add_accel_group (GtkAccelGroup $accel_group) {
     gtk_window_add_accel_group($!win, $accel_group);
   }
 
-  method add_mnemonic (GtkWindow $!win, guint $keyval, GtkWidget $target) {
+  method add_mnemonic (guint $keyval, GtkWidget $target) {
     gtk_window_add_mnemonic($!win, $keyval, $target);
   }
 
-  method begin_move_drag (GtkWindow $!win, gint $button, gint $root_x, gint $root_y, guint32 $timestamp) {
+  method begin_move_drag (gint $button, gint $root_x, gint $root_y, guint $timestamp) {
     gtk_window_begin_move_drag($!win, $button, $root_x, $root_y, $timestamp);
   }
 
-  method begin_resize_drag (GtkWindow $!win, GdkWindowEdge $edge, gint $button, gint $root_x, gint $root_y, guint32 $timestamp) {
+  method begin_resize_drag (GdkWindowEdge $edge, gint $button, gint $root_x, gint $root_y, guint $timestamp) {
     gtk_window_begin_resize_drag($!win, $edge, $button, $root_x, $root_y, $timestamp);
   }
 
-  method close (GtkWindow $!win) {
+  method close {
     gtk_window_close($!win);
   }
 
-  method deiconify (GtkWindow $!win) {
+  method deiconify {
     gtk_window_deiconify($!win);
   }
 
-  method fullscreen (GtkWindow $!win) {
+  method fullscreen {
     gtk_window_fullscreen($!win);
   }
 
-  method fullscreen_on_monitor (GtkWindow $!win, GdkScreen $screen, gint $monitor) {
+  method fullscreen_on_monitor (GdkScreen $screen, gint $monitor) {
     gtk_window_fullscreen_on_monitor($!win, $screen, $monitor);
   }
 
-  method get_default_icon_list () {
+  method get_default_icon_list {
     gtk_window_get_default_icon_list();
   }
 
-  method get_default_icon_name () {
+  method get_default_icon_name {
     gtk_window_get_default_icon_name();
   }
 
-  method get_default_size (GtkWindow $!win, gint $width, gint $height) {
+  method get_default_size (gint $width, gint $height) {
     gtk_window_get_default_size($!win, $width, $height);
   }
 
-  method get_default_widget (GtkWindow $!win) {
+  method get_default_widget {
     gtk_window_get_default_widget($!win);
   }
 
-  method get_group (GtkWindow $!win) {
+  method get_group {
     gtk_window_get_group($!win);
   }
 
-  method get_position (GtkWindow $!win, gint $root_x, gint $root_y) {
+  method get_position (gint $root_x, gint $root_y) {
     gtk_window_get_position($!win, $root_x, $root_y);
   }
 
-  method get_resize_grip_area (GtkWindow $!win, GdkRectangle $rect) {
+  method get_resize_grip_area (GdkRectangle $rect) {
     gtk_window_get_resize_grip_area($!win, $rect);
   }
 
-  method get_size (GtkWindow $!win, gint $width, gint $height) {
+  method get_size (gint $width, gint $height) {
     gtk_window_get_size($!win, $width, $height);
   }
 
-  method get_type () {
+  method get_type {
     gtk_window_get_type();
   }
 
-  method get_window_type (GtkWindow $!win) {
+  method get_window_type {
     gtk_window_get_window_type($!win);
   }
 
-  method has_group (GtkWindow $!win) {
+  method has_group {
     gtk_window_has_group($!win);
   }
 
-  method has_toplevel_focus (GtkWindow $!win) {
+  method has_toplevel_focus {
     gtk_window_has_toplevel_focus($!win);
   }
 
-  method iconify (GtkWindow $!win) {
+  method iconify {
     gtk_window_iconify($!win);
   }
 
-  method is_active (GtkWindow $!win) {
+  method is_active {
     gtk_window_is_active($!win);
   }
 
-  method is_maximized (GtkWindow $!win) {
+  method is_maximized {
     gtk_window_is_maximized($!win);
   }
 
-  method list_toplevels () {
+  method list_toplevels {
     gtk_window_list_toplevels();
   }
 
-  method maximize (GtkWindow $!win) {
+  method maximize {
     gtk_window_maximize($!win);
   }
 
-  method mnemonic_activate (GtkWindow $!win, guint $keyval, GdkModifierType $modifier) {
+  method mnemonic_activate (guint $keyval, GdkModifierType $modifier) {
     gtk_window_mnemonic_activate($!win, $keyval, $modifier);
   }
 
-  method move (GtkWindow $!win, gint $x, gint $y) {
+  method move (gint $x, gint $y) {
     gtk_window_move($!win, $x, $y);
   }
 
-  method new (GtkWindowType $type) {
-    gtk_window_new($type);
-  }
-
-  method parse_geometry (GtkWindow $!win, gchar $geometry) {
+  method parse_geometry (gchar $geometry) {
     gtk_window_parse_geometry($!win, $geometry);
   }
 
-  method present (GtkWindow $!win) {
+  method present {
     gtk_window_present($!win);
   }
 
-  method present_with_time (GtkWindow $!win, guint32 $timestamp) {
+  method present_with_time (guint $timestamp) {
     gtk_window_present_with_time($!win, $timestamp);
   }
 
-  method propagate_key_event (GtkWindow $!win, GdkEventKey $event) {
+  method propagate_key_event (GdkEventKey $event) {
     gtk_window_propagate_key_event($!win, $event);
   }
 
-  method remove_accel_group (GtkWindow $!win, GtkAccelGroup $accel_group) {
+  method remove_accel_group (GtkAccelGroup $accel_group) {
     gtk_window_remove_accel_group($!win, $accel_group);
   }
 
-  method remove_mnemonic (GtkWindow $!win, guint $keyval, GtkWidget $target) {
+  method remove_mnemonic (guint $keyval, GtkWidget $target) {
     gtk_window_remove_mnemonic($!win, $keyval, $target);
   }
 
-  method reshow_with_initial_size (GtkWindow $!win) {
+  method reshow_with_initial_size {
     gtk_window_reshow_with_initial_size($!win);
   }
 
-  method resize (GtkWindow $!win, gint $width, gint $height) {
+  method resize (gint $width, gint $height) {
     gtk_window_resize($!win, $width, $height);
   }
 
-  method resize_grip_is_visible (GtkWindow $!win) {
+  method resize_grip_is_visible {
     gtk_window_resize_grip_is_visible($!win);
   }
 
-  method resize_to_geometry (GtkWindow $!win, gint $width, gint $height) {
+  method resize_to_geometry (gint $width, gint $height) {
     gtk_window_resize_to_geometry($!win, $width, $height);
   }
 
-  method set_default (GtkWindow $!win, GtkWidget $default_widget) {
+  method set_default (GtkWidget $default_widget) {
     gtk_window_set_default($!win, $default_widget);
   }
 
-  method set_default_geometry (GtkWindow $!win, gint $width, gint $height) {
+  method set_default_geometry (gint $width, gint $height) {
     gtk_window_set_default_geometry($!win, $width, $height);
   }
 
-  method set_default_size (GtkWindow $!win, gint $width, gint $height) {
+  method set_default_size (gint $width, gint $height) {
     gtk_window_set_default_size($!win, $width, $height);
   }
 
-  method set_geometry_hints (GtkWindow $!win, GtkWidget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask) {
+  method set_geometry_hints (GtkWidget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask) {
     gtk_window_set_geometry_hints($!win, $geometry_widget, $geometry, $geom_mask);
   }
 
-  method set_has_user_ref_count (GtkWindow $!win, gboolean $setting) {
+  method set_has_user_ref_count (gboolean $setting) {
     gtk_window_set_has_user_ref_count($!win, $setting);
   }
 
-  method set_icon_from_file (GtkWindow $!win, gchar $filename, GError $err) {
+  method set_icon_from_file (gchar $filename, GError $err) {
     gtk_window_set_icon_from_file($!win, $filename, $err);
   }
 
-  method set_keep_above (GtkWindow $!win, gboolean $setting) {
+  method set_keep_above (gboolean $setting) {
     gtk_window_set_keep_above($!win, $setting);
   }
 
-  method set_keep_below (GtkWindow $!win, gboolean $setting) {
+  method set_keep_below (gboolean $setting) {
     gtk_window_set_keep_below($!win, $setting);
   }
 
-  method set_position (GtkWindow $!win, GtkWindowPosition $position) {
+  method set_position (GtkWindowPosition $position) {
     gtk_window_set_position($!win, $position);
   }
 
-  method set_startup_id (GtkWindow $!win, gchar $startup_id) {
+  method set_startup_id (gchar $startup_id) {
     gtk_window_set_startup_id($!win, $startup_id);
   }
 
-  method set_wmclass (GtkWindow $!win, gchar $wmclass_name, gchar $wmclass_class) {
+  method set_wmclass (gchar $wmclass_name, gchar $wmclass_class) {
     gtk_window_set_wmclass($!win, $wmclass_name, $wmclass_class);
   }
 
-  method stick (GtkWindow $!win) {
+  method stick {
     gtk_window_stick($!win);
   }
 
-  method unfullscreen (GtkWindow $!win) {
+  method unfullscreen {
     gtk_window_unfullscreen($!win);
   }
 
-  method unmaximize (GtkWindow $!win) {
+  method unmaximize {
     gtk_window_unmaximize($!win);
   }
 
-  method unstick (GtkWindow $!win) {
+  method unstick {
     gtk_window_unstick($!win);
   }
 

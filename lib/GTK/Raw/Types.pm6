@@ -432,6 +432,11 @@ enum GtkWindowPosition is export (
     GTK_WIN_POS_CENTER_ON_PARENT   => 4,
 );
 
+enum GtkWindowType is export <
+  GTK_WINDOW_TOPLEVEL
+  GTK_WINDOW_POPUP
+>;
+
 enum GtkFileChooserAction is export (
     GTK_FILE_CHOOSER_ACTION_OPEN           => 0,
     GTK_FILE_CHOOSER_ACTION_SAVE           => 1,
@@ -476,3 +481,4 @@ class GtkWidget           is repr('CPointer') is export { }
 class GtkWidgetPath       is repr('CPointer') is export { }
 class GtkWidgetHelpType   is repr('CPointer') is export { }
 class GtkWindow           is repr('CPointer') is export { }
+class GtkWindowGroup      is repr('CPointer') is export { }

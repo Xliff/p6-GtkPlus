@@ -1,5 +1,8 @@
 use v6.c;
 
+use NativeCall;
+
+use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 unit package GTK::Raw::Window;
@@ -32,12 +35,12 @@ sub gtk_window_add_mnemonic (GtkWindow $window, guint $keyval, GtkWidget $target
   is export
   { * }
 
-sub gtk_window_begin_move_drag (GtkWindow $window, gint $button, gint $root_x, gint $root_y, guint32 $timestamp)
+sub gtk_window_begin_move_drag (GtkWindow $window, gint $button, gint $root_x, gint $root_y, guint $timestamp)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_window_begin_resize_drag (GtkWindow $window, GdkWindowEdge $edge, gint $button, gint $root_x, gint $root_y, guint32 $timestamp)
+sub gtk_window_begin_resize_drag (GtkWindow $window, GdkWindowEdge $edge, gint $button, gint $root_x, gint $root_y, guint $timestamp)
   is native('gtk-3')
   is export
   { * }
@@ -85,6 +88,7 @@ sub gtk_window_get_default_widget (GtkWindow $window)
   is export
   { * }
 
+
 sub gtk_window_get_group (GtkWindow $window)
   returns GtkWindowGroup
   is native('gtk-3')
@@ -113,8 +117,9 @@ sub gtk_window_get_type ()
   is export
   { * }
 
+# --> GtkWindowType
 sub gtk_window_get_window_type (GtkWindow $window)
-  returns GtkWindowType
+  returns uint32
   is native('gtk-3')
   is export
   { * }
@@ -170,7 +175,8 @@ sub gtk_window_move (GtkWindow $window, gint $x, gint $y)
   is export
   { * }
 
-sub gtk_window_new (GtkWindowType $type)
+# GtkWindowType $type
+sub gtk_window_new (uint32 $type)
   returns GtkWidget
   is native('gtk-3')
   is export
@@ -187,7 +193,7 @@ sub gtk_window_present (GtkWindow $window)
   is export
   { * }
 
-sub gtk_window_present_with_time (GtkWindow $window, guint32 $timestamp)
+sub gtk_window_present_with_time (GtkWindow $window, guint $timestamp)
   is native('gtk-3')
   is export
   { * }
@@ -270,7 +276,13 @@ sub gtk_window_set_default_size (GtkWindow $window, gint $width, gint $height)
   is export
   { * }
 
-sub gtk_window_set_geometry_hints (GtkWindow $window, GtkWidget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask)
+# GdkWindowHints $geom_mask
+sub gtk_window_set_geometry_hints (
+  GtkWindow $window,
+  GtkWidget $geometry_widget,
+  GdkGeometry $geometry,
+  uint32 $geom_mask
+)
   is native('gtk-3')
   is export
   { * }
@@ -301,7 +313,8 @@ sub gtk_window_set_keep_below (GtkWindow $window, gboolean $setting)
   is export
   { * }
 
-sub gtk_window_set_position (GtkWindow $window, GtkWindowPosition $position)
+# GtkWindowPosition $position
+sub gtk_window_set_position (GtkWindow $window, uint32 $position)
   is native('gtk-3')
   is export
   { * }
@@ -333,5 +346,326 @@ sub gtk_window_unmaximize (GtkWindow $window)
 
 sub gtk_window_unstick (GtkWindow $window)
   is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_window_get_titlebar (GtkWindow $window)
+  returns GtkWidget
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_urgency_hint (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_modal (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_icon_name (GtkWindow $window)
+  returns Str
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_skip_taskbar_hint (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_has_resize_grip (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_focus_visible (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_title (GtkWindow $window)
+  returns Str
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_skip_pager_hint (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_screen (GtkWindow $window)
+  returns GdkScreen
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_mnemonic_modifier (GtkWindow $window)
+  returns GdkModifierType
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_decorated (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_gravity (GtkWindow $window)
+  returns GdkGravity
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_focus_on_map (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+# --> GdkWindowTypeHint
+sub gtk_window_get_type_hint (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_icon (GtkWindow $window)
+  returns GdkPixbuf
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_mnemonics_visible (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_deletable (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_transient_for (GtkWindow $window)
+  returns GtkWindow
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_attached_to (GtkWindow $window)
+  returns GtkWidget
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_accept_focus (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_destroy_with_parent (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_role (GtkWindow $window)
+  returns Str
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_application (GtkWindow $window)
+  returns GtkApplication
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_focus (GtkWindow $window)
+  returns GtkWidget
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_opacity (GtkWindow $window)
+  returns gdouble
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_hide_titlebar_when_maximized (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_icon_list (GtkWindow $window)
+  returns GList
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_get_resizable (GtkWindow $window)
+  returns uint32
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_titlebar (GtkWindow $window, GtkWidget $titlebar)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_urgency_hint (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_modal (GtkWindow $window, gboolean $modal)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_icon_name (GtkWindow $window, gchar $name)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_skip_taskbar_hint (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_has_resize_grip (GtkWindow $window, gboolean $value)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_focus_visible (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_title (GtkWindow $window, gchar $title)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_skip_pager_hint (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_screen (GtkWindow $window, GdkScreen $screen)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_mnemonic_modifier (GtkWindow $window, GdkModifierType $modifier)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_decorated (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_gravity (GtkWindow $window, GdkGravity $gravity)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_focus_on_map (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+# GdkWindowTypeHint $hint
+sub gtk_window_set_type_hint (GtkWindow $window, uint32 $hint)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_icon (GtkWindow $window, GdkPixbuf $icon)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_mnemonics_visible (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_deletable (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_transient_for (GtkWindow $window, GtkWindow $parent)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_attached_to (GtkWindow $window, GtkWidget $attach_widget)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_accept_focus (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_destroy_with_parent (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_role (GtkWindow $window, gchar $role)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_application (GtkWindow $window, GtkApplication $application)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_focus (GtkWindow $window, GtkWidget $focus)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_opacity (GtkWindow $window, gdouble $opacity)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_hide_titlebar_when_maximized (GtkWindow $window, gboolean $setting)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_icon_list (GtkWindow $window, GList $list)
+  is native('glib2.0')
+  is export
+  { * }
+
+sub gtk_window_set_resizable (GtkWindow $window, gboolean $resizable)
+  is native('glib2.0')
   is export
   { * }
