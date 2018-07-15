@@ -21,10 +21,10 @@ class GTK::Box is GTK::Container {
   method baseline_position is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_box_get_baseline_position($box);
+        gtk_box_get_baseline_position($!b);
       },
-      STORE => -> sub ($, $position is copy) {
-        gtk_box_set_baseline_position($box, $position);
+      STORE => sub ($, $position is copy) {
+        gtk_box_set_baseline_position($!b, $position);
       }
     );
   }
@@ -32,10 +32,10 @@ class GTK::Box is GTK::Container {
   method center_widget is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_box_get_center_widget($box);
+        gtk_box_get_center_widget($!b);
       },
-      STORE => -> sub ($, $widget is copy) {
-        gtk_box_set_center_widget($box, $widget);
+      STORE => sub ($, $widget is copy) {
+        gtk_box_set_center_widget($!b, $widget);
       }
     );
   }
@@ -43,10 +43,10 @@ class GTK::Box is GTK::Container {
   method homogeneous is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_box_get_homogeneous($box);
+        gtk_box_get_homogeneous($!b);
       },
-      STORE => -> sub ($, $homogeneous is copy) {
-        gtk_box_set_homogeneous($box, $homogeneous);
+      STORE => sub ($, $homogeneous is copy) {
+        gtk_box_set_homogeneous($!b, $homogeneous);
       }
     );
   }
@@ -54,10 +54,10 @@ class GTK::Box is GTK::Container {
   method spacing is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_box_get_spacing($box);
+        gtk_box_get_spacing($!b);
       },
-      STORE => -> sub ($, $spacing is copy) {
-        gtk_box_set_spacing($box, $spacing);
+      STORE => sub ($, $spacing is copy) {
+        gtk_box_set_spacing($!b, $spacing);
       }
     );
   }
@@ -66,24 +66,24 @@ class GTK::Box is GTK::Container {
   #  gtk_box_get_type();
   #}
 
-  method pack_end (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
-    gtk_box_pack_end($box, $child, $expand, $fill, $padding);
+  method pack_end (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
+    gtk_box_pack_end($!b, $child, $expand, $fill, $padding);
   }
 
-  method pack_start (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
-    gtk_box_pack_start($box, $child, $expand, $fill, $padding);
+  method pack_start (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
+    gtk_box_pack_start($!b, $child, $expand, $fill, $padding);
   }
 
-  method query_child_packing (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
-    gtk_box_query_child_packing($box, $child, $expand, $fill, $padding, $pack_type);
+  method query_child_packing (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
+    gtk_box_query_child_packing($!b, $child, $expand, $fill, $padding, $pack_type);
   }
 
-  method reorder_child (GtkBox $box, GtkWidget $child, gint $position) {
-    gtk_box_reorder_child($box, $child, $position);
+  method reorder_child (GtkWidget $child, gint $position) {
+    gtk_box_reorder_child($!b, $child, $position);
   }
 
-  method set_child_packing (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
-    gtk_box_set_child_packing($box, $child, $expand, $fill, $padding, $pack_type);
+  method set_child_packing (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
+    gtk_box_set_child_packing($!b, $child, $expand, $fill, $padding, $pack_type);
   }
 
 }
