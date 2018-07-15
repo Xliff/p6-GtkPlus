@@ -20,7 +20,11 @@ class GTK::Widget {
   }
 
   submethod DESTROY {
-    g_object_unref($!w);
+    g_object_unref(self.p);
+  }
+
+  method p {
+    nativecast(OpaquePointer, $!w);
   }
 
   # Signal

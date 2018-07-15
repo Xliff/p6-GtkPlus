@@ -255,6 +255,12 @@ our enum GtkPageOrientation is export <
   GTK_PAGE_ORIENTATION_REVERSE_LANDSCAPE
 >;
 
+our enum GtkResizeMode is export <
+  GTK_RESIZE_PARENT
+  GTK_RESIZE_QUEUE
+  GTK_RESIZE_IMMEDIATE
+>;
+
 our enum GtkPrintQuality is export <
   GTK_PRINT_QUALITY_LOW
   GTK_PRINT_QUALITY_NORMAL
@@ -452,6 +458,7 @@ enum GtkPolicyType is export (
 );
 
 class GtkAccelGroup       is repr('CPointer') is export { }
+class GtkAdjustment       is repr('CPointer') is export { }
 class GtkAllocation       is repr('CPointer') is export { }
 class GtkApplication      is repr('CPointer') is export { }
 class GtkCallback         is repr('CPointer') is export { }

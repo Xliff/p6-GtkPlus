@@ -44,11 +44,11 @@ sub gtk_container_child_get_property (GtkContainer $container, GtkWidget $child,
   is export
   { * }
 
-sub gtk_container_class_find_child_property (GObjectClass $cclass, gchar $property_name)
-  returns GParamSpec
-  is native('gtk-3')
-  is export
-  { * }
+# sub gtk_container_class_find_child_property (GObjectClass $cclass, gchar $property_name)
+#   returns GParamSpec
+#   is native('gtk-3')
+#   is export
+#   { * }
 
 sub gtk_container_add (GtkContainer $container, GtkWidget $widget)
   is native('gtk-3')
@@ -73,10 +73,10 @@ sub gtk_container_child_type (GtkContainer $container)
   is export
   { * }
 
-sub gtk_container_class_install_child_properties (GtkContainerClass $cclass, guint $n_pspecs, GParamSpec $pspecs)
-  is native('gtk-3')
-  is export
-  { * }
+# sub gtk_container_class_install_child_properties (GtkContainerClass $cclass, guint $n_pspecs, GParamSpec $pspecs)
+#   is native('gtk-3')
+#   is export
+#   { * }
 
 sub gtk_container_resize_children (GtkContainer $container)
   is native('gtk-3')
@@ -108,15 +108,15 @@ sub gtk_container_child_set_property (GtkContainer $container, GtkWidget $child,
   is export
   { * }
 
-sub gtk_container_class_handle_border_width (GtkContainerClass $klass)
-  is native('gtk-3')
-  is export
-  { * }
-
-sub gtk_container_class_install_child_property (GtkContainerClass $cclass, guint $property_id, GParamSpec $pspec)
-  is native('gtk-3')
-  is export
-  { * }
+# sub gtk_container_class_handle_border_width (GtkContainerClass $klass)
+#   is native('gtk-3')
+#   is export
+#   { * }
+#
+# sub gtk_container_class_install_child_property (GtkContainerClass $cclass, guint $property_id, GParamSpec $pspec)
+#   is native('gtk-3')
+#   is export
+#   { * }
 
 sub gtk_container_remove (GtkContainer $container, GtkWidget $widget)
   is native('gtk-3')
@@ -135,6 +135,65 @@ sub gtk_container_child_notify_by_pspec (GtkContainer $container, GtkWidget $chi
   { * }
 
 sub gtk_container_child_notify (GtkContainer $container, GtkWidget $child, gchar $child_property)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_container_get_border_width (GtkContainer $container)
+  returns guint
+  is native('gtk-3')
+  is export
+  { * }
+
+# --> GtkAdjustment
+sub gtk_container_get_focus_vadjustment (GtkContainer $container)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+# --> GtkResizeMode
+sub gtk_container_get_resize_mode (GtkContainer $container)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+# -->  GtkAdjustment
+sub gtk_container_get_focus_hadjustment (GtkContainer $container)
+  returns uint32
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_container_get_focus_child (GtkContainer $container)
+  returns GtkWidget
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_container_set_border_width (GtkContainer $container, guint $border_width)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_container_set_focus_vadjustment (GtkContainer $container, GtkAdjustment $adjustment)
+  is native('gtk-3')
+  is export
+  { * }
+
+# GtkResizeMode $resize_mode
+sub gtk_container_set_resize_mode (GtkContainer $container, uint32 $resize_mode)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_container_set_focus_hadjustment (GtkContainer $container, GtkAdjustment $adjustment)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_container_set_focus_child (GtkContainer $container, GtkWidget $child)
   is native('gtk-3')
   is export
   { * }

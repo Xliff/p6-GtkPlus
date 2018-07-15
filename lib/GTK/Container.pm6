@@ -2,6 +2,9 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::Types;
+use GTK::Raw::Container;
+use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Widget;
 
@@ -25,12 +28,13 @@ class GTK::Container is GTK::Widget {
   }
 
   # Signal - First
-  method add {
+  # Made multi to prevent a conflict with method add (GtkWidget)
+  multi method add {
     self.connect($!c, 'add');
   }
 
   # Signal - Last
-  method remove {
+  multi method remove {
     self.connect($!c, 'remove');
   }
 
@@ -61,7 +65,7 @@ class GTK::Container is GTK::Widget {
       FETCH => sub ($) {
         gtk_container_get_resize_mode($!c);
       },
-      STORE => -> sub ($, $resize_mode is copy) {
+      STORE => sub ($, $resize_mode is copy) {
         gtk_container_set_resize_mode($!c, $resize_mode);
       }
     );
@@ -72,7 +76,7 @@ class GTK::Container is GTK::Widget {
       FETCH => sub ($) {
         gtk_container_get_focus_vadjustment($!c);
       },
-      STORE => -> sub ($, $adjustment is copy) {
+      STORE => sub ($, $adjustment is copy) {
         gtk_container_set_focus_vadjustment($!c, $adjustment);
       }
     );
@@ -83,7 +87,7 @@ class GTK::Container is GTK::Widget {
       FETCH => sub ($) {
         gtk_container_get_focus_child($!c);
       },
-      STORE => -> sub ($, $child is copy) {
+      STORE => sub ($, $child is copy) {
         gtk_container_set_focus_child($!c, $child);
       }
     );
@@ -94,7 +98,7 @@ class GTK::Container is GTK::Widget {
       FETCH => sub ($) {
         gtk_container_get_focus_hadjustment($!c);
       },
-      STORE => -> sub ($, $adjustment is copy) {
+      STORE => sub ($, $adjustment is copy) {
         gtk_container_set_focus_hadjustment($!c, $adjustment);
       }
     );
@@ -105,7 +109,7 @@ class GTK::Container is GTK::Widget {
       FETCH => sub ($) {
         gtk_container_get_border_width($!c);
       },
-      STORE => -> sub ($, $border_width is copy) {
+      STORE => sub ($, $border_width is copy) {
         gtk_container_set_border_width($!c, $border_width);
       }
     );
@@ -143,7 +147,8 @@ class GTK::Container is GTK::Widget {
   #  gtk_container_class_find_child_property($cclass, $property_name);
   #}
 
-  method add (GtkWidget $widget) {
+  # Made multi to avoid conflict with the "add" signal handler.
+  multi method add (GtkWidget $widget) {
     gtk_container_add($!c, $widget);
   }
 
@@ -195,7 +200,8 @@ class GTK::Container is GTK::Widget {
   #  gtk_container_class_handle_border_width($klass);
   #}
 
-  method remove (GtkWidget $widget) {
+  # Made multi so as to not conflict with the "remove" signal handler.
+  multi method remove (GtkWidget $widget) {
     gtk_container_remove($!c, $widget);
   }
 
