@@ -4,8 +4,6 @@ use NativeCall;
 
 unit package GTK::Compat::Types;
 
-constant gdouble is export := num32;
-
 class GError is repr('CStruct') is export {
   has uint32        $.domain;
   has int32         $.code;

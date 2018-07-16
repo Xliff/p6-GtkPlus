@@ -14,6 +14,8 @@ constant gint     is export := int32;
 constant guint    is export := uint32;
 constant gchar    is export := Str;
 constant GType    is export := uint32;
+constant gfloat   is export := num32;
+constant gdouble  is export := num64;
 
 
 class GtkRequisition is repr('CStruct') is export {
@@ -475,6 +477,7 @@ class GtkAllocation       is repr('CPointer') is export { }
 class GtkApplication      is repr('CPointer') is export { }
 class GtkBin              is repr('CPointer') is export { }
 class GtkBox              is repr('CPointer') is export { }
+class GtkButton           is repr('CPointer') is export { }
 class GtkCallback         is repr('CPointer') is export { }
 class GtkClipboard        is repr('CPointer') is export { }
 class GtkContainer        is repr('CPointer') is export { }

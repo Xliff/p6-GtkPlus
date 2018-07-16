@@ -3,7 +3,7 @@ use v6.c;
 use GTK::Bin;
 
 use GTK::Raw::Button;
-use GTK::Raw::Pointers;
+use GTK::Raw::Types;
 
 class GTK::Button is GTK::Bin {
 
@@ -13,12 +13,12 @@ class GTK::Button is GTK::Bin {
     $!b = $button;
   }
 
-  method new {
+  multi method new {
     my $button = gtk_button_new();
     nextwith(:$button);
   }
 
-  method new(:$button) {
+  multi method new(:$button) {
     self.bless(:$button, :bin($button), :container($button), :widget($button));
   }
 
@@ -65,7 +65,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_always_show_image($!b);
       },
-      STORE => -> sub ($, $always_show is copy) {
+      STORE => sub ($, $always_show is copy) {
         gtk_button_set_always_show_image($!b, $always_show);
       }
     );
@@ -76,7 +76,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_focus_on_click($!b);
       },
-      STORE => -> sub ($, $focus_on_click is copy) {
+      STORE => sub ($, $focus_on_click is copy) {
         gtk_button_set_focus_on_click($!b, $focus_on_click);
       }
     );
@@ -87,7 +87,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_image($!b);
       },
-      STORE => -> sub ($, $image is copy) {
+      STORE => sub ($, $image is copy) {
         gtk_button_set_image($!b, $image);
       }
     );
@@ -98,7 +98,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_image_position($!b);
       },
-      STORE => -> sub ($, $position is copy) {
+      STORE => sub ($, $position is copy) {
         gtk_button_set_image_position($!b, $position);
       }
     );
@@ -109,7 +109,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_label($!b);
       },
-      STORE => -> sub ($, $label is copy) {
+      STORE => sub ($, $label is copy) {
         gtk_button_set_label($!b, $label);
       }
     );
@@ -120,7 +120,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_relief($!b);
       },
-      STORE => -> sub ($, $relief is copy) {
+      STORE => sub ($, $relief is copy) {
         gtk_button_set_relief($!b, $relief);
       }
     );
@@ -131,7 +131,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_use_stock($!b);
       },
-      STORE => -> sub ($, $use_stock is copy) {
+      STORE => sub ($, $use_stock is copy) {
         gtk_button_set_use_stock($!b, $use_stock);
       }
     );
@@ -142,7 +142,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_use_underline($!b);
       },
-      STORE => -> sub ($, $use_underline is copy) {
+      STORE => sub ($, $use_underline is copy) {
         gtk_button_set_use_underline($!b, $use_underline);
       }
     );
