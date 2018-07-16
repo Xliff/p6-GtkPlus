@@ -29,6 +29,7 @@ class GTK::Application is GTK::Window {
     #gtk_init(Pointer, Nil);
   }
 
+
   #method p {
   #  nativecast(OpaquePointer, $!app);
   #}
@@ -37,26 +38,9 @@ class GTK::Application is GTK::Window {
   #  $!app;
   #}
 
-  method title {
-    $!win.title;
-  }
 
-  method width {
-    $!win.width;
-  }
-
-  method height {
-    $!win.height;
-  }
-
-  method init(GTK::Application:U: Int $ac, Str @av) {
-    my int32 $argc = $ac;
-    my CArray[Str] $argv = CArray[Str].new;
-
-    my $i = 0;
-    $argv[$i++] = $_ for @av;
-
-    gtk_init($argc, $argv);
+  method init {
+    gtk_init(OpaquePointer, OpaquePointer);
   }
 
   method new(
@@ -68,6 +52,8 @@ class GTK::Application is GTK::Window {
     my uint32 $f = $flags;
     my uint32 $w = $width;
     my uint32 $h = $height;
+
+    GTK::Application.init;
 
     die 'Application must have a title.' unless $title;
 
@@ -88,6 +74,18 @@ class GTK::Application is GTK::Window {
       :container($window),
       :widget($window)
     );
+  }
+
+  method title {
+    $!win.title;
+  }
+
+  method width {
+    $!win.width;
+  }
+
+  method height {
+    $!win.height;
   }
 
   method app_menu is rw {
@@ -114,7 +112,7 @@ class GTK::Application is GTK::Window {
 
   method run {
     #gtk_main();
-    g_application_run($!app, Pointer[uint32], CArray[Str]);
+    g_application_run($!app, OpaquePointer, OpaquePointer);
   }
 
   method exit {

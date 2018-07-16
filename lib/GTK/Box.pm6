@@ -10,12 +10,20 @@ class GTK::Box is GTK::Container {
   has $!b;
 
   submethod BUILD(:$box) {
-    $!b = $box;
+    $!b = $box ~~ GtkBox ?? $box !! nativecast(GtkBox, $box);
   }
 
   method new (GtkOrientation $orientation, gint $spacing){
     my $box = gtk_box_new($orientation, $spacing);
-    self.bless(:$box, :container($box), :widget($box));
+    nextwith(:$box);
+  }
+
+  method new (:$box) {
+    self.bless( :$box, :container($box), :widget($box) );
+  }
+
+  method box {
+    nativecast(GtkBox, $!b);
   }
 
   method baseline_position is rw {

@@ -35,7 +35,8 @@ sub gtk_button_new ()
   is export
   { * }
 
-sub gtk_button_new_from_icon_name (gchar $icon_name, GtkIconSize $size)
+# GtkIconSize $size
+sub gtk_button_new_from_icon_name (gchar $icon_name, uint32 $size)
   returns GtkWidget
   is native('gtk-3')
   is export
@@ -64,8 +65,9 @@ sub gtk_button_set_alignment (GtkButton $button, gfloat $xalign, gfloat $yalign)
   is export
   { * }
 
+# --> GtkPositionType
 sub gtk_button_get_image_position (GtkButton $button)
-  returns GtkPositionType
+  returns uint32
   is native('gtk-3')
   is export
   { * }
@@ -100,8 +102,9 @@ sub gtk_button_get_always_show_image (GtkButton $button)
   is export
   { * }
 
+# --> GtkReliefstyle
 sub gtk_button_get_relief (GtkButton $button)
-  returns GtkReliefStyle
+  returns uint32
   is native('gtk-3')
   is export
   { * }
@@ -112,7 +115,8 @@ sub gtk_button_get_focus_on_click (GtkButton $button)
   is export
   { * }
 
-sub gtk_button_set_image_position (GtkButton $button, GtkPositionType $position)
+# GtkPositionType $position
+sub gtk_button_set_image_position (GtkButton $button, uint32 $position)
   is native('gtk-3')
   is export
   { * }
@@ -142,7 +146,8 @@ sub gtk_button_set_always_show_image (GtkButton $button, gboolean $always_show)
   is export
   { * }
 
-sub gtk_button_set_relief (GtkButton $button, GtkReliefStyle $relief)
+# GtkReliefStyle $relief
+sub gtk_button_set_relief (GtkButton $button, uint32 $relief)
   is native('gtk-3')
   is export
   { * }

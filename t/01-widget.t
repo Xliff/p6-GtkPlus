@@ -6,46 +6,16 @@ use Test;
 
 use NativeCall;
 
-use MONKEY-SEE-NO-EVAL;
-
-use CompileTestLib;
-use GTK::Class::Pointers;
-use GTK::Class::Subs :app, :window, :widget, :button;
-use GTK::Class::Widget;
+# Could be abstracted away at the module level.
+use GTK::Raw::Types;
 
 use GTK::Application;
+use GTK::Button;
 
-compile_test_lib('00-structures');
-
-sub sizeof_GTypeClass()
-  returns uint64
-  is native('./00-structures')
-  { * }
-
-sub sizeof_GObjectClass()
-  returns uint64
-  is native('./00-structures')
-  { * }
-
-sub sizeof_GtkWidgetClass()
-  returns uint64
-  is native('./00-structures')
-  { * }
-
-ok
-  nativesizeof(GTypeClass) == sizeof_GTypeClass(),
-  "GTypeClass matches that of native struct";
-
-ok
-  nativesizeof(GObjectClass) == sizeof_GObjectClass(),
-  "GObjectClass matches that of native struct";
-
-ok
-  nativesizeof(GTK::Class::Widget) == sizeof_GtkWidgetClass(),
-  "GTK::Class::Widget size matches that of native struct";
+#use GTK::Raw::Subs :app, :window, :widget, :button;
 
 my $a = GTK::Application.new(
-  title  => 'org.genex.test.widget',
+  title  => 'org.genex.test.widget -- Button Demo',
   width  => 200,
   height => 200
 );
@@ -59,47 +29,20 @@ my $a = GTK::Application.new(
 #});
 
 $a.startup.tap({
-  my @p;
-  my $w = gtk_button_new();
-  my $c = GTK::Class::Widget.new(:widget($w));
+  my $box = GTK::Box(GTK_ORIENTATION_HORIZONTAL, 6);
+  my ($b1, $b2, $b3) = (
+    GTK::Button.new_with_label('Click Me'),
+    GTK::Button.new_with_mnemonic('_Open'),
+    GTK::Button.new_with_mnemonic('_Close')
+  );
+  $b1.clicked.tap({ say 'Click me button was clicked'; });
+  $b2.clicked.tap({ say 'Open button was clicked'; });
+  $b3.clocked.tap({ say 'Closing application.'; $a.exit; });
+  $box.pack_start($b1, True, True, 0);
+  $box.pack_start($b2, True, True, 0);
+  $box.pack_start($b3, True, True, 0);
 
-  for $c.^attributes {
-    my $n = .name.substr(2);
-
-    next if $n eq <
-      parent_class
-    >.any;
-
-    given $n {
-      when 'parent_class' {
-      }
-
-      when 'activate_signal' {
-        ok
-          $c.activate_signal ~~ Int,
-          ".activate_signal is an Integer";
-      }
-
-      when /^gtk_reserved\d/ {
-        pass "Found $_";
-      }
-
-      default {
-        my $p = EVAL( "\$c.$n.^name" );
-        ok
-          $p ~~ NativeCall::Types::Pointer.^name,
-          "$n is a native pointer";
-
-        ok
-          $p.gist ne @p.any,
-          "$n ({ $p.gist }) is not a duplicate";
-
-        @p.push: $p.gist;
-      }
-    }
-
-    $a.exit;
-  }
 });
 
+$a.show_all;
 $a.run;

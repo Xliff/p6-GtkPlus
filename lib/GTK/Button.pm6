@@ -1,5 +1,7 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Bin;
 
 use GTK::Raw::Button;
@@ -10,7 +12,7 @@ class GTK::Button is GTK::Bin {
   has GtkButton $!b;
 
   submethod BUILD(:$button) {
-    $!b = $button;
+    $!b = $button ~~ GtkButton ?? $button !! nativecast(GtkButton, $button)
   }
 
   multi method new {
@@ -19,19 +21,41 @@ class GTK::Button is GTK::Bin {
   }
 
   multi method new(:$button) {
-    self.bless(:$button, :bin($button), :container($button), :widget($button));
+    self.bless(
+      :$button,
+      :bin($button),
+      :container($button),
+      :widget($button)
+    );
+  }
+
+  method new_with_mnemonic (GTK::Button:U: gchar $label) {
+    my $button = gtk_button_new_with_mnemonic($label);
+    self.bless(:$button, :bin($button), :container($button), :widget($button))
+  }
+
+  method new_from_icon_name (GTK::Button:U: gchar $icon_name, GtkIconSize $size) {
+    gtk_button_new_from_icon_name($icon_name, $size);
+  }
+
+  method new_from_stock (GTK::Button:U: gchar $stock_id) {
+    gtk_button_new_from_stock($stock_id);
+  }
+
+  method new_with_label (GTK::Button:U: gchar $label) {
+    gtk_button_new_with_label($label);
   }
 
   # Renamed from "clicked" due to conflict with the signal.
-  method get_clicked (GtkButton $!b) {
+  method button-clicked {
     gtk_button_clicked($!b);
   }
 
-  method get_alignment (GtkButton $!b, gfloat $xalign, gfloat $yalign) {
+  method get_alignment (gfloat $xalign, gfloat $yalign) {
     gtk_button_get_alignment($!b, $xalign, $yalign);
   }
 
-  method get_event_window (GtkButton $!b) {
+  method get_event_window {
     gtk_button_get_event_window($!b);
   }
 
@@ -40,23 +64,8 @@ class GTK::Button is GTK::Bin {
   #  gtk_button_get_type();
   #}
 
-  method new_from_icon_name (gchar $icon_name, GtkIconSize $size) {
-    gtk_button_new_from_icon_name($icon_name, $size);
-  }
 
-  method new_from_stock (gchar $stock_id) {
-    gtk_button_new_from_stock($stock_id);
-  }
-
-  method new_with_label (gchar $label) {
-    gtk_button_new_with_label($label);
-  }
-
-  method new_with_mnemonic (gchar $label) {
-    gtk_button_new_with_mnemonic($label);
-  }
-
-  method set_alignment (GtkButton $!b, gfloat $xalign, gfloat $yalign) {
+  method set_alignment (gfloat $xalign, gfloat $yalign) {
     gtk_button_set_alignment($!b, $xalign, $yalign);
   }
 

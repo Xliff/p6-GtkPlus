@@ -15,8 +15,8 @@ class GTK::Widget {
 
   has GtkWidget $!w;
 
-  submethod BUILD (GtkWidget :$widget) {
-    $!w = $widget;
+  submethod BUILD (:$widget) {
+    $!w = $widget ~~ GtkWidget ?? $widget !! nativecast(GtkWidget, $widget);
   }
 
   submethod DESTROY {

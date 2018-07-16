@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 # DEFAULT
 #
 sub g_object_unref(OpaquePointer $p)
-  is native('glib-2.0')
+  is native('gobject-2.0')
   is export
   { * }
 
@@ -33,6 +33,7 @@ sub g_signal_connect_wd(
 )
   returns uint32
   is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
   is export
   { * }
 
@@ -45,11 +46,11 @@ sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
 #
 # CLASS
 #
-sub g_type_check_class_cast (OpaquePointer $tc, int32 $it)
-  returns OpaquePointer
-  is native('glib-2.0')
-  is export(:class)
-  { * }
+#sub g_type_check_class_cast (OpaquePointer $tc, int32 $it)
+#  returns OpaquePointer
+#  is native('glib-2.0')
+#  is export(:class)
+#  { * }
 
 #
 # WINDOW
@@ -104,7 +105,9 @@ sub g_application_run(OpaquePointer, Pointer[uint32], CArray[Str])
   is export(:app)
   { * }
 
-sub gtk_init(uint32 is rw, CArray[Str])
+# cw:This signature is wrong, so go with something that works and circle back.
+#sub gtk_init(uint32 is rw, CArray[Str])
+sub gtk_init(OpaquePointer, OpaquePointer)
   is native('gtk-3')
   is export(:app)
   { * }

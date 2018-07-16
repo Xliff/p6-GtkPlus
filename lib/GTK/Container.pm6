@@ -14,8 +14,8 @@ class GTK::Container is GTK::Widget {
   # Maybe this should be done as the base class.
   has GtkContainer $!c;
 
-  submethod BUILD (GtkContainer :$container) {
-    $!c = $container;
+  submethod BUILD (:$container) {
+    $!c = $container ~~ GtkContainer ?? $container !! nativecast(GtkContainer, $container);
   }
 
   submethod DESTROY {
@@ -23,12 +23,12 @@ class GTK::Container is GTK::Widget {
     g_object_unref(self.p);
   }
 
-  method p {
-    nativecast(OpaquePointer, $!c);
-  }
-
   method new(:$container) {
     self.bless(:$container);
+  }
+
+  method widget {
+    nativecast(GtkWidget, $!c);
   }
 
   # Signal - First

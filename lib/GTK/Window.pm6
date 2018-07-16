@@ -1,5 +1,7 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Bin;
 
 use GTK::Compat::Types;
@@ -14,7 +16,7 @@ class GTK::Window is GTK::Bin {
   has GtkWindow $!win;
 
   submethod BUILD(:$window) {
-    $!win = $window;
+    $!win = $window ~~ GtkWindow ?? $window !! nativecast(GtkWindow, $window);
   }
 
   multi method new (
@@ -27,7 +29,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_title($window, $title);
     gtk_window_set_default_size($window, $width, $height);
 
-    self.bless(:$window, :bin($window), :container($window), :widget($window));
+    nextwith(:$window);
   }
 
   multi method new (:$window) {
