@@ -58,7 +58,7 @@ sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
 sub gtk_application_window_new (GtkApplication $app)
   returns GtkWindow
   is native('gtk-3')
-  is export(:app)
+  is export
   { * }
 
 sub gtk_window_set_title (GtkWindow $win, Str $title)
@@ -102,22 +102,22 @@ sub gtk_button_new()
 
 sub g_application_run(OpaquePointer, Pointer[uint32], CArray[Str])
   is native('gio-2.0')
-  is export(:app)
+  is export
   { * }
 
 # cw:This signature is wrong, so go with something that works and circle back.
 #sub gtk_init(uint32 is rw, CArray[Str])
-sub gtk_init(OpaquePointer, OpaquePointer)
+sub gtk_init(CArray[uint32], CArray[CArray[Str]])
   is native('gtk-3')
-  is export(:app)
+  is export
   { * }
 
 sub gtk_main()
   is native('gtk-3')
-  is export(:app)
+  is export
   { * }
 
 sub gtk_main_quit()
   is native('gtk-3')
-  is export(:app)
+  is export
   { * }

@@ -15,7 +15,13 @@ class GTK::Container is GTK::Widget {
   has GtkContainer $!c;
 
   submethod BUILD (:$container) {
-    $!c = $container ~~ GtkContainer ?? $container !! nativecast(GtkContainer, $container);
+    given $container {
+      when GtkContainer {
+        $!c = $container;
+      }
+      default {
+      }
+    }
   }
 
   submethod DESTROY {
@@ -23,12 +29,16 @@ class GTK::Container is GTK::Widget {
     g_object_unref(self.p);
   }
 
-  method new(:$container) {
+  method new(:$container!) {
     self.bless(:$container);
   }
 
   method widget {
     nativecast(GtkWidget, $!c);
+  }
+
+  method setContainer($container) {
+    self.setWidget($!c = nativecast(GtkContainer, $container));
   }
 
   # Signal - First

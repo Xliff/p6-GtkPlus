@@ -22,4 +22,9 @@ class GTK::Bin is GTK::Container {
     nativecast(GtkContainer, $!bin);
   }
 
+  method setBin($bin) {
+    $!bin = $bin;
+    self.setContainer($bin);
+  }
+
 }

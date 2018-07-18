@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::Subs :app;
+use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Application;
 use GTK::Raw::Window;
@@ -13,34 +13,40 @@ use GTK::Window;
 class GTK::Application is GTK::Window {
   also does GTK::Roles::Signals;
 
-  has $!win; # GtkWindow
-  has $!app; # GtkApplication
-
+  has $!app;    # GtkApplication
   has $!title;
+  has $!width;
+  has $!height;
 
   submethod BUILD(
     :$app,
     Str    :$title,
     uint32 :$flags = 0,
-    Array  :$children
+    uint32 :$width,
+    uint32 :$height,
   ) {
     $!app = $app;
     $!title = $title;
-    #gtk_init(Pointer, Nil);
+    $!width = $width;
+    $!height = $height;
+
+    self.activate.tap({
+      my $window = gtk_application_window_new($app);
+      gtk_window_set_title($window, $title);
+      gtk_window_set_default_size($window, $width, $height);
+      self.setWindow( gtk_application_window_new($app) );
+    });
   }
 
+  method init (GTK::Application:U:) {
+    my $argc = CArray[uint32].new;
+    $argc[0] = 1;
+    my $args = CArray[Str].new;
+    $args[0] = $*PROGRAM.Str;
+    my $argv = CArray[CArray[Str]].new;
+    $argv[0] = $args;
 
-  #method p {
-  #  nativecast(OpaquePointer, $!app);
-  #}
-
-  #method app {
-  #  $!app;
-  #}
-
-
-  method init {
-    gtk_init(OpaquePointer, OpaquePointer);
+    gtk_init($argc, $argv);
   }
 
   method new(
@@ -59,33 +65,33 @@ class GTK::Application is GTK::Window {
 
     # Use raw GTK calls here since the object model will be used by the callers.
     my $app = gtk_application_new($title, $f);
-    my $window = gtk_application_window_new($app);
-    gtk_window_set_title($window, $title);
-    gtk_window_set_default_size($window, $w, $h);
+    #my $window = gtk_application_window_new($app);
+    #gtk_window_set_title($window, $title);
+    #gtk_window_set_default_size($window, $w, $h);
 
     self.bless(
       :$app,
       :$title,
-      :flags($f),
+#      :flags($f),
       :width($w),
-      :height($h),
-      :$window,
-      :bin($window),
-      :container($window),
-      :widget($window)
+      :height($h)
+#      :$window,
+#      :bin($window),
+#      :container($window),
+#      :widget($window)
     );
   }
 
   method title {
-    $!win.title;
+    $!title;
   }
 
   method width {
-    $!win.width;
+    $!width;
   }
 
   method height {
-    $!win.height;
+    $!height;
   }
 
   method app_menu is rw {

@@ -35,15 +35,33 @@ class GTK::Button is GTK::Bin {
   }
 
   method new_from_icon_name (GTK::Button:U: gchar $icon_name, GtkIconSize $size) {
-    gtk_button_new_from_icon_name($icon_name, $size);
+    my $button = gtk_button_new_from_icon_name($icon_name, $size);
+    self.bless(
+      :$button,
+      :bin($button),
+      :container($button),
+      :widget($button)
+    );
   }
 
   method new_from_stock (GTK::Button:U: gchar $stock_id) {
-    gtk_button_new_from_stock($stock_id);
+    my $button = gtk_button_new_from_stock($stock_id);
+    self.bless(
+      :$button,
+      :bin($button),
+      :container($button),
+      :widget($button)
+    );
   }
 
   method new_with_label (GTK::Button:U: gchar $label) {
-    gtk_button_new_with_label($label);
+    my $button = gtk_button_new_with_label($label);
+    self.bless(
+      :$button,
+      :bin($button),
+      :container($button),
+      :widget($button)
+    );
   }
 
   # Renamed from "clicked" due to conflict with the signal.

@@ -16,7 +16,13 @@ class GTK::Widget {
   has GtkWidget $!w;
 
   submethod BUILD (:$widget) {
-    $!w = $widget ~~ GtkWidget ?? $widget !! nativecast(GtkWidget, $widget);
+    given $widget {
+      when GtkWidget {
+        $!w = $widget
+      }
+      default {
+      }
+    }
   }
 
   submethod DESTROY {
@@ -25,6 +31,21 @@ class GTK::Widget {
 
   method p {
     nativecast(OpaquePointer, $!w);
+  }
+
+  method widget {
+    $!w;
+  }
+
+  proto new(|) { * }
+
+  method new(:$widget!) {
+    self.bless(:$widget);
+  }
+
+  method setWidget($widget) {
+    # cw: Consider at least a warning if $!w has already been set.
+    $!w = nativecast(GtkWidget, $widget);
   }
 
   # Signal

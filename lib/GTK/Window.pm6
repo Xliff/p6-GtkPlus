@@ -16,7 +16,13 @@ class GTK::Window is GTK::Bin {
   has GtkWindow $!win;
 
   submethod BUILD(:$window) {
-    $!win = $window ~~ GtkWindow ?? $window !! nativecast(GtkWindow, $window);
+    given $window {
+      when GtkWindow {
+        $!win = $window;
+      }
+      default {
+      }
+    }
   }
 
   multi method new (
@@ -34,6 +40,11 @@ class GTK::Window is GTK::Bin {
 
   multi method new (:$window) {
     self.bless(:$window, :bin($window), :container($window), :widget($window));
+  }
+
+  method setWindow($window) {
+    $!win = $window;
+    self.setBin($window);
   }
 
   # Signal void Action

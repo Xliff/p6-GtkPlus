@@ -62,7 +62,8 @@ our enum GApplicationFlags is export (
   G_APPLICATION_HANDLES_OPEN         => 4,
   G_APPLICATION_HANDLES_COMMAND_LINE => 8,
   G_APPLICATION_SEND_ENVIRONMENT     => 16,
-  G_APPLICATION_NON_UNIQUE           => 32
+  G_APPLICATION_NON_UNIQUE           => 32,
+  G_APPLICATION_CAN_OVERRIDE_APP_ID  => 64
 );
 
 our enum GdkWindowHints is export <
