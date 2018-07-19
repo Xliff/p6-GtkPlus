@@ -21,8 +21,6 @@ my $a = GTK::Application.new(
   height => 200
 );
 
-$a.say;
-
 #$a.activate.tap({
 #  my $win = gtk_application_window_new($a.app);
 #  gtk_window_set_title($win, $a.title);
@@ -32,7 +30,9 @@ $a.say;
 #});
 $a.activate.tap({
   my $box = GTK::Box.new-box(GTK_ORIENTATION_HORIZONTAL, 6);
-  say $box;
+
+  $a.add($box);
+
   my ($b1, $b2, $b3) = (
     GTK::Button.new_with_label('Click Me'),
     GTK::Button.new_with_mnemonic('_Open'),
@@ -44,6 +44,7 @@ $a.activate.tap({
   $box.pack_start($b1, True, True, 0);
   $box.pack_start($b2, True, True, 0);
   $box.pack_start($b3, True, True, 0);
+  
   $a.show_all;
 });
 

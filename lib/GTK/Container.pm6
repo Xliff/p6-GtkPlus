@@ -33,10 +33,6 @@ class GTK::Container is GTK::Widget {
     self.bless(:$container);
   }
 
-  method widget {
-    nativecast(GtkWidget, $!c);
-  }
-
   method setContainer($container) {
     self.setWidget($!c = nativecast(GtkContainer, $container));
   }
@@ -162,6 +158,9 @@ class GTK::Container is GTK::Widget {
   #}
 
   # Made multi to avoid conflict with the "add" signal handler.
+  multi method add (GTK::Widget $w) {
+    nextwith($w.widget);
+  }
   multi method add (GtkWidget $widget) {
     gtk_container_add($!c, $widget);
   }

@@ -5,6 +5,7 @@ use NativeCall;
 use GTK::Raw::Box;
 use GTK::Raw::Types;
 use GTK::Container;
+use GTK::Widget;
 
 class GTK::Box is GTK::Container {
   also does GTK::Roles::Signals;
@@ -24,8 +25,20 @@ class GTK::Box is GTK::Container {
     self.bless( :$box, :container($box), :widget($box) );
   }
 
+  method new-hbox(Int $spacing = 2) {
+    my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $spacing);
+    self.bless( :$box, :container($box), :widget($box) );
+  }
+
+  method new-vbox(Int $spacing = 2) {
+    my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $spacing);
+    self.bless( :$box, :container($box), :widget($box) );
+  }
+
+
+
   method box {
-    nativecast(GtkBox, $!b);
+    $!b
   }
 
   method resolveObject($o) {
@@ -89,11 +102,17 @@ class GTK::Box is GTK::Container {
   #  gtk_box_get_type();
   #}
 
-  method pack_end ($child, gboolean $expand, gboolean $fill, guint $padding) {
+  multi method pack_end (GTK::Widget $child, gboolean $expand, gboolean $fill, guint $padding) {
+    nextwith($child.widget, $expand, $fill, $padding);
+  }
+  multi method pack_end (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
     gtk_box_pack_end($!b, $child, $expand, $fill, $padding);
   }
 
-  method pack_start ($child, gboolean $expand, gboolean $fill, guint $padding) {
+  multi method pack_start (GTK::Widget $child, gboolean $expand, gboolean $fill, guint $padding) {
+    nextwith($child.widget, $expand, $fill, $padding);
+  }
+  multi method pack_start (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
     my $c = self.resolveObject($child);
     gtk_box_pack_start($!b, $c, $expand, $fill, $padding);
   }
