@@ -35,24 +35,24 @@ class GTK::Box is GTK::Container {
     self.bless( :$box, :container($box), :widget($box) );
   }
 
-
-
   method box {
     $!b
   }
 
-  method resolveObject($o) {
-    given $o {
-      when ::?CLASS {
-        self.w;
-      }
-      when GtkWidget {
-        $o;
-      }
-      default {
-      }
-    }
-  }
+  # cw: Just in case I need it in the near future. May want to put it in an
+  #     an inactive role, before I ever delete it.
+  # method resolveObject($o) {
+  #   given $o {
+  #     when ::?CLASS {
+  #       self.w;
+  #     }
+  #     when GtkWidget {
+  #       $o;
+  #     }
+  #     default {
+  #     }
+  #   }
+  # }
 
   method baseline_position is rw {
     Proxy.new(
@@ -113,20 +113,27 @@ class GTK::Box is GTK::Container {
     nextwith($child.widget, $expand, $fill, $padding);
   }
   multi method pack_start (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
-    my $c = self.resolveObject($child);
     gtk_box_pack_start($!b, $c, $expand, $fill, $padding);
   }
 
-  method query_child_packing ($child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
+  multi method query_child_packing (GTK::Widget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
+    nextwith($child.widget, $expand, $fill, $padding, $pack_type);
+  }
+  multi method query_child_packing (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
     gtk_box_query_child_packing($!b, $child, $expand, $fill, $padding, $pack_type);
   }
 
-  method reorder_child ($child, gint $position) {
-    my $c = self.resolveObject($child);
+  multi method reorder_child (GTK::Widget $child, gint $position) {
+    nextwith($child.widget, $position);
+  }
+  multi method reorder_child (GtkWidget $child, gint $position) {
     gtk_box_reorder_child($!b, $c, $position);
   }
 
-  method set_child_packing ($child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
+  multi method set_child_packing (GTK::Widget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
+    nextwith($child.widget, $expand, $fill, $padding, $pack_type);
+  }
+  multi method set_child_packing (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {
     gtk_box_set_child_packing($!b, $child, $expand, $fill, $padding, $pack_type);
   }
 
