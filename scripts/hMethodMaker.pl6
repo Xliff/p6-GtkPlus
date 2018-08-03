@@ -78,8 +78,9 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
           @t.shift if +@t;
         }
 
+        my @sig = (@t [Z] @v);
         my $call = @v.map( *.trim ).join(', ');
-        my $sig = (@t [Z] @v).join(', ');
+        my $sig = @sig.join(', ');
         my $sub = $mo<func_def><sub>.Str.trim;
 
         if $var {
@@ -104,7 +105,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
              'sub' => $sub,
             params => @p,
               call => $call,
-               sig => $sig
+               sig => $sig,
         };
 
         #my $p = 1;
@@ -232,13 +233,28 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
   say "\nMETHODS\n-------";
   if %do_output<all> || %do_output<methods> {
     for %methods.keys.sort -> $m {
+      my @sig_list = %methods{$m}<sig>.split(/\, /);
+
+      my $sig = %methods{$m}<sig>;
+      my $s = ( (my $o_sig = $sig) ~~ s/GtkWidget/GTK::Widget/ );
+      my $call = %methods{$m}<call>;
+      (my $o_call = $call) ~~ s/ '$' (\w+) <?before [',' | $]>/\$$0.widget/;
+      my $mult = $s ?? 'multi ' !! '';
 
       say qq:to/METHOD/;
-        method { %methods{$m}<sub> } { '(' ~ %methods{$m}<sig> ~ ')' } \{
-          { %methods{$m}<original> }({ %methods{$m}<call> });
+        { $mult }method { %methods{$m}<sub> } ({ $sig }) \{
+          { %methods{$m}<original> }({ $call });
         \}
       METHOD
 
+      if $s {
+        say qq:to/METHOD/;
+          { $mult }method { %methods{$m}<sub> } ({ $o_sig })  \{
+            { %methods{$m}<original> }({ $o_call });
+          \}
+        METHOD
+
+      }
     }
   }
 
