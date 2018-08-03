@@ -78,9 +78,8 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
           @t.shift if +@t;
         }
 
-        my @sig = (@t [Z] @v);
+        my $sig = (@t [Z] @v).join(', ');
         my $call = @v.map( *.trim ).join(', ');
-        my $sig = @sig.join(', ');
         my $sub = $mo<func_def><sub>.Str.trim;
 
         if $var {
@@ -100,12 +99,14 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
         }
 
         my $h = {
-          original => $orig.trim,
-           returns => $mo<func_def><returns>,
-             'sub' => $sub,
-            params => @p,
-              call => $call,
-               sig => $sig,
+            original => $orig.trim,
+             returns => $mo<func_def><returns>,
+               'sub' => $sub,
+              params => @p,
+                call => $call,
+                 sig => $sig,
+           call_vars => @v,
+          call_types => @t
         };
 
         #my $p = 1;
@@ -236,25 +237,35 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
       my @sig_list = %methods{$m}<sig>.split(/\, /);
 
       my $sig = %methods{$m}<sig>;
-      my $s = ( (my $o_sig = $sig) ~~ s/GtkWidget/GTK::Widget/ );
       my $call = %methods{$m}<call>;
-      (my $o_call = $call) ~~ s/ '$' (\w+) <?before [',' | $]>/\$$0.widget/;
-      my $mult = $s ?? 'multi ' !! '';
+      my $mult = %methods{$m}<call_types>.grep(/GtkWidget/) ?? 'multi ' !! '';
 
-      say qq:to/METHOD/;
+      say qq:to/METHOD/.chomp;
         { $mult }method { %methods{$m}<sub> } ({ $sig }) \{
           { %methods{$m}<original> }({ $call });
         \}
       METHOD
 
-      if $s {
-        say qq:to/METHOD/;
-          { $mult }method { %methods{$m}<sub> } ({ $o_sig })  \{
-            { %methods{$m}<original> }({ $o_call });
+      if $mult {
+        my $o_call = %methods{$m}<call_vars>.clone;
+        my $o_types = %methods{$m}<call_types>.clone;
+        for (^$o_types) -> $oidx {
+          if $o_types[$oidx] ~~ s/GtkWidget/GTK::Widget/ {
+            $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
+          }
+        }
+        my $oc = $o_call.join(', ');
+        my $os = ($o_types.Array [Z] %methods{$m}<call_vars>.Array).join(', ');
+
+        say qq:to/METHOD/.chomp;
+          { $mult }method { %methods{$m}<sub> } ({ $os })  \{
+            nextwith({ $oc });
           \}
         METHOD
 
       }
+      say '';
+
     }
   }
 
