@@ -141,7 +141,10 @@ class GTK::Application is GTK::Window {
     gtk_application_add_accelerator($!app, $accelerator, $action_name, $parameter);
   }
 
-  method add_window (GtkWindow $window) {
+  multi method add_window(GTK::Window $window) {
+    nextwith($window.widget);
+  }
+  multi method add_window (GtkWindow $window) {
     gtk_application_add_window($!app, $window);
   }
 
@@ -174,6 +177,9 @@ class GTK::Application is GTK::Window {
   }
 
   # cw: Variant to accept a GTK::Window
+  method inhibit (GTK::Window $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
+    nextwith($window.window, $flags, $reason);
+  }
   method inhibit (GtkWindow $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
     gtk_application_inhibit($!app, $window, $flags, $reason);
   }

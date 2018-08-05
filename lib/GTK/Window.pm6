@@ -42,6 +42,10 @@ class GTK::Window is GTK::Bin {
     self.bless(:$window, :bin($window), :container($window), :widget($window));
   }
 
+  method window {
+    $!win;
+  }
+
   method setWindow($window) {
     $!win = $window;
     self.setBin($window);
@@ -581,7 +585,10 @@ class GTK::Window is GTK::Bin {
     gtk_window_resize_to_geometry($!win, $width, $height);
   }
 
-  method set_default (GtkWidget $default_widget) {
+  multi method set_default (GTK::Widget $default_widget) {
+    nextwith($default_widget.widget);
+  }
+  multi method set_default (GtkWidget $default_widget) {
     gtk_window_set_default($!win, $default_widget);
   }
 
@@ -593,7 +600,10 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_default_size($!win, $width, $height);
   }
 
-  method set_geometry_hints (GtkWidget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask) {
+  multi method set_geometry_hints (GTK::Widget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask) {
+    nextwith($geometry_widget.widget, $geometry, $geom_mask);
+  }
+  multi method set_geometry_hints (GtkWidget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask) {
     gtk_window_set_geometry_hints($!win, $geometry_widget, $geometry, $geom_mask);
   }
 
