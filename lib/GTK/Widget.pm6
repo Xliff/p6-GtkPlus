@@ -48,6 +48,39 @@ class GTK::Widget {
     $!w = nativecast(GtkWidget, $widget);
   }
 
+  # Static methods
+  method cairo_should_draw_window (GTK::Widget:U: cairo_t $cr, GdkWindow $window) {
+    gtk_cairo_should_draw_window($cr, $window);
+  }
+
+  method cairo_transform_to_window (GTK::Widget:U: cairo_t $cr, GtkWidget $!w, GdkWindow $window) {
+    gtk_cairo_transform_to_window($cr, $!w, $window);
+  }
+
+  method get_default_direction(GTK::Widget:U: ) {
+    gtk_widget_get_default_direction();
+  }
+
+  method pop_composite_child(GTK::Widget:U: ) {
+    gtk_widget_pop_composite_child();
+  }
+
+  method push_composite_child(GTK::Widget:U: ) {
+    gtk_widget_push_composite_child();
+  }
+
+  method set_default_direction (GTK::Widget:U: GtkTextDirection $dir) {
+    gtk_widget_set_default_direction($dir);
+  }
+
+  method requisition_get_type(GTK::Widget:U: ) {
+    gtk_requisition_get_type();
+  }
+
+  method requisition_new(GTK::Widget:U: ) {
+    gtk_requisition_new();
+  }
+
   # Signal
   method accel-closures-changed {
     self.connect($!w, 'accel-closures-changed');
@@ -1041,10 +1074,6 @@ class GTK::Widget {
     gtk_widget_queue_draw_region($!w, $region);
   }
 
-  method gtk_requisition_get_type () {
-    gtk_requisition_get_type();
-  }
-
   method is_visible (GtkWidget $!w) {
     gtk_widget_is_visible($!w);
   }
@@ -1141,13 +1170,6 @@ class GTK::Widget {
 
   method create_pango_layout (gchar $text) {
     gtk_widget_create_pango_layout($!w, $text);
-  }
-
-  method gtk_cairo_should_draw_window (GTK::Widget:U:
-    cairo_t $cr,
-    GdkWindow $window
-  ) {
-    gtk_cairo_should_draw_window($cr, $window);
   }
 
   method remove_tick_callback (guint $id) {
@@ -1299,14 +1321,6 @@ class GTK::Widget {
     gtk_widget_set_device_events($!w, $device, $events);
   }
 
-  method set_default_direction (GtkTextDirection $dir) {
-    gtk_widget_set_default_direction($dir);
-  }
-
-  method get_default_direction {
-    gtk_widget_get_default_direction();
-  }
-
   method get_clipboard (GdkAtom $selection) {
     gtk_widget_get_clipboard($!w, $selection);
   }
@@ -1355,11 +1369,7 @@ class GTK::Widget {
     gtk_widget_destroy($!w);
   }
 
-  method pop_composite_child {
-    gtk_widget_pop_composite_child();
-  }
-
-  method gtk_requisition_free (GtkRequisition $requisition) {
+  method requisition_free (GtkRequisition $requisition) {
     gtk_requisition_free($requisition);
   }
 
@@ -1391,10 +1401,6 @@ class GTK::Widget {
   #  gtk_widget_class_install_style_property($klass, $pspec);
   #}
 
-  method gtk_requisition_new {
-    gtk_requisition_new();
-  }
-
   method set_size_request (gint $width, gint $height) {
     gtk_widget_set_size_request($!w, $width, $height);
   }
@@ -1419,7 +1425,7 @@ class GTK::Widget {
     gtk_widget_hide_on_delete($!w);
   }
 
-  method gtk_requisition_copy (GtkRequisition $requisition) {
+  method requisition_copy (GtkRequisition $requisition) {
     gtk_requisition_copy($requisition);
   }
 
@@ -1435,20 +1441,12 @@ class GTK::Widget {
     gtk_widget_queue_resize($!w);
   }
 
-  method gtk_cairo_transform_to_window (cairo_t $cr, GtkWidget $!w, GdkWindow $window) {
-    gtk_cairo_transform_to_window($cr, $!w, $window);
-  }
-
   method get_accessible {
     gtk_widget_get_accessible($!w);
   }
 
   method get_preferred_height_for_width (gint $width, gint $minimum_height, gint $natural_height) {
     gtk_widget_get_preferred_height_for_width($!w, $width, $minimum_height, $natural_height);
-  }
-
-  method push_composite_child {
-    gtk_widget_push_composite_child();
   }
 
   method list_mnemonic_labels {

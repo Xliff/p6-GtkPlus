@@ -11,20 +11,27 @@ class GTK::Bin is GTK::Container {
   has $!bin; # GtkBin
 
   submethod BUILD(:$bin) {
-    $!bin = $bin;
+    when GtkBin | GtkWidget {
+      $!bin = $bin;
+    }
+    when GTK::Bin {
+      warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
+    }
+    default {
+      # Throw exception
+    }
   }
 
-  method get_child (GtkBin $bin) {
-    gtk_bin_get_child($bin);
-  }
-
-  method container {
-    nativecast(GtkContainer, $!bin);
+  multi method get_child {
+    gtk_bin_get_child($!bin);
   }
 
   method setBin($bin) {
-    $!bin = $bin;
-    self.setContainer($bin);
+    self.setContainer( $!bin = nativecast(GtkBin, $bin) );
+  }
+
+  method get_type {
+    gtk_bin_get_type();
   }
 
 }

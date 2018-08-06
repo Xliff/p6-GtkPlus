@@ -20,6 +20,9 @@ class GTK::Window is GTK::Bin {
       when GtkWindow {
         $!win = $window;
       }
+      when GTK::Window {
+        warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
+      }
       default {
       }
     }
@@ -37,7 +40,6 @@ class GTK::Window is GTK::Bin {
 
     nextwith(:$window);
   }
-
   multi method new (:$window) {
     self.bless(:$window, :bin($window), :container($window), :widget($window));
   }
@@ -46,9 +48,11 @@ class GTK::Window is GTK::Bin {
     $!win;
   }
 
-  method setWindow($window) {
-    $!win = $window;
-    self.setBin($window);
+  multi method setWindow(GtkWindow $window) {
+     self.setBin($!win = $window);
+  }
+  multi method setWindow(GTK::Window $window) {
+    self.setBin($!win = $window.window);
   }
 
   # Signal void Action

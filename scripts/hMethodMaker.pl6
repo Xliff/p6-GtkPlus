@@ -17,7 +17,8 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
     %do_output<all> = 1;
   }
 
-  die "Var should be an attribute" unless !$var.defined || $var ~~ /^ '$!' /;
+  (my $attr = $var) ~~ s:g/$ <!before '!'>//;
+  $attr = '$!' ~ $attr unless $attr ~~ /^ '$!' /;
 
   my $contents = $filename.IO.open.slurp-rest;
 
@@ -73,7 +74,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
           $t;
         });
 
-        if $var {
+        if $attr {
           @v.shift if +@v;
           @t.shift if +@t;
         }
@@ -82,11 +83,11 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
         my $call = @v.map( *.trim ).join(', ');
         my $sub = $mo<func_def><sub>.Str.trim;
 
-        if $var {
+        if $attr {
           if $call.chars {
-            $call = "{$var}, {$call}";
+            $call = "{$attr}, {$call}";
           } else {
-            $call = $var;
+            $call = $attr;
           }
         }
 
@@ -231,14 +232,17 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
     }
   }
 
+
+
   say "\nMETHODS\n-------";
   if %do_output<all> || %do_output<methods> {
     for %methods.keys.sort -> $m {
       my @sig_list = %methods{$m}<sig>.split(/\, /);
 
+      my rule replacer { «[ 'GtkWidget' | 'GtkWindow' ]» };
       my $sig = %methods{$m}<sig>;
       my $call = %methods{$m}<call>;
-      my $mult = %methods{$m}<call_types>.grep(/GtkWidget/) ?? 'multi ' !! '';
+      my $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! '';
 
       say qq:to/METHOD/.chomp;
         { $mult }method { %methods{$m}<sub> } ({ $sig }) \{
@@ -252,6 +256,9 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
         for (^$o_types) -> $oidx {
           if $o_types[$oidx] ~~ s/GtkWidget/GTK::Widget/ {
             $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
+          }
+          if $o_types[$oidx] ~~ s/GtkWindow/GTK::Window/ {
+            $o_call[$oidx] ~~ s/\$(\w+)/\$$0.window/;
           }
         }
         my $oc = $o_call.join(', ');

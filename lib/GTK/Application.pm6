@@ -10,13 +10,15 @@ use GTK::Raw::Window;
 
 use GTK::Window;
 
-class GTK::Application is GTK::Window {
+class GTK::Application {
   also does GTK::Roles::Signals;
 
   has $!app;    # GtkApplication
   has $!title;
   has $!width;
   has $!height;
+
+  has $.window handles <show_all>;
 
   submethod BUILD(
     :$app,
@@ -31,14 +33,18 @@ class GTK::Application is GTK::Window {
     $!height = $height;
 
     self.activate.tap({
-      my $window = gtk_application_window_new($app);
-      gtk_window_set_title($window, $title);
-      gtk_window_set_default_size($window, $width, $height);
-      self.setWindow( gtk_application_window_new($app) );
+      $!window = GTK::Window.new( :window( gtk_application_window_new($app) ) );
+
+      say "W: $!window";
+
+      self.add_window($!window);
+      self.window.setWindow($!window);
+      self.window.title = $title;
+      self.window.set_default_size($width, $height);
     });
   }
 
-  method init (GTK::Application:U:) {
+  method init (GTK::Application:U: ) {
     my $argc = CArray[uint32].new;
     $argc[0] = 1;
     my $args = CArray[Str].new;
@@ -65,20 +71,13 @@ class GTK::Application is GTK::Window {
 
     # Use raw GTK calls here since the object model will be used by the callers.
     my $app = gtk_application_new($title, $f);
-    #my $window = gtk_application_window_new($app);
-    #gtk_window_set_title($window, $title);
-    #gtk_window_set_default_size($window, $w, $h);
 
     self.bless(
       :$app,
       :$title,
-#      :flags($f),
+      :flags($f),
       :width($w),
       :height($h)
-#      :$window,
-#      :bin($window),
-#      :container($window),
-#      :widget($window)
     );
   }
 
@@ -137,15 +136,15 @@ class GTK::Application is GTK::Window {
     self.connect($!app, 'shutdown');
   }
 
- method add_accelerator (gchar $accelerator, gchar $action_name, GVariant $parameter) {
+  method add_accelerator (gchar $accelerator, gchar $action_name, GVariant $parameter) {
     gtk_application_add_accelerator($!app, $accelerator, $action_name, $parameter);
   }
 
-  multi method add_window(GTK::Window $window) {
-    nextwith($window.widget);
-  }
   multi method add_window (GtkWindow $window) {
     gtk_application_add_window($!app, $window);
+  }
+  multi method add_window(GTK::Window $window) {
+    nextwith($window.widget);
   }
 
   method get_accels_for_action (gchar $detailed_action_name) {
@@ -177,10 +176,10 @@ class GTK::Application is GTK::Window {
   }
 
   # cw: Variant to accept a GTK::Window
-  method inhibit (GTK::Window $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
+  multi method inhibit (GTK::Window $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
     nextwith($window.window, $flags, $reason);
   }
-  method inhibit (GtkWindow $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
+  multi method inhibit (GtkWindow $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
     gtk_application_inhibit($!app, $window, $flags, $reason);
   }
 

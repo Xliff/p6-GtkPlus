@@ -9,10 +9,20 @@ use GTK::Raw::Types;
 
 class GTK::Button is GTK::Bin {
 
-  has GtkButton $!b;
+  has $!b;
 
   submethod BUILD(:$button) {
-    $!b = $button ~~ GtkButton ?? $button !! nativecast(GtkButton, $button)
+    given $button {
+      when GtkButton | GtkWidget {
+        $!b = $button;
+      }
+      when GTK::Button {
+        warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
+      }
+      default {
+        # Throw exception here
+      }
+    }
   }
 
   multi method new {
