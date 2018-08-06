@@ -2,21 +2,9 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::Types;
+
 unit package GTK::Raw::Types;
-
-constant cairo_t        is export := OpaquePointer;
-constant cairo_region_t is export := OpaquePointer;
-
-constant gpointer is export := OpaquePointer;
-constant gboolean is export := uint32;
-constant va_list  is export := OpaquePointer;
-constant gint     is export := int32;
-constant guint    is export := uint32;
-constant gchar    is export := Str;
-constant GType    is export := uint32;
-constant gfloat   is export := num32;
-constant gdouble  is export := num64;
-
 
 class GtkRequisition is repr('CStruct') is export {
   has uint32 $.width;

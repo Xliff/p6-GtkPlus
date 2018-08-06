@@ -12,11 +12,11 @@ class GTK::Container is GTK::Widget {
   also does GTK::Roles::Signals;
 
   # Maybe this should be done as the base class.
-  has GtkContainer $!c;
+  has $!c;
 
   submethod BUILD (:$container) {
     given $container {
-      when GtkContainer {
+      when GtkContainer | GtkWidget {
         $!c = $container;
       }
       when GTK::Container {
@@ -221,6 +221,7 @@ class GTK::Container is GTK::Widget {
   }
 
   method get_children {
+    say $!c.^name;
     gtk_container_get_children($!c);
   }
 

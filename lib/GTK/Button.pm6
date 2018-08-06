@@ -4,6 +4,7 @@ use NativeCall;
 
 use GTK::Bin;
 
+use GTK::Compat::Types;
 use GTK::Raw::Button;
 use GTK::Raw::Types;
 

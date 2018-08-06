@@ -4,25 +4,24 @@ use GTK::Compat::Raw::GList;
 
 use GTK::Compat::Types;
 
-class Gtk::Compat::GList {
-  has GList $!list;
+class GTK::Compat::GList {
+  has $!list;
   has @!nat;
   has $!dirty = False;
 
-  submethod BUILD(:$!list) { }
+  submethod BUILD(:$!list) { say $!list; }
 
   submethod DESTROY {
     self.free;
   }
 
-  method new {
+  multi method new {
     my $list = g_list_alloc();
     die "Cannot allocate GList" unless $list;
 
     self.bless(:$list);
   }
-
-  method new($list) {
+  multi method new($list) {
     self.bless(:$list);
   }
 
@@ -41,7 +40,11 @@ class Gtk::Compat::GList {
   method !rebuild {
     my GList $l;
 
-    my @!nat = ();
+    say $!list.data;
+    say $!list.prev;
+    say $!list.next;
+
+    @!nat = ();
     loop ($l = self.first; $l != GList; $l = $l.next) {
       @!nat.push: $l;
     }
@@ -63,8 +66,7 @@ class Gtk::Compat::GList {
   multi method concat (GTK::Compat::GList:U: GList $list1, GList $list2) {
     g_list_concat($list1, $list2);
   }
-
-  method concat (GList $list2) {
+  multi method concat (GList $list2) {
     my $list = g_list_concat($!list, $list2);
     $!dirty = True;
     $!list = $list;
@@ -85,7 +87,7 @@ class Gtk::Compat::GList {
   }
 
   method find (gconstpointer $data) {
-    g_list_find($list, $data);
+    g_list_find($!list, $data);
   }
 
   method find_custom (gconstpointer $data, GCompareFunc $func) {
@@ -93,7 +95,8 @@ class Gtk::Compat::GList {
   }
 
   method first {
-    g_list_first($!list);
+    #g_list_first($!list);
+    $!list;
   }
 
   method foreach (GFunc $func, gpointer $user_data) {

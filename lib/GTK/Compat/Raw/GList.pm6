@@ -2,7 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-unit package GTK::Compat::GList;
+use GTK::Raw::Types;
+use GTK::Compat::Types;
+
+unit package GTK::Compat::Raw::GList;
 
 sub g_list_alloc ()
   returns GList

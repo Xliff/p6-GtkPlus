@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::Types;
 use GTK::Raw::Box;
 use GTK::Raw::Types;
 use GTK::Container;
@@ -46,10 +47,6 @@ class GTK::Box is GTK::Container {
   method new-vbox(Int $spacing = 2) {
     my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $spacing);
     self.bless( :$box, :container($box), :widget($box) );
-  }
-
-  method box {
-    $!b
   }
 
   # cw: Just in case I need it in the near future. May want to put it in an

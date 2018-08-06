@@ -4,6 +4,20 @@ use NativeCall;
 
 unit package GTK::Compat::Types;
 
+constant cairo_t        is export := OpaquePointer;
+constant cairo_region_t is export := OpaquePointer;
+
+constant gboolean      is export := uint32;
+constant gchar         is export := Str;
+constant gconstpointer is export := OpaquePointer;
+constant gdouble       is export := num64;
+constant gfloat        is export := num32;
+constant gint          is export := int32;
+constant gpointer      is export := OpaquePointer;
+constant GType         is export := uint32;
+constant guint         is export := uint32;
+constant va_list       is export := OpaquePointer;
+
 class GError is repr('CStruct') is export {
   has uint32        $.domain;
   has int32         $.code;
@@ -106,6 +120,10 @@ class PangoLayout           is repr('CPointer') is export { }
 
 class GActionGroup          is repr('CPointer') is export { }
 class GApplication          is repr('CPointer') is export { }
+class GCompareDataFunc      is repr('CPointer') is export { }
+class GCompareFunc          is repr('CPointer') is export { }
+class GCopyFunc             is repr('CPointer') is export { }
+class GFunc                 is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
 class GDestroyNotify        is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }

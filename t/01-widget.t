@@ -8,6 +8,7 @@ use NativeCall;
 
 # Could be abstracted away at the module level.
 use GTK::Raw::Types;
+use GTK::Compat::GList;
 
 use GTK::Application;
 use GTK::Button;
@@ -44,6 +45,9 @@ $a.activate.tap({
   $box.pack_start($b1, True, True, 0);
   $box.pack_start($b2, True, True, 0);
   $box.pack_start($b3, True, True, 0);
+
+  my $l = GTK::Compat::GList.new( $box.get_children );
+  say $l.Array;
 
   $a.window.show_all;
 });
