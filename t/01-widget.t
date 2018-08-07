@@ -14,6 +14,8 @@ use GTK::Application;
 use GTK::Button;
 use GTK::Box;
 
+use GTK::Raw::Container;
+
 #use GTK::Raw::Subs :app, :window, :widget, :button;
 
 my $a = GTK::Application.new(
@@ -46,8 +48,12 @@ $a.activate.tap({
   $box.pack_start($b2, True, True, 0);
   $box.pack_start($b3, True, True, 0);
 
-  my $l = GTK::Compat::GList.new( $box.get_children );
-  say $l.Array;
+  say "B: " ~ $box;
+  say "BW: " ~ $box.widget;
+  my $childs = GTK::Compat::GList.new( gtk_container_get_children($box.widget) );
+  say "CL: " ~ $childs;
+
+  say $childs.first;
 
   $a.window.show_all;
 });

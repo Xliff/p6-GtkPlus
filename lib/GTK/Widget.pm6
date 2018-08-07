@@ -34,7 +34,7 @@ class GTK::Widget {
   }
 
   method widget {
-    $!w;
+    nativecast(GtkWidget, $!w);
   }
 
   proto new(|) { * }

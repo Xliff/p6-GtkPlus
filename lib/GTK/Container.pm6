@@ -19,8 +19,8 @@ class GTK::Container is GTK::Widget {
       when GtkContainer | GtkWidget {
         $!c = $container;
       }
-      when GTK::Container {
-        warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
+      when GTK::Container | GTK::Widget {
+        self.setWidget($!c = $container.widget);
       }
       default {
       }
@@ -220,9 +220,16 @@ class GTK::Container is GTK::Widget {
     gtk_container_foreach($!c, $callback, $callback_data);
   }
 
-  method get_children {
-    say $!c.^name;
-    gtk_container_get_children($!c);
+  method get_children(:$obj = True) {
+    my @children;
+    my $list = gtk_container_get_children($!c);
+    say "List start: { $list }";
+    while $list {
+      @children.push: GTK::Widget.new($list.data);
+      $list = $list.next;
+      say "List next: { $list }";
+    }
+    @children;
   }
 
   method get_focus_chain (GList $focusable_widgets) {
