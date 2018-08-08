@@ -120,14 +120,13 @@ class GTK::Box is GTK::Container {
   }
 
   multi method pack_start (GTK::Widget $child, Bool $expand, Bool $fill, Int $padding) {
-    say "PSCO: { $child }";
-    say "PSCW: { $child.widget }";
-    nextwith($child.widget, $expand.Int, $fill.Int, $padding);
+    my uint32 $c = $expand.Int;
+    my uint32 $f = $fill.Int;
+    my guint $p = $padding;
+    samewith($child.widget, $c, $f, $p);
   }
-  multi method pack_start (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
-    say "PSW";
-    say "PSC: $child";
-    gtk_box_pack_start($!b, $child, $expand, $fill, $padding);
+  multi method pack_start (GtkWidget $child, uint32 $expand, uint32 $fill, guint $padding) {
+    gtk_box_pack_start($!b, $child, $expand.Int, $fill.Int, $padding);
   }
 
   multi method query_child_packing (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {

@@ -17,7 +17,7 @@ class GTK::Container is GTK::Widget {
   submethod BUILD (:$container) {
     given $container {
       when GtkContainer | GtkWidget {
-        $!c = $container;
+        $!c = nativecast(GtkWidget, $container);
       }
       when GTK::Container | GTK::Widget {
         self.setWidget($!c = $container.widget);
@@ -128,7 +128,7 @@ class GTK::Container is GTK::Widget {
     );
   }
 
-    multi method add (GtkWidget $widget) {
+  multi method add (GtkWidget $widget) {
     gtk_container_add($!c, $widget);
   }
   multi method add (GTK::Widget $widget)  {

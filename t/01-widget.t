@@ -7,8 +7,8 @@ use Test;
 use NativeCall;
 
 # Could be abstracted away at the module level.
+use GTK::Compat::Types;
 use GTK::Raw::Types;
-use GTK::Compat::GList;
 
 use GTK::Application;
 use GTK::Button;
@@ -50,10 +50,15 @@ $a.activate.tap({
 
   say "B: " ~ $box;
   say "BW: " ~ $box.widget;
-  my $childs = GTK::Compat::GList.new( gtk_container_get_children($box.widget) );
-  say "CL: " ~ $childs;
+  #my $childs = GTK::Compat::GList.new( gtk_container_get_children($box.widget) );
+  #my $childs = gtk_container_get_children($box.widget);
+  #my $c = 1;
+  #while $childs !=:= GList {
+  #  say "C[$c++]: $childs D: { $childs.data } / N: { $childs.next } / P: { $childs.prev }";
+  #  $childs = $childs.next;
+  #}
 
-  say $childs.first;
+  #say $childs.first;
 
   $a.window.show_all;
 });
