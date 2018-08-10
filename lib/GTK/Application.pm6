@@ -35,9 +35,6 @@ class GTK::Application {
     self.activate.tap({
       $!window = GTK::Window.new( :window( gtk_application_window_new($app) ) );
 
-      say "W: $!window";
-
-      #self.add_window($!window);
       self.window.setWindow($!window);
       self.window.title = $title;
       self.window.set_default_size($width, $height);

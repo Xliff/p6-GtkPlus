@@ -40,6 +40,13 @@ class GTK::Container is GTK::Widget {
     self.setWidget($!c = nativecast(GtkContainer, $container));
   }
 
+  multi method add (GtkWidget $widget) {
+    gtk_container_add($!c, $widget);
+  }
+  multi method add (GTK::Widget $widget)  {
+    samewith($widget.widget);
+  }
+
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
   multi method add {
@@ -126,14 +133,6 @@ class GTK::Container is GTK::Widget {
         gtk_container_set_border_width($!c, $border_width);
       }
     );
-  }
-
-  multi method add (GtkWidget $widget) {
-    say "CONTAINER ADD";
-    gtk_container_add($!c, $widget);
-  }
-  multi method add (GTK::Widget $widget)  {
-    nextwith($widget.widget);
   }
 
   method check_resize () {
