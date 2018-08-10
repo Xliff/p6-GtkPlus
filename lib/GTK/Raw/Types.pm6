@@ -3,10 +3,11 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-class GtkRequisition is repr('CStruct') is export {
+class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32 $.width;
   has uint32 $.height;
 }

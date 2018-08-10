@@ -2,6 +2,8 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Roles::Pointers;
+
 unit package GTK::Compat::Types;
 
 constant cairo_t        is export := OpaquePointer;
@@ -18,13 +20,13 @@ constant GType         is export := uint32;
 constant guint         is export := uint32;
 constant va_list       is export := OpaquePointer;
 
-class GError is repr('CStruct') is export {
+class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
   has int32         $.code;
   has Str           $.message;
 }
 
-class GList is repr('CStruct') is export {
+class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has OpaquePointer $.data;
   has GList         $.next;
   has GList         $.prev;
@@ -42,7 +44,7 @@ class GTypeValueList is repr('CUnion') is export {
   has OpaquePointer   $.v_pointer;
 };
 
-class GValue is repr('CStruct') is export {
+class GValue is repr('CStruct') does GTK::Roles::Pointers is export {
   has ulong           $.g_type;
   HAS GTypeValueList  $.data1;
   HAS GTypeValueList  $.data2;

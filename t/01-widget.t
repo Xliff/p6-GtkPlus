@@ -50,13 +50,16 @@ $a.activate.tap({
 
   say "B: " ~ $box;
   say "BW: " ~ $box.widget;
-  #my $childs = GTK::Compat::GList.new( gtk_container_get_children($box.widget) );
-  #my $childs = gtk_container_get_children($box.widget);
-  #my $c = 1;
-  #while $childs !=:= GList {
-  #  say "C[$c++]: $childs D: { $childs.data } / N: { $childs.next } / P: { $childs.prev }";
-  #  $childs = $childs.next;
-  #}
+
+  my $childs = gtk_container_get_children($box.widget);
+  my $c = 1;
+  while $childs {
+    my $button = GTK::Button.new( :button($childs.data) );
+
+    say $button.label;
+
+    $childs = $childs.next;
+  }
 
   #say $childs.first;
 

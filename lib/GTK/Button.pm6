@@ -20,6 +20,9 @@ class GTK::Button is GTK::Bin {
       when GTK::Button {
         warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
       }
+      when OpaquePointer {
+        $!b = nativecast(GtkButton, $button);
+      }
       default {
         # Throw exception here
       }
