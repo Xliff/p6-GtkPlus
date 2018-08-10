@@ -105,6 +105,11 @@ sub g_application_run(OpaquePointer, Pointer[uint32], CArray[Str])
   is export
   { * }
 
+sub g_application_quit(OpaquePointer)
+  is native('gio-2.0')
+  is export
+  { * }
+
 # cw:This signature is wrong, so go with something that works and circle back.
 #sub gtk_init(uint32 is rw, CArray[Str])
 sub gtk_init(CArray[uint32], CArray[CArray[Str]])

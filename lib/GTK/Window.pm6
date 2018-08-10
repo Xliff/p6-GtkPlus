@@ -380,6 +380,9 @@ class GTK::Window is GTK::Bin {
         gtk_window_get_title($!win);
       },
       STORE => sub ($, $title is copy) {
+
+        say "Window is setting title to: $title";
+
         gtk_window_set_title($!win, $title);
       }
     );

@@ -9,6 +9,7 @@ use NativeCall;
 # Could be abstracted away at the module level.
 use GTK::Compat::Types;
 use GTK::Raw::Types;
+use GTK::Raw::Widget;
 
 use GTK::Application;
 use GTK::Button;
@@ -20,8 +21,8 @@ use GTK::Raw::Container;
 
 my $a = GTK::Application.new(
   title  => 'org.genex.test.widget',
-  width  => 200,
-  height => 200
+  width  => 400,
+  height => 400
 );
 
 #$a.activate.tap({
@@ -31,10 +32,14 @@ my $a = GTK::Application.new(
 #  gtk_application_add_window($a.app, $win);
 #  gtk_widget_show_all($win);
 #});
-$a.activate.tap({
-  my $box = GTK::Box.new-box(GTK_ORIENTATION_HORIZONTAL, 6);
 
-  $a.window.add($box);
+# Try this all without application and just a window.
+
+$a.activate.tap({
+  my $box = GTK::Box.new-box(GTK_ORIENTATION_VERTICAL, 6);
+
+  #$a.window.add($box);
+  gtk_container_add($a.window.window, $box.widget);
 
   my ($b1, $b2, $b3) = (
     GTK::Button.new_with_label('Click Me'),
@@ -56,14 +61,13 @@ $a.activate.tap({
   while $childs {
     my $button = GTK::Button.new( :button($childs.data) );
 
-    say $button.label;
-
+    say "B{ $c++ }: { $button.label }";
     $childs = $childs.next;
   }
 
   #say $childs.first;
 
-  $a.window.show_all;
+  $a.show_all;
 });
 
 $a.run;

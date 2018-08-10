@@ -37,7 +37,7 @@ class GTK::Application {
 
       say "W: $!window";
 
-      self.add_window($!window);
+      #self.add_window($!window);
       self.window.setWindow($!window);
       self.window.title = $title;
       self.window.set_default_size($width, $height);
@@ -121,7 +121,8 @@ class GTK::Application {
   }
 
   method exit {
-    gtk_main_quit();
+    #gtk_main_quit();
+    g_application_quit($!app);
   }
 
   method activate {

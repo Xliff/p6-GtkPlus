@@ -129,6 +129,7 @@ class GTK::Container is GTK::Widget {
   }
 
   multi method add (GtkWidget $widget) {
+    say "CONTAINER ADD";
     gtk_container_add($!c, $widget);
   }
   multi method add (GTK::Widget $widget)  {
