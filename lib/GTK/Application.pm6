@@ -142,7 +142,7 @@ class GTK::Application {
     gtk_application_add_window($!app, $window);
   }
   multi method add_window(GTK::Window $window) {
-    nextwith($window.widget);
+    samewith($window.widget);
   }
 
   method get_accels_for_action (gchar $detailed_action_name) {
@@ -174,11 +174,11 @@ class GTK::Application {
   }
 
   # cw: Variant to accept a GTK::Window
-  multi method inhibit (GTK::Window $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
-    nextwith($window.window, $flags, $reason);
-  }
   multi method inhibit (GtkWindow $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
     gtk_application_inhibit($!app, $window, $flags, $reason);
+  }
+  multi method inhibit (GTK::Window $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
+    samewith($window.window, $flags, $reason);
   }
 
   method is_inhibited (GtkApplicationInhibitFlags $flags) {

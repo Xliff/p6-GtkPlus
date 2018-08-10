@@ -40,13 +40,6 @@ class GTK::Container is GTK::Widget {
     self.setWidget($!c = nativecast(GtkContainer, $container));
   }
 
-  multi method add (GtkWidget $widget) {
-    gtk_container_add($!c, $widget);
-  }
-  multi method add (GTK::Widget $widget)  {
-    samewith($widget.widget);
-  }
-
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
   multi method add {
@@ -135,6 +128,13 @@ class GTK::Container is GTK::Widget {
     );
   }
 
+  multi method add (GtkWidget $widget) {
+    gtk_container_add($!c, $widget);
+  }
+  multi method add (GTK::Widget $widget)  {
+    samewith($widget.widget);
+  }
+
   method check_resize () {
     gtk_container_check_resize($!c);
   }
@@ -143,7 +143,7 @@ class GTK::Container is GTK::Widget {
     gtk_container_child_get_property($!c, $child, $property_name, $value);
   }
   multi method child_get_property (GTK::Widget $child, gchar $property_name, GValue $value)  {
-    nextwith($child.widget, $property_name, $value);
+    samewith($child.widget, $property_name, $value);
   }
 
   # A method for working with va_list could be the following:
@@ -153,28 +153,28 @@ class GTK::Container is GTK::Widget {
     gtk_container_child_get_valist($!c, $child, $first_property_name, $var_args);
   }
   multi method child_get_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
-    nextwith($child.widget, $first_property_name, $var_args);
+    samewith($child.widget, $first_property_name, $var_args);
   }
 
   multi method child_notify (GtkWidget $child, gchar $child_property) {
     gtk_container_child_notify($!c, $child, $child_property);
   }
   multi method child_notify (GTK::Widget $child, gchar $child_property)  {
-    nextwith($child.widget, $child_property);
+    samewith($child.widget, $child_property);
   }
 
   multi method child_notify_by_pspec (GtkWidget $child, GParamSpec $pspec) {
     gtk_container_child_notify_by_pspec($!c, $child, $pspec);
   }
   multi method child_notify_by_pspec (GTK::Widget $child, GParamSpec $pspec)  {
-    nextwith($child.widget, $pspec);
+    samewith($child.widget, $pspec);
   }
 
   multi method child_set_property (GtkWidget $child, gchar $property_name, GValue $value) {
     gtk_container_child_set_property($!c, $child, $property_name, $value);
   }
   multi method child_set_property (GTK::Widget $child, gchar $property_name, GValue $value)  {
-    nextwith($child.widget, $property_name, $value);
+    samewith($child.widget, $property_name, $value);
   }
 
   # va_list:
@@ -184,7 +184,7 @@ class GTK::Container is GTK::Widget {
     gtk_container_child_set_valist($!c, $child, $first_property_name, $var_args);
   }
   multi method child_set_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
-    nextwith($child.widget, $first_property_name, $var_args);
+    samewith($child.widget, $first_property_name, $var_args);
   }
 
   method child_type {
@@ -240,7 +240,7 @@ class GTK::Container is GTK::Widget {
     gtk_container_get_path_for_child($!c, $child);
   }
   multi method get_path_for_child (GTK::Widget $child)  {
-    nextwith($child.widget);
+    samewith($child.widget);
   }
 
   method get_type {
@@ -251,14 +251,14 @@ class GTK::Container is GTK::Widget {
     gtk_container_propagate_draw($!c, $child, $cr);
   }
   multi method propagate_draw (GTK::Widget $child, cairo_t $cr)  {
-    nextwith($child.widget, $cr);
+    samewith($child.widget, $cr);
   }
 
   multi method remove (GtkWidget $widget) {
     gtk_container_remove($!c, $widget);
   }
   multi method remove (GTK::Widget $widget)  {
-    nextwith($widget.widget);
+    samewith($widget.widget);
   }
 
   method resize_children () {
