@@ -31,7 +31,7 @@ class GTK::Button is GTK::Bin {
 
   multi method new {
     my $button = gtk_button_new();
-    nextwith(:$button);
+    samewith(:$button);
   }
 
   multi method new(:$button) {
