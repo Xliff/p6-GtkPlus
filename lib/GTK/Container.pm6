@@ -3,21 +3,21 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+
 use GTK::Raw::Container;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
+
 use GTK::Widget;
 
 class GTK::Container is GTK::Widget {
-  also does GTK::Roles::Signals;
-
   # Maybe this should be done as the base class.
   has $!c;
 
   submethod BUILD (:$container) {
     given $container {
       when GtkContainer | GtkWidget {
-        $!c = nativecast(GtkWidget, $container);
+        self.setWidget($!c = $container);
       }
       when GTK::Container | GTK::Widget {
         self.setWidget($!c = $container.widget);

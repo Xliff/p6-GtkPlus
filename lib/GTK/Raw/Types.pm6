@@ -471,6 +471,7 @@ class GtkCallback         is repr('CPointer') is export { }
 class GtkClipboard        is repr('CPointer') is export { }
 class GtkContainer        is repr('CPointer') is export { }
 class GtkDragContext      is repr('CPointer') is export { }
+class GtkLabel            is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
 class GtkSettings         is repr('CPointer') is export { }
 class GtkStyle            is repr('CPointer') is export { }

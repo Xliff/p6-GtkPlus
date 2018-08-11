@@ -111,10 +111,24 @@ our enum GdkWindowTypeHint is export <
   GDK_WINDOW_TYPE_HINT_DND
 >;
 
+our enum PangoWrapMode is export <
+  PANGO_WRAP_WORD
+  PANGO_WRAP_CHAR
+  PANGO_WRAP_WORD_CHAR
+>;
+
+our enum PangoEllipsizeMode is export <
+  PANGO_ELLIPSIZE_NONE
+  PANGO_ELLIPSIZE_START
+  PANGO_ELLIPSIZE_MIDDLE
+  PANGO_ELLIPSIZE_END
+>;
+
 class cairo_font_options_t  is repr('CPointer') is export { }
 
 class AtkObject             is repr('CPointer') is export { }
 
+class PangoAttrList         is repr('CPointer') is export { }
 class PangoContext          is repr('CPointer') is export { }
 class PangoFontDescription  is repr('CPointer') is export { }
 class PangoFontMap          is repr('CPointer') is export { }

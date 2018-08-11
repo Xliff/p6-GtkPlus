@@ -3,13 +3,14 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+
 use GTK::Raw::Box;
 use GTK::Raw::Types;
+
 use GTK::Container;
 use GTK::Widget;
 
 class GTK::Box is GTK::Container {
-  also does GTK::Roles::Signals;
 
   # Maybe make Widget a role that has $.w and all variants assign to it,
   # but how to keep $.w from being set from outside the object tree?

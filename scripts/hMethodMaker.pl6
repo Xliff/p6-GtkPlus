@@ -239,7 +239,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
     for %methods.keys.sort -> $m {
       my @sig_list = %methods{$m}<sig>.split(/\, /);
 
-      my rule replacer { «[ 'GtkWidget' | 'GtkWindow' ]» };
+      my rule replacer { «[ 'Gtk'<[A..Z]>\w+ | 'GtkWindow' ]» };
       my $sig = %methods{$m}<sig>;
       my $call = %methods{$m}<call>;
       my $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! '';
@@ -254,11 +254,11 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
         my $o_call = %methods{$m}<call_vars>.clone;
         my $o_types = %methods{$m}<call_types>.clone;
         for (^$o_types) -> $oidx {
-          if $o_types[$oidx] ~~ s/GtkWidget/GTK::Widget/ {
-            $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
-          }
           if $o_types[$oidx] ~~ s/GtkWindow/GTK::Window/ {
             $o_call[$oidx] ~~ s/\$(\w+)/\$$0.window/;
+          }
+          if $o_types[$oidx] ~~ s/'Gtk' <!before 'Window'> (<[A..Z]> \w+)/GTK::$0/ {
+            $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
           }
         }
         my $oc = $o_call.join(', ');
@@ -266,7 +266,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
 
         say qq:to/METHOD/.chomp;
           { $mult }method { %methods{$m}<sub> } ({ $os })  \{
-            nextwith({ $oc });
+            samewith({ $oc });
           \}
         METHOD
 

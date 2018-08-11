@@ -8,11 +8,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
-use GTK::Roles::Signals;
-
 class GTK::Window is GTK::Bin {
-  also does GTK::Roles::Signals;
-
   has GtkWindow $!win;
 
   submethod BUILD(:$window) {
