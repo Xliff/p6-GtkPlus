@@ -14,6 +14,13 @@ class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
   has int16 $.bottom;
 }
 
+class GtkTreeIter is repr('CStruct') does GTK::Roles::Pointers is export {
+  has gint     $.stamp;
+  has gpointer $.user_data;
+  has gpointer $.user_data2;
+  has gpointer $.user_data3;
+}
+
 class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32 $.width;
   has uint32 $.height;
@@ -499,6 +506,7 @@ class GtkEntry            is repr('CPointer') is export { }
 class GtkEntryBuffer      is repr('CPointer') is export { }
 class GtkEntryCompletion  is repr('CPointer') is export { }
 class GtkLabel            is repr('CPointer') is export { }
+class GtkListStore        is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
 class GtkSettings         is repr('CPointer') is export { }
 class GtkStyle            is repr('CPointer') is export { }
