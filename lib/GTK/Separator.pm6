@@ -7,7 +7,7 @@ use GTK::Widget;
 
 class GTK::Separator is GTK::Widget {
 
-  submethod BLESS(:$separator) {
+  submethod BUILD(:$separator) {
     self.setWidget($separator);
   }
 
@@ -27,7 +27,7 @@ class GTK::Separator is GTK::Widget {
 
   method new-h-separator(GTK::Separator:U: ) {
     self.bless(
-      :separator( gtk_separator_new( GTK_ORIENTATION_HORIZONTAL ) ) 
+      :separator( gtk_separator_new( GTK_ORIENTATION_HORIZONTAL ) )
     );
   }
 
