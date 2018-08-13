@@ -13,13 +13,15 @@ sub gtk_entry_get_current_icon_drag_source (GtkEntry $entry)
   is export
   { * }
 
-sub gtk_entry_get_icon_activatable (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_activatable (GtkEntry $entry, uint32 $icon_pos)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_area (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GdkRectangle $icon_area)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GdkRectangle $icon_area)
+sub gtk_entry_get_icon_area (GtkEntry $entry, uint32 $icon_pos, GdkRectangle $icon_area)
   is native('gtk-3')
   is export
   { * }
@@ -30,49 +32,57 @@ sub gtk_entry_get_icon_at_pos (GtkEntry $entry, gint $x, gint $y)
   is export
   { * }
 
-sub gtk_entry_get_icon_gicon (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_gicon (GtkEntry $entry, uint32 $icon_pos)
   returns GIcon
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_name (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_name (GtkEntry $entry, uint32 $icon_pos)
   returns Str
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_pixbuf (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_pixbuf (GtkEntry $entry, uint32 $icon_pos)
   returns GdkPixbuf
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_sensitive (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_sensitive (GtkEntry $entry, uint32 $icon_pos)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_stock (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_stock (GtkEntry $entry, uint32 $icon_pos)
   returns Str
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_storage_type (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
-  returns GtkImageType
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_storage_type (GtkEntry $entry, uint32 $icon_pos)
+  returns uint32 # GtkImageType
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_tooltip_markup (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_tooltip_markup (GtkEntry $entry, uint32 $icon_pos)
   returns Str
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_get_icon_tooltip_text (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos)
+sub gtk_entry_get_icon_tooltip_text (GtkEntry $entry, uint32 $icon_pos)
   returns Str
   is native('gtk-3')
   is export
@@ -151,47 +161,56 @@ sub gtk_entry_reset_im_context (GtkEntry $entry)
   is export
   { * }
 
-sub gtk_entry_set_icon_activatable (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gboolean $activatable)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gboolean $activatable)
+sub gtk_entry_set_icon_activatable (GtkEntry $entry, uint32 $icon_pos, gboolean $activatable)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_drag_source (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GtkTargetList $target_list, GdkDragAction $actions)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GtkTargetList $target_list, GdkDragAction $actions)
+sub gtk_entry_set_icon_drag_source (GtkEntry $entry, uint32 $icon_pos, GtkTargetList $target_list, uint32 $actions)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_from_gicon (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GIcon $icon)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GIcon $icon)
+sub gtk_entry_set_icon_from_gicon (GtkEntry $entry, uint32 $icon_pos, GIcon $icon)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_from_icon_name (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $icon_name)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $icon_name)
+sub gtk_entry_set_icon_from_icon_name (GtkEntry $entry, uint32 $icon_pos, gchar $icon_name)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_from_pixbuf (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GdkPixbuf $pixbuf)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, GdkPixbuf $pixbuf)
+sub gtk_entry_set_icon_from_pixbuf (GtkEntry $entry, uint32 $icon_pos, GdkPixbuf $pixbuf)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_from_stock (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $stock_id)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $stock_id)
+sub gtk_entry_set_icon_from_stock (GtkEntry $entry, uint32 $icon_pos, gchar $stock_id)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_sensitive (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gboolean $sensitive)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gboolean $sensitive)
+sub gtk_entry_set_icon_sensitive (GtkEntry $entry, uint32 $icon_pos, gboolean $sensitive)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_tooltip_markup (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $tooltip)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $tooltip)
+sub gtk_entry_set_icon_tooltip_markup (GtkEntry $entry, uint32 $icon_pos, gchar $tooltip)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_entry_set_icon_tooltip_text (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $tooltip)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $tooltip)
+sub gtk_entry_set_icon_tooltip_text (GtkEntry $entry, uint32 $icon_pos, gchar $tooltip)
   is native('gtk-3')
   is export
   { * }
@@ -232,7 +251,7 @@ sub gtk_entry_get_buffer (GtkEntry $entry)
   { * }
 
 sub gtk_entry_get_input_purpose (GtkEntry $entry)
-  returns GtkInputPurpose
+  returns uint32 # GtkInputPurpose
   is native('gtk-3')
   is export
   { * }
@@ -316,7 +335,7 @@ sub gtk_entry_get_tabs (GtkEntry $entry)
   { * }
 
 sub gtk_entry_get_input_hints (GtkEntry $entry)
-  returns GtkInputHints
+  returns uint32 # GtkInputHints
   is native('gtk-3')
   is export
   { * }
@@ -347,7 +366,8 @@ sub gtk_entry_set_buffer (GtkEntry $entry, GtkEntryBuffer $buffer)
   is export
   { * }
 
-sub gtk_entry_set_input_purpose (GtkEntry $entry, GtkInputPurpose $purpose)
+# (GtkEntry $entry, GtkInputPurpose $purpose)
+sub gtk_entry_set_input_purpose (GtkEntry $entry, uint32 $purpose)
   is native('gtk-3')
   is export
   { * }
@@ -417,7 +437,8 @@ sub gtk_entry_set_tabs (GtkEntry $entry, PangoTabArray $tabs)
   is export
   { * }
 
-sub gtk_entry_set_input_hints (GtkEntry $entry, GtkInputHints $hints)
+# (GtkEntry $entry, GtkInputHints $hints)
+sub gtk_entry_set_input_hints (GtkEntry $entry, uint32 $hints)
   is native('gtk-3')
   is export
   { * }

@@ -11,6 +11,7 @@ constant cairo_region_t is export := OpaquePointer;
 
 constant gboolean      is export := uint32;
 constant gchar         is export := Str;
+constant gunichar      is export := uint32;
 constant gconstpointer is export := OpaquePointer;
 constant gdouble       is export := num64;
 constant gfloat        is export := num32;
@@ -18,7 +19,10 @@ constant gint          is export := int32;
 constant gpointer      is export := OpaquePointer;
 constant GType         is export := uint32;
 constant guint         is export := uint32;
+constant guint16       is export := uint16;
 constant va_list       is export := OpaquePointer;
+
+constant PangoTabArray is export := CArray[gint];
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
@@ -82,6 +86,15 @@ our enum GApplicationFlags is export (
   G_APPLICATION_CAN_OVERRIDE_APP_ID  => 64
 );
 
+our enum GdkDragAction is export <
+  GDK_ACTION_DEFAULT
+  GDK_ACTION_COPY
+  GDK_ACTION_MOVE
+  GDK_ACTION_LINK
+  GDK_ACTION_PRIVATE
+  GDK_ACTION_ASK
+>;
+
 our enum GdkWindowHints is export <
   GDK_HINT_POS
   GDK_HINT_MIN_SIZE
@@ -140,6 +153,7 @@ class GCompareDataFunc      is repr('CPointer') is export { }
 class GCompareFunc          is repr('CPointer') is export { }
 class GCopyFunc             is repr('CPointer') is export { }
 class GFunc                 is repr('CPointer') is export { }
+class GIcon                 is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
 class GDestroyNotify        is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }

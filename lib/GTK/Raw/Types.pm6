@@ -7,6 +7,13 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
+class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
+  has int16 $.left;
+  has int16 $.right;
+  has int16 $.top;
+  has int16 $.bottom;
+}
+
 class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32 $.width;
   has uint32 $.height;
@@ -65,6 +72,11 @@ our enum GtkDirectionType is export <
   GTK_DIR_DOWN
   GTK_DIR_LEFT
   GTK_DIR_RIGHT
+>;
+
+our enum GtkEntryIconPosition is export <
+  GTK_ENTRY_ICON_PRIMARY
+  GTK_ENTRY_ICON_SECONDARY
 >;
 
 our enum GtkIconSize is export <
@@ -369,6 +381,17 @@ our enum GtkLevelBarMode is export <
   GTK_LEVEL_BAR_MODE_DISCRETE
 >;
 
+our enum GtkImageType is export <
+  GTK_IMAGE_EMPTY
+  GTK_IMAGE_PIXBUF
+  GTK_IMAGE_STOCK
+  GTK_IMAGE_ICON_SET
+  GTK_IMAGE_ANIMATION
+  GTK_IMAGE_ICON_NAME
+  GTK_IMAGE_GICON
+  GTK_IMAGE_SURFACE
+>;
+
 our enum GtkInputPurpose is export <
   GTK_INPUT_PURPOSE_FREE_FORM
   GTK_INPUT_PURPOSE_ALPHA
@@ -471,11 +494,17 @@ class GtkCallback         is repr('CPointer') is export { }
 class GtkClipboard        is repr('CPointer') is export { }
 class GtkContainer        is repr('CPointer') is export { }
 class GtkDragContext      is repr('CPointer') is export { }
+class GtkEntry            is repr('CPointer') is export { }
+# GtkEntryBuffer should become its own object
+class GtkEntryBuffer      is repr('CPointer') is export { }
+# GtkEntryCompletion should becom its own object
+class GtkEntryCompletion  is repr('CPointer') is export { }
 class GtkLabel            is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
 class GtkSettings         is repr('CPointer') is export { }
 class GtkStyle            is repr('CPointer') is export { }
 class GtkStyleContext     is repr('CPointer') is export { }
+class GtkTargetList       is repr('CPointer') is export { }
 class GtkTickCallback     is repr('CPointer') is export { }
 class GtkToolTip          is repr('CPointer') is export { }
 class GtkWidget           is repr('CPointer') is export { }

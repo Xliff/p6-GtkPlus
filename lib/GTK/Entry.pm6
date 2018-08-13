@@ -6,6 +6,8 @@ use GTK::Compat::Types;
 use GTK::Raw::Entry;
 use GTK::Raw::Types;
 
+use GTK::Widget;
+
 class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Signals;
 
@@ -14,7 +16,7 @@ class GTK::Entry is GTK::Widget {
   submethod BUILD(:$entry) {
     given $entry {
       when GtkEntry | GtkWidget {
-        self.setWidget( nativecast(GtkWidget, $entry) );
+        self.setWidget( nativecast(GtkWidget, $!e = $entry) );
       }
       when GTK::Entry {
       }
@@ -24,7 +26,72 @@ class GTK::Entry is GTK::Widget {
   }
 
   method new {
+    my $entry = gtk_entry_new();
+    self.bless( :$entry );
   }
+
+  method new_with_buffer (GtkEntryBuffer $b) {
+    my $entry = gtk_entry_new_with_buffer($b);
+    self.bless( :$entry );
+  }
+
+  # ↓↓↓↓ SIGNALS ↓↓↓↓
+  method activate {
+    self.connect($!e, 'activate');
+  }
+
+  method backspace {
+    self.connect($!e, 'backspace');
+  }
+
+  method copy-clipboard {
+    self.connect($!e, 'copy-clipboard');
+  }
+
+  method cut-clipboard {
+    self.connect($!e, 'cut-clipboard');
+  }
+
+  method delete-from-cursor {
+    self.connect($!e, 'delete-from-cursor');
+  }
+
+  method icon-press {
+    self.connect($!e, 'icon-press');
+  }
+
+  method icon-release {
+    self.connect($!e, 'icon-release');
+  }
+
+  method insert-at-cursor {
+    self.connect($!e, 'insert-at-cursor');
+  }
+
+  method insert-emoji {
+    self.connect($!e, 'insert-emoji');
+  }
+
+  method move-cursor {
+    self.connect($!e, 'move-cursor');
+  }
+
+  method paste-clipboard {
+    self.connect($!e, 'paste-clipboard');
+  }
+
+  method populate-popup {
+    self.connect($!e, 'populate-popup');
+  }
+
+  method preedit-changed {
+    self.connect($!e, 'preedit-changed');
+  }
+
+  method toggle-overwrite {
+    self.connect($!e, 'toggle-overwrite');
+  }
+  # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method activates_default is rw {
@@ -129,10 +196,11 @@ class GTK::Entry is GTK::Widget {
   method input_purpose is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_input_purpose($!e);
+        GtkInputPurpose( gtk_entry_get_input_purpose($!e) );
       },
-      STORE => sub ($, $purpose is copy) {
-        gtk_entry_set_input_purpose($!e, $purpose);
+      STORE => sub ($, Int $purpose is copy) {
+        my uint32 $p = $purpose;
+        gtk_entry_set_input_purpose($!e, $p);
       }
     );
   }
@@ -249,16 +317,18 @@ class GTK::Entry is GTK::Widget {
 
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
-  method get_current_icon_drag_source () {
+  method get_current_icon_drag_source {
     gtk_entry_get_current_icon_drag_source($!e);
   }
 
   method get_icon_activatable (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_activatable($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_activatable($!e, $ip);
   }
 
   method get_icon_area (GtkEntryIconPosition $icon_pos, GdkRectangle $icon_area) {
-    gtk_entry_get_icon_area($!e, $icon_pos, $icon_area);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_area($!e, $ip, $icon_area);
   }
 
   method get_icon_at_pos (gint $x, gint $y) {
@@ -266,42 +336,50 @@ class GTK::Entry is GTK::Widget {
   }
 
   method get_icon_gicon (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_gicon($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_gicon($!e, $ip);
   }
 
   method get_icon_name (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_name($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_name($!e, $ip);
   }
 
   method get_icon_pixbuf (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_pixbuf($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_pixbuf($!e, $ip);
   }
 
   method get_icon_sensitive (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_sensitive($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_sensitive($!e, $ip);
   }
 
   method get_icon_stock (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_stock($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_stock($!e, $ip);
   }
 
   method get_icon_storage_type (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_storage_type($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    GtkImageType( gtk_entry_get_icon_storage_type($!e, $ip) );
   }
 
   method get_icon_tooltip_markup (GtkEntryIconPosition $icon_pos) {
-    gtk_entry_get_icon_tooltip_markup($!e, $icon_pos);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_get_icon_tooltip_markup($!e, $ip);
   }
 
   method get_icon_tooltip_text (GtkEntryIconPosition $icon_pos) {
+    my uint32 $ip = $icon_pos.Int;
     gtk_entry_get_icon_tooltip_text($!e, $icon_pos);
   }
 
-  method get_invisible_char () {
+  method get_invisible_char {
     gtk_entry_get_invisible_char($!e);
   }
 
-  method get_layout () {
+  method get_layout {
     gtk_entry_get_layout($!e);
   }
 
@@ -313,15 +391,15 @@ class GTK::Entry is GTK::Widget {
     gtk_entry_get_text_area($!e, $text_area);
   }
 
-  method get_text_length () {
+  method get_text_length {
     gtk_entry_get_text_length($!e);
   }
 
-  method get_type () {
+  method get_type {
     gtk_entry_get_type($!e);
   }
 
-  method grab_focus_without_selecting () {
+  method grab_focus_without_selecting {
     gtk_entry_grab_focus_without_selecting($!e);
   }
 
@@ -333,19 +411,11 @@ class GTK::Entry is GTK::Widget {
     gtk_entry_layout_index_to_text_index($!e, $layout_index);
   }
 
-  method new () {
-    gtk_entry_new($!e);
-  }
-
-  method new_with_buffer () {
-    gtk_entry_new_with_buffer($!e);
-  }
-
-  method progress_pulse () {
+  method progress_pulse {
     gtk_entry_progress_pulse($!e);
   }
 
-  method reset_im_context () {
+  method reset_im_context {
     gtk_entry_reset_im_context($!e);
   }
 
@@ -354,44 +424,51 @@ class GTK::Entry is GTK::Widget {
   }
 
   method set_icon_drag_source (GtkEntryIconPosition $icon_pos, GtkTargetList $target_list, GdkDragAction $actions) {
-    gtk_entry_set_icon_drag_source($!e, $icon_pos, $target_list, $actions);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_drag_source($!e, $ip, $target_list, $actions);
   }
 
   method set_icon_from_gicon (GtkEntryIconPosition $icon_pos, GIcon $icon) {
-    gtk_entry_set_icon_from_gicon($!e, $icon_pos, $icon);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_from_gicon($!e, $ip, $icon);
   }
 
   method set_icon_from_icon_name (GtkEntryIconPosition $icon_pos, gchar $icon_name) {
-    gtk_entry_set_icon_from_icon_name($!e, $icon_pos, $icon_name);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_from_icon_name($!e, $ip, $icon_name);
   }
 
   method set_icon_from_pixbuf (GtkEntryIconPosition $icon_pos, GdkPixbuf $pixbuf) {
-    gtk_entry_set_icon_from_pixbuf($!e, $icon_pos, $pixbuf);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_from_pixbuf($!e, $ip, $pixbuf);
   }
 
   method set_icon_from_stock (GtkEntryIconPosition $icon_pos, gchar $stock_id) {
-    gtk_entry_set_icon_from_stock($!e, $icon_pos, $stock_id);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_from_stock($!e, $ip, $stock_id);
   }
 
   method set_icon_sensitive (GtkEntryIconPosition $icon_pos, gboolean $sensitive) {
-    gtk_entry_set_icon_sensitive($!e, $icon_pos, $sensitive);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_sensitive($!e, $ip, $sensitive);
   }
 
   method set_icon_tooltip_markup (GtkEntryIconPosition $icon_pos, gchar $tooltip) {
-    gtk_entry_set_icon_tooltip_markup($!e, $icon_pos, $tooltip);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_tooltip_markup($!e, $ip, $tooltip);
   }
 
   method set_icon_tooltip_text (GtkEntryIconPosition $icon_pos, gchar $tooltip) {
-    gtk_entry_set_icon_tooltip_text($!e, $icon_pos, $tooltip);
+    my uint32 $ip = $icon_pos.Int;
+    gtk_entry_set_icon_tooltip_text($!e, $ip, $tooltip);
   }
 
   method text_index_to_layout_index (gint $text_index) {
     gtk_entry_text_index_to_layout_index($!e, $text_index);
   }
 
-  method unset_invisible_char () {
+  method unset_invisible_char {
     gtk_entry_unset_invisible_char($!e);
   }
-
 
 }
