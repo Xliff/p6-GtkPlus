@@ -12,6 +12,7 @@ use GTK::Raw::Types;
 sub USAGE {
     use nqp;
 		say nqp::getlexcaller(q|$*USAGE|) ~ qq:to/USAGE/;
+    \n\nWHERE
         <num> should be an integer from 1 to 3
     USAGE
 }

@@ -5,7 +5,10 @@ use v6.c;
 my %do_output;
 
 sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
-  die "Cannot fine '$filename'\n" unless $filename.IO.e;
+  my $fn = $filename;
+
+  $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn ~~ /^ '/usr/include/' /;
+  die "Cannot find '$fn'\n" unless $fn.IO.e;
 
   if $output ne 'all' {
     for $output.split(',') -> $o {
@@ -17,10 +20,13 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
     %do_output<all> = 1;
   }
 
-  (my $attr = $var) ~~ s:g/$ <!before '!'>//;
-  $attr = '$!' ~ $attr unless $attr ~~ /^ '$!' /;
+  my $attr;
+  with $var {
+    ($attr = $var) ~~ s:g/$ <!before '!'>//;
+    $attr = '$!' ~ $attr unless $attr ~~ /^ '$!' /;
+  }
 
-  my $contents = $filename.IO.open.slurp-rest;
+  my $contents = $fn.IO.open.slurp-rest;
 
   my $la;
   my $fd = '';
@@ -73,6 +79,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
           }
           $t;
         });
+        my $o_call = (@t [Z] @v).join(', ');
 
         if $attr {
           @v.shift if +@v;
@@ -104,6 +111,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
              returns => $mo<func_def><returns>,
                'sub' => $sub,
               params => @p,
+              o_call => $o_call,
                 call => $call,
                  sig => $sig,
            call_vars => @v,
@@ -208,7 +216,8 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
   }
 
   sub outputSub($m) {
-    my $subcall = "sub $m<original> ($m<sig>)";
+    my @p = $m<params>;
+    my $subcall = "sub $m<original> ({ $m<o_call> })";
 
     if $m<p6_return> && $m<p6_return> ne 'void' {
 
@@ -242,7 +251,12 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
       my rule replacer { «[ 'Gtk'<[A..Z]>\w+ | 'GtkWindow' ]» };
       my $sig = %methods{$m}<sig>;
       my $call = %methods{$m}<call>;
-      my $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! '';
+      my $mult = '';
+
+      $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! ''
+        if
+          %methods{$m}<call_types> &&
+          %methods{$m}<call_types>[0] ne <GtkEntryIconPosition>.all;
 
       say qq:to/METHOD/.chomp;
         { $mult }method { %methods{$m}<sub> } ({ $sig }) \{
@@ -254,11 +268,13 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
         my $o_call = %methods{$m}<call_vars>.clone;
         my $o_types = %methods{$m}<call_types>.clone;
         for (^$o_types) -> $oidx {
-          if $o_types[$oidx] ~~ s/GtkWindow/GTK::Window/ {
-            $o_call[$oidx] ~~ s/\$(\w+)/\$$0.window/;
-          }
-          if $o_types[$oidx] ~~ s/'Gtk' <!before 'Window'> (<[A..Z]> \w+)/GTK::$0/ {
-            $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
+          given $oidx {
+            when s/GtkWindow/GTK::Window/ {
+              $o_call[$oidx] ~~ s/\$(\w+)/\$$0.window/;
+            }
+            when s/'Gtk' <!before 'Window'> (<[A..Z]> \w+)/GTK::$0/ {
+              $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
+            }
           }
         }
         my $oc = $o_call.join(', ');
