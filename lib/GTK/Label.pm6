@@ -13,7 +13,7 @@ class GTK::Label is GTK::Widget {
   submethod BUILD(:$label) {
     given $label {
       when GtkLabel | GtkWidget {
-        self.setwidget( $!l = $label );
+        self.setWidget( $!l = $label );
       }
       when GTK::Label {
       }

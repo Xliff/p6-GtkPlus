@@ -113,21 +113,28 @@ class GTK::Box is GTK::Container {
     gtk_box_get_type();
   }
 
+  multi method pack_end (GTK::Widget $child, Bool $expand, Bool $fill, Int $padding) {
+    my uint32 $e = $expand.Int;
+    my uint32 $f = $fill.Int;
+    my guint $p = $padding;
+
+    self.unshift-end($child);
+    samewith($child.widget, $e, $f, $p);
+  }
   multi method pack_end (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding) {
     gtk_box_pack_end($!b, $child, $expand, $fill, $padding);
-  }
-  multi method pack_end (GTK::Widget $child, Bool $expand, Bool $fill, Int $padding) {
-    nextwith($child.widget, $expand.Int, $fill.Int, $padding);
   }
 
   multi method pack_start (GTK::Widget $child, Bool $expand, Bool $fill, Int $padding) {
     my uint32 $c = $expand.Int;
     my uint32 $f = $fill.Int;
     my guint $p = $padding;
+
+    self.push-start($child);
     samewith($child.widget, $c, $f, $p);
   }
   multi method pack_start (GtkWidget $child, uint32 $expand, uint32 $fill, guint $padding) {
-    gtk_box_pack_start($!b, $child, $expand.Int, $fill.Int, $padding);
+    gtk_box_pack_start($!b, $child, $expand, $fill, $padding);
   }
 
   multi method query_child_packing (GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, GtkPackType $pack_type) {

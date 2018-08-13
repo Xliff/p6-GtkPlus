@@ -3,6 +3,8 @@ use v6.c;
 use GTK::Raw::Types;
 use GTK::Raw::Separator;
 
+use GTK::Widget;
+
 class GTK::Separator is GTK::Widget {
 
   submethod BLESS(:$separator) {
@@ -24,11 +26,15 @@ class GTK::Separator is GTK::Widget {
   }
 
   method new-h-separator(GTK::Separator:U: ) {
-    self.bless(:separator( gtk_separator_new( GTK_ORIENTATION_HORIZONTAL ) );
+    self.bless(
+      :separator( gtk_separator_new( GTK_ORIENTATION_HORIZONTAL ) ) 
+    );
   }
 
   method new-v-separator(GTK::Separator:U: ) {
-    self.bless(:separator( gtk_separator_new( GTK_ORIENTATION_VERTICAL ) );
+    self.bless(
+      :separator( gtk_separator_new( GTK_ORIENTATION_VERTICAL ) )
+    );
   }
 
   method get_type {

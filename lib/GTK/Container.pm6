@@ -13,6 +13,8 @@ use GTK::Widget;
 class GTK::Container is GTK::Widget {
   # Maybe this should be done as the base class.
   has $!c;
+  has @!start;
+  has @!end;
 
   submethod BUILD (:$container) {
     given $container {
@@ -38,6 +40,14 @@ class GTK::Container is GTK::Widget {
 
   method setContainer($container) {
     self.setWidget($!c = nativecast(GtkContainer, $container));
+  }
+
+  method push-start($c) {
+    @!start.push: $c;
+  }
+
+  method unshift-end($c) {
+    @!end.unshift: $c;
   }
 
   # Signal - First
@@ -221,15 +231,16 @@ class GTK::Container is GTK::Widget {
   }
 
   method get_children(:$obj = True) {
-    my @children;
-    my $list = gtk_container_get_children($!c);
-    say "List start: { $list }";
-    while $list {
-      @children.push: GTK::Widget.new($list.data);
-      $list = $list.next;
-      say "List next: { $list }";
-    }
-    @children;
+    # my @children;
+    # my $list = gtk_container_get_children($!c);
+    # say "List start: { $list }";
+    # while $list {
+    #   @children.push: GTK::Widget.new($list.data);
+    #   $list = $list.next;
+    #   say "List next: { $list }";
+    # }
+    # @children;
+    (@!start, @!end).flat;
   }
 
   method get_focus_chain (GList $focusable_widgets) {

@@ -13,6 +13,8 @@ use GTK::Window;
 class GTK::Application {
   also does GTK::Roles::Signals;
 
+  my $gapp;
+
   has $!app;    # GtkApplication
   has $!title;
   has $!width;
@@ -53,7 +55,7 @@ class GTK::Application {
   }
 
   method new(
-    Str :$title,
+    Str :$title = 'Application',
     Int :$flags = 0,
     Int :$width = 200,
     Int :$height = 200
@@ -63,8 +65,6 @@ class GTK::Application {
     my uint32 $h = $height;
 
     GTK::Application.init;
-
-    die 'Application must have a title.' unless $title;
 
     # Use raw GTK calls here since the object model will be used by the callers.
     my $app = gtk_application_new($title, $f);
@@ -112,14 +112,22 @@ class GTK::Application {
     );
   }
 
-  method run {
+  multi method run(GTK::Application:D: ) {
     #gtk_main();
     g_application_run($!app, OpaquePointer, OpaquePointer);
   }
+  multi method run(GTK::Application:U: ) {
+    $gapp = gtk_application_new('Application', G_APPLICATION_FLAGS_NONE);
 
-  method exit {
+    g_application_run($gapp, OpaquePointer, OpaquePointer);
+  }
+
+  multi method exit(GTK::Application:D: ) {
     #gtk_main_quit();
     g_application_quit($!app);
+  }
+  multi method exit(GTK::Application:U: ) {
+    g_application_quit($gapp);
   }
 
   method activate {
@@ -142,7 +150,7 @@ class GTK::Application {
     gtk_application_add_window($!app, $window);
   }
   multi method add_window(GTK::Window $window) {
-    samewith($window.widget);
+    samewith($window.window);
   }
 
   method get_accels_for_action (gchar $detailed_action_name) {

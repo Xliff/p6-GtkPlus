@@ -37,7 +37,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_title($window, $title);
     gtk_window_set_default_size($window, $width, $height);
 
-    nextwith(:$window);
+    samewith(:$window);
   }
   multi method new (:$window) {
     self.bless(:$window, :bin($window), :container($window), :widget($window));
