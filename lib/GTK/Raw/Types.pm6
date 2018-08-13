@@ -490,14 +490,13 @@ class GtkApplication      is repr('CPointer') is export { }
 class GtkBin              is repr('CPointer') is export { }
 class GtkBox              is repr('CPointer') is export { }
 class GtkButton           is repr('CPointer') is export { }
+class GtkCellArea         is repr('CPointer') is export { }
 class GtkCallback         is repr('CPointer') is export { }
 class GtkClipboard        is repr('CPointer') is export { }
 class GtkContainer        is repr('CPointer') is export { }
 class GtkDragContext      is repr('CPointer') is export { }
 class GtkEntry            is repr('CPointer') is export { }
-# GtkEntryBuffer should become its own object
 class GtkEntryBuffer      is repr('CPointer') is export { }
-# GtkEntryCompletion should becom its own object
 class GtkEntryCompletion  is repr('CPointer') is export { }
 class GtkLabel            is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }

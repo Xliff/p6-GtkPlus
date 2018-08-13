@@ -9,7 +9,7 @@ use GTK::Roles::Signals;
 class GTK::EntryBuffer {
   also does GTK::Roles::Signals;
 
-  has $!b;
+  has GtkEntryBuffer $!b;
 
   submethod BUILD (:$buffer) {
     $!b = $buffer;
@@ -18,6 +18,10 @@ class GTK::EntryBuffer {
   method new (Str $text, gint $text_len) {
     my $buffer = gtk_entry_buffer_new($text, $text_len);
     self.bless(:$buffer);
+  }
+
+  method buffer {
+    $!b;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -44,10 +48,10 @@ class GTK::EntryBuffer {
 
   method text is rw {
     Proxy.new(
-      FETCH => sub($) {
+      FETCH => sub ($) {
         gtk_entry_buffer_get_text($!b);
       },
-      STORE => sub($, Str $text is copy) {
+      STORE => sub ($, Str $text is copy) {
         gtk_entry_buffer_set_text($!b, $text, $text.chars);
       }
     );

@@ -7,6 +7,7 @@ use GTK::Raw::Entry;
 use GTK::Raw::Types;
 
 use GTK::Widget;
+use GTK::EntryBuffer;
 
 class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Signals;
@@ -30,7 +31,10 @@ class GTK::Entry is GTK::Widget {
     self.bless( :$entry );
   }
 
-  method new_with_buffer (GtkEntryBuffer $b) {
+  multi method new_with_buffer (GTK::EntryBuffer $b) {
+    samewith($b.buffer);
+  }
+  multi method new_with_buffer (GtkEntryBuffer $b) {
     my $entry = gtk_entry_new_with_buffer($b);
     self.bless( :$entry );
   }

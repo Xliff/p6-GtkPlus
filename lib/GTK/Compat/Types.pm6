@@ -189,6 +189,8 @@ class GdkRectangle          is repr('CPointer') is export { }
 class GdkRGBA               is repr('CPointer') is export { }
 class GdkScreen             is repr('CPointer') is export { }
 class GdkTouchEvent         is repr('CPointer') is export { }
+# Probably should be its own class
+class GtkTreeModel          is repr('CPointer') is export { }
 class GdkVisual             is repr('CPointer') is export { }
 class GdkWindow             is repr('CPointer') is export { }
 class GdkWindowEdge         is repr('CPointer') is export { }
