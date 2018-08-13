@@ -18,13 +18,15 @@ sub USAGE {
 
 sub make_box($h, $s, $e, $f, $p) {
   my $box = GTK::Box.new-hbox($s);
+  $box.homogeneous = $h;
+  my $b0 = GTK::Button.new_with_label( "gtk_box_pack" );
   my $b1 = GTK::Button.new_with_label( "(box," );
   my $b2 = GTK::Button.new_with_label(  "button, " );
   my $b3 = GTK::Button.new_with_label(  "{ $e.Str.uc }, " );
   my $b4 = GTK::Button.new_with_label(  "{ $f.Str.uc }, " );
   my $b5 = GTK::Button.new_with_label(  "$p);" );
 
-  $box.pack_start($_, $e, $f, $p) for ($b1, $b2, $b3, $b4, $b5);
+  $box.pack_start($_, $e, $f, $p) for ($b0, $b1, $b2, $b3, $b4, $b5);
   $box;
 }
 
@@ -59,7 +61,7 @@ sub setup2 {
   #gtk_misc_set_alignment (GTK_MISC (label), 0, 0);
   my $label2 = GTK::Label.new( 'gtk_hbox_new(FALSE, 0)' );
   my $box4 = make_box(False, 0, True, False, 10);
-  my $box5 = make_box(False, 0, True, True, 0);
+  my $box5 = make_box(False, 0, True, True, 10);
   my $sep2 = GTK::Separator.new(:horizontal);
 
   $*box1.pack_start($_, False, False, 0) for ($label2, $box4, $box5);
@@ -82,10 +84,14 @@ sub MAIN(Int $num where 1..3) {
 
   GTK::Application.init;
 
-  my $app = GTK::Application.new( :title('org.genex.pack_example') );
+  my $app = GTK::Application.new(
+    :title('org.genex.pack_example'),
+  );
 
   my $*box1 = GTK::Box.new-vbox(10);
-  my $*window = GTK::Window.new( GTK_WINDOW_TOPLEVEL, :title('Pack Example') );
+  my $*window = GTK::Window.new(
+    GTK_WINDOW_TOPLEVEL, :title('Pack Example'), :width(600)
+  );
 
   $*window.border_width = 10;
 
