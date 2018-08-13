@@ -314,7 +314,6 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   method get_current_icon_drag_source {

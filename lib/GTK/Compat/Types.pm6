@@ -17,6 +17,7 @@ constant gdouble       is export := num64;
 constant gfloat        is export := num32;
 constant gint          is export := int32;
 constant gpointer      is export := OpaquePointer;
+constant gsize         is export := uint64;
 constant GType         is export := uint32;
 constant guint         is export := uint32;
 constant guint16       is export := uint16;
