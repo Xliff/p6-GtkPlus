@@ -22,16 +22,18 @@ class GTK::Bin is GTK::Container {
     }
   }
 
-  multi method get_child {
-    gtk_bin_get_child($!bin);
-  }
-
   method setBin($bin) {
     self.setContainer( $!bin = nativecast(GtkBin, $bin) );
+  }
+
+  multi method get_child {
+    gtk_bin_get_child($!bin);
   }
 
   method get_type {
     gtk_bin_get_type();
   }
+
+  # XXX - Override pack_start and pack_end to take only one child?
 
 }

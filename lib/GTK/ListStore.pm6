@@ -13,10 +13,11 @@ class GTK::ListStore {
     $!ls = $liststore;
   }
 
-  method new (gint $columns, GType @types) {
+  method new (GTypeEnum *@types) {
+    die "GTK::ListSTore -- NOT YET IMPLEMENTED due to NativeCall limitations on va_list.";
     my CArray[GType] $ctypes;
     $ctypes[$_] = @types[$_] for (^@types.elems);
-    my $liststore = gtk_list_store_newv($columns, $ctypes);
+    my $liststore = gtk_list_store_newv(@types.elems, $ctypes);
 
     self.bless(:$liststore);
   }
@@ -84,8 +85,10 @@ class GTK::ListStore {
     gtk_list_store_reorder($!ls, $new_order);
   }
 
-  method set_column_types (gint $n_columns, GType $types) {
-    gtk_list_store_set_column_types($!ls, $n_columns, $types);
+  method set_column_types (GType *@types) {
+    my CArray[GType] $c_types;
+    $c_types[$_] = @types[$_] for (^@types.elems);
+    gtk_list_store_set_column_types($!ls, @types.elems, $types);
   }
 
   #method set_valist (GtkTreeIter $iter, va_list $var_args) {

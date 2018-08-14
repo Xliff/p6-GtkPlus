@@ -8,12 +8,16 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Signals;
 
+# THIS IS OFF OF THE TABLE UNTIL A VIABLE CONVERSION FOR GTKLISTSTORE
+# HAS BEEN DETERMINED.
+
 class GTK::EntryCompletion {
   also does GTK::Roles::Signals;
 
   has GtkEntryCompletion $!ec;
 
   submethod BUILD(:$entrycompletion) {
+    die "GTK::EntryCompletion -- Not yet implemented due to GTK::ListStore"
     given $entrycompletion {
       when GtkEntryCompletion {
         $!ec = $entrycompletion;
