@@ -7,6 +7,8 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
+our constant GtkCalendarDetailFunc is export := OpaquePointer;
+
 class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
   has int16 $.left;
   has int16 $.right;
@@ -60,6 +62,14 @@ our enum GtkBaselinePosition is export <
   GTK_BASELINE_POSITION_CENTER
   GTK_BASELINE_POSITION_BOTTOM
 >;
+
+our enum GtkCalendarDisplayOptions is export (
+  GTK_CALENDAR_SHOW_HEADING       => (1 +< 0),
+  GTK_CALENDAR_SHOW_DAY_NAMES     => (1 +< 1),
+  GTK_CALENDAR_NO_MONTH_CHANGE    => (1 +< 2),
+  GTK_CALENDAR_SHOW_WEEK_NUMBERS  => (1 +< 3),
+  GTK_CALENDAR_SHOW_DETAILS       => (1 +< 5)
+);
 
 our enum GtkDeleteType is export <
   GTK_DELETE_CHARS
@@ -497,6 +507,7 @@ class GtkApplication      is repr('CPointer') is export { }
 class GtkBin              is repr('CPointer') is export { }
 class GtkBox              is repr('CPointer') is export { }
 class GtkButton           is repr('CPointer') is export { }
+class GtkCalendar         is repr('CPointer') is export { }
 class GtkCellArea         is repr('CPointer') is export { }
 class GtkCallback         is repr('CPointer') is export { }
 class GtkClipboard        is repr('CPointer') is export { }
