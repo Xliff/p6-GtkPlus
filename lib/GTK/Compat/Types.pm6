@@ -171,6 +171,7 @@ our enum PangoEllipsizeMode is export <
 >;
 
 class cairo_font_options_t  is repr('CPointer') is export { }
+class cairo_surface_t       is repr('CPointer') is export { }
 
 class AtkObject             is repr('CPointer') is export { }
 
@@ -217,6 +218,7 @@ class GMenuModel            is repr('CPointer') is export { }
 class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkModifierType       is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }
+class GdkPixbufAnimation    is repr('CPointer') is export { }
 class GdkRectangle          is repr('CPointer') is export { }
 class GdkRGBA               is repr('CPointer') is export { }
 class GdkScreen             is repr('CPointer') is export { }

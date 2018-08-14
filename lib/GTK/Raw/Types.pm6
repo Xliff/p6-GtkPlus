@@ -516,6 +516,8 @@ class GtkDragContext      is repr('CPointer') is export { }
 class GtkEntry            is repr('CPointer') is export { }
 class GtkEntryBuffer      is repr('CPointer') is export { }
 class GtkEntryCompletion  is repr('CPointer') is export { }
+class GtkIconSet          is repr('CPointer') is export { }
+class GtkImage            is repr('CPointer') is export { }
 class GtkLabel            is repr('CPointer') is export { }
 class GtkListStore        is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
