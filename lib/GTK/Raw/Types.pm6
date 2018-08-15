@@ -522,9 +522,12 @@ class GtkImage            is repr('CPointer') is export { }
 class GtkLabel            is repr('CPointer') is export { }
 class GtkListStore        is repr('CPointer') is export { }
 class GtkProgressBar      is repr('CPointer') is export { }
+class GtkRange            is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
 class GtkSettings         is repr('CPointer') is export { }
+class GtkSpinner          is repr('CPointer') is export { }
 class GtkStyle            is repr('CPointer') is export { }
+class GtkSwitch           is repr('CPointer') is export { }
 class GtkStyleContext     is repr('CPointer') is export { }
 class GtkTargetList       is repr('CPointer') is export { }
 class GtkTickCallback     is repr('CPointer') is export { }
