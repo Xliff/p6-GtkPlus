@@ -508,8 +508,9 @@ class GtkBin              is repr('CPointer') is export { }
 class GtkBox              is repr('CPointer') is export { }
 class GtkButton           is repr('CPointer') is export { }
 class GtkCalendar         is repr('CPointer') is export { }
-class GtkCellArea         is repr('CPointer') is export { }
 class GtkCallback         is repr('CPointer') is export { }
+class GtkCellArea         is repr('CPointer') is export { }
+class GtkColorChooser     is repr('CPointer') is export { }
 class GtkClipboard        is repr('CPointer') is export { }
 class GtkContainer        is repr('CPointer') is export { }
 class GtkDragContext      is repr('CPointer') is export { }

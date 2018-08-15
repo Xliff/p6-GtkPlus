@@ -15,13 +15,14 @@ class GTK::Box is GTK::Container {
   # Maybe make Widget a role that has $.w and all variants assign to it,
   # but how to keep $.w from being set from outside the object tree?
 
-  has $!b;
+  has GtkBox $!b;
 
   submethod BUILD(:$box) {
     given $box {
       # I don't think this distinction needs to be made. Must test.
       when GtkWidget | GtkBox {
-        $!b = $box;
+        $!b = nativecast(GtkBox, $box);
+        self.setContainer($box);
       }
       when GTK::Box {
         warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
@@ -48,6 +49,10 @@ class GTK::Box is GTK::Container {
   method new-vbox(Int $spacing = 2) {
     my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $spacing);
     self.bless( :$box, :container($box), :widget($box) );
+  }
+
+  method setBox($box) {
+    self.setContainer($!b = nativecast(GtkBox, $box) );
   }
 
   # cw: Just in case I need it in the near future. May want to put it in an

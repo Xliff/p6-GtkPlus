@@ -22,7 +22,7 @@ class GTK::Container is GTK::Widget {
         self.setWidget($!c = $container);
       }
       when GTK::Container | GTK::Widget {
-        self.setWidget($!c = $container.widget);
+        #self.setWidget($!c = $container.widget);
       }
       default {
       }
