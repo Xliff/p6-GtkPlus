@@ -1,5 +1,7 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 use GTK::Raw::Calendar;
 use GTK::Raw::Label;
@@ -13,9 +15,11 @@ class GTK::Calendar is GTK::Widget {
   submethod BUILD(:$calendar) {
     given $calendar {
       when GtkCalendar | GtkWidget {
-        self.setWidget( $!cal = $calendar );
+        $!cal = nativecast(GtkCalendar, $calendar);
+        self.setWidget( $calendar );
       }
       when GTK::Calendar {
+
       }
       default {
       }
@@ -28,6 +32,8 @@ class GTK::Calendar is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+  #
+  # All events take a ($calendar, $user_data) signature.
   method day-selected {
     self.connect($!cal, 'day_selected');
   }
@@ -108,7 +114,7 @@ class GTK::Calendar is GTK::Widget {
     gtk_calendar_clear_marks($!cal);
   }
 
-  method get_date (guint $year, guint $month, guint $day) {
+  method get_date ($year is rw, $month is rw, $day is rw) {
     gtk_calendar_get_date($!cal, $year, $month, $day);
   }
 

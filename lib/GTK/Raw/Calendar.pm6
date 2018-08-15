@@ -12,7 +12,12 @@ sub gtk_calendar_clear_marks (GtkCalendar $calendar)
   is export
   { * }
 
-sub gtk_calendar_get_date (GtkCalendar $calendar, guint $year, guint $month, guint $day)
+sub gtk_calendar_get_date (
+  GtkCalendar $calendar,
+  guint $year is rw,
+  guint $month is rw,
+  guint $day is rw
+)
   is native('gtk-3')
   is export
   { * }

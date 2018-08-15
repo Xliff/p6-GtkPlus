@@ -17,7 +17,8 @@ class GTK::Entry is GTK::Widget {
   submethod BUILD(:$entry) {
     given $entry {
       when GtkEntry | GtkWidget {
-        self.setWidget( nativecast(GtkWidget, $!e = $entry) );
+        $!e = nativecast(GtkEntry, $entry);
+        self.setWidget($entry);
       }
       when GTK::Entry {
       }
@@ -399,7 +400,7 @@ class GTK::Entry is GTK::Widget {
   }
 
   method get_type {
-    gtk_entry_get_type($!e);
+    gtk_entry_get_type();
   }
 
   method grab_focus_without_selecting {

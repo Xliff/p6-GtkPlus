@@ -1,5 +1,7 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 use GTK::Raw::Image;
 use GTK::Raw::Types;
@@ -12,7 +14,8 @@ class GTK::Image is GTK::Widget {
   submethod BUILD(:$image) {
     given $image {
       when GtkImage | GtkWidget {
-        self.setParent( $!i = $image );
+        $!i = nativecast(GtkImage, $image);
+        self.setWidget($image);
       }
       when GTK::Image {
       }

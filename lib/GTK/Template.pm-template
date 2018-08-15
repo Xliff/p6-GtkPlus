@@ -1,0 +1,33 @@
+use v6.c;
+
+use GTK::Compat::Types;
+use GTK::Raw::Label;
+use GTK::Raw::Types;
+
+use GTK::Parent;
+
+class GTK::NewControl is GTK::Parent {
+  has GtkNewControl $!c;
+
+  submethod BUILD(:$control) {
+    given $label {
+      when GtkNewControl | GtkWidget {
+        self.setParent( $!c = $control );
+      }
+      when GTK::NewControll {
+      }
+      default {
+      }
+    }
+  }
+
+  # ↓↓↓↓ SIGNALS ↓↓↓↓
+  # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # ↓↓↓↓ METHODS ↓↓↓↓
+  # ↑↑↑↑ METHODS ↑↑↑↑
+
+}
