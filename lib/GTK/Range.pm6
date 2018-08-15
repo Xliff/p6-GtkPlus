@@ -1,7 +1,10 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 use GTK::Raw::Label;
+use GTK::Raw::Range;
 use GTK::Raw::Types;
 
 use GTK::Widget;
@@ -9,17 +12,7 @@ use GTK::Widget;
 class GTK::Range is GTK::Widget {
   has GtkRange $!r;
 
-  submethod BUILD(:$control) {
-    given $label {
-      when GtkNewControl | GtkWidget {
-        self.setParent( $!c = $control );
-      }
-      when GTK::NewControll {
-      }
-      default {
-      }
-    }
-  }
+  # Abstract code, so no need for BUILD or new
 
   method setRange(:$range) {
     $!r = nativecast(GtkRange, $range);
@@ -27,6 +20,21 @@ class GTK::Range is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+  method adjust-bounds {
+    self.connect($!r, 'adjust-bounds');
+  }
+
+  method change-value {
+    self.connect($!r, 'change-value');
+  }
+
+  method move-slider {
+    self.connect($!r, 'move-slider');
+  }
+
+  method value-changed {
+    self.connect($!r, 'value-changed');
+  }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -77,10 +85,17 @@ class GTK::Range is GTK::Widget {
   method lower_stepper_sensitivity is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_lower_stepper_sensitivity($!r);
+        GtkSensitivityType( gtk_range_get_lower_stepper_sensitivity($!r) );
       },
       STORE => sub ($, $sensitivity is copy) {
-        gtk_range_set_lower_stepper_sensitivity($!r, $sensitivity);
+        my $s = do given $sensitivity {
+          when GtkSensitivityType { $_.Int; }
+          when Int | uint32       { $_;     }
+          default {
+            die "Wrong type used ({ $_.^name }) when setting GTK::Range.lower_stepper_sensitivity.";
+          }
+        }
+        gtk_range_set_lower_stepper_sensitivity($!r, $s);
       }
     );
   }
@@ -143,10 +158,17 @@ class GTK::Range is GTK::Widget {
   method upper_stepper_sensitivity is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_upper_stepper_sensitivity($!r);
+        GtkSensitivityType( gtk_range_get_upper_stepper_sensitivity($!r) );
       },
       STORE => sub ($, $sensitivity is copy) {
-        gtk_range_set_upper_stepper_sensitivity($!r, $sensitivity);
+        my $s = do given $sensitivity {
+          when GtkSensitivityType { $_.Int; }
+          when Int | uint32       { $_;     }
+          default {
+            die "Wrong type used ({ $_.^name }) when setting GTK::Range.upper_stepper_sensitivity.";
+          }
+        }
+        gtk_range_set_upper_stepper_sensitivity($!r, $s);
       }
     );
   }

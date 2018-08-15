@@ -1,10 +1,13 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 use GTK::Raw::Label;
+use GTK::Raw::Switch;
 use GTK::Raw::Types;
 
-use GTK::Parent;
+use GTK::Widget;
 
 class GTK::Switch is GTK::Widget {
   has GtkSwitch $!s;
@@ -12,7 +15,7 @@ class GTK::Switch is GTK::Widget {
   submethod BUILD(:$switch) {
     given $switch {
       when GtkSwitch | GtkWidget {
-        $!r = nativecast(GtkSwitch, $switch);
+        $!s = nativecast(GtkSwitch, $switch);
         self.setWidget($switch);
       }
       when GTK::Switch {

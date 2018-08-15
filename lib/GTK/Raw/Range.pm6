@@ -76,7 +76,7 @@ sub gtk_range_get_restrict_to_fill_level (GtkRange $range)
   { * }
 
 sub gtk_range_get_lower_stepper_sensitivity (GtkRange $range)
-  returns GtkSensitivityType
+  returns uint32 # GtkSensitivityType
   is native('gtk-3')
   is export
   { * }
@@ -88,7 +88,7 @@ sub gtk_range_get_min_slider_size (GtkRange $range)
   { * }
 
 sub gtk_range_get_upper_stepper_sensitivity (GtkRange $range)
-  returns GtkSensitivityType
+  returns uint32 # GtkSensitivityType
   is native('gtk-3')
   is export
   { * }
@@ -120,7 +120,8 @@ sub gtk_range_set_round_digits (GtkRange $range, gint $round_digits)
   is export
   { * }
 
-sub gtk_range_set_adjustment (GtkRange $range, GtkAdjustment $adjustment)
+# (GtkRange $range, GtkAdjustment $adjustment)
+sub gtk_range_set_adjustment (GtkRange $range, uint32 $adjustment)
   is native('gtk-3')
   is export
   { * }
@@ -140,7 +141,8 @@ sub gtk_range_set_restrict_to_fill_level (GtkRange $range, gboolean $restrict_to
   is export
   { * }
 
-sub gtk_range_set_lower_stepper_sensitivity (GtkRange $range, GtkSensitivityType $sensitivity)
+# (GtkRange $range, GtkSensitivityType $sensitivity)
+sub gtk_range_set_lower_stepper_sensitivity (GtkRange $range, uint32 $sensitivity)
   is native('gtk-3')
   is export
   { * }
@@ -150,7 +152,8 @@ sub gtk_range_set_min_slider_size (GtkRange $range, gint $min_size)
   is export
   { * }
 
-sub gtk_range_set_upper_stepper_sensitivity (GtkRange $range, GtkSensitivityType $sensitivity)
+# (GtkRange $range, GtkSensitivityType $sensitivity)
+sub gtk_range_set_upper_stepper_sensitivity (GtkRange $range, uint32 $sensitivity)
   is native('gtk-3')
   is export
   { * }

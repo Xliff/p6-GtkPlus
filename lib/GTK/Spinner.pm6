@@ -13,12 +13,12 @@ class GTK::Spinner is GTK::Widget {
   has GtkSpinner $!spin;
 
   submethod BUILD(:$spin) {
-    given $label {
+    given $spin {
       when GtkSpinner | GtkWidget {
         $!spin = nativecast(GtkSpinner, $spin);
         self.setParent($spin);
       }
-      when GTK::NewControll {
+      when GTK::Spinner {
       }
       default {
       }

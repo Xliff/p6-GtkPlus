@@ -1,20 +1,24 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 use GTK::Raw::Label;
 use GTK::Raw::Types;
 
-use GTK::Parent;
+use GTK::Raw::
 
-class GTK::NewControl is GTK::Parent {
-  has GtkNewControl $!c;
+use GTK::;
+
+class GTK:: is GTK:: {
+  has Gtk $!c;
 
   submethod BUILD(:$control) {
     given $label {
-      when GtkNewControl | GtkWidget {
+      when Gtk | GtkWidget {
         self.setParent( $!c = $control );
       }
-      when GTK::NewControll {
+      when GTK:: {
       }
       default {
       }
