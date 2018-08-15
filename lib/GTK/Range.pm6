@@ -3,7 +3,6 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::Label;
 use GTK::Raw::Range;
 use GTK::Raw::Types;
 
