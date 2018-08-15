@@ -48,7 +48,7 @@ class GTK::ProgressBar is GTK::Widget {
             die "Invalid type { $mode.^name } passed to GTK::ProgressBar.ellipsize!";
           }
         }
-        
+
         gtk_progress_bar_set_ellipsize($!bar, $mode);
       }
     );
@@ -60,7 +60,8 @@ class GTK::ProgressBar is GTK::Widget {
         gtk_progress_bar_get_fraction($!bar);
       },
       STORE => sub ($, $fraction is copy) {
-        gtk_progress_bar_set_fraction($!bar, $fraction);
+        my gdouble $f = $fraction.Num;
+        gtk_progress_bar_set_fraction($!bar, $f);
       }
     );
   }
@@ -112,7 +113,7 @@ class GTK::ProgressBar is GTK::Widget {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type () {
-    gtk_progress_bar_get_type($!bar);
+    gtk_progress_bar_get_type();
   }
 
   method pulse () {
