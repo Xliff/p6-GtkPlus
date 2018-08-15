@@ -22,6 +22,7 @@ $a.activate.tap({
   $a.window.destroy-signal.tap({ $a.exit });
   $a.window.set_size_request(500, 250);
   $image.set_size_request(200, 200);
+  ($entry.margin_left, $entry.margin_right) = (10, 10);
 
   sub format_date {
     my guint $day;
@@ -29,7 +30,7 @@ $a.activate.tap({
     my guint $year;
 
     $calendar.get_date($year, $month, $day);
-    ($year, $month + 1, $day).map( *.fmt('%02d') ).join(' / ');
+    ($year, $month, $day).map( *.fmt('%02d') ).join(' / ');
   };
 
   $calendar.day-selected.tap({
@@ -41,7 +42,7 @@ $a.activate.tap({
   });
 
   $label.set_markup(qq:to/MARK/);
-  <span font="Libberation Sans Narrow 18" color="#0066ff">
+  <span font="Liberation Sans Narrow 24" weight="bold" color="#0066ff">
     Calendar/Image/Label Example
   </span>
   MARK

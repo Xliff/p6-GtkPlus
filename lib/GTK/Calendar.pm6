@@ -115,7 +115,9 @@ class GTK::Calendar is GTK::Widget {
   }
 
   method get_date ($year is rw, $month is rw, $day is rw) {
-    gtk_calendar_get_date($!cal, $year, $month, $day);
+    my $d = gtk_calendar_get_date($!cal, $year, $month, $day);
+    $month++;
+    $d;
   }
 
   method get_day_is_marked (guint $day) {
