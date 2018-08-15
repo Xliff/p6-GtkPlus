@@ -38,20 +38,20 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
 }
 
 class GTypeValueList is repr('CUnion') is export {
-  has int32	          $.v_int;
-  has uint32          $.v_uint;
-  has long            $.v_long;
-  has ulong           $.v_ulong;
-  has int64           $.v_int64;
-  has uint64          $.v_uint64;
-  has num32           $.v_float;
-  has num64           $.v_double;
-  has OpaquePointer   $.v_pointer;
+  has int32	          $.v_int     is rw;
+  has uint32          $.v_uint    is rw;
+  has long            $.v_long    is rw;
+  has ulong           $.v_ulong   is rw;
+  has int64           $.v_int64   is rw;
+  has uint64          $.v_uint64  is rw;
+  has num32           $.v_float   is rw;
+  has num64           $.v_double  is rw;
+  has OpaquePointer   $.v_pointer is rw;
 };
 
 class GValue is repr('CStruct') does GTK::Roles::Pointers is export {
-  has ulong           $.g_type;
-  HAS GTypeValueList  $.data1;
+  has ulong           $.g_type is rw;
+  HAS GTypeValueList  $.data1  is rw;
   HAS GTypeValueList  $.data2;
 }
 

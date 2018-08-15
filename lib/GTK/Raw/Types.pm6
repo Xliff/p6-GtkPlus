@@ -521,6 +521,7 @@ class GtkIconSet          is repr('CPointer') is export { }
 class GtkImage            is repr('CPointer') is export { }
 class GtkLabel            is repr('CPointer') is export { }
 class GtkListStore        is repr('CPointer') is export { }
+class GtkProgressBar      is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
 class GtkSettings         is repr('CPointer') is export { }
 class GtkStyle            is repr('CPointer') is export { }
