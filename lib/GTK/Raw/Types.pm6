@@ -519,12 +519,13 @@ class GtkEntryBuffer      is repr('CPointer') is export { }
 class GtkEntryCompletion  is repr('CPointer') is export { }
 class GtkIconSet          is repr('CPointer') is export { }
 class GtkImage            is repr('CPointer') is export { }
+class GtkLevelBar         is repr('CPointer') is export { }
 class GtkLabel            is repr('CPointer') is export { }
 class GtkListStore        is repr('CPointer') is export { }
 class GtkProgressBar      is repr('CPointer') is export { }
 class GtkRange            is repr('CPointer') is export { }
 class GtkScale            is repr('CPointer') is export { }
-class GtkScrollbar        is repr('CPointer') is export { } 
+class GtkScrollbar        is repr('CPointer') is export { }
 class GtkSelectionData    is repr('CPointer') is export { }
 class GtkSettings         is repr('CPointer') is export { }
 class GtkSpinner          is repr('CPointer') is export { }
