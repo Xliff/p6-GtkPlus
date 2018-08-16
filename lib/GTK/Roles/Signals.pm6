@@ -9,6 +9,10 @@ role GTK::Roles::Signals {
   has %!signals;
 
   # Signal handling code thank to jnthn
+  #
+  # Need another method that does a proper return value for signals like
+  #
+  # GTK::Scale.format-value
   method connect($obj, $signal) {
     %!signals{$signal} //= do {
       my $s = Supplier.new;

@@ -15,7 +15,7 @@ class GTK::Scale is GTK::Range {
     given $scale {
       when GtkScale | GtkWidget {
         $!s = nativecast(GtkScale, $scale);
-        self.setRange($scale);
+        self.setRange( :range($scale) );
       }
       when GTK::Scale {
       }
@@ -24,13 +24,13 @@ class GTK::Scale is GTK::Range {
     }
   }
 
-  multi method new (GtkAdjustment $adj, :$horizontal, :$vertical) {
+  multi method new (GtkAdjustment $adj, :$horizontal = False, :$vertical = False) {
     die 'You must specify only $horizontal or $vertical when creating a GTK::Scale'
-      unless $horizontal.defined ^^ $vertical.defined;
+      unless $horizontal ^^ $vertical;
 
-    my $or = do {
-      when $horizontal { GTK_ORIENTATION_HORIZONTAL; }
-      when $vertical   { GTK_ORIENTATION_VERTICAL;   }
+    my uint32 $or = do {
+      when $horizontal { GTK_ORIENTATION_HORIZONTAL.Int; }
+      when $vertical   { GTK_ORIENTATION_VERTICAL.Int;   }
     };
     my $scale = gtk_scale_new($or, $adj);
     self.bless(:$scale);
@@ -50,25 +50,33 @@ class GTK::Scale is GTK::Range {
     self.bless(:$scale);
   }
 
-  multi method new_with_range (GtkOrientation $o, gdouble $min, gdouble $max, gdouble $step) {
-    my $scale = gtk_scale_new_with_range($o, $min, $max, $step);
+  multi method new_with_range (GtkOrientation $o, Num() $min, Num() $max, Num() $step) {
+    my num64 $mn = $min;
+    my num64 $mx = $max;
+    my num64 $st = $step;
+
+    my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
     self.bless(:$scale);
   }
   multi method new_with_range (
-    gdouble $min,
-    gdouble $max,
-    gdouble $step,
-    :$horizontal,
-    :$vertical
+    Num() $min,
+    Num() $max,
+    Num() $step,
+    :$horizontal = False,
+    :$vertical = False
   ) {
     die 'You must specify only $horizontal or $vertical when creating a GTK::Scale'
-      unless $horizontal.defined ^^ $vertical.defined;
+      unless $horizontal ^^ $vertical;
 
-    my $or = do {
-      when $horizontal { GTK_ORIENTATION_HORIZONTAL; }
-      when $vertical   { GTK_ORIENTATION_VERTICAL;   }
+    my num64 $mn = $min;
+    my num64 $mx = $max;
+    my num64 $st = $step;
+
+    my uint32 $or = do {
+      when $horizontal { GTK_ORIENTATION_HORIZONTAL.Int; }
+      when $vertical   { GTK_ORIENTATION_VERTICAL.Int;   }
     };
-    my $scale = gtk_scale_new_with_range($or, $min, $max, $step);
+    my $scale = gtk_scale_new_with_range($or, $mn, $mx, $st);
     self.bless(:$scale);
   }
 
@@ -130,11 +138,9 @@ class GTK::Scale is GTK::Range {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method add_mark (gdouble $value, GtkPositionType $position, gchar $markup) {
-    gtk_scale_add_mark($!s, $value, $position, $markup);
-  }
-  multi method add_mark (gdouble $value, GtkPositionType $position, gchar $markup)  {
-    samewith($value, $position, $markup);
+  method add_mark (Num() $value, GtkPositionType $position, gchar $markup) {
+    my num64 $v = $value;
+    gtk_scale_add_mark($!s, $v, $position, $markup);
   }
 
   method clear_marks () {
@@ -145,8 +151,10 @@ class GTK::Scale is GTK::Range {
     gtk_scale_get_layout($!s);
   }
 
-  method get_layout_offsets (gint $x, gint $y) {
-    gtk_scale_get_layout_offsets($!s, $x, $y);
+  method get_layout_offsets (Int $x, Int $y) {
+    my gint $_x = $x;
+    my gint $_y = $y;
+    gtk_scale_get_layout_offsets($!s, $_x, $_y);
   }
 
   method get_type () {
