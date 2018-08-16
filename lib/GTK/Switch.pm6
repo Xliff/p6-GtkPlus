@@ -43,10 +43,19 @@ class GTK::Switch is GTK::Widget {
   method active is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_switch_get_active($!s);
+        Bool( gtk_switch_get_active($!s) );
       },
       STORE => sub ($, $is_active is copy) {
-        gtk_switch_set_active($!s, $is_active);
+        my uint32 $ia = do given $is_active {
+          when Bool     { $_.Int;           }
+          when Int      { $_ != 0 ?? 1 !! 0 }
+          when gboolean { $_                }
+          when Str      { $_.lc.trim eq 'true' ?? 1 !! 0; }
+          default {
+            die "Invalid type/value ({ $_.^name }) passed when setting GTK::Switch.active";
+          }
+        }
+        gtk_switch_set_active($!s, $ia);
       }
     );
   }
