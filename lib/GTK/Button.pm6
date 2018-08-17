@@ -78,6 +78,11 @@ class GTK::Button is GTK::Bin {
     );
   }
 
+  method setButton($button) {
+    $!b = nativecast(GtkButton, $button);
+    self.setWidget($button);
+  }
+
   # Renamed from "clicked" due to conflict with the signal.
   method button-clicked {
     gtk_button_clicked($!b);
