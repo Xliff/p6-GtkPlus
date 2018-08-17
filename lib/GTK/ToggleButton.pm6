@@ -11,17 +11,36 @@ use GTK::Button;
 class GTK:: is GTK::Button {
   has Gtk $!tb;
 
-  submethod BUILD(:$button) {
+  submethod BUILD(:$togglebutton) {
     given $button {
       when GtkToggleButton | GtkWidget {
-        $!tb = nativecast(GtkToggleButton, $button);
-        self.setButton($button);
+        self.setToggleButton($togglebutton);
       }
       when GTK::Button {
       }
       default {
       }
     }
+  }
+
+  method new {
+    my $togglebutton = gtk_toggle_button_new($!tb);
+    self.bless(:$togglebutton);
+  }
+
+  method new_with_label (Str $label) {
+    my $togglebutton = gtk_toggle_button_new_with_label($label);
+    self.bless(:$togglebutton);
+  }
+
+  method new_with_mnemonic (Str $label) {
+    my $togglebutton = gtk_toggle_button_new_with_mnemonic($label);
+    self.bless(:$togglebutton);
+  }
+
+  method setToggleButton($togglebutton) {
+    $!tb = nativecast(GtkToggleButton, $togglebutton);
+    self.setButton($togglebutton);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -66,23 +85,11 @@ class GTK:: is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type () {
+  method get_type {
     gtk_toggle_button_get_type($!tb);
   }
 
-  method new () {
-    gtk_toggle_button_new($!tb);
-  }
-
-  method new_with_label () {
-    gtk_toggle_button_new_with_label($!tb);
-  }
-
-  method new_with_mnemonic () {
-    gtk_toggle_button_new_with_mnemonic($!tb);
-  }
-
-  method toggled () {
+  method toggled {
     gtk_toggle_button_toggled($!tb);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
