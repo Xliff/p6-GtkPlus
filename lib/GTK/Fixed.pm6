@@ -29,7 +29,6 @@ class GTK::Fixed is GTK::Container {
     self.bless(:$fixed);
   }
 
-
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
