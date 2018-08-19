@@ -3,18 +3,20 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::
+use GTK::Raw::Label;
 use GTK::Raw::Types;
 
-use GTK::Container;
+use GTK::Raw::
+
+use GTK::;
 
 class GTK:: is GTK:: {
-  has Gtk $!f;
+  has Gtk $!c;
 
-  submethod BUILD(:$fixed) {
-    given $fixed {
+  submethod BUILD(:$control) {
+    given $label {
       when Gtk | GtkWidget {
-
+        self.setParent( $!c = $control );
       }
       when GTK:: {
       }
