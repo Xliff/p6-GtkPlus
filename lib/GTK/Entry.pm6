@@ -10,8 +10,6 @@ use GTK::Widget;
 use GTK::EntryBuffer;
 
 class GTK::Entry is GTK::Widget {
-  also does GTK::Roles::Signals;
-
   has GtkEntry $!e;
 
   submethod BUILD(:$entry) {
@@ -38,6 +36,10 @@ class GTK::Entry is GTK::Widget {
   multi method new_with_buffer (GtkEntryBuffer $b) {
     my $entry = gtk_entry_new_with_buffer($b);
     self.bless( :$entry );
+  }
+
+  method setEntry($entry) {
+    $!e = nativecast(GtkEntry, $entry);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

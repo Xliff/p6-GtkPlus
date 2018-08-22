@@ -3,30 +3,26 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::Pane;
+use GTK::Raw::Label;
 use GTK::Raw::Types;
 
-use GTK::Container;
+use GTK::Raw::
 
-class GTK::Pane is GTK::Container {
-  has Gtk $!p;
+use GTK::;
 
-  submethod BUILD(:$pane) {
-    given $pane {
-      when GtkPane | GtkWidget {
-        $!p = nativecast(GtkPane, $pane);
-        self.setContainer($pane);
+class GTK:: is GTK:: {
+  has Gtk $!c;
+
+  submethod BUILD(:$control) {
+    given $label {
+      when Gtk | GtkWidget {
+        self.setParent( $!c = $control );
       }
-      when GTK::Pane {
+      when GTK:: {
       }
       default {
       }
     }
-  }
-
-  method new {
-    my $pane = gtk_paned_new();
-    self.bless(:$pane);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -36,49 +32,6 @@ class GTK::Pane is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method gtk_paned_add1 (GtkWidget $child) {
-    gtk_paned_add1($!p, $child);
-  }
-  multi method gtk_paned_add1 (GtkWidget $child)  {
-    samewith($child);
-  }
-
-  multi method gtk_paned_add2 (GtkWidget $child) {
-    gtk_paned_add2($!p, $child);
-  }
-  multi method gtk_paned_add2 (GtkWidget $child)  {
-    samewith($child);
-  }
-
-  method gtk_paned_get_child1 () {
-    gtk_paned_get_child1($!p);
-  }
-
-  method gtk_paned_get_child2 () {
-    gtk_paned_get_child2($!p);
-  }
-
-  method gtk_paned_get_handle_window () {
-    gtk_paned_get_handle_window($!p);
-  }
-
-  method gtk_paned_get_type () {
-    gtk_paned_get_type($!p);
-  }
-
-  multi method gtk_paned_pack1 (GtkWidget $child, gboolean $resize, gboolean $shrink) {
-    gtk_paned_pack1($!p, $child, $resize, $shrink);
-  }
-  multi method gtk_paned_pack1 (GTK::Widget $child, gboolean $resize, gboolean $shrink)  {
-    samewith($child.widget, $resize, $shrink);
-  }
-
-  multi method gtk_paned_pack2 (GtkWidget $child, gboolean $resize, gboolean $shrink) {
-    gtk_paned_pack2($!p, $child, $resize, $shrink);
-  }
-  multi method gtk_paned_pack2 (GTK::Widget $child, gboolean $resize, gboolean $shrink)  {
-    samewith($child.widget, $resize, $shrink);
-  }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
