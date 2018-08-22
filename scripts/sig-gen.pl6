@@ -31,12 +31,13 @@ sub MAIN ($control, :$var = 'w') {
   for $found.find('div h3 code').to_array.List -> $e {
     (my $mn = $e.text) ~~ s:g/<[“”]>//;
     my $pre = $e.parent.parent.find('pre').last;
-    my $rt = $pre.find('span.returnvalue').last.text;
+    my $rts = $pre.find('span.returnvalue').last;
+    my $rt = $rts.defined ?? "--> { $rts.text }" !! '';
     my @t = $pre.find('span.type').to_array.List;
 
     say qq:to/METH/;
   # Is originally:
-  # { @t.map(*.text.trim).join(', ') } --> $rt
+  # { @t.map(*.text.trim).join(', ') } $rt
   method $mn \{
     self.connect($v, '$mn');
   \}
