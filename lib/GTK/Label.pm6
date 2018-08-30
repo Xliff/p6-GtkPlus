@@ -7,13 +7,16 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 class GTK::Label is GTK::Widget {
-
   has $!l;
 
   submethod BUILD(:$label) {
     given $label {
       when GtkLabel | GtkWidget {
-        self.setWidget( $!l = $label );
+        $!l = do {
+          when GtkLabel  { $label; }
+          when GtkWidget { nativecast(GtkLabel,$label); }
+        };
+        self.setWidget($label);
       }
       when GTK::Label {
       }
@@ -27,13 +30,16 @@ class GTK::Label is GTK::Widget {
     self.bless(:$label);
   }
 
+  method setLabel($label) {
+    self.setWidget( $!l = nativecast(GtkLabel, $label) );
+  }
+
   method new_with_mnemonic ($text) {
     my $label = gtk_label_new_with_mnemonic($text);
     self.bless(:$label);
   }
 
   # Signals
-
   method activate-current-link {
     self.connect($!l, 'activate-current-link');
   }
@@ -51,7 +57,7 @@ class GTK::Label is GTK::Widget {
   }
 
   method popupate-popup {
-    self.connect($!l, 'populate-pop');
+    self.connect($!l, 'populate-popup');
   }
 
   ## Properties.
