@@ -46,7 +46,7 @@ class GTK::AccelLabel is GTK::Label {
         gtk_accel_label_get_accel_widget($!al);
       },
       STORE => sub ($, $accel_widget is copy) {
-        my $aw = given $accel_widget {
+        my $aw = do given $accel_widget {
           when GTK::Widget { $accel_widget.widget }
           when GtkWidget   { $accel_widget }
         };
