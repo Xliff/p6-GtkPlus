@@ -135,10 +135,12 @@ class GTK::TextView is GTK::Container {
   method accepts_tab is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_text_view_get_accepts_tab($!tv);
+        gtk_text_view_get_accepts_tab($!tv) ?? True !! False;
       },
       STORE => sub ($, $accepts_tab is copy) {
-        gtk_text_view_set_accepts_tab($!tv, $accepts_tab);
+        my $mn = ::?CLASS ~ ".{ &?ROUTINE }";
+        my gboolean $at = self.RESOLVE_BOOL($accepts_tab, );
+        gtk_text_view_set_accepts_tab($!tv, $at);
       }
     );
   }
@@ -159,7 +161,7 @@ class GTK::TextView is GTK::Container {
       FETCH => sub ($) {
         gtk_text_view_get_buffer($!tv);
       },
-      STORE => sub ($, $buffer is copy) {
+      STORE => sub ($, GtkTextBuffer $buffer is copy) {
         gtk_text_view_set_buffer($!tv, $buffer);
       }
     );
@@ -171,7 +173,9 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_cursor_visible($!tv);
       },
       STORE => sub ($, $setting is copy) {
-        gtk_text_view_set_cursor_visible($!tv, $setting);
+        my $mn = ::?CLASS ~ ".{ &?ROUTINE }";
+        my gboolean $s = self.RESOLVE_BOOL($setting, $mn);
+        gtk_text_view_set_cursor_visible($!tv, $s);
       }
     );
   }
@@ -179,10 +183,12 @@ class GTK::TextView is GTK::Container {
   method editable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_text_view_get_editable($!tv);
+        gtk_text_view_get_editable($!tv) ?? True !! False;
       },
       STORE => sub ($, $setting is copy) {
-        gtk_text_view_set_editable($!tv, $setting);
+        my $mn = ::?CLASS ~ ".{ &?ROUTINE }";
+        my gboolean $s = self.RESOLVE_BOOL($setting, $mn);
+        gtk_text_view_set_editable($!tv, $s);
       }
     );
   }
@@ -245,10 +251,12 @@ class GTK::TextView is GTK::Container {
   method monospace is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_text_view_get_monospace($!tv);
+        gtk_text_view_get_monospace($!tv) ?? True !! False;
       },
       STORE => sub ($, $monospace is copy) {
-        gtk_text_view_set_monospace($!tv, $monospace);
+        my $mn = ::?CLASS ~ ".{ &?ROUTINE }";
+        my $m = self.RESOLVE_BOOL($monospace, $mn);
+        gtk_text_view_set_monospace($!tv, $m);
       }
     );
   }
@@ -256,10 +264,12 @@ class GTK::TextView is GTK::Container {
   method overwrite is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_text_view_get_overwrite($!tv);
+        gtk_text_view_get_overwrite($!tv) ?? True !! False;
       },
       STORE => sub ($, $overwrite is copy) {
-        gtk_text_view_set_overwrite($!tv, $overwrite);
+        my $mn = ::?CLASS ~ ".{ &?ROUTINE }";
+        my $o = self.RESOLVE_BOOL($overwrite, $mn);
+        gtk_text_view_set_overwrite($!tv, $o);
       }
     );
   }

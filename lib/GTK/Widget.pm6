@@ -48,6 +48,22 @@ class GTK::Widget {
     $!w = nativecast(GtkWidget, $widget);
   }
 
+  # Protected.
+  method RESOLV_BOOL($rb, $meth) {
+    # Check if caller comes drom a GTK:: object, otherwise throw exception.
+    given $rb {
+      when Num  { $rb != 0 ?? True !! False }
+      when Int  { $rb     }
+      when Bool { $rb.Int }
+      default   {
+        so $rb.can('Bool') ??
+          $rb.Bool
+          !!
+          die "$meth does not accept type { $rb.^name } as a boolean value";
+      }
+    };
+  }
+
   # Static methods
   method cairo_should_draw_window (GTK::Widget:U: cairo_t $cr, GdkWindow $window) {
     gtk_cairo_should_draw_window($cr, $window);
