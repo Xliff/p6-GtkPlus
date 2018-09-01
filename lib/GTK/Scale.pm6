@@ -82,7 +82,7 @@ class GTK::Scale is GTK::Range {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method format-value {
-    self.connect($!s, 'format-value');
+    self.connect_handler($!s, 'format-value');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

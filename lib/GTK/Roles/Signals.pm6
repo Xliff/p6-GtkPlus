@@ -28,12 +28,37 @@ role GTK::Roles::Signals {
     %!signals{$signal}[0];
   }
 
+  # First draft of a generic handler that imitates the interface of what was
+  # provided with GTK::Simple, but with the ability to provide a return
+  # value, and to adapt to multiple signatures.
+  method connect_handler($obj, $signal) {
+    without %!signals{$signal} {
+      my &gh := &g_signal_connect_handler;
+      my \op := OpaquePointer;
+      my $s = class {
+        has $!h;
+        method getHandler       { $!h; }
+        method tap (Routine $s) { gh($obj, $signal, $!h = $s, op, 0); }
+      }.new;
+
+      %!signals{$signal} = [ $s, $obj ];
+    }
+    %!signals{$signal}[0];
+  }
+
   method disconnect_all {
     self.disconnect($_) for %!signals.keys;
   }
 
   method disconnect($signal) {
-    g_signal_handler_disconnect(%!signals{$signal}[1], %!signals{$signal}[0]);
+    given %!signals{$signal}.^name {
+      when 'Supply' {
+        g_signal_handler_disconnect($_[1], $_[0]);
+      }
+      when /^ '<anon' / {
+        g_signal_handler_disconnect($_[1], $_[0].getHandler);
+      }
+    }
     %!signals{$signal}:delete;
   }
 

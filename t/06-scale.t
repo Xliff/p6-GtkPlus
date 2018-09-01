@@ -7,6 +7,8 @@ use GTK::Box;
 use GTK::Label;
 use GTK::Scale;
 
+use NativeCall;
+
 my $a = GTK::Application.new( :title('org.genex.scale_example') );
 
 $a.activate.tap({
@@ -27,13 +29,21 @@ $a.activate.tap({
   $hscale.add_mark(90, GTK_POS_BOTTOM, Str);
 
   # Does not work properly, since current pattern does not return a value.
-  #$hscale.format-value.tap({ "→ { $hscale.value } ←"; });
+  $hscale.format-value.tap(
+    sub ($, num64 $value, OpaquePointer $user_data --> Str) {
+      "→ { $value } ←";
+    }
+  );
   $vscale.add_mark(0.1, GTK_POS_RIGHT, Str);
   $vscale.add_mark(0.5, GTK_POS_LEFT, Str);
   $vscale.add_mark(0.9, GTK_POS_LEFT, Str);
   $vscale.set_size_request(-1, 100);
   # Does not work properly, since current pattern does not return a value.
-  #$vscale.format-value.tap({ "»{ $vscale.value }«"; });
+  $vscale.format-value.tap(
+    -> $, num64 $value, OpaquePointer $user_data --> Str {
+      "»{ $value }«";
+    }
+  );
 
   $vbox.pack_start($title, True, True, 0);
   $vbox.pack_start($vscale, True, True, 0);

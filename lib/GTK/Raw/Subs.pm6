@@ -37,6 +37,20 @@ sub g_signal_connect_wd(
   is export
   { * }
 
+sub g_signal_connect_handler(
+  OpaquePointer $app,
+  Str $name,
+  OpaquePointer $handler,
+  OpaquePointer $data,
+  uint32 $connect_flags
+)
+  returns uint32
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  is export
+  { * }
+
+
 sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
   is native('gobject-2.0')
   is export
