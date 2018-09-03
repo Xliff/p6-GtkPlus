@@ -11,9 +11,13 @@ use GTK::;
 class GTK:: is GTK:: {
   has Gtk $!c;
 
-  submethod BUILD(:$control) {
-    given $label {
+  submethod BUILD(:$ ) {
+    given $ {
       when Gtk | GtkWidget {
+        $! = do {
+          when GtkWidget { nativecast(Gtk , $!); }
+          when Gtk  { $ }
+        }
         self.setParent( $!c = $control );
       }
       when GTK:: {
@@ -21,6 +25,7 @@ class GTK:: is GTK:: {
       default {
       }
     }
+    sel.setType('GTK::');
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
