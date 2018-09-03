@@ -10,6 +10,9 @@ use GTK::Container;
 
 class GTK::Stack is GTK::Container {
   has GtkStack $!s;
+  has GtkStackSwitcher $!ss;
+  has $!by-name;
+  has $!by-title;
 
   submethod BUILD(:$stack ) {
     given $stack {
@@ -25,6 +28,8 @@ class GTK::Stack is GTK::Container {
       default {
       }
     }
+    $!ss = gtk_stack_switcher_new();
+    gtk_stack_switcher_set_stack($!ss, $!s);
     self.setType('GTK::Stack');
   }
 
@@ -134,21 +139,42 @@ class GTK::Stack is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   multi method add_named (GtkWidget $child, gchar $name) {
+    unless self.add-latch {
+      %!by-name{$name} = $child;
+      self.push-start($child);
+    }
     gtk_stack_add_named($!s, $child, $name);
+    self.UNSET-LATCH;
   }
   multi method add_named (GTK::Widget $child, gchar $name)  {
+    self.SET-LATCH;
+    %!by-name{$name} = $child;
+    self.push-start($child);
     samewith($child.widget, $name);
   }
 
   multi method add_titled (GtkWidget $child, gchar $name, gchar $title) {
+    unless self.add-latch {
+      $!by-title{$name} = $child;
+      self.push-start($child);
+    }
     gtk_stack_add_titled($!s, $child, $name, $title);
+    self.UNSET-LATCH;
   }
   multi method add_titled (GTK::Widget $child, gchar $name, gchar $title)  {
+    self.SET-LATCH;
+    %!by-title{$name} = $child;
+    self.push-start($child);
     samewith($child.widget, $name, $title);
   }
 
   method get_child_by_name (gchar $name) {
-    gtk_stack_get_child_by_name($!s, $name);
+    my $w = %!by-name{$name}:v;
+    $w // gtk_stack_get_child_by_name($!s, $name);
+  }
+
+  method get_child_by_title (Str $title) {
+    %!by-title{$name}:v;
   }
 
   method get_transition_running {
@@ -163,7 +189,7 @@ class GTK::Stack is GTK::Container {
     gchar $name,
     Int() $transition
   ) {
-    my uint32 $t = $translation +& 0xffff;
+    my uint32 $t = $transition +& 0xffff;
     gtk_stack_set_visible_child_full($!s, $name, $t);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

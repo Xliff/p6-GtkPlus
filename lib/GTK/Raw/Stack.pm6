@@ -140,3 +140,14 @@ sub gtk_stack_set_homogeneous (GtkStack $stack, gboolean $homogeneous)
   is native('gtk-3')
   is export
   { * }
+
+sub gtk_stack_switcher_new ()
+  returns GtkStackSwitcher
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_stack_switcher_set_stack (GtkStackSwitcher $switcher, GtkStack $stack)
+  is native('gtk-3')
+  is export
+  { * }

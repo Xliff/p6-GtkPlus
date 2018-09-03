@@ -162,6 +162,29 @@ our enum GtkScrollStep is export <
   GTK_SCROLL_HORIZONTAL_ENDS
 >;
 
+our enum GtkTransitionType is export <
+  GTK_STACK_TRANSITION_TYPE_NONE
+  GTK_STACK_TRANSITION_TYPE_CROSSFADE
+  GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT
+  GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT
+  GTK_STACK_TRANSITION_TYPE_SLIDE_UP
+  GTK_STACK_TRANSITION_TYPE_SLIDE_DOWN
+  GTK_STACK_TRANSITION_TYPE_SLIDE_LEFT_RIGHT
+  GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN
+  GTK_STACK_TRANSITION_TYPE_OVER_UP
+  GTK_STACK_TRANSITION_TYPE_OVER_DOWN
+  GTK_STACK_TRANSITION_TYPE_OVER_LEFT
+  GTK_STACK_TRANSITION_TYPE_OVER_RIGHT
+  GTK_STACK_TRANSITION_TYPE_UNDER_UP
+  GTK_STACK_TRANSITION_TYPE_UNDER_DOWN
+  GTK_STACK_TRANSITION_TYPE_UNDER_LEFT
+  GTK_STACK_TRANSITION_TYPE_UNDER_RIGHT
+  GTK_STACK_TRANSITION_TYPE_OVER_UP_DOWN
+  GTK_STACK_TRANSITION_TYPE_OVER_DOWN_UP
+  GTK_STACK_TRANSITION_TYPE_OVER_LEFT_RIGHT
+  GTK_STACK_TRANSITION_TYPE_OVER_RIGHT_LEFT
+>;
+
 our enum GtkOrientation is export <
   GTK_ORIENTATION_HORIZONTAL
   GTK_ORIENTATION_VERTICAL
@@ -529,6 +552,8 @@ class GtkScrollbar        is repr('CPointer') does GTK::Roles::Pointer is export
 class GtkSelectionData    is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkSettings         is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkSpinner          is repr('CPointer') does GTK::Roles::Pointer is export { }
+class GtkStack            is repr('CPointer') does GTK::Roles::Pointer is export { }
+class GtkStackSwitcher    is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkStyle            is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkSwitch           is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkStyleContext     is repr('CPointer') does GTK::Roles::Pointer is export { }

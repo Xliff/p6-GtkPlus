@@ -48,6 +48,16 @@ class GTK::Container is GTK::Widget {
     self.setWidget($!c = nativecast(GtkContainer, $container));
   }
 
+  method SET-LATCH {
+    self.IS-PROTECTED;
+    $!add-latch = True;
+  }
+
+  method UNSET-LATCH {
+    self.IS-PROTECTED;
+    $!add-latch = False;
+  }
+
   method push-start($c) {
     @!start.push: $c;
   }
