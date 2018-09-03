@@ -13,6 +13,7 @@ use GTK::Widget;
 class GTK::Container is GTK::Widget {
   # Maybe this should be done as the base class.
   has $!c;
+  has $!add-latch;
   has @!start;
   has @!end;
 
