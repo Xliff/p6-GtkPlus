@@ -18,7 +18,7 @@ class GTK::Stack is GTK::Container {
     given $stack {
       when GtkStack | GtkWidget {
         $!s = do {
-          when GtkWidget { nativecast(Gtk , $!); }
+          when GtkWidget { nativecast(GtkStack, $!stack); }
           when GtkStack  { $stack }
         }
         self.setContainer($stack);
@@ -47,8 +47,9 @@ class GTK::Stack is GTK::Container {
       FETCH => sub ($) {
         gtk_stack_get_hhomogeneous($!s);
       },
-      STORE => sub ($, $hhomogeneous is copy) {
-        gtk_stack_set_hhomogeneous($!s, $hhomogeneous);
+      STORE => sub ($, Int() $hhomogeneous is copy) {
+        my uint32 $hh = $hhomogeneous;
+        gtk_stack_set_hhomogeneous($!s, $hh);
       }
     );
   }
@@ -58,8 +59,9 @@ class GTK::Stack is GTK::Container {
       FETCH => sub ($) {
         gtk_stack_get_homogeneous($!s);
       },
-      STORE => sub ($, $homogeneous is copy) {
-        gtk_stack_set_homogeneous($!s, $homogeneous);
+      STORE => sub ($, Int() $homogeneous is copy) {
+        my uint32 $h = $homogeneous;
+        gtk_stack_set_homogeneous($!s, $h);
       }
     );
   }
@@ -69,7 +71,8 @@ class GTK::Stack is GTK::Container {
       FETCH => sub ($) {
         gtk_stack_get_interpolate_size($!s);
       },
-      STORE => sub ($, $interpolate_size is copy) {
+      STORE => sub ($, Int() $interpolate_size is copy) {
+        my uint32 $is = $interpolate_size +& 0xffff;
         gtk_stack_set_interpolate_size($!s, $interpolate_size);
       }
     );
@@ -80,8 +83,9 @@ class GTK::Stack is GTK::Container {
       FETCH => sub ($) {
         gtk_stack_get_transition_duration($!s);
       },
-      STORE => sub ($, $duration is copy) {
-        gtk_stack_set_transition_duration($!s, $duration);
+      STORE => sub ($, Int() $duration is copy) {
+        my uint32 $d = $duration;
+        gtk_stack_set_transition_duration($!s, $d);
       }
     );
   }
@@ -103,8 +107,9 @@ class GTK::Stack is GTK::Container {
       FETCH => sub ($) {
         gtk_stack_get_vhomogeneous($!s);
       },
-      STORE => sub ($, $vhomogeneous is copy) {
-        gtk_stack_set_vhomogeneous($!s, $vhomogeneous);
+      STORE => sub ($, Int() $vhomogeneous is copy) {
+        my uint32 $vh = $vhomogeneous +& 0xffff;
+        gtk_stack_set_vhomogeneous($!s, $vh);
       }
     );
   }
@@ -130,7 +135,7 @@ class GTK::Stack is GTK::Container {
       FETCH => sub ($) {
         gtk_stack_get_visible_child_name($!s);
       },
-      STORE => sub ($, $name is copy) {
+      STORE => sub ($, Str() $name is copy) {
         gtk_stack_set_visible_child_name($!s, $name);
       }
     );
@@ -169,12 +174,11 @@ class GTK::Stack is GTK::Container {
   }
 
   method get_child_by_name (gchar $name) {
-    my $w = %!by-name{$name}:v;
-    $w // gtk_stack_get_child_by_name($!s, $name);
+    %!by-name{$name} // gtk_stack_get_child_by_name($!s, $name);
   }
 
   method get_child_by_title (Str $title) {
-    %!by-title{$name}:v;
+    %!by-title{$name};
   }
 
   method get_transition_running {
