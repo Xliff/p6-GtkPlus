@@ -14,7 +14,10 @@ class GTK::Fixed is GTK::Container {
   submethod BUILD(:$fixed) {
     given $fixed {
       when GtkFixed | GtkWidget {
-        $!f = nativecast(GtkFixed, $fixed);
+        $!f = do {
+          when GtkWidget { nativecast(GtkFixed, $fixed); }
+          when GtkFixed  { $fixed; }
+        };
         self.setContainer($fixed);
       }
       when GTK::Fixed {
@@ -22,6 +25,7 @@ class GTK::Fixed is GTK::Container {
       default {
       }
     }
+    self.setType('GTK::Fixed');
   }
 
   method new () {

@@ -15,6 +15,7 @@ class GTK::Window is GTK::Bin {
     given $window {
       when GtkWindow {
         $!win = $window;
+        self.setWidget($!win);
       }
       when GTK::Window {
         warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
@@ -25,6 +26,8 @@ class GTK::Window is GTK::Bin {
       default {
       }
     }
+    self.TYPE-LATCH = True;
+    self.setType('GTK::Window');
   }
 
   multi method new (

@@ -15,15 +15,18 @@ class GTK::Calendar is GTK::Widget {
   submethod BUILD(:$calendar) {
     given $calendar {
       when GtkCalendar | GtkWidget {
-        $!cal = nativecast(GtkCalendar, $calendar);
+        $!cal = do {
+          when GtkWidget   { nativecast(GtkCalendar, $calendar); }
+          when GtkCalendar { $calendar; }
+        };
         self.setWidget( $calendar );
       }
       when GTK::Calendar {
-
       }
       default {
       }
     }
+    self.setType('GTK::Calendar');
   }
 
   method new () {

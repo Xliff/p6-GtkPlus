@@ -14,7 +14,10 @@ class GTK::Frame is GTK::Bin {
   submethod BUILD(:$frame) {
     given $frame {
       when GtkFrame | GtkWidget {
-        $!f = nativecast(GtkFrame, $frame);
+        $!f = do {
+          when GtkWidget { nativecast(GtkFrame, $frame); }
+          when GtkFrame  { $frame; }
+        };
         self.setBin($frame);
       }
       when GTK::Frame {
@@ -22,6 +25,7 @@ class GTK::Frame is GTK::Bin {
       default {
       }
     }
+    self.setType('GTK::Frame');
   }
 
   method new {

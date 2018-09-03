@@ -14,7 +14,10 @@ class GTK::Scale is GTK::Range {
   submethod BUILD(:$scale) {
     given $scale {
       when GtkScale | GtkWidget {
-        $!s = nativecast(GtkScale, $scale);
+        $!s = do {
+          when GtkWidget { nativecast(GtkScale, $scale); }
+          when GtkScale  { $scale; }
+        };
         self.setRange( :range($scale) );
       }
       when GTK::Scale {
@@ -22,6 +25,7 @@ class GTK::Scale is GTK::Range {
       default {
       }
     }
+    self.setType('GTK::Scale');
   }
 
   multi method new (GtkAdjustment $adj, :$horizontal = False, :$vertical = False) {

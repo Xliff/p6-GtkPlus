@@ -18,7 +18,10 @@ class GTK::Pane is GTK::Container {
   submethod BUILD(:$pane) {
     given $pane {
       when GtkPane | GtkWidget {
-        $!p = nativecast(GtkPane, $pane);
+        $!p = do {
+          when GtkWidget { nativecast(GtkPane, $pane); }
+          when GtkPane   { $pane; }
+        };
         self.setContainer($pane);
       }
       when GTK::Pane {
@@ -26,6 +29,7 @@ class GTK::Pane is GTK::Container {
       default {
       }
     }
+    self.setType('GTK::Pane');
   }
 
   multi method new(GtkOrientation $orientation) {

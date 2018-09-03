@@ -2,20 +2,23 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Bin;
-
 use GTK::Compat::Types;
 use GTK::Raw::Button;
 use GTK::Raw::Types;
 
-class GTK::Button is GTK::Bin {
+use GTK::Bin;
 
-  has $!b;
+class GTK::Button is GTK::Bin {
+  has GtkButton $!b;
 
   submethod BUILD(:$button) {
     given $button {
       when GtkButton | GtkWidget {
-        $!b = $button;
+        $!b = do {
+          when GtkWidget { nativecast(GtkButton, $button); }
+          when GtkButton { $button; }
+        };
+        self.setBin($button);
       }
       when GTK::Button {
         warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
@@ -27,6 +30,7 @@ class GTK::Button is GTK::Bin {
         # Throw exception here
       }
     }
+    self.setType('GTK::Button');
   }
 
   multi method new {

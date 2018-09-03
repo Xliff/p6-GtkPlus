@@ -8,6 +8,8 @@ use GTK::Widget;
 class GTK::Separator is GTK::Widget {
 
   submethod BUILD(:$separator) {
+    self.TYPE-LATCH = True;
+    self.setType('GTK::Separator');
     self.setWidget($separator);
   }
 

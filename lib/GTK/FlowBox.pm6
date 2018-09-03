@@ -15,7 +15,10 @@ class GTK::FlowBox is GTK::Container {
   submethod BUILD(:$flowbox) {
     given $flowbox {
       when GtkFlowBox | GtkWidget {
-        $!fb = nativecast(GtkFlowBox, $flowbox);l
+        $!fb = do {
+          when GtkWidget  { nativecast(GtkFlowBox, $flowbox); }
+          when GtkFlowBox { $flowbox; }
+        };
         self.setContainer($flowbox);
       }
       when GTK::FlowBox {
@@ -23,6 +26,7 @@ class GTK::FlowBox is GTK::Container {
       default {
       }
     }
+    self.setType('GTK::FlowBox');
   }
 
 

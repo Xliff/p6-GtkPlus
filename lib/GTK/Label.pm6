@@ -25,6 +25,7 @@ class GTK::Label is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::Label');
   }
 
   method new($text = Str) {

@@ -19,7 +19,11 @@ class GTK::Container is GTK::Widget {
   submethod BUILD (:$container) {
     given $container {
       when GtkContainer | GtkWidget {
-        self.setWidget($!c = $container);
+        $!c = {
+          when GtkWidget    { nativecast(GtkContainer, $container); }
+          when GtkContainer { $container; }
+        }
+        self.setWidget($container);
       }
       when GTK::Container | GTK::Widget {
         #self.setWidget($!c = $container.widget);
@@ -27,6 +31,7 @@ class GTK::Container is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::Container');
   }
 
   submethod DESTROY {

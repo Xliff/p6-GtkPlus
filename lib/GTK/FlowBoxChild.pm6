@@ -25,8 +25,12 @@ class GTK::FlowBoxChild is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method setFlowBoxChild(GtkFlowBoxChild $child) {
-    $!fbc = $child;
+    $!fbc = do given $child {
+      when GtkWidget       { nativecast(GtkFlowBoxChild, $child); }
+      when GtkFlowBoxChild { $child; }
+    };
     self.setBin($child);
+    self.setType('GTK::FlowBoxChild');
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 }

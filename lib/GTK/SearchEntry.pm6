@@ -12,9 +12,12 @@ class GTK::SearchEntry is GTK::Entry {
   has Gtk $!se;
 
   submethod BUILD(:$searchentry) {
-    given $label {
+    given $searchentry {
       when GtkSearchEntry | GtkWidget {
-        $!se = nativecast(GtkSearchEntry, $searchentry);
+        $!se = do {
+          when GtkWidget      { nativecast(GtkSearchEntry, $searchentry); }
+          when GtkSearchEntry { $searchentry; }
+        };
         self.setEntry($searchentrty);
       }
       when GTK::SearchEntry {
@@ -22,6 +25,7 @@ class GTK::SearchEntry is GTK::Entry {
       default {
       }
     }
+    self.setType('GTK::SearchEntry');
   }
 
   method new {

@@ -8,20 +8,24 @@ use GTK::Raw::Types;
 
 use GTK::ToggleButton;
 
-class GTK::CheckButton is GTK::ToggleButton {
+class GTK::MenuButton is GTK::ToggleButton {
   has GtkMenuButton $!mb;
 
   submethod BUILD(:$menubutton) {
     given $button {
       when GtkMenuButton | GtkWidget {
-        $!mb = nativecast(GtkCheckButton, $menubutton);
+        $!mb = do {
+          when GtkWidget     { nativecast(GtkMenuButton, $menubutton); }
+          when GtkMenuButton { $menubutton; }
+        };
         self.setToggleButton($menubutton);
       }
-      when GTK::MenuButton {
+      when GTK::CheckButton {
       }
       default {
       }
     }
+    self.setType('GTK::MenuButton');
   }
 
   method new {

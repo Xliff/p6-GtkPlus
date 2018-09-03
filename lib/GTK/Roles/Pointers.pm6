@@ -8,4 +8,8 @@ role GTK::Roles::Pointers {
     nativecast(Pointer, self);
   }
 
+  method op {
+    nativecast(OpaquePointer, self);
+  }
+
 }

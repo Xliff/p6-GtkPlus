@@ -22,6 +22,7 @@ class GTK::Image is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::Image');
   }
 
   method new () {

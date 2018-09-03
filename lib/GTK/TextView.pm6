@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::;
+use GTK::Raw::NoteView;
 use GTK::Raw::Types;
 
 use GTK::Container;
@@ -25,6 +25,7 @@ class GTK::TextView is GTK::Container {
       default {
       }
     }
+    self.setType('GTK::NoteView');
   }
 
   method new {

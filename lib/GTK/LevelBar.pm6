@@ -14,7 +14,10 @@ class GTK::LevelBar is GTK::Widget {
   submethod BUILD(:$level) {
     given $level {
       when GtkLevelBar | GtkWidget {
-        $!lb = nativecast(GtkLevelBar, $level);
+        $!lb = do {
+          when GtkWidget   { nativecast(GtkLevelBar, $level); }
+          when GtkLevelBar { $level; }
+        };
         self.setWidget($level);
       }
       when GTK::LevelBar {
@@ -22,6 +25,7 @@ class GTK::LevelBar is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::LevelBar');
   }
 
   method new () {

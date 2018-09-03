@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-class GTK:: is GTK::Bin {
+class GTK::StatusBar is GTK::Bin {
   has Gtk $!sb;
 
   submethod BUILD(:$statusbar) {
@@ -25,6 +25,7 @@ class GTK:: is GTK::Bin {
       default {
       }
     }
+    self.setType('GTK::StatusBar');
   }
 
   method new () {

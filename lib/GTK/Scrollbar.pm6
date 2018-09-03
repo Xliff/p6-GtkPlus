@@ -14,14 +14,18 @@ class GTK::Scrollbar is GTK::Range {
   submethod BUILD(:$scroll) {
     given $scroll {
       when GtkScrollbar | GtkWidget {
-        $!sb = nativecast(GtkScrollbar, $scroll);
+        $!sb = do {
+          when GtkWidget    { nativecast(GtkScrollbar, $scroll); }
+          when GtkScrollbar { $scroll; }
+        };
         self.setRange($scroll);
       }
-      when GTK:: {
+      when GTK::Scrollbar {
       }
       default {
       }
     }
+    self.setType('GTK::Scrollbar');
   }
 
   method new (GtkOrientation $or, GtkAdjustment $adjustment) {

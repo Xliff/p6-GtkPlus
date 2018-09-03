@@ -15,7 +15,10 @@ class GTK::ColorChooser is GTK::Box {
   submethod BUILD(:$chooser) {
     given $chooser {
       when GtkColorChooser | GtkWidget {
-        $!cc = nativecast($chooser, GtkColorChooser);
+        $!cc = do {
+          when GtkWidget       { nativecast(GtkColorChooser, $chooser);
+          when GtkColorChooser { $chooser; }
+        };
         self.setBox($chooser);
       }
       when GTK::ColorChooser {
@@ -23,6 +26,7 @@ class GTK::ColorChooser is GTK::Box {
       default {
       }
     }
+    self.setType('GTK::ColorChooser');
   }
 
   method new {

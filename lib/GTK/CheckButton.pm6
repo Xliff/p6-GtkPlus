@@ -14,7 +14,10 @@ class GTK::CheckButton is GTK::ToggleButton {
   submethod BUILD(:$checkbutton) {
     given $button {
       when GtkCheckButton | GtkWidget {
-        $!cb = nativecast(GtkCheckButton, $checkbutton);
+        $!cb = do {
+          when GtkWidget      { nativecast(GtkCheckButton, $checkbutton); }
+          when GtkCheckButton { $checkbutton; }
+        };
         self.setToggleButton($checkbutton);
       }
       when GTK::CheckButton {
@@ -22,6 +25,7 @@ class GTK::CheckButton is GTK::ToggleButton {
       default {
       }
     }
+    self.setType('GTK::CheckButton');
   }
 
   method new () {

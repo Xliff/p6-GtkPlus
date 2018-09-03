@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Raw::Types;
-use GTK::Raw::ScaleButton;
+use GTK::Raw::VolumeButton;
 
 use GTK::ScaleButton;
 
@@ -13,8 +13,11 @@ class GTK::VolumeButton is GTK::ScaleButton {
 
   submethod BUILD(:$button) {
     given $button {
-      when GtkVolume | GtkWidget {
-        $!vb = nativecast(GtkVolumeButton, $button);
+      when GtkVolumeButton | GtkWidget {
+        $!vb = do {
+          when GtkWidget       { nativecast(GtkVolumeButton, $button); }
+          when GtkVolumeButton { $button; }
+        }
         self.setScaleButton($button);
       }
       when GTK::VolumeButton {
@@ -22,6 +25,7 @@ class GTK::VolumeButton is GTK::ScaleButton {
       default {
       }
     }
+    self.setType('GTK::VolumeButton');
   }
 
   method new {

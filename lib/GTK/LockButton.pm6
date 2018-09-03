@@ -9,12 +9,15 @@ use GTK::Raw::Types;
 use GTK::Button;
 
 class GTK::LockButton is GTK::Button {
-  has Gtk $!lb;
+  has GtkLockButton $!lb;
 
   submethod BUILD(:$button) {
     given $button {
       when GtkLockButton | GtkWidget {
-        $!lb = nativecast(GtkLockButton, $button);
+        $!lb = do {
+          when GtkWidget     { nativecast(GtkLockButton, $button); }
+          when GtkLockButton { $button; }
+        };
         self.setButton($button);
       }
       when GTK::Button {
@@ -22,6 +25,7 @@ class GTK::LockButton is GTK::Button {
       default {
       }
     }
+    self.setType('GTK::LockButton');
   }
 
   method new {

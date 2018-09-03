@@ -16,7 +16,10 @@ class GTK::InfoBar is GTK::Box {
   submethod BUILD(:$infobar) {
     given $infobar {
       when GtkInfoBar | GtkWidget {
-        nativecast(GtkInfoBar, $infobar);
+        $!ib = do {
+          when GtkWidget  { nativecast(GtkInfoBar, $infobar); }
+          when GtkInfoBar { $infobar; }
+        };
         self.setBox($infobar);
       }
       when GTK::InfoBar {
@@ -24,6 +27,7 @@ class GTK::InfoBar is GTK::Box {
       default {
       }
     }
+    self.setType('GTK::InfoBar');
   }
 
   method new {

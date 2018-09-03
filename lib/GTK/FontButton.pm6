@@ -9,12 +9,15 @@ use GTK::Raw::Types;
 use GTK::Button;
 
 class GTK::FontButton is GTK::Button {
-  has Gtk $!cb;
+  has GtkFontButton $!fb;
 
   submethod BUILD(:$button) {
     given $button {
-      when GtkColorButton | GtkWidget {
-        $!tb = nativecast(GtkFontButton, $button);
+      when GtkFontButton | GtkWidget {
+        $!tb = do {
+          when GtkWidget     { nativecast(GtkFontButton, $button); }
+          when GtkFontButton { $button; }
+        };
         self.setButton($button);
       }
       when GTK::Button {
@@ -22,10 +25,11 @@ class GTK::FontButton is GTK::Button {
       default {
       }
     }
+    self.setType('GTK::FontButton');
   }
 
   method new {
-    my $button = gtk_font_button_new($!fb);
+    my $button = gtk_font_button_new();
     self.bless(:$button);
   }
 
@@ -36,7 +40,7 @@ class GTK::FontButton is GTK::Button {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method font-set {
-    self.connect($!cb, 'font-set');
+    self.connect($!fb, 'font-set');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

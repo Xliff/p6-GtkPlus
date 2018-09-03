@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::ComboBox;
 
-class GTK:: is GTK::ComboBox {
+class GTK::AppButton is GTK::ComboBox {
   has GtkAppChooserButton $!acb;
 
   submethod BUILD(:$appbutton) {

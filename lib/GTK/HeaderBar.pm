@@ -25,6 +25,7 @@ class GTK::HeaderBar is GTK::Container {
       default {
       }
     }
+    self.setType('GTK::HeaderBar');
   }
 
   method new {

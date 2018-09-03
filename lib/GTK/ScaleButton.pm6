@@ -14,6 +14,10 @@ class GTK::ScaleButton is GTK::Button {
   submethod BUILD(:$button) {
     given $button {
       when GtkScaleButton | GtkWidget {
+        $!sb = do when {
+          GtkWidget      { nativecast(GtkScaleButton, $button); }
+          GtkScaleButton { $button; }
+        };
         self.setScaleButton($button);
       }
       when GTK::ScaleButton {
@@ -21,6 +25,7 @@ class GTK::ScaleButton is GTK::Button {
       default {
       }
     }
+    self.setType('GTK::ScaleButton');
   }
 
   method new (gdouble $min, gdouble $max, gdouble $step, gchar $icons) {

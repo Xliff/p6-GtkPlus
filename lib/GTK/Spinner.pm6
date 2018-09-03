@@ -14,7 +14,10 @@ class GTK::Spinner is GTK::Widget {
   submethod BUILD(:$spin) {
     given $spin {
       when GtkSpinner | GtkWidget {
-        $!spin = nativecast(GtkSpinner, $spin);
+        $!spin = do {
+          when GtkWidget  { nativecast(GtkSpinner, $spin); }
+          when GtkSpinner { $spin; }
+        };
         self.setWidget($spin);
       }
       when GTK::Spinner {
@@ -22,6 +25,7 @@ class GTK::Spinner is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::Spinner');
   }
 
   method new {

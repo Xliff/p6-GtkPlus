@@ -23,6 +23,18 @@ sub g_signal_connect_data(
   is export
   { * }
 
+sub g_object_set_string(OpaquePointer $o, gchar $key, Str $data)
+  is native('gobject-2.0')
+  is symbol('g_object_set_data')
+  is export
+  { * }
+
+sub g_object_get_string(OpaquePointer $o, gchar $key)
+  returns Str
+  is native('gobject-2.0')
+  is symbol('g_object_set_data')
+  is export
+  { * }
 
 sub g_signal_connect_wd(
   OpaquePointer $app,
@@ -85,35 +97,9 @@ sub gtk_window_set_default_size (GtkWindow $win, int32 $w, int32 $h)
   is export(:window)
   { * }
 
-
-#
-# WIDGET
-#
-sub gtk_widget_get_type()
-  returns int32
-  is native('gtk-3')
-  is export(:widget)
-  { * }
-
-sub gtk_widget_show_all(GtkWidget $w)
-  is native('gtk-3')
-  is export(:widget)
-  { * }
-
-
-#
-# BUTTON
-#
-sub gtk_button_new()
-  returns GtkWidget
-  is export(:button)
-  is native('gtk-3')
-  { * }
-
 #
 # APPLICATION
 #
-
 sub g_application_run(OpaquePointer, Pointer[uint32], CArray[Str])
   is native('gio-2.0')
   is export

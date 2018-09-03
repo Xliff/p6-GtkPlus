@@ -8,11 +8,15 @@ use GTK::Raw::Types;
 use GTK::Container;
 
 class GTK::Bin is GTK::Container {
-  has $!bin; # GtkBin
+  has GtkBin $!bin;
 
   submethod BUILD(:$bin) {
     when GtkBin | GtkWidget {
-      $!bin = $bin;
+      $!bin = do given $bin {
+        when GtkBin { $bin; }
+        when GtkWidget { nativecast(GtkBin, $bin); }
+      };
+      self.setWidget($bin);
     }
     when GTK::Bin {
       warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
@@ -20,6 +24,7 @@ class GTK::Bin is GTK::Container {
     default {
       # Throw exception
     }
+    self.setType('GTK::Bin');
   }
 
   method setBin($bin) {

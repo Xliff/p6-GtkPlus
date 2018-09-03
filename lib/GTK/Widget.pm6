@@ -18,19 +18,16 @@ class GTK::Widget {
   submethod BUILD (:$widget) {
     given $widget {
       when GtkWidget {
-        $!w = $widget
+        $!w = $widget;
       }
       default {
       }
     }
+    self.setType('GTK::Widget');
   }
 
   submethod DESTROY {
-    g_object_unref(self.p);
-  }
-
-  method p {
-    nativecast(OpaquePointer, $!w);
+    g_object_unref($!w.p);
   }
 
   method widget {
@@ -48,8 +45,22 @@ class GTK::Widget {
     $!w = nativecast(GtkWidget, $widget);
   }
 
-  # Protected.
+  # Should never be called ouside of the GTK::Widget hierarchy, but
+  # how can the watcher watch itself?
+  method IS-PROTECTED {
+    # Really kinda violates someone's idea of "object-oriented" somewhere,
+    # but I am more results-oriened.
+    my $c = callframe(1).code;
+    $c ~~ Routine ??
+      $c.package.^name ~~ /^ 'GTK::'/ ?? True
+        !!
+        die "Cannot call method from outside of a GTK:: object";
+      !!
+      die "Cannot call method from outside of a GTK:: object";
+  }
+
   method RESOLV_BOOL($rb, $meth) {
+    self.IS-PROTECTED;
     # Check if caller comes drom a GTK:: object, otherwise throw exception.
     given $rb {
       when Num  { $rb != 0 ?? True !! False }
@@ -62,6 +73,19 @@ class GTK::Widget {
           die "$meth does not accept type { $rb.^name } as a boolean value";
       }
     };
+  }
+
+  method setType($typeName) {
+    self.IS_PROTECTED;
+
+    my $oldType = self.getType;
+    with $oldType {
+      warn "WARNING -- Resetting type from $oldType to $typeName"
+        unless $oldType eq 'GTK::Widget' || $oldType eq $typeName;
+    }
+
+    g_object_set_string($!w, 'GTKPLUS-Type', $typeName)
+      unless $oldType ne $newType;
   }
 
   # Static methods
@@ -935,6 +959,10 @@ class GTK::Widget {
         gtk_widget_set_support_multidevice($!w, $support_multidevice);
       }
     );
+  }
+
+  method getType {
+    g_object_get_string($!w, 'GTKPLUS-Type');
   }
 
   method add_events (gint $events) {

@@ -8,7 +8,6 @@ use GTK::Raw::Box;
 use GTK::Raw::Types;
 
 use GTK::Container;
-use GTK::Widget;
 
 class GTK::Box is GTK::Container {
 
@@ -19,9 +18,11 @@ class GTK::Box is GTK::Container {
 
   submethod BUILD(:$box) {
     given $box {
-      # I don't think this distinction needs to be made. Must test.
       when GtkWidget | GtkBox {
-        $!b = nativecast(GtkBox, $box);
+        $!b = do {
+          when GtkWidget { nativecast(GtkBox, $box); }
+          when GtkBox    { $box }
+        };
         self.setContainer($box);
       }
       when GTK::Box {
@@ -30,6 +31,7 @@ class GTK::Box is GTK::Container {
       default {
       }
     }
+    self.setType('GTK::Box');
   }
 
   multi method new-box (GtkOrientation $orientation, Int $spacing) {
@@ -52,7 +54,7 @@ class GTK::Box is GTK::Container {
   }
 
   method setBox($box) {
-    self.setContainer($!b = nativecast(GtkBox, $box) );
+    self.setContainer( $!b = nativecast(GtkBox, $box) );
   }
 
   # cw: Just in case I need it in the near future. May want to put it in an

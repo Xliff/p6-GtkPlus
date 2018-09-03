@@ -3,20 +3,22 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::Label;
+use GTK::Raw::RadioButton;
 use GTK::Raw::Types;
 
-use GTK::Raw::
 
-use GTK::;
+use GTK::CheckButton;
 
-class GTK:: is GTK:: {
+class GTK::RadioButton is GTK::CheckButton {
   has GtkRadioButton $!rb;
 
   submethod BUILD(:$radiobutton) {
     given $radiobutton {
       when GtkRadioButton | GtkWidget {
-        $!rb = nativecast(GtkRadioButton, $radiobutton);
+        $!rb = do {
+          when GtkWidget      { nativecast(GtkRadioButton, $radiobutton); }
+          when GtkRadioButton { $radiobutton; }
+        };
         self.setCheckButton($radiobutton);
       }
       when GTK::RadioButton {
@@ -24,6 +26,7 @@ class GTK:: is GTK:: {
       default {
       }
     }
+    self.setType('GTK::RadioButton');
   }
 
   method new {

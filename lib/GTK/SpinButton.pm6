@@ -14,7 +14,10 @@ class GTK::SpinButton is GTK::Entry {
   submethod BUILD(:$spinbutton) {
     given $spinbutton {
       when GtkSpinButton | GtkWidget {
-        $!sp = nativecast(GtkSpinButton, $_);
+        $!sp = do {
+          when GtkWidget     { nativecast(GtkSpinButton, $_); }
+          when GtkSpinButton { $spinbutton; }
+        };
         self.setParent($_);
       }
       when GTK::SpinButton {
@@ -22,6 +25,7 @@ class GTK::SpinButton is GTK::Entry {
       default {
       }
     }
+    self.setType('GTK::SpinButton');
   }
 
   method new (Num() $climb_rate, Int() $digits) {

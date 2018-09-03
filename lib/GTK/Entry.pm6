@@ -15,7 +15,10 @@ class GTK::Entry is GTK::Widget {
   submethod BUILD(:$entry) {
     given $entry {
       when GtkEntry | GtkWidget {
-        $!e = nativecast(GtkEntry, $entry);
+        $!e = do {
+          when GtkWidget { nativecast(GtkEntry, $entry); }
+          when GtkEntry  { $entry; }
+        };
         self.setWidget($entry);
       }
       when GTK::Entry {
@@ -23,6 +26,7 @@ class GTK::Entry is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::Entry');
   }
 
   method new {

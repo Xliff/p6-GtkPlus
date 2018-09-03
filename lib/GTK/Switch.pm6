@@ -14,7 +14,10 @@ class GTK::Switch is GTK::Widget {
   submethod BUILD(:$switch) {
     given $switch {
       when GtkSwitch | GtkWidget {
-        $!s = nativecast(GtkSwitch, $switch);
+        $!s = do {
+          when GtkWidget { nativecast(GtkSwitch, $switch); }
+          when GtkSwitch { $switch; }
+        };
         self.setWidget($switch);
       }
       when GTK::Switch {
@@ -22,6 +25,7 @@ class GTK::Switch is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::Switch');
   }
 
   method new () {

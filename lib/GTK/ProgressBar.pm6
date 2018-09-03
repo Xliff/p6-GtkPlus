@@ -15,7 +15,10 @@ class GTK::ProgressBar is GTK::Widget {
   submethod BUILD(:$bar) {
     given $bar {
       when GtkProgressBar | GtkWidget {
-        $!bar = nativecast(GtkProgressBar, $bar);
+        $!bar = do {
+          when GtkWidget      { nativecast(GtkProgressBar, $bar); }
+          when GtkProgressBar { $bar; }
+        };
         self.setWidget($bar);
       }
       when GTK::ProgressBar {
@@ -23,6 +26,7 @@ class GTK::ProgressBar is GTK::Widget {
       default {
       }
     }
+    self.setType('GTK::ProgressBar');
   }
 
   method new () {

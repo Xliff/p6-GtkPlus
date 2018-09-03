@@ -25,6 +25,7 @@ class GTK::AccelLabel is GTK::Label {
       default {
       }
     }
+    self.setType('GTK::AccelLabel');
   }
 
   method new {

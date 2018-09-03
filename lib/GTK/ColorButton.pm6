@@ -9,12 +9,15 @@ use GTK::Raw::Types;
 use GTK::Button;
 
 class GTK::ColorButton is GTK::Button {
-  has Gtk $!cb;
+  has GtkColorButton $!cb;
 
   submethod BUILD(:$button) {
     given $button {
       when GtkColorButton | GtkWidget {
-        $!tb = nativecast(GtkColorButton, $button);
+        $!tb = do {
+          when GtkWidget      { nativecast(GtkColorButton, $button); }
+          when GtkColorButton { $button; }
+        };
         self.setButton($button);
       }
       when GTK::Button {
@@ -22,6 +25,7 @@ class GTK::ColorButton is GTK::Button {
       default {
       }
     }
+    self.setType('GTK::ColorButton');
   }
 
   method new {

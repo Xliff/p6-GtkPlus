@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-class GTK:: is GTK::Container {
+class GTK::NoteBook is GTK::Container {
   has Gtk $!n;
 
   submethod BUILD(:$notebook) {
@@ -25,6 +25,7 @@ class GTK:: is GTK::Container {
       default {
       }
     }
+    self.setType('GTK::NoteBook');
   }
 
   method new {
