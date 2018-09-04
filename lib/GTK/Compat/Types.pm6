@@ -37,6 +37,11 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has GList         $.prev;
 }
 
+class GSList is repr('CStruct' does GTK::Roles::Pointers is export {
+  has OpaquePointer $.data;
+  has GSList        $.next;
+}
+
 class GTypeValueList is repr('CUnion') is export {
   has int32	          $.v_int     is rw;
   has uint32          $.v_uint    is rw;
