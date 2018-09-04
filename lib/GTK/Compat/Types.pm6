@@ -124,14 +124,14 @@ our enum GApplicationFlags is export (
   G_APPLICATION_CAN_OVERRIDE_APP_ID  => 64
 );
 
-our enum GdkDragAction is export <
-  GDK_ACTION_DEFAULT
-  GDK_ACTION_COPY
-  GDK_ACTION_MOVE
-  GDK_ACTION_LINK
-  GDK_ACTION_PRIVATE
-  GDK_ACTION_ASK
->;
+our enum GdkDragAction is export (
+  GDK_ACTION_DEFAULT => 1,
+  GDK_ACTION_COPY    => 2,
+  GDK_ACTION_MOVE    => (1 +< 2),
+  GDK_ACTION_LINK    => (1 +< 3),
+  GDK_ACTION_PRIVATE => (1 +< 4),
+  GDK_ACTION_ASK     => (1 +< 5)
+);
 
 our enum GdkWindowHints is export <
   GDK_HINT_POS

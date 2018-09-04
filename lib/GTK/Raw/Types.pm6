@@ -16,6 +16,12 @@ class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
   has int16 $.bottom;
 }
 
+class GtkTargetEntry is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str   $.target;
+  has guint $.flags;
+  has guint $.info;
+}
+
 class GtkTreeIter is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint     $.stamp;
   has gpointer $.user_data;
@@ -521,6 +527,18 @@ enum GtkPolicyType is export (
                                 #In this mode the content determines the size.
     GTK_POLICY_EXTERNAL => 3,   #Don't show a scrollbar, but don't force the size to follow the content.
                                 #This can be used e.g. to make multiple scrolled windows share a scrollbar.
+);
+
+enum GtkToolPalleteDragTargets is export (
+  GTK_TOOL_PALETTE_DRAG_ITEMS  => 1,
+  GTK_TOOL_PALETTE_DRAG_GROUPS => 2
+);
+
+enum GtkDestDefaults is export {
+  GTK_DEST_DEFAULT_MOTION     => 1,
+  GTK_DEST_DEFAULT_HIGHLIGHT  => 2,
+  GTK_DEST_DEFAULT_DROP       => 4,
+  GTK_DEST_DEFAULT_ALL        => 7
 );
 
 class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointer is export { }
