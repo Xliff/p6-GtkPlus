@@ -40,11 +40,19 @@ class GTK::ToolItem is GTK::Bin {
   }
 
   method setToolItem($toolitem) {
+    my $to-parent;
+
     $!ti = given $toolitem {
-      when GtkToolItem { $toolitem; }
-      when GtkWidget   { nativecast(GtkToolItem, $toolitem); }
+      when GtkToolItem {
+        $to-parent = nativecast(GtkBin, $toolitem);
+        $toolitem;
+      }
+      when GtkWidget {
+        $to-parent = $toolitem;
+        nativecast(GtkToolItem, $toolitem);
+      }
     }
-    self.setBin($toolitem);
+    self.setBin($to-parent);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

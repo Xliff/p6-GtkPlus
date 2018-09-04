@@ -13,12 +13,8 @@ class GTK::ToolButton is GTK::ToolItem {
 
   submethod BUILD(:$toolbutton) {
     given $toolbutton {
-      when GtkToolButton | GtkWidget {
-        $!tb = do {
-          when GtkWidget     { nativecast(GtkToolButton, $toolbutton); }
-          when GtkToolButton { $toolbutton; }
-        }
-        self.setToolItem($toolbutton);
+      when GtkToolButton | GtkToolItem | GtkWidget {
+        self.setToolButton($toolbutton);
       }
       when GTK::ToolButton {
       }
@@ -41,6 +37,23 @@ class GTK::ToolButton is GTK::ToolItem {
   {
     my $toolbutton = gtk_tool_button_new_from_stock($stock_id);
     self.bless(:$toolbutton);
+  }
+
+  method setToolButton($toolbutton) {
+    self.IS-PROTECTED;
+
+    my $to-parent;
+    $!tb = do given $toolbutton {
+      when GtkToolItem | GtkWidget {
+        $to-parent = $toolbutton;
+        nativecast(GtkToolButton, $toolbutton);
+      }
+      when GtkToolButton {
+        $to-parent = nativecast(GtkToolItem, $toolbutton);
+        $toolbutton;
+      }
+    }
+    self.setToolItem($to-parent);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
