@@ -27,7 +27,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
         }
         self.setParent($to-parent);
       }
-      when GTK:: {
+      when GTK::RadioMenuItem {
       }
       default {
       }
