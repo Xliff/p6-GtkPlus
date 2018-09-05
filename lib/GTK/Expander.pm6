@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::;
+use GTK::Raw::Expander;
 use GTK::Raw::Types;
 
 use GTK::Bin;
@@ -90,7 +90,7 @@ class GTK::Expander is GTK::Bin {
       FETCH => sub ($) {
         Bool( gtk_expander_get_label_fill($!e) );
       },
-      STORE => sub ($, $label_fill is copy) {
+      STORE => sub ($, Int() $label_fill is copy) {
         my gboolean $lf = $label_fill == 0 ?? 0 !! 1;
         gtk_expander_set_label_fill($!e, $lf);
       }
@@ -124,9 +124,6 @@ class GTK::Expander is GTK::Bin {
     );
   }
 
-  # Was asked earlier, best method for handling gint is:
-  # ($$int +& 0x7fff) * ($int < 0 ?? -1 !! 1);
-
   # Deprecated, and unused.
   #
   # method spacing is rw {
@@ -134,8 +131,7 @@ class GTK::Expander is GTK::Bin {
   #     FETCH => sub ($) {
   #       gtk_expander_get_spacing($!e);
   #     },
-  #     STORE => sub ($, Int $spacing is copy) {
-  #
+  #     STORE => sub ($, Int() $spacing is copy) {
   #       gtk_expander_set_spacing($!e, $s);
   #     }
   #   );

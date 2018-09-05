@@ -80,14 +80,17 @@ class GTK::ToolPalette is GTK::Container {
   }
 
   method get_drop_group (Int() $x, Int() $y) {
-    my gint ($xx, $yy) = ($x, $y) >>+&<< (0xffff xx 2);
+    my gint ($xx, $yy) = ($x, $y).map({
+      (.abs +& 0x7fff) * ($_ < 0 ?? -1 !! 1)
+    });
     gtk_tool_palette_get_drop_group($!tp, $xx, $yy);
   }
 
   method get_drop_item (Int() $x, Int() $y) {
-    # -YYY- Note to self: It occurs to me that the method below
-    # may NOT be the best way to handle signed integers.
-    my gint ($xx, $yy) = ($x, $y) >>+&<< (0xffff xx 2);
+    # This is probably the best way to handle signed integers.
+    my gint ($xx, $yy) = ($x, $y).map({
+      (.abs +& 0x7fff) * ($_ < 0 ?? -1 !! 1)
+    });
     gtk_tool_palette_get_drop_item($!tp, $xx, $yy);
   }
 
@@ -135,20 +138,19 @@ class GTK::ToolPalette is GTK::Container {
 
   #multi
   method set_exclusive (GtkToolItemGroup $group, Int() $exclusive) {
-    my $e = $exclusive == 0 ?? 0 !! 1
+    my gboolean $e = $exclusive == 0 ?? 0 !! 1
     gtk_tool_palette_set_exclusive($!tp, $group, $e);
   }
 
   #multi
   method set_expand (GtkToolItemGroup $group, Int() $expand) {
-    my $e = $expand == 0 ?? 0 !! 1
+    my gboolean $e = $expand == 0 ?? 0 !! 1
     gtk_tool_palette_set_expand($!tp, $group, $e);
   }
 
   #multi
   method set_group_position (GtkToolItemGroup $group, Int() $position) {
-    # See note on gint handling, above
-    my gint $p = $position;
+    my gint $p = ($position.abs +& 0x7fff) * ($position < 0 ?? -1 !! 1);
     gtk_tool_palette_set_group_position($!tp, $group, $p);
   }
 
