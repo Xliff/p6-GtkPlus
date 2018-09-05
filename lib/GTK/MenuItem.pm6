@@ -12,20 +12,9 @@ class GTK::MenuItem is GTK::Bin {
   has GtkMenuItem $!mi;
 
   submethod BUILD(:$menuitem) {
-    my $to-parent;
     given $menuitem {
       when GtkMenuItem | GtkWidget {
-        $!mi = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkMenuItem, $!mi);
-          }
-          when GtkMenuItem {
-            $to-parent = nativecast(GtkBin, $_);
-            $_;
-          }
-        }
-        self.setBin($to-parent);
+        self.setMenuItem($menuitem);
       }
       when GTK::MenuItem {
       }
@@ -35,12 +24,28 @@ class GTK::MenuItem is GTK::Bin {
     self.setType('GTK::MenuItem');
   }
 
-  method new {
+  method setMenuItem($menuitem) {
+    self.IS-PROTECTED;
+
+    my $to-parent;
+    $!mi = do given $checkmenuitem {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkMenuItem, $!mi);
+      }
+      when GtkMenuItem {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
+      }
+    }
+    self.setBin($to-parent);
+  }
+
+  multi method new {
     my $menuitem = gtk_menu_item_new();
     self.bless(:$menuitem);
   }
-
-  method new(Str() :$label, Str() :$mnemonic) {
+  multi method new(Str() :$label, Str() :$mnemonic) {
     die "Use ONE of \$label or \$mnemonic when using { ::?CLASS }.new()"
       unless $label.defined ^^ $nmemonic.defined;
 
