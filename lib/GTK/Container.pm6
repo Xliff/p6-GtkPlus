@@ -18,16 +18,22 @@ class GTK::Container is GTK::Widget {
   has @!end;
 
   submethod BUILD (:$container) {
+    my $to-parent;
     given $container {
       when GtkContainer | GtkWidget {
-        $!c = {
-          when GtkWidget    { nativecast(GtkContainer, $container); }
-          when GtkContainer { $container; }
+        $!c = do {
+          when GtkWidget {
+            $to-parent = $_
+            nativecast(GtkContainer, $_);
+          }
+          when GtkContainer {
+            $to-parent = nativecast(GtkWidget, $_);
+            $_;
+          }
         }
-        self.setWidget($container);
+        self.setWidget($to-parent);
       }
-      when GTK::Container | GTK::Widget {
-        #self.setWidget($!c = $container.widget);
+      when GTK::Container {
       }
       default {
       }
@@ -58,11 +64,18 @@ class GTK::Container is GTK::Widget {
     $!add-latch = False;
   }
 
+  method IS-LATCHED {
+    self.IS-PROTECTED;
+    $!add-latch;
+  }
+
   method push-start($c) {
+    # Write @!start.elems to GtkWidget under key GTKPlus-ContainerStart
     @!start.push: $c;
   }
 
   method unshift-end($c) {
+    # Write @!end.elems to GtkWidget under key GTKPlus-ContainerEnd
     @!end.unshift: $c;
   }
 
