@@ -42,7 +42,11 @@ class GTK::Widget {
 
   method setWidget($widget) {
     # cw: Consider at least a warning if $!w has already been set.
-    $!w = nativecast(GtkWidget, $widget);
+    $!w = do given $widget {
+      when GtkWidget { $widget }
+      # This will go away once proper pass-down rules have been established.
+      default        { nativecast(GtkWidget, $widget); }
+    };
   }
 
   # Should never be called ouside of the GTK::Widget hierarchy, but

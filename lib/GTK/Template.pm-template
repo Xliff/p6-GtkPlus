@@ -12,20 +12,27 @@ class GTK:: is GTK:: {
   has Gtk $!c;
 
   submethod BUILD(:$ ) {
+    my $to-parent;
     given $ {
       when Gtk | GtkWidget {
         $! = do {
-          when GtkWidget { nativecast(Gtk , $!); }
-          when Gtk  { $ }
+          when GtkWidget {
+            $to-parent = $_
+            nativecast(Gtk , $_);
+          }
+          when Gtk  {
+            $to-parent = nativecast(Gtk, $_);
+            $_;
+          }
         }
-        self.setParent( $!c = $control );
+        self.setParent($to-parent);
       }
       when GTK:: {
       }
       default {
       }
     }
-    sel.setType('GTK::');
+    self.setType('GTK::');
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
