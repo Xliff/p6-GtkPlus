@@ -3,45 +3,72 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::;
 use GTK::Raw::Types;
+use GTK::Raw::Viewport;
 
-use GTK::;
+use GTK::Bin;
 
-class GTK:: is GTK:: {
-  has Gtk $!c;
+class GTK::Viewport is GTK::Bin {
+  has GtkViewport $!vp;
 
-  submethod BUILD(:$ ) {
+  submethod BUILD(:$viewport) {
     my $to-parent;
-    given $ {
-      when Gtk | GtkWidget {
+    given $viewport {
+      when GtkViewport | GtkWidget {
         $! = do {
           when GtkWidget {
             $to-parent = $_
-            nativecast(Gtk , $_);
+            nativecast(GtkViewport, $_);
           }
-          when Gtk  {
-            $to-parent = nativecast(Gtk, $_);
+          when GtkViewport  {
+            $to-parent = nativecast(GtkBin, $_);
             $_;
           }
         }
-        self.setParent($to-parent);
+        self.setBin($to-parent);
       }
-      when GTK:: {
+      when GTK::Viewport {
       }
       default {
       }
     }
-    self.setType('GTK::');
+    self.setType('GTK::Viewport');
+  }
+
+  method new (GtkAdjustment $vadjustment) {
+    my $viewport = gtk_viewport_new($vadjustment);
+    self.bless(:$viewport);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  method shadow_type is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        gtk_viewport_get_shadow_type($!vp);
+      },
+      STORE => sub ($, Int() $type is copy) {
+        my uint32 $t = $type +& 0xffff;
+        gtk_viewport_set_shadow_type($!vp, $t);
+      }
+    );
+  }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
+  method get_bin_window {
+    gtk_viewport_get_bin_window($!vp);
+  }
+
+  method get_type {
+    gtk_viewport_get_type();
+  }
+
+  method get_view_window {
+    gtk_viewport_get_view_window($!vp);
+  }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
