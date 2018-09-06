@@ -534,12 +534,21 @@ enum GtkToolPalleteDragTargets is export (
   GTK_TOOL_PALETTE_DRAG_GROUPS => 2
 );
 
-enum GtkDestDefaults is export {
+enum GtkDestDefaults is export (
   GTK_DEST_DEFAULT_MOTION     => 1,
   GTK_DEST_DEFAULT_HIGHLIGHT  => 2,
   GTK_DEST_DEFAULT_DROP       => 4,
   GTK_DEST_DEFAULT_ALL        => 7
 );
+
+enum GtkRevealerTransitionType is export <
+  GTK_REVEALER_TRANSITION_TYPE_NONE
+  GTK_REVEALER_TRANSITION_TYPE_CROSSFADE
+  GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT
+  GTK_REVEALER_TRANSITION_TYPE_SLIDE_LEFT
+  GTK_REVEALER_TRANSITION_TYPE_SLIDE_UP
+  GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
+>;
 
 class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointer is export { }
