@@ -8,14 +8,15 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
+# ALL METHODS NEED PERL6 REFINEMENTS!!
+
 class GTK::Window is GTK::Bin {
   has GtkWindow $!win;
 
   submethod BUILD(:$window) {
     given $window {
-      when GtkWindow {
-        $!win = $window;
-        self.setWidget($!win);
+      when GtkWindow | GtkWidget {
+
       }
       when GTK::Window {
         warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
@@ -46,15 +47,23 @@ class GTK::Window is GTK::Bin {
     self.bless(:$window, :bin($window), :container($window), :widget($window));
   }
 
-  method window {
-    $!win;
+  method setWindow($window) {
+    my $to-parent;
+    $!win = do given $window {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkWindow, $window);
+      }
+      when GtkWindow {
+        $to-parent = nativecast(GtkBin, $window);
+        $_;
+      }
+      self.setBin($to-parent);
+    }
   }
 
-  multi method setWindow(GtkWindow $window) {
-     self.setBin($!win = $window);
-  }
-  multi method setWindow(GTK::Window $window) {
-    self.setBin($!win = $window.window);
+  method window {
+    $!win;
   }
 
   # Signal void Action

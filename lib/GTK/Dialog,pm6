@@ -25,7 +25,7 @@ class GTK::Dialog is GTK::Window {
             $_;
           }
         }
-        self.setBin($to-parent);
+        self.setWindow($to-parent);
       }
       when GTK::Dialog {
       }
