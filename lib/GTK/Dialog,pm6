@@ -1,0 +1,137 @@
+use v6.c;
+
+use NativeCall;
+
+use GTK::Compat::Types;
+use GTK::Raw::Dialog;
+use GTK::Raw::Types;
+
+use GTK::Window;
+
+class GTK::Dialog is GTK::Window {
+  has GtkDialog $!d;
+
+  submethod BUILD(:$dialog) {
+    my $to-parent;
+    given $dialog {
+      when GtkDialog | GtkWidget {
+        $!vp = do {
+          when GtkWidget {
+            $to-parent = $_
+            nativecast(GtkDialog, $_);
+          }
+          when GtkViewport  {
+            $to-parent = nativecast(GtkWindow, $_);
+            $_;
+          }
+        }
+        self.setBin($to-parent);
+      }
+      when GTK::Dialog {
+      }
+      default {
+      }
+    }
+    self.setType('GTK::Dialog');
+  }
+
+  method new {
+    my $dialog = gtk_dialog_new();
+    self.bless(:$dialog);
+  }
+
+  # ↓↓↓↓ SIGNALS ↓↓↓↓
+  # Is originally:
+
+  # GtkDialog, gpointer --> void
+  method close {
+    self.connect($!d, 'close');
+  }
+
+  # Is originally:
+  # GtkDialog, gint, gpointer --> void
+  method response {
+    self.connect($!d, 'response');
+  }
+  # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # ↓↓↓↓ METHODS ↓↓↓↓
+  multi method add_action_widget (GtkWidget $child, Int() $response_id) {
+    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    gtk_dialog_add_action_widget($!d, $child, $ri);
+  }
+  multi method add_action_widget (GTK::Widget $child, Int() $response_id)  {
+    samewith($child.widget, $response_id);
+  }
+
+  method add_button (gchar $button_text, Int() $response_id) {
+    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    gtk_dialog_add_button($!d, $button_text, $ri);
+  }
+
+  method get_action_area {
+    gtk_dialog_get_action_area($!d);
+  }
+
+  method get_content_area {
+    gtk_dialog_get_content_area($!d);
+  }
+
+  method get_header_bar {
+    gtk_dialog_get_header_bar($!d);
+  }
+
+  multi method get_response_for_widget (GtkWidget $widget) {
+    gtk_dialog_get_response_for_widget($!d, $widget);
+  }
+  multi method get_response_for_widget (GTK::Widget $widget)  {
+    samewith($widget.widget);
+  }
+
+  method get_type {
+    gtk_dialog_get_type();
+  }
+
+  method get_widget_for_response (Int() $response_id) {
+    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    gtk_dialog_get_widget_for_response($!d, $ri);
+  }
+
+  method gtk_alternative_dialog_button_order {
+    gtk_alternative_dialog_button_order($!d);
+  }
+
+  method response (gint $response_id) {
+    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    gtk_dialog_response($!d, $ri);
+  }
+
+  method run {
+    gtk_dialog_run($!d);
+  }
+
+  method set_alternative_button_order_from_array (
+    gint $n_params,
+    gint $new_order
+  )
+    is deprecated
+  {
+    gtk_dialog_set_alternative_button_order_from_array($!d, $n_params, $new_order);
+  }
+
+  method set_default_response (Int() $response_id) {
+    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    gtk_dialog_set_default_response($!d, $ri);
+  }
+
+  method set_response_sensitive (Int() $response_id, Int() $setting) {
+    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    my gboolean $s = self.RESOLVE-BOOL($setting, ::?METHOD);
+    gtk_dialog_set_response_sensitive($!d, $ri, $s);
+  }
+  # ↑↑↑↑ METHODS ↑↑↑↑
+
+}

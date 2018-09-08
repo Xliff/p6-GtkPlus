@@ -63,13 +63,15 @@ class GTK::Widget {
       die "Cannot call method from outside of a GTK:: object";
   }
 
-  method RESOLV_BOOL($rb, $meth) {
+  multi method RESOLVE_BOOL(@rb, $meth) {
+    self.IS-PROTECTED;
+    my &other = nextcallee;
+    @rb.map({ other($_, $meth) });
+  }
+  multi method RESOLV_BOOL($rb, $meth) {
     self.IS-PROTECTED;
     # Check if caller comes drom a GTK:: object, otherwise throw exception.
-    given $rb {
-      when Num  { $rb != 0 ?? True !! False }
-      when Int  { $rb     }
-      when Bool { $rb.Int }
+    do given $rb {
       default   {
         so $rb.can('Bool') ??
           $rb.Bool
@@ -77,6 +79,20 @@ class GTK::Widget {
           die "$meth does not accept type { $rb.^name } as a boolean value";
       }
     };
+  }
+
+  method RESOLVE-INT($ri, $meth) {
+    self.IS-PROTECTED;
+    ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
+  }
+
+  multi method RESOLVE-UINT($ri, $meth) {
+    self.IS-PROTECTED;
+    $ri +& 0xffff;
+  }
+  multi method RESOLVE-UINT(@ri, $meth) {
+    self.IS-PROTECTED;
+    @ri >>+&<< (0xffff xx @ri.elems);
   }
 
   method setType($typeName) {

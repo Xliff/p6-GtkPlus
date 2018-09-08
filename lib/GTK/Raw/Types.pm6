@@ -550,6 +550,22 @@ enum GtkRevealerTransitionType is export <
   GTK_REVEALER_TRANSITION_TYPE_SLIDE_DOWN
 >;
 
+# NOT a uint32!!!
+our enum GtkResponseType is export (
+  GTK_RESPONSE_NONE         => -1,
+  GTK_RESPONSE_REJECT       => -2,
+  GTK_RESPONSE_ACCEPT       => -3,
+  GTK_RESPONSE_DELETE_EVENT => -4,
+  GTK_RESPONSE_OK           => -5,
+  GTK_RESPONSE_CANCEL       => -6,
+  GTK_RESPONSE_CLOSE        => -7,
+  GTK_RESPONSE_YES          => -8,
+  GTK_RESPONSE_NO           => -9,
+  GTK_RESPONSE_APPLY        => -10,
+  GTK_RESPONSE_HELP         => -11
+);
+
+
 class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkAllocation       is repr('CPointer') does GTK::Roles::Pointer is export { }
