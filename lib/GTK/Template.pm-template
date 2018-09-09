@@ -17,7 +17,7 @@ class GTK:: is GTK:: {
       when Gtk | GtkWidget {
         $! = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(Gtk , $_);
           }
           when Gtk  {
