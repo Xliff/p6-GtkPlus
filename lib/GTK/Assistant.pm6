@@ -15,7 +15,7 @@ class GTK::Assistant is GTK::Window {
     my $to-parent;
     given $ {
       when GtkAssistant | GtkWidget {
-        $! = do {
+        $!a = do {
           when GtkWidget {
             $to-parent = $_
             nativecast(GtkAssistant, $_);

@@ -15,7 +15,7 @@ class GTK::Offscreen is GTK::Window {
     my $to-parent;
     given $ {
       when GtkOffscreen | GtkWidget {
-        $! = do {
+        $!ow = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkOffscreen, $_);

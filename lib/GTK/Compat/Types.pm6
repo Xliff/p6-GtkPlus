@@ -32,7 +32,9 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str           $.message;
 }
 
-class GList is repr('CStruct') does GTK::Roles::Pointers is export {
+class GFile is repr('CPointer') does GTK::Roles::Pointers is export { }
+
+class GList is repr('CStruct')  does GTK::Roles::Pointers is export {
   has OpaquePointer $.data;
   has GList         $.next;
   has GList         $.prev;
