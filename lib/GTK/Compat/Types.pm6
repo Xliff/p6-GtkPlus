@@ -24,6 +24,7 @@ constant guint16       is export := uint16;
 constant va_list       is export := OpaquePointer;
 
 constant PangoTabArray is export := CArray[gint];
+constant GStrv         is export := CArray[Str];
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;

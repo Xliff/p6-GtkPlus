@@ -63,12 +63,12 @@ class GTK::Widget {
       die "Cannot call method from outside of a GTK:: object";
   }
 
-  multi method RESOLVE_BOOL(@rb, $meth) {
+  multi method RESOLVE-BOOL(@rb, $meth) {
     self.IS-PROTECTED;
     my &other = nextcallee;
     @rb.map({ other($_, $meth) });
   }
-  multi method RESOLV_BOOL($rb, $meth) {
+  multi method RESOLVE-BOOL($rb, $meth) {
     self.IS-PROTECTED;
     # Check if caller comes drom a GTK:: object, otherwise throw exception.
     do given $rb {
@@ -93,6 +93,16 @@ class GTK::Widget {
   multi method RESOLVE-UINT(@ri, $meth) {
     self.IS-PROTECTED;
     @ri >>+&<< (0xffff xx @ri.elems);
+  }
+
+  multi method RESOLVE-GSTRV(Str @ri, $meth) {
+    self.IS-PROTECTED;
+    @ri.push: Str unless @ri[*-1] =:= Str;
+    @ri;
+  }
+  multi method RESOLVE-GSTRV(Str $ri, $meth) {
+    self.IS-PROTECTED;
+    samewith($ri.Array);
   }
 
   method setType($typeName) {
