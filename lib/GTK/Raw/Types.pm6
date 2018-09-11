@@ -565,6 +565,12 @@ our enum GtkResponseType is export (
   GTK_RESPONSE_HELP         => -11
 );
 
+our enum GtkCornerType is exort <
+  GTK_CORNER_TOP_LEFT
+  GTK_CORNER_BOTTOM_LEFT
+  GTK_CORNER_TOP_RIGHT
+  GTK_CORNER_BOTTOM_RIGHT
+>;
 
 class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointer is export { }
 class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointer is export { }

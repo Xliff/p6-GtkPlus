@@ -25,7 +25,7 @@ class GTK::Places is GTK::ScrolledWindow {
             $_;
           }
         }
-        self.setParent($to-parent);
+        self.setScrolledWindow($to-parent);
       }
       when GTK::Places {
       }
