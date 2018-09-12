@@ -4,7 +4,6 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Raw::Calendar;
-use GTK::Raw::Label;
 use GTK::Raw::Types;
 
 use GTK::Widget;
@@ -13,13 +12,20 @@ class GTK::Calendar is GTK::Widget {
   has GtkCalendar $!cal;
 
   submethod BUILD(:$calendar) {
+    my $to-parent;
     given $calendar {
       when GtkCalendar | GtkWidget {
         $!cal = do {
-          when GtkWidget   { nativecast(GtkCalendar, $calendar); }
+          when GtkWidget   {
+            $to-parent = $_;
+            nativecast(GtkCalendar, $calendar);
+          }
           when GtkCalendar { $calendar; }
+            $to-parent = nativecast(GtkWidget, $calendar);
+            $_;
+          }
         };
-        self.setWidget( $calendar );
+        self.setWidget($to-parent);
       }
       when GTK::Calendar {
       }
@@ -29,41 +35,55 @@ class GTK::Calendar is GTK::Widget {
     self.setType('GTK::Calendar');
   }
 
-  method new () {
+  method new  {
     my $calendar = gtk_calendar_new();
     self.bless(:$calendar);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  #
-  # All events take a ($calendar, $user_data) signature.
+
+  # Is originally:
+  # GtkCalendar, gpointer --> void
   method day-selected {
-    self.connect($!cal, 'day_selected');
+    self.connect($!cal, 'day-selected');
   }
 
+  # Is originally:
+  # GtkCalendar, gpointer --> void
   method day-selected-double-click {
     self.connect($!cal, 'day-selected-double-click');
   }
 
+  # Is originally:
+  # GtkCalendar, gpointer --> void
   method month-changed {
     self.connect($!cal, 'month-changed');
   }
 
+  # Is originally:
+  # GtkCalendar, gpointer --> void
   method next-month {
     self.connect($!cal, 'next-month');
   }
 
+  # Is originally:
+  # GtkCalendar, gpointer --> void
   method next-year {
     self.connect($!cal, 'next-year');
   }
 
+  # Is originally:
+  # GtkCalendar, gpointer --> void
   method prev-month {
     self.connect($!cal, 'prev-month');
   }
 
+  # Is originally:
+  # GtkCalendar, gpointer --> void
   method prev-year {
     self.connect($!cal, 'prev-year');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -83,8 +103,9 @@ class GTK::Calendar is GTK::Widget {
       FETCH => sub ($) {
         gtk_calendar_get_detail_width_chars($!cal);
       },
-      STORE => sub ($, $chars is copy) {
-        gtk_calendar_set_detail_width_chars($!cal, $chars);
+      STORE => sub ($, Int() $chars is copy) {
+        my gint $c = self.RESOLVE-INT($chars, ::?METHOD);
+        gtk_calendar_set_detail_width_chars($!cal, $c);
       }
     );
   }
@@ -94,18 +115,8 @@ class GTK::Calendar is GTK::Widget {
       FETCH => sub ($) {
         GtkCalendarDisplayOptions( gtk_calendar_get_display_options($!cal) );
       },
-      STORE => sub ($, $flags is copy) {
-        my uint32 $f = do given $flags {
-          when GtkCalendarDisplayOptions | IntStr {
-            $flags.Int;
-          }
-          when Int {
-            $flags;
-          }
-          default {
-            die "Invalid type ({ $flags.^name }) passed to GTK::Calendar.display_options";
-          }
-        }
+      STORE => sub ($, Int() $flags is copy) {
+        my uint32 $f = self.RESOLVE-UINT($flags, ::?METHOD);
         gtk_calendar_set_display_options($!cal, $f);
       }
     );
@@ -113,42 +124,58 @@ class GTK::Calendar is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method clear_marks () {
+  method clear_marks {
     gtk_calendar_clear_marks($!cal);
   }
 
-  method get_date ($year is rw, $month is rw, $day is rw) {
-    my $d = gtk_calendar_get_date($!cal, $year, $month, $day);
-    $month++;
-    $d;
+  multi method get_date (Int() $year is rw, Int() $month is rw, Int() $day is rw) {
+    my @u = ($year, $month, $day);
+    my uint32 ($y, $m, $d) = self.RESOLVE-UINT(@u, ::?METHOD);
+    gtk_calendar_get_date($!cal, $y, $m, $d);
+    $m++;
+    ($year, $month, $day) = ($y, $m, $d);
+  }
+  multi method get_date {
+    my ($y, $m, $d) = (0 xx 3);
+    samewith($y, $m, $d);
   }
 
-  method get_day_is_marked (guint $day) {
-    gtk_calendar_get_day_is_marked($!cal, $day);
+  method get_day_is_marked (Int() $day) {
+    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    Bool( gtk_calendar_get_day_is_marked($!cal, $d) );
   }
 
-  method get_type () {
+  method get_type {
     gtk_calendar_get_type();
   }
 
-  method mark_day (guint $day) {
-    gtk_calendar_mark_day($!cal, $day);
+  method mark_day (Int() $day) {
+    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    gtk_calendar_mark_day($!cal, $d);
   }
 
-  method select_day (guint $day) {
-    gtk_calendar_select_day($!cal, $day);
+  method select_day (Int() $day) {
+    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    gtk_calendar_select_day($!cal, $d);
   }
 
-  method select_month (guint $month, guint $year) {
-    gtk_calendar_select_month($!cal, $month, $year);
+  method select_month (Int() $month, Int() $year) {
+    my @u = ($month, $year);
+    my guint ($m, $y) = self.RESOLVE-UINT(@u, ::?METHOD);
+    gtk_calendar_select_month($!cal, $m, $y);
   }
 
-  multi method set_detail_func (GtkCalendarDetailFunc $func, gpointer $data, GDestroyNotify $destroy) {
+  multi method set_detail_func (
+    GtkCalendarDetailFunc $func,
+    gpointer $data,
+    GDestroyNotify $destroy
+  ) {
     gtk_calendar_set_detail_func($!cal, $func, $data, $destroy);
   }
 
-  method unmark_day (guint $day) {
-    gtk_calendar_unmark_day($!cal, $day);
+  method unmark_day (Int() $day) {
+    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    gtk_calendar_unmark_day($!cal, $d);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
