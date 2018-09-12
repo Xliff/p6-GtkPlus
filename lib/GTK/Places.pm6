@@ -128,7 +128,7 @@ class GTK::Places is GTK::ScrolledWindow {
         Bool( gtk_places_sidebar_get_local_only($!ps) );
       },
       STORE => sub ($, Int() $local_only is copy) {
-        my gboolean $lo = self.RESOLVE-BOOL($local_only, ::?METHOD);
+        my gboolean $lo = self.RESOLVE-BOOL($local_only, &?ROUTINE.name);
         gtk_places_sidebar_set_local_only($!ps, $local_only);
       }
     );
@@ -152,7 +152,7 @@ class GTK::Places is GTK::ScrolledWindow {
         GtkPlacesOpenFlags( gtk_places_sidebar_get_open_flags($!ps) );
       },
       STORE => sub ($, Int() $flags is copy) {
-        my uint32 $f = self.RESOLVE-UINT($flags, ::?METHOD);
+        my uint32 $f = self.RESOLVE-UINT($flags, &?ROUTINE.name);
         gtk_places_sidebar_set_open_flags($!ps, $f);
       }
     );
@@ -164,7 +164,7 @@ class GTK::Places is GTK::ScrolledWindow {
         gtk_places_sidebar_get_show_connect_to_server($!ps);
       },
       STORE => sub ($, Int() $show_connect_to_server is copy) {
-        my gboolean $scs = self.RESOLVE-BOOL($show_connect_to_server, ::?METHOD);
+        my gboolean $scs = self.RESOLVE-BOOL($show_connect_to_server, &?ROUTINE.name);
         gtk_places_sidebar_set_show_connect_to_server($!ps, $scs);
       }
     );
@@ -176,7 +176,7 @@ class GTK::Places is GTK::ScrolledWindow {
         Bool( gtk_places_sidebar_get_show_desktop($!ps) );
       },
       STORE => sub ($, Int() $show_desktop is copy) {
-        my gboolean $sd = self.RESOLVE-BOOL($show_desktop, ::?METHOD);
+        my gboolean $sd = self.RESOLVE-BOOL($show_desktop, &?ROUTINE.name);
         gtk_places_sidebar_set_show_desktop($!ps, $sd);
       }
     );
@@ -188,7 +188,7 @@ class GTK::Places is GTK::ScrolledWindow {
         Bool( gtk_places_sidebar_get_show_enter_location($!ps) );
       },
       STORE => sub ($, Int() $show_enter_location is copy) {
-        my gboolean $sel = self.RESOLVE-BOOL($show_enter_location, ::?METHOD);
+        my gboolean $sel = self.RESOLVE-BOOL($show_enter_location, &?ROUTINE.name);
         gtk_places_sidebar_set_show_enter_location($!ps, $sel);
       }
     );
@@ -200,7 +200,7 @@ class GTK::Places is GTK::ScrolledWindow {
         Bool( gtk_places_sidebar_get_show_other_locations($!ps) );
       },
       STORE => sub ($, Int() $show_other_locations is copy) {
-        my gboolean $sol = self.RESOLVE-BOOL($show_other_locations, ::?METHOD);
+        my gboolean $sol = self.RESOLVE-BOOL($show_other_locations, &?ROUTINE.name);
         gtk_places_sidebar_set_show_other_locations($!ps, $sol);
       }
     );
@@ -212,7 +212,7 @@ class GTK::Places is GTK::ScrolledWindow {
         Bool( gtk_places_sidebar_get_show_recent($!ps) );
       },
       STORE => sub ($, Int() $show_recent is copy) {
-        my $sr = self.RESOLVE-BOOL($show_recent, ::?METHOD);
+        my $sr = self.RESOLVE-BOOL($show_recent, &?ROUTINE.name);
         gtk_places_sidebar_set_show_recent($!ps, $sr);
       }
     );
@@ -224,7 +224,7 @@ class GTK::Places is GTK::ScrolledWindow {
         Bool( gtk_places_sidebar_get_show_starred_location($!ps) );
       },
       STORE => sub ($, Int() $show_starred_location is copy) {
-        my gboolean $ssl = self.RESOLVE-BOOL($show_starred_location, ::?METHOD);
+        my gboolean $ssl = self.RESOLVE-BOOL($show_starred_location, &?ROUTINE.name);
         gtk_places_sidebar_set_show_starred_location($!ps, $ssl);
       }
     );
@@ -236,7 +236,7 @@ class GTK::Places is GTK::ScrolledWindow {
         Bool( gtk_places_sidebar_get_show_trash($!ps) );
       },
       STORE => sub ($, Int() $show_trash is copy) {
-        my gboolean $st = self.RESOLVE-BOOL($show_trash, ::?METHOD);
+        my gboolean $st = self.RESOLVE-BOOL($show_trash, &?ROUTINE.name);
         gtk_places_sidebar_set_show_trash($!ps, $st);
       }
     );
@@ -249,7 +249,7 @@ class GTK::Places is GTK::ScrolledWindow {
   }
 
   method get_nth_bookmark (Int() $n) {
-    my $nn = self.RESOLVE-INT($n, ::?METHOD);
+    my $nn = self.RESOLVE-INT($n, &?ROUTINE.name);
     gtk_places_sidebar_get_nth_bookmark($!ps, $nn);
   }
 
@@ -266,8 +266,8 @@ class GTK::Places is GTK::ScrolledWindow {
   }
 
   method set_drop_targets_visible (Int() $visible, Int() $context) {
-    my $v = self.RESOLVE-BOOL($visible, ::?METHOD);
-    my $c = self.RESOLVE-UINT($context, ::?METHOD);
+    my $v = self.RESOLVE-BOOL($visible, &?ROUTINE.name);
+    my $c = self.RESOLVE-UINT($context, &?ROUTINE.name);
     gtk_places_sidebar_set_drop_targets_visible($!ps, $v, $c);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

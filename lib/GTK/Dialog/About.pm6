@@ -76,7 +76,7 @@ class GTK::Dialog::About is GTK::Dialog {
       STORE => sub ($, $artists is copy) {
         gtk_about_dialog_set_artists(
           $!ad,
-          self!getGStrv($artists, ::?METHOD);
+          self!getGStrv($artists, &?ROUTINE.name);
         );
       }
     );
@@ -90,7 +90,7 @@ class GTK::Dialog::About is GTK::Dialog {
       STORE => sub ($, $authors is copy) {
         gtk_about_dialog_set_authors(
           $!ad,
-          self!getGStrv($authors, ::?METHOD);
+          self!getGStrv($authors, &?ROUTINE.name);
         );
       }
     );
@@ -126,7 +126,7 @@ class GTK::Dialog::About is GTK::Dialog {
       STORE => sub ($, $documenters is copy) {
         gtk_about_dialog_set_documenters(
           $!ad,
-          self!getStrv($documenters, ::?METHOD);
+          self!getStrv($documenters, &?ROUTINE.name);
         );
       }
     );
@@ -238,7 +238,7 @@ class GTK::Dialog::About is GTK::Dialog {
         gtk_about_dialog_get_wrap_license($!ad);
       },
       STORE => sub ($, Bool() $wrap_license is copy) {
-        my gboolean $wl = self.RESOLVE-BOOL($wrap_license, ::?METHOD);
+        my gboolean $wl = self.RESOLVE-BOOL($wrap_license, &?ROUTINE.name);
         gtk_about_dialog_set_wrap_license($!ad, $wrap_license);
       }
     );

@@ -80,7 +80,7 @@ class GTK::Assistant is GTK::Window {
         gtk_assistant_get_current_page($!a);
       },
       STORE => sub ($, Int() $page_num is copy) {
-        my gint $pn = self.RESOLVE-INT($page_num, ::?METHOD);
+        my gint $pn = self.RESOLVE-INT($page_num, &?ROUTINE.name);
         gtk_assistant_set_current_page($!a, $page_num);
       }
     );
@@ -111,7 +111,7 @@ class GTK::Assistant is GTK::Window {
   }
 
   method get_nth_page (Iint() $page_num) {
-    my gint $pn = self.RESOLVE-INT($page_num, ::?METHOD);
+    my gint $pn = self.RESOLVE-INT($page_num, &?ROUTINE.name);
     gtk_assistant_get_nth_page($!a, $pn);
   }
 
@@ -162,7 +162,7 @@ class GTK::Assistant is GTK::Window {
   }
 
   multi method insert_page (GtkWidget $page, Int() $position) {
-    my gint $p = self.RESOLVE-INT($position, ::?METHOD);
+    my gint $p = self.RESOLVE-INT($position, &?ROUTINE.name);
     gtk_assistant_insert_page($!a, $page, $position);
   }
   multi method insert_page (GTK::Widget $page, Int() $position)  {
@@ -192,7 +192,7 @@ class GTK::Assistant is GTK::Window {
   }
 
   method remove_page (Int() $page_num) {
-    my gint $pn = self.RESOLVE-INT($page_num, ::?METHOD);
+    my gint $pn = self.RESOLVE-INT($page_num, &?ROUTINE.name);
     gtk_assistant_remove_page($!a, $page_num);
   }
 
@@ -205,7 +205,7 @@ class GTK::Assistant is GTK::Window {
   }
 
   multi method set_page_complete (GtkWidget $page, Int() $complete) {
-    my gboolean $c = self.RESOLVE-BOOLEAN($complete. ::?METHOD);
+    my gboolean $c = self.RESOLVE-BOOLEAN($complete. &?ROUTINE.name);
     gtk_assistant_set_page_complete($!a, $page, $complete);
   }
   multi method set_page_complete (GtkWidget $page, Int() $complete)  {
@@ -213,7 +213,7 @@ class GTK::Assistant is GTK::Window {
   }
 
   multi method set_page_has_padding (GtkWidget $page, Int() $has_padding) {
-    my gboolean $hp = self.RESOLVE-BOOLEAN($has_padding, ::?METHOD);
+    my gboolean $hp = self.RESOLVE-BOOLEAN($has_padding, &?ROUTINE.name);
     gtk_assistant_set_page_has_padding($!a, $page, $hp);
   }
   multi method set_page_has_padding (GTK::Widget $page, Int() $has_padding)  {
@@ -242,7 +242,7 @@ class GTK::Assistant is GTK::Window {
   }
 
   multi method set_page_type (GtkWidget $page, Int() $type) {
-    my uint32 $t = self.RESOLVE-UINT($type, ::?METHOD);
+    my uint32 $t = self.RESOLVE-UINT($type, &?ROUTINE.name);
     gtk_assistant_set_page_type($!a, $page, $t);
   }
   multi method set_page_type (GTK::Widget $page, Int() $type)  {

@@ -23,7 +23,7 @@ class GTK::Container is GTK::Widget {
       when GtkContainer | GtkWidget {
         $!c = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkContainer, $_);
           }
           when GtkContainer {

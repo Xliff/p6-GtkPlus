@@ -20,7 +20,7 @@ class GTK::Calendar is GTK::Widget {
             $to-parent = $_;
             nativecast(GtkCalendar, $calendar);
           }
-          when GtkCalendar { $calendar; }
+          when GtkCalendar {
             $to-parent = nativecast(GtkWidget, $calendar);
             $_;
           }
@@ -35,7 +35,7 @@ class GTK::Calendar is GTK::Widget {
     self.setType('GTK::Calendar');
   }
 
-  method new  {
+  method new {
     my $calendar = gtk_calendar_new();
     self.bless(:$calendar);
   }
@@ -104,7 +104,7 @@ class GTK::Calendar is GTK::Widget {
         gtk_calendar_get_detail_width_chars($!cal);
       },
       STORE => sub ($, Int() $chars is copy) {
-        my gint $c = self.RESOLVE-INT($chars, ::?METHOD);
+        my gint $c = self.RESOLVE-INT($chars, &?ROUTINE.name);
         gtk_calendar_set_detail_width_chars($!cal, $c);
       }
     );
@@ -116,7 +116,7 @@ class GTK::Calendar is GTK::Widget {
         GtkCalendarDisplayOptions( gtk_calendar_get_display_options($!cal) );
       },
       STORE => sub ($, Int() $flags is copy) {
-        my uint32 $f = self.RESOLVE-UINT($flags, ::?METHOD);
+        my uint32 $f = self.RESOLVE-UINT($flags, &?ROUTINE.name);
         gtk_calendar_set_display_options($!cal, $f);
       }
     );
@@ -130,7 +130,7 @@ class GTK::Calendar is GTK::Widget {
 
   multi method get_date (Int() $year is rw, Int() $month is rw, Int() $day is rw) {
     my @u = ($year, $month, $day);
-    my uint32 ($y, $m, $d) = self.RESOLVE-UINT(@u, ::?METHOD);
+    my uint32 ($y, $m, $d) = self.RESOLVE-UINT(@u, &?ROUTINE.name);
     gtk_calendar_get_date($!cal, $y, $m, $d);
     $m++;
     ($year, $month, $day) = ($y, $m, $d);
@@ -141,7 +141,7 @@ class GTK::Calendar is GTK::Widget {
   }
 
   method get_day_is_marked (Int() $day) {
-    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    my guint $d = self.RESOLVE-UINT($day, &?ROUTINE.name);
     Bool( gtk_calendar_get_day_is_marked($!cal, $d) );
   }
 
@@ -150,18 +150,18 @@ class GTK::Calendar is GTK::Widget {
   }
 
   method mark_day (Int() $day) {
-    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    my guint $d = self.RESOLVE-UINT($day, &?ROUTINE.name);
     gtk_calendar_mark_day($!cal, $d);
   }
 
   method select_day (Int() $day) {
-    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    my guint $d = self.RESOLVE-UINT($day, &?ROUTINE.name);
     gtk_calendar_select_day($!cal, $d);
   }
 
   method select_month (Int() $month, Int() $year) {
     my @u = ($month, $year);
-    my guint ($m, $y) = self.RESOLVE-UINT(@u, ::?METHOD);
+    my guint ($m, $y) = self.RESOLVE-UINT(@u, &?ROUTINE.name);
     gtk_calendar_select_month($!cal, $m, $y);
   }
 
@@ -174,7 +174,7 @@ class GTK::Calendar is GTK::Widget {
   }
 
   method unmark_day (Int() $day) {
-    my guint $d = self.RESOLVE-UINT($day, ::?METHOD);
+    my guint $d = self.RESOLVE-UINT($day, &?ROUTINE.name);
     gtk_calendar_unmark_day($!cal, $d);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

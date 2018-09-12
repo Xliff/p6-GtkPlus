@@ -565,52 +565,52 @@ our enum GtkResponseType is export (
   GTK_RESPONSE_HELP         => -11
 );
 
-our enum GtkCornerType is exort <
+our enum GtkCornerType is export <
   GTK_CORNER_TOP_LEFT
   GTK_CORNER_BOTTOM_LEFT
   GTK_CORNER_TOP_RIGHT
   GTK_CORNER_BOTTOM_RIGHT
 >;
 
-class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkAllocation       is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkApplication      is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkBin              is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkBox              is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkButton           is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkCalendar         is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkCallback         is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkCellArea         is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkColorChooser     is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkClipboard        is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkContainer        is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkDragContext      is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkEntry            is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkEntryBuffer      is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkEntryCompletion  is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkIconSet          is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkImage            is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkLevelBar         is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkLabel            is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkListStore        is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkProgressBar      is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkRange            is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkScale            is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkScrollbar        is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkSelectionData    is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkSettings         is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkSpinner          is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkStack            is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkStackSwitcher    is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkStyle            is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkSwitch           is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkStyleContext     is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkTargetList       is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkTickCallback     is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkToolTip          is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkWidget           is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkWidgetPath       is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkWidgetHelpType   is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkWindow           is repr('CPointer') does GTK::Roles::Pointer is export { }
-class GtkWindowGroup      is repr('CPointer') does GTK::Roles::Pointer is export { }
+class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAllocation       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkApplication      is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkBin              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkBox              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCalendar         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCallback         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellArea         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkColorChooser     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkClipboard        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkContainer        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkDragContext      is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkEntry            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkEntryBuffer      is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkEntryCompletion  is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkIconSet          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkImage            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkLevelBar         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkLabel            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkListStore        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkProgressBar      is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkRange            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkScale            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkScrollbar        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSelectionData    is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSettings         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSpinner          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStack            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStackSwitcher    is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStyle            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSwitch           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStyleContext     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTargetList       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTickCallback     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkToolTip          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkWidget           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkWidgetPath       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkWidgetHelpType   is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkWindow           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkWindowGroup      is repr('CPointer') does GTK::Roles::Pointers is export { }

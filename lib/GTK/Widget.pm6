@@ -56,9 +56,11 @@ class GTK::Widget {
     # but I am more results-oriened.
     my $c = callframe(1).code;
     $c ~~ Routine ??
-      $c.package.^name ~~ /^ 'GTK::'/ ?? True
-        !!
-        die "Cannot call method from outside of a GTK:: object";
+      (
+        $c.package.^name ~~ /^ 'GTK::'/ ?? True
+          !!
+          die "Cannot call method from outside of a GTK:: object";
+      )
       !!
       die "Cannot call method from outside of a GTK:: object";
   }
@@ -115,7 +117,7 @@ class GTK::Widget {
     }
 
     g_object_set_string($!w, 'GTKPLUS-Type', $typeName)
-      unless $oldType ne $newType;
+      unless $oldType ne $typeName;
   }
 
   # Static methods
@@ -992,7 +994,10 @@ class GTK::Widget {
   }
 
   method getType {
-    g_object_get_string($!w, 'GTKPLUS-Type');
+    g_object_get_string(
+      nativecast(Pointer, $!w),
+      'GTKPLUS-Type'
+    );
   }
 
   method add_events (gint $events) {

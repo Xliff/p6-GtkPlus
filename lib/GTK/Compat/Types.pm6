@@ -40,7 +40,7 @@ class GList is repr('CStruct')  does GTK::Roles::Pointers is export {
   has GList         $.prev;
 }
 
-class GSList is repr('CStruct' does GTK::Roles::Pointers is export {
+class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
   has OpaquePointer $.data;
   has GSList        $.next;
 }
