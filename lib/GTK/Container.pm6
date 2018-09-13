@@ -8,6 +8,7 @@ use GTK::Raw::Container;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
 
+use GTK::Adjustment;
 use GTK::Widget;
 
 class GTK::Container is GTK::Widget {
@@ -18,20 +19,9 @@ class GTK::Container is GTK::Widget {
   has @!end;
 
   submethod BUILD (:$container) {
-    my $to-parent;
     given $container {
       when GtkContainer | GtkWidget {
-        $!c = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkContainer, $_);
-          }
-          when GtkContainer {
-            $to-parent = nativecast(GtkWidget, $_);
-            $_;
-          }
-        }
-        self.setWidget($to-parent);
+        self.setContainer($container);
       }
       when GTK::Container {
       }
@@ -46,12 +36,21 @@ class GTK::Container is GTK::Widget {
     g_object_unref(self.p);
   }
 
-  method new(:$container!) {
-    self.bless(:$container);
-  }
+  # GTK::Container is abstract, so no need for new.
 
   method setContainer($container) {
-    self.setWidget($!c = nativecast(GtkContainer, $container));
+    my $to-parent;
+    $!c = do given $container {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkContainer, $_);
+      }
+      when GtkContainer {
+        $to-parent = nativecast(GtkWidget, $_);
+        $_;
+      }
+    }
+    self.setWidget($to-parent);
   }
 
   method SET-LATCH {
@@ -112,21 +111,22 @@ class GTK::Container is GTK::Widget {
 #perl6 -e 'sub a { b(); }; sub b { c(); }; sub c { my @a = Backtrace.new.list; @a[*-2].gist.say }; a()'
 #Backtrace::Frame.new(file => "-e", line => 1, code => sub a () { #`(Sub|93842260662800) ... }, subname => "a")
 
-  method resize_mode is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        gtk_container_get_resize_mode($!c);
-      },
-      STORE => sub ($, $resize_mode is copy) {
-        gtk_container_set_resize_mode($!c, $resize_mode);
-      }
-    );
-  }
+  # method resize_mode is rw {
+  #   Proxy.new(
+  #     FETCH => sub ($) {
+  #       gtk_container_get_resize_mode($!c);
+  #     },
+  #     STORE => sub ($, $resize_mode is copy) {
+  #       gtk_container_set_resize_mode($!c, $resize_mode);
+  #     }
+  #   );
+  # }
 
   method focus_vadjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_container_get_focus_vadjustment($!c);
+        my $adjustment = gtk_container_get_focus_vadjustment($!c);
+        GTK::Adjustment.new(:$adjustment);
       },
       STORE => sub ($, $adjustment is copy) {
         gtk_container_set_focus_vadjustment($!c, $adjustment);
@@ -148,10 +148,15 @@ class GTK::Container is GTK::Widget {
   method focus_hadjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_container_get_focus_hadjustment($!c);
+        my $adjustment = gtk_container_get_focus_hadjustment($!c)
+        GTK::Adjustment.new(:$adjustment);
       },
       STORE => sub ($, $adjustment is copy) {
-        gtk_container_set_focus_hadjustment($!c, $adjustment);
+        my GtkAdjustment $a = do given $adjustment {
+          when GtkAdjustment   { $_; }
+          when GTK::Adjustment { .adjustment; }
+        };
+        gtk_container_set_focus_hadjustment($!c, $a);
       }
     );
   }
@@ -161,8 +166,9 @@ class GTK::Container is GTK::Widget {
       FETCH => sub ($) {
         gtk_container_get_border_width($!c);
       },
-      STORE => sub ($, $border_width is copy) {
-        gtk_container_set_border_width($!c, $border_width);
+      STORE => sub ($, Int() $border_width is copy) {
+        my $bw = self.RESOLVE-UINT($border_width, &?ROUTINE.name);
+        gtk_container_set_border_width($!c, $bw);
       }
     );
   }
@@ -174,7 +180,7 @@ class GTK::Container is GTK::Widget {
     samewith($widget.widget);
   }
 
-  method check_resize () {
+  method check_resize {
     gtk_container_check_resize($!c);
   }
 
@@ -188,12 +194,12 @@ class GTK::Container is GTK::Widget {
   # A method for working with va_list could be the following:
   #   gchar         $first_property_name
   #   CArray[gchar] $property_names
-  multi method child_get_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
-    gtk_container_child_get_valist($!c, $child, $first_property_name, $var_args);
-  }
-  multi method child_get_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
-    samewith($child.widget, $first_property_name, $var_args);
-  }
+  # multi method child_get_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
+  #   gtk_container_child_get_valist($!c, $child, $first_property_name, $var_args);
+  # }
+  # multi method child_get_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
+  #   samewith($child.widget, $first_property_name, $var_args);
+  # }
 
   multi method child_notify (GtkWidget $child, gchar $child_property) {
     gtk_container_child_notify($!c, $child, $child_property);
@@ -219,12 +225,12 @@ class GTK::Container is GTK::Widget {
   # va_list:
   #   gchar         $first_property_name
   #   CArray[gchar] $property_names
-  multi method child_set_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
-    gtk_container_child_set_valist($!c, $child, $first_property_name, $var_args);
-  }
-  multi method child_set_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
-    samewith($child.widget, $first_property_name, $var_args);
-  }
+  # multi method child_set_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
+  #   gtk_container_child_set_valist($!c, $child, $first_property_name, $var_args);
+  # }
+  # multi method child_set_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
+  #   samewith($child.widget, $first_property_name, $var_args);
+  # }
 
   method child_type {
      gtk_container_child_type($!c);
@@ -305,8 +311,9 @@ class GTK::Container is GTK::Widget {
     gtk_container_resize_children($!c);
   }
 
-  method set_reallocate_redraws (gboolean $needs_redraws) {
-    gtk_container_set_reallocate_redraws($!c, $needs_redraws);
+  method set_reallocate_redraws (Int() $needs_redraws) {
+    my gboolean $nr = self.RESOLVE-BOOL($needs_redraws, &?ROUTINE.name);
+    gtk_container_set_reallocate_redraws($!c, $nr);
   }
 
   method unset_focus_chain {
