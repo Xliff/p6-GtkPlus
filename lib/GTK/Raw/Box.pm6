@@ -20,18 +20,37 @@ sub gtk_box_new (uint32 $orientation, gint $spacing)
   is export
   { * }
 
-sub gtk_box_pack_end (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding)
+sub gtk_box_pack_end (
+  GtkBox $box,
+  GtkWidget $child,
+  gboolean $expand,
+  gboolean $fill,
+  guint $padding
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_box_pack_start (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding)
+sub gtk_box_pack_start (
+  GtkBox $box,
+  GtkWidget $child,
+  gboolean $expand,
+  gboolean $fill,
+  guint $padding
+)
   is native('gtk-3')
   is export
   { * }
 
 # GtkPackType $pack_type
-sub gtk_box_query_child_packing (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, uint32 $pack_type)
+sub gtk_box_query_child_packing (
+  GtkBox $box,
+  GtkWidget $child,
+  gboolean $expand is rw,
+  gboolean $fill is rw,
+  guint $padding is rw,
+  uint32 $pack_type is rw
+)
   is native('gtk-3')
   is export
   { * }
@@ -42,7 +61,14 @@ sub gtk_box_reorder_child (GtkBox $box, GtkWidget $child, gint $position)
   { * }
 
 # GtkPackType $pack_type
-sub gtk_box_set_child_packing (GtkBox $box, GtkWidget $child, gboolean $expand, gboolean $fill, guint $padding, uint32 $pack_type)
+sub gtk_box_set_child_packing (
+  GtkBox $box,
+  GtkWidget $child,
+  gboolean $expand,
+  gboolean $fill,
+  guint $padding,
+  uint32 $pack_type
+)
   is native('gtk-3')
   is export
   { * }

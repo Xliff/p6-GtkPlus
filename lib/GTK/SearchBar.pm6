@@ -50,7 +50,7 @@ class GTK::SearchBar is GTK::Bin {
         Bool( gtk_search_bar_get_search_mode($!sb) );
       },
       STORE => sub ($, Int() $search_mode is copy) {
-        my $sm = $search_mode == 0 ?? 0 !! 1;
+        my $sm = self.RESOLVE-BOOL($search_mode);
         gtk_search_bar_set_search_mode($!sb, $sm);
       }
     );
@@ -62,7 +62,7 @@ class GTK::SearchBar is GTK::Bin {
         Bool( gtk_search_bar_get_show_close_button($!sb) );
       },
       STORE => sub ($, Int() $visible is copy) {
-        my gboolean $v = $visible == 0 ?? 0 !! 1;
+        my gboolean $v = self.RESOLVE-BOOL($visible);
         gtk_search_bar_set_show_close_button($!sb, $v);
       }
     );
