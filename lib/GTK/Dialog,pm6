@@ -60,7 +60,7 @@ class GTK::Dialog is GTK::Window {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   multi method add_action_widget (GtkWidget $child, Int() $response_id) {
-    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_add_action_widget($!d, $child, $ri);
   }
   multi method add_action_widget (GTK::Widget $child, Int() $response_id)  {
@@ -68,7 +68,7 @@ class GTK::Dialog is GTK::Window {
   }
 
   method add_button (gchar $button_text, Int() $response_id) {
-    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_add_button($!d, $button_text, $ri);
   }
 
@@ -96,7 +96,7 @@ class GTK::Dialog is GTK::Window {
   }
 
   method get_widget_for_response (Int() $response_id) {
-    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_get_widget_for_response($!d, $ri);
   }
 
@@ -105,7 +105,7 @@ class GTK::Dialog is GTK::Window {
   }
 
   method response (gint $response_id) {
-    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_response($!d, $ri);
   }
 
@@ -123,13 +123,13 @@ class GTK::Dialog is GTK::Window {
   }
 
   method set_default_response (Int() $response_id) {
-    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
+    my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_set_default_response($!d, $ri);
   }
 
   method set_response_sensitive (Int() $response_id, Int() $setting) {
-    my gint $ri = self.RESOLVE-INT($response_id, ::?METHOD);
-    my gboolean $s = self.RESOLVE-BOOL($setting, ::?METHOD);
+    my gint $ri = self.RESOLVE-INT($response_id);
+    my gboolean $s = self.RESOLVE-BOOL($setting);
     gtk_dialog_set_response_sensitive($!d, $ri, $s);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

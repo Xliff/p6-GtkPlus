@@ -33,12 +33,14 @@ role GTK::Roles::Signals {
   # value, and to adapt to multiple signatures.
   method connect_handler($obj, $signal) {
     without %!signals{$signal} {
-      my &gh := &g_signal_connect_handler;
+      my &gc := &g_signal_connect_handler;
+      my %gd := &g_signal_handler_disconnect;
       my \op := OpaquePointer;
       my $s = class {
         has $!h;
         method getHandler       { $!h; }
-        method tap (Routine $s) { gh($obj, $signal, $!h = $s, op, 0); }
+        method tap (Routine $s) { gc($obj, $signal, $!h = $s, op, 0); }
+        method disconnect       { gd($obk, $signal, $!h);             }
       }.new;
 
       %!signals{$signal} = [ $s, $obj ];
@@ -51,12 +53,12 @@ role GTK::Roles::Signals {
   }
 
   method disconnect($signal) {
-    given %!signals{$signal}.^name {
-      when 'Supply' {
+    given %!signals{$signal} {
+      when Supply {
         g_signal_handler_disconnect($_[1], $_[0]);
       }
-      when /^ '<anon' / {
-        g_signal_handler_disconnect($_[1], $_[0].getHandler);
+      when .^name ~~ /^ '<anon' / {
+        .disconnect;
       }
     }
     %!signals{$signal}:delete;

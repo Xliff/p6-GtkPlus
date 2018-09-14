@@ -164,7 +164,7 @@ method delete_finish (GAsyncResult $result, GError $error) {
   g_file_delete_finish(self, $result, $error);
 }
 
-method dup () {
+method dup {
   g_file_dup($!f);
 }
 
@@ -227,7 +227,7 @@ method find_enclosing_mount_finish (GAsyncResult $res, GError $error) {
   g_file_find_enclosing_mount_finish(self, $res, $error);
 }
 
-method get_basename () {
+method get_basename {
   g_file_get_basename($!f);
 }
 
@@ -239,15 +239,15 @@ method get_child_for_display_name (char $display_name, GError $error) {
   g_file_get_child_for_display_name(self, $display_name, $error);
 }
 
-method get_parent () {
+method get_parent {
   g_file_get_parent($!f);
 }
 
-method get_parse_name () {
+method get_parse_name {
   g_file_get_parse_name($!f);
 }
 
-method get_path () {
+method get_path {
   g_file_get_path($!f);
 }
 
@@ -255,15 +255,15 @@ method get_relative_path (GFile $descendant) {
   g_file_get_relative_path(self, $descendant);
 }
 
-method get_type () {
-  g_file_get_type($!f);
+method get_type {
+  g_file_get_type();
 }
 
-method get_uri () {
+method get_uri {
   g_file_get_uri($!f);
 }
 
-method get_uri_scheme () {
+method get_uri_scheme {
   g_file_get_uri_scheme($!f);
 }
 
@@ -279,11 +279,11 @@ method has_uri_scheme (char $uri_scheme) {
   g_file_has_uri_scheme(self, $uri_scheme);
 }
 
-method hash () {
+method hash {
   g_file_hash($!f);
 }
 
-method is_native () {
+method is_native {
   g_file_is_native($!f);
 }
 

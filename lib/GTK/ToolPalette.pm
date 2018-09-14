@@ -53,9 +53,8 @@ class GTK::ToolPalette is GTK::Container {
     Int() $targets,
     Int() $actions
   ) {
-    my uint32 ($f, $t, $a) = ($flags, $targets, $actions)
-      >>+&<<
-    (0xffff xx 3);
+    my @u = ($flags, $targets, $actions);
+    my uint32 ($f, $t, $a) = self.RESOLVE-UINT(@u);
     gtk_tool_palette_add_drag_dest($!tp, $widget, $f, $t, $a);
   }
   multi method add_drag_dest (
@@ -80,17 +79,14 @@ class GTK::ToolPalette is GTK::Container {
   }
 
   method get_drop_group (Int() $x, Int() $y) {
-    my gint ($xx, $yy) = ($x, $y).map({
-      (.abs +& 0x7fff) * ($_ < 0 ?? -1 !! 1)
-    });
+    my @u = ($x, $y);
+    my gint ($xx, $yy) = self.RESOLVE-INT(@u);
     gtk_tool_palette_get_drop_group($!tp, $xx, $yy);
   }
 
   method get_drop_item (Int() $x, Int() $y) {
-    # This is probably the best way to handle signed integers.
-    my gint ($xx, $yy) = ($x, $y).map({
-      (.abs +& 0x7fff) * ($_ < 0 ?? -1 !! 1)
-    });
+    my @u = ($x, $y);
+    my gint ($xx, $yy) = self.RESOLVE-INT(@u);
     gtk_tool_palette_get_drop_item($!tp, $xx, $yy);
   }
 
@@ -132,25 +128,25 @@ class GTK::ToolPalette is GTK::Container {
   multi method set_drag_source (
     Int() $targets           # GtkToolPaletteDragTargets $targets
   ) {
-    my $t = $targets +& 0xffff;
+    my $t = self.RESOLVE-UINT($targets);
     gtk_tool_palette_set_drag_source($!tp, $t);
   }
 
   #multi
   method set_exclusive (GtkToolItemGroup $group, Int() $exclusive) {
-    my gboolean $e = $exclusive == 0 ?? 0 !! 1
+    my gboolean $e = self.RESOLVE-BOOL($exclusive);
     gtk_tool_palette_set_exclusive($!tp, $group, $e);
   }
 
   #multi
   method set_expand (GtkToolItemGroup $group, Int() $expand) {
-    my gboolean $e = $expand == 0 ?? 0 !! 1
+    my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_tool_palette_set_expand($!tp, $group, $e);
   }
 
   #multi
   method set_group_position (GtkToolItemGroup $group, Int() $position) {
-    my gint $p = ($position.abs +& 0x7fff) * ($position < 0 ?? -1 !! 1);
+    my gint $p = self.RESOLVE-INT($position);
     gtk_tool_palette_set_group_position($!tp, $group, $p);
   }
 

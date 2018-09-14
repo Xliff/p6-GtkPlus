@@ -12,13 +12,20 @@ class GTK::HeaderBar is GTK::Container {
   has Gtk $!hb;
 
   submethod BUILD(:$headerbar) {
+    my $to-parent;
     given $headerbar {
       when GtkHeaderBar | GtkWidget {
         $!hb = do {
-          when GtkHeaderBar { $headerbar }
-          when GtkWidget    { nativecast(GtkHeaderBar, $headerbar) }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkHeaderBar, $_);
+          }
+          when GtkHeaderBar {
+            $to-partent = nativecast(GtkContainer, $_);
+            $_;
+          }
         };
-        self.setContainer($headerbar);
+        self.setContainer($to-parent);
       }
       when GTK::HeaderBar {
       }
@@ -43,7 +50,14 @@ class GTK::HeaderBar is GTK::Container {
         gtk_header_bar_get_custom_title($!hb);
       },
       STORE => sub ($, $title_widget is copy) {
-        gtk_header_bar_set_custom_title($!hb, $title_widget);
+        my $tw = given $title_widget {
+          when GtkWidget   { $_;      }
+          when GTK::Widget { .widget; }
+          default {
+            die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
+          }
+        }
+        gtk_header_bar_set_custom_title($!hb, $tw);
       }
     );
   }
@@ -53,7 +67,7 @@ class GTK::HeaderBar is GTK::Container {
       FETCH => sub ($) {
         gtk_header_bar_get_decoration_layout($!hb);
       },
-      STORE => sub ($, $layout is copy) {
+      STORE => sub ($, Str() $layout is copy) {
         gtk_header_bar_set_decoration_layout($!hb, $layout);
       }
     );
@@ -64,8 +78,9 @@ class GTK::HeaderBar is GTK::Container {
       FETCH => sub ($) {
         gtk_header_bar_get_has_subtitle($!hb);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_header_bar_set_has_subtitle($!hb, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOLEAN($setting);
+        gtk_header_bar_set_has_subtitle($!hb, $s);
       }
     );
   }
@@ -73,10 +88,11 @@ class GTK::HeaderBar is GTK::Container {
   method show_close_button is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_header_bar_get_show_close_button($!hb);
+        Bool( gtk_header_bar_get_show_close_button($!hb) );
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_header_bar_set_show_close_button($!hb, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOLEAN($setting);
+        gtk_header_bar_set_show_close_button($!hb, $s);
       }
     );
   }
@@ -86,7 +102,7 @@ class GTK::HeaderBar is GTK::Container {
       FETCH => sub ($) {
         gtk_header_bar_get_subtitle($!hb);
       },
-      STORE => sub ($, $subtitle is copy) {
+      STORE => sub ($, Str() $subtitle is copy) {
         gtk_header_bar_set_subtitle($!hb, $subtitle);
       }
     );
@@ -97,7 +113,7 @@ class GTK::HeaderBar is GTK::Container {
       FETCH => sub ($) {
         gtk_header_bar_get_title($!hb);
       },
-      STORE => sub ($, $title is copy) {
+      STORE => sub ($, Str() $title is copy) {
         gtk_header_bar_set_title($!hb, $title);
       }
     );
