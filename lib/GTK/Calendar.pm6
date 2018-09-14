@@ -92,8 +92,9 @@ class GTK::Calendar is GTK::Widget {
       FETCH => sub ($) {
         gtk_calendar_get_detail_height_rows($!cal);
       },
-      STORE => sub ($, $rows is copy) {
-        gtk_calendar_set_detail_height_rows($!cal, $rows);
+      STORE => sub ($, Int() $rows is copy) {
+        my gint $r = self.RESOLVE-INT($rows, &?ROUTINE.name);
+        gtk_calendar_set_detail_height_rows($!cal, $r);
       }
     );
   }

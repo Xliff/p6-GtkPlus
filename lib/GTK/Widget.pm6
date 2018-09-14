@@ -36,7 +36,7 @@ class GTK::Widget {
 
   proto new(|) { * }
 
-  method new(:$widget!) {
+  method new($widget) {
     self.bless(:$widget);
   }
 
@@ -49,60 +49,77 @@ class GTK::Widget {
     };
   }
 
+  # cw: This is a HACK, but it should work with careful use.
+  method !CALLING-METHOD($nf = 1) {
+    my $c = callframe($nf).code;
+    $c ~~ Routine ??
+      "{ $c.name }.{ $c.package.^name }"
+      !!
+      die "Frame not a method or code!";
+  }
+
   # Should never be called ouside of the GTK::Widget hierarchy, but
   # how can the watcher watch itself?
   method IS-PROTECTED {
     # Really kinda violates someone's idea of "object-oriented" somewhere,
     # but I am more results-oriened.
-    my $c = callframe(1).code;
-    $c ~~ Routine ??
-      (
-        $c.package.^name ~~ /^ 'GTK::'/ ?? True
-          !!
-          die "Cannot call method from outside of a GTK:: object";
-      )
+    my $c = self!CALLING-METHOD;
+    $c ~~ /^ 'GTK::'/ ??
+      True
       !!
       die "Cannot call method from outside of a GTK:: object";
   }
 
-  multi method RESOLVE-BOOL(@rb, $meth) {
+  multi method RESOLVE-BOOL(@rb) {
     self.IS-PROTECTED;
+    my $meth = self!CALLING-METHOD;
     my &other = nextcallee;
-    @rb.map({ other($_, $meth) });
+    @rb.map({ other($_, :$meth) });
   }
-  multi method RESOLVE-BOOL($rb, $meth) {
+  multi method RESOLVE-BOOL($rb, :$meth) {
     self.IS-PROTECTED;
+    my $m = $meth // self!CALLING-METHOD;
     # Check if caller comes drom a GTK:: object, otherwise throw exception.
     do given $rb {
       default   {
         so $rb.can('Bool') ??
           $rb.Bool
           !!
-          die "$meth does not accept type { $rb.^name } as a boolean value";
+          die "$m does not accept type { $rb.^name } as a boolean value";
       }
     };
   }
 
-  method RESOLVE-INT($ri, $meth) {
+  multi method RESOLVE-INT(@ri) {
     self.IS-PROTECTED;
+    my $meth = self!CALLING-METHOD;
+    my &other = nextcallee;
+    @ri.map({ other($_, :$meth) });
+  }
+  method RESOLVE-INT($ri, :$meth) {
+    self.IS-PROTECTED;
+    my $m = $meth // self!CALLING-METHOD;
     ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
   }
 
-  multi method RESOLVE-UINT($ri, $meth) {
+  multi method RESOLVE-UINT(@ru) {
     self.IS-PROTECTED;
+    my $meth = self!CALLING-METHOD;
+    my &other = nextcallee;
+    @ri.map({ other($_, :$meth) });
+  }
+  multi method RESOLVE-UINT($ru, :$meth) {
+    self.IS-PROTECTED;
+    my $meth = self!CALLING-METHOD;
     $ri +& 0xffff;
   }
-  multi method RESOLVE-UINT(@ri, $meth) {
-    self.IS-PROTECTED;
-    @ri >>+&<< (0xffff xx @ri.elems);
-  }
 
-  multi method RESOLVE-GSTRV(Str @ri, $meth) {
+  multi method RESOLVE-GSTRV(Str @ri) {
     self.IS-PROTECTED;
     @ri.push: Str unless @ri[*-1] =:= Str;
     @ri;
   }
-  multi method RESOLVE-GSTRV(Str $ri, $meth) {
+  multi method RESOLVE-GSTRV(Str $ri) {
     self.IS-PROTECTED;
     samewith($ri.Array);
   }
