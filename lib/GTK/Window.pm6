@@ -3,7 +3,9 @@ use v6.c;
 use NativeCall;
 
 use GTK::Bin;
+use GTK::Widget;
 
+use GTK::Compat::GList;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
@@ -16,18 +18,14 @@ class GTK::Window is GTK::Bin {
   submethod BUILD(:$window) {
     given $window {
       when GtkWindow | GtkWidget {
-
+        self.setWindow($window);
       }
       when GTK::Window {
         warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
       }
-      when OpaquePointer {
-        self.setBin( $!win = nativecast(GtkWindow, $window) );
-      }
       default {
       }
     }
-    self.TYPE-LATCH = True;
     self.setType('GTK::Window');
   }
 
@@ -44,7 +42,7 @@ class GTK::Window is GTK::Bin {
     samewith(:$window);
   }
   multi method new (:$window) {
-    self.bless(:$window, :bin($window), :container($window), :widget($window));
+    self.bless(:$window);
   }
 
   method setWindow($window) {
@@ -66,36 +64,48 @@ class GTK::Window is GTK::Bin {
     $!win;
   }
 
-  # Signal void Action
+  # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkWindow, gpointer --> void
   method activate-default {
     self.connect($!win, 'activate-default');
   }
 
-  # Signal void Action
+  # Is originally:
+  # GtkWindow, gpointer --> void
   method activate-focus {
     self.connect($!win, 'activate-focus');
   }
 
-  # Signal gboolean Action
+  # Is originally:
+  # GtkWindow, gboolean, gpointer --> gboolean
   method enable-debugging {
     self.connect($!win, 'enable-debugging');
   }
 
-  # Signal void Run First
+  # Is originally:
+  # GtkWindow, gpointer --> void
   method keys-changed {
     self.connect($!win, 'keys-changed');
   }
 
-  # Signal void Run Last
+  # Is originally:
+  # GtkWindow, GtkWidget, gpointer --> void
   method set-focus {
     self.connect($!win, 'set-focus');
   }
 
+  # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+
   # *
   # * STATIC METHODS
   # *
-  method set_auto_startup_notification (GTK::Window:U: gboolean $setting) {
-    gtk_window_set_auto_startup_notification($setting);
+  method set_auto_startup_notification (GTK::Window:U: Int() $setting) {
+    # Static, so cannot use RESOLVE-BOOL
+    my $s = $setting == 0 ?? 0 !! 1;
+    gtk_window_set_auto_startup_notification($s);
   }
 
   method set_default_icon (GTK::Window:U: GdkPixbuf $icon) {
@@ -114,20 +124,23 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_default_icon_name($name);
   }
 
-  method set_interactive_debugging (GTK::Window:U: gboolean $enable) {
+  method set_interactive_debugging (GTK::Window:U: Int() $enable) {
+    # Static, so cannot use RESOLVE-BOOL
+    my gboolean $e = $enable == 0 ?? 0 !! 1;
     gtk_window_set_interactive_debugging($enable);
   }
 
-  # ****************************************************************I
+  # ****************************************************************
 
-
+  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method accept_focus is rw {
     Proxy.new(
       FETCH => sub ($) {
         gtk_window_get_accept_focus($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_accept_focus($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($s);
+        gtk_window_set_accept_focus($!win, $s);
       }
     );
   }
@@ -137,7 +150,7 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_application($!win);
       },
-      STORE => sub ($, $application is copy) {
+      STORE => sub ($, GtkApplication $application is copy) {
         gtk_window_set_application($!win, $application);
       }
     );
@@ -149,7 +162,14 @@ class GTK::Window is GTK::Bin {
         gtk_window_get_attached_to($!win);
       },
       STORE => sub ($, $attach_widget is copy) {
-        gtk_window_set_attached_to($!win, $attach_widget);
+        my $aw = do given $attach_widget {
+          when GTK::Widget { .widget; }
+          when GtkWidget   { $_;      }
+          default {
+            die "Invalid type { .^name } passed to { ::?CLASS }.{ &^ROUTINE.name }";
+          }
+        };
+        gtk_window_set_attached_to($!win, $aw);
       }
     );
   }
@@ -159,8 +179,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_decorated($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_decorated($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_decorated($!win, $s);
       }
     );
   }
@@ -170,8 +191,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_deletable($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_deletable($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_deletable($!win, $s);
       }
     );
   }
@@ -181,8 +203,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_destroy_with_parent($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_destroy_with_parent($!win, $setting);
+      STORE => sub ($, Int $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_destroy_with_parent($!win, $s);
       }
     );
   }
@@ -192,8 +215,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_focus($!win);
       },
-      STORE => sub ($, $focus is copy) {
-        gtk_window_set_focus($!win, $focus);
+      STORE => sub ($, Int() $focus is copy) {
+        my gboolean $f = self.RESOLVE-BOOL($focus);
+        gtk_window_set_focus($!win, $f);
       }
     );
   }
@@ -203,8 +227,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_focus_on_map($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_focus_on_map($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_focus_on_map($!win, $s);
       }
     );
   }
@@ -214,8 +239,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_focus_visible($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_focus_visible($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_focus_visible($!win, $s);
       }
     );
   }
@@ -225,8 +251,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_gravity($!win);
       },
-      STORE => sub ($, $gravity is copy) {
-        gtk_window_set_gravity($!win, $gravity);
+      STORE => sub ($, Int() $gravity is copy) {
+        my uint32 $g = self.RESOLVE-UINT($gravity);
+        gtk_window_set_gravity($!win, $g);
       }
     );
   }
@@ -236,8 +263,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_has_resize_grip($!win);
       },
-      STORE => sub ($, $value is copy) {
-        gtk_window_set_has_resize_grip($!win, $value);
+      STORE => sub ($, Int() $value is copy) {
+        my gboolean $v = self.RESOLVE-UINT($value)
+        gtk_window_set_has_resize_grip($!win, $v);
       }
     );
   }
@@ -247,8 +275,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_hide_titlebar_when_maximized($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_hide_titlebar_when_maximized($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_hide_titlebar_when_maximized($!win, $s);
       }
     );
   }
@@ -258,7 +287,7 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_icon($!win);
       },
-      STORE => sub ($, $icon is copy) {
+      STORE => sub ($, GdkPixbuf $icon is copy) {
         gtk_window_set_icon($!win, $icon);
       }
     );
@@ -267,9 +296,9 @@ class GTK::Window is GTK::Bin {
   method icon_list is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_icon_list($!win);
+        GList.new( gtk_window_get_icon_list($!win) );
       },
-      STORE => sub ($, $list is copy) {
+      STORE => sub ($, GList $list is copy) {
         gtk_window_set_icon_list($!win, $list);
       }
     );
@@ -280,7 +309,7 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_icon_name($!win);
       },
-      STORE => sub ($, $name is copy) {
+      STORE => sub ($, Str $name is copy) {
         gtk_window_set_icon_name($!win, $name);
       }
     );
@@ -289,10 +318,11 @@ class GTK::Window is GTK::Bin {
   method mnemonic_modifier is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_mnemonic_modifier($!win);
+        GdkModifierType( gtk_window_get_mnemonic_modifier($!win) );
       },
-      STORE => sub ($, $modifier is copy) {
-        gtk_window_set_mnemonic_modifier($!win, $modifier);
+      STORE => sub ($, Int() $modifier is copy) {
+        my uint32 $m = self.RESOLVE-UINT($modifier);
+        gtk_window_set_mnemonic_modifier($!win, $m);
       }
     );
   }
@@ -300,10 +330,11 @@ class GTK::Window is GTK::Bin {
   method mnemonics_visible is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_mnemonics_visible($!win);
+        Bool( gtk_window_get_mnemonics_visible($!win) );
       },
       STORE => sub ($, $setting is copy) {
-        gtk_window_set_mnemonics_visible($!win, $setting);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_mnemonics_visible($!win, $s);
       }
     );
   }
@@ -311,10 +342,11 @@ class GTK::Window is GTK::Bin {
   method modal is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_modal($!win);
+        Bool( gtk_window_get_modal($!win) );
       },
       STORE => sub ($, $modal is copy) {
-        gtk_window_set_modal($!win, $modal);
+        my gboolean $m = self.RESOLVE-BOOL($modal);
+        gtk_window_set_modal($!win, $m);
       }
     );
   }
@@ -322,10 +354,11 @@ class GTK::Window is GTK::Bin {
   method opacity is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_opacity($!win);
+        Bool( gtk_window_get_opacity($!win) );
       },
       STORE => sub ($, $opacity is copy) {
-        gtk_window_set_opacity($!win, $opacity);
+        my gboolean $o = self.RESOLVE-BOOL($opacity)
+        gtk_window_set_opacity($!win, $o);
       }
     );
   }
@@ -333,10 +366,11 @@ class GTK::Window is GTK::Bin {
   method resizable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_resizable($!win);
+        Bool( gtk_window_get_resizable($!win) );
       },
       STORE => sub ($, $resizable is copy) {
-        gtk_window_set_resizable($!win, $resizable);
+        my gboolean $r = self.RESOLVE-BOOL($resizable);
+        gtk_window_set_resizable($!win, $r);
       }
     );
   }
@@ -346,7 +380,7 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_role($!win);
       },
-      STORE => sub ($, $role is copy) {
+      STORE => sub ($, Str $role is copy) {
         gtk_window_set_role($!win, $role);
       }
     );
@@ -357,7 +391,7 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_screen($!win);
       },
-      STORE => sub ($, $screen is copy) {
+      STORE => sub ($, GdkScreen $screen is copy) {
         gtk_window_set_screen($!win, $screen);
       }
     );
@@ -368,8 +402,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_skip_pager_hint($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_skip_pager_hint($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_skip_pager_hint($!win, $s);
       }
     );
   }
@@ -379,8 +414,9 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_skip_taskbar_hint($!win);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_skip_taskbar_hint($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_skip_taskbar_hint($!win, $s);
       }
     );
   }
@@ -390,7 +426,7 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_title($!win);
       },
-      STORE => sub ($, $title is copy) {
+      STORE => sub ($, Str $title is copy) {
         gtk_window_set_title($!win, $title);
       }
     );
@@ -401,7 +437,7 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_titlebar($!win);
       },
-      STORE => sub ($, $titlebar is copy) {
+      STORE => sub ($, Str $titlebar is copy) {
         gtk_window_set_titlebar($!win, $titlebar);
       }
     );
@@ -413,7 +449,14 @@ class GTK::Window is GTK::Bin {
         gtk_window_get_transient_for($!win);
       },
       STORE => sub ($, $parent is copy) {
-        gtk_window_set_transient_for($!win, $parent);
+        my $p = do given {
+          when GTK::Window { .window; }
+          when GtkWindow   { $_;      }
+          default {
+            die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
+          }
+        }
+        gtk_window_set_transient_for($!win, $p);
       }
     );
   }
@@ -421,10 +464,11 @@ class GTK::Window is GTK::Bin {
   method type_hint is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_type_hint($!win);
+        GdkWindowTypeHint( gtk_window_get_type_hint($!win) );
       },
-      STORE => sub ($, $hint is copy) {
-        gtk_window_set_type_hint($!win, $hint);
+      STORE => sub ($, Int() $hint is copy) {
+        my uint32 $h = self.RESOLVE-UINT($hint);
+        gtk_window_set_type_hint($!win, $h);
       }
     );
   }
@@ -432,13 +476,15 @@ class GTK::Window is GTK::Bin {
   method urgency_hint is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_urgency_hint($!win);
+        Bool( gtk_window_get_urgency_hint($!win) );
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_window_set_urgency_hint($!win, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_window_set_urgency_hint($!win, $s);
       }
     );
   }
+  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   method activate_default {
     gtk_window_activate_default($!win);
@@ -460,12 +506,30 @@ class GTK::Window is GTK::Bin {
     gtk_window_add_mnemonic($!win, $keyval, $target);
   }
 
-  method begin_move_drag (gint $button, gint $root_x, gint $root_y, guint $timestamp) {
-    gtk_window_begin_move_drag($!win, $button, $root_x, $root_y, $timestamp);
+  method begin_move_drag (
+    gint $button,
+    gint $root_x,
+    gint $root_y,
+    guint $timestamp
+  ) {
+    my @ui = ($button, $root_x, $root_y);
+    my gint ($b, $rx, $ry) = self.RESOLVE-INT(@ui);
+    my guint $t = self.RESOLVE-UINT($timestamp
+    gtk_window_begin_move_drag($!win, $b, $rx, $ry, $t);
   }
 
-  method begin_resize_drag (GdkWindowEdge $edge, gint $button, gint $root_x, gint $root_y, guint $timestamp) {
-    gtk_window_begin_resize_drag($!win, $edge, $button, $root_x, $root_y, $timestamp);
+  method begin_resize_drag (
+    Int() $edge,
+    Int() $button,
+    Int() $root_x,
+    Int() $root_y,
+    Int() $timestamp
+  ) {
+    my @ui = ($button, $root_x, $root_y);
+    my gint ($b, $rx, $ry) = self.RESOLVE-INT(@ui);
+    my @u = ($edge, $timestamp);
+    my guint ($e, $t) = self.RESOLVE-UINT(@u);
+    gtk_window_begin_resize_drag($!win, $e, $b, $rx, $ry, $t);
   }
 
   method close {
@@ -480,8 +544,9 @@ class GTK::Window is GTK::Bin {
     gtk_window_fullscreen($!win);
   }
 
-  method fullscreen_on_monitor (GdkScreen $screen, gint $monitor) {
-    gtk_window_fullscreen_on_monitor($!win, $screen, $monitor);
+  method fullscreen_on_monitor (GdkScreen $screen, Int() $monitor) {
+    my gint $m = self.RESOLVE-INT($monitor);
+    gtk_window_fullscreen_on_monitor($!win, $screen, $m);
   }
 
   method get_default_icon_list {
@@ -492,8 +557,10 @@ class GTK::Window is GTK::Bin {
     gtk_window_get_default_icon_name();
   }
 
-  method get_default_size (gint $width, gint $height) {
-    gtk_window_get_default_size($!win, $width, $height);
+  method get_default_size (Int() $width, Int() $height) {
+    my @i = ($width, $height);
+    my gint ($w, $h) = self.RESOLVE-INT(@i);
+    gtk_window_get_default_size($!win, $w, $h);
   }
 
   method get_default_widget {
@@ -505,15 +572,19 @@ class GTK::Window is GTK::Bin {
   }
 
   method get_position (gint $root_x, gint $root_y) {
-    gtk_window_get_position($!win, $root_x, $root_y);
+    my @i = ($root_x, $root_y);
+    my ($rx, $ry) = self.RESOLVE-INT(@i);
+    gtk_window_get_position($!win, $rx, $ry);
   }
 
   method get_resize_grip_area (GdkRectangle $rect) {
     gtk_window_get_resize_grip_area($!win, $rect);
   }
 
-  method get_size (gint $width, gint $height) {
-    gtk_window_get_size($!win, $width, $height);
+  method get_size (Int() $width, Int() $height) {
+    my @i = ($width, $height);
+    my gint ($w, $h) = self.RESOLVE-INT(@i);
+    gtk_window_get_size($!win, $w, $h);
   }
 
   method get_type {
@@ -553,11 +624,15 @@ class GTK::Window is GTK::Bin {
   }
 
   method mnemonic_activate (guint $keyval, GdkModifierType $modifier) {
-    gtk_window_mnemonic_activate($!win, $keyval, $modifier);
+    my @u = ($keyval, $modifier)
+    my guint ($kv, $m) = self.RESOLVE-UINT(@u);
+    gtk_window_mnemonic_activate($!win, $kv, $m);
   }
 
-  method move (gint $x, gint $y) {
-    gtk_window_move($!win, $x, $y);
+  method move (Int() $x, Int() $y) {
+    my @i = ($x, $y);
+    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    gtk_window_move($!win, $xx, $yy);
   }
 
   method parse_geometry (gchar $geometry) {
@@ -568,61 +643,84 @@ class GTK::Window is GTK::Bin {
     gtk_window_present($!win);
   }
 
-  method present_with_time (guint $timestamp) {
-    gtk_window_present_with_time($!win, $timestamp);
+  method present_with_time (Int() $timestamp) {
+    my guint $t = self.RESOLVE-UINT($timestamp);
+    gtk_window_present_with_time($!win, $t);
   }
 
   method propagate_key_event (GdkEventKey $event) {
-    gtk_window_propagate_key_event($!win, $event);
+    Bool( gtk_window_propagate_key_event($!win, $event) );
   }
 
   method remove_accel_group (GtkAccelGroup $accel_group) {
     gtk_window_remove_accel_group($!win, $accel_group);
   }
 
-  method remove_mnemonic (guint $keyval, GtkWidget $target) {
-    gtk_window_remove_mnemonic($!win, $keyval, $target);
+  multi method remove_mnemonic (guint $keyval, GtkWidget $target) {
+    my guint $kv = self.RESOLVE-UINT($keyval);
+    gtk_window_remove_mnemonic($!win, $kv, $target);
+  }
+  multi method rename_nmemonic (Int() $keyval, GTK::Widget $target) {
+    samewith($keyval, $target.widget);
   }
 
   method reshow_with_initial_size {
     gtk_window_reshow_with_initial_size($!win);
   }
 
-  method resize (gint $width, gint $height) {
-    gtk_window_resize($!win, $width, $height);
+  method resize (Int() $width, Int() $height) {
+    my @i = ($width, $height);
+    my gint ($w, $h) = self.RESOLVE-INT(@i);
+    gtk_window_resize($!win, $w, $h);
   }
 
   method resize_grip_is_visible {
     gtk_window_resize_grip_is_visible($!win);
   }
 
-  method resize_to_geometry (gint $width, gint $height) {
-    gtk_window_resize_to_geometry($!win, $width, $height);
+  method resize_to_geometry (Int() $width, Int() $height) {
+    my @i = ($width, $height);
+    my gint ($w, $h) = self.RESOLVE-INT(@i);
+    gtk_window_resize_to_geometry($!win, $w, $h);
   }
 
-  multi method set_default (GTK::Widget $default_widget) {
-    nextwith($default_widget.widget);
-  }
   multi method set_default (GtkWidget $default_widget) {
     gtk_window_set_default($!win, $default_widget);
   }
-
-  method set_default_geometry (gint $width, gint $height) {
-    gtk_window_set_default_geometry($!win, $width, $height);
+  multi method set_default (GTK::Widget $default_widget) {
+    samewith($default_widget.widget);
   }
 
-  method set_default_size (gint $width, gint $height) {
-    gtk_window_set_default_size($!win, $width, $height);
+  method set_default_geometry (Int() $width, Int() $height) {
+    my @i = ($width, $height);
+    my gint ($w, $h) = self.RESOLVE-INT(@i);
+    gtk_window_set_default_geometry($!win, $w, $h);
   }
 
-  multi method set_geometry_hints (GTK::Widget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask) {
-    nextwith($geometry_widget.widget, $geometry, $geom_mask);
-  }
-  multi method set_geometry_hints (GtkWidget $geometry_widget, GdkGeometry $geometry, GdkWindowHints $geom_mask) {
-    gtk_window_set_geometry_hints($!win, $geometry_widget, $geometry, $geom_mask);
+  method set_default_size (Int() $width, Int() $height) {
+    my @i = ($width, $height);
+    my gint ($w, $h) = self.RESOLVE-INT(@i);
+    gtk_window_set_default_size($!win, $w, $h);
   }
 
-  method set_has_user_ref_count (gboolean $setting) {
+  multi method set_geometry_hints (
+    GtkWidget $geometry_widget,
+    GdkGeometry $geometry,
+    Int() $geom_mask                # GdkWindowHints
+  ) {
+    my uint32 $gm = self.RESOLVE-UINT($geom_mask);
+    gtk_window_set_geometry_hints($!win, $geometry_widget, $geometry, $gm);
+  }
+  multi method set_geometry_hints (
+    GTK::Widget $geometry_widget,
+    GdkGeometry $geometry,
+    Int() $geom_mask
+  ) {
+    samewith($geometry_widget.widget, $geometry, $geom_mask);
+  }
+
+  method set_has_user_ref_count (Int() $s) {
+    my gboolean $s = self.RESOLVE-BOOL($setting);
     gtk_window_set_has_user_ref_count($!win, $setting);
   }
 
@@ -630,16 +728,19 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_icon_from_file($!win, $filename, $err);
   }
 
-  method set_keep_above (gboolean $setting) {
-    gtk_window_set_keep_above($!win, $setting);
+  method set_keep_above (Int() $setting) {
+    my gboolean $s = self.RESOLVE-BOOL($setting);
+    gtk_window_set_keep_above($!win, $s);
   }
 
-  method set_keep_below (gboolean $setting) {
-    gtk_window_set_keep_below($!win, $setting);
+  method set_keep_below (Int() $setting) {
+    my gboolean $s = self.RESOLVE-BOOL($setting);
+    gtk_window_set_keep_below($!win, $s);
   }
 
-  method set_position (GtkWindowPosition $position) {
-    gtk_window_set_position($!win, $position);
+  method set_position (Int() $position) {
+    my uint32 $p = self.RESOLVE-UINT($position);
+    gtk_window_set_position($!win, $p);
   }
 
   method set_startup_id (gchar $startup_id) {
