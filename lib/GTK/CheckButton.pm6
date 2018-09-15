@@ -12,13 +12,20 @@ class GTK::CheckButton is GTK::ToggleButton {
   has GtkCheckButton $!cb;
 
   submethod BUILD(:$checkbutton) {
+    my $to-parent;
     given $button {
       when GtkCheckButton | GtkWidget {
         $!cb = do {
-          when GtkWidget      { nativecast(GtkCheckButton, $checkbutton); }
-          when GtkCheckButton { $checkbutton; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkCheckButton, $checkbutton);
+          }
+          when GtkCheckButton {
+            $to-parent = nativecast(GtkToggleButton, $_);
+            $checkbutton;
+          }
         };
-        self.setToggleButton($checkbutton);
+        self.setToggleButton($to-parent);
       }
       when GTK::CheckButton {
       }

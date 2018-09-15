@@ -12,13 +12,20 @@ class GTK::FontButton is GTK::Button {
   has GtkFontButton $!fb;
 
   submethod BUILD(:$button) {
+    my $to-parent;
     given $button {
       when GtkFontButton | GtkWidget {
         $!tb = do {
-          when GtkWidget     { nativecast(GtkFontButton, $button); }
-          when GtkFontButton { $button; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkFontButton, $_);
+          }
+          when GtkFontButton {
+            $to-parent = nativecast(GtkButton, $_);
+            $_;
+          }
         };
-        self.setButton($button);
+        self.setButton($to-parent);
       }
       when GTK::Button {
       }
@@ -39,9 +46,13 @@ class GTK::FontButton is GTK::Button {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkFontButton, gpointer --> void
   method font-set {
     self.connect($!fb, 'font-set');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -50,7 +61,7 @@ class GTK::FontButton is GTK::Button {
       FETCH => sub ($) {
         gtk_font_button_get_font_name($!fb);
       },
-      STORE => sub ($, $fontname is copy) {
+      STORE => sub ($, Str $fontname is copy) {
         gtk_font_button_set_font_name($!fb, $fontname);
       }
     );
@@ -59,10 +70,11 @@ class GTK::FontButton is GTK::Button {
   method show_size is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_font_button_get_show_size($!fb);
+        Bool( gtk_font_button_get_show_size($!fb) );
       },
-      STORE => sub ($, $show_size is copy) {
-        gtk_font_button_set_show_size($!fb, $show_size);
+      STORE => sub ($, Int() $show_size is copy) {
+        my gboolean $ss = self.RESOLVE-BOOL($show_size);
+        gtk_font_button_set_show_size($!fb, $ss);
       }
     );
   }
@@ -70,10 +82,11 @@ class GTK::FontButton is GTK::Button {
   method show_style is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_font_button_get_show_style($!fb);
+        Bool( gtk_font_button_get_show_style($!fb) );
       },
-      STORE => sub ($, $show_style is copy) {
-        gtk_font_button_set_show_style($!fb, $show_style);
+      STORE => sub ($, Int() $show_style is copy) {
+        my gboolean $ss = self.RESOLVE-BOOL($show_style);
+        gtk_font_button_set_show_style($!fb, $ss);
       }
     );
   }
@@ -83,7 +96,7 @@ class GTK::FontButton is GTK::Button {
       FETCH => sub ($) {
         gtk_font_button_get_title($!fb);
       },
-      STORE => sub ($, $title is copy) {
+      STORE => sub ($, Str $title is copy) {
         gtk_font_button_set_title($!fb, $title);
       }
     );
@@ -92,10 +105,11 @@ class GTK::FontButton is GTK::Button {
   method use_font is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_font_button_get_use_font($!fb);
+        Bool( gtk_font_button_get_use_font($!fb) );
       },
-      STORE => sub ($, $use_font is copy) {
-        gtk_font_button_set_use_font($!fb, $use_font);
+      STORE => sub ($, Int() $use_font is copy) {
+        my gboolean $uf = self.RESOLVE-BOOL($use_font);
+        gtk_font_button_set_use_font($!fb, $uf);
       }
     );
   }
@@ -103,10 +117,11 @@ class GTK::FontButton is GTK::Button {
   method use_size is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_font_button_get_use_size($!fb);
+        Bool( gtk_font_button_get_use_size($!fb) );
       },
-      STORE => sub ($, $use_size is copy) {
-        gtk_font_button_set_use_size($!fb, $use_size);
+      STORE => sub ($, Int() $use_size is copy) {
+        my gboolean $us = self.RESOLVE-BOOL($use_size);
+        gtk_font_button_set_use_size($!fb, $us);
       }
     );
   }

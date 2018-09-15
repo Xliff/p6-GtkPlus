@@ -76,12 +76,14 @@ class GTK::Widget {
     my &other = nextcallee;
     @rb.map({ other($_, :$meth) });
   }
-  multi method RESOLVE-BOOL($rb, :$meth) {
+  multi method RESOLVE-BOOL($rb) {
     self.IS-PROTECTED;
     my $m = $meth // self!CALLING-METHOD;
     # Check if caller comes drom a GTK:: object, otherwise throw exception.
     do given $rb {
-      default   {
+      when Bool { $rb.Int; }
+      when Int  { $rb;     }
+      default {
         so $rb.can('Bool') ??
           $rb.Bool
           !!
