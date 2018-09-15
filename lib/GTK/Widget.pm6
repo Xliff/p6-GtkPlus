@@ -72,13 +72,10 @@ class GTK::Widget {
 
   multi method RESOLVE-BOOL(@rb) {
     self.IS-PROTECTED;
-    my $meth = self!CALLING-METHOD;
-    my &other = nextcallee;
-    @rb.map({ other($_, :$meth) });
+    @rb.map({ samewith($_) });
   }
   multi method RESOLVE-BOOL($rb) {
     self.IS-PROTECTED;
-    my $m = $meth // self!CALLING-METHOD;
     # Check if caller comes drom a GTK:: object, otherwise throw exception.
     do given $rb {
       when Bool { $rb.Int; }
@@ -87,33 +84,29 @@ class GTK::Widget {
         so $rb.can('Bool') ??
           $rb.Bool
           !!
-          die "$m does not accept type { $rb.^name } as a boolean value";
+          die X::TypeCheck
+            .new(payload => "Invalid type to RESOLVE-BOOL: { .^name }")
+            .throw;
       }
     };
   }
 
   multi method RESOLVE-INT(@ri) {
     self.IS-PROTECTED;
-    my $meth = self!CALLING-METHOD;
-    my &other = nextcallee;
-    @ri.map({ other($_, :$meth) });
+    @ri.map({ samewith($_) });
   }
-  method RESOLVE-INT($ri, :$meth) {
+  multi method RESOLVE-INT($ri) {
     self.IS-PROTECTED;
-    my $m = $meth // self!CALLING-METHOD;
     ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
   }
 
   multi method RESOLVE-UINT(@ru) {
     self.IS-PROTECTED;
-    my $meth = self!CALLING-METHOD;
-    my &other = nextcallee;
-    @ri.map({ other($_, :$meth) });
+    @ru.map({ samewith($_) });
   }
-  multi method RESOLVE-UINT($ru, :$meth) {
+  multi method RESOLVE-UINT($ru) {
     self.IS-PROTECTED;
-    my $meth = self!CALLING-METHOD;
-    $ri +& 0xffff;
+    $ru +& 0xffff;
   }
 
   multi method RESOLVE-GSTRV(Str @ri) {

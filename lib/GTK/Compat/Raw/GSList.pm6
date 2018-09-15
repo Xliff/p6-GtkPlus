@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 
 my constant lib = 'glib-2.0',v0;
 
-unit package GTK::Compat::Raw::GList;
+unit package GTK::Compat::Raw::GSList;
 
 sub g_slist_alloc ()
   returns GSList
@@ -100,7 +100,12 @@ sub g_slist_insert_sorted (GSList $list, gpointer $data, GCompareFunc $func)
   is export
   { * }
 
-sub g_slist_insert_sorted_with_data (GSList $list, gpointer $data, GCompareDataFunc $func, gpointer $user_data)
+sub g_slist_insert_sorted_with_data (
+  GSList $list,
+  gpointer $data,
+  GCompareDataFunc $func,
+  gpointer $user_data
+)
   returns GSList
   is native(lib)
   is export
@@ -172,7 +177,11 @@ sub g_slist_sort (GSList $list, GCompareFunc $compare_func)
   is export
   { * }
 
-sub g_slist_sort_with_data (GSList $list, GCompareDataFunc $compare_func, gpointer $user_data)
+sub g_slist_sort_with_data (
+  GSList $list,
+  GCompareDataFunc $compare_func,
+  gpointer $user_data
+)
   returns GSList
   is native(lib)
   is export

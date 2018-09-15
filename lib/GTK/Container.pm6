@@ -148,7 +148,7 @@ class GTK::Container is GTK::Widget {
   method focus_hadjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        my $adjustment = gtk_container_get_focus_hadjustment($!c)
+        my $adjustment = gtk_container_get_focus_hadjustment($!c);
         GTK::Adjustment.new(:$adjustment);
       },
       STORE => sub ($, $adjustment is copy) {

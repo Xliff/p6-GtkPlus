@@ -16,8 +16,8 @@ role GTK::Roles::Signals {
   method connect(
     $obj,
     $signal,
-    &handler(Pointer, Pointer)?
-  {
+    &handler (Pointer, Pointer)
+  ) {
     %!signals{$signal} //= do {
       my $s = Supplier.new;
       g_signal_connect_wd($obj, $signal,

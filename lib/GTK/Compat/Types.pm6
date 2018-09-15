@@ -178,7 +178,7 @@ our enum GdkWindowTypeHint is export <
   GDK_WINDOW_TYPE_HINT_DND
 >;
 
-our GdkModifierType is export (
+our enum GdkModifierType is export (
   GDK_SHIFT_MASK                 => 1,
   GDK_LOCK_MASK                  => 1 +< 1,
   GDK_CONTROL_MASK               => 1 +< 2,
@@ -216,6 +216,36 @@ our GdkModifierType is export (
   GDK_RELEASE_MASK               => 1 +< 30,
   GDK_MODIFIER_MASK              => 0x5c001fff
 );
+
+our enum GdkEventMask is export (
+  GDK_EXPOSURE_MASK             => 1,
+  GDK_POINTER_MOTION_MASK       => 1 +< 2,
+  GDK_POINTER_MOTION_HINT_MASK  => 1 +< 3,
+  GDK_BUTTON_MOTION_MASK        => 1 +< 4,
+  GDK_BUTTON1_MOTION_MASK       => 1 +< 5,
+  GDK_BUTTON2_MOTION_MASK       => 1 +< 6,
+  GDK_BUTTON3_MOTION_MASK       => 1 +< 7,
+  GDK_BUTTON_PRESS_MASK         => 1 +< 8,
+  GDK_BUTTON_RELEASE_MASK       => 1 +< 9,
+  GDK_KEY_PRESS_MASK            => 1 +< 10,
+  GDK_KEY_RELEASE_MASK          => 1 +< 11,
+  GDK_ENTER_NOTIFY_MASK         => 1 +< 12,
+  GDK_LEAVE_NOTIFY_MASK         => 1 +< 13,
+  GDK_FOCUS_CHANGE_MASK         => 1 +< 14,
+  GDK_STRUCTURE_MASK            => 1 +< 15,
+  GDK_PROPERTY_CHANGE_MASK      => 1 +< 16,
+  GDK_VISIBILITY_NOTIFY_MASK    => 1 +< 17,
+  GDK_PROXIMITY_IN_MASK         => 1 +< 18,
+  GDK_PROXIMITY_OUT_MASK        => 1 +< 19,
+  GDK_SUBSTRUCTURE_MASK         => 1 +< 20,
+  GDK_SCROLL_MASK               => 1 +< 21,
+  GDK_TOUCH_MASK                => 1 +< 22,
+  GDK_SMOOTH_SCROLL_MASK        => 1 +< 23,
+  GDK_TOUCHPAD_GESTURE_MASK     => 1 +< 24,
+  GDK_TABLET_PAD_MASK           => 1 +< 25,
+  GDK_ALL_EVENTS_MASK           => 0x3FFFFFE
+);
+
 
 our enum GdkEventType is export (
   GDK_NOTHING             => -1,
@@ -318,15 +348,12 @@ class GdkEventCrossing      is repr('CPointer') is export { }
 class GdkEventExpose        is repr('CPointer') is export { }
 class GdkEventFocus         is repr('CPointer') is export { }
 class GdkEventGrabBroken    is repr('CPointer') is export { }
-class GdkEventKey           is repr('CPointer') is export { }
-class GdkEventMask          is repr('CPointer') is export { }
 class GdkEventMotion        is repr('CPointer') is export { }
 class GdkEventScroll        is repr('CPointer') is export { }
 class GdkEventSelection     is repr('CPointer') is export { }
 class GdkEventVisibility    is repr('CPointer') is export { }
 class GdkEventWindowState   is repr('CPointer') is export { }
 class GdkFrameClock         is repr('CPointer') is export { }
-class GdkGeometry           is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
 class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }
@@ -342,7 +369,7 @@ class GdkWindow             is repr('CPointer') is export { }
 class GdkWindowEdge         is repr('CPointer') is export { }
 
 class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
-  has GdkEventType $.type;
+  has uint32       $.type;      # GdkEventType
   has GdkWindow    $.window;
   has int8         $.send_event;
   has uint32       $.time;

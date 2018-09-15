@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw:Adjustment;
+use GTK::Raw::Adjustment;
 use GTK::Raw::Types;
 
 class GTK::Adjustment {
@@ -49,7 +49,7 @@ class GTK::Adjustment {
         gtk_adjustment_get_page_increment($!a);
       },
       STORE => sub ($, Num() $page_increment is copy) {
-        my gdouble $pi = $page_increment
+        my gdouble $pi = $page_increment;
         gtk_adjustment_set_page_increment($!a, $pi);
       }
     );
@@ -73,7 +73,7 @@ class GTK::Adjustment {
         gtk_adjustment_get_step_increment($!a);
       },
       STORE => sub ($, Num() $step_increment is copy) {
-        my gdouble $si = $step_increment
+        my gdouble $si = $step_increment;
         gtk_adjustment_set_step_increment($!a, $si);
       }
     );
@@ -85,7 +85,7 @@ class GTK::Adjustment {
         gtk_adjustment_get_upper($!a);
       },
       STORE => sub ($, Num() $upper is copy) {
-        my gdouble $u = $upper
+        my gdouble $u = $upper;
         gtk_adjustment_set_upper($!a, $u);
       }
     );

@@ -107,7 +107,12 @@ sub g_list_insert_sorted (GList $list, gpointer $data, GCompareFunc $func)
   is export
   { * }
 
-sub g_list_insert_sorted_with_data (GList $list, gpointer $data, GCompareDataFunc $func, gpointer $user_data)
+sub g_list_insert_sorted_with_data (
+  GList $list,
+  gpointer $data,
+  GCompareDataFunc $func,
+  gpointer $user_data
+)
   returns GList
   is native(lib)
   is export
@@ -185,7 +190,11 @@ sub g_list_sort (GList $list, GCompareFunc $compare_func)
   is export
   { * }
 
-sub g_list_sort_with_data (GList $list, GCompareDataFunc $compare_func, gpointer $user_data)
+sub g_list_sort_with_data (
+  GList $list,
+  GCompareDataFunc $compare_func,
+  gpointer $user_data
+)
   returns GList
   is native(lib)
   is export

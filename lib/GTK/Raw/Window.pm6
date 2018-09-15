@@ -35,12 +35,25 @@ sub gtk_window_add_mnemonic (GtkWindow $window, guint $keyval, GtkWidget $target
   is export
   { * }
 
-sub gtk_window_begin_move_drag (GtkWindow $window, gint $button, gint $root_x, gint $root_y, guint $timestamp)
+sub gtk_window_begin_move_drag (
+  GtkWindow $window,
+  gint $button,
+  gint $root_x,
+  gint $root_y,
+  guint $timestamp
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_window_begin_resize_drag (GtkWindow $window, GdkWindowEdge $edge, gint $button, gint $root_x, gint $root_y, guint $timestamp)
+sub gtk_window_begin_resize_drag (
+  GtkWindow $window,
+  GdkWindowEdge $edge,
+  gint $button,
+  gint $root_x,
+  gint $root_y,
+  guint $timestamp
+)
   is native('gtk-3')
   is export
   { * }
@@ -60,7 +73,11 @@ sub gtk_window_fullscreen (GtkWindow $window)
   is export
   { * }
 
-sub gtk_window_fullscreen_on_monitor (GtkWindow $window, GdkScreen $screen, gint $monitor)
+sub gtk_window_fullscreen_on_monitor (
+  GtkWindow $window,
+  GdkScreen $screen,
+  gint $monitor
+)
   is native('gtk-3')
   is export
   { * }
@@ -164,7 +181,11 @@ sub gtk_window_maximize (GtkWindow $window)
   is export
   { * }
 
-sub gtk_window_mnemonic_activate (GtkWindow $window, guint $keyval, GdkModifierType $modifier)
+sub gtk_window_mnemonic_activate (
+  GtkWindow $window,
+  guint $keyval,
+  uint32 $modifier              # GdkModifierType $modifier
+)
   returns uint32
   is native('gtk-3')
   is export
@@ -324,7 +345,11 @@ sub gtk_window_set_startup_id (GtkWindow $window, gchar $startup_id)
   is export
   { * }
 
-sub gtk_window_set_wmclass (GtkWindow $window, gchar $wmclass_name, gchar $wmclass_class)
+sub gtk_window_set_wmclass (
+  GtkWindow $window,
+  gchar $wmclass_name,
+  gchar $wmclass_class
+)
   is native('gtk-3')
   is export
   { * }
@@ -410,7 +435,7 @@ sub gtk_window_get_screen (GtkWindow $window)
   { * }
 
 sub gtk_window_get_mnemonic_modifier (GtkWindow $window)
-  returns GdkModifierType
+  returns uint32 # GdkModifierType
   is native('gtk-3')
   is export
   { * }
@@ -422,7 +447,7 @@ sub gtk_window_get_decorated (GtkWindow $window)
   { * }
 
 sub gtk_window_get_gravity (GtkWindow $window)
-  returns GdkGravity
+  returns uint32 # GdkGravity
   is native('gtk-3')
   is export
   { * }
@@ -574,7 +599,10 @@ sub gtk_window_set_screen (GtkWindow $window, GdkScreen $screen)
   is export
   { * }
 
-sub gtk_window_set_mnemonic_modifier (GtkWindow $window, GdkModifierType $modifier)
+sub gtk_window_set_mnemonic_modifier (
+  GtkWindow $window,
+  uint32 $modifier              # GdkModifierType $modifier
+)
   is native('gtk-3')
   is export
   { * }
@@ -584,7 +612,10 @@ sub gtk_window_set_decorated (GtkWindow $window, gboolean $setting)
   is export
   { * }
 
-sub gtk_window_set_gravity (GtkWindow $window, GdkGravity $gravity)
+sub gtk_window_set_gravity (
+  GtkWindow $window,
+  uint32 $gravity               # GdkGravity $gravity
+)
   is native('gtk-3')
   is export
   { * }

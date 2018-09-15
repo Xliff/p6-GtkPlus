@@ -139,7 +139,7 @@ class GTK::Window is GTK::Bin {
         gtk_window_get_accept_focus($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($s);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
         gtk_window_set_accept_focus($!win, $s);
       }
     );
@@ -166,7 +166,7 @@ class GTK::Window is GTK::Bin {
           when GTK::Widget { .widget; }
           when GtkWidget   { $_;      }
           default {
-            die "Invalid type { .^name } passed to { ::?CLASS }.{ &^ROUTINE.name }";
+            die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
           }
         };
         gtk_window_set_attached_to($!win, $aw);
@@ -215,8 +215,14 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_focus($!win);
       },
-      STORE => sub ($, Int() $focus is copy) {
-        my gboolean $f = self.RESOLVE-BOOL($focus);
+      STORE => sub ($, $focus is copy) {
+        my $f = do given $focus {
+          when GTK::Widget { .widget };
+          when GtkWidget   { $_;     };
+          default {
+            die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
+          }
+        };
         gtk_window_set_focus($!win, $f);
       }
     );
@@ -264,7 +270,7 @@ class GTK::Window is GTK::Bin {
         gtk_window_get_has_resize_grip($!win);
       },
       STORE => sub ($, Int() $value is copy) {
-        my gboolean $v = self.RESOLVE-UINT($value)
+        my gboolean $v = self.RESOLVE-UINT($value);
         gtk_window_set_has_resize_grip($!win, $v);
       }
     );
@@ -356,8 +362,8 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         Bool( gtk_window_get_opacity($!win) );
       },
-      STORE => sub ($, $opacity is copy) {
-        my gboolean $o = self.RESOLVE-BOOL($opacity)
+      STORE => sub ($, Num() $opacity is copy) {
+        my gdouble $o = $opacity;
         gtk_window_set_opacity($!win, $o);
       }
     );
@@ -437,8 +443,15 @@ class GTK::Window is GTK::Bin {
       FETCH => sub ($) {
         gtk_window_get_titlebar($!win);
       },
-      STORE => sub ($, Str $titlebar is copy) {
-        gtk_window_set_titlebar($!win, $titlebar);
+      STORE => sub ($, $titlebar is copy) {
+        my $tb = do given $titlebar {
+          when GTK::Widget { .widget; }
+          when GtkWidget   { $_; }
+          default {
+            die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
+          }
+        };
+        gtk_window_set_titlebar($!win, $tb);
       }
     );
   }
@@ -449,13 +462,13 @@ class GTK::Window is GTK::Bin {
         gtk_window_get_transient_for($!win);
       },
       STORE => sub ($, $parent is copy) {
-        my $p = do given {
+        my $p = do given $parent {
           when GTK::Window { .window; }
           when GtkWindow   { $_;      }
           default {
             die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
           }
-        }
+        };
         gtk_window_set_transient_for($!win, $p);
       }
     );
@@ -514,12 +527,12 @@ class GTK::Window is GTK::Bin {
   ) {
     my @ui = ($button, $root_x, $root_y);
     my gint ($b, $rx, $ry) = self.RESOLVE-INT(@ui);
-    my guint $t = self.RESOLVE-UINT($timestamp
+    my guint $t = self.RESOLVE-UINT($timestamp);
     gtk_window_begin_move_drag($!win, $b, $rx, $ry, $t);
   }
 
   method begin_resize_drag (
-    Int() $edge,
+    GdkWindowEdge $edge,
     Int() $button,
     Int() $root_x,
     Int() $root_y,
@@ -527,9 +540,8 @@ class GTK::Window is GTK::Bin {
   ) {
     my @ui = ($button, $root_x, $root_y);
     my gint ($b, $rx, $ry) = self.RESOLVE-INT(@ui);
-    my @u = ($edge, $timestamp);
-    my guint ($e, $t) = self.RESOLVE-UINT(@u);
-    gtk_window_begin_resize_drag($!win, $e, $b, $rx, $ry, $t);
+    my guint $t = self.RESOLVE-UINT($timestamp);
+    gtk_window_begin_resize_drag($!win, $edge, $b, $rx, $ry, $t);
   }
 
   method close {
@@ -624,7 +636,7 @@ class GTK::Window is GTK::Bin {
   }
 
   method mnemonic_activate (guint $keyval, GdkModifierType $modifier) {
-    my @u = ($keyval, $modifier)
+    my @u = ($keyval, $modifier);
     my guint ($kv, $m) = self.RESOLVE-UINT(@u);
     gtk_window_mnemonic_activate($!win, $kv, $m);
   }
@@ -719,7 +731,7 @@ class GTK::Window is GTK::Bin {
     samewith($geometry_widget.widget, $geometry, $geom_mask);
   }
 
-  method set_has_user_ref_count (Int() $s) {
+  method set_has_user_ref_count (Int() $setting) {
     my gboolean $s = self.RESOLVE-BOOL($setting);
     gtk_window_set_has_user_ref_count($!win, $setting);
   }
