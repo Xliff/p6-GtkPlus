@@ -1,13 +1,13 @@
 use v6.c;
 
 use GTK::Application;
-#use GTK::Box;
-#use GTK::Calendar;
-#use GTK::Entry;
-#use GTK::Image;
-#use GTK::Label;
+use GTK::Box;
+use GTK::Calendar;
+use GTK::Entry;
+use GTK::Image;
+use GTK::Label;
 
-#use GTK::Compat::Types;
+use GTK::Compat::Types;
 
 my $a = GTK::Application.new( :title('org.genex.calendar_example') );
 
@@ -25,7 +25,12 @@ $a.activate.tap({
   ($entry.margin_left, $entry.margin_right) = (10, 10);
 
   sub format_date {
-    $calendar.get_date.map( *.fmt('%02d') ).join(' / ');
+    my guint $day;
+    my guint $month;
+    my guint $year;
+
+    $calendar.get_date($year, $month, $day);
+    ($year, $month, $day).map( *.fmt('%02d') ).join(' / ');
   };
 
   $calendar.day-selected.tap({

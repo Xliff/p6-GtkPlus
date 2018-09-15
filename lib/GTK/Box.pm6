@@ -16,18 +16,25 @@ class GTK::Box is GTK::Container {
 
   has GtkBox $!b;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Box');
+    $o;
+  }
+
   submethod BUILD(:$box) {
     given $box {
       when GtkWidget | GtkBox {
         self.setBox($box);
       }
       when GTK::Box {
-        warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
+        my $class = ::?CLASS.^name;
+        warn "To copy a { $class }, use { $class }.clone.";
       }
       default {
       }
     }
-    self.setType('GTK::Box');
   }
 
   multi method new-box (GtkOrientation $orientation, Int $spacing) {
@@ -165,7 +172,7 @@ class GTK::Box is GTK::Container {
   ) {
     self.push-start($child);
     self.SET-LATCH;
-    samewith($child.widget, $c, $expand, $fill, $padding);
+    samewith($child.widget, $expand, $fill, $padding);
   }
 
   multi method query_child_packing (
@@ -179,7 +186,7 @@ class GTK::Box is GTK::Container {
     my @ui = ($padding, $pack_type);
     my gboolean ($e, $f) = self.RESOLVE-BOOL(@b);
     my guint ($p, $pt) = self.RESOLVE-UINT(@ui);
-    gtk_box_query_child_packing($!b, $child, $e, $f, $p, $pt);
+    my $rc = gtk_box_query_child_packing($!b, $child, $e, $f, $p, $pt);
     ($expand, $fill, $padding, $pack_type) = ($e, $f, $p, $pt);
     $rc;
   }
@@ -194,8 +201,8 @@ class GTK::Box is GTK::Container {
   }
   multi method query_child_packing($child) {
     my $c = do given $child {
-      GTK::Widget { $_.widget; }
-      GtkWidget   { $_;        }
+      when GTK::Widget { .widget; }
+      when GtkWidget   { $_;      }
       default {
         die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
       }
@@ -206,7 +213,7 @@ class GTK::Box is GTK::Container {
   }
 
   multi method reorder_child (GtkWidget $child, Int() $position) {
-    my gint $p = self.RESOLVE-INT($positiion);
+    my gint $p = self.RESOLVE-INT($position);
     gtk_box_reorder_child($!b, $child, $p);
   }
   multi method reorder_child (GTK::Widget $child, Int() $position) {

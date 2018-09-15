@@ -9,23 +9,36 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 class GTK::Label is GTK::Widget {
-  has $!l;
+  has GtkLabel $!l;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Label');
+    $o;
+  }
 
   submethod BUILD(:$label) {
+    my $to-parent;
     given $label {
       when GtkLabel | GtkWidget {
         $!l = do {
-          when GtkLabel  { $label; }
-          when GtkWidget { nativecast(GtkLabel,$label); }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkLabel, $label);
+          }
+          when GtkLabel  {
+            $to-parent = nativecast(GtkWidget, $_);
+            $_;
+          }
         };
-        self.setWidget($label);
+        self.setWidget($to-parent);
       }
       when GTK::Label {
       }
       default {
       }
     }
-    self.setType('GTK::Label');
   }
 
   method new($text = Str) {

@@ -10,13 +10,16 @@ use GTK::Container;
 class GTK::Bin is GTK::Container {
   has GtkBin $!bin;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Bin');
+    $o;
+  }
+
   submethod BUILD(:$bin) {
     when GtkBin | GtkWidget {
-      $!bin = do given $bin {
-        when GtkBin { $bin; }
-        when GtkWidget { nativecast(GtkBin, $bin); }
-      };
-      self.setWidget($bin);
+      self.setBin($bin);
     }
     when GTK::Bin {
       warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
@@ -24,11 +27,22 @@ class GTK::Bin is GTK::Container {
     default {
       # Throw exception
     }
-    self.setType('GTK::Bin');
   }
 
   method setBin($bin) {
-    self.setContainer( $!bin = nativecast(GtkBin, $bin) );
+#    "setBin".say;
+    my $to-parent;
+    $!bin = do given $bin {
+      when GtkBin {
+        $to-parent = nativecast(GtkContainer, $bin);
+        $_;
+      }
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkBin, $bin);
+      }
+    };
+    self.setContainer($to-parent);
   }
 
   multi method get_child {

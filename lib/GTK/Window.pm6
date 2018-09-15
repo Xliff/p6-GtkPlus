@@ -15,25 +15,30 @@ use GTK::Raw::Window;
 class GTK::Window is GTK::Bin {
   has GtkWindow $!win;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Window');
+    $o;
+  }
+
   submethod BUILD(:$window) {
     given $window {
       when GtkWindow | GtkWidget {
         self.setWindow($window);
       }
       when GTK::Window {
-        warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
       }
       default {
       }
     }
-    self.setType('GTK::Window');
   }
 
   multi method new (
     GtkWindowType $type,
-                 :$title = 'Window',
-                 :$width  = 200,
-                 :$height = 200
+    Str :$title = 'Window',
+    Int :$width  = 200,
+    Int :$height = 200
   ) {
     my $window = gtk_window_new($type);
     gtk_window_set_title($window, $title);
@@ -56,8 +61,8 @@ class GTK::Window is GTK::Bin {
         $to-parent = nativecast(GtkBin, $window);
         $_;
       }
-      self.setBin($to-parent);
     }
+    self.setBin($to-parent);
   }
 
   method window {

@@ -11,18 +11,34 @@ use GTK::Widget;
 class GTK::Image is GTK::Widget {
   has GtkImage $!i;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Image');
+    $o;
+  }
+
   submethod BUILD(:$image) {
+    my $to-parent;
     given $image {
       when GtkImage | GtkWidget {
-        $!i = nativecast(GtkImage, $image);
-        self.setWidget($image);
+        $!i = do {
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkImage, $_);
+          }
+          when GtkImage {
+            $to-parent = nativecast(GtkWidget, $_);
+            $_;
+          }
+        }
+        self.setWidget($to-parent);
       }
       when GTK::Image {
       }
       default {
       }
     }
-    self.setType('GTK::Image');
   }
 
   method new () {

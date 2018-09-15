@@ -13,6 +13,8 @@ use GTK::Roles::Signals;
 class GTK::Widget {
   also does GTK::Roles::Signals;
 
+  has $!type;
+
   has GtkWidget $!w;
 
   submethod BUILD (:$widget) {
@@ -23,7 +25,6 @@ class GTK::Widget {
       default {
       }
     }
-    self.setType('GTK::Widget');
   }
 
   submethod DESTROY {
@@ -41,19 +42,23 @@ class GTK::Widget {
   }
 
   method setWidget($widget) {
+#    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
     $!w = do given $widget {
-      when GtkWidget { $widget }
+      when GtkWidget   { $_; }
       # This will go away once proper pass-down rules have been established.
-      default        { nativecast(GtkWidget, $widget); }
+      default {
+#        say "Setting from { .^name }";
+         die "GTK::Widget initialized from unexpected source!";
+      }
     };
   }
 
   # cw: This is a HACK, but it should work with careful use.
-  method !CALLING-METHOD($nf = 1) {
+  method !CALLING-METHOD($nf = 2) {
     my $c = callframe($nf).code;
     $c ~~ Routine ??
-      "{ $c.name }.{ $c.package.^name }"
+      "{ $c.package.^name }.{ $c.name }"
       !!
       die "Frame not a method or code!";
   }
@@ -120,7 +125,7 @@ class GTK::Widget {
   }
 
   method setType($typeName) {
-    self.IS_PROTECTED;
+    self.IS-PROTECTED;
 
     my $oldType = self.getType;
     with $oldType {
@@ -129,7 +134,7 @@ class GTK::Widget {
     }
 
     g_object_set_string($!w, 'GTKPLUS-Type', $typeName)
-      unless $oldType ne $typeName;
+      unless ($oldType // '') ne $typeName;
   }
 
   # Static methods

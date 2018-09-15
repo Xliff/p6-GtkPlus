@@ -11,6 +11,13 @@ use GTK::;
 class GTK:: is GTK:: {
   has Gtk $!c;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    self.setType('GTK::');
+    $o;
+  }
+
   submethod BUILD(:$ ) {
     my $to-parent;
     given $ {
@@ -32,7 +39,6 @@ class GTK:: is GTK:: {
       default {
       }
     }
-    self.setType('GTK::');
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

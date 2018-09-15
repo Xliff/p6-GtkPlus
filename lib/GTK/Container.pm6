@@ -18,6 +18,13 @@ class GTK::Container is GTK::Widget {
   has @!start;
   has @!end;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Container');
+    $o;
+  }
+
   submethod BUILD (:$container) {
     given $container {
       when GtkContainer | GtkWidget {
@@ -28,7 +35,6 @@ class GTK::Container is GTK::Widget {
       default {
       }
     }
-    self.setType('GTK::Container');
   }
 
   submethod DESTROY {

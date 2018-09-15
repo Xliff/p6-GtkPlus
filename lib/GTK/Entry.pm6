@@ -12,6 +12,13 @@ use GTK::EntryBuffer;
 class GTK::Entry is GTK::Widget {
   has GtkEntry $!e;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Entry');
+    $o;
+  }
+
   submethod BUILD(:$entry) {
     given $entry {
       when GtkEntry | GtkWidget {
@@ -22,12 +29,11 @@ class GTK::Entry is GTK::Widget {
       default {
       }
     }
-    self.setType('GTK::Entry');
   }
 
   method new {
     my $entry = gtk_entry_new();
-    self.bless( :$entry );
+    self.bless(:$entry);
   }
 
   multi method new_with_buffer (GTK::EntryBuffer $b) {
@@ -35,19 +41,19 @@ class GTK::Entry is GTK::Widget {
   }
   multi method new_with_buffer (GtkEntryBuffer $b) {
     my $entry = gtk_entry_new_with_buffer($b);
-    self.bless( :$entry );
+    self.bless(:$entry);
   }
 
   method setEntry($entry) {
     my $to-parent;
-    $!e = do {
+    $!e = do given $entry {
       when GtkWidget {
         $to-parent = $_;
-        nativecast(GtkEntry, $entry);
+        nativecast(GtkEntry, $_);
       }
       when GtkEntry {
         $to-parent = nativecast(GtkWidget, $_);
-        $entry;
+        $_;
       }
     };
     self.setWidget($to-parent);

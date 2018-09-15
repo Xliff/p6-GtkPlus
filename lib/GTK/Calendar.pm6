@@ -11,6 +11,13 @@ use GTK::Widget;
 class GTK::Calendar is GTK::Widget {
   has GtkCalendar $!cal;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Calendar');
+    $o;
+  }
+
   submethod BUILD(:$calendar) {
     my $to-parent;
     given $calendar {
@@ -32,7 +39,6 @@ class GTK::Calendar is GTK::Widget {
       default {
       }
     }
-    self.setType('GTK::Calendar');
   }
 
   method new {
