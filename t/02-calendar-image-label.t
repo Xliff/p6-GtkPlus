@@ -25,12 +25,7 @@ $a.activate.tap({
   ($entry.margin_left, $entry.margin_right) = (10, 10);
 
   sub format_date {
-    my guint $day;
-    my guint $month;
-    my guint $year;
-
-    $calendar.get_date($year, $month, $day);
-    ($year, $month, $day).map( *.fmt('%02d') ).join(' / ');
+    $calendar.get_date.map( *.fmt('%02d') ).join(' / ');
   };
 
   $calendar.day-selected.tap({

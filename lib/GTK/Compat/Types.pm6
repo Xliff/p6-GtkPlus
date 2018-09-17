@@ -336,6 +336,7 @@ class GParamSpec            is repr('CPointer') is export { }
 class GDestroyNotify        is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
+class GQuark                is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }
 class GdkDevice             is repr('CPointer') is export { }

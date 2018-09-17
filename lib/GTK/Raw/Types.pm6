@@ -582,9 +582,10 @@ class GtkButton           is repr('CPointer') does GTK::Roles::Pointers is expor
 class GtkCalendar         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCallback         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellArea         is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkColorChooser     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkClipboard        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkColorChooser     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkContainer        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCSSProvider      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDragContext      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntry            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryBuffer      is repr('CPointer') does GTK::Roles::Pointers is export { }

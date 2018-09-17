@@ -31,25 +31,41 @@ sub gtk_css_provider_get_type ()
   is export
   { * }
 
-sub gtk_css_provider_load_from_data (GtkCssProvider $css_provider, gchar $data, gssize $length, GError $error)
+sub gtk_css_provider_load_from_data (
+  GtkCssProvider $css_provider,
+  gchar $data,
+  gssize $length,
+  GError $error
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_css_provider_load_from_file (GtkCssProvider $css_provider, GFile $file, GError $error)
+sub gtk_css_provider_load_from_file (
+  GtkCssProvider $css_provider,
+  GFile $file,
+  GError $error
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_css_provider_load_from_path (GtkCssProvider $css_provider, gchar $path, GError $error)
+sub gtk_css_provider_load_from_path (
+  GtkCssProvider $css_provider,
+  gchar $path,
+  GError $error
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_css_provider_load_from_resource (GtkCssProvider $css_provider, gchar $resource_path)
+sub gtk_css_provider_load_from_resource (
+  GtkCssProvider $css_provider,
+  gchar $resource_path
+)
   is native('gtk-3')
   is export
   { * }

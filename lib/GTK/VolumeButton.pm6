@@ -11,21 +11,34 @@ use GTK::ScaleButton;
 class GTK::VolumeButton is GTK::ScaleButton {
   has GtkVolumeButton $!vb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::VolumeButton');
+    $o;
+  }
+
   submethod BUILD(:$button) {
     given $button {
+      my $to-parent;
       when GtkVolumeButton | GtkWidget {
         $!vb = do {
-          when GtkWidget       { nativecast(GtkVolumeButton, $button); }
-          when GtkVolumeButton { $button; }
+          when GtkWidget       {
+            $to-parent = $_;
+            nativecast(GtkVolumeButton, $_);
+          }
+          when GtkVolumeButton {
+            $to-parent = nativecast(GtkScaleButton, $_);
+            $_;
+          }
         }
-        self.setScaleButton($button);
+        self.setScaleButton($to-parent);
       }
       when GTK::VolumeButton {
       }
       default {
       }
     }
-    self.setType('GTK::VolumeButton');
   }
 
   method new {

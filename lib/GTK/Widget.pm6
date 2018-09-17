@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 
 use GTK::Raw::Subs;
@@ -12,8 +13,6 @@ use GTK::Roles::Signals;
 
 class GTK::Widget {
   also does GTK::Roles::Signals;
-
-  has $!type;
 
   has GtkWidget $!w;
 
@@ -116,8 +115,10 @@ class GTK::Widget {
 
   multi method RESOLVE-GSTRV(Str @ri) {
     self.IS-PROTECTED;
-    @ri.push: Str unless @ri[*-1] =:= Str;
-    @ri;
+    my CArray[Str] $gs = CArray[Str].new;
+    $gs[$++] = $_ for @ri;
+    $gs[$gs.elems] = Str unless $gs[*-1] =:= Str;
+    $gs;
   }
   multi method RESOLVE-GSTRV(Str $ri) {
     self.IS-PROTECTED;
@@ -1058,7 +1059,10 @@ class GTK::Widget {
     gtk_widget_has_screen($!w);
   }
 
-  method override_background_color (GtkStateFlags $state, GdkRGBA $color) {
+  method override_background_color (
+    GtkStateFlags $state,
+    GTK::Compat::RGBA $color
+  ) {
     gtk_widget_override_background_color($!w, $state, $color);
   }
 
@@ -1082,7 +1086,10 @@ class GTK::Widget {
     gtk_widget_get_frame_clock($!w);
   }
 
-  method get_preferred_size (GtkRequisition $minimum_size, GtkRequisition $natural_size) {
+  method get_preferred_size (
+    GtkRequisition $minimum_size,
+    GtkRequisition $natural_size
+  ) {
     gtk_widget_get_preferred_size($!w, $minimum_size, $natural_size);
   }
 
@@ -1098,7 +1105,10 @@ class GTK::Widget {
     gtk_widget_size_request($!w, $requisition);
   }
 
-  method override_cursor (GdkRGBA $cursor, GdkRGBA $secondary_cursor) {
+  method override_cursor (
+    GTK::Compat::RGBA $cursor,
+    GTK::Compat::RGBA $secondary_cursor
+  ) {
     gtk_widget_override_cursor($!w, $cursor, $secondary_cursor);
   }
 
@@ -1138,7 +1148,7 @@ class GTK::Widget {
     gtk_widget_send_expose($!w, $event);
   }
 
-  method override_symbolic_color (gchar $name, GdkRGBA $color) {
+  method override_symbolic_color (gchar $name, GTK::Compat::RGBA $color) {
     gtk_widget_override_symbolic_color($!w, $name, $color);
   }
 
@@ -1194,7 +1204,7 @@ class GTK::Widget {
     gtk_widget_is_ancestor($!w, $ancestor);
   }
 
-  method override_color (GtkStateFlags $state, GdkRGBA $color) {
+  method override_color (GtkStateFlags $state, GTK::Compat::RGBA $color) {
     gtk_widget_override_color($!w, $state, $color);
   }
 
@@ -1317,7 +1327,14 @@ class GTK::Widget {
     gint $dest_x,
     gint $dest_y
   ) {
-    gtk_widget_translate_coordinates($src_widget, $dest_widget, $src_x, $src_y, $dest_x, $dest_y);
+    gtk_widget_translate_coordinates(
+      $src_widget,
+      $dest_widget,
+      $src_x,
+      $src_y,
+      $dest_x,
+      $dest_y
+    );
   }
 
   method style_get_property (gchar $property_name, GValue $value) {
@@ -1369,8 +1386,17 @@ class GTK::Widget {
     gtk_widget_init_template($!w);
   }
 
-  method get_preferred_width_for_height (gint $height, gint $minimum_width, gint $natural_width) {
-    gtk_widget_get_preferred_width_for_height($!w, $height, $minimum_width, $natural_width);
+  method get_preferred_width_for_height (
+    gint $height,
+    gint $minimum_width,
+    gint $natural_width
+  ) {
+    gtk_widget_get_preferred_width_for_height(
+      $!w,
+      $height,
+      $minimum_width,
+      $natural_width
+    );
   }
 
   method get_template_child (GType $widget_type, gchar $name) {
@@ -1397,7 +1423,10 @@ class GTK::Widget {
     gtk_widget_list_accel_closures($!w);
   }
 
-  method size_allocate_with_baseline (GtkAllocation $allocation, gint $baseline) {
+  method size_allocate_with_baseline (
+    GtkAllocation $allocation,
+    gint $baseline
+  ) {
     gtk_widget_size_allocate_with_baseline($!w, $allocation, $baseline);
   }
 
@@ -1505,8 +1534,21 @@ class GTK::Widget {
     gtk_widget_thaw_child_notify($!w);
   }
 
-  method add_accelerator (gchar $accel_signal, GtkAccelGroup $accel_group, guint $accel_key, GdkModifierType $accel_mods, GtkAccelFlags $accel_flags) {
-    gtk_widget_add_accelerator($!w, $accel_signal, $accel_group, $accel_key, $accel_mods, $accel_flags);
+  method add_accelerator (
+    gchar $accel_signal,
+    GtkAccelGroup $accel_group,
+    guint $accel_key,
+    GdkModifierType $accel_mods,
+    GtkAccelFlags $accel_flags
+  ) {
+    gtk_widget_add_accelerator(
+      $!w,
+      $accel_signal,
+      $accel_group,
+      $accel_key,
+      $accel_mods,
+      $accel_flags
+    );
   }
 
   method size_allocate (GtkAllocation $allocation) {
@@ -1541,8 +1583,17 @@ class GTK::Widget {
     gtk_widget_get_accessible($!w);
   }
 
-  method get_preferred_height_for_width (gint $width, gint $minimum_height, gint $natural_height) {
-    gtk_widget_get_preferred_height_for_width($!w, $width, $minimum_height, $natural_height);
+  method get_preferred_height_for_width (
+    gint $width,
+    gint $minimum_height,
+    gint $natural_height
+  ) {
+    gtk_widget_get_preferred_height_for_width(
+      $!w,
+      $width,
+      $minimum_height,
+      $natural_height
+    );
   }
 
   method list_mnemonic_labels {
@@ -1593,7 +1644,11 @@ class GTK::Widget {
     gtk_widget_unrealize($!w);
   }
 
-  method add_tick_callback (GtkTickCallback $callback, gpointer $user_data, GDestroyNotify $notify) {
+  method add_tick_callback (
+    GtkTickCallback $callback,
+    gpointer $user_data,
+    GDestroyNotify $notify
+  ) {
     gtk_widget_add_tick_callback($!w, $callback, $user_data, $notify);
   }
 

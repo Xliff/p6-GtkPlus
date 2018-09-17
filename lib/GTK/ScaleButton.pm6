@@ -11,13 +11,16 @@ use GTK::Button;
 class GTK::ScaleButton is GTK::Button {
   has GtkScaleButton $!sb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ScaleButton');
+    $o;
+  }
+
   submethod BUILD(:$button) {
     given $button {
       when GtkScaleButton | GtkWidget {
-        $!sb = do when {
-          GtkWidget      { nativecast(GtkScaleButton, $button); }
-          GtkScaleButton { $button; }
-        };
         self.setScaleButton($button);
       }
       when GTK::ScaleButton {
@@ -25,17 +28,28 @@ class GTK::ScaleButton is GTK::Button {
       default {
       }
     }
-    self.setType('GTK::ScaleButton');
   }
 
-  method new (gdouble $min, gdouble $max, gdouble $step, gchar $icons) {
-    $button - gtk_scale_button_new($min, $max, $step, $icons);
+  method new (Num() $min, Num() $max, Num() $step, Str @icons) {
+    my gdouble ($mn, $mx, $s, $i) = ($min, $max, $step);
+    my GStrV $i = self.RESOLVE-GSTRV(@icons);
+    $button = gtk_scale_button_new($min, $max, $step, $i);
     self.bless(:$button);
   }
 
   method setScaleButton($button) {
-    $!sb = nativecast(GtkScaleButton, $button);
-    self.setButton($button);
+    my $to-parent;
+    $!sb = do when given $button {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkScaleButton, $_);
+      }
+      when GtkScaleButton {
+        $to-parent = nativecast(GtkButton, $_);
+        $_;
+      }
+    };
+    self.setButton($to-parent);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -58,17 +72,9 @@ class GTK::ScaleButton is GTK::Button {
       FETCH => sub ($) {
         GtkAdjustment( gtk_scale_button_get_adjustment($!sb) );
       },
-      STORE => sub ($, $adjustment is copy) {
-        my uint32 $a = do given $adjustment {
-          when GtkAdjustment { $_.Int;           }
-          when Int           { $_ +& 0xffff;     }
-          when IntStr        { $_.Int +& 0xffff; }
-          when uint32        { $_;               }
-          default {
-            die "Invalid type ({ $_.^name }) detected when attempting to set GTK::ScaleButton.adjustment.";
-          }
-        }
-        gtk_scale_button_set_adjustment($!sb, $adjustment);
+      STORE => sub ($, Int() $adjustment is copy) {
+        my uint32 $a = self.RESOLVE-UINT($adjustment);
+        gtk_scale_button_set_adjustment($!sb, $a);
       }
     );
   }
@@ -86,19 +92,19 @@ class GTK::ScaleButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_minus_button () {
+  method get_minus_button {
     gtk_scale_button_get_minus_button($!sb);
   }
 
-  method get_plus_button () {
+  method get_plus_button {
     gtk_scale_button_get_plus_button($!sb);
   }
 
-  method get_popup () {
+  method get_popup {
     gtk_scale_button_get_popup($!sb);
   }
 
-  method get_type () {
+  method get_type {
     gtk_scale_button_get_type();
   }
 
