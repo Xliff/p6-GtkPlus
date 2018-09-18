@@ -572,6 +572,14 @@ our enum GtkCornerType is export <
   GTK_CORNER_BOTTOM_RIGHT
 >;
 
+our enum GtkStyleProviderPriority is export (
+  GTK_STYLE_PROVIDER_PRIORITY_FALLBACK     => 1,
+  GTK_STYLE_PROVIDER_PRIORITY_THEME        => 200,
+  GTK_STYLE_PROVIDER_PRIORITY_SETTINGS     => 400,
+  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION  => 600,
+  GTK_STYLE_PROVIDER_PRIORITY_USER         => 800
+);
+
 class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAllocation       is repr('CPointer') does GTK::Roles::Pointers is export { }

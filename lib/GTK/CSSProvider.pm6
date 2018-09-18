@@ -7,19 +7,30 @@ use GTK::Raw::CSSProvider;
 use GTK::Raw::Types;
 
 class GTK::CSSProvider {
-  has  $!css;
+  has GtkCSSProvider $!css;
 
-  submethod BUILD(:$provider) {
+  submethod BUILD(
+    :$provider,
+    :$priority
+  ) {
+    my uint32 $p = do given $priority {
+      when GtkStyleProviderPriority { .Int; }
+      when Int                      { $_;   }
+      when not .defined             { GTK_STYLE_PROVIDER_PRIORITY_APPLICATION.Int; }
+      default {
+        die "Invalid type passed as \$priority: { .^name }. Must be Int or GtkStyleProviderPriority";
+      }
+    } +& 0xffff;
+
     $!css = $provider;
     my $display = gdk_display_get_default();
     my $screen = gdk_display_get_default_screen($display);
-    my uint32 $p = GTK_STYLE_PROVIDER_PRIORITY_APPLICATION.Int;
     gtk_style_context_add_provider_for_screen($screen, $!css, $p);
   }
 
-  method new {
+  method new(:$priority) {
     my $provider = gtk_css_provider_new();
-    self.bless(:$provider);
+    self.bless(:$provider, :$priority);
   }
 
 
@@ -39,8 +50,8 @@ class GTK::CSSProvider {
   #   gtk_css_provider_get_default();
   # }
 
-  method get_named (gchar $variant) {
-    gtk_css_provider_get_named($!css, $variant);
+  method get_named (gchar $name, gchar $variant) {
+    gtk_css_provider_get_named($name, $variant);
   }
 
   method get_type {
@@ -52,7 +63,7 @@ class GTK::CSSProvider {
     Int() $length = -1,
     GError $error = GError
   ) {
-    my guint $l = $length;
+    my gssize $l = $length;
     gtk_css_provider_load_from_data($!css, $data, $l, $error);
   }
 

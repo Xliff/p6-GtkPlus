@@ -38,6 +38,7 @@ class GTK::Application {
       $!window = GTK::Window.new( :window( gtk_application_window_new($app) ) );
 
       self.window.title = $title;
+      self.window.name = 'application';
       self.window.set_default_size($width, $height);
     });
   }
@@ -172,8 +173,9 @@ class GTK::Application {
     gtk_application_get_type();
   }
 
-  method get_window_by_id (guint $id) {
-    gtk_application_get_window_by_id($!app, $id);
+  method get_window_by_id (Int() $id) {
+    my guint $i = GTK::Window.RESOLVE-UINT($id);
+    gtk_application_get_window_by_id($!app, $i);
   }
 
   method get_windows {
@@ -181,15 +183,27 @@ class GTK::Application {
   }
 
   # cw: Variant to accept a GTK::Window
-  multi method inhibit (GtkWindow $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
-    gtk_application_inhibit($!app, $window, $flags, $reason);
+  multi method inhibit (
+    GtkWindow $window,
+    Int() $flags,               # GtkApplicationInhibitFlags $flags,
+    gchar $reason
+  ) {
+    my guint $f = GTK::Window.RESOLVE-UINT($flags);
+    gtk_application_inhibit($!app, $window, $f, $reason);
   }
-  multi method inhibit (GTK::Window $window, GtkApplicationInhibitFlags $flags, gchar $reason) {
+  multi method inhibit (
+    GTK::Window $window,
+    Int() $flags,               # GtkApplicationInhibitFlags $flags,
+    gchar $reason
+  ) {
     samewith($window.window, $flags, $reason);
   }
 
-  method is_inhibited (GtkApplicationInhibitFlags $flags) {
-    gtk_application_is_inhibited($!app, $flags);
+  method is_inhibited (
+    Int() $flags                # GtkApplicationInhibitFlags $flags
+  ) {
+    my guint $f = GTK::Window.RESOLVE-UINT($flags);
+    gtk_application_is_inhibited($!app, $f);
   }
 
   method list_action_descriptions {
@@ -204,12 +218,16 @@ class GTK::Application {
     gtk_application_remove_accelerator($!app, $action_name, $parameter);
   }
 
-  method remove_window (GtkWindow $window) {
+  multi method remove_window (GtkWindow $window) {
     gtk_application_remove_window($!app, $window);
   }
+  multi method remove_window (GTK::Window $window) {
+    samewith($window.window);
+  }
 
-  method uninhibit (guint $cookie) {
-    gtk_application_uninhibit($!app, $cookie);
+  method uninhibit (Int() $cookie) {
+    my guint $c = GTK::Window.RESOLVE-UINT($cookie);
+    gtk_application_uninhibit($!app, $c);
   }
 
 }

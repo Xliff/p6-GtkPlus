@@ -7,14 +7,6 @@ use GTK::Raw::Types;
 
 unit package GTK::Raw::CSSProvider;
 
-our enum GtkStyleProviderPriority is export (
-  GTK_STYLE_PROVIDER_PRIORITY_FALLBACK     => 1,
-  GTK_STYLE_PROVIDER_PRIORITY_THEME        => 200,
-  GTK_STYLE_PROVIDER_PRIORITY_SETTINGS     => 400,
-  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION  => 600,
-  GTK_STYLE_PROVIDER_PRIORITY_USER         => 800
-);
-
 sub gdk_display_get_default()
   returns GdkDisplay
   is native('gdk-3')
