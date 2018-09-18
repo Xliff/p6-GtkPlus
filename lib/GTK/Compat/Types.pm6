@@ -18,6 +18,7 @@ constant gfloat        is export := num32;
 constant gint          is export := int32;
 constant gpointer      is export := OpaquePointer;
 constant gsize         is export := uint64;
+constant gssize        is export := int64;
 constant GType         is export := uint32;
 constant guint         is export := uint32;
 constant guint16       is export := uint16;
@@ -360,8 +361,8 @@ class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }
 class GdkPixbufAnimation    is repr('CPointer') is export { }
 class GdkRectangle          is repr('CPointer') is export { }
-class GdkRGBA               is repr('CPointer') is export { }
 class GdkScreen             is repr('CPointer') is export { }
+class GdkStyleProvider      is repr('CPointer') is export { }
 class GdkTouchEvent         is repr('CPointer') is export { }
 # Probably should be its own class
 class GtkTreeModel          is repr('CPointer') is export { }

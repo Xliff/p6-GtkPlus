@@ -4,22 +4,22 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-class GdkRGBA is repr('CStruct') is export {
+class GTK::Compat::RGBA is repr('CStruct') is export {
   has gdouble $.red;
   has gdouble $.green;
   has gdouble $.blue;
   has gdouble $.alpha;
 
   method copy {
-    gdk_rgba_copy($!c);
+    gdk_rgba_copy(self);
   }
 
-  method equal (GdkRGBA $p2) {
-    Bool( gdk_rgba_equal($!c, $p2) );
+  method equal (GTK::Compat::RGBA $p2) {
+    Bool( gdk_rgba_equal(self, $p2) );
   }
 
   method free {
-    gdk_rgba_free($!c);
+    gdk_rgba_free(self);
   }
 
   method get_type {
@@ -27,36 +27,36 @@ class GdkRGBA is repr('CStruct') is export {
   }
 
   method hash {
-    gdk_rgba_hash($!c);
+    gdk_rgba_hash(self);
   }
 
   method parse (gchar $spec) {
-    Bool( gdk_rgba_parse($!c, $spec) );
+    Bool( gdk_rgba_parse(self, $spec) );
   }
 
   method to_string {
-    gdk_rgba_to_string($!c);
+    gdk_rgba_to_string(self);
   }
 
 }
 
-sub infix:<eqv> (GdkRGBA $a, GdkRGBA $b) {
+sub infix:<eqv> (GTK::Compat::RGBA $a, GTK::Compat::RGBA $b) {
   $a.equal($b);
 }
 
-sub gdk_rgba_copy (GdkRGBA $rgba)
-  returns GdkRGBA
+sub gdk_rgba_copy (GTK::Compat::RGBA $rgba)
+  returns GTK::Compat::RGBA
   is native('gtk-3')
   is export
   { * }
 
-sub gdk_rgba_equal (gconstpointer $p1, gconstpointer $p2)
+sub gdk_rgba_equal (GTK::Compat::RGBA $p1, GTK::Compat::RGBA $p2)
   returns uint32
   is native('gdk-3')
   is export
   { * }
 
-sub gdk_rgba_free (GdkRGBA $rgba)
+sub gdk_rgba_free (GTK::Compat::RGBA $rgba)
   is native('gdk-3')
   is export
   { * }
@@ -67,19 +67,19 @@ sub gdk_rgba_get_type ()
   is export
   { * }
 
-sub gdk_rgba_hash (gconstpointer $p)
+sub gdk_rgba_hash (GTK::Compat::RGBA $p)
   returns guint
   is native('gdk-3')
   is export
   { * }
 
-sub gdk_rgba_parse (GdkRGBA $rgba, gchar $spec)
+sub gdk_rgba_parse (GTK::Compat::RGBA $rgba, gchar $spec)
   returns uint32
   is native('gdk-3')
   is export
   { * }
 
-sub gdk_rgba_to_string (GdkRGBA $rgba)
+sub gdk_rgba_to_string (GTK::Compat::RGBA $rgba)
   returns Str
   is native('gdk-3')
   is export

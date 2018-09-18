@@ -2,22 +2,35 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 unit package GTK::Raw::Widget;
 
-sub gtk_widget_set_device_events (GtkWidget $widget, GdkDevice $device, GdkEventMask $events)
+sub gtk_widget_set_device_events (
+  GtkWidget $widget,
+  GdkDevice $device,
+  guint $events                 # GdkEventMask $events
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_widget_style_get_valist (GtkWidget $widget, gchar $first_property_name, va_list $var_args)
+sub gtk_widget_style_get_valist (
+  GtkWidget $widget,
+  gchar $first_property_name,
+  va_list $var_args
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_widget_get_allocated_size (GtkWidget $widget, GtkAllocation $allocation, int32 $baseline)
+sub gtk_widget_get_allocated_size (
+  GtkWidget $widget,
+  GtkAllocation $allocation,
+  int32 $baseline
+)
   is native('gtk-3')
   is export
   { * }
@@ -28,7 +41,11 @@ sub gtk_widget_has_grab (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_override_cursor (GtkWidget $widget, GdkRGBA $cursor, GdkRGBA $secondary_cursor)
+sub gtk_widget_override_cursor (
+  GtkWidget $widget,
+  GTK::Compat::RGBA $cursor,
+  GTK::Compat::RGBA $secondary_cursor
+)
   is native('gtk-3')
   is export
   { * }
@@ -123,7 +140,12 @@ sub gtk_widget_get_path (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_remove_accelerator (GtkWidget $widget, GtkAccelGroup $accel_group, guint $accel_key, GdkModifierType $accel_mods)
+sub gtk_widget_remove_accelerator (
+  GtkWidget $widget,
+  GtkAccelGroup $accel_group,
+  guint $accel_key,
+  uint32 $accel_mods            # GdkModifierType $accel_mods
+)
   returns uint32
   is native('gtk-3')
   is export
@@ -340,7 +362,7 @@ sub gtk_widget_get_ancestor (GtkWidget $widget, GType $widget_type)
   { * }
 
 sub gtk_widget_get_modifier_mask (GtkWidget $widget, GdkModifierIntent $intent)
-  returns GdkModifierType
+  returns uint32 # GdkModifierType
   is native('gtk-3')
   is export
   { * }
@@ -468,7 +490,10 @@ sub gtk_widget_list_action_prefixes (GtkWidget $widget)
   { * }
 
 # GtkStateFlag $state
-sub gtk_widget_override_color (GtkWidget $widget,uint32 $state, GdkRGBA $color)
+sub gtk_widget_override_color (
+  GtkWidget $widget,uint32 $state,
+  GTK::Compat::RGBA $color
+)
   is native('gtk-3')
   is export
   { * }
@@ -520,7 +545,11 @@ sub gtk_widget_register_window (GtkWidget $widget, GdkWindow $window)
   is export
   { * }
 
-sub gtk_widget_add_device_events (GtkWidget $widget, GdkDevice $device, GdkEventMask $events)
+sub gtk_widget_add_device_events (
+  GtkWidget $widget,
+  GdkDevice $device,
+  guint $events                 # GdkEventMask $events
+)
   is native('gtk-3')
   is export
   { * }
@@ -589,7 +618,11 @@ sub gtk_widget_draw (GtkWidget $widget, cairo_t $cr)
   is export
   { * }
 
-sub gtk_widget_override_symbolic_color (GtkWidget $widget, gchar $name, GdkRGBA $color)
+sub gtk_widget_override_symbolic_color (
+  GtkWidget $widget,
+  gchar $name,
+  GTK::Compat::RGBA $color
+)
   is native('gtk-3')
   is export
   { * }
@@ -618,7 +651,7 @@ sub gtk_widget_reset_style (GtkWidget $widget)
   { * }
 
 sub gtk_widget_get_device_events (GtkWidget $widget, GdkDevice $device)
-  returns GdkEventMask
+  returns uint32 # GdkEventMask
   is native('gtk-3')
   is export
   { * }
@@ -698,7 +731,11 @@ sub gtk_widget_can_activate_accel (GtkWidget $widget, guint $signal_id)
   { * }
 
 # GtkStateFlags $state
-sub gtk_widget_override_background_color (GtkWidget $widget, uint32 $state, GdkRGBA $color)
+sub gtk_widget_override_background_color (
+  GtkWidget $widget,
+  uint32 $state,
+  GTK::Compat::RGBA $color
+)
   is native('gtk-3')
   is export
   { * }
@@ -804,7 +841,14 @@ sub gtk_widget_send_expose (GtkWidget $widget, GdkEvent $event)
   { * }
 
 # GtkAccelGroup $accel_group
-sub gtk_widget_add_accelerator (GtkWidget $widget, gchar $accel_signal, GtkAccelGroup $accel_group, guint $accel_key, GdkModifierType $accel_mods, uint32 $accel_flags)
+sub gtk_widget_add_accelerator (
+  GtkWidget $widget,
+  gchar $accel_signal,
+  GtkAccelGroup $accel_group,
+  guint $accel_key,
+  uint32 $accel_mods,           # GdkModifierType $accel_mods,
+  uint32 $accel_flags
+)
   is native('gtk-3')
   is export
   { * }

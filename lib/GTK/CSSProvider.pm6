@@ -4,13 +4,17 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Raw::CSSProvider;
-use GTK::Raw::Types
+use GTK::Raw::Types;
 
 class GTK::CSSProvider {
-  has GtkProvider $!css;
+  has  $!css;
 
   submethod BUILD(:$provider) {
     $!css = $provider;
+    my $display = gdk_display_get_default();
+    my $screen = gdk_display_get_default_screen($display);
+    my uint32 $p = GTK_STYLE_PROVIDER_PRIORITY_APPLICATION.Int;
+    gtk_style_context_add_provider_for_screen($screen, $!css, $p);
   }
 
   method new {
@@ -27,13 +31,13 @@ class GTK::CSSProvider {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method error_quark {
-    gtk_css_provider_error_quark($!css);
-  }
+  # method error_quark {
+  #   gtk_css_provider_error_quark($!css);
+  # }
 
-  method get_default {
-    gtk_css_provider_get_default($!css);
-  }
+  # method get_default {
+  #   gtk_css_provider_get_default();
+  # }
 
   method get_named (gchar $variant) {
     gtk_css_provider_get_named($!css, $variant);
@@ -43,7 +47,11 @@ class GTK::CSSProvider {
     gtk_css_provider_get_type();
   }
 
-  method load_from_data (gchar $data, Int() $length, GError $error) {
+  method load_from_data (
+    gchar $data,
+    Int() $length = -1,
+    GError $error = GError
+  ) {
     my guint $l = $length;
     gtk_css_provider_load_from_data($!css, $data, $l, $error);
   }

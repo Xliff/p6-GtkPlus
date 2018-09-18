@@ -2,8 +2,9 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::RGBA :EXPORT;
+use GTK::Compat::RGBA;
 use GTK::Compat::Types;
+
 use GTK::Raw::ColorChooser;
 use GTK::Raw::Label;
 use GTK::Raw::Types;
@@ -34,7 +35,7 @@ class GTK::ColorChooser is GTK::Box {
             $_;
           }
         };
-        self.setBox($chooser);
+        self.setBox($to-parent);
       }
       when GTK::ColorChooser {
       }
@@ -69,7 +70,7 @@ class GTK::ColorChooser is GTK::Box {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_palette (
-    Int() $orientation          # GtkOrientation $orientation,
+    Int() $orientation,
     Int() $colors_per_line,
     Int() $n_colors,
     GTK::Compat::RGBA $colors
@@ -80,8 +81,13 @@ class GTK::ColorChooser is GTK::Box {
     gtk_color_chooser_add_palette($!cc, $o, $cpl, $nc, $colors);
   }
 
-  method get_rgba (GTK::Compat::RGBA $color) {
+  multi method get_rgba (GTK::Compat::RGBA $color is rw) {
     gtk_color_chooser_get_rgba($!cc, $color);
+    $color;
+  }
+  multi method get_rgba {
+    my $c = GTK::Compat::RGBA.new;
+    samewith($c);
   }
 
   method get_type {

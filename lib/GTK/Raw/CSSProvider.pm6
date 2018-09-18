@@ -7,6 +7,36 @@ use GTK::Raw::Types;
 
 unit package GTK::Raw::CSSProvider;
 
+our enum GtkStyleProviderPriority is export (
+  GTK_STYLE_PROVIDER_PRIORITY_FALLBACK     => 1,
+  GTK_STYLE_PROVIDER_PRIORITY_THEME        => 200,
+  GTK_STYLE_PROVIDER_PRIORITY_SETTINGS     => 400,
+  GTK_STYLE_PROVIDER_PRIORITY_APPLICATION  => 600,
+  GTK_STYLE_PROVIDER_PRIORITY_USER         => 800
+);
+
+sub gdk_display_get_default()
+  returns GdkDisplay
+  is native('gdk-3')
+  is export
+  { * }
+
+sub gdk_display_get_default_screen(GdkDisplay $display)
+  returns GdkScreen
+  is native('gdk-3')
+  is export
+  { * }
+
+sub gtk_style_context_add_provider_for_screen(
+  GdkScreen $screen,
+  GdkStyleProvider $provider,
+  guint $priority
+)
+  is native('gtk-3')
+  is export
+  { * }
+
+
 sub gtk_css_provider_error_quark ()
   returns GQuark
   is native('gtk-3')
@@ -14,13 +44,13 @@ sub gtk_css_provider_error_quark ()
   { * }
 
 sub gtk_css_provider_get_default ()
-  returns GtkCssProvider
+  returns GtkCSSProvider
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_css_provider_get_named (gchar $name, gchar $variant)
-  returns GtkCssProvider
+  returns GtkCSSProvider
   is native('gtk-3')
   is export
   { * }
@@ -32,7 +62,7 @@ sub gtk_css_provider_get_type ()
   { * }
 
 sub gtk_css_provider_load_from_data (
-  GtkCssProvider $css_provider,
+  GtkCSSProvider $css_provider,
   gchar $data,
   gssize $length,
   GError $error
@@ -43,7 +73,7 @@ sub gtk_css_provider_load_from_data (
   { * }
 
 sub gtk_css_provider_load_from_file (
-  GtkCssProvider $css_provider,
+  GtkCSSProvider $css_provider,
   GFile $file,
   GError $error
 )
@@ -53,7 +83,7 @@ sub gtk_css_provider_load_from_file (
   { * }
 
 sub gtk_css_provider_load_from_path (
-  GtkCssProvider $css_provider,
+  GtkCSSProvider $css_provider,
   gchar $path,
   GError $error
 )
@@ -63,7 +93,7 @@ sub gtk_css_provider_load_from_path (
   { * }
 
 sub gtk_css_provider_load_from_resource (
-  GtkCssProvider $css_provider,
+  GtkCSSProvider $css_provider,
   gchar $resource_path
 )
   is native('gtk-3')
@@ -71,13 +101,13 @@ sub gtk_css_provider_load_from_resource (
   { * }
 
 sub gtk_css_provider_new ()
-  returns GtkCssProvider
+  returns GtkCSSProvider
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_css_provider_to_string (GtkCssProvider $provider)
-  returns char
+sub gtk_css_provider_to_string (GtkCSSProvider $provider)
+  returns gchar
   is native('gtk-3')
   is export
   { * }

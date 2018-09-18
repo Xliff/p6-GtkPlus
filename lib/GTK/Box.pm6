@@ -61,11 +61,11 @@ class GTK::Box is GTK::Container {
     $!b = do given $box {
       when GtkWidget {
         $to-parent = $_;
-        nativecast(GtkBox, $box);
+        nativecast(GtkBox, $_);
       }
       when GtkBox {
         $to-parent = nativecast(GtkContainer, $_);
-        $box;
+        $_;
       }
     }
     self.setContainer($to-parent);
