@@ -16,9 +16,10 @@ with $m {
     (my $type = $o<tag><t>.Str) ~~ s/'Gtk' ( <[A..Za..z]>+ )/GTK::$0/;
     %types{ $o<tag><n>.Str } = $type;
   }
+  %types.gist.say;
+} else {
+  say "Nothing found.";
 }
-
-%types.gist.say;
 
 =begin data
 <?xml version="1.0"?>

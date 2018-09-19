@@ -8,6 +8,7 @@ use GTK::Raw::Types;
 use GTK::Raw::Application;
 use GTK::Raw::Window;
 
+use GTK::Builder;
 use GTK::Window;
 
 class GTK::Application {
@@ -20,6 +21,7 @@ class GTK::Application {
   has $!width;
   has $!height;
 
+  has $.builder;
   has $.window handles <show_all>;
 
   submethod BUILD(
@@ -28,19 +30,51 @@ class GTK::Application {
     uint32 :$flags = 0,
     uint32 :$width,
     uint32 :$height,
+    :$pod,
+    :$ui,
+    :$style
   ) {
     $!app = $app;
-    $!title = $title;
-    $!width = $width;
-    $!height = $height;
 
-    self.activate.tap({
-      $!window = GTK::Window.new( :window( gtk_application_window_new($app) ) );
+    my %sections;
+    my ($ui-data, $style-data);
+    with $pod {
+      for $pod.grep( *.name eq <css ui>.any ).Array {
+        # This may not always be true. Keep up with POD spec!
+        %sections{ .name } //= $_.contents[0].contents[0];
+        last when %sections<css>.defined && %sections<ui>.defined;
+      }
+      ($ui-data, $style-data) = %sections<ui css>;
+    } else {
+         $ui-data = $_ with $ui;
+      $style-data = $_ with $style;
+    }
 
-      self.window.title = $title;
-      self.window.name = 'application';
-      self.window.set_default_size($width, $height);
-    });
+    with $ui-data {
+      $!builder = GTK::Builder.new_from_string($_);
+      # Set $!title, $!width, $!height from application window, but
+      # what would be the best way to get that from the builder?
+      #
+      # The answer: that information is REALLY NOT IMPORTANT in this stage of
+      # GtkBuilder support!
+    }
+    with $style-data {
+      my $cp = GTK::CSSProvider.new;
+      $cp.load_from_data($_);
+    }
+
+    without $ui-data {
+      $!title = $title;
+      $!width = $width;
+      $!height = $height;
+      self.activate.tap({
+        $!window = GTK::Window.new( :window( gtk_application_window_new($app) ) );
+
+        self.window.title = $title;
+        self.window.name = 'application';
+        self.window.set_default_size($width, $height);
+      });
+    }
   }
 
   method init (GTK::Application:U: ) {
@@ -55,10 +89,13 @@ class GTK::Application {
   }
 
   method new(
-    Str :$title = 'Application',
+    Str :$title = 'org.genex.application',
     Int :$flags = 0,
     Int :$width = 200,
     Int :$height = 200
+    :$pod
+    :$ui
+    :$style
   ) {
     my uint32 $f = $flags;
     my uint32 $w = $width;
@@ -75,6 +112,9 @@ class GTK::Application {
       :flags($f),
       :width($w),
       :height($h)
+      :$pod,
+      :$ui,
+      :$style
     );
   }
 
@@ -113,7 +153,17 @@ class GTK::Application {
   }
 
   multi method run(GTK::Application:D: ) {
+    # Check to see if supply has already been tapped. If not, then:
+    # self.window.destroy-signal.tap({ self.exit; });
     #gtk_main();
+
+    # Currently the default behavior is:
+    self.window.show_all;
+
+    # -XXX- -- Build a mechanism that will allow the user to specify alternatives
+    # to the above;
+
+
     g_application_run($!app, OpaquePointer, OpaquePointer);
   }
   multi method run(GTK::Application:U: ) {
