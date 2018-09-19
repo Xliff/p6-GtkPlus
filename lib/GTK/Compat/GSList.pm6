@@ -5,7 +5,7 @@ use GTK::Compat::Raw::GSList;
 use GTK::Compat::Types;
 
 class GTK::Compat::GSList {
-  has $!list;
+  has GSList $!list;
   has @!nat;
   has $!dirty = False;
 
@@ -18,15 +18,25 @@ class GTK::Compat::GSList {
 
   submethod BUILD(:$!list) { }
 
+
   submethod DESTROY {
     self.free;
+  }
+
+  method new(:$list) {
+    with $list {
+      self.bless(:$list);
+    } else {
+      my $list = GTK::Compat::GSList.alloc();
+      self.bless(:$list)
+    }
   }
 
   # Import methods from
   # https://developer.gnome.org/glib/stable/glib-Singly-Linked-Lists.html
 
   method alloc {
-    g_slist_alloc($!list);
+    g_slist_alloc();
   }
 
   method append (gpointer $data) {

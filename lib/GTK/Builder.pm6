@@ -8,8 +8,20 @@ use GTK::Raw::Types;
 
 use GTK::Application;
 
-class GTK::Builder  {
+class GTK::Builder does Associative {
   has GtkBuilder $!b;
+  has %!types;
+  has %!widgets handles <
+    AT-KEY
+    EXISTS-KEY
+    elems
+    keys
+    values
+    pairs
+    antipairs
+    kv
+    sort
+  >;
 
   submethod BUILD(:$builder) {
     $!b = $builder;
@@ -41,6 +53,41 @@ class GTK::Builder  {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  method !getTypes (
+    :$ui_def
+    :$file
+    :$resource
+  ) {
+    with $file {
+    }
+    with $resource {
+    }
+    with $ui_def {
+      my rule tag {
+        '<object' 'class="' $<t>=(<-["]>+) '"' 'id="' $<n>=(<-["]>+) '"' '>'
+      }
+
+      my $m = m:g/<tag>/;
+      if $m.defined {
+        for $m.Array -> $o {
+          %!types{ $o<tag><n>.Str } = $o<tag><t>.Str;
+        }
+      }
+    }
+  }
+
+  method !postProcess(
+    :$uidef
+    :$file
+    :$resource
+  ) {
+    self!getTypes(:$uidef, :$file, :$resource);
+    my $objects = self.get_objects;
+    while $objects.defined {
+      $objects = $objects.next;
+    }
+  }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method application is rw {
@@ -86,6 +133,7 @@ class GTK::Builder  {
     GError $error = GError
   ) {
     gtk_builder_add_from_file($!b, $filename, $error);
+    self!postHandle(:file($filename));
   }
 
   method add_from_resource (
@@ -93,6 +141,7 @@ class GTK::Builder  {
     GError $error = GError
   ) {
     gtk_builder_add_from_resource($!b, $resource_path, $error);
+    self!postHandle(:resource($resource_path));
   }
 
   method add_from_string (
@@ -103,6 +152,7 @@ class GTK::Builder  {
     die "\$length cannot be negative" unless $length > -2;
     my gsize $l = $length;
     gtk_builder_add_from_string($!b, $buffer, $l, $error);
+    self!postHandle(:ui_def($buffer));
   }
 
   method add_objects_from_file (
@@ -111,6 +161,7 @@ class GTK::Builder  {
     GError $error = GError
   ) {
     gtk_builder_add_objects_from_file($!b, $filename, $object_ids, $error);
+    #self!postHandle;
   }
 
   method add_objects_from_resource (
@@ -119,6 +170,7 @@ class GTK::Builder  {
     GError $error = GError
   ) {
     gtk_builder_add_objects_from_resource($!b, $resource_path, $object_ids, $error);
+    #self!postProcess;
   }
 
   method add_objects_from_string (
@@ -130,6 +182,7 @@ class GTK::Builder  {
     die "\$length cannot be negative" unless $length > -2;
     my gsize $l = $length;
     gtk_builder_add_objects_from_string($!b, $buffer, $length, $object_ids, $error);
+    self!postProcess(:ui_def($buffer));
   }
 
   method connect_signals (gpointer $user_data) {
@@ -163,6 +216,7 @@ class GTK::Builder  {
     gtk_builder_extend_with_template(
       $!b, $widget, $template_type, $buffer, $l, $error
     );
+    self!postProcess;
   }
   multi method extend_with_template (
     GTK::Widget $widget,
@@ -179,7 +233,7 @@ class GTK::Builder  {
   }
 
   method get_objects {
-    gtk_builder_get_objects($!b);
+    GSList.new( gtk_builder_get_objects($!b) );
   }
 
   method get_type {
