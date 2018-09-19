@@ -13,7 +13,8 @@ my %types;
 
 with $m {
   for $m.Array -> $o {
-    %types{ $o<tag><n>.Str } = $o<tag><t>.Str;
+    (my $type = $o<tag><t>.Str) ~~ s/'Gtk' ( <[A..Za..z]>+ )/GTK::$0/;
+    %types{ $o<tag><n>.Str } = $type;
   }
 }
 

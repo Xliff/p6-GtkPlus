@@ -71,7 +71,21 @@ class GTK::Builder does Associative {
       my $m = m:g/<tag>/;
       if $m.defined {
         for $m.Array -> $o {
-          %!types{ $o<tag><n>.Str } = $o<tag><t>.Str;
+          (my $type = $o<tag><t>.Str) ~~ s/'Gtk' ( <[A..Za..z]>+ )/GTK::$0/;
+          my $args;
+          # Last-chance special case resolution.
+          $type = do given $type {
+            when 'GTK::VBox' {
+              $args = 'vertical';
+              'GTK::Box';
+            }
+            when 'GTK::HBox' {
+              $args = 'horizontal';
+              'GTK::Box';
+            }
+            default { $_; }
+          }
+          %!types{ $o<tag><n>.Str } = [ $type, $args ];
         }
       }
     }
