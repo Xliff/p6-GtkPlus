@@ -7,7 +7,8 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-our constant GtkCalendarDetailFunc is export := OpaquePointer;
+our constant GtkCalendarDetailFunc is export := Pointer;
+our constant GtkBuilderConnectFunc is export := Pointer;
 
 class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
   has int16 $.left;
@@ -586,6 +587,7 @@ class GtkAllocation       is repr('CPointer') does GTK::Roles::Pointers is expor
 class GtkApplication      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBin              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBox              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkBuilder          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCalendar         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCallback         is repr('CPointer') does GTK::Roles::Pointers is export { }
