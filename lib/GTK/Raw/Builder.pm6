@@ -127,7 +127,7 @@ sub gtk_builder_extend_with_template (
   { * }
 
 sub gtk_builder_get_object (GtkBuilder $builder, gchar $name)
-  returns GObject
+  returns GtkWidget # GObject
   is native('gtk-3')
   is export
   { * }

@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Builder;
 use GTK::Raw::Types;
 
-use GTK::Application;
+use GTK::Widget;
 
 class GTK::Builder does Associative {
   has GtkBuilder $!b;
@@ -28,7 +28,7 @@ class GTK::Builder does Associative {
   }
 
   method new {
-    my $builder = gtk_builder_new($!b);
+    my $builder = gtk_builder_new();
     self.bless(:$builder);
   }
 
@@ -45,7 +45,8 @@ class GTK::Builder does Associative {
   method new_from_string (gchar $string, Int() $length = -1) {
     die "\$string must not be negative" unless $length > -2;
     my gssize $l = $length;
-    gtk_builder_new_from_string($string, $l);
+    my $builder = gtk_builder_new_from_string($string, $l);
+    self.bless(:$builder);
   }
 
   #  new-from-buf??
@@ -55,8 +56,8 @@ class GTK::Builder does Associative {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   method !getTypes (
-    :$ui_def
-    :$file
+    :$ui_def,
+    :$file,
     :$resource
   ) {
     with $file {
@@ -73,7 +74,8 @@ class GTK::Builder does Associative {
         for $m.Array -> $o {
           (my $type = $o<tag><t>.Str) ~~ s/'Gtk' ( <[A..Za..z]>+ )/GTK::$0/;
           my $args;
-          # Last-chance special case resolution.
+          # Last-chance special case resolution -- should probably be broken
+          # out into its own package.
           $type = do given $type {
             when 'GTK::VBox' {
               $args = 'vertical';
@@ -92,8 +94,8 @@ class GTK::Builder does Associative {
   }
 
   method !postProcess(
-    :$uidef
-    :$file
+    :$uidef,
+    :$file,
     :$resource
   ) {
     self!getTypes(:$uidef, :$file, :$resource);
@@ -110,9 +112,10 @@ class GTK::Builder does Associative {
         gtk_builder_get_application($!b);
       },
       STORE => sub ($, $application is copy) {
+        # Note use of late binding to prevent circular dependency.
         my GtkApplication $a = do given $application {
-          when GtkApplication   { $_;     }
-          when GTK::Application { $_.app; }
+          when GtkApplication         { $_;     }
+          when ::("GTK::Application") { $_.app; }
           default {
             die "Invalid type { .^name } passed to { ::?CLASS.name }.{ &?ROUTINE.name }";
           }
@@ -147,7 +150,7 @@ class GTK::Builder does Associative {
     GError $error = GError
   ) {
     gtk_builder_add_from_file($!b, $filename, $error);
-    self!postHandle(:file($filename));
+    self!postProcess(:file($filename));
   }
 
   method add_from_resource (
@@ -155,7 +158,7 @@ class GTK::Builder does Associative {
     GError $error = GError
   ) {
     gtk_builder_add_from_resource($!b, $resource_path, $error);
-    self!postHandle(:resource($resource_path));
+    self!postProcess(:resource($resource_path));
   }
 
   method add_from_string (
@@ -166,7 +169,7 @@ class GTK::Builder does Associative {
     die "\$length cannot be negative" unless $length > -2;
     my gsize $l = $length;
     gtk_builder_add_from_string($!b, $buffer, $l, $error);
-    self!postHandle(:ui_def($buffer));
+    self!postProcess(:ui_def($buffer));
   }
 
   method add_objects_from_file (
@@ -211,7 +214,7 @@ class GTK::Builder does Associative {
   }
 
   method error_quark {
-    gtk_builder_error_quark($!b);
+    gtk_builder_error_quark();
   }
 
   method expose_object (gchar $name, GObject $object) {
@@ -239,11 +242,12 @@ class GTK::Builder does Associative {
     Int() $length,
     GError $error = GError
   )  {
-    samewith($widget, $template_type, $buffer, $length, $error);
+    samewith($widget.widget, $template_type, $buffer, $length, $error);
   }
 
   method get_object (gchar $name) {
-    gtk_builder_get_object($!b, $name);
+    my $o = gtk_builder_get_object($!b, $name);
+    $o =:= GtkWidget ?? Nil !! $o;
   }
 
   method get_objects {

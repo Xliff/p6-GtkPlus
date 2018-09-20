@@ -9,6 +9,7 @@ use GTK::Raw::Application;
 use GTK::Raw::Window;
 
 use GTK::Builder;
+use GTK::CSSProvider;
 use GTK::Window;
 
 class GTK::Application {
@@ -32,6 +33,7 @@ class GTK::Application {
     uint32 :$height,
     :$pod,
     :$ui,
+    :$window-name,
     :$style
   ) {
     $!app = $app;
@@ -57,24 +59,44 @@ class GTK::Application {
       #
       # The answer: that information is REALLY NOT IMPORTANT in this stage of
       # GtkBuilder support!
+
+      # MUST define an activate handler!!
+
+      my $w;
+      $!window = GTK::Window.new(
+        :widget( $w = $!builder.get_object($window-name // 'application') )
+      );
+      die qq:to/ERR/ unless $!window;
+Application window '#application' was not found. Please do one of the following:
+   - Rename the top-level window to 'application' in the .ui file
+   OR
+   - Specify the name of the top-level window using the named parameter
+     :\$window-name in the constructor to GTK::Application
+ERR
+
+    say $w;
+    say $!builder.get_object('box1');
+    say $!builder.get_object('grid1');
+
     }
     with $style-data {
       my $cp = GTK::CSSProvider.new;
       $cp.load_from_data($_);
     }
 
-    without $ui-data {
-      $!title = $title;
-      $!width = $width;
-      $!height = $height;
-      self.activate.tap({
-        $!window = GTK::Window.new( :window( gtk_application_window_new($app) ) );
+    $!title = $title;
+    $!width = $width;
+    $!height = $height;
 
-        self.window.title = $title;
-        self.window.name = 'application';
-        self.window.set_default_size($width, $height);
-      });
-    }
+    self.activate.tap({
+      $!window //= GTK::Window.new(
+        :window( gtk_application_window_new($!app) )
+      );
+
+      self.window.title = $title;
+      self.window.name = $window-name;
+      self.window.set_default_size($width, $height) without $ui-data;
+    });
   }
 
   method init (GTK::Application:U: ) {
@@ -92,9 +114,10 @@ class GTK::Application {
     Str :$title = 'org.genex.application',
     Int :$flags = 0,
     Int :$width = 200,
-    Int :$height = 200
-    :$pod
-    :$ui
+    Int :$height = 200,
+    :$pod,
+    :$ui,
+    :$window-name,
     :$style
   ) {
     my uint32 $f = $flags;
@@ -114,6 +137,7 @@ class GTK::Application {
       :height($h)
       :$pod,
       :$ui,
+      :$window-name,
       :$style
     );
   }
@@ -157,13 +181,6 @@ class GTK::Application {
     # self.window.destroy-signal.tap({ self.exit; });
     #gtk_main();
 
-    # Currently the default behavior is:
-    self.window.show_all;
-
-    # -XXX- -- Build a mechanism that will allow the user to specify alternatives
-    # to the above;
-
-
     g_application_run($!app, OpaquePointer, OpaquePointer);
   }
   multi method run(GTK::Application:U: ) {
@@ -190,6 +207,13 @@ class GTK::Application {
 
   method shutdown {
     self.connect($!app, 'shutdown');
+  }
+
+  method getWidget($name) {
+    die "Application not initialized with Builder support!" unless $!builder;
+
+    # Object resolution code needed here, as well.
+    $!builder.get_object($name);
   }
 
   method add_accelerator (gchar $accelerator, gchar $action_name, GVariant $parameter) {

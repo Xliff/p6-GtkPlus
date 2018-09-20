@@ -3,13 +3,16 @@ use v6.c;
 use GTK::Application;
 
 my $a = GTK::Application.new(:pod($=pod));
-$a.window.destroy-signal.tap({ $a.exit; });
+$a.activate.tap({
+  $a.window.destroy-signal.tap({ $a.exit; });
+});
+
 $a.run;
 
-=begin data
+=begin ui
 <interface>
   <requires lib="gtk+" version="3.20"/>
-  <object class="GtkWindow">
+  <object class="GtkWindow" id="application">
     <property name="can_focus">False</property>
     <child>
       <placeholder/>

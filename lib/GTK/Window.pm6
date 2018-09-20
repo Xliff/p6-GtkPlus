@@ -46,7 +46,10 @@ class GTK::Window is GTK::Bin {
 
     samewith(:$window);
   }
-  multi method new (:$window) {
+  multi method new (GtkWidget $widget) {
+    self.bless(:window($widget));
+  }
+  multi method new (GtkWindow $window) {
     self.bless(:$window);
   }
 
