@@ -37,6 +37,7 @@ class GTK::Application {
     :$style
   ) {
     $!app = $app;
+    $!title = $title;
 
     my %sections;
     my ($ui-data, $style-data);
@@ -74,19 +75,15 @@ Application window '#application' was not found. Please do one of the following:
      :\$window-name in the constructor to GTK::Application
 ERR
 
-    say $w;
-    say $!builder.get_object('box1');
-    say $!builder.get_object('grid1');
-
+    } else {
+      $!width = $width;
+      $!height = $height;
     }
+
     with $style-data {
       my $cp = GTK::CSSProvider.new;
       $cp.load_from_data($_);
     }
-
-    $!title = $title;
-    $!width = $width;
-    $!height = $height;
 
     self.activate.tap({
       $!window //= GTK::Window.new(
