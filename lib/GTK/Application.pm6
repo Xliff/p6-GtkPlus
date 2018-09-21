@@ -44,7 +44,7 @@ class GTK::Application {
     with $pod {
       for $pod.grep( *.name eq <css ui>.any ).Array {
         # This may not always be true. Keep up with POD spec!
-        %sections{ .name } //= $_.contents[0].contents[0];
+        %sections{ .name } //= $_.contents.map( *.contents[0] ).join("\n");
         last when %sections<css>.defined && %sections<ui>.defined;
       }
       ($ui-data, $style-data) = %sections<ui css>;

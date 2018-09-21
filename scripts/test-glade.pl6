@@ -2,7 +2,12 @@ use v6.c;
 
 use Data::Dump::Tree;
 
+ddt $=pod;
+
 my $ui = $=pod.grep( *.name eq 'data' )[0].contents[0].contents[0];
+my $css = $=pod.grep( *.name eq 'css' )[0].contents.map( *.contents[0] ).join("\n");
+
+say $css;
 
 my rule tag {
   '<object' 'class="' $<t>=(<-["]>+) '"' 'id="' $<n>=(<-["]>+) '"' '>'
@@ -20,6 +25,29 @@ with $m {
 } else {
   say "Nothing found.";
 }
+
+=begin css
+* {
+  background: #11ccff;
+}
+
+GtkButton {
+  margin: 10px;
+}
+
+#button1 {
+  font-family: Times New Roman;
+}
+
+#button2 {
+  font-weight: bold;
+}
+
+#button3 {
+  font-family: FreeSans;
+  font-style: italic;
+}
+=end css
 
 =begin data
 <?xml version="1.0"?>
