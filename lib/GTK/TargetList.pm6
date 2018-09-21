@@ -46,6 +46,10 @@ class GTK::TargetList {
     self.bless(:$target_list);
   }
 
+  method GtkTargetList {
+    $!tl;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -61,15 +65,15 @@ class GTK::TargetList {
     gtk_target_list_add_image_targets($!tl, $info, $writable);
   }
 
-  multi method add_rich_text_targets (
+  method add_rich_text_targets (
     guint $info,
     gboolean $deserializable,
-    GtkTextBuffer $buffer
+    GtkTextBuffer() $buffer
   ) {
     gtk_target_list_add_rich_text_targets($!tl, $info, $deserializable, $buffer);
   }
 
-  multi method add_table (GtkTargetEntry $targets, guint $ntargets) {
+  method add_table (GtkTargetEntry() $targets, guint $ntargets) {
     gtk_target_list_add_table($!tl, $targets, $ntargets);
   }
 

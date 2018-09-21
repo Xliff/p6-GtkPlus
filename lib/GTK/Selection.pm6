@@ -58,7 +58,7 @@ class GTK::Selection {
 
   multi method add_targets (
     GdkAtom $selection,
-    GtkTargetEntry $targets,
+    GtkTargetEntry() $targets,
     guint $ntargets
   ) {
     gtk_selection_add_targets($selection, $targets, $ntargets);
@@ -76,8 +76,12 @@ class GTK::Selection {
     gtk_selection_owner_set($selection, $time_);
   }
 
-  multi method owner_set_for_display (GtkWidget $widget, GdkAtom $selection, guint32 $time_) {
-    gtk_selection_owner_set_for_display($widget, $selection, $time_);
+  multi method owner_set_for_display (
+    GtkWidget() $widget,
+    GdkAtom $selection,
+    guint32 $time
+  ) {
+    gtk_selection_owner_set_for_display($widget, $selection, $time);
   }
 
   method remove_all {
@@ -147,7 +151,7 @@ class GTK::Selection {
     gtk_selection_data_targets_include_image($!s, $w);
   }
 
-  multi method targets_include_rich_text (GtkTextBuffer $buffer) {
+  multi method targets_include_rich_text (GtkTextBuffer() $buffer) {
     gtk_selection_data_targets_include_rich_text($!s, $buffer);
   }
 

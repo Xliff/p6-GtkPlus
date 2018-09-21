@@ -40,6 +40,10 @@ class GTK::Widget {
     self.bless(:$widget);
   }
 
+  method GtkWidget {
+    $!w;
+  }
+
   method setWidget($widget) {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
@@ -1172,7 +1176,11 @@ class GTK::Widget {
     gtk_widget_freeze_child_notify($!w);
   }
 
-  method remove_accelerator (GtkAccelGroup $accel_group, guint $accel_key, GdkModifierType $accel_mods) {
+  method remove_accelerator (
+    GtkAccelGroup $accel_group,
+    guint $accel_key,
+    GdkModifierType $accel_mods
+  ) {
     gtk_widget_remove_accelerator($!w, $accel_group, $accel_key, $accel_mods);
   }
 
@@ -1200,7 +1208,7 @@ class GTK::Widget {
     gtk_widget_queue_compute_expand($!w);
   }
 
-  method is_ancestor (GtkWidget $ancestor) {
+  method is_ancestor (GtkWidget() $ancestor) {
     gtk_widget_is_ancestor($!w, $ancestor);
   }
 
@@ -1263,7 +1271,14 @@ class GTK::Widget {
     gint $minimum_baseline,
     gint $natural_baseline
   ) {
-    gtk_widget_get_preferred_height_and_baseline_for_width($!w, $width, $minimum_height, $natural_height, $minimum_baseline, $natural_baseline);
+    gtk_widget_get_preferred_height_and_baseline_for_width(
+      $!w,
+      $width,
+      $minimum_height,
+      $natural_height,
+      $minimum_baseline,
+      $natural_baseline
+    );
   }
 
   method activate {
@@ -1310,11 +1325,11 @@ class GTK::Widget {
     gtk_widget_get_preferred_height($!w, $minimum_height, $natural_height);
   }
 
-  method unmap (GtkWidget $!w) {
+  method unmap (GtkWidget() $!w) {
     gtk_widget_unmap($!w);
   }
 
-  method error_bell (GtkWidget $!w) {
+  method error_bell (GtkWidget() $!w) {
     gtk_widget_error_bell($!w);
   }
 
@@ -1374,7 +1389,7 @@ class GTK::Widget {
     gtk_widget_queue_resize_no_redraw($!w);
   }
 
-  method destroyed (GtkWidget $widget_pointer) {
+  method destroyed (GtkWidget() $widget_pointer) {
     gtk_widget_destroyed($!w, $widget_pointer);
   }
 
@@ -1478,7 +1493,7 @@ class GTK::Widget {
     gtk_widget_child_focus($!w, $direction);
   }
 
-  method reparent (GtkWidget $new_parent) {
+  method reparent (GtkWidget() $new_parent) {
     gtk_widget_reparent($!w, $new_parent);
   }
 

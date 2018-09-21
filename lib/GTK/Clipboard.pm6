@@ -27,7 +27,7 @@ class GTK::Clipboard {
   method owner-change {
     self.connect($!cb, 'owner-change');
   }
-  
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -82,7 +82,7 @@ class GTK::Clipboard {
   }
 
   method request_rich_text (
-    GtkTextBuffer $buffer,
+    GtkTextBuffer() $buffer,
     GtkClipboardRichTextReceivedFunc $callback,
     gpointer $user_data
   ) {
@@ -110,7 +110,7 @@ class GTK::Clipboard {
     gtk_clipboard_request_uris($!cb, $callback, $user_data);
   }
 
-  method set_can_store (GtkTargetEntry $targets, gint $n_targets) {
+  method set_can_store (GtkTargetEntry() $targets, gint $n_targets) {
     gtk_clipboard_set_can_store($!cb, $targets, $n_targets);
   }
 
@@ -123,23 +123,37 @@ class GTK::Clipboard {
   }
 
   method set_with_data (
-    GtkTargetEntry $targets,
+    GtkTargetEntry() $targets,
     guint $n_targets,
     GtkClipboardGetFunc $get_func,
     GtkClipboardClearFunc $clear_func,
     gpointer $user_data
   ) {
-    gtk_clipboard_set_with_data($!cb, $targets, $n_targets, $get_func, $clear_func, $user_data);
+    gtk_clipboard_set_with_data(
+      $!cb,
+      $targets,
+      $n_targets,
+      $get_func,
+      $clear_func,
+      $user_data
+    );
   }
 
   method set_with_owner (
-    GtkTargetEntry $targets,
+    GtkTargetEntry() $targets,
     guint $n_targets,
     GtkClipboardGetFunc $get_func,
     GtkClipboardClearFunc $clear_func,
     GObject $owner
   ) {
-    gtk_clipboard_set_with_owner($!cb, $targets, $n_targets, $get_func, $clear_func, $owner);
+    gtk_clipboard_set_with_owner(
+      $!cb,
+      $targets,
+      $n_targets,
+      $get_func,
+      $clear_func,
+      $owner
+    );
   }
 
   method store {
@@ -155,7 +169,7 @@ class GTK::Clipboard {
   }
 
   method wait_for_rich_text (
-    GtkTextBuffer $buffer,
+    GtkTextBuffer() $buffer,
     GdkAtom $format,
     gsize $length
   ) {
@@ -178,7 +192,7 @@ class GTK::Clipboard {
     gtk_clipboard_wait_is_image_available($!cb);
   }
 
-  method wait_is_rich_text_available (GtkTextBuffer $buffer) {
+  method wait_is_rich_text_available (GtkTextBuffer() $buffer) {
     gtk_clipboard_wait_is_rich_text_available($!cb, $buffer);
   }
 

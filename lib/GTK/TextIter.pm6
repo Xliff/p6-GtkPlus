@@ -171,7 +171,7 @@ class GTK::TextIter {
     Bool( gtk_text_iter_backward_sentence_starts($!ti, $count) );
   }
 
-  method backward_to_tag_toggle (GtkTextTag $tag) {
+  method backward_to_tag_toggle (GtkTextTag() $tag) {
     Bool( gtk_text_iter_backward_to_tag_toggle($!ti, $tag) );
   }
 
@@ -207,7 +207,7 @@ class GTK::TextIter {
     Bool( gtk_text_iter_backward_word_starts($!ti, $count) );
   }
 
-  method begins_tag (GtkTextTag $tag) {
+  method begins_tag (GtkTextTag() $tag) {
     Bool( gtk_text_iter_begins_tag($!ti, $tag) );
   }
 
@@ -235,7 +235,7 @@ class GTK::TextIter {
     Bool( gtk_text_iter_ends_sentence($!ti) );
   }
 
-  method ends_tag (GtkTextTag $tag) {
+  method ends_tag (GtkTextTag() $tag) {
     Bool( gtk_text_iter_ends_tag($!ti, $tag) );
   }
 
@@ -314,7 +314,7 @@ class GTK::TextIter {
     Bool( gtk_text_iter_forward_to_line_end($!ti) );
   }
 
-  method forward_to_tag_toggle (GtkTextTag $tag) {
+  method forward_to_tag_toggle (GtkTextTag() $tag) {
     Bool( gtk_text_iter_forward_to_tag_toggle($!ti, $tag) );
   }
 
@@ -419,7 +419,7 @@ class GTK::TextIter {
     gtk_text_iter_get_visible_text($!ti, $end);
   }
 
-  method has_tag (GtkTextTag $tag) {
+  method has_tag (GtkTextTag() $tag) {
     Bool( gtk_text_iter_has_tag($!ti, $tag) );
   }
 
@@ -459,7 +459,7 @@ class GTK::TextIter {
     Bool( gtk_text_iter_starts_sentence($!ti) );
   }
 
-  method starts_tag (GtkTextTag $tag) {
+  method starts_tag (GtkTextTag() $tag) {
     gtk_text_iter_starts_tag($!ti, $tag);
   }
 
@@ -467,7 +467,7 @@ class GTK::TextIter {
     Bool( gtk_text_iter_starts_word($!ti) );
   }
 
-  method toggles_tag (GtkTextTag $tag) {
+  method toggles_tag (GtkTextTag() $tag) {
     gtk_text_iter_toggles_tag($!ti, $tag);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

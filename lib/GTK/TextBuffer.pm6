@@ -25,6 +25,10 @@ class GTK::TextBuffer {
     self.bless(:$buffer);
   }
 
+  method GtkTextBuffer {
+    $!tb;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
