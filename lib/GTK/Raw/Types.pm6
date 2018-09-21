@@ -23,6 +23,12 @@ class GtkTargetEntry is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint $.info;
 }
 
+class GtkTargetPair is repr('CStruct') does GTK::Roles::Pointers is export {
+  has GdkAtom $.target;
+  has guint   $.flags;
+  has guint   $.info;
+}
+
 class GtkTreeIter is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint     $.stamp;
   has gpointer $.user_data;
