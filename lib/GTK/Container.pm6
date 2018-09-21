@@ -91,6 +91,7 @@ class GTK::Container is GTK::Widget {
   }
 
   # Signal - Last
+  # Made multi to prevent a conflict with method remove (GtkWidget)
   multi method remove {
     self.connect($!c, 'remove');
   }
@@ -157,12 +158,8 @@ class GTK::Container is GTK::Widget {
         my $adjustment = gtk_container_get_focus_hadjustment($!c);
         GTK::Adjustment.new(:$adjustment);
       },
-      STORE => sub ($, $adjustment is copy) {
-        my GtkAdjustment $a = do given $adjustment {
-          when GtkAdjustment   { $_; }
-          when GTK::Adjustment { .adjustment; }
-        };
-        gtk_container_set_focus_hadjustment($!c, $a);
+      STORE => sub ($, GtkAdjustment() $adjustment is copy) {
+        gtk_container_set_focus_hadjustment($!c, $adjustment);
       }
     );
   }
@@ -179,62 +176,55 @@ class GTK::Container is GTK::Widget {
     );
   }
 
-  multi method add (GtkWidget $widget) {
+  multi method add (GtkWidget() $widget) {
     gtk_container_add($!c, $widget);
-  }
-  multi method add (GTK::Widget $widget)  {
-    samewith($widget.widget);
   }
 
   method check_resize {
     gtk_container_check_resize($!c);
   }
 
-  multi method child_get_property (GtkWidget $child, gchar $property_name, GValue $value) {
+  method child_get_property (
+    GtkWidget() $child,
+    gchar $property_name,
+    GValue $value
+  ) {
     gtk_container_child_get_property($!c, $child, $property_name, $value);
-  }
-  multi method child_get_property (GTK::Widget $child, gchar $property_name, GValue $value)  {
-    samewith($child.widget, $property_name, $value);
   }
 
   # A method for working with va_list could be the following:
   #   gchar         $first_property_name
   #   CArray[gchar] $property_names
-  # multi method child_get_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
+  # method child_get_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
   #   gtk_container_child_get_valist($!c, $child, $first_property_name, $var_args);
   # }
-  # multi method child_get_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
+  # method child_get_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
   #   samewith($child.widget, $first_property_name, $var_args);
   # }
 
-  multi method child_notify (GtkWidget $child, gchar $child_property) {
+  method child_notify (GtkWidget() $child, gchar $child_property) {
     gtk_container_child_notify($!c, $child, $child_property);
   }
-  multi method child_notify (GTK::Widget $child, gchar $child_property)  {
-    samewith($child.widget, $child_property);
-  }
 
-  multi method child_notify_by_pspec (GtkWidget $child, GParamSpec $pspec) {
+  method child_notify_by_pspec (GtkWidget() $child, GParamSpec $pspec) {
     gtk_container_child_notify_by_pspec($!c, $child, $pspec);
   }
-  multi method child_notify_by_pspec (GTK::Widget $child, GParamSpec $pspec)  {
-    samewith($child.widget, $pspec);
-  }
 
-  multi method child_set_property (GtkWidget $child, gchar $property_name, GValue $value) {
+  method child_set_property (
+    GtkWidget() $child,
+    gchar $property_name,
+    GValue $value
+  ) {
     gtk_container_child_set_property($!c, $child, $property_name, $value);
-  }
-  multi method child_set_property (GTK::Widget $child, gchar $property_name, GValue $value)  {
-    samewith($child.widget, $property_name, $value);
   }
 
   # va_list:
   #   gchar         $first_property_name
   #   CArray[gchar] $property_names
-  # multi method child_set_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
+  # method child_set_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
   #   gtk_container_child_set_valist($!c, $child, $first_property_name, $var_args);
   # }
-  # multi method child_set_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
+  # method child_set_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
   #   samewith($child.widget, $first_property_name, $var_args);
   # }
 
@@ -288,32 +278,23 @@ class GTK::Container is GTK::Widget {
     gtk_container_get_focus_chain($!c, $focusable_widgets);
   }
 
-  multi method get_path_for_child (GtkWidget $child) {
+  method get_path_for_child (GtkWidget() $child) {
     gtk_container_get_path_for_child($!c, $child);
-  }
-  multi method get_path_for_child (GTK::Widget $child)  {
-    samewith($child.widget);
   }
 
   method get_type {
     gtk_container_get_type();
   }
 
-  multi method propagate_draw (GtkWidget $child, cairo_t $cr) {
+  method propagate_draw (GtkWidget() $child, cairo_t $cr) {
     gtk_container_propagate_draw($!c, $child, $cr);
   }
-  multi method propagate_draw (GTK::Widget $child, cairo_t $cr)  {
-    samewith($child.widget, $cr);
-  }
 
-  multi method remove (GtkWidget $widget) {
+  multi method remove (GtkWidget() $widget) {
     gtk_container_remove($!c, $widget);
   }
-  multi method remove (GTK::Widget $widget)  {
-    samewith($widget.widget);
-  }
 
-  method resize_children () {
+  method resize_children {
     gtk_container_resize_children($!c);
   }
 

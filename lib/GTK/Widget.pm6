@@ -40,7 +40,7 @@ class GTK::Widget {
     self.bless(:$widget);
   }
 
-  method GtkWidget {
+  method GTK::Raw::Types::GtkWidget {
     $!w;
   }
 

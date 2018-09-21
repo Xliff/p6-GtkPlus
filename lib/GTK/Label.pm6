@@ -119,7 +119,7 @@ class GTK::Label is GTK::Widget {
         GtkJustification( gtk_label_get_justify($!l) );
       },
       STORE => sub ($, Int() $jtype is copy) {
-        my uint32 $j = self.RESOLVE-UINT($jtype);
+        my uint32 $jt = self.RESOLVE-UINT($jtype);
         gtk_label_set_justify($!l, $jt);
       }
     );
