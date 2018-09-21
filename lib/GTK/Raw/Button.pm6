@@ -12,7 +12,11 @@ sub gtk_button_clicked (GtkButton $button)
   is export
   { * }
 
-sub gtk_button_get_alignment (GtkButton $button, gfloat $xalign, gfloat $yalign)
+sub gtk_button_get_alignment (
+  GtkButton $button,
+  gfloat $xalign is rw,
+  gfloat $yalign is rw
+)
   is native('gtk-3')
   is export
   { * }

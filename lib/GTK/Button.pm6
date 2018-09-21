@@ -11,40 +11,49 @@ use GTK::Bin;
 class GTK::Button is GTK::Bin {
   has GtkButton $!b;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Button');
+    $o;
+  }
+
   submethod BUILD(:$button) {
     given $button {
       when GtkButton | GtkWidget {
-        $!b = do {
-          when GtkWidget { nativecast(GtkButton, $button); }
-          when GtkButton { $button; }
-        };
-        self.setBin($button);
+        self.setButton($button);
       }
       when GTK::Button {
         warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
-      }
-      when OpaquePointer {
-        $!b = nativecast(GtkButton, $button);
       }
       default {
         # Throw exception here
       }
     }
-    self.setType('GTK::Button');
+  }
+
+  method setButton($button) {
+    my $to-parent;
+    $!b = do given $button {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkButton, $_);
+      }
+      when GtkButton {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
+      }
+    };
+    self.setBin($button);
   }
 
   multi method new {
     my $button = gtk_button_new();
-    samewith(:$button);
+    self.bless(:$button);
   }
 
-  multi method new(:$button) {
-    self.bless(
-      :$button,
-      :bin($button),
-      :container($button),
-      :widget($button)
-    );
+  multi method new(GtkWidget :$button) {
+    self.bless(:$button);
   }
 
   method new_with_mnemonic (GTK::Button:U: gchar $label) {
@@ -54,46 +63,36 @@ class GTK::Button is GTK::Bin {
 
   method new_from_icon_name (GTK::Button:U: gchar $icon_name, GtkIconSize $size) {
     my $button = gtk_button_new_from_icon_name($icon_name, $size);
-    self.bless(
-      :$button,
-      :bin($button),
-      :container($button),
-      :widget($button)
-    );
+    self.bless(:$button);
   }
 
   method new_from_stock (GTK::Button:U: gchar $stock_id) {
     my $button = gtk_button_new_from_stock($stock_id);
-    self.bless(
-      :$button,
-      :bin($button),
-      :container($button),
-      :widget($button)
-    );
+    self.bless(:$button);
   }
 
   method new_with_label (GTK::Button:U: gchar $label) {
     my $button = gtk_button_new_with_label($label);
-    self.bless(
-      :$button,
-      :bin($button),
-      :container($button),
-      :widget($button)
-    );
-  }
-
-  method setButton($button) {
-    $!b = nativecast(GtkButton, $button);
-    self.setWidget($button);
+    self.bless(:$button);
   }
 
   # Renamed from "clicked" due to conflict with the signal.
-  method button-clicked {
+  method emit-clicked {
     gtk_button_clicked($!b);
   }
 
-  method get_alignment (gfloat $xalign, gfloat $yalign) {
-    gtk_button_get_alignment($!b, $xalign, $yalign);
+  multi method get_alignment (Num() $xalign is rw, Num() $yalign is rw)
+    is DEPRECATED
+  {
+    my gfloat ($xa, $ya) = ($xalign, $yalign);
+    my $rc = gtk_button_get_alignment($!b, $xa, $ya);
+    ($xalign, $yalign) = ($xa, $ya);
+    $rc;
+  }
+  multi method get_alignment is DEPRECATED {
+    my ($x, $y);
+    samewith($x, $y);
+    ($x, $y);
   }
 
   method get_event_window {
@@ -106,17 +105,19 @@ class GTK::Button is GTK::Bin {
   #}
 
 
-  method set_alignment (gfloat $xalign, gfloat $yalign) {
+  method set_alignment (Num() $xalign, Num() $yalign) {
+    my gfloat ($xa, $ya) = ($xalign, $yalign);
     gtk_button_set_alignment($!b, $xalign, $yalign);
   }
 
   method always_show_image is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_button_get_always_show_image($!b);
+        Bool( gtk_button_get_always_show_image($!b) );
       },
-      STORE => sub ($, $always_show is copy) {
-        gtk_button_set_always_show_image($!b, $always_show);
+      STORE => sub ($, Int() $always_show is copy) {
+        my gboolean $as = self.RESOLVE-BOOL($always_show);
+        gtk_button_set_always_show_image($!b, $as);
       }
     );
   }
@@ -124,10 +125,11 @@ class GTK::Button is GTK::Bin {
   method focus_on_click is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_button_get_focus_on_click($!b);
+        Bool( gtk_button_get_focus_on_click($!b) );
       },
-      STORE => sub ($, $focus_on_click is copy) {
-        gtk_button_set_focus_on_click($!b, $focus_on_click);
+      STORE => sub ($, Int() $focus_on_click is copy) {
+        my gboolean $fc = self.RESOLVE-BOOL($focus_on_click);
+        gtk_button_set_focus_on_click($!b, $fc);
       }
     );
   }
@@ -137,7 +139,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_image($!b);
       },
-      STORE => sub ($, $image is copy) {
+      STORE => sub ($, GtkWidget() $image is copy) {
         gtk_button_set_image($!b, $image);
       }
     );
@@ -146,10 +148,11 @@ class GTK::Button is GTK::Bin {
   method image_position is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_button_get_image_position($!b);
+        GtkPositionType( gtk_button_get_image_position($!b) );
       },
-      STORE => sub ($, $position is copy) {
-        gtk_button_set_image_position($!b, $position);
+      STORE => sub ($, Int() $position is copy) {
+        my uint32 $p = self.RESOLVE-UINT($position);
+        gtk_button_set_image_position($!b, $p);
       }
     );
   }
@@ -159,7 +162,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_label($!b);
       },
-      STORE => sub ($, $label is copy) {
+      STORE => sub ($, gchar $label is copy) {
         gtk_button_set_label($!b, $label);
       }
     );
@@ -168,10 +171,11 @@ class GTK::Button is GTK::Bin {
   method relief is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_button_get_relief($!b);
+        GtkReliefStyle( gtk_button_get_relief($!b) );
       },
-      STORE => sub ($, $relief is copy) {
-        gtk_button_set_relief($!b, $relief);
+      STORE => sub ($, Int() $relief is copy) {
+        my uint32 $r = self.RESOLVE-UINT($relief);
+        gtk_button_set_relief($!b, $r);
       }
     );
   }
@@ -179,10 +183,11 @@ class GTK::Button is GTK::Bin {
   method use_stock is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_button_get_use_stock($!b);
+        Bool( gtk_button_get_use_stock($!b) );
       },
-      STORE => sub ($, $use_stock is copy) {
-        gtk_button_set_use_stock($!b, $use_stock);
+      STORE => sub ($, Int() $use_stock is copy) {
+        my gboolean $us = self.RESOLVE-BOOL($use_stock);
+        gtk_button_set_use_stock($!b, $us);
       }
     );
   }
@@ -190,41 +195,49 @@ class GTK::Button is GTK::Bin {
   method use_underline is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_button_get_use_underline($!b);
+        Bool( gtk_button_get_use_underline($!b) );
       },
       STORE => sub ($, $use_underline is copy) {
+        my gboolean $uu = self.RESOLVE-BOOL($use_underline);
         gtk_button_set_use_underline($!b, $use_underline);
       }
     );
   }
 
-  # Signal void Action
+  # Is originally:
+  # GtkButton, gpointer --> void
   method activate {
     self.connect($!b, 'activate');
   }
 
-  # Signal void Action
+  # Is originally:
+  # GtkButton, gpointer --> void
   method clicked {
     self.connect($!b, 'clicked');
   }
 
-  # Signal void Run First
+  # Is originally:
+  # GtkButton, gpointer --> void
   method enter {
     self.connect($!b, 'enter');
   }
 
-  # Signal void Run First
+  # Is originally:
+  # GtkButton, gpointer --> void
   method leave {
     self.connect($!b, 'leave');
   }
 
-  # Signal void Run First
+  # Is originally:
+  # GtkButton, gpointer --> void
   method pressed {
     self.connect($!b, 'pressed');
   }
 
-  # Signal void Run First
+  # Is originally:
+  # GtkButton, gpointer --> void
   method released {
     self.connect($!b, 'released');
   }
+
 }
