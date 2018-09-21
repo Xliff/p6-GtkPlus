@@ -624,6 +624,7 @@ class GtkStyle            is repr('CPointer') does GTK::Roles::Pointers is expor
 class GtkSwitch           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyleContext     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTargetList       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTextChildAnchor  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTickCallback     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolTip          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidget           is repr('CPointer') does GTK::Roles::Pointers is export { }
