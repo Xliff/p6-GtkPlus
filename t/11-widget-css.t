@@ -22,17 +22,17 @@ $a.activate.tap({
     GTK::Button.new_with_mnemonic('_Open'),
     GTK::Button.new_with_mnemonic('_Close')
   );
+  ($b1.name, $b2.name, $b3.name) = ('button1', 'button2', 'button3');
+  # Not as self-documenting, but does the same thing as ↑↑↑↑:
+  #    ('button' xx 3) Z~ (1..3).list
 
-  $a.window.add($box);
-  $b1.name = 'button1';
   $b1.clicked.tap({ say 'Click me button was clicked'; });
-  $b2.name = 'button2';
   $b2.clicked.tap({ say 'Open button was clicked'; });
-  $b3.name = 'button3';
   $b3.clicked.tap({ say 'Closing application.'; $a.exit; });
   $box.pack_start($b1, True, True, 0);
   $box.pack_start($b2, True, True, 0);
   $box.pack_start($b3, True, True, 0);
+  $a.window.add($box);
   $a.show_all;
 });
 
