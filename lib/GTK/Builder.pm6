@@ -111,16 +111,8 @@ class GTK::Builder does Associative {
       FETCH => sub ($) {
         gtk_builder_get_application($!b);
       },
-      STORE => sub ($, $application is copy) {
-        # Note use of late binding to prevent circular dependency.
-        my GtkApplication $a = do given $application {
-          when GtkApplication         { $_;     }
-          when ::("GTK::Application") { $_.app; }
-          default {
-            die "Invalid type { .^name } passed to { ::?CLASS.name }.{ &?ROUTINE.name }";
-          }
-        };
-        gtk_builder_set_application($!b, $a);
+      STORE => sub ($, GtkApplication() $application is copy) {
+        gtk_builder_set_application($!b, $application);
       }
     );
   }
@@ -222,7 +214,7 @@ class GTK::Builder does Associative {
   }
 
   multi method extend_with_template (
-    GtkWidget $widget,
+    GtkWidget() $widget,
     GType $template_type,
     gchar $buffer,
     Int() $length,
@@ -234,15 +226,6 @@ class GTK::Builder does Associative {
       $!b, $widget, $template_type, $buffer, $l, $error
     );
     self!postProcess;
-  }
-  multi method extend_with_template (
-    GTK::Widget $widget,
-    GType $template_type,
-    gchar $buffer,
-    Int() $length,
-    GError $error = GError
-  )  {
-    samewith($widget.widget, $template_type, $buffer, $length, $error);
   }
 
   method get_object (gchar $name) {

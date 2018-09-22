@@ -11,6 +11,13 @@ use GTK::Bin;
 class GTK::ToolItem is GTK::Bin {
   has GtkToolItem $!ti;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ToolItem');
+    $o;
+  }
+
   submethod BUILD(:$toolitem) {
     given $toolitem {
       when GtkToolItem | GtkWidget {
@@ -21,7 +28,6 @@ class GTK::ToolItem is GTK::Bin {
       default {
       }
     }
-    sel.setType('GTK::ToolItem');
   }
 
   method new {
@@ -29,13 +35,12 @@ class GTK::ToolItem is GTK::Bin {
     self.bless(:$toolitem);
   }
 
-  # Test if this will work in a role or a sub
   method new (GtkWidget $toolitem) {
-    use GTK::Widget;
+    #use GTK::Widget;
 
-    my $type = GTK::Widget.getType($toolitem);
-    die "Incorrect type $type passed to " ~ ::?CLASS ~ 'constructor.'
-      unless $type eq ::?CLASS;
+    #my $type = GTK::Widget.getType($toolitem);
+    #die "Incorrect type $type passed to " ~ ::?CLASS ~ 'constructor.'
+    #  unless $type eq ::?CLASS.name;
     self.bless(:$toolitem);
   }
 
@@ -53,6 +58,10 @@ class GTK::ToolItem is GTK::Bin {
       }
     }
     self.setBin($to-parent);
+  }
+
+  method GTK::Raw::Types::GtkToolItem {
+    $!ti;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -194,11 +203,11 @@ class GTK::ToolItem is GTK::Bin {
     gtk_tool_item_retrieve_proxy_menu_item($!ti);
   }
 
-  multi method set_proxy_menu_item (gchar $menu_item_id, GtkWidget $menu_item) {
+  method set_proxy_menu_item (
+    gchar $menu_item_id,
+    tkWidget() $menu_item
+  ) {
     gtk_tool_item_set_proxy_menu_item($!ti, $menu_item_id, $menu_item);
-  }
-  multi method set_proxy_menu_item (gchar $menu_item_id, GTK::Widget $menu_item)  {
-    samewith($menu_item_id, $menu_item.widget);
   }
 
   method set_tooltip_markup (gchar $markup) {

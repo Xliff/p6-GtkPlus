@@ -15,8 +15,10 @@ class GTK::EntryBuffer {
     $!b = $buffer;
   }
 
-  method new (Str $text, gint $text_len) {
-    my $buffer = gtk_entry_buffer_new($text, $text_len);
+  method new (Str $text, Int() $text_len) {
+    # Move resolve functions to utilities package.
+    my gint $tl = ($text_len.abs +& 0x7fff) * ($text_len < 0 ?? -1 !! 1);
+    my $buffer = gtk_entry_buffer_new($text, $tl);
     self.bless(:$buffer);
   }
 

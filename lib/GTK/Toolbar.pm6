@@ -11,21 +11,34 @@ use GTK::Container;
 class GTK::Toolbar is GTK::Container {
   has GtkToolbar $!tb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Toolbar');
+    $o;
+  }
+
   submethod BUILD(:$toolbar) {
+    my $to-parent;
     given $toolbar {
       when GtkToolbar | GtkWidget {
         $!tb = do {
-          when GtkWidget { nativecast(Gtk , $toolbar); }
-          when GtkToolbar{ $toolbar; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkToolbar, $_);
+          }
+          when GtkToolbar {
+            $to-parent = nativecast(GtkContainer, $_);
+            $_;
+          }
         }
-        self.setContainer($toolbar);
+        self.setContainer($to-parent);
       }
       when GTK::Toolbar {
       }
       default {
       }
     }
-    self.setType('GTK::Toolbar');
   }
 
   method new {
@@ -34,7 +47,7 @@ class GTK::Toolbar is GTK::Container {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  
+
   # Is originally:
   # GtkToolbar, gboolean, gpointer --> gboolean
   method focus-home-or-end {
@@ -75,20 +88,19 @@ class GTK::Toolbar is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_drop_index (Int() $x, Int() $y) {
+  method get_drop_index (Int() $x is rw, Int() $y is rw) {
     my gint ($xx, $yy) = ($x, $y) >>+&<< (0xffff xx 2);
     gtk_toolbar_get_drop_index($!tb, $xx, $yy);
+    ($x, $y) = ($xx, $yy);
   }
+  # Add a no-arg multi
 
   method get_icon_size {
     gtk_toolbar_get_icon_size($!tb);
   }
 
-  multi method get_item_index (GtkToolItem $item) {
+  multi method get_item_index (GtkToolItem() $item) {
     gtk_toolbar_get_item_index($!tb, $item);
-  }
-  multi method get_item_index (Gtk::ToolItem $item)  {
-    samewith($item.toolitem);
   }
 
   method get_n_items {
@@ -112,22 +124,14 @@ class GTK::Toolbar is GTK::Container {
     gtk_toolbar_get_type();
   }
 
-  multi method insert (GtkToolItem $item, Int() $pos) {
+  method insert (GtkToolItem() $item, Int() $pos) {
     my uint32 $p = $pos +& 0xffff;
     gtk_toolbar_insert($!tb, $item, $p);
   }
-  multi method insert (Gtk::ToolItem $item, Int() $pos)  {
-    my uint32 $p = $pos +& 0xffff;
-    samewith($item.toolitem, $p);
-  }
 
-  multi method set_drop_highlight_item (GtkToolItem $tool_item, Int() $index) {
+  method set_drop_highlight_item (GtkToolItem() $tool_item, Int() $index) {
     my uint32 $i = $index +& 0xffff;
     gtk_toolbar_set_drop_highlight_item($!tb, $tool_item, $i);
-  }
-  multi method set_drop_highlight_item (Gtk::ToolItem $tool_item, Int() $index)  {
-    my uint32 $i = $index +& 0xffff;
-    samewith($tool_item.toolitem, $i);
   }
 
   method unset_icon_size {

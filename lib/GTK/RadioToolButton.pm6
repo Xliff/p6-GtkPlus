@@ -11,6 +11,13 @@ use GTK::ToggleToolButton;
 class GTK::RadioToolButton is GTK::ToggleToolButton {
   has Gtk $!rtb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::RadioToolButton');
+    $o;
+  }
+
   submethod BUILD(:$radiotoolbutton ) {
     given $radiotoolbutton {
       when GtkRadioToolButton | GtkToolItem | GtkWidget {
@@ -32,7 +39,6 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
       default {
       }
     }
-    self.setType('GTK::RadioToolButton');
   }
 
   method new {
@@ -41,7 +47,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
   }
 
   method new_from_stock (gchar $stock_id)
-    is deprecated( ::?CLASS ~ '.new()' )
+    is DEPRECATED( ::?CLASS.name ~ '.new()' )
   {
     my $radiotoolbutton = gtk_radio_tool_button_new_from_stock(
       $!rtb, $stock_id
@@ -55,7 +61,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
   }
 
   method new_with_stock_from_widget (gchar $stock_id)
-    is deprecated( ::?CLASS ~ '.new_from_widget()' )
+    is DEPRECATED( ::?CLASS.name ~ '.new_from_widget()' )
   {
     my $radiotoolbutton = gtk_radio_tool_button_new_with_stock_from_widget(
       $!rtb, $stock_id

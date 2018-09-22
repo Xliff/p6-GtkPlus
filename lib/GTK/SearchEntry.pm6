@@ -11,21 +11,34 @@ use GTK::Entry;
 class GTK::SearchEntry is GTK::Entry {
   has Gtk $!se;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::SearchEntry');
+    $o;
+  }
+
   submethod BUILD(:$searchentry) {
+    my $to-parent;
     given $searchentry {
       when GtkSearchEntry | GtkWidget {
         $!se = do {
-          when GtkWidget      { nativecast(GtkSearchEntry, $searchentry); }
-          when GtkSearchEntry { $searchentry; }
+          when GtkWidget      {
+            $to-parent = $_;
+            nativecast(GtkSearchEntry, $_);
+          }
+          when GtkSearchEntry {
+            $to-parent = nativecast(GtkEntry, $_);
+            $searchentry;
+          }
         };
-        self.setEntry($searchentrty);
+        self.setEntry($to-parent);
       }
       when GTK::SearchEntry {
       }
       default {
       }
     }
-    self.setType('GTK::SearchEntry');
   }
 
   method new {

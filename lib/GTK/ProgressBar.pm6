@@ -12,25 +12,42 @@ use GTK::Widget;
 class GTK::ProgressBar is GTK::Widget {
   has GtkProgressBar $!bar;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ProgressBar');
+    $o;
+  }
+
   submethod BUILD(:$bar) {
+    my $to-parent;
     given $bar {
       when GtkProgressBar | GtkWidget {
         $!bar = do {
-          when GtkWidget      { nativecast(GtkProgressBar, $bar); }
-          when GtkProgressBar { $bar; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkProgressBar, $_);
+          }
+          when GtkProgressBar {
+            $to-parent = nativecast(GtkProgressBar, $_);
+            $_;
+          }
         };
-        self.setWidget($bar);
+        self.setWidget($to-parent);
       }
       when GTK::ProgressBar {
       }
       default {
       }
     }
-    self.setType('GTK::ProgressBar');
   }
 
-  method new () {
+  method new {
     my $bar = gtk_progress_bar_new();
+    self.bless(:$bar);
+  }
+
+  method new (GtkWidget $bar) {
     self.bless(:$bar);
   }
 
@@ -43,17 +60,9 @@ class GTK::ProgressBar is GTK::Widget {
       FETCH => sub ($) {
         PangoEllipsizeMode( gtk_progress_bar_get_ellipsize($!bar) );
       },
-      STORE => sub ($, $mode is copy) {
-        my uint32 $m = do given $mode {
-          when PangoEllipsizeMode { $mode.Int;      }
-          when uint32             { $mode;          }
-          when Int                { $mode +& 0xffff }
-          default                 {
-            die "Invalid type { $mode.^name } passed to GTK::ProgressBar.ellipsize!";
-          }
-        }
-
-        gtk_progress_bar_set_ellipsize($!bar, $mode);
+      STORE => sub ($, Int() $mode is copy) {
+        my uint32 $m = self.RESOLVE-UINT($mode)
+        gtk_progress_bar_set_ellipsize($!bar, $m);
       }
     );
   }
@@ -63,8 +72,8 @@ class GTK::ProgressBar is GTK::Widget {
       FETCH => sub ($) {
         gtk_progress_bar_get_fraction($!bar);
       },
-      STORE => sub ($, $fraction is copy) {
-        my gdouble $f = $fraction.Num;
+      STORE => sub ($, Num() $fraction is copy) {
+        my gdouble $f = $fraction;
         gtk_progress_bar_set_fraction($!bar, $f);
       }
     );
@@ -73,10 +82,11 @@ class GTK::ProgressBar is GTK::Widget {
   method inverted is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_progress_bar_get_inverted($!bar);
+        Bool( gtk_progress_bar_get_inverted($!bar) );
       },
-      STORE => sub ($, $inverted is copy) {
-        gtk_progress_bar_set_inverted($!bar, $inverted);
+      STORE => sub ($, Int() $inverted is copy) {
+        my gboolean $i = self.RESOLVE-BOOL($inverted);
+        gtk_progress_bar_set_inverted($!bar, $i);
       }
     );
   }
@@ -86,8 +96,9 @@ class GTK::ProgressBar is GTK::Widget {
       FETCH => sub ($) {
         gtk_progress_bar_get_pulse_step($!bar);
       },
-      STORE => sub ($, $fraction is copy) {
-        gtk_progress_bar_set_pulse_step($!bar, $fraction);
+      STORE => sub ($, Num() $fraction is copy) {
+        my gdouble $f = $fraction;
+        gtk_progress_bar_set_pulse_step($!bar, $f);
       }
     );
   }
@@ -95,10 +106,11 @@ class GTK::ProgressBar is GTK::Widget {
   method show_text is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_progress_bar_get_show_text($!bar);
+        Bool( gtk_progress_bar_get_show_text($!bar) );
       },
-      STORE => sub ($, $show_text is copy) {
-        gtk_progress_bar_set_show_text($!bar, $show_text);
+      STORE => sub ($, Int() $show_text is copy) {
+        my gboolean $st = self.RESOLVE-BOOL($show_text);
+        gtk_progress_bar_set_show_text($!bar, $st);
       }
     );
   }
@@ -108,7 +120,7 @@ class GTK::ProgressBar is GTK::Widget {
       FETCH => sub ($) {
         gtk_progress_bar_get_text($!bar);
       },
-      STORE => sub ($, $text is copy) {
+      STORE => sub ($, Str() $text is copy) {
         gtk_progress_bar_set_text($!bar, $text);
       }
     );
@@ -116,11 +128,11 @@ class GTK::ProgressBar is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type () {
+  method get_type {
     gtk_progress_bar_get_type();
   }
 
-  method pulse () {
+  method pulse {
     gtk_progress_bar_pulse($!bar);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

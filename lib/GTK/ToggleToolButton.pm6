@@ -9,7 +9,14 @@ use GTK::Raw::Types;
 use GTK::ToolButton;
 
 class GTK::ToggleToolButton is GTK::ToolButton {
-  has Gtk $!ttb;
+  has GtkToggleToolButton $!ttb;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ToggleToolButton');
+    $o;
+  }
 
   submethod BUILD(:$toggletoolbutton) {
     given $toggletoolbutton {
@@ -21,7 +28,6 @@ class GTK::ToggleToolButton is GTK::ToolButton {
       default {
       }
     }
-    self.setType('GTK::ToggleToolButton');
   }
 
   method new {
@@ -44,6 +50,10 @@ class GTK::ToggleToolButton is GTK::ToolButton {
       }
     }
     self.setToolButton($to-parent);
+  }
+
+  method GTK::Raw::Types::GtkToggleToolButton {
+    $!ttb;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

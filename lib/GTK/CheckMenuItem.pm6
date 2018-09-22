@@ -11,6 +11,13 @@ use GTK::MenuItem;
 class GTK::CheckMenuItem is GTK::MenuItem {
   has GtkCheckMenuItem $!cmi;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::CheckMenuItem');
+    $o;
+  }
+
   submethod BUILD(:$checkmenuitem) {
     my $to-parent;
     given $checkmenuitem {
@@ -22,7 +29,6 @@ class GTK::CheckMenuItem is GTK::MenuItem {
       default {
       }
     }
-    self.setType('GTK::CheckMenuItem');
   }
 
   method setCheckMenuItem($checkmenuitem) {

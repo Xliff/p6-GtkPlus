@@ -96,6 +96,10 @@ ERR
     });
   }
 
+  method GTK::Raw::Types::GtkApplication {
+    $!app;
+  }
+
   method init (GTK::Application:U: ) {
     my $argc = CArray[uint32].new;
     $argc[0] = 1;

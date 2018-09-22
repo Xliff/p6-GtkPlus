@@ -22,7 +22,8 @@ class GTK::Bin is GTK::Container {
       self.setBin($bin);
     }
     when GTK::Bin {
-      warn "To copy a { ::?CLASS }, use { ::?CLASS }.clone.";
+      my $c = ::?CLASS.name;
+      warn "To copy a { $c } object, use { $c }.clone.";
     }
     default {
       # Throw exception
@@ -53,6 +54,6 @@ class GTK::Bin is GTK::Container {
     gtk_bin_get_type();
   }
 
-  # XXX - Override pack_start and pack_end to take only one child?
+  # XXX - Override add to take only one child?
 
 }
