@@ -35,12 +35,12 @@ class GTK::Bin is GTK::Container {
     my $to-parent;
     $!bin = do given $bin {
       when GtkBin {
-        $to-parent = nativecast(GtkContainer, $bin);
+        $to-parent = nativecast(GtkContainer, $_);
         $_;
       }
       when GtkWidget {
         $to-parent = $_;
-        nativecast(GtkBin, $bin);
+        nativecast(GtkBin, $_);
       }
     };
     self.setContainer($to-parent);

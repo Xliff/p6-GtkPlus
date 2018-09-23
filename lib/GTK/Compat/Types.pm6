@@ -16,6 +16,7 @@ constant gconstpointer is export := Pointer;
 constant gdouble       is export := num64;
 constant gfloat        is export := num32;
 constant gint          is export := int32;
+constant gint16        is export := int16;
 constant gpointer      is export := Pointer;
 constant gsize         is export := uint64;
 constant gssize        is export := int64;
@@ -38,9 +39,9 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
 class GFile is repr('CPointer') does GTK::Roles::Pointers is export { }
 
 class GList is repr('CStruct')  does GTK::Roles::Pointers is export {
-  has OpaquePointer $.data;
-  has GList         $.next;
-  has GList         $.prev;
+  has Pointer $.data;
+  has GList   $.next;
+  has GList   $.prev;
 }
 
 class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -371,6 +372,13 @@ class GtkTreeModel          is repr('CPointer') is export { }
 class GdkVisual             is repr('CPointer') is export { }
 class GdkWindow             is repr('CPointer') is export { }
 class GdkWindowEdge         is repr('CPointer') is export { }
+
+class GdkColor is repr('CStruct') does GTK::Roles::Pointers is export {
+  has guint   $.pixel;
+  has guint16 $.red;
+  has guint16 $.green;
+  has guint16 $.blue;
+}
 
 class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32       $.type;      # GdkEventType

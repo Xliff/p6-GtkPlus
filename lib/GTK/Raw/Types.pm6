@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Roles::Pointers;
 
@@ -9,6 +10,8 @@ unit package GTK::Raw::Types;
 
 our constant GtkCalendarDetailFunc is export := Pointer;
 our constant GtkBuilderConnectFunc is export := Pointer;
+
+our constant GdkRGBA is export := GTK::Compat::RGBA;
 
 class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
   has int16 $.left;
@@ -34,6 +37,44 @@ class GtkTreeIter is repr('CStruct') does GTK::Roles::Pointers is export {
   has gpointer $.user_data;
   has gpointer $.user_data2;
   has gpointer $.user_data3;
+}
+
+class GtkTextAppearance is repr('CStruct') does GTK::Roles::Pointers is export {
+  HAS GdkColor $.bg_color;
+  HAS GdkColor $.fg_color;
+  has gint     $.rise;
+  has guint    $.underline;        # :4
+  has guint    $.strikethru;       # :1
+  has guint    $.draw_bg;          # :1
+  has guint    $.inside_selection; # :1
+  has guint    $.is_text;          # :1
+  has GdkRGBA  $.rgba1;
+  has GdkRGBA  $.rgba2;
+}
+
+class GtkTextAttributes is repr('CStruct') does GTK::Roles::Pointers is export {
+  HAS GtkTextAppearance    $.appearance;
+  has uint32               $.justification;   # GtkTextJustification
+  has uint32               $.direction;       # GtkTextDirection
+  has PangoFontDescription $.font;
+  has gdouble              $.font_scale;
+  has gint                 $.left_margin;
+  has gint                 $.right_margin;
+  has gint                 $.ident;
+  has gint                 $.pixels_above_lines;
+  has gint                 $.pixels_below_lines;
+  has gint                 $.pixels_inside_wrap;
+  has PangoTabArray        $.tabs;
+  has uint32               $.wrap_mode;       # GtkWrapMode
+  has Pointer              $.language;        # PangoLanguage
+  has guint                $.invisible;       # :1
+  has guint                $.bg_bull_height;  # :1
+  has guint                $.editable;        # :1
+  has guint                $.no_fallback;     # :1
+  has GdkRGBA              $.pg_bg_rgba;
+  has gint                 $.letter_spacing;
+  has Str                  $.font_features;
+  has guint                $.padding;
 }
 
 class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -617,6 +658,7 @@ class GtkDragContext      is repr('CPointer') does GTK::Roles::Pointers is expor
 class GtkEntry            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryBuffer      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryCompletion  is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkFrame            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconSet          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLevelBar         is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -635,7 +677,11 @@ class GtkStyle            is repr('CPointer') does GTK::Roles::Pointers is expor
 class GtkSwitch           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyleContext     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTargetList       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTextBuffer       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextChildAnchor  is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTextIter         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTextMark         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTextView         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTickCallback     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolTip          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidget           is repr('CPointer') does GTK::Roles::Pointers is export { }

@@ -66,7 +66,7 @@ sub gtk_text_view_forward_display_line_end (
 
 sub gtk_text_view_get_border_window_size (
   GtkTextView $text_view,
-  GtkTextWindowType $type
+  uint32 $type                  # GtkTextWindowType $type
 )
   returns gint
   is native('gtk-3')
@@ -177,7 +177,7 @@ sub gtk_text_view_get_window (
   { * }
 
 sub gtk_text_view_get_window_type (GtkTextView $text_view, GdkWindow $window)
-  returns GtkTextWindowType
+  returns uint32 # GtkTextWindowType
   is native('gtk-3')
   is export
   { * }
@@ -270,14 +270,17 @@ sub gtk_text_view_scroll_to_mark (
 
 sub gtk_text_view_set_border_window_size (
   GtkTextView $text_view,
-  uint32 $type                # GtkTextWindowType $type,
+  uint32 $type,               # GtkTextWindowType $type,
   gint $size
 )
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_text_view_starts_display_line (GtkTextView $text_view, GtkTextIter $iter)
+sub gtk_text_view_starts_display_line (
+  GtkTextView $text_view,
+  GtkTextIter $iter
+)
   returns uint32
   is native('gtk-3')
   is export
@@ -296,7 +299,7 @@ sub gtk_text_view_window_to_buffer_coords (
   { * }
 
 sub gtk_text_view_get_input_hints (GtkTextView $text_view)
-  returns GtkInputHints
+  returns uint32 # GtkInputHints
   is native('gtk-3')
   is export
   { * }
@@ -356,19 +359,19 @@ sub gtk_text_view_get_top_margin (GtkTextView $text_view)
   { * }
 
 sub gtk_text_view_get_wrap_mode (GtkTextView $text_view)
-  returns GtkWrapMode
+  returns uint32 # GtkWrapMode
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_text_view_get_justification (GtkTextView $text_view)
-  returns GtkJustification
+  returns uint32 # GtkJustification
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_text_view_get_input_purpose (GtkTextView $text_view)
-  returns GtkInputPurpose
+  returns uint32 # GtkInputPurpose
   is native('gtk-3')
   is export
   { * }
@@ -409,9 +412,17 @@ sub gtk_text_view_get_buffer (GtkTextView $text_view)
   is export
   { * }
 
+sub gtk_text_view_set_buffer (
+  GtkTextView $text_view,
+  GtkTextBuffer $buffer
+)
+  is native('gtk-3')
+  is export
+  { * }
+
 sub gtk_text_view_set_input_hints (
   GtkTextView $text_view,
-  GtkInputHints $hints
+  uint32 $hints               # GtkInputHints $hints
 )
   is native('gtk-3')
   is export

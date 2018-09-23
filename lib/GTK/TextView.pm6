@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::NoteView;
+use GTK::Raw::TextView;
 use GTK::Raw::Types;
 
 use GTK::Container;
@@ -57,91 +57,91 @@ class GTK::TextView is GTK::Container {
   # Is originally:
   # GtkTextView, gpointer --> void
   method backspace {
-    self.connect($!w, 'backspace');
+    self.connect($!tv, 'backspace');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
   method copy-clipboard {
-    self.connect($!w, 'copy-clipboard');
+    self.connect($!tv, 'copy-clipboard');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
   method cut-clipboard {
-    self.connect($!w, 'cut-clipboard');
+    self.connect($!tv, 'cut-clipboard');
   }
 
   # Is originally:
   # GtkTextView, GtkDeleteType, gint, gpointer --> void
   method delete-from-cursor {
-    self.connect($!w, 'delete-from-cursor');
+    self.connect($!tv, 'delete-from-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkTextExtendSelection, GtkTextIter, GtkTextIter, GtkTextIter, gpointer --> gboolean
   method extend-selection {
-    self.connect($!w, 'extend-selection');
+    self.connect($!tv, 'extend-selection');
   }
 
   # Is originally:
   # GtkTextView, gchar, gpointer --> void
   method insert-at-cursor {
-    self.connect($!w, 'insert-at-cursor');
+    self.connect($!tv, 'insert-at-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkMovementStep, gint, gboolean, gpointer --> void
   method move-cursor {
-    self.connect($!w, 'move-cursor');
+    self.connect($!tv, 'move-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkScrollStep, gint, gpointer --> void
   method move-viewport {
-    self.connect($!w, 'move-viewport');
+    self.connect($!tv, 'move-viewport');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
   method paste-clipboard {
-    self.connect($!w, 'paste-clipboard');
+    self.connect($!tv, 'paste-clipboard');
   }
 
   # Is originally:
   # GtkTextView, GtkWidget, gpointer --> void
   method populate-popup {
-    self.connect($!w, 'populate-popup');
+    self.connect($!tv, 'populate-popup');
   }
 
   # Is originally:
   # GtkTextView, gchar, gpointer --> void
   method preedit-changed {
-    self.connect($!w, 'preedit-changed');
+    self.connect($!tv, 'preedit-changed');
   }
 
   # Is originally:
   # GtkTextView, gboolean, gpointer --> void
   method select-all {
-    self.connect($!w, 'select-all');
+    self.connect($!tv, 'select-all');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
   method set-anchor {
-    self.connect($!w, 'set-anchor');
+    self.connect($!tv, 'set-anchor');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
   method toggle-cursor-visible {
-    self.connect($!w, 'toggle-cursor-visible');
+    self.connect($!tv, 'toggle-cursor-visible');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
   method toggle-overwrite {
-    self.connect($!w, 'toggle-overwrite');
+    self.connect($!tv, 'toggle-overwrite');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -235,7 +235,7 @@ class GTK::TextView is GTK::Container {
         GtkInputPurpose( gtk_text_view_get_input_purpose($!tv) );
       },
       STORE => sub ($, Int() $purpose is copy) {
-        my uint34 $p = self.RESOLVE-UINT($purpose);
+        my uint32 $p = self.RESOLVE-UINT($purpose);
         gtk_text_view_set_input_purpose($!tv, $p);
       }
     );
@@ -295,7 +295,7 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_pixels_above_lines($!tv);
       },
       STORE => sub ($, $pixels_above_lines is copy) {
-        my gint $pal = self.RESOLVE-INT($pal);
+        my gint $pal = self.RESOLVE-INT($pixels_above_lines);
         gtk_text_view_set_pixels_above_lines($!tv, $pal);
       }
     );
@@ -307,7 +307,7 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_pixels_below_lines($!tv);
       },
       STORE => sub ($, Int() $pixels_below_lines is copy) {
-        my gint $pbl = self.RESOLVE-INT($pixels_below_lines)
+        my gint $pbl = self.RESOLVE-INT($pixels_below_lines);
         gtk_text_view_set_pixels_below_lines($!tv, $pbl);
       }
     );
@@ -390,7 +390,7 @@ class GTK::TextView is GTK::Container {
   }
 
   method buffer_to_window_coords (
-    Int() $win                # GtkTextWindowType $win,
+    Int() $win,               # GtkTextWindowType $win,
     Int() $buffer_x,
     Int() $buffer_y,
     Int() $window_x,
@@ -399,7 +399,7 @@ class GTK::TextView is GTK::Container {
     my @u = ($buffer_x, $buffer_y, $window_x, $window_y);
     my gint ($bx, $by,$wx, $wy) = self.RESOLVE-INT(@u);
     my uint32 $w = self.RESOLVE-UINT($win);
-    gtk_text_view_buffer_to_window_coords($!tv, $w, $bx, $by, $wx, $y);
+    gtk_text_view_buffer_to_window_coords($!tv, $w, $bx, $by, $wx, $wy);
   }
 
   method forward_display_line (GtkTextIter() $iter) {
@@ -446,7 +446,7 @@ class GTK::TextView is GTK::Container {
     Int() $x,
     Int() $y
   ) {
-    my @u = ($trailing, $x, $y)
+    my @u = ($trailing, $x, $y);
     my gint ($t, $xx, $yy) = self.RESOLVE-INT(@u);
     gtk_text_view_get_iter_at_position($!tv, $iter, $t, $xx, $yy);
   }
@@ -479,7 +479,7 @@ class GTK::TextView is GTK::Container {
     gtk_text_view_get_visible_rect($!tv, $visible_rect);
   }
 
-  multi method get_window (
+  method get_window (
     Int() $win                  # GtkTextWindowType $win
   ) {
     my uint32 $w = self.RESOLVE-UINT($win);
@@ -545,7 +545,7 @@ class GTK::TextView is GTK::Container {
   }
 
   method set_border_window_size (
-    Int() $type                 # GtkTextWindowType $type,
+    Int() $type,                # GtkTextWindowType $type,
     Int() $size                 # gint $size
   ) {
     my uint32 $t = self.RESOLVE-UINT($type);
@@ -558,14 +558,14 @@ class GTK::TextView is GTK::Container {
   }
 
   method window_to_buffer_coords (
-    Int() $win                  # GtkTextWindowType $win,
+    Int() $win,                # GtkTextWindowType $win,
     Int() $window_x,
     Int() $window_y,
     Int() $buffer_x,
     Int() $buffer_y
   ) {
     my @u = ($window_x, $window_y, $buffer_x, $buffer_y);
-    my gint ($wx, $wy, $by, $by) = self.RESOLVE-INT(@u);
+    my gint ($wx, $wy, $bx, $by) = self.RESOLVE-INT(@u);
     my uint32 $w = self.RESOLVE-UINT($win);
     gtk_text_view_window_to_buffer_coords($!tv, $w, $wx, $wy, $bx, $by);
   }

@@ -36,7 +36,7 @@ sub gtk_frame_get_label_widget (GtkFrame $frame)
   { * }
 
 sub gtk_frame_get_shadow_type (GtkFrame $frame)
-  returns GtkShadowType
+  returns uint32 # GtkShadowType
   is native('gtk-3')
   is export
   { * }
@@ -52,7 +52,10 @@ sub gtk_frame_set_label_widget (GtkFrame $frame, GtkWidget $label_widget)
   is export
   { * }
 
-sub gtk_frame_set_shadow_type (GtkFrame $frame, GtkShadowType $type)
+sub gtk_frame_set_shadow_type (
+  GtkFrame $frame,
+  uint32 $type                  # GtkShadowType $type
+)
   is native('gtk-3')
   is export
   { * }
