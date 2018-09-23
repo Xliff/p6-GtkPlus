@@ -327,6 +327,7 @@ class PangoAttrList         is repr('CPointer') is export { }
 class PangoContext          is repr('CPointer') is export { }
 class PangoFontDescription  is repr('CPointer') is export { }
 class PangoFontMap          is repr('CPointer') is export { }
+class PangoLanguage         is repr('CPointer') is export { }
 class PangoLayout           is repr('CPointer') is export { }
 
 class GActionGroup          is repr('CPointer') is export { }

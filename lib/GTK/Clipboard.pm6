@@ -20,6 +20,10 @@ class GTK::Clipboard {
     $!cb = $clipboard
   }
 
+  method GTK::Raw::Types::GtkClipboard {
+    $!cb;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:

@@ -62,7 +62,7 @@ sub gtk_text_iter_backward_lines (GtkTextIter $iter, gint $count)
 sub gtk_text_iter_backward_search (
   GtkTextIter $iter,
   gchar $str,
-  GtkTextSearchFlags $flags,
+  uint32 $flags,                # GtkTextSearchFlags $flags,
   GtkTextIter $match_start,
   GtkTextIter $match_end,
   GtkTextIter $limit
@@ -251,7 +251,7 @@ sub gtk_text_iter_forward_lines (GtkTextIter $iter, gint $count)
 sub gtk_text_iter_forward_search (
   GtkTextIter $iter,
   gchar $str,
-  GtkTextSearchFlags $flags,
+  uint32 $flags,                  # GtkTextSearchFlags $flags,
   GtkTextIter $match_start,
   GtkTextIter $match_end,
   GtkTextIter $limit

@@ -3,42 +3,30 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::;
+use GTK::Raw::TextTagTable;
 use GTK::Raw::Types;
 
-use GTK::;
-
-class GTK:: is GTK:: {
+class GTK::TextTagTable {
   has Gtk $!c;
 
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::');
+    self.setType('GTK::TextTagTable');
     $o;
   }
 
-  submethod BUILD(:$ ) {
-    my $to-parent;
-    given $ {
-      when Gtk | GtkWidget {
-        $! = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(Gtk , $_);
-          }
-          when Gtk  {
-            $to-parent = nativecast(Gtk, $_);
-            $_;
-          }
-        }
-        self.setParent($to-parent);
-      }
-      when GTK:: {
-      }
-      default {
-      }
-    }
+  submethod BUILD(:$texttag) {
+    $!ttt = $texttag;
+  }
+
+  method new {
+    my $tagtable = gtk_text_tag_table_new();
+    self.bless($tagtable);
+  }
+
+  method GTK::Raw::Types::GtkTextTagTable {
+    $!ttt;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -48,6 +36,29 @@ class GTK:: is GTK:: {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
+  method add (GtkTextTag() $tag) {
+    gtk_text_tag_table_add($!ttt, $tag);
+  }
+
+  method foreach (GtkTextTagTableForeach $func, gpointer $data) {
+    gtk_text_tag_table_foreach($!ttt, $func, $data);
+  }
+
+  method get_size {
+    gtk_text_tag_table_get_size($!ttt);
+  }
+
+  method get_type {
+    gtk_text_tag_table_get_type($!ttt);
+  }
+
+  method lookup (gchar $name) {
+    gtk_text_tag_table_lookup($!ttt, $name);
+  }
+
+  multi method remove (GtkTextTag() $tag) {
+    gtk_text_tag_table_remove($!ttt, $tag);
+  }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }

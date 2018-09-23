@@ -8,12 +8,13 @@ use GTK::Raw::TextIter;
 use GTK::Raw::Types;
 
 class GTK::TextIter {
-  has Gtk $!ti;
+  has GtkTextIter $!ti;
 
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::TextIter');
+    # Non-widget descendent does not have setType.
+    #$o.setType('GTK::TextIter');
     $o;
   }
 
@@ -188,7 +189,7 @@ class GTK::TextIter {
   }
 
   method backward_visible_lines (gint $count) {
-    Bool( tk_text_iter_backward_visible_lines($!ti, $count) );
+    Bool( gtk_text_iter_backward_visible_lines($!ti, $count) );
   }
 
   method backward_visible_word_start {

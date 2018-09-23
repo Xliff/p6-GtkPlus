@@ -10,9 +10,11 @@ use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
 use GTK::Roles::Signals;
+use GTK::Roles::Types;
 
 class GTK::Widget {
   also does GTK::Roles::Signals;
+  also does GTK::Roles::Types;
 
   has GtkWidget $!w;
 
@@ -55,78 +57,6 @@ class GTK::Widget {
          die "GTK::Widget initialized from unexpected source!";
       }
     };
-  }
-
-  # cw: This is a HACK, but it should work with careful use.
-  method !CALLING-METHOD($nf = 2) {
-    my $c = callframe($nf).code;
-    $c ~~ Routine ??
-      "{ $c.package.^name }.{ $c.name }"
-      !!
-      die "Frame not a method or code!";
-  }
-
-  # Should never be called ouside of the GTK::Widget hierarchy, but
-  # how can the watcher watch itself?
-  method IS-PROTECTED {
-    # Really kinda violates someone's idea of "object-oriented" somewhere,
-    # but I am more results-oriened.
-    my $c = self!CALLING-METHOD;
-    $c ~~ /^ 'GTK::'/ ??
-      True
-      !!
-      die "Cannot call method from outside of a GTK:: object";
-  }
-
-  multi method RESOLVE-BOOL(@rb) {
-    self.IS-PROTECTED;
-    @rb.map({ samewith($_) });
-  }
-  multi method RESOLVE-BOOL($rb) {
-    self.IS-PROTECTED;
-    # Check if caller comes drom a GTK:: object, otherwise throw exception.
-    do given $rb {
-      when Bool { $rb.Int; }
-      when Int  { $rb;     }
-      default {
-        so $rb.can('Bool') ??
-          $rb.Bool
-          !!
-          die X::TypeCheck
-            .new(payload => "Invalid type to RESOLVE-BOOL: { .^name }")
-            .throw;
-      }
-    };
-  }
-
-  multi method RESOLVE-INT(@ri) {
-    self.IS-PROTECTED;
-    @ri.map({ samewith($_) });
-  }
-  multi method RESOLVE-INT($ri) {
-    self.IS-PROTECTED;
-    ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
-  }
-
-  multi method RESOLVE-UINT(@ru) {
-    self.IS-PROTECTED;
-    @ru.map({ samewith($_) });
-  }
-  multi method RESOLVE-UINT($ru) {
-    self.IS-PROTECTED;
-    $ru +& 0xffff;
-  }
-
-  multi method RESOLVE-GSTRV(Str @ri) {
-    self.IS-PROTECTED;
-    my CArray[Str] $gs = CArray[Str].new;
-    $gs[$++] = $_ for @ri;
-    $gs[$gs.elems] = Str unless $gs[*-1] =:= Str;
-    $gs;
-  }
-  multi method RESOLVE-GSTRV(Str $ri) {
-    self.IS-PROTECTED;
-    samewith($ri.Array);
   }
 
   method setType($typeName) {

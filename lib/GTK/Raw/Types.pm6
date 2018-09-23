@@ -8,8 +8,10 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-our constant GtkCalendarDetailFunc is export := Pointer;
-our constant GtkBuilderConnectFunc is export := Pointer;
+our constant GtkCalendarDetailFunc  is export := Pointer;
+our constant GtkBuilderConnectFunc  is export := Pointer;
+our constant GtkTextTagTableForeach is export := Pointer;
+our constant GtkTextCharPredicate   is export := Pointer;
 
 our constant GdkRGBA is export := GTK::Compat::RGBA;
 
@@ -638,6 +640,12 @@ our enum GtkTextWindowType is export <
   GTK_TEXT_WINDOW_BOTTOM
 >;
 
+our enum GtkTextSearchFlags is export (
+  GTK_TEXT_SEARCH_VISIBLE_ONLY     => 1,
+  GTK_TEXT_SEARCH_TEXT_ONLY        => (1 +< 1),
+  GTK_TEXT_SEARCH_CASE_INSENSITIVE => (1 +< 2)
+);
+
 
 class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -681,6 +689,8 @@ class GtkTextBuffer       is repr('CPointer') does GTK::Roles::Pointers is expor
 class GtkTextChildAnchor  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextIter         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextMark         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTextTag          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTextTagTable     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextView         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTickCallback     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolTip          is repr('CPointer') does GTK::Roles::Pointers is export { }

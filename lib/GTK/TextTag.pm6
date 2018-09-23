@@ -25,7 +25,7 @@ class GTK::  {
     self.bless(:$tag);
   }
 
-  method GtkTextTag {
+  method GTK::Raw::Types::GtkTextTag {
     $!tt;
   }
 
