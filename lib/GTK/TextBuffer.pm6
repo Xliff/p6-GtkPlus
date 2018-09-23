@@ -25,7 +25,7 @@ class GTK::TextBuffer {
     self.bless(:$buffer);
   }
 
-  method GtkTextBuffer {
+  method GTK::Raw::Types::GtkTextBuffer {
     $!tb;
   }
 

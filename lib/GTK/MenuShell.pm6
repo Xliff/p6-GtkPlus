@@ -90,7 +90,7 @@ class GTK::MenuShell is GTK::Container {
         Bool( gtk_menu_shell_get_take_focus($!ms) );
       },
       STORE => sub ($, Int() $take_focus is copy) {
-        my $tf = $take_focus == 0 ?? 0 !! 1;
+        my $tf = self.RESOLVE-BOOL($take_focus);
         gtk_menu_shell_set_take_focus($!ms, $tf);
       }
     );
@@ -98,25 +98,16 @@ class GTK::MenuShell is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method activate_item (
-    GtkWidget $menu_item,
-    gboolean $force_deactivate
-  ) {
-    gtk_menu_shell_activate_item($!ms, $menu_item, $force_deactivate);
-  }
-  multi method activate_item (
-    GTK::Widget $menu_item,
+  method activate_item (
+    GtkWidget() $menu_item,
     Int() $force_deactivate
   ) {
-    my $fd = $force_deactivate +& 0xffff;
-    samewith($menu_item.widget, $fd);
+    my gboolean $fd = self.RESOLVE-BOOL($force_deactivate);
+    gtk_menu_shell_activate_item($!ms, $menu_item, $fd);
   }
 
-  multi method append (GtkWidget $child) {
+  multi method append (GtkWidget() $child) {
     gtk_menu_shell_append($!ms, $child);
-  }
-  multi method append (GTK::Widget $child)  {
-    samewith($child.widget);
   }
 
   method bind_model (
@@ -124,7 +115,7 @@ class GTK::MenuShell is GTK::Container {
     gchar $action_namespace,
     Int() $with_separators
   ) {
-    my $ws = $with_separators +& 0xffff;
+    my gboolean $ws = self.RESOLVE-BOOL($with_separators);
     gtk_menu_shell_bind_model($!ms, $model, $action_namespace, $ws);
   }
 
@@ -152,32 +143,22 @@ class GTK::MenuShell is GTK::Container {
     gtk_menu_shell_get_type();
   }
 
-  multi method insert (GtkWidget $child, Int() $position) {
-    my $p = $position +& 0xffff;
+  method insert (GtkWidget() $child, Int() $position) {
+    my gint $p = self.RESOLVE-INT($position);
     gtk_menu_shell_insert($!ms, $child, $p);
   }
-  multi method insert (GTK::Widget $child, Int() $position)  {
-    my $p = $position +& 0xffff;
-    samewith($child.widget, $p);
-  }
 
-  multi method prepend (GtkWidget $child) {
+  method prepend (GtkWidget() $child) {
     gtk_menu_shell_prepend($!ms, $child);
-  }
-  multi method prepend (GTK::Widget $child)  {
-    samewith($child.widget);
   }
 
   method select_first (Int() $search_sensitive) {
-    my $ss = $search_sensitive +& 0xffff;
+    my gboolean $ss = self.RESOLVE-BOOL($search_sensitive);
     gtk_menu_shell_select_first($!ms, $ss);
   }
 
-  multi method select_item (GtkWidget $menu_item) {
+  method select_item (GtkWidget() $menu_item) {
     gtk_menu_shell_select_item($!ms, $menu_item);
-  }
-  multi method select_item (GTK::Widget $menu_item)  {
-    samewith($menu_item.widget);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

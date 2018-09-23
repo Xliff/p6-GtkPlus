@@ -587,6 +587,17 @@ our enum GtkStyleProviderPriority is export (
   GTK_STYLE_PROVIDER_PRIORITY_USER         => 800
 );
 
+our enum GtkTextWindowType is export <
+  GTK_TEXT_WINDOW_PRIVATE
+  GTK_TEXT_WINDOW_WIDGET
+  GTK_TEXT_WINDOW_TEXT
+  GTK_TEXT_WINDOW_LEFT
+  GTK_TEXT_WINDOW_RIGHT
+  GTK_TEXT_WINDOW_TOP
+  GTK_TEXT_WINDOW_BOTTOM
+>;
+
+
 class GtkAccelGroup       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAdjustment       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAllocation       is repr('CPointer') does GTK::Roles::Pointers is export { }

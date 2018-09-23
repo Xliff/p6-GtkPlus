@@ -11,21 +11,34 @@ use GTK::Container;
 class GTK::Fixed is GTK::Container {
   has GtkFixed $!f;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Fixed');
+    $o;
+  }
+
   submethod BUILD(:$fixed) {
+    my $to-parent;
     given $fixed {
       when GtkFixed | GtkWidget {
         $!f = do {
-          when GtkWidget { nativecast(GtkFixed, $fixed); }
-          when GtkFixed  { $fixed; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkFixed, $_);
+          }
+          when GtkFixed {
+            $to-parent = nativecast(GtkContainer, $_);
+            $_;
+          }
         };
-        self.setContainer($fixed);
+        self.setContainer($to-parent);
       }
       when GTK::Fixed {
       }
       default {
       }
     }
-    self.setType('GTK::Fixed');
   }
 
   method new () {
@@ -44,20 +57,17 @@ class GTK::Fixed is GTK::Container {
     gtk_fixed_get_type();
   }
 
-  multi method move (GtkWidget $widget, gint $x, gint $y) {
-    gtk_fixed_move($!f, $widget, $x, $y);
-  }
-  multi method move (GTK::Widget $widget, gint $x, gint $y)  {
-    samewith($widget.widget, $x, $y);
-  }
-
-  multi method put (GtkWidget $widget, gint $x, gint $y) {
-    gtk_fixed_put($!f, $widget, $x, $y);
-  }
-  multi method put (GTK::Widget $widget, gint $x, gint $y)  {
-    samewith($widget.widget, $x, $y);
+  multi method move (GtkWidget() $widget, Int() $x, Int() $y) {
+    my @i = ($x, $y);
+    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    gtk_fixed_move($!f, $widget, $xx, $yy);
   }
 
+  multi method put (GtkWidget $widget, Int() $x, Int() $y) {
+    my @i = ($x, $y);
+    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    gtk_fixed_put($!f, $widget, $xx, $uy);
+  }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }

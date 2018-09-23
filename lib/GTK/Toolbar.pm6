@@ -80,7 +80,7 @@ class GTK::Toolbar is GTK::Container {
         gtk_toolbar_get_show_arrow($!tb);
       },
       STORE => sub ($, Int() $show_arrow is copy) {
-        my gboolean $sa = $show_arrow == 0 ?? 0 !! 1;
+        my gboolean $sa = self.RESOLVE-BOOL($show_arrow);
         gtk_toolbar_set_show_arrow($!tb, $show_arrow);
       }
     );
@@ -89,7 +89,8 @@ class GTK::Toolbar is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_drop_index (Int() $x is rw, Int() $y is rw) {
-    my gint ($xx, $yy) = ($x, $y) >>+&<< (0xffff xx 2);
+    my @u = ($x, $y);
+    my gint ($xx, $yy) = self.RESOLVE-UINT(@u);
     gtk_toolbar_get_drop_index($!tb, $xx, $yy);
     ($x, $y) = ($xx, $yy);
   }
@@ -108,7 +109,7 @@ class GTK::Toolbar is GTK::Container {
   }
 
   method get_nth_item (Int() $n) {
-    my gint $nn = $n +& 0xffff;
+    my gint $nn = self.RESOLVE-INT($n);
     gtk_toolbar_get_nth_item($!tb, $nn);
   }
 
@@ -125,12 +126,12 @@ class GTK::Toolbar is GTK::Container {
   }
 
   method insert (GtkToolItem() $item, Int() $pos) {
-    my uint32 $p = $pos +& 0xffff;
+    my uint32 $p = self.RESOLVE-UINT($pos);
     gtk_toolbar_insert($!tb, $item, $p);
   }
 
   method set_drop_highlight_item (GtkToolItem() $tool_item, Int() $index) {
-    my uint32 $i = $index +& 0xffff;
+    my uint32 $i = self.RESOLVE-UINT($index);
     gtk_toolbar_set_drop_highlight_item($!tb, $tool_item, $i);
   }
 

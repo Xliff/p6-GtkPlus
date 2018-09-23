@@ -25,7 +25,7 @@ class GTK::TextIter {
     self.bless(:$textiter);
   }
 
-  method GtkTextIter {
+  method GTK::Raw::Types::GtkTextIter {
     $!ti;
   }
 
