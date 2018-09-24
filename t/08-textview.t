@@ -23,8 +23,6 @@ $a.activate.tap({
   ($t.margin_top, $t.margin_bottom) = (5 xx 2);
   $f.add($t);
 
-  # Next steps:
-  # - Resize elements to match new window size... IF NECESSARY
   $a.window.destroy-signal.tap({
     my $tb = GTK::TextBuffer.new($t.buffer);
     my ($s, $e) = $tb.get_bounds;

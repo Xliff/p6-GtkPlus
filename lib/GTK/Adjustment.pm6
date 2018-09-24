@@ -11,7 +11,24 @@ class GTK::Adjustment {
 
   submethod BUILD(GtkAdjustment :$adjustment) {
     $!a = $adjustment;
-    self.setType('GTK::Adjustment');
+  }
+
+  method new (
+    Num() $lower,
+    Num() $upper,
+    Num() $step_increment,
+    Num() $page_increment,
+    Num() $page_size
+  ) {
+    my gdouble ($l, $u, $si, $pi, $ps) = (
+      $lower, $upper, $step_increment, $page_increment, $page_size
+    );
+    my $adjustment = gtk_adjustment_new($!a, $l, $u, $si, $pi, $ps);
+    self.bless($adjustment);
+  }
+
+  method GTK::Raw::Types::GtkAdjustment {
+    $!a;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -135,19 +152,6 @@ class GTK::Adjustment {
 
   method get_type {
     gtk_adjustment_get_type();
-  }
-
-  method new (
-    Num() $lower,
-    Num() $upper,
-    Num() $step_increment,
-    Num() $page_increment,
-    Num() $page_size
-  ) {
-    my gdouble ($l, $u, $si, $pi, $ps) = (
-      $lower, $upper, $step_increment, $page_increment, $page_size
-    );
-    gtk_adjustment_new($!a, $l, $u, $si, $pi, $ps);
   }
 
   # method value_changed () {

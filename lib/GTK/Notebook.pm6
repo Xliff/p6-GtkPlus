@@ -3,13 +3,13 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::NoteBook;
+use GTK::Raw::Notebook;
 use GTK::Raw::Types;
 
 use GTK::Container;
 
-class GTK::NoteBook is GTK::Container {
-  has GtkNoteBook $!n;
+class GTK::Notebook is GTK::Container {
+  has GtkNotebook $!n;
 
   method bless(*%attrinit) {
     use nqp;
@@ -21,20 +21,20 @@ class GTK::NoteBook is GTK::Container {
   submethod BUILD(:$notebook) {
     my $to-parent;
     given $notebook {
-      when GtkNoteBook | GtkWidget {
+      when GtkNotebook | GtkWidget {
         $!n = do {
-          when GtkNoteBook {
+          when GtkNotebook {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
           }
           when GtkWidget   {
             $to-parent = $_;
-            nativecast(GtkNoteBook, $_);
+            nativecast(GtkNotebook, $_);
           }
         }
         self.setContainer($to-parent);
       }
-      when GTK::NoteBook {
+      when GTK::Notebook {
       }
       default {
       }
@@ -116,7 +116,7 @@ class GTK::NoteBook is GTK::Container {
         gtk_notebook_get_current_page($!n);
       },
       STORE => sub ($, Int() $page_num is copy) {
-        my gint $pn = self.RESOLVE-INT($pn);
+        my gint $pn = self.RESOLVE-INT($page_num);
         gtk_notebook_set_current_page($!n, $pn);
       }
     );
@@ -163,7 +163,7 @@ class GTK::NoteBook is GTK::Container {
         Bool( gtk_notebook_get_show_tabs($!n) );
       },
       STORE => sub ($, $show_tabs is copy) {
-        my gboolean $st = self.RESOLVE-BOL($show_tabs);
+        my gboolean $st = self.RESOLVE-BOOL($show_tabs);
         gtk_notebook_set_show_tabs($!n, $st);
       }
     );
@@ -219,7 +219,7 @@ class GTK::NoteBook is GTK::Container {
   method get_nth_page (
     Int() $page_num               # gint $page_num
   ) {
-    my gint $page_num = self.RESOLVE-INT($page_num);
+    my gint $pn = self.RESOLVE-INT($page_num);
     gtk_notebook_get_nth_page($!n, $pn);
   }
 
@@ -337,7 +337,7 @@ class GTK::NoteBook is GTK::Container {
     GtkWidget() $child,
     Int() $detachable             # gboolean $detachable
   ) {
-    my gboolean $d = self.RESOLVE-BOOL($reorderable);
+    my gboolean $d = self.RESOLVE-BOOL($detachable);
     gtk_notebook_set_tab_detachable($!n, $child, $d);
   }
 

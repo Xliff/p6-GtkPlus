@@ -9,14 +9,28 @@ use GTK::Raw::Types;
 use GTK::Button;
 
 class GTK::ToggleButton is GTK::Button {
-  has Gtk $!tb;
+  has GtkToggleButton $!tb;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ToggleButton`');
+    $o;
+  }
 
   submethod BUILD(:$togglebutton) {
-    given $button {
+    my $to-parent;
+    given $togglebutton {
       when GtkToggleButton | GtkWidget {
         $!tb = do {
-          when GtkWidget       { nativecast(GtkToggleButton, $togglebutton); }
-          when GtkToggleButton { $togglebutton; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkToggleButton, $_);
+          }
+          when GtkToggleButton {
+            $to-parent = nativecast(GtkButton, $_);
+            $_;
+          }
         };
         self.setButton($togglebutton);
       }
@@ -25,11 +39,10 @@ class GTK::ToggleButton is GTK::Button {
       default {
       }
     }
-    self.setType('GTK::ToggleButton');
   }
 
   method new {
-    my $togglebutton = gtk_toggle_button_new($!tb);
+    my $togglebutton = gtk_toggle_button_new();
     self.bless(:$togglebutton);
   }
 
@@ -58,10 +71,11 @@ class GTK::ToggleButton is GTK::Button {
   method active is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_toggle_button_get_active($!tb);
+        Bool( gtk_toggle_button_get_active($!tb) );
       },
-      STORE => sub ($, $is_active is copy) {
-        gtk_toggle_button_set_active($!tb, $is_active);
+      STORE => sub ($, Int() $is_active is copy) {
+        my gboolean $ia = self.RESOLVE-BOOL($is_active);
+        gtk_toggle_button_set_active($!tb, $ia);
       }
     );
   }
@@ -69,10 +83,11 @@ class GTK::ToggleButton is GTK::Button {
   method inconsistent is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_toggle_button_get_inconsistent($!tb);
+        Bool( gtk_toggle_button_get_inconsistent($!tb) );
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_toggle_button_set_inconsistent($!tb, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_toggle_button_set_inconsistent($!tb, $s);
       }
     );
   }
@@ -80,10 +95,11 @@ class GTK::ToggleButton is GTK::Button {
   method mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_toggle_button_get_mode($!tb);
+        Bool( gtk_toggle_button_get_mode($!tb) );
       },
       STORE => sub ($, $draw_indicator is copy) {
-        gtk_toggle_button_set_mode($!tb, $draw_indicator);
+        my gboolean $di = self.RESOLVE-BOOL($draw_indicator);
+        gtk_toggle_button_set_mode($!tb, $di);
       }
     );
   }
@@ -91,10 +107,10 @@ class GTK::ToggleButton is GTK::Button {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type {
-    gtk_toggle_button_get_type($!tb);
+    gtk_toggle_button_get_type();
   }
 
-  method toggled {
+  method emit-toggled {
     gtk_toggle_button_toggled($!tb);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

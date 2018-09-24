@@ -39,7 +39,7 @@ class GTK::Container is GTK::Widget {
 
   submethod DESTROY {
     g_object_unref($_.data) for self.get_children.Array;
-    g_object_unref(self.p);
+    g_object_unref(self.widget);
   }
 
   # GTK::Container is abstract, so no need for new.
@@ -135,7 +135,7 @@ class GTK::Container is GTK::Widget {
         my $adjustment = gtk_container_get_focus_vadjustment($!c);
         GTK::Adjustment.new(:$adjustment);
       },
-      STORE => sub ($, $adjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_container_set_focus_vadjustment($!c, $adjustment);
       }
     );
@@ -170,7 +170,7 @@ class GTK::Container is GTK::Widget {
         gtk_container_get_border_width($!c);
       },
       STORE => sub ($, Int() $border_width is copy) {
-        my $bw = self.RESOLVE-UINT($border_width, &?ROUTINE.name);
+        my $bw = self.RESOLVE-UINT($border_width);
         gtk_container_set_border_width($!c, $bw);
       }
     );

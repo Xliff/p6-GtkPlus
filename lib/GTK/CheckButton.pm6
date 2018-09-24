@@ -11,9 +11,16 @@ use GTK::ToggleButton;
 class GTK::CheckButton is GTK::ToggleButton {
   has GtkCheckButton $!cb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::CheckButton`');
+    $o;
+  }
+
   submethod BUILD(:$checkbutton) {
     my $to-parent;
-    given $button {
+    given $checkbutton {
       when GtkCheckButton | GtkWidget {
         $!cb = do {
           when GtkWidget {
@@ -32,7 +39,6 @@ class GTK::CheckButton is GTK::ToggleButton {
       default {
       }
     }
-    self.setType('GTK::CheckButton');
   }
 
   method new () {

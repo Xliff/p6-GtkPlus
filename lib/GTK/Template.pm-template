@@ -14,7 +14,7 @@ class GTK:: is GTK:: {
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::');
+    $o.setType('GTK::');
     $o;
   }
 
