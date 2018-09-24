@@ -79,6 +79,24 @@ class GtkTextAttributes is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint                $.padding;
 }
 
+class GtkTextIter is repr('CStruct') does GTK::Roles::Pointers is export {
+  # Opaque struct, but memory needs to be initialized.
+  has gpointer $.dummy1;
+  has gpointer $.dummy2;
+  has gint     $.dummy3;
+  has gint     $.dummy4;
+  has gint     $.dummy5;
+  has gint     $.dummy6;
+  has gint     $.dummy7;
+  has gint     $.dummy8;
+  has gpointer $.dummy9;
+  has gpointer $.dummy10;
+  has gint     $.dummy11;
+  has gint     $.dummy12;
+  has gint     $.dummy13;
+  has gpointer $.dummy14;
+}
+
 class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32 $.width;
   has uint32 $.height;
@@ -687,7 +705,6 @@ class GtkStyleContext     is repr('CPointer') does GTK::Roles::Pointers is expor
 class GtkTargetList       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextBuffer       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextChildAnchor  is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkTextIter         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextMark         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextTag          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextTagTable     is repr('CPointer') does GTK::Roles::Pointers is export { }

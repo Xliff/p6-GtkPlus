@@ -8,7 +8,7 @@ use GTK::Raw::TextIter;
 use GTK::Raw::Types;
 
 class GTK::TextIter {
-  has GtkTextIter $!ti;
+  has GtkTextIter $!ti = .new;
 
   method bless(*%attrinit) {
     use nqp;

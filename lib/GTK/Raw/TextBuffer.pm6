@@ -138,8 +138,8 @@ sub gtk_text_buffer_end_user_action (GtkTextBuffer $buffer)
 
 sub gtk_text_buffer_get_bounds (
   GtkTextBuffer $buffer,
-  GtkTextIter $start,
-  GtkTextIter $end
+  GtkTextIter $start is rw,
+  GtkTextIter $end is rw
 )
   is native('gtk-3')
   is export
