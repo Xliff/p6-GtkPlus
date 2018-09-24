@@ -5,7 +5,7 @@ use GTK::Compat::Raw::GList;
 use GTK::Compat::Types;
 
 class GTK::Compat::GList {
-  has $!list;
+  has GList $!list;
   has @!nat;
   has $!dirty = False;
 
@@ -23,6 +23,10 @@ class GTK::Compat::GList {
   }
   multi method new($list) {
     self.bless(:$list);
+  }
+
+  method GTK::Compat::Types::GList {
+    $!list;
   }
 
   method data {
