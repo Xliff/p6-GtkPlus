@@ -8,7 +8,7 @@ use GTK::Raw::TextIter;
 use GTK::Raw::Types;
 
 class GTK::TextIter {
-  has GtkTextIter $!ti = .new;
+  has GtkTextIter $!ti;
 
   method bless(*%attrinit) {
     use nqp;
@@ -20,6 +20,11 @@ class GTK::TextIter {
 
   submethod BUILD(:$textiter) {
    $!ti = $textiter
+  }
+
+  method new {
+    my $textiter = GtkTextIter.new;
+    self.bless(:$textiter);
   }
 
   method new(GtkTextIter $textiter) {
