@@ -428,16 +428,16 @@ our enum GtkSizeGroupMode is export <
   GTK_SIZE_GROUP_BOTH
 >;
 
-our enum GtkSizeRequestMode is export <
-  GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH
-  GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
-  GTK_SIZE_REQUEST_CONSTANT_SIZE
->;
+our enum GtkSizeRequestMode is export (
+  GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH => 0,
+  GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT,
+  GTK_SIZE_REQUEST_CONSTANT_SIZE,
+);
 
-our enum GtkScrollablePolicy is export <
-  GTK_SCROLL_MINIMUM
+our enum GtkScrollablePolicy is export (
+  GTK_SCROLL_MINIMUM => 0,
   GTK_SCROLL_NATURAL
->;
+);
 
 our enum GtkStateFlags is export (
   GTK_STATE_FLAG_NORMAL       => 0,

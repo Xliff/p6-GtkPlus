@@ -49,12 +49,12 @@ class GTK::ToolItem is GTK::Bin {
 
     $!ti = given $toolitem {
       when GtkToolItem {
-        $to-parent = nativecast(GtkBin, $toolitem);
-        $toolitem;
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
       }
       when GtkWidget {
-        $to-parent = $toolitem;
-        nativecast(GtkToolItem, $toolitem);
+        $to-parent = $_;
+        nativecast(GtkToolItem, $_);
       }
     }
     self.setBin($to-parent);
@@ -205,7 +205,7 @@ class GTK::ToolItem is GTK::Bin {
 
   method set_proxy_menu_item (
     gchar $menu_item_id,
-    tkWidget() $menu_item
+    GtkWidget() $menu_item
   ) {
     gtk_tool_item_set_proxy_menu_item($!ti, $menu_item_id, $menu_item);
   }
