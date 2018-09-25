@@ -83,7 +83,7 @@ class GTK::ToolItem is GTK::Bin {
   method expand is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_tool_item_get_expand($!ti) );
+        so gtk_tool_item_get_expand($!ti);
       },
       STORE => sub ($, Int() $expand is copy) {
         my gboolean $e = self.RESOLVE-BOOL($expand);
@@ -95,7 +95,7 @@ class GTK::ToolItem is GTK::Bin {
   method homogeneous is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_tool_item_get_homogeneous($!ti) );
+        so gtk_tool_item_get_homogeneous($!ti);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
         my gboolean $h = self.RESOLVE-BOOL($homogeneous);
@@ -107,7 +107,7 @@ class GTK::ToolItem is GTK::Bin {
   method is_important is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_tool_item_get_is_important($!ti) );
+        so gtk_tool_item_get_is_important($!ti);
       },
       STORE => sub ($, Int() $is_important is copy) {
         my gboolean $ii = self.RESOLVE-BOOL($is_important);
@@ -119,7 +119,7 @@ class GTK::ToolItem is GTK::Bin {
   method use_drag_window is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_tool_item_get_use_drag_window($!ti) );
+        so gtk_tool_item_get_use_drag_window($!ti);
       },
       STORE => sub ($, Int() $use_drag_window is copy) {
         my gboolean $udw = self.RESOLVE-BOOL($use_drag_window);
@@ -131,7 +131,7 @@ class GTK::ToolItem is GTK::Bin {
   method visible_horizontal is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_tool_item_get_visible_horizontal($!ti) );
+        so gtk_tool_item_get_visible_horizontal($!ti);
       },
       STORE => sub ($, Int() $visible_horizontal is copy) {
         my gboolean $vh = self.RESOLVE-BOOL($visible_horizontal);
@@ -143,7 +143,7 @@ class GTK::ToolItem is GTK::Bin {
   method visible_vertical is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_tool_item_get_visible_vertical($!ti) );
+        so gtk_tool_item_get_visible_vertical($!ti);
       },
       STORE => sub ($, Int() $visible_vertical is copy) {
         my gboolean $vv = self.RESOLVE-BOOL($visible_vertical);

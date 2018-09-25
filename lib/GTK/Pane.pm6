@@ -13,26 +13,39 @@ class GTK::Pane is GTK::Container {
 
   has @!child1;
   has @!child2;
-  has $!add-latch;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Pane');
+    $o;
+  }
 
   submethod BUILD(:$pane) {
+    my $to-parent;
     given $pane {
       when GtkPane | GtkWidget {
         $!p = do {
-          when GtkWidget { nativecast(GtkPane, $pane); }
-          when GtkPane   { $pane; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkPane, $pane);
+          }
+          when GtkPane {
+            $to-parent = nativecast(GtkContainer, $_);
+            $pane;
+          }
         };
-        self.setContainer($pane);
+        self.setContainer($to-parent);
       }
       when GTK::Pane {
       }
       default {
       }
     }
-    self.setType('GTK::Pane');
   }
 
-  multi method new(GtkOrientation $orientation) {
+  multi method new(Int() $orientation) {
+    my uint32 $o = self.RESOLVE-UINT($orientation);
     my $pane = gtk_paned_new($orientation);
     self.bless(:$pane);
   }
@@ -94,8 +107,9 @@ class GTK::Pane is GTK::Container {
       FETCH => sub ($) {
         gtk_paned_get_position($!p);
       },
-      STORE => sub ($, $position is copy) {
-        gtk_paned_set_position($!p, $position);
+      STORE => sub ($, Int() $position is copy) {
+        my gint $p = self.RESOLVE-UINT($position);
+        gtk_paned_set_position($!p, $p);
       }
     );
   }
@@ -103,10 +117,11 @@ class GTK::Pane is GTK::Container {
   method wide_handle is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_paned_get_wide_handle($!p);
+        so gtk_paned_get_wide_handle($!p);
       },
-      STORE => sub ($, $wide is copy) {
-        gtk_paned_set_wide_handle($!p, $wide);
+      STORE => sub ($, Int() $wide is copy) {
+        my gboolean $w = self.RESOLVE-BOOL($wide);
+        gtk_paned_set_wide_handle($!p, $w);
       }
     );
   }
@@ -114,31 +129,33 @@ class GTK::Pane is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   multi method add1 (GtkWidget $child) {
-    @!child1.push: $child unless $!add-latch;
-    $!add-latch = False;
+    @!child1.push: $child unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     gtk_paned_add1($!p, $child);
   }
   multi method add1 (GTK::Widget $child)  {
     @!child1.push: $child;
-    $!add-latch = True;
+    self.SET-LATCH;
     samewith($child.widget);
   }
 
   multi method add2 (GtkWidget $child) {
-    @!child2.push($child) unless $!add-latch;
-    $!add-latch = False;
+    @!child2.push($child) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     gtk_paned_add2($!p, $child);
   }
   multi method add2 (GTK::Widget $child)  {
     @!child2.push: $child;
-    $!add-latch = True;
+    self.SET-LATCH;
     samewith($child.widget);
   }
 
+  # Use the attribute only if it's a GtkPlus object.
   method get_child1 {
     @!child1 ~~ GTK::Widget ?? @!child1[0] !! gtk_paned_get_child1($!p);
   }
 
+  # Use the  attribute only if it's a GtkPlus object.
   method get_child2 {
     @!child2 ~~ GTK::Widget ?? @!child2[0] !! gtk_paned_get_child2($!p);
   }
@@ -151,25 +168,45 @@ class GTK::Pane is GTK::Container {
     gtk_paned_get_type();
   }
 
-  multi method pack1 (GtkWidget $child, gboolean $resize, gboolean $shrink) {
-    @!child1.push($child) unless $!add-latch;
-    $!add-latch = False;
-    gtk_paned_pack1($!p, $child, $resize, $shrink);
+  multi method pack1 (
+    GtkWidget $child,
+    Int() $resize                 # gboolean $resize,
+    Int() $shrink                 # gboolean $shrink
+  ) {
+    my @b = ($resize, $shrink);
+    my gboolean ($r, $s) = self.RESOLVE-BOOL(@b);
+    @!child1.push($child) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
+    gtk_paned_pack1($!p, $child, $r, $s);
   }
-  multi method pack1 (GTK::Widget $child, gboolean $resize, gboolean $shrink)  {
+  multi method pack1 (
+    GTK::Widget $child,
+    Int() $resize,
+    Int() $shrink
+  )  {
     @!child1.push($child)
-    $!add-latch = True;
+    self.SET-LATCH;
     samewith($child.widget, $resize, $shrink);
   }
 
-  multi method pack2 (GtkWidget $child, gboolean $resize, gboolean $shrink) {
-    @!child2.push($child) unless $!add-latch;
-    $!add-latch = False;
-    gtk_paned_pack2($!p, $child, $resize, $shrink);
+  multi method pack2 (
+    GtkWidget $child,
+    gboolean $resize,
+    gboolean $shrink
+  ) {
+    my @b = ($resize, $shrink);
+    my gboolean ($r, $s) = self.RESOLVE-BOOL(@b);
+    @!child2.push($child) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
+    gtk_paned_pack2($!p, $child, $r, $s);
   }
-  multi method pack2 (GTK::Widget $child, gboolean $resize, gboolean $shrink)  {
+  multi method pack2 (
+    GTK::Widget $child,
+    Int() $resize,
+    Int() $shrink
+  )  {
     @!child2.push($child);
-    $!add-latch = True;
+    self.SET-LATCH;
     samewith($child.widget, $resize, $shrink);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

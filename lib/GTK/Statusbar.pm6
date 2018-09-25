@@ -3,34 +3,50 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::StatusBar;
+use GTK::Raw::Statusbar;
 use GTK::Raw::Types;
 
 use GTK::Bin;
 
-class GTK::StatusBar is GTK::Bin {
-  has Gtk $!sb;
+class GTK::Statusbar is GTK::Bin {
+  has GtkStatsbar $!sb;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Statusbar');
+    $o;
+  }
 
   submethod BUILD(:$statusbar) {
+    my $to-parent;
     given $statusbar {
-      when GtkStatusBar | GtkWidget {
+      when GtkStatusbar | GtkWidget {
         $!sb = do given {
-          when GtkStatusBar { $statusbar; }
-          when GtkWidget    { nativecast(GtkStatusBar, $statusbar); }
+          when GtkStatusBar {
+            $to-parent = nativecast(GtkBin, $_);
+            $_;
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkStatusbar, $statusbar);
+          }
         };
-        self.setBin($statusbar);
+        self.setBin($to-parent);
       }
       when GTK::StatusBar {
       }
       default {
       }
     }
-    self.setType('GTK::StatusBar');
   }
 
-  method new () {
+  multi method new {
     my $statusbar = gtk_statusbar_new();
     self.bless(:$statusbar)
+  }
+  multi method new (GtkWidget $statusbar) {
+    self.bless(:$statusbar);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -64,24 +80,25 @@ class GTK::StatusBar is GTK::Bin {
     gtk_statusbar_get_type();
   }
 
-  method pop (guint $context_id) {
-    my guint $ci = $context_id +& 0xffff;
+  method pop (Int() $context_id) {
+    my guint $ci = self.RESOLVE-UINT($context_id);
     gtk_statusbar_pop($!sb, $ci);
   }
 
   method push (Int() $context_id, gchar $text) {
-    my guint $ci = $context_id +& 0xffff;
+    my guint $ci = self.RESOLVE-UINT($context_id);
     gtk_statusbar_push($!sb, $ci, $text);
   }
 
   method remove (Int() $context_id, Int() $message_id) {
-    my guint ($ci, $mi) = ($context_id, $message_id) >>+&<< (0xffff xx 2);
-    gtk_statusbar_remove($!sb, $context_id, $message_id);
+    my @u = ($context_id, $message_id);
+    my guint ($ci, $mi) = self.RESOLVE-UINT(@u);
+    gtk_statusbar_remove($!sb, $ci, $mi);
   }
 
-  method remove_all (guint $context_id) {
-    my guint $ci = $context_id +& 0xffff;
-    gtk_statusbar_remove_all($!sb, $ci);
+  method remove_all (Int() $context_id) {
+    my guint $ci = self.RESOLVE-UINT($context_id);
+    gtk_statusbar_remove_all($!s, $ci);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

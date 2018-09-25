@@ -726,6 +726,7 @@ class GtkSpinButton        is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkSpinner           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStack             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStackSwitcher     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStatusbar         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyle             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyleContext      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSwitch            is repr('CPointer') does GTK::Roles::Pointers is export { }

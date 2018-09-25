@@ -46,6 +46,10 @@ class GTK::Widget {
     $!w;
   }
 
+  method widget {
+    $!w;
+  }
+
   method setWidget($widget) {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
