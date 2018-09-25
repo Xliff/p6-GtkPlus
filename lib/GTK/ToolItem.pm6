@@ -7,6 +7,7 @@ use GTK::Raw::ToolItem;
 use GTK::Raw::Types;
 
 use GTK::Bin;
+use GTK::SizeGroup;
 
 class GTK::ToolItem is GTK::Bin {
   has GtkToolItem $!ti;
@@ -30,12 +31,11 @@ class GTK::ToolItem is GTK::Bin {
     }
   }
 
-  method new {
+  multi method new {
     my $toolitem = gtk_tool_item_new();
     self.bless(:$toolitem);
   }
-
-  method new (GtkWidget $toolitem) {
+  multi method new (GtkWidget $toolitem) {
     #use GTK::Widget;
 
     #my $type = GTK::Widget.getType($toolitem);
@@ -86,7 +86,7 @@ class GTK::ToolItem is GTK::Bin {
         Bool( gtk_tool_item_get_expand($!ti) );
       },
       STORE => sub ($, Int() $expand is copy) {
-        my gboolean $e = $expand == 0 ?? 0 !! 1;
+        my gboolean $e = self.RESOLVE-BOOL($expand);
         gtk_tool_item_set_expand($!ti, $e);
       }
     );
@@ -98,7 +98,7 @@ class GTK::ToolItem is GTK::Bin {
         Bool( gtk_tool_item_get_homogeneous($!ti) );
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = $homogeneous == 0 ?? 0 !! 1;
+        my gboolean $h = self.RESOLVE-BOOL($homogeneous);
         gtk_tool_item_set_homogeneous($!ti, $h);
       }
     );
@@ -110,7 +110,7 @@ class GTK::ToolItem is GTK::Bin {
         Bool( gtk_tool_item_get_is_important($!ti) );
       },
       STORE => sub ($, Int() $is_important is copy) {
-        my gboolean $ii = $is_important == 0 ?? 0 !! 1;
+        my gboolean $ii = self.RESOLVE-BOOL($is_important);
         gtk_tool_item_set_is_important($!ti, $ii);
       }
     );
@@ -122,7 +122,7 @@ class GTK::ToolItem is GTK::Bin {
         Bool( gtk_tool_item_get_use_drag_window($!ti) );
       },
       STORE => sub ($, Int() $use_drag_window is copy) {
-        my gboolean $udw = $use_drag_window == 0 ?? 0 !! 1;
+        my gboolean $udw = self.RESOLVE-BOOL($use_drag_window);
         gtk_tool_item_set_use_drag_window($!ti, $udw);
       }
     );
@@ -134,7 +134,7 @@ class GTK::ToolItem is GTK::Bin {
         Bool( gtk_tool_item_get_visible_horizontal($!ti) );
       },
       STORE => sub ($, Int() $visible_horizontal is copy) {
-        my gboolean $vh = $visible_horizontal == 0 ?? 0 !! 1;
+        my gboolean $vh = self.RESOLVE-BOOL($visible_horizontal);
         gtk_tool_item_set_visible_horizontal($!ti, $vh);
       }
     );
@@ -146,7 +146,7 @@ class GTK::ToolItem is GTK::Bin {
         Bool( gtk_tool_item_get_visible_vertical($!ti) );
       },
       STORE => sub ($, Int() $visible_vertical is copy) {
-        my gboolean $vv = $visible_vertical == 0 ?? 0 !! 1;
+        my gboolean $vv = self.RESOLVE-BOOL($visible_vertical);
         gtk_tool_item_set_visible_vertical($!ti, $vv);
       }
     );
@@ -159,11 +159,11 @@ class GTK::ToolItem is GTK::Bin {
   }
 
   method get_icon_size {
-    gtk_tool_item_get_icon_size($!ti);
+    GtkIconSize( gtk_tool_item_get_icon_size($!ti) );
   }
 
   method get_orientation {
-    gtk_tool_item_get_orientation($!ti);
+    GtkOrientation( gtk_tool_item_get_orientation($!ti);
   }
 
   method get_proxy_menu_item (gchar $menu_item_id) {
@@ -183,8 +183,7 @@ class GTK::ToolItem is GTK::Bin {
   }
 
   method get_text_size_group {
-    # GtkSizeGroup -- GObject descendant
-    gtk_tool_item_get_text_size_group($!ti);
+    GTK::SizeGroup.new( gtk_tool_item_get_text_size_group($!ti) );
   }
 
   method get_toolbar_style {

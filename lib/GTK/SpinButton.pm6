@@ -9,14 +9,28 @@ use GTK::Raw::Types;
 use GTK::Entry;
 
 class GTK::SpinButton is GTK::Entry {
-  has Gtk $!sp;
+  has GtkSpinButton $!sp;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::SpinButton');
+    $o;
+  }
 
   submethod BUILD(:$spinbutton) {
+    my $to-parent;
     given $spinbutton {
       when GtkSpinButton | GtkWidget {
         $!sp = do {
-          when GtkWidget     { nativecast(GtkSpinButton, $_); }
-          when GtkSpinButton { $spinbutton; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkSpinButton, $_);
+          }
+          when GtkSpinButton {
+            $to-parent = nativecast(GtkEntry, $_);
+            $_;
+          }
         };
         self.setParent($_);
       }
@@ -25,7 +39,6 @@ class GTK::SpinButton is GTK::Entry {
       default {
       }
     }
-    self.setType('GTK::SpinButton');
   }
 
   method new (Num() $climb_rate, Int() $digits) {
@@ -75,9 +88,9 @@ class GTK::SpinButton is GTK::Entry {
   method adjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_spin_button_get_adjustment($!sp);
+        GTK::Adjustment.new( gtk_spin_button_get_adjustment($!sp) );
       },
-      STORE => sub ($, $adjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_spin_button_set_adjustment($!sp, $adjustment);
       }
     );
@@ -88,8 +101,9 @@ class GTK::SpinButton is GTK::Entry {
       FETCH => sub ($) {
         gtk_spin_button_get_digits($!sp);
       },
-      STORE => sub ($, $digits is copy) {
-        gtk_spin_button_set_digits($!sp, $digits);
+      STORE => sub ($, Int() $digits is copy) {
+        my gint $d = self.RESOLVE-INT($digits);
+        gtk_spin_button_set_digits($!sp, $d);
       }
     );
   }
@@ -97,10 +111,12 @@ class GTK::SpinButton is GTK::Entry {
   method numeric is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_spin_button_get_numeric($!sp);
+        # Previously using Bool() for this, so() is more efficient.
+        so gtk_spin_button_get_numeric($!sp);
       },
-      STORE => sub ($, $numeric is copy) {
-        gtk_spin_button_set_numeric($!sp, $numeric);
+      STORE => sub ($, Int() $numeric is copy) {
+        my gboolean $n = self.RESOLVE-BOOL($numeric);
+        gtk_spin_button_set_numeric($!sp, $n);
       }
     );
   }
@@ -108,10 +124,11 @@ class GTK::SpinButton is GTK::Entry {
   method snap_to_ticks is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_spin_button_get_snap_to_ticks($!sp);
+        so gtk_spin_button_get_snap_to_ticks($!sp);
       },
       STORE => sub ($, $snap_to_ticks is copy) {
-        gtk_spin_button_set_snap_to_ticks($!sp, $snap_to_ticks);
+        my gboolean $s = self.RESOLVE-BOOL($snap_to_ticks);
+        gtk_spin_button_set_snap_to_ticks($!sp, $s);
       }
     );
   }
@@ -119,10 +136,11 @@ class GTK::SpinButton is GTK::Entry {
   method update_policy is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_spin_button_get_update_policy($!sp);
+        GtkSpinButtonUpdatePolicy( gtk_spin_button_get_update_policy($!sp) );
       },
-      STORE => sub ($, $policy is copy) {
-        gtk_spin_button_set_update_policy($!sp, $policy);
+      STORE => sub ($, Int() $policy is copy) {
+        my gboolean $p = self.RESOLVE-UINT($policy);
+        gtk_spin_button_set_update_policy($!sp, $p);
       }
     );
   }
@@ -132,8 +150,9 @@ class GTK::SpinButton is GTK::Entry {
       FETCH => sub ($) {
         gtk_spin_button_get_value($!sp);
       },
-      STORE => sub ($, $value is copy) {
-        gtk_spin_button_set_value($!sp, $value);
+      STORE => sub ($, Num() $value is copy) {
+        my gdouble $v = $value;
+        gtk_spin_button_set_value($!sp, $v);
       }
     );
   }
@@ -141,26 +160,35 @@ class GTK::SpinButton is GTK::Entry {
   method wrap is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_spin_button_get_wrap($!sp);
+        so gtk_spin_button_get_wrap($!sp);
       },
-      STORE => sub ($, $wrap is copy) {
-        gtk_spin_button_set_wrap($!sp, $wrap);
+      STORE => sub ($, Int() $wrap is copy) {
+        my gboolean $w = self.RESOLVE-BOOL($wrap);
+        gtk_spin_button_set_wrap($!sp, $w);
       }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method configure (GtkAdjustment $adjustment, gdouble $climb_rate, guint $digits) {
-    gtk_spin_button_configure($!sp, $adjustment, $climb_rate, $digits);
+  method configure (
+    GtkAdjustment() $adjustment,
+    Int() $climb_rate,
+    Int() $digits
+  ) {
+    my guint $d = self.RESOLVE-UINT($digits);
+    my gdouble $cr = $climb_rate;
+    gtk_spin_button_configure($!sp, $adjustment, $cr, $d);
   }
 
-  method get_increments (gdouble $step, gdouble $page) {
-    gtk_spin_button_get_increments($!sp, $step, $page);
+  method get_increments (Num() $step, Num() $page) {
+    my gdouble ($s, $p) = ($step, $page);
+    gtk_spin_button_get_increments($!sp, $s, $p);
   }
 
-  method get_range (gdouble $min, gdouble $max) {
-    gtk_spin_button_get_range($!sp, $min, $max);
+  method get_range (Num() $min, Num() $max) {
+    my gdouble ($mn, $mx) = ($min, $max)l
+    gtk_spin_button_get_range($!sp, $mn, $mx);
   }
 
   method get_type {
@@ -171,16 +199,20 @@ class GTK::SpinButton is GTK::Entry {
     gtk_spin_button_get_value_as_int($!sp);
   }
 
-  method set_increments (gdouble $step, gdouble $page) {
-    gtk_spin_button_set_increments($!sp, $step, $page);
+  method set_increments (Num() $step, Num() $page) {
+    my gdouble ($s, $p) = ($step, $page);
+    gtk_spin_button_set_increments($!sp, $s, $p);
   }
 
-  method set_range (gdouble $min, gdouble $max) {
-    gtk_spin_button_set_range($!sp, $min, $max);
+  method set_range (Num() $min, Num() $max) {
+    my gdouble ($mn, $mx) = ($min, $max);
+    gtk_spin_button_set_range($!sp, $mn, $mx);
   }
 
-  method spin (GtkSpinType $direction, gdouble $increment) {
-    gtk_spin_button_spin($!sp, $direction, $increment);
+  method spin (Int() $direction, Num() $increment) {
+    my uint32 $d = self.RESOLVE-UINT($direction);
+    my gdouble $i = $increment;
+    gtk_spin_button_spin($!sp, $d, $i);
   }
 
   method update {

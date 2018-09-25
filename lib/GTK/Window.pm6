@@ -143,7 +143,7 @@ class GTK::Window is GTK::Bin {
   method accept_focus is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_accept_focus($!win);
+        Bool( gtk_window_get_accept_focus($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -177,7 +177,7 @@ class GTK::Window is GTK::Bin {
   method decorated is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_decorated($!win);
+        Bool( gtk_window_get_decorated($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -189,7 +189,7 @@ class GTK::Window is GTK::Bin {
   method deletable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_deletable($!win);
+        Bool( gtk_window_get_deletable($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -201,7 +201,7 @@ class GTK::Window is GTK::Bin {
   method destroy_with_parent is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_destroy_with_parent($!win);
+        Bool( gtk_window_get_destroy_with_parent($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -224,7 +224,7 @@ class GTK::Window is GTK::Bin {
   method focus_on_map is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_focus_on_map($!win);
+        Bool( gtk_window_get_focus_on_map($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -236,7 +236,7 @@ class GTK::Window is GTK::Bin {
   method focus_visible is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_focus_visible($!win);
+        Bool( gtk_window_get_focus_visible($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -260,7 +260,7 @@ class GTK::Window is GTK::Bin {
   method has_resize_grip is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_has_resize_grip($!win);
+        Bool( gtk_window_get_has_resize_grip($!win) );
       },
       STORE => sub ($, Int() $value is copy) {
         my gboolean $v = self.RESOLVE-UINT($value);
@@ -272,7 +272,7 @@ class GTK::Window is GTK::Bin {
   method hide_titlebar_when_maximized is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_hide_titlebar_when_maximized($!win);
+        Bool( gtk_window_get_hide_titlebar_when_maximized($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -399,7 +399,7 @@ class GTK::Window is GTK::Bin {
   method skip_pager_hint is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_skip_pager_hint($!win);
+        Bool( gtk_window_get_skip_pager_hint($!win) );
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -491,6 +491,7 @@ class GTK::Window is GTK::Bin {
   }
 
   method add_accel_group (GtkAccelGroup $accel_group) {
+    # Need class GTK::AccelGroup
     gtk_window_add_accel_group($!win, $accel_group);
   }
 
@@ -609,7 +610,7 @@ class GTK::Window is GTK::Bin {
   }
 
   method list_toplevels {
-    gtk_window_list_toplevels();
+    GList.new( gtk_window_list_toplevels() );
   }
 
   method maximize {

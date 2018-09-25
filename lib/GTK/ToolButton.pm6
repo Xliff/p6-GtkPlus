@@ -11,6 +11,13 @@ use GTK::ToolItem;
 class GTK::ToolButton is GTK::ToolItem {
   has GtkToolButton $!tb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ToolButton');
+    $o;
+  }
+
   submethod BUILD(:$toolbutton) {
     given $toolbutton {
       when GtkToolButton | GtkToolItem | GtkWidget {
@@ -21,15 +28,11 @@ class GTK::ToolButton is GTK::ToolItem {
       default {
       }
     }
-    self.setType('GTK::ToolButton');
   }
 
-  multi method new (GtkWidget $widget, gchar $label) {
+  method new (GtkWidget() $widget, gchar $label) {
     my $toolbutton = gtk_tool_button_new($label);
     self.bless(:$toolbutton);
-  }
-  multi method new (GTK::Widget $widget, gchar $label) {
-    samewith($widget.widget, $label);
   }
 
   method new_from_stock (gchar $stock_id)
@@ -82,15 +85,8 @@ class GTK::ToolButton is GTK::ToolItem {
       FETCH => sub ($) {
         gtk_tool_button_get_icon_widget($!tb);
       },
-      STORE => sub ($, $icon_widget is copy) {
-        my GtkWidget $iw = do given $icon_widget {
-          when GtkWidget   { $icon_widget; }
-          when GTK::Widget { $icon_widget.widget; }
-          default {
-            # Throw exception.
-          }
-        }
-        gtk_tool_button_set_icon_widget($!tb, $iw);
+      STORE => sub ($, GtkWidget() $icon_widget is copy) {
+        gtk_tool_button_set_icon_widget($!tb, $icon_widget);
       }
     );
   }
@@ -100,7 +96,7 @@ class GTK::ToolButton is GTK::ToolItem {
       FETCH => sub ($) {
         gtk_tool_button_get_label($!tb);
       },
-      STORE => sub ($, $label is copy) {
+      STORE => sub ($, Str() $label is copy) {
         gtk_tool_button_set_label($!tb, $label);
       }
     );
@@ -111,15 +107,8 @@ class GTK::ToolButton is GTK::ToolItem {
       FETCH => sub ($) {
         gtk_tool_button_get_label_widget($!tb);
       },
-      STORE => sub ($, $label_widget is copy) {
-        my GtkWidget $lw = do given $label_widget {
-          when GtkWidget   { $label_widget; }
-          when GTK::Widget { $label_widget.widget; }
-          default {
-            # Throw exception.
-          }
-        }
-        gtk_tool_button_set_label_widget($!tb, $lw);
+      STORE => sub ($, GtkWidget() $label_widget is copy) {
+        gtk_tool_button_set_label_widget($!tb, $label_widget);
       }
     );
   }
@@ -141,7 +130,7 @@ class GTK::ToolButton is GTK::ToolItem {
         gtk_tool_button_get_use_underline($!tb);
       },
       STORE => sub ($, Int() $use_underline is copy) {
-        my $uu = $use_underline == 0 ?? 0 !! 1;
+        my $uu = self.RESOLVE-BOOL($use_underline);
         gtk_tool_button_set_use_underline($!tb, $uu);
       }
     );

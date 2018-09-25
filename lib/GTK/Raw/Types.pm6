@@ -664,6 +664,20 @@ our enum GtkTextSearchFlags is export (
   GTK_TEXT_SEARCH_CASE_INSENSITIVE => (1 +< 2)
 );
 
+our enum GtkSpinButtonUpdatePolicy is export <
+  GTK_UPDATE_ALWAYS
+  GTK_UPDATE_IF_VALID
+>;
+
+our enum GtkSpinType is export <
+  GTK_SPIN_STEP_FORWARD
+  GTK_SPIN_STEP_BACKWARD
+  GTK_SPIN_PAGE_FORWARD
+  GTK_SPIN_PAGE_BACKWARD
+  GTK_SPIN_HOME
+  GTK_SPIN_END
+  GTK_SPIN_USER_DEFINED
+>;
 
 class GtkAccelGroup        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAdjustment        is repr('CPointer') does GTK::Roles::Pointers is export { }

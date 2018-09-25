@@ -11,7 +11,6 @@ constant cairo_region_t is export := Pointer;
 
 constant gboolean      is export := uint32;
 constant gchar         is export := Str;
-constant gunichar      is export := uint32;
 constant gconstpointer is export := Pointer;
 constant gdouble       is export := num64;
 constant gfloat        is export := num32;
@@ -20,15 +19,17 @@ constant gint16        is export := int16;
 constant gpointer      is export := Pointer;
 constant gsize         is export := uint64;
 constant gssize        is export := int64;
-constant GType         is export := uint32;
 constant guint         is export := uint32;
 constant guint16       is export := uint16;
+constant gunichar      is export := uint32;
 constant va_list       is export := Pointer;
 
-constant PangoTabArray is export := CArray[gint];
-constant GStrv         is export := CArray[Str];
-
 constant GCallback     is export := Pointer;
+constant GStrv         is export := CArray[Str];
+constant GQuark        is export := uint32;
+constant GType         is export := uint32;
+
+constant PangoTabArray is export := CArray[gint];
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
@@ -341,7 +342,6 @@ class GParamSpec            is repr('CPointer') is export { }
 class GDestroyNotify        is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
-class GQuark                is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }
 class GdkDevice             is repr('CPointer') is export { }
