@@ -11,33 +11,39 @@ use GTK::ToolButton;
 class GTK::MenuToolButton is GTK::ToolButton {
   has GtkMenuToolButton $!mtb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::MenuToolButton');
+    $o;
+  }
+
   submethod BUILD(:$menutoolbutton) {
+    my $to-parent;
     given $menutoolbutton {
       when GtkMenuToolButton | GtkToolItem | GtkWidget {
         $!mtb = do {
           when GtkWidget | GtkToolItem {
-            nativecast(GtkMenuToolButton, $menutoolbutton);
+            $to-parent = $_;
+            nativecast(GtkMenuToolButton, $_);
           }
           when GtkMenuToolButton {
-            $menutoolbutton
+            $to-parent = nativecast(GtkToolButton, $_);
+            $_
           }
         }
-        self.setToolButton($menutoolbutton);
+        self.setToolButton($to-parent);
       }
       when GTK::MenuToolButton {
       }
       default {
       }
     }
-    self.setType('GTK::MenuToolButton');
   }
 
   multi method new (GtkWidget $widget, gchar $label) {
     my $menutoolbutton = gtk_menu_tool_button_new($!mtb, $widget, $label);
     self.bless(:$menutoolbutton);
-  }
-  multi method new (GTK::Widget $widget, gchar $label) {
-    samewith($widget.widget, $label);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -55,16 +61,8 @@ class GTK::MenuToolButton is GTK::ToolButton {
       FETCH => sub ($) {
         gtk_menu_tool_button_get_menu($!mtb);
       },
-      STORE => sub ($, $menu is copy) {
-        my $m = do given $menu {
-          when GtkWidget   { $menu }
-          when GTK::Widget { $menu.widget; }
-          default {
-            # Throw exception
-            die "Invalid type passed to " ~ ?::CLASS ~ ".menu()";
-          }
-        }
-        gtk_menu_tool_button_set_menu($!mtb, $m);
+      STORE => sub ($, GtkWidget() $menu is copy) {
+        gtk_menu_tool_button_set_menu($!mtb, $menu);
       }
     );
   }

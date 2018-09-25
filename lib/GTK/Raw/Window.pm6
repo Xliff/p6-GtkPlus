@@ -48,7 +48,7 @@ sub gtk_window_begin_move_drag (
 
 sub gtk_window_begin_resize_drag (
   GtkWindow $window,
-  GdkWindowEdge $edge,
+  uint32 $edge,                   # GdkWindowEdge $edge,
   gint $button,
   gint $root_x,
   gint $root_y,

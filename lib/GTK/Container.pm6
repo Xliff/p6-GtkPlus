@@ -59,6 +59,10 @@ class GTK::Container is GTK::Widget {
     self.setWidget($to-parent);
   }
 
+  method GTK::Raw::Types::GtkContainer {
+    $!c;
+  }
+
   method SET-LATCH {
     self.IS-PROTECTED;
     $!add-latch = True;

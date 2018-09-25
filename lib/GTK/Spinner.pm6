@@ -11,25 +11,41 @@ use GTK::Widget;
 class GTK::Spinner is GTK::Widget {
   has GtkSpinner $!spin;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Spinner');
+    $o;
+  }
+
   submethod BUILD(:$spin) {
+    my $to-parent;
     given $spin {
       when GtkSpinner | GtkWidget {
         $!spin = do {
-          when GtkWidget  { nativecast(GtkSpinner, $spin); }
-          when GtkSpinner { $spin; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkSpinner, $_);
+          }
+          when GtkSpinner {
+            $to-parent = nativecast(GtkWidget, $_);
+            $_;
+          }
         };
-        self.setWidget($spin);
+        self.setWidget($to-parent);
       }
       when GTK::Spinner {
       }
       default {
       }
     }
-    self.setType('GTK::Spinner');
   }
 
-  method new {
+  multi method new {
     my $spin = gtk_spinner_new();
+    self.bless(:$spin);
+  }
+  multi method new (GtkWidget $spin) {
     self.bless(:$spin);
   }
 
@@ -40,15 +56,15 @@ class GTK::Spinner is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type () {
+  method get_type {
     gtk_spinner_get_type();
   }
 
-  method start () {
+  method start {
     gtk_spinner_start($!spin);
   }
 
-  method stop () {
+  method stop {
     gtk_spinner_stop($!spin);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

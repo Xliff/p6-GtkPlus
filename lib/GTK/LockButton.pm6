@@ -11,25 +11,41 @@ use GTK::Button;
 class GTK::LockButton is GTK::Button {
   has GtkLockButton $!lb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::LockButton');
+    $o;
+  }
+
   submethod BUILD(:$button) {
+    my $to-parent;
     given $button {
       when GtkLockButton | GtkWidget {
         $!lb = do {
-          when GtkWidget     { nativecast(GtkLockButton, $button); }
-          when GtkLockButton { $button; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkLockButton, $button);
+          }
+          when GtkLockButton {
+            $to-parent = nativecast(GtkButton, $_);
+            $_;
+          }
         };
-        self.setButton($button);
+        self.setButton($to-parent);
       }
       when GTK::Button {
       }
       default {
       }
     }
-    self.setType('GTK::LockButton');
   }
 
-  method new {
+  multi method new {
     my $button = gtk_lock_button_new();
+    self.bless(:$button);
+  }
+  multi method new (GtkWidget $button) {
     self.bless(:$button);
   }
 
@@ -38,6 +54,7 @@ class GTK::LockButton is GTK::Button {
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method permission is rw {
+    # GPermission
     Proxy.new(
       FETCH => sub ($) {
         gtk_lock_button_get_permission($!lb);

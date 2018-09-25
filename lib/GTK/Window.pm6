@@ -618,7 +618,7 @@ class GTK::Window is GTK::Bin {
   }
 
   method mnemonic_activate (
-    Int() $keyval                 # guint $keyval,
+    Int() $keyval,                # guint $keyval,
     Int() $modifier               # GdkModifierType $modifier
   ) {
     my @u = ($keyval, $modifier);
@@ -654,7 +654,7 @@ class GTK::Window is GTK::Bin {
   }
 
   method remove_mnemonic (
-    Int() $keyval                 # guint $keyval,
+    Int() $keyval,                # guint $keyval,
     GtkWidget() $target
   ) {
     my guint $kv = self.RESOLVE-UINT($keyval);

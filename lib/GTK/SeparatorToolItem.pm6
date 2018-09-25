@@ -11,29 +11,44 @@ use GTK::ToolItem;
 class GTK::SeparatorToolItem is GTK::ToolItem {
   has GtkSeparatorToolItem $!sti;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::SeparatorToolItem');
+    $o;
+  }
+
   submethod BUILD(:$separator) {
+    my $to-parent;
     given $separator {
       when GtkSepartorToolItem | GtkWidget {
         $!sti = do {
           when GtkWidget {
-            nativecast(GtkSeparatorToolItem , $separator);
+            $to-parent = $_;
+            nativecast(GtkSeparatorToolItem, $_);
           }
           when GtkSeparatorToolItem {
-            $separator;
+            $to-parent = nativecast(GtkToolItem, $_);
+            $_;
           }
         };
-        self.setToolItem($separator);
+        self.setToolItem($to-parent);
       }
       when GTK::SeparatorToolItem {
       }
       default {
       }
     }
-    self.setType('GTK::SeparatorToolItem');
   }
 
-  method new {
+  multi method new {
     my $separator = gtk_separator_tool_item_new();
+    self.bless(:$separator);
+  }
+  multi method new (GtkToolItem $separator) {
+    self.bless(:$separator);
+  }
+  multi method new (GtkWidget $separator) {
     self.bless(:$separator);
   }
 

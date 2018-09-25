@@ -428,16 +428,18 @@ our enum GtkSizeGroupMode is export <
   GTK_SIZE_GROUP_BOTH
 >;
 
-our enum GtkSizeRequestMode is export (
-  GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH => 0,
-  GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT,
-  GTK_SIZE_REQUEST_CONSTANT_SIZE,
-);
+# This form of enum allows gaps.
+our enum GtkSizeRequestMode is export <<
+  :GTK_SIZE_REQUEST_HEIGHT_FOR_WIDTH(0)
+  GTK_SIZE_REQUEST_WIDTH_FOR_HEIGHT
+  GTK_SIZE_REQUEST_CONSTANT_SIZE
+>>;
 
-our enum GtkScrollablePolicy is export (
-  GTK_SCROLL_MINIMUM => 0,
+# This form of enum allows gaps.
+our enum GtkScrollablePolicy is export <<
+  :GTK_SCROLL_MINIMUM(0)
   GTK_SCROLL_NATURAL
-);
+>>;
 
 our enum GtkStateFlags is export (
   GTK_STATE_FLAG_NORMAL       => 0,
@@ -712,8 +714,11 @@ class GtkLevelBar          is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkLinkButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkListStore         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLockButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkMenu              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenuButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkNotebook          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkOffscreen         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPopover           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkProgressBar       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRadioButton       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRange             is repr('CPointer') does GTK::Roles::Pointers is export { }

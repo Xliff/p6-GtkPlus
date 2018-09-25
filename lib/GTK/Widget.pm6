@@ -32,10 +32,6 @@ class GTK::Widget {
     g_object_unref($!w.p);
   }
 
-  method widget {
-    $!w;
-  }
-
   proto new(|) { * }
 
   method new($widget) {

@@ -319,6 +319,17 @@ our enum PangoEllipsizeMode is export <
   PANGO_ELLIPSIZE_END
 >;
 
+our enum GdkWindowEdge is export <
+  GDK_WINDOW_EDGE_NORTH_WEST
+  GDK_WINDOW_EDGE_NORTH
+  GDK_WINDOW_EDGE_NORTH_EAST
+  GDK_WINDOW_EDGE_WEST
+  GDK_WINDOW_EDGE_EAST
+  GDK_WINDOW_EDGE_SOUTH_WEST
+  GDK_WINDOW_EDGE_SOUTH
+  GDK_WINDOW_EDGE_SOUTH_EAST
+>;
+
 class cairo_font_options_t  is repr('CPointer') is export { }
 class cairo_surface_t       is repr('CPointer') is export { }
 
@@ -372,7 +383,6 @@ class GdkTouchEvent         is repr('CPointer') is export { }
 class GtkTreeModel          is repr('CPointer') is export { }
 class GdkVisual             is repr('CPointer') is export { }
 class GdkWindow             is repr('CPointer') is export { }
-class GdkWindowEdge         is repr('CPointer') is export { }
 
 class GdkColor is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint   $.pixel;

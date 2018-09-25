@@ -11,6 +11,13 @@ use GTK::Bin;
 class GTK::Popover is GTK::Bin {
   has GtkPopover $!p;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Popover');
+    $o;
+  }
+
   submethod BUILD(:$popover) {
       when GtkPopover | GtkWidget {
         self.setPopover($popover);
@@ -19,7 +26,6 @@ class GTK::Popover is GTK::Bin {
       default {
       }
     }
-    self.setType('GTK::Popover');
   }
 
   method setPopover($popover) {
@@ -74,15 +80,8 @@ class GTK::Popover is GTK::Bin {
       FETCH => sub ($) {
         gtk_popover_get_default_widget($!p);
       },
-      STORE => sub ($, $widget is copy) {
-        my $w = do given $widget {
-          when GTK::Widget { .widget; }
-          when GtkWidget   { $_;      }
-          default {
-            die "Invalid type { .^name } passed to { ::?CLASS }.default_widget";
-          }
-        }
-        gtk_popover_set_default_widget($!p, $w);
+      STORE => sub ($, GtkWidget() $widget is copy) {
+        gtk_popover_set_default_widget($!p, $widget);
       }
     );
   }
@@ -93,7 +92,7 @@ class GTK::Popover is GTK::Bin {
         Bool( gtk_popover_get_modal($!p) );
       },
       STORE => sub ($, Int() $modal is copy) {
-        my gboolean $m = $modal == 0 ?? 0 !! 1;
+        my gboolean $m = self.RESOLVE-BOOL($modal);
         gtk_popover_set_modal($!p, $m);
       }
     );
@@ -105,7 +104,7 @@ class GTK::Popover is GTK::Bin {
         GtkPositionType( gtk_popover_get_position($!p) );
       },
       STORE => sub ($, Int() $position is copy) {
-        my uint32 $p = $position +& 0xffff;
+        my uint32 $p = self.RESOLVE-UINT($position);
         gtk_popover_set_position($!p, $p);
       }
     );
@@ -116,15 +115,8 @@ class GTK::Popover is GTK::Bin {
       FETCH => sub ($) {
         gtk_popover_get_relative_to($!p);
       },
-      STORE => sub ($, $relative_to is copy) {
-        my $rt = do given $relative_to {
-          when GTK::Widget { .widget };
-          when GtkWidget   { $_      };
-          default {
-            die "Invalid type { .^name } passed to { ::?CLASS }.relative_to";
-          }
-        }
-        gtk_popover_set_relative_to($!p, $rt);
+      STORE => sub ($, GtkWidget() $relative_to is copy) {
+        gtk_popover_set_relative_to($!p, $relative_to);
       }
     );
   }
@@ -132,10 +124,10 @@ class GTK::Popover is GTK::Bin {
   method transitions_enabled is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_popover_get_transitions_enabled($!p) );
+        so gtk_popover_get_transitions_enabled($!p);
       },
       STORE => sub ($, Int() $transitions_enabled is copy) {
-        my gboolean $te = $transitions_enabled == 0 ?? 0 !! 1;
+        my gboolean $te = self.RESOLVE-BOOL($transitions_enabled);
         gtk_popover_set_transitions_enabled($!p, $te);
       }
     );

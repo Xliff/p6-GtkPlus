@@ -9,7 +9,14 @@ use GTK::Raw::Types;
 use GTK::Window;
 
 class GTK::Offscreen is GTK::Window {
-  has Gtk $!ow;
+  has GtkOffscreen $!ow;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Offscreen');
+    $o;
+  }
 
   submethod BUILD(:$offscreen) {
     my $to-parent;
@@ -32,11 +39,13 @@ class GTK::Offscreen is GTK::Window {
       default {
       }
     }
-    self.setType('GTK::Offscreen');
   }
 
-  method new {
+  multi method new {
     my $offscreen = gtk_offscreen_window_new();
+    self.bless(:$offscreen);
+  }
+  multi method new (GtkWidget $offscreen) {
     self.bless(:$offscreen);
   }
 
