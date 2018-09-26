@@ -11,18 +11,25 @@ use GTK::MenuShell;
 class GTK::MenuBar is GTK::MenuShell {
   has GtkMenuBar $!mb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::MenuBar');
+    $o;
+  }
+
   submethod BUILD(:$menubar) {
     given $menubar {
       my $to-parent;
       when GtkMenuBar | GtkMenuShell | GtkWidget {
         $!mb = do {
           when GtkMenuShell | GtkWidget  {
-            $to-parent = $menubar;
-            nativecast(GtkMenuBar, $menubar);
+            $to-parent = $_;
+            nativecast(GtkMenuBar, $_);
           }
           when GtkMenuBar {
-            $to-parent = nativecast(GtkMenuShell, $menubar);
-            $menubar;
+            $to-parent = nativecast(GtkMenuShell, $_);
+            $_;
           }
         }
         self.setMenuShell($to-parent);
@@ -32,11 +39,13 @@ class GTK::MenuBar is GTK::MenuShell {
       default {
       }
     }
-    self.setType('GTK::MenuBar');
   }
 
   method new {
     my $menubar = gtk_menu_bar_new();
+    self.bless(:$menubar);
+  }
+  multi method new ($menubar) {
     self.bless(:$menubar);
   }
 
@@ -55,7 +64,7 @@ class GTK::MenuBar is GTK::MenuShell {
         GtkPackDirection( gtk_menu_bar_get_child_pack_direction($!mb) );
       },
       STORE => sub ($, Int() $child_pack_dir is copy) {
-        my $cpd = $child_pack_dir +& 0xffff;
+        my $cpd = self.RESOLVE-UINT($child_pack_dir);
         gtk_menu_bar_set_child_pack_direction($!mb, $cpd);
       }
     );
@@ -67,7 +76,7 @@ class GTK::MenuBar is GTK::MenuShell {
         GtkPackDirection( gtk_menu_bar_get_pack_direction($!mb) );
       },
       STORE => sub ($, Int() $pack_dir is copy) {
-        my uint32 $pd = $pack_dir +& 0xffff;
+        my uint32 $pd = self.RESOLVE-UINT($pack_dir);
         gtk_menu_bar_set_pack_direction($!mb, $pd);
       }
     );

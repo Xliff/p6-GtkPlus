@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::RadioMenuItem;
 use GTK::Raw::Types;
@@ -10,6 +11,13 @@ use GTK::MenuItem;
 
 class GTK::RadioMenuItem is GTK::MenuItem {
   has GtkRadioMenuItem $!rmi;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::RadioMenuItem');
+    $o;
+  }
 
   submethod BUILD(:$radiomenu) {
     my $to-parent;
@@ -32,18 +40,22 @@ class GTK::RadioMenuItem is GTK::MenuItem {
       default {
       }
     }
-    self.setType('GTK::RadioMenuItem');
   }
 
-  multi method join_group (GtkRadioMenuItem $group_source) {
-    gtk_radio_menu_item_join_group($!rmi, $group_source);
+  # So that GtkRadioMenuItem() works in signatures.
+  method GTK::Raw::Types::GtkRadioMenuItem {
+    $!rmi;
   }
-  multi method join_group (GTK::RadioMenuItem $group_source)  {
-    samewith($group_source.radiomenuitem);
+  # Aliasing FTW -- next code review!
+  method radiomenuitem {
+    $!rmi;
   }
 
   multi method new {
     $radiomenu = gtk_radio_menu_item_new();
+    self.bless(:$radiomenu);
+  }
+  multi method new (GtkWidget $radiomenu) {
     self.bless(:$radiomenu);
   }
   multi method new(:$widget, Str() :$label, Str() :$mnemonic) {
@@ -86,12 +98,9 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     self.bless(:$radiomenu);
   }
 
-  multi method new_from_widget (GtkRadioMenuItem $group) {
+  method new_from_widget (GtkRadioMenuItem() $group) {
     $radiomenu = gtk_radio_menu_item_new_from_widget($group);
     self.bless(:$radiomenu);
-  }
-  multi method new_from_widget (GTK::RadioMenuItem $group) {
-    samewith($group.radiomenuitem);
   }
 
   method new_with_label (gchar $label) {
@@ -100,7 +109,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   }
 
   method new_with_label_from_widget (
-    GtkRadioMenuItem $group,
+    GtkRadioMenuItem() $group,
     gchar $label
   ) {
     my $radiomenu = gtk_radio_menu_item_new_with_label_from_widget(
@@ -115,8 +124,8 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     self.bless(:$radiomenu);
   }
 
-  multi method new_with_mnemonic_from_widget (
-    GtkRadioMenuItem $group,
+  method new_with_mnemonic_from_widget (
+    GtkRadioMenuItem() $group,
     gchar $label
   ) {
     my $radiomenu = gtk_radio_menu_item_new_with_mnemonic_from_widget(
@@ -124,12 +133,6 @@ class GTK::RadioMenuItem is GTK::MenuItem {
       $label
     );
     self.bless(:$radiomenu);
-  }
-  multi method new_with_mnemonic_from_widget (
-    GTK::RadioMenuItem $group,
-    gchar $label
-  ) {
-    samewith($group.radiomenuitem, $label);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -145,9 +148,9 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   method group is rw {
   Proxy.new(
       FETCH => sub ($) {
-        gtk_radio_menu_item_get_group($!rmi);
+        GSList.new( gtk_radio_menu_item_get_group($!rmi) );
       },
-      STORE => sub ($, $group is copy) {
+      STORE => sub ($, GSList() $group is copy) {
         gtk_radio_menu_item_set_group($!rmi, $group);
       }
     );
@@ -155,8 +158,8 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method radiomenuitem {
-    $!rmi;
+  method join_group (GtkRadioMenuItem() $group_source) {
+    gtk_radio_menu_item_join_group($!rmi, $group_source);
   }
 
   method get_type {

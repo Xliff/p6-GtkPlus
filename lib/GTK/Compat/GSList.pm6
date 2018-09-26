@@ -32,6 +32,10 @@ class GTK::Compat::GSList {
     }
   }
 
+  method GTK::Compat::Types::GSList {
+    $!list;
+  }
+
   # Import methods from
   # https://developer.gnome.org/glib/stable/glib-Singly-Linked-Lists.html
 

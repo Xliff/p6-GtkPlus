@@ -13,6 +13,7 @@ use GTK::Roles::Signals;
 
 class GTK::EntryCompletion {
   also does GTK::Roles::Signals;
+  also does GTK::Roles::Types;
 
   has GtkEntryCompletion $!ec;
 
@@ -70,7 +71,9 @@ class GTK::EntryCompletion {
         gtk_entry_completion_get_inline_completion($!ec);
       },
       STORE => sub ($, $inline_completion is copy) {
-        gtk_entry_completion_set_inline_completion($!ec, $inline_completion);
+        gtk_entry_completion_set_inline_completion(
+          $!ec, $inline_completion
+        );
       }
     );
   }
@@ -81,7 +84,9 @@ class GTK::EntryCompletion {
         gtk_entry_completion_get_inline_selection($!ec);
       },
       STORE => sub ($, $inline_selection is copy) {
-        gtk_entry_completion_set_inline_selection($!ec, $inline_selection);
+        gtk_entry_completion_set_inline_selection(
+          $!ec, $inline_selection
+        );
       }
     );
   }
@@ -136,7 +141,9 @@ class GTK::EntryCompletion {
         gtk_entry_completion_get_popup_single_match($!ec);
       },
       STORE => sub ($, $popup_single_match is copy) {
-        gtk_entry_completion_set_popup_single_match($!ec, $popup_single_match);
+        gtk_entry_completion_set_popup_single_match(
+          $!ec, $popup_single_match
+        );
       }
     );
   }
@@ -189,8 +196,14 @@ class GTK::EntryCompletion {
     gtk_entry_completion_insert_prefix($!ec);
   }
 
-  method set_match_func (OpaquePointer $func, gpointer $func_data, GDestroyNotify $func_notify) {
-    gtk_entry_completion_set_match_func($!ec, $func, $func_data, $func_notify);
+  method set_match_func (
+    OpaquePointer $func,
+    gpointer $func_data,
+    GDestroyNotify $func_notify
+  ) {
+    gtk_entry_completion_set_match_func(
+      $!ec, $func, $func_data, $func_notify
+    );
   }
 
 }

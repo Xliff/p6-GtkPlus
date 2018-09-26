@@ -11,6 +11,13 @@ use GTK::Bin;
 class GTK::Overlay is GTK::Bin {
   has GtkOverlay $!o;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Overlay');
+    $o;
+  }
+
   submethod BUILD(:$overlay) {
     my $to-parent;
     given $overlay {
@@ -32,16 +39,18 @@ class GTK::Overlay is GTK::Bin {
       default {
       }
     }
-    self.setType('GTK::Overlay');
   }
 
-  method new {
+  multi method new {
     my $overlay = gtk_overlay_new();
+    self.bless(:$overlay);
+  }
+  multi method new (GtkWidget $overlay) {
     self.bless(:$overlay);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  
+
   # Is originally:
   # GtkOverlay, GtkWidget, GdkRectangle, gpointer --> gboolean
   method get-child-position {
@@ -53,44 +62,29 @@ class GTK::Overlay is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method add_overlay (GtkWidget $widget) {
+  method add_overlay (GtkWidget() $widget) {
     gtk_overlay_add_overlay($!o, $widget);
   }
-  multi method add_overlay (GTK::Widget $widget)  {
-    samewith($widget.widget);
-  }
 
-  multi method get_overlay_pass_through (GtkWidget $widget) {
+  method get_overlay_pass_through (GtkWidget() $widget) {
     gtk_overlay_get_overlay_pass_through($!o, $widget);
-  }
-  multi method get_overlay_pass_through (GTK::Widget $widget)  {
-    samewith($widget.widget);
   }
 
   method get_type {
     gtk_overlay_get_type();
   }
 
-  multi method reorder_overlay (GtkWidget $child, Int() $position) {
-    my gint $p = ($position.abs +& 0x7fff) * ($position < 0 ?? -1 !! 1);
+  method reorder_overlay (GtkWidget() $child, Int() $position) {
+    my gint $p = self.RESOLVE-INT($position);
     gtk_overlay_reorder_overlay($!o, $child, $position);
   }
-  multi method reorder_overlay (GTK::Widget $child, Int() $position)  {
-    samewith($child.widget, $position);
-  }
 
-  multi method set_overlay_pass_through (
-    GtkWidget $widget,
+  method set_overlay_pass_through (
+    GtkWidget() $widget,
     Int() $pass_through
   ) {
-    my $pt = $pass_through == 0 ?? 0 !! 1
+    my gboolean $pt = self.RESOLVE-BOOL($pass_through);
     gtk_overlay_set_overlay_pass_through($!o, $widget, $pt);
-  }
-  multi method set_overlay_pass_through (
-    GTK::Widget $widget,
-    Int() $pass_through
-  )  {
-    samewith($widget.widget, $pass_through);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

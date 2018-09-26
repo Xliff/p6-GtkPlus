@@ -11,14 +11,28 @@ use GTK::ComboBox;
 class GTK::AppButton is GTK::ComboBox {
   has GtkAppChooserButton $!acb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::AppButton');
+    $o;
+  }
+
   submethod BUILD(:$appbutton) {
+    my $to-parent;
     given $appbutton {
       when GtkAppChooserButton | GtkWidget {
         $!acb = {
-          when GtkAppChooserButton { $appbutton; }
-          when GtkWidget           { nativecast(GtkAppChooserButton, $appbutton); }
+          when GtkAppChooserButton {
+            $to-parent = nativecast(GtkComboBox, $_);
+            $_;
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkAppChooserButton, $_);
+          }
         }
-        self.setComboBox($appbutton);
+        self.setComboBox($o-parent);
       }
       when GTK::AppButton {
       }
@@ -27,8 +41,11 @@ class GTK::AppButton is GTK::ComboBox {
     }
   }
 
-  method new {
+  multi method new {
     my $appbutton = gtk_app_chooser_button_new();
+    self.bless(:$appbutton);
+  }
+  multi method new (GtkWidget $appbutton) {
     self.bless(:$appbutton);
   }
 
@@ -49,7 +66,7 @@ class GTK::AppButton is GTK::ComboBox {
       FETCH => sub ($) {
         gtk_app_chooser_button_get_heading($!acb);
       },
-      STORE => sub ($, $heading is copy) {
+      STORE => sub ($, Str() $heading is copy) {
         gtk_app_chooser_button_set_heading($!acb, $heading);
       }
     );
@@ -58,10 +75,11 @@ class GTK::AppButton is GTK::ComboBox {
   method show_default_item is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_app_chooser_button_get_show_default_item($!acb);
+        so gtk_app_chooser_button_get_show_default_item($!acb);
       },
       STORE => sub ($, $setting is copy) {
-        gtk_app_chooser_button_set_show_default_item($!acb, $setting);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_app_chooser_button_set_show_default_item($!acb, $s);
       }
     );
   }
@@ -69,18 +87,21 @@ class GTK::AppButton is GTK::ComboBox {
   method show_dialog_item is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_app_chooser_button_get_show_dialog_item($!acb);
+        so gtk_app_chooser_button_get_show_dialog_item($!acb);
       },
       STORE => sub ($, $setting is copy) {
-        gtk_app_chooser_button_set_show_dialog_item($!acb, $setting);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_app_chooser_button_set_show_dialog_item($!acb, $s);
       }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_custom_item (gchar $name, gchar $label, GIcon $icon) {
-    gtk_app_chooser_button_append_custom_item($!acb, $name, $label, $icon);
+  method append_custom_item (Str() $name, Str() $label, GIcon $icon) {
+    gtk_app_chooser_button_append_custom_item(
+      $!acb, $name, $label, $icon
+    );
   }
 
   method append_separator {
@@ -91,7 +112,7 @@ class GTK::AppButton is GTK::ComboBox {
     gtk_app_chooser_button_get_type();
   }
 
-  method set_active_custom_item (gchar $name) {
+  method set_active_custom_item (Str() $name) {
     gtk_app_chooser_button_set_active_custom_item($!acb, $name);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

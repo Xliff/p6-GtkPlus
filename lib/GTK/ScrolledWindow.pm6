@@ -6,10 +6,18 @@ use GTK::Compat::Types;
 use GTK::Raw::ScrolledWindow;
 use GTK::Raw::Types;
 
+use GTK::Adjustment;
 use GTK::Bin;
 
 class GTK::ScrolledWindow is GTK::Bin {
   has GtkScrolledWindow $!sw;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ScrolledWindow');
+    $o;
+  }
 
   submethod BUILD(:$scrolled) {
     given $scrolled {
@@ -21,14 +29,17 @@ class GTK::ScrolledWindow is GTK::Bin {
       default {
       }
     }
-    self.setType('GTK::ScrolledWindow');
   }
 
-  method new (Int() $hadjustment, Int() $vadjustment) {
-    my @u = ($hadjustment, $vadjustment);
-    my uint32 ($ha, $va) = self.RESOLVE-UINT(@a, &?ROUTINE.name);
-    my $scrolled = gtk_scrolled_window_new($ha, $va);
+  multi method new (
+    GtkAdjustment() $hadjustment,
+    GtkAdjustment() $vadjustment
+  ) {
+    my $scrolled = gtk_scrolled_window_new($hadjustment, $vadjustment);
     self.blessed(:$scrolled);
+  }
+  multi method new (GtkWidget $scrolled) {
+    self.bless(:$scrolled);
   }
 
   method setScrolledWindow($scrolled) {
@@ -85,7 +96,7 @@ class GTK::ScrolledWindow is GTK::Bin {
         gtk_scrolled_window_get_capture_button_press($!sw);
       },
       STORE => sub ($, Int() $capture_button_press is copy) {
-        my gboolean  $cbp = self.RESOLVE-BOOL($capture_button_press, &?ROUTINE.name);
+        my gboolean  $cbp = self.RESOLVE-BOOL($capture_button_press);
         gtk_scrolled_window_set_capture_button_press($!sw, $cbp);
       }
     );
@@ -94,9 +105,11 @@ class GTK::ScrolledWindow is GTK::Bin {
   method hadjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scrolled_window_get_hadjustment($!sw);
+        GTK::Adjustment.new(
+          gtk_scrolled_window_get_hadjustment($!sw)
+        );
       },
-      STORE => sub ($, $hadjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $hadjustment is copy) {
         gtk_scrolled_window_set_hadjustment($!sw, $hadjustment);
       }
     );
@@ -105,11 +118,11 @@ class GTK::ScrolledWindow is GTK::Bin {
   method kinetic_scrolling is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_scrolled_window_get_kinetic_scrolling($!sw) );
+        so gtk_scrolled_window_get_kinetic_scrolling($!sw);
       },
       STORE => sub ($, Int() $kinetic_scrolling is copy) {
-        my gboolean $ks = self.RESOLVE-BOOL($kinetic_scrolling, &?ROUTINE.name);
-        gtk_scrolled_window_set_kinetic_scrolling($!sw, $kinetic_scrolling);
+        my gboolean $ks = self.RESOLVE-BOOL($kinetic_scrolling);
+        gtk_scrolled_window_set_kinetic_scrolling($!sw, $ks);
       }
     );
   }
@@ -120,7 +133,7 @@ class GTK::ScrolledWindow is GTK::Bin {
         gtk_scrolled_window_get_max_content_height($!sw);
       },
       STORE => sub ($, Int() $height is copy) {
-        my $h = self.RESOLVE-INT($height, &?ROUTINE.name);
+        my $h = self.RESOLVE-INT($height);
         gtk_scrolled_window_set_max_content_height($!sw, $height);
       }
     );
@@ -132,7 +145,7 @@ class GTK::ScrolledWindow is GTK::Bin {
         gtk_scrolled_window_get_max_content_width($!sw);
       },
       STORE => sub ($, Int() $width is copy) {
-        my gint $w = self.RESOLVE-INT($width, &?ROUTINE.name);
+        my gint $w = self.RESOLVE-INT($width);
         gtk_scrolled_window_set_max_content_width($!sw, $w);
       }
     );
@@ -144,7 +157,7 @@ class GTK::ScrolledWindow is GTK::Bin {
         gtk_scrolled_window_get_min_content_height($!sw);
       },
       STORE => sub ($, Int() $height is copy) {
-        my gint $h = self.RESOLVE-INT($height, &?ROUTINE.name);
+        my gint $h = self.RESOLVE-INT($height);
         gtk_scrolled_window_set_min_content_height($!sw, $h);
       }
     );
@@ -156,7 +169,7 @@ class GTK::ScrolledWindow is GTK::Bin {
         gtk_scrolled_window_get_min_content_width($!sw);
       },
       STORE => sub ($, Int() $width is copy) {
-        my gint $w = self.RESOLVE-INT($width, &?ROUTINE.name);
+        my gint $w = self.RESOLVE-INT($width);
         gtk_scrolled_window_set_min_content_width($!sw, $w);
       }
     );
@@ -165,10 +178,10 @@ class GTK::ScrolledWindow is GTK::Bin {
   method overlay_scrolling is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_scrolled_window_get_overlay_scrolling($!sw) );
+        so gtk_scrolled_window_get_overlay_scrolling($!sw);
       },
       STORE => sub ($, Int() $overlay_scrolling is copy) {
-        my $os = self.RESOLVE-BOOL($overlay_scrolling, &?ROUTINE.name);
+        my $os = self.RESOLVE-BOOL($overlay_scrolling);
         gtk_scrolled_window_set_overlay_scrolling($!sw, $os);
       }
     );
@@ -177,10 +190,10 @@ class GTK::ScrolledWindow is GTK::Bin {
   method propagate_natural_height is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_scrolled_window_get_propagate_natural_height($!sw) );
+        so gtk_scrolled_window_get_propagate_natural_height($!sw);
       },
       STORE => sub ($, Int() $propagate is copy) {
-        my gboolean $p = self.RESOLVE-BOOL($propagate, &?ROUTINE.name);
+        my gboolean $p = self.RESOLVE-BOOL($propagate);
         gtk_scrolled_window_set_propagate_natural_height($!sw, $p);
       }
     );
@@ -189,10 +202,10 @@ class GTK::ScrolledWindow is GTK::Bin {
   method propagate_natural_width is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_scrolled_window_get_propagate_natural_width($!sw) );
+        so gtk_scrolled_window_get_propagate_natural_width($!sw);
       },
       STORE => sub ($, Int() $propagate is copy) {
-        my gboolean $p = self.RESOLVE-BOOL($propagate, &?ROUTINE.name);
+        my gboolean $p = self.RESOLVE-BOOL($propagate);
         gtk_scrolled_window_set_propagate_natural_width($!sw, $p);
       }
     );
@@ -204,7 +217,7 @@ class GTK::ScrolledWindow is GTK::Bin {
         GtkShadowType( gtk_scrolled_window_get_shadow_type($!sw) );
       },
       STORE => sub ($, $type is copy) {
-        my uint32 $t = self.RESOLVE-UINT($type, &?ROUTINE.name);
+        my uint32 $t = self.RESOLVE-UINT($type);
         gtk_scrolled_window_set_shadow_type($!sw, $t);
       }
     );
@@ -213,9 +226,11 @@ class GTK::ScrolledWindow is GTK::Bin {
   method vadjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scrolled_window_get_vadjustment($!sw);
+        GTK::Adjustment.new(
+          gtk_scrolled_window_get_vadjustment($!sw)
+        );
       },
-      STORE => sub ($, Gtkdjustment $vadjustment is copy) {
+      STORE => sub ($, Gtkdjustment() $vadjustment is copy) {
         gtk_scrolled_window_set_vadjustment($!sw, $vadjustment);
       }
     );
@@ -223,11 +238,8 @@ class GTK::ScrolledWindow is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method add_with_viewport (GtkWidget $child) {
+  method add_with_viewport (GtkWidget() $child) {
     gtk_scrolled_window_add_with_viewport($!sw, $child);
-  }
-  multi method add_with_viewport (GTK::Widget $child)  {
-    samewith($child.widget);
   }
 
   method get_hscrollbar {
@@ -235,19 +247,22 @@ class GTK::ScrolledWindow is GTK::Bin {
   }
 
   method get_placement {
-    gtk_scrolled_window_get_placement($!sw);
+    GtkCornerType( gtk_scrolled_window_get_placement($!sw) ;
   }
 
   multi method get_policy (
-    GtkPolicyType $hscrollbar_policy is rw,
-    GtkPolicyType $vscrollbar_policy is rw
+    Int() $hscrollbar_policy is rw,     # GtkPolicyType
+    Int() $vscrollbar_policy is rw      # GtkPolicyType
   ) {
-    my uint32 ($hp, $vp);
-    ($hscrollbar_policy, $vscrollbar_policy) = samewith;
+    my @u = ($hscrollbar_policy, $vscrollbar_policy);
+    my uint32 ($hp, $vp) = self.RESOLVE-UINT(@u);
+    my $rc = gtk_scrolled_window_get_policy($!sw, $hp, $vp);
+    ($hscrollbar_policy, $vscrollbar_policy) = ($hp, $vp);
+    $rc;
   }
   multi method get_policy {
-    my uint32 ($hp, $vp);
-    gtk_scrolled_window_get_policy($!sw, $hp, $vp);
+    my ($hp, $vp);
+    samewith($hp, $vp);
     ($hp, $vp);
   }
 
@@ -259,9 +274,9 @@ class GTK::ScrolledWindow is GTK::Bin {
     gtk_scrolled_window_get_vscrollbar($!sw);
   }
 
-  multi method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy) {
+  method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy) {
     my @u = ($hscrollbar_policy, $vscrollbar_policy);
-    my uint32 ($hp, $vp) = self.RESOLVE-UINT(@u, &?ROUTINE.name);
+    my uint32 ($hp, $vp) = self.RESOLVE-UINT(@u);
     gtk_scrolled_window_set_policy($!sw, $hp, $vp);
   }
 

@@ -11,29 +11,49 @@ use GTK::Bin;
 class GTK::FileChooserButton is GTK::Bin {
   has GtkFileChooserButton $!fc;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::FileChooserButton');
+    $o;
+  }
+
   submethod BUILD(:$chooser) {
+    my $to-parent;
     given $chooser {
       when GtkFileChooserButton | GtkWidget {
         $!fc = do {
-          when GtkWidget       { nativecast(GtkFileChooserButton, $chooser); }
-          when GtkFileChooser  { $chooser }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkFileChooserButton, $_);
+          }
+          when GtkFileChooser {
+            $to-parent = nativecast(GtkBin, $_);
+            $_;
+          }
         }
-        self.setBin($chooser);
+        self.setBin($to-parent);
       }
       when GTK::FileChooser {
       }
       default {
       }
     }
-    sel.setType('GTK::FileChooser');
   }
 
-  multi method new (Str $title, GtkFileChooserAction $action) {
-    my $chooser = gtk_file_chooser_button_new($title, $action);
+  multi method new (
+    Str() $title,
+    Int() $action                 # GtkFileChooserAction $action
+  ) {
+    my uint32 $a = self.RESOLVE-UINT($action);
+    my $chooser = gtk_file_chooser_button_new($title, $a);
+    self.bless(:$chooser);
+  }
+  multi method new (GtkWidget $chooser) {
     self.bless(:$chooser);
   }
 
-  method new_with_dialog (GtkWidget $dialog) {
+  method new_with_dialog (GtkWidget() $dialog) {
     my $chooser = gtk_file_chooser_button_new_with_dialog($dialog);
     self.bless(:$chooser);
   }

@@ -13,9 +13,19 @@ class GTK::Range is GTK::Widget {
 
   # Abstract code, so no need for BUILD or new
 
-  method setRange(:$range) {
-    $!r = nativecast(GtkRange, $range);
-    self.setWidget($range);
+  method setRange($range) {
+    my $to-parent;
+    $!r = do given $range {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkRange, $_);
+      }
+      when GtkRange {
+        $to-parent = nativecast(GtkWidget, $_);
+        $_;
+      }
+    }
+    self.setWidget($to-parent);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -40,9 +50,9 @@ class GTK::Range is GTK::Widget {
   method adjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_adjustment($!r);
+        Gtk::Adjustment.new( gtk_range_get_adjustment($!r) );
       },
-      STORE => sub ($, $adjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_range_set_adjustment($!r, $adjustment);
       }
     );
@@ -53,8 +63,9 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         gtk_range_get_fill_level($!r);
       },
-      STORE => sub ($, $fill_level is copy) {
-        gtk_range_set_fill_level($!r, $fill_level);
+      STORE => sub ($, Num() $fill_level is copy) {
+        my gdouble $fl = $fill_level;
+        gtk_range_set_fill_level($!r, $fl);
       }
     );
   }
@@ -62,10 +73,11 @@ class GTK::Range is GTK::Widget {
   method flippable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_flippable($!r);
+        so gtk_range_get_flippable($!r);
       },
       STORE => sub ($, $flippable is copy) {
-        gtk_range_set_flippable($!r, $flippable);
+        my gboolean $f = self.RESOLVE-BOOL($flippable);
+        gtk_range_set_flippable($!r, $f);
       }
     );
   }
@@ -73,10 +85,11 @@ class GTK::Range is GTK::Widget {
   method inverted is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_inverted($!r);
+        so gtk_range_get_inverted($!r);
       },
       STORE => sub ($, $setting is copy) {
-        gtk_range_set_inverted($!r, $setting);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_range_set_inverted($!r, $s);
       }
     );
   }
@@ -86,26 +99,24 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         GtkSensitivityType( gtk_range_get_lower_stepper_sensitivity($!r) );
       },
-      STORE => sub ($, $sensitivity is copy) {
-        my $s = do given $sensitivity {
-          when GtkSensitivityType { $_.Int; }
-          when Int | uint32       { $_;     }
-          default {
-            die "Wrong type used ({ $_.^name }) when setting GTK::Range.lower_stepper_sensitivity.";
-          }
-        }
+      STORE => sub ($, Int() $sensitivity is copy) {
+        my uint32 $s = self.RESOLVE-UINT($sensitivity);
         gtk_range_set_lower_stepper_sensitivity($!r, $s);
       }
     );
   }
 
-  method min_slider_size is rw {
+  method min_slider_size
+    is DEPRECATED('use CSS min-height/min-width')
+    is rw
+  {
     Proxy.new(
       FETCH => sub ($) {
         gtk_range_get_min_slider_size($!r);
       },
-      STORE => sub ($, $min_size is copy) {
-        gtk_range_set_min_slider_size($!r, $min_size);
+      STORE => sub ($, Int() $min_size is copy) {
+        my gint $ms = self.RESOLVE-INT($min_size);
+        gtk_range_set_min_slider_size($!r, $ms);
       }
     );
   }
@@ -115,8 +126,9 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         gtk_range_get_restrict_to_fill_level($!r);
       },
-      STORE => sub ($, $restrict_to_fill_level is copy) {
-        gtk_range_set_restrict_to_fill_level($!r, $restrict_to_fill_level);
+      STORE => sub ($, Num() $restrict_to_fill_level is copy) {
+        my gdouble $fl = $restrict_to_fill_level;
+        gtk_range_set_restrict_to_fill_level($!r, $fl);
       }
     );
   }
@@ -126,8 +138,9 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         gtk_range_get_round_digits($!r);
       },
-      STORE => sub ($, $round_digits is copy) {
-        gtk_range_set_round_digits($!r, $round_digits);
+      STORE => sub ($, Int() $round_digits is copy) {
+        my gint $rd = self.RESOLVE-INT($round_digits);
+        gtk_range_set_round_digits($!r, $rd);
       }
     );
   }
@@ -135,10 +148,11 @@ class GTK::Range is GTK::Widget {
   method show_fill_level is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_show_fill_level($!r);
+        so gtk_range_get_show_fill_level($!r);
       },
       STORE => sub ($, $show_fill_level is copy) {
-        gtk_range_set_show_fill_level($!r, $show_fill_level);
+        my gboolean $sfl = self.RESOLVE-BOOL($show_fill_level);
+        gtk_range_set_show_fill_level($!r, $sfl);
       }
     );
   }
@@ -146,10 +160,11 @@ class GTK::Range is GTK::Widget {
   method slider_size_fixed is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_slider_size_fixed($!r);
+        so gtk_range_get_slider_size_fixed($!r);
       },
       STORE => sub ($, $size_fixed is copy) {
-        gtk_range_set_slider_size_fixed($!r, $size_fixed);
+        my gboolean $sf = self.RESOLVE-BOOL($size_fixed);
+        gtk_range_set_slider_size_fixed($!r, $sf);
       }
     );
   }
@@ -159,14 +174,8 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         GtkSensitivityType( gtk_range_get_upper_stepper_sensitivity($!r) );
       },
-      STORE => sub ($, $sensitivity is copy) {
-        my $s = do given $sensitivity {
-          when GtkSensitivityType { $_.Int; }
-          when Int | uint32       { $_;     }
-          default {
-            die "Wrong type used ({ $_.^name }) when setting GTK::Range.upper_stepper_sensitivity.";
-          }
-        }
+      STORE => sub ($, Int() $sensitivity is copy) {
+        my uint32 $s = self.RESOLVE-UINT($sensitivity);
         gtk_range_set_upper_stepper_sensitivity($!r, $s);
       }
     );
@@ -177,8 +186,9 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         gtk_range_get_value($!r);
       },
-      STORE => sub ($, $value is copy) {
-        gtk_range_set_value($!r, $value);
+      STORE => sub ($, Num() $value is copy) {
+        my gdouble $v = $value;
+        gtk_range_set_value($!r, $v);
       }
     );
   }
@@ -189,20 +199,24 @@ class GTK::Range is GTK::Widget {
     gtk_range_get_range_rect($!r, $range_rect);
   }
 
-  method get_slider_range (gint $slider_start, gint $slider_end) {
-    gtk_range_get_slider_range($!r, $slider_start, $slider_end);
+  method get_slider_range (Int() $slider_start, Int() $slider_end) {
+    my @i = ($slider_start, $slider_end);
+    my gint ($s, $e) = self.RESOLVE-INT(@i);
+    gtk_range_get_slider_range($!r, $s, $e);
   }
 
-  method get_type () {
+  method get_type {
     gtk_range_get_type();
   }
 
-  method set_increments (gdouble $step, gdouble $page) {
-    gtk_range_set_increments($!r, $step, $page);
+  method set_increments (Num() $step, Num() $page) {
+    my gdouble ($s, $p) = ($step, $page);
+    gtk_range_set_increments($!r, $s, $p);
   }
 
-  method set_range (gdouble $min, gdouble $max) {
-    gtk_range_set_range($!r, $min, $max);
+  method set_range (Num() $min, Num() $max) {
+    my gdouble ($mn, $mx) = ($min, $max);
+    gtk_range_set_range($!r, $mn, $mx);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

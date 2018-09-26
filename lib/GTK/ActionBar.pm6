@@ -11,13 +11,20 @@ use GTK::Bin;
 class GTK::ActionBar is GTK::Bin {
   has GtkActionBar $!ab;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::ActionBar');
+    $o;
+  }
+
   submethod BUILD(:$actionbar) {
     my $to-parent;
     given $actionbar {
       when GtkActionBar | GtkWidget {
         $!ab = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkActionBar, $_);
           }
           when GtkActionBar  {
@@ -32,11 +39,13 @@ class GTK::ActionBar is GTK::Bin {
       default {
       }
     }
-    self.setType('GTK::ActionBar');
   }
 
-  method new {
+  multi method new {
     my $actionbar = gtk_action_bar_new();
+    self.bless(:$actionbar);
+  }
+  multi method new (GtkWidget $actionbar) {
     self.bless(:$actionbar);
   }
 
@@ -49,15 +58,8 @@ class GTK::ActionBar is GTK::Bin {
       FETCH => sub ($) {
         gtk_action_bar_get_center_widget($!ab);
       },
-      STORE => sub ($, $center_widget is copy) {
-        my $cw = do given $center_widget {
-          when GTK::Widget { .widget }
-          when GtkWidget   { $_ }
-          default {
-            die "Invalid type { .^name } passed to { ::?CLASS }.center_widget()";
-          }
-        }
-        gtk_action_bar_set_center_widget($!ab, $cw);
+      STORE => sub ($, GtkWidget() $center_widget is copy) {
+        gtk_action_bar_set_center_widget($!ab, $center_widget);
       }
     );
   }
