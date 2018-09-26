@@ -9,27 +9,42 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 class GTK::LevelBar is GTK::Widget {
-  has Gtk $!lb;
+  has GtkLevelBar $!lb;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::LevelBar');
+    $o;
+  }
 
   submethod BUILD(:$level) {
     given $level {
       when GtkLevelBar | GtkWidget {
         $!lb = do {
-          when GtkWidget   { nativecast(GtkLevelBar, $level); }
-          when GtkLevelBar { $level; }
+          when GtkWidget   {
+            $to-parent = $_;
+            nativecast(GtkLevelBar, $_);
+          }
+          when GtkLevelBar {
+            $to-parent = nativecast(GtkWidget, $_);
+            $_;
+          }
         };
-        self.setWidget($level);
+        self.setWidget($to-parent);
       }
       when GTK::LevelBar {
       }
       default {
       }
     }
-    self.setType('GTK::LevelBar');
   }
 
-  method new () {
+  multi method new {
     my $level = gtk_level_bar_new();
+    self.bless(:$level);
+  }
+  multi method new (GtkWidget $level) {
     self.bless(:$level);
   }
 
@@ -49,10 +64,11 @@ class GTK::LevelBar is GTK::Widget {
   method inverted is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_level_bar_get_inverted($!lb);
+        so gtk_level_bar_get_inverted($!lb);
       },
       STORE => sub ($, $inverted is copy) {
-        gtk_level_bar_set_inverted($!lb, $inverted);
+        my gboolean $i = self.RESOLVE-BOOL($inverted);
+        gtk_level_bar_set_inverted($!lb, $i);
       }
     );
   }
@@ -62,8 +78,9 @@ class GTK::LevelBar is GTK::Widget {
       FETCH => sub ($) {
         gtk_level_bar_get_max_value($!lb);
       },
-      STORE => sub ($, $value is copy) {
-        gtk_level_bar_set_max_value($!lb, $value);
+      STORE => sub ($, Num() $value is copy) {
+        my gdouble $v = $value;
+        gtk_level_bar_set_max_value($!lb, $v);
       }
     );
   }
@@ -73,8 +90,9 @@ class GTK::LevelBar is GTK::Widget {
       FETCH => sub ($) {
         gtk_level_bar_get_min_value($!lb);
       },
-      STORE => sub ($, $value is copy) {
-        gtk_level_bar_set_min_value($!lb, $value);
+      STORE => sub ($, Num() $value is copy) {
+        my gdouble $v = $value;
+        gtk_level_bar_set_min_value($!lb, $v);
       }
     );
   }
@@ -82,10 +100,11 @@ class GTK::LevelBar is GTK::Widget {
   method mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_level_bar_get_mode($!lb);
+        GtkLevelBarMode( gtk_level_bar_get_mode($!lb) );
       },
       STORE => sub ($, $mode is copy) {
-        gtk_level_bar_set_mode($!lb, $mode);
+        my guint32 $m = self.RESOLVE-uint($mode);
+        gtk_level_bar_set_mode($!lb, $m);
       }
     );
   }
@@ -97,7 +116,7 @@ class GTK::LevelBar is GTK::Widget {
       },
       STORE => sub ($, Num() $value is copy) {
         my gdouble $v = $value;
-        gtk_level_bar_set_value($!lb, $name);
+        gtk_level_bar_set_value($!lb, $v);
       }
     );
   }
@@ -109,16 +128,16 @@ class GTK::LevelBar is GTK::Widget {
     gtk_level_bar_get_offset_value($!lb, $name, $v);
   }
 
-  method get_type () {
+  method get_type {
     gtk_level_bar_get_type();
   }
 
-  method add_offset_value(Str $name, Num() $value) {
+  method add_offset_value(Str() $name, Num() $value) {
     my gdouble $v = $value;
     gtk_level_bar_add_offset_value($!lb, $name, $v);
   }
 
-  method remove_offset_value(Str $name) {
+  method remove_offset_value(Str() $name) {
     gtk_level_bar_remove_offset_value($!lb, $name);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

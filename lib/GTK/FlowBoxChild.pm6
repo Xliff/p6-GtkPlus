@@ -17,6 +17,45 @@ use GTK::Bin;
 class GTK::FlowBoxChild is GTK::Bin {
   has GtkFlowBoxChild $!fbc;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::FlowBoxChild');
+    $o;
+  }
+
+  submethod BUILD(:$flowboxchild) {
+    my $to-parent;
+    given $flowboxchild {
+      when GtkFlowBoxChild | GtkWidget {
+        $!fb = do {
+          when GtkWidget  {
+            $to-parent = $_;
+            nativecast(GtkFlowBoxChild, $_);
+          }
+          when GtkFlowBox {
+            $to-parent = nativecast(GtkBin, $_);
+            $_;
+          }
+        };
+        self.setBin($to-parent);
+      }
+      when GTK::FlowBox {
+      }
+      default {
+      }
+    }
+  }
+
+  method new {
+    my $flowboxchild = gtk_flow_box_child_new();
+    self.bless(:$flowboxchild);
+  }
+
+  method GTK::Raw::Types::GtkFlowBoxChild {
+    $!fbc
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -24,13 +63,16 @@ class GTK::FlowBoxChild is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method setFlowBoxChild(GtkFlowBoxChild $child) {
-    $!fbc = do given $child {
-      when GtkWidget       { nativecast(GtkFlowBoxChild, $child); }
-      when GtkFlowBoxChild { $child; }
-    };
-    self.setBin($child);
-    self.setType('GTK::FlowBoxChild');
+  method changed {
+    gtk_flow_box_child_changed($!fbc);
+  }
+
+  method get_index {
+    gtk_flow_box_child_get_index($!fbc);
+  }
+
+  method is_selected {
+    gtk_flow_box_child_is_selected($!fbc);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 }

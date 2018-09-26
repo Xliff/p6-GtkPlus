@@ -14,14 +14,28 @@ class GTK::Stack is GTK::Container {
   has $!by-name;
   has $!by-title;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Stack');
+    $o;
+  }
+
   submethod BUILD(:$stack ) {
+    my $to-parent;
     given $stack {
       when GtkStack | GtkWidget {
         $!s = do {
-          when GtkWidget { nativecast(GtkStack, $!stack); }
-          when GtkStack  { $stack }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkStack, $_);
+          }
+          when GtkStack  {
+            $to-parent = nativecast(GtkContainer, $_);
+            $_;
+          }
         }
-        self.setContainer($stack);
+        self.setContainer($to-parent);
       }
       when GTK::Stack {
       }
@@ -30,11 +44,13 @@ class GTK::Stack is GTK::Container {
     }
     $!ss = gtk_stack_switcher_new();
     gtk_stack_switcher_set_stack($!ss, $!s);
-    self.setType('GTK::Stack');
   }
 
-  method new {
+  multi method new {
     my $stack = gtk_stack_new();
+    self.bless(:$stack);
+  }
+  multi method new (GtkWidget $stack);
     self.bless(:$stack);
   }
 
@@ -72,8 +88,8 @@ class GTK::Stack is GTK::Container {
         gtk_stack_get_interpolate_size($!s);
       },
       STORE => sub ($, Int() $interpolate_size is copy) {
-        my uint32 $is = $interpolate_size +& 0xffff;
-        gtk_stack_set_interpolate_size($!s, $interpolate_size);
+        my uint32 $is = self.RESOLVE-UINT($interpolate_size);
+        gtk_stack_set_interpolate_size($!s, $is);
       }
     );
   }
@@ -84,7 +100,7 @@ class GTK::Stack is GTK::Container {
         gtk_stack_get_transition_duration($!s);
       },
       STORE => sub ($, Int() $duration is copy) {
-        my uint32 $d = $duration;
+        my uint32 $d = self.RESOLVE-UINT($duration);
         gtk_stack_set_transition_duration($!s, $d);
       }
     );
@@ -96,7 +112,7 @@ class GTK::Stack is GTK::Container {
         GtkTransitionType( gtk_stack_get_transition_type($!s) );
       },
       STORE => sub ($, Int() $transition is copy) {
-        my uint32 $t = $transition +& 0xffff;
+        my uint32 $t = self.RESOLVE-UINT($transition);
         gtk_stack_set_transition_type($!s, $t);
       }
     );
@@ -108,7 +124,7 @@ class GTK::Stack is GTK::Container {
         gtk_stack_get_vhomogeneous($!s);
       },
       STORE => sub ($, Int() $vhomogeneous is copy) {
-        my uint32 $vh = $vhomogeneous +& 0xffff;
+        my uint32 $vh = self.RESOLVE-UINT($vhomogeneous);
         gtk_stack_set_vhomogeneous($!s, $vh);
       }
     );
@@ -120,12 +136,8 @@ class GTK::Stack is GTK::Container {
         # Resolve widget to object based on stored children.
         gtk_stack_get_visible_child($!s);
       },
-      STORE => sub ($, $child is copy) {
-        my $c = given $child {
-          when GtkWidget   { $child };
-          when GTK::Widget { $child.widget; }
-        };
-        gtk_stack_set_visible_child($!s, $c);
+      STORE => sub ($, GtkWidget() $child is copy) {
+        gtk_stack_set_visible_child($!s, $child);
       }
     );
   }
@@ -144,7 +156,7 @@ class GTK::Stack is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   multi method add_named (GtkWidget $child, gchar $name) {
-    unless self.add-latch {
+    unless self.IS-LATCHED {
       %!by-name{$name} = $child;
       self.push-start($child);
     }
@@ -159,7 +171,7 @@ class GTK::Stack is GTK::Container {
   }
 
   multi method add_titled (GtkWidget $child, gchar $name, gchar $title) {
-    unless self.add-latch {
+    unless self.IS-LATCHED {
       $!by-title{$name} = $child;
       self.push-start($child);
     }
@@ -193,7 +205,7 @@ class GTK::Stack is GTK::Container {
     gchar $name,
     Int() $transition
   ) {
-    my uint32 $t = $transition +& 0xffff;
+    my uint32 $t = self.RESOLVE-UINT($transition);
     gtk_stack_set_visible_child_full($!s, $name, $t);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

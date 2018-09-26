@@ -7,31 +7,46 @@ use GTK::Raw::Label;
 use GTK::Raw::Types;
 
 use GTK::Raw::InfoBar;
-
 use GTK::Box;
 
 class GTK::InfoBar is GTK::Box {
-  has Gtk $!ib;
+  has GtkInfoBar $!ib;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::InfoBar');
+    $o;
+  }
 
   submethod BUILD(:$infobar) {
+    my $to-parent;
     given $infobar {
       when GtkInfoBar | GtkWidget {
         $!ib = do {
-          when GtkWidget  { nativecast(GtkInfoBar, $infobar); }
-          when GtkInfoBar { $infobar; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkInfoBar, $_);
+          }
+          when GtkInfoBar {
+            $to-parent = nativecast(GtkBox, $_);
+            $_;
+          }
         };
-        self.setBox($infobar);
+        self.setBox($to-parent);
       }
       when GTK::InfoBar {
       }
       default {
       }
     }
-    self.setType('GTK::InfoBar');
   }
 
-  method new {
+  multi method new {
     my $infobar = gtk_info_bar_new();
+    self.bless(:$infobar);
+  }
+  multi method new (GtkWidget $infobar) {
     self.bless(:$infobar);
   }
 
@@ -54,10 +69,11 @@ class GTK::InfoBar is GTK::Box {
   method message_type is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_info_bar_get_message_type($!ib);
+        GtkMessageType( gtk_info_bar_get_message_type($!ib) );
       },
       STORE => sub ($, $message_type is copy) {
-        gtk_info_bar_set_message_type($!ib, $message_type);
+        my uint32 $mt = self.RESOLVE-UINT($message_type);
+        gtk_info_bar_set_message_type($!ib, $mt);
       }
     );
   }
@@ -65,9 +81,10 @@ class GTK::InfoBar is GTK::Box {
   method revealed is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_info_bar_get_revealed($!ib);
+        so gtk_info_bar_get_revealed($!ib);
       },
-      STORE => sub ($, $revealed is copy) {
+      STORE => sub ($, Int() $revealed is copy) {
+        my gboolean $r = self.RESOLVE-BOOL($revealed);
         gtk_info_bar_set_revealed($!ib, $revealed);
       }
     );
@@ -76,26 +93,24 @@ class GTK::InfoBar is GTK::Box {
   method show_close_button is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_info_bar_get_show_close_button($!ib);
+        so gtk_info_bar_get_show_close_button($!ib);
       },
       STORE => sub ($, $setting is copy) {
-        gtk_info_bar_set_show_close_button($!ib, $setting);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_info_bar_set_show_close_button($!ib, $s);
       }
     );
   }
-
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method add_action_widget (GtkWidget $child, gint $response_id) {
+  method add_action_widget (GtkWidget() $child, gint $response_id) {
     gtk_info_bar_add_action_widget($!ib, $child, $response_id);
-  }
-  multi method add_action_widget (GTK::Widget $child, gint $response_id)  {
-    samewith($child.widget, $response_id);
   }
 
   method add_button (gchar $button_text, gint $response_id) {
-    gtk_info_bar_add_button($!ib, $button_text, $response_id);
+    my gint $ri = self.RESOLVE-INT($response_id);
+    gtk_info_bar_add_button($!ib, $button_text, $ri);
   }
 
   method get_action_area {
@@ -110,16 +125,20 @@ class GTK::InfoBar is GTK::Box {
     gtk_info_bar_get_type();
   }
 
-  method response (gint $response_id) {
-    gtk_info_bar_response($!ib, $response_id);
+  method response (Int() $response_id) {
+    my gint $ri = self.RESOLVE-INT($response_id);
+    gtk_info_bar_response($!ib, $ri);
   }
 
-  method set_default_response (gint $response_id) {
-    gtk_info_bar_set_default_response($!ib, $response_id);
+  method set_default_response (Int() $response_id) {
+    my gint $ri = self.RESOLVE-INT($response_id);
+    gtk_info_bar_set_default_response($!ib, $ri);
   }
 
   method set_response_sensitive (gint $response_id, gboolean $setting) {
-    gtk_info_bar_set_response_sensitive($!ib, $response_id, $setting);
+    my gint $ri = self.RESOLVE-INT($response_id);
+    my gboolean $s = self.RESOLVE-BOOL($setting);
+    gtk_info_bar_set_response_sensitive($!ib, $ri, $s);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

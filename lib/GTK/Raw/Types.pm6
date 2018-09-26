@@ -706,6 +706,8 @@ class GtkEntryCompletion   is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkFileChooserButton is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFontButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFrame             is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkFlowBox           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkFlowBoxChild      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkGrid              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconSet           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage             is repr('CPointer') does GTK::Roles::Pointers is export { }

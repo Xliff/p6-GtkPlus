@@ -11,11 +11,18 @@ use GTK::Bin;
 class GTK::Revealer is GTK::Bin {
   has GtkRevealer $!r;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Revealer');
+    $o;
+  }
+
   submethod BUILD(:$revealer) {
     my $to-parent;
     given $ {
       when GtkRevealer | GtkWidget {
-        $! = do {
+        $!r = do {
           when GtkWidget {
             $to-parent = $_
             nativecast(GtkRevealer, $_);
@@ -32,11 +39,13 @@ class GTK::Revealer is GTK::Bin {
       default {
       }
     }
-    self.setType('GTK::Revealer');
   }
 
-  method new {
+  multi method new {
     my $revealer = gtk_revealer_new();
+    self.bless(:$revealer);
+  }
+  multi method new (GtkWidget $revealer) {
     self.bless(:$revealer);
   }
 
@@ -48,10 +57,10 @@ class GTK::Revealer is GTK::Bin {
   method reveal_child is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_revealer_get_reveal_child($!r);
+        so gtk_revealer_get_reveal_child($!r);
       },
       STORE => sub ($, $reveal_child is copy) {
-        my gboolean $rc = $reveal_child == 0 ?? 0 !! 1;
+        my gboolean $rc = self.RESOLVE-BOOL($reveal_child);
         gtk_revealer_set_reveal_child($!r, $rc);
       }
     );
@@ -63,7 +72,7 @@ class GTK::Revealer is GTK::Bin {
         gtk_revealer_get_transition_duration($!r);
       },
       STORE => sub ($, Int() $duration is copy) {
-        my guint $d = $duration +& 0xffff;
+        my guint $d = self.RESOLVE-UINT($duration);
         gtk_revealer_set_transition_duration($!r, $d);
       }
     );
@@ -75,7 +84,7 @@ class GTK::Revealer is GTK::Bin {
         GtkRevealerTransitionType( gtk_revealer_get_transition_type($!r) );
       },
       STORE => sub ($, Int() $transition is copy) {
-        my uint32 $t = $transition +& 0xffff;
+        my uint32 $t = self.RESOLVE-UINT($transition);
         gtk_revealer_set_transition_type($!r, $t);
       }
     );
@@ -84,7 +93,6 @@ class GTK::Revealer is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_child_revealed {
-    # Alias to child_revealed()
     gtk_revealer_get_child_revealed($!r);
   }
 

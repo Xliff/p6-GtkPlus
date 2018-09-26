@@ -11,25 +11,41 @@ use GTK::Button;
 class GTK::LinkButton is GTK::Button {
   has GtkLinkButton $!lb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::LinkButton');
+    $o;
+  }
+
   submethod BUILD(:$button) {
+    my $to-parent;
     given $button {
       when GtkLinkButton | GtkWidget {
         $!lb = do {
-          when GtkWidget     { nativecast(GtkLinkButton, $button); }
-          when GtkLinkButton { $button; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkLinkButton, $_);
+          }
+          when GtkLinkButton {
+            $to-parent = nativecast(GtkButton, $_);
+            $_;
+          }
         };
-        self.setButton($button);
+        self.setButton($to-parent);
       }
       when GTK::LinkButton {
       }
       default {
       }
     }
-    self.setType('GTK::LinkButton');
   }
 
-  method new () {
+  multi method new {
     my $button = gtk_link_button_new();
+    self.bless(:$button);
+  }
+  multi method new (GtkWidget $button) {
     self.bless(:$button);
   }
 
@@ -50,7 +66,7 @@ class GTK::LinkButton is GTK::Button {
       FETCH => sub ($) {
         gtk_link_button_get_uri($!lb);
       },
-      STORE => sub ($, $uri is copy) {
+      STORE => sub ($, Str() $uri is copy) {
         gtk_link_button_set_uri($!lb, $uri);
       }
     );
@@ -59,10 +75,11 @@ class GTK::LinkButton is GTK::Button {
   method visited is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_link_button_get_visited($!lb);
+        so gtk_link_button_get_visited($!lb);
       },
       STORE => sub ($, $visited is copy) {
-        gtk_link_button_set_visited($!lb, $visited);
+        my gboolean $v = self.RESOLVE-BOOL($visited);
+        gtk_link_button_set_visited($!lb, $v);
       }
     );
   }
@@ -70,7 +87,7 @@ class GTK::LinkButton is GTK::Button {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type {
-    gtk_link_button_get_type($!lb);
+    gtk_link_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

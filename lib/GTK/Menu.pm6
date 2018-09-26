@@ -11,18 +11,25 @@ use GTK::MenuShell;
 class GTK::Menu is GTK::MenuShell {
   has GtkMenu $!m;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::MenuShell');
+    $o;
+  }
+
   submethod BUILD(:$menu) {
     my $to-parent;
     given $menu {
       when GtkMenu | GtkMenuShell | GtkWidget {
         $!m = do {
           when GtkMenuShell | GtkWidget {
-            $to-parent = $menu;
-            nativecast(GtkMenu, $menu);
+            $to-parent = $_;
+            nativecast(GtkMenu, $_);
           }
           when GtkMenu {
-            $to-parent = nativecast(GtkMenuShell, $menu);
-            $menu;
+            $to-parent = nativecast(GtkMenuShell, $_);
+            $_;
           }
         };
         self.setMenuShell($to-parent);
@@ -34,8 +41,11 @@ class GTK::Menu is GTK::MenuShell {
     }
   }
 
-  method new {
+  multi method new {
     my $menu = gtk_menu_new();
+    self.bless(:$menu);
+  }
+  multi method new GtkWidget ($menu) {
     self.bless(:$menu);
   }
 
@@ -65,7 +75,8 @@ class GTK::Menu is GTK::MenuShell {
       FETCH => sub ($) {
         gtk_menu_get_accel_group($!m);
       },
-      STORE => sub ($, $accel_group is copy) {
+      STORE => sub ($, GtkAccelGroup $accel_group is copy) {
+        # GTK::AccelGroup NYI
         gtk_menu_set_accel_group($!m, $accel_group);
       }
     );
@@ -76,7 +87,7 @@ class GTK::Menu is GTK::MenuShell {
       FETCH => sub ($) {
         gtk_menu_get_accel_path($!m);
       },
-      STORE => sub ($, $accel_path is copy) {
+      STORE => sub ($, Str() $accel_path is copy) {
         gtk_menu_set_accel_path($!m, $accel_path);
       }
     );
@@ -88,7 +99,7 @@ class GTK::Menu is GTK::MenuShell {
         gtk_menu_get_active($!m);
       },
       STORE => sub ($, Int() $index is copy) {
-        my gint $ii = $index +& 0xffff;
+        my gint $i = self.RESOLVE-INT($index);
         gtk_menu_set_active($!m, $i);
       }
     );
@@ -100,7 +111,7 @@ class GTK::Menu is GTK::MenuShell {
         gtk_menu_get_monitor($!m);
       },
       STORE => sub ($, Int() $monitor_num is copy) {
-        my gint $mn = $monitor_num +& 0xffff;
+        my gint $mn = self.RESOLVE-INT($monitor_num);
         gtk_menu_set_monitor($!m, $mn);
       }
     );
@@ -109,10 +120,10 @@ class GTK::Menu is GTK::MenuShell {
   method reserve_toggle_size is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_menu_get_reserve_toggle_size($!m) );
+        so gtk_menu_get_reserve_toggle_size($!m);
       },
       STORE => sub ($, Int() $reserve_toggle_size is copy) {
-        my $rts = $reserve_toggle_size == 0 ?? 0 !! 1;
+        my $rts = self.RESOLVE-BOOL($reserve_toggle_size);
         gtk_menu_set_reserve_toggle_size($!m, $rts);
       }
     );
@@ -121,10 +132,10 @@ class GTK::Menu is GTK::MenuShell {
   method tearoff_state is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_menu_get_tearoff_state($!m) );
+        so gtk_menu_get_tearoff_state($!m);
       },
       STORE => sub ($, $torn_off is copy) {
-        my $to = $torn_off == 0 ?? 0 !! 1
+        my $to = self.RESOLVE-BOOL($torn_off);
         gtk_menu_set_tearoff_state($!m, $to);
       }
     );
@@ -135,7 +146,7 @@ class GTK::Menu is GTK::MenuShell {
       FETCH => sub ($) {
         gtk_menu_get_title($!m);
       },
-      STORE => sub ($, Str $title is copy) {
+      STORE => sub ($, Str() $title is copy) {
         gtk_menu_set_title($!m, $title);
       }
     );
@@ -143,47 +154,23 @@ class GTK::Menu is GTK::MenuShell {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method attach (
-    GtkWidget $child,
+  method attach (
+    GtkWidget() $child,
     Int() $left_attach,
     Int() $right_attach,
     Int() $top_attach,
     Int() $bottom_attach
   ) {
-    my guint ($la, $ra, $ta, $ba) =
-      ($left_attach, $right_attach, $top_attach, $bottom_attach)
-      >>+&<<
-      (0xffff xx 4);
-
+    my @u = ($left_attach, $right_attach, $top_attach, $bottom_attach);
+    my guint ($la, $ra, $ta, $ba) = self.RESOLVE-UINT(@u);
     gtk_menu_attach($!m, $child, $la, $ra, $ta, $ba);
   }
-  multi method attach (
-    GTK::Widget $child,
-    Int() $left_attach,
-    Int() $right_attach,
-    Int() $top_attach,
-    Int() $bottom_attach
-  ) {
-    samewith(
-      $child.widget,
-      $left_attach,
-      $right_attach,
-      $top_attach,
-      $bottom_attach
-    );
-  }
 
-  multi method attach_to_widget (
-    GtkWidget $attach_widget,
+  method attach_to_widget (
+    GtkWidget() $attach_widget,
     GtkMenuDetachFunc $detacher
   ) {
     gtk_menu_attach_to_widget($!m, $attach_widget, $detacher);
-  }
-  multi method attach_to_widget (
-    GTK::Widget $attach_widget,
-    GtkMenuDetachFunc $detacher
-  ) {
-    samewith($attach_widget.widget, $detacher);
   }
 
   method detach {
@@ -206,45 +193,22 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_place_on_monitor($!m, $monitor);
   }
 
-  method popdown () {
+  method popdown {
     gtk_menu_popdown($!m);
   }
 
   multi method popup (
-    GtkWidget $parent_menu_shell,
-    GtkWidget $parent_menu_item,
+    GtkWidget() $parent_menu_shell,
+    GtkWidget() $parent_menu_item,
     GtkMenuPositionFunc $func,
     gpointer $data,
     Int() $button,
     Int() $activate_time
-  ) {
-    my guint    $b = $button +& 0xffff;
-    my guint32 $at = $activate_time +& 0xffff;
+  ) is DEPRECATED {
+    my @u = ($button, $activate_time);
+    my guint32 ($b, $at) = self.RESOLVE-UINT(@u);
     gtk_menu_popup(
-      $!m,
-      $parent_menu_shell,
-      $parent_menu_item,
-      $func,
-      $data,
-      $b,
-      $at
-    );
-  }
-  multi method popup (
-    GtkWidget $parent_menu_shell,
-    GtkWidget $parent_menu_item,
-    GtkMenuPositionFunc $func,
-    gpointer $data,
-    Int() $button,
-    Int() $activate_time
-  ) {
-    samewith(
-      $parent_menu_shell.widget,
-      $parent_menu_item.widget,
-      $func,
-      $data,
-      $button,
-      $activate_time
+      $!m, $parent_menu_shell, $parent_menu_item, $func, $data, $b, $at
     );
   }
 
@@ -259,44 +223,34 @@ class GTK::Menu is GTK::MenuShell {
     GdkGravity $menu_anchor,
     GdkEvent $trigger_event
   ) {
-    gtk_menu_popup_at_rect($!m, $rect_window, $rect, $rect_anchor, $menu_anchor, $trigger_event);
+    gtk_menu_popup_at_rect(
+      $!m, $rect_window, $rect, $rect_anchor, $menu_anchor, $trigger_event
+    );
   }
 
-  multi method popup_at_widget (
-    GtkWidget $widget,
+  method popup_at_widget (
+    GtkWidget() $widget,
     GdkGravity $widget_anchor,
     GdkGravity $menu_anchor,
     GdkEvent $trigger_event
   ) {
     gtk_menu_popup_at_widget(
-      $!m,
-      $widget,
-      $widget_anchor,
-      $menu_anchor,
-      $trigger_event
+      $!m, $widget, $widget_anchor, $menu_anchor, $trigger_event
     );
   }
-  multi method popup_at_widget (
-    GtkWidget $widget,
-    GdkGravity $widget_anchor,
-    GdkGravity $menu_anchor,
-    GdkEvent $trigger_event
-  ) {
-    samewith($widget.widget, $widget_anchor, $menu_anchor, $trigger_event);
-  }
 
-  multi method popup_for_device (
+  method popup_for_device (
     GdkDevice $device,
-    GtkWidget $parent_menu_shell,
-    GtkWidget $parent_menu_item,
+    GtkWidget() $parent_menu_shell,
+    GtkWidget() $parent_menu_item,
     GtkMenuPositionFunc $func,
-    gpointer $data, GDestroyNotify
-    $destroy,
+    gpointer $data,
+    GDestroyNotify $destroy,
     Int() $button,
     Int() $activate_time
-  ) {
-    my guint    $b = $button +& 0xffff;
-    my guint32 $at = $activate_time +& 0xffff;
+  ) is DEPRECATED {
+    my @u = ($button, $activate_time);
+    my guint32 ($b, $at) = self.RESOLVE-UINT(@u);
     gtk_menu_popup_for_device(
       $!m,
       $device,
@@ -309,34 +263,10 @@ class GTK::Menu is GTK::MenuShell {
       $at
     );
   }
-  multi method popup_for_device (
-    GdkDevice $device,
-    GTK::Widget $parent_menu_shell,
-    GTK::Widget $parent_menu_item,
-    GtkMenuPositionFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy,
-    Int() $button,
-    Int() $activate_time
-  ) {
-    samewith(
-      $device,
-      $parent_menu_shell.widget,
-      $parent_menu_item.widget,
-      $func,
-      $data,
-      $destroy,
-      $button,
-      $activate_time
-    );
-  }
 
-  multi method reorder_child (GtkWidget $child, Int() $position) {
-    my $p = $position +& 0xffff;
+  method reorder_child (GtkWidget() $child, Int() $position) {
+    my gint $p = self.RESOLVE-INT($position);
     gtk_menu_reorder_child($!m, $child, $p);
-  }
-  multi method reorder_child (GTK::Widget $child, Int() $position)  {
-    samewith($child.widget, $position);
   }
 
   method reposition {

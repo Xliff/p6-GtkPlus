@@ -11,6 +11,13 @@ use GTK::Bin;
 class GTK::Expander is GTK::Bin {
   has GtkExpander $!e;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Expander');
+    $o;
+  }
+
   submethod BUILD(:$expander) {
     my $to-parent;
     given $expander {
@@ -32,14 +39,16 @@ class GTK::Expander is GTK::Bin {
       default {
       }
     }
-    self.setType('GTK::Expander');
   }
 
   multi method new {
     my $expander = gtk_expander_new();
     self.bless(:$expander);
   }
-  multi method new(Str() :$mnemonic) {
+  multi method new (GtkWidget $expander) {
+    self.bless($expander);
+  }
+  multi method new (Str() :$mnemonic) {
     my $expander = do {
       with $mnemonic.defined { gtk_expander_new_with_mnemonic($label); }
       else                   { gtk_expander_new(); }
@@ -65,10 +74,10 @@ class GTK::Expander is GTK::Bin {
   method expanded is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_expander_get_expanded($!e) );
+        so gtk_expander_get_expanded($!e);
       },
       STORE => sub ($, $expanded is copy) {
-        my gboolean $e = $expanded == 0 ?? 0 !! 1;
+        my gboolean $e = self.RESOLVE-BOOL($expanded);
         gtk_expander_set_expanded($!e, $e);
       }
     );
@@ -88,10 +97,10 @@ class GTK::Expander is GTK::Bin {
   method label_fill is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_expander_get_label_fill($!e) );
+        so gtk_expander_get_label_fill($!e);
       },
       STORE => sub ($, Int() $label_fill is copy) {
-        my gboolean $lf = $label_fill == 0 ?? 0 !! 1;
+        my gboolean $lf = self.RESOLVE-BOOL($label_fill);
         gtk_expander_set_label_fill($!e, $lf);
       }
     );
@@ -102,12 +111,8 @@ class GTK::Expander is GTK::Bin {
       FETCH => sub ($) {
         gtk_expander_get_label_widget($!e);
       },
-      STORE => sub ($, $label_widget is copy) {
-        my $lw = do given $label_widget {
-          GtkWidget   { $_;      }
-          GTK::Widget { .widget; }
-        };
-        gtk_expander_set_label_widget($!e, $lw);
+      STORE => sub ($, GtkWidget() $label_widget is copy) {
+        gtk_expander_set_label_widget($!e, $label_widget);
       }
     );
   }
@@ -115,10 +120,10 @@ class GTK::Expander is GTK::Bin {
   method resize_toplevel is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_expander_get_resize_toplevel($!e) );
+        so gtk_expander_get_resize_toplevel($!e);
       },
       STORE => sub ($, Int() $resize_toplevel is copy) {
-        my gboolean $rt = $resize_toplevel == 0 ?? 0 !! 1;
+        my gboolean $rt = self.RESOLVE-BOOL($resize_toplevel);
         gtk_expander_set_resize_toplevel($!e, $rt);
       }
     );
@@ -140,10 +145,10 @@ class GTK::Expander is GTK::Bin {
   method use_markup is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_expander_get_use_markup($!e) );
+        so gtk_expander_get_use_markup($!e);
       },
       STORE => sub ($, Int() $use_markup is copy) {
-        my goolean $um = $use_markup == 0 ?? 0 !! 1;
+        my goolean $um = self.RESOLVE-BOOL($use_markup);
         gtk_expander_set_use_markup($!e, $um);
       }
     );
@@ -152,10 +157,10 @@ class GTK::Expander is GTK::Bin {
   method use_underline is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_expander_get_use_underline($!e) );
+        so gtk_expander_get_use_underline($!e);
       },
       STORE => sub ($, Int() $use_underline is copy) {
-        my gboolean $uu = $use_underline == 0 ?? 0 !! 1
+        my gboolean $uu = self.RESOLVE-BOOL($use_underline);
         gtk_expander_set_use_underline($!e, $uu);
       }
     );

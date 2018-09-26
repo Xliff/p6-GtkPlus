@@ -11,25 +11,41 @@ use GTK::Label;
 class GTK::AccelLabel is GTK::Label {
   has GtkAccelLabel $!a1;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::AccelLabel');
+    $o;
+  }
+
   submethod BUILD(:$alabel) {
+    my $to-parent;
     given $alabel {
       when GtkAccelLabel | GtkWidget {
         $!al = do {
-          when GtkAccelLabel { $alabel; }
-          when GtkWidget     { nativecast(GtkAccelLabel); }
+          when GtkAccelLabel {
+            $to-parent = nativecast(GtkLabel, $_);
+            $_;
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkAccelLabel, $_);
+          }
         };
-        self.setLabel($alabel);
+        self.setLabel($to-parent);
       }
       when GTK::AccelLabel {
       }
       default {
       }
     }
-    self.setType('GTK::AccelLabel');
   }
 
-  method new {
+  multi method new {
     my $alabel = gtk_accel_label_new();
+    self.bless(:$alabel);
+  }
+  multi method new (GtkWidget $alabel) {
     self.bless(:$alabel);
   }
 
@@ -46,22 +62,21 @@ class GTK::AccelLabel is GTK::Label {
         # acrobatics.
         gtk_accel_label_get_accel_widget($!al);
       },
-      STORE => sub ($, $accel_widget is copy) {
-        my $aw = do given $accel_widget {
-          when GTK::Widget { $accel_widget.widget }
-          when GtkWidget   { $accel_widget }
-        };
-        gtk_accel_label_set_accel_widget($!al, $aw);
+      STORE => sub ($, GtkWidget() $accel_widget is copy) {
+        gtk_accel_label_set_accel_widget($!al, $accel_widget);
       }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_accel (guint $accelerator_key, GdkModifierType $accelerator_mods is rw) {
-    my uint32 $am = $accelerator_mods.Int;
-
-    my $rc = gtk_accel_label_get_accel($!al, $accelerator_key, $am);
+  method get_accel (
+    Int() $accelerator_key,
+    Int() $accelerator_mods is rw
+  ) {
+    my guint @u = ($accelerator_key, $accelerator_mods)
+    my uint32 ($ak, $am) = self.RESOLVE-UINT(@u);
+    my $rc = gtk_accel_label_get_accel($!al, $ak, $am);
     $accelerator_mods = $am;
     $rc;
   }
@@ -78,10 +93,14 @@ class GTK::AccelLabel is GTK::Label {
     gtk_accel_label_refetch($!al);
   }
 
-  method set_accel (guint $accelerator_key, GdkModifierType $accelerator_mods) {
-    my uint32 $am = $accel_mods.Int;
+  method set_accel (
+    Int() $accelerator_key,       # guint $accelerator_key,
+    Int() $accelerator_mods       # GdkModifierType $accelerator_mods
+  ) {
+    my @u = ($accelerator_key, $accelerator_mods);
+    my uint32 ($ak, $am) = self.RESOLVE-UINT(@u);
 
-    gtk_accel_label_set_accel($!al, $accelerator_key, $am);
+    gtk_accel_label_set_accel($!al, $ak, $am);
   }
 
   method set_accel_closure (GClosure $accel_closure) {
