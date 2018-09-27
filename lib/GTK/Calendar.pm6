@@ -41,8 +41,11 @@ class GTK::Calendar is GTK::Widget {
     }
   }
 
-  method new {
+  multi method new {
     my $calendar = gtk_calendar_new();
+    self.bless(:$calendar);
+  }
+  multi method new (GtkWidget $calendar) {
     self.bless(:$calendar);
   }
 
@@ -120,7 +123,9 @@ class GTK::Calendar is GTK::Widget {
   method display_options is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkCalendarDisplayOptions( gtk_calendar_get_display_options($!cal) );
+        GtkCalendarDisplayOptions(
+          gtk_calendar_get_display_options($!cal)
+        );
       },
       STORE => sub ($, Int() $flags is copy) {
         my uint32 $f = self.RESOLVE-UINT($flags);

@@ -41,8 +41,11 @@ class GTK::Image is GTK::Widget {
     }
   }
 
-  method new () {
+  multi method new {
     my $image = gtk_image_new();
+    self.bless(:$image);
+  }
+  multi method new (GtkWidget $image) {
     self.bless(:$image);
   }
 
@@ -107,27 +110,39 @@ class GTK::Image is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method clear () {
+  method clear {
     gtk_image_clear($!i);
   }
 
-  method get_animation () {
+  method get_animation {
     gtk_image_get_animation($!i);
   }
 
-  method get_gicon (GIcon $gicon, GtkIconSize $size) {
-    gtk_image_get_gicon($!i, $gicon, $size);
+  method get_gicon (
+    GIcon $gicon,
+    uint32 $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    gtk_image_get_gicon($!i, $gicon, $s);
   }
 
-  method get_icon_name (gchar $icon_name, GtkIconSize $size) {
-    gtk_image_get_icon_name($!i, $icon_name, $size);
+  method get_icon_name (
+    gchar $icon_name,
+    uint32 $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    gtk_image_get_icon_name($!i, $icon_name, $s);
   }
 
-  method get_icon_set (GtkIconSet $icon_set, GtkIconSize $size) {
-    gtk_image_get_icon_set($!i, $icon_set, $size);
+  method get_icon_set (
+    GtkIconSet $icon_set,
+    uint32 $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    gtk_image_get_icon_set($!i, $icon_set, $s);
   }
 
-  method get_pixbuf () {
+  method get_pixbuf {
     gtk_image_get_pixbuf($!i);
   }
 
@@ -135,11 +150,11 @@ class GTK::Image is GTK::Widget {
   #  gtk_image_get_stock($!i, $stock_id, $size);
   #}
 
-  method get_storage_type () {
+  method get_storage_type {
     gtk_image_get_storage_type($!i);
   }
 
-  method get_type () {
+  method get_type {
     gtk_image_get_type();
   }
 
@@ -151,16 +166,28 @@ class GTK::Image is GTK::Widget {
     gtk_image_set_from_file($!i, $filename);
   }
 
-  method set_from_gicon (GIcon $icon, GtkIconSize $size) {
-    gtk_image_set_from_gicon($!i, $icon, $size);
+  method set_from_gicon (
+    GIcon $icon,
+    uint32 $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    gtk_image_set_from_gicon($!i, $icon, $s);
   }
 
-  method set_from_icon_name (gchar $icon_name, GtkIconSize $size) {
-    gtk_image_set_from_icon_name($!i, $icon_name, $size);
+  method set_from_icon_name (
+    gchar $icon_name,
+    uint32 $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    gtk_image_set_from_icon_name($!i, $icon_name, $s);
   }
 
-  method set_from_icon_set (GtkIconSet $icon_set, GtkIconSize $size) {
-    gtk_image_set_from_icon_set($!i, $icon_set, $size);
+  method set_from_icon_set (
+    GtkIconSet $icon_set,
+    uint32 $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    gtk_image_set_from_icon_set($!i, $icon_set, $s);
   }
 
   method set_from_pixbuf (GdkPixbuf $pixbuf) {
