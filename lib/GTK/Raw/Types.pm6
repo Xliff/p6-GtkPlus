@@ -709,6 +709,7 @@ class GtkFrame             is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkFlowBox           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFlowBoxChild      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkGrid              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkHeaderBar         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconSet           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLabel             is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -747,6 +748,7 @@ class GtkTextView          is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkTickCallback      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToggleButton      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolTip           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkToolItemGroup     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkVolumeButton      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidget            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidgetHelpType    is repr('CPointer') does GTK::Roles::Pointers is export { }

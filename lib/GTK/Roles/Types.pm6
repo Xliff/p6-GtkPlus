@@ -4,7 +4,7 @@ use NativeCall;
 
 role GTK::Roles::Types {
   # cw: This is a HACK, but it should work with careful use.
-  method !CALLING-METHOD($nf = 2) {
+  method CALLING-METHOD($nf = 2) {
     my $c = callframe($nf).code;
     $c ~~ Routine ??
       "{ $c.package.^name }.{ $c.name }"
@@ -17,7 +17,7 @@ role GTK::Roles::Types {
   method IS-PROTECTED {
     # Really kinda violates someone's idea of "object-oriented" somewhere,
     # but I am more results-oriened.
-    my $c = self!CALLING-METHOD;
+    my $c = self.CALLING-METHOD;
     $c ~~ /^ 'GTK::'/ ??
       True
       !!

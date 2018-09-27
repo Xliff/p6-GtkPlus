@@ -11,6 +11,13 @@ use GTK::Dialog;
 class GTK::Dialog::About is GTK::Dialog {
   has GtkAboutDialog $!ad;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Dialog::About');
+    $o;
+  }
+
   submethod BUILD(:$about) {
     my $to-parent;
     given $ {
@@ -32,11 +39,13 @@ class GTK::Dialog::About is GTK::Dialog {
       default {
       }
     }
-    self.setType('GTK::Dialog::About');
   }
 
-  method new {
+  multi method new {
     my $about = gtk_about_dialog_new($!ad);
+    self.bless(:$about);
+  }
+  multi method new (GtkWidget $about) {
     self.bless(:$about);
   }
 
@@ -49,19 +58,21 @@ class GTK::Dialog::About is GTK::Dialog {
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
-  method !getStrv($l, $meth) {
+  method !getStrv($l) {
+    # Look into self.CALLING-METHOD to properly set $meth.
     my GStrv @a;
+    my $meth = self.CALLING-METHOD;
     do given $l {
       when Str {
-        @a = self.RESOLVE-GSTRV($l.Array, $meth);
+        @a = self.RESOLVE-GSTRV($l.Array);
       }
       when Array {
-        die "Array must contain strings for assignment to { ::?CLASS }.{ $meth }"
+        die "Array must contain strings for assignment to { ::?CLASS.name }.{ $meth }"
           unless $artists.all ~~ Str;
-        @a = self.RESOLVE-GSTRV($l, $meth);
+        @a = self.RESOLVE-GSTRV($l);
       }
       default {
-        die "Invalid type { .^name } passed to { ::?CLASS }.{ $meth }";
+        die "Invalid type { .^name } passed to { ::?CLASS.name }.{ $meth }";
       }
     }
     @a;
@@ -73,10 +84,10 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_artists($!ad);
       },
-      STORE => sub ($, $artists is copy) {
+      STORE => sub ($, Array() $artists is copy) {
         gtk_about_dialog_set_artists(
           $!ad,
-          self!getGStrv($artists, &?ROUTINE.name);
+          self!getGStrv($artists);
         );
       }
     );
@@ -87,10 +98,10 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_authors($!ad);
       },
-      STORE => sub ($, $authors is copy) {
+      STORE => sub ($,  Array() $authors is copy) {
         gtk_about_dialog_set_authors(
           $!ad,
-          self!getGStrv($authors, &?ROUTINE.name);
+          self!getGStrv($authors);
         );
       }
     );
@@ -101,7 +112,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_comments($!ad);
       },
-      STORE => sub ($, Str $comments is copy) {
+      STORE => sub ($, Str() $comments is copy) {
         gtk_about_dialog_set_comments($!ad, $comments);
       }
     );
@@ -112,7 +123,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_copyright($!ad);
       },
-      STORE => sub ($, Str $copyright is copy) {
+      STORE => sub ($, Str() $copyright is copy) {
         gtk_about_dialog_set_copyright($!ad, $copyright);
       }
     );
@@ -123,10 +134,10 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_documenters($!ad);
       },
-      STORE => sub ($, $documenters is copy) {
+      STORE => sub ($, Array() $documenters is copy) {
         gtk_about_dialog_set_documenters(
           $!ad,
-          self!getStrv($documenters, &?ROUTINE.name);
+          self!getStrv($documenters);
         );
       }
     );
@@ -137,7 +148,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_license($!ad);
       },
-      STORE => sub ($, Str $license is copy) {
+      STORE => sub ($, Str() $license is copy) {
         gtk_about_dialog_set_license($!ad, $license);
       }
     );
@@ -171,7 +182,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_logo_icon_name($!ad);
       },
-      STORE => sub ($, Str $icon_name is copy) {
+      STORE => sub ($, Str() $icon_name is copy) {
         gtk_about_dialog_set_logo_icon_name($!ad, $icon_name);
       }
     );
@@ -182,7 +193,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_program_name($!ad);
       },
-      STORE => sub ($, Str $name is copy) {
+      STORE => sub ($, Str() $name is copy) {
         gtk_about_dialog_set_program_name($!ad, $name);
       }
     );
@@ -193,8 +204,10 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_translator_credits($!ad);
       },
-      STORE => sub ($, Str $translator_credits is copy) {
-        gtk_about_dialog_set_translator_credits($!ad, $translator_credits);
+      STORE => sub ($, Str() $translator_credits is copy) {
+        gtk_about_dialog_set_translator_credits(
+          $!ad, $translator_credits
+        );
       }
     );
   }
@@ -215,7 +228,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_website($!ad);
       },
-      STORE => sub ($, Str $website is copy) {
+      STORE => sub ($, Str() $website is copy) {
         gtk_about_dialog_set_website($!ad, $website);
       }
     );
@@ -226,7 +239,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_website_label($!ad);
       },
-      STORE => sub ($, Str $website_label is copy) {
+      STORE => sub ($, Str() $website_label is copy) {
         gtk_about_dialog_set_website_label($!ad, $website_label);
       }
     );
@@ -238,15 +251,15 @@ class GTK::Dialog::About is GTK::Dialog {
         gtk_about_dialog_get_wrap_license($!ad);
       },
       STORE => sub ($, Bool() $wrap_license is copy) {
-        my gboolean $wl = self.RESOLVE-BOOL($wrap_license, &?ROUTINE.name);
-        gtk_about_dialog_set_wrap_license($!ad, $wrap_license);
+        my gboolean $wl = self.RESOLVE-BOOL($wrap_license);
+        gtk_about_dialog_set_wrap_license($!ad, $wl);
       }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_credit_section (gchar $section_name, gchar $people) {
+  method add_credit_section (Str() $section_name, Str() $people) {
     gtk_about_dialog_add_credit_section($!ad, $section_name, $people);
   }
 

@@ -9,7 +9,14 @@ use GTK::Raw::Types;
 use GTK::Container;
 
 class GTK::HeaderBar is GTK::Container {
-  has Gtk $!hb;
+  has GtkHeaderBar $!hb;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::HeaderBar');
+    $o;
+  }
 
   submethod BUILD(:$headerbar) {
     my $to-parent;
@@ -32,11 +39,13 @@ class GTK::HeaderBar is GTK::Container {
       default {
       }
     }
-    self.setType('GTK::HeaderBar');
   }
 
-  method new {
+  multi method new {
     my $headerbar = gtk_header_bar_new();
+    self.bless(:$headerbar);
+  }
+  multi method new (GtkWidget $headerbar) {
     self.bless(:$headerbar);
   }
 
@@ -49,15 +58,8 @@ class GTK::HeaderBar is GTK::Container {
       FETCH => sub ($) {
         gtk_header_bar_get_custom_title($!hb);
       },
-      STORE => sub ($, $title_widget is copy) {
-        my $tw = given $title_widget {
-          when GtkWidget   { $_;      }
-          when GTK::Widget { .widget; }
-          default {
-            die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
-          }
-        }
-        gtk_header_bar_set_custom_title($!hb, $tw);
+      STORE => sub ($, GtkWidget() $title_widget is copy) {
+        gtk_header_bar_set_custom_title($!hb, $title_widget);
       }
     );
   }
@@ -79,7 +81,7 @@ class GTK::HeaderBar is GTK::Container {
         gtk_header_bar_get_has_subtitle($!hb);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOLEAN($setting);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
         gtk_header_bar_set_has_subtitle($!hb, $s);
       }
     );
@@ -91,7 +93,7 @@ class GTK::HeaderBar is GTK::Container {
         Bool( gtk_header_bar_get_show_close_button($!hb) );
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOLEAN($setting);
+        my gboolean $s = self.RESOLVE-BOOL($setting);
         gtk_header_bar_set_show_close_button($!hb, $s);
       }
     );
@@ -126,27 +128,26 @@ class GTK::HeaderBar is GTK::Container {
   }
 
   multi method pack_end (GtkWidget $child) {
-    self.unshift-end($child) unless $!add-latch;
-    $!add-latch = False;
+    self.unshift-end($child) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     gtk_header_bar_pack_end($!hb, $child);
   }
   multi method pack_end (GTK::Widget $child)  {
     self.unshift-end($child);
-    $!add-latch = True;
+    self.SET-LATCH;
     samewith($child.widget);
   }
 
   multi method pack_start (GtkWidget $child) {
-    self.push-start($child) unless $!add-latch;
-    $!add-latch = False;
+    self.push-start($child) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     gtk_header_bar_pack_start($!hb, $child);
   }
   multi method pack_start (GTK::Widget $child)  {
     self.push-start($child);
-    $!add-latch = True;
+    self.SET-LATCH;
     samewith($child.widget);
   }
-
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
