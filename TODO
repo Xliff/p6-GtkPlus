@@ -1,4 +1,5 @@
 
+- Insure all method-level gchar paramters are converted to Str()
 - META6.json
 - New dependency: https://github.com/timo/cairo-p6
 - Complete GTK Builder support

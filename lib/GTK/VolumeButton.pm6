@@ -45,6 +45,9 @@ class GTK::VolumeButton is GTK::ScaleButton {
     $button = gtk_volume_button_new();
     self.bless(:$button);
   }
+  method new (GtkWidget $button) {
+    self.bless(:$button);
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -53,7 +56,7 @@ class GTK::VolumeButton is GTK::ScaleButton {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type () {
+  method get_type {
     gtk_volume_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -30,16 +30,23 @@ class GTK::ScaleButton is GTK::Button {
     }
   }
 
-  method new (Num() $min, Num() $max, Num() $step, Str @icons) {
+  method new (
+    Int() $size,
+    Num() $min,
+    Num() $max,
+    Num() $step,
+    Str @icons
+  ) {
+    my uint32 $s = self.RESOLVE-UINT($size);
     my gdouble ($mn, $mx, $s, $i) = ($min, $max, $step);
     my GStrV $i = self.RESOLVE-GSTRV(@icons);
-    $button = gtk_scale_button_new($min, $max, $step, $i);
+    $button = gtk_scale_button_new($s, $min, $max, $step, $i);
     self.bless(:$button);
   }
 
   method setScaleButton($button) {
     my $to-parent;
-    $!sb = do when given $button {
+    $!sb = do given $button {
       when GtkWidget {
         $to-parent = $_;
         nativecast(GtkScaleButton, $_);
@@ -70,11 +77,12 @@ class GTK::ScaleButton is GTK::Button {
   method adjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkAdjustment( gtk_scale_button_get_adjustment($!sb) );
+        GtkAdjustment.new(
+          gtk_scale_button_get_adjustment($!sb)
+        );
       },
-      STORE => sub ($, Int() $adjustment is copy) {
-        my uint32 $a = self.RESOLVE-UINT($adjustment);
-        gtk_scale_button_set_adjustment($!sb, $a);
+      STORE => sub ($, GtkAdjustment() $adjustment is copy) {
+        gtk_scale_button_set_adjustment($!sb, $adjustment);
       }
     );
   }

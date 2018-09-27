@@ -6,6 +6,10 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Compat::Types;
 
+constant glib     is export = 'glib-2.0',v0;
+constant gio      is export = 'gio-2.0',v0;
+constant gobject  is export = 'gobject-2.0',v0;
+
 constant cairo_t        is export := Pointer;
 constant cairo_region_t is export := Pointer;
 

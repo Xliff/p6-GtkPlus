@@ -59,18 +59,31 @@ class GTK::Image is GTK::Widget {
     self.bless(:$image);
   }
 
-  method new_from_gicon (GIcon $icon, GtkIconSize $size) {
-    my $image = gtk_image_new_from_gicon($icon, $size);
+  method new_from_gicon (
+    GIcon $icon,
+    Int() $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    my $image = gtk_image_new_from_gicon($icon, $s);
     self.bless(:$image);
   }
 
-  method new_from_icon_name (Str $name, GtkIconSize $size) {
-    my $image = gtk_image_new_from_icon_name($name, $size);
+  method new_from_icon_name (
+    Str $name,
+    Int() $size                  # GtkIconSize $size
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    my $image = gtk_image_new_from_icon_name($name, $s);
     self.bless(:$image);
   }
 
-  method new_from_icon_set (GtkIconSet $set, GtkIconSize $size) {
-    my $image = gtk_image_new_from_icon_set($set, $size);
+  method new_from_icon_set (
+    GtkIconSet $set,
+    Int() $size                  # GtkIconSize $size
+
+  ) {
+    my guint32 $s = self.RESOLVE-UINT($size);
+    my $image = gtk_image_new_from_icon_set($set, $s);
     self.bless(:$image);
   }
 
@@ -102,8 +115,9 @@ class GTK::Image is GTK::Widget {
       FETCH => sub ($) {
         gtk_image_get_pixel_size($!i);
       },
-      STORE => sub ($, $pixel_size is copy) {
-        gtk_image_set_pixel_size($!i, $pixel_size);
+      STORE => sub ($, Int() $pixel_size is copy) {
+        my gint $ps = self.RESOLVE-INT($pixel_size);
+        gtk_image_set_pixel_size($!i, $ps);
       }
     );
   }
@@ -198,7 +212,10 @@ class GTK::Image is GTK::Widget {
     gtk_image_set_from_resource($!i, $resource_path);
   }
 
-  method set_from_stock (gchar $stock_id, GtkIconSize $size) {
+  method set_from_stock (
+    gchar $stock_id,
+    uint32 $size                  # GtkIconSize $size
+  ) {
     gtk_image_set_from_stock($!i, $stock_id, $size);
   }
 
