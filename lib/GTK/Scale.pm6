@@ -11,24 +11,41 @@ use GTK::Range;
 class GTK::Scale is GTK::Range {
   has GtkScale $!s;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Scale');
+    $o;
+  }
+
   submethod BUILD(:$scale) {
+    my $to-parent;
     given $scale {
       when GtkScale | GtkWidget {
         $!s = do {
-          when GtkWidget { nativecast(GtkScale, $scale); }
-          when GtkScale  { $scale; }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkScale, $s_);
+          }
+          when GtkScale  {
+            $to-parent = nativecast(GtkRange, $_);
+            $_;
+          }
         };
-        self.setRange( :range($scale) );
+        self.setRange($to-parent);
       }
       when GTK::Scale {
       }
       default {
       }
     }
-    self.setType('GTK::Scale');
   }
 
-  multi method new (GtkAdjustment $adj, :$horizontal = False, :$vertical = False) {
+  multi method new (
+    GtkAdjustment() $adj,
+    :$horizontal = False,
+    :$vertical = False
+  ) {
     die 'You must specify only $horizontal or $vertical when creating a GTK::Scale'
       unless $horizontal ^^ $vertical;
 
@@ -39,48 +56,37 @@ class GTK::Scale is GTK::Range {
     my $scale = gtk_scale_new($or, $adj);
     self.bless(:$scale);
   }
-  multi method new (GtkOrientation $orientation, GtkAdjustment $adjustment) {
-    my $scale = gtk_scale_new($orientation, $adjustment);
+  multi method new (GtkWidget $scale) {
+    self.bless(:$scale);
+  }
+  multi method new (
+    Int() $orientation            # # GtkOrientation $orientation,
+    GtkAdjustment() $adjustment
+  ) {
+    my uint32 $o = self.RESOLVE-UINT($orientation);
+    my $scale = gtk_scale_new($o, $adjustment);
     self.bless(:$scale);
   }
 
-  method new-hscale(GtkAdjustment $adj) {
+  method new-hscale(GtkAdjustment() $adj) {
     my $scale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, $adj);
     self.bless(:$scale);
   }
 
-  method new-vscale(GtkAdjustment $adj) {
+  method new-vscale(GtkAdjustment() $adj) {
     my $scale = gtk_scale_new(GTK_ORIENTATION_VERTICAL, $adj);
     self.bless(:$scale);
   }
 
-  multi method new_with_range (GtkOrientation $o, Num() $min, Num() $max, Num() $step) {
-    my num64 $mn = $min;
-    my num64 $mx = $max;
-    my num64 $st = $step;
-
-    my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
-    self.bless(:$scale);
-  }
-  multi method new_with_range (
+  method new_with_range (
+    Int() $orientation,           # GtkOrientation $orientation,
     Num() $min,
     Num() $max,
-    Num() $step,
-    :$horizontal = False,
-    :$vertical = False
+    Num() $step
   ) {
-    die 'You must specify only $horizontal or $vertical when creating a GTK::Scale'
-      unless $horizontal ^^ $vertical;
-
-    my num64 $mn = $min;
-    my num64 $mx = $max;
-    my num64 $st = $step;
-
-    my uint32 $or = do {
-      when $horizontal { GTK_ORIENTATION_HORIZONTAL.Int; }
-      when $vertical   { GTK_ORIENTATION_VERTICAL.Int;   }
-    };
-    my $scale = gtk_scale_new_with_range($or, $mn, $mx, $st);
+    my uint32 $o = self.RESOLVE-UINT($orientation);
+    my num64 ($mn, $mx, $st) = ($min, $max, $step);
+    my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
     self.bless(:$scale);
   }
 
@@ -105,9 +111,10 @@ class GTK::Scale is GTK::Range {
   method draw_value is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scale_get_draw_value($!s);
+        so gtk_scale_get_draw_value($!s);
       },
-      STORE => sub ($, $draw_value is copy) {
+      STORE => sub ($, Int() $draw_value is copy) {
+        my gboolean $dv = self.RESOLVE-BOOL($draw_value);
         gtk_scale_set_draw_value($!s, $draw_value);
       }
     );
@@ -116,10 +123,11 @@ class GTK::Scale is GTK::Range {
   method has_origin is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scale_get_has_origin($!s);
+        so gtk_scale_get_has_origin($!s);
       },
-      STORE => sub ($, $has_origin is copy) {
-        gtk_scale_set_has_origin($!s, $has_origin);
+      STORE => sub ($, Int() $has_origin is copy) {
+        my gboolean $ho = self.RESOLVE-BOOL($has_origin);
+        gtk_scale_set_has_origin($!s, $ho);
       }
     );
   }
@@ -129,12 +137,8 @@ class GTK::Scale is GTK::Range {
       FETCH => sub ($) {
         GtkPositionType( gtk_scale_get_value_pos($!s) );
       },
-      STORE => sub ($, $pos is copy) {
-        my $p = do given $pos {
-          when GtkPositionType { $_.Int;      }
-          when Int             { $_ +&0xffff; }
-          when uint32          { $_;          }
-        }
+      STORE => sub ($, Int() $pos is copy) {
+        my $p = self.RESOVLE-UINT($pos);
         gtk_scale_set_value_pos($!s, $p);
       }
     );
@@ -142,16 +146,21 @@ class GTK::Scale is GTK::Range {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_mark (Num() $value, GtkPositionType $position, gchar $markup) {
+  method add_mark (
+    Num() $value,
+    Int() $position,
+    gchar $markup
+  ) {
+    my uint32 $p = self.RESOLVE-UINT($position);
     my num64 $v = $value;
-    gtk_scale_add_mark($!s, $v, $position, $markup);
+    gtk_scale_add_mark($!s, $v, $p, $markup);
   }
 
-  method clear_marks () {
+  method clear_marks {
     gtk_scale_clear_marks($!s);
   }
 
-  method get_layout () {
+  method get_layout {
     gtk_scale_get_layout($!s);
   }
 
@@ -161,7 +170,7 @@ class GTK::Scale is GTK::Range {
     gtk_scale_get_layout_offsets($!s, $_x, $_y);
   }
 
-  method get_type () {
+  method get_type {
     gtk_scale_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
