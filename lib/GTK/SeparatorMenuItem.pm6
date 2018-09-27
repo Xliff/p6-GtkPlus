@@ -11,6 +11,13 @@ use GTK::MenuItem;
 class GTK::SeparatorMenuItem is GTK::MenuItem {
   has GtkSeparatorMenuItem $!smi;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::SeparatorMenuItem');
+    $o;
+  }
+
   submethod BUILD(:$separator) {
     my $to-parent;
     given $separator {
@@ -32,11 +39,13 @@ class GTK::SeparatorMenuItem is GTK::MenuItem {
       default {
       }
     }
-    self.setType('GTK::SeparatorMenuItem');
   }
 
   method new {
     my $separator = gtk_separator_menu_item_new($!smi);
+    self.bless(:$separator);
+  }
+  method new (GtkWidget $separator) {
     self.bless(:$separator);
   }
 

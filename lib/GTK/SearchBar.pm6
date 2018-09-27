@@ -11,6 +11,13 @@ use GTK::Bin;
 class GTK::SearchBar is GTK::Bin {
   has GtkSearchBar $!sb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::SearchBar');
+    $o;
+  }
+
   submethod BUILD(:$searchbar) {
     my $to-parent;
     given $searchbar {
@@ -32,11 +39,14 @@ class GTK::SearchBar is GTK::Bin {
       default {
       }
     }
-    self.setBin('GTK::SearchBar');
   }
 
-  method new {
+  multi method new {
     my $searchbar = gtk_search_bar_new();
+    self.bless(:$searchbar);
+  }
+
+  multi method new (GtkWidget $searchbar) {
     self.bless(:$searchbar);
   }
 
@@ -47,10 +57,10 @@ class GTK::SearchBar is GTK::Bin {
   method search_mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_search_bar_get_search_mode($!sb) );
+        so gtk_search_bar_get_search_mode($!sb);
       },
       STORE => sub ($, Int() $search_mode is copy) {
-        my $sm = self.RESOLVE-BOOL($search_mode);
+        my gboolean $sm = self.RESOLVE-BOOL($search_mode);
         gtk_search_bar_set_search_mode($!sb, $sm);
       }
     );
@@ -59,7 +69,7 @@ class GTK::SearchBar is GTK::Bin {
   method show_close_button is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_search_bar_get_show_close_button($!sb) );
+        so gtk_search_bar_get_show_close_button($!sb);
       },
       STORE => sub ($, Int() $visible is copy) {
         my gboolean $v = self.RESOLVE-BOOL($visible);
@@ -70,11 +80,8 @@ class GTK::SearchBar is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method connect_entry (GtkEntry $entry) {
+  method connect_entry (GtkEntry() $entry) {
     gtk_search_bar_connect_entry($!sb, $entry);
-  }
-  multi method connect_entry (GTK::Entry $entry)  {
-    samewith($entry.entry);
   }
 
   method get_type {

@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::Places;
 use GTK::Raw::Types;
@@ -10,6 +11,13 @@ use GTK::ScrolledWindow;
 
 class GTK::Places is GTK::ScrolledWindow {
   has GtkPlaces $!ps;
+
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Places');
+    $o;
+  }
 
   submethod BUILD(:$places) {
     my $to-parent;
@@ -32,11 +40,13 @@ class GTK::Places is GTK::ScrolledWindow {
       default {
       }
     }
-    self.setType('GTK::Places');
   }
 
-  method new {
+  multi method new {
     my $places = gtk_places_sidebar_new();
+    self.bless(:$places);
+  }
+  multi method new (GtkWidget $places) {
     self.bless(:$places);
   }
 
@@ -125,7 +135,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method local_only is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_places_sidebar_get_local_only($!ps) );
+        so gtk_places_sidebar_get_local_only($!ps);
       },
       STORE => sub ($, Int() $local_only is copy) {
         my gboolean $lo = self.RESOLVE-BOOL($local_only);
@@ -141,7 +151,10 @@ class GTK::Places is GTK::ScrolledWindow {
         gtk_places_sidebar_get_location($!ps);
       },
       STORE => sub ($, $location is copy) {
-        gtk_places_sidebar_set_location($!ps, $location);
+        die "GFile NYI";
+        GFile.new(
+          gtk_places_sidebar_set_location($!ps, $location)
+        );
       }
     );
   }
@@ -161,7 +174,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method show_connect_to_server is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_places_sidebar_get_show_connect_to_server($!ps);
+        so gtk_places_sidebar_get_show_connect_to_server($!ps);
       },
       STORE => sub ($, Int() $show_connect_to_server is copy) {
         my gboolean $scs = self.RESOLVE-BOOL($show_connect_to_server);
@@ -173,7 +186,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method show_desktop is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_places_sidebar_get_show_desktop($!ps) );
+        so gtk_places_sidebar_get_show_desktop($!ps);
       },
       STORE => sub ($, Int() $show_desktop is copy) {
         my gboolean $sd = self.RESOLVE-BOOL($show_desktop);
@@ -185,7 +198,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method show_enter_location is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_places_sidebar_get_show_enter_location($!ps) );
+        so gtk_places_sidebar_get_show_enter_location($!ps);
       },
       STORE => sub ($, Int() $show_enter_location is copy) {
         my gboolean $sel = self.RESOLVE-BOOL($show_enter_location);
@@ -197,7 +210,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method show_other_locations is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_places_sidebar_get_show_other_locations($!ps) );
+        so gtk_places_sidebar_get_show_other_locations($!ps);
       },
       STORE => sub ($, Int() $show_other_locations is copy) {
         my gboolean $sol = self.RESOLVE-BOOL($show_other_locations);
@@ -209,10 +222,10 @@ class GTK::Places is GTK::ScrolledWindow {
   method show_recent is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_places_sidebar_get_show_recent($!ps) );
+        so gtk_places_sidebar_get_show_recent($!ps);
       },
       STORE => sub ($, Int() $show_recent is copy) {
-        my $sr = self.RESOLVE-BOOL($show_recent);
+        my gboolean $sr = self.RESOLVE-BOOL($show_recent);
         gtk_places_sidebar_set_show_recent($!ps, $sr);
       }
     );
@@ -221,7 +234,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method show_starred_location is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_places_sidebar_get_show_starred_location($!ps) );
+        so gtk_places_sidebar_get_show_starred_location($!ps);
       },
       STORE => sub ($, Int() $show_starred_location is copy) {
         my gboolean $ssl = self.RESOLVE-BOOL($show_starred_location);
@@ -233,7 +246,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method show_trash is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_places_sidebar_get_show_trash($!ps) );
+        so gtk_places_sidebar_get_show_trash($!ps);
       },
       STORE => sub ($, Int() $show_trash is copy) {
         my gboolean $st = self.RESOLVE-BOOL($show_trash);
@@ -249,8 +262,9 @@ class GTK::Places is GTK::ScrolledWindow {
   }
 
   method get_nth_bookmark (Int() $n) {
+    die "GFile NYI";
     my $nn = self.RESOLVE-INT($n);
-    gtk_places_sidebar_get_nth_bookmark($!ps, $nn);
+    GFile.new(  gtk_places_sidebar_get_nth_bookmark($!ps, $nn) );
   }
 
   method get_type {
@@ -258,17 +272,19 @@ class GTK::Places is GTK::ScrolledWindow {
   }
 
   method list_shortcuts {
-    gtk_places_sidebar_list_shortcuts($!ps);
+    GTK::Compat::GSList.new((gtk_places_sidebar_list_shortcuts($!ps) );
   }
 
   method remove_shortcut (GFile $location) {
     gtk_places_sidebar_remove_shortcut($!ps, $location);
   }
 
-  method set_drop_targets_visible (Int() $visible, Int() $context) {
+  method set_drop_targets_visible (
+    Int() $visible,
+    GdkDragContext $context = GdkDragContext
+  ) {
     my $v = self.RESOLVE-BOOL($visible);
-    my $c = self.RESOLVE-UINT($context);
-    gtk_places_sidebar_set_drop_targets_visible($!ps, $v, $c);
+    gtk_places_sidebar_set_drop_targets_visible($!ps, $v, $context);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

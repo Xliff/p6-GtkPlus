@@ -11,16 +11,23 @@ use GTK::Window;
 class GTK::Dialog is GTK::Window {
   has GtkDialog $!d;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::Dialog');
+    $o;
+  }
+
   submethod BUILD(:$dialog) {
     my $to-parent;
     given $dialog {
       when GtkDialog | GtkWidget {
-        $!vp = do {
+        $!d = do {
           when GtkWidget {
             $to-parent = $_
             nativecast(GtkDialog, $_);
           }
-          when GtkViewport  {
+          when GtkDialog {
             $to-parent = nativecast(GtkWindow, $_);
             $_;
           }
@@ -32,11 +39,13 @@ class GTK::Dialog is GTK::Window {
       default {
       }
     }
-    self.setType('GTK::Dialog');
   }
 
-  method new {
+  multi method new {
     my $dialog = gtk_dialog_new();
+    self.bless(:$dialog);
+  }
+  multi method new (GtkWidget $dialog) {
     self.bless(:$dialog);
   }
 
@@ -59,12 +68,9 @@ class GTK::Dialog is GTK::Window {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method add_action_widget (GtkWidget $child, Int() $response_id) {
+  method add_action_widget (GtkWidget() $child, Int() $response_id) {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_add_action_widget($!d, $child, $ri);
-  }
-  multi method add_action_widget (GTK::Widget $child, Int() $response_id)  {
-    samewith($child.widget, $response_id);
   }
 
   method add_button (gchar $button_text, Int() $response_id) {
@@ -84,11 +90,8 @@ class GTK::Dialog is GTK::Window {
     gtk_dialog_get_header_bar($!d);
   }
 
-  multi method get_response_for_widget (GtkWidget $widget) {
+  method get_response_for_widget (GtkWidget() $widget) {
     gtk_dialog_get_response_for_widget($!d, $widget);
-  }
-  multi method get_response_for_widget (GTK::Widget $widget)  {
-    samewith($widget.widget);
   }
 
   method get_type {
@@ -114,12 +117,16 @@ class GTK::Dialog is GTK::Window {
   }
 
   method set_alternative_button_order_from_array (
-    gint $n_params,
-    gint $new_order
+    Int() $n_params,
+    Int @new_order
   )
     is deprecated
   {
-    gtk_dialog_set_alternative_button_order_from_array($!d, $n_params, $new_order);
+    my gint $np = self.RESOLVE-INT($n_params);
+    my CArray[gint] $no = CArray[gint].new;
+    $no[$++] = $_ for @new_order;
+
+    gtk_dialog_set_alternative_button_order_from_array($!d, $np, $no);
   }
 
   method set_default_response (Int() $response_id) {

@@ -41,7 +41,6 @@ class GTK::Widget {
   method GTK::Raw::Types::GtkWidget {
     $!w;
   }
-
   method widget {
     $!w;
   }
@@ -70,6 +69,23 @@ class GTK::Widget {
 
     g_object_set_string($!w, 'GTKPLUS-Type', $typeName)
       unless ($oldType // '') ne $typeName;
+  }
+
+  # REALLY EXPERIMENTAL attempt to create a global object creation
+  # factory.
+  method CreateObject(GtkWidget $o) {
+    self.IS-PROTECTED;
+
+    my $type = g_object_get_string($o, 'GTKPLUS-Type');
+    # In this situation, GTK::Widget CANNOT validate what will happen
+    # if there is no type. The caller has to INSURE that if this call is
+    # made, they are aware of this possibility.
+    #
+    # Therefore this should be made into a PROPER exception with
+    # the die() message as the payload.
+    die "Invalid type name { $type } passed to GTK::Widget.CreateObject():"
+      unless $type ~~ /^ 'GTK::' /;
+    ::($type).new($o);
   }
 
   # Static methods
@@ -946,10 +962,7 @@ class GTK::Widget {
   }
 
   method getType {
-    g_object_get_string(
-      nativecast(Pointer, $!w),
-      'GTKPLUS-Type'
-    );
+    g_object_get_string($!w, 'GTKPLUS-Type');
   }
 
   method add_events (gint $events) {

@@ -11,6 +11,13 @@ use GTK::Button;
 class GTK::FontButton is GTK::Button {
   has GtkFontButton $!fb;
 
+  method bless(*%attrinit) {
+    use nqp;
+    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::FontButton');
+    $o;
+  }
+
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
@@ -32,11 +39,13 @@ class GTK::FontButton is GTK::Button {
       default {
       }
     }
-    self.setType('GTK::FontButton');
   }
 
-  method new {
+  multi method new {
     my $button = gtk_font_button_new();
+    self.bless(:$button);
+  }
+  multi method new (GtkWidget $button) {
     self.bless(:$button);
   }
 
@@ -61,7 +70,7 @@ class GTK::FontButton is GTK::Button {
       FETCH => sub ($) {
         gtk_font_button_get_font_name($!fb);
       },
-      STORE => sub ($, Str $fontname is copy) {
+      STORE => sub ($, Str() $fontname is copy) {
         gtk_font_button_set_font_name($!fb, $fontname);
       }
     );
@@ -70,7 +79,7 @@ class GTK::FontButton is GTK::Button {
   method show_size is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_font_button_get_show_size($!fb) );
+        so gtk_font_button_get_show_size($!fb);
       },
       STORE => sub ($, Int() $show_size is copy) {
         my gboolean $ss = self.RESOLVE-BOOL($show_size);
@@ -82,7 +91,7 @@ class GTK::FontButton is GTK::Button {
   method show_style is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_font_button_get_show_style($!fb) );
+        so gtk_font_button_get_show_style($!fb);
       },
       STORE => sub ($, Int() $show_style is copy) {
         my gboolean $ss = self.RESOLVE-BOOL($show_style);
@@ -96,7 +105,7 @@ class GTK::FontButton is GTK::Button {
       FETCH => sub ($) {
         gtk_font_button_get_title($!fb);
       },
-      STORE => sub ($, Str $title is copy) {
+      STORE => sub ($, Str() $title is copy) {
         gtk_font_button_set_title($!fb, $title);
       }
     );
@@ -105,7 +114,7 @@ class GTK::FontButton is GTK::Button {
   method use_font is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_font_button_get_use_font($!fb) );
+        so gtk_font_button_get_use_font($!fb);
       },
       STORE => sub ($, Int() $use_font is copy) {
         my gboolean $uf = self.RESOLVE-BOOL($use_font);
@@ -117,7 +126,7 @@ class GTK::FontButton is GTK::Button {
   method use_size is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_font_button_get_use_size($!fb) );
+        so gtk_font_button_get_use_size($!fb);
       },
       STORE => sub ($, Int() $use_size is copy) {
         my gboolean $us = self.RESOLVE-BOOL($use_size);

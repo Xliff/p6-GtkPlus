@@ -59,6 +59,9 @@ class GTK::Entry is GTK::Widget {
     self.setWidget($to-parent);
   }
 
+  method GTK::Raw::Types::GtkEntry {
+    $!e;
+  }
   method entry {
     $!e;
   }
