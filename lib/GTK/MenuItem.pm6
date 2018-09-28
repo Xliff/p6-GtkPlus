@@ -85,7 +85,7 @@ class GTK::MenuItem is GTK::Bin {
     :$mnemonic,
     :$submenu
   ) {
-    my $menuitem = so $mnemonic ??
+    my $menuitem = (so $mnemonic) ??
       gtk_menu_item_new_with_mnemonic($label)
       !!
       gtk_menu_item_new_with_label($label);

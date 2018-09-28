@@ -43,7 +43,7 @@ class GTK::MenuBar is GTK::MenuShell {
     with @menu {
       die 'All items in @append must be GTK::MenuItems or GtkMenuItem references.'
         unless @menu.all ~~ (GTK::MenuItem, GtkMenuItem).any;
-      self.append($_) for @menu;
+      self.append-widgets($_) for @menu;
     }
   }
 
@@ -51,7 +51,7 @@ class GTK::MenuBar is GTK::MenuShell {
     my $menubar = gtk_menu_bar_new();
     self.bless(:$menubar);
   }
-  multi method new ($menubar) {
+  multi method new (GtkWidget $menubar) {
     self.bless(:$menubar);
   }
   multi method new (*@menu) {
