@@ -48,7 +48,7 @@ sub gtk_menu_item_select (GtkMenuItem $menu_item)
 
 sub gtk_menu_item_toggle_size_allocate (
   GtkMenuItem $menu_item,
-  int $allocation
+  gint $allocation
 )
   is native('gtk-3')
   is export

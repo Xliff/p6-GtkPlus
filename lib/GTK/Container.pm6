@@ -78,6 +78,23 @@ class GTK::Container is GTK::Widget {
     $!add-latch;
   }
 
+  method INSERT-START ($child, $pos) {
+    self.IS-PROTECTED;
+    
+    my $last = @!start.elems - 1;
+    if $pos == 0 {
+      self.prepend($child)
+    } elsif $pos > $last {
+      self.append($child);
+    } else {
+      @!start = (
+        @!start[ 0..$pos-1 ],
+        $child,
+        @!start[ $pos..$last ]
+      ).flat;
+    }
+  }
+
   method push-start($c) {
     # Write @!start.elems to GtkWidget under key GTKPlus-ContainerStart
     @!start.push: $c;

@@ -45,7 +45,7 @@ class GTK::Menu is GTK::MenuShell {
     my $menu = gtk_menu_new();
     self.bless(:$menu);
   }
-  multi method new GtkWidget ($menu) {
+  multi method new (GtkWidget $menu) {
     self.bless(:$menu);
   }
 
@@ -182,7 +182,7 @@ class GTK::Menu is GTK::MenuShell {
   }
 
   method get_for_attach_widget {
-    gtk_menu_get_for_attach_widget($!m);
+    gtk_menu_get_for_attach_widget($!m.widget);
   }
 
   method get_type {

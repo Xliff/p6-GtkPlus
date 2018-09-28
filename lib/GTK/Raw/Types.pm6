@@ -8,10 +8,12 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-our constant GtkCalendarDetailFunc  is export := Pointer;
 our constant GtkBuilderConnectFunc  is export := Pointer;
-our constant GtkTextTagTableForeach is export := Pointer;
+our constant GtkCalendarDetailFunc  is export := Pointer;
+our constant GtkMenuDetachFunc      is export := Pointer;
 our constant GtkTextCharPredicate   is export := Pointer;
+our constant GtkTextTagTableForeach is export := Pointer;
+our constant GtkMenuPositionFunc    is export := Pointer;
 
 our constant GdkRGBA is export := GTK::Compat::RGBA;
 
@@ -718,7 +720,10 @@ class GtkLinkButton        is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkListStore         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLockButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenu              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkMenuBar           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenuButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkMenuItem          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkMenuShell         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkNotebook          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkOffscreen         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPopover           is repr('CPointer') does GTK::Roles::Pointers is export { }

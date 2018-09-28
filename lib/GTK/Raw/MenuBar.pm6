@@ -26,20 +26,20 @@ sub gtk_menu_bar_new_from_model (GMenuModel $model)
   { * }
 
 sub gtk_menu_bar_get_child_pack_direction (GtkMenuBar $menubar)
-  returns GtkPackDirection
+  returns uint32 # GtkPackDirection
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_menu_bar_get_pack_direction (GtkMenuBar $menubar)
-  returns GtkPackDirection
+  returns uint32 # GtkPackDirection
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_menu_bar_set_child_pack_direction (
   GtkMenuBar $menubar,
-  GtkPackDirection $child_pack_dir
+  uint32 $child_pack_dir        # GtkPackDirection $child_pack_dir
 )
   is native('gtk-3')
   is export
@@ -47,7 +47,7 @@ sub gtk_menu_bar_set_child_pack_direction (
 
 sub gtk_menu_bar_set_pack_direction (
   GtkMenuBar $menubar,
-  GtkPackDirection $pack_dir
+  uint32 $pack_dir              # GtkPackDirection $pack_dir
 )
   is native('gtk-3')
   is export

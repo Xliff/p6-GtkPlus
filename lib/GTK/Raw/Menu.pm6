@@ -95,8 +95,8 @@ sub gtk_menu_popup_at_rect (
   GtkMenu $menu,
   GdkWindow $rect_window,
   GdkRectangle $rect,
-  GdkGravity $rect_anchor,
-  GdkGravity $menu_anchor,
+  uint32 $rect_anchor,            # GdkGravity $rect_anchor,
+  uint32 $menu_anchor,            # GdkGravity $menu_anchor,
   GdkEvent $trigger_event
 )
   is native('gtk-3')
@@ -106,8 +106,8 @@ sub gtk_menu_popup_at_rect (
 sub gtk_menu_popup_at_widget (
   GtkMenu $menu,
   GtkWidget $widget,
-  GdkGravity $widget_anchor,
-  GdkGravity $menu_anchor,
+  uint32 $wisdget_anchor,         # GdkGravity $widget_anchor,
+  uint32 $menu_anchor,            # GdkGravity $menu_anchor,
   GdkEvent $trigger_event
 )
   is native('gtk-3')
@@ -129,7 +129,11 @@ sub gtk_menu_popup_for_device (
   is export
   { * }
 
-sub gtk_menu_reorder_child (GtkMenu $menu, GtkWidget $child, gint $position)
+sub gtk_menu_reorder_child (
+  GtkMenu $menu,
+  GtkWidget $child,
+  gint $position
+)
   is native('gtk-3')
   is export
   { * }

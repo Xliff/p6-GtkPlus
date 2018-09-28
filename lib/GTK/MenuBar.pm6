@@ -18,7 +18,7 @@ class GTK::MenuBar is GTK::MenuShell {
     $o;
   }
 
-  submethod BUILD(:$menubar) {
+  submethod BUILD(:$menubar, :@menu) {
     given $menubar {
       my $to-parent;
       when GtkMenuBar | GtkMenuShell | GtkWidget {
@@ -39,14 +39,24 @@ class GTK::MenuBar is GTK::MenuShell {
       default {
       }
     }
+
+    with @menu {
+      die 'All items in @append must be GTK::MenuItems or GtkMenuItem references.'
+        unless @menu.all ~~ (GTK::MenuItem, GtkMenuItem).any;
+      self.append($_) for @menu;
+    }
   }
 
-  method new {
+  multi method new {
     my $menubar = gtk_menu_bar_new();
     self.bless(:$menubar);
   }
   multi method new ($menubar) {
     self.bless(:$menubar);
+  }
+  multi method new (@menu) {
+    my $menubar = gtk_menu_bar_new();
+    self.bless(:$menubar, :@menu);
   }
 
   method new_from_model (GMenuModel $model) {

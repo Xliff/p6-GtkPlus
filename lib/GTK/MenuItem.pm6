@@ -32,7 +32,7 @@ class GTK::MenuItem is GTK::Bin {
 
   method setMenuItem($menuitem) {
     my $to-parent;
-    $!mi = do given $checkmenuitem {
+    $!mi = do given $menuitem {
       when GtkWidget {
         $to-parent = $_;
         nativecast(GtkMenuItem, $_);
@@ -52,16 +52,39 @@ class GTK::MenuItem is GTK::Bin {
   multi method new (GtkWidget $menuitem) {
     self.bless(:$menuitem);
   }
-  multi method new(Str() :$label, Str() :$mnemonic) {
-    die "Use ONE of \$label or \$mnemonic when using { ::?CLASS.name }.new()"
-      unless $label.defined ^^ $nmemonic.defined;
 
-    my $menuitem = do {
-      with $label    { gtk_menu_item_new_with_label($_);    }
-      with $mnemonic { gtk_menu_item_new_with_mnemonic($_); }
-    };
-    self.bless(:$menuitem);
+  multi method new(
+    Str() $label,
+    Routine :$clicked,
+    Routine :$activate,
+    :$right,
+    :$mnemonic,
+    GtkWidget() :$submenu
+  ) {
+    my $menuitem = so $mnemonic ??
+      gtk_menu_item_new_with_mnemonic($_)
+      !!
+      gtk_menu_item_new_with_label($_);
+    self.submenu = $_     with $submenu;
+    # $clicked and $activate do the same thing.
+    # DON'T GO OVERBOARD.
+    self.activate.tap($_) with $clicked;
+    self.activate.tap($_) with $activate;
+    self.right_justified = True if $right;
   }
+  # multi method new(
+  #   Str() :$label,
+  #   Str() :$mnemonic
+  # ) {
+  #   die "Use ONE of \$label or \$mnemonic when using { ::?CLASS.name }.new()"
+  #     unless $label.defined ^^ $mnemonic.defined;
+  #
+  #   my $menuitem = do {
+  #     with $label    { gtk_menu_item_new_with_label($_);    }
+  #     with $mnemonic { gtk_menu_item_new_with_mnemonic($_); }
+  #   };
+  #   self.bless(:$menuitem);
+  # }
 
   method new_with_label (Str() $label) {
     my $menuitem = gtk_menu_item_new_with_label($label);
@@ -147,19 +170,17 @@ class GTK::MenuItem is GTK::Bin {
     );
   }
 
-  # Deprecated and not useful, IMHO. See:
-  # https://developer.gnome.org/gtk3/stable/GtkMenuItem.html#gtk-menu-item-set-right-justified
-  #
-  # method right_justified is rw {
-  #   Proxy.new(
-  #     FETCH => sub ($) {
-  #       gtk_menu_item_get_right_justified($!mi);
-  #     },
-  #     STORE => sub ($, $right_justified is copy) {
-  #       gtk_menu_item_set_right_justified($!mi, $right_justified);
-  #     }
-  #   );
-  # }
+  method right_justified is DEPRECATED is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        so gtk_menu_item_get_right_justified($!mi);
+      },
+      STORE => sub ($, Int() $right_justified is copy) {
+        my gboolean $rj = self.RESOLVE-BOOL($right_justified);
+        gtk_menu_item_set_right_justified($!mi, $rj);
+      }
+    );
+  }
 
   method submenu is rw {
     Proxy.new(
@@ -186,20 +207,20 @@ class GTK::MenuItem is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method activate {
+  method emit-activate {
     gtk_menu_item_activate($!mi);
   }
 
-  method deselect {
+  method emit-deselect {
     gtk_menu_item_deselect($!mi);
+  }
+
+  method emit-select {
+    gtk_menu_item_select($!mi);
   }
 
   method get_type {
     gtk_menu_item_get_type();
-  }
-
-  method select {
-    gtk_menu_item_select($!mi);
   }
 
   method toggle_size_allocate (Int() $allocation) {

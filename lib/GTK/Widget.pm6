@@ -67,7 +67,7 @@ class GTK::Widget {
         unless $oldType eq 'GTK::Widget' || $oldType eq $typeName;
     }
 
-    g_object_set_string($!w, 'GTKPLUS-Type', $typeName)
+    g_object_set_string($!w.p, 'GTKPLUS-Type', $typeName)
       unless ($oldType // '') ne $typeName;
   }
 
@@ -76,7 +76,7 @@ class GTK::Widget {
   method CreateObject(GtkWidget $o) {
     self.IS-PROTECTED;
 
-    my $type = g_object_get_string($o, 'GTKPLUS-Type');
+    my $type = g_object_get_string($o.p, 'GTKPLUS-Type');
     # In this situation, GTK::Widget CANNOT validate what will happen
     # if there is no type. The caller has to INSURE that if this call is
     # made, they are aware of this possibility.
@@ -962,7 +962,7 @@ class GTK::Widget {
   }
 
   method getType {
-    g_object_get_string($!w, 'GTKPLUS-Type');
+    g_object_get_string($!w.p, 'GTKPLUS-Type');
   }
 
   method add_events (gint $events) {

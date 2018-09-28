@@ -7,6 +7,7 @@ use GTK::Raw::MenuShell;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::MenuItem;
 
 class GTK::MenuShell is GTK::Container {
   has GtkMenuShell $!ms;
@@ -21,7 +22,7 @@ class GTK::MenuShell is GTK::Container {
     my $to-parent;
     $!ms = do given $menushell {
       when GtkMenuShell {
-        $to-parent = nativecall(GtkContainer, $_);
+        $to-parent = nativecast(GtkContainer, $_);
         $menushell;
       }
       when GtkWidget {
@@ -60,7 +61,8 @@ class GTK::MenuShell is GTK::Container {
 
   # Is originally:
   # GtkMenuShell, GtkWidget, gint, gpointer --> void
-  method insert {
+  # Made multi due to further declarations in subclasses
+  multi method insert {
     self.connect($!ms, 'insert');
   }
 
@@ -107,7 +109,19 @@ class GTK::MenuShell is GTK::Container {
   }
 
   multi method append (GtkWidget() $child) {
+    self.push-start($child) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     gtk_menu_shell_append($!ms, $child);
+  }
+  multi method append (@children) {
+    die 'All children must be GTK::MenuItem or a GtkMenuItem reference.'
+      unless @children.all ~~ (GTK::MenuItem, GtkMenuItem).any;
+
+    for @children {
+      self.push-start($_);
+      self.SET-LATCH;
+      self.append($_);
+    }
   }
 
   method bind_model (
@@ -119,11 +133,11 @@ class GTK::MenuShell is GTK::Container {
     gtk_menu_shell_bind_model($!ms, $model, $action_namespace, $ws);
   }
 
-  method cancel {
+  method emit-cancel {
     gtk_menu_shell_cancel($!ms);
   }
 
-  method deactivate {
+  method emit-deactivate {
     gtk_menu_shell_deactivate($!ms);
   }
 
@@ -143,13 +157,27 @@ class GTK::MenuShell is GTK::Container {
     gtk_menu_shell_get_type();
   }
 
-  method insert (GtkWidget() $child, Int() $position) {
+  multi method insert (GtkWidget $child, Int() $position) {
+    self.INSERT-START($child, $position) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     my gint $p = self.RESOLVE-INT($position);
     gtk_menu_shell_insert($!ms, $child, $p);
   }
+  multi method insert (GTK::MenuItem $child, Int() $position) {
+    self.INSERT-START($child, $position);
+    self.SET-LATCH;
+    samewith($child, $position);
+  }
 
-  method prepend (GtkWidget() $child) {
+  multi method prepend (GtkWidget $child) {
+    self.unshift-end($child) unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     gtk_menu_shell_prepend($!ms, $child);
+  }
+  multi method prepend (GTK::MenuItem $child) {
+    self.unshift-end($child);
+    self.SET-LATCH;
+    samewith($child.widget);
   }
 
   method select_first (Int() $search_sensitive) {

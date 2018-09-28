@@ -25,6 +25,7 @@ constant gsize         is export := uint64;
 constant gssize        is export := int64;
 constant guint         is export := uint32;
 constant guint16       is export := uint16;
+constant guint32       is export := uint32;
 constant gunichar      is export := uint32;
 constant va_list       is export := Pointer;
 
@@ -377,6 +378,7 @@ class GdkEventWindowState   is repr('CPointer') is export { }
 class GdkFrameClock         is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
 class GdkModifierIntent     is repr('CPointer') is export { }
+class GdkMonitor            is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }
 class GdkPixbufAnimation    is repr('CPointer') is export { }
 class GdkRectangle          is repr('CPointer') is export { }
