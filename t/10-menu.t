@@ -20,24 +20,30 @@ $a.activate.tap({
   sub quit      { $a.exit; }
 
   my $menubar = GTK::MenuBar.new(
-    GTK::MenuItem.new('File',
-      :submenu(
-        GTK::Menu.new.append(
-          GTK::MenuItem.new('Open',  :clicked(&open-menu)),
-          GTK::MenuItem.new('Close', :clicked(&close-menu))
-        )
-      ),
+    GTK::MenuItem.new('File'#,
+ #     :submenu(
+ #       GTK::Menu.new.append(
+ #         GTK::MenuItem.new('Open', :clicked(&open-menu))#,
+#            .activate.tap({ &open-menu }),
+#          GTK::MenuItem.new('Close', :clicked(&close-menu))
+            #.activate.tap(&close-menu)
+#        )
+#      ),
     ),
-    GTK::MenuItem.new('Edit',
-      :submenu(
-        GTK::Menu.new.append(
-          GTK::MenuItem.new('Option 1', :clicked(&option1)),
-          GTK::MenuItem.new('Option 2', :clicked(&option2)),
-          GTK::MenuItem.new('Option 3', :clicked(&option3))
-        )
-      )
-    ),
-    GTK::MenuItem.new('Quit', :clicked(&quit), :right)
+    GTK::MenuItem.new('Edit'#,
+    #   :submenu(
+    #     GTK::Menu.new.append(
+    #       GTK::MenuItem.new('Option 1', :clicked(&option1)).
+#            .activate.tap(&option1),
+          # GTK::MenuItem.new('Option 2', :clicked(&option2)),
+#            .activate.tap(&option2),
+          # GTK::MenuItem.new('Option 3', :clicked(&option3))
+#            .activate.tap(&option3)
+        # )
+      # )
+     ),
+     GTK::MenuItem.new('Quit', :clicked(&quit), :right)
+#      .activate-tap(&quit)
   );
 
   sub open-menu {
@@ -49,7 +55,7 @@ $a.activate.tap({
   }
 
   my $vbox = GTK::Box.new-vbox;
-  $vbox.pack($menubar);
+  $vbox.pack_start($menubar);
   $a.window.show_all;
 
 });

@@ -54,7 +54,7 @@ class GTK::MenuBar is GTK::MenuShell {
   multi method new ($menubar) {
     self.bless(:$menubar);
   }
-  multi method new (@menu) {
+  multi method new (*@menu) {
     my $menubar = gtk_menu_bar_new();
     self.bless(:$menubar, :@menu);
   }

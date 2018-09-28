@@ -113,14 +113,16 @@ class GTK::MenuShell is GTK::Container {
     self.UNSET-LATCH;
     gtk_menu_shell_append($!ms, $child);
   }
-  multi method append (@children) {
+  multi method append (*@children) {
     die 'All children must be GTK::MenuItem or a GtkMenuItem reference.'
       unless @children.all ~~ (GTK::MenuItem, GtkMenuItem).any;
 
     for @children {
+      say 'MSA-S';
       self.push-start($_);
       self.SET-LATCH;
       self.append($_);
+      say 'MSA-E';
     }
   }
 

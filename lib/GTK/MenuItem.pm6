@@ -11,6 +11,13 @@ use GTK::Bin;
 class GTK::MenuItem is GTK::Bin {
   has GtkMenuItem $!mi;
 
+  # Thanks, Zoffix!
+  # method bless(*%attrinit) {
+  #   my $o := self.Mu::bless: |%attrinit;
+  #   $o.setType('GTK::MenuItem');
+  #   $o;
+  # }
+
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
@@ -18,7 +25,13 @@ class GTK::MenuItem is GTK::Bin {
     $o;
   }
 
-  submethod BUILD(:$menuitem) {
+  submethod BUILD(
+    :$menuitem,
+    :$submenu,
+    :$clicked,
+    :$activate,
+    :$right
+  ) {
     given $menuitem {
       when GtkMenuItem | GtkWidget {
         self.setMenuItem($menuitem);
@@ -28,6 +41,18 @@ class GTK::MenuItem is GTK::Bin {
       default {
       }
     }
+
+    with $submenu {
+      # Error checking for a GTK::Menu without a circular dependency?
+      # Otherwise, GtkWidget is the best we can do.
+      self.submenu = $_ if $_ ~~ (GtkWidget, GTK::Widget).any;
+    }
+
+    # $clicked and $activate do the same thing.
+    # DON'T GO OVERBOARD.
+    #self.activate.tap($clicked) with $clicked;
+    #self.activate.tap($activate) with $activate;
+    self.right_justified = True if $right;
   }
 
   method setMenuItem($menuitem) {
@@ -52,25 +77,26 @@ class GTK::MenuItem is GTK::Bin {
   multi method new (GtkWidget $menuitem) {
     self.bless(:$menuitem);
   }
-
   multi method new(
     Str() $label,
-    Routine :$clicked,
-    Routine :$activate,
+    :$clicked,
+    :$activate,
     :$right,
     :$mnemonic,
-    GtkWidget() :$submenu
+    :$submenu
   ) {
     my $menuitem = so $mnemonic ??
-      gtk_menu_item_new_with_mnemonic($_)
+      gtk_menu_item_new_with_mnemonic($label)
       !!
-      gtk_menu_item_new_with_label($_);
-    self.submenu = $_     with $submenu;
-    # $clicked and $activate do the same thing.
-    # DON'T GO OVERBOARD.
-    self.activate.tap($_) with $clicked;
-    self.activate.tap($_) with $activate;
-    self.right_justified = True if $right;
+      gtk_menu_item_new_with_label($label);
+
+    self.bless(
+      :$menuitem,
+      :$submenu,
+      :$activate,
+      :$clicked,
+      :$right
+    );
   }
   # multi method new(
   #   Str() :$label,
@@ -94,6 +120,10 @@ class GTK::MenuItem is GTK::Bin {
   method new_with_mnemonic (Str() $label) {
     my $menuitem = gtk_menu_item_new_with_mnemonic($label);
     self.bless(:$menuitem);
+  }
+
+  method GTK::Raw::Types::GtkMenuItem {
+    $!mi;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
