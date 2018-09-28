@@ -6,27 +6,29 @@ use GTK::Menu;
 use GTK::MenuBar;
 use GTK::MenuItem;
 
+# Test GTK::Dialog::About?
+
 my $a = GTK::Application.new( title => 'org.genex.menus' );
 
 $a.activate.tap({
   # For a lark... let's see if subs can be pre-defined.
   sub open-menu  { ... }
   sub close-menu { ... }
+  sub help       { ... }
 
   # Normal inline defs.
   sub option1   { &?ROUTINE.name.say; }
   sub option2   { &?ROUTINE.name.say; }
   sub option3   { &?ROUTINE.name.say; }
-  sub quit      { $a.exit; }
+  sub quit      { say "Quit!"; $a.exit; }
 
   my $menubar = GTK::MenuBar.new(
     GTK::MenuItem.new('File',
       :submenu(
         GTK::Menu.new(
-          GTK::MenuItem.new('Open', :clicked(&open-menu)),
-#            .activate.tap({ &open-menu }),
-          GTK::MenuItem.new('Close', :clicked(&close-menu))
-            #.activate.tap(&close-menu)
+          GTK::MenuItem.new('Open',  :clicked(&open-menu)),
+          GTK::MenuItem.new('Close', :clicked(&close-menu)),
+          GTK::MenuItem.new('Quit',  :clicked(&quit))
         )
       ),
     ),
@@ -34,15 +36,13 @@ $a.activate.tap({
        :submenu(
          GTK::Menu.new(
            GTK::MenuItem.new('Option 1', :clicked(&option1)),
-#            .activate.tap(&option1),
            GTK::MenuItem.new('Option 2', :clicked(&option2)),
-#            .activate.tap(&option2),
            GTK::MenuItem.new('Option 3', :clicked(&option3))
-#            .activate.tap(&option3)
          )
        )
     ),
-    GTK::MenuItem.new('Quit', :clicked(&quit), :right)
+    # Takes a double click, because... EXPEXTING SUB!
+    GTK::MenuItem.new('Help', :clicked(&help), :right)
   );
 
   sub open-menu {
@@ -51,6 +51,10 @@ $a.activate.tap({
 
   sub close-menu {
     say "The 'Closed' menu item was clicked.";
+  }
+
+  sub help {
+    say "IT'S A DEMO! -- there's no help for you.";
   }
 
   my $vbox = GTK::Box.new-vbox;

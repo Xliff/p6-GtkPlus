@@ -50,8 +50,8 @@ class GTK::MenuItem is GTK::Bin {
 
     # $clicked and $activate do the same thing.
     # DON'T GO OVERBOARD.
-    #self.activate.tap($clicked) with $clicked;
-    #self.activate.tap($activate) with $activate;
+    self.activate.tap({ $clicked();  }) with $clicked;
+    self.activate.tap({ $activate(); }) with $activate;
     self.right_justified = True if $right;
   }
 
