@@ -10,7 +10,6 @@ use GTK::Raw::Builder;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
-# We have to write this, now. LOL!
 use GTK;
 
 class GTK::Builder does Associative {
