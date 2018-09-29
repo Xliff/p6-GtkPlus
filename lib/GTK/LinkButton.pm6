@@ -41,16 +41,16 @@ class GTK::LinkButton is GTK::Button {
     }
   }
 
-  multi method new {
-    my $button = gtk_link_button_new();
+  multi method new($uri) {
+    my $button = gtk_link_button_new($uri);
     self.bless(:$button);
   }
   multi method new (GtkWidget $button) {
     self.bless(:$button);
   }
 
-  method new_with_label (gchar $label) {
-    my $button = gtk_link_button_new_with_label($label);
+  method new_with_label (gchar $uri, gchar $label) {
+    my $button = gtk_link_button_new_with_label($uri, $label);
     self.bless(:$button);
   }
 

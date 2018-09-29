@@ -1,11 +1,15 @@
 use v6.c;
 
-use GTK::Compat::Raw::GSList;
+use GTK::Roles::Types;
 
 use GTK::Compat::Types;
+use GTK::Compat::Raw::GSList;
 
 class GTK::Compat::GSList {
-  has GSList $!list;
+  also does GTK::Roles::Types;
+
+  has GSList $!list handles <next data>;
+
   has @!nat;
   has $!dirty = False;
 
@@ -18,12 +22,12 @@ class GTK::Compat::GSList {
 
   submethod BUILD(:$!list) { }
 
-
+  # May need to write something to free every element in the list.
   submethod DESTROY {
     self.free;
   }
 
-  method new(:$list) {
+  method new (GSList $list?) {
     with $list {
       self.bless(:$list);
     } else {
@@ -59,8 +63,8 @@ class GTK::Compat::GSList {
     g_slist_copy_deep($!list, $func, $user_data);
   }
 
-  method delete_link (GSList $link_) {
-    g_slist_delete_link($!list, $link_);
+  method delete_link (GSList $link) {
+    g_slist_delete_link($!list, $link);
   }
 
   method find (gpointer $data) {
@@ -92,7 +96,7 @@ class GTK::Compat::GSList {
   }
 
   method insert (gpointer $data, Int() $position) {
-    my gint $p = $position +& 0xffff;
+    my gint $p = self.RESOLVE-INT($position);
     g_slist_insert($!list, $data, $p);
   }
 
@@ -121,12 +125,12 @@ class GTK::Compat::GSList {
   }
 
   method nth (Int() $n) {
-    my guint $nn = $n +& 0xffff;
+    my guint $nn = self.RESOLVE-UINT($n);
     g_slist_nth($!list, $nn);
   }
 
   method nth_data (Int() $n) {
-    my guint $nn = $n +& 0xffff;
+    my guint $nn = self.RESOLVE-UINT($n);
     g_slist_nth_data($!list, $nn);
   }
 

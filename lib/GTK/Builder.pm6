@@ -2,12 +2,16 @@ use v6.c;
 
 use NativeCall;
 
+use Data::Dump::Tree;
+
+use GTK::Compat::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::Builder;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
-use GTK::Widget;
+# We have to write this, now. LOL!
+use GTK;
 
 class GTK::Builder does Associative {
   has GtkBuilder $!b;
@@ -35,7 +39,6 @@ class GTK::Builder does Associative {
   }
 
   method run {
-    say "run";
     gtk_main();
   }
 
@@ -88,8 +91,8 @@ class GTK::Builder does Associative {
       my rule tag {
         '<object' 'class="' $<t>=(<-["]>+) '"' 'id="' $<n>=(<-["]>+) '"' '>'
       }
-
       my $m = m:g/<tag>/;
+
       if $m.defined {
         for $m.Array -> $o {
           (my $type = $o<tag><t>.Str) ~~ s/'Gtk' ( <[A..Za..z]>+ )/GTK::$0/;
@@ -114,15 +117,20 @@ class GTK::Builder does Associative {
   }
 
   method !postProcess(
-    :$uidef,
+    :$ui_def,
     :$file,
     :$resource
   ) {
-    self!getTypes(:$uidef, :$file, :$resource);
-    my $objects = self.get_objects;
-    while $objects.defined {
-      $objects = $objects.next;
+    self!getTypes(:$ui_def, :$file, :$resource);
+    for %!types.keys -> $k {
+      say %!types{$k}[0];
+      # Use type names to dynamically create objects.
+      %!widgets{$k} = ::( %!types{$k}[0] ).new(
+        self.get_object($k)
+      );
     }
+
+    ddt %!widgets;
   }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -162,7 +170,7 @@ class GTK::Builder does Associative {
     GError $error = GError
   ) {
     gtk_builder_add_from_file($!b, $filename, $error);
-    #self!postProcess(:file($filename));
+    self!postProcess(:file($filename));
   }
 
   method add_from_resource (
@@ -188,8 +196,9 @@ class GTK::Builder does Associative {
 
     my gsize $l = $length // $buffer.chars;
     my GError $e = $error // GError;
-    gtk_builder_add_from_string($!b, $buffer, $l, $e);
-    #self!postProcess(:ui_def($buffer));
+    my $rc = gtk_builder_add_from_string($!b, $buffer, $l, $e);
+    self!postProcess(:ui_def($buffer));
+    $rc;
   }
 
   method add_objects_from_file (
@@ -262,7 +271,7 @@ class GTK::Builder does Associative {
   }
 
   method get_objects {
-    GSList.new( gtk_builder_get_objects($!b) );
+    GTK::Compat::GSList.new( gtk_builder_get_objects($!b) );
   }
 
   method get_type {

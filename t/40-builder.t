@@ -1,21 +1,15 @@
 use v6.c;
 
-use GTK::Builder;
+use GTK::Application;
+use GTK::Button;
+use GTK::LinkButton;
 
-#my $a = GTK::Application.new( :pod($=pod) );
-#$a.activate.tap({
-#  $a.window.show_all;
-#  $a.window.destroy-signal.tap({ $a.exit; });
-#});
-#$a.run;
+# HOPEFULLY FOR NOW!
+# Use of GTK::Builder requires a whole new paradigm for
+# writing applications.
+my $a = GTK::Application.new( :pod($=pod) );
 
-my $ui = $=pod.grep( *.name eq 'ui' )
-             .map( *.contents[0] )
-             .map( *.contents[0] )
-             .join("\n");
-my $b = GTK::Builder.new();
-say $b.add_from_string($ui);
-$b.run;
+$a.run;
 
 =begin ui
 <interface>
