@@ -42,12 +42,11 @@ class GTK::ProgressBar is GTK::Widget {
     }
   }
 
-  method new {
+  multi method new {
     my $bar = gtk_progress_bar_new();
     self.bless(:$bar);
   }
-
-  method new (GtkWidget $bar) {
+  multi method new (GtkWidget $bar) {
     self.bless(:$bar);
   }
 
@@ -61,7 +60,7 @@ class GTK::ProgressBar is GTK::Widget {
         PangoEllipsizeMode( gtk_progress_bar_get_ellipsize($!bar) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = self.RESOLVE-UINT($mode)
+        my uint32 $m = self.RESOLVE-UINT($mode);
         gtk_progress_bar_set_ellipsize($!bar, $m);
       }
     );

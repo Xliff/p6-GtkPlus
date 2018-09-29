@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Container;
 
 class GTK::Pane is GTK::Container {
-  has GtkPane $!p;
+  has GtkPaned $!p;
 
   has @!child1;
   has @!child2;
@@ -24,13 +24,13 @@ class GTK::Pane is GTK::Container {
   submethod BUILD(:$pane) {
     my $to-parent;
     given $pane {
-      when GtkPane | GtkWidget {
+      when GtkPaned | GtkWidget {
         $!p = do {
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkPane, $pane);
+            nativecast(GtkPaned, $pane);
           }
-          when GtkPane {
+          when GtkPaned {
             $to-parent = nativecast(GtkContainer, $_);
             $pane;
           }
@@ -44,30 +44,33 @@ class GTK::Pane is GTK::Container {
     }
   }
 
-  multi method new(Int() $orientation) {
+  multi method new (GtkWidget $pane) {
+    self.bless(:$pane);
+  }
+  multi method new (Int() $orientation) {
     my uint32 $o = self.RESOLVE-UINT($orientation);
     my $pane = gtk_paned_new($orientation);
     self.bless(:$pane);
   }
-  multi method new(:$horizontal = False, :$vertical = False) {
-    die "Must specify either :horizontal or :vertical when creating GTK::Pane";
+  multi method new (:$horizontal = False, :$vertical = False) {
+    die "Must specify either :horizontal or :vertical when creating GTK::Pane"
       unless $horizontal ^^ $vertical;
 
     my $orientation = do {
-      when $horizontal { GTK_ORIENTATION_HORIZONTAL; }
-      when $vertical   { GTK_ORIENTATION_HORIZONTAL; }
+      when $horizontal { GTK_ORIENTATION_HORIZONTAL.Int; }
+      when $vertical   { GTK_ORIENTATION_HORIZONTAL.Int; }
     }
 
     samewith($orientation);
   }
 
   method new-hpane {
-    my $pane = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL);
+    my $pane = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL.Int);
     self.bless(:$pane);
   }
 
   method new-vpane {
-    my $pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL);
+    my $pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL.Int);
     self.bless(:$pane);
   }
 
@@ -170,7 +173,7 @@ class GTK::Pane is GTK::Container {
 
   multi method pack1 (
     GtkWidget $child,
-    Int() $resize                 # gboolean $resize,
+    Int() $resize,                # gboolean $resize,
     Int() $shrink                 # gboolean $shrink
   ) {
     my @b = ($resize, $shrink);
@@ -184,7 +187,7 @@ class GTK::Pane is GTK::Container {
     Int() $resize,
     Int() $shrink
   )  {
-    @!child1.push($child)
+    @!child1.push($child);
     self.SET-LATCH;
     samewith($child.widget, $resize, $shrink);
   }

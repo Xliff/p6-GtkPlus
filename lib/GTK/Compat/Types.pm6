@@ -47,8 +47,6 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str           $.message;
 }
 
-class GFile is repr('CPointer') does GTK::Roles::Pointers is export { }
-
 class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $.data;
   has GList   $.next;
@@ -365,17 +363,20 @@ class GAsyncResult          is repr('CPointer') is export { }
 class GCompareDataFunc      is repr('CPointer') is export { }
 class GCompareFunc          is repr('CPointer') is export { }
 class GCopyFunc             is repr('CPointer') is export { }
+class GFile                 is repr('CPointer') is export { }
 class GFunc                 is repr('CPointer') is export { }
 class GIcon                 is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
 class GDestroyNotify        is repr('CPointer') is export { }
 class GListModel            is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
+class GMenuModel            is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }
 class GdkDevice             is repr('CPointer') is export { }
 class GdkDisplay            is repr('CPointer') is export { }
+class GdkDragContext        is repr('CPointer') is export { }
 class GdkEvent              is repr('CPointer') is export { }
 class GdkEventAny           is repr('CPointer') is export { }
 class GdkEventButton        is repr('CPointer') is export { }
@@ -390,7 +391,6 @@ class GdkEventSelection     is repr('CPointer') is export { }
 class GdkEventVisibility    is repr('CPointer') is export { }
 class GdkEventWindowState   is repr('CPointer') is export { }
 class GdkFrameClock         is repr('CPointer') is export { }
-class GMenuModel            is repr('CPointer') is export { }
 class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkMonitor            is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }

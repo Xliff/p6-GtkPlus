@@ -10,7 +10,7 @@ use GTK::Raw::Types;
 use GTK::ScrolledWindow;
 
 class GTK::Places is GTK::ScrolledWindow {
-  has GtkPlaces $!ps;
+  has GtkPlacesSidebar $!ps;
 
   method bless(*%attrinit) {
     use nqp;
@@ -22,13 +22,13 @@ class GTK::Places is GTK::ScrolledWindow {
   submethod BUILD(:$places) {
     my $to-parent;
     given $places {
-      when GtkPlaces | GtkWidget {
+      when GtkPlacesSidebar | GtkWidget {
         $!ps = do {
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkPlaces, $_);
+            nativecast(GtkPlacesSidebar, $_);
           }
-          when GtkPlaces  {
+          when GtkPlacesSidebar {
             $to-parent = nativecast(GtkScrolledWindow, $_);
             $_;
           }
@@ -272,7 +272,7 @@ class GTK::Places is GTK::ScrolledWindow {
   }
 
   method list_shortcuts {
-    GTK::Compat::GSList.new((gtk_places_sidebar_list_shortcuts($!ps) );
+    GTK::Compat::GSList.new( gtk_places_sidebar_list_shortcuts($!ps) );
   }
 
   method remove_shortcut (GFile $location) {

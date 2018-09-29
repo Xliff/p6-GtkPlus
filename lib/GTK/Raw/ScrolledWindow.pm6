@@ -29,7 +29,7 @@ sub gtk_scrolled_window_get_placement (GtkScrolledWindow $scrolled_window)
 
 sub gtk_scrolled_window_get_policy (
   GtkScrolledWindow $scrolled_window,
-  uint32 $hpolicy is rw                      # GtkPolicyType $hscrollbar_policy,
+  uint32 $hpolicy is rw,                     # GtkPolicyType $hscrollbar_policy,
   uint32 $vpolicy is rw                      # GtkPolicyType $vscrollbar_policy
 )
   is native('gtk-3')
@@ -49,7 +49,7 @@ sub gtk_scrolled_window_get_vscrollbar (GtkScrolledWindow $scrolled_window)
   { * }
 
 sub gtk_scrolled_window_new (
-  uint32 $ha is rw                           # GtkAdjustment $hadjustment,
+  uint32 $ha is rw,                          # GtkAdjustment $hadjustment,
   uint32 $va is rw                           # GtkAdjustment $vadjustment
 )
   returns GtkWidget
@@ -59,7 +59,7 @@ sub gtk_scrolled_window_new (
 
 sub gtk_scrolled_window_set_policy (
   GtkScrolledWindow $scrolled_window,
-  uint32 $hp                              # GtkPolicyType $hscrollbar_policy,
+  uint32 $hp,                             # GtkPolicyType $hscrollbar_policy,
   uint32 $vp                              # GtkPolicyType $vscrollbar_policy
 )
   is native('gtk-3')
@@ -77,31 +77,41 @@ sub gtk_scrolled_window_get_hadjustment (GtkScrolledWindow $scrolled_window)
   is export
   { * }
 
-sub gtk_scrolled_window_get_capture_button_press (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_capture_button_press (
+  GtkScrolledWindow $scrolled_window
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_scrolled_window_get_min_content_width (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_min_content_width (
+  GtkScrolledWindow $scrolled_window
+)
   returns gint
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_scrolled_window_get_propagate_natural_width (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_propagate_natural_width (
+  GtkScrolledWindow $scrolled_window
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_scrolled_window_get_max_content_height (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_max_content_height (
+  GtkScrolledWindow $scrolled_window
+)
   returns gint
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_scrolled_window_get_overlay_scrolling (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_overlay_scrolling (
+  GtkScrolledWindow $scrolled_window
+)
   returns uint32
   is native('gtk-3')
   is export
@@ -113,25 +123,33 @@ sub gtk_scrolled_window_get_shadow_type (GtkScrolledWindow $scrolled_window)
   is export
   { * }
 
-sub gtk_scrolled_window_get_max_content_width (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_max_content_width (
+  GtkScrolledWindow $scrolled_window
+)
   returns gint
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_scrolled_window_get_min_content_height (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_min_content_height (
+  GtkScrolledWindow $scrolled_window
+)
   returns gint
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_scrolled_window_get_propagate_natural_height (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_propagate_natural_height (
+  GtkScrolledWindow $scrolled_window
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_scrolled_window_get_kinetic_scrolling (GtkScrolledWindow $scrolled_window)
+sub gtk_scrolled_window_get_kinetic_scrolling (
+  GtkScrolledWindow $scrolled_window
+)
   returns uint32
   is native('gtk-3')
   is export

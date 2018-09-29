@@ -30,8 +30,11 @@ class GTK::ToggleToolButton is GTK::ToolButton {
     }
   }
 
-  method new {
+  multi method new {
     my $toggletoolbutton = gtk_toggle_tool_button_new();
+    self.bless(:$toggletoolbutton);
+  }
+  multi method new (GtkWidget $toggletoolbutton) {
     self.bless(:$toggletoolbutton);
   }
 
@@ -41,12 +44,12 @@ class GTK::ToggleToolButton is GTK::ToolButton {
     my $to-parent;
     $!ttb = do given $toggletoolbutton {
       when GtkToolItem | GtkWidget {
-        $to-parent = $toggletoolbutton;
-        nativecast(GtkToggleToolButton, $toggletoolbutton);
+        $to-parent = $_;
+        nativecast(GtkToggleToolButton, $_);
       }
       when GtkToggleToolButton {
-        $to-parent = nativecast(GtkToolButton, $toggletoolbutton);
-        $toggletoolbutton;
+        $to-parent = nativecast(GtkToolButton, $_);
+        $_;
       }
     }
     self.setToolButton($to-parent);
@@ -69,7 +72,7 @@ class GTK::ToggleToolButton is GTK::ToolButton {
   method active is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_toggle_tool_button_get_active($!mtb) );
+        so gtk_toggle_tool_button_get_active($!ttb);
       },
       STORE => sub ($, Int() $is_active is copy) {
         my gboolean $ia = $is_active == 0 ?? 0 !! 1;

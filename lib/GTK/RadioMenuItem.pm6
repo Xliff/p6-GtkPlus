@@ -25,7 +25,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
       when GtkRadioMenuItem | GtkWidget {
         $!rmi = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkRadioMenuItem, $_);
           }
           when GtkRadioMenuItem {
@@ -51,60 +51,29 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     $!rmi;
   }
 
-  multi method new {
-    $radiomenu = gtk_radio_menu_item_new();
-    self.bless(:$radiomenu);
-  }
   multi method new (GtkWidget $radiomenu) {
     self.bless(:$radiomenu);
   }
-  multi method new(:$widget, Str() :$label, Str() :$mnemonic) {
-    without $widget {
-      die "Must specify ONE of \$label or \$mnemonic when using { ::?CLASS }.new"
-        unless $label.defined ^^ $mnemonic.defined;
-
-      $radiomenu = do {
-        when $label.defined {
-          gtk_radio_menu_item_new_with_label($label);
-        }
-        when $mnemonic.defined {
-          gtk_radio_menu_item_new_with_mnemonic($mnemonic);
-        }
-      };
-      return self.bless(:$radiomenu);
-    }
-
-    die "\$widget must be a GtkRadioMenuItem or GTK::RadioMenuItem";
-      unless $widget ~~ (GtkWidget, GtkRadioMenuItem, GTK::RadioMenuItem).any;
-    die "\$widget must be GTK::RadioMenuItem"
-      unless $widget.getType eq ('GTK::RadioMenuItem', '').any;
-    die "Must specify ONE of \$label or \$mnemonic when using { ::?CLASS }.new"
-      if $label.defined && $mnemonic.defined;
-
-    my $w = do given $widget {
-      when GtkWidget          { nativecast(GtkRadioMenuItem, $widget); }
-      when GtkRadioMenuItem   { $widget; }
-      when GTK::RadioMenuItem { $widget.radiomenuitem; }
-    }
-    $radiomenu = do {
-      with $label {
-        gtk_radio_menu_item_new_with_label_from_widget($w, $label);
-      } orwith $mnemnic {
-        gtk_radio_menu_item_new_with_mnemonic_from_widget($w, $label);
-      } else {
-        gtk_radio_menu_item_new_from_widget($w);
-      }
+  multi method new(GSList() $group, Str() :$label, :$mnemonic = False) {
+    my $radiomenu;
+    with $label {
+      $radiomenu = $mnemonic ??
+        gtk_radio_menu_item_new_with_mnemonic($group, $label)
+        !!
+        gtk_radio_menu_item_new_with_label($group, $label);
+    } else {
+      $radiomenu = gtk_radio_menu_item_new($group);
     }
     self.bless(:$radiomenu);
   }
 
   method new_from_widget (GtkRadioMenuItem() $group) {
-    $radiomenu = gtk_radio_menu_item_new_from_widget($group);
+    my $radiomenu = gtk_radio_menu_item_new_from_widget($group);
     self.bless(:$radiomenu);
   }
 
-  method new_with_label (gchar $label) {
-    $radiomenu = gtk_radio_menu_item_new_with_label($label);
+  method new_with_label (GSList() $group, gchar $label) {
+    my $radiomenu = gtk_radio_menu_item_new_with_label($group, $label);
     self.bless(:$radiomenu);
   }
 
@@ -119,8 +88,8 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     self.bless(:$radiomenu);
   }
 
-  method new_with_mnemonic (gchar $label) {
-    my $radiomenu = gtk_radio_menu_item_new_with_mnemonic($label);
+  method new_with_mnemonic (GSList() $group, gchar $label) {
+    my $radiomenu = gtk_radio_menu_item_new_with_mnemonic($group, $label);
     self.bless(:$radiomenu);
   }
 
@@ -148,7 +117,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   method group is rw {
   Proxy.new(
       FETCH => sub ($) {
-        GSList.new( gtk_radio_menu_item_get_group($!rmi) );
+        GTK::Compat::GSList.new( gtk_radio_menu_item_get_group($!rmi) );
       },
       STORE => sub ($, GSList() $group is copy) {
         gtk_radio_menu_item_set_group($!rmi, $group);

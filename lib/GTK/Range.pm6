@@ -124,10 +124,10 @@ class GTK::Range is GTK::Widget {
   method restrict_to_fill_level is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_range_get_restrict_to_fill_level($!r);
+        so gtk_range_get_restrict_to_fill_level($!r);
       },
-      STORE => sub ($, Num() $restrict_to_fill_level is copy) {
-        my gdouble $fl = $restrict_to_fill_level;
+      STORE => sub ($, Int() $restrict_to_fill_level is copy) {
+        my uint32 $fl = self.RESOLVE-BOOL($restrict_to_fill_level);
         gtk_range_set_restrict_to_fill_level($!r, $fl);
       }
     );

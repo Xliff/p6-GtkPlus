@@ -41,11 +41,11 @@ class GTK::RadioButton is GTK::CheckButton {
     }
   }
 
-  multi method new {
-    my $radiobutton = gtk_radio_button_new();
+  multi method new (GtkWidget $radiobutton) {
     self.bless(:$radiobutton);
   }
-  multi method new (GtkWidget $radiobutton) {
+  multi method new(GSList() $group) {
+    my $radiobutton = gtk_radio_button_new($group);
     self.bless(:$radiobutton);
   }
 
@@ -88,7 +88,7 @@ class GTK::RadioButton is GTK::CheckButton {
   method group is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GSList.new( gtk_radio_button_get_group($!rb) );
+        GTK::Compat::GSList.new( gtk_radio_button_get_group($!rb) );
       },
       STORE => sub ($, GSList() $group is copy) {
         gtk_radio_button_set_group($!rb, $group);

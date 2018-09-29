@@ -41,18 +41,30 @@ sub gtk_paned_get_type ()
   is export
   { * }
 
-sub gtk_paned_new (GtkOrientation $orientation)
+sub gtk_paned_new (
+  uint32 $orientation               # GtkOrientation $orientation
+)
   returns GtkWidget
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_paned_pack1 (GtkPaned $paned, GtkWidget $child, gboolean $resize, gboolean $shrink)
+sub gtk_paned_pack1 (
+  GtkPaned $paned,
+  GtkWidget $child,
+  gboolean $resize,
+  gboolean $shrink
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_paned_pack2 (GtkPaned $paned, GtkWidget $child, gboolean $resize, gboolean $shrink)
+sub gtk_paned_pack2 (
+  GtkPaned $paned,
+  GtkWidget $child,
+  gboolean $resize,
+  gboolean $shrink
+)
   is native('gtk-3')
   is export
   { * }

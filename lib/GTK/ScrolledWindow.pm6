@@ -230,7 +230,7 @@ class GTK::ScrolledWindow is GTK::Bin {
           gtk_scrolled_window_get_vadjustment($!sw)
         );
       },
-      STORE => sub ($, Gtkdjustment() $vadjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $vadjustment is copy) {
         gtk_scrolled_window_set_vadjustment($!sw, $vadjustment);
       }
     );
@@ -247,7 +247,7 @@ class GTK::ScrolledWindow is GTK::Bin {
   }
 
   method get_placement {
-    GtkCornerType( gtk_scrolled_window_get_placement($!sw) ;
+    GtkCornerType( gtk_scrolled_window_get_placement($!sw) );
   }
 
   multi method get_policy (

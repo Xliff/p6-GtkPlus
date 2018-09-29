@@ -41,8 +41,11 @@ class GTK::ToggleButton is GTK::Button {
     }
   }
 
-  method new {
+  multi method new {
     my $togglebutton = gtk_toggle_button_new();
+    self.bless(:$togglebutton);
+  }
+  multi method new (GtkToggleButton $togglebutton) {
     self.bless(:$togglebutton);
   }
 

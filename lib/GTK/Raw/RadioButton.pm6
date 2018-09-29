@@ -13,7 +13,10 @@ sub gtk_radio_button_get_type ()
   is export
   { * }
 
-sub gtk_radio_button_join_group (GtkRadioButton $radio_button, GtkRadioButton $group_source)
+sub gtk_radio_button_join_group (
+  GtkRadioButton $radio_button,
+  GtkRadioButton $group_source
+)
   is native('gtk-3')
   is export
   { * }
@@ -36,7 +39,10 @@ sub gtk_radio_button_new_with_label (GSList $group, gchar $label)
   is export
   { * }
 
-sub gtk_radio_button_new_with_label_from_widget (GtkRadioButton $radio_group_member, gchar $label)
+sub gtk_radio_button_new_with_label_from_widget (
+  GtkRadioButton $radio_group_member,
+  gchar $label
+)
   returns GtkWidget
   is native('gtk-3')
   is export
@@ -48,7 +54,10 @@ sub gtk_radio_button_new_with_mnemonic (GSList $group, gchar $label)
   is export
   { * }
 
-sub gtk_radio_button_new_with_mnemonic_from_widget (GtkRadioButton $radio_group_member, gchar $label)
+sub gtk_radio_button_new_with_mnemonic_from_widget (
+  GtkRadioButton $radio_group_member,
+  gchar $label
+)
   returns GtkWidget
   is native('gtk-3')
   is export

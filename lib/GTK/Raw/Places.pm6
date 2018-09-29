@@ -121,7 +121,7 @@ sub gtk_places_sidebar_get_show_trash (GtkPlacesSidebar $sidebar)
 
 sub gtk_places_sidebar_set_open_flags (
   GtkPlacesSidebar $sidebar,
-  GtkPlacesOpenFlags $flags
+  uint32 $flags                   # GtkPlacesOpenFlags $flags
 )
   is native('gtk-3')
   is export
