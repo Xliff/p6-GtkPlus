@@ -118,6 +118,11 @@ sub gtk_init(CArray[uint32], CArray[CArray[Str]])
   is export
   { * }
 
+sub gtk_init_check()
+  is native('gtk-3')
+  is export
+  { * }
+
 sub gtk_main()
   is native('gtk-3')
   is export

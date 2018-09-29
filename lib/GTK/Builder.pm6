@@ -5,6 +5,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Builder;
 use GTK::Raw::Types;
+use GTK::Raw::Subs;
 
 use GTK::Widget;
 
@@ -23,26 +24,45 @@ class GTK::Builder does Associative {
     sort
   >;
 
+  method init {
+    my $argc = CArray[uint32].new;
+    $argc[0] = 1;
+    my $args = CArray[Str].new;
+    $args[0] = $*PROGRAM.Str;
+    my $argv = CArray[CArray[Str]].new;
+    $argv[0] = $args;
+    gtk_init($argc, $argv) unless gtk_init_check();
+  }
+
+  method run {
+    say "run";
+    gtk_main();
+  }
+
   submethod BUILD(:$builder) {
     $!b = $builder;
   }
 
   method new {
+    GTK::Builder.init;
     my $builder = gtk_builder_new();
     self.bless(:$builder);
   }
 
   method new_from_file (gchar $filename) {
+    GTK::Builder.init;
     my $builder = gtk_builder_new_from_file($filename);
     self.bless(:$builder);
   }
 
   method new_from_resource (gchar $resource) {
+    GTK::Builder.init;
     my $builder = gtk_builder_new_from_resource($resource);
     self.bless(:$builder);
   }
 
   method new_from_string (gchar $string, Int() $length = -1) {
+    GTK::Builder.init;
     die "\$string must not be negative" unless $length > -2;
     my gssize $l = $length;
     my $builder = gtk_builder_new_from_string($string, $l);
@@ -142,7 +162,7 @@ class GTK::Builder does Associative {
     GError $error = GError
   ) {
     gtk_builder_add_from_file($!b, $filename, $error);
-    self!postProcess(:file($filename));
+    #self!postProcess(:file($filename));
   }
 
   method add_from_resource (
@@ -155,13 +175,21 @@ class GTK::Builder does Associative {
 
   method add_from_string (
     gchar $buffer,
-    Int() $length = -1,
-    GError $error = GError
+    $length?,
+    $error?
   ) {
-    die "\$length cannot be negative" unless $length > -2;
-    my gsize $l = $length;
-    gtk_builder_add_from_string($!b, $buffer, $l, $error);
-    self!postProcess(:ui_def($buffer));
+    with $length {
+      die "\$length cannot be negative" unless $length > -2;
+    }
+    with $error {
+      die "\$error must be a GError object or pointer"
+        unless $error ~~ GError;
+    }
+
+    my gsize $l = $length // $buffer.chars;
+    my GError $e = $error // GError;
+    gtk_builder_add_from_string($!b, $buffer, $l, $e);
+    #self!postProcess(:ui_def($buffer));
   }
 
   method add_objects_from_file (

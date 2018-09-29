@@ -54,7 +54,8 @@ class GTK::Application {
     }
 
     with $ui-data {
-      $!builder = GTK::Builder.new_from_string($_);
+      $!builder = GTK::Builder.new;
+      $!builder.add_from_string($_);
       # Set $!title, $!width, $!height from application window, but
       # what would be the best way to get that from the builder?
       #
@@ -62,11 +63,10 @@ class GTK::Application {
       # GtkBuilder support!
 
       # MUST define an activate handler!!
-
-      my $w;
       $!window = GTK::Window.new(
-        :widget( $w = $!builder.get_object($window-name // 'application') )
+        :widget( $!builder.get_object($window-name) )
       );
+
       die qq:to/ERR/ unless $!window;
 Application window '#application' was not found. Please do one of the following:
    - Rename the top-level window to 'application' in the .ui file
@@ -85,15 +85,19 @@ ERR
       $cp.load_from_data($_);
     }
 
+
     self.activate.tap({
       $!window //= GTK::Window.new(
         :window( gtk_application_window_new($!app) )
       );
 
-      self.window.title = $title;
-      self.window.name = $window-name;
-      self.window.set_default_size($width, $height) without $ui-data;
+      without $ui-data {
+        self.window.title = $title;
+        self.window.name = $window-name;
+        self.window.set_default_size($width, $height);
+      }
     });
+
   }
 
   method GTK::Raw::Types::GtkApplication {
@@ -118,7 +122,7 @@ ERR
     Int :$height = 200,
     :$pod,
     :$ui,
-    :$window-name,
+    :$window-name = 'application',
     :$style
   ) {
     my uint32 $f = $flags;

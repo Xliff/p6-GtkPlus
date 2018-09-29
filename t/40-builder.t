@@ -1,22 +1,30 @@
 use v6.c;
 
-use GTK::Application;
+use GTK::Builder;
 
-my $a = GTK::Application.new(:pod($=pod));
-$a.activate.tap({
-  $a.window.destroy-signal.tap({ $a.exit; });
-});
+#my $a = GTK::Application.new( :pod($=pod) );
+#$a.activate.tap({
+#  $a.window.show_all;
+#  $a.window.destroy-signal.tap({ $a.exit; });
+#});
+#$a.run;
 
-$a.run;
+my $ui = $=pod.grep( *.name eq 'ui' )
+             .map( *.contents[0] )
+             .map( *.contents[0] )
+             .join("\n");
+my $b = GTK::Builder.new();
+say $b.add_from_string($ui);
+$b.run;
 
 =begin ui
 <interface>
   <requires lib="gtk+" version="3.20"/>
   <object class="GtkWindow" id="application">
-    <property name="can_focus">False</property>
-    <child>
-      <placeholder/>
-    </child>
+    <property name="visible">True</property>
+    <property name="can_focus">True</property>
+    <property name="has_focus">True</property>
+    <property name="can_default">True</property>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>
