@@ -41,8 +41,11 @@ class GTK::Fixed is GTK::Container {
     }
   }
 
-  method new () {
+  multi method new {
     my $fixed = gtk_fixed_new();
+    self.bless(:$fixed);
+  }
+  multi method new (GtkWidget $fixed) {
     self.bless(:$fixed);
   }
 
@@ -66,7 +69,7 @@ class GTK::Fixed is GTK::Container {
   multi method put (GtkWidget $widget, Int() $x, Int() $y) {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
-    gtk_fixed_put($!f, $widget, $xx, $uy);
+    gtk_fixed_put($!f, $widget, $xx, $yy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

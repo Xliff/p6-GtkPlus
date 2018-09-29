@@ -24,7 +24,7 @@ class GTK::Dialog is GTK::Window {
       when GtkDialog | GtkWidget {
         $!d = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkDialog, $_);
           }
           when GtkDialog {
@@ -59,7 +59,9 @@ class GTK::Dialog is GTK::Window {
 
   # Is originally:
   # GtkDialog, gint, gpointer --> void
-  method response {
+  # - Made multi so as to not conflict with the method implementing
+  #   gtk_response_dialog()
+  multi method response {
     self.connect($!d, 'response');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -103,11 +105,14 @@ class GTK::Dialog is GTK::Window {
     gtk_dialog_get_widget_for_response($!d, $ri);
   }
 
-  method gtk_alternative_dialog_button_order {
-    gtk_alternative_dialog_button_order($!d);
+  # Class method.. but deprecated
+  method gtk_alternative_dialog_button_order (GdkScreen $screen)
+    is DEPRECATED
+  {
+    gtk_alternative_dialog_button_order($screen);
   }
 
-  method response (gint $response_id) {
+  multi method response (gint $response_id) {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_response($!d, $ri);
   }
@@ -120,7 +125,7 @@ class GTK::Dialog is GTK::Window {
     Int() $n_params,
     Int @new_order
   )
-    is deprecated
+    is DEPRECATED
   {
     my gint $np = self.RESOLVE-INT($n_params);
     my CArray[gint] $no = CArray[gint].new;

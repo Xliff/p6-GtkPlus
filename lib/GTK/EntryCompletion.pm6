@@ -7,6 +7,7 @@ use GTK::Raw::EntryCompletion;
 use GTK::Raw::Types;
 
 use GTK::Roles::Signals;
+use GTK::Roles::Types;
 
 # THIS IS OFF OF THE TABLE UNTIL A VIABLE CONVERSION FOR GTKLISTSTORE
 # HAS BEEN DETERMINED.
@@ -18,13 +19,13 @@ class GTK::EntryCompletion {
   has GtkEntryCompletion $!ec;
 
   submethod BUILD(:$entrycompletion) {
-    die "GTK::EntryCompletion -- Not yet implemented due to GTK::ListStore"
-    given $entrycompletion {
+    die "GTK::EntryCompletion -- Not yet implemented due to GTK::ListStore";
+    $!ec = do given $entrycompletion {
       when GtkEntryCompletion {
-        $!ec = $entrycompletion;
+        $_;
       }
-      when OpaquePointer {
-        $!ec = nativecast(GtkEntryCompletion, $entrycompletion);
+      when Pointer {
+        nativecast(GtkEntryCompletion, $entrycompletion);
       }
       default {
         # Throw exception.

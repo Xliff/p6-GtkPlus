@@ -20,11 +20,11 @@ class GTK::Assistant is GTK::Window {
 
   submethod BUILD(:$assistant) {
     my $to-parent;
-    given $ {
+    given $assistant {
       when GtkAssistant | GtkWidget {
         $!a = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkAssistant, $_);
           }
           when GtkAssistant  {
@@ -41,8 +41,11 @@ class GTK::Assistant is GTK::Window {
     }
   }
 
-  method new {
-    my $assistant = gtk_assistant_new($!a);
+  multi method new {
+    my $assistant = gtk_assistant_new();
+    self.bless(:$assistant);
+  }
+  multi method new (GtkWidget $assistant) {
     self.bless(:$assistant);
   }
 

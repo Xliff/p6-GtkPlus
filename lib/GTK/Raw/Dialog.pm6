@@ -94,7 +94,7 @@ sub gtk_dialog_run (GtkDialog $dialog)
 sub gtk_dialog_set_alternative_button_order_from_array (
   GtkDialog $dialog,
   gint $n_params,
-  CArrray[gint] $new_order
+  CArray[gint] $new_order
 )
   is native('gtk-3')
   is export

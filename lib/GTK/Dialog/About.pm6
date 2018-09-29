@@ -20,7 +20,7 @@ class GTK::Dialog::About is GTK::Dialog {
 
   submethod BUILD(:$about) {
     my $to-parent;
-    given $ {
+    given $about {
       when GtkAboutDialog | GtkWidget {
         $! = do {
           when GtkWidget {
@@ -42,7 +42,7 @@ class GTK::Dialog::About is GTK::Dialog {
   }
 
   multi method new {
-    my $about = gtk_about_dialog_new($!ad);
+    my $about = gtk_about_dialog_new();
     self.bless(:$about);
   }
   multi method new (GtkWidget $about) {
@@ -58,7 +58,7 @@ class GTK::Dialog::About is GTK::Dialog {
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
-  method !getStrv($l) {
+  method !getGStrv($l) {
     # Look into self.CALLING-METHOD to properly set $meth.
     my GStrv @a;
     my $meth = self.CALLING-METHOD;
@@ -68,7 +68,7 @@ class GTK::Dialog::About is GTK::Dialog {
       }
       when Array {
         die "Array must contain strings for assignment to { ::?CLASS.name }.{ $meth }"
-          unless $artists.all ~~ Str;
+          unless $l.all ~~ Str;
         @a = self.RESOLVE-GSTRV($l);
       }
       default {
@@ -137,7 +137,7 @@ class GTK::Dialog::About is GTK::Dialog {
       STORE => sub ($, Array() $documenters is copy) {
         gtk_about_dialog_set_documenters(
           $!ad,
-          self!getStrv($documenters);
+          self!getGStrv($documenters);
         );
       }
     );

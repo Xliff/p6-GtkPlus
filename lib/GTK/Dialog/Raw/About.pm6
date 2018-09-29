@@ -7,7 +7,7 @@ use GTK::Raw::Types;
 
 unit package GTK::Dialog::Raw::About;
 
-ub gtk_about_dialog_add_credit_section (
+sub gtk_about_dialog_add_credit_section (
   GtkAboutDialog $about,
   gchar $section_name,
   gchar $people
@@ -35,7 +35,7 @@ sub gtk_about_dialog_get_translator_credits (GtkAboutDialog $about)
   { * }
 
 sub gtk_about_dialog_get_documenters (GtkAboutDialog $about)
-  returns const
+  returns Str
   is native('gtk-3')
   is export
   { * }
@@ -47,7 +47,7 @@ sub gtk_about_dialog_get_license (GtkAboutDialog $about)
   { * }
 
 sub gtk_about_dialog_get_artists (GtkAboutDialog $about)
-  returns const
+  returns Str
   is native('gtk-3')
   is export
   { * }
@@ -83,7 +83,7 @@ sub gtk_about_dialog_get_logo_icon_name (GtkAboutDialog $about)
   { * }
 
 sub gtk_about_dialog_get_authors (GtkAboutDialog $about)
-  returns const
+  returns Str
   is native('gtk-3')
   is export
   { * }
@@ -107,7 +107,7 @@ sub gtk_about_dialog_get_wrap_license (GtkAboutDialog $about)
   { * }
 
 sub gtk_about_dialog_get_license_type (GtkAboutDialog $about)
-  returns GtkLicense
+  returns uint32 # GtkLicense
   is native('gtk-3')
   is export
   { * }
@@ -134,32 +134,50 @@ sub gtk_about_dialog_set_documenters (
   is export
   { * }
 
-sub gtk_about_dialog_set_license (GtkAboutDialog $about, gchar $license)
+sub gtk_about_dialog_set_license (
+  GtkAboutDialog $about,
+  gchar $license
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_about_dialog_set_artists (GtkAboutDialog $about, gchar $artists)
+sub gtk_about_dialog_set_artists (
+  GtkAboutDialog $about,
+  gchar $artists
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_about_dialog_set_comments (GtkAboutDialog $about, gchar $comments)
+sub gtk_about_dialog_set_comments (
+  GtkAboutDialog $about,
+  gchar $comments
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_about_dialog_set_version (GtkAboutDialog $about, gchar $version)
+sub gtk_about_dialog_set_version (
+  GtkAboutDialog $about,
+  gchar $version
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_about_dialog_set_program_name (GtkAboutDialog $about, gchar $name)
+sub gtk_about_dialog_set_program_name (
+  GtkAboutDialog $about,
+  gchar $name
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_about_dialog_set_logo (GtkAboutDialog $about, GdkPixbuf $logo)
+sub gtk_about_dialog_set_logo (
+  GtkAboutDialog $about,
+  GdkPixbuf $logo
+)
   is native('gtk-3')
   is export
   { * }
@@ -172,12 +190,18 @@ sub gtk_about_dialog_set_logo_icon_name (
   is export
   { * }
 
-sub gtk_about_dialog_set_authors (GtkAboutDialog $about, gchar $authors)
+sub gtk_about_dialog_set_authors (
+  GtkAboutDialog $about,
+  gchar $authors
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_about_dialog_set_website (GtkAboutDialog $about, gchar $website)
+sub gtk_about_dialog_set_website (
+  GtkAboutDialog $about,
+  gchar $website
+)
   is native('gtk-3')
   is export
   { * }
@@ -200,7 +224,7 @@ sub gtk_about_dialog_set_wrap_license (
 
 sub gtk_about_dialog_set_license_type (
   GtkAboutDialog $about,
-  GtkLicense $license_type
+  uint32 $license_type          # GtkLicense $license_type
 )
   is native('gtk-3')
   is export

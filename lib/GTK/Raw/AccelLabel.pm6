@@ -7,7 +7,11 @@ use GTK::Raw::Types;
 
 unit package GTK::Raw::AccelLabel;
 
-sub gtk_accel_label_get_accel (GtkAccelLabel $accel_label, guint $accelerator_key, uint32 $accelerator_mods is rw)
+sub gtk_accel_label_get_accel (
+  GtkAccelLabel $accel_label,
+  guint $accelerator_key,
+  uint32 $accelerator_mods is rw
+)
   is native('gtk-3')
   is export
   { * }
@@ -36,12 +40,19 @@ sub gtk_accel_label_refetch (GtkAccelLabel $accel_label)
   is export
   { * }
 
-sub gtk_accel_label_set_accel (GtkAccelLabel $accel_label, guint $accelerator_key, GdkModifierType $accelerator_mods)
+sub gtk_accel_label_set_accel (
+  GtkAccelLabel $accel_label,
+  guint $accelerator_key,
+  uint32 $accelerator_mods      # GdkModifierType $accelerator_mods
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_accel_label_set_accel_closure (GtkAccelLabel $accel_label, GClosure $accel_closure)
+sub gtk_accel_label_set_accel_closure (
+  GtkAccelLabel $accel_label,
+  GClosure $accel_closure
+)
   is native('gtk-3')
   is export
   { * }
@@ -52,7 +63,10 @@ sub gtk_accel_label_get_accel_widget (GtkAccelLabel $accel_label)
   is export
   { * }
 
-sub gtk_accel_label_set_accel_widget (GtkAccelLabel $accel_label, GtkWidget $accel_widget)
+sub gtk_accel_label_set_accel_widget (
+  GtkAccelLabel $accel_label,
+  GtkWidget $accel_widget
+)
   is native('gtk-3')
   is export
   { * }

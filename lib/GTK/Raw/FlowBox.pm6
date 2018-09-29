@@ -194,7 +194,10 @@ sub gtk_flow_box_set_homogeneous (GtkFlowBox $box, gboolean $homogeneous)
   is export
   { * }
 
-sub gtk_flow_box_set_max_children_per_line (GtkFlowBox $box, guint $n_children)
+sub gtk_flow_box_set_max_children_per_line (
+  GtkFlowBox $box,
+  guint $n_children
+)
   is native('gtk-3')
   is export
   { * }
@@ -210,12 +213,18 @@ sub gtk_flow_box_set_column_spacing (GtkFlowBox $box, guint $spacing)
   is export
   { * }
 
-sub gtk_flow_box_set_min_children_per_line (GtkFlowBox $box, guint $n_children)
+sub gtk_flow_box_set_min_children_per_line (
+  GtkFlowBox $box,
+  guint $n_children
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_flow_box_set_activate_on_single_click (GtkFlowBox $box, gboolean $single)
+sub gtk_flow_box_set_activate_on_single_click (
+  GtkFlowBox $box,
+  gboolean $single
+)
   is native('gtk-3')
   is export
   { * }

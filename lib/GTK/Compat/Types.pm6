@@ -19,17 +19,20 @@ constant gconstpointer is export := Pointer;
 constant gdouble       is export := num64;
 constant gfloat        is export := num32;
 constant gint          is export := int32;
+constant gint8         is export := int8;
 constant gint16        is export := int16;
 constant gpointer      is export := Pointer;
 constant gsize         is export := uint64;
 constant gssize        is export := int64;
 constant guint         is export := uint32;
+constant guint8        is export := uint8;
 constant guint16       is export := uint16;
 constant guint32       is export := uint32;
 constant gunichar      is export := uint32;
 constant va_list       is export := Pointer;
 
 constant GCallback     is export := Pointer;
+constant GClosure      is export := Pointer;
 constant GStrv         is export := CArray[Str];
 constant GQuark        is export := uint32;
 constant GType         is export := uint32;
@@ -356,6 +359,7 @@ class GFunc                 is repr('CPointer') is export { }
 class GIcon                 is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
 class GDestroyNotify        is repr('CPointer') is export { }
+class GListModel            is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
 

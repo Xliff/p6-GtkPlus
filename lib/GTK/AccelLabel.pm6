@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Label;
 
 class GTK::AccelLabel is GTK::Label {
-  has GtkAccelLabel $!a1;
+  has GtkAccelLabel $!al;
 
   method bless(*%attrinit) {
     use nqp;
@@ -41,8 +41,8 @@ class GTK::AccelLabel is GTK::Label {
     }
   }
 
-  multi method new {
-    my $alabel = gtk_accel_label_new();
+  multi method new (Str $label) {
+    my $alabel = gtk_accel_label_new($label);
     self.bless(:$alabel);
   }
   multi method new (GtkWidget $alabel) {
@@ -74,7 +74,7 @@ class GTK::AccelLabel is GTK::Label {
     Int() $accelerator_key,
     Int() $accelerator_mods is rw
   ) {
-    my guint @u = ($accelerator_key, $accelerator_mods)
+    my guint @u = ($accelerator_key, $accelerator_mods);
     my uint32 ($ak, $am) = self.RESOLVE-UINT(@u);
     my $rc = gtk_accel_label_get_accel($!al, $ak, $am);
     $accelerator_mods = $am;

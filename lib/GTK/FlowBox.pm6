@@ -197,7 +197,7 @@ class GTK::FlowBox is GTK::Container {
   method get_child_at_pos (gint $x, gint $y) {
     GTK::FlowBoxChild.new(
       gtk_flow_box_get_child_at_pos($!fb, $x, $y);
-    }
+    );
   }
 
   method get_selected_children {
@@ -205,7 +205,7 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method get_type {
-    gtk_flow_box_get_type($!fb);
+    gtk_flow_box_get_type();
   }
 
   method insert (GtkWidget() $widget, gint $position) {

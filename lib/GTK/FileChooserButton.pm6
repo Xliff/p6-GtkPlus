@@ -27,14 +27,14 @@ class GTK::FileChooserButton is GTK::Bin {
             $to-parent = $_;
             nativecast(GtkFileChooserButton, $_);
           }
-          when GtkFileChooser {
+          when GtkFileChooserButton {
             $to-parent = nativecast(GtkBin, $_);
             $_;
           }
         }
         self.setBin($to-parent);
       }
-      when GTK::FileChooser {
+      when GTK::FileChooserButton {
       }
       default {
       }

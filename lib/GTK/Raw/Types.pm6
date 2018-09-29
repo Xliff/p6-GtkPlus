@@ -8,12 +8,26 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-our constant GtkBuilderConnectFunc  is export := Pointer;
-our constant GtkCalendarDetailFunc  is export := Pointer;
-our constant GtkMenuDetachFunc      is export := Pointer;
-our constant GtkTextCharPredicate   is export := Pointer;
-our constant GtkTextTagTableForeach is export := Pointer;
-our constant GtkMenuPositionFunc    is export := Pointer;
+our constant GtkAssistantPageFunc             is export := Pointer;
+our constant GtkBuilderConnectFunc            is export := Pointer;
+our constant GtkCalendarDetailFunc            is export := Pointer;
+our constant GtkClipboardClearFunc            is export := Pointer;
+our constant GtkClipboardGetFunc              is export := Pointer;
+our constant GtkClipboardImageReceivedFunc    is export := Pointer;
+our constant GtkClipboardReceivedFunc         is export := Pointer;
+our constant GtkClipboardRichTextReceivedFunc is export := Pointer;
+our constant GtkClipboardTargetsReceivedFunc  is export := Pointer;
+our constant GtkClipboardTextReceivedFunc     is export := Pointer;
+our constant GtkClipboardURIReceivedFunc      is export := Pointer;
+our constant GtkFlowBoxCreateWidgetFunc       is export := Pointer;
+our constant GtkFlowBoxFilterFunc             is export := Pointer;
+our constant GtkFlowBoxForeachFunc            is export := Pointer;
+our constant GtkFlowBoxSortFunc               is export := Pointer;
+our constant GtkMenuDetachFunc                is export := Pointer;
+our constant GtkMenuPositionFunc              is export := Pointer;
+our constant GtkTextCharPredicate             is export := Pointer;
+our constant GtkTextTagTableForeach           is export := Pointer;
+our constant GtkTreeViewRowSeparatorFunc      is export := Pointer;
 
 our constant GdkRGBA is export := GTK::Compat::RGBA;
 
@@ -683,11 +697,33 @@ our enum GtkSpinType is export <
   GTK_SPIN_USER_DEFINED
 >;
 
+our enum GtkLicense is export <
+  GTK_LICENSE_UNKNOWN
+  GTK_LICENSE_CUSTOM
+  GTK_LICENSE_GPL_2_0
+  GTK_LICENSE_GPL_3_0
+  GTK_LICENSE_LGPL_2_1
+  GTK_LICENSE_LGPL_3_0
+  GTK_LICENSE_BSD
+  GTK_LICENSE_MIT_X11
+  GTK_LICENSE_ARTISTIC
+  GTK_LICENSE_GPL_2_0_ONLY
+  GTK_LICENSE_GPL_3_0_ONLY
+  GTK_LICENSE_LGPL_2_1_ONLY
+  GTK_LICENSE_LGPL_3_0_ONLY
+  GTK_LICENSE_AGPL_3_0
+  GTK_LICENSE_AGPL_3_0_ONLY
+>;
+
+class GtkAboutDialog       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAccelLabel        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkActionBar         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAdjustment        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAllocation        is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkAppButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAppChooserButton  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkApplication       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAssistant         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBin               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBox               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBuilder           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -696,16 +732,21 @@ class GtkCalendar          is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkCallback          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellArea          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCheckButton       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCheckMenuItem     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkClipboard         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkColorButton       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkColorChooser      is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkComboBox          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkContainer         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCSSProvider       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkDialog            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDragContext       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntry             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryBuffer       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryCompletion   is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkExpander          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFileChooserButton is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkFixed             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFontButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFrame             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFlowBox           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -713,6 +754,7 @@ class GtkFlowBoxChild      is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkGrid              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkHeaderBar         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconSet           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkInfoBar           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLabel             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLevelBar          is repr('CPointer') does GTK::Roles::Pointers is export { }

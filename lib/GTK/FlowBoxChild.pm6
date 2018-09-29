@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Raw::FlowBox;
 use GTK::Raw::Types;
 
 use GTK::Bin;
@@ -28,19 +29,19 @@ class GTK::FlowBoxChild is GTK::Bin {
     my $to-parent;
     given $flowboxchild {
       when GtkFlowBoxChild | GtkWidget {
-        $!fb = do {
+        $!fbc = do {
           when GtkWidget  {
             $to-parent = $_;
             nativecast(GtkFlowBoxChild, $_);
           }
-          when GtkFlowBox {
+          when GtkFlowBoxChild {
             $to-parent = nativecast(GtkBin, $_);
             $_;
           }
         };
         self.setBin($to-parent);
       }
-      when GTK::FlowBox {
+      when GTK::FlowBoxChild {
       }
       default {
       }

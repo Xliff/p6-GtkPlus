@@ -60,7 +60,9 @@ class GTK::InfoBar is GTK::Box {
   # (GtkInfoBar *info_bar,
   #  gint        response_id,
   #  gpointer    user_data)
-  method response {
+  # - Made multi so as to not conflict with the implementation for
+  #   gtk_info_bar_response
+  multi method response {
     self.connect($!ib, 'response');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -125,7 +127,7 @@ class GTK::InfoBar is GTK::Box {
     gtk_info_bar_get_type();
   }
 
-  method response (Int() $response_id) {
+  multi method response (Int() $response_id) {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_info_bar_response($!ib, $ri);
   }

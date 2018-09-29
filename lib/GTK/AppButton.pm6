@@ -32,7 +32,7 @@ class GTK::AppButton is GTK::ComboBox {
             nativecast(GtkAppChooserButton, $_);
           }
         }
-        self.setComboBox($o-parent);
+        self.setComboBox($to-parent);
       }
       when GTK::AppButton {
       }
@@ -41,8 +41,8 @@ class GTK::AppButton is GTK::ComboBox {
     }
   }
 
-  multi method new {
-    my $appbutton = gtk_app_chooser_button_new();
+  multi method new(Str $content-type) {
+    my $appbutton = gtk_app_chooser_button_new($content-type);
     self.bless(:$appbutton);
   }
   multi method new (GtkWidget $appbutton) {

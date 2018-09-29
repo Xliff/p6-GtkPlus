@@ -24,7 +24,7 @@ class GTK::ColorButton is GTK::Button {
     my $to-parent;
     given $button {
       when GtkColorButton | GtkWidget {
-        $!tb = do {
+        $!cb = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkColorButton, $_);
@@ -83,12 +83,14 @@ class GTK::ColorButton is GTK::Button {
   method rgba is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::RGBA.new(
-          gtk_color_chooser_get_rgba($!cb)
-        );
+        my $rgba = GTK::Compat::RGBA.new;
+        my GtkColorChooser $cc = nativecast(GtkColorChooser, $!cb);
+        gtk_color_chooser_get_rgba($cc, $rgba);
+        $rgba;
       },
       STORE => sub ($, GTK::Compat::RGBA $rgba is copy) {
-        gtk_color_chooser_set_rgba($!cb, $rgba);
+        my GtkColorChooser $cc = nativecast(GtkColorChooser, $!cb);
+        gtk_color_chooser_set_rgba($cc, $rgba);
       }
     );
   }

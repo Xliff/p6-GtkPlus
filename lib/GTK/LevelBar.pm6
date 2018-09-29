@@ -19,6 +19,7 @@ class GTK::LevelBar is GTK::Widget {
   }
 
   submethod BUILD(:$level) {
+    my $to-parent;
     given $level {
       when GtkLevelBar | GtkWidget {
         $!lb = do {

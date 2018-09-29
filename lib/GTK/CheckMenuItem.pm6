@@ -32,27 +32,30 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   }
 
   method setCheckMenuItem($checkmenuitem) {
+    my $to-parent;
     $!cmi = do given $checkmenuitem {
       when GtkWidget {
         $to-parent = $_;
-        nativecast(GtkMenuItem, $_);
+        nativecast(GtkCheckMenuItem, $_);
       }
       when GtkCheckMenuItem {
-        $to-parent = nativecast(MenuItem, $_);
+        $to-parent = nativecast(GtkMenuItem, $_);
         $_;
       }
     }
     self.setMenuItem($to-parent);
   }
 
-  method new {
+  multi method new {
     my $checkmenuitem = gtk_check_menu_item_new();
     self.bless(:$checkmenuitem);
   }
-
-  method new(Str() :$label, Str() :$mnemonic) {
+  multi method new (GtkWidget $checkmenuitem) {
+    self.bless(:$checkmenuitem);
+  }
+  multi method new(Str() :$label, Str() :$mnemonic) {
     die "Use ONE of \$label or \$mnemonic when using { ::?CLASS }.new()"
-      unless $label.defined ^^ $nmemonic.defined;
+      unless $label.defined ^^ $mnemonic.defined;
 
     my $checkmenuitem = do {
       with $label    { gtk_check_menu_item_new_with_label($_);    }
@@ -61,13 +64,13 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     self.bless(:$checkmenuitem);
   }
 
-  method new_with_label {
-    my $checkmenuitem = gtk_check_menu_item_new_with_label($!cmi);
+  method new_with_label(Str $label) {
+    my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
     self.bless(:$checkmenuitem);
   }
 
-  method new_with_mnemonic {
-    my $checkmenuitem = gtk_check_menu_item_new_with_mnemonic($!cmi);
+  method new_with_mnemonic(Str $label) {
+    my $checkmenuitem = gtk_check_menu_item_new_with_mnemonic($label);
     self.bless(:$checkmenuitem);
   }
 
@@ -84,10 +87,10 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   method active is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_check_menu_item_get_active($!cmi) );
+        so gtk_check_menu_item_get_active($!cmi);
       },
       STORE => sub ($, Int() $is_active is copy) {
-        my $ia = $is_active == 0 ?? 0 !! 1;
+        my $ia = self.RESOLVE-BOOL($is_active);
         gtk_check_menu_item_set_active($!cmi, $ia);
       }
     );
@@ -96,10 +99,10 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   method draw_as_radio is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_check_menu_item_get_draw_as_radio($!cmi) );
+        so gtk_check_menu_item_get_draw_as_radio($!cmi);
       },
       STORE => sub ($, Int() $draw_as_radio is copy) {
-        my $dar = $draw_as_radio == 0 ?? 0 !! 1;
+        my $dar = self.RESOLVE-BOOL($draw_as_radio);
         gtk_check_menu_item_set_draw_as_radio($!cmi, $dar);
       }
     );
@@ -108,10 +111,10 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   method inconsistent is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_check_menu_item_get_inconsistent($!cmi) );
+        so gtk_check_menu_item_get_inconsistent($!cmi);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my $s = $setting == 0 ?? 0 !! 1
+        my $s = self.RESOLVE-BOOL($setting);
         gtk_check_menu_item_set_inconsistent($!cmi, $s);
       }
     );

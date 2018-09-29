@@ -30,7 +30,10 @@ sub gtk_clipboard_get_display (GtkClipboard $clipboard)
   is export
   { * }
 
-sub gtk_clipboard_get_for_display (GdkDisplay $display, GdkAtom $selection)
+sub gtk_clipboard_get_for_display (
+  GdkDisplay $display,
+  GdkAtom $selection
+)
   returns GtkClipboard
   is native('gtk-3')
   is export
@@ -119,12 +122,19 @@ sub gtk_clipboard_set_can_store (
   is export
   { * }
 
-sub gtk_clipboard_set_image (GtkClipboard $clipboard, GdkPixbuf $pixbuf)
+sub gtk_clipboard_set_image (
+  GtkClipboard $clipboard,
+  GdkPixbuf $pixbuf
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_clipboard_set_text (GtkClipboard $clipboard, gchar $text, gint $len)
+sub gtk_clipboard_set_text (
+  GtkClipboard $clipboard,
+  gchar $text,
+  gint $len
+)
   is native('gtk-3')
   is export
   { * }
@@ -160,7 +170,10 @@ sub gtk_clipboard_store (GtkClipboard $clipboard)
   is export
   { * }
 
-sub gtk_clipboard_wait_for_contents (GtkClipboard $clipboard, GdkAtom $target)
+sub gtk_clipboard_wait_for_contents (
+  GtkClipboard $clipboard,
+  GdkAtom $target
+)
   returns GtkSelectionData
   is native('gtk-3')
   is export

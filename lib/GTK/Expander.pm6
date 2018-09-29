@@ -25,7 +25,7 @@ class GTK::Expander is GTK::Bin {
         $!e = do {
           when GtkWidget {
             $to-parent = $_;
-            nativecast(Gtk , $_);
+            nativecast(GtkExpander, $_);
           }
           when GtkExpander {
             $to-parent = nativecast(GtkBin, $_);
@@ -41,17 +41,17 @@ class GTK::Expander is GTK::Bin {
     }
   }
 
-  multi method new {
-    my $expander = gtk_expander_new();
+  multi method new (Str $label) {
+    my $expander = gtk_expander_new($label);
     self.bless(:$expander);
   }
   multi method new (GtkWidget $expander) {
     self.bless($expander);
   }
-  multi method new (Str() :$mnemonic) {
+  multi method new (Str $label, :$mnemonic) {
     my $expander = do {
-      with $mnemonic.defined { gtk_expander_new_with_mnemonic($label); }
-      else                   { gtk_expander_new(); }
+      with $mnemonic { gtk_expander_new_with_mnemonic($label); }
+      else           { gtk_expander_new($label); }
     };
     self.bless(:$expander);
   }
@@ -148,7 +148,7 @@ class GTK::Expander is GTK::Bin {
         so gtk_expander_get_use_markup($!e);
       },
       STORE => sub ($, Int() $use_markup is copy) {
-        my goolean $um = self.RESOLVE-BOOL($use_markup);
+        my gboolean $um = self.RESOLVE-BOOL($use_markup);
         gtk_expander_set_use_markup($!e, $um);
       }
     );

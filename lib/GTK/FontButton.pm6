@@ -22,7 +22,7 @@ class GTK::FontButton is GTK::Button {
     my $to-parent;
     given $button {
       when GtkFontButton | GtkWidget {
-        $!tb = do {
+        $!fb = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkFontButton, $_);

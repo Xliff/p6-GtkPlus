@@ -5,9 +5,13 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
-unit package GTK::Raw::LevelBar
+unit package GTK::Raw::LevelBar;
 
-sub gtk_level_bar_get_offset_value (GtkLevelBar $self, gchar $name, gdouble $value)
+sub gtk_level_bar_get_offset_value (
+  GtkLevelBar $self,
+  gchar $name,
+  gdouble $value
+)
   returns uint32
   is native('gtk-3')
   is export
@@ -56,7 +60,7 @@ sub gtk_level_bar_get_min_value (GtkLevelBar $self)
   { * }
 
 sub gtk_level_bar_get_mode (GtkLevelBar $self)
-  returns GtkLevelBarMode
+  returns uint32 # GtkLevelBarMode
   is native('gtk-3')
   is export
   { * }
@@ -81,7 +85,24 @@ sub gtk_level_bar_set_min_value (GtkLevelBar $self, gdouble $value)
   is export
   { * }
 
-sub gtk_level_bar_set_mode (GtkLevelBar $self, GtkLevelBarMode $mode)
+sub gtk_level_bar_set_mode (
+  GtkLevelBar $self,
+  uint32 $mode                  # GtkLevelBarMode $mode
+)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_level_bar_add_offset_value (
+  GtkLevelBar $self,
+  gchar $name,
+  gdouble $value
+)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_level_bar_set_value (GtkLevelBar $self, gdouble $value)
   is native('gtk-3')
   is export
   { * }

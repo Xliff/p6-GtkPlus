@@ -42,20 +42,20 @@ class GTK::Clipboard {
     gtk_clipboard_clear($!cb);
   }
 
-  method get {
-    gtk_clipboard_get($!cb);
+  method get(GdkAtom $sel) {
+    gtk_clipboard_get($sel);
   }
 
-  method get_default {
-    gtk_clipboard_get_default($!cb);
+  method get_default(GdkDisplay $display) {
+    gtk_clipboard_get_default($display);
   }
 
   method get_display {
     gtk_clipboard_get_display($!cb);
   }
 
-  method get_for_display (GdkAtom $selection) {
-    gtk_clipboard_get_for_display($!cb, $selection);
+  method get_for_display (GdkDisplay $display, GdkAtom $selection) {
+    gtk_clipboard_get_for_display($display, $selection);
   }
 
   method get_owner {

@@ -5,7 +5,19 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
-unit package GTK::Raw::
+unit package GTK::Raw::CheckMenuItem;
+
+sub gtk_check_menu_item_get_type ()
+  returns GType
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_check_menu_item_new ()
+  returns GtkWidget
+  is native('gtk-3')
+  is export
+  { * }
 
 sub gtk_check_menu_item_new_with_label (gchar $label)
   returns GtkWidget
