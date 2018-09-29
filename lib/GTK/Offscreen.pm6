@@ -20,7 +20,7 @@ class GTK::Offscreen is GTK::Window {
 
   submethod BUILD(:$offscreen) {
     my $to-parent;
-    given $ {
+    given $offscreen {
       when GtkOffscreen | GtkWidget {
         $!ow = do {
           when GtkWidget {

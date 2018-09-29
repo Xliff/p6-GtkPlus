@@ -19,8 +19,10 @@ class GTK::Popover is GTK::Bin {
   }
 
   submethod BUILD(:$popover) {
+    given $popover {
       when GtkPopover | GtkWidget {
         self.setPopover($popover);
+      }
       when GTK::Popover {
       }
       default {
@@ -43,13 +45,17 @@ class GTK::Popover is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  method new {
-    my $popover = gtk_popover_new($!p);
+  method new (GtkWidget $popover) {
     self.bless(:$popover);
   }
 
-  method new_from_model (GMenuModel $model) {
-    my $popover = gtk_popover_new_from_model($model);
+  method new-relative-to(GtkWidget() $relative) {
+    my $popover = gtk_popover_new($relative);
+    self.bless(:$popover);
+  }
+
+  method new_from_model (GtkWidget() $relative, GMenuModel $model) {
+    my $popover = gtk_popover_new_from_model($relative, $model);
     self.bless(:$popover);
   }
 
@@ -69,7 +75,7 @@ class GTK::Popover is GTK::Bin {
         GtkPopoverConstraint( gtk_popover_get_constrain_to($!p) );
       },
       STORE => sub ($, Int() $constraint is copy) {
-        my uint32 $c = $constraint +& 0xffff;
+        my uint32 $c = self.RESOLVE-UINT($constraint);
         gtk_popover_set_constrain_to($!p, $c);
       }
     );
@@ -89,7 +95,7 @@ class GTK::Popover is GTK::Bin {
   method modal is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_popover_get_modal($!p) );
+        so gtk_popover_get_modal($!p);
       },
       STORE => sub ($, Int() $modal is copy) {
         my gboolean $m = self.RESOLVE-BOOL($modal);

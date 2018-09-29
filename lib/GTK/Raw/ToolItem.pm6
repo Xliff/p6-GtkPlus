@@ -8,19 +8,19 @@ use GTK::Raw::Types;
 unit package GTK::Raw::ToolItem;
 
 sub gtk_tool_item_get_ellipsize_mode (GtkToolItem $tool_item)
-  returns PangoEllipsizeMode
+  returns uint32 # PangoEllipsizeMode
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_tool_item_get_icon_size (GtkToolItem $tool_item)
-  returns GtkIconSize
+  returns uint32 # GtkIconSize
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_tool_item_get_orientation (GtkToolItem $tool_item)
-  returns GtkOrientation
+  returns uint32 # GtkOrientation
   is native('gtk-3')
   is export
   { * }
@@ -47,7 +47,7 @@ sub gtk_tool_item_get_text_alignment (GtkToolItem $tool_item)
   { * }
 
 sub gtk_tool_item_get_text_orientation (GtkToolItem $tool_item)
-  returns GtkOrientation
+  returns uint32 # GtkOrientation
   is native('gtk-3')
   is export
   { * }
@@ -59,7 +59,7 @@ sub gtk_tool_item_get_text_size_group (GtkToolItem $tool_item)
   { * }
 
 sub gtk_tool_item_get_toolbar_style (GtkToolItem $tool_item)
-  returns GtkToolbarStyle
+  returns uint32 # GtkToolbarStyle
   is native('gtk-3')
   is export
   { * }
@@ -147,32 +147,50 @@ sub gtk_tool_item_get_use_drag_window (GtkToolItem $tool_item)
   is export
   { * }
 
-sub gtk_tool_item_set_homogeneous (GtkToolItem $tool_item, gboolean $homogeneous)
+sub gtk_tool_item_set_homogeneous (
+  GtkToolItem $tool_item,
+  gboolean $homogeneous
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_tool_item_set_is_important (GtkToolItem $tool_item, gboolean $is_important)
+sub gtk_tool_item_set_is_important (
+  GtkToolItem $tool_item,
+  gboolean $is_important
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_tool_item_set_visible_vertical (GtkToolItem $tool_item, gboolean $visible_vertical)
+sub gtk_tool_item_set_visible_vertical (
+  GtkToolItem $tool_item,
+  gboolean $visible_vertical
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_tool_item_set_expand (GtkToolItem $tool_item, gboolean $expand)
+sub gtk_tool_item_set_expand (
+  GtkToolItem $tool_item,
+  gboolean $expand
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_tool_item_set_visible_horizontal (GtkToolItem $tool_item, gboolean $visible_horizontal)
+sub gtk_tool_item_set_visible_horizontal (
+  GtkToolItem $tool_item,
+  gboolean $visible_horizontal
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_tool_item_set_use_drag_window (GtkToolItem $tool_item, gboolean $use_drag_window)
+sub gtk_tool_item_set_use_drag_window (
+  GtkToolItem $tool_item,
+  gboolean $use_drag_window
+)
   is native('gtk-3')
   is export
   { * }

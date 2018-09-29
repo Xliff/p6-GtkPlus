@@ -10,32 +10,34 @@ constant glib     is export = 'glib-2.0',v0;
 constant gio      is export = 'gio-2.0',v0;
 constant gobject  is export = 'gobject-2.0',v0;
 
-constant cairo_t        is export := Pointer;
-constant cairo_region_t is export := Pointer;
+constant cairo_t             is export := Pointer;
+constant cairo_region_t      is export := Pointer;
 
-constant gboolean      is export := uint32;
-constant gchar         is export := Str;
-constant gconstpointer is export := Pointer;
-constant gdouble       is export := num64;
-constant gfloat        is export := num32;
-constant gint          is export := int32;
-constant gint8         is export := int8;
-constant gint16        is export := int16;
-constant gpointer      is export := Pointer;
-constant gsize         is export := uint64;
-constant gssize        is export := int64;
-constant guint         is export := uint32;
-constant guint8        is export := uint8;
-constant guint16       is export := uint16;
-constant guint32       is export := uint32;
-constant gunichar      is export := uint32;
-constant va_list       is export := Pointer;
+constant gboolean            is export := uint32;
+constant gchar               is export := Str;
+constant gconstpointer       is export := Pointer;
+constant gdouble             is export := num64;
+constant gfloat              is export := num32;
+constant gint                is export := int32;
+constant gint8               is export := int8;
+constant gint16              is export := int16;
+constant gpointer            is export := Pointer;
+constant gsize               is export := uint64;
+constant gssize              is export := int64;
+constant guint               is export := uint32;
+constant guint8              is export := uint8;
+constant guint16             is export := uint16;
+constant guint32             is export := uint32;
+constant gunichar            is export := uint32;
+constant va_list             is export := Pointer;
 
-constant GCallback     is export := Pointer;
-constant GClosure      is export := Pointer;
-constant GStrv         is export := CArray[Str];
-constant GQuark        is export := uint32;
-constant GType         is export := uint32;
+constant GAsyncReadyCallback is export := Pointer;
+constant GCallback           is export := Pointer;
+constant GCancellable        is export := Pointer;
+constant GClosure            is export := Pointer;
+constant GStrv               is export := CArray[Str];
+constant GQuark              is export := uint32;
+constant GType               is export := uint32;
 
 constant PangoTabArray is export := CArray[gint];
 
@@ -47,10 +49,17 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
 
 class GFile is repr('CPointer') does GTK::Roles::Pointers is export { }
 
-class GList is repr('CStruct')  does GTK::Roles::Pointers is export {
+class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $.data;
   has GList   $.next;
   has GList   $.prev;
+}
+
+class GPermission is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint64 $.dummy1;
+  has uint64 $.dummy2;
+  has uint64 $.dummy3;
+  has uint64 $.dummy4;
 }
 
 class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -352,6 +361,7 @@ class PangoLayout           is repr('CPointer') is export { }
 
 class GActionGroup          is repr('CPointer') is export { }
 class GApplication          is repr('CPointer') is export { }
+class GAsyncResult          is repr('CPointer') is export { }
 class GCompareDataFunc      is repr('CPointer') is export { }
 class GCompareFunc          is repr('CPointer') is export { }
 class GCopyFunc             is repr('CPointer') is export { }

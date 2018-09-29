@@ -41,8 +41,8 @@ class GTK::LockButton is GTK::Button {
     }
   }
 
-  multi method new {
-    my $button = gtk_lock_button_new();
+  multi method new (GPermission $p) {
+    my $button = gtk_lock_button_new($p);
     self.bless(:$button);
   }
   multi method new (GtkWidget $button) {
@@ -57,9 +57,11 @@ class GTK::LockButton is GTK::Button {
     # GPermission
     Proxy.new(
       FETCH => sub ($) {
-        gtk_lock_button_get_permission($!lb);
+        GTK::Compat::Permission.new(
+          gtk_lock_button_get_permission($!lb)
+        )
       },
-      STORE => sub ($, $permission is copy) {
+      STORE => sub ($, GPermission() $permission is copy) {
         gtk_lock_button_set_permission($!lb, $permission);
       }
     );

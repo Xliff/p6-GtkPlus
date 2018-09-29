@@ -41,8 +41,11 @@ class GTK::MenuToolButton is GTK::ToolButton {
     }
   }
 
+  multi method new (GtkWidget $menutoolbutton) {
+    self.bless(:$menutoolbutton);
+  }
   multi method new (GtkWidget $widget, gchar $label) {
-    my $menutoolbutton = gtk_menu_tool_button_new($!mtb, $widget, $label);
+    my $menutoolbutton = gtk_menu_tool_button_new($widget, $label);
     self.bless(:$menutoolbutton);
   }
 

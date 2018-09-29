@@ -101,7 +101,10 @@ sub gtk_popover_set_modal (GtkPopover $popover, gboolean $modal)
   is export
   { * }
 
-sub gtk_popover_set_position (GtkPopover $popover, GtkPositionType $position)
+sub gtk_popover_set_position (
+  GtkPopover $popover,
+  uint32 $position              # GtkPositionType $position
+)
   is native('gtk-3')
   is export
   { * }
@@ -113,7 +116,7 @@ sub gtk_popover_set_relative_to (GtkPopover $popover, GtkWidget $relative_to)
 
 sub gtk_popover_set_constrain_to (
   GtkPopover $popover,
-  GtkPopoverConstraint $constraint
+  uint32 $constraint            # GtkPopoverConstraint $constraint
 )
   is native('gtk-3')
   is export

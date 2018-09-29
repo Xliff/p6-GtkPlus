@@ -46,8 +46,7 @@ class GTK::ToolItem is GTK::Bin {
 
   method setToolItem($toolitem) {
     my $to-parent;
-
-    $!ti = given $toolitem {
+    $!ti = do given $toolitem {
       when GtkToolItem {
         $to-parent = nativecast(GtkBin, $_);
         $_;
@@ -163,7 +162,7 @@ class GTK::ToolItem is GTK::Bin {
   }
 
   method get_orientation {
-    GtkOrientation( gtk_tool_item_get_orientation($!ti);
+    GtkOrientation( gtk_tool_item_get_orientation($!ti) );
   }
 
   method get_proxy_menu_item (gchar $menu_item_id) {

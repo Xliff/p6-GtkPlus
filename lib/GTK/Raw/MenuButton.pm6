@@ -32,7 +32,7 @@ sub gtk_menu_button_get_use_popover (GtkMenuButton $menu_button)
   { * }
 
 sub gtk_menu_button_get_direction (GtkMenuButton $menu_button)
-  returns GtkArrowType
+  returns uint32 # GtkArrowType
   is native('gtk-3')
   is export
   { * }
@@ -60,27 +60,42 @@ sub gtk_menu_button_set_popup (GtkMenuButton $menu_button, GtkWidget $menu)
   is export
   { * }
 
-sub gtk_menu_button_set_use_popover (GtkMenuButton $menu_button, gboolean $use_popover)
+sub gtk_menu_button_set_use_popover (
+  GtkMenuButton $menu_button,
+  gboolean $use_popover
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_menu_button_set_direction (GtkMenuButton $menu_button, GtkArrowType $direction)
+sub gtk_menu_button_set_direction (
+  GtkMenuButton $menu_button,
+  uint32 $direction               # GtkArrowType $direction
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_menu_button_set_popover (GtkMenuButton $menu_button, GtkWidget $popover)
+sub gtk_menu_button_set_popover (
+  GtkMenuButton $menu_button,
+  GtkWidget $popover
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_menu_button_set_align_widget (GtkMenuButton $menu_button, GtkWidget $align_widget)
+sub gtk_menu_button_set_align_widget (
+  GtkMenuButton $menu_button,
+  GtkWidget $align_widget
+)
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_menu_button_set_menu_model (GtkMenuButton $menu_button, GMenuModel $menu_model)
+sub gtk_menu_button_set_menu_model (
+  GtkMenuButton $menu_button,
+  GMenuModel $menu_model
+)
   is native('gtk-3')
   is export
   { * }

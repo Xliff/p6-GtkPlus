@@ -18,7 +18,7 @@ class GTK::SizeGroup {
     my $sizegroup = gtk_size_group_new($s);
     self.bless(:$sizegroup);
   }
-  multi method new(GtkSizeGroup $sizegroup);
+  multi method new(GtkSizeGroup $sizegroup) {
     self.bless(:$sizegroup);
   }
 

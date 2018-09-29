@@ -22,7 +22,7 @@ class GTK::MenuButton is GTK::ToggleButton {
 
   submethod BUILD(:$menubutton) {
     my $to-parent;
-    given $button {
+    given $menubutton {
       when GtkMenuButton | GtkWidget {
         $!mb = do {
           when GtkWidget {
@@ -43,8 +43,11 @@ class GTK::MenuButton is GTK::ToggleButton {
     }
   }
 
-  method new {
+  multi method new {
     my $menubutton = gtk_menu_button_new();
+    self.bless(:$menubutton);
+  }
+  multi method new (GtkWidget $menubutton) {
     self.bless(:$menubutton);
   }
 
@@ -127,7 +130,7 @@ class GTK::MenuButton is GTK::ToggleButton {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type {
-    gtk_menu_button_get_type(;
+    gtk_menu_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -30,18 +30,6 @@ class GTK::ToolButton is GTK::ToolItem {
     }
   }
 
-  method new (GtkWidget() $widget, gchar $label) {
-    my $toolbutton = gtk_tool_button_new($label);
-    self.bless(:$toolbutton);
-  }
-
-  method new_from_stock (gchar $stock_id)
-    is deprecated('GTK::ToolButton.new( GTK::Image.new_from_icon_name() )')
-  {
-    my $toolbutton = gtk_tool_button_new_from_stock($stock_id);
-    self.bless(:$toolbutton);
-  }
-
   method setToolButton($toolbutton) {
     self.IS-PROTECTED;
 
@@ -57,6 +45,21 @@ class GTK::ToolButton is GTK::ToolItem {
       }
     }
     self.setToolItem($to-parent);
+  }
+
+  multi method new (GtkWidget $toolbutton) {
+    self.bless(:$toolbutton);
+  }
+  multi method new (GtkWidget() $widget, gchar $label) {
+    my $toolbutton = gtk_tool_button_new($widget, $label);
+    self.bless(:$toolbutton);
+  }
+
+  method new_from_stock (gchar $stock_id)
+    is DEPRECATED('GTK::ToolButton.new( GTK::Image.new_from_icon_name() )')
+  {
+    my $toolbutton = gtk_tool_button_new_from_stock($stock_id);
+    self.bless(:$toolbutton);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -113,7 +116,7 @@ class GTK::ToolButton is GTK::ToolItem {
     );
   }
 
-  method stock_id is deprecated is rw {
+  method stock_id is DEPRECATED is rw {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tool_button_get_stock_id($!tb);

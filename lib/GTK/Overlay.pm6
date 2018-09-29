@@ -21,10 +21,10 @@ class GTK::Overlay is GTK::Bin {
   submethod BUILD(:$overlay) {
     my $to-parent;
     given $overlay {
-      when Gtk | GtkWidget {
+      when GtkOverlay | GtkWidget {
         $!o = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkOverlay, $_);
           }
           when GtkOverlay  {
@@ -34,7 +34,7 @@ class GTK::Overlay is GTK::Bin {
         }
         self.setBin($to-parent);
       }
-      when GTK:: {
+      when GTK::Overlay {
       }
       default {
       }
@@ -76,7 +76,7 @@ class GTK::Overlay is GTK::Bin {
 
   method reorder_overlay (GtkWidget() $child, Int() $position) {
     my gint $p = self.RESOLVE-INT($position);
-    gtk_overlay_reorder_overlay($!o, $child, $position);
+    gtk_overlay_reorder_overlay($!o, $child, $p);
   }
 
   method set_overlay_pass_through (
