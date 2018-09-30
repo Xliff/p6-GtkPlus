@@ -18,6 +18,7 @@ my $check = $a.control('check1');
 my $switch = $a.control('switch1');
 my $color = $a.control('color1');
 my $spin = $a.control('spin1');
+my $scale = $a.control('scale1');
 # Can't add a statusbar in glade, so have to do it, here!
 my $status = GTK::Statusbar.new;
 
@@ -39,6 +40,7 @@ $a.control('application').destroy-signal.tap({ $a.exit });
 $a.control('cancelbutton').clicked.tap({ $a.exit });
 $link.clicked.tap({ $numClicks++ });
 $a.control('okbutton').clicked.tap({
+  say '-' x 30;
   say "Entry control contains: " ~ $a.control('entry1').text;
   say "Link control was { $link.visited ?? '' !! 'not ' }visited.";
   say "Link control clicked: { $numClicks } times";
@@ -47,6 +49,7 @@ $a.control('okbutton').clicked.tap({
   say "Switch current status: " ~ $switch.active.Str;
   say "Color button current color: " ~ $color.rgba.Str;
   say "Spin current value: " ~ $spin.value;
+  say "Scale control current value: " ~ $scale.value;
 });
 
 $a.run;
@@ -62,6 +65,11 @@ $a.run;
     <property name="upper">100</property>
     <property name="step_increment">2</property>
     <property name="page_increment">5</property>
+  </object>
+  <object class="GtkAdjustment" id="adjustment2">
+    <property name="upper">100</property>
+    <property name="step_increment">5</property>
+    <property name="page_increment">10</property>
   </object>
   <object class="GtkWindow" id="application">
     <property name="visible">True</property>
@@ -191,6 +199,7 @@ $a.run;
                 <property name="margin_top">10</property>
                 <property name="margin_bottom">10</property>
                 <property name="round_digits">1</property>
+                <property name="adjustment">adjustment2</property>
               </object>
               <packing>
                 <property name="left_attach">2</property>
