@@ -9,6 +9,12 @@ use GTK::LinkButton;
 # writing applications.
 my $a = GTK::Application.new( :pod($=pod) );
 
+$a.control('application').destroy-signal.tap({ $a.exit });
+$a.control('cancelbutton').clicked.tap({ $a.exit });
+$a.control('okbutton').clicked.tap({
+  say "OK button clicked!";
+});
+
 $a.run;
 
 =begin ui

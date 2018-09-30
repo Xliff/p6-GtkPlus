@@ -11,6 +11,7 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
 use GTK;
+use GTK::Widget;
 
 class GTK::Builder does Associative {
   has GtkBuilder $!b;
@@ -122,14 +123,13 @@ class GTK::Builder does Associative {
   ) {
     self!getTypes(:$ui_def, :$file, :$resource);
     for %!types.keys -> $k {
-      say %!types{$k}[0];
       # Use type names to dynamically create objects.
       %!widgets{$k} = ::( %!types{$k}[0] ).new(
         self.get_object($k)
       );
     }
 
-    ddt %!widgets;
+    #ddt %!widgets;
   }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

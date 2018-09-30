@@ -32,7 +32,7 @@ class GTK::SpinButton is GTK::Entry {
             $_;
           }
         };
-        self.setParent($_);
+        self.setEntry($_);
       }
       when GTK::SpinButton {
       }

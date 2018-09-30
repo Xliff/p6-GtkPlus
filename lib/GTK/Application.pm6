@@ -104,6 +104,12 @@ ERR
     $!app;
   }
 
+  method control(Str $name) {
+    die "GTK::Application.controls only available if using GTK::Builder support."
+      unless $!builder;
+    $!builder{$name};
+  }
+
   method init (GTK::Application:U: ) {
     my $argc = CArray[uint32].new;
     $argc[0] = 1;
@@ -199,11 +205,10 @@ ERR
   }
 
   multi method exit(GTK::Application:D: ) {
-    #gtk_main_quit();
-    g_application_quit($!app);
+    $.builder ?? gtk_main_quit() !! g_application_quit($!app);
   }
   multi method exit(GTK::Application:U: ) {
-    g_application_quit($gapp);
+    $.builder ?? gtk_main_quit() !! g_application_quit($!app);
   }
 
   method activate {

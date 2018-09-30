@@ -52,14 +52,13 @@ class GTK::Button is GTK::Bin {
     my $button = gtk_button_new();
     self.bless(:$button);
   }
-
-  multi method new(GtkWidget :$button) {
+  multi method new(GtkWidget $button) {
     self.bless(:$button);
   }
 
   method new_with_mnemonic (GTK::Button:U: gchar $label) {
     my $button = gtk_button_new_with_mnemonic($label);
-    self.bless(:$button, :bin($button), :container($button), :widget($button))
+    self.bless(:$button)
   }
 
   method new_from_icon_name (GTK::Button:U: gchar $icon_name, GtkIconSize $size) {
