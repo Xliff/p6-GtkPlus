@@ -37,23 +37,29 @@ class GTK::Box is GTK::Container {
     }
   }
 
-  multi method new-box (GtkOrientation $orientation, Int $spacing) {
-    my $box = gtk_box_new($orientation, $spacing);
-    self.bless( :$box, :container($box), :widget($box) );
+  multi method new (
+    Int() $orientation,          # GtkOrientation,
+    Int() $spacing
+  ) {
+    my guint $o = self.RESOLVE-UINT($orientation);
+    my gint $s = self.RESOLVE-INT($spacing);
+    my $box = gtk_box_new($o, $s);
+    self.bless(:$box);
   }
-
-  multi method new-box (:$box!) {
-    self.bless( :$box, :container($box), :widget($box) );
+  multi method new (GtkWidget $box) {
+    self.bless(:$box);
   }
 
   method new-hbox(Int $spacing = 2) {
-    my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $spacing);
-    self.bless( :$box, :container($box), :widget($box) );
+    my gint $s = $spacing;
+    my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL.Int, $s);
+    self.bless(:$box);
   }
 
   method new-vbox(Int $spacing = 2) {
-    my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $spacing);
-    self.bless( :$box, :container($box), :widget($box) );
+    my gint $s = $spacing;
+    my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL.Int, $s);
+    self.bless(:$box);
   }
 
   method setBox($box) {
@@ -88,15 +94,8 @@ class GTK::Box is GTK::Container {
       FETCH => sub ($) {
         gtk_box_get_center_widget($!b);
       },
-      STORE => sub ($, $widget is copy) {
-        my GtkWidget $w = do given $widget {
-          when GTK::Widget { .widget; }
-          when GtkWidget   { $_;      }
-          default {
-            die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
-          }
-        }
-        gtk_box_set_center_widget($!b, $w);
+      STORE => sub ($, GtkWidget() $widget is copy) {
+        gtk_box_set_center_widget($!b, $widget);
       }
     );
   }
@@ -175,8 +174,13 @@ class GTK::Box is GTK::Container {
     samewith($child.widget, $expand, $fill, $padding);
   }
 
+  multi method query_child_packing (GtkWidget() $child) {
+    my ($e, $f, $p, $pt) = (0 xx 4);
+    callwith($child, $e, $f, $p, $pt);
+    ($e, $f, $p, GtkPackType($pt));
+  }
   multi method query_child_packing (
-    GtkWidget $child,
+    GtkWidget() $child,
     Int() $expand is rw,
     Int() $fill is rw,
     Int() $padding is rw,
@@ -190,38 +194,14 @@ class GTK::Box is GTK::Container {
     ($expand, $fill, $padding, $pack_type) = ($e, $f, $p, $pt);
     $rc;
   }
-  multi method query_child_packing (
-    GTK::Widget $child,
-    Int() $expand is rw,
-    Int() $fill is rw,
-    Int() $padding is rw,
-    Int() $pack_type is rw
-  ) {
-    samewith($child.widget, $expand, $fill, $padding, $pack_type);
-  }
-  multi method query_child_packing($child) {
-    my $c = do given $child {
-      when GTK::Widget { .widget; }
-      when GtkWidget   { $_;      }
-      default {
-        die "Invalid type { .^name } passed to { ::?CLASS }.{ &?ROUTINE.name }";
-      }
-    }
-    my ($e, $f, $p, $pt) = (0 xx 4);
-    callwith($c, $e, $f, $p, $pt);
-    ($e, $f, $p, GtkPackType($pt));
-  }
 
-  multi method reorder_child (GtkWidget $child, Int() $position) {
+  multi method reorder_child (GtkWidget() $child, Int() $position) {
     my gint $p = self.RESOLVE-INT($position);
     gtk_box_reorder_child($!b, $child, $p);
   }
-  multi method reorder_child (GTK::Widget $child, Int() $position) {
-    samewith($child.widget, $position);
-  }
 
-  multi method set_child_packing (
-    GtkWidget $child,
+  method set_child_packing (
+    GtkWidget() $child,
     Int() $expand,
     Int() $fill,
     Int() $padding,
@@ -232,15 +212,6 @@ class GTK::Box is GTK::Container {
     my ($e, $f) = self.RESOLVE-BOOL(@b);
     my ($p, $pt) = self.RESOLVE-UINT(@ui);
     gtk_box_set_child_packing($!b, $child, $e, $f, $p, $pt);
-  }
-  multi method set_child_packing (
-    GTK::Widget $child,
-    Int() $expand,
-    Int() $fill,
-    Int() $padding,
-    Int() $pack_type
-  ) {
-    samewith($child.widget, $expand, $fill, $padding, $pack_type);
   }
 
 }

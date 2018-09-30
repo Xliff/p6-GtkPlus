@@ -1,16 +1,20 @@
 use v6.c;
 
+use NativeCall;
+
+use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Separator;
 
 use GTK::Widget;
 
 class GTK::Separator is GTK::Widget {
+  has GtkSeparator $!s;
 
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Label');
+    $o.setType('GTK::Separator');
     $o;
   }
 
@@ -18,10 +22,10 @@ class GTK::Separator is GTK::Widget {
     my $to-parent;
     given $separator {
       when GtkSeparator | GtkWidget {
-        $!l = do {
+        $!s = do {
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkSeparator, $label);
+            nativecast(GtkSeparator, $_);
           }
           when GtkSeparator {
             $to-parent = nativecast(GtkWidget, $_);
@@ -37,7 +41,10 @@ class GTK::Separator is GTK::Widget {
     }
   }
 
-  method new(:$horizontal, :$vertical)  {
+  multi method new (GtkWidget $separator) {
+    self.bless(:$separator);
+  }
+  multi method new(:$horizontal, :$vertical)  {
     die "Please specify only ONE of \$horizontal and \$vertical when creating a GTK::Separator"
       unless $horizontal ^^ $vertical;
 
@@ -46,7 +53,7 @@ class GTK::Separator is GTK::Widget {
       when $vertical   {   GTK_ORIENTATION_VERTICAL.Int; }
     };
 
-    my $separator = gtk_separator_new($o)
+    my $separator = gtk_separator_new($o);
     self.bless(:$separator);
   }
 

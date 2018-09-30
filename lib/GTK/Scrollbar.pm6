@@ -23,7 +23,7 @@ class GTK::Scrollbar is GTK::Range {
     given $scroll {
       when GtkScrollbar | GtkWidget {
         $!sb = do {
-          when GtkWidget    {
+          when GtkWidget {
             $to-parent = $_;
             nativecast(GtkScrollbar, $_);
           }
@@ -41,10 +41,12 @@ class GTK::Scrollbar is GTK::Range {
     }
   }
 
-  method new (Int() $orientation, Int() $adjustment) {
-    my @u = ($orientation, $adjustment);
-    my uint32 ($or, $ad) = self.RESOLVE-UINT(@u);
-    my $scroll = gtk_scrollbar_new($or, $ad);
+  multi method new (GtkWidget $scroll) {
+    self.bless(:$scroll);
+  }
+  multi method new (Int() $orientation, GtkAdjustment() $adjustment) {
+    my uint32 $or = self.RESOLVE-UINT($orientation);
+    my $scroll = gtk_scrollbar_new($or, $adjustment);
     self.bless(:$scroll);
   }
 

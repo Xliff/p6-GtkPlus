@@ -31,8 +31,11 @@ class GTK::Entry is GTK::Widget {
     }
   }
 
-  method new {
+  multi method new {
     my $entry = gtk_entry_new();
+    self.bless(:$entry);
+  }
+  multi method new (GtkWidget $entry) {
     self.bless(:$entry);
   }
 

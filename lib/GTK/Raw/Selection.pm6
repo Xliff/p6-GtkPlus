@@ -58,7 +58,7 @@ sub gtk_selection_data_free (GtkSelectionData $data)
   { * }
 
 sub gtk_selection_data_get_data (GtkSelectionData $selection_data)
-  returns guchar
+  returns CArray[Str]
   is native('gtk-3')
   is export
   { * }
@@ -213,7 +213,10 @@ sub gtk_selection_data_get_pixbuf (GtkSelectionData $selection_data)
   is export
   { * }
 
-sub gtk_selection_data_set_uris (GtkSelectionData $selection_data, gchar $uris)
+sub gtk_selection_data_set_uris (
+  GtkSelectionData $selection_data,
+  CArray[Str] $uris
+)
   returns uint32
   is native('gtk-3')
   is export

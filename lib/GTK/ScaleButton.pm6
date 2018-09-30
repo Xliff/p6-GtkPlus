@@ -30,7 +30,10 @@ class GTK::ScaleButton is GTK::Button {
     }
   }
 
-  method new (
+  multi method new (GtkWidget $button) {
+    self.bless(:$button);
+  }
+  multi method new (
     Int() $size,
     Num() $min,
     Num() $max,
@@ -38,9 +41,9 @@ class GTK::ScaleButton is GTK::Button {
     Str @icons
   ) {
     my uint32 $s = self.RESOLVE-UINT($size);
-    my gdouble ($mn, $mx, $s, $i) = ($min, $max, $step);
-    my GStrV $i = self.RESOLVE-GSTRV(@icons);
-    $button = gtk_scale_button_new($s, $min, $max, $step, $i);
+    my gdouble ($mn, $mx, $st) = ($min, $max, $step);
+    my GStrv $i = self.RESOLVE-GSTRV(@icons);
+    my $button = gtk_scale_button_new($s, $mn, $mx, $st, $i);
     self.bless(:$button);
   }
 
@@ -69,7 +72,7 @@ class GTK::ScaleButton is GTK::Button {
   }
 
   method value-changed {
-    self.connect($!sb. 'value-changed');
+    self.connect($!sb, 'value-changed');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -77,7 +80,7 @@ class GTK::ScaleButton is GTK::Button {
   method adjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkAdjustment.new(
+        GTK::Adjustment.new(
           gtk_scale_button_get_adjustment($!sb)
         );
       },
@@ -92,8 +95,9 @@ class GTK::ScaleButton is GTK::Button {
       FETCH => sub ($) {
         gtk_scale_button_get_value($!sb);
       },
-      STORE => sub ($, $value is copy) {
-        gtk_scale_button_set_value($!sb, $value);
+      STORE => sub ($, Num() $value is copy) {
+        my gdouble $v = $value;
+        gtk_scale_button_set_value($!sb, $v);
       }
     );
   }

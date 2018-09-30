@@ -67,12 +67,12 @@ class GTK::Dialog::About is GTK::Dialog {
         @a = self.RESOLVE-GSTRV($l.Array);
       }
       when Array {
-        die "Array must contain strings for assignment to { ::?CLASS.name }.{ $meth }"
+        die "Array must contain strings for assignment to { ::?CLASS.^name }.{ $meth }"
           unless $l.all ~~ Str;
         @a = self.RESOLVE-GSTRV($l);
       }
       default {
-        die "Invalid type { .^name } passed to { ::?CLASS.name }.{ $meth }";
+        die "Invalid type { .^name } passed to { ::?CLASS.^name }.{ $meth }";
       }
     }
     @a;

@@ -6,22 +6,19 @@ use GTK::Compat::Types;
 use GTK::Raw::TextTag;
 use GTK::Raw::Types;
 
-class GTK::  {
-  has GtkTextTag $!tt;
+use GTK::Roles::Types;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::TextTag');
-    $o;
-  }
+class GTK::TextTag  {
+  also does GTK::Roles::Types;
+  
+  has GtkTextTag $!tt;
 
   submethod BUILD(:$tag) {
     $!tt = $tag;
   }
 
-  method new {
-    my $tag = gtk_text_tag_new();
+  method new(Str() $name) {
+    my $tag = gtk_text_tag_new($name);
     self.bless(:$tag);
   }
 
@@ -33,7 +30,9 @@ class GTK::  {
 
   # Is originally:
   # GtkTextTag, GObject, GdkEvent, GtkTextIter, gpointer --> gboolean
-  method event {
+  # - Made multi so as to not conflict with the method implementing
+  #   gtk_text_tag_event
+  multi method event {
     self.connect($!tt, 'event');
   }
 
@@ -46,7 +45,7 @@ class GTK::  {
         gtk_text_tag_get_priority($!tt);
       },
       STORE => sub ($, Int() $priority is copy) {
-        my gint $p = $priority
+        my gint $p = self.RESOLVE-INT($priority);
         gtk_text_tag_set_priority($!tt, $p);
       }
     );
@@ -54,8 +53,9 @@ class GTK::  {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method changed (gboolean $size_changed) {
-    gtk_text_tag_changed($!tt, $size_changed);
+  method changed (Int() $size_changed) {
+    my gboolean $sc = self.RESOLVE-BOOL($size_changed);
+    gtk_text_tag_changed($!tt, $sc);
   }
 
   multi method event (

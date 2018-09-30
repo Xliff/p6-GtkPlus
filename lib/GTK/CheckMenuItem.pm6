@@ -54,7 +54,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     self.bless(:$checkmenuitem);
   }
   multi method new(Str() :$label, Str() :$mnemonic) {
-    die "Use ONE of \$label or \$mnemonic when using { ::?CLASS }.new()"
+    die "Use ONE of \$label or \$mnemonic when using { ::?CLASS.^name }.new()"
       unless $label.defined ^^ $mnemonic.defined;
 
     my $checkmenuitem = do {

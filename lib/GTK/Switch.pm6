@@ -41,11 +41,11 @@ class GTK::Switch is GTK::Widget {
     }
   }
 
-  method new {
+  multi method new {
     my $switch = gtk_switch_new();
     self.bless(:$switch);
   }
-  method new(GtkWidget $switch) {
+  multi method new(GtkWidget $switch) {
     # cw: Check type before-hand?
     self.bless(:$switch);
   }

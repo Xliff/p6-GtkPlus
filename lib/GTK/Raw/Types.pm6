@@ -252,7 +252,7 @@ our enum GtkScrollStep is export <
   GTK_SCROLL_HORIZONTAL_ENDS
 >;
 
-our enum GtkTransitionType is export <
+our enum GtkStackTransitionType is export <
   GTK_STACK_TRANSITION_TYPE_NONE
   GTK_STACK_TRANSITION_TYPE_CROSSFADE
   GTK_STACK_TRANSITION_TYPE_SLIDE_RIGHT
@@ -759,8 +759,8 @@ class GtkImage             is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkLabel             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLevelBar          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLinkButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkListStore         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLockButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkListStore         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenu              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenuBar           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenuButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -778,11 +778,17 @@ class GtkRadioButton       is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkRadioMenuItem     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRadioToolButton   is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRange             is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkRevealer          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScale             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScaleButton       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScrollbar         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScrolledWindow    is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSearchBar         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSearchEntry       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSelectionData     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSeparator         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSeparatorMenuItem is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkSeparatorToolItem is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSettings          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSizeGroup         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSpinButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -803,6 +809,7 @@ class GtkTextView          is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkTickCallback      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToggleButton      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToggleToolButton  is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkToolbar           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolItem          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolTip           is repr('CPointer') does GTK::Roles::Pointers is export { }

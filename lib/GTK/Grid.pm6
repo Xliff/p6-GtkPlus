@@ -34,15 +34,18 @@ class GTK::Grid is GTK::Container {
         }
         self.setContainer($to-parent);
       }
-      when GTK:: {
+      when GTK::Grid {
       }
       default {
       }
     }
   }
 
-  method new {
+  multi method new {
     my $grid = gtk_grid_new();
+    self.bless(:$grid);
+  }
+  multi method new (GtkWidget $grid) {
     self.bless(:$grid);
   }
 

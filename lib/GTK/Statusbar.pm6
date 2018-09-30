@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Bin;
 
 class GTK::Statusbar is GTK::Bin {
-  has GtkStatsbar $!sb;
+  has GtkStatusbar $!sb;
 
   method bless(*%attrinit) {
     use nqp;
@@ -22,19 +22,19 @@ class GTK::Statusbar is GTK::Bin {
     my $to-parent;
     given $statusbar {
       when GtkStatusbar | GtkWidget {
-        $!sb = do given {
-          when GtkStatusBar {
+        $!sb = do {
+          when GtkStatusbar {
             $to-parent = nativecast(GtkBin, $_);
             $_;
           }
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkStatusbar, $statusbar);
+            nativecast(GtkStatusbar, $_);
           }
         };
         self.setBin($to-parent);
       }
-      when GTK::StatusBar {
+      when GTK::Statusbar {
       }
       default {
       }
@@ -62,6 +62,7 @@ class GTK::Statusbar is GTK::Bin {
   method text-pushed {
     self.connect($!sb, 'text-pushed');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -98,7 +99,7 @@ class GTK::Statusbar is GTK::Bin {
 
   method remove_all (Int() $context_id) {
     my guint $ci = self.RESOLVE-UINT($context_id);
-    gtk_statusbar_remove_all($!s, $ci);
+    gtk_statusbar_remove_all($!sb, $ci);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

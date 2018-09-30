@@ -41,11 +41,14 @@ class GTK::Frame is GTK::Bin {
     }
   }
 
-  method new(Str() $label) {
+  multi method new (GtkWidget $frame) {
+    self.bless(:$frame);
+  }
+  multi method new(Str() $label) {
     my $frame = gtk_frame_new($label);
     self.bless(:$frame);
   }
-
+  
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

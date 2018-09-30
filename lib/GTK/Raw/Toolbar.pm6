@@ -14,7 +14,7 @@ sub gtk_toolbar_get_drop_index (GtkToolbar $toolbar, gint $x, gint $y)
   { * }
 
 sub gtk_toolbar_get_icon_size (GtkToolbar $toolbar)
-  returns GtkIconSize
+  returns uint32 # GtkIconSize
   is native('gtk-3')
   is export
   { * }
@@ -38,13 +38,13 @@ sub gtk_toolbar_get_nth_item (GtkToolbar $toolbar, gint $n)
   { * }
 
 sub gtk_toolbar_get_relief_style (GtkToolbar $toolbar)
-  returns GtkReliefStyle
+  returns uint32 # GtkReliefStyle
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_toolbar_get_style (GtkToolbar $toolbar)
-  returns GtkToolbarStyle
+  returns uint32 # GtkToolbarStyle
   is native('gtk-3')
   is export
   { * }

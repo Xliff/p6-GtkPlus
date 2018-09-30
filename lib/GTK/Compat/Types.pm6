@@ -15,6 +15,7 @@ constant cairo_region_t      is export := Pointer;
 
 constant gboolean            is export := uint32;
 constant gchar               is export := Str;
+constant guchar              is export := Str;
 constant gconstpointer       is export := Pointer;
 constant gdouble             is export := num64;
 constant gfloat              is export := num32;

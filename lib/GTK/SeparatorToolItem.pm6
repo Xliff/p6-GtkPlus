@@ -21,7 +21,7 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
   submethod BUILD(:$separator) {
     my $to-parent;
     given $separator {
-      when GtkSepartorToolItem | GtkWidget {
+      when GtkSeparatorToolItem | GtkWidget {
         $!sti = do {
           when GtkWidget {
             $to-parent = $_;

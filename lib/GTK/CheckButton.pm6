@@ -41,8 +41,11 @@ class GTK::CheckButton is GTK::ToggleButton {
     }
   }
 
-  method new () {
+  multi method new {
     my $checkbutton = gtk_check_button_new();
+    self.bless(:$checkbutton);
+  }
+  multi method new (GtkWidget $checkbutton) {
     self.bless(:$checkbutton);
   }
 

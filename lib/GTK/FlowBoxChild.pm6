@@ -48,8 +48,11 @@ class GTK::FlowBoxChild is GTK::Bin {
     }
   }
 
-  method new {
+  multi method new {
     my $flowboxchild = gtk_flow_box_child_new();
+    self.bless(:$flowboxchild);
+  }
+  multi method new (GtkWidget $flowboxchild) {
     self.bless(:$flowboxchild);
   }
 

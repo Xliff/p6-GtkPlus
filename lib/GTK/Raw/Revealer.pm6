@@ -45,7 +45,7 @@ sub gtk_revealer_get_reveal_child (GtkRevealer $revealer)
 
 sub gtk_revealer_set_transition_type (
   GtkRevealer $revealer,
-  GtkRevealerTransitionType $transition
+  uint32 $transition            # GtkRevealerTransitionType $transition
 )
   is native('gtk-3')
   is export

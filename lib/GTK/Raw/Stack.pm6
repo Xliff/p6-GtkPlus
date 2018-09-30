@@ -12,7 +12,12 @@ sub gtk_stack_add_named (GtkStack $stack, GtkWidget $child, gchar $name)
   is export
   { * }
 
-sub gtk_stack_add_titled (GtkStack $stack, GtkWidget $child, gchar $name, gchar $title)
+sub gtk_stack_add_titled (
+  GtkStack $stack,
+  GtkWidget $child,
+  gchar $name,
+  gchar $title
+)
   is native('gtk-3')
   is export
   { * }
@@ -44,7 +49,7 @@ sub gtk_stack_new ()
 sub gtk_stack_set_visible_child_full (
   GtkStack $stack,
   gchar $name,
-  GtkStackTransitionType $transition
+  uint32 $transition            # GtkStackTransitionType $transition
 )
   is native('gtk-3')
   is export
@@ -121,7 +126,10 @@ sub gtk_stack_set_hhomogeneous (GtkStack $stack, gboolean $hhomogeneous)
   is export
   { * }
 
-sub gtk_stack_set_interpolate_size (GtkStack $stack, gboolean $interpolate_size)
+sub gtk_stack_set_interpolate_size (
+  GtkStack $stack,
+  gboolean $interpolate_size
+)
   is native('gtk-3')
   is export
   { * }
@@ -147,7 +155,10 @@ sub gtk_stack_switcher_new ()
   is export
   { * }
 
-sub gtk_stack_switcher_set_stack (GtkStackSwitcher $switcher, GtkStack $stack)
+sub gtk_stack_switcher_set_stack (
+  GtkStackSwitcher $switcher,
+  GtkStack $stack
+)
   is native('gtk-3')
   is export
   { * }

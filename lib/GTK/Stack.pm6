@@ -11,8 +11,8 @@ use GTK::Container;
 class GTK::Stack is GTK::Container {
   has GtkStack $!s;
   has GtkStackSwitcher $!ss;
-  has $!by-name;
-  has $!by-title;
+  has %!by-name;
+  has %!by-title;
 
   method bless(*%attrinit) {
     use nqp;
@@ -50,7 +50,7 @@ class GTK::Stack is GTK::Container {
     my $stack = gtk_stack_new();
     self.bless(:$stack);
   }
-  multi method new (GtkWidget $stack);
+  multi method new (GtkWidget $stack) {
     self.bless(:$stack);
   }
 
@@ -109,7 +109,7 @@ class GTK::Stack is GTK::Container {
   method transition_type is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkTransitionType( gtk_stack_get_transition_type($!s) );
+        GtkStackTransitionType( gtk_stack_get_transition_type($!s) );
       },
       STORE => sub ($, Int() $transition is copy) {
         my uint32 $t = self.RESOLVE-UINT($transition);
@@ -172,7 +172,7 @@ class GTK::Stack is GTK::Container {
 
   multi method add_titled (GtkWidget $child, gchar $name, gchar $title) {
     unless self.IS-LATCHED {
-      $!by-title{$name} = $child;
+      %!by-title{$name} = $child;
       self.push-start($child);
     }
     gtk_stack_add_titled($!s, $child, $name, $title);
@@ -186,11 +186,13 @@ class GTK::Stack is GTK::Container {
   }
 
   method get_child_by_name (gchar $name) {
-    %!by-name{$name} // gtk_stack_get_child_by_name($!s, $name);
+    %!by-name{$name}
+    //
+    %!by-name{$name} = gtk_stack_get_child_by_name($!s, $name);
   }
 
   method get_child_by_title (Str $title) {
-    %!by-title{$name};
+    %!by-title{$title};
   }
 
   method get_transition_running {

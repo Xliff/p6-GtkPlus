@@ -41,8 +41,11 @@ class GTK::Toolbar is GTK::Container {
     }
   }
 
-  method new {
+  multi method new {
     my $toolbar = gtk_toolbar_new();
+    self.bless(:$toolbar);
+  }
+  multi method new (GtkWidget $toolbar) {
     self.bless(:$toolbar);
   }
 
@@ -77,7 +80,7 @@ class GTK::Toolbar is GTK::Container {
   method show_arrow is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_toolbar_get_show_arrow($!tb);
+        so gtk_toolbar_get_show_arrow($!tb);
       },
       STORE => sub ($, Int() $show_arrow is copy) {
         my gboolean $sa = self.RESOLVE-BOOL($show_arrow);
@@ -91,13 +94,14 @@ class GTK::Toolbar is GTK::Container {
   method get_drop_index (Int() $x is rw, Int() $y is rw) {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-UINT(@u);
-    gtk_toolbar_get_drop_index($!tb, $xx, $yy);
+    my $rc = gtk_toolbar_get_drop_index($!tb, $xx, $yy);
     ($x, $y) = ($xx, $yy);
+    $rc;
   }
   # Add a no-arg multi
 
   method get_icon_size {
-    gtk_toolbar_get_icon_size($!tb);
+    GtkIconSize( gtk_toolbar_get_icon_size($!tb) );
   }
 
   multi method get_item_index (GtkToolItem() $item) {
@@ -114,11 +118,11 @@ class GTK::Toolbar is GTK::Container {
   }
 
   method get_relief_style {
-    gtk_toolbar_get_relief_style($!tb);
+    GtkReliefStyle( gtk_toolbar_get_relief_style($!tb) );
   }
 
   method get_style {
-    gtk_toolbar_get_style($!tb);
+    GtkToolbarStyle( gtk_toolbar_get_style($!tb) );
   }
 
   method get_type {

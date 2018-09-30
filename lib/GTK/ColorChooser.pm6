@@ -44,8 +44,11 @@ class GTK::ColorChooser is GTK::Box {
     }
   }
 
-  method new {
+  multi method new {
     my $chooser = gtk_color_chooser_widget_new();
+    self.bless(:$chooser);
+  }
+  multi method new (GtkWidget $chooser) {
     self.bless(:$chooser);
   }
 

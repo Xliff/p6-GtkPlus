@@ -33,11 +33,11 @@ sub gtk_scale_button_get_type ()
 
 # (GtkIconSize $size, gdouble $min, gdouble $max, gdouble $step, gchar $icons)
 sub gtk_scale_button_new (
-  uint32 $size,
-  gdouble $min,
-  gdouble $max,
-  gdouble $step,
-  gchar $icons
+  uint32      $size,
+  gdouble     $min,
+  gdouble     $max,
+  gdouble     $step,
+  CArray[Str] $icons
 )
   returns GtkWidget
   is native('gtk-3')

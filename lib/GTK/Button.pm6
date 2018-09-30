@@ -24,7 +24,7 @@ class GTK::Button is GTK::Bin {
         self.setButton($button);
       }
       when GTK::Button {
-        my $c = ::?CLASS.name;
+        my $c = ::?CLASS.^name;
         warn "To copy a { $c } object, use { $c }.clone.";
       }
       default {

@@ -39,8 +39,8 @@ class GTK::ToolItem is GTK::Bin {
     #use GTK::Widget;
 
     #my $type = GTK::Widget.getType($toolitem);
-    #die "Incorrect type $type passed to " ~ ::?CLASS ~ 'constructor.'
-    #  unless $type eq ::?CLASS.name;
+    #die "Incorrect type $type passed to " ~ ::?CLASS.^name ~ 'constructor.'
+    #  unless $type eq ::?CLASS.^name;
     self.bless(:$toolitem);
   }
 

@@ -102,7 +102,7 @@ class GTK::MenuItem is GTK::Bin {
   #   Str() :$label,
   #   Str() :$mnemonic
   # ) {
-  #   die "Use ONE of \$label or \$mnemonic when using { ::?CLASS.name }.new()"
+  #   die "Use ONE of \$label or \$mnemonic when using { ::?CLASS.^name }.new()"
   #     unless $label.defined ^^ $mnemonic.defined;
   #
   #   my $menuitem = do {

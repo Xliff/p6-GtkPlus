@@ -41,8 +41,11 @@ class GTK::Label is GTK::Widget {
     }
   }
 
-  method new($text = Str) {
+  multi method new ($text = Str) {
     my $label = gtk_label_new($text);
+    self.bless(:$label);
+  }
+  multi method new (GtkWidget $label) {
     self.bless(:$label);
   }
 

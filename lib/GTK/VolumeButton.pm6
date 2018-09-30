@@ -23,7 +23,7 @@ class GTK::VolumeButton is GTK::ScaleButton {
       my $to-parent;
       when GtkVolumeButton | GtkWidget {
         $!vb = do {
-          when GtkWidget       {
+          when GtkWidget {
             $to-parent = $_;
             nativecast(GtkVolumeButton, $_);
           }
@@ -41,11 +41,11 @@ class GTK::VolumeButton is GTK::ScaleButton {
     }
   }
 
-  method new {
-    $button = gtk_volume_button_new();
+  multi method new {
+    my $button = gtk_volume_button_new();
     self.bless(:$button);
   }
-  method new (GtkWidget $button) {
+  multi method new (GtkWidget $button) {
     self.bless(:$button);
   }
 

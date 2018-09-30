@@ -67,7 +67,10 @@ sub gtk_target_list_get_type ()
   is export
   { * }
 
-sub gtk_target_list_new (GtkTargetEntry $targets, guint $ntargets)
+sub gtk_target_list_new (
+  CArray[GtkTargetEntry] $targets,
+  guint $ntargets
+)
   returns GtkTargetList
   is native('gtk-3')
   is export

@@ -24,7 +24,7 @@ class GTK::Revealer is GTK::Bin {
       when GtkRevealer | GtkWidget {
         $!r = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkRevealer, $_);
           }
           when GtkRevealer {

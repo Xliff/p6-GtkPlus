@@ -41,8 +41,11 @@ class GTK::Notebook is GTK::Container {
     }
   }
 
-  method new {
+  multi method new {
     my $notebook = gtk_notebook_new();
+    self.bless(:$notebook);
+  }
+  multi method new (GtkWidget $notebook) {
     self.bless(:$notebook);
   }
 

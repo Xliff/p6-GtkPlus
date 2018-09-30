@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Entry;
 
 class GTK::SearchEntry is GTK::Entry {
-  has Gtk $!se;
+  has GtkSearchEntry $!se;
 
   method bless(*%attrinit) {
     use nqp;
@@ -23,7 +23,7 @@ class GTK::SearchEntry is GTK::Entry {
     given $searchentry {
       when GtkSearchEntry | GtkWidget {
         $!se = do {
-          when GtkWidget      {
+          when GtkWidget {
             $to-parent = $_;
             nativecast(GtkSearchEntry, $_);
           }
@@ -41,26 +41,29 @@ class GTK::SearchEntry is GTK::Entry {
     }
   }
 
-  method new {
-    my $searchentry = gtk_search_entry_new($!se);
+  multi method new {
+    my $searchentry = gtk_search_entry_new();
+    self.bless(:$searchentry);
+  }
+  multi method new (GtkWidget $searchentry) {
     self.bless(:$searchentry);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method activate {
-    self.connect($!sb, 'activate');
+    self.connect($!se, 'activate');
   }
 
   method backspace {
-    self.connect($!sb, 'backspace');
+    self.connect($!se, 'backspace');
   }
 
   method copy-clipboard {
-    self.connect($!sb, 'copy-clipboard');
+    self.connect($!se, 'copy-clipboard');
   }
 
   method cut-clipboard {
-    self.connect($!sb, 'cut-clipboard');
+    self.connect($!se, 'cut-clipboard');
   }
 
   # Is actually:
@@ -69,7 +72,7 @@ class GTK::SearchEntry is GTK::Entry {
   #  gint          count,
   #  gpointer      user_data)
   method delete-from-cursor {
-    self.connect($!sb, 'delete-from-cursor');
+    self.connect($!se, 'delete-from-cursor');
   }
 
   # Is actually:
@@ -78,7 +81,7 @@ class GTK::SearchEntry is GTK::Entry {
   #   GdkEvent            *event,
   #   gpointer             user_data)
   method icon-release {
-    self.connect($!sb, 'icon-release');
+    self.connect($!se, 'icon-release');
   }
 
   # Is actually:
@@ -86,11 +89,11 @@ class GTK::SearchEntry is GTK::Entry {
   #  gchar    *string,
   #  gpointer  user_data)
   method insert-at-cursor {
-    self.connect($!sb, 'insert-at-cursor');
+    self.connect($!se, 'insert-at-cursor');
   }
 
   method insert-emoji {
-    self.connect($!sb, 'insert-emoji');
+    self.connect($!se, 'insert-emoji');
   }
 
   # Is actually:
@@ -100,11 +103,11 @@ class GTK::SearchEntry is GTK::Entry {
   #  gboolean        extend_selection,
   #  gpointer        user_data)
   method move-cursor {
-    self.connect($!sb, 'move-cursor');
+    self.connect($!se, 'move-cursor');
   }
 
   method paste-clipboard {
-    self.connect($!sb, 'paste-clipboard');
+    self.connect($!se, 'paste-clipboard');
   }
 
   # is actually:
@@ -112,7 +115,7 @@ class GTK::SearchEntry is GTK::Entry {
   #  GtkWidget *widget,
   #  gpointer   user_data)
   method populate-popup {
-    self.connect($!sb, 'populate-popup');
+    self.connect($!se, 'populate-popup');
   }
 
   # Is actually:
@@ -120,11 +123,11 @@ class GTK::SearchEntry is GTK::Entry {
   #  gchar    *preedit,
   #  gpointer  user_data)
   method preedit-changed {
-    self.connect($!sb, 'preedit-changed');
+    self.connect($!se, 'preedit-changed');
   }
 
   method toggle-overwrite {
-    self.connect($!sb, 'toggle-overwrite');
+    self.connect($!se, 'toggle-overwrite');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

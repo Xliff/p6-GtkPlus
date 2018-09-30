@@ -22,7 +22,7 @@ class GTK::Bin is GTK::Container {
       self.setBin($bin);
     }
     when GTK::Bin {
-      my $c = ::?CLASS.name;
+      my $c = ::?CLASS.^name;
       warn "To copy a { $c } object, use { $c }.clone.";
     }
     default {

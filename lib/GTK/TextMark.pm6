@@ -6,25 +6,23 @@ use GTK::Compat::Types;
 use GTK::Raw::TextMark;
 use GTK::Raw::Types;
 
-class GTK::TextMark {
-  has GtkTextMark $!tm;
+use GTK::Roles::Types;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::TextMark');
-    $o;
-  }
+class GTK::TextMark {
+  also does GTK::Roles::Types;
+
+  has GtkTextMark $!tm;
 
   submethod BUILD(:$textmark) {
     $!tm = $textmark;
   }
 
   method new (
+    Str() $name,
     Int() $left_gravity         # gboolean $left_gravity
   ) {
     my uint32 $lg = self.RESOLVE-BOOL($left_gravity);
-    my $textmark = gtk_text_mark_new($!tm, $lg);
+    my $textmark = gtk_text_mark_new($name, $lg);
     self.bless(:$textmark);
   }
 
@@ -39,7 +37,7 @@ class GTK::TextMark {
   method visible is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_text_mark_get_visible($!tm) );
+        so gtk_text_mark_get_visible($!tm);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -51,15 +49,15 @@ class GTK::TextMark {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_buffer {
-    gtk_text_mark_get_buffer($!tm);
+    GTK::TextBuffer( gtk_text_mark_get_buffer($!tm) );
   }
 
   method get_deleted {
-    gtk_text_mark_get_deleted($!tm);
+    so gtk_text_mark_get_deleted($!tm);
   }
 
   method get_left_gravity {
-    gtk_text_mark_get_left_gravity($!tm);
+    so gtk_text_mark_get_left_gravity($!tm);
   }
 
   method get_name {

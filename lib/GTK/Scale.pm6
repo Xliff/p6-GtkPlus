@@ -25,7 +25,7 @@ class GTK::Scale is GTK::Range {
         $!s = do {
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkScale, $s_);
+            nativecast(GtkScale, $_);
           }
           when GtkScale  {
             $to-parent = nativecast(GtkRange, $_);
@@ -60,7 +60,7 @@ class GTK::Scale is GTK::Range {
     self.bless(:$scale);
   }
   multi method new (
-    Int() $orientation            # # GtkOrientation $orientation,
+    Int() $orientation,           # GtkOrientation $orientation,
     GtkAdjustment() $adjustment
   ) {
     my uint32 $o = self.RESOLVE-UINT($orientation);
@@ -102,8 +102,9 @@ class GTK::Scale is GTK::Range {
       FETCH => sub ($) {
         gtk_scale_get_digits($!s);
       },
-      STORE => sub ($, $digits is copy) {
-        gtk_scale_set_digits($!s, $digits);
+      STORE => sub ($, Int() $digits is copy) {
+        my gint $d = self.RESOLVE-INT($digits);
+        gtk_scale_set_digits($!s, $d);
       }
     );
   }
@@ -138,7 +139,7 @@ class GTK::Scale is GTK::Range {
         GtkPositionType( gtk_scale_get_value_pos($!s) );
       },
       STORE => sub ($, Int() $pos is copy) {
-        my $p = self.RESOVLE-UINT($pos);
+        my uint32 $p = self.RESOVLE-UINT($pos);
         gtk_scale_set_value_pos($!s, $p);
       }
     );

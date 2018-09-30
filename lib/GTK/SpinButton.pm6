@@ -41,13 +41,23 @@ class GTK::SpinButton is GTK::Entry {
     }
   }
 
-  method new (Num() $climb_rate, Int() $digits) {
-    my $spinbutton = gtk_spin_button_new($climb_rate, $digits);
+  multi method new (GtkWidget $spinbutton) {
+    self.bless(:$spinbutton);
+  }
+  multi method new (
+    GtkAdjustment() $adjustment,
+    Num() $climb_rate,
+    Int() $digits
+  ) {
+    my gdouble $cr = $climb_rate;
+    my guint $d = self.RESOLVE-UINT($digits);
+    my $spinbutton = gtk_spin_button_new($adjustment, $cr, $d);
     self.bless(:$spinbutton);
   }
 
-  method new_with_range (Num() $max, Num() $step) {
-    my $spinbutton = gtk_spin_button_new_with_range($max, $step);
+  method new_with_range (Num() $min, Num() $max, Num() $step) {
+    my gdouble ($mn, $mx, $st) = ($min, $max, $step);
+    my $spinbutton = gtk_spin_button_new_with_range($mn, $mx, $st);
     self.bless(:$spinbutton);
   }
 
@@ -187,7 +197,7 @@ class GTK::SpinButton is GTK::Entry {
   }
 
   method get_range (Num() $min, Num() $max) {
-    my gdouble ($mn, $mx) = ($min, $max)l
+    my gdouble ($mn, $mx) = ($min, $max);
     gtk_spin_button_get_range($!sp, $mn, $mx);
   }
 

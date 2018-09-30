@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-class GTK::ToolitemGroup is GTK::Container {
+class GTK::ToolItemGroup is GTK::Container {
   has GtkToolItemGroup $!tig;
 
   method bless(*%attrinit) {
@@ -21,8 +21,8 @@ class GTK::ToolitemGroup is GTK::Container {
   submethod BUILD(:$toolgroup) {
     my $to-parent;
     given $toolgroup {
-      when Gtk | GtkWidget {
-        $! = do {
+      when GtkToolItemGroup | GtkWidget {
+        $!tig = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkToolItemGroup, $_);
@@ -34,19 +34,23 @@ class GTK::ToolitemGroup is GTK::Container {
         }
         self.setContainer($to-parent);
       }
-      when GTK:: {
+      when GTK::ToolItemGroup {
       }
       default {
       }
     }
   }
 
-  multi method new {
-    my $toolgroup = gtk_tool_item_group_new($!tig);
+  multi method new(Str() $label) {
+    my $toolgroup = gtk_tool_item_group_new($label);
     self.bless(:$toolgroup);
   }
   multi method new (GtkWidget $toolgroup) {
     self.bless(:$toolgroup);
+  }
+
+  method GTK::Raw::Types::GtkToolItemGroup {
+    $!tig;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -59,7 +63,7 @@ class GTK::ToolitemGroup is GTK::Container {
         so gtk_tool_item_group_get_collapsed($!tig);
       },
       STORE => sub ($, Int() $collapsed is copy) {
-        my gboolean $c = self.RESOLVE-BOOL($c);
+        my gboolean $c = self.RESOLVE-BOOL($collapsed);
         gtk_tool_item_group_set_collapsed($!tig, $c);
       }
     );
@@ -69,11 +73,11 @@ class GTK::ToolitemGroup is GTK::Container {
     Proxy.new(
       FETCH => sub ($) {
         PangoEllipsizeMode(
-          gtk_tool_item_group_get_ellipsize($!tig);
+          gtk_tool_item_group_get_ellipsize($!tig)
         );
       },
       STORE => sub ($, Int() $ellipsize is copy) {
-        my gboolean $e = self.RESOLVE-BOOL($ellipsize);
+        my uint32 $e = self.RESOLVE-UINT($ellipsize);
         gtk_tool_item_group_set_ellipsize($!tig, $e);
       }
     );
@@ -87,7 +91,7 @@ class GTK::ToolitemGroup is GTK::Container {
         );
       },
       STORE => sub ($, Int() $style is copy) {
-        my gboolean $s = self.RESOLVE-UINT($style);
+        my uint32 $s = self.RESOLVE-UINT($style);
         gtk_tool_item_group_set_header_relief($!tig, $s);
       }
     );
@@ -119,7 +123,7 @@ class GTK::ToolitemGroup is GTK::Container {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_drop_item (Int() $x, Int() $y) {
     my @i = ($x, $y);
-    my gint ($xx, $uu) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_tool_item_group_get_drop_item($!tig, $xx, $yy);
   }
 
@@ -137,7 +141,7 @@ class GTK::ToolitemGroup is GTK::Container {
   }
 
   method get_type {
-    gtk_tool_item_group_get_type($!tig);
+    gtk_tool_item_group_get_type();
   }
 
   multi method insert (GtkToolItem() $item, Int() $position) {

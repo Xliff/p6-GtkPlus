@@ -24,7 +24,7 @@ class GTK::SeparatorMenuItem is GTK::MenuItem {
       when GtkSeparatorMenuItem | GtkWidget {
         $!smi = do {
           when GtkWidget {
-            $to-parent = $_
+            $to-parent = $_;
             nativecast(GtkSeparatorMenuItem, $_);
           }
           when GtkSeparatorMenuItem {
@@ -41,11 +41,11 @@ class GTK::SeparatorMenuItem is GTK::MenuItem {
     }
   }
 
-  method new {
-    my $separator = gtk_separator_menu_item_new($!smi);
+  multi method new {
+    my $separator = gtk_separator_menu_item_new();
     self.bless(:$separator);
   }
-  method new (GtkWidget $separator) {
+  multi method new (GtkWidget $separator) {
     self.bless(:$separator);
   }
 
