@@ -50,7 +50,7 @@ class GTK::ToolButton is GTK::ToolItem {
   multi method new (GtkWidget $toolbutton) {
     self.bless(:$toolbutton);
   }
-  multi method new (GtkWidget() $widget, gchar $label) {
+  multi method new (GtkWidget() $widget, Str() $label) {
     my $toolbutton = gtk_tool_button_new($widget, $label);
     self.bless(:$toolbutton);
   }
