@@ -6,8 +6,6 @@ use GTK::Statusbar;
 use GTK::Compat::Permission;
 use GTK::Compat::RGBA;
 
-use Data::Dump::Tree;
-
 # HOPEFULLY FOR NOW!
 # Use of GTK::Builder requires a whole new paradigm for
 # writing applications.
@@ -53,6 +51,9 @@ $a.control('okbutton').clicked.tap({
 
 $a.run;
 
+=begin css
+*:hover { background: #ff3333; }
+=end css
 =begin ui
 <interface>
   <requires lib="gtk+" version="3.20"/>
