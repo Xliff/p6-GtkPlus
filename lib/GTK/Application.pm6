@@ -104,7 +104,10 @@ ERR
     $!app;
   }
 
-  method control(Str $name) {
+  method control(Str $name?) {
+    without $name {
+      return $!builder;
+    }
     die "GTK::Application.controls only available if using GTK::Builder support."
       unless $!builder;
     $!builder{$name};

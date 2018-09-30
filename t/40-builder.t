@@ -1,17 +1,17 @@
 use v6.c;
 
 use GTK::Application;
-use GTK::Button;
-use GTK::LinkButton;
+use GTK::Statusbar;
 
 use GTK::Compat::Permission;
 use GTK::Compat::RGBA;
 
-# use Data::Dump::Tree;
+use Data::Dump::Tree;
 
 # HOPEFULLY FOR NOW!
 # Use of GTK::Builder requires a whole new paradigm for
 # writing applications.
+my %cids;
 my $a = GTK::Application.new( :pod($=pod) );
 my $numClicks = 0;
 my $link = $a.control('link1');
@@ -20,7 +20,23 @@ my $check = $a.control('check1');
 my $switch = $a.control('switch1');
 my $color = $a.control('color1');
 my $spin = $a.control('spin1');
+# Can't add a statusbar in glade, so have to do it, here!
+my $status = GTK::Statusbar.new;
 
+# Set statusbar events.
+for $a.control.keys {
+  # Never a good idea to use loop control variable in a closure?
+  my $k = $_;
+  next unless $a.control($k) ~~ GTK::Widget;
+
+  my $text = "Control: { $k } ( { $a.control($k).^name } )";
+  %cids{$k} //= $status.get_context_id($text);
+  $a.control($k).enter-notify-event.tap({ $status.push(%cids{$k}, $text) });
+  $a.control($k).leave-notify-event.tap({ $status.pop(%cids{$k}) });
+}
+
+$status.show;
+$a.control('box1').pack_start($status, True, True);
 $a.control('application').destroy-signal.tap({ $a.exit });
 $a.control('cancelbutton').clicked.tap({ $a.exit });
 $link.clicked.tap({ $numClicks++ });
@@ -33,7 +49,6 @@ $a.control('okbutton').clicked.tap({
   say "Switch current status: " ~ $switch.active.Str;
   say "Color button current color: " ~ $color.rgba.Str;
   say "Spin current value: " ~ $spin.value;
-
 });
 
 $a.run;
