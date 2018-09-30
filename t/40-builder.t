@@ -5,18 +5,35 @@ use GTK::Button;
 use GTK::LinkButton;
 
 use GTK::Compat::Permission;
+use GTK::Compat::RGBA;
 
-use Data::Dump::Tree;
+# use Data::Dump::Tree;
 
 # HOPEFULLY FOR NOW!
 # Use of GTK::Builder requires a whole new paradigm for
 # writing applications.
 my $a = GTK::Application.new( :pod($=pod) );
+my $numClicks = 0;
+my $link = $a.control('link1');
+my $tog = $a.control('toggle1');
+my $check = $a.control('check1');
+my $switch = $a.control('switch1');
+my $color = $a.control('color1');
+my $spin = $a.control('spin1');
 
 $a.control('application').destroy-signal.tap({ $a.exit });
 $a.control('cancelbutton').clicked.tap({ $a.exit });
+$link.clicked.tap({ $numClicks++ });
 $a.control('okbutton').clicked.tap({
-  say "OK button clicked!";
+  say "Entry control contains: " ~ $a.control('entry1').text;
+  say "Link control was { $link.visited ?? '' !! 'not ' }visited.";
+  say "Link control clicked: { $numClicks } times";
+  say "Toggle button current status: " ~ $tog.active.Str;
+  say "Check button current status: " ~ $check.active.Str;
+  say "Switch current status: " ~ $switch.active.Str;
+  say "Color button current color: " ~ $color.rgba.Str;
+  say "Spin current value: " ~ $spin.value;
+
 });
 
 $a.run;

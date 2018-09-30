@@ -14,7 +14,7 @@ class GTK::ToggleButton is GTK::Button {
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ToggleButton`');
+    $o.setType('GTK::ToggleButton');
     $o;
   }
 
@@ -77,7 +77,7 @@ class GTK::ToggleButton is GTK::Button {
   method active is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_toggle_button_get_active($!tb) );
+        so gtk_toggle_button_get_active($!tb);
       },
       STORE => sub ($, Int() $is_active is copy) {
         my gboolean $ia = self.RESOLVE-BOOL($is_active);
@@ -89,7 +89,7 @@ class GTK::ToggleButton is GTK::Button {
   method inconsistent is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_toggle_button_get_inconsistent($!tb) );
+        so gtk_toggle_button_get_inconsistent($!tb);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -101,7 +101,7 @@ class GTK::ToggleButton is GTK::Button {
   method mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_toggle_button_get_mode($!tb) );
+        so gtk_toggle_button_get_mode($!tb);
       },
       STORE => sub ($, $draw_indicator is copy) {
         my gboolean $di = self.RESOLVE-BOOL($draw_indicator);
