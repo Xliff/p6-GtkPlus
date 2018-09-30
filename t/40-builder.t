@@ -4,6 +4,10 @@ use GTK::Application;
 use GTK::Button;
 use GTK::LinkButton;
 
+use GTK::Compat::Permission;
+
+use Data::Dump::Tree;
+
 # HOPEFULLY FOR NOW!
 # Use of GTK::Builder requires a whole new paradigm for
 # writing applications.
@@ -20,6 +24,12 @@ $a.run;
 =begin ui
 <interface>
   <requires lib="gtk+" version="3.20"/>
+  <object class="GtkAdjustment" id="adjustment1">
+    <property name="lower">25</property>
+    <property name="upper">100</property>
+    <property name="step_increment">2</property>
+    <property name="page_increment">5</property>
+  </object>
   <object class="GtkWindow" id="application">
     <property name="visible">True</property>
     <property name="can_focus">True</property>
@@ -116,7 +126,11 @@ $a.run;
             <child>
               <object class="GtkSpinButton" id="spin1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
+                <property name="adjustment">adjustment1</property>
+                <property name="can_focus">False</property>
+                <property name="max_width_chars">2</property>
+                <property name="snap_to_ticks">False</property>
+                <property name="numeric">True</property>
                 <property name="value">25</property>
               </object>
               <packing>

@@ -11,13 +11,13 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
 use GTK;
+use GTK::Adjustment;
 use GTK::Widget;
 
 class GTK::Builder does Associative {
   has GtkBuilder $!b;
   has %!types;
   has %!widgets handles <
-    AT-KEY
     EXISTS-KEY
     elems
     keys
@@ -74,6 +74,11 @@ class GTK::Builder does Associative {
 
   #  new-from-buf??
 
+  method AT-KEY(Str $key) {
+    die "Requested control '$key' does not exist."
+      unless  %!widgets{$key}:exists;
+    %!widgets{$key};
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -100,12 +105,16 @@ class GTK::Builder does Associative {
           # Last-chance special case resolution -- should probably be broken
           # out into its own package.
           $type = do given $type {
+            when 'GTK::Adjustment' {
+              $args = ['cast', GtkAdjustment];
+              $_;
+            }
             when 'GTK::VBox' {
-              $args = 'vertical';
+              $args = ['option', { vertical => 1 } ];
               'GTK::Box';
             }
             when 'GTK::HBox' {
-              $args = 'horizontal';
+              $args = ['option', { horizontal => 1} ];
               'GTK::Box';
             }
             default { $_; }
@@ -121,12 +130,29 @@ class GTK::Builder does Associative {
     :$file,
     :$resource
   ) {
+    my $args;
+
     self!getTypes(:$ui_def, :$file, :$resource);
     for %!types.keys -> $k {
+      my $o = self.get_object($k);
+      given %!types{$k}[1][0] {
+        when 'cast' {
+          $o = nativecast(%!types{$k}[1][1], $o);
+        }
+        when 'option' {
+          $args = %!types{$k}[1][1];
+        }
+      }
       # Use type names to dynamically create objects.
-      %!widgets{$k} = ::( %!types{$k}[0] ).new(
-        self.get_object($k)
-      );
+      # Use $args to pass along additional arguments.
+      %!widgets{$k} = do {
+         when $args.defined {
+           ::( %!types{$k}[0] ).new($o, $args.pairs);
+          }
+         default {
+           ::( %!types{$k}[0] ).new($o);
+         }
+      }
     }
 
     #ddt %!widgets;

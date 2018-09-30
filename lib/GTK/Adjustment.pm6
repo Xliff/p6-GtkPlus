@@ -13,6 +13,9 @@ class GTK::Adjustment {
     $!a = $adjustment;
   }
 
+  multi method new (GtkAdjustment $adjustment) {
+    self.bless(:$adjustment);
+  }
   multi method new (
     Num() $lower,
     Num() $upper,
@@ -25,9 +28,6 @@ class GTK::Adjustment {
     );
     my $adjustment = gtk_adjustment_new($!a, $l, $u, $si, $pi, $ps);
     self.bless($adjustment);
-  }
-  multi method new (GtkAdjustment $adjustment) {
-    self.bless(:$adjustment);
   }
 
   method GTK::Raw::Types::GtkAdjustment {
