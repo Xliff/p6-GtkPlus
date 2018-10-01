@@ -18,26 +18,30 @@ class GTK::ComboBox is GTK::Bin {
   }
 
   submethod BUILD(:$combobox) {
-    my $to-parent;
-    given $ {
+    given $combobox {
       when GtkComboBox | GtkWidget {
-        $!cb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkComboBox, $_);
-          }
-          when GtkComboBox  {
-            $to-parent = nativecast(GtkBin, $_);
-            $_;
-          }
-        }
-        self.setBin($to-parent);
+        self.setComboBox($combobox);
       }
       when GTK::ComboBox {
       }
       default {
       }
     }
+  }
+
+  method setComboBox($combobox) {
+    my $to-parent;
+    $!cb = do given $combobox {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkComboBox, $_);
+      }
+      when GtkComboBox  {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
+      }
+    }
+    self.setBin($to-parent);
   }
 
   multi method new {
@@ -113,8 +117,8 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_active($!cb);
       },
-      STORE => sub ($, $index_ is copy) {
-        gtk_combo_box_set_active($!cb, $index_);
+      STORE => sub ($, $index is copy) {
+        gtk_combo_box_set_active($!cb, $index);
       }
     );
   }

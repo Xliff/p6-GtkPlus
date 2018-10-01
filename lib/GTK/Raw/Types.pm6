@@ -737,6 +737,7 @@ class GtkClipboard         is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkColorButton       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkColorChooser      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkComboBox          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkComboBoxText      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkContainer         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCSSProvider       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDialog            is repr('CPointer') does GTK::Roles::Pointers is export { }
