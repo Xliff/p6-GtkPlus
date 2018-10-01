@@ -12,8 +12,7 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
   has GtkSeparatorToolItem $!sti;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::SeparatorToolItem');
     $o;
   }

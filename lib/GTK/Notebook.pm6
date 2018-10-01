@@ -12,9 +12,8 @@ class GTK::Notebook is GTK::Container {
   has GtkNotebook $!n;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::NoteBook`');
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::NoteBook');
     $o;
   }
 

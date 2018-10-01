@@ -12,8 +12,7 @@ class GTK::SeparatorMenuItem is GTK::MenuItem {
   has GtkSeparatorMenuItem $!smi;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::SeparatorMenuItem');
     $o;
   }

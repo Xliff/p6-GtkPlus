@@ -189,7 +189,7 @@ ERR
     );
   }
 
-  multi method run (GTK::Application:D: ) {
+  method run {
     # Check to see if supply has already been tapped. If not, then:
     # self.window.destroy-signal.tap({ self.exit; });
     #gtk_main();
@@ -200,16 +200,13 @@ ERR
       g_application_run($!app, OpaquePointer, OpaquePointer);
     }
   }
-  multi method run(GTK::Application:U: ) {
-    $gapp = gtk_application_new('Application', G_APPLICATION_FLAGS_NONE);
+  # multi method run(GTK::Application:U: ) {
+  #   $gapp = gtk_application_new('Application', G_APPLICATION_FLAGS_NONE);
+  #
+  #   g_application_run($gapp, OpaquePointer, OpaquePointer);
+  # }
 
-    g_application_run($gapp, OpaquePointer, OpaquePointer);
-  }
-
-  multi method exit(GTK::Application:D: ) {
-    $.builder ?? gtk_main_quit() !! g_application_quit($!app);
-  }
-  multi method exit(GTK::Application:U: ) {
+  method exit {
     $.builder ?? gtk_main_quit() !! g_application_quit($!app);
   }
 

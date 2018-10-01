@@ -13,8 +13,7 @@ class GTK::Entry is GTK::Widget {
   has GtkEntry $!e;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Entry');
     $o;
   }

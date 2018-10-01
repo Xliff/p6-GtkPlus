@@ -12,8 +12,7 @@ class GTK::Frame is GTK::Bin {
   has GtkFrame $!f;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Frame');
     $o;
   }
@@ -48,7 +47,7 @@ class GTK::Frame is GTK::Bin {
     my $frame = gtk_frame_new($label);
     self.bless(:$frame);
   }
-  
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
