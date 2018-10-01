@@ -12,8 +12,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
   has GtkMenuToolButton $!mtb;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::MenuToolButton');
     $o;
   }

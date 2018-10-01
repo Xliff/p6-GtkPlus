@@ -11,13 +11,6 @@ use GTK::TargetEntry;
 class GTK::TargetList {
   has GtkTargetList $!tl;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::TargetList');
-    $o;
-  }
-
   submethod BUILD(:$targetlist) {
     $!tl = $targetlist
   }

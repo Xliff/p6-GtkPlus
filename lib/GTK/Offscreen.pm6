@@ -12,8 +12,7 @@ class GTK::Offscreen is GTK::Window {
   has GtkOffscreen $!ow;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Offscreen');
     $o;
   }

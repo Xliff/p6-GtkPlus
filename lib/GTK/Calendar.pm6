@@ -12,8 +12,7 @@ class GTK::Calendar is GTK::Widget {
   has GtkCalendar $!cal;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Calendar');
     $o;
   }

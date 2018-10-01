@@ -12,8 +12,7 @@ class GTK::MenuBar is GTK::MenuShell {
   has GtkMenuBar $!mb;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::MenuBar');
     $o;
   }

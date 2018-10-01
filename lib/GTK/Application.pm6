@@ -14,6 +14,7 @@ use GTK::Window;
 
 class GTK::Application {
   also does GTK::Roles::Signals;
+  also does GTK::Roles::Types;
 
   my $gapp;
 
@@ -89,6 +90,13 @@ ERR
       $!window //= GTK::Window.new(
         :window( gtk_application_window_new($!app) )
       );
+
+      # This looks to be unnecessary, now. 
+      # self.window.realize-signal.tap({
+      #   # If destroy signal not set, then set an appropriate default.
+      #   self.window.destroy-signal.tap({ self.exit; })
+      #     unless self.window.is-connected('destroy');
+      # });
 
       without $ui-data {
         self.window.title = $title;
@@ -190,9 +198,10 @@ ERR
   }
 
   method run {
-    # Check to see if supply has already been tapped. If not, then:
-    # self.window.destroy-signal.tap({ self.exit; });
-    #gtk_main();
+    # Check to see if the destroy signal has already been tapped. If not, then
+    # add the default.
+    #
+    # Cannot be done here as the activate signal has NOT occurred, yet.
 
     with $!builder {
       gtk_main();
@@ -222,17 +231,15 @@ ERR
     self.connect($!app, 'shutdown');
   }
 
-  method getWidget($name) {
-    die "Application not initialized with Builder support!" unless $!builder;
-
-    # Object resolution code needed here, as well.
-    $!builder.get_object($name);
-  }
-
-  method add_accelerator (gchar $accelerator, gchar $action_name, GVariant $parameter) {
+  method add_accelerator (
+    Str() $accelerator,
+    Str() $action_name,
+    GVariant $parameter
+  ) {
     gtk_application_add_accelerator($!app, $accelerator, $action_name, $parameter);
   }
 
+  # Do we need to do anything here? Will leave this until answered.
   multi method add_window (GtkWindow $window) {
     gtk_application_add_window($!app, $window);
   }
@@ -240,11 +247,11 @@ ERR
     samewith($window.window);
   }
 
-  method get_accels_for_action (gchar $detailed_action_name) {
+  method get_accels_for_action (Str() $detailed_action_name) {
     gtk_application_get_accels_for_action($!app, $detailed_action_name);
   }
 
-  method get_actions_for_accel (gchar $accel) {
+  method get_actions_for_accel (Str() $accel) {
     gtk_application_get_actions_for_accel($!app, $accel);
   }
 
@@ -252,7 +259,7 @@ ERR
     gtk_application_get_active_window($!app);
   }
 
-  method get_menu_by_id (gchar $id) {
+  method get_menu_by_id (Str() $id) {
     gtk_application_get_menu_by_id($!app, $id);
   }
 
@@ -261,7 +268,7 @@ ERR
   }
 
   method get_window_by_id (Int() $id) {
-    my guint $i = GTK::Window.RESOLVE-UINT($id);
+    my guint $i = self.RESOLVE-UINT($id);
     gtk_application_get_window_by_id($!app, $i);
   }
 
@@ -270,26 +277,19 @@ ERR
   }
 
   # cw: Variant to accept a GTK::Window
-  multi method inhibit (
+  method inhibit (
     GtkWindow $window,
     Int() $flags,               # GtkApplicationInhibitFlags $flags,
-    gchar $reason
+    Str() $reason
   ) {
-    my guint $f = GTK::Window.RESOLVE-UINT($flags);
+    my guint $f = self.RESOLVE-UINT($flags);
     gtk_application_inhibit($!app, $window, $f, $reason);
-  }
-  multi method inhibit (
-    GTK::Window $window,
-    Int() $flags,               # GtkApplicationInhibitFlags $flags,
-    gchar $reason
-  ) {
-    samewith($window.window, $flags, $reason);
   }
 
   method is_inhibited (
     Int() $flags                # GtkApplicationInhibitFlags $flags
   ) {
-    my guint $f = GTK::Window.RESOLVE-UINT($flags);
+    my guint $f = self.RESOLVE-UINT($flags);
     gtk_application_is_inhibited($!app, $f);
   }
 
@@ -301,19 +301,16 @@ ERR
     gtk_application_prefers_app_menu($!app);
   }
 
-  method remove_accelerator (gchar $action_name, GVariant $parameter) {
+  method remove_accelerator (Str() $action_name, GVariant $parameter) {
     gtk_application_remove_accelerator($!app, $action_name, $parameter);
   }
 
-  multi method remove_window (GtkWindow $window) {
+  method remove_window (GtkWindow() $window) {
     gtk_application_remove_window($!app, $window);
-  }
-  multi method remove_window (GTK::Window $window) {
-    samewith($window.window);
   }
 
   method uninhibit (Int() $cookie) {
-    my guint $c = GTK::Window.RESOLVE-UINT($cookie);
+    my guint $c = self.RESOLVE-UINT($cookie);
     gtk_application_uninhibit($!app, $c);
   }
 

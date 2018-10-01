@@ -9,19 +9,39 @@ use GTK::Raw::Types;
 class GTK::Clipboard {
   has GtkClipboard $!cb;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::Clipboard');
-    $o;
-  }
-
   submethod BUILD(:$clipboard) {
     $!cb = $clipboard
   }
 
   method GTK::Raw::Types::GtkClipboard {
     $!cb;
+  }
+
+  multi method new (GdkAtom $sel) {
+    my $clipboard = GTK::Clipboard.get($sel);
+    self.bless(:$clipboard);
+  }
+  multi method new (GdkDisplay $display, GdkAtom $sel) {
+    my $clipboard = GTK::Clipboard.get_for_display($display, $sel);
+    self.bless(:$clipboard);
+  }
+  multi method new (GdkDisplay $display) {
+    my $clipboard = GTK::Clipboard.get_default($display);
+    self.bless(:$clipboard);
+  }
+
+  # Static methods used in multi new(). Should these just be eliminated
+  # for the default object accessors?
+  method get(GdkAtom $sel) {
+    gtk_clipboard_get($sel);
+  }
+
+  method get_default(GdkDisplay $display) {
+    gtk_clipboard_get_default($display);
+  }
+
+  method get_for_display (GdkDisplay $display, GdkAtom $selection) {
+    gtk_clipboard_get_for_display($display, $selection);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -42,20 +62,8 @@ class GTK::Clipboard {
     gtk_clipboard_clear($!cb);
   }
 
-  method get(GdkAtom $sel) {
-    gtk_clipboard_get($sel);
-  }
-
-  method get_default(GdkDisplay $display) {
-    gtk_clipboard_get_default($display);
-  }
-
   method get_display {
     gtk_clipboard_get_display($!cb);
-  }
-
-  method get_for_display (GdkDisplay $display, GdkAtom $selection) {
-    gtk_clipboard_get_for_display($display, $selection);
   }
 
   method get_owner {

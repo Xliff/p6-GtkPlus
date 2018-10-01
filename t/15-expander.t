@@ -41,7 +41,7 @@ TEXT
 
   $e.notify-expanded.tap({ $a.window.resizable = $e.expanded });
   $a.window.add($vb);
-  $a.window.destroy-signal.tap({ $a.exit });
+  #$a.window.destroy-signal.tap({ say "Exited"; $a.exit });
   $a.show_all;
 });
 

@@ -14,14 +14,6 @@ class GTK::TextBuffer {
 
   has GtkTextBuffer $!tb;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    # This should be moved to a role so that non GtkWidgets can use it!
-    # $o.setType('GTK::TextBuffer');
-    $o;
-  }
-
   submethod BUILD(:$buffer) {
     $!tb = $buffer;
   }

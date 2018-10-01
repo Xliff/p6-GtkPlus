@@ -12,8 +12,7 @@ class GTK::Dialog is GTK::Window {
   has GtkDialog $!d;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Dialog');
     $o;
   }

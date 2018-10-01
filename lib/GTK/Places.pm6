@@ -13,8 +13,7 @@ class GTK::Places is GTK::ScrolledWindow {
   has GtkPlacesSidebar $!ps;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Places');
     $o;
   }

@@ -35,6 +35,12 @@ role GTK::Roles::Signals {
     %!signals{$signal}[0];
   }
 
+  # Has this supply been created yet? If True, this is a good indication that
+  # that signal $name has been tapped.
+  method is-connected(Str $name) {
+    %!signals{$name}:exists;
+  }
+
   # First draft of a generic handler that imitates the interface of what was
   # provided with GTK::Simple, but with the ability to provide a return
   # value, and to adapt to multiple signatures.

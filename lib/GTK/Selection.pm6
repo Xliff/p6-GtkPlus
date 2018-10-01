@@ -13,13 +13,6 @@ class GTK::Selection {
 
   has GtkSelectionData $!s;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    self.setType('GTK::Selection');
-    $o;
-  }
-
   submethod BUILD(:$selection) {
     $!s = $selection
   }
