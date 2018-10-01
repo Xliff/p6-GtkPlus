@@ -210,6 +210,15 @@ class GTK::Stack is GTK::Container {
     my uint32 $t = self.RESOLVE-UINT($transition);
     gtk_stack_set_visible_child_full($!s, $name, $t);
   }
+
+  # Expose the Stack Switcher widget as GtkStackSwitcher
+  method switcher {
+    $!ss;
+  }
+  # Expose the Stack Switcher widget as GtkWidget
+  method switcher-widget {
+    nativecast(GtkWidget, $!ss);
+  }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }

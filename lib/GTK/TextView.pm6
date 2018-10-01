@@ -374,12 +374,16 @@ class GTK::TextView is GTK::Container {
   }
 
   # Custom convenience method.
-  method text {
+  method text is rw {
     Proxy.new(
       FETCH => -> $ {
         my $tb = self.buffer;
         my ($s, $e) = $tb.get_bounds;
         $tb.get_text($s, $e, False);
+      },
+      STORE => -> $, Str() $t {
+        my $tb = self.buffer;
+        $tb.set_text($t);
       }
     );
   }

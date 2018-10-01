@@ -155,7 +155,7 @@ class GTK::TextBuffer {
   }
 
   method apply_tag_by_name (
-    gchar $name,
+    Str() $name,
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
@@ -328,7 +328,7 @@ class GTK::TextBuffer {
     gtk_text_buffer_get_line_count($!tb);
   }
 
-  method get_mark (gchar $name) {
+  method get_mark (Str() $name) {
     gtk_text_buffer_get_mark($!tb, $name);
   }
 
@@ -379,7 +379,7 @@ class GTK::TextBuffer {
 
   multi method insert (
     GtkTextIter() $iter,
-    gchar $text,
+    Str() $text,
     Int() $len                    # gint $len
   ) {
     my gint $l = self.RESOLVE-INT($len);
@@ -387,7 +387,7 @@ class GTK::TextBuffer {
   }
 
   method insert_at_cursor (
-    gchar $text,
+    Str() $text,
     Int() $len                    # gint $len
   ) {
     my gint $l = self.RESOLVE-INT($len);
@@ -403,7 +403,7 @@ class GTK::TextBuffer {
 
   method insert_interactive (
     GtkTextIter() $iter,
-    gchar $text,
+    Str() $text,
     Int() $len,                   # gint $len,
     Int() $default_editable       # gboolean $default_editable
   ) {
@@ -413,7 +413,7 @@ class GTK::TextBuffer {
   }
 
   method insert_interactive_at_cursor (
-    gchar $text,
+    Str() $text,
     Int() $len,                   # gint $len,
     Int() $default_editable       # gboolean $default_editable
   ) {
@@ -424,7 +424,7 @@ class GTK::TextBuffer {
 
   method insert_markup (
     GtkTextIter() $iter,
-    gchar $markup,
+    Str() $markup,
     Int() $len                    # gint $len
   ) {
     my gint $l = self.RESOLVE-INT($len);
@@ -463,7 +463,7 @@ class GTK::TextBuffer {
     gtk_text_buffer_move_mark($!tb, $mark, $where);
   }
 
-  method move_mark_by_name (gchar $name, GtkTextIter() $where) {
+  method move_mark_by_name (Str() $name, GtkTextIter() $where) {
     gtk_text_buffer_move_mark_by_name($!tb, $name, $where);
   }
 
@@ -497,7 +497,7 @@ class GTK::TextBuffer {
   }
 
   method remove_tag_by_name (
-    gchar $name,
+    Str() $name,
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
@@ -509,10 +509,10 @@ class GTK::TextBuffer {
   }
 
   method set_text (
-    gchar $text,
-    Int() $len                    # gint $len
+    Str() $text,
+    Int $len?                   # gint $len, can't use Int() since optional.
   ) {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = $len ?? self.RESOLVE-INT($len) !! $text.chars;
     gtk_text_buffer_set_text($!tb, $text, $l);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
