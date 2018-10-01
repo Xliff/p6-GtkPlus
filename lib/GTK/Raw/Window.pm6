@@ -123,7 +123,11 @@ sub gtk_window_get_resize_grip_area (GtkWindow $window, GdkRectangle $rect)
   is export
   { * }
 
-sub gtk_window_get_size (GtkWindow $window, gint $width, gint $height)
+sub gtk_window_get_size (
+  GtkWindow $window,
+  gint $width is rw,
+  gint $height is rw
+)
   is native('gtk-3')
   is export
   { * }

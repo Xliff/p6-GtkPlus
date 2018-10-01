@@ -49,7 +49,9 @@ class GTK::Widget {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
     $!w = do given $widget {
-      when GtkWidget   { $_; }
+      when GtkWidget {
+        $_;
+      }
       # This will go away once proper pass-down rules have been established.
       default {
 #        say "Setting from { .^name }";
@@ -691,8 +693,9 @@ class GTK::Widget {
       FETCH => sub ($) {
         gtk_widget_get_opacity($!w);
       },
-      STORE => sub ($, $opacity is copy) {
-        gtk_widget_set_opacity($!w, $opacity);
+      STORE => sub ($, Num() $opacity is copy) {
+        my gdouble $o = $opacity;
+        gtk_widget_set_opacity($!w, $o);
       }
     );
   }

@@ -350,17 +350,20 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method opacity is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        Bool( gtk_window_get_opacity($!win) );
-      },
-      STORE => sub ($, Num() $opacity is copy) {
-        my gdouble $o = $opacity;
-        gtk_window_set_opacity($!win, $o);
-      }
-    );
-  }
+  # DO NOT USE -- Is deprecated and conflicts with the recommended
+  # function implemented in GTK::Widget
+  #
+  # method opacity is rw {
+  #   Proxy.new(
+  #     FETCH => sub ($) {
+  #       Bool( gtk_window_get_opacity($!win) );
+  #     },
+  #     STORE => sub ($, Num() $opacity is copy) {
+  #       my gdouble $o = $opacity;
+  #       gtk_window_set_opacity($!win, $o);
+  #     }
+  #   );
+  # }
 
   method resizable is rw {
     Proxy.new(
@@ -575,10 +578,17 @@ class GTK::Window is GTK::Bin {
     gtk_window_get_resize_grip_area($!win, $rect);
   }
 
-  method get_size (Int() $width, Int() $height) {
+  multi method get_size {
+    my ($width, $height) = (0, 0);
+    samewith($width, $height);
+    ($width, $height);
+  }
+  multi method get_size (Int() $width is rw, Int() $height is rw) {
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
-    gtk_window_get_size($!win, $w, $h);
+    my $rc = gtk_window_get_size($!win, $w, $h);
+    ($width, $height) = ($w, $h);
+    $rc;
   }
 
   method get_type {

@@ -85,7 +85,6 @@ ERR
       $cp.load_from_data($_);
     }
 
-
     self.activate.tap({
       $!window //= GTK::Window.new(
         :window( gtk_application_window_new($!app) )
