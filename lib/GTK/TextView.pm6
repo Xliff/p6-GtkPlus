@@ -7,6 +7,7 @@ use GTK::Raw::TextView;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::TextBuffer;
 
 class GTK::TextView is GTK::Container {
   has GtkTextView $!tv;
@@ -173,9 +174,9 @@ class GTK::TextView is GTK::Container {
   method buffer is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_text_view_get_buffer($!tv);
+        GTK::TextBuffer.new( gtk_text_view_get_buffer($!tv) );
       },
-      STORE => sub ($, GtkTextBuffer $buffer is copy) {
+      STORE => sub ($, GtkTextBuffer() $buffer is copy) {
         gtk_text_view_set_buffer($!tv, $buffer);
       }
     );
@@ -368,6 +369,17 @@ class GTK::TextView is GTK::Container {
       STORE => sub ($, Int() $wrap_mode is copy) {
         my uint32 $wm = self.RESOLVE-UINT($wrap_mode);
         gtk_text_view_set_wrap_mode($!tv, $wm);
+      }
+    );
+  }
+
+  # Custom convenience method.
+  method text {
+    Proxy.new(
+      FETCH => -> $ {
+        my $tb = self.buffer;
+        my ($s, $e) = $tb.get_bounds;
+        $tb.get_text($s, $e, False);
       }
     );
   }
