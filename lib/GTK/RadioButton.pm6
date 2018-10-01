@@ -45,16 +45,30 @@ class GTK::RadioButton is GTK::CheckButton {
   multi method new (GtkWidget $radiobutton) {
     self.bless(:$radiobutton);
   }
-  multi method new (@members) {
-    my $member_list = GTK::Compat::GSList.new(@members);
-    samewith($member_list);
-  }
   multi method new(GSList() $group) {
     my $radiobutton = gtk_radio_button_new($group);
     self.bless(:$radiobutton);
   }
+  method new-group (*@members) {
+    my @m = @members.clone;
+    my @radiobuttons = (
+      GTK::RadioButton.new_with_label(GSList, @m.shift)
+    );
+    for @m {
+      @radiobuttons.push(
+        GTK::RadioButton.new_with_label_from_widget(
+          @radiobuttons[0].radiobutton,
+          $_
+        )
+      );
+    }
+    @radiobuttons;
+  }
 
   method GTK::Raw::Types::GtkRadioButton {
+    $!rb;
+  }
+  method radiobutton {
     $!rb;
   }
 

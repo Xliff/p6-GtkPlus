@@ -27,6 +27,7 @@ class GTK::Compat::GSList {
     self.free;
   }
 
+  # XXX - THIS DOES NOT CURRENTLY WORK WITHOUT A WAY TO SET DATA! - XXX
   # Not liking this. See if it can be improved.
   multi method new (@list) {
     my $list;

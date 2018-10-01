@@ -56,22 +56,22 @@ class GTK::Button is GTK::Bin {
     self.bless(:$button);
   }
 
-  method new_with_mnemonic (GTK::Button:U: gchar $label) {
+  method new_with_mnemonic (GTK::Button:U: Str() $label) {
     my $button = gtk_button_new_with_mnemonic($label);
     self.bless(:$button)
   }
 
-  method new_from_icon_name (GTK::Button:U: gchar $icon_name, GtkIconSize $size) {
+  method new_from_icon_name (GTK::Button:U: Str() $icon_name, GtkIconSize $size) {
     my $button = gtk_button_new_from_icon_name($icon_name, $size);
     self.bless(:$button);
   }
 
-  method new_from_stock (GTK::Button:U: gchar $stock_id) {
+  method new_from_stock (GTK::Button:U: Str() $stock_id) {
     my $button = gtk_button_new_from_stock($stock_id);
     self.bless(:$button);
   }
 
-  method new_with_label (GTK::Button:U: gchar $label) {
+  method new_with_label (GTK::Button:U: Str() $label) {
     my $button = gtk_button_new_with_label($label);
     self.bless(:$button);
   }
@@ -162,7 +162,7 @@ class GTK::Button is GTK::Bin {
       FETCH => sub ($) {
         gtk_button_get_label($!b);
       },
-      STORE => sub ($, gchar $label is copy) {
+      STORE => sub ($, Str() $label is copy) {
         gtk_button_set_label($!b, $label);
       }
     );
