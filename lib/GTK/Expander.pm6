@@ -68,6 +68,10 @@ class GTK::Expander is GTK::Bin {
   method activate {
     self.connect($!e, 'activate');
   }
+
+  method notify-expanded {
+    self.connect($!e, 'notify::expanded');
+  }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

@@ -31,14 +31,14 @@ class GTK::ScrolledWindow is GTK::Bin {
     }
   }
 
+  multi method new (GtkWidget $scrolled) {
+    self.bless(:$scrolled);
+  }
   multi method new (
-    GtkAdjustment() $hadjustment,
-    GtkAdjustment() $vadjustment
+    GtkAdjustment() $hadjustment = GtkAdjustment,
+    GtkAdjustment() $vadjustment = GtkAdjustment
   ) {
     my $scrolled = gtk_scrolled_window_new($hadjustment, $vadjustment);
-    self.blessed(:$scrolled);
-  }
-  multi method new (GtkWidget $scrolled) {
     self.bless(:$scrolled);
   }
 
@@ -56,7 +56,7 @@ class GTK::ScrolledWindow is GTK::Bin {
             $_;
           }
         }
-        self.setParent($to-parent);
+        self.setBin($to-parent);
       }
     }
   }

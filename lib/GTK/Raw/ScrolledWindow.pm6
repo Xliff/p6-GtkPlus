@@ -49,8 +49,8 @@ sub gtk_scrolled_window_get_vscrollbar (GtkScrolledWindow $scrolled_window)
   { * }
 
 sub gtk_scrolled_window_new (
-  uint32 $ha is rw,                          # GtkAdjustment $hadjustment,
-  uint32 $va is rw                           # GtkAdjustment $vadjustment
+  GtkAdjustment $hadjustment,
+  GtkAdjustment $vadjustment
 )
   returns GtkWidget
   is native('gtk-3')
@@ -72,7 +72,7 @@ sub gtk_scrolled_window_unset_placement (GtkScrolledWindow $scrolled_window)
   { * }
 
 sub gtk_scrolled_window_get_hadjustment (GtkScrolledWindow $scrolled_window)
-  returns uint32 # GtkAdjustment
+  returns GtkAdjustment
   is native('gtk-3')
   is export
   { * }
@@ -156,14 +156,14 @@ sub gtk_scrolled_window_get_kinetic_scrolling (
   { * }
 
 sub gtk_scrolled_window_get_vadjustment (GtkScrolledWindow $scrolled_window)
-  returns uint32 # GtkAdjustment
+  returns GtkAdjustment
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_scrolled_window_set_hadjustment (
   GtkScrolledWindow $scrolled_window,
-  uint32 $ha                              # GtkAdjustment $hadjustment
+  GtkAdjustment $hadjustment
 )
   is native('gtk-3')
   is export
@@ -251,7 +251,7 @@ sub gtk_scrolled_window_set_kinetic_scrolling (
 
 sub gtk_scrolled_window_set_vadjustment (
   GtkScrolledWindow $scrolled_window,
-  uint32 $va                              # GtkAdjustment $vadjustment
+  GtkAdjustment $vadjustment
 )
   is native('gtk-3')
   is export
