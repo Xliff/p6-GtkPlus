@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::RadioButton;
 use GTK::Raw::Types;
@@ -44,6 +45,10 @@ class GTK::RadioButton is GTK::CheckButton {
   multi method new (GtkWidget $radiobutton) {
     self.bless(:$radiobutton);
   }
+  multi method new (@members) {
+    my $member_list = GTK::Compat::GSList.new(@members);
+    samewith($member_list);
+  }
   multi method new(GSList() $group) {
     my $radiobutton = gtk_radio_button_new($group);
     self.bless(:$radiobutton);
@@ -53,28 +58,37 @@ class GTK::RadioButton is GTK::CheckButton {
     $!rb;
   }
 
-  method new_from_widget (GtkRadioButton() $rgm) {
-    my $radiobutton = gtk_radio_button_new_from_widget($rgm);
+  method new_from_widget (GtkRadioButton() $member) {
+    my $radiobutton = gtk_radio_button_new_from_widget($member);
     self.bless(:$radiobutton);
   }
 
-  method new_with_label (Str() $label) {
-    my $radiobutton = gtk_radio_button_new_with_label($label);
+  method new_with_label (GSList() $group, Str() $label) {
+    my $radiobutton = gtk_radio_button_new_with_label($group, $label);
     self.bless(:$radiobutton);
   }
 
-  method new_with_label_from_widget (Str() $label) {
-    my $radiobutton = gtk_radio_button_new_with_label_from_widget($label);
+  method new_with_label_from_widget (GtkRadioButton() $member, Str() $label) {
+    my $radiobutton = gtk_radio_button_new_with_label_from_widget(
+      $member,
+      $label
+    );
     self.bless(:$radiobutton);
   }
 
-  method new_with_mnemonic (Str() $label) {
-    my $radiobutton = gtk_radio_button_new_with_mnemonic($label);
+  method new_with_mnemonic (GSList() $group, Str() $label) {
+    my $radiobutton = gtk_radio_button_new_with_mnemonic($group, $label);
     self.bless(:$radiobutton);
   }
 
-  method new_with_mnemonic_from_widget (Str() $label) {
-    my $radiobutton = gtk_radio_button_new_with_mnemonic_from_widget($label);
+  method new_with_mnemonic_from_widget (
+    GtkRadioButton() $member,
+    Str() $label
+  ) {
+    my $radiobutton = gtk_radio_button_new_with_mnemonic_from_widget(
+      $member,
+      $label
+    );
     self.bless(:$radiobutton);
   }
 

@@ -62,8 +62,24 @@ class GPermission is repr('CStruct') does GTK::Roles::Pointers is export {
 }
 
 class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Pointer $.data;
+  has Pointer $!data is rw;
   has GSList  $.next;
+
+  method data is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        $!data;
+      },
+      STORE => -> $, $val {
+        nqp::bindattr(
+          nqp::decont(self),
+          GSList,
+          '$!data',
+          nqp::unbox($val)
+        );
+      }
+    );
+  }
 }
 
 class GTypeValueList is repr('CUnion') is export {

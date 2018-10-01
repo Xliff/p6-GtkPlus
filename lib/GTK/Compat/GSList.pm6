@@ -27,7 +27,21 @@ class GTK::Compat::GSList {
     self.free;
   }
 
-  method new (GSList $list?) {
+  # Not liking this. See if it can be improved.
+  multi method new (@list) {
+    my $list;
+    for @list {
+      my $l = GTK::Compat::GSList.alloc();
+      $l.data = $_;
+      with $list  {
+        $list.append($l);
+      } else {
+        $list = self.bless(list => $l);
+      }
+    }
+    $list;
+  }
+  multi method new (GSList $list?) {
     with $list {
       self.bless(:$list);
     } else {

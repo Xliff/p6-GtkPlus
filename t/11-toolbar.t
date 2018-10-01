@@ -21,7 +21,6 @@ my $a = GTK::Application.new(
 
 $a.activate.tap({
   my %buttons;
-  my %icons;
   my $tb = GTK::Toolbar.new;
   my $g = GTK::Grid.new;
   my $window = $a.window.window;
@@ -46,31 +45,25 @@ $a.activate.tap({
     $full = !$full;
   }
 
-  for <
-    document-new
-    document-open
-    edit-undo
-    view-fullscreen
-    view-restore
-  > {
-    my $label = do {
-      when 'document-new'    { 'New'  }
-      when 'document-open'   { 'Open' }
-      when 'edit-undo'       { 'Undo' }
-      when 'view-fullscreen' { 'Full-Screen' }
-      when 'view-restore'    { 'Restore' }
-    }
-    %icons{$_} = GTK::Image.new_from_icon_name($_, icon_size);
-    %buttons{$_} = GTK::ToolButton.new(%icons{$_}, $label);
-    %buttons{$_}.clicked.tap({ say "$label button clicked." });
+  for (
+    ['document-new', 'New'],
+    ['document-open', 'Open'],
+    ['edit-undo', 'Undo'],
+    ['view-fullscreen', 'Full-Screen'],
+    ['view-restore', 'Restore']
+  ) {
+    %buttons{$_[0]} = GTK::ToolButton.new(
+      GTK::Image.new_from_icon_name($_[0], icon_size),
+      $_[1]
+    );
+    %buttons{$_[0]}.is_important = True;
+    # Use of $_ in closures is STILL a bad idea.
+    my $a = $_;
+    %buttons{$_[0]}.clicked.tap({ say "$a[1] button clicked." });
+    # Insure view buttons are inserted at the same position.
     my $num = $++;
-    $tb.insert(%buttons{$_}, $_ eq 'view-restore' ?? --$num !! $num);
+    $tb.insert(%buttons{$_[0]}, $_[0] eq 'view-restore' ?? --$num !! $num);
   }
-  %buttons<document-new>.is_important = True;
-  %buttons<document-open>.is_important = True;
-  %buttons<edit-undo>.is_important = True;
-  %buttons<view-fullscreen>.is_important = True;
-  %buttons<view-restore>.is_important = True;
 
   %buttons<view-fullscreen>.clicked.tap({
     toggle-screen;
