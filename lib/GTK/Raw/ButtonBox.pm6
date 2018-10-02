@@ -31,7 +31,9 @@ sub gtk_button_box_get_type ()
   is export
   { * }
 
-sub gtk_button_box_new (GtkOrientation $orientation)
+sub gtk_button_box_new (
+  uint32 $orientation           # GtkOrientation $orientation
+)
   returns GtkWidget
   is native('gtk-3')
   is export
@@ -63,7 +65,7 @@ sub gtk_button_box_get_layout (GtkButtonBox $widget)
 
 sub gtk_button_box_set_layout (
   GtkButtonBox $widget,
-  uint332 $layout_style           # GtkButtonBoxStyle $layout_style
+  uint32 $layout_style           # GtkButtonBoxStyle $layout_style
 )
   is native('gtk-3')
   is export

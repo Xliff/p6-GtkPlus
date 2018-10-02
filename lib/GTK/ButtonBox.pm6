@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Box;
 
 class GTK::ButtonBox is GTK::Box {
-  has GtkButtonBox $!c;
+  has GtkButtonBox $!bb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -26,7 +26,7 @@ class GTK::ButtonBox is GTK::Box {
             $to-parent = $_;
             nativecast(GtkButtonBox, $_);
           }
-          when GtkButtonBox  {
+          when GtkButtonBox {
             $to-parent = nativecast(GtkBox, $_);
             $_;
           }
@@ -46,28 +46,28 @@ class GTK::ButtonBox is GTK::Box {
   multi method new ($orientation) {
     die "Can't coerce argument to GTK::ButtonBox.new to an integer."
       unless $orientation.^can('Int').elems > 0;
-    $o = self.RESOLVE-UINT($orientation.Int);
+    my guint $o = self.RESOLVE-UINT($orientation.Int);
     my $buttonbox = gtk_button_box_new($o);
     self.bless(:$buttonbox);
   }
   multi method new(:$horizontal, :$vertical) {
-    die 'Please specify only $horizontal or $vertical';
+    die 'Please specify only $horizontal or $vertical'
       unless $horizontal.defined ^^ $vertical.defined;
 
     my guint $o = do {
       when $horizontal { GTK_ORIENTATION_HORIZONTAL.Int; }
-      when $vertical   { GTO_ORIENTATION_VERTICAL.Int; }
+      when $vertical   { GTK_ORIENTATION_VERTICAL.Int; }
     }
     my $buttonbox = gtk_button_box_new($o);
     self.bless(:$buttonbox);
   }
 
   method new-hbox {
-    samewith(GTK_ORIENTATION_HORIZONTAL);
+    GTK::ButtonBox.new(GTK_ORIENTATION_HORIZONTAL);
   }
 
   method new-vbox {
-    samewith(GTK_ORIENTATION_VERTICAL);
+    GTK::ButtonBox.new(GTK_ORIENTATION_VERTICAL);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
