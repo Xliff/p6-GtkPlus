@@ -9,13 +9,15 @@ use GTK::Scale;
 
 use NativeCall;
 
+# XXX - Revisit due to lack of proper signals.
+
 my $a = GTK::Application.new( :title('org.genex.scale_example') );
 
 $a.activate.tap({
   my $title  = GTK::Label.new;
   my $vbox   = GTK::Box.new-vbox(6);
-  my $hscale = GTK::Scale.new_with_range(0, 100, 1, :horizontal);
-  my $vscale = GTK::Scale.new_with_range(0, 1, 0.05, :vertical);
+  my $hscale = GTK::Scale.new_with_range(GTK_ORIENTATION_HORIZONTAL, 0, 100, 1);
+  my $vscale = GTK::Scale.new_with_range(GTK_ORIENTATION_VERTICAL, 0, 1, 0.05);
 
    (my $mark = qq:to/MARK/) ~~ s:g/\n//;
  <span font="Chilanka 24" weight="bold" color="#993300">Scale Example</span>
@@ -29,10 +31,8 @@ $a.activate.tap({
   $hscale.add_mark(90, GTK_POS_BOTTOM, Str);
 
   # Does not work properly, since current pattern does not return a value.
-  $hscale.format-value.tap(
-    sub ($, num64 $value, OpaquePointer $user_data --> Str) {
-      "→ { $value } ←";
-    }
+  $hscale.format-value.tap({
+#      "→ { $value } ←";
   );
   $vscale.add_mark(0.1, GTK_POS_RIGHT, Str);
   $vscale.add_mark(0.5, GTK_POS_LEFT, Str);

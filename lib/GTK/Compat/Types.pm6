@@ -354,6 +354,8 @@ class AtkObject             is repr('CPointer') is export { }
 class PangoAttrList         is repr('CPointer') is export { }
 class PangoContext          is repr('CPointer') is export { }
 class PangoFontDescription  is repr('CPointer') is export { }
+class PangoFontFace         is repr('CPointer') is export { }
+class PangoFontFamily       is repr('CPointer') is export { }
 class PangoFontMap          is repr('CPointer') is export { }
 class PangoLanguage         is repr('CPointer') is export { }
 class PangoLayout           is repr('CPointer') is export { }

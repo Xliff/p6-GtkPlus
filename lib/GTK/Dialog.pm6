@@ -18,26 +18,30 @@ class GTK::Dialog is GTK::Window {
   }
 
   submethod BUILD(:$dialog) {
-    my $to-parent;
     given $dialog {
       when GtkDialog | GtkWidget {
-        $!d = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkDialog, $_);
-          }
-          when GtkDialog {
-            $to-parent = nativecast(GtkWindow, $_);
-            $_;
-          }
-        }
-        self.setWindow($to-parent);
+        self.setDialog($dialog);
       }
       when GTK::Dialog {
       }
       default {
       }
     }
+  }
+
+  method setDialog($dialog) {
+    my $to-parent;
+    $!d = do given $dialog {
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkDialog, $_);
+      }
+      when GtkDialog {
+        $to-parent = nativecast(GtkWindow, $_);
+        $_;
+      }
+    }
+    self.setWindow($to-parent);
   }
 
   multi method new {

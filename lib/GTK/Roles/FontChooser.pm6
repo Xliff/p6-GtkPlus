@@ -76,7 +76,7 @@ role GTK::Roles::FontChooser {
         so gtk_font_chooser_get_show_preview_entry($!fc);
       },
       STORE => sub ($, Int() $show_preview_entry is copy) {
-        my gboolean = $spe = self.RESOLVE-BOOL($show_preview_entry);
+        my gboolean $spe = self.RESOLVE-BOOL($show_preview_entry);
         gtk_font_chooser_set_show_preview_entry($!fc, $spe);
       }
     );

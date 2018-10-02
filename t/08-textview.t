@@ -24,7 +24,7 @@ $a.activate.tap({
   $f.add($t);
 
   $a.window.destroy-signal.tap({
-    my $tb = GTK::TextBuffer.new($t.buffer);
+    my $tb = $t.buffer;
     my ($s, $e) = $tb.get_bounds;
     my $text = $tb.get_text($s, $e, False);
     say $text;
