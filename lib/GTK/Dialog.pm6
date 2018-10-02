@@ -121,7 +121,8 @@ class GTK::Dialog is GTK::Window {
   }
 
   method run {
-    gtk_dialog_run($!d);
+    my gint $rc = gtk_dialog_run($!d);
+    GtkResponseType( $rc );
   }
 
   method set_alternative_button_order_from_array (

@@ -11,8 +11,12 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
+use GTK::Roles::ColorChooser;
+
 class GTK::ColorChooser is GTK::Box {
-  has GtkColorChooser $!cc;
+  also does GTK::Roles::ColorChooser;
+
+  # Attribute provided by GTK::Roles::ColorChooser
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -52,22 +56,15 @@ class GTK::ColorChooser is GTK::Box {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method color-activated {
-    self.connect($!cc, 'color-activated');
-  }
+
+  # All signals implemented by GTK::Role::ColorChooser
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method use_alpha is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        gtk_color_chooser_get_use_alpha($!cc);
-      },
-      STORE => sub ($, $use_alpha is copy) {
-        gtk_color_chooser_set_use_alpha($!cc, $use_alpha);
-      }
-    );
-  }
+
+  # All attributes immplemented by GTK::Role::ColorChooser
+
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -83,21 +80,8 @@ class GTK::ColorChooser is GTK::Box {
     gtk_color_chooser_add_palette($!cc, $o, $cpl, $nc, $colors);
   }
 
-  multi method get_rgba (GTK::Compat::RGBA $color is rw) {
-    gtk_color_chooser_get_rgba($!cc, $color);
-    $color;
-  }
-  multi method get_rgba {
-    my $c = GTK::Compat::RGBA.new;
-    samewith($c);
-  }
-
   method get_type {
     gtk_color_chooser_get_type();
-  }
-
-  method set_rgba (GTK::Compat::RGBA $color) {
-    gtk_color_chooser_set_rgba($!cc, $color);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
