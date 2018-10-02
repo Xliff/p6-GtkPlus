@@ -715,6 +715,15 @@ our enum GtkLicense is export <
   GTK_LICENSE_AGPL_3_0_ONLY
 >;
 
+our enum GtkButtonBoxStyle is export <<
+  :GTK_BUTTONBOX_SPREAD(1)
+  GTK_BUTTONBOX_EDGE
+  GTK_BUTTONBOX_START
+  GTK_BUTTONBOX_END
+  GTK_BUTTONBOX_CENTER
+  GTK_BUTTONBOX_EXPAND
+>>;
+
 class GtkAboutDialog       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelLabel        is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -728,6 +737,7 @@ class GtkBin               is repr('CPointer') does GTK::Roles::Pointers is expo
 class GtkBox               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBuilder           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkButton            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkButtonBox         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCalendar          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCallback          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellArea          is repr('CPointer') does GTK::Roles::Pointers is export { }
