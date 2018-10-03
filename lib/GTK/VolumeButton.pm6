@@ -8,7 +8,11 @@ use GTK::Raw::VolumeButton;
 
 use GTK::ScaleButton;
 
+use GTK::Roles::Orientable;
+
 class GTK::VolumeButton is GTK::ScaleButton {
+  also does GTK::Roles::Orientable;
+
   has GtkVolumeButton $!vb;
 
   method bless(*%attrinit) {
@@ -38,6 +42,8 @@ class GTK::VolumeButton is GTK::ScaleButton {
       default {
       }
     }
+    # For GTK::Roles::Orientable
+    $!or = nativecast(GtkOrientable, $!vb);
   }
 
   multi method new {

@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+use GTK::Roles::Orientable;
+
 class GTK::Range is GTK::Widget {
+  also does GTK::Roles::Orientable;
+
   has GtkRange $!r;
 
   # Abstract code, so no need for BUILD or new
@@ -26,6 +30,8 @@ class GTK::Range is GTK::Widget {
       }
     }
     self.setWidget($to-parent);
+    # For GTK::Roles::Orientable
+    $!or = nativecast(GtkOrientable, $!r);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

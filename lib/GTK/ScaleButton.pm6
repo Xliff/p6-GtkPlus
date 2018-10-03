@@ -8,6 +8,8 @@ use GTK::Raw::ScaleButton;
 
 use GTK::Button;
 
+use GTK::Roles::Orientable;
+
 class GTK::ScaleButton is GTK::Button {
   has GtkScaleButton $!sb;
 
@@ -27,6 +29,8 @@ class GTK::ScaleButton is GTK::Button {
       default {
       }
     }
+    # For GTK::Roles::Orientable
+    $!or = nativecast(GtkOrientable, $!sb);
   }
 
   multi method new (GtkWidget $button) {

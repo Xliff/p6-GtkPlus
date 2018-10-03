@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+use GTK::Roles::Orientable;
+
 class GTK::LevelBar is GTK::Widget {
+  also does GTK::Roles::Orientable;
+
   has GtkLevelBar $!lb;
 
   method bless(*%attrinit) {
@@ -38,6 +42,8 @@ class GTK::LevelBar is GTK::Widget {
       default {
       }
     }
+    # For GTK::Roles::Orientable
+    $!or = nativecast(GtkOrientable, $!lb);
   }
 
   multi method new {

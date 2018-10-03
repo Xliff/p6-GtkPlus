@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+use GTK::Roles::Orientable;
+
 class GTK::Grid is GTK::Container {
+  also does GTK::Roles::Orientable;
+
   has GtkGrid $!g;
 
   method bless(*%attrinit) {
@@ -38,6 +42,8 @@ class GTK::Grid is GTK::Container {
       default {
       }
     }
+    # For GTK::Roles::GtkOrientable
+    $!or = nativecast(GtkOrientable, $!g);
   }
 
   multi method new {

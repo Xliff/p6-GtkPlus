@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+use GTK::Roles::Orientable;
+
 class GTK::Pane is GTK::Container {
+  also does GTK::Roles::Orientable
+
   has GtkPaned $!p;
 
   has @!child1;
@@ -41,6 +45,8 @@ class GTK::Pane is GTK::Container {
       default {
       }
     }
+    # For GTK::Roles::GtkOrientable
+    $!or = nativecast(GtkOrientable, $!p);
   }
 
   multi method new (GtkWidget $pane) {

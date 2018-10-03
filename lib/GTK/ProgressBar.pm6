@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+use GTK::Roles::Orientable;
+
 class GTK::ProgressBar is GTK::Widget {
   has GtkProgressBar $!bar;
 
@@ -39,6 +41,8 @@ class GTK::ProgressBar is GTK::Widget {
       default {
       }
     }
+    # For GTK::Roles::Orientable
+    $!or = nativecast(GtkOrientable, $!bar);
   }
 
   multi method new {

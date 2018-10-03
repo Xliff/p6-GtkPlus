@@ -3,10 +3,9 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::Label;
+use GTK::Raw::InfoBar;
 use GTK::Raw::Types;
 
-use GTK::Raw::InfoBar;
 use GTK::Box;
 
 class GTK::InfoBar is GTK::Box {
@@ -53,7 +52,6 @@ class GTK::InfoBar is GTK::Box {
   method close {
     self.connect($!ib, 'close');
   }
-
 
   # Should be:
   # (GtkInfoBar *info_bar,
@@ -105,11 +103,12 @@ class GTK::InfoBar is GTK::Box {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_action_widget (GtkWidget() $child, gint $response_id) {
-    gtk_info_bar_add_action_widget($!ib, $child, $response_id);
+  method add_action_widget (GtkWidget() $child, Int() $response_id) {
+    my gint $r = self.RESOLVE-INT($response_id);
+    gtk_info_bar_add_action_widget($!ib, $child, $r);
   }
 
-  method add_button (gchar $button_text, gint $response_id) {
+  method add_button (Str() $button_text, Int() $response_id) {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_info_bar_add_button($!ib, $button_text, $ri);
   }
@@ -136,7 +135,7 @@ class GTK::InfoBar is GTK::Box {
     gtk_info_bar_set_default_response($!ib, $ri);
   }
 
-  method set_response_sensitive (gint $response_id, gboolean $setting) {
+  method set_response_sensitive (Int() $response_id, Int() $setting) {
     my gint $ri = self.RESOLVE-INT($response_id);
     my gboolean $s = self.RESOLVE-BOOL($setting);
     gtk_info_bar_set_response_sensitive($!ib, $ri, $s);
