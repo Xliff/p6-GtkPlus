@@ -96,7 +96,7 @@ role GTK::Roles::FontChooser {
     gtk_font_chooser_get_font_size($!fc);
   }
 
-  method get_type {
+  method get_role_type {
     gtk_font_chooser_get_type();
   }
 

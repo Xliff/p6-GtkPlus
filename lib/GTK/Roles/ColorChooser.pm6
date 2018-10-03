@@ -49,6 +49,10 @@ role GTK::Roles::ColorChooser {
     gtk_color_chooser_get_rgba($!cc, $color);
     $color;
   }
+
+  method get_role_type {
+    warn "There is no role type for GTK::Roles::ColorChooser";
+  }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }

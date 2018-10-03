@@ -294,7 +294,7 @@ role GTK::Roles::FileChooser {
     gtk_file_chooser_get_preview_uri($!fc);
   }
 
-  method get_type {
+  method get_role_type {
     gtk_file_chooser_get_type();
   }
 

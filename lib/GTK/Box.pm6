@@ -9,7 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+use GTK::Roles::Orientable;
+
 class GTK::Box is GTK::Container {
+  also does GTK::Roles::Orientable;
 
   # Maybe make Widget a role that has $.w and all variants assign to it,
   # but how to keep $.w from being set from outside the object tree?
@@ -34,6 +37,8 @@ class GTK::Box is GTK::Container {
       default {
       }
     }
+    # For GTK::Roles::Orientable
+    $!or = nativecast(GtkOrientable, $!b);
   }
 
   multi method new (
