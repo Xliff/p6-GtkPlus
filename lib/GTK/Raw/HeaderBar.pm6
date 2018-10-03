@@ -7,7 +7,7 @@ use GTK::Raw::Types;
 
 unit package GTK::Raw::HeaderBar;
 
-ub gtk_header_bar_get_type ()
+sub gtk_header_bar_get_type ()
   returns GType
   is native('gtk-3')
   is export

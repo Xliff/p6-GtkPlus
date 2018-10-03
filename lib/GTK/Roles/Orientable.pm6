@@ -6,12 +6,12 @@ use GTK::Compat::Types;
 use GTK::Raw::Orientable;
 use GTK::Raw::Types;
 
-use GTK::Roles::Types
+use GTK::Roles::Types;
 
-class GTK::Roles::Orientable {
+role GTK::Roles::Orientable {
   also does GTK::Roles::Types;
 
-  has GtkOrientable $!c;
+  has GtkOrientable $!or;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -32,7 +32,7 @@ class GTK::Roles::Orientable {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_role_type {
-    gtk_orientable_get_type($!or);
+    gtk_orientable_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

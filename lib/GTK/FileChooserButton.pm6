@@ -70,10 +70,10 @@ class GTK::FileChooserButton is GTK::Bin {
   method title is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_file_chooser_button_get_title($!fc);
+        gtk_file_chooser_button_get_title($!fcb);
       },
       STORE => sub ($, Str $title is copy) {
-        gtk_file_chooser_button_set_title($!fc, $title);
+        gtk_file_chooser_button_set_title($!fcb, $title);
       }
     );
   }
@@ -81,11 +81,11 @@ class GTK::FileChooserButton is GTK::Bin {
   method width_chars is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_file_chooser_button_get_width_chars($!fc);
+        gtk_file_chooser_button_get_width_chars($!fcb);
       },
       STORE => sub ($, Int() $n_chars is copy) {
         my uint32 $nc = $n_chars;
-        gtk_file_chooser_button_set_width_chars($!fc, $nc);
+        gtk_file_chooser_button_set_width_chars($!fcb, $nc);
       }
     );
   }

@@ -3,13 +3,13 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::;
+use GTK::Raw::Editable;
 use GTK::Raw::Types;
 
 use GTK::Roles::Signals;
 use GTK::Roles::Types;
 
-class GTK::Roles::Editable {
+role GTK::Roles::Editable {
   also does GTK::Roles::Signals;
   also does GTK::Roles::Types;
 
@@ -96,7 +96,7 @@ class GTK::Roles::Editable {
   }
 
   method get_type () {
-    gtk_editable_get_type($!er);
+    gtk_editable_get_type();
   }
 
   method insert_text (
@@ -109,7 +109,7 @@ class GTK::Roles::Editable {
     gtk_editable_insert_text($!er, $new_text, $n, $p);
   }
 
-  method paste_clipboard () {
+  method paste_clipboard {
     gtk_editable_paste_clipboard($!er);
   }
 

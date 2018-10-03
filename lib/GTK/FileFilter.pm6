@@ -20,7 +20,9 @@ class GTK::FileFilter does GTK::Roles::Types {
     self.bless(:$filter);
   }
 
-  method new_from_gvariant (GVariant $v) {
+  method new_from_gvariant (
+    Pointer $v                  # GVariant $v
+  ) {
     my $filter = gtk_file_filter_new_from_gvariant($v);
     self.bless(:$filter);
   }
@@ -64,11 +66,8 @@ class GTK::FileFilter does GTK::Roles::Types {
     gtk_file_filter_add_pixbuf_formats($f);
   }
 
-  method filter (
-    Int() $filter_info          # GtkFileFilterInfo $filter_info
-  ) {
-    my guint $fi = self.RESOLVE-UINT($filter_info);
-    gtk_file_filter_filter($!ff, $fi);
+  method filter (GtkFileFilterInfo $filter_info) {
+    gtk_file_filter_filter($!ff, $filter_info);
   }
 
   method get_needed {

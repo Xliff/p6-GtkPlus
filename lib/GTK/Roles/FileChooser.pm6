@@ -6,11 +6,13 @@ use GTK::Compat::Types;
 use GTK::Raw::FileChooser;
 use GTK::Raw::Types;
 
+use GTK::FileFilter;
+
 use GTK::Roles::Signals;
 use GTK::Roles::Types;
 
 role GTK::Roles::FileChooser {
-  also does GTK::Roles::Signals
+  also does GTK::Roles::Signals;
   also does GTK::Roles::Types;
 
   has GtkFileChooser $!fc;
@@ -18,7 +20,7 @@ role GTK::Roles::FileChooser {
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
-  # char
+  # gchar
   method confirm-overwrite {
     self.connect($!fc, 'confirm-overwrite');
   }
@@ -79,7 +81,7 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         gtk_file_chooser_get_current_folder($!fc);
       },
-      STORE => sub ($, $filename is copy) {
+      STORE => sub ($, Str() $filename is copy) {
         gtk_file_chooser_set_current_folder($!fc, $filename);
       }
     );
@@ -90,7 +92,7 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         gtk_file_chooser_get_current_folder_uri($!fc);
       },
-      STORE => sub ($, $uri is copy) {
+      STORE => sub ($, Str() $uri is copy) {
         gtk_file_chooser_set_current_folder_uri($!fc, $uri);
       }
     );
@@ -101,7 +103,7 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         gtk_file_chooser_get_current_name($!fc);
       },
-      STORE => sub ($, $name is copy) {
+      STORE => sub ($, Str() $name is copy) {
         gtk_file_chooser_set_current_name($!fc, $name);
       }
     );
@@ -135,17 +137,16 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         gtk_file_chooser_get_filename($!fc);
       },
-      STORE => sub ($, $filename is copy) {
+      STORE => sub ($, Str() $filename is copy) {
         gtk_file_chooser_set_filename($!fc, $filename);
       }
     );
   }
 
-  # GTK::FileFilter
   method filter is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_file_chooser_get_filter($!fc);
+        GTK::FileFilter.new( gtk_file_chooser_get_filter($!fc) );
       },
       STORE => sub ($, GtkFileFilter() $filter is copy) {
         gtk_file_chooser_set_filter($!fc, $filter);
@@ -217,7 +218,7 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         gtk_file_chooser_get_uri($!fc);
       },
-      STORE => sub ($, $uri is copy) {
+      STORE => sub ($, Str() $uri is copy) {
         gtk_file_chooser_set_uri($!fc, $uri);
       }
     );
@@ -238,10 +239,10 @@ role GTK::Roles::FileChooser {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_choice (
-    char $id,
-    char $label,
-    char $options,
-    char $option_labels
+    gchar $id,
+    gchar $label,
+    gchar $options,
+    gchar $option_labels
   ) {
     gtk_file_chooser_add_choice($!fc, $id, $label, $options, $option_labels);
   }
@@ -259,7 +260,7 @@ role GTK::Roles::FileChooser {
   }
 
   method error_quark {
-    gtk_file_chooser_error_quark($!fc);
+    gtk_file_chooser_error_quark();
   }
 
   method get_choice (Str() $id) {

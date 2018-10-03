@@ -9,7 +9,7 @@ unit package GTK::Raw::FileFilter;
 
 sub gtk_file_filter_add_custom (
   GtkFileFilter $filter,
-  uint32                        # GtkFileFilterFlags $needed,
+  uint32 $needed,               # GtkFileFilterFlags $needed,
   GtkFileFilterFunc $func,
   gpointer $data,
   GDestroyNotify $notify
@@ -60,14 +60,16 @@ sub gtk_file_filter_new ()
   is export
   { * }
 
-sub gtk_file_filter_new_from_gvariant (GVariant $variant)
+sub gtk_file_filter_new_from_gvariant (
+  Pointer $variant              # GVariant $variant
+)
   returns GtkFileFilter
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_file_filter_to_gvariant (GtkFileFilter $filter)
-  returns GVariant
+  returns Pointer # GVariant
   is native('gtk-3')
   is export
   { * }

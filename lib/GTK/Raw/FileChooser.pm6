@@ -9,10 +9,10 @@ unit package GTK::Raw::FileChooser;
 
 sub gtk_file_chooser_add_choice (
   GtkFileChooser $chooser,
-  char $id,
-  char $label,
-  char $options,
-  char $option_labels
+  gchar $id,
+  gchar $label,
+  gchar $options,
+  gchar $option_labels
 )
   is native('gtk-3')
   is export
@@ -28,7 +28,7 @@ sub gtk_file_chooser_add_filter (
 
 sub gtk_file_chooser_add_shortcut_folder (
   GtkFileChooser $chooser,
-  char $folder,
+  gchar $folder,
   GError $error
 )
   returns uint32
@@ -38,7 +38,7 @@ sub gtk_file_chooser_add_shortcut_folder (
 
 sub gtk_file_chooser_add_shortcut_folder_uri (
   GtkFileChooser $chooser,
-  char $uri,
+  gchar $uri,
   GError $error
 )
   returns uint32
@@ -52,8 +52,8 @@ sub gtk_file_chooser_error_quark ()
   is export
   { * }
 
-sub gtk_file_chooser_get_choice (GtkFileChooser $chooser, char $id)
-  returns char
+sub gtk_file_chooser_get_choice (GtkFileChooser $chooser, gchar $id)
+  returns gchar
   is native('gtk-3')
   is export
   { * }
@@ -89,13 +89,13 @@ sub gtk_file_chooser_get_preview_file (GtkFileChooser $chooser)
   { * }
 
 sub gtk_file_chooser_get_preview_filename (GtkFileChooser $chooser)
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_file_chooser_get_preview_uri (GtkFileChooser $chooser)
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
@@ -130,7 +130,7 @@ sub gtk_file_chooser_list_shortcut_folders (GtkFileChooser $chooser)
   is export
   { * }
 
-sub gtk_file_chooser_remove_choice (GtkFileChooser $chooser, char $id)
+sub gtk_file_chooser_remove_choice (GtkFileChooser $chooser, gchar $id)
   is native('gtk-3')
   is export
   { * }
@@ -145,7 +145,7 @@ sub gtk_file_chooser_remove_filter (
 
 sub gtk_file_chooser_remove_shortcut_folder (
   GtkFileChooser $chooser,
-  char $folder,
+  gchar $folder,
   GError $error
 )
   returns uint32
@@ -155,7 +155,7 @@ sub gtk_file_chooser_remove_shortcut_folder (
 
 sub gtk_file_chooser_remove_shortcut_folder_uri (
   GtkFileChooser $chooser,
-  char $uri,
+  gchar $uri,
   GError $error
 )
   returns uint32
@@ -178,19 +178,26 @@ sub gtk_file_chooser_select_file (
   is export
   { * }
 
-sub gtk_file_chooser_select_filename (GtkFileChooser $chooser, char $filename)
+sub gtk_file_chooser_select_filename (
+  GtkFileChooser $chooser,
+  gchar $filename
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_file_chooser_select_uri (GtkFileChooser $chooser, char $uri)
+sub gtk_file_chooser_select_uri (GtkFileChooser $chooser, gchar $uri)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_file_chooser_set_choice (GtkFileChooser $chooser, char $id, char $option)
+sub gtk_file_chooser_set_choice (
+  GtkFileChooser $chooser,
+  gchar $id,
+  gchar $option
+)
   is native('gtk-3')
   is export
   { * }
@@ -227,13 +234,13 @@ sub gtk_file_chooser_unselect_file (GtkFileChooser $chooser, GFile $file)
 
 sub gtk_file_chooser_unselect_filename (
   GtkFileChooser $chooser,
-  char $filename
+  gchar $filename
 )
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_file_chooser_unselect_uri (GtkFileChooser $chooser, char $uri)
+sub gtk_file_chooser_unselect_uri (GtkFileChooser $chooser, gchar $uri)
   is native('gtk-3')
   is export
   { * }
@@ -334,7 +341,7 @@ sub gtk_file_chooser_get_show_hidden (GtkFileChooser $chooser)
   is export
   { * }
 
-sub gtk_file_chooser_set_uri (GtkFileChooser $chooser, char $uri)
+sub gtk_file_chooser_set_uri (GtkFileChooser $chooser, gchar $uri)
   returns uint32
   is native('gtk-3')
   is export
@@ -403,7 +410,7 @@ sub gtk_file_chooser_set_current_folder_uri (
   is export
   { * }
 
-sub gtk_file_chooser_set_filename (GtkFileChooser $chooser, char $filename)
+sub gtk_file_chooser_set_filename (GtkFileChooser $chooser, gchar $filename)
   returns uint32
   is native('gtk-3')
   is export

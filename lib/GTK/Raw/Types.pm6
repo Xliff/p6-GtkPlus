@@ -804,6 +804,7 @@ class GtkMenuShell          is repr('CPointer') does GTK::Roles::Pointers is exp
 class GtkMenuToolButton     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkNotebook           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkOffscreen          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkOrientable         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkOverlay            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPaned              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPlacesSidebar      is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -829,6 +830,7 @@ class GtkSizeGroup          is repr('CPointer') does GTK::Roles::Pointers is exp
 class GtkSpinButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSpinner            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStack              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStackSidebar       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStackSwitcher      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStatusbar          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyle              is repr('CPointer') does GTK::Roles::Pointers is export { }

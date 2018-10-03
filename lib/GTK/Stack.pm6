@@ -7,10 +7,12 @@ use GTK::Raw::Stack;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::StackSidebar;
 
 class GTK::Stack is GTK::Container {
   has GtkStack $!s;
   has GtkStackSwitcher $!ss;
+  has $!sb;
   has %!by-name;
   has %!by-title;
 
@@ -20,7 +22,7 @@ class GTK::Stack is GTK::Container {
     $o;
   }
 
-  submethod BUILD(:$stack ) {
+  submethod BUILD(:$stack, :$switcher, :$sidebar) {
     my $to-parent;
     given $stack {
       when GtkStack | GtkWidget {
@@ -41,16 +43,28 @@ class GTK::Stack is GTK::Container {
       default {
       }
     }
-    $!ss = gtk_stack_switcher_new();
-    gtk_stack_switcher_set_stack($!ss, $!s);
+    if $switcher {
+      # Note: Builder support may require StackSwitcher become an object!
+      $!ss = gtk_stack_switcher_new();
+      gtk_stack_switcher_set_stack($!ss, $!s);
+    } elsif $sidebar {
+      $!sb = GTK::StackSidebar.new;
+      $!sb.stack = $!s;
+    }
   }
 
-  multi method new {
-    my $stack = gtk_stack_new();
+  multi method new (GtkStack $stack) {
     self.bless(:$stack);
   }
   multi method new (GtkWidget $stack) {
     self.bless(:$stack);
+  }
+  multi method new(:$switcher, :$sidebar) {
+    die 'Please use $switcher OR $sidebar when creating a GTK::Stack'
+      if $switcher.defined && $sidebar.defined;
+
+    my $stack = gtk_stack_new();
+    self.bless(:$stack, :$switcher, :$sidebar);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -151,6 +165,9 @@ class GTK::Stack is GTK::Container {
       }
     );
   }
+
+  # XXX - Add attribute for 'control' to add either GtkStackSwitcher or GtkStackSidebar
+
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -217,6 +234,15 @@ class GTK::Stack is GTK::Container {
   # Expose the Stack Switcher widget as GtkWidget
   method switcher-widget {
     nativecast(GtkWidget, $!ss);
+  }
+
+  # Expose the StackSidebar object
+  method sidebar {
+    $!sb;
+  }
+  # Expose the StackSidebar GtkWidget
+  method sidebar-widget {
+    $!sb.widget;
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

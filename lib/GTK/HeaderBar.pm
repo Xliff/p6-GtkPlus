@@ -27,7 +27,7 @@ class GTK::HeaderBar is GTK::Container {
             nativecast(GtkHeaderBar, $_);
           }
           when GtkHeaderBar {
-            $to-partent = nativecast(GtkContainer, $_);
+            $to-parent = nativecast(GtkContainer, $_);
             $_;
           }
         };

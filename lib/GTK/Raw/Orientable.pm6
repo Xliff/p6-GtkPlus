@@ -5,7 +5,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
-unit package GTK::Raw::
+unit package GTK::Raw::Orientable;
 
 sub gtk_orientable_get_type ()
   returns GType
