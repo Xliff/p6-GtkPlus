@@ -19,6 +19,7 @@ our constant GtkClipboardRichTextReceivedFunc is export := Pointer;
 our constant GtkClipboardTargetsReceivedFunc  is export := Pointer;
 our constant GtkClipboardTextReceivedFunc     is export := Pointer;
 our constant GtkClipboardURIReceivedFunc      is export := Pointer;
+our constant GtkFileFilterFunc                is export := Pointer;
 our constant GtkFlowBoxCreateWidgetFunc       is export := Pointer;
 our constant GtkFlowBoxFilterFunc             is export := Pointer;
 our constant GtkFlowBoxForeachFunc            is export := Pointer;
@@ -118,6 +119,14 @@ class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32 $.width;
   has uint32 $.height;
 }
+
+class GtkFileFilterInfo is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32  $.contains;       # GtkFileFilterFlags
+  has Str     $.filename;
+  has Str     $.uri;
+  has Str     $.display_name;
+  has Str     $.mime_type;
+};
 
 our enum GtkAccelFlags is export <
   GTK_ACCEL_VISIBLE
@@ -725,6 +734,14 @@ our enum GtkButtonBoxStyle is export <<
   GTK_BUTTONBOX_EXPAND
 >>;
 
+our enum GtkFileFilterFlags is export (
+  GTK_FILE_FILTER_FILENAME     => 1,
+  GTK_FILE_FILTER_URI          => (1 +< 1),
+  GTK_FILE_FILTER_DISPLAY_NAME => (1 +< 2),
+  GTK_FILE_FILTER_MIME_TYPE    => (1 +< 3)
+);
+
+
 class GtkAboutDialog        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelLabel         is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -758,7 +775,9 @@ class GtkEntry              is repr('CPointer') does GTK::Roles::Pointers is exp
 class GtkEntryBuffer        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryCompletion    is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkExpander           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkFileChooser        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFileChooserButton  is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkFileFilter         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFixed              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFontButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFontChooser        is repr('CPointer') does GTK::Roles::Pointers is export { }

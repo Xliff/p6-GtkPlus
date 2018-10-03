@@ -8,8 +8,12 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+use GTK::Roles::FileChooser;
+
 class GTK::FileChooserButton is GTK::Bin {
-  has GtkFileChooserButton $!fc;
+  also does GTK::Roles::FileChooser;
+
+  has GtkFileChooserButton $!fcb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -21,7 +25,7 @@ class GTK::FileChooserButton is GTK::Bin {
     my $to-parent;
     given $chooser {
       when GtkFileChooserButton | GtkWidget {
-        $!fc = do {
+        $!fcb = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkFileChooserButton, $_);
@@ -38,6 +42,8 @@ class GTK::FileChooserButton is GTK::Bin {
       default {
       }
     }
+    # Assign for the role, as well.
+    $!fc = nativecast(GtkFileChooser, $!fcb);
   }
 
   multi method new (

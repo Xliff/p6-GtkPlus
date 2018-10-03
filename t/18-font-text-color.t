@@ -57,7 +57,10 @@ $a.activate.tap({
   $bf.add($bb);
 
   # OK Button Event
-  $ob.clicked.tap({ $a.exit; });
+  $ob.clicked.tap({
+    say $t.text;
+    $a.exit;
+  });
   # Font Button Event
   $fb.clicked.tap({
     my $rc = $fcd.run;
@@ -86,17 +89,26 @@ $a.activate.tap({
 
   $vb.pack_start($_, False, False, 0) for ($f, $bf);
 
-  # Both pieces of shutdown code CANNOT run.
+  # === FOR REFERENCE! ===
+  # What is a better place to put last minute, must run code.
+  # Through GTK we have two methods, GTK::Application.shutdown and
+  # GTK::Window.destroy-signal on the main window.
+  #
+  # Both pieces of shutdown code CANNOT run in the same code path.
+  #
+  # A pure Perl6 implementation may be necessary. (Phasers?)
+  #
+  # Proposed solution:
   my $shutdown-latch = False;
   $a.window.destroy-signal.tap({
     # If exited by corner close button.
-    say $t.text;
     $shutdown-latch = True;
+    #...
   });
   $a.shutdown.tap({
     # If exited by OK Button
     unless $shutdown-latch {
-      say $t.text;
+      #...
     }
   });
 
