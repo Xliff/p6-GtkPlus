@@ -13,7 +13,7 @@ use GTK::Image;
 use GTK::Label;
 use GTK::Stack;
 
-my @pages = (
+my @titles = (
   'Welcome to GTK+',
   'GtkStackSidebar Widget',
   'Automatic navigation',
@@ -42,13 +42,15 @@ $a.activate.tap({
   );
 
   $h.show_close_button = True;
+  $s.transition_type = GTK_STACK_TRANSITION_TYPE_SLIDE_UP_DOWN;
   $a.window.title = 'Stack Sidebar';
   $b.pack_start($s.sidebar, False, False, 0);
   $b.pack_start($sp, False, False, 0);
   $b.pack_start($s, True, True, 0);
 
   my $e;
-  for @pages.kv -> $k, $v {
+  my @pages;
+  for @titles.kv -> $k, $v {
     my $w;
 
     if !$k {
@@ -56,15 +58,21 @@ $a.activate.tap({
       $w.pixel_size = 256;
     } else {
       $w = GTK::Label.new($v);
-      $e = $w if $k == 3;
     }
     $s.add_named($w, $v);
-    $s.child_set($w, 'title', $v, Nil); # May be problematic.
+    # cw: This is new code on my part. I wonder if this is the behavior
+    # that was intended.
+    @pages.push: $w;
+    #$s.child_set($w, 'title', $v, Nil); # May be problematic.
   }
 
+  my $cur_page = 1;
   $btn.clicked.tap({
-    say 'Hello World';
-    $s.visible_child = $e;
+    # cw - Original code:
+    # say 'Hello World';
+    # $s.visible_child = $e
+    # cw - My interpretation:
+    $s.visible_child = @pages[$cur_page++ % @pages];
   });
   $b.add($btn);
   $a.window.add($b);
