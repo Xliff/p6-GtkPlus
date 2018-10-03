@@ -19,7 +19,7 @@ $a.activate.tap({
   $vbox.name = 'box';
 
   $cc.color-activated.tap({
-    my $color = $cc.get_rgba;
+    my $color = $cc.rgba;
     my $css = GTK::CSSProvider.new;
     my $css-s = "#box \{ background-color: { $color.to_string }; \}";
 

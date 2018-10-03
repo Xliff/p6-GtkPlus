@@ -6,7 +6,7 @@
 - New dependency: https://github.com/timo/cairo-p6
 - GDK
 - Feature Request: GTK::TextBuffer.buffer to accept from Str or Buf. This should also apply to .text()
-
+- METHOD ALIASING!
 
 Applications
 ============

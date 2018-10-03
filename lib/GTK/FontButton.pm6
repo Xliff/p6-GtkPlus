@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Button;
 
+use GTK::Roles::FontChooser;
+
 class GTK::FontButton is GTK::Button {
+  also does GTK::Roles::FontChooser;
+
   has GtkFontButton $!fb;
 
   method bless(*%attrinit) {
@@ -38,6 +42,8 @@ class GTK::FontButton is GTK::Button {
       default {
       }
     }
+    # For GTK::Roles::FontChooser
+    $!fc = nativecast(GtkFontChooser, $!fb);
   }
 
   multi method new {
