@@ -1,0 +1,28 @@
+use v6.c;
+
+use NativeCall;
+
+use GTK::Compat::Types;
+use GTK::Raw::Editable;
+use GTK::Raw::Types;
+
+use GTK::Roles::Signals;
+use GTK::Roles::Types
+
+class GTK:: {
+  also does GTK::Roles::Signals;
+  also does GTK::Roles::Types;
+
+  has Gtk $!c;
+
+
+  # ↓↓↓↓ SIGNALS ↓↓↓↓
+  # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # ↓↓↓↓ METHODS ↓↓↓↓
+  # ↑↑↑↑ METHODS ↑↑↑↑
+
+}

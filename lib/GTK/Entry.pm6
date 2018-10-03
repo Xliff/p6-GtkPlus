@@ -9,7 +9,11 @@ use GTK::Raw::Types;
 use GTK::Widget;
 use GTK::EntryBuffer;
 
+use GTK::Roles::Editable;
+
 class GTK::Entry is GTK::Widget {
+  also does GTK::Roles::Editable;
+  
   has GtkEntry $!e;
 
   method bless(*%attrinit) {
@@ -28,6 +32,8 @@ class GTK::Entry is GTK::Widget {
       default {
       }
     }
+    # For GTK::Roles::Editable
+    $!er = nativecast(GtkEditable, $!e);
   }
 
   multi method new {
