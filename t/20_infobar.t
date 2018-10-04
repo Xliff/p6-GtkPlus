@@ -56,7 +56,7 @@ $a.activate.tap({
 
   my $f = GTK::Frame.new('Info Bars');
   my $label = GTK::Label.new('An example of different infobars');
-  # Aesthetics.
+  # For some reason, the C version has this and GtkPlus does not. Make a default?
   $label.margin_bottom = 5;
   ($f.margin_top, $f.margin_bottom) = (8 xx 2);
   $vb.pack_start($f);
