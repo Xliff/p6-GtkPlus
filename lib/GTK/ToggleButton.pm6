@@ -31,7 +31,7 @@ class GTK::ToggleButton is GTK::Button {
             $_;
           }
         };
-        self.setButton($togglebutton);
+        self.setButton($to-parent);
       }
       when GTK::ToggleButton {
       }

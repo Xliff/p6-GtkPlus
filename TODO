@@ -1,4 +1,4 @@
-
+- Mechanism for providing PROPER event handlers for all events
 - Insure all method-level gchar paramters are converted to Str()
 - COMPLETE a working GSList implementation
 - Add a working GList implementation

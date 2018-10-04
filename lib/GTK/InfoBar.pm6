@@ -113,12 +113,14 @@ class GTK::InfoBar is GTK::Box {
     gtk_info_bar_add_button($!ib, $button_text, $ri);
   }
 
-  method get_action_area {
-    gtk_info_bar_get_action_area($!ib);
+  # Renamed from get_action_area
+  method action_area {
+    GTK::Box.new( gtk_info_bar_get_action_area($!ib) );
   }
 
-  method get_content_area {
-    gtk_info_bar_get_content_area($!ib);
+  # Renamed from get_content_area
+  method content_area {
+    GTK::Box.new( gtk_info_bar_get_content_area($!ib) );
   }
 
   method get_type {

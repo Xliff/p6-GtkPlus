@@ -37,10 +37,10 @@ class GTK::Container is GTK::Widget {
     }
   }
 
-  submethod DESTROY {
-    g_object_unref($_.data) for self.get_children.Array;
-    g_object_unref(self.widget);
-  }
+  #submethod DESTROY {
+  #  g_object_unref($_.data) for self.get_children.Array;
+  #  g_object_unref(self.widget);
+  #}
 
   # GTK::Container is abstract, so no need for new.
 
@@ -80,7 +80,7 @@ class GTK::Container is GTK::Widget {
 
   method INSERT-START ($child, $pos) {
     self.IS-PROTECTED;
-    
+
     my $last = @!start.elems - 1;
     if $pos == 0 {
       self.prepend($child)

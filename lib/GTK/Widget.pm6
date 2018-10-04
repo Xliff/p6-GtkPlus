@@ -964,6 +964,28 @@ class GTK::Widget {
     );
   }
 
+  # Convenience attribute.
+  method margins is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        (
+          self.margin_left,
+          self.margin_right,
+          self.margin_top,
+          self.margin_bottom
+        );
+      },
+      STORE => -> $, Int() $margin {
+        my $m = self.RESOLVE-UINT($margin);
+        self.margin_left =
+        self.margin_right =
+        self.margin_top =
+        self.margin_bottom = $m;
+      }
+    );
+  }
+
+
   method getType {
     g_object_get_string($!w.p, 'GTKPLUS-Type');
   }

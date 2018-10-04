@@ -12,6 +12,8 @@ use GTK::Widget;
 use GTK::Roles::Orientable;
 
 class GTK::ProgressBar is GTK::Widget {
+  also does GTK::Roles::Orientable;
+  
   has GtkProgressBar $!bar;
 
   method bless(*%attrinit) {

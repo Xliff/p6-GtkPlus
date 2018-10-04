@@ -11,6 +11,8 @@ use GTK::Button;
 use GTK::Roles::Orientable;
 
 class GTK::ScaleButton is GTK::Button {
+  also does GTK::Roles::Orientable;
+  
   has GtkScaleButton $!sb;
 
   method bless(*%attrinit) {
