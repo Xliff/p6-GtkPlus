@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
+use GTK::Roles::Signals::InfoBar;
+
 class GTK::InfoBar is GTK::Box {
+  also does GTK::Roles::Signals::InfoBar;
+
   has GtkInfoBar $!ib;
 
   method bless(*%attrinit) {
@@ -59,8 +63,19 @@ class GTK::InfoBar is GTK::Box {
   #  gpointer    user_data)
   # - Made multi so as to not conflict with the implementation for
   #   gtk_info_bar_response
-  multi method response {
-    self.connect($!ib, 'response');
+  multi method response(:$supply = True) {
+    with %!signals<response> {
+      if $_[0] ~~ Supply {
+        die "Cannot mix <response> signal types" unless $supply;
+      } else {
+        die "Cannot mix <response> signal types" if $supply;
+      }
+    }
+
+    $supply ??
+      self.connect($!ib, 'response')
+      !!
+      self.connect-response($!ib);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

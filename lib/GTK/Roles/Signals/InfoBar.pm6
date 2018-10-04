@@ -2,62 +2,62 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
-use GTK::Roles::Signals;
+class ResponseSignal {
+  has $!s;
+  has $!o;
+  has %!sig;
 
-role GTK::Roles::Signals::Infobar {
+  submethod BUILD(:$!o, :$!s, :$sig) {
+    %!sig = %($sig);
+  }
 
-  class ResponseSignal {
-    has $!s;
-    has $!o;
+  method new($o, $s, $sig) {
+    self.bless(:$o, :$s, :$sig);
+  }
 
-    method new($o, $s;) {
-      self.bless(:$!o, $!s);
-    }
+  submethod DESTROY {
+    self.free;
+  }
 
-    submethod DESTROY {
+  method tap(&handler) {
+    if %!sig{$!s}:exists {
+      warn "Response signal for GTK::Infobar was already connected";
       self.free;
     }
-
-    method tap( &handler(GtkInfoBar, gint, gpointer) ) {
-      if %!signals{$!s}:exists {
-        warn "Response signal for GTK::Infobar was already connected";
-        self.free;
-      }
-      my $sid = g_connect_response($!o, $!s, &handler, OpaquePointer, 0)
-      %!signals{$!s} = [ self, $sid ];
-    }
-
-    method free {
-      g_signal_handler_disconnect($!o, $_[1]) with %!signals{$!s};
-    }
+    my $sid = g_connect_response($!o, $!s, &handler, OpaquePointer, 0);
+    %!sig{$!s} = [ self, $sid ];
   }
+
+  method free {
+    g_signal_handler_disconnect($!o, $_[1]) with %!sig{$!s};
+  }
+}
+
+role GTK::Roles::Signals::InfoBar {
+  has %!signals;
 
   method connect-response(
     $obj,
     &handler?
   ) {
-    %!signals{'response'} //= do {
-      ResponseSignal.new($obj, 'response')
-    };
-    %!signals{'response'}[0].tap(&handler) with &handler;
-    %!signals{'response'}[0];
+    my $r = ResponseSignal.new($obj, 'response', %!signals);
+    $r.tap(&handler) with &handler;
+    $r;
   }
-
-  sub g_connect_response(
-    OpaquePointer $app,
-    Str $name,
-    &handler (GtkInfoBar, gint, gpointer)
-    OpaquePointer $data,
-    uint32 $connect_flags
-  )
-    returns uint32
-    is native('gobject-2.0')
-    is symbol('g_signal_connect_object')
-    is export
-    { * }
-
-
 }
+
+sub g_connect_response(
+  OpaquePointer $app,
+  Str $name,
+  &handler (Pointer, gint, Pointer),
+  OpaquePointer $data,
+  uint32 $connect_flags
+)
+  returns uint32
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }

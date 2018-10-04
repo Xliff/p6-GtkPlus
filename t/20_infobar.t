@@ -31,10 +31,11 @@ $a.activate.tap({
       $b.show_close_button = True;
       $b.add_button('_OK', GTK_RESPONSE_OK);
       # We REQUIRE a proper event handler for this to work properly.
-      $b.response.tap({
+      $b.response(:!supply).tap(-> $, $rid, $ {
         # Should vary on response_id
-        say 'You clicked a button in an InfoBar.';
-      })
+        my $r = GtkResponseType($rid).Str;
+        say "You clicked a button in an InfoBar. The response id was: { $r }";
+      });
     }
 
     $btn.active = True;
