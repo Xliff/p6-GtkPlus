@@ -28,7 +28,7 @@ class GTK::Dialog::Message is GTK::Dialog {
             $to-parent = $_;
             nativecast(GtkMessageDialog, $_);
           }
-          when GtkWidget  {
+          when GtkMessageDialog {
             $to-parent = nativecast(GtkDialog, $_);
             $_;
           }
@@ -50,7 +50,8 @@ class GTK::Dialog::Message is GTK::Dialog {
     Str         $message_format
   ) {
     #my @u = ($flags, $type, $buttons);
-    #my guint ($f, $t, $b) = GTK::Widget.RESOLVE-UINT(@u);
+    # Can't use type resolution since it's the constructor.
+    #my guint ($f, $t, $b) = @u >>+&<< (0xffff xx @u.elems);
     my $dialog = gtk_message_dialog_new(
       $parent,
       $flags,
@@ -103,11 +104,11 @@ class GTK::Dialog::Message is GTK::Dialog {
   }
 
   method format_secondary_markup (Str() $message_format) {
-    gtk_message_dialog_format_secondary_markup($message_format);
+    gtk_message_dialog_format_secondary_markup($!md, $message_format);
   }
 
   method format_secondary_text (Str() $message_format) {
-    gtk_message_dialog_format_secondary_text($message_format);
+    gtk_message_dialog_format_secondary_text($!md, $message_format);
   }
 
   method get_type {
