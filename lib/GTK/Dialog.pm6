@@ -6,6 +6,8 @@ use GTK::Compat::Types;
 use GTK::Raw::Dialog;
 use GTK::Raw::Types;
 
+use GTK::Box;
+use GTK::HeaderBar;
 use GTK::Window;
 
 class GTK::Dialog is GTK::Window {
@@ -78,21 +80,21 @@ class GTK::Dialog is GTK::Window {
     gtk_dialog_add_action_widget($!d, $child, $ri);
   }
 
-  method add_button (gchar $button_text, Int() $response_id) {
+  method add_button (Str() $button_text, Int() $response_id) {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_add_button($!d, $button_text, $ri);
   }
 
   method get_action_area {
-    gtk_dialog_get_action_area($!d);
+    GTK::Box.new( gtk_dialog_get_action_area($!d) );
   }
 
   method get_content_area {
-    gtk_dialog_get_content_area($!d);
+    GTK::Box.new( gtk_dialog_get_content_area($!d) );
   }
 
   method get_header_bar {
-    gtk_dialog_get_header_bar($!d);
+    GTK::HeaderBar.new( gtk_dialog_get_header_bar($!d) );
   }
 
   method get_response_for_widget (GtkWidget() $widget) {
@@ -115,7 +117,7 @@ class GTK::Dialog is GTK::Window {
     gtk_alternative_dialog_button_order($screen);
   }
 
-  multi method response (gint $response_id) {
+  multi method response (Int() $response_id) {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_response($!d, $ri);
   }

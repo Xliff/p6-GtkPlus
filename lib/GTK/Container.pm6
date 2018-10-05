@@ -18,13 +18,6 @@ class GTK::Container is GTK::Widget {
   has @!start;
   has @!end;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Container');
-    $o;
-  }
-
   submethod BUILD (:$container) {
     given $container {
       when GtkContainer | GtkWidget {
@@ -197,8 +190,15 @@ class GTK::Container is GTK::Widget {
     );
   }
 
-  multi method add (GtkWidget() $widget) {
+  multi method add (GtkWidget $widget) {
+    @!end.push: $widget unless self.IS-LATCHED;
+    self.UNSET-LATCH;
     gtk_container_add($!c, $widget);
+  }
+  multi method add (GTK::Widget $widget) {
+    @!end.push: $widget;
+    self.SET-LATCH;
+    samewith($widget.widget);
   }
 
   method check_resize {
@@ -312,6 +312,12 @@ class GTK::Container is GTK::Widget {
   }
 
   multi method remove (GtkWidget() $widget) {
+    @!end .= grep({
+      do {
+        when GtkWidget   {        $_ !== $widget }
+        when GTK::Widget { $_.widget !== $widget }
+      }
+    });
     gtk_container_remove($!c, $widget);
   }
 

@@ -15,6 +15,16 @@ class GTK::Grid is GTK::Container {
 
   has GtkGrid $!g;
 
+  # XXX
+  # As a container, it is imperative that there be proper storage for widgets.
+  # As things are right now, we have only @!start and @!end. We could reuse these,
+  # but that will make it problematic for ease of retrieval.
+  #
+  # A method built on hash references is preferrable.
+  #
+  # This NEEDS to be done prior to release, so that widgets created outside of
+  # this scope are preserved.
+
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Grid');

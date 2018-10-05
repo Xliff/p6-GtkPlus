@@ -282,7 +282,7 @@ sub gtk_file_chooser_get_preview_widget (GtkFileChooser $chooser)
   { * }
 
 sub gtk_file_chooser_get_action (GtkFileChooser $chooser)
-  returns GtkFileChooserAction
+  returns uint32 # GtkFileChooserAction
   is native('gtk-3')
   is export
   { * }

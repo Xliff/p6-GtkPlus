@@ -48,7 +48,7 @@ sub gtk_label_new (Str $text)
   is export
   { * }
 
-sub gtk_label_new_with_mnemonic (GtkLabel $l, Str $text)
+sub gtk_label_new_with_mnemonic (Str $text)
   returns GtkWidget
   is native('gtk-3')
   is export

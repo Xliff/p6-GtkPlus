@@ -741,6 +741,20 @@ our enum GtkFileFilterFlags is export (
   GTK_FILE_FILTER_MIME_TYPE    => (1 +< 3)
 );
 
+our enum GtkButtonsType is export <
+  GTK_BUTTONS_NONE
+  GTK_BUTTONS_OK
+  GTK_BUTTONS_CLOSE
+  GTK_BUTTONS_CANCEL
+  GTK_BUTTONS_YES_NO
+  GTK_BUTTONS_OK_CANCEL
+>;
+
+our enum GtkDialogFlags is export (
+  GTK_DIALOG_MODAL               => 1,
+  GTK_DIALOG_DESTROY_WITH_PARENT => (1 +< 1),
+  GTK_DIALOG_USE_HEADER_BAR      => (1 +< 2)
+);
 
 class GtkAboutDialog        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup         is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -796,6 +810,7 @@ class GtkLevelBar           is repr('CPointer') does GTK::Roles::Pointers is exp
 class GtkLinkButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLockButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkListStore          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkMessageDialog      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenu               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenuBar            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenuButton         is repr('CPointer') does GTK::Roles::Pointers is export { }

@@ -14,7 +14,7 @@ sub gtk_orientable_get_type ()
   { * }
 
 sub gtk_orientable_get_orientation (GtkOrientable $orientable)
-  returns GtkOrientation
+  returns uint32 # GtkOrientation
   is native('gtk-3')
   is export
   { * }
