@@ -45,6 +45,7 @@ class GTK::Box is GTK::Container {
     Int() $orientation,          # GtkOrientation,
     Int() $spacing
   ) {
+    # This works because it is NOT the array version.
     my guint $o = self.RESOLVE-UINT($orientation);
     my gint $s = self.RESOLVE-INT($spacing);
     my $box = gtk_box_new($o, $s);

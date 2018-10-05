@@ -116,3 +116,16 @@ sub gtk_dialog_set_response_sensitive (
   is native('gtk-3')
   is export
   { * }
+
+sub gtk_dialog_new_with_buttons(
+  Str $title,
+  GtkWindow $parent,
+  uint32 $flags,                # GtkDialogFlags flags,
+  Str $first_button_text,
+  gint $first_response_id,
+  Str
+)
+  returns GtkWidget
+  is native('gtk-3')
+  is export
+  { * }

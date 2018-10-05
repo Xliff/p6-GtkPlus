@@ -447,9 +447,9 @@ class GTK::Window is GTK::Bin {
   method transient_for is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_transient_for($!win);
+        GTK::Window.new( gtk_window_get_transient_for($!win) );
       },
-      STORE => sub ($, GtkWidget() $parent is copy) {
+      STORE => sub ($, GtkWindow() $parent is copy) {
         gtk_window_set_transient_for($!win, $parent);
       }
     );

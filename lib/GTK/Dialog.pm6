@@ -54,6 +54,24 @@ class GTK::Dialog is GTK::Window {
     self.bless(:$dialog);
   }
 
+  method new_with_buttons(
+   Str()       $title,
+   GtkWindow() $parent,
+   uint32      $flags,          # GtkDialogFlags $flags
+   Str()       $button_text,
+   gint        $button_response_id
+  ) {
+    my $dialog = gtk_dialog_new_with_buttons(
+      $title,
+      $parent,
+      $flags,
+      $button_text,
+      $button_response_id,
+      Str
+    );
+    self.bless(:$dialog);
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # Is originally:
 

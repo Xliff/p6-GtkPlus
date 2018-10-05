@@ -10,12 +10,13 @@ use GTK::Dialog::Message;
 use GTK::Frame;
 use GTK::Label;
 
+my ($*entry1, $*entry2, $*md);
+
 my $a = GTK::Application.new(
   title => 'org.genex.dialog'
 );
 
 sub message_dialog_clicked(*@a) {
-  my $*md;
   state $mdo = 1;
 
   without $*md {
@@ -33,23 +34,21 @@ sub message_dialog_clicked(*@a) {
 }
 
 sub interactive_dialog_clicked(*@a) {
-  my $*entry1;
-  my $*entry2;
+  # Will need GTK::Dialog.new_with_buttons
+  my $d1 = GTK::Dialog.new_with_buttons(
+    'Interactive Dialog',
+    $a.window,
+    GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,
+    '_OK',
+    GTK_RESPONSE_OK
+  );
+  $d1.add_button('_Cancel', GTK_RESPONSE_CANCEL);
 
-  $a.window.title = 'Dialog example';
-
-  my $d1 = GTK::Dialog.new;
-  my $ob = GTK::Button.new_with_mnemonic('_OK');
-  my $cb = GTK::Button.new_with_mnemonic('_Cancel');
-  my $ca = $d1.content_area;
-  $d1.modal = True;
-  $d1.add_action_widget($ob, GTK_RESPONSE_OK);
-  $d1.acc_action_widget($cb, GTK_RESPONSE_CANCEL);
-
+  my $ca = $d1.get_content_area;
   my $hbox = GTK::Box.new-hbox;
   $ca.pack_start($hbox);
 
-  my $i = GTK::Image.new_from_icon_name('dialog-question');
+  my $i = GTK::Image.new_from_icon_name('dialog-question', GTK_ICON_SIZE_DIALOG);
   my $g = GTK::Grid.new;
   ($g.row_spacing, $g.column_spacing) = (4 xx 2);
   $hbox.pack_start($i);
@@ -59,7 +58,7 @@ sub interactive_dialog_clicked(*@a) {
   $g.attach($l1, 0, 0, 1, 1);
 
   my $e1 = GTK::Entry.new;
-  $e1.text = $l1.text;
+  $e1.text = $*entry1.text;
   $g.attach($e1, 1, 0, 1, 1);
   $l1.mnemonic_widget = $e1;
 
@@ -67,10 +66,11 @@ sub interactive_dialog_clicked(*@a) {
   $g.attach($l2, 0, 1, 1, 1);
 
   my $e2 = GTK::Entry.new;
-  $e2.text = $l2.text;
-  $g.attach($e1, 1, 1, 1, 1);
+  $e2.text = $*entry2.text;
+  $g.attach($e2, 1, 1, 1, 1);
   $l2.mnemonic_widget = $e2;
 
+  $d1.show_all;
   if $d1.run == GTK_RESPONSE_OK {
     $*entry1.text = $e1.text;
     $*entry2.text = $e2.text;
@@ -78,10 +78,6 @@ sub interactive_dialog_clicked(*@a) {
 }
 
 $a.activate.tap({
-  my $*entry1;
-  my $*entry2;
-  my $*md;
-
   my $f = GTK::Frame.new('Dialogs');
   $f.margins = 8;
 
