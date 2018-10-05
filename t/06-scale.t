@@ -9,8 +9,6 @@ use GTK::Scale;
 
 use NativeCall;
 
-# XXX - Revisit due to lack of proper signals.
-
 my $a = GTK::Application.new( :title('org.genex.scale_example') );
 
 $a.activate.tap({
@@ -30,20 +28,18 @@ $a.activate.tap({
   $hscale.add_mark(50, GTK_POS_BOTTOM, Str);
   $hscale.add_mark(90, GTK_POS_BOTTOM, Str);
 
-  # Does not work properly, since current pattern does not return a value.
-  $hscale.format-value.tap({
-#      "→ { $value } ←";
-  );
+  # Formatting stops working after a while. Bug in GTK?
+  $hscale.format-value(:!supply).tap(-> $, $v, $ --> Str {
+    "→ { $v } ←";
+  });
+
   $vscale.add_mark(0.1, GTK_POS_RIGHT, Str);
   $vscale.add_mark(0.5, GTK_POS_LEFT, Str);
   $vscale.add_mark(0.9, GTK_POS_LEFT, Str);
   $vscale.set_size_request(-1, 100);
-  # Does not work properly, since current pattern does not return a value.
-  $vscale.format-value.tap(
-    -> $, num64 $value, OpaquePointer $user_data --> Str {
-      "»{ $value }«";
-    }
-  );
+  $vscale.format-value(:!supply).tap(-> $, $v, $ --> Str {
+    "»{ $v }«";
+  });
 
   $vbox.pack_start($title, True, True, 0);
   $vbox.pack_start($vscale, True, True, 0);

@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
-class ResponseSignal {
+class ResponseHandler {
   has $!s;
   has $!o;
   has %!sig;
@@ -25,7 +25,7 @@ class ResponseSignal {
 
   method tap(&handler) {
     if %!sig{$!s}:exists {
-      warn "Response signal for GTK::Infobar was already connected";
+      warn "{ $!s.tc } signal for GTK::Infobar was already connected";
       self.free;
     }
     my $sid = g_connect_response($!o, $!s, &handler, OpaquePointer, 0);
@@ -44,7 +44,7 @@ role GTK::Roles::Signals::InfoBar {
     $obj,
     &handler?
   ) {
-    my $r = ResponseSignal.new($obj, 'response', %!signals);
+    my $r = ResponseHandler.new($obj, 'response', %!signals);
     $r.tap(&handler) with &handler;
     $r;
   }
