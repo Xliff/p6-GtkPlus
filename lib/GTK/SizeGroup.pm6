@@ -6,7 +6,11 @@ use GTK::Compat::Types;
 use GTK::Raw::SizeGroup;
 use GTK::Raw::Types;
 
+use GTK::Roles::Types;
+
 class GTK::SizeGroup {
+  also does GTK::Roles::Types;
+
   has GtkSizeGroup $!sg;
 
   submethod BUILD(:$sizegroup) {
@@ -19,6 +23,16 @@ class GTK::SizeGroup {
     self.bless(:$sizegroup);
   }
   multi method new(GtkSizeGroup $sizegroup) {
+    self.bless(:$sizegroup);
+  }
+  multi method new (:$horizontal, :$vertical) {
+    die 'Please specify either :horizontal or :vertical in call to GTK::SizeGroup.new'
+      unless $horizontal ^^ $vertical;
+    my $m = do {
+      when $horizontal { GTK_ORIENTATION_HORIZONTAL }
+      when $vertical   { GTK_ORIENTATION_VERTICAL }
+    };
+    my $sizegroup = gtk_size_group_new($m);
     self.bless(:$sizegroup);
   }
 
@@ -48,7 +62,7 @@ class GTK::SizeGroup {
         GtkSizeGroupMode( gtk_size_group_get_mode($!sg) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = self.RgESOLVE-UINT($mode);
+        my uint32 $m = self.RESOLVE-UINT($mode);
         gtk_size_group_set_mode($!sg, $m);
       }
     );

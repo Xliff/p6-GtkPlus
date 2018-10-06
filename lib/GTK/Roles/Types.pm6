@@ -66,6 +66,26 @@ role GTK::Roles::Types {
     $ru +& 0xffff;
   }
 
+  multi method RESOLVE-LINT(@ri) {
+    self.IS-PROTECTED;
+    # This will not work if called before 'self' exists!
+    @ri.map({ samewith($_) });
+  }
+  multi method RESOLVE-LINT($ri) {
+    self.IS-PROTECTED;
+    ($ri.abs +& 0x7fffffff) * ($ri < 0 ?? -1 !! 1);
+  }
+
+  multi method RESOLVE-ULINT(@ru) {
+    self.IS-PROTECTED;
+    # This will not work if called before 'self' exists!
+    @ru.map({ samewith($_) });
+  }
+  multi method RESOLVE-ULINT($ru) {
+    self.IS-PROTECTED;
+    $ru +& 0xffffffff;
+  }
+
   multi method RESOLVE-GSTRV(Str @ri) {
     self.IS-PROTECTED;
     my CArray[Str] $gs = CArray[Str].new;

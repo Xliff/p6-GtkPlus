@@ -81,7 +81,7 @@ class GTypeValueList is repr('CUnion') is export {
 class GValue is repr('CStruct') does GTK::Roles::Pointers is export {
   has ulong           $.g_type is rw;
   HAS GTypeValueList  $.data1  is rw;
-  HAS GTypeValueList  $.data2;
+  HAS GTypeValueList  $.data2  is rw;
 }
 
 our enum GTypeEnum is export (
