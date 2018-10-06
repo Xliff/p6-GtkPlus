@@ -95,60 +95,74 @@ role GTK::Roles::TreeModel {
   #   gtk_tree_model_get_valist($!tm, $iter, $var_args);
   # }
 
+  # XXX - With the advent of GTK::Compat::Value, the below comment may be
+  #       incorrect. 8^)
   # This will need to turn into set of variants for:
   #     types: uint, int, uint64, int64, num, num64, string, object
   # shortcuts: boolean, flags(uint); enum(int)
   # See the below example:
-  method get_value_s (GtkTreeIter() $iter, Int() $column, Str $value is rw) {
+  multi method get_value (
+    GtkTreeIter() $iter,
+    Int() $column,
+    GValue() $value is rw
+  ) {
     my gint $c = self.RESOLVE-INT($column);
-    gtk_tree_model_get_value_string($!tm, $iter, $c, $value);
-  }
-  method get_value_o (GtkTreeIter() $iter, Int() $column, Pointer $value is rw) {
-    my gint $c = self.RESOLVE-INT($column);
-    gtk_tree_model_get_value_obj($!tm, $iter, $c, $value);
-  }
-  method get_value_f (GtkTreeIter() $iter, Int() $column, Num() $value is rw) {
-    my num32 $v = $value;
-    my gint $c = self.RESOLVE-INT($column);
-    my $rc = gtk_tree_model_get_value_float($!tm, $iter, $c, $v);
-    $value = $v
+    my $rc = gtk_tree_model_get_value($!tm, $iter, $c, $value);
     $rc;
   }
-  method get_value_d (GtkTreeIter() $iter, Int() $column, Num() $value is rw) {
-    my num64 $v = $value;
-    my gint $c = self.RESOLVE-INT($column);
-    my $rc = gtk_tree_model_get_value_double($!tm, $iter, $c, $value);
-    $value = $v;
-    $rc;
+  multi method get_value (GtkTreeIter() $iter, Int() $column) {
+    my GValue $v .= new;
+    samewith($iter, $column, $v);
+    my $vo = GTK::Compat::Value.new($v);
+    $vo.value;
   }
-  method get_value_i (GtkTreeIter() $iter, Int() $column, int32 $value is rw) {
-    my int32 $v = self.RESOLVE-INT($value);
-    my gint $c = self.RESOLVE-INT($column);
-    my $rc = gtk_tree_model_get_value_int($!tm, $iter, $c, $value);
-    $value = $v;
-    $rc;
-  }
-  method get_value_ui (GtkTreeIter() $iter, Int() $column, uint32 $value is rw) {
-    my uint32 $v = self.RESOLVE-UINT($value);
-    my gint $c = self.RESOLVE-INT($column);
-    my $rc = gtk_tree_model_get_value_uint($!tm, $iter, $c, $value);
-    $value = $v;
-    $rc;
-  }
-  method get_value_l (GtkTreeIter() $iter, Int() $column, int64 $value is rw) {
-    my int64 $v = self.RESOLVE-LINT($value);
-    my gint $c = self.RESOLVE-INT($column);
-    my $rc = gtk_tree_model_get_value_long($!tm, $iter, $c, $value);
-    $value = $v;
-    $rc;
-  }
-  method get_value_ul (GtkTreeIter() $iter, Int() $column, uint64 $value is rw) {
-    my int64 $v = self.RESOLVE-ULINT($value);
-    my gint $c = self.RESOLVE-INT($column);
-    my $rc = gtk_tree_model_get_value_ulong($!tm, $iter, $c, $value);
-    $value = $v;
-    $rc;
-  }
+
+  # method get_value_o (GtkTreeIter() $iter, Int() $column, Pointer $value is rw) {
+  #   my gint $c = self.RESOLVE-INT($column);
+  #   gtk_tree_model_get_value_obj($!tm, $iter, $c, $value);
+  # }
+  # method get_value_f (GtkTreeIter() $iter, Int() $column, Num() $value is rw) {
+  #   my num32 $v = $value;
+  #   my gint $c = self.RESOLVE-INT($column);
+  #   my $rc = gtk_tree_model_get_value_float($!tm, $iter, $c, $v);
+  #   $value = $v;
+  #   $rc;
+  # }
+  # method get_value_d (GtkTreeIter() $iter, Int() $column, Num() $value is rw) {
+  #   my num64 $v = $value;
+  #   my gint $c = self.RESOLVE-INT($column);
+  #   my $rc = gtk_tree_model_get_value_double($!tm, $iter, $c, $value);
+  #   $value = $v;
+  #   $rc;
+  # }
+  # method get_value_i (GtkTreeIter() $iter, Int() $column, int32 $value is rw) {
+  #   my int32 $v = self.RESOLVE-INT($value);
+  #   my gint $c = self.RESOLVE-INT($column);
+  #   my $rc = gtk_tree_model_get_value_int($!tm, $iter, $c, $value);
+  #   $value = $v;
+  #   $rc;
+  # }
+  # method get_value_ui (GtkTreeIter() $iter, Int() $column, uint32 $value is rw) {
+  #   my uint32 $v = self.RESOLVE-UINT($value);
+  #   my gint $c = self.RESOLVE-INT($column);
+  #   my $rc = gtk_tree_model_get_value_uint($!tm, $iter, $c, $value);
+  #   $value = $v;
+  #   $rc;
+  # }
+  # method get_value_l (GtkTreeIter() $iter, Int() $column, int64 $value is rw) {
+  #   my int64 $v = self.RESOLVE-LINT($value);
+  #   my gint $c = self.RESOLVE-INT($column);
+  #   my $rc = gtk_tree_model_get_value_long($!tm, $iter, $c, $value);
+  #   $value = $v;
+  #   $rc;
+  # }
+  # method get_value_ul (GtkTreeIter() $iter, Int() $column, uint64 $value is rw) {
+  #   my int64 $v = self.RESOLVE-ULINT($value);
+  #   my gint $c = self.RESOLVE-INT($column);
+  #   my $rc = gtk_tree_model_get_value_ulong($!tm, $iter, $c, $value);
+  #   $value = $v;
+  #   $rc;
+  # }
 
   method iter_children (GtkTreeIter() $iter, GtkTreeIter() $parent) {
     gtk_tree_model_iter_children($!tm, $iter, $parent);

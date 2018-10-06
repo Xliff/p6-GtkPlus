@@ -390,18 +390,6 @@ sub gtk_tree_path_up (GtkTreePath $path)
   is export
   { * }
 
-# This function needs type variants for:
-#   Int, Uint, Int64, Uint64, Num32, Num64, Str, and Object
-sub gtk_tree_model_get_value (
-  GtkTreeModel $tree_model,
-  GtkTreeIter $iter,
-  gint $column,
-  GValue $value is rw
-)
-  is native('gtk-3')
-  is export
-  { * }
-
 sub gtk_tree_model_get_value (
   GtkTreeModel $tree_model,
   GtkTreeIter $iter,

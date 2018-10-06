@@ -15,20 +15,24 @@ constant cairo_region_t      is export := Pointer;
 
 constant gboolean            is export := uint32;
 constant gchar               is export := Str;
-constant guchar              is export := Str;
 constant gconstpointer       is export := Pointer;
 constant gdouble             is export := num64;
 constant gfloat              is export := num32;
 constant gint                is export := int32;
-constant gint8               is export := int8;
 constant gint16              is export := int16;
+constant gint64              is export := int64;
+constant gint8               is export := int8;
+constant glong               is export := int64;
 constant gpointer            is export := Pointer;
 constant gsize               is export := uint64;
 constant gssize              is export := int64;
+constant guchar              is export := Str;
 constant guint               is export := uint32;
-constant guint8              is export := uint8;
 constant guint16             is export := uint16;
 constant guint32             is export := uint32;
+constant guint64             is export := uint64;
+constant guint8              is export := uint8;
+constant gulong              is export := uint64;
 constant gunichar            is export := uint32;
 constant va_list             is export := Pointer;
 
@@ -39,6 +43,7 @@ constant GClosure            is export := Pointer;
 constant GStrv               is export := CArray[Str];
 constant GQuark              is export := uint32;
 constant GType               is export := uint32;
+constant GVariant            is export := Pointer;
 
 constant PangoTabArray is export := CArray[gint];
 
@@ -115,8 +120,7 @@ our enum GTypeEnum is export (
   G_TYPE_RESERVED_USER_FIRST => 49
 );
 
-
-our enum GVariant is export <
+our enum GVariantType is export <
   G_VARIANT_CLASS_BOOLEAN
   G_VARIANT_CLASS_BYTE
   G_VARIANT_CLASS_INT16
@@ -402,8 +406,6 @@ class GdkRectangle          is repr('CPointer') is export { }
 class GdkScreen             is repr('CPointer') is export { }
 class GdkStyleProvider      is repr('CPointer') is export { }
 class GdkTouchEvent         is repr('CPointer') is export { }
-# Probably should be its own class
-class GtkTreeModel          is repr('CPointer') is export { }
 class GdkVisual             is repr('CPointer') is export { }
 class GdkWindow             is repr('CPointer') is export { }
 
