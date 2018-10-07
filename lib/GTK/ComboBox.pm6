@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+use GTK::Roles::CellLayout;
+
 class GTK::ComboBox is GTK::Bin {
+  also does GTK::Roles::CellLayout;
+
   has GtkComboBox $!cb;
 
   method bless(*%attrinit) {
@@ -42,6 +46,8 @@ class GTK::ComboBox is GTK::Bin {
       }
     }
     self.setBin($to-parent);
+    # For GTK::Roles::CellLayout
+    $!cl = nativecast(GtkCellLayout, $!cb);
   }
 
   multi method new {

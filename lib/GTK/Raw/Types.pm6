@@ -11,6 +11,7 @@ unit package GTK::Raw::Types;
 our constant GtkAssistantPageFunc             is export := Pointer;
 our constant GtkBuilderConnectFunc            is export := Pointer;
 our constant GtkCalendarDetailFunc            is export := Pointer;
+our constant GtkCellLayoutDataFunc            is export := Pointer;
 our constant GtkClipboardClearFunc            is export := Pointer;
 our constant GtkClipboardGetFunc              is export := Pointer;
 our constant GtkClipboardImageReceivedFunc    is export := Pointer;
@@ -775,6 +776,8 @@ class GtkButtonBox          is repr('CPointer') does GTK::Roles::Pointers is exp
 class GtkCalendar           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCallback           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellArea           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellLayout         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellRenderer       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCheckButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCheckMenuItem      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkClipboard          is repr('CPointer') does GTK::Roles::Pointers is export { }

@@ -291,7 +291,6 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
 
       }
       say '';
-
     }
   }
 

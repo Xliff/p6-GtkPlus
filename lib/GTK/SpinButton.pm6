@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Entry;
 
+use GTK::Roles::Editable;
+
 class GTK::SpinButton is GTK::Entry {
+  also does GTK::Roles::Editable;
+  
   has GtkSpinButton $!sp;
 
   method bless(*%attrinit) {
@@ -38,6 +42,8 @@ class GTK::SpinButton is GTK::Entry {
       default {
       }
     }
+    # For GTK::Roles::Editable
+    $!er = nativecast(GtkEditable, $!sp);
   }
 
   multi method new (GtkWidget $spinbutton) {

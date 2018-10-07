@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Entry;
 
+use GTK::Roles::Editable;
+
 class GTK::SearchEntry is GTK::Entry {
+  also does GTK::Roles::Editable;
+
   has GtkSearchEntry $!se;
 
   method bless(*%attrinit) {
@@ -38,6 +42,8 @@ class GTK::SearchEntry is GTK::Entry {
       default {
       }
     }
+    # For GTK::Roles::GtkEditable
+    $!er = nativecast(GtkEditable, $!se);
   }
 
   multi method new {
