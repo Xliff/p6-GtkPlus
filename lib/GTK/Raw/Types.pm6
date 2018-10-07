@@ -794,6 +794,7 @@ class GtkContainer          is repr('CPointer') does GTK::Roles::Pointers is exp
 class GtkCSSProvider        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDialog             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDragContext        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkDrawingArea        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEditable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntry              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryBuffer        is repr('CPointer') does GTK::Roles::Pointers is export { }

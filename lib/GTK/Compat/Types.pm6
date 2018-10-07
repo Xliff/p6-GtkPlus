@@ -9,6 +9,7 @@ unit package GTK::Compat::Types;
 constant glib     is export = 'glib-2.0',v0;
 constant gio      is export = 'gio-2.0',v0;
 constant gobject  is export = 'gobject-2.0',v0;
+constant cairo    is export = 'cairo',v2
 
 constant cairo_t             is export := Pointer;
 constant cairo_region_t      is export := Pointer;
@@ -89,6 +90,48 @@ class GValue is repr('CStruct') does GTK::Roles::Pointers is export {
   HAS GTypeValueList  $.data1  is rw;
   HAS GTypeValueList  $.data2  is rw;
 }
+
+our enum cairo_operator_t is export <
+  CAIRO_OPERATOR_CLEAR
+  CAIRO_OPERATOR_SOURCE
+  CAIRO_OPERATOR_OVER
+  CAIRO_OPERATOR_IN
+  CAIRO_OPERATOR_OUT
+  CAIRO_OPERATOR_ATOP
+  CAIRO_OPERATOR_DEST
+  CAIRO_OPERATOR_DEST_OVER
+  CAIRO_OPERATOR_DEST_IN
+  CAIRO_OPERATOR_DEST_OUT
+  CAIRO_OPERATOR_DEST_ATOP
+  CAIRO_OPERATOR_XOR
+  CAIRO_OPERATOR_ADD
+  CAIRO_OPERATOR_SATURATE
+  CAIRO_OPERATOR_MULTIPLY
+  CAIRO_OPERATOR_SCREEN
+  CAIRO_OPERATOR_OVERLAY
+  CAIRO_OPERATOR_DARKEN
+  CAIRO_OPERATOR_LIGHTEN
+  CAIRO_OPERATOR_COLOR_DODGE
+  CAIRO_OPERATOR_COLOR_BURN
+  CAIRO_OPERATOR_HARD_LIGHT
+  CAIRO_OPERATOR_SOFT_LIGHT
+  CAIRO_OPERATOR_DIFFERENCE
+  CAIRO_OPERATOR_EXCLUSION
+  CAIRO_OPERATOR_HSL_HUE
+  CAIRO_OPERATOR_HSL_SATURATION
+  CAIRO_OPERATOR_HSL_COLOR
+  CAIRO_OPERATOR_HSL_LUMINOSITY
+>;
+
+our enum cairo_format_t is export (
+  CAIRO_FORMAT_INVALID   => -1,
+  CAIRO_FORMAT_ARGB32    => 0,
+  CAIRO_FORMAT_RGB24     => 1,
+  CAIRO_FORMAT_A8        => 2,
+  CAIRO_FORMAT_A1        => 3,
+  CAIRO_FORMAT_RGB16_565 => 4,
+  CAIRO_FORMAT_RGB30     => 5
+);
 
 our enum GTypeEnum is export (
   G_TYPE_INVALID   => 0,
