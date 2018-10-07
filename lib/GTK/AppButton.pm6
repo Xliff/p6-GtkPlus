@@ -11,6 +11,8 @@ use GTK::ComboBox;
 use GTK::Roles::AppChooser;
 
 class GTK::AppButton is GTK::ComboBox {
+  also does GTK::Roles::AppChooser;
+
   has GtkAppChooserButton $!acb;
 
   method bless(*%attrinit) {
@@ -41,7 +43,7 @@ class GTK::AppButton is GTK::ComboBox {
       }
     }
     # For GTK::Roles::AppChooser
-    $!ac = nativecast(GtkAppChooser, $!acb);
+    #$!ac = nativecast(GtkAppChooser, $!acb);
   }
 
   multi method new(Str $content-type) {

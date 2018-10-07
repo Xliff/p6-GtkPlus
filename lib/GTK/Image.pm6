@@ -40,6 +40,10 @@ class GTK::Image is GTK::Widget {
     }
   }
 
+  method GTK::Compat::Types::GdkPixbuf {
+    self.get_pixbuf;
+  }
+
   multi method new {
     my $image = gtk_image_new();
     self.bless(:$image);

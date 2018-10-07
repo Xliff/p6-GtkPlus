@@ -22,7 +22,7 @@ class GTK::Dialog::About is GTK::Dialog {
     my $to-parent;
     given $about {
       when GtkAboutDialog | GtkWidget {
-        $! = do {
+        $!ad = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkAboutDialog, $_);
@@ -32,7 +32,7 @@ class GTK::Dialog::About is GTK::Dialog {
             $_;
           }
         }
-        self.setParent($to-parent);
+        self.setDialog($to-parent);
       }
       when GTK::Dialog::About {
       }
@@ -58,37 +58,17 @@ class GTK::Dialog::About is GTK::Dialog {
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
-  method !getGStrv($l) {
-    # Look into self.CALLING-METHOD to properly set $meth.
-    my GStrv @a;
-    my $meth = self.CALLING-METHOD;
-    do given $l {
-      when Str {
-        @a = self.RESOLVE-GSTRV($l.Array);
-      }
-      when Array {
-        die "Array must contain strings for assignment to { ::?CLASS.^name }.{ $meth }"
-          unless $l.all ~~ Str;
-        @a = self.RESOLVE-GSTRV($l);
-      }
-      default {
-        die "Invalid type { .^name } passed to { ::?CLASS.^name }.{ $meth }";
-      }
-    }
-    @a;
-  }
-
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method artists is rw {
     Proxy.new(
       FETCH => sub ($) {
         gtk_about_dialog_get_artists($!ad);
       },
-      STORE => sub ($, Array() $artists is copy) {
-        gtk_about_dialog_set_artists(
-          $!ad,
-          self!getGStrv($artists);
-        );
+      STORE => sub ($, $artists is copy) {
+        die "Cannot accept { $artists.^name } for GTK::Dialog::About.artists"
+          unless $artists ~~ (Str, Array).any;
+        my $a = self.RESOLVE-GSTRV($artists);
+        gtk_about_dialog_set_artists($!ad, $a);
       }
     );
   }
@@ -98,11 +78,11 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_authors($!ad);
       },
-      STORE => sub ($,  Array() $authors is copy) {
-        gtk_about_dialog_set_authors(
-          $!ad,
-          self!getGStrv($authors);
-        );
+      STORE => sub ($, $authors is copy) {
+        die "Cannot accept { $authors.^name } for GTK::Dialog::About.authors"
+          unless $authors ~~ (Str, Array).any;
+        my $a = self.RESOLVE-GSTRV($authors);
+        gtk_about_dialog_set_authors($!ad, $a);
       }
     );
   }
@@ -134,11 +114,11 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_documenters($!ad);
       },
-      STORE => sub ($, Array() $documenters is copy) {
-        gtk_about_dialog_set_documenters(
-          $!ad,
-          self!getGStrv($documenters);
-        );
+      STORE => sub ($, $documenters is copy) {
+        die "Cannot accept { $documenters.^name } for GTK::Dialog::About.documenters"
+          unless $documenters ~~ (Str, Array).any;
+        my $d = self.RESOLVE-GSTRV($documenters);
+        gtk_about_dialog_set_documenters($!ad, $d);
       }
     );
   }
@@ -171,7 +151,7 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_logo($!ad);
       },
-      STORE => sub ($, GdkPixbuf $logo is copy) {
+      STORE => sub ($, GdkPixbuf() $logo is copy) {
         gtk_about_dialog_set_logo($!ad, $logo);
       }
     );
@@ -259,8 +239,9 @@ class GTK::Dialog::About is GTK::Dialog {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_credit_section (Str() $section_name, Str() $people) {
-    gtk_about_dialog_add_credit_section($!ad, $section_name, $people);
+  method add_credit_section (Str() $section_name, @people) {
+    my $ac = self.RESOLVE-GSTR(@people);
+    gtk_about_dialog_add_credit_section($!ad, $section_name, $ac);
   }
 
   method get_type {

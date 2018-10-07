@@ -352,10 +352,10 @@ our enum GdkWindowEdge is export <
 >;
 
 our enum GAppInfoCreateFlags is export (
-  G_APP_INFO_CREATE_NONE                           = 0,         # nick=none
-  G_APP_INFO_CREATE_NEEDS_TERMINAL                 = 1,         # nick=needs-terminal
-  G_APP_INFO_CREATE_SUPPORTS_URIS                  = (1 +< 1),  # nick=supports-uris
-  G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  = (1 +< 2)   # nick=supports-startup-notification
+  G_APP_INFO_CREATE_NONE                           => 0,         # nick=none
+  G_APP_INFO_CREATE_NEEDS_TERMINAL                 => 1,         # nick=needs-terminal
+  G_APP_INFO_CREATE_SUPPORTS_URIS                  => (1 +< 1),  # nick=supports-uris
+  G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  => (1 +< 2)   # nick=supports-startup-notification
 );
 
 class cairo_font_options_t  is repr('CPointer') is export { }

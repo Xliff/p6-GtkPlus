@@ -10,7 +10,7 @@ unit package GTK::Dialog::Raw::About;
 sub gtk_about_dialog_add_credit_section (
   GtkAboutDialog $about,
   gchar $section_name,
-  gchar $people
+  CArray[Str] $people
 )
   is native('gtk-3')
   is export
@@ -35,7 +35,7 @@ sub gtk_about_dialog_get_translator_credits (GtkAboutDialog $about)
   { * }
 
 sub gtk_about_dialog_get_documenters (GtkAboutDialog $about)
-  returns Str
+  returns CArray[Str]
   is native('gtk-3')
   is export
   { * }
@@ -47,7 +47,7 @@ sub gtk_about_dialog_get_license (GtkAboutDialog $about)
   { * }
 
 sub gtk_about_dialog_get_artists (GtkAboutDialog $about)
-  returns Str
+  returns CArray[Str]
   is native('gtk-3')
   is export
   { * }
@@ -83,7 +83,7 @@ sub gtk_about_dialog_get_logo_icon_name (GtkAboutDialog $about)
   { * }
 
 sub gtk_about_dialog_get_authors (GtkAboutDialog $about)
-  returns Str
+  returns CArray[Str]
   is native('gtk-3')
   is export
   { * }
@@ -120,7 +120,7 @@ sub gtk_about_dialog_get_copyright (GtkAboutDialog $about)
 
 sub gtk_about_dialog_set_translator_credits (
   GtkAboutDialog $about,
-  gchar $translator_credits
+  CArray[Str] $translator_credits
 )
   is native('gtk-3')
   is export
@@ -128,7 +128,7 @@ sub gtk_about_dialog_set_translator_credits (
 
 sub gtk_about_dialog_set_documenters (
   GtkAboutDialog $about,
-  gchar $documenters
+  CArray[Str] $documenters
 )
   is native('gtk-3')
   is export
@@ -144,7 +144,7 @@ sub gtk_about_dialog_set_license (
 
 sub gtk_about_dialog_set_artists (
   GtkAboutDialog $about,
-  gchar $artists
+  CArray[Str] $artists
 )
   is native('gtk-3')
   is export
@@ -192,7 +192,7 @@ sub gtk_about_dialog_set_logo_icon_name (
 
 sub gtk_about_dialog_set_authors (
   GtkAboutDialog $about,
-  gchar $authors
+  CArray[Str] $authors
 )
   is native('gtk-3')
   is export

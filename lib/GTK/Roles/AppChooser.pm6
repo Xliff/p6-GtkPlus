@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Raw::AppChooser;
 use GTK::Raw::Types;
 
-class GTK::AppChooser  {
+role GTK::Roles::AppChooser  {
   has GtkAppChooser $!ac;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

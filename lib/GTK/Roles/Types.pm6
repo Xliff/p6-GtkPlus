@@ -86,10 +86,14 @@ role GTK::Roles::Types {
     $ru +& 0xffffffff;
   }
 
-  multi method RESOLVE-GSTRV(Str @ri) {
+  multi method RESOLVE-GSTRV(@ri) {
     self.IS-PROTECTED;
     my CArray[Str] $gs = CArray[Str].new;
-    $gs[$++] = $_ for @ri;
+    for @ri {
+      die "Cannot coerce element { $_.^name } to string."
+        unless $_ ~~ Str || $_.^can('Str').elems;
+      $gs[$++] = $_.Str;
+    }
     $gs[$gs.elems] = Str unless $gs[*-1] =:= Str;
     $gs;
   }
