@@ -358,6 +358,18 @@ our enum GAppInfoCreateFlags is export (
   G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  => (1 +< 2)   # nick=supports-startup-notification
 );
 
+our enum GtkCellRendererState is export (
+  GTK_CELL_RENDERER_SELECTED    => 1,
+  GTK_CELL_RENDERER_PRELIT      => (1 +< 1),
+  GTK_CELL_RENDERER_INSENSITIVE => (1 +< 2),
+  # this flag means the cell is in the sort column/row
+  GTK_CELL_RENDERER_SORTED      => (1 +< 3),
+  GTK_CELL_RENDERER_FOCUSED     => (1 +< 4),
+  GTK_CELL_RENDERER_EXPANDABLE  => (1 +< 5),
+  GTK_CELL_RENDERER_EXPANDED    => (1 +< 6)
+} ;
+
+
 class cairo_font_options_t  is repr('CPointer') is export { }
 class cairo_surface_t       is repr('CPointer') is export { }
 
@@ -411,7 +423,6 @@ class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkMonitor            is repr('CPointer') is export { }
 class GdkPixbuf             is repr('CPointer') is export { }
 class GdkPixbufAnimation    is repr('CPointer') is export { }
-class GdkRectangle          is repr('CPointer') is export { }
 class GdkScreen             is repr('CPointer') is export { }
 class GdkStyleProvider      is repr('CPointer') is export { }
 class GdkTouchEvent         is repr('CPointer') is export { }
@@ -451,4 +462,11 @@ class GdkGeometry is repr('CStruct') does GTK::Roles::Pointers is export {
   has gdouble    $.min_aspect;
   has gdouble    $.max_aspect;
   has guint      $.win_gravity;       # GdkGravity
+}
+
+class GdkRectangle is repr('CStruct') does GTK::Roles::Pointers is export {
+  has gint $.x;
+  has gint $.y;
+  has gint $.width;
+  has gint $.height;
 }

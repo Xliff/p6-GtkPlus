@@ -8,6 +8,8 @@
 - Feature Request: GTK::TextBuffer.buffer to accept from Str or Buf. This should also apply to .text()
 - METHOD ALIASING!
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
+- Convert Perl6 additions to GTK::Container into a role. (GTK::Roles::Containable)
+- Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
 
 Applications
 ============
