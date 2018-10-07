@@ -33,7 +33,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
   my $i = 1;
   my @detected;
   for $contents.lines -> $l {
-    if $l ~~ /^ [ 'GDK_' | 'GLIB_' ] [ 'AVAILABLE' | 'DEPRECATED' ] '_'.+ / {
+    if $l ~~ /^ [ 'GDK_' 'PIXBUF_'? | 'GLIB_' ] [ 'AVAILABLE' | 'DEPRECATED' ] '_'.+ / {
       $la = True;
       next;
     }
