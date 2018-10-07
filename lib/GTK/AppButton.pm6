@@ -8,6 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::ComboBox;
 
+use GTK::Roles::AppChooser;
+
 class GTK::AppButton is GTK::ComboBox {
   has GtkAppChooserButton $!acb;
 
@@ -38,6 +40,8 @@ class GTK::AppButton is GTK::ComboBox {
       default {
       }
     }
+    # For GTK::Roles::AppChooser
+    $!ac = nativecast(GtkAppChooser, $!acb);
   }
 
   multi method new(Str $content-type) {

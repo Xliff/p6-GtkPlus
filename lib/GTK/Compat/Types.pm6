@@ -40,8 +40,9 @@ constant GAsyncReadyCallback is export := Pointer;
 constant GCallback           is export := Pointer;
 constant GCancellable        is export := Pointer;
 constant GClosure            is export := Pointer;
-constant GStrv               is export := CArray[Str];
+constant GDestroyNotify      is export := Pointer;
 constant GQuark              is export := uint32;
+constant GStrv               is export := CArray[Str];
 constant GType               is export := uint32;
 constant GVariant            is export := Pointer;
 
@@ -350,6 +351,13 @@ our enum GdkWindowEdge is export <
   GDK_WINDOW_EDGE_SOUTH_EAST
 >;
 
+our enum GAppInfoCreateFlags is export (
+  G_APP_INFO_CREATE_NONE                           = 0,         # nick=none
+  G_APP_INFO_CREATE_NEEDS_TERMINAL                 = 1,         # nick=needs-terminal
+  G_APP_INFO_CREATE_SUPPORTS_URIS                  = (1 +< 1),  # nick=supports-uris
+  G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  = (1 +< 2)   # nick=supports-startup-notification
+);
+
 class cairo_font_options_t  is repr('CPointer') is export { }
 class cairo_surface_t       is repr('CPointer') is export { }
 
@@ -365,6 +373,7 @@ class PangoLanguage         is repr('CPointer') is export { }
 class PangoLayout           is repr('CPointer') is export { }
 
 class GActionGroup          is repr('CPointer') is export { }
+class GAppInfo              is repr('CPointer') is export { }
 class GApplication          is repr('CPointer') is export { }
 class GAsyncResult          is repr('CPointer') is export { }
 class GCompareDataFunc      is repr('CPointer') is export { }
@@ -374,7 +383,7 @@ class GFile                 is repr('CPointer') is export { }
 class GFunc                 is repr('CPointer') is export { }
 class GIcon                 is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
-class GDestroyNotify        is repr('CPointer') is export { }
+class GLaunchContext        is repr('CPointer') is export { }  # GAppLaunchContext
 class GListModel            is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
@@ -442,4 +451,4 @@ class GdkGeometry is repr('CStruct') does GTK::Roles::Pointers is export {
   has gdouble    $.min_aspect;
   has gdouble    $.max_aspect;
   has guint      $.win_gravity;       # GdkGravity
-};
+}
