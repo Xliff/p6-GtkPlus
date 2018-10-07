@@ -10,7 +10,11 @@ use GTK::Raw::Types;
 
 use GTK::Button;
 
+use GTK::Roles::ColorChooser;
+
 class GTK::ColorButton is GTK::Button {
+  also does GTK::Roles::ColorChooser;
+
   has GtkColorButton $!cb;
 
   method bless(*%attrinit) {
@@ -40,6 +44,7 @@ class GTK::ColorButton is GTK::Button {
       default {
       }
     }
+    $!cc = nativecast(GtkColorChooser, $!cb);
   }
 
   multi method new {
@@ -75,21 +80,6 @@ class GTK::ColorButton is GTK::Button {
       STORE => sub ($, Int() $alpha is copy) {
         my guint $a = self.RESOLVE-UINT($alpha);
         gtk_color_button_set_alpha($!cb, $a);
-      }
-    );
-  }
-
-  method rgba is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        my $rgba = GTK::Compat::RGBA.new;
-        my GtkColorChooser $cc = nativecast(GtkColorChooser, $!cb);
-        gtk_color_chooser_get_rgba($cc, $rgba);
-        $rgba;
-      },
-      STORE => sub ($, GTK::Compat::RGBA $rgba is copy) {
-        my GtkColorChooser $cc = nativecast(GtkColorChooser, $!cb);
-        gtk_color_chooser_set_rgba($cc, $rgba);
       }
     );
   }
