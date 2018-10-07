@@ -43,7 +43,7 @@ class GTK::AppButton is GTK::ComboBox {
       }
     }
     # For GTK::Roles::AppChooser
-    #$!ac = nativecast(GtkAppChooser, $!acb);
+    $!ac = nativecast(GtkAppChooser, $!acb);
   }
 
   multi method new(Str $content-type) {
