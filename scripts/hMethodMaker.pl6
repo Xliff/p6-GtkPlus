@@ -253,13 +253,13 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
       my $call = %methods{$m}<call>;
       my $mult = '';
 
-      $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! ''
-        if
-          %methods{$m}<call_types> &&
-          %methods{$m}<call_types>[0] eq <
-            GtkEntryIconPosition
-            GtkTreeIter
-          >.none;
+      # $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! ''
+      #   if
+      #     %methods{$m}<call_types> &&
+      #     %methods{$m}<call_types>[0] eq <
+      #       GtkEntryIconPosition
+      #       GtkTreeIter
+      #     >.none;
 
       say qq:to/METHOD/.chomp;
         { $mult }method { %methods{$m}<sub> } ({ $sig }) \{

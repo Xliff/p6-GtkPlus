@@ -23,6 +23,31 @@ class GTK:: {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkCellArea, GtkCellRenderer, GtkCellEditable, GdkRectangle, gchar, gpointer --> void
+  method add-editable {
+    self.connect($!w, 'add-editable');
+  }
+
+  # Is originally:
+  # GtkCellArea, GtkTreeModel, GtkTreeIter, gboolean, gboolean, gpointer --> void
+  method apply-attributes {
+    self.connect($!w, 'apply-attributes');
+  }
+
+  # Is originally:
+  # GtkCellArea, GtkCellRenderer, gchar, gpointer --> void
+  method focus-changed {
+    self.connect($!w, 'focus-changed');
+  }
+
+  # Is originally:
+  # GtkCellArea, GtkCellRenderer, GtkCellEditable, gpointer --> void
+  method remove-editable {
+    self.connect($!w, 'remove-editable');
+  }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

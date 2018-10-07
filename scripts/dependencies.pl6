@@ -9,6 +9,7 @@ use Data::Dump::Tree;
 sub resolve($n, $l, $seen = {}) {
   # I hate special casing, but this begs for it.
   return if $n eq 'GTK';
+  die "No node information for $n" unless %nodes{$n}:exists;
 
   my $i = "\t" x $l;
   sub mark-resolved($rn) {
