@@ -201,7 +201,7 @@ class GTK::Range is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_range_rect (GdkRectangle $range_rect) {
+  method get_range_rect (GdkRectangle() $range_rect) {
     gtk_range_get_range_rect($!r, $range_rect);
   }
 

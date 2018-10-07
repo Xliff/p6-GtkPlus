@@ -431,8 +431,8 @@ class GTK::TextView is GTK::Container {
 
   method get_cursor_locations (
     GtkTextIter() $iter,
-    GdkRectangle $strong,
-    GdkRectangle $weak
+    GdkRectangle() $strong,
+    GdkRectangle() $weak
   ) {
     gtk_text_view_get_cursor_locations($!tv, $iter, $strong, $weak);
   }
@@ -466,11 +466,15 @@ class GTK::TextView is GTK::Container {
     gtk_text_view_get_iter_at_position($!tv, $iter, $t, $xx, $yy);
   }
 
-  method get_iter_location (GtkTextIter() $iter, GdkRectangle $location) {
+  method get_iter_location (GtkTextIter() $iter, GdkRectangle() $location) {
     gtk_text_view_get_iter_location($!tv, $iter, $location);
   }
 
-  method get_line_at_y (GtkTextIter() $target_iter, Int() $y, Int() $line_top) {
+  method get_line_at_y (
+    GtkTextIter() $target_iter,
+    Int() $y,
+    Int() $line_top
+  ) {
     my @u = ($y, $line_top);
     my gint ($yy, $lt) = self.RESOLVE-INT(@u);
     gtk_text_view_get_line_at_y($!tv, $target_iter, $yy, $lt);
@@ -490,7 +494,7 @@ class GTK::TextView is GTK::Container {
     gtk_text_view_get_vadjustment($!tv);
   }
 
-  method get_visible_rect (GdkRectangle $visible_rect) {
+  method get_visible_rect (GdkRectangle() $visible_rect) {
     gtk_text_view_get_visible_rect($!tv, $visible_rect);
   }
 

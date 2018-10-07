@@ -144,7 +144,7 @@ class GTK::Popover is GTK::Bin {
     gtk_popover_bind_model($!p, $model, $action_namespace);
   }
 
-  method get_pointing_to (GdkRectangle $rect) {
+  method get_pointing_to (GdkRectangle() $rect) {
     gtk_popover_get_pointing_to($!p, $rect);
   }
 
@@ -160,7 +160,7 @@ class GTK::Popover is GTK::Bin {
     gtk_popover_popup($!p);
   }
 
-  method set_pointing_to (GdkRectangle $rect) {
+  method set_pointing_to (GdkRectangle() $rect) {
     gtk_popover_set_pointing_to($!p, $rect);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -1325,7 +1325,7 @@ class GTK::Widget {
     gtk_widget_get_request_mode($!w);
   }
 
-  method intersect (GdkRectangle $area, GdkRectangle $intersection) {
+  method intersect (GdkRectangle() $area, GdkRectangle() $intersection) {
     gtk_widget_intersect($!w, $area, $intersection);
   }
 

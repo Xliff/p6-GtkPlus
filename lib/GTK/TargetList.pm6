@@ -40,7 +40,7 @@ class GTK::TargetList {
     self.bless(:$targetlist);
   }
 
-  method GtkTargetList {
+  method GTK::Raw::Types::GtkTargetList {
     $!tl;
   }
 

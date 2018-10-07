@@ -227,7 +227,7 @@ class GTK::Menu is GTK::MenuShell {
 
   method popup_at_rect (
     GdkWindow $rect_window,
-    GdkRectangle $rect,
+    GdkRectangle() $rect,
     GdkGravity $rect_anchor,
     GdkGravity $menu_anchor,
     GdkEvent $trigger_event

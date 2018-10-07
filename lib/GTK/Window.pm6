@@ -573,7 +573,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_get_position($!win, $rx, $ry);
   }
 
-  method get_resize_grip_area (GdkRectangle $rect) {
+  method get_resize_grip_area (GdkRectangle() $rect) {
     gtk_window_get_resize_grip_area($!win, $rect);
   }
 
