@@ -96,4 +96,7 @@ sub gtk_cell_layout_set_attributes (
   Str $attribute,
   gint $column,
   Str
-);
+)
+  is native('gtk-3')
+  is export
+  { * }

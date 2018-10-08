@@ -9,7 +9,7 @@ unit package GTK::Compat::Types;
 constant glib     is export = 'glib-2.0',v0;
 constant gio      is export = 'gio-2.0',v0;
 constant gobject  is export = 'gobject-2.0',v0;
-constant cairo    is export = 'cairo',v2
+constant cairo    is export = 'cairo',v2;
 
 constant cairo_t             is export := Pointer;
 constant cairo_region_t      is export := Pointer;
@@ -410,7 +410,7 @@ our enum GtkCellRendererState is export (
   GTK_CELL_RENDERER_FOCUSED     => (1 +< 4),
   GTK_CELL_RENDERER_EXPANDABLE  => (1 +< 5),
   GTK_CELL_RENDERER_EXPANDED    => (1 +< 6)
-};
+);
 
 our enum GdkCursorType is export (
   GDK_X_CURSOR            => 0,

@@ -135,7 +135,7 @@ class GTK::Entry is GTK::Widget {
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
 
   # Needs refinement
-  
+
   method activates_default is rw {
     Proxy.new(
       FETCH => sub ($) {
@@ -500,7 +500,7 @@ class GTK::Entry is GTK::Widget {
     GtkTargetList() $target_list,
     Int() $actions            # GdkDragAction $actions
   ) {
-    my @u = ($icon_pos, $actions;
+    my @u = ($icon_pos, $actions);
     my uint32 ($ip, $a) = self.RESOLVE-INT(@u);
     gtk_entry_set_icon_drag_source($!e, $ip, $target_list, $a);
   }

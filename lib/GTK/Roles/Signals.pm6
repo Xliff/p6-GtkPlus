@@ -18,18 +18,19 @@ role GTK::Roles::Signals {
     $signal,
     &handler?
   ) {
+    my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
       #"O: $obj".say;
       #"S: $signal".say;
-      g_signal_connect_wd($obj, $signal,
+      $hid = g_signal_connect_wd($obj, $signal,
         -> $, $ {
             $s.emit(self);
             CATCH { default { note $_; } }
         },
         OpaquePointer, 0
       );
-      [ $s.Supply, $obj ];
+      [ $s.Supply, $obj, $hid];
     };
     %!signals{$signal}[0].tap(&handler) with &handler;
     %!signals{$signal}[0];
@@ -41,21 +42,15 @@ role GTK::Roles::Signals {
     %!signals{$name}:exists;
   }
 
+  # If I cannot share attributes between roles, then each one will have
+  # to have its own signature, or clean-up routine.
   method disconnect_all {
     self.disconnect($_) for %!signals.keys;
   }
 
-  method disconnect($signal) {
-    given %!signals{$signal}[0] {
-      when Supply {
-        # First parameter is good, but concerned about the second.
-        g_signal_handler_disconnect(self, $_[1]);
-      }
-      default {
-        .free;
-      }
-    }
-    %!signals{$signal}:delete;
+  method disconnect($signal, %signals) {
+    # First parameter is good, but concerned about the second.
+    g_signal_handler_disconnect(%signals{$signal}[1], %signals{$signal}[2]);
   }
 
 }
