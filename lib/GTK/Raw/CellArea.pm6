@@ -427,3 +427,36 @@ sub gtk_cell_area_set_focus_cell (
   is native('gtk-3')
   is export
   { * }
+
+sub gtk_cell_area_add_with_properties (
+  GtkCellArea $area,
+  GtkCellRenderer $renderer,
+  Str $name,
+  GValue $value,
+  Str
+)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_cell_area_cell_set (
+  GtkCellArea $area,
+  GtkCellRenderer $renderer,
+  Str $name,
+  GValue $value,
+  Str
+)
+  is native('gtk-3')
+  is export
+  { * }
+
+sub gtk_cell_area_cell_get (
+  GtkCellArea $area,
+  GtkCellRenderer $renderer,
+  Str $name,
+  GValue $value,
+  Str
+)
+  is native('gtk-3')
+  is export
+  { * }

@@ -120,8 +120,8 @@ class GtkTextIter is repr('CStruct') does GTK::Roles::Pointers is export {
 }
 
 class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
-  has uint32 $.width;
-  has uint32 $.height;
+  has uint32 $.width  is rw;
+  has uint32 $.height is rw;
 }
 
 class GtkFileFilterInfo is repr('CStruct') does GTK::Roles::Pointers is export {

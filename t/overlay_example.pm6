@@ -11,6 +11,18 @@ sub image_surface_create(Int() $format, Int() $width, Int() $height)
   cairo_image_surface_create($f, $w, $h);
 }
 
+sub set_source_rgb (
+  cairo_t $cr,
+  Num() $red,
+  Num() $green,
+  Num() $blue,
+)
+  is export
+{
+  my gdouble ($r, $g, $b) = ($red, $green, $blue);
+  cairo_set_source_rgb($cr, $r, $g, $b);
+}
+
 sub set_source_rgba (
   cairo_t $cr,
   Num() $red,
@@ -77,6 +89,15 @@ sub cairo_stroke (cairo_t $cr)
 
 sub cairo_paint (cairo_t $cr)
   is export
+  is native(cairo)
+  { * }
+
+sub cairo_set_source_rgb (
+  cairo_t $cr,
+  gdouble $red,
+  gdouble $green,
+  gdouble $blue
+)
   is native(cairo)
   { * }
 

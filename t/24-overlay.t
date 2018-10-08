@@ -35,7 +35,7 @@ my $packet = {
 };
 
 $packet<func> = &sin;
-my $a = GTK::Application.new( title => 'org.genex.overlay' );
+my $a = GTK::Application.new( title => 'org.genex.overlay', pod => $=pod );
 
 sub do_graph($packet) {
   my ($pi_rads, $label);
@@ -46,18 +46,18 @@ sub do_graph($packet) {
   $packet<rads> += $packet<rad_step>;
   $packet<current_x> = 0 if $packet<current_x> > $packet<width>;
   $packet<last_x last_y> = $packet<current_x current_y>;
-  $packet<current_x> += $packet<y0> - (
+  $packet<current_x> += $packet<x_step>;
+  $packet<current_y> = $packet<y0> - (
     $packet<scale_factor> * $packet<func>($pi_rads)
   );
 
   $packet<current_eraser_x> += $packet<x_step>;
   $packet<current_eraser_x> = 0 if $packet<current_eraser_x> > $packet<width>;
   $a.window.queue_draw;
-
-  say $packet<label>.text;
 }
 
 sub draw_callback($drawable, $packet) {
+  say $drawable;
   # Erase Old
   move_to($packet<eraser>, $packet<current_eraser_x>, 0);
   line_to($packet<eraser>, $packet<current_eraser_x>, $packet<height>);
@@ -97,12 +97,17 @@ $a.activate.tap({
   $packet<label> = GTK::Label.new('Radians: 0.0pi');
   $packet<label>.halign = GTK_ALIGN_START;
   $packet<label>.valign = GTK_ALIGN_END;
+  $packet<label>.name = 'radlabel';
 
   my $drawing_area = GTK::DrawingArea.new;
   $drawing_area.set_size_request(400, 200);
+  my $da = $drawing_area.p;
   $drawing_area.draw.tap(-> *@a {
     # Expecting: self, CairoContext, user_data
-    draw_callback(@a[1], $packet)
+    #
+    # Do these calls do the same thing? (even though the values in $packet change...)
+    draw_callback($da, $packet);
+    draw_callback(@a[1], $packet);
   });
 
   $overlay.add($background);
@@ -135,3 +140,7 @@ $a.activate.tap({
 });
 
 $a.run;
+
+=begin css
+#radlabel { color: #ffffff; }
+=end css

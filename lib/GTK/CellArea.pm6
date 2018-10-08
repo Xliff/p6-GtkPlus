@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Roles::Types;
 use GTK::Roles::CellLayout;
 
-class GTK:: {
+class GTK::CellArea {
   also does GTK::Roles::Types;
   also does GTK::Roles::CellLayout;
 
@@ -68,7 +68,7 @@ class GTK:: {
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
     GdkRectangle() $cell_area,
-    uint32 $flags               # GtkCellRendererState $flags,
+    Int() $flags                # GtkCellRendererState $flags,
     gboolean $edit_only
   ) {
     my guint $f = self.RESOLVE-UINT($flags);
@@ -81,7 +81,7 @@ class GTK:: {
     GtkCellRenderer() $r,
     GdkEvent $e,
     GdkRectangle() $ca,
-    uint32 $flags               # GtkCellRendererState $flags
+    Int() $flags                # GtkCellRendererState $flags
   ) {
     my guint $f = self.RESOLVE-UINT($flags);
     gtk_cell_area_activate_cell($!ca, $widget, $r, $e, $ca, $f);
@@ -97,6 +97,15 @@ class GTK:: {
     GtkCellRenderer() $sibling
   ) {
     gtk_cell_area_add_focus_sibling($!ca, $renderer, $sibling);
+  }
+
+  sub add_with_properties (
+    GtkCellArea() $area,
+    GtkCellRenderer() $renderer,
+    Str() $name,
+    GValue() $value
+  ) {
+    gtk_cell_area_add_with_properties($area, $renderer, $name, $value, Str);
   }
 
   method apply_attributes (
@@ -131,6 +140,24 @@ class GTK:: {
     Str() $attribute
   ) {
     gtk_cell_area_attribute_get_column($!ca, $renderer, $attribute);
+  }
+
+  method cell_get (
+    GtkCellArea() $area,
+    GtkCellRenderer() $renderer,
+    Str() $name,
+    GValue() $value
+  ) {
+    gtk_cell_area_cell_get($area, $renderer, $name, $value, Str);
+  }
+
+  method cell_set (
+    GtkCellArea() $area,
+    GtkCellRenderer() $renderer,
+    Str() $name,
+    GValue() $value
+  ) {
+    gtk_cell_area_cell_set($area, $renderer, $name, $value, Str);
   }
 
   method cell_get_property (
@@ -182,14 +209,14 @@ class GTK:: {
     GtkWidget() $widget,
     GdkEvent $event,
     GdkRectangle() $cell_area,
-    uint32 $flags               # GtkCellRendererState $flags
+    Int() $flags                # GtkCellRendererState $flags
   ) {
     my guint $flags = self.RESOLVE-UINT($flags);
     gtk_cell_area_event($!ca, $context, $widget, $event, $cell_area, $f);
   }
 
   multi method focus (
-    uint32 $direction           # GtkDirectionType $direction)
+    Int() $direction            # GtkDirectionType $direction)
   ) {
     my guint $d = self.RESOLVE-UINT($direction);
     gtk_cell_area_focus($!ca, $d);
