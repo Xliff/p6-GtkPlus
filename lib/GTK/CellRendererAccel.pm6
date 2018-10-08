@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::;
+use GTK::Raw::CellRendererAccel;
 use GTK::Raw::Types;
 
 use GTK::CellRendererText;
@@ -19,7 +19,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   submethod BUILD(:$cellaccel) {
     my $to-parent;
-    given $celltext {
+    given $cellaccel {
       when GtkCellRendererAccel | GtkWidget {
         $!cra = do {
           when GtkCellRenderer {
@@ -68,64 +68,64 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: guint
   method accel-key is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'accel-key', $gv);
+        self.prop_get($!cra, 'accel-key', $gv);
   #        $gv.get_TYPE;
       },
       STORE => -> $, $val is copy {
   #        $gv.set_TYPE($val);
-        self.prop_set($!cr, 'accel-key', $gv);
+        self.prop_set($!cra, 'accel-key', $gv);
       }
     );
   }
 
   # Type: GtkCellRendererAccelMode
   method accel-mode is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'accel-mode', $gv);
+        self.prop_get($!cra, 'accel-mode', $gv);
   #        $gv.get_TYPE;
       },
       STORE => -> $, $val is copy {
   #        $gv.set_TYPE($val);
-        self.prop_set($!cr, 'accel-mode', $gv);
+        self.prop_set($!cra, 'accel-mode', $gv);
       }
     );
   }
 
   # Type: GdkModifierType
   method accel-mods is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'accel-mods', $gv);
+        self.prop_get($!cra, 'accel-mods', $gv);
   #        $gv.get_TYPE;
       },
       STORE => -> $, $val is copy {
   #        $gv.set_TYPE($val);
-        self.prop_set($!cr, 'accel-mods', $gv);
+        self.prop_set($!cra, 'accel-mods', $gv);
       }
     );
   }
 
   # Type: guint
   method keycode is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'keycode', $gv);
+        self.prop_get($!cra, 'keycode', $gv);
   #        $gv.get_TYPE;
       },
       STORE => -> $, $val is copy {
   #        $gv.set_TYPE($val);
-        self.prop_set($!cr, 'keycode', $gv);
+        self.prop_set($!cra, 'keycode', $gv);
       }
     );
   }
-  
+
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
 

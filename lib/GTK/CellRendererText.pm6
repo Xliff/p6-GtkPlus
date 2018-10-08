@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::CellRenderer;
+use GTK::Raw::CellRendererText;
 use GTK::Raw::Types;
 
 use GTK::CellRenderer;
@@ -40,11 +40,11 @@ class GTK::CellRendererText is GTK::CellRenderer {
     }
   }
 
-  method new {
+  multi method new {
     my $celltext = gtk_cell_renderer_text_new();
     self.bless(:$celltext);
   }
-  method new (GtkCellRenderer $celltext) {
+  multi method new (GtkCellRenderer $celltext) {
     self.bless(:$celltext);
   }
 
@@ -65,7 +65,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method align-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'align-set', $gv);
@@ -80,7 +80,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoAlignment
   method alignment is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'alignment', $gv);
@@ -95,7 +95,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoAttrList
   method attributes is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'attributes', $gv);
@@ -110,7 +110,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method background is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         warn "background does not allow reading"
@@ -125,7 +125,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: GdkColor
   method background-gdk is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'background-gdk', $gv);
@@ -140,7 +140,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: GdkRGBA
   method background-rgba is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'background-rgba', $gv);
@@ -155,7 +155,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method background-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'background-set', $gv);
@@ -170,7 +170,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method editable is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'editable', $gv);
@@ -185,7 +185,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method editable-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'editable-set', $gv);
@@ -200,7 +200,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoEllipsizeMode
   method ellipsize is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'ellipsize', $gv);
@@ -215,7 +215,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method ellipsize-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'ellipsize-set', $gv);
@@ -230,7 +230,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method family is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'family', $gv);
@@ -245,7 +245,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method family-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'family-set', $gv);
@@ -260,7 +260,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method font is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'font', $gv);
@@ -275,7 +275,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoFontDescription
   method font-desc is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'font-desc', $gv);
@@ -290,7 +290,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method foreground is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         warn "foreground does not allow reading"
@@ -305,7 +305,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: GdkColor
   method foreground-gdk is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'foreground-gdk', $gv);
@@ -320,7 +320,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: GdkRGBA
   method foreground-rgba is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'foreground-rgba', $gv);
@@ -335,7 +335,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method foreground-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'foreground-set', $gv);
@@ -350,7 +350,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method language is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'language', $gv);
@@ -365,7 +365,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method language-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'language-set', $gv);
@@ -380,7 +380,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method markup is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         warn "markup does not allow reading"
@@ -395,7 +395,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gint
   method max-width-chars is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'max-width-chars', $gv);
@@ -410,7 +410,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method placeholder-text is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'placeholder-text', $gv);
@@ -425,7 +425,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gint
   method rise is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'rise', $gv);
@@ -440,7 +440,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method rise-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'rise-set', $gv);
@@ -455,7 +455,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gdouble
   method scale is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'scale', $gv);
@@ -470,7 +470,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method scale-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'scale-set', $gv);
@@ -485,7 +485,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method single-paragraph-mode is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'single-paragraph-mode', $gv);
@@ -500,7 +500,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gint
   method size is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'size', $gv);
@@ -515,7 +515,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gdouble
   method size-points is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'size-points', $gv);
@@ -530,7 +530,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method size-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'size-set', $gv);
@@ -545,7 +545,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoStretch
   method stretch is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'stretch', $gv);
@@ -560,7 +560,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method stretch-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'stretch-set', $gv);
@@ -575,7 +575,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method strikethrough is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'strikethrough', $gv);
@@ -590,7 +590,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method strikethrough-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'strikethrough-set', $gv);
@@ -605,7 +605,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoStyle
   method style is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'style', $gv);
@@ -620,7 +620,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method style-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'style-set', $gv);
@@ -635,7 +635,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gchar
   method text is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'text', $gv);
@@ -650,7 +650,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoUnderline
   method underline is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'underline', $gv);
@@ -665,7 +665,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method underline-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'underline-set', $gv);
@@ -680,7 +680,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoVariant
   method variant is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'variant', $gv);
@@ -695,7 +695,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method variant-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'variant-set', $gv);
@@ -710,7 +710,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gint
   method weight is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'weight', $gv);
@@ -725,7 +725,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gboolean
   method weight-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'weight-set', $gv);
@@ -740,7 +740,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gint
   method width-chars is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'width-chars', $gv);
@@ -755,7 +755,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: PangoWrapMode
   method wrap-mode is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'wrap-mode', $gv);
@@ -770,7 +770,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # Type: gint
   method wrap-width is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!crt, 'wrap-width', $gv);

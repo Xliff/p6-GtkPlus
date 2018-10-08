@@ -777,11 +777,11 @@ our enum GtkCellRendererMode is export <
   GTK_CELL_RENDERER_MODE_EDITABLE
 >;
 
-our enum GtkCellRendererAccelMode is export<
+our enum GtkCellRendererAccelMode is export <
   GTK_CELL_RENDERER_ACCEL_MODE_GTK
   GTK_CELL_RENDERER_ACCEL_MODE_OTHER
   GTK_CELL_RENDERER_ACCEL_MODE_MODIFIER_TAP
->; 
+>;
 
 
 class GtkAboutDialog        is repr('CPointer') does GTK::Roles::Pointers is export { }

@@ -6,11 +6,16 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRenderer;
 use GTK::Raw::Types;
 
+use GTK::Roles::Properties;
+
 class GTK::CellRenderer {
+  also does GTK::Roles::Properties;
+
   has GtkCellRenderer $!cr;
 
   method setCellRenderer($renderer) {
     $!cr = $renderer;
+    $!prop = nativecast(GObject, $!cr);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -59,7 +64,7 @@ class GTK::CellRenderer {
 
   # Type: gchar
   method cell-background is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         warn "cell-background does not allow reading"
@@ -74,7 +79,7 @@ class GTK::CellRenderer {
 
   # Type: GdkColor
   method cell-background-gdk is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'cell-background-gdk', $gv);
@@ -89,7 +94,7 @@ class GTK::CellRenderer {
 
   # Type: GdkRGBA
   method cell-background-rgba is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'cell-background-rgba', $gv);
@@ -104,7 +109,7 @@ class GTK::CellRenderer {
 
   # Type: gboolean
   method cell-background-set is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'cell-background-set', $gv);
@@ -119,7 +124,7 @@ class GTK::CellRenderer {
 
   # Type: gboolean
   method editing is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'editing', $gv);
@@ -134,7 +139,7 @@ class GTK::CellRenderer {
 
   # Type: gint
   method height is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'height', $gv);
@@ -149,7 +154,7 @@ class GTK::CellRenderer {
 
   # Type: gboolean
   method is-expanded is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'is-expanded', $gv);
@@ -164,7 +169,7 @@ class GTK::CellRenderer {
 
   # Type: gboolean
   method is-expander is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'is-expander', $gv);
@@ -179,7 +184,7 @@ class GTK::CellRenderer {
 
   # Type: GtkCellRendererMode
   method mode is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'mode', $gv);
@@ -193,38 +198,38 @@ class GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method sensitive is rw {
-    GValue $gv .= new;
-    Proxy.new(
-      FETCH => -> $ {
-        self.prop_get($!cr, 'sensitive', $gv);
-  #        $gv.get_TYPE;
-      },
-      STORE => -> $, $val is copy {
-  #        $gv.set_TYPE($val);
-        self.prop_set($!cr, 'sensitive', $gv);
-      }
-    );
-  }
+  # method sensitive is rw {
+  #   my GValue $gv .= new;
+  #   Proxy.new(
+  #     FETCH => -> $ {
+  #       self.prop_get($!cr, 'sensitive', $gv);
+  # #        $gv.get_TYPE;
+  #     },
+  #     STORE => -> $, $val is copy {
+  # #        $gv.set_TYPE($val);
+  #       self.prop_set($!cr, 'sensitive', $gv);
+  #     }
+  #   );
+  # }
 
   # Type: gboolean
-  method visible is rw {
-    GValue $gv .= new;
-    Proxy.new(
-      FETCH => -> $ {
-        self.prop_get($!cr, 'visible', $gv);
-  #        $gv.get_TYPE;
-      },
-      STORE => -> $, $val is copy {
-  #        $gv.set_TYPE($val);
-        self.prop_set($!cr, 'visible', $gv);
-      }
-    );
-  }
+  # method visible is rw {
+  #   my GValue $gv .= new;
+  #   Proxy.new(
+  #     FETCH => -> $ {
+  #       self.prop_get($!cr, 'visible', $gv);
+  # #        $gv.get_TYPE;
+  #     },
+  #     STORE => -> $, $val is copy {
+  # #        $gv.set_TYPE($val);
+  #       self.prop_set($!cr, 'visible', $gv);
+  #     }
+  #   );
+  # }
 
   # Type: gint
   method width is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'width', $gv);
@@ -239,7 +244,7 @@ class GTK::CellRenderer {
 
   # Type: gfloat
   method xalign is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'xalign', $gv);
@@ -254,7 +259,7 @@ class GTK::CellRenderer {
 
   # Type: guint
   method xpad is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'xpad', $gv);
@@ -269,7 +274,7 @@ class GTK::CellRenderer {
 
   # Type: gfloat
   method yalign is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'yalign', $gv);
@@ -284,7 +289,7 @@ class GTK::CellRenderer {
 
   # Type: guint
   method ypad is rw {
-    GValue $gv .= new;
+    my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cr, 'ypad', $gv);
@@ -296,7 +301,7 @@ class GTK::CellRenderer {
       }
     );
   }
-  
+
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -423,7 +428,7 @@ class GTK::CellRenderer {
     gtk_cell_renderer_get_preferred_width_for_height(
       $!cr,
       $widget,
-      $w,
+      $h,
       $mw,
       $nw
     );
@@ -442,7 +447,7 @@ class GTK::CellRenderer {
     Int() $height
   ) {
     my @i = ($x_offset, $y_offset, $width, $height);
-    my gint ($x, $y, $w, $h) = self.RESOLVE-INT(@i);
+    my gint ($xo, $yo, $w, $h) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_get_size($!cr, $widget, $cell_area, $xo, $yo, $w, $h);
   }
 

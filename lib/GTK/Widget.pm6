@@ -1098,6 +1098,325 @@ class GTK::Widget {
     );
   }
 
+  # ↓↓↓↓ PROPERTIES ↓↓↓↓
+
+  # Type: gboolean
+  method can-default is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'can-default', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'can-default', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method can-focus is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'can-focus', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'can-focus', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method composite-child is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'composite-child', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        warn "composite-child does not allow writing"
+      }
+    );
+  }
+
+  # Type: gboolean
+  method double-buffered is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'double-buffered', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'double-buffered', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method expand is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'expand', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'expand', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method focus-on-click is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'focus-on-click', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'focus-on-click', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method has-default is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'has-default', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'has-default', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method has-focus is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'has-focus', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'has-focus', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method has-tooltip is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'has-tooltip', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'has-tooltip', $gv);
+      }
+    );
+  }
+
+  # Type: gint
+  method height-request is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'height-request', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'height-request', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method hexpand-set is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'hexpand-set', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'hexpand-set', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method is-focus is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'is-focus', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'is-focus', $gv);
+      }
+    );
+  }
+
+  # Type: gint
+  method margin is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'margin', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'margin', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method no-show-all is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'no-show-all', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'no-show-all', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method receives-default is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'receives-default', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'receives-default', $gv);
+      }
+    );
+  }
+
+  # Type: gint
+  method scale-factor is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'scale-factor', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        warn "scale-factor does not allow writing"
+      }
+    );
+  }
+
+  # DEPRECATED
+  # # Type: GtkStyle
+  # method style is rw {
+  #   my GValue $gv .= new;
+  #   Proxy.new(
+  #     FETCH => -> $ {
+  #       self.prop_get($!w, 'style', $gv);
+  # #        $gv.get_TYPE;
+  #     },
+  #     STORE => -> $, $val is copy {
+  # #        $gv.set_TYPE($val);
+  #       self.prop_set($!w, 'style', $gv);
+  #     }
+  #   );
+  # }
+
+  # Type: gchar
+  method tooltip-markup is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'tooltip-markup', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'tooltip-markup', $gv);
+      }
+    );
+  }
+
+  # Type: gchar
+  method tooltip-text is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'tooltip-text', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'tooltip-text', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method vexpand-set is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'vexpand-set', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'vexpand-set', $gv);
+      }
+    );
+  }
+
+  # Type: gint
+  method width-request is rw {
+    my GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!w, 'width-request', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!w, 'width-request', $gv);
+      }
+    );
+  }
+
+  # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   method getType {
     g_object_get_string($!w.p, 'GTKPLUS-Type');

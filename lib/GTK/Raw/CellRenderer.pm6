@@ -21,13 +21,13 @@ sub gtk_cell_renderer_activate (
   is export
   { * }
 
-sub gtk_cell_renderer_class_set_accessible_type (
-  GtkCellRendererClass $renderer_class,
-  GType $type
-)
-  is native('gtk-3')
-  is export
-  { * }
+# sub gtk_cell_renderer_class_set_accessible_type (
+#   GtkCellRendererClass $renderer_class,
+#   GType $type
+# )
+#   is native('gtk-3')
+#   is export
+#   { * }
 
 sub gtk_cell_renderer_get_aligned_area (
   GtkCellRenderer $cell,

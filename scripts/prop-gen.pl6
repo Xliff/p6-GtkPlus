@@ -53,7 +53,7 @@ sub MAIN ($control, :$var = 'w') {
     say qq:to/METH/;
   # Type: { @t.map(*.text.trim).join(', ') }
   method $mn is rw \{
-    GValue \$gv .= new;
+    my GValue \$gv .= new;
     Proxy.new(
       FETCH => -> \$ \{
         { %c<read> }

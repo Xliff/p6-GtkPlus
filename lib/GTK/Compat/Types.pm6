@@ -401,17 +401,6 @@ our enum GAppInfoCreateFlags is export (
   G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  => (1 +< 2)   # nick=supports-startup-notification
 );
 
-our enum GtkCellRendererState is export (
-  GTK_CELL_RENDERER_SELECTED    => 1,
-  GTK_CELL_RENDERER_PRELIT      => (1 +< 1),
-  GTK_CELL_RENDERER_INSENSITIVE => (1 +< 2),
-  # this flag means the cell is in the sort column/row
-  GTK_CELL_RENDERER_SORTED      => (1 +< 3),
-  GTK_CELL_RENDERER_FOCUSED     => (1 +< 4),
-  GTK_CELL_RENDERER_EXPANDABLE  => (1 +< 5),
-  GTK_CELL_RENDERER_EXPANDED    => (1 +< 6)
-);
-
 our enum GdkCursorType is export (
   GDK_X_CURSOR            => 0,
   GDK_ARROW               => 2,
