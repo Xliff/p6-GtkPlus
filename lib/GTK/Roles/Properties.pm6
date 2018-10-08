@@ -33,7 +33,10 @@ role GTK::Roles::Properties {
     });
   }
 
-  method set_prop(@names, @values) {
+  multi method set_prop(Str() $name, GValue() $value) {
+    samewith( $name.Array, ($value) );
+  }
+  multi method set_prop(@names, @values) {
     my @n = self!checkNames(@names);
     my @v = self!checkValues(@values);
 
@@ -48,7 +51,12 @@ role GTK::Roles::Properties {
     g_object_setv($!prop, $n.elems, $n, $v);
   }
 
-  method get_prop(@names, @values) {
+  multi method get_prop(Str() $name, GValue() $value is rw) {
+    my @v = ($value);
+    samewith( $name.Array, @v );
+    $value = @v[0];
+  }
+  multi method get_prop(@names, @values) {
     my @n = self!checkNames(@names);
     my @v = self!checkValues(@values);
 

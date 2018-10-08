@@ -56,10 +56,10 @@ sub MAIN ($control, :$var = 'w') {
     my GValue \$gv .= new;
     Proxy.new(
       FETCH => -> \$ \{
-        { %c<read> }
+        $gv = GTK::Compat::Value.new( { %c<read> } );
 #        \$gv.get_TYPE;
       \},
-      STORE => -> \$, \$val is copy \{
+      STORE => -> \$, GValue() \$val is copy \{
 #        \$gv.set_TYPE(\$val);
         { %c<write> }
       \}

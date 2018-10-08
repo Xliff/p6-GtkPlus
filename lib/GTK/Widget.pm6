@@ -9,11 +9,13 @@ use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
+use GTK::Roles::Properties;
 use GTK::Roles::Signals;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
 
 class GTK::Widget {
+  also does GTK::Roles::Properties;
   also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
@@ -28,6 +30,7 @@ class GTK::Widget {
       default {
       }
     }
+    $!prop = nativecast(GObject, $!w);
   }
 
   submethod DESTROY {
@@ -1105,10 +1108,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'can-default', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'can-default', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'can-default', $gv);
       }
@@ -1120,10 +1123,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'can-focus', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'can-focus', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'can-focus', $gv);
       }
@@ -1135,10 +1138,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'composite-child', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'composite-child', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         warn "composite-child does not allow writing"
       }
@@ -1150,10 +1153,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'double-buffered', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'double-buffered', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'double-buffered', $gv);
       }
@@ -1165,10 +1168,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'expand', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'expand', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'expand', $gv);
       }
@@ -1180,10 +1183,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'focus-on-click', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'focus-on-click', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'focus-on-click', $gv);
       }
@@ -1195,10 +1198,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'has-default', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-default', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'has-default', $gv);
       }
@@ -1210,10 +1213,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'has-focus', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-focus', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'has-focus', $gv);
       }
@@ -1225,10 +1228,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'has-tooltip', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-tooltip', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'has-tooltip', $gv);
       }
@@ -1240,10 +1243,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'height-request', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'height-request', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'height-request', $gv);
       }
@@ -1255,10 +1258,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'hexpand-set', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'hexpand-set', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'hexpand-set', $gv);
       }
@@ -1270,10 +1273,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'is-focus', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'is-focus', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'is-focus', $gv);
       }
@@ -1285,10 +1288,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'margin', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'margin', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'margin', $gv);
       }
@@ -1300,10 +1303,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'no-show-all', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'no-show-all', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'no-show-all', $gv);
       }
@@ -1315,10 +1318,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'receives-default', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'receives-default', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'receives-default', $gv);
       }
@@ -1330,10 +1333,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'scale-factor', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'scale-factor', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         warn "scale-factor does not allow writing"
       }
@@ -1346,10 +1349,10 @@ class GTK::Widget {
   #   my GValue $gv .= new;
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       self.prop_get($!w, 'style', $gv);
+  #       $gv = GTK::Compat::Value.new( self.prop_get($!w, 'style', $gv) );
   # #        $gv.get_TYPE;
   #     },
-  #     STORE => -> $, $val is copy {
+  #     STORE => -> $, GValue() $val is copy {
   # #        $gv.set_TYPE($val);
   #       self.prop_set($!w, 'style', $gv);
   #     }
@@ -1361,10 +1364,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'tooltip-markup', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'tooltip-markup', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'tooltip-markup', $gv);
       }
@@ -1376,10 +1379,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'tooltip-text', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'tooltip-text', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'tooltip-text', $gv);
       }
@@ -1391,10 +1394,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'vexpand-set', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'vexpand-set', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'vexpand-set', $gv);
       }
@@ -1406,10 +1409,10 @@ class GTK::Widget {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!w, 'width-request', $gv);
+        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'width-request', $gv) );
   #        $gv.get_TYPE;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, GValue() $val is copy {
   #        $gv.set_TYPE($val);
         self.prop_set($!w, 'width-request', $gv);
       }
