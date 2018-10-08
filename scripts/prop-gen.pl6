@@ -53,13 +53,13 @@ sub MAIN ($control, :$var = 'w') {
     say qq:to/METH/;
   # Type: { @t.map(*.text.trim).join(', ') }
   method $mn is rw \{
-    my GValue \$gv .= new;
+    my GTK::Compat::Value \$gv .= new;
     Proxy.new(
       FETCH => -> \$ \{
         $gv = GTK::Compat::Value.new( { %c<read> } );
 #        \$gv.get_TYPE;
       \},
-      STORE => -> \$, GValue() \$val is copy \{
+      STORE => -> \$, \$val is copy \{
 #        \$gv.set_TYPE(\$val);
         { %c<write> }
       \}

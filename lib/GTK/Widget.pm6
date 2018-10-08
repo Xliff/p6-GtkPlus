@@ -4,6 +4,7 @@ use NativeCall;
 
 use GTK::Compat::RGBA;
 use GTK::Compat::Types;
+use GTK::Compat::Value;
 
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
@@ -1105,14 +1106,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method can-default is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'can-default', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'can-default', $gv);
       }
     );
@@ -1120,14 +1121,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method can-focus is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'can-focus', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'can-focus', $gv);
       }
     );
@@ -1135,14 +1136,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method composite-child is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'composite-child', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         warn "composite-child does not allow writing"
       }
     );
@@ -1150,14 +1151,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method double-buffered is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'double-buffered', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'double-buffered', $gv);
       }
     );
@@ -1165,14 +1166,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method expand is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'expand', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'expand', $gv);
       }
     );
@@ -1180,14 +1181,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method focus-on-click is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'focus-on-click', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'focus-on-click', $gv);
       }
     );
@@ -1195,14 +1196,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method has-default is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-default', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'has-default', $gv);
       }
     );
@@ -1210,14 +1211,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method has-focus is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-focus', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'has-focus', $gv);
       }
     );
@@ -1225,14 +1226,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method has-tooltip is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-tooltip', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'has-tooltip', $gv);
       }
     );
@@ -1240,14 +1241,14 @@ class GTK::Widget {
 
   # Type: gint
   method height-request is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'height-request', $gv) );
-  #        $gv.get_TYPE;
+        $gv.int;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.int = self.RESOLVE-INT($val);
         self.prop_set($!w, 'height-request', $gv);
       }
     );
@@ -1255,14 +1256,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method hexpand-set is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'hexpand-set', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'hexpand-set', $gv);
       }
     );
@@ -1270,14 +1271,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method is-focus is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'is-focus', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'is-focus', $gv);
       }
     );
@@ -1285,14 +1286,14 @@ class GTK::Widget {
 
   # Type: gint
   method margin is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'margin', $gv) );
-  #        $gv.get_TYPE;
+        $gv.int;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.int = self.RESOLVE-INT($val);
         self.prop_set($!w, 'margin', $gv);
       }
     );
@@ -1300,14 +1301,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method no-show-all is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'no-show-all', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'no-show-all', $gv);
       }
     );
@@ -1315,14 +1316,14 @@ class GTK::Widget {
 
   # Type: gboolean
   method receives-default is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'receives-default', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'receives-default', $gv);
       }
     );
@@ -1330,14 +1331,13 @@ class GTK::Widget {
 
   # Type: gint
   method scale-factor is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'scale-factor', $gv) );
-  #        $gv.get_TYPE;
+        $gv.int;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
         warn "scale-factor does not allow writing"
       }
     );
@@ -1361,14 +1361,14 @@ class GTK::Widget {
 
   # Type: gchar
   method tooltip-markup is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'tooltip-markup', $gv) );
-  #        $gv.get_TYPE;
+        $gv.string;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
         self.prop_set($!w, 'tooltip-markup', $gv);
       }
     );
@@ -1376,14 +1376,14 @@ class GTK::Widget {
 
   # Type: gchar
   method tooltip-text is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'tooltip-text', $gv) );
-  #        $gv.get_TYPE;
+        $gv.string
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
         self.prop_set($!w, 'tooltip-text', $gv);
       }
     );
@@ -1395,10 +1395,10 @@ class GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'vexpand-set', $gv) );
-  #        $gv.get_TYPE;
+        $gv.boolean;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
         self.prop_set($!w, 'vexpand-set', $gv);
       }
     );
@@ -1410,10 +1410,10 @@ class GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'width-request', $gv) );
-  #        $gv.get_TYPE;
+        $gv.int;
       },
-      STORE => -> $, GValue() $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.int = self.RESOLVE-INT($val);
         self.prop_set($!w, 'width-request', $gv);
       }
     );
@@ -1555,7 +1555,7 @@ class GTK::Widget {
     gtk_widget_send_expose($!w, $event);
   }
 
-  method override_symbolic_color (gchar $name, GTK::Compat::RGBA $color) {
+  method override_symbolic_color (Str() $name, GTK::Compat::RGBA $color) {
     gtk_widget_override_symbolic_color($!w, $name, $color);
   }
 
@@ -1567,7 +1567,7 @@ class GTK::Widget {
     gtk_widget_get_device_events($!w, $device);
   }
 
-  method style_get_valist (gchar $first_property_name, va_list $var_args) {
+  method style_get_valist (Str() $first_property_name, va_list $var_args) {
     gtk_widget_style_get_valist($!w, $first_property_name, $var_args);
   }
 
@@ -1635,7 +1635,7 @@ class GTK::Widget {
     gtk_widget_get_clip($!w, $clip);
   }
 
-#  method class_find_style_property (GtkWidgetClass $klass, gchar $property_name) {
+#  method class_find_style_property (GtkWidgetClass $klass, Str() $property_name) {
 #    gtk_widget_class_find_style_property($klass, $property_name);
 #  }
 
@@ -1692,7 +1692,7 @@ class GTK::Widget {
     gtk_widget_add_device_events($!w, $device, $events);
   }
 
-  method create_pango_layout (gchar $text) {
+  method create_pango_layout (Str() $text) {
     gtk_widget_create_pango_layout($!w, $text);
   }
 
@@ -1700,7 +1700,7 @@ class GTK::Widget {
     gtk_widget_remove_tick_callback($!w, $id);
   }
 
-  #method class_bind_template_callback_full (GtkWidgetClass $widget_class, gchar $callback_name, GCallback $callback_symbol) {
+  #method class_bind_template_callback_full (GtkWidgetClass $widget_class, Str() $callback_name, GCallback $callback_symbol) {
   #  gtk_widget_class_bind_template_callback_full($widget_class, $callback_name, $callback_symbol);
   #}
 
@@ -1755,7 +1755,7 @@ class GTK::Widget {
     );
   }
 
-  method style_get_property (gchar $property_name, GValue $value) {
+  method style_get_property (Str() $property_name, GValue $value) {
     gtk_widget_style_get_property($!w, $property_name, $value);
   }
 
@@ -1796,7 +1796,7 @@ class GTK::Widget {
     gtk_widget_destroyed($!w, $widget_pointer);
   }
 
-  method get_action_group (gchar $prefix) {
+  method get_action_group (Str() $prefix) {
     gtk_widget_get_action_group($!w, $prefix);
   }
 
@@ -1817,7 +1817,7 @@ class GTK::Widget {
     );
   }
 
-  method get_template_child (GType $widget_type, gchar $name) {
+  method get_template_child (GType $widget_type, Str() $name) {
     gtk_widget_get_template_child($!w, $widget_type, $name);
   }
 
@@ -1852,7 +1852,7 @@ class GTK::Widget {
   #  gtk_widget_class_install_style_property_parser($klass, $pspec, $parser);
   #}
 
-  method insert_action_group (gchar $name, GActionGroup $group) {
+  method insert_action_group (Str() $name, GActionGroup $group) {
     gtk_widget_insert_action_group($!w, $name, $group);
   }
 
@@ -1876,7 +1876,7 @@ class GTK::Widget {
     gtk_widget_map($!w);
   }
 
-  method render_icon_pixbuf (gchar $stock_id, GtkIconSize $size) {
+  method render_icon_pixbuf (Str() $stock_id, GtkIconSize $size) {
     gtk_widget_render_icon_pixbuf($!w, $stock_id, $size);
   }
 
@@ -1884,7 +1884,7 @@ class GTK::Widget {
     gtk_widget_register_window($!w, $window);
   }
 
-  #method class_bind_template_child_full (GtkWidgetClass $widget_class, gchar $name, gboolean $internal_child, gssize $struct_offset) {
+  #method class_bind_template_child_full (GtkWidgetClass $widget_class, Str() $name, gboolean $internal_child, gssize $struct_offset) {
   #  gtk_widget_class_bind_template_child_full($widget_class, $name, $internal_child, $struct_offset);
   #}
 
@@ -1924,7 +1924,7 @@ class GTK::Widget {
     gtk_widget_get_allocated_size($!w, $allocation, $baseline);
   }
 
-  #method class_set_template_from_resource (GtkWidgetClass $widget_class, gchar $resource_name) {
+  #method class_set_template_from_resource (GtkWidgetClass $widget_class, Str() $resource_name) {
   #  gtk_widget_class_set_template_from_resource($widget_class, $resource_name);
   #}
 
@@ -1936,7 +1936,7 @@ class GTK::Widget {
     gtk_widget_is_toplevel($!w);
   }
 
-  method child_notify (gchar $child_property) {
+  method child_notify (Str() $child_property) {
     gtk_widget_child_notify($!w, $child_property);
   }
 
@@ -1953,7 +1953,7 @@ class GTK::Widget {
   }
 
   method add_accelerator (
-    gchar $accel_signal,
+    Str() $accel_signal,
     GtkAccelGroup $accel_group,
     guint $accel_key,
     GdkModifierType $accel_mods,
@@ -2026,7 +2026,7 @@ class GTK::Widget {
   #  gtk_widget_class_set_connect_func($widget_class, $self.connect_func, $self.connect_data, $self.connect_data_destroy);
   #}
 
-  method set_accel_path (gchar $accel_path, GtkAccelGroup $accel_group) {
+  method set_accel_path (Str() $accel_path, GtkAccelGroup $accel_group) {
     gtk_widget_set_accel_path($!w, $accel_path, $accel_group);
   }
 
