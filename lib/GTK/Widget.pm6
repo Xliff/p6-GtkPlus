@@ -10,10 +10,12 @@ use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
 use GTK::Roles::Signals;
+use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
 
 class GTK::Widget {
   also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
 
   has GtkWidget $!w;
@@ -30,6 +32,8 @@ class GTK::Widget {
 
   submethod DESTROY {
     g_object_unref($!w.p);
+    self.disconnect($_, %!signals) for %!signals.keys;
+    self.disconnect($_, %!signals-widget) for %!signals-widget.keys
   }
 
   proto new(|) { * }
@@ -267,7 +271,7 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, CairoContext, gpointer --> gboolean
   multi method draw {
-    self.connect($!w, 'draw');
+    self.connect-draw($!w);
   }
 
   # Signal gboolean Run Last

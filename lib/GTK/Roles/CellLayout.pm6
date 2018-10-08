@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
-role GTK::RolesCellLayout {
+role GTK::Roles::CellLayout {
   also does GTK::Roles::Types;
 
   has GtkCellLayout $!cl;
@@ -46,7 +46,7 @@ role GTK::RolesCellLayout {
   }
 
   method get_cell_layout_type {
-    gtk_cell_layout_get_type($!cl);
+    gtk_cell_layout_get_type();
   }
 
   multi method pack_end (GtkCellRenderer $cell, Int() $expand) {

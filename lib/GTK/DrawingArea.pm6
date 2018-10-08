@@ -42,7 +42,7 @@ class GTK::DrawingArea is GTK::Widget {
         }
         self.setWidget($to-parent);
       }
-      when GTK:: {
+      when GTK::DrawingArea {
       }
       default {
       }
@@ -52,6 +52,13 @@ class GTK::DrawingArea is GTK::Widget {
   method new {
     my $draw = gtk_drawing_area_new();
     self.bless(:$draw);
+  }
+
+  method GTK::Compat::Types::cairo_t {
+    nativecast(cairo_t, $!da);
+  }
+  method cairo_t {
+    nativecast(cairo_t, $!da);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
