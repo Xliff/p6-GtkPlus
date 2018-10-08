@@ -8,32 +8,29 @@ role GTK::Roles::Properties {
   has GObject $!prop;
 
   method !checkNames(@names) {
-    gather {
-      for @names {
-        if $_ ~~ Str {
-          .take;
-        } else {
-          unless .^can('Str').elems {
-            die "$_ value cannot be coerced to string.";
-          }
-          take .Str;
+    @names.map({
+      if $_ ~~ Str {
+        $_;
+      } else {
+        unless .^can('Str').elems {
+          die "$_ value cannot be coerced to string.";
         }
+        .Str;
       }
-    }
+    });
   }
 
   method !checkValues(@values) {
-    gather {
-      for @values {
-        if $_ ~~ GValue {
-          .take;
-          unless .^can('GValue').elems {
-            die "$_ value cannot be coerced to GValue";
-          }
-          take .GValue;
+    @values.map({
+      if $_ ~~ GValue {
+        $_;
+      } else {
+        unless .^can('GValue').elems {
+          die "$_ value cannot be coerced to GValue";
         }
+        .'GTK::Compat::Types::GValue'();
       }
-    }
+    });
   }
 
   method set_prop(@names, @values) {
@@ -69,13 +66,9 @@ role GTK::Roles::Properties {
     @values.push($v[$_]) for (^$v.elems);
 
     # Be perlish with the return.
-    %(
-      gather {
-        for (^@names.elems) {
-          take @names[$_] => @values[$_];
-        }
-      }
-    );
+    %(do for (^@names.elems) {
+      @names[$_] => @values[$_];
+    });
   }
 
 }
