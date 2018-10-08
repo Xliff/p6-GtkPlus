@@ -14,6 +14,19 @@ class GTK::CellRenderer {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkCellRenderer, gpointer --> void
+  method editing-canceled {
+   self.connect($!cr, 'editing-canceled');
+  }
+
+  # Is originally:
+  # void
+  method editing-started {
+   self.connect($!cr, 'editing-started');
+  }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -41,6 +54,250 @@ class GTK::CellRenderer {
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # ↓↓↓↓ PROPERTIES ↓↓↓↓
+
+  # Type: gchar
+  method cell-background is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        warn "cell-background does not allow reading"
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'cell-background', $gv);
+      }
+    );
+  }
+
+  # Type: GdkColor
+  method cell-background-gdk is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'cell-background-gdk', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'cell-background-gdk', $gv);
+      }
+    );
+  }
+
+  # Type: GdkRGBA
+  method cell-background-rgba is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'cell-background-rgba', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'cell-background-rgba', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method cell-background-set is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'cell-background-set', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'cell-background-set', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method editing is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'editing', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        warn "editing does not allow writing"
+      }
+    );
+  }
+
+  # Type: gint
+  method height is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'height', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'height', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method is-expanded is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'is-expanded', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'is-expanded', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method is-expander is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'is-expander', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'is-expander', $gv);
+      }
+    );
+  }
+
+  # Type: GtkCellRendererMode
+  method mode is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'mode', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'mode', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method sensitive is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'sensitive', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'sensitive', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method visible is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'visible', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'visible', $gv);
+      }
+    );
+  }
+
+  # Type: gint
+  method width is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'width', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'width', $gv);
+      }
+    );
+  }
+
+  # Type: gfloat
+  method xalign is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'xalign', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'xalign', $gv);
+      }
+    );
+  }
+
+  # Type: guint
+  method xpad is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'xpad', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'xpad', $gv);
+      }
+    );
+  }
+
+  # Type: gfloat
+  method yalign is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'yalign', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'yalign', $gv);
+      }
+    );
+  }
+
+  # Type: guint
+  method ypad is rw {
+    GValue $gv .= new;
+    Proxy.new(
+      FETCH => -> $ {
+        self.prop_get($!cr, 'ypad', $gv);
+  #        $gv.get_TYPE;
+      },
+      STORE => -> $, $val is copy {
+  #        $gv.set_TYPE($val);
+        self.prop_set($!cr, 'ypad', $gv);
+      }
+    );
+  }
+  
+  # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method activate (

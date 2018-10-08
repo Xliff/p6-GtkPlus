@@ -10,6 +10,7 @@
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
 - Convert Perl6 additions to GTK::Container into a role. (GTK::Roles::Containable)
 - Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
+- Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get
 
 Applications
 ============

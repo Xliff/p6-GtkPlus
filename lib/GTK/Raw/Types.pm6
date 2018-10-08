@@ -760,6 +760,30 @@ our enum GtkDialogFlags is export (
   GTK_DIALOG_USE_HEADER_BAR      => (1 +< 2)
 );
 
+our enum GtkCellRendererState is export (
+  GTK_CELL_RENDERER_SELECTED    => 1,
+  GTK_CELL_RENDERER_PRELIT      => (1 +< 1),
+  GTK_CELL_RENDERER_INSENSITIVE => (1 +< 2),
+  # this flag means the cell is in the sort column/row
+  GTK_CELL_RENDERER_SORTED      => (1 +< 3),
+  GTK_CELL_RENDERER_FOCUSED     => (1 +< 4),
+  GTK_CELL_RENDERER_EXPANDABLE  => (1 +< 5),
+  GTK_CELL_RENDERER_EXPANDED    => (1 +< 6)
+);
+
+our enum GtkCellRendererMode is export <
+  GTK_CELL_RENDERER_MODE_INERT
+  GTK_CELL_RENDERER_MODE_ACTIVATABLE
+  GTK_CELL_RENDERER_MODE_EDITABLE
+>;
+
+our enum GtkCellRendererAccelMode is export<
+  GTK_CELL_RENDERER_ACCEL_MODE_GTK
+  GTK_CELL_RENDERER_ACCEL_MODE_OTHER
+  GTK_CELL_RENDERER_ACCEL_MODE_MODIFIER_TAP
+>; 
+
+
 class GtkAboutDialog        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelLabel         is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -782,6 +806,8 @@ class GtkCellAreaContext    is repr('CPointer') does GTK::Roles::Pointers is exp
 class GtkCellEditable       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellLayout         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRenderer       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellRendererAccel  is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellRendererText   is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCheckButton        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCheckMenuItem      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkClipboard          is repr('CPointer') does GTK::Roles::Pointers is export { }
