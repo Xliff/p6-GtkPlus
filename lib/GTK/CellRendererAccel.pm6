@@ -68,14 +68,14 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: guint
   method accel-key is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cra, 'accel-key', $gv);
-  #        $gv.get_TYPE;
+        $gv.int;
       },
-      STORE => -> $, $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.int = self.RESOLVE-INT($val);
         self.prop_set($!cra, 'accel-key', $gv);
       }
     );
@@ -83,14 +83,14 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: GtkCellRendererAccelMode
   method accel-mode is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cra, 'accel-mode', $gv);
-  #        $gv.get_TYPE;
+        GtkCellRendererAccelMode( $gv.enum );
       },
-      STORE => -> $, $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.enum = self.RESOLVE-UINT($val);
         self.prop_set($!cra, 'accel-mode', $gv);
       }
     );
@@ -98,14 +98,14 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: GdkModifierType
   method accel-mods is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cra, 'accel-mods', $gv);
-  #        $gv.get_TYPE;
+        GdkModifierType( $gv.enum );
       },
-      STORE => -> $, $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.enum = self.RESOLVE-UINT($val);
         self.prop_set($!cra, 'accel-mods', $gv);
       }
     );
@@ -113,14 +113,14 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: guint
   method keycode is rw {
-    my GValue $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get($!cra, 'keycode', $gv);
-  #        $gv.get_TYPE;
+        $gv.int;
       },
-      STORE => -> $, $val is copy {
-  #        $gv.set_TYPE($val);
+      STORE => -> $, Int() $val is copy {
+        $gv.int = self.RESOLVE-INT($val);
         self.prop_set($!cra, 'keycode', $gv);
       }
     );
