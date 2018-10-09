@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::Value;
 
 role GTK::Roles::Properties {
   has GObject $!prop;
@@ -71,7 +72,7 @@ role GTK::Roles::Properties {
     g_object_getv($!prop, $n.elems, $n, $v);
 
     @values = ();
-    @values.push($v[$_]) for (^$v.elems);
+    @values.push( GTK::Compat::Value.new($v[$_]) ) for (^$v.elems);
 
     # Be perlish with the return.
     %(do for (^@names.elems) {

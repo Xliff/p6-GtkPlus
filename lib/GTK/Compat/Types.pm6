@@ -315,7 +315,6 @@ our enum GdkEventMask is export (
   GDK_ALL_EVENTS_MASK           => 0x3FFFFFE
 );
 
-
 our enum GdkEventType is export (
   GDK_NOTHING             => -1,
   GDK_DELETE              => 0,
@@ -369,6 +368,12 @@ our enum GdkEventType is export (
   GDK_PAD_GROUP_MODE      => 47,
   'GDK_EVENT_LAST'
 );
+
+our enum PangoAlignment is export <
+  PANGO_ALIGN_LEFT
+  PANGO_ALIGN_CENTER
+  PANGO_ALIGN_RIGHT
+>;
 
 our enum PangoWrapMode is export <
   PANGO_WRAP_WORD
@@ -483,6 +488,37 @@ our enum GdkCursorType is export (
   GDK_BLANK_CURSOR        => -2,
   GDK_CURSOR_IS_PIXMAP    => -1
 );
+
+our enum PangoStretch is export <
+  PANGO_STRETCH_ULTRA_CONDENSED
+  PANGO_STRETCH_EXTRA_CONDENSED
+  PANGO_STRETCH_CONDENSED
+  PANGO_STRETCH_SEMI_CONDENSED
+  PANGO_STRETCH_NORMAL
+  PANGO_STRETCH_SEMI_EXPANDED
+  PANGO_STRETCH_EXPANDED
+  PANGO_STRETCH_EXTRA_EXPANDED
+  PANGO_STRETCH_ULTRA_EXPANDED
+>;
+
+our enum PangoStyle is export <
+  PANGO_STYLE_NORMAL
+  PANGO_STYLE_OBLIQUE
+  PANGO_STYLE_ITALIC
+>;
+
+our enum PangoUnderline is export <
+  PANGO_UNDERLINE_NONE
+  PANGO_UNDERLINE_SINGLE
+  PANGO_UNDERLINE_DOUBLE
+  PANGO_UNDERLINE_LOW
+  PANGO_UNDERLINE_ERROR
+>;
+
+our enum PangoVariant is export <
+  PANGO_VARIANT_NORMAL
+  PANGO_VARIANT_SMALL_CAPS
+>;
 
 
 class cairo_font_options_t  is repr('CPointer') is export { }

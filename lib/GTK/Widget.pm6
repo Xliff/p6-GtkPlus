@@ -1106,7 +1106,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method can-default is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'can-default', $gv) );
@@ -1121,7 +1121,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method can-focus is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'can-focus', $gv) );
@@ -1136,7 +1136,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method composite-child is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'composite-child', $gv) );
@@ -1151,7 +1151,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method double-buffered is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'double-buffered', $gv) );
@@ -1166,7 +1166,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method expand is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'expand', $gv) );
@@ -1181,7 +1181,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method focus-on-click is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'focus-on-click', $gv) );
@@ -1196,7 +1196,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method has-default is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-default', $gv) );
@@ -1211,7 +1211,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method has-focus is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-focus', $gv) );
@@ -1226,7 +1226,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method has-tooltip is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'has-tooltip', $gv) );
@@ -1241,7 +1241,7 @@ class GTK::Widget {
 
   # Type: gint
   method height-request is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'height-request', $gv) );
@@ -1256,7 +1256,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method hexpand-set is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'hexpand-set', $gv) );
@@ -1271,7 +1271,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method is-focus is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'is-focus', $gv) );
@@ -1286,7 +1286,7 @@ class GTK::Widget {
 
   # Type: gint
   method margin is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'margin', $gv) );
@@ -1301,7 +1301,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method no-show-all is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'no-show-all', $gv) );
@@ -1316,7 +1316,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method receives-default is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'receives-default', $gv) );
@@ -1331,7 +1331,7 @@ class GTK::Widget {
 
   # Type: gint
   method scale-factor is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'scale-factor', $gv) );
@@ -1361,7 +1361,7 @@ class GTK::Widget {
 
   # Type: gchar
   method tooltip-markup is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'tooltip-markup', $gv) );
@@ -1376,7 +1376,7 @@ class GTK::Widget {
 
   # Type: gchar
   method tooltip-text is rw {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'tooltip-text', $gv) );
@@ -1391,7 +1391,7 @@ class GTK::Widget {
 
   # Type: gboolean
   method vexpand-set is rw {
-    my GValue $gv .= new;
+    my GValue $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'vexpand-set', $gv) );
@@ -1406,7 +1406,7 @@ class GTK::Widget {
 
   # Type: gint
   method width-request is rw {
-    my GValue $gv .= new;
+    my GValue $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!w, 'width-request', $gv) );

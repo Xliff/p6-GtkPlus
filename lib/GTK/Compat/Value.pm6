@@ -12,16 +12,18 @@ class GTK::Compat::Value {
 
   has GValue $!v;
 
-  submethod BUILD(:$type, :$value) {
+  submethod BUILD(:$type, GValue :$value) {
     $!v = $value // GValue.new;
-    g_value_init($!v, $type) without $value;
+    g_value_init($!v, $type);
   }
 
-  multi method new(Int() $t) {
-    my $type = self.RESOLVE-UINT($t);
+  multi method new(Int $t = G_TYPE_NONE) {
+    die "Invalid type passed to GTK::Compat::Value.new - { $t.^name }"
+      unless $t ~~ Int || $t.^can('Int').elems;
+    my $type = self.RESOLVE-UINT($t.Int);
     self.bless(:$type);
   }
-  multi method new(GValue $value) {
+  multi method new(GValue() $value) {
     self.bless(:$value);
   }
 

@@ -53,7 +53,7 @@ sub MAIN ($control, :$var = 'w') {
     say qq:to/METH/;
   # Type: { @t.map(*.text.trim).join(', ') }
   method $mn is rw \{
-    my GTK::Compat::Value \$gv .= new;
+    my GTK::Compat::Value \$gv .= new( -type- );
     Proxy.new(
       FETCH => -> \$ \{
         $gv = GTK::Compat::Value.new( { %c<read> } );
