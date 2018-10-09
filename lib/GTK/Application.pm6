@@ -91,7 +91,7 @@ ERR
         :window( gtk_application_window_new($!app) )
       );
 
-      # This looks to be unnecessary, now. 
+      # This looks to be unnecessary, now.
       # self.window.realize-signal.tap({
       #   # If destroy signal not set, then set an appropriate default.
       #   self.window.destroy-signal.tap({ self.exit; })
@@ -206,7 +206,8 @@ ERR
     with $!builder {
       gtk_main();
     } else {
-      g_application_run($!app, OpaquePointer, OpaquePointer);
+      my gint $z = 0;
+      g_application_run($!app, $z, OpaquePointer);
     }
   }
   # multi method run(GTK::Application:U: ) {

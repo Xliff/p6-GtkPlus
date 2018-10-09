@@ -16,12 +16,11 @@ role GTK::Roles::Signals::Widget {
   ) {
     %!signals-widget{$signal} //= do {
       my $s = Supplier.new;
-      #"O: $obj".say;
-      #"S: $signal".say;
       g_connect_draw($obj, $signal,
-        -> $, $cr, $ud {
-            $s.emit( [self, $cr, $ud] );
-            CATCH { default { note $_; } }
+        -> $, $cr, $ud --> uint32 {
+          $s.emit( [self, $cr, $ud] );
+          CATCH { default { note $_; } }
+          0;
         },
         OpaquePointer, 0
       );
@@ -35,11 +34,11 @@ role GTK::Roles::Signals::Widget {
 sub g_connect_draw(
   Pointer $app,
   Str $bane,
-  &handler (Pointer, Pointer, Pointer --> Str),
+  &handler (Pointer, Pointer, Pointer --> uint32),
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   is export

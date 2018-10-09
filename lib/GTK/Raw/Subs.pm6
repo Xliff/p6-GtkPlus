@@ -44,7 +44,7 @@ sub g_signal_connect_wd(
   OpaquePointer $data,
   uint32 $connect_flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   is export
@@ -57,7 +57,7 @@ sub g_signal_connect_handler(
   OpaquePointer $data,
   uint32 $connect_flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   is export
@@ -101,7 +101,7 @@ sub gtk_window_set_default_size (GtkWindow $win, int32 $w, int32 $h)
 #
 # APPLICATION
 #
-sub g_application_run(OpaquePointer, Pointer[uint32], CArray[Str])
+sub g_application_run(OpaquePointer, int32, CArray[Str])
   is native('gio-2.0')
   is export
   { * }

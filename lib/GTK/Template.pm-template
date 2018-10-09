@@ -46,6 +46,9 @@ class GTK:: is GTK:: {
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
+  # ↓↓↓↓ PROPERTIES ↓↓↓↓
+  # ↑↑↑↑ PROPERTIES ↑↑↑↑
+
   # ↓↓↓↓ METHODS ↓↓↓↓
   # ↑↑↑↑ METHODS ↑↑↑↑
 

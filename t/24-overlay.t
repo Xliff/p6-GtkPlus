@@ -36,6 +36,7 @@ my $packet = {
 
 $packet<func> = &sin;
 my $a = GTK::Application.new( title => 'org.genex.overlay', pod => $=pod );
+my $drawing_area = GTK::DrawingArea.new;
 
 sub do_graph($packet) {
   my ($pi_rads, $label);
@@ -54,10 +55,10 @@ sub do_graph($packet) {
   $packet<current_eraser_x> += $packet<x_step>;
   $packet<current_eraser_x> = 0 if $packet<current_eraser_x> > $packet<width>;
   $a.window.queue_draw;
+  1;
 }
 
 sub draw_callback($drawable, $packet) {
-  say $drawable;
   # Erase Old
   move_to($packet<eraser>, $packet<current_eraser_x>, 0);
   line_to($packet<eraser>, $packet<current_eraser_x>, $packet<height>);
@@ -69,7 +70,7 @@ sub draw_callback($drawable, $packet) {
 
   set_source_surface($drawable, $packet<plot_surface>, 0, 0);
   cairo_paint($drawable);
-  False;
+  0;
 }
 
 $a.activate.tap({
@@ -99,14 +100,8 @@ $a.activate.tap({
   $packet<label>.valign = GTK_ALIGN_END;
   $packet<label>.name = 'radlabel';
 
-  my $drawing_area = GTK::DrawingArea.new;
   $drawing_area.set_size_request(400, 200);
-  my $da = $drawing_area.p;
   $drawing_area.draw.tap(-> *@a {
-    # Expecting: self, CairoContext, user_data
-    #
-    # Do these calls do the same thing? (even though the values in $packet change...)
-    draw_callback($da, $packet);
     draw_callback(@a[1], $packet);
   });
 
