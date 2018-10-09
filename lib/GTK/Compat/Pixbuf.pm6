@@ -17,20 +17,24 @@ class GTK::Compat::Pixbuf  {
   }
 
   # ↓↓↓↓ OBJECT CREATION ↓↓↓↓
-  method new (
+  multi method new (GdkPixbuf $pixbuf) {
+    self.bless(:$pixbuf);
+  }
+  multi method new (
     GdkColorspace $colorspace
     gboolean $has_alpha,
     int $bits_per_sample,
     int $width,
     int $height
   ) {
-    gdk_pixbuf_new(
+    my $pixbuf = gdk_pixbuf_new(
       $coloorspace,
       $has_alpha,
       $bits_per_sample,
       $width,
       $height
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_bytes (
@@ -42,7 +46,7 @@ class GTK::Compat::Pixbuf  {
     int $height,
     int $rowstride
   ) {
-    gdk_pixbuf_new_from_bytes(
+    my $pixbuf = gdk_pixbuf_new_from_bytes(
       $data,
       $colorspace,
       $has_alpha,
@@ -51,6 +55,7 @@ class GTK::Compat::Pixbuf  {
       $height,
       $rowstride
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_data (
@@ -64,21 +69,23 @@ class GTK::Compat::Pixbuf  {
     GdkPixbufDestroyNotify $destroy_fn,
     gpointer $destroy_fn_data
   ) {
-      gdk_pixbuf_new_from_data(
-        $data,
-        $colorspace,
-        $has_alpha,
-        $bits_per_sample,
-        $width,
-        $height,
-        $rowstride,
-        $destroy_fn,
-        $destroy_fn_data
-      );
+    my $pixbuf = gdk_pixbuf_new_from_data(
+      $data,
+      $colorspace,
+      $has_alpha,
+      $bits_per_sample,
+      $width,
+      $height,
+      $rowstride,
+      $destroy_fn,
+      $destroy_fn_data
+    );
+    self.bless(:$pixbuf);
   }
 
   method new_from_file (Str() $filename, GError $error) {
-    gdk_pixbuf_new_from_file($filename, $error);
+    my $pixbuf = gdk_pixbuf_new_from_file($filename, $error);
+    self.bless(:$pixbuf);
   }
 
   method new_from_file_at_scale (
@@ -88,13 +95,14 @@ class GTK::Compat::Pixbuf  {
     gboolean $preserve_aspect_ratio,
     GError $error
   ) {
-    gdk_pixbuf_new_from_file_at_scale(
+    my $pixbuf = gdk_pixbuf_new_from_file_at_scale(
       $filename,
       $width,
       $height,
       $preserve_aspect_ratio,
       $error
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_file_at_scale_utf8 (
@@ -104,13 +112,14 @@ class GTK::Compat::Pixbuf  {
     gboolean $preserve_aspect_ratio,
     GError $error
   ) {
-    gdk_pixbuf_new_from_file_at_scale_utf8(
+    my $pixbuf = gdk_pixbuf_new_from_file_at_scale_utf8(
       $filename,
       $width,
       $height,
       $preserve_aspect_ratio,
       $error
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_file_at_size (
@@ -119,7 +128,13 @@ class GTK::Compat::Pixbuf  {
     int $height,
     GError $error
   ) {
-    gdk_pixbuf_new_from_file_at_size($filename, $width, $height, $error);
+    my $pixbuf = gdk_pixbuf_new_from_file_at_size(
+      $filename,
+      $width,
+      $height,
+      $error
+    );
+    self.bless(:$pixbuf);
   }
 
   method new_from_file_at_size_utf8 (
@@ -128,11 +143,18 @@ class GTK::Compat::Pixbuf  {
     int $height,
     GError $error
   ) {
-    gdk_pixbuf_new_from_file_at_size_utf8($filename, $width, $height, $error);
+    my $pixbuf = gdk_pixbuf_new_from_file_at_size_utf8(
+      $filename,
+      $width,
+      $height,
+      $error
+    );
+    self.bless(:$pixbuf);
   }
 
   method new_from_file_utf8 (Str() $filename, GError $error) {
-    gdk_pixbuf_new_from_file_utf8($filename, $error);
+    my $pixbuf = gdk_pixbuf_new_from_file_utf8($filename, $error);
+    self.bless(:$pixbuf);
   }
 
   method new_from_inline (
@@ -141,11 +163,18 @@ class GTK::Compat::Pixbuf  {
     gboolean $copy_pixels,
     GError $error
   ) is DEPRECATED {
-    gdk_pixbuf_new_from_inline($length, $data, $copy_pixels, $error);
+    my $pixbuf = gdk_pixbuf_new_from_inline(
+      $length,
+      $data,
+      $copy_pixels,
+      $error
+    );
+    self.bless(:$pixbuf);
   }
 
   method new_from_resource (Str() $resource_path, GError $error) {
-    gdk_pixbuf_new_from_resource($resource_path, $error);
+    my $pixbuf = gdk_pixbuf_new_from_resource($resource_path, $error);
+    self.bless(:$pixbuf);
   }
 
   method new_from_resource_at_scale (
@@ -155,13 +184,14 @@ class GTK::Compat::Pixbuf  {
     gboolean $preserve_aspect_ratio,
     GError $error
   ) {
-    gdk_pixbuf_new_from_resource_at_scale(
+    my $pixbuf = gdk_pixbuf_new_from_resource_at_scale(
       $resource_path,
       $width,
       $height,
       $preserve_aspect_ratio,
       $error
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_stream (
@@ -169,7 +199,8 @@ class GTK::Compat::Pixbuf  {
     GCancellable $cancellable,
     GError $error
   ) {
-    gdk_pixbuf_new_from_stream($stream, $cancellable, $error);
+    my $pixbuf = gdk_pixbuf_new_from_stream($stream, $cancellable, $error);
+    self.bless(:$pixbuf);
   }
 
   method new_from_stream_async (
@@ -178,12 +209,13 @@ class GTK::Compat::Pixbuf  {
     GAsyncReadyCallback $callback,
     gpointer $user_data
   ) {
-    gdk_pixbuf_new_from_stream_async(
+    my $pixbuf = gdk_pixbuf_new_from_stream_async(
       $stream,
       $cancellable,
       $callback,
       $user_data
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_stream_at_scale (
@@ -194,7 +226,7 @@ class GTK::Compat::Pixbuf  {
     GCancellable $cancellable,
     GError $error
   ) {
-    gdk_pixbuf_new_from_stream_at_scale(
+    my $pixbuf = gdk_pixbuf_new_from_stream_at_scale(
       $stream,
       $width,
       $height,
@@ -202,6 +234,7 @@ class GTK::Compat::Pixbuf  {
       $cancellable,
       $error
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_stream_at_scale_async (
@@ -213,7 +246,7 @@ class GTK::Compat::Pixbuf  {
     GAsyncReadyCallback $callback,
     gpointer $user_data
   ) {
-    gdk_pixbuf_new_from_stream_at_scale_async(
+    my $pixbuf = gdk_pixbuf_new_from_stream_at_scale_async(
       $stream,
       $width,
       $height,
@@ -222,14 +255,17 @@ class GTK::Compat::Pixbuf  {
       $callback,
       $user_data
     );
+    self.bless(:$pixbuf);
   }
 
   method new_from_stream_finish (GError $error) {
-    gdk_pixbuf_new_from_stream_finish($!p, $error);
+    my $pixbuf = gdk_pixbuf_new_from_stream_finish($!p, $error);
+    self.bless(:$pixbuf);
   }
 
   method new_from_xpm_data(CArray[Str] $data) {
-    gdk_pixbuf_new_from_xpm_data($!data);
+    my $pixbuf = gdk_pixbuf_new_from_xpm_data($!data);
+    self.bless(:$pixbuf);
   }
 
   method new_subpixbuf (
@@ -239,7 +275,14 @@ class GTK::Compat::Pixbuf  {
     int $width,
     int $height
   ) {
-    gdk_pixbuf_new_subpixbuf($src, $src_x, $src_y, $width, $height);
+    my $pixbuf = gdk_pixbuf_new_subpixbuf(
+      $src,
+      $src_x,
+      $src_y,
+      $width,
+      $height
+    );
+    self.bless(:$pixbuf);
   }
   # ↑↑↑↑ OBJECT CREATION ↑↑↑↑
 

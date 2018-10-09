@@ -56,7 +56,7 @@ sub MAIN ($control, :$var = 'w') {
     my GTK::Compat::Value \$gv .= new( -type- );
     Proxy.new(
       FETCH => -> \$ \{
-        $gv = GTK::Compat::Value.new( { %c<read> } );
+        \$gv = GTK::Compat::Value.new( { %c<read> } );
 #        \$gv.get_TYPE;
       \},
       STORE => -> \$, \$val is copy \{
