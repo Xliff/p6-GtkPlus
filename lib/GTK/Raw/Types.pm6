@@ -807,6 +807,8 @@ class GtkCellEditable         is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkCellLayout           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRenderer         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRendererAccel    is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellRendererCombo    is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellRendererSpin     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRendererText     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRendererPixbuf   is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRendererProgress is repr('CPointer') does GTK::Roles::Pointers is export { }

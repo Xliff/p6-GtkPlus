@@ -21,23 +21,30 @@ class GTK::CellRendererText is GTK::CellRenderer {
   submethod BUILD(:$celltext) {
     my $to-parent;
     given $celltext {
-      when GtkCellRendererText | GtkWidget {
-        $!crt = do {
-          when GtkCellRenderer {
-            $to-parent = $_;
-            nativecast(GtkCellRendererText, $_);
-          }
-          when GtkCellRendererText  {
-            $to-parent = nativecast(GtkCellRenderer, $_);
-            $_;
-          }
-        }
-        self.setCellRenderer($to-parent);
+      when GtkCellRendererText | GtkCellRenderer {
+        self.setCellRendererText($to-parent);
       }
       when GTK::CellRendererText {
       }
       default {
       }
+    }
+  }
+
+  method setCellRendererText($celltext) {
+    my $to-parent;
+    given $celltext {
+      $!crt = do {
+        when GtkCellRenderer {
+          $to-parent = $_;
+          nativecast(GtkCellRendererText, $_);
+        }
+        when GtkCellRendererText  {
+          $to-parent = nativecast(GtkCellRenderer, $_);
+          $_;
+        }
+      }
+      self.setCellRenderer($to-parent);
     }
   }
 

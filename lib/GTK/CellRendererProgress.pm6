@@ -13,7 +13,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::');
+    $o.setType('GTK::CellRendereProgress');
     $o;
   }
 

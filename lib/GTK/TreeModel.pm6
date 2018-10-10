@@ -17,6 +17,10 @@ class GTK::TreeModel {
     $!tm = $tree;
   }
 
+  method new (GtkTreeModel $tree) {
+    self.bless(:$tree);
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

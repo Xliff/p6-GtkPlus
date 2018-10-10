@@ -20,7 +20,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   submethod BUILD(:$cellaccel) {
     my $to-parent;
     given $cellaccel {
-      when GtkCellRendererAccel | GtkWidget {
+      when GtkCellRendererAccel | GtkCellRenderer {
         $!cra = do {
           when GtkCellRenderer {
             $to-parent = $_;
