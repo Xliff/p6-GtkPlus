@@ -32,6 +32,7 @@ our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
+our constant GtkTreeIterCompareFunc           is export := Pointer;
 our constant GtkTreeModelForeachFunc          is export := Pointer;
 our constant GtkTreeViewRowSeparatorFunc      is export := Pointer;
 
@@ -918,6 +919,7 @@ class GtkToolItemGroup        is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkTreeModel            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreePath             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeRowReference     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeSortable         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkVolumeButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidget               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidgetHelpType       is repr('CPointer') does GTK::Roles::Pointers is export { }
