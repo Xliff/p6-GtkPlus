@@ -94,7 +94,11 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
           if $call.chars {
             $call = "{$attr}, {$call}";
           } else {
-            $call = $attr;
+            if $sub ~~ (/'_new'$/ , /'_get_type' $/).any {
+              $call = '';
+            } else {
+              $call = $attr;
+            }
           }
         }
 

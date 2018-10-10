@@ -1,0 +1,128 @@
+use v6.c;
+
+use NativeCall;
+
+use GTK::Compat::Types;
+use GTK::Raw::CellRendererToggle;
+use GTK::Raw::Types;
+
+use GTK::CellRenderer;
+
+class GTK::CellRendererToggle is GTK::CellRenderer {
+  has GtkCellRendererToggle $!crt;
+
+  method bless(*%attrinit) {
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::CellRendererToggle');
+    $o;
+  }
+
+  submethod BUILD(:$celltoggle) {
+    my $to-parent;
+    given $ {
+      when GtkCellRendererToggle | GtkCellRenderer {
+        $! = do {
+          when GtkCellRenderer {
+            $to-parent = $_;
+            nativecast(GtkCellRendererToggle, $_);
+          }
+          when GtkCellRendererToggle {
+            $to-parent = nativecast(GtkCellRenderer, $_);
+            $_;
+          }
+        }
+        self.setCellRenderer($to-parent);
+      }
+      when GTK::CellRendererToggle {
+      }
+      default {
+      }
+    }
+  }
+
+  # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkCellRendererToggle, gchar, gpointer --> void
+  method toggled {
+    self.connect($!crt, 'toggled');
+  }
+
+  # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  method activatable is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        so gtk_cell_renderer_toggle_get_activatable($!crt);
+      },
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_cell_renderer_toggle_set_activatable($!crt, $s);
+      }
+    );
+  }
+
+  method active is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        gtk_cell_renderer_toggle_get_active($!crt);
+      },
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_cell_renderer_toggle_set_active($!crt, $s);
+      }
+    );
+  }
+
+  method radio is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        so gtk_cell_renderer_toggle_get_radio($!crt);
+      },
+      STORE => sub ($, Int() $radio is copy) {
+        my gboolean $r = self.RESOLVE-BOOL($radio);
+        gtk_cell_renderer_toggle_set_radio($!crt, $r);
+      }
+    );
+  }
+  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # ↓↓↓↓ PROPERTIES ↓↓↓↓
+
+  # Type: gboolean
+  method inconsistent is rw {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new( self.prop_get($!crt, 'inconsistent', $gv); );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = self.RESOLVE-BOOL($val);
+        self.prop_set($!crt, 'inconsistent', $gv);
+      }
+    );
+  }
+
+  # Type: gint
+  method indicator-size is rw {
+    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new( self.prop_get($!crt, 'indicator-size', $gv); );
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.int = self.RESOLVE-INT($val);
+        self.prop_set($!crt, 'indicator-size', $gv);
+      }
+    );
+  }
+
+  # ↑↑↑↑ PROPERTIES ↑↑↑↑
+
+  # ↓↓↓↓ METHODS ↓↓↓↓
+  # ↑↑↑↑ METHODS ↑↑↑↑
+
+}
