@@ -37,8 +37,8 @@ class GTK::TreePath {
     self.bless(:$path);
   }
 
-  method new_from_string ($path) {
-    my $path = gtk_tree_path_new_from_string($path);
+  method new_from_string (Str() $newpath) {
+    my $path = gtk_tree_path_new_from_string($newpath);
     self.bless(:$path);
   }
 
@@ -83,7 +83,7 @@ class GTK::TreePath {
   }
 
   method get_indices_with_depth (Int() $depth) {
-    my gint $d = self.RESOLVE-INT($depth)
+    my gint $d = self.RESOLVE-INT($depth);
     gtk_tree_path_get_indices_with_depth($!tp, $depth);
   }
 

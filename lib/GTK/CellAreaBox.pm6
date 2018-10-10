@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::;
+use GTK::Raw::CellAreaBox;
 use GTK::Raw::Types;
 
 use GTK::CellArea;
@@ -25,7 +25,7 @@ class GTK::CellAreaBox is GTK::CellArea {
     my $to-parent;
     given $cellbox {
       when GtkCellAreaBox | GtkWidget {
-        $! = do {
+        $!cab = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkCellAreaBox, $_);
@@ -43,7 +43,11 @@ class GTK::CellAreaBox is GTK::CellArea {
       }
     }
     # For GTK::Roles::Orientable
-    $!o = nativecast(GtkOrientable, $!cab);
+    $!or = nativecast(GtkOrientable, $!cab);
+  }
+
+  method GTK::Raw::Types::GtkCellArea {
+    $!cab;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -74,7 +78,7 @@ class GTK::CellAreaBox is GTK::CellArea {
   }
 
   method pack_end (
-    GtkCellRenderer $renderer,
+    GtkCellRenderer() $renderer,
     gboolean $expand,
     gboolean $align,
     gboolean $fixed
@@ -83,7 +87,7 @@ class GTK::CellAreaBox is GTK::CellArea {
   }
 
   method pack_start (
-    GtkCellRenderer $renderer,
+    GtkCellRenderer() $renderer,
     gboolean $expand,
     gboolean $align,
     gboolean $fixed

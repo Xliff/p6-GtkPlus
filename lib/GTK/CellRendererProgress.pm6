@@ -40,6 +40,10 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     }
   }
 
+  method GTK::Raw::Types::CellRendererProgress {
+    $!crp;
+  }
+
   multi method new {
     my $cellprogress = gtk_cell_renderer_progress_new();
     self.bless(:$cellprogress);

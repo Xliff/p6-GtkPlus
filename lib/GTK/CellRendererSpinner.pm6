@@ -8,6 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::CellRenderer;
 
+my subset ParentChild where GtkCellRenderer | GtkCellRendererSpinner;
+
 class GTK::CellRendererSpinner is GTK::CellRenderer {
   has GtkCellRendererSpinner $!crs;
 
@@ -20,7 +22,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   submethod BUILD(:$cellspin) {
     my $to-parent;
     given $cellspin {
-      when GtkCellRendererSpinner | GtkCellRenderer {
+      when ParentChild {
         $!crs = do {
           when GtkCellRenderer {
             $to-parent = $_;
@@ -40,8 +42,15 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
     }
   }
 
-  method new {
+  method GTK::Raw::Types::CellRendererSpinner {
+    $!crs;
+  }
+
+  multi method new {
     my $cellspin = gtk_cell_renderer_spinner_new();
+    self.bless(:$cellspin);
+  }
+  multi method new (ParentChild $cellspin) {
     self.bless(:$cellspin);
   }
 

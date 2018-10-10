@@ -45,6 +45,10 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     self.bless(:$cellaccel);
   }
 
+  method GTK::Raw::Types::GtkCelRendererAccel {
+    $!cra;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:

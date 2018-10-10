@@ -20,6 +20,10 @@ class GTK::CellRenderer {
     $!prop = nativecast(GObject, $!cr);
   }
 
+  method GTK::Raw::Types::GtkCellRenderer {
+    $!cr;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:

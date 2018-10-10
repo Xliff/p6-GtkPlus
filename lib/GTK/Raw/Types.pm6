@@ -783,6 +783,11 @@ our enum GtkCellRendererAccelMode is export <
   GTK_CELL_RENDERER_ACCEL_MODE_MODIFIER_TAP
 >;
 
+our enum GtkTreeModelFlags is export (
+  GTK_TREE_MODEL_ITERS_PERSIST => 1,
+  GTK_TREE_MODEL_LIST_ONLY => 2
+);
+
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -802,6 +807,7 @@ class GtkButtonBox            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkCalendar             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCallback             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellArea             is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellAreaBox          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellAreaContext      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellEditable         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellLayout           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -814,6 +820,7 @@ class GtkCellRendererSpin     is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkCellRendererSpinner  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRendererText     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCellRendererToggle   is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCellView             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCheckButton          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCheckMenuItem        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkClipboard            is repr('CPointer') does GTK::Roles::Pointers is export { }

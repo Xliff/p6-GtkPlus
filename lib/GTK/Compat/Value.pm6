@@ -23,7 +23,7 @@ class GTK::Compat::Value {
     my $type = self.RESOLVE-UINT($t.Int);
     self.bless(:$type);
   }
-  multi method new(GValue() $value) {
+  multi method new(GValue $value) {
     self.bless(:$value);
   }
 
@@ -38,7 +38,7 @@ class GTK::Compat::Value {
     do given self.gtype {
       when G_TYPE_CHAR     { self.char;       }
       when G_TYPE_UCHAR    { self.uchar;      }
-      when G_TYPE_BOOLEAN  { so self.boolean; }
+      when G_TYPE_BOOLEAN  { self.boolean; }
       when G_TYPE_INT      { self.int;        }
       when G_TYPE_UINT     { self.uint;       }
       when G_TYPE_LONG     { self.long;       }
@@ -69,7 +69,7 @@ class GTK::Compat::Value {
   method boolean is rw {
     Proxy.new(
       FETCH => sub ($) {
-        g_value_get_boolean($!v);
+        so g_value_get_boolean($!v);
       },
       STORE => sub ($, $v_boolean is copy) {
         g_value_set_boolean($!v, $v_boolean);

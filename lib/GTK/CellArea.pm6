@@ -10,7 +10,6 @@ use GTK::Roles::Types;
 use GTK::Roles::CellLayout;
 
 class GTK::CellArea {
-  also does GTK::Roles::Types;
   also does GTK::Roles::CellLayout;
 
   has GtkCellArea $!ca;
@@ -22,30 +21,34 @@ class GTK::CellArea {
     $!cl = nativecast(GtkCellLayout, $!ca);
   }
 
+  method GTK::Raw::Types::GtkCellArea {
+    $!ca;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, GtkCellEditable, GdkRectangle, gchar, gpointer --> void
   method add-editable {
-    self.connect($!w, 'add-editable');
+    self.connect($!ca, 'add-editable');
   }
 
   # Is originally:
   # GtkCellArea, GtkTreeModel, GtkTreeIter, gboolean, gboolean, gpointer --> void
   method apply-attributes {
-    self.connect($!w, 'apply-attributes');
+    self.connect($!ca, 'apply-attributes');
   }
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, gchar, gpointer --> void
   method focus-changed {
-    self.connect($!w, 'focus-changed');
+    self.connect($!ca, 'focus-changed');
   }
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, GtkCellEditable, gpointer --> void
   method remove-editable {
-    self.connect($!w, 'remove-editable');
+    self.connect($!ca, 'remove-editable');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -68,7 +71,7 @@ class GTK::CellArea {
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
     GdkRectangle() $cell_area,
-    Int() $flags                # GtkCellRendererState $flags,
+    Int() $flags,               # GtkCellRendererState $flags,
     gboolean $edit_only
   ) {
     my guint $f = self.RESOLVE-UINT($flags);
@@ -211,7 +214,7 @@ class GTK::CellArea {
     GdkRectangle() $cell_area,
     Int() $flags                # GtkCellRendererState $flags
   ) {
-    my guint $flags = self.RESOLVE-UINT($flags);
+    my guint $f = self.RESOLVE-UINT($flags);
     gtk_cell_area_event($!ca, $context, $widget, $event, $cell_area, $f);
   }
 
@@ -339,7 +342,7 @@ class GTK::CellArea {
     Int() $minimum_width,
     Int() $natural_width
   ) {
-    my @i = ($minimum_width, $natural_width)
+    my @i = ($minimum_width, $natural_width);
     my ($mw, $nw) = self.RESOLVE-INT(@i);
     gtk_cell_area_get_preferred_width($!ca, $context, $widget, $mw, $nw);
   }
@@ -351,7 +354,7 @@ class GTK::CellArea {
     Int() $minimum_width,
     Int() $natural_width
   ) {
-    my @i = ($height, $minimum_width, $natural_width)
+    my @i = ($height, $minimum_width, $natural_width);
     my ($h, $mw, $nw) = self.RESOLVE-INT(@i);
     gtk_cell_area_get_preferred_width_for_height(
       $!ca,
@@ -368,7 +371,7 @@ class GTK::CellArea {
   }
 
   method get_type {
-    gtk_cell_area_get_type($!ca);
+    gtk_cell_area_get_type();
   }
 
   method has_renderer (GtkCellRenderer() $renderer) {
@@ -411,7 +414,7 @@ class GTK::CellArea {
     cairo_t $cr,
     GdkRectangle() $background_area,
     GdkRectangle() $cell_area,
-    Int() $flags               # GtkCellRendererState $flags,
+    Int() $flags,              # GtkCellRendererState $flags,
     gboolean $paint_focus
   ) {
     my gboolean $pf = self.RESOLVE-BOOL($paint_focus);
@@ -430,7 +433,7 @@ class GTK::CellArea {
 
   method request_renderer (
     GtkCellRenderer() $renderer,
-    Int() $orientation          # GtkOrientation $orientation,
+    Int() $orientation,         # GtkOrientation $orientation,
     GtkWidget() $widget,
     Int() $for_size,
     Int() $minimum_size,

@@ -41,6 +41,10 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     }
   }
 
+  method GTK::Raw::Types::GtkCellRendererSpin {
+    $!crs;
+  }
+
   multi method new {
     my $cellspin = gtk_cell_renderer_spin_new();
     self.bless(:$cellspin);

@@ -48,6 +48,10 @@ class GTK::CellRendererText is GTK::CellRenderer {
     }
   }
 
+  method GTK::Raw::Types::CellRendererText {
+    $!crt;
+  }
+
   multi method new {
     my $celltext = gtk_cell_renderer_text_new();
     self.bless(:$celltext);

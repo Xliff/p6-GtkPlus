@@ -51,6 +51,10 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     self.bless(:$cellpix);
   }
 
+  method GTK::Raw::Types::GtkCellRendererPixbuf {
+    $!crp;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

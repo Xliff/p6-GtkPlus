@@ -54,6 +54,9 @@ class GTK::DrawingArea is GTK::Widget {
     self.bless(:$draw);
   }
 
+  method GTK::Raw::Types::GtkDrawingArea {
+    $!da;
+  }
   method GTK::Compat::Types::cairo_t {
     nativecast(cairo_t, $!da);
   }

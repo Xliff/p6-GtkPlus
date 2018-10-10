@@ -7,7 +7,6 @@ use GTK::Raw::CellRendererCombo;
 use GTK::Raw::Types;
 
 use GTK::CellRendererText;
-use GTK::TreeModel;
 
 class GTK::CellRendererCombo is GTK::CellRendererText {
   has GtkCellRendererCombo $!crc;
@@ -39,6 +38,10 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
       default {
       }
     }
+  }
+
+  method GTK::Raw::Types::GtkCellRendererCombo {
+    $!crc;
   }
 
   multi method new {
@@ -81,7 +84,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get($!crc, 'model', $gv); );
-        GTK::TreeModel.new( nativecast(GtkTreeModel, $gv.pointer ) );
+        nativecast(GtkTreeModel, $gv.pointer);
       },
       STORE => -> $, GtkTreeModel() $val is copy {
         $gv.pointer = $val;

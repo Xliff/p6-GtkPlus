@@ -8,6 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::CellRenderer;
 
+my subset ParentChild where GtkCellRenderer | GtkCellRendererToggle;
+
 class GTK::CellRendererToggle is GTK::CellRenderer {
   has GtkCellRendererToggle $!crt;
 
@@ -20,7 +22,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   submethod BUILD(:$celltoggle) {
     my $to-parent;
     given $ {
-      when GtkCellRendererToggle | GtkCellRenderer {
+      when ParentChild {
         $! = do {
           when GtkCellRenderer {
             $to-parent = $_;
@@ -39,6 +41,19 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
       }
     }
   }
+
+  method GTK::Raw::Types::GtkCellRendererToggle {
+    $!crt;
+  }
+
+  multi method new {
+    my $celltoggle = gtk_cell_renderer_toggle_new();
+    self.bless(:$celltoggle);
+  }
+  multi method new (ParentChild $celltoggle) {
+    self.bless(:$celltoggle);
+  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -123,6 +138,9 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
+  method get_type {
+    gtk_cell_renderer_toggle_get_type();
+  }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
