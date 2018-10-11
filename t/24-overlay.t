@@ -82,7 +82,7 @@ $a.activate.tap({
   die 'Could not create plot surface' unless $packet<plot_surface>;
 
   $packet<plot> = cairo_create($packet<plot_surface>) or die;
-  set_source_rgba($packet<plot>, 1, 0, 0, 0);
+  set_source_rgb($packet<plot>, 1, 0, 0);
   $packet<eraser> = cairo_create($packet<plot_surface>) or die;
   set_source_rgba($packet<eraser>, 0, 0, 0, 0);
   set_operator($packet<eraser>, CAIRO_OPERATOR_CLEAR);
