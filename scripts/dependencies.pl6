@@ -79,3 +79,20 @@ while (my @unresolved = %unresolved.keys.sort).elems {
 
 say "\nOther dependencies are:\n";
 say @others.unique.sort.join("\n");
+
+sub space($a) {
+  ' ' x ($a.chars % 8);
+}
+
+{
+  # Not an optimal solution, but it will work with editing.
+  # Want to take the longest of $_[0], add a number of spaces
+  # equal the difference between the size plus the previous number modulo 8
+  use Text::Table::Simple;
+  say "\nProvides section:\n";
+  .say for lol2table(@modules.map({ $_.reverse.map({ qq["$_"] }) }),
+    rows => {
+      column_separator => ': '
+    }
+  );
+}
