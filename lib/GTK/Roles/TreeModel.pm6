@@ -168,10 +168,10 @@ role GTK::Roles::TreeModel {
   }
 
   method rows_reordered_with_length (
-    GtkTreePath $path,
-    GtkTreeIter $iter,
-    gint $new_order,
-    gint $length
+    GtkTreePath() $path,
+    GtkTreeIter() $iter,
+    Int() $new_order,
+    Int() $length
   ) {
     my @i = ($new_order, $length);
     my gint ($no, $l) = self.RESOLVE-INT(@i);
