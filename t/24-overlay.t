@@ -1,11 +1,15 @@
 use v6.c;
 
+use NativeCall;
+
 # Example ported from:
 # https://github.com/sweckhoff/GTK-Cairo-Sinusoids/blob/master/gtk_cairo_sinusoid_plot.c
 
 use lib <t .>;
 
 # Needs porting to the Cairo module
+
+use Cairo;
 
 use GTK::Compat::Types;
 use GTK::Raw::Types;
@@ -62,32 +66,51 @@ sub do_graph($packet) {
 
 sub draw_callback($drawable, $packet) {
   # Erase Old
-  move_to($packet<eraser>, $packet<current_eraser_x>, 0);
-  line_to($packet<eraser>, $packet<current_eraser_x>, $packet<height>);
-  cairo_stroke($packet<eraser>);
+  # move_to($packet<eraser>, $packet<current_eraser_x>, 0);
+  # line_to($packet<eraser>, $packet<current_eraser_x>, $packet<height>);
+  # cairo_stroke($packet<eraser>);
+  $packet<eraser>.move_to($packet<current_eraser_x>, 0);
+  $packet<eraser>.line_to($packet<current_eraser_x>, $packet<height>);
+  $packet<eraser>.stroke;
   # Plot New
-  move_to($packet<plot>, $packet<last_x>, $packet<last_y>);
-  line_to($packet<plot>, $packet<current_x>, $packet<current_y>);
-  cairo_stroke($packet<plot>);
+  # move_to($packet<plot>, $packet<last_x>, $packet<last_y>);
+  # line_to($packet<plot>, $packet<current_x>, $packet<current_y>);
+  # cairo_stroke($packet<plot>);
+  $packet<plot>.move_to($packet<last_x>, $packet<last_y>);
+  $packet<plot>.line_to($packet<current_x>, $packet<current_y>);
+  $packet<plot>.stroke;
 
-  set_source_surface($drawable, $packet<plot_surface>, 0, 0);
-  cairo_paint($drawable);
+  # set_source_surface($drawable, $packet<plot_surface>, 0, 0);
+  # cairo_paint($drawable);
+  my $dc = Cairo::Context.new( nativecast(Cairo::cairo_t, $drawable) );
+  $dc.set_source_surface($packet<plot_surface>);
+  $dc.paint;
   0;
 }
 
 $a.activate.tap({
-  $packet<plot_surface> = image_surface_create(
-    CAIRO_FORMAT_ARGB32,
+  # $packet<plot_surface> = image_surface_create(
+  #   CAIRO_FORMAT_ARGB32,
+  #   400,
+  #   200
+  # );
+  $packet<plot_surface> = Cairo::Image.create(
+    Cairo::Format::FORMAT_ARGB32,
     400,
     200
   );
   die 'Could not create plot surface' unless $packet<plot_surface>;
 
-  $packet<plot> = cairo_create($packet<plot_surface>) or die;
-  set_source_rgb($packet<plot>, 1, 0, 0);
-  $packet<eraser> = cairo_create($packet<plot_surface>) or die;
-  set_source_rgba($packet<eraser>, 0, 0, 0, 0);
-  set_operator($packet<eraser>, CAIRO_OPERATOR_CLEAR);
+  # $packet<plot> = cairo_create($packet<plot_surface>) or die;
+  $packet<plot> = Cairo::Context.new($packet<plot_surface>) or die;
+  #set_source_rgb($packet<plot>, 1, 0, 0);
+  $packet<plot>.rgb(1, 0, 0);
+  #$packet<eraser> = cairo_create($packet<plot_surface>) or die;
+  $packet<eraser> = Cairo::Context.new($packet<plot_surface>) or die;
+  #set_source_rgba($packet<eraser>, 0, 0, 0, 0);
+  #set_operator($packet<eraser>, CAIRO_OPERATOR_CLEAR);
+  $packet<eraser>.rgba(0, 0, 0, 0);
+  $packet<eraser>.operator = CAIRO_OPERATOR_CLEAR;
   $a.window.set_size_request(480, 200);
   $packet<window> = $a.window;
 

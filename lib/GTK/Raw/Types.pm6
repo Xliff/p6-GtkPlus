@@ -9,7 +9,7 @@ use GTK::Roles::Pointers;
 unit package GTK::Raw::Types;
 
 our constant GtkAssistantPageFunc             is export := Pointer;
-our constant GtkBuil            is export := Pointer;
+our constant GtkBuilderConnectFunc            is export := Pointer;
 our constant GtkCalendarDetailFunc            is export := Pointer;
 our constant GtkCellAllocCallback             is export := Pointer;
 our constant GtkCellCallback                  is export := Pointer;
