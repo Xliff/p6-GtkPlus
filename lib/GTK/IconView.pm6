@@ -151,7 +151,7 @@ class GTK::IconView is GTK::Container {
         gtk_icon_view_get_columns($!iv);
       },
       STORE => sub ($, Int() $columns is copy) {
-        my gint $c = self.RESOLVE-INT($columns)
+        my gint $c = self.RESOLVE-INT($columns);
         gtk_icon_view_set_columns($!iv, $c);
       }
     );
@@ -199,7 +199,7 @@ class GTK::IconView is GTK::Container {
         gtk_icon_view_get_margin($!iv);
       },
       STORE => sub ($, Int() $margin is copy) {
-        my gint $i = self.RESOLVE-INT($item_padding);
+        my gint $m = self.RESOLVE-INT($margin);
         gtk_icon_view_set_margin($!iv, $m);
       }
     );
@@ -341,9 +341,9 @@ class GTK::IconView is GTK::Container {
   }
 
   method enable_model_drag_dest (
-    GtkTargetEntry $targets,
+    GtkTargetEntry() $targets,
     Int() $n_targets,
-    uint32 $actions             # GdkDragAction $actions
+    Int() $actions             # GdkDragAction $actions
   ) {
     my gint $nt = self.RESOLVE-INT($n_targets);
     my uint32 $a = self.RESOLVE-UINT($actions);
@@ -351,10 +351,10 @@ class GTK::IconView is GTK::Container {
   }
 
   method enable_model_drag_source (
-    GdkModifierType $start_button_mask,
+    Int() $start_button_mask,  # GdkModifierType $start_button_mask,
     GtkTargetEntry() $targets,
-    gint $n_targets,
-    uint32 $actions             # GdkDragAction $actions
+    Int() $n_targets,
+    Int() $actions             # GdkDragAction $actions
   ) {
     my @u = ($start_button_mask, $actions);
     my guint ($s, $a) = self.RESOLVE-UINT(@u);

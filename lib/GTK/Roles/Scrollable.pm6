@@ -7,14 +7,11 @@ use GTK::Raw::Scrollable;
 use GTK::Raw::Types;
 
 use GTK::Roles::Signals;
-use GTK::Roles::Types
 
-class GTK::Roles::Scrollable {
+role GTK::Roles::Scrollable {
   also does GTK::Roles::Signals;
-  also does GTK::Roles::Types;
 
   has GtkScrollable $!s;
-
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑

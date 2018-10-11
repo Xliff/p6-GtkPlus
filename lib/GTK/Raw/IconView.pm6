@@ -28,7 +28,7 @@ sub gtk_icon_view_enable_model_drag_dest (
   GtkIconView $icon_view,
   GtkTargetEntry $targets,
   gint $n_targets,
-  GdkDragAction $actions
+  guint $actions                # GdkDragAction $actions
 )
   is native('gtk-3')
   is export
@@ -36,10 +36,10 @@ sub gtk_icon_view_enable_model_drag_dest (
 
 sub gtk_icon_view_enable_model_drag_source (
   GtkIconView $icon_view,
-  GdkModifierType $start_button_mask,
+  guint $sbm,                   # GdkModifierType $start_button_mask,
   GtkTargetEntry $targets,
   gint $n_targets,
-  GdkDragAction $actions
+  guint $actions                # GdkDragAction $actions
 )
   is native('gtk-3')
   is export
@@ -71,7 +71,7 @@ sub gtk_icon_view_get_dest_item_at_pos (
   gint $drag_x,
   gint $drag_y,
   GtkTreePath $path,
-  GtkIconViewDropPosition $pos
+  guint $pos                    # GtkIconViewDropPosition $pos
 )
   returns uint32
   is native('gtk-3')
@@ -81,7 +81,7 @@ sub gtk_icon_view_get_dest_item_at_pos (
 sub gtk_icon_view_get_drag_dest_item (
   GtkIconView $icon_view,
   GtkTreePath $path,
-  GtkIconViewDropPosition $pos
+  guint $pos                    # GtkIconViewDropPosition $pos
 )
   is native('gtk-3')
   is export
@@ -228,7 +228,7 @@ sub gtk_icon_view_set_cursor (
 sub gtk_icon_view_set_drag_dest_item (
   GtkIconView $icon_view,
   GtkTreePath $path,
-  GtkIconViewDropPosition $pos
+  guint $pos                    # GtkIconViewDropPosition $pos
 )
   is native('gtk-3')
   is export
@@ -280,13 +280,13 @@ sub gtk_icon_view_get_row_spacing (GtkIconView $icon_view)
   { * }
 
 sub gtk_icon_view_get_selection_mode (GtkIconView $icon_view)
-  returns GtkSelectionMode
+  returns uint32 # GtkSelectionMode
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_icon_view_get_item_orientation (GtkIconView $icon_view)
-  returns GtkOrientation
+  returns uint32 # GtkOrientation
   is native('gtk-3')
   is export
   { * }
@@ -384,7 +384,7 @@ sub gtk_icon_view_set_selection_mode (
 
 sub gtk_icon_view_set_item_orientation (
   GtkIconView $icon_view,
-  GtkOrientation $orientation
+  uint32 $o                     # GtkOrientation $orientation
 )
   is native('gtk-3')
   is export

@@ -26,13 +26,13 @@ sub gtk_scrollable_get_vadjustment (GtkScrollable $scrollable)
   { * }
 
 sub gtk_scrollable_get_hscroll_policy (GtkScrollable $scrollable)
-  returns GtkScrollablePolicy
+  returns uint32 # GtkScrollablePolicy
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_scrollable_get_vscroll_policy (GtkScrollable $scrollable)
-  returns GtkScrollablePolicy
+  returns uint32 # GtkScrollablePolicy
   is native('gtk-3')
   is export
   { * }
@@ -53,7 +53,7 @@ sub gtk_scrollable_set_vadjustment (
 
 sub gtk_scrollable_set_hscroll_policy (
   GtkScrollable $scrollable,
-  GtkScrollablePolicy $policy
+  uint32 $p                     # GtkScrollablePolicy $policy
 )
   is native('gtk-3')
   is export
@@ -61,7 +61,7 @@ sub gtk_scrollable_set_hscroll_policy (
 
 sub gtk_scrollable_set_vscroll_policy (
   GtkScrollable $scrollable,
-  GtkScrollablePolicy $policy
+  uint32 $p                     # GtkScrollablePolicy $policy
 )
   is native('gtk-3')
   is export

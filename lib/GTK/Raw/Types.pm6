@@ -9,7 +9,7 @@ use GTK::Roles::Pointers;
 unit package GTK::Raw::Types;
 
 our constant GtkAssistantPageFunc             is export := Pointer;
-our constant GtkBuilderConnectFunc            is export := Pointer;
+our constant GtkBuil            is export := Pointer;
 our constant GtkCalendarDetailFunc            is export := Pointer;
 our constant GtkCellAllocCallback             is export := Pointer;
 our constant GtkCellCallback                  is export := Pointer;
@@ -28,6 +28,7 @@ our constant GtkFlowBoxFilterFunc             is export := Pointer;
 our constant GtkFlowBoxForeachFunc            is export := Pointer;
 our constant GtkFlowBoxSortFunc               is export := Pointer;
 our constant GtkFontFilterFunc                is export := Pointer;
+our constant GtkIconViewForeachFunc           is export := Pointer;
 our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
@@ -789,6 +790,15 @@ our enum GtkTreeModelFlags is export (
   GTK_TREE_MODEL_LIST_ONLY => 2
 );
 
+our enum GtkIconViewDropPosition is export <
+  GTK_ICON_VIEW_NO_DROP
+  GTK_ICON_VIEW_DROP_INTO
+  GTK_ICON_VIEW_DROP_LEFT
+  GTK_ICON_VIEW_DROP_RIGHT
+  GTK_ICON_VIEW_DROP_ABOVE
+  GTK_ICON_VIEW_DROP_BELOW
+>;
+
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -853,6 +863,7 @@ class GtkFlowBoxChild         is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkGrid                 is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkHeaderBar            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconSet              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkIconView             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkInfoBar              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLabel                is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -915,7 +926,7 @@ class GtkToggleToolButton     is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkToolbar              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolItem             is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkToolTip              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTooltip              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolItemGroup        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeModel            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreePath             is repr('CPointer') does GTK::Roles::Pointers is export { }
