@@ -10,6 +10,13 @@ role GTK::Roles::TreeSortable {
   has GtkTreeSortable $!ts;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+  
+  # Is originally:
+  # GtkTreeSortable, gpointer --> void
+  method sort-column-changed {
+    self.connect($!ts, 'sort-column-changed');
+  }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

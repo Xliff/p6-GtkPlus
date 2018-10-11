@@ -882,6 +882,7 @@ class GtkRange                is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkRevealer             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScale                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScaleButton          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkScrollable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScrollbar            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScrolledWindow       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSearchBar            is repr('CPointer') does GTK::Roles::Pointers is export { }

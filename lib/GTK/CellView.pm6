@@ -9,7 +9,11 @@ use GTK::Raw::Types;
 use GTK::TreePath;
 use GTK::Widget;
 
+use GTK::Roles::CellLayout;
+
 class GTK::CellView is GTK::Widget {
+  also does GTK::Roles::CellLayout;
+
   has GtkCellView $!cv;
 
   method bless(*%attrinit) {
@@ -39,6 +43,8 @@ class GTK::CellView is GTK::Widget {
       default {
       }
     }
+    # For GTK::Roles::CellLayout
+    $!cl = nativecast(GtkCellLayout, $!cv);
   }
 
   method GTK::Raw::Types::CellView {

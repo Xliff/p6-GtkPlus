@@ -8,6 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
+use GTK::CellRenderer;
+
 role GTK::Roles::CellLayout {
   also does GTK::Roles::Types;
 
@@ -53,16 +55,16 @@ role GTK::Roles::CellLayout {
     my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_cell_layout_pack_end($!cl, $cell, $e);
   }
-  multi method pack_end (GtkCellRenderer $cell, Int() $expand)  {
-    samewith($cell, $expand);
+  multi method pack_end (GTK::CellRenderer $cell, Int() $expand) {
+    die "Object pack_end method NYI.";
   }
 
   multi method pack_start (GtkCellRenderer $cell, Int() $expand) {
     my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_cell_layout_pack_start($!cl, $cell, $e);
   }
-  multi method pack_start (GtkCellRenderer $cell, Int() $expand)  {
-    samewith($cell, $expand);
+  multi method pack_start (GTK::CellRenderer $cell, Int() $expand) {
+    die "Object pack_end method NYI.";
   }
 
   method reorder (GtkCellRenderer() $cell, Int() $position) {
@@ -80,7 +82,7 @@ role GTK::Roles::CellLayout {
   }
 
   method set_cell_data_func (
-    GtkCellRenderer $cell,
+    GtkCellRenderer() $cell,
     GtkCellLayoutDataFunc $func,
     gpointer $func_data,
     GDestroyNotify $destroy

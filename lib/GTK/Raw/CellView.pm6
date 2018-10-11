@@ -31,7 +31,7 @@ sub gtk_cell_view_new ()
 
 sub gtk_cell_view_new_with_context (
   GtkCellArea $area,
-  GtkCellAreaContext() $context
+  GtkCellAreaContext $context
 )
   returns GtkWidget
   is native('gtk-3')

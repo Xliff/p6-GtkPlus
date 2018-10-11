@@ -6,15 +6,15 @@ use GTK::Compat::Types;
 use GTK::Raw::EntryCompletion;
 use GTK::Raw::Types;
 
+use GTK::Roles::CellLayout;
 use GTK::Roles::Signals;
-use GTK::Roles::Types;
 
 # THIS IS OFF OF THE TABLE UNTIL A VIABLE CONVERSION FOR GTKLISTSTORE
 # HAS BEEN DETERMINED.
 
 class GTK::EntryCompletion {
+  also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals;
-  also does GTK::Roles::Types;
 
   has GtkEntryCompletion $!ec;
 
@@ -31,6 +31,8 @@ class GTK::EntryCompletion {
         # Throw exception.
       }
     }
+    # For GTK::Roles::GtkCellLayout
+    $!cl = nativecast(GtkCellLayout, $!ec);
   }
 
   method new {

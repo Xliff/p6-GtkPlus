@@ -15,6 +15,8 @@ use GTK::Roles::Signals;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
 
+# Add GTK::Roles::Buildable when created
+
 class GTK::Widget {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals;

@@ -286,7 +286,7 @@
     "GTK::Widget":  "lib/GTK/Widget.pm6",
     "GTK::Window":  "lib/GTK/Window.pm6"
   },
-  "version" : "*",
+  "version" : "r0.2",
   "meta-version" : "0",
   "authors" : [
     "clifton.wood@gmail.com"

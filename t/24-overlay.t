@@ -5,6 +5,8 @@ use v6.c;
 
 use lib <t .>;
 
+# Needs porting to the Cairo module
+
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use overlay_example;
