@@ -548,6 +548,7 @@ class GIcon                 is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
 class GLaunchContext        is repr('CPointer') is export { }  # GAppLaunchContext
 class GListModel            is repr('CPointer') is export { }
+class GMarkupParser         is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }

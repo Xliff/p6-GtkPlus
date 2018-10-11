@@ -813,6 +813,7 @@ class GtkAssistant            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkBin                  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBox                  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBuilder              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkBuildable            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkButton               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkButtonBox            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCalendar             is repr('CPointer') does GTK::Roles::Pointers is export { }

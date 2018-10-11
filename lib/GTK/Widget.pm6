@@ -10,18 +10,16 @@ use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
+use GTK::Roles::Buildable;
 use GTK::Roles::Properties;
 use GTK::Roles::Signals;
 use GTK::Roles::Signals::Widget;
-use GTK::Roles::Types;
-
-# Add GTK::Roles::Buildable when created
 
 class GTK::Widget {
+  also does GTK::Roles::Buildable;
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::Widget;
-  also does GTK::Roles::Types;
 
   has GtkWidget $!w;
 
@@ -33,7 +31,8 @@ class GTK::Widget {
       default {
       }
     }
-    $!prop = nativecast(GObject, $!w);
+    $!prop = nativecast(GObject, $!w);    # GTK::Roles::Properties
+    $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
   }
 
   submethod DESTROY {
