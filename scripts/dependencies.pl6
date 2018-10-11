@@ -48,6 +48,7 @@ my @modules = @files
 
 %nodes{$_[1]} = ( filename => $_[0], edges => [] ).Hash for @modules;
 
+my @others;
 for %nodes.pairs.sort( *.key ) -> $p {
   say "Processing requirements for module { $p.key }...";
 
@@ -57,7 +58,10 @@ for %nodes.pairs.sort( *.key ) -> $p {
     my $mn = $mm;
     $mn ~~ s/'use' \s+//;
     $mn ~~ s/';' $//;
-    next unless $mn ~~ /^ 'GTK'/;
+    unless $mn ~~ /^ 'GTK'/ {
+      @others.push: $mn;
+      next;
+    }
     %nodes{$p.key}<edges>.push: $mn;
   }
 }
@@ -72,3 +76,6 @@ while (my @unresolved = %unresolved.keys.sort).elems {
   %unresolved{$_}:delete for $seen.keys;
   %unresolved{@unresolved[0]}:delete;
 }
+
+say "\nOther dependencies are:\n";
+say @others.unique.sort.join("\n");

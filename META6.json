@@ -1,0 +1,24 @@
+{
+  "name" : "Perl6-GtkPlus",
+  "source-url" : "https://git@github.com/Xliff/p6-GtkPlus.git",
+  "support" : {
+    "source" : null
+  },
+  "perl" : "6.c",
+  "license" : "GPL-3.0",
+  "test-depends" : [
+    "Test::META"
+  ],
+  "provides" : {
+  },
+  "version" : "*",
+  "meta-version" : "0",
+  "authors" : [
+    "clifton.wood@gmail.com"
+  ],
+  "depends" : [
+    "Cairo",
+    "Method::Also"
+  ],
+  "description" : "Perl6 library bindings for GTK+ 3.0"
+}
