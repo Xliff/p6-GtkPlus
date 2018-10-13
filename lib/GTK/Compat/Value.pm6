@@ -179,6 +179,17 @@ class GTK::Compat::Value {
     );
   }
 
+  method object is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        g_value_get_object($!v);
+      },
+      STORE => sub ($, $obj is copy) {
+        g_value_set_object( $!v, nativecast(Pointer, $obj) );
+      }
+    );
+  }
+
   method schar is rw {
     Proxy.new(
       FETCH => sub ($) {

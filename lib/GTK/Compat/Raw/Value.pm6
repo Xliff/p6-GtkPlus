@@ -140,6 +140,12 @@ sub g_value_get_int64 (GValue $value)
   is export
   { * }
 
+sub g_value_get_object (GValue $value)
+  returns Pointer
+  is native('gtk-3')
+  is export
+  { * }
+
 sub g_value_get_pointer (GValue $value)
   returns OpaquePointer
   is native('gtk-3')
@@ -226,6 +232,12 @@ sub g_value_set_pointer (GValue $value, gpointer $v_pointer)
   is native('gtk-3')
   is export
   { * }
+
+sub g_value_set_object (GValue $value, gpointer $v_pointer)
+  is native('gtk-3')
+  is export
+  { * }
+
 
 sub g_value_set_ulong (GValue $value, gulong $v_ulong)
   is native('gtk-3')

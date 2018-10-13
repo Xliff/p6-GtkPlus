@@ -8,6 +8,10 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
+sub cast($cast-to, $obj) is export {
+  nativecast($cast-to, $obj);
+}
+
 our constant GtkAssistantPageFunc             is export := Pointer;
 our constant GtkBuilderConnectFunc            is export := Pointer;
 our constant GtkCalendarDetailFunc            is export := Pointer;

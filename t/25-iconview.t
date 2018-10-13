@@ -47,12 +47,13 @@ sub fill_store {
       0 => GTK::Compat::Value.new(G_TYPE_STRING) ,
       1 => GTK::Compat::Value.new(G_TYPE_STRING) ,
       #2 => GTK::Compat::Value.new(GTK::Compat::Pixbuf.get_type()),
+      2 => GTK::Compat::Value.new(G_TYPE_OBJECT) ,
       3 => GTK::Compat::Value.new(G_TYPE_BOOLEAN),
     );
     %data<0>.string  = .path;
     %data<1>.string  = .basename;
-#    %data<2>.pointer = .d ??
-#      %pixbufs<folder>.get_pixbuf !! %pixbufs<file>.get_pixbuf;
+    %data<2>.object  = .d ??
+      %pixbufs<folder>.get_pixbuf !! %pixbufs<file>.get_pixbuf;
     %data<3>.boolean = .d;
 
     $store.append($iter);
@@ -155,6 +156,9 @@ $a.activate.tap({
 
   $icon_view.text_column = COL_DISPLAY_NAME;
   $icon_view.pixbuf_column = COL_PIXBUF;
+
+  say 'PB: ' ~ $icon_view.pixbuf_column;
+
   $sw.add($icon_view);
   $icon_view.grab_focus;
 
