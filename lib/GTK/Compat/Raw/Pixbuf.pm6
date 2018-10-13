@@ -39,9 +39,9 @@ sub gdk_pixbuf_apply_embedded_orientation (GdkPixbuf $src)
 sub gdk_pixbuf_calculate_rowstride (
   GdkColorspace $colorspace,
   gboolean $has_alpha,
-  int $bits_per_sample,
-  int $width,
-  int $height
+  gint $bits_per_sample,
+  gint $width,
+  gint $height
 )
   returns gint
   is native('gtk-3')
@@ -56,13 +56,13 @@ sub gdk_pixbuf_copy (GdkPixbuf $pixbuf)
 
 sub gdk_pixbuf_copy_area (
   GdkPixbuf $src_pixbuf,
-  int $src_x,
-  int $src_y,
-  int $width,
-  int $height,
+  gint $src_x,
+  gint $src_y,
+  gint $width,
+  gint $height,
   GdkPixbuf $dest_pixbuf,
-  int $dest_x,
-  int $dest_y
+  gint $dest_x,
+  gint $dest_y
 )
   is native('gtk-3')
   is export
@@ -86,7 +86,7 @@ sub gdk_pixbuf_fill (GdkPixbuf $pixbuf, guint32 $pixel)
   { * }
 
 sub gdk_pixbuf_get_bits_per_sample (GdkPixbuf $pixbuf)
-  returns int
+  returns gint
   is native('gtk-3')
   is export
   { * }
@@ -110,13 +110,13 @@ sub gdk_pixbuf_get_has_alpha (GdkPixbuf $pixbuf)
   { * }
 
 sub gdk_pixbuf_get_height (GdkPixbuf $pixbuf)
-  returns int
+  returns gint
   is native('gtk-3')
   is export
   { * }
 
 sub gdk_pixbuf_get_n_channels (GdkPixbuf $pixbuf)
-  returns int
+  returns gint
   is native('gtk-3')
   is export
   { * }
@@ -146,7 +146,7 @@ sub gdk_pixbuf_get_pixels_with_length (GdkPixbuf $pixbuf, guint $length)
   { * }
 
 sub gdk_pixbuf_get_rowstride (GdkPixbuf $pixbuf)
-  returns int
+  returns gint
   is native('gtk-3')
   is export
   { * }
@@ -158,7 +158,7 @@ sub gdk_pixbuf_get_type ()
   { * }
 
 sub gdk_pixbuf_get_width (GdkPixbuf $pixbuf)
-  returns int
+  returns gint
   is native('gtk-3')
   is export
   { * }
@@ -166,9 +166,9 @@ sub gdk_pixbuf_get_width (GdkPixbuf $pixbuf)
 sub gdk_pixbuf_new (
   GdkColorspace $colorspace,
   gboolean $has_alpha,
-  int $bits_per_sample,
-  int $width,
-  int $height
+  gint $bits_per_sample,
+  gint $width,
+  gint $height
 )
   returns GdkPixbuf
   is native('gtk-3')
@@ -179,10 +179,10 @@ sub gdk_pixbuf_new_from_bytes (
   GBytes $data,
   GdkColorspace $colorspace,
   gboolean $has_alpha,
-  int $bits_per_sample,
-  int $width,
-  int $height,
-  int $rowstride
+  gint $bits_per_sample,
+  gint $width,
+  gint $height,
+  gint $rowstride
 )
   returns GdkPixbuf
   is native('gtk-3')
@@ -193,10 +193,10 @@ sub gdk_pixbuf_new_from_data (
   guchar $data,
   GdkColorspace $colorspace,
   gboolean $has_alpha,
-  int $bits_per_sample,
-  int $width,
-  int $height,
-  int $rowstride,
+  gint $bits_per_sample,
+  gint $width,
+  gint $height,
+  gint $rowstride,
   GdkPixbufDestroyNotify $destroy_fn,
   gpointer $destroy_fn_data
 )
@@ -213,8 +213,8 @@ sub gdk_pixbuf_new_from_file (gchar $filename, GError $error)
 
 sub gdk_pixbuf_new_from_file_at_scale (
   gchar $filename,
-  int $width,
-  int $height,
+  gint $width,
+  gint $height,
   gboolean $preserve_aspect_ratio,
   GError $error
 )
@@ -225,8 +225,8 @@ sub gdk_pixbuf_new_from_file_at_scale (
 
 sub gdk_pixbuf_new_from_file_at_scale_utf8 (
   gchar $filename,
-  int $width,
-  int $height,
+  gint $width,
+  gint $height,
   gboolean $preserve_aspect_ratio,
   GError $error
 )
@@ -237,8 +237,8 @@ sub gdk_pixbuf_new_from_file_at_scale_utf8 (
 
 sub gdk_pixbuf_new_from_file_at_size (
   gchar $filename,
-  int $width,
-  int $height,
+  gint $width,
+  gint $height,
   GError $error
 )
   returns GdkPixbuf
@@ -248,8 +248,8 @@ sub gdk_pixbuf_new_from_file_at_size (
 
 sub gdk_pixbuf_new_from_file_at_size_utf8 (
   gchar $filename,
-  int $width,
-  int $height,
+  gint $width,
+  gint $height,
   GError $error
 )
   returns GdkPixbuf
@@ -257,7 +257,7 @@ sub gdk_pixbuf_new_from_file_at_size_utf8 (
   is export
   { * }
 
-sub gdk_pixbuf_new_from_file_utf8 (char $filename, GError $error)
+sub gdk_pixbuf_new_from_file_utf8 (gchar $filename, GError $error)
   returns GdkPixbuf
   is native('gtk-3')
   is export
@@ -282,8 +282,8 @@ sub gdk_pixbuf_new_from_resource (gchar $resource_path, GError $error)
 
 sub gdk_pixbuf_new_from_resource_at_scale (
   gchar $resource_path,
-  int $width,
-  int $height,
+  gint $width,
+  gint $height,
   gboolean $preserve_aspect_ratio,
   GError $error
 )
@@ -347,7 +347,7 @@ sub gdk_pixbuf_new_from_stream_finish (
   is export
   { * }
 
-sub gdk_pixbuf_new_from_xpm_data (gchar $data)
+sub gdk_pixbuf_new_from_xpm_data (CArray[Str] $data)
   returns GdkPixbuf
   is native('gtk-3')
   is export
@@ -355,10 +355,10 @@ sub gdk_pixbuf_new_from_xpm_data (gchar $data)
 
 sub gdk_pixbuf_new_subpixbuf (
   GdkPixbuf $src_pixbuf,
-  int $src_x,
-  int $src_y,
-  int $width,
-  int $height
+  gint $src_x,
+  gint $src_y,
+  gint $width,
+  gint $height
 )
   returns GdkPixbuf
   is native('gtk-3')
@@ -417,9 +417,9 @@ sub gdk_pixbuf_save_to_callbackv (
   GdkPixbuf $pixbuf,
   GdkPixbufSaveFunc $save_func,
   gpointer $user_data,
-  char $type,
-  char $option_keys,
-  char $option_values,
+  gchar $type,
+  gchar $option_keys,
+  gchar $option_values,
   GError $error
 )
   returns uint32

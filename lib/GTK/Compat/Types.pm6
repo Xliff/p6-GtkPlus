@@ -41,11 +41,17 @@ constant GAsyncReadyCallback is export := Pointer;
 constant GCallback           is export := Pointer;
 constant GCancellable        is export := Pointer;
 constant GClosure            is export := Pointer;
+constant GCompareDataFunc    is export := Pointer;
+constant GCompareFunc        is export := Pointer;
+constant GCopyFunc           is export := Pointer;
 constant GDestroyNotify      is export := Pointer;
 constant GQuark              is export := uint32;
 constant GStrv               is export := CArray[Str];
 constant GType               is export := uint32;
 constant GVariant            is export := Pointer;
+
+constant GdkPixbufSaveFunc      is export := Pointer;
+constant GdkPixbufDestroyNotify is export := Pointer;
 
 constant PangoTabArray is export := CArray[gint];
 
@@ -539,12 +545,12 @@ class GActionGroup          is repr('CPointer') is export { }
 class GAppInfo              is repr('CPointer') is export { }
 class GApplication          is repr('CPointer') is export { }
 class GAsyncResult          is repr('CPointer') is export { }
-class GCompareDataFunc      is repr('CPointer') is export { }
-class GCompareFunc          is repr('CPointer') is export { }
-class GCopyFunc             is repr('CPointer') is export { }
+class GBytes                is repr('CPointer') is export { }
 class GFile                 is repr('CPointer') is export { }
 class GFunc                 is repr('CPointer') is export { }
+class GHashTable            is repr('CPointer') is export { }
 class GIcon                 is repr('CPointer') is export { }
+class GInputStream          is repr('CPointer') is export { }
 class GParamSpec            is repr('CPointer') is export { }
 class GLaunchContext        is repr('CPointer') is export { }  # GAppLaunchContext
 class GListModel            is repr('CPointer') is export { }
@@ -552,9 +558,11 @@ class GMarkupParser         is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
+class GOutputStream         is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }
 class GdkDevice             is repr('CPointer') is export { }
+class GdkColorspace         is repr('CPointer') is export { }
 class GdkCursor             is repr('CPointer') is export { }
 class GdkDisplay            is repr('CPointer') is export { }
 class GdkDragContext        is repr('CPointer') is export { }

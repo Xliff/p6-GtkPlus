@@ -21,14 +21,14 @@ class GTK::Compat::Pixbuf  {
     self.bless(:$pixbuf);
   }
   multi method new (
-    GdkColorspace $colorspace
+    GdkColorspace $colorspace,
     gboolean $has_alpha,
     int $bits_per_sample,
     int $width,
     int $height
   ) {
     my $pixbuf = gdk_pixbuf_new(
-      $coloorspace,
+      $colorspace,
       $has_alpha,
       $bits_per_sample,
       $width,
@@ -59,7 +59,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method new_from_data (
-    guchar $data
+    guchar $data,
     GdkColorspace $colorspace,
     gboolean $has_alpha,
     int $bits_per_sample,
@@ -258,22 +258,22 @@ class GTK::Compat::Pixbuf  {
     self.bless(:$pixbuf);
   }
 
-  method new_from_stream_finish (GError $error) {
-    my $pixbuf = gdk_pixbuf_new_from_stream_finish($!p, $error);
+  method new_from_stream_finish (GAsyncResult $result, GError $error) {
+    my $pixbuf = gdk_pixbuf_new_from_stream_finish($result, $error);
     self.bless(:$pixbuf);
   }
 
   method new_from_xpm_data(CArray[Str] $data) {
-    my $pixbuf = gdk_pixbuf_new_from_xpm_data($!data);
+    my $pixbuf = gdk_pixbuf_new_from_xpm_data($data);
     self.bless(:$pixbuf);
   }
 
   method new_subpixbuf (
     GdkPixbuf() $src,
-    int $src_x,
-    int $src_y,
-    int $width,
-    int $height
+    gint $src_x,
+    gint $src_y,
+    gint $width,
+    gint $height
   ) {
     my $pixbuf = gdk_pixbuf_new_subpixbuf(
       $src,
@@ -304,16 +304,18 @@ class GTK::Compat::Pixbuf  {
   }
 
   method calculate_rowstride (
+    GdkColorspace $colorspace,
     gboolean $has_alpha,
     int $bits_per_sample,
     int $width,
     int $height
   ) {
     gdk_pixbuf_calculate_rowstride(
-      $!p,
+      $colorspace,
       $has_alpha,
       $bits_per_sample,
-      $width, $height
+      $width,
+      $height
     );
   }
 
@@ -347,7 +349,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method error_quark {
-    gdk_pixbuf_error_quark($!p);
+    gdk_pixbuf_error_quark();
   }
 
   method fill (guint32 $pixel) {
@@ -399,26 +401,26 @@ class GTK::Compat::Pixbuf  {
   }
 
   method get_type {
-    gdk_pixbuf_get_type($!p);
+    gdk_pixbuf_get_type();
   }
 
   method get_width {
     gdk_pixbuf_get_width($!p);
   }
 
-  method read_pixel_bytes () {
+  method read_pixel_bytes {
     gdk_pixbuf_read_pixel_bytes($!p);
   }
 
-  method read_pixels () {
+  method read_pixels {
     gdk_pixbuf_read_pixels($!p);
   }
 
-  method ref () {
+  method ref {
     gdk_pixbuf_ref($!p);
   }
 
-  method remove_option (gchar $key) {
+  method remove_option (Str() $key) {
     gdk_pixbuf_remove_option($!p, $key);
   }
 
@@ -468,8 +470,11 @@ class GTK::Compat::Pixbuf  {
     );
   }
 
-  method save_to_stream_finish (GError $error) {
-    gdk_pixbuf_save_to_stream_finish($!p, $error);
+  method save_to_stream_finish (
+    GAsyncResult, $result = GAsyncResult,
+    GError $error = GError
+  ) {
+    gdk_pixbuf_save_to_stream_finish($result, $error);
   }
 
   method save_to_streamv (

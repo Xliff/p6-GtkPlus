@@ -86,7 +86,7 @@ sub gtk_list_store_move_before (
   is export
   { * }
 
-sub gtk_list_store_newv (gint $n_columns, CArray[uint32] $types)
+sub gtk_list_store_newv (gint $n_columns, CArray[uint64] $types)
   returns GtkListStore
   is native('gtk-3')
   is export

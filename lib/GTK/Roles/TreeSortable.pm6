@@ -10,7 +10,7 @@ role GTK::Roles::TreeSortable {
   has GtkTreeSortable $!ts;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  
+
   # Is originally:
   # GtkTreeSortable, gpointer --> void
   method sort-column-changed {
@@ -44,16 +44,11 @@ role GTK::Roles::TreeSortable {
   }
 
   method set_default_sort_func (
-    GtkTreeIterCompareFunc $sort_func,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    &f,
+    gpointer $user_data = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   ) {
-    gtk_tree_sortable_set_default_sort_func(
-      $!ts,
-      $sort_func,
-      $user_data,
-      $destroy
-    );
+    gtk_tree_sortable_set_default_sort_func($!ts, &f, $user_data, $destroy);
   }
 
   method set_sort_column_id (

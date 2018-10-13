@@ -4,6 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Raw::Value;
 use GTK::Compat::Types;
+use GTK::Raw::Subs;
 
 use GTK::Roles::Types;
 
@@ -15,6 +16,10 @@ class GTK::Compat::Value {
   submethod BUILD(:$type, GValue :$value) {
     $!v = $value // GValue.new;
     g_value_init($!v, $type);
+  }
+
+  submethod DESTROY {
+    #self.free;
   }
 
   multi method new(Int $t = G_TYPE_NONE) {
@@ -30,15 +35,22 @@ class GTK::Compat::Value {
   method GTK::Compat::Types::GValue {
     $!v;
   }
+  method gvalue {
+    $!v;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  method free {
+    g_object_unref( nativecast(Pointer, $!v) );
+  }
 
   method value {
     do given self.gtype {
       when G_TYPE_CHAR     { self.char;       }
       when G_TYPE_UCHAR    { self.uchar;      }
-      when G_TYPE_BOOLEAN  { self.boolean; }
+      when G_TYPE_BOOLEAN  { so self.boolean; }
       when G_TYPE_INT      { self.int;        }
       when G_TYPE_UINT     { self.uint;       }
       when G_TYPE_LONG     { self.long;       }
@@ -48,8 +60,8 @@ class GTK::Compat::Value {
 
       # Enums and Flags will need to be checked, since they can be either
       # 32 or 64 bit depending on the definition.
-      #when G_TYPE_ENUM     { self.int;        }
-      #when G_TYPE_FLAGS    { self.int;        }
+      when G_TYPE_ENUM     { self.enum;       }
+      when G_TYPE_FLAGS    { self.flags;      }
 
       when G_TYPE_FLOAT    { self.float;      }
       when G_TYPE_DOUBLE   { self.double      }
@@ -162,7 +174,7 @@ class GTK::Compat::Value {
         g_value_get_pointer($!v);
       },
       STORE => sub ($, $v_pointer is copy) {
-        g_value_set_pointer($!v, $v_pointer);
+        g_value_set_pointer($!v, nativecast(Pointer, $v_pointer) );
       }
     );
   }

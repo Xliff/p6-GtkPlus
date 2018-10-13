@@ -22,19 +22,26 @@ class GTK::ListStore {
   has $!accessed = False;
   has $!columns;
 
-  submethod BUILD(:$liststore) {
-    $!ls = $liststore;
+  submethod BUILD(:$liststore, :$columns) {
+    $!columns = $columns;
+         $!ls = $liststore;
+
      $!b = nativecast(GtkBuildable, $!ls);      # GTK::Roles::Buildable
     $!ts = nativecast(GtkTreeSortable, $!ls);   # GTK::Roles::TreeSortable
     $!tm = nativecast(GtkTreeModel, $!ls);      # GTK::Roles::TreeSortable
   }
 
-  method new (Int() @types) {
-    my CArray[uint32] $t = CArray[uint32].new;
-    $t[$++] = $_.Int for @types.elems;
-    $!columns = @types.elems;
-    my $liststore = gtk_list_store_newv($t.elems, $t);
-    self.bless(:$liststore);
+  method new (@types) {
+    for @types {
+      next if $_ ~~ (Int, IntStr).any || .^can('Int').elems;
+      die '@types must consist of Integers or objects that will convert to Integer';
+    }
+
+    my $t = CArray[uint64].new(@types);
+    my gint $columns = @types.elems;
+    my $liststore = gtk_list_store_newv($columns, $t);
+    die 'GtkListStore not created!' unless $liststore;
+    self.bless(:$liststore, :$columns);
   }
 
   method append (GtkTreeIter() $iter) {
@@ -86,8 +93,8 @@ class GTK::ListStore {
 
     $!accessed = True;
     # Throw exception if columns mismatch?
-    my CArray[gint] $c_columns;
-    my CArray[Pointer] $c_values;
+    my $c_columns = CArray[gint].new(@columns);
+    my $c_values = CArray[Pointer].new;
     $c_columns[$_] = @columns[$_] for (^$n_values);
     for (^$n_values) {
       $c_values[$_] = do given @values[$_] {
@@ -168,8 +175,7 @@ class GTK::ListStore {
       if $!accessed;
     die 'Elements of @types must be integers, and must not exceeed column size'
       unless @types.all ~~ (Int, IntStr).any;
-    my CArray[uint32] $c_types = CArray[uint32].new;
-    $c_types[$_++] = $_.Int for ^@types;
+    my $c_types = CArray[uint64].new(@types);
     $!columns = @types.elems;
     gtk_list_store_set_column_types($!ls, @types.elems, $c_types);
   }
@@ -184,7 +190,7 @@ class GTK::ListStore {
     GValue() $value
   ) {
     my gint $c = self.RESOLVE-INT($column);
-    gtk_list_store_set_value($iter, $c, $value);
+    gtk_list_store_set_value($!ls, $iter, $c, $value);
   }
 
   method set_values (
@@ -192,26 +198,26 @@ class GTK::ListStore {
     %values
   ) {
     $!accessed = True;
-    die 'Keys used %values must be integers.'
-      unless %values.keys.all ~~ (Int, IntStr).any;
+    for %values.keys {
+      unless $_ ~~ (Int, IntStr).any {
+        die 'Keys used %values must be integers.' unless .^can('Int').elems;
+      }
+    }
     die 'Values used in %values must be GTK::Compat::Value or GValue.'
       unless %values.values.all ~~ GValues;
 
-    my CArray[gint] $c_columns;
-    my CArray[GValue] $c_values;
-    for %values.keys.sort {
-      my $c = $++;
-      $c_columns[$c] = $_.Int;
-      $c_values[$c] = %values{$_};
+    for (%values.keys) {
+      my gint $i = $_.Int;
+      self.set_value($iter, $i, %values{$_}.gvalue);
     }
 
-    gtk_list_store_set_valuesv(
-      $!ls,
-      $iter,
-      $c_columns,
-      $c_values,
-      $c_columns.elems
-    );
+    # gtk_list_store_set_valuesv(
+    #   $!ls,
+    #   $iter,
+    #   $c_columns,
+    #   $c_values,
+    #   $c_columns.elems
+    # );
   }
 
   method set_valuesv (
@@ -230,10 +236,10 @@ class GTK::ListStore {
     die '@values must contain GTK::Compat::Value or GValue elements'
       unless @values.all ~~ GValues;
     $!accessed = True;
-    my CArray[gint] $c_columns;
-    my CArray[GValue] $c_values;
+    my $c_columns = CArray[gint].new;
+    my $c_values = CArray[gint].new;
     $c_columns[$_] = @columns[$_] for (^$n_values);
-    $c_values[$_] = @values[$_] for (^$n_values);
+    $c_values[$_]  = @values[$_]  for (^$n_values);
     gtk_list_store_set_valuesv($!ls, $iter, $c_columns, $c_values, $n_values);
   }
 

@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::Value;
 use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
 
@@ -61,6 +62,15 @@ role GTK::Roles::TreeModel {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method foreach (GtkTreeModelForeachFunc $func, gpointer $user_data) {
     gtk_tree_model_foreach($!tm, $func, $user_data);
+  }
+
+  multi method get(GtkTreeIter() $iter, @cols) {
+    samewith($iter, @cols.List);
+  }
+  multi method get(GtkTreeIter() $iter, *@cols) {
+    my @r;
+    @r.push( GTK::Compat::Value.new( self.get_value($iter, $_) ) ) for @cols;
+    @r;
   }
 
   method get_column_type (Int() $index) {

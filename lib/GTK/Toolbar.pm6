@@ -90,7 +90,7 @@ class GTK::Toolbar is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_drop_index (Int() $x is rw, Int() $y is rw) {
+  method get_drop_index (Int() $x is rw, Int $y is rw) {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-UINT(@u);
     my $rc = gtk_toolbar_get_drop_index($!tb, $xx, $yy);
@@ -111,7 +111,7 @@ class GTK::Toolbar is GTK::Container {
     gtk_toolbar_get_n_items($!tb);
   }
 
-  method get_nth_item (Int() $n) {
+  method get_nth_item (Int $n) {
     my gint $nn = self.RESOLVE-INT($n);
     gtk_toolbar_get_nth_item($!tb, $nn);
   }
@@ -128,12 +128,12 @@ class GTK::Toolbar is GTK::Container {
     gtk_toolbar_get_type();
   }
 
-  method insert (GtkToolItem() $item, Int() $pos) {
+  method insert (GtkToolItem() $item, Int $pos = -1) {
     my uint32 $p = self.RESOLVE-UINT($pos);
     gtk_toolbar_insert($!tb, $item, $p);
   }
 
-  method set_drop_highlight_item (GtkToolItem() $tool_item, Int() $index) {
+  method set_drop_highlight_item (GtkToolItem() $tool_item, Int $index) {
     my uint32 $i = self.RESOLVE-UINT($index);
     gtk_toolbar_set_drop_highlight_item($!tb, $tool_item, $i);
   }

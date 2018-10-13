@@ -376,7 +376,7 @@ sub gtk_icon_view_set_row_spacing (GtkIconView $icon_view, gint $row_spacing)
 
 sub gtk_icon_view_set_selection_mode (
   GtkIconView $icon_view,
-  GtkSelectionMode $mode
+  uint32 $m                     # GtkSelectionMode $mode
 )
   is native('gtk-3')
   is export

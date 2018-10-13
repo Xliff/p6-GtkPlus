@@ -52,7 +52,7 @@ role GTK::Roles::Signals::Scale {
 
 sub g_connect_format_value(
   Pointer $app,
-  Str $bane,
+  Str $name,
   &handler (Pointer, gdouble, Pointer --> Str),
   Pointer $data,
   uint32 $flags

@@ -31,7 +31,7 @@ sub gtk_tree_sortable_has_default_sort_func (GtkTreeSortable $sortable)
 
 sub gtk_tree_sortable_set_default_sort_func (
   GtkTreeSortable $sortable,
-  GtkTreeIterCompareFunc $sort_func,
+  &function (GtkTreeModel, GtkTreeIter, GtkTreeIter, gpointer --> gint),
   gpointer $user_data,
   GDestroyNotify $destroy
 )
