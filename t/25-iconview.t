@@ -12,6 +12,7 @@ use GTK::Box;
 use GTK::IconView;
 use GTK::Image;
 use GTK::ListStore;
+use GTK::TreePath;
 use GTK::Toolbar;
 use GTK::ToolButton;
 use GTK::Window;
@@ -41,18 +42,18 @@ sub fill_store {
   my $iter = GtkTreeIter.new;
 
   $store.clear;
-  for dir($parent) {
+  for dir($parent.path) {
     my %data = (
       0 => GTK::Compat::Value.new(G_TYPE_STRING) ,
       1 => GTK::Compat::Value.new(G_TYPE_STRING) ,
       #2 => GTK::Compat::Value.new(GTK::Compat::Pixbuf.get_type()),
-      2 => GTK::Compat::Value.new(G_TYPE_BOOLEAN),
+      3 => GTK::Compat::Value.new(G_TYPE_BOOLEAN),
     );
-    %data<0>.string  = .dirname;
+    %data<0>.string  = .path;
     %data<1>.string  = .basename;
-    #%data<2>.pointer = .d ??
-    #  %pixbufs<folder>.get_pixbuf !! %pixbufs<file>.get_pixbuf;
-    %data<2>.boolean = .d;
+#    %data<2>.pointer = .d ??
+#      %pixbufs<folder>.get_pixbuf !! %pixbufs<file>.get_pixbuf;
+    %data<3>.boolean = .d;
 
     $store.append($iter);
     $store.set_values($iter, %data);
@@ -80,7 +81,7 @@ sub create_store {
   my @types = (
     G_TYPE_STRING,
     G_TYPE_STRING,
-    #GTK::Compat::Pixbuf.get_type(),
+    GTK::Compat::Pixbuf.get_type(),
     G_TYPE_BOOLEAN
   );
 
@@ -93,23 +94,23 @@ sub item_activated ($iv, $tp, $ud) {
 
   $store.get_iter($iter, $tp);
   my ($p, $d) = $store.get($iter, COL_PATH, COL_IS_DIRECTORY);
-  return if $d.value;
+  return unless $d.value;
 
-  $parent = $p.value;
+  $parent = $p.value.IO;
   fill_store();
-  $up_button.set_sensitive = True;
+  $up_button.sensitive = True;
 }
 
 sub up_clicked {
   $parent = $parent.parent;
   fill_store();
-  $up_button.is_sensitive = so $parent ne '/';
+  $up_button.sensitive = $parent.path ne '/';
 }
 
 sub home_clicked {
   $parent = $*HOME;
   fill_store();
-  $up_button.set_sensitive = so $parent ne '/';
+  $up_button.sensitive = $parent.path ne '/';
 }
 
 my $a = GTK::Application.new( title => 'org.genex.iconview' );
@@ -129,6 +130,7 @@ $a.activate.tap({
     ''
   );
   $up_button.is_important = True;
+  $up_button.sensitive = False;
   $toolbar.insert($up_button);
   $home_button = GTK::ToolButton.new(
     GTK::Image.new_from_icon_name('gtk-home', GTK_ICON_SIZE_SMALL_TOOLBAR),
@@ -140,7 +142,7 @@ $a.activate.tap({
   $sw.set_policy(GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
   $vbox.pack_start($sw, True, True);
 
-  $parent = '/';
+  $parent = '/'.IO;
   create_store();
   fill_store();
   $icon_view = GTK::IconView.new_with_model($store);

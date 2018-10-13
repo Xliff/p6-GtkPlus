@@ -72,7 +72,7 @@ role GTK::Roles::Signals::IconView {
 sub g_connect_item_activated(
   Pointer $app,
   Str $name,
-  &handler (Pointer, Pointer, Pointer),
+  &handler (GtkIconView, GtkTreePath, Pointer),
   Pointer $data,
   uint32 $flags
 )
@@ -84,7 +84,7 @@ sub g_connect_item_activated(
 sub g_connect_move_cursor (
   Pointer $app,
   Str $name,
-  &handler (Pointer, uint32, int32, Pointer --> uint32),
+  &handler (GtkIconView, uint32, int32, Pointer --> uint32),
   Pointer $data,
   uint32 $flags
 )

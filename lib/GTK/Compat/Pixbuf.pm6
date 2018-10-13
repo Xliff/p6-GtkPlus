@@ -401,7 +401,16 @@ class GTK::Compat::Pixbuf  {
   }
 
   method get_type {
-    gdk_pixbuf_get_type();
+    state $t;
+    state $n = 0;
+
+    return $t if $n > 0;
+    repeat {
+      $t = gdk_pixbuf_get_type();
+      die "{ ::?CLASS.^name }.get_type could not get stable result"
+        if $n++ > 20;
+    } until $t == gdk_pixbuf_get_type();
+    $t;
   }
 
   method get_width {

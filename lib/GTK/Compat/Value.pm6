@@ -15,7 +15,7 @@ class GTK::Compat::Value {
 
   submethod BUILD(:$type, GValue :$value) {
     $!v = $value // GValue.new;
-    g_value_init($!v, $type);
+    g_value_init($!v, $type) with $type;
   }
 
   submethod DESTROY {
@@ -28,7 +28,7 @@ class GTK::Compat::Value {
     my $type = self.RESOLVE-UINT($t.Int);
     self.bless(:$type);
   }
-  multi method new(GValue $value) {
+  multi method new (GValue $value) {
     self.bless(:$value);
   }
 
@@ -47,7 +47,7 @@ class GTK::Compat::Value {
   }
 
   method value {
-    do given self.gtype {
+    do given $!v.g_type {
       when G_TYPE_CHAR     { self.char;       }
       when G_TYPE_UCHAR    { self.uchar;      }
       when G_TYPE_BOOLEAN  { so self.boolean; }
