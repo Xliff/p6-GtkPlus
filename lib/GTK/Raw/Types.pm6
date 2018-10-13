@@ -946,6 +946,7 @@ class GtkTreeView             is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkTreeRowReference     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeSelection        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeSortable         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeStore            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkVolumeButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidget               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidgetHelpType       is repr('CPointer') does GTK::Roles::Pointers is export { }

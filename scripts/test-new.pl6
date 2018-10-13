@@ -17,7 +17,9 @@ sub MAIN( $rev = 'HEAD' ) {
       next;
     }
 
-    my $tf = ".touch/{ $_[0].IO.basename }";
+    my $rel = $_[0].IO.dirname.split('/')[1..*].join('/');
+    mkdir ".touch/{ $rel }";
+    my $tf = ".touch/{ $rel }/{ $_[0].IO.basename }";
     next unless ! $tf.IO.e || $_[0].IO.modified > $tf.IO.modified;
 
     say "===== $_[1] =====";

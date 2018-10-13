@@ -38,7 +38,7 @@ role GTK::Roles::TreeDragSource  {
 }
 
 role GTK::Roles::TreeDragDest  {
-  has GtkTreeDragSource $!dd;
+  has GtkTreeDragDest $!dd;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
