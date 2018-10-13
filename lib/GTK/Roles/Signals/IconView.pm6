@@ -6,12 +6,12 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
+my class ReturnedValue {
+  has $.r is rw;
+}
+
 role GTK::Roles::Signals::IconView {
   has %!signals-iv;
-
-  class ReturnedValue {
-    has $.r is rw;
-  }
 
   method connect-item-activated (
     $obj,
@@ -23,7 +23,7 @@ role GTK::Roles::Signals::IconView {
       my $s = Supplier.new;
       #"O: $obj".say;
       #"S: $signal".say;
-      $hid = g_signal_connect_item_activated($obj, $signal,
+      $hid = g_connect_item_activated($obj, $signal,
         -> $iv, $tp, $ud {
           CATCH {
             default { note $_; }
@@ -49,7 +49,7 @@ role GTK::Roles::Signals::IconView {
       my $s = Supplier.new;
       #"O: $obj".say;
       #"S: $signal".say;
-      $hid = g_signal_connect_item_activated($obj, $signal,
+      $hid = g_connect_move_cursor($obj, $signal,
         -> $iv, $ms, $c, $ud {
           CATCH {
             default { note $_; }
