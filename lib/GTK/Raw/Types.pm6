@@ -934,7 +934,10 @@ class GtkToolButton           is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkToolItem             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTooltip              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolItemGroup        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeDragDest         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeDragSource       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeModel            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeModelSort        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreePath             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeView             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeRowReference     is repr('CPointer') does GTK::Roles::Pointers is export { }
