@@ -11,12 +11,14 @@ use GTK::Container;
 
 use GTK::Roles::CellLayout;
 use GTK::Roles::Scrollable;
+use GTK::Roles::Signals::IconView;
 
 my subset ParentChild where GtkIconView | GtkWidget;
 
 class GTK::IconView is GTK::Container {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Scrollable;
+  also does GTK::Roles::Signals::IconView;
 
   has GtkIconView $!iv;
 
@@ -24,6 +26,10 @@ class GTK::IconView is GTK::Container {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::IconView');
     $o;
+  }
+
+  submethod DESTROY {
+    self.disconnect($_, %!signals-iv{$_}) for %!signals-iv.keys
   }
 
   submethod BUILD(:$iconview) {
@@ -80,13 +86,13 @@ class GTK::IconView is GTK::Container {
   # Is originally:
   # GtkIconView, GtkTreePath, gpointer --> void
   method item-activated {
-    self.connect($!iv, 'item-activated');
+    self.connect-item-activated($!iv, 'item-activated');
   }
 
   # Is originally:
   # GtkIconView, GtkMovementStep, gint, gpointer --> gboolean
   method move-cursor {
-    self.connect($!iv, 'move-cursor');
+    self.connect-move-cursor($!iv, 'move-cursor');
   }
 
   # Is originally:

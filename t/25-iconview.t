@@ -88,10 +88,8 @@ sub create_store {
   $store.set_default_sort_func(&sort_func);
 }
 
-sub item_activated ($tp) {
+sub item_activated ($iv, $tp, $ud) {
   my $iter = GtkTreeIter.new;
-
-  say "$tp";
 
   $store.get_iter($iter, $tp);
   my ($p, $d) = $store.get($iter, COL_PATH, COL_IS_DIRECTORY);
@@ -151,7 +149,7 @@ $a.activate.tap({
          $up_button.clicked.tap({ up_clicked()   });
        $home_button.clicked.tap({ home_clicked() });
 
-  $icon_view.item-activated.tap(-> *@a { @a[1].say; item_activated(@a[1]) });
+  $icon_view.item-activated.tap(-> *@a { item_activated(|@a) });
 
   $icon_view.text_column = COL_DISPLAY_NAME;
   $icon_view.pixbuf_column = COL_PIXBUF;
