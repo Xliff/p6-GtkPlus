@@ -2,7 +2,7 @@
 - Insure all method-level gchar paramters are converted to Str()
 - COMPLETE a working GSList implementation
 - Add a working GList implementation
-- META6.json
+√ META6.json
 - New dependency: https://github.com/timo/cairo-p6
 - GDK
 - Feature Request: GTK::TextBuffer.buffer to accept from Str or Buf. This should also apply to .text()
@@ -10,7 +10,9 @@
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
 - Convert Perl6 additions to GTK::Container into a role. (GTK::Roles::Containable)
 - Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
-- Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get
+* Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get (MOSTLY DONE! See scripts/prop-get.pl6)
+- Fix lack of icons in GTK::IconView
+
 
 Applications
 ============

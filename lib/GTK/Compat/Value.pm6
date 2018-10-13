@@ -291,15 +291,15 @@ class GTK::Compat::Value {
     g_strdup_value_contents($!v);
   }
 
-  method set_static_string (gchar $v_string) {
+  method set_static_string (Str() $v_string) {
     g_value_set_static_string($!v, $v_string);
   }
 
-  method set_string_take_ownership (gchar $v_string) {
+  method set_string_take_ownership (Str() $v_string) {
     g_value_set_string_take_ownership($!v, $v_string);
   }
 
-  method take_string (gchar $v_string) {
+  method take_string (Str() $v_string) {
     g_value_take_string($!v, $v_string);
   }
 
