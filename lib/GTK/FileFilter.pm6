@@ -6,13 +6,17 @@ use GTK::Compat::Types;
 use GTK::Raw::FileFilter;
 use GTK::Raw::Types;
 
+use GTK::Roles::Buildable;
 use GTK::Roles::Types;
 
 class GTK::FileFilter does GTK::Roles::Types {
+  also does GTK::Roles::Buildable;
+  
   has GtkFileFilter $!ff;
 
   submethod BUILD(:$filter) {
     $!ff = $filter;
+    $!b = nativecast(GtkBuildable, $!ff);   # GTK::Roles::Buildable
   }
 
   method new () {

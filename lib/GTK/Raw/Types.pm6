@@ -39,6 +39,8 @@ our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
 our constant GtkTreeIterCompareFunc           is export := Pointer;
 our constant GtkTreeModelForeachFunc          is export := Pointer;
+our constant GtkTreeSelectionFunc             is export := Pointer;
+our constant GtkTreeSelectionForeachFunc      is export := Pointer;
 our constant GtkTreeViewRowSeparatorFunc      is export := Pointer;
 
 our constant GdkRGBA is export := GTK::Compat::RGBA;
@@ -124,7 +126,6 @@ class GtkTextIter is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint     $.dummy13;
   has gpointer $.dummy14;
 }
-
 class GtkRequisition is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32 $.width  is rw;
   has uint32 $.height is rw;
@@ -935,7 +936,9 @@ class GtkTooltip              is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkToolItemGroup        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeModel            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreePath             is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeView             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeRowReference     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeSelection        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeSortable         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkVolumeButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidget               is repr('CPointer') does GTK::Roles::Pointers is export { }
