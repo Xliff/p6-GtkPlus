@@ -12,6 +12,7 @@ sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
 
+our constant GtkAccelGroupFindFunc            is export := Pointer;
 our constant GtkAssistantPageFunc             is export := Pointer;
 our constant GtkBuilderConnectFunc            is export := Pointer;
 our constant GtkCalendarDetailFunc            is export := Pointer;
@@ -151,6 +152,12 @@ class GtkRecentFilterInfo is repr('CStruct') does GTK::Roles::Pointers is export
   has CArray[Str] $.applications;
   has CArray[Str] $.groups;
   has gint        $.age;
+};
+
+class GtkAccelKey is repr('CStruct') does GTK::Roles::Pointers is export {
+  has guint  $.accel_key;
+  has uint32 $.accel_mods;      # GdkModifierType accel_mods;
+  has uint32 $.accel_flags;     # : 16;
 };
 
 our enum GtkAccelFlags is export <
@@ -835,6 +842,7 @@ our enum GtkRecentFilterFlags is export (
 
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelLabel           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionBar            is repr('CPointer') does GTK::Roles::Pointers is export { }
