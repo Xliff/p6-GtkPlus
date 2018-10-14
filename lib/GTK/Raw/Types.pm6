@@ -35,6 +35,7 @@ our constant GtkFontFilterFunc                is export := Pointer;
 our constant GtkIconViewForeachFunc           is export := Pointer;
 our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
+our constant GtkRecentFilterFunc              is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
 our constant GtkTreeCellDataFunc              is export := Pointer;
@@ -140,6 +141,16 @@ class GtkFileFilterInfo is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str     $.uri;
   has Str     $.display_name;
   has Str     $.mime_type;
+};
+
+class GtkRecentFilterInfo is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32      $.contains;   # GtkRecentFilterFlags contains;
+  has Str         $.uri;
+  has Str         $.display_name;
+  has Str         $.mime_type;
+  has CArray[Str] $.applications;
+  has CArray[Str] $.groups;
+  has gint        $.age;
 };
 
 our enum GtkAccelFlags is export <
@@ -813,6 +824,15 @@ our enum GtkTreeViewColumnSizing is export <
   GTK_TREE_VIEW_COLUMN_FIXED
 >;
 
+our enum GtkRecentFilterFlags is export (
+  GTK_RECENT_FILTER_URI          => 1,
+  GTK_RECENT_FILTER_DISPLAY_NAME => (1 +< 1),
+  GTK_RECENT_FILTER_MIME_TYPE    => (1 +< 2),
+  GTK_RECENT_FILTER_APPLICATION  => (1 +< 3),
+  GTK_RECENT_FILTER_GROUP        => (1 +< 4),
+  GTK_RECENT_FILTER_AGE          => (1 +< 5)
+);
+
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -905,6 +925,7 @@ class GtkRadioButton          is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkRadioMenuItem        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRadioToolButton      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRange                is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkRecentFilter         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRevealer             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScale                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScaleButton          is repr('CPointer') does GTK::Roles::Pointers is export { }
