@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Roles::Signals;
 use GTK::Roles::Types
 
-class GTK:: {
+role GTK::Roles:: {
   also does GTK::Roles::Signals;
   also does GTK::Roles::Types;
 
