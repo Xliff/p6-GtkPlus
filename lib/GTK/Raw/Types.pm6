@@ -842,6 +842,7 @@ our enum GtkRecentFilterFlags is export (
 
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelLabel           is repr('CPointer') does GTK::Roles::Pointers is export { }
