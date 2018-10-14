@@ -35,7 +35,7 @@ role GTK::Roles::CellLayout {
     gtk_cell_layout_clear($!cl);
   }
 
-  multi method clear_attributes (GtkCellRenderer() $cell) {
+  method clear_layout_attributes (GtkCellRenderer() $cell) {
     gtk_cell_layout_clear_attributes($!cl, $cell);
   }
 
@@ -51,19 +51,19 @@ role GTK::Roles::CellLayout {
     gtk_cell_layout_get_type();
   }
 
-  multi method pack_end (GtkCellRenderer $cell, Int() $expand) {
+  multi method layout_pack_end (GtkCellRenderer $cell, Int() $expand) {
     my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_cell_layout_pack_end($!cl, $cell, $e);
   }
-  multi method pack_end (GTK::CellRenderer $cell, Int() $expand) {
+  multi method layout_pack_end (GTK::CellRenderer $cell, Int() $expand) {
     die "Object pack_end method NYI.";
   }
 
-  multi method pack_start (GtkCellRenderer $cell, Int() $expand) {
+  multi method layout_pack_start (GtkCellRenderer $cell, Int() $expand) {
     my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_cell_layout_pack_start($!cl, $cell, $e);
   }
-  multi method pack_start (GTK::CellRenderer $cell, Int() $expand) {
+  multi method layout_spack_start (GTK::CellRenderer $cell, Int() $expand) {
     die "Object pack_end method NYI.";
   }
 

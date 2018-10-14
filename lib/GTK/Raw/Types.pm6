@@ -37,6 +37,7 @@ our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
+our constant GtkTreeCellDataFunc              is export := Pointer;
 our constant GtkTreeIterCompareFunc           is export := Pointer;
 our constant GtkTreeModelFilterModifyFunc     is export := Pointer;
 our constant GtkTreeModelFilterVisibleFunc    is export := Pointer;
@@ -806,6 +807,12 @@ our enum GtkIconViewDropPosition is export <
   GTK_ICON_VIEW_DROP_BELOW
 >;
 
+our enum GtkTreeViewColumnSizing is export <
+  GTK_TREE_VIEW_COLUMN_GROW_ONLY
+  GTK_TREE_VIEW_COLUMN_AUTOSIZE
+  GTK_TREE_VIEW_COLUMN_FIXED
+>;
+
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroup           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -943,6 +950,7 @@ class GtkTreeModelFilter      is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkTreeModelSort        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreePath             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeView             is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkTreeViewColumn       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeRowReference     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeSelection        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeSortable         is repr('CPointer') does GTK::Roles::Pointers is export { }
