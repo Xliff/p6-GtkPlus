@@ -1,4 +1,4 @@
-### GtkPlus is [GTK+](https://www.gtk.org) library binding for Perl 6
+### GtkPlus provides [GTK+](https://www.gtk.org) library binding for Perl 6
 
 Where can I use it?
 
