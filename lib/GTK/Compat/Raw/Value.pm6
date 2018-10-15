@@ -238,13 +238,12 @@ sub g_value_set_object (GValue $value, gpointer $v_pointer)
   is export
   { * }
 
-
 sub g_value_set_ulong (GValue $value, gulong $v_ulong)
   is native('gtk-3')
   is export
   { * }
 
-sub g_value_init (GValue $value, uint32 $type)
+sub g_value_init (GValue $value, uint64 $type)
   returns GValue
   is native('gtk-3')
   is export

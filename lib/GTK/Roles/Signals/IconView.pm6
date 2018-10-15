@@ -6,10 +6,6 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
-my class ReturnedValue {
-  has $.r is rw;
-}
-
 role GTK::Roles::Signals::IconView {
   has %!signals-iv;
 

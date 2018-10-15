@@ -48,7 +48,7 @@ constant GCopyFunc           is export := Pointer;
 constant GDestroyNotify      is export := Pointer;
 constant GQuark              is export := uint32;
 constant GStrv               is export := CArray[Str];
-constant GType               is export := uint32;
+constant GType               is export := uint64;
 constant GVariant            is export := Pointer;
 
 constant GdkPixbufSaveFunc      is export := Pointer;

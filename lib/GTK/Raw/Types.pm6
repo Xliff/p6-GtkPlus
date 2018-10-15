@@ -8,6 +8,10 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
+class ReturnedValue is export {
+  has $.r is rw;
+}
+
 sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
@@ -855,6 +859,17 @@ our enum GtkTreeViewDropPosition is export (
   'GTK_TREE_VIEW_DROP_INTO_OR_AFTER'
 );
 
+our enum GtkShortcutType is export <
+  GTK_SHORTCUT_ACCELERATOR
+  GTK_SHORTCUT_GESTURE_PINCH
+  GTK_SHORTCUT_GESTURE_STRETCH
+  GTK_SHORTCUT_GESTURE_ROTATE_CLOCKWISE
+  GTK_SHORTCUT_GESTURE_ROTATE_COUNTERCLOCKWISE
+  GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_LEFT
+  GTK_SHORTCUT_GESTURE_TWO_FINGER_SWIPE_RIGHT
+  GTK_SHORTCUT_GESTURE
+>;
+
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -963,6 +978,10 @@ class GtkSeparator            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkSeparatorMenuItem    is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSeparatorToolItem    is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSettings             is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkShortcutsGroup       is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkShortcutsSection     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkShortcutsShortcut    is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkShortcutsWindow      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSizeGroup            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSpinButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSpinner              is repr('CPointer') does GTK::Roles::Pointers is export { }

@@ -75,6 +75,8 @@ sub sort_func (
   return  1 if !$da.value &&  $db.value;
   return -1 if  $da.value && !$db.value;
 
+  say "{ $na.value } vs { $nb.value }";
+
   return $na.value cmp $nb.value;
 }
 
@@ -149,15 +151,13 @@ $a.activate.tap({
   $icon_view = GTK::IconView.new_with_model($store);
   $icon_view.selection_mode = GTK_SELECTION_MULTIPLE;
 
-         $up_button.clicked.tap({ up_clicked()   });
-       $home_button.clicked.tap({ home_clicked() });
+    $up_button.clicked.tap({ up_clicked()   });
+  $home_button.clicked.tap({ home_clicked() });
 
   $icon_view.item-activated.tap(-> *@a { item_activated(|@a) });
 
   $icon_view.text_column = COL_DISPLAY_NAME;
   $icon_view.pixbuf_column = COL_PIXBUF;
-
-  say 'PB: ' ~ $icon_view.pixbuf_column;
 
   $sw.add($icon_view);
   $icon_view.grab_focus;

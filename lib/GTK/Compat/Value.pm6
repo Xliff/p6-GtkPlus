@@ -25,7 +25,7 @@ class GTK::Compat::Value {
   multi method new(Int $t = G_TYPE_NONE) {
     die "Invalid type passed to GTK::Compat::Value.new - { $t.^name }"
       unless $t ~~ Int || $t.^can('Int').elems;
-    my $type = self.RESOLVE-UINT($t.Int);
+    my $type = self.RESOLVE-ULINT($t.Int);
     self.bless(:$type);
   }
   multi method new (GValue $value) {
@@ -184,7 +184,7 @@ class GTK::Compat::Value {
         g_value_get_object($!v);
       },
       STORE => sub ($, $obj is copy) {
-        g_value_set_object( $!v, nativecast(Pointer, $obj) );
+        g_value_set_object( $!v, nativecast(GObject, $obj) );
       }
     );
   }
