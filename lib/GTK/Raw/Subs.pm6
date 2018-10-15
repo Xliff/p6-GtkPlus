@@ -5,6 +5,23 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+# For signal handlers -- Didn't work because of missing closure, but it was
+# a nice idea.
+#
+# sub signal-harness(%sig-hash, $obj, $signal-name, &c_call, &handler)
+#   is export
+# {
+#   my $hid;
+#   %sig-hash{$signal-name} //= do {
+#     my $s = Supplier.new;
+#     $hid = &c_call($obj, $signal-name, &handler, OpaquePointer, 0);
+#     [ $s.Supply, $obj, $hid];
+#   };
+#   %sig-hash{$signal-name}[0].tap(&handler) with &handler;
+#   %sig-hash{$signal-name}[0];
+# }
+
+
 #
 # DEFAULT
 #
@@ -113,7 +130,7 @@ sub g_application_quit(OpaquePointer)
 
 # cw:This signature is wrong, so go with something that works and circle back.
 #sub gtk_init(uint32 is rw, CArray[Str])
-sub gtk_init(CArray[uint32], CArray[CArray[Str]])
+sub gtk_init(CArray[uint32], CArray[Str])
   is native('gtk-3')
   is export
   { * }

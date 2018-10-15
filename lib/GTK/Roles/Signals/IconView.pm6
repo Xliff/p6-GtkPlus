@@ -5,6 +5,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
+use GTK::Raw::ReturnedValue;
 
 role GTK::Roles::Signals::IconView {
   has %!signals-iv;
@@ -17,15 +18,14 @@ role GTK::Roles::Signals::IconView {
     my $hid;
     %!signals-iv{$signal} //= do {
       my $s = Supplier.new;
-      #"O: $obj".say;
-      #"S: $signal".say;
       $hid = g_connect_item_activated($obj, $signal,
         -> $iv, $tp, $ud {
           CATCH {
             default { note $_; }
           }
-
-          $s.emit( [self, $tp, $ud] );
+          my $r = ReturnedValue.new;
+          $s.emit( [self, $tp, $ud, $r] );
+          $r.r;
         },
         OpaquePointer, 0
       );
@@ -43,14 +43,11 @@ role GTK::Roles::Signals::IconView {
     my $hid;
     %!signals-iv{$signal} //= do {
       my $s = Supplier.new;
-      #"O: $obj".say;
-      #"S: $signal".say;
       $hid = g_connect_move_cursor($obj, $signal,
         -> $iv, $ms, $c, $ud {
           CATCH {
             default { note $_; }
           }
-
           my $r = ReturnedValue.new;
           $s.emit( [self, $ms, $c, $ud, $r] );
           $r.r;

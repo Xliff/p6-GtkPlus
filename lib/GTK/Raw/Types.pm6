@@ -8,10 +8,6 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-class ReturnedValue is export {
-  has $.r is rw;
-}
-
 sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
@@ -1019,6 +1015,7 @@ class GtkTreeRowReference     is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkTreeSelection        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeSortable         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTreeStore            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkViewport             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkVolumeButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidget               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkWidgetHelpType       is repr('CPointer') does GTK::Roles::Pointers is export { }

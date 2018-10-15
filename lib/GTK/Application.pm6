@@ -122,13 +122,11 @@ ERR
 
   method init (GTK::Application:U: ) {
     my $argc = CArray[uint32].new;
-    $argc[0] = 1;
+    $argc[0] = 0;
     my $args = CArray[Str].new;
     $args[0] = $*PROGRAM.Str;
-    my $argv = CArray[CArray[Str]].new;
-    $argv[0] = $args;
 
-    gtk_init($argc, $argv);
+    gtk_init($argc, $args);
   }
 
   method new(
