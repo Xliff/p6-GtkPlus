@@ -120,8 +120,14 @@ role GTK::Roles::TreeModel {
   #   gtk_tree_model_get_valist($!tm, $iter, $var_args);
   # }
 
-  method get_value (GtkTreeIter() $iter, Int() $column, GValue() $value) {
-    # Check iter for path.
+  multi method get_value(GtkTreeIter() $iter, Int() $column) {
+    my gint $c = self.RESOLVE-INT($column);
+    my $value = GValue.new;
+    gtk_tree_model_get_value($!tm, $iter, $c, $value);
+    GTK::Compat::Value.new($value);
+  }
+  multi method get_value (GtkTreeIter() $iter, Int() $column, GValue() $value) {
+    # TODO: Check iter for path.
     my gint $c = self.RESOLVE-INT($column);
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
   }

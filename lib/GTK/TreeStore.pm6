@@ -29,7 +29,14 @@ class GTK::TreeStore  {
     $!ds = nativecast(GtkTreeDragSource, $!tree);  # GTK::Roles::TreeDragSource
   }
 
-  method new (GType @types) {
+  method new (*@types) {
+    # self does NOT exist yet, so can't use GTK::Roles::Types methods.
+    #
+    # Really should check into macros for these for this EXACT situation.
+    for (@types) {
+      die "{ $_ } is not a valid GType value"
+        unless $_.Int (elem) GTypeEnum.enums.values;
+    }
     my $t = CArray[GType].new;
     $t[$++] = $_ for @types;
     my gint $c = @types.elems;

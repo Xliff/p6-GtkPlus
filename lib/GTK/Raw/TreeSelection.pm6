@@ -21,7 +21,7 @@ sub gtk_tree_selection_get_select_function (GtkTreeSelection $selection)
 
 sub gtk_tree_selection_get_selected (
   GtkTreeSelection $selection,
-  GtkTreeModel $model,
+  GtkTreeModel $model is rw,
   GtkTreeIter $iter
 )
   returns uint32
@@ -31,7 +31,7 @@ sub gtk_tree_selection_get_selected (
 
 sub gtk_tree_selection_get_selected_rows (
   GtkTreeSelection $selection,
-  GtkTreeModel $model
+  GtkTreeModel $model is rw
 )
   returns GList
   is native('gtk-3')

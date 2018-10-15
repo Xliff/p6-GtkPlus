@@ -6,15 +6,21 @@ use GTK::Compat::Types;
 use GTK::Raw::TreeSelection;
 use GTK::Raw::Types;
 
+use GTK::Roles::Signals;
 use GTK::Roles::Types;
 
 class GTK::TreeSelection {
+  also does GTK::Roles::Signals;
   also does GTK::Roles::Types;
 
   has GtkTreeSelection $!ts;
 
   submethod BUILD(:$selection) {
     $!ts = $selection;
+  }
+
+  method new (GtkTreeSelection $selection) {
+    self.bless(:$selection);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -53,11 +59,19 @@ class GTK::TreeSelection {
     gtk_tree_selection_get_select_function($!ts);
   }
 
-  method get_selected (GtkTreeModel() $model, GtkTreeIter() $iter) {
+  multi method get_selected {
+    my GtkTreeModel $model = GtkTreeModel.new;
+    my GtkTreeIter $iter = GtkTreeIter.new;
+    ($model, $iter) if samewith($model, $iter);
+  }
+  multi method get_selected (
+    GtkTreeModel() $model is rw,
+    GtkTreeIter() $iter
+  ) {
     gtk_tree_selection_get_selected($!ts, $model, $iter);
   }
 
-  method get_selected_rows (GtkTreeModel() $model) {
+  method get_selected_rows (Pointer[GtkTreeModel] $model) {
     gtk_tree_selection_get_selected_rows($!ts, $model);
   }
 

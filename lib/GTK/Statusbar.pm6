@@ -68,7 +68,7 @@ class GTK::Statusbar is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_context_id (gchar $context_description) {
+  method get_context_id (Str() $context_description) {
     gtk_statusbar_get_context_id($!sb, $context_description);
   }
 
@@ -85,7 +85,7 @@ class GTK::Statusbar is GTK::Bin {
     gtk_statusbar_pop($!sb, $ci);
   }
 
-  method push (Int() $context_id, gchar $text) {
+  method push (Int() $context_id, Str() $text) {
     my guint $ci = self.RESOLVE-UINT($context_id);
     gtk_statusbar_push($!sb, $ci, $text);
   }

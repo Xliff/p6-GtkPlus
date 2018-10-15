@@ -12,17 +12,10 @@ use GTK::CellRenderer;
 class GTK::CellRendererText is GTK::CellRenderer {
   has GtkCellRendererText $!crt;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererText');
-    $o;
-  }
-
   submethod BUILD(:$celltext) {
-    my $to-parent;
     given $celltext {
       when GtkCellRendererText | GtkCellRenderer {
-        self.setCellRendererText($to-parent);
+        self.setCellRendererText($celltext);
       }
       when GTK::CellRendererText {
       }
@@ -33,19 +26,17 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   method setCellRendererText($celltext) {
     my $to-parent;
-    given $celltext {
-      $!crt = do {
-        when GtkCellRenderer {
-          $to-parent = $_;
-          nativecast(GtkCellRendererText, $_);
-        }
-        when GtkCellRendererText  {
-          $to-parent = nativecast(GtkCellRenderer, $_);
-          $_;
-        }
+    $!crt = do given $celltext {
+      when GtkCellRenderer {
+        $to-parent = $_;
+        nativecast(GtkCellRendererText, $_);
       }
-      self.setCellRenderer($to-parent);
+      when GtkCellRendererText  {
+        $to-parent = nativecast(GtkCellRenderer, $_);
+        $_;
+      }
     }
+    self.setCellRenderer($to-parent);
   }
 
   method GTK::Raw::Types::CellRendererText {

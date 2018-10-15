@@ -1,6 +1,7 @@
 use v6.c;
 
 use GTK::Compat::Value;
+use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GTK::Application;
@@ -12,51 +13,46 @@ use GTK::TreeViewColumn;
 use GTK::TreeSelection;
 use GTK::TreeStore;
 
-sub on_changed {
-  my GtkTreeIter $iter .= new;
-  my $v = GTK::Compat::Value(G_TYPE_STRING);
+# Dynamic variables do not apply in closures?
+my ($ts, $sb);
 
-  if $*ts.get_selected($*model, $iter) {
-    $*model.get_value($iter, 0, $gv);
-    $*sb.push( $*sb.get_context($gv.string) );
+sub on_changed($s) {
+  my ($model, $iter) = $s.get_selected;
+  if $model.defined && $iter.defined {
+    my $gv = $ts.get_value($iter, 0);
+    $sb.push( $sb.get_context_id($gv.string), $gv.string );
   }
 }
 
 sub create_and_fill {
   my ($toplevel, $child) = (GtkTreeIter.new, GtkTreeIter.new);
 
-  sub g_str(Str $s) {
-    my $gv = GTK::Compat::Value.new( G_TYPE_STRING );
-    $gv.string = $s;
-    $gv;
-  }
-
-  $*ts = GTK::TreeStore.new(1, G_TYPE_STRING);
-  $*ts.append($toplevel);
-  $*ts.set_value( $toplevel, 0, g_str('Scripting Languages') );
+  $ts = GTK::TreeStore.new(G_TYPE_STRING);
+  $ts.append($toplevel);
+  $ts.set_value( $toplevel, 0, g_str('Scripting Languages') );
   for <Python Perl PHP> {
-    $*ts.append($child, $toplevel);
-    $*ts.set_value( $child, 0,  g_str($_) );
+    $ts.append($child, $toplevel);
+    $ts.set_value( $child, 0,  g_str($_) );
   }
 
-  $*ts.append($toplevel);
-  $*ts.set_value( $toplevel, 0, g_str('Compiled Languages') );
+  $ts.append($toplevel);
+  $ts.set_value( $toplevel, 0, g_str('Compiled Languages') );
   for <C C++ Java Perl6> {
-    $*ts.append($child, $toplevel);
-    $*ts.set_value( $child, 0,  g_str($_) );
+    $ts.append($child, $toplevel);
+    $ts.set_value( $child, 0,  g_str($_) );
   }
 }
 
 sub create_view_model {
+  my $r =  GTK::CellRendererText.new;
+  my $col = GTK::TreeViewColumn.new;
   $*v   = GTK::TreeView.new;
-  $*col = GTK::TreeViewColumn.new;
-  $*r   = GTK::CellRendererText.new;
-  $*col.title = 'Programming Languages';
-  $*v.append_column($*col);
-  $*col.pack_start($*r, True);
-  $*col.add_attribute($*r, 'text', 0);
+  $col.title = 'Programming Languages';
+  $*v.append_column($col);
+  $col.pack_start($r, True);
+  $col.add_attribute($r, 'text', 0);
   create_and_fill;
-  $*v.model = $*ts;
+  $*v.model = $ts;
 }
 
 my $a = GTK::Application.new(
@@ -66,14 +62,18 @@ my $a = GTK::Application.new(
 );
 
 $a.activate.tap({
-  $a.window.position = GTK_WIN_POS_CENTER;
+  my ($*v, $*col, $*r, $vbox, $s);
+
+  $a.window.set_position(GTK_WIN_POS_CENTER);
   $a.window.title = 'Tree view';
-  $*vbox = GTK::Box.new-vbox(2);
-  $a.window.add($*vbox);
+  $vbox = GTK::Box.new-vbox(2);
+  $a.window.add($vbox);
   create_view_model;
-  $*s = $*v.get_sleection;
+  $s = $*v.get_selection;
   $vbox.pack_start($*v, True, True, 1);
-  $*sb.changed.tap({ on_changed; });
+  $sb = GTK::Statusbar.new;
+  $vbox.pack_start($sb, False, True, 1);
+  $s.changed.tap({ on_changed($s); });
 
   $a.window.show_all;
 });

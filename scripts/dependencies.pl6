@@ -90,9 +90,25 @@ sub space($a) {
   # equal the difference between the size plus the previous number modulo 8
   use Text::Table::Simple;
   say "\nProvides section:\n";
-  .say for lol2table(@modules.map({ $_.reverse.map({ qq["$_"] }) }),
+  my $table = lol2table(@modules.map({ $_.reverse.map({ qq["$_"] }) }),
     rows => {
-      column_separator => ': '
+      column_separator => ': ',
+      corner_marker    => ' ',
+      bottom_border    => ''
+    },
+    headers => {
+      top_border       => '',
+      column_separator => '',
+      corner_marker    => '',
+      bottom_border    => ''
+    },
+    footers => {
+      column_separator => '',
+      corner_marker    => '',
+      bottom_border    => ''
     }
-  );
+  ).join("\n");
+  $table ~~ s:g/^^':'//;
+  $table ~~ s:g/':' \s* $$/,/;
+  say $table;
 }

@@ -9,6 +9,7 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::Container;
 use GTK::Entry;
+use GTK::TreeSelection;
 
 use GTK::Roles::Scrollable;
 
@@ -299,7 +300,7 @@ class GTK::TreeView is GTK::Container {
   method model is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::TreeModel.new( gtk_tree_view_get_model($!tv) );
+        gtk_tree_view_get_model($!tv);
       },
       STORE => sub ($, GtkTreeModel() $model is copy) {
         gtk_tree_view_set_model($!tv, $model);
@@ -650,7 +651,7 @@ class GTK::TreeView is GTK::Container {
   }
 
   method get_selection {
-    gtk_tree_view_get_selection($!tv);
+    GTK::TreeSelection.new( gtk_tree_view_get_selection($!tv) );
   }
 
   method get_tooltip_context (

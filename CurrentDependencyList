@@ -1,3 +1,4 @@
+Processing requirements for module GTK::AccelGroup...
 Processing requirements for module GTK::AccelLabel...
 Processing requirements for module GTK::ActionBar...
 Processing requirements for module GTK::Adjustment...
@@ -76,6 +77,7 @@ Processing requirements for module GTK::FontButton...
 Processing requirements for module GTK::Frame...
 Processing requirements for module GTK::Grid...
 Processing requirements for module GTK::HeaderBar...
+Processing requirements for module GTK::IconView...
 Processing requirements for module GTK::Image...
 Processing requirements for module GTK::InfoBar...
 Processing requirements for module GTK::Label...
@@ -100,8 +102,10 @@ Processing requirements for module GTK::RadioButton...
 Processing requirements for module GTK::RadioMenuItem...
 Processing requirements for module GTK::RadioToolButton...
 Processing requirements for module GTK::Range...
+Processing requirements for module GTK::Raw::AccelGroup...
 Processing requirements for module GTK::Raw::AccelLabel...
 Processing requirements for module GTK::Raw::ActionBar...
+Processing requirements for module GTK::Raw::Actionable...
 Processing requirements for module GTK::Raw::Adjustment...
 Processing requirements for module GTK::Raw::AppButton...
 Processing requirements for module GTK::Raw::AppChooser...
@@ -109,6 +113,7 @@ Processing requirements for module GTK::Raw::Application...
 Processing requirements for module GTK::Raw::Assistant...
 Processing requirements for module GTK::Raw::Bin...
 Processing requirements for module GTK::Raw::Box...
+Processing requirements for module GTK::Raw::Buildable...
 Processing requirements for module GTK::Raw::Builder...
 Processing requirements for module GTK::Raw::Button...
 Processing requirements for module GTK::Raw::ButtonBox...
@@ -117,6 +122,7 @@ Processing requirements for module GTK::Raw::Calendar...
 Processing requirements for module GTK::Raw::CellArea...
 Processing requirements for module GTK::Raw::CellAreaBox...
 Processing requirements for module GTK::Raw::CellAreaContext...
+Processing requirements for module GTK::Raw::CellEditable...
 Processing requirements for module GTK::Raw::CellLayout...
 Processing requirements for module GTK::Raw::CellRenderer...
 Processing requirements for module GTK::Raw::CellRendererAccel...
@@ -152,6 +158,7 @@ Processing requirements for module GTK::Raw::FontChooser...
 Processing requirements for module GTK::Raw::Frame...
 Processing requirements for module GTK::Raw::Grid...
 Processing requirements for module GTK::Raw::HeaderBar...
+Processing requirements for module GTK::Raw::IconView...
 Processing requirements for module GTK::Raw::Image...
 Processing requirements for module GTK::Raw::InfoBar...
 Processing requirements for module GTK::Raw::Label...
@@ -177,9 +184,11 @@ Processing requirements for module GTK::Raw::RadioButton...
 Processing requirements for module GTK::Raw::RadioMenuItem...
 Processing requirements for module GTK::Raw::RadioToolButton...
 Processing requirements for module GTK::Raw::Range...
+Processing requirements for module GTK::Raw::RecentFilter...
 Processing requirements for module GTK::Raw::Revealer...
 Processing requirements for module GTK::Raw::Scale...
 Processing requirements for module GTK::Raw::ScaleButton...
+Processing requirements for module GTK::Raw::Scrollable...
 Processing requirements for module GTK::Raw::Scrollbar...
 Processing requirements for module GTK::Raw::ScrolledWindow...
 Processing requirements for module GTK::Raw::SearchBar...
@@ -211,15 +220,27 @@ Processing requirements for module GTK::Raw::ToolItem...
 Processing requirements for module GTK::Raw::ToolItemGroup...
 Processing requirements for module GTK::Raw::ToolPalette...
 Processing requirements for module GTK::Raw::Toolbar...
+Processing requirements for module GTK::Raw::Tooltip...
+Processing requirements for module GTK::Raw::TreeDnD...
 Processing requirements for module GTK::Raw::TreeModel...
+Processing requirements for module GTK::Raw::TreeModelFilter...
+Processing requirements for module GTK::Raw::TreeModelSort...
+Processing requirements for module GTK::Raw::TreeSelection...
 Processing requirements for module GTK::Raw::TreeSortable...
+Processing requirements for module GTK::Raw::TreeStore...
+Processing requirements for module GTK::Raw::TreeView...
+Processing requirements for module GTK::Raw::TreeViewColumn...
 Processing requirements for module GTK::Raw::Types...
 Processing requirements for module GTK::Raw::Viewport...
 Processing requirements for module GTK::Raw::VolumeButton...
 Processing requirements for module GTK::Raw::Widget...
 Processing requirements for module GTK::Raw::Window...
+Processing requirements for module GTK::RecentFilter...
 Processing requirements for module GTK::Revealer...
+Processing requirements for module GTK::Roles::Actionable...
 Processing requirements for module GTK::Roles::AppChooser...
+Processing requirements for module GTK::Roles::Buildable...
+Processing requirements for module GTK::Roles::CellEditable...
 Processing requirements for module GTK::Roles::CellLayout...
 Processing requirements for module GTK::Roles::ColorChooser...
 Processing requirements for module GTK::Roles::Editable...
@@ -228,10 +249,13 @@ Processing requirements for module GTK::Roles::FontChooser...
 Processing requirements for module GTK::Roles::Orientable...
 Processing requirements for module GTK::Roles::Pointers...
 Processing requirements for module GTK::Roles::Properties...
+Processing requirements for module GTK::Roles::Scrollable...
 Processing requirements for module GTK::Roles::Signals...
+Processing requirements for module GTK::Roles::Signals::IconView...
 Processing requirements for module GTK::Roles::Signals::InfoBar...
 Processing requirements for module GTK::Roles::Signals::Scale...
 Processing requirements for module GTK::Roles::Signals::Widget...
+Processing requirements for module GTK::Roles::TreeDnD...
 Processing requirements for module GTK::Roles::TreeModel...
 Processing requirements for module GTK::Roles::TreeSortable...
 Processing requirements for module GTK::Roles::Types...
@@ -258,6 +282,7 @@ Processing requirements for module GTK::TextBuffer...
 Processing requirements for module GTK::TextIter...
 Processing requirements for module GTK::TextMark...
 Processing requirements for module GTK::TextTag...
+Processing requirements for module GTK::TextTagTable...
 Processing requirements for module GTK::TextView...
 Processing requirements for module GTK::ToggleButton...
 Processing requirements for module GTK::ToggleToolButton...
@@ -266,41 +291,55 @@ Processing requirements for module GTK::ToolItem...
 Processing requirements for module GTK::ToolItemGroup...
 Processing requirements for module GTK::ToolPalette...
 Processing requirements for module GTK::Toolbar...
+Processing requirements for module GTK::Tooltip...
 Processing requirements for module GTK::TreeIter...
+Processing requirements for module GTK::TreeModelFilter...
+Processing requirements for module GTK::TreeModelSort...
 Processing requirements for module GTK::TreePath...
 Processing requirements for module GTK::TreeRow...
-Processing requirements for module GTK::TreeSortable...
+Processing requirements for module GTK::TreeSelection...
+Processing requirements for module GTK::TreeStore...
+Processing requirements for module GTK::TreeView...
+Processing requirements for module GTK::TreeViewColumn...
 Processing requirements for module GTK::VolumeButton...
 Processing requirements for module GTK::Widget...
 Processing requirements for module GTK::Window...
 
 A resolution order is:
 
+GTK::AccelGroup
+	GTK::Compat::Value
+		GTK::Compat::Raw::Value
+			GTK::Compat::Types
+				GTK::Roles::Pointers
+				Resolved: GTK::Roles::Pointers
+			Resolved: GTK::Compat::Types
+		Resolved: GTK::Compat::Raw::Value
+		GTK::Raw::Subs
+			GTK::Raw::Types
+				GTK::Compat::RGBA
+				Resolved: GTK::Compat::RGBA
+			Resolved: GTK::Raw::Types
+		Resolved: GTK::Raw::Subs
+		GTK::Roles::Types
+		Resolved: GTK::Roles::Types
+	Resolved: GTK::Compat::Value
+	GTK::Raw::AccelGroup
+	Resolved: GTK::Raw::AccelGroup
+Resolved: GTK::AccelGroup
 GTK::AccelLabel
-	GTK::Compat::Types
-		GTK::Roles::Pointers
-		Resolved: GTK::Roles::Pointers
-	Resolved: GTK::Compat::Types
 	GTK::Raw::AccelLabel
-		GTK::Raw::Types
-			GTK::Compat::RGBA
-			Resolved: GTK::Compat::RGBA
-		Resolved: GTK::Raw::Types
 	Resolved: GTK::Raw::AccelLabel
 	GTK::Label
 		GTK::Raw::Label
 		Resolved: GTK::Raw::Label
 		GTK::Widget
-			GTK::Compat::Value
-				GTK::Compat::Raw::Value
-				Resolved: GTK::Compat::Raw::Value
-				GTK::Roles::Types
-				Resolved: GTK::Roles::Types
-			Resolved: GTK::Compat::Value
-			GTK::Raw::Subs
-			Resolved: GTK::Raw::Subs
 			GTK::Raw::Widget
 			Resolved: GTK::Raw::Widget
+			GTK::Roles::Buildable
+				GTK::Raw::Buildable
+				Resolved: GTK::Raw::Buildable
+			Resolved: GTK::Roles::Buildable
 			GTK::Roles::Properties
 			Resolved: GTK::Roles::Properties
 			GTK::Roles::Signals
@@ -336,6 +375,10 @@ GTK::AppButton
 		GTK::Roles::CellLayout
 			GTK::Raw::CellLayout
 			Resolved: GTK::Raw::CellLayout
+			GTK::CellRenderer
+				GTK::Raw::CellRenderer
+				Resolved: GTK::Raw::CellRenderer
+			Resolved: GTK::CellRenderer
 		Resolved: GTK::Roles::CellLayout
 	Resolved: GTK::ComboBox
 	GTK::Roles::AppChooser
@@ -407,9 +450,6 @@ GTK::CellAreaContext
 	Resolved: GTK::Raw::CellAreaContext
 Resolved: GTK::CellAreaContext
 GTK::CellRenderer
-	GTK::Raw::CellRenderer
-	Resolved: GTK::Raw::CellRenderer
-Resolved: GTK::CellRenderer
 GTK::CellRendererAccel
 	GTK::Raw::CellRendererAccel
 	Resolved: GTK::Raw::CellRendererAccel
@@ -623,6 +663,16 @@ GTK::Grid
 	Resolved: GTK::Raw::Grid
 Resolved: GTK::Grid
 GTK::HeaderBar
+GTK::IconView
+	GTK::Raw::IconView
+	Resolved: GTK::Raw::IconView
+	GTK::Roles::Scrollable
+		GTK::Raw::Scrollable
+		Resolved: GTK::Raw::Scrollable
+	Resolved: GTK::Roles::Scrollable
+	GTK::Roles::Signals::IconView
+	Resolved: GTK::Roles::Signals::IconView
+Resolved: GTK::IconView
 GTK::Image
 GTK::InfoBar
 	GTK::Raw::InfoBar
@@ -642,6 +692,12 @@ Resolved: GTK::LinkButton
 GTK::ListStore
 	GTK::Raw::ListStore
 	Resolved: GTK::Raw::ListStore
+	GTK::Roles::TreeModel
+	Resolved: GTK::Roles::TreeModel
+	GTK::Roles::TreeSortable
+		GTK::Raw::TreeSortable
+		Resolved: GTK::Raw::TreeSortable
+	Resolved: GTK::Roles::TreeSortable
 Resolved: GTK::ListStore
 GTK::LockButton
 	GTK::Raw::LockButton
@@ -734,8 +790,11 @@ GTK::Range
 	GTK::Raw::Range
 	Resolved: GTK::Raw::Range
 Resolved: GTK::Range
+GTK::Raw::AccelGroup
 GTK::Raw::AccelLabel
 GTK::Raw::ActionBar
+GTK::Raw::Actionable
+Resolved: GTK::Raw::Actionable
 GTK::Raw::Adjustment
 GTK::Raw::AppButton
 GTK::Raw::AppChooser
@@ -743,6 +802,7 @@ GTK::Raw::Application
 GTK::Raw::Assistant
 GTK::Raw::Bin
 GTK::Raw::Box
+GTK::Raw::Buildable
 GTK::Raw::Builder
 GTK::Raw::Button
 GTK::Raw::ButtonBox
@@ -751,6 +811,8 @@ GTK::Raw::Calendar
 GTK::Raw::CellArea
 GTK::Raw::CellAreaBox
 GTK::Raw::CellAreaContext
+GTK::Raw::CellEditable
+Resolved: GTK::Raw::CellEditable
 GTK::Raw::CellLayout
 GTK::Raw::CellRenderer
 GTK::Raw::CellRendererAccel
@@ -786,6 +848,7 @@ GTK::Raw::FontChooser
 GTK::Raw::Frame
 GTK::Raw::Grid
 GTK::Raw::HeaderBar
+GTK::Raw::IconView
 GTK::Raw::Image
 GTK::Raw::InfoBar
 GTK::Raw::Label
@@ -811,12 +874,15 @@ GTK::Raw::RadioButton
 GTK::Raw::RadioMenuItem
 GTK::Raw::RadioToolButton
 GTK::Raw::Range
+GTK::Raw::RecentFilter
+Resolved: GTK::Raw::RecentFilter
 GTK::Raw::Revealer
 Resolved: GTK::Raw::Revealer
 GTK::Raw::Scale
 Resolved: GTK::Raw::Scale
 GTK::Raw::ScaleButton
 Resolved: GTK::Raw::ScaleButton
+GTK::Raw::Scrollable
 GTK::Raw::Scrollbar
 Resolved: GTK::Raw::Scrollbar
 GTK::Raw::ScrolledWindow
@@ -872,9 +938,24 @@ GTK::Raw::ToolPalette
 Resolved: GTK::Raw::ToolPalette
 GTK::Raw::Toolbar
 Resolved: GTK::Raw::Toolbar
+GTK::Raw::Tooltip
+Resolved: GTK::Raw::Tooltip
+GTK::Raw::TreeDnD
+Resolved: GTK::Raw::TreeDnD
 GTK::Raw::TreeModel
+GTK::Raw::TreeModelFilter
+Resolved: GTK::Raw::TreeModelFilter
+GTK::Raw::TreeModelSort
+Resolved: GTK::Raw::TreeModelSort
+GTK::Raw::TreeSelection
+Resolved: GTK::Raw::TreeSelection
 GTK::Raw::TreeSortable
-Resolved: GTK::Raw::TreeSortable
+GTK::Raw::TreeStore
+Resolved: GTK::Raw::TreeStore
+GTK::Raw::TreeView
+Resolved: GTK::Raw::TreeView
+GTK::Raw::TreeViewColumn
+Resolved: GTK::Raw::TreeViewColumn
 GTK::Raw::Types
 GTK::Raw::Viewport
 Resolved: GTK::Raw::Viewport
@@ -882,9 +963,16 @@ GTK::Raw::VolumeButton
 Resolved: GTK::Raw::VolumeButton
 GTK::Raw::Widget
 GTK::Raw::Window
+GTK::RecentFilter
+Resolved: GTK::RecentFilter
 GTK::Revealer
 Resolved: GTK::Revealer
+GTK::Roles::Actionable
+Resolved: GTK::Roles::Actionable
 GTK::Roles::AppChooser
+GTK::Roles::Buildable
+GTK::Roles::CellEditable
+Resolved: GTK::Roles::CellEditable
 GTK::Roles::CellLayout
 GTK::Roles::ColorChooser
 GTK::Roles::Editable
@@ -893,15 +981,17 @@ GTK::Roles::FontChooser
 GTK::Roles::Orientable
 GTK::Roles::Pointers
 GTK::Roles::Properties
+GTK::Roles::Scrollable
 GTK::Roles::Signals
+GTK::Roles::Signals::IconView
 GTK::Roles::Signals::InfoBar
 GTK::Roles::Signals::Scale
 Resolved: GTK::Roles::Signals::Scale
 GTK::Roles::Signals::Widget
+GTK::Roles::TreeDnD
+Resolved: GTK::Roles::TreeDnD
 GTK::Roles::TreeModel
-Resolved: GTK::Roles::TreeModel
 GTK::Roles::TreeSortable
-Resolved: GTK::Roles::TreeSortable
 GTK::Roles::Types
 GTK::Scale
 Resolved: GTK::Scale
@@ -949,6 +1039,8 @@ GTK::TextMark
 Resolved: GTK::TextMark
 GTK::TextTag
 Resolved: GTK::TextTag
+GTK::TextTagTable
+Resolved: GTK::TextTagTable
 GTK::TextView
 Resolved: GTK::TextView
 GTK::ToggleButton
@@ -961,13 +1053,25 @@ GTK::ToolPalette
 Resolved: GTK::ToolPalette
 GTK::Toolbar
 Resolved: GTK::Toolbar
+GTK::Tooltip
+Resolved: GTK::Tooltip
 GTK::TreeIter
 Resolved: GTK::TreeIter
+GTK::TreeModelFilter
+Resolved: GTK::TreeModelFilter
+GTK::TreeModelSort
+Resolved: GTK::TreeModelSort
 GTK::TreePath
 GTK::TreeRow
 Resolved: GTK::TreeRow
-GTK::TreeSortable
-Resolved: GTK::TreeSortable
+GTK::TreeSelection
+Resolved: GTK::TreeSelection
+GTK::TreeStore
+Resolved: GTK::TreeStore
+GTK::TreeView
+Resolved: GTK::TreeView
+GTK::TreeViewColumn
+Resolved: GTK::TreeViewColumn
 GTK::VolumeButton
 Resolved: GTK::VolumeButton
 GTK::Widget
@@ -981,281 +1085,309 @@ nqp
 
 Provides section:
 
-O----------------------------------O----------------------------------------O
-O==================================O========================================O
- =>  "GTK::AccelLabel"                 =>  "lib/GTK/AccelLabel.pm6"                => 
- =>  "GTK::ActionBar"                  =>  "lib/GTK/ActionBar.pm6"                 => 
- =>  "GTK::Adjustment"                 =>  "lib/GTK/Adjustment.pm6"                => 
- =>  "GTK::AppButton"                  =>  "lib/GTK/AppButton.pm6"                 => 
- =>  "GTK::Application"                =>  "lib/GTK/Application.pm6"               => 
- =>  "GTK::Assistant"                  =>  "lib/GTK/Assistant.pm6"                 => 
- =>  "GTK::Bin"                        =>  "lib/GTK/Bin.pm6"                       => 
- =>  "GTK::Box"                        =>  "lib/GTK/Box.pm6"                       => 
- =>  "GTK::Builder"                    =>  "lib/GTK/Builder.pm6"                   => 
- =>  "GTK::Button"                     =>  "lib/GTK/Button.pm6"                    => 
- =>  "GTK::ButtonBox"                  =>  "lib/GTK/ButtonBox.pm6"                 => 
- =>  "GTK::CSSProvider"                =>  "lib/GTK/CSSProvider.pm6"               => 
- =>  "GTK::Calendar"                   =>  "lib/GTK/Calendar.pm6"                  => 
- =>  "GTK::CellArea"                   =>  "lib/GTK/CellArea.pm6"                  => 
- =>  "GTK::CellAreaBox"                =>  "lib/GTK/CellAreaBox.pm6"               => 
- =>  "GTK::CellAreaContext"            =>  "lib/GTK/CellAreaContext.pm6"           => 
- =>  "GTK::CellRenderer"               =>  "lib/GTK/CellRenderer.pm6"              => 
- =>  "GTK::CellRendererAccel"          =>  "lib/GTK/CellRendererAccel.pm6"         => 
- =>  "GTK::CellRendererCombo"          =>  "lib/GTK/CellRendererCombo.pm6"         => 
- =>  "GTK::CellRendererPixbuf"         =>  "lib/GTK/CellRendererPixbuf.pm6"        => 
- =>  "GTK::CellRendererProgress"       =>  "lib/GTK/CellRendererProgress.pm6"      => 
- =>  "GTK::CellRendererSpin"           =>  "lib/GTK/CellRendererSpin.pm6"          => 
- =>  "GTK::CellRendererSpinner"        =>  "lib/GTK/CellRendererSpinner.pm6"       => 
- =>  "GTK::CellRendererText"           =>  "lib/GTK/CellRendererText.pm6"          => 
- =>  "GTK::CellRendererToggle"         =>  "lib/GTK/CellRendererToggle.pm6"        => 
- =>  "GTK::CellView"                   =>  "lib/GTK/CellView.pm6"                  => 
- =>  "GTK::CheckButton"                =>  "lib/GTK/CheckButton.pm6"               => 
- =>  "GTK::CheckMenuItem"              =>  "lib/GTK/CheckMenuItem.pm6"             => 
- =>  "GTK::Clipboard"                  =>  "lib/GTK/Clipboard.pm6"                 => 
- =>  "GTK::ColorButton"                =>  "lib/GTK/ColorButton.pm6"               => 
- =>  "GTK::ColorChooser"               =>  "lib/GTK/ColorChooser.pm6"              => 
- =>  "GTK::ComboBox"                   =>  "lib/GTK/ComboBox.pm6"                  => 
- =>  "GTK::ComboBoxText"               =>  "lib/GTK/ComboBoxText.pm6"              => 
- =>  "GTK::Compat::Cursor"             =>  "lib/GTK/Compat/Cursor.pm6"             => 
- =>  "GTK::Compat::GList"              =>  "lib/GTK/Compat/GList.pm6"              => 
- =>  "GTK::Compat::GSList"             =>  "lib/GTK/Compat/GSList.pm6"             => 
- =>  "GTK::Compat::LaunchContext"      =>  "lib/GTK/Compat/LaunchContext.pm6"      => 
- =>  "GTK::Compat::MenuModel"          =>  "lib/GTK/Compat/MenuModel.pm6"          => 
- =>  "GTK::Compat::Permission"         =>  "lib/GTK/Compat/Permission.pm6"         => 
- =>  "GTK::Compat::Pixbuf"             =>  "lib/GTK/Compat/Pixbuf.pm6"             => 
- =>  "GTK::Compat::RGBA"               =>  "lib/GTK/Compat/RGBA.pm6"               => 
- =>  "GTK::Compat::Raw::AppInfo"       =>  "lib/GTK/Compat/Raw/AppInfo.pm6"        => 
- =>  "GTK::Compat::Raw::Cursor"        =>  "lib/GTK/Compat/Raw/Cursor.pm6"         => 
- =>  "GTK::Compat::Raw::GList"         =>  "lib/GTK/Compat/Raw/GList.pm6"          => 
- =>  "GTK::Compat::Raw::GSList"        =>  "lib/GTK/Compat/Raw/GSList.pm6"         => 
- =>  "GTK::Compat::Raw::MenuModel"     =>  "lib/GTK/Compat/Raw/MenuModel.pm6"      => 
- =>  "GTK::Compat::Raw::Permission"    =>  "lib/GTK/Compat/Raw/Permission.pm6"     => 
- =>  "GTK::Compat::Raw::Pixbuf"        =>  "lib/GTK/Compat/Raw/Pixbuf.pm6"         => 
- =>  "GTK::Compat::Raw::Rectangle"     =>  "lib/GTK/Compat/Raw/Rectangle.pm6"      => 
- =>  "GTK::Compat::Raw::Value"         =>  "lib/GTK/Compat/Raw/Value.pm6"          => 
- =>  "GTK::Compat::Rectangle"          =>  "lib/GTK/Compat/Rectangle.pm6"          => 
- =>  "GTK::Compat::Roles::AppInfo"     =>  "lib/GTK/Compat/Roles/AppInfo.pm6"      => 
- =>  "GTK::Compat::Types"              =>  "lib/GTK/Compat/Types.pm6"              => 
- =>  "GTK::Compat::Value"              =>  "lib/GTK/Compat/Value.pm6"              => 
- =>  "GTK::Container"                  =>  "lib/GTK/Container.pm6"                 => 
- =>  "GTK::Dialog"                     =>  "lib/GTK/Dialog.pm6"                    => 
- =>  "GTK::Dialog::About"              =>  "lib/GTK/Dialog/About.pm6"              => 
- =>  "GTK::Dialog::ColorChooser"       =>  "lib/GTK/Dialog/ColorChooser.pm6"       => 
- =>  "GTK::Dialog::FontChooser"        =>  "lib/GTK/Dialog/FontChooser.pm6"        => 
- =>  "GTK::Dialog::Message"            =>  "lib/GTK/Dialog/Message.pm6"            => 
- =>  "GTK::Dialog::Raw::About"         =>  "lib/GTK/Dialog/Raw/About.pm6"          => 
- =>  "GTK::Dialog::Raw::ColorChooser"  =>  "lib/GTK/Dialog/Raw/ColorChooser.pm6"   => 
- =>  "GTK::Dialog::Raw::FontChooser"   =>  "lib/GTK/Dialog/Raw/FontChooser.pm6"    => 
- =>  "GTK::Dialog::Raw::Message"       =>  "lib/GTK/Dialog/Raw/Message.pm6"        => 
- =>  "GTK::DrawingArea"                =>  "lib/GTK/DrawingArea.pm6"               => 
- =>  "GTK::Entry"                      =>  "lib/GTK/Entry.pm6"                     => 
- =>  "GTK::EntryBuffer"                =>  "lib/GTK/EntryBuffer.pm6"               => 
- =>  "GTK::EntryCompletion"            =>  "lib/GTK/EntryCompletion.pm6"           => 
- =>  "GTK::Expander"                   =>  "lib/GTK/Expander.pm6"                  => 
- =>  "GTK::FileChooserButton"          =>  "lib/GTK/FileChooserButton.pm6"         => 
- =>  "GTK::FileFilter"                 =>  "lib/GTK/FileFilter.pm6"                => 
- =>  "GTK::Fixed"                      =>  "lib/GTK/Fixed.pm6"                     => 
- =>  "GTK::FlowBox"                    =>  "lib/GTK/FlowBox.pm6"                   => 
- =>  "GTK::FlowBoxChild"               =>  "lib/GTK/FlowBoxChild.pm6"              => 
- =>  "GTK::FontButton"                 =>  "lib/GTK/FontButton.pm6"                => 
- =>  "GTK::Frame"                      =>  "lib/GTK/Frame.pm6"                     => 
- =>  "GTK::Grid"                       =>  "lib/GTK/Grid.pm6"                      => 
- =>  "GTK::HeaderBar"                  =>  "lib/GTK/HeaderBar.pm6"                 => 
- =>  "GTK::Image"                      =>  "lib/GTK/Image.pm6"                     => 
- =>  "GTK::InfoBar"                    =>  "lib/GTK/InfoBar.pm6"                   => 
- =>  "GTK::Label"                      =>  "lib/GTK/Label.pm6"                     => 
- =>  "GTK::LevelBar"                   =>  "lib/GTK/LevelBar.pm6"                  => 
- =>  "GTK::LinkButton"                 =>  "lib/GTK/LinkButton.pm6"                => 
- =>  "GTK::ListStore"                  =>  "lib/GTK/ListStore.pm6"                 => 
- =>  "GTK::LockButton"                 =>  "lib/GTK/LockButton.pm6"                => 
- =>  "GTK::Menu"                       =>  "lib/GTK/Menu.pm6"                      => 
- =>  "GTK::MenuBar"                    =>  "lib/GTK/MenuBar.pm6"                   => 
- =>  "GTK::MenuButton"                 =>  "lib/GTK/MenuButton.pm6"                => 
- =>  "GTK::MenuItem"                   =>  "lib/GTK/MenuItem.pm6"                  => 
- =>  "GTK::MenuShell"                  =>  "lib/GTK/MenuShell.pm6"                 => 
- =>  "GTK::MenuToolButton"             =>  "lib/GTK/MenuToolButton.pm6"            => 
- =>  "GTK::Notebook"                   =>  "lib/GTK/Notebook.pm6"                  => 
- =>  "GTK::Offscreen"                  =>  "lib/GTK/Offscreen.pm6"                 => 
- =>  "GTK::Overlay"                    =>  "lib/GTK/Overlay.pm6"                   => 
- =>  "GTK::Pane"                       =>  "lib/GTK/Pane.pm6"                      => 
- =>  "GTK::Places"                     =>  "lib/GTK/Places.pm6"                    => 
- =>  "GTK::Popover"                    =>  "lib/GTK/Popover.pm6"                   => 
- =>  "GTK::ProgressBar"                =>  "lib/GTK/ProgressBar.pm6"               => 
- =>  "GTK::RadioButton"                =>  "lib/GTK/RadioButton.pm6"               => 
- =>  "GTK::RadioMenuItem"              =>  "lib/GTK/RadioMenuItem.pm6"             => 
- =>  "GTK::RadioToolButton"            =>  "lib/GTK/RadioToolButton.pm6"           => 
- =>  "GTK::Range"                      =>  "lib/GTK/Range.pm6"                     => 
- =>  "GTK::Raw::AccelLabel"            =>  "lib/GTK/Raw/AccelLabel.pm6"            => 
- =>  "GTK::Raw::ActionBar"             =>  "lib/GTK/Raw/ActionBar.pm6"             => 
- =>  "GTK::Raw::Adjustment"            =>  "lib/GTK/Raw/Adjustment.pm6"            => 
- =>  "GTK::Raw::AppButton"             =>  "lib/GTK/Raw/AppButton.pm6"             => 
- =>  "GTK::Raw::AppChooser"            =>  "lib/GTK/Raw/AppChooser.pm6"            => 
- =>  "GTK::Raw::Application"           =>  "lib/GTK/Raw/Application.pm6"           => 
- =>  "GTK::Raw::Assistant"             =>  "lib/GTK/Raw/Assistant.pm6"             => 
- =>  "GTK::Raw::Bin"                   =>  "lib/GTK/Raw/Bin.pm6"                   => 
- =>  "GTK::Raw::Box"                   =>  "lib/GTK/Raw/Box.pm6"                   => 
- =>  "GTK::Raw::Builder"               =>  "lib/GTK/Raw/Builder.pm6"               => 
- =>  "GTK::Raw::Button"                =>  "lib/GTK/Raw/Button.pm6"                => 
- =>  "GTK::Raw::ButtonBox"             =>  "lib/GTK/Raw/ButtonBox.pm6"             => 
- =>  "GTK::Raw::CSSProvider"           =>  "lib/GTK/Raw/CSSProvider.pm6"           => 
- =>  "GTK::Raw::Calendar"              =>  "lib/GTK/Raw/Calendar.pm6"              => 
- =>  "GTK::Raw::CellArea"              =>  "lib/GTK/Raw/CellArea.pm6"              => 
- =>  "GTK::Raw::CellAreaBox"           =>  "lib/GTK/Raw/CellAreaBox.pm6"           => 
- =>  "GTK::Raw::CellAreaContext"       =>  "lib/GTK/Raw/CellAreaContext.pm6"       => 
- =>  "GTK::Raw::CellLayout"            =>  "lib/GTK/Raw/CellLayout.pm6"            => 
- =>  "GTK::Raw::CellRenderer"          =>  "lib/GTK/Raw/CellRenderer.pm6"          => 
- =>  "GTK::Raw::CellRendererAccel"     =>  "lib/GTK/Raw/CellRendererAccel.pm6"     => 
- =>  "GTK::Raw::CellRendererCombo"     =>  "lib/GTK/Raw/CellRendererCombo.pm6"     => 
- =>  "GTK::Raw::CellRendererPixbuf"    =>  "lib/GTK/Raw/CellRendererPixbuf.pm6"    => 
- =>  "GTK::Raw::CellRendererProgress"  =>  "lib/GTK/Raw/CellRendererProgress.pm6"  => 
- =>  "GTK::Raw::CellRendererSpin"      =>  "lib/GTK/Raw/CellRendererSpin.pm6"      => 
- =>  "GTK::Raw::CellRendererSpinner"   =>  "lib/GTK/Raw/CellRendererSpinner.pm6"   => 
- =>  "GTK::Raw::CellRendererText"      =>  "lib/GTK/Raw/CellRendererText.pm6"      => 
- =>  "GTK::Raw::CellRendererToggle"    =>  "lib/GTK/Raw/CellRendererToggle.pm6"    => 
- =>  "GTK::Raw::CellView"              =>  "lib/GTK/Raw/CellView.pm6"              => 
- =>  "GTK::Raw::CheckButton"           =>  "lib/GTK/Raw/CheckButton.pm6"           => 
- =>  "GTK::Raw::CheckMenuItem"         =>  "lib/GTK/Raw/CheckMenuItem.pm6"         => 
- =>  "GTK::Raw::Clipboard"             =>  "lib/GTK/Raw/Clipboard.pm6"             => 
- =>  "GTK::Raw::ColorButton"           =>  "lib/GTK/Raw/ColorButton.pm6"           => 
- =>  "GTK::Raw::ColorChooser"          =>  "lib/GTK/Raw/ColorChooser.pm6"          => 
- =>  "GTK::Raw::ComboBox"              =>  "lib/GTK/Raw/ComboBox.pm6"              => 
- =>  "GTK::Raw::ComboBoxText"          =>  "lib/GTK/Raw/ComboBoxText.pm6"          => 
- =>  "GTK::Raw::Container"             =>  "lib/GTK/Raw/Container.pm6"             => 
- =>  "GTK::Raw::Dialog"                =>  "lib/GTK/Raw/Dialog.pm6"                => 
- =>  "GTK::Raw::Editable"              =>  "lib/GTK/Raw/Editable.pm6"              => 
- =>  "GTK::Raw::Entry"                 =>  "lib/GTK/Raw/Entry.pm6"                 => 
- =>  "GTK::Raw::EntryBuffer"           =>  "lib/GTK/Raw/EntryBuffer.pm6"           => 
- =>  "GTK::Raw::EntryCompletion"       =>  "lib/GTK/Raw/EntryCompletion.pm6"       => 
- =>  "GTK::Raw::Expander"              =>  "lib/GTK/Raw/Expander.pm6"              => 
- =>  "GTK::Raw::FileChooser"           =>  "lib/GTK/Raw/FileChooser.pm6"           => 
- =>  "GTK::Raw::FileChooserButton"     =>  "lib/GTK/Raw/FileChooserButton.pm6"     => 
- =>  "GTK::Raw::FileFilter"            =>  "lib/GTK/Raw/FileFilter.pm6"            => 
- =>  "GTK::Raw::Fixed"                 =>  "lib/GTK/Raw/Fixed.pm6"                 => 
- =>  "GTK::Raw::FlowBox"               =>  "lib/GTK/Raw/FlowBox.pm6"               => 
- =>  "GTK::Raw::FontButton"            =>  "lib/GTK/Raw/FontButton.pm6"            => 
- =>  "GTK::Raw::FontChooser"           =>  "lib/GTK/Raw/FontChooser.pm6"           => 
- =>  "GTK::Raw::Frame"                 =>  "lib/GTK/Raw/Frame.pm6"                 => 
- =>  "GTK::Raw::Grid"                  =>  "lib/GTK/Raw/Grid.pm6"                  => 
- =>  "GTK::Raw::HeaderBar"             =>  "lib/GTK/Raw/HeaderBar.pm6"             => 
- =>  "GTK::Raw::Image"                 =>  "lib/GTK/Raw/Image.pm6"                 => 
- =>  "GTK::Raw::InfoBar"               =>  "lib/GTK/Raw/InfoBar.pm6"               => 
- =>  "GTK::Raw::Label"                 =>  "lib/GTK/Raw/Label.pm6"                 => 
- =>  "GTK::Raw::LevelBar"              =>  "lib/GTK/Raw/LevelBar.pm6"              => 
- =>  "GTK::Raw::LinkButton"            =>  "lib/GTK/Raw/LinkButton.pm6"            => 
- =>  "GTK::Raw::ListStore"             =>  "lib/GTK/Raw/ListStore.pm6"             => 
- =>  "GTK::Raw::LockButton"            =>  "lib/GTK/Raw/LockButton.pm6"            => 
- =>  "GTK::Raw::Menu"                  =>  "lib/GTK/Raw/Menu.pm6"                  => 
- =>  "GTK::Raw::MenuBar"               =>  "lib/GTK/Raw/MenuBar.pm6"               => 
- =>  "GTK::Raw::MenuButton"            =>  "lib/GTK/Raw/MenuButton.pm6"            => 
- =>  "GTK::Raw::MenuItem"              =>  "lib/GTK/Raw/MenuItem.pm6"              => 
- =>  "GTK::Raw::MenuShell"             =>  "lib/GTK/Raw/MenuShell.pm6"             => 
- =>  "GTK::Raw::MenuToolButton"        =>  "lib/GTK/Raw/MenuToolButton.pm6"        => 
- =>  "GTK::Raw::Notebook"              =>  "lib/GTK/Raw/Notebook.pm6"              => 
- =>  "GTK::Raw::Offscreen"             =>  "lib/GTK/Raw/Offscreen.pm6"             => 
- =>  "GTK::Raw::Orientable"            =>  "lib/GTK/Raw/Orientable.pm6"            => 
- =>  "GTK::Raw::Overlay"               =>  "lib/GTK/Raw/Overlay.pm6"               => 
- =>  "GTK::Raw::Pane"                  =>  "lib/GTK/Raw/Pane.pm6"                  => 
- =>  "GTK::Raw::Places"                =>  "lib/GTK/Raw/Places.pm6"                => 
- =>  "GTK::Raw::Popover"               =>  "lib/GTK/Raw/Popover.pm6"               => 
- =>  "GTK::Raw::ProgressBar"           =>  "lib/GTK/Raw/ProgressBar.pm6"           => 
- =>  "GTK::Raw::RadioButton"           =>  "lib/GTK/Raw/RadioButton.pm6"           => 
- =>  "GTK::Raw::RadioMenuItem"         =>  "lib/GTK/Raw/RadioMenuItem.pm6"         => 
- =>  "GTK::Raw::RadioToolButton"       =>  "lib/GTK/Raw/RadioToolButton.pm6"       => 
- =>  "GTK::Raw::Range"                 =>  "lib/GTK/Raw/Range.pm6"                 => 
- =>  "GTK::Raw::Revealer"              =>  "lib/GTK/Raw/Revealer.pm6"              => 
- =>  "GTK::Raw::Scale"                 =>  "lib/GTK/Raw/Scale.pm6"                 => 
- =>  "GTK::Raw::ScaleButton"           =>  "lib/GTK/Raw/ScaleButton.pm6"           => 
- =>  "GTK::Raw::Scrollbar"             =>  "lib/GTK/Raw/Scrollbar.pm6"             => 
- =>  "GTK::Raw::ScrolledWindow"        =>  "lib/GTK/Raw/ScrolledWindow.pm6"        => 
- =>  "GTK::Raw::SearchBar"             =>  "lib/GTK/Raw/SearchBar.pm6"             => 
- =>  "GTK::Raw::SearchEntry"           =>  "lib/GTK/Raw/SearchEntry.pm6"           => 
- =>  "GTK::Raw::Selection"             =>  "lib/GTK/Raw/Selection.pm6"             => 
- =>  "GTK::Raw::Separator"             =>  "lib/GTK/Raw/Separator.pm6"             => 
- =>  "GTK::Raw::SeparatorMenuItem"     =>  "lib/GTK/Raw/SeparatorMenuItem.pm6"     => 
- =>  "GTK::Raw::SeparatorToolItem"     =>  "lib/GTK/Raw/SeparatorToolItem.pm6"     => 
- =>  "GTK::Raw::SizeGroup"             =>  "lib/GTK/Raw/SizeGroup.pm6"             => 
- =>  "GTK::Raw::SpinButton"            =>  "lib/GTK/Raw/SpinButton.pm6"            => 
- =>  "GTK::Raw::Spinner"               =>  "lib/GTK/Raw/Spinner.pm6"               => 
- =>  "GTK::Raw::Stack"                 =>  "lib/GTK/Raw/Stack.pm6"                 => 
- =>  "GTK::Raw::StackSidebar"          =>  "lib/GTK/Raw/StackSidebar.pm6"          => 
- =>  "GTK::Raw::Statusbar"             =>  "lib/GTK/Raw/Statusbar.pm6"             => 
- =>  "GTK::Raw::Subs"                  =>  "lib/GTK/Raw/Subs.pm6"                  => 
- =>  "GTK::Raw::Switch"                =>  "lib/GTK/Raw/Switch.pm6"                => 
- =>  "GTK::Raw::TargetEntry"           =>  "lib/GTK/Raw/TargetEntry.pm6"           => 
- =>  "GTK::Raw::TargetList"            =>  "lib/GTK/Raw/TargetList.pm6"            => 
- =>  "GTK::Raw::TextBuffer"            =>  "lib/GTK/Raw/TextBuffer.pm6"            => 
- =>  "GTK::Raw::TextIter"              =>  "lib/GTK/Raw/TextIter.pm6"              => 
- =>  "GTK::Raw::TextMark"              =>  "lib/GTK/Raw/TextMark.pm6"              => 
- =>  "GTK::Raw::TextTag"               =>  "lib/GTK/Raw/TextTag.pm6"               => 
- =>  "GTK::Raw::TextTagTable"          =>  "lib/GTK/Raw/TextTagTable.pm6"          => 
- =>  "GTK::Raw::TextView"              =>  "lib/GTK/Raw/TextView.pm6"              => 
- =>  "GTK::Raw::ToggleButton"          =>  "lib/GTK/Raw/ToggleButton.pm6"          => 
- =>  "GTK::Raw::ToggleToolButton"      =>  "lib/GTK/Raw/ToggleToolButton.pm6"      => 
- =>  "GTK::Raw::ToolButton"            =>  "lib/GTK/Raw/ToolButton.pm6"            => 
- =>  "GTK::Raw::ToolItem"              =>  "lib/GTK/Raw/ToolItem.pm6"              => 
- =>  "GTK::Raw::ToolItemGroup"         =>  "lib/GTK/Raw/ToolItemGroup.pm6"         => 
- =>  "GTK::Raw::ToolPalette"           =>  "lib/GTK/Raw/ToolPalette.pm6"           => 
- =>  "GTK::Raw::Toolbar"               =>  "lib/GTK/Raw/Toolbar.pm6"               => 
- =>  "GTK::Raw::TreeModel"             =>  "lib/GTK/Raw/TreeModel.pm6"             => 
- =>  "GTK::Raw::TreeSortable"          =>  "lib/GTK/Raw/TreeSortable.pm6"          => 
- =>  "GTK::Raw::Types"                 =>  "lib/GTK/Raw/Types.pm6"                 => 
- =>  "GTK::Raw::Viewport"              =>  "lib/GTK/Raw/Viewport.pm6"              => 
- =>  "GTK::Raw::VolumeButton"          =>  "lib/GTK/Raw/VolumeButton.pm6"          => 
- =>  "GTK::Raw::Widget"                =>  "lib/GTK/Raw/Widget.pm6"                => 
- =>  "GTK::Raw::Window"                =>  "lib/GTK/Raw/Window.pm6"                => 
- =>  "GTK::Revealer"                   =>  "lib/GTK/Revealer.pm6"                  => 
- =>  "GTK::Roles::AppChooser"          =>  "lib/GTK/Roles/AppChooser.pm6"          => 
- =>  "GTK::Roles::CellLayout"          =>  "lib/GTK/Roles/CellLayout.pm6"          => 
- =>  "GTK::Roles::ColorChooser"        =>  "lib/GTK/Roles/ColorChooser.pm6"        => 
- =>  "GTK::Roles::Editable"            =>  "lib/GTK/Roles/Editable.pm6"            => 
- =>  "GTK::Roles::FileChooser"         =>  "lib/GTK/Roles/FileChooser.pm6"         => 
- =>  "GTK::Roles::FontChooser"         =>  "lib/GTK/Roles/FontChooser.pm6"         => 
- =>  "GTK::Roles::Orientable"          =>  "lib/GTK/Roles/Orientable.pm6"          => 
- =>  "GTK::Roles::Pointers"            =>  "lib/GTK/Roles/Pointers.pm6"            => 
- =>  "GTK::Roles::Properties"          =>  "lib/GTK/Roles/Properties.pm6"          => 
- =>  "GTK::Roles::Signals"             =>  "lib/GTK/Roles/Signals.pm6"             => 
- =>  "GTK::Roles::Signals::InfoBar"    =>  "lib/GTK/Roles/Signals/InfoBar.pm6"     => 
- =>  "GTK::Roles::Signals::Scale"      =>  "lib/GTK/Roles/Signals/Scale.pm6"       => 
- =>  "GTK::Roles::Signals::Widget"     =>  "lib/GTK/Roles/Signals/Widget.pm6"      => 
- =>  "GTK::Roles::TreeModel"           =>  "lib/GTK/Roles/TreeModel.pm6"           => 
- =>  "GTK::Roles::TreeSortable"        =>  "lib/GTK/Roles/TreeSortable.pm6"        => 
- =>  "GTK::Roles::Types"               =>  "lib/GTK/Roles/Types.pm6"               => 
- =>  "GTK::Scale"                      =>  "lib/GTK/Scale.pm6"                     => 
- =>  "GTK::ScaleButton"                =>  "lib/GTK/ScaleButton.pm6"               => 
- =>  "GTK::Scrollbar"                  =>  "lib/GTK/Scrollbar.pm6"                 => 
- =>  "GTK::ScrolledWindow"             =>  "lib/GTK/ScrolledWindow.pm6"            => 
- =>  "GTK::SearchBar"                  =>  "lib/GTK/SearchBar.pm6"                 => 
- =>  "GTK::SearchEntry"                =>  "lib/GTK/SearchEntry.pm6"               => 
- =>  "GTK::Selection"                  =>  "lib/GTK/Selection.pm6"                 => 
- =>  "GTK::Separator"                  =>  "lib/GTK/Separator.pm6"                 => 
- =>  "GTK::SeparatorMenuItem"          =>  "lib/GTK/SeparatorMenuItem.pm6"         => 
- =>  "GTK::SeparatorToolItem"          =>  "lib/GTK/SeparatorToolItem.pm6"         => 
- =>  "GTK::SizeGroup"                  =>  "lib/GTK/SizeGroup.pm6"                 => 
- =>  "GTK::SpinButton"                 =>  "lib/GTK/SpinButton.pm6"                => 
- =>  "GTK::Spinner"                    =>  "lib/GTK/Spinner.pm6"                   => 
- =>  "GTK::Stack"                      =>  "lib/GTK/Stack.pm6"                     => 
- =>  "GTK::StackSidebar"               =>  "lib/GTK/StackSidebar.pm6"              => 
- =>  "GTK::Statusbar"                  =>  "lib/GTK/Statusbar.pm6"                 => 
- =>  "GTK::Switch"                     =>  "lib/GTK/Switch.pm6"                    => 
- =>  "GTK::TargetEntry"                =>  "lib/GTK/TargetEntry.pm6"               => 
- =>  "GTK::TargetList"                 =>  "lib/GTK/TargetList.pm6"                => 
- =>  "GTK::TextBuffer"                 =>  "lib/GTK/TextBuffer.pm6"                => 
- =>  "GTK::TextIter"                   =>  "lib/GTK/TextIter.pm6"                  => 
- =>  "GTK::TextMark"                   =>  "lib/GTK/TextMark.pm6"                  => 
- =>  "GTK::TextTag"                    =>  "lib/GTK/TextTag.pm6"                   => 
- =>  "GTK::TextView"                   =>  "lib/GTK/TextView.pm6"                  => 
- =>  "GTK::ToggleButton"               =>  "lib/GTK/ToggleButton.pm6"              => 
- =>  "GTK::ToggleToolButton"           =>  "lib/GTK/ToggleToolButton.pm6"          => 
- =>  "GTK::ToolButton"                 =>  "lib/GTK/ToolButton.pm6"                => 
- =>  "GTK::ToolItem"                   =>  "lib/GTK/ToolItem.pm6"                  => 
- =>  "GTK::ToolItemGroup"              =>  "lib/GTK/ToolItemGroup.pm6"             => 
- =>  "GTK::ToolPalette"                =>  "lib/GTK/ToolPalette.pm6"               => 
- =>  "GTK::Toolbar"                    =>  "lib/GTK/Toolbar.pm6"                   => 
- =>  "GTK::TreeIter"                   =>  "lib/GTK/TreeIter.pm6"                  => 
- =>  "GTK::TreePath"                   =>  "lib/GTK/TreePath.pm6"                  => 
- =>  "GTK::TreeRow"                    =>  "lib/GTK/TreeRow.pm6"                   => 
- =>  "GTK::TreeSortable"               =>  "lib/GTK/TreeSortable.pm6"              => 
- =>  "GTK::VolumeButton"               =>  "lib/GTK/VolumeButton.pm6"              => 
- =>  "GTK::Widget"                     =>  "lib/GTK/Widget.pm6"                    => 
- =>  "GTK::Window"                     =>  "lib/GTK/Window.pm6"                    => 
------------------------------------------------------------------------------
+  "GTK::AccelGroup"                :  "lib/GTK/AccelGroup.pm6"               ,
+  "GTK::AccelLabel"                :  "lib/GTK/AccelLabel.pm6"               ,
+  "GTK::ActionBar"                 :  "lib/GTK/ActionBar.pm6"                ,
+  "GTK::Adjustment"                :  "lib/GTK/Adjustment.pm6"               ,
+  "GTK::AppButton"                 :  "lib/GTK/AppButton.pm6"                ,
+  "GTK::Application"               :  "lib/GTK/Application.pm6"              ,
+  "GTK::Assistant"                 :  "lib/GTK/Assistant.pm6"                ,
+  "GTK::Bin"                       :  "lib/GTK/Bin.pm6"                      ,
+  "GTK::Box"                       :  "lib/GTK/Box.pm6"                      ,
+  "GTK::Builder"                   :  "lib/GTK/Builder.pm6"                  ,
+  "GTK::Button"                    :  "lib/GTK/Button.pm6"                   ,
+  "GTK::ButtonBox"                 :  "lib/GTK/ButtonBox.pm6"                ,
+  "GTK::CSSProvider"               :  "lib/GTK/CSSProvider.pm6"              ,
+  "GTK::Calendar"                  :  "lib/GTK/Calendar.pm6"                 ,
+  "GTK::CellArea"                  :  "lib/GTK/CellArea.pm6"                 ,
+  "GTK::CellAreaBox"               :  "lib/GTK/CellAreaBox.pm6"              ,
+  "GTK::CellAreaContext"           :  "lib/GTK/CellAreaContext.pm6"          ,
+  "GTK::CellRenderer"              :  "lib/GTK/CellRenderer.pm6"             ,
+  "GTK::CellRendererAccel"         :  "lib/GTK/CellRendererAccel.pm6"        ,
+  "GTK::CellRendererCombo"         :  "lib/GTK/CellRendererCombo.pm6"        ,
+  "GTK::CellRendererPixbuf"        :  "lib/GTK/CellRendererPixbuf.pm6"       ,
+  "GTK::CellRendererProgress"      :  "lib/GTK/CellRendererProgress.pm6"     ,
+  "GTK::CellRendererSpin"          :  "lib/GTK/CellRendererSpin.pm6"         ,
+  "GTK::CellRendererSpinner"       :  "lib/GTK/CellRendererSpinner.pm6"      ,
+  "GTK::CellRendererText"          :  "lib/GTK/CellRendererText.pm6"         ,
+  "GTK::CellRendererToggle"        :  "lib/GTK/CellRendererToggle.pm6"       ,
+  "GTK::CellView"                  :  "lib/GTK/CellView.pm6"                 ,
+  "GTK::CheckButton"               :  "lib/GTK/CheckButton.pm6"              ,
+  "GTK::CheckMenuItem"             :  "lib/GTK/CheckMenuItem.pm6"            ,
+  "GTK::Clipboard"                 :  "lib/GTK/Clipboard.pm6"                ,
+  "GTK::ColorButton"               :  "lib/GTK/ColorButton.pm6"              ,
+  "GTK::ColorChooser"              :  "lib/GTK/ColorChooser.pm6"             ,
+  "GTK::ComboBox"                  :  "lib/GTK/ComboBox.pm6"                 ,
+  "GTK::ComboBoxText"              :  "lib/GTK/ComboBoxText.pm6"             ,
+  "GTK::Compat::Cursor"            :  "lib/GTK/Compat/Cursor.pm6"            ,
+  "GTK::Compat::GList"             :  "lib/GTK/Compat/GList.pm6"             ,
+  "GTK::Compat::GSList"            :  "lib/GTK/Compat/GSList.pm6"            ,
+  "GTK::Compat::LaunchContext"     :  "lib/GTK/Compat/LaunchContext.pm6"     ,
+  "GTK::Compat::MenuModel"         :  "lib/GTK/Compat/MenuModel.pm6"         ,
+  "GTK::Compat::Permission"        :  "lib/GTK/Compat/Permission.pm6"        ,
+  "GTK::Compat::Pixbuf"            :  "lib/GTK/Compat/Pixbuf.pm6"            ,
+  "GTK::Compat::RGBA"              :  "lib/GTK/Compat/RGBA.pm6"              ,
+  "GTK::Compat::Raw::AppInfo"      :  "lib/GTK/Compat/Raw/AppInfo.pm6"       ,
+  "GTK::Compat::Raw::Cursor"       :  "lib/GTK/Compat/Raw/Cursor.pm6"        ,
+  "GTK::Compat::Raw::GList"        :  "lib/GTK/Compat/Raw/GList.pm6"         ,
+  "GTK::Compat::Raw::GSList"       :  "lib/GTK/Compat/Raw/GSList.pm6"        ,
+  "GTK::Compat::Raw::MenuModel"    :  "lib/GTK/Compat/Raw/MenuModel.pm6"     ,
+  "GTK::Compat::Raw::Permission"   :  "lib/GTK/Compat/Raw/Permission.pm6"    ,
+  "GTK::Compat::Raw::Pixbuf"       :  "lib/GTK/Compat/Raw/Pixbuf.pm6"        ,
+  "GTK::Compat::Raw::Rectangle"    :  "lib/GTK/Compat/Raw/Rectangle.pm6"     ,
+  "GTK::Compat::Raw::Value"        :  "lib/GTK/Compat/Raw/Value.pm6"         ,
+  "GTK::Compat::Rectangle"         :  "lib/GTK/Compat/Rectangle.pm6"         ,
+  "GTK::Compat::Roles::AppInfo"    :  "lib/GTK/Compat/Roles/AppInfo.pm6"     ,
+  "GTK::Compat::Types"             :  "lib/GTK/Compat/Types.pm6"             ,
+  "GTK::Compat::Value"             :  "lib/GTK/Compat/Value.pm6"             ,
+  "GTK::Container"                 :  "lib/GTK/Container.pm6"                ,
+  "GTK::Dialog"                    :  "lib/GTK/Dialog.pm6"                   ,
+  "GTK::Dialog::About"             :  "lib/GTK/Dialog/About.pm6"             ,
+  "GTK::Dialog::ColorChooser"      :  "lib/GTK/Dialog/ColorChooser.pm6"      ,
+  "GTK::Dialog::FontChooser"       :  "lib/GTK/Dialog/FontChooser.pm6"       ,
+  "GTK::Dialog::Message"           :  "lib/GTK/Dialog/Message.pm6"           ,
+  "GTK::Dialog::Raw::About"        :  "lib/GTK/Dialog/Raw/About.pm6"         ,
+  "GTK::Dialog::Raw::ColorChooser" :  "lib/GTK/Dialog/Raw/ColorChooser.pm6"  ,
+  "GTK::Dialog::Raw::FontChooser"  :  "lib/GTK/Dialog/Raw/FontChooser.pm6"   ,
+  "GTK::Dialog::Raw::Message"      :  "lib/GTK/Dialog/Raw/Message.pm6"       ,
+  "GTK::DrawingArea"               :  "lib/GTK/DrawingArea.pm6"              ,
+  "GTK::Entry"                     :  "lib/GTK/Entry.pm6"                    ,
+  "GTK::EntryBuffer"               :  "lib/GTK/EntryBuffer.pm6"              ,
+  "GTK::EntryCompletion"           :  "lib/GTK/EntryCompletion.pm6"          ,
+  "GTK::Expander"                  :  "lib/GTK/Expander.pm6"                 ,
+  "GTK::FileChooserButton"         :  "lib/GTK/FileChooserButton.pm6"        ,
+  "GTK::FileFilter"                :  "lib/GTK/FileFilter.pm6"               ,
+  "GTK::Fixed"                     :  "lib/GTK/Fixed.pm6"                    ,
+  "GTK::FlowBox"                   :  "lib/GTK/FlowBox.pm6"                  ,
+  "GTK::FlowBoxChild"              :  "lib/GTK/FlowBoxChild.pm6"             ,
+  "GTK::FontButton"                :  "lib/GTK/FontButton.pm6"               ,
+  "GTK::Frame"                     :  "lib/GTK/Frame.pm6"                    ,
+  "GTK::Grid"                      :  "lib/GTK/Grid.pm6"                     ,
+  "GTK::HeaderBar"                 :  "lib/GTK/HeaderBar.pm6"                ,
+  "GTK::IconView"                  :  "lib/GTK/IconView.pm6"                 ,
+  "GTK::Image"                     :  "lib/GTK/Image.pm6"                    ,
+  "GTK::InfoBar"                   :  "lib/GTK/InfoBar.pm6"                  ,
+  "GTK::Label"                     :  "lib/GTK/Label.pm6"                    ,
+  "GTK::LevelBar"                  :  "lib/GTK/LevelBar.pm6"                 ,
+  "GTK::LinkButton"                :  "lib/GTK/LinkButton.pm6"               ,
+  "GTK::ListStore"                 :  "lib/GTK/ListStore.pm6"                ,
+  "GTK::LockButton"                :  "lib/GTK/LockButton.pm6"               ,
+  "GTK::Menu"                      :  "lib/GTK/Menu.pm6"                     ,
+  "GTK::MenuBar"                   :  "lib/GTK/MenuBar.pm6"                  ,
+  "GTK::MenuButton"                :  "lib/GTK/MenuButton.pm6"               ,
+  "GTK::MenuItem"                  :  "lib/GTK/MenuItem.pm6"                 ,
+  "GTK::MenuShell"                 :  "lib/GTK/MenuShell.pm6"                ,
+  "GTK::MenuToolButton"            :  "lib/GTK/MenuToolButton.pm6"           ,
+  "GTK::Notebook"                  :  "lib/GTK/Notebook.pm6"                 ,
+  "GTK::Offscreen"                 :  "lib/GTK/Offscreen.pm6"                ,
+  "GTK::Overlay"                   :  "lib/GTK/Overlay.pm6"                  ,
+  "GTK::Pane"                      :  "lib/GTK/Pane.pm6"                     ,
+  "GTK::Places"                    :  "lib/GTK/Places.pm6"                   ,
+  "GTK::Popover"                   :  "lib/GTK/Popover.pm6"                  ,
+  "GTK::ProgressBar"               :  "lib/GTK/ProgressBar.pm6"              ,
+  "GTK::RadioButton"               :  "lib/GTK/RadioButton.pm6"              ,
+  "GTK::RadioMenuItem"             :  "lib/GTK/RadioMenuItem.pm6"            ,
+  "GTK::RadioToolButton"           :  "lib/GTK/RadioToolButton.pm6"          ,
+  "GTK::Range"                     :  "lib/GTK/Range.pm6"                    ,
+  "GTK::Raw::AccelGroup"           :  "lib/GTK/Raw/AccelGroup.pm6"           ,
+  "GTK::Raw::AccelLabel"           :  "lib/GTK/Raw/AccelLabel.pm6"           ,
+  "GTK::Raw::ActionBar"            :  "lib/GTK/Raw/ActionBar.pm6"            ,
+  "GTK::Raw::Actionable"           :  "lib/GTK/Raw/Actionable.pm6"           ,
+  "GTK::Raw::Adjustment"           :  "lib/GTK/Raw/Adjustment.pm6"           ,
+  "GTK::Raw::AppButton"            :  "lib/GTK/Raw/AppButton.pm6"            ,
+  "GTK::Raw::AppChooser"           :  "lib/GTK/Raw/AppChooser.pm6"           ,
+  "GTK::Raw::Application"          :  "lib/GTK/Raw/Application.pm6"          ,
+  "GTK::Raw::Assistant"            :  "lib/GTK/Raw/Assistant.pm6"            ,
+  "GTK::Raw::Bin"                  :  "lib/GTK/Raw/Bin.pm6"                  ,
+  "GTK::Raw::Box"                  :  "lib/GTK/Raw/Box.pm6"                  ,
+  "GTK::Raw::Buildable"            :  "lib/GTK/Raw/Buildable.pm6"            ,
+  "GTK::Raw::Builder"              :  "lib/GTK/Raw/Builder.pm6"              ,
+  "GTK::Raw::Button"               :  "lib/GTK/Raw/Button.pm6"               ,
+  "GTK::Raw::ButtonBox"            :  "lib/GTK/Raw/ButtonBox.pm6"            ,
+  "GTK::Raw::CSSProvider"          :  "lib/GTK/Raw/CSSProvider.pm6"          ,
+  "GTK::Raw::Calendar"             :  "lib/GTK/Raw/Calendar.pm6"             ,
+  "GTK::Raw::CellArea"             :  "lib/GTK/Raw/CellArea.pm6"             ,
+  "GTK::Raw::CellAreaBox"          :  "lib/GTK/Raw/CellAreaBox.pm6"          ,
+  "GTK::Raw::CellAreaContext"      :  "lib/GTK/Raw/CellAreaContext.pm6"      ,
+  "GTK::Raw::CellEditable"         :  "lib/GTK/Raw/CellEditable.pm6"         ,
+  "GTK::Raw::CellLayout"           :  "lib/GTK/Raw/CellLayout.pm6"           ,
+  "GTK::Raw::CellRenderer"         :  "lib/GTK/Raw/CellRenderer.pm6"         ,
+  "GTK::Raw::CellRendererAccel"    :  "lib/GTK/Raw/CellRendererAccel.pm6"    ,
+  "GTK::Raw::CellRendererCombo"    :  "lib/GTK/Raw/CellRendererCombo.pm6"    ,
+  "GTK::Raw::CellRendererPixbuf"   :  "lib/GTK/Raw/CellRendererPixbuf.pm6"   ,
+  "GTK::Raw::CellRendererProgress" :  "lib/GTK/Raw/CellRendererProgress.pm6" ,
+  "GTK::Raw::CellRendererSpin"     :  "lib/GTK/Raw/CellRendererSpin.pm6"     ,
+  "GTK::Raw::CellRendererSpinner"  :  "lib/GTK/Raw/CellRendererSpinner.pm6"  ,
+  "GTK::Raw::CellRendererText"     :  "lib/GTK/Raw/CellRendererText.pm6"     ,
+  "GTK::Raw::CellRendererToggle"   :  "lib/GTK/Raw/CellRendererToggle.pm6"   ,
+  "GTK::Raw::CellView"             :  "lib/GTK/Raw/CellView.pm6"             ,
+  "GTK::Raw::CheckButton"          :  "lib/GTK/Raw/CheckButton.pm6"          ,
+  "GTK::Raw::CheckMenuItem"        :  "lib/GTK/Raw/CheckMenuItem.pm6"        ,
+  "GTK::Raw::Clipboard"            :  "lib/GTK/Raw/Clipboard.pm6"            ,
+  "GTK::Raw::ColorButton"          :  "lib/GTK/Raw/ColorButton.pm6"          ,
+  "GTK::Raw::ColorChooser"         :  "lib/GTK/Raw/ColorChooser.pm6"         ,
+  "GTK::Raw::ComboBox"             :  "lib/GTK/Raw/ComboBox.pm6"             ,
+  "GTK::Raw::ComboBoxText"         :  "lib/GTK/Raw/ComboBoxText.pm6"         ,
+  "GTK::Raw::Container"            :  "lib/GTK/Raw/Container.pm6"            ,
+  "GTK::Raw::Dialog"               :  "lib/GTK/Raw/Dialog.pm6"               ,
+  "GTK::Raw::Editable"             :  "lib/GTK/Raw/Editable.pm6"             ,
+  "GTK::Raw::Entry"                :  "lib/GTK/Raw/Entry.pm6"                ,
+  "GTK::Raw::EntryBuffer"          :  "lib/GTK/Raw/EntryBuffer.pm6"          ,
+  "GTK::Raw::EntryCompletion"      :  "lib/GTK/Raw/EntryCompletion.pm6"      ,
+  "GTK::Raw::Expander"             :  "lib/GTK/Raw/Expander.pm6"             ,
+  "GTK::Raw::FileChooser"          :  "lib/GTK/Raw/FileChooser.pm6"          ,
+  "GTK::Raw::FileChooserButton"    :  "lib/GTK/Raw/FileChooserButton.pm6"    ,
+  "GTK::Raw::FileFilter"           :  "lib/GTK/Raw/FileFilter.pm6"           ,
+  "GTK::Raw::Fixed"                :  "lib/GTK/Raw/Fixed.pm6"                ,
+  "GTK::Raw::FlowBox"              :  "lib/GTK/Raw/FlowBox.pm6"              ,
+  "GTK::Raw::FontButton"           :  "lib/GTK/Raw/FontButton.pm6"           ,
+  "GTK::Raw::FontChooser"          :  "lib/GTK/Raw/FontChooser.pm6"          ,
+  "GTK::Raw::Frame"                :  "lib/GTK/Raw/Frame.pm6"                ,
+  "GTK::Raw::Grid"                 :  "lib/GTK/Raw/Grid.pm6"                 ,
+  "GTK::Raw::HeaderBar"            :  "lib/GTK/Raw/HeaderBar.pm6"            ,
+  "GTK::Raw::IconView"             :  "lib/GTK/Raw/IconView.pm6"             ,
+  "GTK::Raw::Image"                :  "lib/GTK/Raw/Image.pm6"                ,
+  "GTK::Raw::InfoBar"              :  "lib/GTK/Raw/InfoBar.pm6"              ,
+  "GTK::Raw::Label"                :  "lib/GTK/Raw/Label.pm6"                ,
+  "GTK::Raw::LevelBar"             :  "lib/GTK/Raw/LevelBar.pm6"             ,
+  "GTK::Raw::LinkButton"           :  "lib/GTK/Raw/LinkButton.pm6"           ,
+  "GTK::Raw::ListStore"            :  "lib/GTK/Raw/ListStore.pm6"            ,
+  "GTK::Raw::LockButton"           :  "lib/GTK/Raw/LockButton.pm6"           ,
+  "GTK::Raw::Menu"                 :  "lib/GTK/Raw/Menu.pm6"                 ,
+  "GTK::Raw::MenuBar"              :  "lib/GTK/Raw/MenuBar.pm6"              ,
+  "GTK::Raw::MenuButton"           :  "lib/GTK/Raw/MenuButton.pm6"           ,
+  "GTK::Raw::MenuItem"             :  "lib/GTK/Raw/MenuItem.pm6"             ,
+  "GTK::Raw::MenuShell"            :  "lib/GTK/Raw/MenuShell.pm6"            ,
+  "GTK::Raw::MenuToolButton"       :  "lib/GTK/Raw/MenuToolButton.pm6"       ,
+  "GTK::Raw::Notebook"             :  "lib/GTK/Raw/Notebook.pm6"             ,
+  "GTK::Raw::Offscreen"            :  "lib/GTK/Raw/Offscreen.pm6"            ,
+  "GTK::Raw::Orientable"           :  "lib/GTK/Raw/Orientable.pm6"           ,
+  "GTK::Raw::Overlay"              :  "lib/GTK/Raw/Overlay.pm6"              ,
+  "GTK::Raw::Pane"                 :  "lib/GTK/Raw/Pane.pm6"                 ,
+  "GTK::Raw::Places"               :  "lib/GTK/Raw/Places.pm6"               ,
+  "GTK::Raw::Popover"              :  "lib/GTK/Raw/Popover.pm6"              ,
+  "GTK::Raw::ProgressBar"          :  "lib/GTK/Raw/ProgressBar.pm6"          ,
+  "GTK::Raw::RadioButton"          :  "lib/GTK/Raw/RadioButton.pm6"          ,
+  "GTK::Raw::RadioMenuItem"        :  "lib/GTK/Raw/RadioMenuItem.pm6"        ,
+  "GTK::Raw::RadioToolButton"      :  "lib/GTK/Raw/RadioToolButton.pm6"      ,
+  "GTK::Raw::Range"                :  "lib/GTK/Raw/Range.pm6"                ,
+  "GTK::Raw::RecentFilter"         :  "lib/GTK/Raw/RecentFilter.pm6"         ,
+  "GTK::Raw::Revealer"             :  "lib/GTK/Raw/Revealer.pm6"             ,
+  "GTK::Raw::Scale"                :  "lib/GTK/Raw/Scale.pm6"                ,
+  "GTK::Raw::ScaleButton"          :  "lib/GTK/Raw/ScaleButton.pm6"          ,
+  "GTK::Raw::Scrollable"           :  "lib/GTK/Raw/Scrollable.pm6"           ,
+  "GTK::Raw::Scrollbar"            :  "lib/GTK/Raw/Scrollbar.pm6"            ,
+  "GTK::Raw::ScrolledWindow"       :  "lib/GTK/Raw/ScrolledWindow.pm6"       ,
+  "GTK::Raw::SearchBar"            :  "lib/GTK/Raw/SearchBar.pm6"            ,
+  "GTK::Raw::SearchEntry"          :  "lib/GTK/Raw/SearchEntry.pm6"          ,
+  "GTK::Raw::Selection"            :  "lib/GTK/Raw/Selection.pm6"            ,
+  "GTK::Raw::Separator"            :  "lib/GTK/Raw/Separator.pm6"            ,
+  "GTK::Raw::SeparatorMenuItem"    :  "lib/GTK/Raw/SeparatorMenuItem.pm6"    ,
+  "GTK::Raw::SeparatorToolItem"    :  "lib/GTK/Raw/SeparatorToolItem.pm6"    ,
+  "GTK::Raw::SizeGroup"            :  "lib/GTK/Raw/SizeGroup.pm6"            ,
+  "GTK::Raw::SpinButton"           :  "lib/GTK/Raw/SpinButton.pm6"           ,
+  "GTK::Raw::Spinner"              :  "lib/GTK/Raw/Spinner.pm6"              ,
+  "GTK::Raw::Stack"                :  "lib/GTK/Raw/Stack.pm6"                ,
+  "GTK::Raw::StackSidebar"         :  "lib/GTK/Raw/StackSidebar.pm6"         ,
+  "GTK::Raw::Statusbar"            :  "lib/GTK/Raw/Statusbar.pm6"            ,
+  "GTK::Raw::Subs"                 :  "lib/GTK/Raw/Subs.pm6"                 ,
+  "GTK::Raw::Switch"               :  "lib/GTK/Raw/Switch.pm6"               ,
+  "GTK::Raw::TargetEntry"          :  "lib/GTK/Raw/TargetEntry.pm6"          ,
+  "GTK::Raw::TargetList"           :  "lib/GTK/Raw/TargetList.pm6"           ,
+  "GTK::Raw::TextBuffer"           :  "lib/GTK/Raw/TextBuffer.pm6"           ,
+  "GTK::Raw::TextIter"             :  "lib/GTK/Raw/TextIter.pm6"             ,
+  "GTK::Raw::TextMark"             :  "lib/GTK/Raw/TextMark.pm6"             ,
+  "GTK::Raw::TextTag"              :  "lib/GTK/Raw/TextTag.pm6"              ,
+  "GTK::Raw::TextTagTable"         :  "lib/GTK/Raw/TextTagTable.pm6"         ,
+  "GTK::Raw::TextView"             :  "lib/GTK/Raw/TextView.pm6"             ,
+  "GTK::Raw::ToggleButton"         :  "lib/GTK/Raw/ToggleButton.pm6"         ,
+  "GTK::Raw::ToggleToolButton"     :  "lib/GTK/Raw/ToggleToolButton.pm6"     ,
+  "GTK::Raw::ToolButton"           :  "lib/GTK/Raw/ToolButton.pm6"           ,
+  "GTK::Raw::ToolItem"             :  "lib/GTK/Raw/ToolItem.pm6"             ,
+  "GTK::Raw::ToolItemGroup"        :  "lib/GTK/Raw/ToolItemGroup.pm6"        ,
+  "GTK::Raw::ToolPalette"          :  "lib/GTK/Raw/ToolPalette.pm6"          ,
+  "GTK::Raw::Toolbar"              :  "lib/GTK/Raw/Toolbar.pm6"              ,
+  "GTK::Raw::Tooltip"              :  "lib/GTK/Raw/Tooltip.pm6"              ,
+  "GTK::Raw::TreeDnD"              :  "lib/GTK/Raw/TreeDnD.pm6"              ,
+  "GTK::Raw::TreeModel"            :  "lib/GTK/Raw/TreeModel.pm6"            ,
+  "GTK::Raw::TreeModelFilter"      :  "lib/GTK/Raw/TreeModelFilter.pm6"      ,
+  "GTK::Raw::TreeModelSort"        :  "lib/GTK/Raw/TreeModelSort.pm6"        ,
+  "GTK::Raw::TreeSelection"        :  "lib/GTK/Raw/TreeSelection.pm6"        ,
+  "GTK::Raw::TreeSortable"         :  "lib/GTK/Raw/TreeSortable.pm6"         ,
+  "GTK::Raw::TreeStore"            :  "lib/GTK/Raw/TreeStore.pm6"            ,
+  "GTK::Raw::TreeView"             :  "lib/GTK/Raw/TreeView.pm6"             ,
+  "GTK::Raw::TreeViewColumn"       :  "lib/GTK/Raw/TreeViewColumn.pm6"       ,
+  "GTK::Raw::Types"                :  "lib/GTK/Raw/Types.pm6"                ,
+  "GTK::Raw::Viewport"             :  "lib/GTK/Raw/Viewport.pm6"             ,
+  "GTK::Raw::VolumeButton"         :  "lib/GTK/Raw/VolumeButton.pm6"         ,
+  "GTK::Raw::Widget"               :  "lib/GTK/Raw/Widget.pm6"               ,
+  "GTK::Raw::Window"               :  "lib/GTK/Raw/Window.pm6"               ,
+  "GTK::RecentFilter"              :  "lib/GTK/RecentFilter.pm6"             ,
+  "GTK::Revealer"                  :  "lib/GTK/Revealer.pm6"                 ,
+  "GTK::Roles::Actionable"         :  "lib/GTK/Roles/Actionable.pm6"         ,
+  "GTK::Roles::AppChooser"         :  "lib/GTK/Roles/AppChooser.pm6"         ,
+  "GTK::Roles::Buildable"          :  "lib/GTK/Roles/Buildable.pm6"          ,
+  "GTK::Roles::CellEditable"       :  "lib/GTK/Roles/CellEditable.pm6"       ,
+  "GTK::Roles::CellLayout"         :  "lib/GTK/Roles/CellLayout.pm6"         ,
+  "GTK::Roles::ColorChooser"       :  "lib/GTK/Roles/ColorChooser.pm6"       ,
+  "GTK::Roles::Editable"           :  "lib/GTK/Roles/Editable.pm6"           ,
+  "GTK::Roles::FileChooser"        :  "lib/GTK/Roles/FileChooser.pm6"        ,
+  "GTK::Roles::FontChooser"        :  "lib/GTK/Roles/FontChooser.pm6"        ,
+  "GTK::Roles::Orientable"         :  "lib/GTK/Roles/Orientable.pm6"         ,
+  "GTK::Roles::Pointers"           :  "lib/GTK/Roles/Pointers.pm6"           ,
+  "GTK::Roles::Properties"         :  "lib/GTK/Roles/Properties.pm6"         ,
+  "GTK::Roles::Scrollable"         :  "lib/GTK/Roles/Scrollable.pm6"         ,
+  "GTK::Roles::Signals"            :  "lib/GTK/Roles/Signals.pm6"            ,
+  "GTK::Roles::Signals::IconView"  :  "lib/GTK/Roles/Signals/IconView.pm6"   ,
+  "GTK::Roles::Signals::InfoBar"   :  "lib/GTK/Roles/Signals/InfoBar.pm6"    ,
+  "GTK::Roles::Signals::Scale"     :  "lib/GTK/Roles/Signals/Scale.pm6"      ,
+  "GTK::Roles::Signals::Widget"    :  "lib/GTK/Roles/Signals/Widget.pm6"     ,
+  "GTK::Roles::TreeDnD"            :  "lib/GTK/Roles/TreeDnD.pm6"            ,
+  "GTK::Roles::TreeModel"          :  "lib/GTK/Roles/TreeModel.pm6"          ,
+  "GTK::Roles::TreeSortable"       :  "lib/GTK/Roles/TreeSortable.pm6"       ,
+  "GTK::Roles::Types"              :  "lib/GTK/Roles/Types.pm6"              ,
+  "GTK::Scale"                     :  "lib/GTK/Scale.pm6"                    ,
+  "GTK::ScaleButton"               :  "lib/GTK/ScaleButton.pm6"              ,
+  "GTK::Scrollbar"                 :  "lib/GTK/Scrollbar.pm6"                ,
+  "GTK::ScrolledWindow"            :  "lib/GTK/ScrolledWindow.pm6"           ,
+  "GTK::SearchBar"                 :  "lib/GTK/SearchBar.pm6"                ,
+  "GTK::SearchEntry"               :  "lib/GTK/SearchEntry.pm6"              ,
+  "GTK::Selection"                 :  "lib/GTK/Selection.pm6"                ,
+  "GTK::Separator"                 :  "lib/GTK/Separator.pm6"                ,
+  "GTK::SeparatorMenuItem"         :  "lib/GTK/SeparatorMenuItem.pm6"        ,
+  "GTK::SeparatorToolItem"         :  "lib/GTK/SeparatorToolItem.pm6"        ,
+  "GTK::SizeGroup"                 :  "lib/GTK/SizeGroup.pm6"                ,
+  "GTK::SpinButton"                :  "lib/GTK/SpinButton.pm6"               ,
+  "GTK::Spinner"                   :  "lib/GTK/Spinner.pm6"                  ,
+  "GTK::Stack"                     :  "lib/GTK/Stack.pm6"                    ,
+  "GTK::StackSidebar"              :  "lib/GTK/StackSidebar.pm6"             ,
+  "GTK::Statusbar"                 :  "lib/GTK/Statusbar.pm6"                ,
+  "GTK::Switch"                    :  "lib/GTK/Switch.pm6"                   ,
+  "GTK::TargetEntry"               :  "lib/GTK/TargetEntry.pm6"              ,
+  "GTK::TargetList"                :  "lib/GTK/TargetList.pm6"               ,
+  "GTK::TextBuffer"                :  "lib/GTK/TextBuffer.pm6"               ,
+  "GTK::TextIter"                  :  "lib/GTK/TextIter.pm6"                 ,
+  "GTK::TextMark"                  :  "lib/GTK/TextMark.pm6"                 ,
+  "GTK::TextTag"                   :  "lib/GTK/TextTag.pm6"                  ,
+  "GTK::TextTagTable"              :  "lib/GTK/TextTagTable.pm6"             ,
+  "GTK::TextView"                  :  "lib/GTK/TextView.pm6"                 ,
+  "GTK::ToggleButton"              :  "lib/GTK/ToggleButton.pm6"             ,
+  "GTK::ToggleToolButton"          :  "lib/GTK/ToggleToolButton.pm6"         ,
+  "GTK::ToolButton"                :  "lib/GTK/ToolButton.pm6"               ,
+  "GTK::ToolItem"                  :  "lib/GTK/ToolItem.pm6"                 ,
+  "GTK::ToolItemGroup"             :  "lib/GTK/ToolItemGroup.pm6"            ,
+  "GTK::ToolPalette"               :  "lib/GTK/ToolPalette.pm6"              ,
+  "GTK::Toolbar"                   :  "lib/GTK/Toolbar.pm6"                  ,
+  "GTK::Tooltip"                   :  "lib/GTK/Tooltip.pm6"                  ,
+  "GTK::TreeIter"                  :  "lib/GTK/TreeIter.pm6"                 ,
+  "GTK::TreeModelFilter"           :  "lib/GTK/TreeModelFilter.pm6"          ,
+  "GTK::TreeModelSort"             :  "lib/GTK/TreeModelSort.pm6"            ,
+  "GTK::TreePath"                  :  "lib/GTK/TreePath.pm6"                 ,
+  "GTK::TreeRow"                   :  "lib/GTK/TreeRow.pm6"                  ,
+  "GTK::TreeSelection"             :  "lib/GTK/TreeSelection.pm6"            ,
+  "GTK::TreeStore"                 :  "lib/GTK/TreeStore.pm6"                ,
+  "GTK::TreeView"                  :  "lib/GTK/TreeView.pm6"                 ,
+  "GTK::TreeViewColumn"            :  "lib/GTK/TreeViewColumn.pm6"           ,
+  "GTK::VolumeButton"              :  "lib/GTK/VolumeButton.pm6"             ,
+  "GTK::Widget"                    :  "lib/GTK/Widget.pm6"                   ,
+  "GTK::Window"                    :  "lib/GTK/Window.pm6"                   ,

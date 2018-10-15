@@ -19,7 +19,7 @@ class GTK::Compat::Value {
   }
 
   submethod DESTROY {
-    #self.free;
+    #self.unref
   }
 
   multi method new(Int $t = G_TYPE_NONE) {
@@ -42,7 +42,7 @@ class GTK::Compat::Value {
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
-  method free {
+  method unref {
     g_object_unref( nativecast(Pointer, $!v) );
   }
 
@@ -69,7 +69,7 @@ class GTK::Compat::Value {
       when G_TYPE_POINTER  { self.pointer;    }
       #when G_TYPE_BOXED   { }
       #when G_TYPE_PARAM   { }
-      #when G_TYPE_OBJECT  { }
+      when G_TYPE_OBJECT   { self.object;     }
       #when G_TYPE_VARIANT { }
       default {
         warn "{ $_.Str } type NYI.";
@@ -83,8 +83,8 @@ class GTK::Compat::Value {
       FETCH => sub ($) {
         so g_value_get_boolean($!v);
       },
-      STORE => sub ($, $v_boolean is copy) {
-        g_value_set_boolean($!v, $v_boolean);
+      STORE => sub ($, Int() $v_boolean is copy) {
+        g_value_set_boolean($!v, self.RESOLVE-BOOL($v_boolean));
       }
     );
   }
@@ -105,7 +105,7 @@ class GTK::Compat::Value {
       FETCH => sub ($) {
         g_value_get_double($!v);
       },
-      STORE => sub ($, $v_double is copy) {
+      STORE => sub ($, Num() $v_double is copy) {
         g_value_set_double($!v, $v_double);
       }
     );
@@ -116,7 +116,7 @@ class GTK::Compat::Value {
       FETCH => sub ($) {
         g_value_get_float($!v);
       },
-      STORE => sub ($, $v_float is copy) {
+      STORE => sub ($, Num() $v_float is copy) {
         g_value_set_float($!v, $v_float);
       }
     );
@@ -129,8 +129,7 @@ class GTK::Compat::Value {
         GTypeEnum( g_value_get_gtype($!v) );
       },
       STORE => sub ($, Int() $v_gtype is copy) {
-        my guint $vt = self.RESOLVE-UINT($v_gtype);
-        g_value_set_gtype($!v, $vt);
+        g_value_set_gtype($!v, self.RESOLVE-UINT($v_gtype));
       }
     );
   }
@@ -140,8 +139,8 @@ class GTK::Compat::Value {
       FETCH => sub ($) {
         g_value_get_int($!v);
       },
-      STORE => sub ($, $v_int is copy) {
-        g_value_set_int($!v, $v_int);
+      STORE => sub ($, Int() $v_int is copy) {
+        g_value_set_int($!v, self.RESOLVE-INT($v_int));
       }
     );
   }
@@ -151,8 +150,8 @@ class GTK::Compat::Value {
       FETCH => sub ($) {
         g_value_get_int64($!v);
       },
-      STORE => sub ($, $v_int64 is copy) {
-        g_value_set_int64($!v, $v_int64);
+      STORE => sub ($, Int() $v_int64 is copy) {
+        g_value_set_int64($!v, self.RESOLVE-LINT($v_int64));
       }
     );
   }
@@ -163,7 +162,7 @@ class GTK::Compat::Value {
         g_value_get_long($!v);
       },
       STORE => sub ($, $v_long is copy) {
-        g_value_set_long($!v, $v_long);
+        g_value_set_long($!v, self.RESOLVE-LINT($v_long));
       }
     );
   }
@@ -206,7 +205,7 @@ class GTK::Compat::Value {
       FETCH => sub ($) {
         g_value_get_string($!v);
       },
-      STORE => sub ($, $v_string is copy) {
+      STORE => sub ($, Str() $v_string is copy) {
         g_value_set_string($!v, $v_string);
       }
     );
@@ -228,8 +227,8 @@ class GTK::Compat::Value {
       FETCH => sub ($) {
         g_value_get_uint($!v);
       },
-      STORE => sub ($, $v_uint is copy) {
-        g_value_set_uint($!v, $v_uint);
+      STORE => sub ($, Int() $v_uint is copy) {
+        g_value_set_uint($!v, self.RESOLVE-UINT($v_uint));
       }
     );
   }
@@ -240,7 +239,7 @@ class GTK::Compat::Value {
         g_value_get_uint64($!v);
       },
       STORE => sub ($, $v_uint64 is copy) {
-        g_value_set_uint64($!v, $v_uint64);
+        g_value_set_uint64($!v, self.RESOLVE-ULINT($v_uint64));
       }
     );
   }
@@ -251,7 +250,7 @@ class GTK::Compat::Value {
         g_value_get_ulong($!v);
       },
       STORE => sub ($, $v_ulong is copy) {
-        g_value_set_ulong($!v, $v_ulong);
+        g_value_set_ulong($!v, self.RESOLVE-ULINT($v_ulong));
       }
     );
   }
@@ -308,4 +307,54 @@ class GTK::Compat::Value {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+}
+
+# Helper functions
+
+sub g_str(Str() $s) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_STRING );
+  $gv.string = $s;
+  $gv;
+}
+
+sub g_bool(Int() $b) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_BOOLEAN );
+  $gv.boolean = $b;
+  $gv;
+}
+
+sub g_int(Int() $i) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_INT );
+  $gv.int = $i;
+  $gv;
+}
+
+sub g_uint(Int() $i) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_UINT );
+  $gv.uint = $i;
+  $gv;
+}
+
+sub g_flt(Num() $f) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_FLOAT );
+  $gv.float = $f;
+  $gv;
+}
+
+sub g_dbl(Num() $d) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_DOUBLE );
+  $gv.double = $d;
+  $gv;
+}
+
+sub g_obj($o) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_OBJECT );
+  $gv.object = $o;
+  $gv;
+}
+
+sub g_ptr($p) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_POINTER );
+  $gv.pointer = $p;
+  $gv;
 }
