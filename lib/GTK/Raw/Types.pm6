@@ -877,6 +877,7 @@ class GtkAdjustment           is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkAllocation           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAppChooser           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAppChooserButton     is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAppChooserDialog     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkApplication          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAssistant            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkBin                  is repr('CPointer') does GTK::Roles::Pointers is export { }
