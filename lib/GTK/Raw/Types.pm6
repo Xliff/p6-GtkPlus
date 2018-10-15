@@ -40,13 +40,18 @@ our constant GtkRecentFilterFunc              is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
 our constant GtkTreeCellDataFunc              is export := Pointer;
+our constant GtkTreeDestroyCountFunc          is export := Pointer;
 our constant GtkTreeIterCompareFunc           is export := Pointer;
 our constant GtkTreeModelFilterModifyFunc     is export := Pointer;
 our constant GtkTreeModelFilterVisibleFunc    is export := Pointer;
 our constant GtkTreeModelForeachFunc          is export := Pointer;
 our constant GtkTreeSelectionFunc             is export := Pointer;
 our constant GtkTreeSelectionForeachFunc      is export := Pointer;
+our constant GtkTreeViewColumnDropFunc        is export := Pointer;
+our constant GtkTreeViewMappingFunc           is export := Pointer;
 our constant GtkTreeViewRowSeparatorFunc      is export := Pointer;
+our constant GtkTreeViewSearchEqualFunc       is export := Pointer;
+our constant GtkTreeViewSearchPositionFunc    is export := Pointer;
 
 our constant GdkRGBA is export := GTK::Compat::RGBA;
 
@@ -838,6 +843,16 @@ our enum GtkRecentFilterFlags is export (
   GTK_RECENT_FILTER_APPLICATION  => (1 +< 3),
   GTK_RECENT_FILTER_GROUP        => (1 +< 4),
   GTK_RECENT_FILTER_AGE          => (1 +< 5)
+);
+
+our enum GtkTreeViewDropPosition is export (
+  # drop before/after this row
+  'GTK_TREE_VIEW_DROP_BEFORE',
+  'GTK_TREE_VIEW_DROP_AFTER',
+  # drop as a child of this row (with fallback to before or after
+  # if into is not possible)
+  'GTK_TREE_VIEW_DROP_INTO_OR_BEFORE',
+  'GTK_TREE_VIEW_DROP_INTO_OR_AFTER'
 );
 
 

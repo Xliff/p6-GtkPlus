@@ -23,6 +23,10 @@ class GTK::TreeViewColumn {
     $!cl  = nativecast(GtkCellLayout, $!tvc);  # GTK::Roles::CellLayout
   }
 
+  method GTK::Raw::Types::GtkTreeViewColumn {
+    $!tvc;
+  }
+
   method new {
     my $treeview = gtk_tree_view_column_new();
     self.bless(:$treeview);

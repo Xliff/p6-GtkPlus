@@ -68,7 +68,10 @@ class GTK::TreeStore  {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append (GtkTreeIter() $iter, GtkTreeIter() $parent) {
+  method append (
+    GtkTreeIter() $iter,
+    GtkTreeIter() $parent = GtkTreeIter
+  ) {
     gtk_tree_store_append($!tree, $iter, $parent);
   }
 
