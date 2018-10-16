@@ -9,9 +9,17 @@ use GTK::Raw::Types;
 use GTK::Bin;
 
 use GTK::Roles::CellLayout;
+use GTK::Roles::Signals::ComboBox;
+
+<<<<<<< HEAD
+my subset Ancestry where GtkComboBox | GtkCellLayout | GtkWidget;
+=======
+subset Ancestry where GtkComboBox | GtkCellLayout | GtkWidget;
+>>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
 
 class GTK::ComboBox is GTK::Bin {
   also does GTK::Roles::CellLayout;
+  also does GTK::Roles::Signals::ComboBox;
 
   has GtkComboBox $!cb;
 
@@ -23,7 +31,7 @@ class GTK::ComboBox is GTK::Bin {
 
   submethod BUILD(:$combobox) {
     given $combobox {
-      when GtkComboBox | GtkWidget {
+      when Ancestry {
         self.setComboBox($combobox);
       }
       when GTK::ComboBox {
@@ -33,6 +41,10 @@ class GTK::ComboBox is GTK::Bin {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals-cb);
+  }
+
   method setComboBox($combobox) {
     my $to-parent;
     $!cb = do given $combobox {
@@ -40,30 +52,34 @@ class GTK::ComboBox is GTK::Bin {
         $to-parent = $_;
         nativecast(GtkComboBox, $_);
       }
+      when GtkCellLayout {
+        $!cl = $_;                               # GTK::Roles::CellLayout
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkComboBox, $_);
+      }
       when GtkComboBox  {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
     }
+    $!cl //= nativecast(GtkCellLayout, $!cb);   # GTK::Roles::CellLayout
     self.setBin($to-parent);
-    # For GTK::Roles::CellLayout
-    $!cl = nativecast(GtkCellLayout, $!cb);
   }
 
   multi method new {
     my $combobox = gtk_combo_box_new();
     self.bless(:$combobox);
   }
-  multi method new (GtkWidget $combobox) {
+  multi method new (Ancestry $combobox) {
     self.bless(:$combobox);
   }
 
-  method new_with_area(GtkCellArea $area) {
+  method new_with_area(GtkCellArea() $area) {
     my $combobox = gtk_combo_box_new_with_area($area);
     self.bless(:$combobox);
   }
 
-  method new_with_area_and_entry(GtkCellArea $area) {
+  method new_with_area_and_entry(GtkCellArea() $area) {
     my $combobox = gtk_combo_box_new_with_area_and_entry($area);
     self.bless(:$combobox);
   }
@@ -73,12 +89,12 @@ class GTK::ComboBox is GTK::Bin {
     self.bless(:$combobox);
   }
 
-  method new_with_model (GtkTreeModel $model) {
+  method new_with_model (GtkTreeModel() $model) {
     my $combobox = gtk_combo_box_new_with_model($model);
     self.bless(:$combobox);
   }
 
-  method new_with_model_and_entry(GtkTreeModel $model) {
+  method new_with_model_and_entry(GtkTreeModel() $model) {
     my $combobox = gtk_combo_box_new_with_model_and_entry($model);
     self.bless(:$combobox);
   }
@@ -94,13 +110,13 @@ class GTK::ComboBox is GTK::Bin {
   # Is originally:
   #
   method format-entry-text {
-    self.connect($!cb, 'format-entry-text');
+    self.connect-format-entry-text($!cb);
   }
 
   # Is originally:
   # GtkComboBox, GtkScrollType, gpointer --> void
   method move-active {
-    self.connect($!cb, 'move-active');
+    self.connect-move-active($!cb);
   }
 
   # Is originally:
@@ -117,7 +133,11 @@ class GTK::ComboBox is GTK::Bin {
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
+
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+
+  # cw - ATTRIBUTES NEED REFINEMENT!
+
   method active is rw {
     Proxy.new(
       FETCH => sub ($) {
@@ -244,7 +264,7 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_title($!cb);
       },
-      STORE => sub ($, $title is copy) {
+      STORE => sub ($, Str() $title is copy) {
         gtk_combo_box_set_title($!cb, $title);
       }
     );
@@ -263,7 +283,7 @@ class GTK::ComboBox is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_active_iter (GtkTreeIter $iter) {
+  method get_active_iter (GtkTreeIter() $iter) {
     gtk_combo_box_get_active_iter($!cb, $iter);
   }
 
@@ -295,14 +315,14 @@ class GTK::ComboBox is GTK::Bin {
     gtk_combo_box_popup_for_device($!cb, $device);
   }
 
-  method set_active_iter (GtkTreeIter $iter) {
+  method set_active_iter (GtkTreeIter() $iter) {
     gtk_combo_box_set_active_iter($!cb, $iter);
   }
 
   method set_row_separator_func (
     GtkTreeViewRowSeparatorFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy
+    gpointer $data = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   ) {
     gtk_combo_box_set_row_separator_func($!cb, $func, $data, $destroy);
   }

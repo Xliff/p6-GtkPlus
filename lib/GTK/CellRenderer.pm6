@@ -9,9 +9,18 @@ use GTK::Raw::CellRenderer;
 use GTK::Raw::Types;
 
 use GTK::Roles::Properties;
+use GTK::Roles::Signals;
+use GTK::Roles::Signals::CellRenderer;
+
+use GTK::Roles::Signals::CellRenderer;
 
 class GTK::CellRenderer {
   also does GTK::Roles::Properties;
+<<<<<<< HEAD
+  also does GTK::Roles::Signals;
+=======
+>>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
+  also does GTK::Roles::Signals::CellRenderer;
 
   has GtkCellRenderer $!cr;
 
@@ -22,6 +31,10 @@ class GTK::CellRenderer {
 
   method GTK::Raw::Types::GtkCellRenderer {
     $!cr;
+  }
+
+  method disconnect-cellrenderer-signals {
+    self.disconnect-all(%!signals-cr);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -35,7 +48,7 @@ class GTK::CellRenderer {
   # Is originally:
   # void
   method editing-started {
-   self.connect($!cr, 'editing-started');
+   self.connect-editing-started($!cr);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

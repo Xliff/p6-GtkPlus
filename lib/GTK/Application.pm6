@@ -12,8 +12,12 @@ use GTK::Builder;
 use GTK::CSSProvider;
 use GTK::Window;
 
+use GTK::Roles::Signals;
+use GTK::Roles::Signals::Application;
+
 class GTK::Application {
   also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Application;
   also does GTK::Roles::Types;
 
   my $gapp;
@@ -105,6 +109,10 @@ ERR
       }
     });
 
+  }
+
+  submethod DESTROY {
+    self.disconnect-all(%!signals-app);
   }
 
   method GTK::Raw::Types::GtkApplication {
@@ -229,6 +237,27 @@ ERR
   method shutdown {
     self.connect($!app, 'shutdown');
   }
+
+  # Is originally:
+  # GtkApplication, GtkWindow, gpointer --> void
+  method window-added {
+<<<<<<< HEAD
+    self.connect-application-signal($!app, 'window-added');
+=======
+    self.connect-application-signal($!a, 'window-added');
+>>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
+  }
+
+  # Is originally:
+  # GtkApplication, GtkWindow, gpointer --> void
+  method window-removed {
+<<<<<<< HEAD
+    self.connect-application-signal($!app, 'window-removed');
+=======
+    self.connect-application-signal($!a, 'window-removed');
+>>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
+  }
+
 
   method add_accelerator (
     Str() $accelerator,

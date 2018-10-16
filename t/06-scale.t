@@ -29,16 +29,17 @@ $a.activate.tap({
   $hscale.add_mark(90, GTK_POS_BOTTOM, Str);
 
   # Formatting stops working after a while. Bug in GTK?
-  $hscale.format-value(:!supply).tap(-> $, $v, $ --> Str {
-    "→ { $v } ←";
+  $hscale.format-value.tap(-> *@a --> Str {
+     @a[*-1].r = "→ { @a[1] } ←";
   });
 
   $vscale.add_mark(0.1, GTK_POS_RIGHT, Str);
   $vscale.add_mark(0.5, GTK_POS_LEFT, Str);
   $vscale.add_mark(0.9, GTK_POS_LEFT, Str);
   $vscale.set_size_request(-1, 100);
-  $vscale.format-value(:!supply).tap(-> $, $v, $ --> Str {
-    "»{ $v }«";
+  
+  $vscale.format-value.tap(-> *@a --> Str {
+     @a[*-1].r = "»{ @a[1] }«";
   });
 
   $vbox.pack_start($title, True, True, 0);

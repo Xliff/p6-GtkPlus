@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::MenuShell;
 
+use GTK::Roles::Signals::Menu;
+
 class GTK::Menu is GTK::MenuShell {
+  also does GTK::Roles::Signals::Menu;
+
   has GtkMenu $!m;
 
   method bless(*%attrinit) {
@@ -46,6 +50,10 @@ class GTK::Menu is GTK::MenuShell {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals-menu);
+  }
+
   multi method new {
     my $menu = gtk_menu_new();
     self.bless(:$menu);
@@ -68,13 +76,13 @@ class GTK::Menu is GTK::MenuShell {
   # Is originally:
   # GtkMenu, GtkScrollType, gpointer --> void
   method move-scroll {
-    self.connect($!m, 'move-scroll');
+    self.connect-move-scroll($!m);
   }
 
   # Is originally:
   # GtkMenu, gpointer, gpointer, gboolean, gboolean, gpointer --> void
   method popped-up {
-    self.connect($!m, 'popped-up');
+    self.connect-popped-up($!m);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
