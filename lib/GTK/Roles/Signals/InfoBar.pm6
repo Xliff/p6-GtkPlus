@@ -15,7 +15,7 @@ role GTK::Roles::Signals::InfoBar {
     &handler?
   ) {
     my $hid;
-    %!signals-sb{$signal} //= do {
+    %!signals-ib{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_response($obj, $signal,
         -> $ib, $rid, $ud {
