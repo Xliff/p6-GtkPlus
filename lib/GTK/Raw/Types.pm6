@@ -873,6 +873,7 @@ class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkAccelGroup           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelLabel           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionBar            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkAspectFrame          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAdjustment           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAllocation           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAppChooser           is repr('CPointer') does GTK::Roles::Pointers is export { }
