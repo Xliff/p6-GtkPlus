@@ -47,7 +47,7 @@ role GTK::Roles::CellLayout {
     gtk_cell_layout_get_cells($!cl);
   }
 
-  method get_cell_layout_type {
+  method get_celllayout_type {
     gtk_cell_layout_get_type();
   }
 

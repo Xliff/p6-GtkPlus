@@ -239,10 +239,10 @@ role GTK::Roles::FileChooser {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_choice (
-    gchar $id,
-    gchar $label,
-    gchar $options,
-    gchar $option_labels
+    Str() $id,
+    Str() $label,
+    Str() $options,
+    Str() $option_labels
   ) {
     gtk_file_chooser_add_choice($!fc, $id, $label, $options, $option_labels);
   }
@@ -295,7 +295,7 @@ role GTK::Roles::FileChooser {
     gtk_file_chooser_get_preview_uri($!fc);
   }
 
-  method get_role_type {
+  method get_filechooser_type {
     gtk_file_chooser_get_type();
   }
 

@@ -35,7 +35,7 @@ role GTK::Roles::TreeSortable {
     so gtk_tree_sortable_get_sort_column_id($!ts, $s, $o);
   }
 
-  method get_type {
+  method get_treesortable_type {
     gtk_tree_sortable_get_type();
   }
 

@@ -40,7 +40,7 @@ role GTK::Roles::Actionable {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_actionable_role_type {
+  method get_actionable_type {
     gtk_actionable_get_type();
   }
 

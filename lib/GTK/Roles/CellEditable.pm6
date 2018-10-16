@@ -57,7 +57,7 @@ role GTK::Roles::CellEditable {
     gtk_cell_editable_editing_done($!ce);
   }
 
-  method role_editable_get_type  {
+  method get_celleditable_type {
     gtk_cell_editable_get_type();
   }
 

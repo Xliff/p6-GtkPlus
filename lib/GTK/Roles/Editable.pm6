@@ -95,7 +95,7 @@ role GTK::Roles::Editable {
     gtk_editable_get_selection_bounds($!er, $start_pos, $end_pos);
   }
 
-  method get_type () {
+  method get_editable_type () {
     gtk_editable_get_type();
   }
 

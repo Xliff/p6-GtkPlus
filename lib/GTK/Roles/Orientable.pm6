@@ -31,7 +31,7 @@ role GTK::Roles::Orientable {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_role_type {
+  method get_orientable_type {
     gtk_orientable_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -50,8 +50,8 @@ role GTK::Roles::ColorChooser {
     $color;
   }
 
-  method get_role_type {
-    warn "There is no role type for GTK::Roles::ColorChooser";
+  method get_colorchooser_type {
+    warn 'There is no role type for GTK::Roles::ColorChooser';
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

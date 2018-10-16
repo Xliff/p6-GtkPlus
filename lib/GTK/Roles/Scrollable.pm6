@@ -67,7 +67,7 @@ role GTK::Roles::Scrollable {
     gtk_scrollable_get_border($!s, $border);
   }
 
-  method get_type {
+  method get_scrollable_type {
     gtk_scrollable_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

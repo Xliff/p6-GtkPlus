@@ -112,7 +112,7 @@ role GTK::Roles::TreeModel {
     gtk_tree_model_get_string_from_iter($!tm, $iter);
   }
 
-  method get_type {
+  method get_treemodel_type {
     gtk_tree_model_get_type();
   }
 
