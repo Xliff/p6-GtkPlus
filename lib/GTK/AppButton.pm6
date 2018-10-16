@@ -46,6 +46,10 @@ class GTK::AppButton is GTK::ComboBox {
     $!ac = nativecast(GtkAppChooser, $!acb);
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals-ab);
+  }
+
   multi method new(Str $content-type) {
     my $appbutton = gtk_app_chooser_button_new($content-type);
     self.bless(:$appbutton);
@@ -60,7 +64,7 @@ class GTK::AppButton is GTK::ComboBox {
   # Is originally:
   # GtkAppChooserButton, gchar, gpointer --> void
   method custom-item-activated {
-    self.connect($!acb, 'custom-item-activated');
+    self.connect-custom-item-activated($!acb);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

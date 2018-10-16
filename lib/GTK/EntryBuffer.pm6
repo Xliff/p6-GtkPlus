@@ -5,14 +5,20 @@ use GTK::Raw::EntryBuffer;
 use GTK::Raw::Types;
 
 use GTK::Roles::Signals;
+use GTK::Roles::Signals::EntryBuffer;
 
 class GTK::EntryBuffer {
   also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::EntryBuffer;
 
   has GtkEntryBuffer $!b;
 
   submethod BUILD (:$buffer) {
     $!b = $buffer;
+  }
+
+  submethod DESTROY {
+    self.disconnect-all(%!signals-eb);
   }
 
   method new (Str $text, Int() $text_len) {
@@ -28,11 +34,11 @@ class GTK::EntryBuffer {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method deleted-text {
-    self.connect($!b, 'deleted-text');
+    self.connect-deleted-text($!b);
   }
 
   method inserted-text {
-    self.connect($!b, 'inserted-text');
+    self.connect-inserted-textt($!b);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -42,8 +48,9 @@ class GTK::EntryBuffer {
       FETCH => sub ($) {
         gtk_entry_buffer_get_max_length($!b);
       },
-      STORE => sub ($, $max_length is copy) {
-        gtk_entry_buffer_set_max_length($!b, $max_length);
+      STORE => sub ($, Int() $max_length is copy) {
+        my guint $m = self.RESOLVE-INT($max_length);
+        gtk_entry_buffer_set_max_length($!b, $m);
       }
     );
   }
@@ -53,23 +60,43 @@ class GTK::EntryBuffer {
       FETCH => sub ($) {
         gtk_entry_buffer_get_text($!b);
       },
-      STORE => sub ($, Str $text is copy) {
+      STORE => sub ($, Str() $text is copy) {
         gtk_entry_buffer_set_text($!b, $text, $text.chars);
       }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
-  method delete_text (guint $position, gint $n_chars) {
-    gtk_entry_buffer_delete_text($!b, $position, $n_chars);
+  # Type: guint
+  method length is rw {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new( self.prop_get($!b, 'length', $gv); );
+        $gv.uint;
+      },
+      STORE => -> $, $val is copy {
+        warn "length does not allow writing"
+      }
+    );
   }
 
-  method emit_deleted_text (guint $position, guint $n_chars) {
-    gtk_entry_buffer_emit_deleted_text($!b, $position, $n_chars);
+  method delete_text (Int() $position, Int() $n_chars) {
+    my guint $p = self.RESOLVE-UINT($position);
+    my gint $nc = self.RESOLVE-INT($n_chars);
+    gtk_entry_buffer_delete_text($!b, $p, $nc);
   }
 
-  method emit_inserted_text (guint $position, gchar $chars, guint $n_chars) {
-    gtk_entry_buffer_emit_inserted_text($!b, $position, $chars, $n_chars);
+  method emit_deleted_text (Int() $position, Int() $n_chars) {
+    my guint $p = self.RESOLVE-UINT($position);
+    my gint $nc = self.RESOLVE-INT($n_chars);
+    gtk_entry_buffer_emit_deleted_text($!b, $p, $nc);
+  }
+
+  method emit_inserted_text (Int() $position, Str() $chars, Int() $n_chars) {
+    my guint $p = self.RESOLVE-UINT($position);
+    my gint $nc = self.RESOLVE-INT($n_chars);
+    gtk_entry_buffer_emit_inserted_text($!b, $p, $chars, $nc);
   }
 
   method get_bytes {
@@ -84,12 +111,15 @@ class GTK::EntryBuffer {
     gtk_entry_buffer_get_type();
   }
 
-  method insert_text (guint $position, gchar $chars, gint $n_chars) {
-    gtk_entry_buffer_insert_text($!b, $position, $chars, $n_chars);
+  method insert_text (guint $position, Str() $chars, Int() $n_chars) {
+    my guint $p = self.RESOLVE-UINT($position);
+    my gint $nc = self.RESOLVE-INT($n_chars);
+    gtk_entry_buffer_insert_text($!b, $p, $chars, $nc);
   }
 
-  method set_text (gchar $chars, gint $n_chars) {
-    gtk_entry_buffer_set_text($!b, $chars, $n_chars);
+  method set_text (Str() $chars, Int() $n_chars) {
+    my gint $nc = self.RESOLVE-INT($n_chars);
+    gtk_entry_buffer_set_text($!b, $chars, $nc);
   }
 
 }

@@ -8,15 +8,16 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-class GTK::MenuItem is GTK::Bin {
-  has GtkMenuItem $!mi;
+use GTK::Roles::Actionable;
+use GTK::Roles::Signals::MenuItem;
 
-  # Thanks, Zoffix!
-  # method bless(*%attrinit) {
-  #   my $o := self.Mu::bless: |%attrinit;
-  #   $o.setType('GTK::MenuItem');
-  #   $o;
-  # }
+my subset Ancestry where GtkMenuItem | GtkActionable | GtkWidget;
+
+class GTK::MenuItem is GTK::Bin {
+  also does GTK::Roles::Actionable;
+  also does GTK::Roles::Signals::MenuItem;
+
+  has GtkMenuItem $!mi;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -32,7 +33,7 @@ class GTK::MenuItem is GTK::Bin {
     :$right
   ) {
     given $menuitem {
-      when GtkMenuItem | GtkWidget {
+      when Ancestry {
         self.setMenuItem($menuitem);
       }
       when GTK::MenuItem {
@@ -54,6 +55,10 @@ class GTK::MenuItem is GTK::Bin {
     self.right_justified = True if $right;
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals-mi);
+  }
+
   method setMenuItem($menuitem) {
     my $to-parent;
     $!mi = do given $menuitem {
@@ -61,11 +66,16 @@ class GTK::MenuItem is GTK::Bin {
         $to-parent = $_;
         nativecast(GtkMenuItem, $_);
       }
+      when GtkActionable {
+        $!a = $_;
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkMenuItem, $_);
       when GtkMenuItem {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
     }
+    $!a //= nativecast(GtkActionable, $!mi);  # GTK::Roles::Actionable
     self.setBin($to-parent);
   }
 
@@ -154,13 +164,13 @@ class GTK::MenuItem is GTK::Bin {
   # Is originally:
   # GtkMenuItem, gint, gpointer --> void
   method toggle-size-allocate {
-    self.connect($!mi, 'toggle-size-allocate');
+    self.connect-toggle-size-allocate($!mi);
   }
 
   # Is originally:
   # GtkMenuItem, gpointer, gpointer --> void
   method toggle-size-request {
-    self.connect($!mi, 'toggle-size-request');
+    self.connect-toggle-size-request($!mi);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

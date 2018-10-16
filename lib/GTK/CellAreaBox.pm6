@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 use GTK::CellArea;
 
 use GTK::Roles::Orientable;
+use GTK::Roles::CellLayout;
+
+my subset Ancestry
+  where GtkCellAreaBox | GtkCellArea | GtkOrientable | GtkCellLayout | GtkWidget;
 
 class GTK::CellAreaBox is GTK::CellArea {
   also does GTK::Roles::Orientable;
@@ -24,13 +28,23 @@ class GTK::CellAreaBox is GTK::CellArea {
   submethod BUILD(:$cellbox) {
     my $to-parent;
     given $cellbox {
-      when GtkCellAreaBox | GtkWidget {
+      when Ancestry {
         $!cab = do {
-          when GtkWidget {
+          when GtkWidget | GtkCellArea {
             $to-parent = $_;
             nativecast(GtkCellAreaBox, $_);
           }
-          when GtkCellAreaBox  {
+          when GtkOrientable {
+            $!or = $_;                          # GTK::Roles::Orientable
+            $to-parent = nativecast(GtkCellArea, $_);
+            nativecast(GtkCellAreaBox, $_);
+          }
+          when GtkCellLayout {
+            $!cl = $_;                          # GTK::Roles::CellLayout
+            $to-parent = nativecast(GtkCellArea, $_);
+            nativecast(GtkCellAreaBox, $_);
+          }
+          when GtkCellAreaBox {
             $to-parent = nativecast(GtkCellArea, $_);
             $_;
           }
@@ -42,8 +56,20 @@ class GTK::CellAreaBox is GTK::CellArea {
       default {
       }
     }
-    # For GTK::Roles::Orientable
-    $!or = nativecast(GtkOrientable, $!cab);
+    $!cl //= nativecast(GtkCellLayout, $!cab);  # GTK::Roles::CellLayout
+    $!or //= nativecast(GtkOrientable, $!cab);  # GTK::Roles::Orientable
+  }
+
+  submethod DESTROY {
+    self.disconnect-all(%!signals-ca);
+  }
+
+  multi method new {
+    my $cellbox = gtk_cell_area_box_new();
+    self.bless(:$cellbox);
+  }
+  multi method new (Ancestry $cellbox) {
+    self.bless(:$cellbox);
   }
 
   method GTK::Raw::Types::GtkCellArea {
@@ -72,27 +98,26 @@ class GTK::CellAreaBox is GTK::CellArea {
     gtk_cell_area_box_get_type();
   }
 
-  method new {
-    my $cellbox = gtk_cell_area_box_new();
-    self.bless(:$cellbox);
-  }
-
   method pack_end (
     GtkCellRenderer() $renderer,
-    gboolean $expand,
-    gboolean $align,
-    gboolean $fixed
+    Int() $expand,
+    Int() $align,
+    Int() $fixed
   ) {
-    gtk_cell_area_box_pack_end($!cab, $renderer, $expand, $align, $fixed);
+    my @b = ($expand, $align, $fixed);
+    my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
+    gtk_cell_area_box_pack_end($!cab, $renderer, $e, $a, $f);
   }
 
   method pack_start (
     GtkCellRenderer() $renderer,
-    gboolean $expand,
-    gboolean $align,
-    gboolean $fixed
+    Int() $expand,
+    Int() $align,
+    Int() $fixed
   ) {
-    gtk_cell_area_box_pack_start($!cab, $renderer, $expand, $align, $fixed);
+    my @b = ($expand, $align, $fixed);
+    my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
+    gtk_cell_area_box_pack_start($!cab, $renderer, $e, $a, $f);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑

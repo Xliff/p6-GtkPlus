@@ -10,8 +10,11 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Properties;
 
+use GTK::Roles::Signals::CellRenderer;
+
 class GTK::CellRenderer {
   also does GTK::Roles::Properties;
+  also does GTK::Roles::Signals::CellRenderer;
 
   has GtkCellRenderer $!cr;
 
@@ -35,7 +38,7 @@ class GTK::CellRenderer {
   # Is originally:
   # void
   method editing-started {
-   self.connect($!cr, 'editing-started');
+   self.connect-editing-started($!cr);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

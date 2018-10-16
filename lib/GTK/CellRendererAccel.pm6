@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::CellRendererText;
 
+use GTK::Roles::Signals::CellRendererAccel;
+
 class GTK::CellRendererAccel is GTK::CellRendererText {
+  also does GTK::Roles::Signals::CellRendererAccel;
+
   has GtkCellRendererAccel $!cra;
 
   method bless(*%attrinit) {
@@ -40,6 +44,10 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals-cra);
+  }
+
   method new {
     my $cellaccel = gtk_cell_renderer_accel_new();
     self.bless(:$cellaccel);
@@ -54,13 +62,13 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   # Is originally:
   # GtkCellRendererAccel, gchar, gpointer --> void
   method accel-cleared {
-    self.connect($!cra, 'accel-cleared');
+    self.connect-accel-cleared($!cra);
   }
 
   # Is originally:
   # GtkCellRendererAccel, gchar, guint, GdkModifierType, guint, gpointer --> void
   method accel-edited {
-    self.connect($!cra, 'accel-edited');
+    self.connect-accel-edited($!cra);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

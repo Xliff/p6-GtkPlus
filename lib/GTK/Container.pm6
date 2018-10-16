@@ -11,7 +11,11 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::Widget;
 
+use GTK::Roles::Signals::Container;
+
 class GTK::Container is GTK::Widget {
+  also does GTK::Roles::Signals::Container;
+
   # Maybe this should be done as the base class.
   has $!c;
   has $!add-latch;
@@ -28,6 +32,10 @@ class GTK::Container is GTK::Widget {
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all(%!signals-Container);
   }
 
   #submethod DESTROY {
@@ -101,13 +109,13 @@ class GTK::Container is GTK::Widget {
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
   multi method add {
-    self.connect($!c, 'add');
+    self.connect-container-signal($!c, 'add');
   }
 
   # Signal - Last
   # Made multi to prevent a conflict with method remove (GtkWidget)
   multi method remove {
-    self.connect($!c, 'remove');
+    self.connect-container-signal($!c, 'remove');
   }
 
   # Signal - Last
@@ -117,7 +125,7 @@ class GTK::Container is GTK::Widget {
 
   # Signal - Last
   method set-focus-child {
-    self.connect($!c, 'set-focus-child');
+    self.connect-container-signal($!c, 'set-focus-child');
   }
 
 

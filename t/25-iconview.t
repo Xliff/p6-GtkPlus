@@ -92,7 +92,7 @@ sub create_store {
   $store.set_default_sort_func(&sort_func);
 }
 
-sub item_activated ($iv, $tp, $ud) {
+sub item_activated ($iv, $tp, $ud, $r) {
   my $iter = GtkTreeIter.new;
 
   $store.get_iter($iter, $tp);

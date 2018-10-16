@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Window;
 
+use GTK::Roles::Signals::Assistant;
+
 class GTK::Assistant is GTK::Window {
+  also does GTK::Roles::Signals::Assistant;
+
   has GtkAssistant $!a;
 
   method bless(*%attrinit) {
@@ -38,6 +42,10 @@ class GTK::Assistant is GTK::Window {
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all(%!signals-asst);
   }
 
   multi method new {
@@ -77,7 +85,7 @@ class GTK::Assistant is GTK::Window {
   # Is originally:
   # GtkAssistant, GtkWidget, gpointer --> void
   method prepare {
-    self.connect($!a, 'prepare');
+    self.connect-prepare($!a);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

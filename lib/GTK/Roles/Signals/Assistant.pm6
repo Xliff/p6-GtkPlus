@@ -7,45 +7,47 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::Scale {
-  has %!signals-scale;
+role GTK::Roles::Signals::Assistant {
+  has %!signals-asst;
 
-  method connect-format-value (
+  # Copy for each signal.
+  method connect-prepare (
     $obj,
-    $signal = 'format-value',
+    $signal,
     &handler?
   ) {
     my $hid;
-    %!signals-scale{$signal} //= do {
+    %!signals-<name>{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_format_value($obj, $signal,
-        -> $scale, $v, $ud --> Str {
+      $hid = g_connect_prepare($obj, $signal,
+        -> $a, $w, $ud {
           CATCH {
             default { note $_; }
           }
+
           my $r = ReturnedValue.new;
-          $s.emit( [self, $v, $ud, $r] );
+          $s.emit( [self, $w, $ud, $r] );
           $r.r;
         },
         OpaquePointer, 0
       );
-      [ $s.Supply, $obj, $hid ];
+      [ $s.Supply, $obj, $hid];
     };
-    %!signals-scale{$signal}[0].tap(&handler) with &handler;
-    %!signals-scale{$signal}[0];
+    %!signals-asst{$signal}[0].tap(&handler) with &handler;
+    %!signals-asst{$signal}[0];
   }
 
 }
 
-sub g_connect_format_value(
+# Define for each signal
+sub g_connect_prepare(
   Pointer $app,
   Str $name,
-  &handler (Pointer, gdouble, Pointer --> Str),
+  &handler (Pointer, Pointer, Pointer),
   Pointer $data,
   uint32 $flags
 )
   returns uint32
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  is export
   { * }

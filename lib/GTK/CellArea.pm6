@@ -30,25 +30,25 @@ class GTK::CellArea {
   # Is originally:
   # GtkCellArea, GtkCellRenderer, GtkCellEditable, GdkRectangle, gchar, gpointer --> void
   method add-editable {
-    self.connect($!ca, 'add-editable');
+    self.connect-add-editable($!ca);
   }
 
   # Is originally:
   # GtkCellArea, GtkTreeModel, GtkTreeIter, gboolean, gboolean, gpointer --> void
   method apply-attributes {
-    self.connect($!ca, 'apply-attributes');
+    self.connect-apply-attributes($!ca);
   }
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, gchar, gpointer --> void
   method focus-changed {
-    self.connect($!ca, 'focus-changed');
+    self.connect-focus-changed($!ca);
   }
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, GtkCellEditable, gpointer --> void
   method remove-editable {
-    self.connect($!ca, 'remove-editable');
+    self.connect-remove-editable($!ca);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

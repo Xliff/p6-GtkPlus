@@ -29,7 +29,7 @@ class GTK::IconView is GTK::Container {
   }
 
   submethod DESTROY {
-    self.disconnect($_, %!signals-iv{$_}) for %!signals-iv.keys
+    self.disconnect-all(%!signals-iv{$_});
   }
 
   submethod BUILD(:$iconview) {
@@ -80,19 +80,19 @@ class GTK::IconView is GTK::Container {
   # Is originally:
   # GtkIconView, gpointer --> gboolean
   method activate-cursor-item {
-    self.connect($!iv, 'activate-cursor-item');
+    self.connect-activate-cursor-item($!iv);
   }
 
   # Is originally:
   # GtkIconView, GtkTreePath, gpointer --> void
   method item-activated {
-    self.connect-item-activated($!iv, 'item-activated');
+    self.connect-item-activated($!iv);
   }
 
   # Is originally:
   # GtkIconView, GtkMovementStep, gint, gpointer --> gboolean
   method move-cursor {
-    self.connect-move-cursor($!iv, 'move-cursor');
+    self.connect-move-cursor($!iv);
   }
 
   # Is originally:
