@@ -924,6 +924,7 @@ class GtkEntryCompletion      is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkExpander             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFileChooser          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFileChooserButton    is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkFileChooserDialog    is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFileFilter           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFixed                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFontButton           is repr('CPointer') does GTK::Roles::Pointers is export { }

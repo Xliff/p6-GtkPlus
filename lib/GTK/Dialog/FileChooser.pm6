@@ -7,11 +7,15 @@ use GTK::Raw::Types;
 
 use GTK::Dialog;
 
+use GTK::Roles::FileChooser;
+
 my subset Ancestry
   where GtkFileChooserDialog | GtkDialog | GtkFileChooser | GtkWidget;
 
 class GTK::FileChooserDialog is GTK::Dialog {
-  has GtkFileChooserDialog $!fcb;
+  also does GTK::Roles::FileChooser;
+
+  has GtkFileChooserDialog $!fcd;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -45,7 +49,7 @@ class GTK::FileChooserDialog is GTK::Dialog {
       default {
       }
     }
-    $!fc //= nativecast(GtkFileChooser, $!fcb);   # GTK::Roles::FileChooser
+    $!fc //= nativecast(GtkFileChooser, $!fcd);   # GTK::Roles::FileChooser
   }
 
   multi method new (
@@ -106,7 +110,7 @@ class GTK::FileChooserDialog is GTK::Dialog {
 sub gtk_file_chooser_dialog_new (
   Str $title,
   GtkWindow $parent,
-  uint32 $action                # GtkFileChooserAction  $action,
+  uint32 $action,               # GtkFileChooserAction  $action,
   Str $first_button_text,
   gint $button_response_id,
   Str
