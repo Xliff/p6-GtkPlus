@@ -62,11 +62,7 @@ class GTK::CellAreaBox is GTK::CellArea {
   }
 
   submethod DESTROY {
-<<<<<<< HEAD
     self.disconnect-cellarea-signals;
-=======
-    self.disconnect-all(%!signals-ca);
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   }
 
   multi method new {

@@ -43,11 +43,7 @@ role GTK::Roles::Signals::CellRenderer {
 sub g_connect_editing_started(
   Pointer $app,
   Str $name,
-<<<<<<< HEAD
   &handler (Pointer, GtkCellEditable, Str, Pointer),
-=======
-  &handler (Poiner, GtkCellEditable, Str, Pointer),
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   Pointer $data,
   uint32 $flags
 )

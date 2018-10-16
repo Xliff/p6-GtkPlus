@@ -241,21 +241,13 @@ ERR
   # Is originally:
   # GtkApplication, GtkWindow, gpointer --> void
   method window-added {
-<<<<<<< HEAD
     self.connect-application-signal($!app, 'window-added');
-=======
-    self.connect-application-signal($!a, 'window-added');
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   }
 
   # Is originally:
   # GtkApplication, GtkWindow, gpointer --> void
   method window-removed {
-<<<<<<< HEAD
     self.connect-application-signal($!app, 'window-removed');
-=======
-    self.connect-application-signal($!a, 'window-removed');
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   }
 
 

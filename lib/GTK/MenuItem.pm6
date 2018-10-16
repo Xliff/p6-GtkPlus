@@ -70,10 +70,7 @@ class GTK::MenuItem is GTK::Bin {
         $!a = $_;
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkMenuItem, $_);
-<<<<<<< HEAD
       }
-=======
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
       when GtkMenuItem {
         $to-parent = nativecast(GtkBin, $_);
         $_;

@@ -11,11 +11,7 @@ use GTK::Bin;
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::ComboBox;
 
-<<<<<<< HEAD
 my subset Ancestry where GtkComboBox | GtkCellLayout | GtkWidget;
-=======
-subset Ancestry where GtkComboBox | GtkCellLayout | GtkWidget;
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
 
 class GTK::ComboBox is GTK::Bin {
   also does GTK::Roles::CellLayout;

@@ -14,12 +14,11 @@ use GTK::Roles::Signals::CellRenderer;
 
 use GTK::Roles::Signals::CellRenderer;
 
+use GTK::Roles::Signals::CellRenderer;
+
 class GTK::CellRenderer {
   also does GTK::Roles::Properties;
-<<<<<<< HEAD
   also does GTK::Roles::Signals;
-=======
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   also does GTK::Roles::Signals::CellRenderer;
 
   has GtkCellRenderer $!cr;

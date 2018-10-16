@@ -4,11 +4,6 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Raw::Types;
-<<<<<<< HEAD
-=======
-use GTK::Raw::Subs;
-use GTK::Raw::ReturnedValue;
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
 
 role GTK::Roles::Signals::MenuItem {
   has %!signals-mi;
@@ -28,21 +23,11 @@ role GTK::Roles::Signals::MenuItem {
             default { note $_; }
           }
 
-<<<<<<< HEAD
           $s.emit( [self, $i, $ud] );
         },
         OpaquePointer, 0
       );
-      [ $s.Supply, $obj, $hid ];
-=======
-          my $r = ReturnedValue.new;
-          $s.emit( [self, $i, $ud, $r] );
-          $r.r;
-        },
-        OpaquePointer, 0
-      );
       [ $s.Supply, $obj, $hid];
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
     };
     %!signals-mi{$signal}[0].tap(&handler) with &handler;
     %!signals-mi{$signal}[0];
@@ -62,21 +47,12 @@ role GTK::Roles::Signals::MenuItem {
             default { note $_; }
           }
 
-<<<<<<< HEAD
           $s.emit( [self, $ptr, $ud] );
         },
         OpaquePointer, 0
       );
-      [ $s.Supply, $obj, $hid ];
-=======
-          my $r = ReturnedValue.new;
-          $s.emit( [self, $ptr, $ud, $r] );
-          $r.r;
-        },
-        OpaquePointer, 0
-      );
+
       [ $s.Supply, $obj, $hid];
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
     };
     %!signals-mi{$signal}[0].tap(&handler) with &handler;
     %!signals-mi{$signal}[0];
@@ -85,11 +61,7 @@ role GTK::Roles::Signals::MenuItem {
 }
 
 # Define for each signal
-<<<<<<< HEAD
 sub g_connect_toggle_size_allocate (
-=======
-sub g_connect_toggle-size-allocate(
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   Pointer $app,
   Str $name,
   &handler (Pointer, gint, Pointer),
@@ -101,11 +73,7 @@ sub g_connect_toggle-size-allocate(
   is symbol('g_signal_connect_object')
   { * }
 
-<<<<<<< HEAD
 sub g_connect_toggle_size_request(
-=======
-sub g_connect_toggle-size-allocate(
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   Pointer $app,
   Str $name,
   &handler (Pointer, Pointer, Pointer),

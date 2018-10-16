@@ -29,13 +29,8 @@ role GTK::Roles::Signals::Events {
       );
       [ $s.Supply, $obj, $hid];
     };
-<<<<<<< HEAD
     %signals{$signal}[0].tap(&handler) with &handler;
     %signals{$signal}[0];
-=======
-    %!signals-cb{$signal}[0].tap(&handler) with &handler;
-    %!signals-cb{$signal}[0];
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   }
 
 }

@@ -17,11 +17,7 @@ role GTK::Roles::Signals::Assistant {
     &handler?
   ) {
     my $hid;
-<<<<<<< HEAD
     %!signals-asst{$signal} //= do {
-=======
-    %!signals-<name>{$signal} //= do {
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
       my $s = Supplier.new;
       $hid = g_connect_prepare($obj, $signal,
         -> $a, $w, $ud {

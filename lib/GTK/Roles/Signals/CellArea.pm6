@@ -121,11 +121,7 @@ role GTK::Roles::Signals::CellArea {
 sub g_connect_add_editable (
   Pointer $app,
   Str $name,
-<<<<<<< HEAD
   &handler (Pointer, GtkCellRenderer, GtkCellEditable, GdkRectangle, Str, Pointer),
-=======
-  &handler (Pointer, GtkCellRenderer, GtkCellEditable, GtkRectangle, Str, Pointer),
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   Pointer $data,
   uint32 $flags
 )
@@ -149,11 +145,7 @@ sub g_connect_apply_attributes (
 sub g_connect_focus_changed (
   Pointer $app,
   Str $name,
-<<<<<<< HEAD
   &handler (Pointer, GtkCellRenderer, Str, Pointer),
-=======
-  &handler (Pointer, GtkRenderer, Str, Pointer),
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   Pointer $data,
   uint32 $flags
 )
@@ -165,11 +157,7 @@ sub g_connect_focus_changed (
 sub g_connect_remove_editable (
   Pointer $app,
   Str $name,
-<<<<<<< HEAD
   &handler (Pointer, GtkCellRenderer, GtkCellEditable, Pointer),
-=======
-  &handler (Pointer, GtkRenderer, GtkCellEditable, Pointer),
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   Pointer $data,
   uint32 $flags
 )

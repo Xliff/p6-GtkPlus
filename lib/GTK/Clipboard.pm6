@@ -60,11 +60,7 @@ class GTK::Clipboard {
   # Is originally:
   # GtkClipboard, GdkEvent, gpointer --> void
   method owner-change {
-<<<<<<< HEAD
     self.connect-event($!cb, 'owner-change', %!signals-cb);
-=======
-    self.connect-event($!cb, 'owner-change', %signals-cb);
->>>>>>> 3fe12b2267efcadbc9466bf34cb9e1e7db5c0b45
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
