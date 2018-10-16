@@ -10,10 +10,6 @@ use GTK::Raw::ReturnedValue;
 role GTK::Roles::Signals::<name> {
   has %!signals-<name>;
 
-  method new-rv {
-    ReturnedValue.new;
-  }
-
   # Copy for each signal.
   method connect-<sigName> (
     $obj,
@@ -21,7 +17,7 @@ role GTK::Roles::Signals::<name> {
     &handler?
   ) {
     my $hid;
-    %!signals-iv{$signal} //= do {
+    %!signals-<name>{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_<sigName>($obj, $signal,
         -> <params>, $ud {
@@ -29,7 +25,8 @@ role GTK::Roles::Signals::<name> {
             default { note $_; }
           }
 
-          $s.emit( [self, <params>, $uid, new-rv] );
+          my $r = ReturnedValue.new;
+          $s.emit( [self, <params>, $ud, $r] );
           $r.r;
         },
         OpaquePointer, 0
@@ -43,7 +40,7 @@ role GTK::Roles::Signals::<name> {
 }
 
 # Define for each signal
-sub g_connect_item_<sigName>(
+sub g_connect_<sigName>(
   Pointer $app,
   Str $name,
   &handler (<params>, Pointer),

@@ -10,9 +10,13 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
+use GTK::Roles::Signals::Window;
+
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
 class GTK::Window is GTK::Bin {
+  also does GTK::Roles::Signals::Window;
+
   has GtkWindow $!win;
 
   method bless(*%attrinit) {
@@ -31,6 +35,10 @@ class GTK::Window is GTK::Bin {
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all(%!signals-win);
   }
 
   multi method new (
@@ -87,7 +95,7 @@ class GTK::Window is GTK::Bin {
   # Is originally:
   # GtkWindow, gboolean, gpointer --> gboolean
   method enable-debugging {
-    self.connect($!win, 'enable-debugging');
+    self.connect-enable-debugging($!win);
   }
 
   # Is originally:
@@ -99,7 +107,7 @@ class GTK::Window is GTK::Bin {
   # Is originally:
   # GtkWindow, GtkWidget, gpointer --> void
   method set-focus {
-    self.connect($!win, 'set-focus');
+    self.connect-set-focus($!win);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

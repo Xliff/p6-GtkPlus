@@ -44,8 +44,8 @@ role GTK::Roles::Signals {
 
   # If I cannot share attributes between roles, then each one will have
   # to have its own signature, or clean-up routine.
-  method disconnect_all {
-    self.disconnect($_) for %!signals.keys;
+  method disconnect-all (%sigs) {
+    self.disconnect($_, %sigs) for %sigs.keys;
   }
 
   method disconnect($signal, %signals) {
