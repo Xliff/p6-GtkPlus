@@ -91,6 +91,8 @@ class GTK::Dialog is GTK::Window {
    @buttons
   ) {
     die '@buttons cannot be empty' unless +@buttons;
+    die '\@buttons is not an array of pair objects!'
+      unless @buttons.all ~~ Pair;
     my $fb = @buttons.shift;
     my $o = GTK::Dialog.new_with_button(
       $title,
