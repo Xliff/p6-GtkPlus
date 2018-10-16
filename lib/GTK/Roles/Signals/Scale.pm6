@@ -21,7 +21,7 @@ role GTK::Roles::Signals::Scale {
       $hid = g_connect_format_value($obj, $signal,
         -> $scale, $v, $ud --> Str {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $v, $ud, $r] );
@@ -44,7 +44,7 @@ sub g_connect_format_value(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   is export

@@ -44,6 +44,10 @@ class GTK::InfoBar is GTK::Box {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals-ib);
+  }
+
   multi method new {
     my $infobar = gtk_info_bar_new();
     self.bless(:$infobar);
@@ -63,19 +67,8 @@ class GTK::InfoBar is GTK::Box {
   #  gpointer    user_data)
   # - Made multi so as to not conflict with the implementation for
   #   gtk_info_bar_response
-  multi method response(:$supply = True) {
-    with %!signals<response> {
-      if $_[0] ~~ Supply {
-        die "Cannot mix <response> signal types" unless $supply;
-      } else {
-        die "Cannot mix <response> signal types" if $supply;
-      }
-    }
-
-    $supply ??
-      self.connect($!ib, 'response')
-      !!
-      self.connect-response($!ib);
+  multi method response {
+    self.connect-response($!ib);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

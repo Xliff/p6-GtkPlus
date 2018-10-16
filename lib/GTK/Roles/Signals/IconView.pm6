@@ -21,7 +21,7 @@ role GTK::Roles::Signals::IconView {
       $hid = g_connect_item_activated($obj, $signal,
         -> $iv, $ud --> gboolean {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $ud, $r] );
@@ -46,7 +46,7 @@ role GTK::Roles::Signals::IconView {
       $hid = g_connect_item_activated($obj, $signal,
         -> $iv, $tp, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $tp, $ud, $r] );
@@ -71,7 +71,7 @@ role GTK::Roles::Signals::IconView {
       $hid = g_connect_move_cursor($obj, $signal,
         -> $iv, $ms, $c, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $ms, $c, $ud, $r] );
@@ -94,7 +94,7 @@ sub g_connect_activate_cursor_item(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -106,7 +106,7 @@ sub g_connect_item_activated(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -118,7 +118,7 @@ sub g_connect_move_cursor (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

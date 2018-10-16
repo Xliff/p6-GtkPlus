@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Application {
       $hid = g_connect_application_signal($obj, $signal,
         -> $a, $w, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -47,7 +47,7 @@ sub g_connect_application_signal(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

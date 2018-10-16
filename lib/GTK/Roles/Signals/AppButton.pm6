@@ -22,7 +22,7 @@ role GTK::Roles::Signals::AppButton {
       $hid = g_connect_custom_item_activated($obj, $signal,
         -> $ac, $item, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -47,7 +47,7 @@ sub g_connect_custom_item_activated(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

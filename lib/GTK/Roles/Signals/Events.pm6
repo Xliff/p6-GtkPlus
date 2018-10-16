@@ -20,7 +20,7 @@ role GTK::Roles::Signals::Events {
       $hid = g_connect_event($obj, $signal,
         -> $o, $e, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           $s.emit( [self, $o, $e, $ud] );
@@ -43,7 +43,7 @@ sub g_connect_event(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

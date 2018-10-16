@@ -20,7 +20,7 @@ role GTK::Roles::Signals::EntryBuffer {
       $hid = g_connect_deleted_text($obj, $signal,
         -> $b, $p, $nc, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           $s.emit( [self, $p, $nc, $ud ] );
@@ -44,7 +44,7 @@ role GTK::Roles::Signals::EntryBuffer {
       $hid = g_connect_inserted_text($obj, $signal,
         -> $b, $p, $str, $nc, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           $s.emit( [self, $p, $str, $nc, $ud] );
@@ -67,7 +67,7 @@ sub g_connect_deleted_text(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -79,7 +79,7 @@ sub g_connect_inserted_text(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

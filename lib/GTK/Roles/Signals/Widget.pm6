@@ -19,7 +19,7 @@ role GTK::Roles::Signals::Widget {
       g_connect_draw($obj, $signal,
         -> $, $cr, $ud --> uint32 {
           $s.emit( [self, $cr, $ud] );
-          CATCH { default { note $_; } }
+          CATCH { default { $s.quit($_) } }
           0;
         },
         OpaquePointer, 0

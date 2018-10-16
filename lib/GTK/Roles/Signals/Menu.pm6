@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Menu {
       $hid = g_connect_move_scroll($obj, $signal,
         -> $m, $s, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -49,7 +49,7 @@ role GTK::Roles::Signals::Menu {
       $hid = g_connect_popped_up($obj, $signal,
         -> $m, $flpr, $finr, $fx, $fy, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -74,7 +74,7 @@ sub g_connect_move_scroll(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -87,7 +87,7 @@ sub g_connect_move_scroll(
     Pointer $data,
     uint32 $flags
   )
-    returns uint32
+    returns uint64
     is native('gobject-2.0')
     is symbol('g_signal_connect_object')
     { * }

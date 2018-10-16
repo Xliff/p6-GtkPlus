@@ -20,7 +20,7 @@ role GTK::Roles::Signals::MenuItem {
       $hid = g_connect_toggle_size_allocate($obj, $signal,
         -> $mu, $i, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           $s.emit( [self, $i, $ud] );
@@ -44,7 +44,7 @@ role GTK::Roles::Signals::MenuItem {
       $hid = g_connect_toggle_size_request($obj, $signal,
         -> $mi, $ptr, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           $s.emit( [self, $ptr, $ud] );
@@ -68,7 +68,7 @@ sub g_connect_toggle_size_allocate (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -80,7 +80,7 @@ sub g_connect_toggle_size_request(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

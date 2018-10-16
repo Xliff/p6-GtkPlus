@@ -6,47 +6,31 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
-class ResponseHandler {
-  has $!s;
-  has $!o;
-  has %!sig;
-
-  submethod BUILD(:$!o, :$!s, :$sig) {
-    %!sig = %($sig);
-  }
-
-  method new($o, $s, $sig) {
-    self.bless(:$o, :$s, :$sig);
-  }
-
-  submethod DESTROY {
-    self.free;
-  }
-
-  method tap(&handler) {
-    if %!sig{$!s}:exists {
-      warn "{ $!s.tc } signal for GTK::Infobar was already connected";
-      self.free;
-    }
-    my $sid = g_connect_response($!o, $!s, &handler, OpaquePointer, 0);
-    %!sig{$!s} = [ self, $sid ];
-  }
-
-  method free {
-    g_signal_handler_disconnect($!o, $_[1]) with %!sig{$!s};
-  }
-}
-
 role GTK::Roles::Signals::InfoBar {
-  has %!signals;
+  has %!signals-ib;
 
-  method connect-response(
+  method connect-response (
     $obj,
+    $signal = 'response',
     &handler?
   ) {
-    my $r = ResponseHandler.new($obj, 'response', %!signals);
-    $r.tap(&handler) with &handler;
-    $r;
+    my $hid;
+    %!signals-sb{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_response($obj, $signal,
+        -> $ib, $rid, $ud {
+          CATCH {
+            default { $s.quit($_); }
+          }
+
+          $s.emit( [self, $rid, $ud] );
+        },
+        OpaquePointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-ib{$signal}[0].tap(&handler) with &handler;
+    %!signals-ib{$signal}[0];
   }
 }
 
@@ -57,7 +41,7 @@ sub g_connect_response(
   OpaquePointer $data,
   uint32 $connect_flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

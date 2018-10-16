@@ -26,7 +26,7 @@ role GTK::Roles::Signals {
       $hid = g_signal_connect_wd($obj, $signal,
         -> $, $ {
             $s.emit(self);
-            CATCH { default { note $_; } }
+            CATCH { default { $s.quit($_) } }
         },
         OpaquePointer, 0
       );

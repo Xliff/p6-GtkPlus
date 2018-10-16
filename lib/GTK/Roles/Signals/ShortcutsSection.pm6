@@ -22,7 +22,7 @@ role GTK::Roles::Signals::ShortcutsSection {
       $hid = g_connect_changePage($obj, $signal,
         -> $ss, $p, $ud --> gboolean {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $p, $ud, $r] );
@@ -46,7 +46,7 @@ sub g_connect_changePage(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

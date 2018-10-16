@@ -22,7 +22,7 @@ role GTK::Roles::Signals::CellArea {
       $hid = g_connect_add_editable($obj, $signal,
         -> $a, $cr, $e, $ca, $p, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -48,7 +48,7 @@ role GTK::Roles::Signals::CellArea {
       $hid = g_connect_apply_attributes($obj, $signal,
         -> $a, $m, $i, $exp, $ext, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -74,7 +74,7 @@ role GTK::Roles::Signals::CellArea {
       $hid = g_connect_focus_changed($obj, $signal,
         -> $a, $cr, $p, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -100,7 +100,7 @@ role GTK::Roles::Signals::CellArea {
       $hid = g_connect_remove_editable($obj, $signal,
         -> $a, $cr, $ce, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -125,7 +125,7 @@ sub g_connect_add_editable (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -137,7 +137,7 @@ sub g_connect_apply_attributes (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -149,7 +149,7 @@ sub g_connect_focus_changed (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -161,7 +161,7 @@ sub g_connect_remove_editable (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

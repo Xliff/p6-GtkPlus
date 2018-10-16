@@ -21,7 +21,7 @@ role GTK::Roles::Signals::CellRendererAccel {
       $hid = g_connect_accel_cleared($obj, $signal,
         -> $ca, $ps, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           $s.emit( [self, $ps, $ud] );
@@ -45,7 +45,7 @@ role GTK::Roles::Signals::CellRendererAccel {
       $hid = g_connect_accel_edited($obj, $signal,
         -> $ca, $ps, $ak, $am, $hk, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           $s.emit( [self, $ps, $ak, $am, $hk, $ud] );
@@ -68,7 +68,7 @@ sub g_connect_accel_cleared (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -80,7 +80,7 @@ sub g_connect_accel_edited (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

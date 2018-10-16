@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Window {
       $hid = g_connect_enable_debugging($obj, $signal,
         -> $w, $t, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -49,7 +49,7 @@ role GTK::Roles::Signals::Window {
       $hid = g_connect_set_focus($obj, $signal,
         -> $w, $widget, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -74,7 +74,7 @@ sub g_connect_enable_debugging(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -87,7 +87,7 @@ sub g_connect_set_focus (
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

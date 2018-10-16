@@ -22,7 +22,7 @@ role GTK::Roles::Signals::ComboBox {
       $hid = g_connect_format_entry_text($obj, $signal,
         -> $cb, $p, $ud --> Str {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -49,7 +49,7 @@ role GTK::Roles::Signals::ComboBox {
       $hid = g_connect_move_active($obj, $signal,
         -> $cb, $st, $ud {
           CATCH {
-            default { note $_; }
+            default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -74,7 +74,7 @@ sub g_connect_format_entry_text(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
@@ -86,7 +86,7 @@ sub g_connect_move_active(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
