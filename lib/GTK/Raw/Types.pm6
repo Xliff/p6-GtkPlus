@@ -938,6 +938,7 @@ class GtkIconView             is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkInfoBar              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLabel                is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkLayout               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLevelBar             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLinkButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLockButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
