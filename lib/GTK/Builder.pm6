@@ -12,11 +12,14 @@ use GTK::Raw::Subs;
 
 use GTK;
 use GTK::Adjustment;
+use GTK::CSSProvider;
 use GTK::Widget;
 
 class GTK::Builder does Associative {
   has GtkBuilder $!b;
+  has GtkWindow $.window;
   has %!types;
+
   has %!widgets handles <
     EXISTS-KEY
     elems
@@ -28,45 +31,79 @@ class GTK::Builder does Associative {
     sort
   >;
 
-  method init {
-    my $argc = CArray[uint32].new;
-    $argc[0] = 1;
-    my $args = CArray[Str].new;
-    $args[0] = $*PROGRAM.Str;
-    my $argv = CArray[CArray[Str]].new;
-    $argv[0] = $args;
-    gtk_init($argc, $argv) unless gtk_init_check();
-  }
-
-  method run {
-    gtk_main();
-  }
-
-  submethod BUILD(:$builder) {
+  submethod BUILD(
+    :$builder!,
+    :$pod,
+    :$ui,
+    :$window-name,
+    :$style
+  ) {
     $!b = $builder;
+
+    my %sections;
+    my ($ui-data, $style-data);
+    with $pod {
+      for $pod.grep( *.name eq <css ui>.any ).Array {
+        # This may not always be true. Keep up with POD spec!
+        %sections{ .name } //= $_.contents.map( *.contents[0] ).join("\n");
+        last when %sections<css>.defined && %sections<ui>.defined;
+      }
+      ($ui-data, $style-data) = %sections<ui css>;
+    } else {
+         $ui-data = $_ with $ui;
+      $style-data = $_ with $style;
+    }
+
+    with $ui-data {
+      self.add_from_string($_);
+      # Set $!title, $!width, $!height from application window, but
+      # what would be the best way to get that from the builder?
+      #
+      # The answer: that information is REALLY NOT IMPORTANT in this stage of
+      # GtkBuilder support!
+
+      # MUST define an activate handler!!
+      $!window = GTK::Window.new(
+        :widget( self.get_object($window-name) )
+      );
+
+      die qq:to/ERR/ unless $!window;
+Application window '#application' was not found. Please do one of the following:
+   - Rename the top-level window to 'application' in the .ui file
+   OR
+   - Specify the name of the top-level window using the named parameter
+     :\$window-name in the constructor to GTK::Application
+ERR
+    }
+
+    with $style-data {
+      my $cp = GTK::CSSProvider.new;
+      $cp.load_from_data($_);
+    }
   }
 
-  method new {
-    GTK::Builder.init;
+  method new (
+    :$pod,
+    :$ui,
+    :$window-name,
+    :$style
+  ) {
     my $builder = gtk_builder_new();
-    self.bless(:$builder);
+    self.bless(:$builder, :$pod, :$ui, :$window-name, :$style);
   }
 
-  method new_from_file (gchar $filename) {
-    GTK::Builder.init;
+  method new_from_file (Str() $filename) {
     my $builder = gtk_builder_new_from_file($filename);
     self.bless(:$builder);
   }
 
-  method new_from_resource (gchar $resource) {
-    GTK::Builder.init;
+  method new_from_resource (Str() $resource) {
     my $builder = gtk_builder_new_from_resource($resource);
     self.bless(:$builder);
   }
 
-  method new_from_string (gchar $string, Int() $length = -1) {
-    GTK::Builder.init;
-    die "\$string must not be negative" unless $length > -2;
+  method new_from_string (Str() $string, Int() $length = -1) {
+    die '$length must not be negative' unless $length > -2;
     my gssize $l = $length;
     my $builder = gtk_builder_new_from_string($string, $l);
     self.bless(:$builder);

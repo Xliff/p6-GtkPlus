@@ -60,6 +60,7 @@ $a.activate.tap({
   my $vbox = GTK::Box.new-vbox;
   $menubar.show;
   $vbox.pack_start($menubar);
+
   $a.window.add($vbox);
   $a.window.show_all;
 

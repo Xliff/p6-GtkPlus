@@ -25,13 +25,11 @@ role GTK::Roles::Signals::Application {
             default { $s.quit($_) }
           }
 
-          my $r = ReturnedValue.new;
-          $s.emit( [self, $w, $ud, $r] );
-          $r.r;
+          $s.emit( [self, $w, $ud] );
         },
         OpaquePointer, 0
       );
-      [ $s.Supply, $obj, $hid];
+      [ $s.Supply, $obj, $hid ];
     };
     %!signals-app{$signal}[0].tap(&handler) with &handler;
     %!signals-app{$signal}[0];

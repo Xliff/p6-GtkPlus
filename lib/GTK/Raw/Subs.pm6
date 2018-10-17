@@ -55,10 +55,10 @@ sub g_object_get_string(OpaquePointer $o, gchar $key)
   { * }
 
 sub g_signal_connect_wd(
-  OpaquePointer $app,
+  Pointer $app,
   Str $name,
-  &handler (GtkWidget $h_widget, OpaquePointer $h_data),
-  OpaquePointer $data,
+  &handler (GtkWidget $h_widget, Pointer $h_data),
+  Pointer $data,
   uint32 $connect_flags
 )
   returns uint64

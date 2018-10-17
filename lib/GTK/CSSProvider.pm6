@@ -11,7 +11,9 @@ class GTK::CSSProvider {
 
   submethod BUILD(
     :$provider,
-    :$priority
+    :$priority,
+    :$pod,
+    :$style-data
   ) {
     my uint32 $p = do given $priority {
       when GtkStyleProviderPriority { .Int; }
@@ -26,11 +28,23 @@ class GTK::CSSProvider {
     my $display = gdk_display_get_default();
     my $screen = gdk_display_get_default_screen($display);
     gtk_style_context_add_provider_for_screen($screen, $!css, $p);
+
+    my %sections;
+    my $css = $style-data;
+    with $pod {
+      for $pod.grep( *.name eq 'css' ).Array {
+        # This may not always be true. Keep up with POD spec!
+        %sections{ .name } //= $_.contents.map( *.contents[0] ).join("\n");
+        last when %sections<css>.defined && %sections<ui>.defined;
+      }
+      $css ~= %sections<css>;
+    }
+    self.load_from_data($_) with $css;
   }
 
-  method new(:$priority) {
+  method new(:$priority, :$pod) {
     my $provider = gtk_css_provider_new();
-    self.bless(:$provider, :$priority);
+    self.bless(:$provider, :$priority, :$pod);
   }
 
 
@@ -50,7 +64,7 @@ class GTK::CSSProvider {
   #   gtk_css_provider_get_default();
   # }
 
-  method get_named (gchar $name, gchar $variant) {
+  method get_named (Str() $name, Str() $variant) {
     gtk_css_provider_get_named($name, $variant);
   }
 
@@ -59,7 +73,7 @@ class GTK::CSSProvider {
   }
 
   method load_from_data (
-    gchar $data,
+    Str() $data,
     Int() $length = -1,
     GError $error = GError
   ) {

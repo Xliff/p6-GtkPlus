@@ -8,6 +8,7 @@ use GTK::Application;
 use GTK::Box;
 use GTK::CellRendererText;
 use GTK::Statusbar;
+use GTK::TreeIter;
 use GTK::TreeView;
 use GTK::TreeViewColumn;
 use GTK::TreeSelection;

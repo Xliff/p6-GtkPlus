@@ -315,7 +315,7 @@
     "GTK::TreeViewColumn"            :  "lib/GTK/TreeViewColumn.pm6"           ,
     "GTK::VolumeButton"              :  "lib/GTK/VolumeButton.pm6"             ,
     "GTK::Widget"                    :  "lib/GTK/Widget.pm6"                   ,
-    "GTK::Window"                    :  "lib/GTK/Window.pm6"                   ,
+    "GTK::Window"                    :  "lib/GTK/Window.pm6"                   
   },
   "version" : "r0.2",
   "meta-version" : "0",

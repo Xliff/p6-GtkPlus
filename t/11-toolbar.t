@@ -2,9 +2,12 @@ use v6.c;
 
 use lib <t .>;
 
-use GTK::Application;
 use GTK::Raw::Types;
 use GTK::Compat::Types;
+
+use GTK::Application;
+use GTK::Grid;
+use GTK::Image;
 use GTK::Toolbar;
 use GTK::ToolButton;
 use GTK::ToolItem;
@@ -80,7 +83,6 @@ $a.activate.tap({
   $a.window.title = 'ToolBar Example';
   $tb.hexpand = True;
   $g.attach($tb, 1, 1, 1, 1);
-  $a.window.destroy-signal.tap({ $a.exit; });
   $a.window.add($g);
   $a.window.show_all;
   %buttons<view-restore>.hide;

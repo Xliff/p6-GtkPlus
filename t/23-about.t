@@ -31,6 +31,7 @@ L
 	$d.wrap_license = True;
 	$d.website = "http://github.com/Xliff/p6-GtkPlus/";
 	$d.website_label = "Perl6 GtkPlus";
+  say "HI!";
 
   $d.run;
   $a.exit;

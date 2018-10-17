@@ -18,10 +18,12 @@ use overlay_example;
 use GTK::Application;
 use GTK::Box;
 use GTK::ButtonBox;
+use GTK::CSSProvider;
 use GTK::DrawingArea;
 use GTK::Image;
 use GTK::Label;
 use GTK::Overlay;
+use GTK::RadioButton;
 use GTK::ToggleButton;
 use GTK::Window;
 
@@ -41,7 +43,8 @@ my $packet = {
 };
 
 $packet<func> = &sin;
-my $a = GTK::Application.new( title => 'org.genex.overlay', pod => $=pod );
+my $a = GTK::Application.new( title => 'org.genex.overlay' );
+my $c = GTK::CSSProvider.new( pod => $=pod );
 my $drawing_area = GTK::DrawingArea.new;
 
 sub do_graph($packet) {

@@ -101,7 +101,7 @@ role GTK::Roles::Types {
 
   multi method RESOLVE-GSTRV(@ri) {
     self.IS-PROTECTED;
-    my CArray[Str] $gs = CArray[Str].new;
+    my $gs = CArray[Str].new;
     for @ri {
       die "Cannot coerce element { $_.^name } to string."
         unless $_ ~~ Str || $_.^can('Str').elems;

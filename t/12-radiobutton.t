@@ -1,9 +1,8 @@
 use v6.c;
 
 use GTK::Application;
+use GTK::Box;
 use GTK::RadioButton;
-
-use Data::Dump::Tree;
 
 my $a = GTK::Application.new(
   title => 'org.genex.radiobutton',
@@ -19,13 +18,15 @@ $a.activate.tap({
   );
   $_.clicked.tap({ say "{ $_.label } set active." if $_.active }) for @group;
 
+  # This will cause a MoarVM panic in current rakudo.
+  # die 'Will this crash?';
+
   my $box = GTK::Box.new-vbox;
   for @group {
     ($_.margin_left, $_.margin_right) = 20 xx 2;
     $box.pack_start($_, False, False, 4);
   }
   $a.window.add($box);
-  $a.window.destroy-signal.tap({ $a.exit; });
   $a.window.show_all;
 });
 

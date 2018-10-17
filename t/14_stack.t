@@ -2,6 +2,7 @@ use v6.c;
 
 use GTK::Application;
 use GTK::Box;
+use GTK::Button;
 use GTK::RadioButton;
 use GTK::Stack;
 use GTK::TextView;
@@ -16,8 +17,6 @@ my $a = GTK::Application.new(
 );
 
 $a.activate.tap({
-  $a.window.destroy-signal.tap({ $a.exit; });
-
   sub newBoxText($string) {
     my $box = GTK::Box.new-vbox;
     my $tv = GTK::TextView.new;

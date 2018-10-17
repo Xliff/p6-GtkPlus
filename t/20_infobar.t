@@ -3,7 +3,11 @@ use v6.c;
 use GTK::Raw::Types;
 
 use GTK::Application;
+use GTK::Box;
+use GTK::Frame;
 use GTK::InfoBar;
+use GTK::Label;
+use GTK::ToggleButton;
 
 my $a = GTK::Application.new(
   title  => 'org.genex.infobar',
@@ -31,9 +35,9 @@ $a.activate.tap({
       $b.show_close_button = True;
       $b.add_button('_OK', GTK_RESPONSE_OK);
       # We REQUIRE a proper event handler for this to work properly.
-      $b.response(:!supply).tap(-> $, $rid, $ {
+      $b.response.tap(-> *@a {
         # Should vary on response_id
-        my $r = GtkResponseType($rid).Str;
+        my $r = GtkResponseType(@a[1]).Str;
         say "You clicked a button in an InfoBar. The response id was: { $r }";
       });
     }

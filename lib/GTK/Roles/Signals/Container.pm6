@@ -4,8 +4,6 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Raw::Types;
-use GTK::Raw::Subs;
-use GTK::Raw::ReturnedValue;
 
 role GTK::Roles::Signals::Container {
   has %!signals-Container;
@@ -25,9 +23,7 @@ role GTK::Roles::Signals::Container {
             default { $s.quit($_) }
           }
 
-          my $r = ReturnedValue.new;
-          $s.emit( [self, $w, $ud, $r] );
-          $r.r;
+          $s.emit( [self, $w, $ud] );
         },
         OpaquePointer, 0
       );

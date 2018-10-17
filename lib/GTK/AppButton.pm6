@@ -59,14 +59,6 @@ class GTK::AppButton is GTK::ComboBox {
     self.disconnect-all(%!signals-ab);
   }
 
-  submethod DESTROY {
-    self.disconnect-all(%!signals-ab);
-  }
-
-  submethod DESTROY {
-    self.disconnect-all(%!signals-ab);
-  }
-
   multi method new(Str $content-type) {
     my $appbutton = gtk_app_chooser_button_new($content-type);
     self.bless(:$appbutton);
