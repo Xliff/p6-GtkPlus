@@ -7,43 +7,41 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::AppButton {
-  has %!signals-ab;
+role GTK::Roles::Signals::Dialog {
+  has %!signals-d;
 
   # Copy for each signal.
-  method connect-custom-item-activated (
+  method connect-response (
     $obj,
-    $signal,
+    $signal = 'response',
     &handler?
   ) {
     my $hid;
-    %!signals-ab{$signal} //= do {
+    %!signals-d{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_custom_item_activated($obj, $signal,
-        -> $ac, $item, $ud {
+      $hid = g_connect_response($obj, $signal,
+        -> $d, $rid, $ud {
           CATCH {
             default { $s.quit($_) }
           }
 
-          my $r = ReturnedValue.new;
-          $s.emit( [self, $item, $ud, $r] );
-          $r.r;
+          $s.emit( [self, $rid, $ud] );
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-ab{$signal}[0].tap(&handler) with &handler;
-    %!signals-ab{$signal}[0];
+    %!signals-d{$signal}[0].tap(&handler) with &handler;
+    %!signals-d{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g_connect_custom_item_activated(
+sub g_connect_response(
   Pointer $app,
   Str $name,
-  &handler (Pointer, Str, Pointer),
+  &handler (Pointer, gint, Pointer),
   Pointer $data,
   uint32 $flags
 )

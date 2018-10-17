@@ -10,11 +10,13 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Window;
 
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
 class GTK::Window is GTK::Bin {
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Window;
 
   has GtkWindow $!win;
@@ -107,7 +109,7 @@ class GTK::Window is GTK::Bin {
   # Is originally:
   # GtkWindow, GtkWidget, gpointer --> void
   method set-focus {
-    self.connect-set-focus($!win);
+    self.connect-widget($!win, 'set-focus');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

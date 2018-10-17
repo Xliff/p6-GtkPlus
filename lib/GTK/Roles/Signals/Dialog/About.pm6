@@ -7,43 +7,43 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::CellRendererToggle {
-  has %!signals-crt;
+role GTK::Roles::Signals::Dialog::About {
+  has %!signals-ad;
 
   # Copy for each signal.
-  method connect-toggled (
+  method connect-activate-link (
     $obj,
-    $signal = 'toggled',
+    $signal = 'activate-link',
     &handler?
   ) {
     my $hid;
-    %!signals-crt{$signal} //= do {
+    %!signals-ad{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_toggled($obj, $signal,
-        -> $crt, $p, $ud {
+      $hid = g-connect-activate-link($obj, $signal,
+        -> $ad, $uri, $ud --> gboolean {
           CATCH {
             default { $s.quit($_) }
           }
 
           my $r = ReturnedValue.new;
-          $s.emit( [self, $p, $ud, $r] );
+          $s.emit( [self, $uri, $ud, $r] );
           $r.r;
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-crt{$signal}[0].tap(&handler) with &handler;
-    %!signals-crt{$signal}[0];
+    %!signals-ad{$signal}[0].tap(&handler) with &handler;
+    %!signals-ad{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g_connect_toggled(
+sub g-connect-activate-link(
   Pointer $app,
   Str $name,
-  &handler (Pointer, Str, Pointer),
+  &handler (Pointer, Str, Pointer --> gboolean),
   Pointer $data,
   uint32 $flags
 )

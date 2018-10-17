@@ -9,13 +9,13 @@ use GTK::Raw::Types;
 use GTK::ComboBox;
 
 use GTK::Roles::AppChooser;
-use GTK::Roles::Signals::AppButton;
+use GTK::Roles::Signals::Generic;
 
 my subset Ancestry where GtkAppChooserButton | GtkAppChooser | GtkWidget;
 
 class GTK::AppButton is GTK::ComboBox {
   also does GTK::Roles::AppChooser;
-  also does GTK::Roles::Signals::AppButton;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkAppChooserButton $!acb;
 
@@ -56,7 +56,7 @@ class GTK::AppButton is GTK::ComboBox {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-ab);
+    self.disconnect-all(%!signals-generic);
   }
 
   multi method new(Str $content-type) {
@@ -72,7 +72,7 @@ class GTK::AppButton is GTK::ComboBox {
   # Is originally:
   # GtkAppChooserButton, gchar, gpointer --> void
   method custom-item-activated {
-    self.connect-custom-item-activated($!acb);
+    self.connect-string($!acb, 'custom-item-activated');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

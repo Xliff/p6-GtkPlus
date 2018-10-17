@@ -10,9 +10,13 @@ use GTK::Widget;
 use GTK::EntryBuffer;
 
 use GTK::Roles::Editable;
+use GTK::Roles::Signals::Entry;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Editable;
+  also does GTK::Roles::Signals::Entry;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkEntry $!e;
 
@@ -75,61 +79,91 @@ class GTK::Entry is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkEntry, gpointer --> void
   method activate {
     self.connect($!e, 'activate');
   }
 
+  # Is originally:
+  # GtkEntry, gpointer --> void
   method backspace {
     self.connect($!e, 'backspace');
   }
 
+  # Is originally:
+  # GtkEntry, gpointer --> void
   method copy-clipboard {
     self.connect($!e, 'copy-clipboard');
   }
 
+  # Is originally:
+  # GtkEntry, gpointer --> void
   method cut-clipboard {
     self.connect($!e, 'cut-clipboard');
   }
 
+  # Is originally:
+  # GtkEntry, GtkDeleteType, gint, gpointer --> void
   method delete-from-cursor {
-    self.connect($!e, 'delete-from-cursor');
+    self.connect-delete-from-cursor($!e);
   }
 
+  # Is originally:
+  # GtkEntry, GtkEntryIconPosition, GdkEvent, gpointer --> void
   method icon-press {
-    self.connect($!e, 'icon-press');
+    self.connect-entry-icon($!e, 'icon-press');
   }
 
+  # Is originally:
+  # GtkEntry, GtkEntryIconPosition, GdkEvent, gpointer --> void
   method icon-release {
-    self.connect($!e, 'icon-release');
+    self.connect-entry-icon($!e, 'icon-release');
   }
 
+  # Is originally:
+  # GtkEntry, gchar, gpointer --> void
   method insert-at-cursor {
-    self.connect($!e, 'insert-at-cursor');
+    self.connect-string($!e, 'insert-at-cursor');
   }
 
+  # Is originally:
+  # GtkEntry, gpointer --> void
   method insert-emoji {
     self.connect($!e, 'insert-emoji');
   }
 
+  # Is originally:
+  # GtkEntry, GtkMovementStep, gint, gboolean, gpointer --> void
   method move-cursor {
-    self.connect($!e, 'move-cursor');
+    self.connect-move-cursor($!e);
   }
 
+  # Is originally:
+  # GtkEntry, gpointer --> void
   method paste-clipboard {
     self.connect($!e, 'paste-clipboard');
   }
 
+  # Is originally:
+  # GtkEntry, GtkWidget, gpointer --> void
   method populate-popup {
-    self.connect($!e, 'populate-popup');
+    self.connect-widget($!e, 'populate-popup');
   }
 
+  # Is originally:
+  # GtkEntry, gchar, gpointer --> void
   method preedit-changed {
-    self.connect($!e, 'preedit-changed');
+    self.connect-string($!e, 'preedit-changed');
   }
 
+  # Is originally:
+  # GtkEntry, gpointer --> void
   method toggle-overwrite {
     self.connect($!e, 'toggle-overwrite');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

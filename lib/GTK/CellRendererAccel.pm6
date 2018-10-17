@@ -8,9 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::CellRendererText;
 
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::CellRendererAccel;
 
 class GTK::CellRendererAccel is GTK::CellRendererText {
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CellRendererAccel;
 
   has GtkCellRendererAccel $!cra;
@@ -62,7 +64,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   # Is originally:
   # GtkCellRendererAccel, gchar, gpointer --> void
   method accel-cleared {
-    self.connect-accel-cleared($!cra);
+    self.connect-string($!cra, 'accel-cleared');
   }
 
   # Is originally:

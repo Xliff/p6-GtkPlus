@@ -29,7 +29,7 @@ role GTK::Roles::Signals::<name> {
           $s.emit( [self, <params>, $ud, $r] );
           $r.r;
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };

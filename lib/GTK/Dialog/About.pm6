@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Dialog;
 
+use GTK::Roles::Signals::Dialog::About;
+
 class GTK::Dialog::About is GTK::Dialog {
+  also does GTK::Roles::Signals::Dialog::About;
+
   has GtkAboutDialog $!ad;
 
   method bless(*%attrinit) {
@@ -54,7 +58,7 @@ class GTK::Dialog::About is GTK::Dialog {
   # Is originally:
   # GtkAboutDialog, gchar, gpointer --> gboolean
   method activate-link {
-    self.connect($!ad, 'activate-link');
+    self.connect-activate-link($!ad);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

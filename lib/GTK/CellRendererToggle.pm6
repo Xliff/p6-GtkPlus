@@ -8,12 +8,12 @@ use GTK::Raw::Types;
 
 use GTK::CellRenderer;
 
-use GTK::Roles::Signals::CellRendererToggle;
+use GTK::Roles::Signals::Generic;
 
 my subset Ancestry where GtkCellRendererToggle | GtkCellRenderer | GtkWidget;
 
 class GTK::CellRendererToggle is GTK::CellRenderer {
-  also does GTK::Roles::Signals::CellRendererToggle;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkCellRendererToggle $!crt;
 
@@ -47,7 +47,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-crt);
+    self.disconnect-all(%!signals-generic);
   }
 
   method GTK::Raw::Types::GtkCellRendererToggle {
@@ -68,7 +68,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   # Is originally:
   # GtkCellRendererToggle, gchar, gpointer --> void
   method toggled {
-    self.connect-toggled($!crt);
+    self.connect-string($!crt, 'toggled');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

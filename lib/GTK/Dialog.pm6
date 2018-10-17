@@ -10,7 +10,11 @@ use GTK::Box;
 use GTK::HeaderBar;
 use GTK::Window;
 
+use GTK::Roles::Signals::Dialog;
+
 class GTK::Dialog is GTK::Window {
+  also does GTK::Roles::Signals::Dialog;
+
   has GtkDialog $!d;
 
   method bless(*%attrinit) {
@@ -29,6 +33,10 @@ class GTK::Dialog is GTK::Window {
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all(%!signals-d);
   }
 
   method setDialog($dialog) {
@@ -118,7 +126,7 @@ class GTK::Dialog is GTK::Window {
   # - Made multi so as to not conflict with the method implementing
   #   gtk_response_dialog()
   multi method response {
-    self.connect($!d, 'response');
+    self.connect-response($!d);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

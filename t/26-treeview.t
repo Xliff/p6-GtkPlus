@@ -1,18 +1,12 @@
 use v6.c;
 
 use GTK::Compat::Value;
-use GTK::Compat::Types;
-use GTK::Raw::Types;
 
 use GTK::Application;
 use GTK::Box;
 use GTK::CellRendererText;
 use GTK::Statusbar;
-use GTK::TreeIter;
 use GTK::TreeView;
-use GTK::TreeViewColumn;
-use GTK::TreeSelection;
-use GTK::TreeStore;
 
 # Dynamic variables do not apply in closures?
 my ($ts, $sb);
@@ -75,6 +69,7 @@ $a.activate.tap({
   $sb = GTK::Statusbar.new;
   $vbox.pack_start($sb, False, True, 1);
   $s.changed.tap({ on_changed($s); });
+  $*v.expand_all;
 
   $a.window.show_all;
 });

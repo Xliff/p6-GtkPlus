@@ -9,9 +9,23 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::Container;
 use GTK::Entry;
+use GTK::TreeIter;
 use GTK::TreeSelection;
+use GTK::TreeStore;
+use GTK::TreeViewColumn;
 
 use GTK::Roles::Scrollable;
+
+sub EXPORT {
+  %(
+    GTK::Compat::Types::EXPORT::DEFAULT::,
+    GTK::Raw::Types::EXPORT::DEFAULT::,
+    GTK::TreeIter::,
+    GTK::TreeSelection::,
+    GTK::TreeStore::,
+    GTK::TreeViewColumn::,
+  );
+}
 
 class GTK::TreeView is GTK::Container {
   has GtkTreeView $!tv;
