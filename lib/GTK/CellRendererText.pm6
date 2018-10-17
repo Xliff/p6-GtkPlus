@@ -9,10 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::CellRenderer;
 
-use GTK::Roles::Signals::CellRendererText;
+use GTK::Roles::Signals::Generic;
 
 class GTK::CellRendererText is GTK::CellRenderer {
-  also does GTK::Roles::Signals::CellRendererText;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkCellRendererText $!crt;
 
@@ -44,6 +44,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
     self.disconnect-cellrenderer-signals;
   }
 
@@ -64,7 +65,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   # Is originally:
   # GtkCellRendererText, gchar, gchar, gpointer --> void
   method edited {
-    self.connect-edited($!crt);
+    self.connect-strstr($!crt, 'edited');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

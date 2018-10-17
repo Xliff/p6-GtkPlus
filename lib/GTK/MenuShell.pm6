@@ -9,8 +9,18 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::MenuItem;
 
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::MenuShell;
+
 class GTK::MenuShell is GTK::Container {
+  also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::MenuShell;
+
   has GtkMenuShell $!ms;
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic, %!signals-ms;
+  }
 
   method new {
     die "Cannot instantiate a GTK::MenuShell object.";
@@ -38,7 +48,7 @@ class GTK::MenuShell is GTK::Container {
   # Is originally:
   # GtkMenuShell, gboolean, gpointer --> void
   method activate-current {
-    self.connect($!ms, 'activate-current');
+    self.connect-uint($!ms, 'activate-current');
   }
 
   # Is originally:
@@ -50,7 +60,7 @@ class GTK::MenuShell is GTK::Container {
   # Is originally:
   # GtkMenuShell, GtkDirectionType, gpointer --> void
   method cycle-focus {
-    self.connect($!ms, 'cycle-focus');
+    self.connect-uint($!ms, 'cycle-focus');
   }
 
   # Is originally:
@@ -63,19 +73,19 @@ class GTK::MenuShell is GTK::Container {
   # GtkMenuShell, GtkWidget, gint, gpointer --> void
   # Made multi due to further declarations in subclasses
   multi method insert {
-    self.connect($!ms, 'insert');
+    self.connect-insert($!ms);
   }
 
   # Is originally:
   # GtkMenuShell, GtkMenuDirectionType, gpointer --> void
   method move-current {
-    self.connect($!ms, 'move-current');
+    self.connect-uint($!ms, 'move-current');
   }
 
   # Is originally:
   # GtkMenuShell, gint, gpointer --> gboolean
   method move-selected {
-    self.connect($!ms, 'move-selected');
+    self.connect-int-ruint($!ms, 'move-selected');
   }
 
   # Is originally:

@@ -9,7 +9,13 @@ use GTK::Raw::Types;
 
 use GTK::ScrolledWindow;
 
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Places;
+
 class GTK::Places is GTK::ScrolledWindow {
+  also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::Places;
+
   has GtkPlacesSidebar $!ps;
 
   method bless(*%attrinit) {
@@ -41,6 +47,10 @@ class GTK::Places is GTK::ScrolledWindow {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic, %!signals-p;
+  }
+
   multi method new {
     my $places = gtk_places_sidebar_new();
     self.bless(:$places);
@@ -54,37 +64,37 @@ class GTK::Places is GTK::ScrolledWindow {
   # Is originally:
   # GtkPlacesSidebar, gint, gpointer --> gint
   method drag-action-ask {
-    self.connect($!ps, 'drag-action-ask');
+    self.connect-int-rint($!ps, 'drag-action-ask');
   }
 
   # Is originally:
   # GtkPlacesSidebar, GdkDragContext, GObject, gpointer, gpointer --> gint
   method drag-action-requested {
-    self.connect($!ps, 'drag-action-requested');
+    self.connect-drag-action-requested($!ps);
   }
 
   # Is originally:
   # GtkPlacesSidebar, GObject, gpointer, gint, gpointer --> void
   method drag-perform-drop {
-    self.connect($!ps, 'drag-perform-drop');
+    self.connect-drag-perform-drop($!ps);
   }
 
   # Is originally:
   # GtkPlacesSidebar, GMountOperation, gpointer --> void
   method mount {
-    self.connect($!ps, 'mount');
+    self.connect-mount_op($!ps, 'mount');
   }
 
   # Is originally:
   # GtkPlacesSidebar, GObject, GtkPlacesOpenFlags, gpointer --> void
   method open-location {
-    self.connect($!ps, 'open-location');
+    self.connect-open-location($!ps);
   }
 
   # Is originally:
   # GtkPlacesSidebar, GtkWidget, GFile, GVolume, gpointer --> void
   method populate-popup {
-    self.connect($!ps, 'populate-popup');
+    self.connect-populate-popup($!ps);
   }
 
   # Is originally:
@@ -102,7 +112,7 @@ class GTK::Places is GTK::ScrolledWindow {
   # Is originally:
   # GtkPlacesSidebar, gchar, gchar, gpointer --> void
   method show-error-message {
-    self.connect($!ps, 'show-error-message');
+    self.connect-strstr($!ps, 'show-error-message');
   }
 
   # Is originally:
@@ -114,19 +124,19 @@ class GTK::Places is GTK::ScrolledWindow {
   # Is originally:
   # GtkPlacesSidebar, GtkPlacesOpenFlags, gpointer --> void
   method show-other-locations-with-flags {
-    self.connect($!ps, 'show-other-locations-with-flags');
+    self.connect-uint($!ps, 'show-other-locations-with-flags');
   }
 
   # Is originally:
   # GtkPlacesSidebar, GtkPlacesOpenFlags, gpointer --> void
   method show-starred-location {
-    self.connect($!ps, 'show-starred-location');
+    self.connect-uint($!ps, 'show-starred-location');
   }
 
   # Is originally:
   # GtkPlacesSidebar, GMountOperation, gpointer --> void
   method unmount {
-    self.connect($!ps, 'unmount');
+    self.connect-mount_op($!ps, 'unmount');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

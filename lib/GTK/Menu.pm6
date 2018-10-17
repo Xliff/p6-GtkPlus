@@ -8,9 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::MenuShell;
 
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Menu;
 
 class GTK::Menu is GTK::MenuShell {
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Menu;
 
   has GtkMenu $!m;
@@ -51,7 +53,7 @@ class GTK::Menu is GTK::MenuShell {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-menu);
+    self.disconnect-all($_) for %!signals-generic, %!signals-menu;
   }
 
   multi method new {
@@ -76,7 +78,7 @@ class GTK::Menu is GTK::MenuShell {
   # Is originally:
   # GtkMenu, GtkScrollType, gpointer --> void
   method move-scroll {
-    self.connect-move-scroll($!m);
+    self.connect-uint($!m, 'move-scroll');
   }
 
   # Is originally:

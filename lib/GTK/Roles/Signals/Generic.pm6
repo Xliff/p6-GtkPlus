@@ -10,7 +10,7 @@ role GTK::Roles::Signals::Generic {
   has %!signals-generic;
 
   # Copy for each signal.
-  method connect_event (
+  method connect-event (
     $obj,
     $signal,
     &handler?
@@ -34,7 +34,7 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_widget (
+  method connect-widget (
     $obj,
     $signal,
     &handler?
@@ -58,7 +58,7 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_string (
+  method connect-string (
     $obj,
     $signal,
     &handler?
@@ -82,7 +82,31 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_int (
+  method connect-strstr (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_strstr($obj, $signal,
+        -> $, $s1, $s2, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $s1, $s2, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+  method connect-int (
     $obj,
     $signal,
     &handler?
@@ -106,7 +130,31 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_pointer (
+  method connect-uint (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_uint($obj, $signal,
+        -> $, $ui, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $ui, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+  method connect-pointer (
     $obj,
     $signal,
     &handler?
@@ -130,7 +178,7 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_movement_step (
+  method connect-movement-step (
     $obj,
     $signal,
     &handler?
@@ -154,7 +202,7 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_move_cursor (
+  method connect-move-cursor (
     $obj,
     $signal,
     &handler?
@@ -178,7 +226,7 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_activate_link (
+  method connect-activate-link (
     $obj,
     $signal = 'activate_link',
     &handler?
@@ -204,7 +252,7 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect_menu (
+  method connect-menu (
     $obj,
     $signal,
     &handler?
@@ -219,6 +267,87 @@ role GTK::Roles::Signals::Generic {
           }
 
           $s.emit( [self, $m, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+  method connect-int-rint (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_int_ruint($obj, $signal,
+        -> $, $i, $ud --> gint {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          my $r = ReturnedValue.new;
+          $s.emit( [self, $i, $ud, $r] );
+          $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
+          $r.r;
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+  method connect-int-ruint (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_int_ruint($obj, $signal,
+        -> $, $i, $ud --> guint {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          my $r = ReturnedValue.new;
+          $s.emit( [self, $i, $ud, $r] );
+          $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
+          $r.r;
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+  method connect-uint-ruint (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_uint_ruint($obj, $signal,
+        -> $, $ui, $ud --> guint {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          my $r = ReturnedValue.new;
+          $s.emit( [self, $ui, $ud, $r] );
+          $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
+          $r.r;
         },
         Pointer, 0
       );
@@ -267,6 +396,18 @@ sub g_connect_string(
   is symbol('g_signal_connect_object')
   { * }
 
+sub g_connect_strstr(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, Str, Str, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
 sub g_connect_int(
   Pointer $app,
   Str $name,
@@ -276,6 +417,19 @@ sub g_connect_int(
 )
   returns uint64
   is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+# Define for each signal
+sub g_connect_uint(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, uint32, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -331,6 +485,42 @@ sub g_connect_activate_link(
   Pointer $app,
   Str $name,
   &handler (Pointer, Str, Pointer --> gboolean),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g_connect_int_ruint(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, gint, Pointer --> guint),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g_connect_int_rint(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, gint, Pointer --> gint),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g_connect_uint_ruint(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, guint, Pointer --> guint),
   Pointer $data,
   uint32 $flags
 )

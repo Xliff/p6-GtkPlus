@@ -11,13 +11,11 @@ use GTK::Raw::Types;
 use GTK::Raw::Window;
 
 use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::Window;
 
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
 class GTK::Window is GTK::Bin {
   also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Signals::Window;
 
   has GtkWindow $!win;
 
@@ -40,7 +38,7 @@ class GTK::Window is GTK::Bin {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-win);
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new (
@@ -97,7 +95,7 @@ class GTK::Window is GTK::Bin {
   # Is originally:
   # GtkWindow, gboolean, gpointer --> gboolean
   method enable-debugging {
-    self.connect-enable-debugging($!win);
+    self.connect-uint-ruint($!win, 'enable-debugging');
   }
 
   # Is originally:

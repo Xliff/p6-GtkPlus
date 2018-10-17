@@ -51,6 +51,7 @@ role GTK::Roles::Signals {
   method disconnect($signal, %signals) {
     # First parameter is good, but concerned about the second.
     g_signal_handler_disconnect(%signals{$signal}[1], %signals{$signal}[2]);
+    %signals{$signal}:delete;
   }
 
 }

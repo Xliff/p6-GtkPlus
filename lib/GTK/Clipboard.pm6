@@ -7,21 +7,20 @@ use GTK::Raw::Clipboard;
 use GTK::Raw::Types;
 
 use GTK::Roles::Signals;
-use GTK::Roles::Signals::Events;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Clipboard {
   also does GTK::Roles::Signals;
-  also does GTK::Roles::Signals::Events;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkClipboard $!cb;
-  has %!signals-cb;
 
   submethod BUILD(:$clipboard) {
     $!cb = $clipboard
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-cb);
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   method GTK::Raw::Types::GtkClipboard {
@@ -60,7 +59,7 @@ class GTK::Clipboard {
   # Is originally:
   # GtkClipboard, GdkEvent, gpointer --> void
   method owner-change {
-    self.connect-event($!cb, 'owner-change', %!signals-cb);
+    self.connect-event($!cb, 'owner-change');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

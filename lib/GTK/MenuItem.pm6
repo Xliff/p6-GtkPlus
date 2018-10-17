@@ -9,13 +9,13 @@ use GTK::Raw::Types;
 use GTK::Bin;
 
 use GTK::Roles::Actionable;
-use GTK::Roles::Signals::MenuItem;
+use GTK::Roles::Signals::Generic;
 
 my subset Ancestry where GtkMenuItem | GtkActionable | GtkWidget;
 
 class GTK::MenuItem is GTK::Bin {
   also does GTK::Roles::Actionable;
-  also does GTK::Roles::Signals::MenuItem;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkMenuItem $!mi;
 
@@ -56,7 +56,7 @@ class GTK::MenuItem is GTK::Bin {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-mi);
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   method setMenuItem($menuitem) {
@@ -165,13 +165,13 @@ class GTK::MenuItem is GTK::Bin {
   # Is originally:
   # GtkMenuItem, gint, gpointer --> void
   method toggle-size-allocate {
-    self.connect-toggle-size-allocate($!mi);
+    self.connect-int($!mi, 'toggle-size-allocate');
   }
 
   # Is originally:
   # GtkMenuItem, gpointer, gpointer --> void
   method toggle-size-request {
-    self.connect-toggle-size-request($!mi);
+    self.connect-pointer($!mi, 'toggle-size-request');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

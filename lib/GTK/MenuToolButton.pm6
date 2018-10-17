@@ -28,7 +28,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
           }
           when GtkMenuToolButton {
             $to-parent = nativecast(GtkToolButton, $_);
-            $_
+            $_;
           }
         }
         self.setToolButton($to-parent);
@@ -55,6 +55,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
   method show-menu {
     self.connect($!mtb, 'show-menu');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

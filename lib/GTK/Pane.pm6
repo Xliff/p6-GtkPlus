@@ -9,9 +9,11 @@ use GTK::Raw::Types;
 use GTK::Container;
 
 use GTK::Roles::Orientable;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Pane is GTK::Container {
   also does GTK::Roles::Orientable;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkPaned $!p;
 
@@ -49,6 +51,10 @@ class GTK::Pane is GTK::Container {
     $!or = nativecast(GtkOrientable, $!p);
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
+  }
+
   multi method new (GtkWidget $pane) {
     self.bless(:$pane);
   }
@@ -80,33 +86,43 @@ class GTK::Pane is GTK::Container {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkPaned, gpointer --> gboolean
   method accept-position {
     self.connect($!p, 'accept-position');
   }
 
+  # Is originally:
+  # GtkPaned, gpointer --> gboolean
   method cancel-position {
     self.connect($!p, 'cancel-position');
   }
 
-  # Should be:
-  # (GtkPaned *widget,
-  #  gboolean  reversed,
-  #  gpointer  user_data)
+  # Is originally:
+  # GtkPaned, gboolean, gpointer --> gboolean
   method cycle-child-focus {
-    self.connect($!p, 'cycle-child-focus');
+    self.connect-uint-ruint($!p, 'cycle-child-focus');
   }
 
-  # Should be:
-  # (GtkPaned     *widget,
-  #  GtkScrollType scroll_type,
-  #  gpointer      user_data)
+  # Is originally:
+  # GtkPaned, gboolean, gpointer --> gboolean
+  method cycle-handle-focus {
+    self.connect-uint-ruint($!p, 'cycle-handle-focus');
+  }
+
+  # Is originally:
+  # GtkPaned, GtkScrollType, gpointer --> gboolean
   method move-handle {
-    self.connect($!p, 'move-handle');
+    self.connect-uint-ruint($!p, 'move-handle');
   }
 
+  # Is originally:
+  # GtkPaned, gpointer --> gboolean
   method toggle-handle-focus {
     self.connect($!p, 'toggle-handle-focus');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

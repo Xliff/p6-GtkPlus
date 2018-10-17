@@ -8,10 +8,10 @@ use GTK::Raw::Types;
 
 use GTK::Window;
 
-use GTK::Roles::Signals::Assistant;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Assistant is GTK::Window {
-  also does GTK::Roles::Signals::Assistant;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkAssistant $!a;
 
@@ -45,7 +45,7 @@ class GTK::Assistant is GTK::Window {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-asst);
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new {

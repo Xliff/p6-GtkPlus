@@ -558,8 +558,10 @@ class GListModel            is repr('CPointer') is export { }
 class GMarkupParser         is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
+class GMountOperation       is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
 class GOutputStream         is repr('CPointer') is export { }
+class GVolume               is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }
 class GdkDevice             is repr('CPointer') is export { }
