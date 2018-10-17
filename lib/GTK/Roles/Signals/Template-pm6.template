@@ -19,7 +19,7 @@ role GTK::Roles::Signals::<name> {
     my $hid;
     %!signals-<name>{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_<sigName>($obj, $signal,
+      $hid = g-connect-<sigName>($obj, $signal,
         -> <params>, $ud {
           CATCH {
             default { $s.quit($_) }
@@ -40,7 +40,7 @@ role GTK::Roles::Signals::<name> {
 }
 
 # Define for each signal
-sub g_connect_<sigName>(
+sub g-connect-<sigName>(
   Pointer $app,
   Str $name,
   &handler (<params>, Pointer),

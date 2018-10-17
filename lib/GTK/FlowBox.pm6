@@ -51,10 +51,6 @@ class GTK::FlowBox is GTK::Container {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method activate {
-    self.connect($!fb, 'activate');
-  }
-
   method activate-cursor-child {
     self.connect($!fb, 'activate-cursor-child');
   }
@@ -64,7 +60,7 @@ class GTK::FlowBox is GTK::Container {
       # (GtkFlowBox      *box,
       #  GtkFlowBoxChild *child,
       #  gpointer         user_data)
-    self.connect($!fb, 'child-activated');
+    self.connect-child-activated($!fb);
   }
 
   method move-cursor {

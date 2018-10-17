@@ -60,6 +60,9 @@ class GTK::FlowBoxChild is GTK::Bin {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+  method activate {
+    self.connect($!fbc, 'activate');
+  }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

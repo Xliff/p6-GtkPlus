@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+use GTK::Roles::Signals::Generic;
+
 class GTK::Label is GTK::Widget {
+  also does GTK::Roles::Signals::Generic;
+
   has GtkLabel $!l;
 
   method bless(*%attrinit) {
@@ -40,6 +44,10 @@ class GTK::Label is GTK::Widget {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
+  }
+
   multi method new ($text = Str) {
     my $label = gtk_label_new($text);
     self.bless(:$label);
@@ -58,24 +66,35 @@ class GTK::Label is GTK::Widget {
   }
 
   # Signals
+
+  # Is originally:
+  # GtkLabel, gpointer --> void
   method activate-current-link {
     self.connect($!l, 'activate-current-link');
   }
 
+  # Is originally:
+  # GtkLabel, gchar, gpointer --> gboolean
   method activate-link {
-    self.connect($!l, 'activate-link');
+    self.connect-activate-link($!l);
   }
 
+  # Is originally:
+  # GtkLabel, gpointer --> void
   method copy-clipboard {
     self.connect($!l, 'copy-clipboard');
   }
 
+  # Is originally:
+  # GtkLabel, GtkMovementStep, gint, gboolean, gpointer --> void
   method move-cursor {
-    self.connect($!l, 'move-cursor');
+    self.connect-move-cursor($!l);
   }
 
-  method popupate-popup {
-    self.connect($!l, 'populate-popup');
+  # Is originally:
+  # GtkLabel, GtkMenu, gpointer --> void
+  method populate-popup {
+    self.connect-menu($!l, 'populate-popup');
   }
 
   ## Properties.

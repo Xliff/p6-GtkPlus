@@ -7,10 +7,12 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Signals;
 use GTK::Roles::Signals::EntryBuffer;
+use GTK::Roles::Signals::Generic;
 
 class GTK::EntryBuffer {
   also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::EntryBuffer;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkEntryBuffer $!b;
 
@@ -19,7 +21,7 @@ class GTK::EntryBuffer {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-eb);
+    self.disconnect-all($_) for %!signals-generic, %!signals-eb;
   }
 
   method new (Str $text, Int() $text_len) {
@@ -35,7 +37,7 @@ class GTK::EntryBuffer {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method deleted-text {
-    self.connect-deleted-text($!b);
+    self.connect-movement-step($!b, 'deleted-text');
   }
 
   method inserted-text {

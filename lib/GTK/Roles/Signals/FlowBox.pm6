@@ -7,41 +7,43 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::Dialog {
-  has %!signals-d;
+role GTK::Roles::Signals::FlowBox {
+  has %!signals-fb;
 
   # Copy for each signal.
-  method connect-response (
+  method connect-child-activated (
     $obj,
-    $signal = 'response',
+    $signal = 'child-activated',
     &handler?
   ) {
     my $hid;
-    %!signals-d{$signal} //= do {
+    %!signals-fb{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_response($obj, $signal,
-        -> $d, $rid, $ud {
+      $hid = g-connect-child-activated($obj, $signal,
+        -> $, $fbc, $ud {
           CATCH {
             default { $s.quit($_) }
           }
 
-          $s.emit( [self, $rid, $ud] );
+          my $r = ReturnedValue.new;
+          $s.emit( [self, $fbc, $ud, $r] );
+          $r.r;
         },
         Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-d{$signal}[0].tap(&handler) with &handler;
-    %!signals-d{$signal}[0];
+    %!signals-fb{$signal}[0].tap(&handler) with &handler;
+    %!signals-fb{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g_connect_response(
+sub g-connect-child-activated(
   Pointer $app,
   Str $name,
-  &handler (Pointer, gint, Pointer),
+  &handler (Pointer, GtkFlowBoxChild, Pointer),
   Pointer $data,
   uint32 $flags
 )

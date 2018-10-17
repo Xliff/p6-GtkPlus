@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+use GTK::Roles::Signals::Generic;
+
 class GTK::Expander is GTK::Bin {
+  also does GTK::Roles::Signals::Generic;
+
   has GtkExpander $!e;
 
   method bless(*%attrinit) {
@@ -41,6 +45,10 @@ class GTK::Expander is GTK::Bin {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals-generic);
+  }
+
   multi method new (Str $label) {
     my $expander = gtk_expander_new($label);
     self.bless(:$expander);
@@ -70,7 +78,7 @@ class GTK::Expander is GTK::Bin {
   }
 
   method notify-expanded {
-    self.connect($!e, 'notify::expanded');
+    self.connect-pointer($!e, 'notify::expanded');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

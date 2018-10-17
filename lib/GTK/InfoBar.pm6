@@ -8,10 +8,10 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-use GTK::Roles::Signals::InfoBar;
+use GTK::Roles::Signals::Generic;
 
 class GTK::InfoBar is GTK::Box {
-  also does GTK::Roles::Signals::InfoBar;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkInfoBar $!ib;
 
@@ -45,7 +45,7 @@ class GTK::InfoBar is GTK::Box {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-ib);
+    self.disconnect-all(%!signals-generic);
   }
 
   multi method new {
@@ -68,7 +68,7 @@ class GTK::InfoBar is GTK::Box {
   # - Made multi so as to not conflict with the implementation for
   #   gtk_info_bar_response
   multi method response {
-    self.connect-response($!ib);
+    self.connect-int($!ib);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

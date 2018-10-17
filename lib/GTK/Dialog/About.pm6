@@ -8,10 +8,10 @@ use GTK::Raw::Types;
 
 use GTK::Dialog;
 
-use GTK::Roles::Signals::Dialog::About;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Dialog::About is GTK::Dialog {
-  also does GTK::Roles::Signals::Dialog::About;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkAboutDialog $!ad;
 
@@ -43,6 +43,10 @@ class GTK::Dialog::About is GTK::Dialog {
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new {

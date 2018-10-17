@@ -7,43 +7,41 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::Dialog::About {
-  has %!signals-ad;
+role GTK::Roles::Signals::EntryCompletion {
+  has %!signals-ec;
 
   # Copy for each signal.
-  method connect-activate-link (
+  method connect-on-match (
     $obj,
-    $signal = 'activate-link',
+    $signal,
     &handler?
   ) {
     my $hid;
-    %!signals-ad{$signal} //= do {
+    %!signals-ec{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-activate-link($obj, $signal,
-        -> $ad, $uri, $ud --> gboolean {
+      $hid = g-connect-on-match($obj, $signal,
+        -> $, $tm, $ti, $ud {
           CATCH {
             default { $s.quit($_) }
           }
 
-          my $r = ReturnedValue.new;
-          $s.emit( [self, $uri, $ud, $r] );
-          $r.r;
+          $s.emit( [self, $tm, $ti, $ud] );
         },
         Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-ad{$signal}[0].tap(&handler) with &handler;
-    %!signals-ad{$signal}[0];
+    %!signals-ec{$signal}[0].tap(&handler) with &handler;
+    %!signals-ec{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g-connect-activate-link(
+sub g-connect-on-match(
   Pointer $app,
   Str $name,
-  &handler (Pointer, Str, Pointer --> gboolean),
+  &handler (Pointer, GtkTreeModel, GtkTreeIter, Pointer),
   Pointer $data,
   uint32 $flags
 )

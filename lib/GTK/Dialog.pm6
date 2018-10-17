@@ -10,10 +10,10 @@ use GTK::Box;
 use GTK::HeaderBar;
 use GTK::Window;
 
-use GTK::Roles::Signals::Dialog;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Dialog is GTK::Window {
-  also does GTK::Roles::Signals::Dialog;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkDialog $!d;
 
@@ -36,7 +36,7 @@ class GTK::Dialog is GTK::Window {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-d);
+    self.disconnect-all(%!signals-generic);
   }
 
   method setDialog($dialog) {
@@ -126,7 +126,7 @@ class GTK::Dialog is GTK::Window {
   # - Made multi so as to not conflict with the method implementing
   #   gtk_response_dialog()
   multi method response {
-    self.connect-response($!d);
+    self.connect-int($!d, 'response');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

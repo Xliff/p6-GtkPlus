@@ -9,9 +9,11 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 use GTK::Roles::Orientable;
+use GTK::Roles::Signals::Generic;
 
 class GTK::LevelBar is GTK::Widget {
   also does GTK::Roles::Orientable;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkLevelBar $!lb;
 
@@ -46,6 +48,10 @@ class GTK::LevelBar is GTK::Widget {
     $!or = nativecast(GtkOrientable, $!lb);
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
+  }
+
   multi method new {
     my $level = gtk_level_bar_new();
     self.bless(:$level);
@@ -61,9 +67,13 @@ class GTK::LevelBar is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkLevelBar, gchar, gpointer --> void
   method offset-changed {
-    self.connect($!lb, 'offset-changed');
+    self.connect-string($!lb, 'offset-changed');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
