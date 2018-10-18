@@ -9,13 +9,12 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::Bin;
 
-use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::ScrolledWindow;
 
 class GTK::ScrolledWindow is GTK::Bin {
-  has GtkScrolledWindow $!sw;
-  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::ScrolledWindow;
+
+  has GtkScrolledWindow $!sw;
 
   method bless(*%attrinit) {
     use nqp;
@@ -37,7 +36,7 @@ class GTK::ScrolledWindow is GTK::Bin {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-sw;
+    self.disconnect-all($_) for %!signals-sw;
   }
 
   multi method new (GtkWidget $scrolled) {

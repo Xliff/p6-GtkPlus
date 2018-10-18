@@ -9,13 +9,11 @@ use GTK::Raw::Types;
 use GTK::ComboBox;
 
 use GTK::Roles::AppChooser;
-use GTK::Roles::Signals::Generic;
 
 my subset Ancestry where GtkAppChooserButton | GtkAppChooser | GtkWidget;
 
 class GTK::AppButton is GTK::ComboBox {
   also does GTK::Roles::AppChooser;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkAppChooserButton $!acb;
 
@@ -53,10 +51,6 @@ class GTK::AppButton is GTK::ComboBox {
     }
     # For GTK::Roles::AppChooser
     $!ac //= nativecast(GtkAppChooser, $!acb);
-  }
-
-  submethod DESTROY {
-    self.disconnect-all(%!signals-generic);
   }
 
   multi method new(Str $content-type) {

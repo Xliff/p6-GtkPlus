@@ -9,17 +9,15 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::MenuItem;
 
-use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::MenuShell;
 
 class GTK::MenuShell is GTK::Container {
-  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::MenuShell;
 
   has GtkMenuShell $!ms;
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-ms;
+    self.disconnect-all($_) for %!signals-ms;
   }
 
   method new {

@@ -9,11 +9,9 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::TextBuffer;
 
-use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::TextView;
 
 class GTK::TextView is GTK::Container {
-  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::TextView;
 
   has GtkTextView $!tv;
@@ -48,7 +46,7 @@ class GTK::TextView is GTK::Container {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-tv;
+    self.disconnect-all($_) for %!signals-tv;
   }
 
   method new {

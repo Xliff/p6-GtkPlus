@@ -8,11 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-use GTK::Roles::Signals::Generic;
-
 class GTK::InfoBar is GTK::Box {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkInfoBar $!ib;
 
   method bless(*%attrinit) {
@@ -42,10 +38,6 @@ class GTK::InfoBar is GTK::Box {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all(%!signals-generic);
   }
 
   multi method new {

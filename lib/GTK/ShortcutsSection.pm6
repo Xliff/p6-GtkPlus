@@ -5,15 +5,11 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals::Generic;
-
 use GTK::Box;
 
 subset ParentChild where GtkShortcutsSection | GtkWidget;
 
 class GTK::ShortcutsSection is GTK::Box {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkShortcutsSection $!ss;
 
   method bless(*%attrinit) {
@@ -43,10 +39,6 @@ class GTK::ShortcutsSection is GTK::Box {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   method new (ParentChild $section) {

@@ -10,13 +10,11 @@ use GTK::Bin;
 use GTK::SizeGroup;
 
 use GTK::Roles::Actionable;
-use GTK::Roles::Signals::Generic;
 
 my subset Ancestry where GtkToolItem | GtkActionable | GtkWidget;
 
 class GTK::ToolItem is GTK::Bin {
   also does GTK::Roles::Actionable;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkToolItem $!ti;
 
@@ -36,10 +34,6 @@ class GTK::ToolItem is GTK::Bin {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   method setToolItem($toolitem) {

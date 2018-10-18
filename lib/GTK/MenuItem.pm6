@@ -9,13 +9,11 @@ use GTK::Raw::Types;
 use GTK::Bin;
 
 use GTK::Roles::Actionable;
-use GTK::Roles::Signals::Generic;
 
 my subset Ancestry where GtkMenuItem | GtkActionable | GtkWidget;
 
 class GTK::MenuItem is GTK::Bin {
   also does GTK::Roles::Actionable;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkMenuItem $!mi;
 
@@ -53,10 +51,6 @@ class GTK::MenuItem is GTK::Bin {
     self.activate.tap({ $clicked();  }) with $clicked;
     self.activate.tap({ $activate(); }) with $activate;
     self.right_justified = True if $right;
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   method setMenuItem($menuitem) {

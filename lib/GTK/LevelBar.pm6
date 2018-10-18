@@ -9,11 +9,9 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 use GTK::Roles::Orientable;
-use GTK::Roles::Signals::Generic;
 
 class GTK::LevelBar is GTK::Widget {
   also does GTK::Roles::Orientable;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkLevelBar $!lb;
 
@@ -46,10 +44,6 @@ class GTK::LevelBar is GTK::Widget {
     }
     # For GTK::Roles::Orientable
     $!or = nativecast(GtkOrientable, $!lb);
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new {

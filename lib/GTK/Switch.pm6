@@ -9,13 +9,11 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 use GTK::Roles::Actionable;
-use GTK::Roles::Signals::Generic;
 
 my subset Ancestry where GtkSwitch | GtkActionable | GtkWidget;
 
 class GTK::Switch is GTK::Widget {
   also does GTK::Roles::Actionable;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkSwitch $!s;
 
@@ -52,10 +50,6 @@ class GTK::Switch is GTK::Widget {
       }
     }
     $!action //= nativecast(GtkActionable, $_);       # GTK::Roles::Actionable
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new {

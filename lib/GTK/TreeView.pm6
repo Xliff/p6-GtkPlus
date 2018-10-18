@@ -34,7 +34,6 @@ sub EXPORT {
 
 class GTK::TreeView is GTK::Container {
   also does GTK::Roles::Scrollable;
-  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::TreeView;
 
   has GtkTreeView $!tv;
@@ -70,7 +69,7 @@ class GTK::TreeView is GTK::Container {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-tv;
+    self.disconnect-all($_) for %!signals-tv;
   }
 
   method new {

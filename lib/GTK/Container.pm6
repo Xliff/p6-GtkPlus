@@ -11,11 +11,7 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::Widget;
 
-use GTK::Roles::Signals::Generic;
-
 class GTK::Container is GTK::Widget {
-  also does GTK::Roles::Signals::Generic;
-
   # Maybe this should be done as the base class.
   has $!c;
   has $!add-latch;
@@ -32,10 +28,6 @@ class GTK::Container is GTK::Widget {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all(%!signals-generic);
   }
 
   #submethod DESTROY {

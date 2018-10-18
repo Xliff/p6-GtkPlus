@@ -9,11 +9,9 @@ use GTK::Raw::ScaleButton;
 use GTK::Button;
 
 use GTK::Roles::Orientable;
-use GTK::Roles::Signals::Generic;
 
 class GTK::ScaleButton is GTK::Button {
   also does GTK::Roles::Orientable;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkScaleButton $!sb;
 
@@ -35,10 +33,6 @@ class GTK::ScaleButton is GTK::Button {
     }
     # For GTK::Roles::Orientable
     $!or = nativecast(GtkOrientable, $!sb);
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new (GtkWidget $button) {

@@ -11,12 +11,10 @@ use GTK::EntryBuffer;
 
 use GTK::Roles::Editable;
 use GTK::Roles::Signals::Entry;
-use GTK::Roles::Signals::Generic;
 
 class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Editable;
   also does GTK::Roles::Signals::Entry;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkEntry $!e;
 
@@ -41,7 +39,7 @@ class GTK::Entry is GTK::Widget {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-e;
+    self.disconnect-all($_) for %!signals-e;
   }
 
   multi method new {

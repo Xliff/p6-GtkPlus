@@ -8,11 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-use GTK::Roles::Signals::Generic;
-
 class GTK::Toolbar is GTK::Container {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkToolbar $!tb;
 
   method bless(*%attrinit) {
@@ -42,10 +38,6 @@ class GTK::Toolbar is GTK::Container {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new {

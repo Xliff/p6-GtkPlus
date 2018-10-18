@@ -8,11 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Window;
 
-use GTK::Roles::Signals::Generic;
-
 class GTK::Assistant is GTK::Window {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkAssistant $!asst;
 
   method bless(*%attrinit) {
@@ -42,10 +38,6 @@ class GTK::Assistant is GTK::Window {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new {

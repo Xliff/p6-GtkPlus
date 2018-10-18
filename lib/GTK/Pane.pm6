@@ -9,11 +9,9 @@ use GTK::Raw::Types;
 use GTK::Container;
 
 use GTK::Roles::Orientable;
-use GTK::Roles::Signals::Generic;
 
 class GTK::Pane is GTK::Container {
   also does GTK::Roles::Orientable;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkPaned $!p;
 
@@ -49,10 +47,6 @@ class GTK::Pane is GTK::Container {
     }
     # For GTK::Roles::GtkOrientable
     $!or = nativecast(GtkOrientable, $!p);
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new (GtkWidget $pane) {

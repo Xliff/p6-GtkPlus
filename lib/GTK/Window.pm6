@@ -10,13 +10,9 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
-use GTK::Roles::Signals::Generic;
-
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
 class GTK::Window is GTK::Bin {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkWindow $!win;
 
   method bless(*%attrinit) {
@@ -35,10 +31,6 @@ class GTK::Window is GTK::Bin {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new (

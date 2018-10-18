@@ -9,11 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::ScrolledWindow;
 
-use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Places;
 
 class GTK::Places is GTK::ScrolledWindow {
-  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Places;
 
   has GtkPlacesSidebar $!ps;
@@ -48,7 +46,7 @@ class GTK::Places is GTK::ScrolledWindow {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-p;
+    self.disconnect-all($_) for %!signals-p;
   }
 
   multi method new {

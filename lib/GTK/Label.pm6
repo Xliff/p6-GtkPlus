@@ -8,11 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-use GTK::Roles::Signals::Generic;
-
 class GTK::Label is GTK::Widget {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkLabel $!l;
 
   method bless(*%attrinit) {
@@ -42,10 +38,6 @@ class GTK::Label is GTK::Widget {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new ($text = Str) {

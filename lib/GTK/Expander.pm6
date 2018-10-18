@@ -8,11 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-use GTK::Roles::Signals::Generic;
-
 class GTK::Expander is GTK::Bin {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkExpander $!e;
 
   method bless(*%attrinit) {
@@ -43,10 +39,6 @@ class GTK::Expander is GTK::Bin {
       default {
       }
     }
-  }
-
-  submethod DESTROY {
-    self.disconnect-all(%!signals-generic);
   }
 
   multi method new (Str $label) {

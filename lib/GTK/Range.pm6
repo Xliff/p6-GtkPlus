@@ -9,12 +9,10 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 use GTK::Roles::Orientable;
-use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Range;
 
 class GTK::Range is GTK::Widget {
   also does GTK::Roles::Orientable;
-  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Range;
 
   has GtkRange $!r;
@@ -22,7 +20,7 @@ class GTK::Range is GTK::Widget {
   # Abstract code, so no need for BUILD or new
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-r;
+    self.disconnect-all($_) for %!signals-r;
   }
 
   method setRange($range) {
