@@ -49,7 +49,7 @@ class GTK::Switch is GTK::Widget {
       default {
       }
     }
-    $!action //= nativecast(GtkActionable, $_);       # GTK::Roles::Actionable
+    $!action //= nativecast(GtkActionable, $!s);       # GTK::Roles::Actionable
   }
 
   multi method new {
