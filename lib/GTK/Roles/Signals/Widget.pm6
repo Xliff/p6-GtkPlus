@@ -6,8 +6,36 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Widget;
+
 role GTK::Roles::Signals::Widget {
   has %!signals-widget;
+
+  method connect-widget-event(
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-widget{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-widget-event($obj, $signal,
+        -> $, $e, $ud --> uint32 {
+          CATCH { default { $s.quit($_) } }
+
+          my @valid-types = (Bool, Int);
+          $s.emit( [self, $e, $ud, $r] );
+          die 'Invalid return type' if $r.r ~~ @valid-types.any;
+          $r.r = .Int if $r.r ~~ @valid-types.any;
+        },
+        OpaquePointer, 0
+      );
+      [ $s.Supply, $obj, $hid ];
+    };
+    %!signals-widget{$signal}[0].tap(&handler) with &handler;
+    %!signals-widget{$signal}[0];
+  }
 
   method connect-draw(
     $obj,
@@ -16,11 +44,10 @@ role GTK::Roles::Signals::Widget {
   ) {
     %!signals-widget{$signal} //= do {
       my $s = Supplier.new;
-      g_connect_draw($obj, $signal,
+      g-connect-draw($obj, $signal,
         -> $, $cr, $ud --> uint32 {
           $s.emit( [self, $cr, $ud] );
           CATCH { default { $s.quit($_) } }
-          0;
         },
         OpaquePointer, 0
       );
@@ -31,10 +58,23 @@ role GTK::Roles::Signals::Widget {
   }
 }
 
-sub g_connect_draw(
+sub g-connect-widget-event(
   Pointer $app,
   Str $bane,
-  &handler (Pointer, Pointer, Pointer --> uint32),
+  &handler (Pointer, GdkEvent, Pointer --> uint32),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  is export
+  { * }
+
+sub g-connect-draw(
+  Pointer $app,
+  Str $bane,
+  &handler (Pointer, CairoContext, Pointer --> uint32),
   Pointer $data,
   uint32 $flags
 )

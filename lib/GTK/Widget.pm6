@@ -13,6 +13,7 @@ use GTK::Raw::Widget;
 use GTK::Roles::Buildable;
 use GTK::Roles::Properties;
 use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
 
@@ -20,6 +21,7 @@ class GTK::Widget {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
 
@@ -39,8 +41,7 @@ class GTK::Widget {
 
   submethod DESTROY {
     g_object_unref($!w.p);
-    self.disconnect($_, %!signals) for %!signals.keys;
-    self.disconnect($_, %!signals-widget) for %!signals-widget.keys
+    self.disconnect-all($_) for %!signals-generic, %!signals-widget;
   }
 
   proto new(|) { * }
@@ -134,7 +135,8 @@ class GTK::Widget {
     gtk_requisition_new();
   }
 
-  # Signal
+  # ↓↓↓↓ SIGNALS ↓↓↓↓
+  # Default
   method accel-closures-changed {
     self.connect($!w, 'accel-closures-changed');
   }
@@ -142,29 +144,29 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method button-press-event {
-    self.connect($!w, 'button-press-event');
+    self.connect-widget-event($!w, 'button-press-event');
   }
 
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method button-release-event {
-    self.connect($!w, 'button-release-event');
+    self.connect-widget-event($!w, 'button-release-event');
   }
 
   # Is originally:
   # GtkWidget, guint, gpointer --> gboolean
   method can-activate-accel {
-    self.connect($!w, 'can-activate-accel');
+    self.connect-uint-ruint($!w, 'can-activate-accel');
   }
 
   # Signal --> No Hooks
   # Is originally:
   # GtkWidget, GParamSpec, gpointer --> void
   method child-notify {
-    self.connect($!w, 'child-notify');
+    self.connect-child-notify($!w);
   }
 
-  # Signal
+  # Default Signal
   method composited-changed {
     self.connect($!w, 'composited-changed');
   }
@@ -173,24 +175,24 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method configure-event {
-    self.connect($!w, 'configure-event');
+    self.connect-widget-event($!w, 'configure-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method damage-event {
-    self.connect($!w, 'damage-event');
+    self.connect-widget-event($!w, 'damage-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method delete-event {
-    self.connect($!w, 'delete-event');
+    self.connect-widget-event($!w, 'delete-event');
   }
 
-  # Signal void No Hooks
+  # Signal - Default No Hooks
   # Method renamed to avoid conflict with the destroy method using the same signature.
   method destroy-signal {
     self.connect($!w, 'destroy');
@@ -200,35 +202,35 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method destroy-event {
-    self.connect($!w, 'destroy-event');
+    self.connect-widget-event($!w, 'destroy-event');
   }
 
   # Signal void Run First
   # Is originally:
   # GtkWidget, GtkTextDirection, gpointer --> void
   method direction-changed {
-    self.connect($!w, 'direction-changed');
+    self.connect-uint($!w, 'direction-changed');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, gpointer --> void
   method drag-begin {
-    self.connect($!w, 'drag-begin');
+    self.connect-drag($!w, 'drag-begin');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, gpointer --> void
   method drag-data-delete {
-    self.connect($!w, 'drag-data-delete');
+    self.connect-drag($!w, 'drag-data-delete');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, GtkSelectionData, guint, guint, gpointer --> void
   method drag-data-get {
-    self.connect($!w, 'drag-data-get');
+    self.connect-drag-get($!w);
   }
 
   # Signal void Run Last
@@ -236,28 +238,28 @@ class GTK::Widget {
   # GtkWidget, GdkDragContext, gint, gint, GtkSelectionData, guint, guint, gpointer
   # --> void
   method drag-data-received {
-    self.connect($!w, 'drag-data-received');
+    self.connect-drag-received($!w);
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, gint, gint, guint, gpointer --> gboolean
   method drag-drop {
-    self.connect($!w, 'drag-drop');
+    self.connect-drag-action($!w, 'drag-drop');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, gpointer --> void
   method drag-end {
-    self.connect($!w, 'drag-end');
+    self.connect-drag($!w, 'drag-end');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, GtkDragResult, gpointer --> gboolean
   method drag-failed {
-    self.connect($!w, 'drag-failed');
+    self.connect-drag-failed($!w);
   }
 
   # Signal void Run Last
@@ -270,7 +272,7 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkDragContext, gint, gint, guint, gpointer --> gboolean
   method drag-motion {
-    self.connect($!w, 'drag-motion');
+    self.connect-drag-action($!w, 'drag-motion');
   }
 
   # Signal gboolean Run Last
@@ -284,7 +286,7 @@ class GTK::Widget {
   # Signal gboolean Run Last
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method enter-notify-event {
-    self.connect($!w, 'enter-notify-event');
+    self.connect-widget-event($!w, 'enter-notify-event');
   }
 
   # Signal gboolean Run Last
@@ -292,44 +294,44 @@ class GTK::Widget {
   # GtkWidget, GdkEvent, gpointer --> gboolean
   # Made multi to avoid conflict with another method event, below
   multi method event {
-    self.connect($!w, 'event');
+    self.connect-widget-event($!w, 'event');
   }
 
   # Signal Run
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> void
   method event-after {
-    self.connect($!w, 'event-after');
+    self.connect-widget-event($!w, 'event-after');
   }
 
   # Is originally:
   # GtkWidget, GtkDirectionType, gpointer --> gboolean
   method focus {
-    self.connect($!w, 'focus');
+    self.connect-uint-ruint($!w, 'focus');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method focus-in-event {
-    self.connect($!w, 'focus-in-event');
+    self.connect-widget-event($!w, 'focus-in-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method focus-out-event {
-    self.connect($!w, 'focus-out-event');
+    self.connect-widget-event($!w, 'focus-out-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method grab-broken-event {
-    self.connect($!w, 'grab-broken-event');
+    self.connect-widget-event($!w, 'grab-broken-event');
   }
 
-  # Signal  Action
+  # Signal Default Action
   method grab-focus {
     self.connect($!w, 'grab-focus');
   }
@@ -338,11 +340,11 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, gboolean, gpointer --> void
   method grab-notify {
-    self.connect($!w, 'grab-notify');
+    self.connect-uint($!w, 'grab-notify');
   }
 
 
-  # Signal void Run First
+  # Signal Default Run First
   # Renamed from "hide" so as to not conflict with the method below with same signature.
   # In cases where the method is more common than the signal, common practice will be to
   # append "-signal" to the signal handler.
@@ -354,38 +356,38 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GtkWidget, gpointer --> void
   method hierarchy-changed {
-    self.connect($!w, 'hierarchy-changed');
+    self.connect-widget($!w, 'hierarchy-changed');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method key-press-event {
-    self.connect($!w, 'key-press-event');
+    self.connect-widget-event($!w, 'key-press-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method key-release-event {
-    self.connect($!w, 'key-release-event');
+    self.connect-widget-event($!w, 'key-release-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GtkDirectionType, gpointer --> gboolean
   method keynav-failed {
-    self.connect($!w, 'keynav-failed');
+    self.connect-uint-ruint($!w, 'keynav-failed');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method leave-notify-event {
-    self.connect($!w, 'leave-notify-event');
+    self.connect-widget-event($!w, 'leave-notify-event');
   }
 
-  # Signal void Run First
+  # Signal Default Run First
   # Renamed to avoid conflict with the method map using the same signature.
   method map-signal {
     self.connect($!w, 'map');
@@ -395,68 +397,69 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method map-event {
-    self.connect($!w, 'map-event');
+    self.connect-widget-event($!w, 'map-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, gboolean, gpointer --> gboolean
   method mnemonic-activate {
-    self.connect($!w, 'mnemonic-activate');
+    self.connect-uint-ruint($!w, 'mnemonic-activate');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method motion-notify-event {
-    self.connect($!w, 'motion-notify-event');
+    self.connect-widget-event($!w, 'motion-notify-event');
   }
 
   # Signal Action
   # Is originally:
   # GtkWidget, GtkDirectionType, gpointer --> void
   method move-focus {
-    self.connect($!w, 'move-focus');
+    self.connect-uint($!w, 'move-focus');
   }
 
   # Signal void Run First
   # Is originally:
   # GtkWidget, GtkWidget, gpointer --> void
   method parent-set {
-    self.connect($!w, 'parent-set');
+    self.connect-widget($!w, 'parent-set');
   }
 
-  # Signal gboolean
+  # Signal Default
+  # Returns gboolean
   method popup-menu {
-    self.connect($!w, 'popup-menu');
+    self.connect-ruint($!w, 'popup-menu');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method property-notify-event {
-    self.connect($!w, 'property-notify-event');
+    self.connect-widget-event($!w, 'property-notify-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method proximity-in-event {
-    self.connect($!w, 'proximity-in-event');
+    self.connect-widget-event($!w, 'proximity-in-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method proximity-out-event {
-    self.connect($!w, 'proximity-out-event');
+    self.connect-widget-event($!w, 'proximity-out-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, gint, gint, gboolean, GtkTooltip, gpointer --> gboolean
   method query-tooltip {
-    self.connect($!w, 'query-tooltip');
+    self.connect-query-tooltip($!w);
   }
 
   # Signal void Run First
@@ -469,52 +472,52 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkScreen, gpointer --> void
   method screen-changed {
-    self.connect($!w, 'screen-changed');
+    self.connect-screen($!w, 'screen-changed');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method scroll-event {
-    self.connect($!w, 'scroll-event');
+    self.connect-widget-event($!w, 'scroll-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method selection-clear-event {
-    self.connect($!w, 'selection-clear-event');
+    self.connect-widget-event($!w, 'selection-clear-event');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GtkSelectionData, guint, guint, gpointer --> void
   method selection-get {
-    self.connect($!w, 'selection-get');
+    self.connect-selection-get($!w);
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method selection-notify-event {
-    self.connect($!w, 'selection-notify-event');
+    self.connect-widget-event($!w, 'selection-notify-event');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GtkSelectionData, guint, gpointer --> void
   method selection-received {
-    self.connect($!w, 'selection-received');
+    self.connect-selection-received($!w);
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method selection-request-event {
-    self.connect($!w, 'selection-request-event');
+    self.connect-widget-event($!w, 'selection-request-event');
   }
 
-  # Signal void Run First
+  # Signal Default Run First
   # Renamed from "show" so as to not conflict with the method below with same signature.
   method show-signal {
     self.connect($!w, 'show');
@@ -523,38 +526,38 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GtkWidgetHelpType, gpointer --> gboolean
   method show-help {
-    self.connect($!w, 'show-help');
+    self.connect-uint-ruint($!w, 'show-help');
   }
 
   # Signal void Run First
   # Is originally:
   # GtkWidget, GdkRectangle, gpointer --> void
   method size-allocate {
-    self.connect($!w, 'size-allocate');
+    self.connect-widget-rectangle($!w, 'size-allocate');
   }
 
   # Signal void Run First
   # Is originally:
   # GtkWidget, GtkStateType, gpointer --> void
   method state-changed {
-    self.connect($!w, 'state-changed');
+    self.connect-uint($!w, 'state-changed');
   }
 
   # Signal void Run First
   # Is originally:
   # GtkWidget, GtkStateFlags, gpointer --> void
   method state-flags-changed {
-    self.connect($!w, 'state-flags-changed');
+    self.connect-uint($!w, 'state-flags-changed');
   }
 
   # Signal void Run First
   # Is originally:
   # GtkWidget, GtkStyle, gpointer --> void
   method style-set {
-    self.connect($!w, 'style-set');
+    self.connect-widget-style($!w, 'style-set');
   }
 
-  # Signal void Run First
+  # Signal Default Run First
   method style-updated {
     self.connect($!w, 'style-updated');
   }
@@ -563,10 +566,10 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method touch-event {
-    self.connect($!w, 'touch-event');
+    self.connect-widget-event($!w, 'touch-event');
   }
 
-  # Signal void Run First
+  # Signal Default Run First
   # Renamed to avoid conflict with the unmap method using the same signature.
   method unmap-signal {
     self.connect($!w, 'unmap');
@@ -576,10 +579,10 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method unmap-event {
-    self.connect($!w, 'unmap-event');
+    self.connect-widget-event($!w, 'unmap-event');
   }
 
-  # Signal void Run Last
+  # Signal Default Run Last
   # Renamed to avoid conflict with the unrealize method using the same signature.
   method unrealize-signal {
     self.connect($!w, 'unrealize');
@@ -589,15 +592,16 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method visibility-notify-event {
-    self.connect($!w, 'visibility-notify-event');
+    self.connect-widget-event($!w, 'visibility-notify-event');
   }
 
   # Signal gboolean Run Last
   # Is originally:
   # GtkWidget, GdkEvent, gpointer --> gboolean
   method window-state-event {
-    self.connect($!w, 'window-state-event');
+    self.connect-widget-event($!w, 'window-state-event');
   }
+  # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   method receives_default is rw {
     Proxy.new(
