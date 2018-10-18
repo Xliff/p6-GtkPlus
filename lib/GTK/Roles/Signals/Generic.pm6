@@ -9,7 +9,6 @@ use GTK::Raw::ReturnedValue;
 role GTK::Roles::Signals::Generic {
   has %!signals-generic;
 
-  # Copy for each signal.
   method connect-event (
     $obj,
     $signal,
@@ -25,6 +24,33 @@ role GTK::Roles::Signals::Generic {
           }
 
           $s.emit( [self, $e, $ud] );
+        },
+        OpaquePointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+  method connect-rbool (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_rbool($obj, $signal,
+        -> $, $ud --> gboolean {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          my $r = ReturnedValue.new;
+          $s.emit( [self, $ud, $r] );
+          die 'Invalid return type' if $r.r ~~ Bool;
+          $r.r = .Int if $r.r ~~ Bool;
         },
         OpaquePointer, 0
       );
@@ -290,6 +316,8 @@ role GTK::Roles::Signals::Generic {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $uri, $ud, $r] );
+          die 'Invalid return type' if $r.r ~~ Bool;
+          $r.r = .Int if $r.r ~~ Bool;
           $r.r;
         },
         Pointer, 0
@@ -436,6 +464,18 @@ sub g_connect_event(
   Pointer $app,
   Str $name,
   &handler (Pointer, GdkEvent, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g_connect_rbool(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, Pointer --> gboolean),
   Pointer $data,
   uint32 $flags
 )

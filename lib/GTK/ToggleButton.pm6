@@ -67,6 +67,8 @@ class GTK::ToggleButton is GTK::Button {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+  # Is originally:
+  # GtkToggleButton, gpointer --> void
   method toggled {
     self.connect($!tb, 'toggled');
   }

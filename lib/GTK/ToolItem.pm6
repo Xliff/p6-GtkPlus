@@ -9,7 +9,15 @@ use GTK::Raw::Types;
 use GTK::Bin;
 use GTK::SizeGroup;
 
+use GTK::Roles::Actionable;
+use GTK::Roles::Signals::Generic;
+
+subset Ancestry where GtkToolItem | GtkActionable | GtkWidget;
+
 class GTK::ToolItem is GTK::Bin {
+  also does GTK::Roles::Actionable;
+  also does GTK::Roles::Signals::Generic;
+
   has GtkToolItem $!ti;
 
   method bless(*%attrinit) {
@@ -20,7 +28,7 @@ class GTK::ToolItem is GTK::Bin {
 
   submethod BUILD(:$toolitem) {
     given $toolitem {
-      when GtkToolItem | GtkWidget {
+      when Ancestry {
         self.setToolItem($toolitem);
       }
       when GTK::ToolItem {
@@ -30,17 +38,8 @@ class GTK::ToolItem is GTK::Bin {
     }
   }
 
-  multi method new {
-    my $toolitem = gtk_tool_item_new();
-    self.bless(:$toolitem);
-  }
-  multi method new (GtkWidget $toolitem) {
-    #use GTK::Widget;
-
-    #my $type = GTK::Widget.getType($toolitem);
-    #die "Incorrect type $type passed to " ~ ::?CLASS.^name ~ 'constructor.'
-    #  unless $type eq ::?CLASS.^name;
-    self.bless(:$toolitem);
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   method setToolItem($toolitem) {
@@ -50,12 +49,26 @@ class GTK::ToolItem is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
+      when GtkActionable {
+        $!action = nativecast(GtkActionable, $!ti);  # GTK::Roles::Actionable
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkToolItem, $_);
+      }
       when GtkWidget {
         $to-parent = $_;
         nativecast(GtkToolItem, $_);
       }
     }
     self.setBin($to-parent);
+    $!action //= nativecast(GtkActionable, $!ti);    # GTK::Roles::Actionable
+  }
+
+  multi method new {
+    my $toolitem = gtk_tool_item_new();
+    self.bless(:$toolitem);
+  }
+  multi method new (Ancestry $toolitem) {
+    self.bless(:$toolitem);
   }
 
   method GTK::Raw::Types::GtkToolItem {
@@ -67,7 +80,7 @@ class GTK::ToolItem is GTK::Bin {
   # Is originally:
   # GtkToolItem, gpointer --> gboolean
   method create-menu-proxy {
-    self.connect($!ti, 'create-menu-proxy');
+    self.connect-rbool($!ti, 'create-menu-proxy');
   }
 
   # Is originally:

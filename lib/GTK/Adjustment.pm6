@@ -7,10 +7,10 @@ use GTK::Raw::Adjustment;
 use GTK::Raw::Types;
 
 class GTK::Adjustment {
-  has GtkAdjustment $!a;
+  has GtkAdjustment $!adj;
 
   submethod BUILD(GtkAdjustment :$adjustment) {
-    $!a = $adjustment;
+    $!adj = $adjustment;
   }
 
   multi method new (GtkAdjustment $adjustment) {
@@ -26,12 +26,12 @@ class GTK::Adjustment {
     my gdouble ($l, $u, $si, $pi, $ps) = (
       $lower, $upper, $step_increment, $page_increment, $page_size
     );
-    my $adjustment = gtk_adjustment_new($!a, $l, $u, $si, $pi, $ps);
+    my $adjustment = gtk_adjustment_new($!adj, $l, $u, $si, $pi, $ps);
     self.bless($adjustment);
   }
 
   method GTK::Raw::Types::GtkAdjustment {
-    $!a;
+    $!adj;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -39,13 +39,13 @@ class GTK::Adjustment {
   # Is originally:
   # GtkAdjustment, gpointer --> void
   method changed {
-    self.connect($!a, 'changed');
+    self.connect($!adj, 'changed');
   }
 
   # Is originally:
   # GtkAdjustment, gpointer --> void
   method value-changed {
-    self.connect($!a, 'value-changed');
+    self.connect($!adj, 'value-changed');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -54,11 +54,11 @@ class GTK::Adjustment {
   method lower is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_adjustment_get_lower($!a);
+        gtk_adjustment_get_lower($!adj);
       },
       STORE => sub ($, Num() $lower is copy) {
         my gdouble $l = $lower;
-        gtk_adjustment_set_lower($!a, $l);
+        gtk_adjustment_set_lower($!adj, $l);
       }
     );
   }
@@ -66,11 +66,11 @@ class GTK::Adjustment {
   method page_increment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_adjustment_get_page_increment($!a);
+        gtk_adjustment_get_page_increment($!adj);
       },
       STORE => sub ($, Num() $page_increment is copy) {
         my gdouble $pi = $page_increment;
-        gtk_adjustment_set_page_increment($!a, $pi);
+        gtk_adjustment_set_page_increment($!adj, $pi);
       }
     );
   }
@@ -78,11 +78,11 @@ class GTK::Adjustment {
   method page_size is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_adjustment_get_page_size($!a);
+        gtk_adjustment_get_page_size($!adj);
       },
       STORE => sub ($, Num() $page_size is copy) {
         my gdouble $ps = $page_size;
-        gtk_adjustment_set_page_size($!a, $ps);
+        gtk_adjustment_set_page_size($!adj, $ps);
       }
     );
   }
@@ -90,11 +90,11 @@ class GTK::Adjustment {
   method step_increment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_adjustment_get_step_increment($!a);
+        gtk_adjustment_get_step_increment($!adj);
       },
       STORE => sub ($, Num() $step_increment is copy) {
         my gdouble $si = $step_increment;
-        gtk_adjustment_set_step_increment($!a, $si);
+        gtk_adjustment_set_step_increment($!adj, $si);
       }
     );
   }
@@ -102,11 +102,11 @@ class GTK::Adjustment {
   method upper is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_adjustment_get_upper($!a);
+        gtk_adjustment_get_upper($!adj);
       },
       STORE => sub ($, Num() $upper is copy) {
         my gdouble $u = $upper;
-        gtk_adjustment_set_upper($!a, $u);
+        gtk_adjustment_set_upper($!adj, $u);
       }
     );
   }
@@ -114,11 +114,11 @@ class GTK::Adjustment {
   method value is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_adjustment_get_value($!a);
+        gtk_adjustment_get_value($!adj);
       },
       STORE => sub ($, Num() $value is copy) {
         my gdouble $v = $value;
-        gtk_adjustment_set_value($!a, $v);
+        gtk_adjustment_set_value($!adj, $v);
       }
     );
   }
@@ -127,12 +127,12 @@ class GTK::Adjustment {
   # ↓↓↓↓ METHODS ↓↓↓↓
 
   # method changed {
-  #   gtk_adjustment_changed($!a);
+  #   gtk_adjustment_changed($!adj);
   # }
 
   method clamp_page (Num() $lower, Num() $upper) {
     my gdouble ($l, $u) = ($lower, $upper);
-    gtk_adjustment_clamp_page($!a, $l, $u);
+    gtk_adjustment_clamp_page($!adj, $l, $u);
   }
 
   method configure (
@@ -146,11 +146,11 @@ class GTK::Adjustment {
     my gdouble ($v, $l, $u, $si, $pi, $ps) = (
       $value, $lower, $upper, $step_increment, $page_increment, $page_size
     );
-    gtk_adjustment_configure($!a, $v, $l, $u, $si, $pi, $ps);
+    gtk_adjustment_configure($!adj, $v, $l, $u, $si, $pi, $ps);
   }
 
   method get_minimum_increment {
-    gtk_adjustment_get_minimum_increment($!a);
+    gtk_adjustment_get_minimum_increment($!adj);
   }
 
   method get_type {
@@ -158,7 +158,7 @@ class GTK::Adjustment {
   }
 
   # method value_changed () {
-  #   gtk_adjustment_value_changed($!a);
+  #   gtk_adjustment_value_changed($!adj);
   # }
 
   # ↑↑↑↑ METHODS ↑↑↑↑

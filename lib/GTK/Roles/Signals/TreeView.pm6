@@ -7,43 +7,115 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::<name> {
-  has %!signals-<name>;
+role GTK::Roles::Signals::TreeView {
+  has %!signals-tv;
 
-  # Copy for each signal.
-  method connect-<sigName> (
+  # GtkTreeView, GtkTreeIter, GtkTreePath, gpointer --> void
+  method connect-row (
     $obj,
     $signal,
     &handler?
   ) {
     my $hid;
-    %!signals-<name>{$signal} //= do {
+    %!signals-tv{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-<sigName>($obj, $signal,
-        -> $, <params>, $ud {
+      $hid = g-connect-row($obj, $signal,
+        -> $, $ti, $tp, $ud {
           CATCH {
             default { $s.quit($_) }
           }
 
-          my $r = ReturnedValue.new;
-          $s.emit( [self, <params>, $ud, $r] );
-          $r.r;
+          $s.emit( [self, $ti, $tp, $ud] );
         },
         Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-<name>{$signal}[0].tap(&handler) with &handler;
-    %!signals-<name>{$signal}[0];
+    %!signals-tv{$signal}[0].tap(&handler) with &handler;
+    %!signals-tv{$signal}[0];
+  }
+
+  # GtkTreeView, GtkTreeIter, GtkTreePath, gpointer --> gboolean
+  method connect-test-row (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-tv{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-test-row($obj, $signal,
+        -> $, $ti, $tp, $ud --> gboolean {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $ti, $tp, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-tv{$signal}[0].tap(&handler) with &handler;
+    %!signals-tv{$signal}[0];
+  }
+
+  # GtkTreeView, gboolean, gboolean, gboolean, gpointer --> gboolean
+  method connect-expand-collapse (
+    $obj,
+    $signal = 'expand-collapse-cursor-row',
+    &handler?
+  ) {
+    my $hid;
+    %!signals-tv{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-expand-collapse($obj, $signal,
+        -> $, $b1, $b2, $b3, $ud --> gboolean {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $b1, $b2, $b3, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-tv{$signal}[0].tap(&handler) with &handler;
+    %!signals-tv{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g-connect-<sigName>(
+sub g-connect-row(
   Pointer $app,
   Str $name,
-  &handler (<params>, Pointer),
+  &handler (Pointer, GtkTreeIter, GtkTreePath, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g-connect-test-row(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, GtkTreeIter, GtkTreePath, Pointer --> gboolean),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g-connect-expand-collapse(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, gboolean, gboolean, gboolean, Pointer --> gboolean),
   Pointer $data,
   uint32 $flags
 )

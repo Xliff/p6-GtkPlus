@@ -16,11 +16,15 @@ use GTK::TreeViewColumn;
 
 use GTK::Roles::Scrollable;
 use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::TreeView;
 
 sub EXPORT {
   %(
     GTK::Compat::Types::EXPORT::DEFAULT::,
     GTK::Raw::Types::EXPORT::DEFAULT::,
+    GTK::Adjustment::,
+    GTK::Container::,
+    GTK::Entry::,
     GTK::TreeIter::,
     GTK::TreeSelection::,
     GTK::TreeStore::,
@@ -31,6 +35,7 @@ sub EXPORT {
 class GTK::TreeView is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::TreeView;
 
   has GtkTreeView $!tv;
 
@@ -65,7 +70,7 @@ class GTK::TreeView is GTK::Container {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
+    self.disconnect-all($_) for %!signals-generic, %!signals-tv;
   }
 
   method new {
@@ -95,7 +100,7 @@ class GTK::TreeView is GTK::Container {
   # Is originally:
   # GtkTreeView, gboolean, gboolean, gboolean, gpointer --> gboolean
   method expand-collapse-cursor-row {
-    self.connect($!tv, 'expand-collapse-cursor-row');
+    self.connect-expand-collapse($!tv);
   }
 
   # Is originally:
@@ -113,61 +118,61 @@ class GTK::TreeView is GTK::Container {
   # Is originally:
   # GtkTreeView, GtkTreeIter, GtkTreePath, gpointer --> void
   method row-collapsed {
-    self.connect($!tv, 'row-collapsed');
+    self.connect-row($!tv, 'row-collapsed');
   }
 
   # Is originally:
   # GtkTreeView, GtkTreeIter, GtkTreePath, gpointer --> void
   method row-expanded {
-    self.connect($!tv, 'row-expanded');
+    self.connect-row($!tv, 'row-expanded');
   }
 
   # Is originally:
   # GtkTreeView, gpointer --> gboolean
   method select-all {
-    self.connect($!tv, 'select-all');
+    self.connect-rbool($!tv, 'select-all');
   }
 
   # Is originally:
   # GtkTreeView, gpointer --> gboolean
   method select-cursor-parent {
-    self.connect($!tv, 'select-cursor-parent');
+    self.connect-rbool($!tv, 'select-cursor-parent');
   }
 
   # Is originally:
   # GtkTreeView, gboolean, gpointer --> gboolean
   method select-cursor-row {
-    self.connect($!tv, 'select-cursor-row');
+    self.connect-uint-rbool($!tv, 'select-cursor-row');
   }
 
   # Is originally:
   # GtkTreeView, gpointer --> gboolean
   method start-interactive-search {
-    self.connect($!tv, 'start-interactive-search');
+    self.connect-rbool($!tv, 'start-interactive-search');
   }
 
   # Is originally:
   # GtkTreeView, GtkTreeIter, GtkTreePath, gpointer --> gboolean
   method test-collapse-row {
-    self.connect($!tv, 'test-collapse-row');
+    self.connect-test-row($!tv, 'test-collapse-row');
   }
 
   # Is originally:
   # GtkTreeView, GtkTreeIter, GtkTreePath, gpointer --> gboolean
   method test-expand-row {
-    self.connect($!tv, 'test-expand-row');
+    self.connect-test-row($!tv, 'test-expand-row');
   }
 
   # Is originally:
   # GtkTreeView, gpointer --> gboolean
   method toggle-cursor-row {
-    self.connect($!tv, 'toggle-cursor-row');
+    self.connect-rbool($!tv, 'toggle-cursor-row');
   }
 
   # Is originally:
   # GtkTreeView, gpointer --> gboolean
   method unselect-all {
-    self.connect($!tv, 'unselect-all');
+    self.connect-rbool($!tv, 'unselect-all');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

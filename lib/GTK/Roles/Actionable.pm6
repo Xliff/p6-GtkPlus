@@ -7,17 +7,17 @@ use GTK::Raw::Actionable;
 use GTK::Raw::Types;
 
 role GTK::Roles::Actionable {
-  has GtkActionable $!a;
+  has GtkActionable $!action;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   method action_name is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_actionable_get_action_name($!a);
+        gtk_actionable_get_action_name($!action);
       },
       STORE => sub ($, Str() $action_name is copy) {
-        gtk_actionable_set_action_name($!a, $action_name);
+        gtk_actionable_set_action_name($!action, $action_name);
       }
     );
   }
@@ -26,10 +26,10 @@ role GTK::Roles::Actionable {
   method action_target is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_actionable_get_action_target_value($!a);
+        gtk_actionable_get_action_target_value($!action);
       },
       STORE => sub ($, GVariant() $target_value is copy) {
-        gtk_actionable_set_action_target_value($!a, $target_value);
+        gtk_actionable_set_action_target_value($!action, $target_value);
       }
     );
   }
@@ -45,7 +45,7 @@ role GTK::Roles::Actionable {
   }
 
   method set_detailed_action_name (Str() $detailed_action_name) {
-    gtk_actionable_set_detailed_action_name($!a, $detailed_action_name);
+    gtk_actionable_set_detailed_action_name($!action, $detailed_action_name);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

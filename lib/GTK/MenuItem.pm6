@@ -67,7 +67,7 @@ class GTK::MenuItem is GTK::Bin {
         nativecast(GtkMenuItem, $_);
       }
       when GtkActionable {
-        $!a = $_;
+        $!action = $_;
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkMenuItem, $_);
       }
@@ -76,7 +76,7 @@ class GTK::MenuItem is GTK::Bin {
         $_;
       }
     }
-    $!a //= nativecast(GtkActionable, $!mi);  # GTK::Roles::Actionable
+    $!action //= nativecast(GtkActionable, $!mi);  # GTK::Roles::Actionable
     self.setBin($to-parent);
   }
 

@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+use GTK::Roles::Signals::Generic;
+
 class GTK::Toolbar is GTK::Container {
+  also does GTK::Roles::Signals::Generic;
+
   has GtkToolbar $!tb;
 
   method bless(*%attrinit) {
@@ -40,6 +44,10 @@ class GTK::Toolbar is GTK::Container {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
+  }
+
   multi method new {
     my $toolbar = gtk_toolbar_new();
     self.bless(:$toolbar);
@@ -53,25 +61,25 @@ class GTK::Toolbar is GTK::Container {
   # Is originally:
   # GtkToolbar, gboolean, gpointer --> gboolean
   method focus-home-or-end {
-    self.connect($!tb, 'focus-home-or-end');
+    self.connect-uint-rbool($!tb, 'focus-home-or-end');
   }
 
   # Is originally:
   # GtkToolbar, GtkOrientation, gpointer --> void
   method orientation-changed {
-    self.connect($!tb, 'orientation-changed');
+    self.connect-uint($!tb, 'orientation-changed');
   }
 
   # Is originally:
   # GtkToolbar, gint, gint, gint, gpointer --> gboolean
   method popup-context-menu {
-    self.connect($!tb, 'popup-context-menu');
+    self.connect-context-menu($!tb);
   }
 
   # Is originally:
   # GtkToolbar, GtkToolbarStyle, gpointer --> void
   method style-changed {
-    self.connect($!tb, 'style-changed');
+    self.connect-uint($!tb, 'style-changed');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

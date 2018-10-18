@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::ToolItem;
 
+use GTK::Roles::Actionable;
+
 class GTK::ToolButton is GTK::ToolItem {
+  also does GTK::Roles::Actionable;
+
   has GtkToolButton $!tb;
 
   method bless(*%attrinit) {
@@ -44,6 +48,7 @@ class GTK::ToolButton is GTK::ToolItem {
       }
     }
     self.setToolItem($to-parent);
+    $!action = nativecast(GtkActionable, $!tb);   GTK::Roles::Actionable
   }
 
   multi method new (GtkWidget $toolbutton) {
