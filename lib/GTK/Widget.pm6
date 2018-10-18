@@ -163,7 +163,7 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GParamSpec, gpointer --> void
   method child-notify {
-    self.connect-child-notify($!w);
+    self.connect-gparam($!w, 'child-notify');
   }
 
   # Default Signal

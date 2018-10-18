@@ -43,6 +43,7 @@ class GTK::Stack is GTK::Container {
       default {
       }
     }
+
     if $switcher {
       # Note: Builder support may require StackSwitcher become an object!
       $!ss = gtk_stack_switcher_new();
@@ -54,7 +55,8 @@ class GTK::Stack is GTK::Container {
   }
 
   multi method new (GtkStack $stack) {
-    self.bless(:$stack);
+    my $switcher = True;
+    self.bless(:$stack, :$switcher);
   }
   multi method new (GtkWidget $stack) {
     self.bless(:$stack);

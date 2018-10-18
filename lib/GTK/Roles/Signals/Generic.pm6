@@ -204,30 +204,6 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect-pointer (
-    $obj,
-    $signal,
-    &handler?
-  ) {
-    my $hid;
-    %!signals-generic{$signal} //= do {
-      my $s = Supplier.new;
-      $hid = g_connect_pointer($obj, $signal,
-        -> $, $p, $ud {
-          CATCH {
-            default { $s.quit($_) }
-          }
-
-          $s.emit( [self, $p, $ud] );
-        },
-        Pointer, 0
-      );
-      [ $s.Supply, $obj, $hid];
-    };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
-  }
-
   method connect-movement-step (
     $obj,
     $signal,
@@ -457,6 +433,29 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
+  method connect-gparam(
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-gparam($obj, $signal,
+        -> $, $gp, $ud {
+          CATCH { default { $s.quit($_) } }
+
+          $s.emit( [self, $gp, $ud] );
+        },
+        OpaquePointer, 0
+      );
+      [ $s.Supply, $obj, $hid ];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+
 }
 
 # Define for each signal
@@ -669,6 +668,18 @@ sub g-connect-delete(
   Pointer $app,
   Str $name,
   &handler (Pointer, uint32, gint, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g-connect-gparam(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, GParamSpec, Pointer),
   Pointer $data,
   uint32 $flags
 )

@@ -191,28 +191,6 @@ role GTK::Roles::Signals::Widget {
     %!signals-widget{$signal}[0];
   }
 
-  method connect-child-notify(
-    $obj,
-    $signal = 'child-notify',
-    &handler?
-  ) {
-    my $hid;
-    %!signals-widget{$signal} //= do {
-      my $s = Supplier.new;
-      $hid = g-connect-child-notify($obj, $signal,
-        -> $, $gp, $ud {
-          CATCH { default { $s.quit($_) } }
-
-          $s.emit( [self, $gp, $ud] );
-        },
-        OpaquePointer, 0
-      );
-      [ $s.Supply, $obj, $hid ];
-    };
-    %!signals-widget{$signal}[0].tap(&handler) with &handler;
-    %!signals-widget{$signal}[0];
-  }
-
   # GdkDragContext
   method connect-widget-drag(
     $obj,
@@ -447,18 +425,6 @@ sub g-connect-drag-leave(
   Pointer $app,
   Str $name,
   &handler (Pointer, GdkDragContext, guint, Pointer),
-  Pointer $data,
-  uint32 $flags
-)
-  returns uint64
-  is native('gobject-2.0')
-  is symbol('g_signal_connect_object')
-  { * }
-
-sub g-connect-child-notify(
-  Pointer $app,
-  Str $name,
-  &handler (Pointer, GParamSpec, Pointer),
   Pointer $data,
   uint32 $flags
 )

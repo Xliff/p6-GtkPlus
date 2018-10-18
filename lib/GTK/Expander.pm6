@@ -70,7 +70,7 @@ class GTK::Expander is GTK::Bin {
   }
 
   method notify-expanded {
-    self.connect-pointer($!e, 'notify::expanded');
+    self.connect-gparam($!e, 'notify::expanded');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
