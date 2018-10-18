@@ -389,6 +389,26 @@ class GTK::TextView is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
+
+  # - XXX -
+  # MISSED DUE TO COMMENTS IN DEFINITION -- SHOULD IMPLEMENT
+  #
+  # void gtk_text_view_add_child_in_window (
+  #   GtkTextView          *text_view,
+  #   GtkWidget            *child,
+  #   GtkTextWindowType     which_window,
+  #   /* window coordinates */
+  #   gint                  xpos,
+  #   gint                  ypos);
+  #
+  # void gtk_text_view_move_child          (
+  #   GtkTextView          *text_view,
+  #   GtkWidget            *child,
+  #   /* window coordinates */
+  #   gint                  xpos,
+  #   gint                  ypos);
+
+
   method add_child_at_anchor (
     GtkWidget() $child,
     GtkTextChildAnchor() $anchor

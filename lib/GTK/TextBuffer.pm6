@@ -9,13 +9,20 @@ use GTK::Roles::Types;
 
 use GTK::TextIter;
 
+use GTK::Roles::Signals::TextBuffer;
+
 class GTK::TextBuffer {
   also does GTK::Roles::Types;
+  also does GTK::Roles::Signals::TextBuffer;
 
   has GtkTextBuffer $!tb;
 
   submethod BUILD(:$buffer) {
     $!tb = $buffer;
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-tb;
   }
 
   multi method new($text_tag_table = GtkTextTagTable) {
@@ -35,7 +42,7 @@ class GTK::TextBuffer {
   # Is originally:
   # GtkTextBuffer, GtkTextTag, GtkTextIter, GtkTextIter, gpointer --> void
   method apply-tag {
-    self.connect($!tb, 'apply-tag');
+    self.connect-tag($!tb, 'apply-tag');
   }
 
   # Is originally:
@@ -53,7 +60,7 @@ class GTK::TextBuffer {
   # Is originally:
   # GtkTextBuffer, GtkTextIter, GtkTextIter, gpointer --> void
   method delete-range {
-    self.connect($!tb, 'delete-range');
+    self.connect-delete-range($!tb);
   }
 
   # Is originally:
@@ -65,31 +72,31 @@ class GTK::TextBuffer {
   # Is originally:
   # GtkTextBuffer, GtkTextIter, GtkTextChildAnchor, gpointer --> void
   method insert-child-anchor {
-    self.connect($!tb, 'insert-child-anchor');
+    self.connect-insert-child-anchor($!tb);
   }
 
   # Is originally:
   # GtkTextBuffer, GtkTextIter, GdkPixbuf, gpointer --> void
   method insert-pixbuf {
-    self.connect($!tb, 'insert-pixbuf');
+    self.connect-insert-pixbuf($!tb);
   }
 
   # Is originally:
   # GtkTextBuffer, GtkTextIter, gchar, gint, gpointer --> void
   method insert-text {
-    self.connect($!tb, 'insert-text');
+    self.connect-insert-text($!tb);
   }
 
   # Is originally:
   # GtkTextBuffer, GtkTextMark, gpointer --> void
   method mark-deleted {
-    self.connect($!tb, 'mark-deleted');
+    self.connect-mark-deleted($!tb);
   }
 
   # Is originally:
   # GtkTextBuffer, GtkTextIter, GtkTextMark, gpointer --> void
   method mark-set {
-    self.connect($!tb, 'mark-set');
+    self.connect-mark-set($!tb);
   }
 
   # Is originally:
@@ -101,13 +108,13 @@ class GTK::TextBuffer {
   # Is originally:
   # GtkTextBuffer, GtkClipboard, gpointer --> void
   method paste-done {
-    self.connect($!tb, 'paste-done');
+    self.connect-paste-done($!tb);
   }
 
   # Is originally:
   # GtkTextBuffer, GtkTextTag, GtkTextIter, GtkTextIter, gpointer --> void
   method remove-tag {
-    self.connect($!tb, 'remove-tag');
+    self.connect-tag($!tb, 'remove-tag');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
