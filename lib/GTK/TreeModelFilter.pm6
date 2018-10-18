@@ -13,14 +13,13 @@ use GTK::Roles::Types;
 class GTK::TreeModelFilter {
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeDragSource;
-  also does GTK::Roles::Types;
 
   has GtkTreeModelFilter $!tmf;
 
   submethod BUILD(:$treefilter) {
     $!tmf = $treefilter;
     $!tm = nativecast(GtkTreeModel, $!tmf);         # GTK::Roles::TreeModel
-    $!dd = nativecast(GtkTreeDragSource, $!tmf);    # GTK::Roles::TreeDragSource
+    $!ds = nativecast(GtkTreeDragSource, $!tmf);    # GTK::Roles::TreeDragSource
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -106,8 +105,8 @@ class GTK::TreeModelFilter {
     gtk_tree_model_filter_get_type();
   }
 
-  method new (GtkTreePath() $root) {
-    gtk_tree_model_filter_new($!tmf, $root);
+  method new (GtkTreeModel() $model, GtkTreePath() $root) {
+    gtk_tree_model_filter_new($model, $root);
   }
 
   method refilter {

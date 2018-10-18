@@ -544,6 +544,8 @@ class PangoLayout           is repr('CPointer') is export { }
 
 class GActionGroup          is repr('CPointer') is export { }
 class GAppInfo              is repr('CPointer') is export { }
+class GAppInfoMonitor       is repr('CPointer') is export { }
+class GAppLaunchContext     is repr('CPointer') is export { }
 class GApplication          is repr('CPointer') is export { }
 class GAsyncResult          is repr('CPointer') is export { }
 class GBytes                is repr('CPointer') is export { }
@@ -552,15 +554,16 @@ class GFunc                 is repr('CPointer') is export { }
 class GHashTable            is repr('CPointer') is export { }
 class GIcon                 is repr('CPointer') is export { }
 class GInputStream          is repr('CPointer') is export { }
-class GParamSpec            is repr('CPointer') is export { }
 class GLaunchContext        is repr('CPointer') is export { }  # GAppLaunchContext
 class GListModel            is repr('CPointer') is export { }
 class GMarkupParser         is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
+class GMenuAttributeIter    is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
 class GMountOperation       is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
 class GOutputStream         is repr('CPointer') is export { }
+class GParamSpec            is repr('CPointer') is export { }
 class GVolume               is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }

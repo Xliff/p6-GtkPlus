@@ -13,7 +13,7 @@ class GTK::Tooltip {
     $!tt = $tooltip
   }
 
-  method new (GtkToolTip $tooltip) {
+  method new (GtkTooltip $tooltip) {
     self.bless(:$tooltip);
   }
 
@@ -25,6 +25,11 @@ class GTK::Tooltip {
 
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
+
+  # Static
+  method gtk_tooltip_trigger_tooltip_query(GdkDisplay $display){
+    gtk_tooltip_trigger_tooltip_query($display);
+  }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method gtk_tooltip_get_type {
@@ -73,10 +78,6 @@ class GTK::Tooltip {
 
   method gtk_tooltip_set_tip_area (GdkRectangle() $rect) {
     gtk_tooltip_set_tip_area($!tt, $rect);
-  }
-
-  method gtk_tooltip_trigger_tooltip_query {
-    gtk_tooltip_trigger_tooltip_query($!tt);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

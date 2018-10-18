@@ -53,7 +53,7 @@ if !$s.serialise {
 } else {
   @module-order.push($_<name>) for $s.result;
 }
-my $list = @module-order.join("\n");
+my $list = @module-order.grep(* ne 'GTK::Builder').join("\n");
 "BuildList".IO.open(:w).say($list);
 say $list;
 

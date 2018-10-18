@@ -11,18 +11,22 @@ use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
 
 class GTK::TreeModelSort {
+  also does GTK::Roles::TreeDragSource;
+  also does GTK::Roles::TreeModel;
+  also does GTK::Roles::TreeSortable;
+
   has GtkTreeModelSort $!tms;
 
   submethod BUILD(:$treesort) {
     $!tms = $treesort;
-    $!tds = nativecast(GtkTreeDragSource, $!tms);   # GTK::Roles::TreeDragSource
+    $!ds = nativecast(GtkTreeDragSource, $!tms);   # GTK::Roles::TreeDragSource
     $!ts = nativecast(GtkTreeSortable, $!tms);      # GTK::Roles::GtkTreeSortable
     $!tm = nativecast(GtkTreeModel, $!tms);         # GTK::Roles::TreeModel
   }
 
   method new (GtkTreeModel() $model) {
     my $treesort = gtk_tree_model_sort_new_with_model($model);
-    self.bless(:$treemodel);
+    self.bless(:$treesort);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

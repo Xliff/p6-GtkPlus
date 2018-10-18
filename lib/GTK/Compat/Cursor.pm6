@@ -24,7 +24,7 @@ class GTK::Compat::Cursor {
   }
 
   method new_for_display (
-    GtkDisplay $display,
+    GdkDisplay $display,
     Int() $cursor_type          # GdkCursorType $cursor_type
   ) {
     my uint32 $ct = self.RESOLVE-UINT($cursor_type);
@@ -55,8 +55,8 @@ class GTK::Compat::Cursor {
     Num() $x,
     Num() $y
   ) {
-    my gdouble($xx, $yy) = ($x, $y);
-    gdk_cursor_new_from_surface($!c, $surface, $xx, $yy);
+    my gdouble ($xx, $yy) = ($x, $y);
+    gdk_cursor_new_from_surface($display, $surface, $xx, $yy);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -82,7 +82,7 @@ class GTK::Compat::Cursor {
   }
 
   method get_surface (Num() $x_hot, Num() $y_hot) {
-    my gdouble ($xh, $yh) = ($x_hot, $y_hot)
+    my gdouble ($xh, $yh) = ($x_hot, $y_hot);
     gdk_cursor_get_surface($!c, $xh, $yh);
   }
 
