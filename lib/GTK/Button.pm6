@@ -8,7 +8,13 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+use GTK::Roles::Actionable;
+
+my subset Ancestry where GtkButton | GtkActionable | GtkWidget;
+
 class GTK::Button is GTK::Bin {
+  also does GTK::Roles::Actionable;
+
   has GtkButton $!b;
 
   method bless(*%attrinit) {
@@ -19,7 +25,7 @@ class GTK::Button is GTK::Bin {
 
   submethod BUILD(:$button) {
     given $button {
-      when GtkButton | GtkWidget {
+      when Ancestry {
         self.setButton($button);
       }
       when GTK::Button {
@@ -39,19 +45,25 @@ class GTK::Button is GTK::Bin {
         $to-parent = $_;
         nativecast(GtkButton, $_);
       }
+      when GtkActionable {
+        $!action //= nativecast(GtkActionable, $!b);    # GTK::Roles::Actionable
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkButton, $_);
+      }
       when GtkButton {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
     };
     self.setBin($button);
+    $!action //= nativecast(GtkActionable, $!b);        # GTK::Roles::Actionable
   }
 
   multi method new {
     my $button = gtk_button_new();
     self.bless(:$button);
   }
-  multi method new(GtkWidget $button) {
+  multi method new(Ancestry $button) {
     self.bless(:$button);
   }
 

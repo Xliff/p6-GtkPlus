@@ -8,12 +8,16 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+use GTK::Roles::Actionable;
 use GTK::Roles::Signals::Generic;
 
-class GTK::Switch is GTK::Widget {
-  has GtkSwitch $!s;
+my subset Ancestry where GtkSwitch | GtkActionable | GtkWidget;
 
+class GTK::Switch is GTK::Widget {
+  also does GTK::Roles::Actionable;
   also does GTK::Roles::Signals::Generic;
+
+  has GtkSwitch $!s;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -24,11 +28,16 @@ class GTK::Switch is GTK::Widget {
   submethod BUILD(:$switch) {
     my $to-parent;
     given $switch {
-      when GtkSwitch | GtkWidget {
+      when Ancestry {
         $!s = do {
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkSwitch, $switch);
+            nativecast(GtkSwitch, $_);
+          }
+          when GtkActionable {
+            $!action = nativecast(GtkActionable, $_);
+            $to-parent = nativecast(GtkWidget, $_);
+            nativecast(GtkSwitch, $_);                # GTK::Roles::Actionable
           }
           when GtkSwitch {
             $to-parent = nativecast(GtkWidget, $_);
@@ -42,6 +51,7 @@ class GTK::Switch is GTK::Widget {
       default {
       }
     }
+    $!action //= nativecast(GtkActionable, $_);       # GTK::Roles::Actionable
   }
 
   submethod DESTROY {

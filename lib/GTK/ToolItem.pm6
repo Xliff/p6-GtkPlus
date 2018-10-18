@@ -12,7 +12,7 @@ use GTK::SizeGroup;
 use GTK::Roles::Actionable;
 use GTK::Roles::Signals::Generic;
 
-subset Ancestry where GtkToolItem | GtkActionable | GtkWidget;
+my subset Ancestry where GtkToolItem | GtkActionable | GtkWidget;
 
 class GTK::ToolItem is GTK::Bin {
   also does GTK::Roles::Actionable;
