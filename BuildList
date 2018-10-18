@@ -186,6 +186,10 @@ GTK::Roles::Signals::ScrolledWindow
 GTK::Roles::Signals::SpinButton
 GTK::Roles::Signals::Statusbar
 GTK::Roles::Signals::TextBuffer
+GTK::Roles::Signals::TextTag
+GTK::Roles::Signals::TextView
+GTK::Roles::Signals::Toolbar
+GTK::Roles::Signals::TreeView
 GTK::Roles::Signals::Widget
 GTK::Roles::TreeDnD
 GTK::Roles::TreeSortable

@@ -1,5 +1,10 @@
 use v6.c;
 
+die 'Cannot find BuildList file in current directory.'
+  unless 'BuildList'.IO.e;
+
+my @buildlist = 'BuildList'.IO.open.slurp-rest.split(/\r?\n/).map( *.chomp );
+
 sub MAIN( $rev = 'HEAD' ) {
   chdir '/home/cbwood/Projects/p6-GtkPlus';
   mkdir '.touch' unless '.touch'.IO.d;
@@ -8,10 +13,10 @@ sub MAIN( $rev = 'HEAD' ) {
     next unless / '.pm6' $/;
     my $a = S/ '.pm6' //;
     $a = ( $a .= split("\/") )[1..*].join('::');
-    [$_, $a];
+    [ $_, $a, @buildlist.first(* eq $a, :k) ];
   });
 
-  for @files {
+  for @files.sort( *[2] ) {
     unless $_[0].IO.e {
       say "{ $_[0] } no longer exists.";
       next;

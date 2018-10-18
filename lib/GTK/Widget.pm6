@@ -216,21 +216,21 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkDragContext, gpointer --> void
   method drag-begin {
-    self.connect-drag($!w, 'drag-begin');
+    self.connect-widget-drag($!w, 'drag-begin');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, gpointer --> void
   method drag-data-delete {
-    self.connect-drag($!w, 'drag-data-delete');
+    self.connect-widget-drag($!w, 'drag-data-delete');
   }
 
   # Signal void Run Last
   # Is originally:
   # GtkWidget, GdkDragContext, GtkSelectionData, guint, guint, gpointer --> void
   method drag-data-get {
-    self.connect-drag-get($!w);
+    self.connect-drag-data-get($!w);
   }
 
   # Signal void Run Last
@@ -238,7 +238,7 @@ class GTK::Widget {
   # GtkWidget, GdkDragContext, gint, gint, GtkSelectionData, guint, guint, gpointer
   # --> void
   method drag-data-received {
-    self.connect-drag-received($!w);
+    self.connect-drag-data-received($!w);
   }
 
   # Signal gboolean Run Last
@@ -252,7 +252,7 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkDragContext, gpointer --> void
   method drag-end {
-    self.connect-drag($!w, 'drag-end');
+    self.connect-widget-drag($!w, 'drag-end');
   }
 
   # Signal gboolean Run Last
@@ -265,7 +265,7 @@ class GTK::Widget {
   # Signal void Run Last
   # GtkWidget, GdkDragContext, guint, gpointer --> void
   method drag-leave {
-    self.connect($!w, 'drag-leave');
+    self.connect-drag-leave($!w);
   }
 
   # Signal gboolean Run Last
@@ -278,7 +278,7 @@ class GTK::Widget {
   # Signal gboolean Run Last
   # Multi to allow for method draw(GtkWidget, cairo_t)
   # Is originally:
-  # GtkWidget, CairoContext, gpointer --> gboolean
+  # GtkWidget, cairo_t, gpointer --> gboolean
   multi method draw {
     self.connect-draw($!w);
   }
@@ -472,7 +472,7 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkScreen, gpointer --> void
   method screen-changed {
-    self.connect-screen($!w, 'screen-changed');
+    self.connect-screen-changed($!w);
   }
 
   # Signal gboolean Run Last
@@ -533,7 +533,7 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GdkRectangle, gpointer --> void
   method size-allocate {
-    self.connect-widget-rectangle($!w, 'size-allocate');
+    self.connect-size-allocate($!w);
   }
 
   # Signal void Run First
@@ -554,7 +554,7 @@ class GTK::Widget {
   # Is originally:
   # GtkWidget, GtkStyle, gpointer --> void
   method style-set {
-    self.connect-widget-style($!w, 'style-set');
+    self.connect-style-set($!w);
   }
 
   # Signal Default Run First
