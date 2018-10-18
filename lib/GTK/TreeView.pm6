@@ -15,6 +15,7 @@ use GTK::TreeStore;
 use GTK::TreeViewColumn;
 
 use GTK::Roles::Scrollable;
+use GTK::Roles::Signals::Generic;
 
 sub EXPORT {
   %(
@@ -28,9 +29,10 @@ sub EXPORT {
 }
 
 class GTK::TreeView is GTK::Container {
-  has GtkTreeView $!tv;
-
   also does GTK::Roles::Scrollable;
+  also does GTK::Roles::Signals::Generic;
+
+  has GtkTreeView $!tv;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -60,6 +62,10 @@ class GTK::TreeView is GTK::Container {
       }
     }
     $!s = nativecast(GtkScrollable, $!tv);    # GTK::Roles::Scrollable
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   method new {
@@ -95,7 +101,7 @@ class GTK::TreeView is GTK::Container {
   # Is originally:
   # GtkTreeView, GtkMovementStep, gint, gpointer --> gboolean
   method move-cursor {
-    self.connect($!tv, 'move-cursor');
+    self.connect-move-cursor1($!tv, 'move-cursor');
   }
 
   # Is originally:

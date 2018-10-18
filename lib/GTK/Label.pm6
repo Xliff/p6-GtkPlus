@@ -88,7 +88,7 @@ class GTK::Label is GTK::Widget {
   # Is originally:
   # GtkLabel, GtkMovementStep, gint, gboolean, gpointer --> void
   method move-cursor {
-    self.connect-move-cursor($!l);
+    self.connect-move-cursor2($!l, 'move-cursor');
   }
 
   # Is originally:

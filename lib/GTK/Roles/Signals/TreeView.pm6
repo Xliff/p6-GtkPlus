@@ -7,41 +7,43 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::Entry {
-  has %!signals-e;
+role GTK::Roles::Signals::<name> {
+  has %!signals-<name>;
 
-  method connect-entry-icon (
+  # Copy for each signal.
+  method connect-<sigName> (
     $obj,
     $signal,
     &handler?
   ) {
     my $hid;
-    %!signals-e{$signal} //= do {
+    %!signals-<name>{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-entry-icon($obj, $signal,
-        -> $, $ip, $ev, $ud {
+      $hid = g-connect-<sigName>($obj, $signal,
+        -> $, <params>, $ud {
           CATCH {
             default { $s.quit($_) }
           }
 
-          $s.emit( [self, $ip, $ev, $ud] );
+          my $r = ReturnedValue.new;
+          $s.emit( [self, <params>, $ud, $r] );
+          $r.r;
         },
         Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-e{$signal}[0].tap(&handler) with &handler;
-    %!signals-e{$signal}[0];
+    %!signals-<name>{$signal}[0].tap(&handler) with &handler;
+    %!signals-<name>{$signal}[0];
   }
 
 }
 
 # Define for each signal
-
-sub g-connect-entry-icon(
+sub g-connect-<sigName>(
   Pointer $app,
   Str $name,
-  &handler (Pointer, uint32, GdkEvent, Pointer),
+  &handler (<params>, Pointer),
   Pointer $data,
   uint32 $flags
 )

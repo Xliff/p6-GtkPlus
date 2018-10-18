@@ -866,6 +866,11 @@ our enum GtkShortcutType is export <
   GTK_SHORTCUT_GESTURE
 >;
 
+our enum GtkTextExtendSelection is export <
+  GTK_TEXT_EXTEND_SELECTION_WORD
+  GTK_TEXT_EXTEND_SELECTION_LINE
+>;
+
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }

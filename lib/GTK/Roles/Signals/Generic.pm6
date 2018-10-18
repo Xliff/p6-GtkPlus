@@ -226,7 +226,7 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
-  method connect-move-cursor (
+  method connect-move-cursor1 (
     $obj,
     $signal,
     &handler?
@@ -234,7 +234,31 @@ role GTK::Roles::Signals::Generic {
     my $hid;
     %!signals-generic{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_move_cursor($obj, $signal,
+      $hid = g_connect_move_cursor1($obj, $signal,
+        -> $, $ms, $c, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $ms, $c, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
+  method connect-move-cursor2 (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_move_cursor2($obj, $signal,
         -> $, $ms, $c, $es, $ud {
           CATCH {
             default { $s.quit($_) }
@@ -381,6 +405,30 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
+  method connect-delete (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-delete($obj, $signal,
+        -> $, $t, $c, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $t, $c, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
 }
 
 # Define for each signal
@@ -505,7 +553,19 @@ sub g_connect_movement_step(
   is symbol('g_signal_connect_object')
   { * }
 
-sub g_connect_move_cursor(
+sub g_connect_move_cursor1(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, uint32, gint, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g_connect_move_cursor2(
   Pointer $app,
   Str $name,
   &handler (Pointer, uint32, gint, gboolean, Pointer),
@@ -562,5 +622,17 @@ sub g_connect_uint_ruint(
 )
   returns uint64
   is native('gobject_2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g-connect-delete(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, uint32, gint, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }

@@ -69,7 +69,7 @@ class GTK::FlowBox is GTK::Container {
      #  gint            count,
      #  GtkMovementStep step,
      #  gpointer        user_data)
-    self.connect($!fb, 'move-cursor');
+    self.connect-move-cursor1($!fb, 'move-cursor');
   }
 
   method select-all {

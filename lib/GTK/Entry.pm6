@@ -40,6 +40,10 @@ class GTK::Entry is GTK::Widget {
     $!er = nativecast(GtkEditable, $!e);
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic, %!signals-e;
+  }
+
   multi method new {
     my $entry = gtk_entry_new();
     self.bless(:$entry);
@@ -107,7 +111,7 @@ class GTK::Entry is GTK::Widget {
   # Is originally:
   # GtkEntry, GtkDeleteType, gint, gpointer --> void
   method delete-from-cursor {
-    self.connect-delete-from-cursor($!e);
+    self.connect-delete($!e, 'delete-from-cursor');
   }
 
   # Is originally:
@@ -137,7 +141,7 @@ class GTK::Entry is GTK::Widget {
   # Is originally:
   # GtkEntry, GtkMovementStep, gint, gboolean, gpointer --> void
   method move-cursor {
-    self.connect-move-cursor($!e);
+    self.connect-move-cursor2($!e, 'move-cursor');
   }
 
   # Is originally:

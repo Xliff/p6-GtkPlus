@@ -92,7 +92,7 @@ class GTK::IconView is GTK::Container {
   # Is originally:
   # GtkIconView, GtkMovementStep, gint, gpointer --> gboolean
   method move-cursor {
-    self.connect-move-cursor($!iv);
+    self.connect-move-cursor1($!iv);
   }
 
   # Is originally:
