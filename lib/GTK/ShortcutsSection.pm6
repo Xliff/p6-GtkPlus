@@ -5,14 +5,14 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals::ShortcutsSection;
+use GTK::Roles::Signals::Generic;
 
 use GTK::Box;
 
 subset ParentChild where GtkShortcutsSection | GtkWidget;
 
 class GTK::ShortcutsSection is GTK::Box {
-  also does GTK::Roles::Signals::ShortcutsSection;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkShortcutsSection $!ss;
 
@@ -46,7 +46,7 @@ class GTK::ShortcutsSection is GTK::Box {
   }
 
   submethod DESTROY {
-    self.disconnect($_, %!signals-ss) for %!signals-ss.keys
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   method new (ParentChild $section) {
@@ -58,7 +58,7 @@ class GTK::ShortcutsSection is GTK::Box {
   # Is originally:
   # GtkShortcutsSection, gint, gpointer --> gboolean
   method change-current-page {
-    self.connect-change-current-page($!ss);
+    self.connect-int-ruint($!ss);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

@@ -9,13 +9,21 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 use GTK::Roles::Orientable;
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Range;
 
 class GTK::Range is GTK::Widget {
   also does GTK::Roles::Orientable;
+  also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::Range;
 
   has GtkRange $!r;
 
   # Abstract code, so no need for BUILD or new
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic, %!signals-r;
+  }
 
   method setRange($range) {
     my $to-parent;
@@ -35,21 +43,32 @@ class GTK::Range is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+
+  # GtkRange, gdouble, gpointer --> void
   method adjust-bounds {
-    self.connect($!r, 'adjust-bounds');
+    self.connect-double($!r, 'adjust-bounds');
   }
 
+  # Is originally:
+  # GtkRange, GtkScrollType, gdouble, gpointer --> gboolean
   method change-value {
     self.connect($!r, 'change-value');
   }
 
+  # Is originally:
+  # GtkRange, GtkScrollType, gpointer --> void
   method move-slider {
-    self.connect($!r, 'move-slider');
+    self.connect-uint($!r, 'move-slider');
   }
 
+  # Is originally:
+  # GtkRange, gpointer --> void
   method value-changed {
     self.connect($!r, 'value-changed');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

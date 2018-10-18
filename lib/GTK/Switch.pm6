@@ -8,8 +8,12 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+use GTK::Roles::Signals::Generic;
+
 class GTK::Switch is GTK::Widget {
   has GtkSwitch $!s;
+
+  also does GTK::Roles::Signals::Generic;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -40,6 +44,10 @@ class GTK::Switch is GTK::Widget {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
+  }
+
   multi method new {
     my $switch = gtk_switch_new();
     self.bless(:$switch);
@@ -50,13 +58,19 @@ class GTK::Switch is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkSwitch, gpointer --> void
   method activate {
     self.connect($!s, 'activate');
   }
 
+  # Is originally:
+  # GtkSwitch, gboolean, gpointer --> gboolean
   method state-set {
-    self.connect($!s, 'state-set');
+    self.connect-uint-ruint($!s, 'state-set');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

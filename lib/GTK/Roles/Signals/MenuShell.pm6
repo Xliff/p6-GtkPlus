@@ -7,43 +7,41 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::<name> {
-  has %!signals-<name>;
+role GTK::Roles::Signals::MenuShell {
+  has %!signals-ms;
 
   # Copy for each signal.
-  method connect-<sigName> (
+  method connect-insert (
     $obj,
-    $signal,
+    $signal = 'insert',
     &handler?
   ) {
     my $hid;
-    %!signals-<name>{$signal} //= do {
+    %!signals-ms{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-<sigName>($obj, $signal,
-        -> $, <params>, $ud {
+      $hid = g-connect-insert($obj, $signal,
+        -> $, $w, $i, $ud {
           CATCH {
             default { $s.quit($_) }
           }
 
-          my $r = ReturnedValue.new;
-          $s.emit( [self, <params>, $ud, $r] );
-          $r.r;
+          $s.emit( [self, $w, $i, $ud] );
         },
         Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-<name>{$signal}[0].tap(&handler) with &handler;
-    %!signals-<name>{$signal}[0];
+    %!signals-ms{$signal}[0].tap(&handler) with &handler;
+    %!signals-ms{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g-connect-<sigName>(
+sub g-connect-insert(
   Pointer $app,
   Str $name,
-  &handler (<params>, Pointer),
+  &handler (Pointer, GtkWidget, gint, Pointer),
   Pointer $data,
   uint32 $flags
 )

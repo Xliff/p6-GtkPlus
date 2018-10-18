@@ -55,85 +55,31 @@ class GTK::SearchEntry is GTK::Entry {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method activate {
-    self.connect($!se, 'activate');
+
+  # Is originally:
+  # GtkSearchEntry, gpointer --> void
+  method next-match {
+    self.connect($!se, 'next-match');
   }
 
-  method backspace {
-    self.connect($!se, 'backspace');
+  # Is originally:
+  # GtkSearchEntry, gpointer --> void
+  method previous-match {
+    self.connect($!se, 'previous-match');
   }
 
-  method copy-clipboard {
-    self.connect($!se, 'copy-clipboard');
+  # Is originally:
+  # GtkSearchEntry, gpointer --> void
+  method search-changed {
+    self.connect($!se, 'search-changed');
   }
 
-  method cut-clipboard {
-    self.connect($!se, 'cut-clipboard');
+  # Is originally:
+  # GtkSearchEntry, gpointer --> void
+  method stop-search {
+    self.connect($!se, 'stop-search');
   }
 
-  # Is actually:
-  # (GtkEntry     *entry,
-  #  GtkDeleteType type,
-  #  gint          count,
-  #  gpointer      user_data)
-  method delete-from-cursor {
-    self.connect($!se, 'delete-from-cursor');
-  }
-
-  # Is actually:
-  #  (GtkEntry            *entry,
-  #   GtkEntryIconPosition icon_pos,
-  #   GdkEvent            *event,
-  #   gpointer             user_data)
-  method icon-release {
-    self.connect($!se, 'icon-release');
-  }
-
-  # Is actually:
-  # (GtkEntry *entry,
-  #  gchar    *string,
-  #  gpointer  user_data)
-  method insert-at-cursor {
-    self.connect($!se, 'insert-at-cursor');
-  }
-
-  method insert-emoji {
-    self.connect($!se, 'insert-emoji');
-  }
-
-  # Is actually:
-  # (GtkEntry       *entry,
-  #  GtkMovementStep step,
-  #  gint            count,
-  #  gboolean        extend_selection,
-  #  gpointer        user_data)
-  method move-cursor {
-    self.connect($!se, 'move-cursor');
-  }
-
-  method paste-clipboard {
-    self.connect($!se, 'paste-clipboard');
-  }
-
-  # is actually:
-  # (GtkEntry  *entry,
-  #  GtkWidget *widget,
-  #  gpointer   user_data)
-  method populate-popup {
-    self.connect($!se, 'populate-popup');
-  }
-
-  # Is actually:
-  # (GtkEntry *entry,
-  #  gchar    *preedit,
-  #  gpointer  user_data)
-  method preedit-changed {
-    self.connect($!se, 'preedit-changed');
-  }
-
-  method toggle-overwrite {
-    self.connect($!se, 'toggle-overwrite');
-  }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

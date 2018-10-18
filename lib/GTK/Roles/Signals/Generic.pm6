@@ -154,6 +154,30 @@ role GTK::Roles::Signals::Generic {
     %!signals-generic{$signal}[0];
   }
 
+  method connect-double (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals-generic{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_double($obj, $signal,
+        -> $, $d, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $d, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-generic{$signal}[0].tap(&handler) with &handler;
+    %!signals-generic{$signal}[0];
+  }
+
   method connect-pointer (
     $obj,
     $signal,
@@ -425,6 +449,18 @@ sub g_connect_uint(
   Pointer $app,
   Str $name,
   &handler (Pointer, uint32, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g_connect_double(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, gdouble, Pointer),
   Pointer $data,
   uint32 $flags
 )

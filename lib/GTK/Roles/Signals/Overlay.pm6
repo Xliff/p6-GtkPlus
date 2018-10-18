@@ -7,43 +7,41 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::<name> {
-  has %!signals-<name>;
+role GTK::Roles::Signals::Overlay {
+  has %!signals-o;
 
   # Copy for each signal.
-  method connect-<sigName> (
+  method connect-widget-rect (
     $obj,
     $signal,
     &handler?
   ) {
     my $hid;
-    %!signals-<name>{$signal} //= do {
+    %!signals-o{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-<sigName>($obj, $signal,
-        -> $, <params>, $ud {
+      $hid = g-connect-widget-rect($obj, $signal,
+        -> $, $w, $rect, $ud {
           CATCH {
             default { $s.quit($_) }
           }
 
-          my $r = ReturnedValue.new;
-          $s.emit( [self, <params>, $ud, $r] );
-          $r.r;
+          $s.emit( [self, $w, $rect, $ud] );
         },
         Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-<name>{$signal}[0].tap(&handler) with &handler;
-    %!signals-<name>{$signal}[0];
+    %!signals-o{$signal}[0].tap(&handler) with &handler;
+    %!signals-o{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g-connect-<sigName>(
+sub g-connect-widget-rect(
   Pointer $app,
   Str $name,
-  &handler (<params>, Pointer),
+  &handler (Pointer, GtkWidget, GdkRectangle, Pointer),
   Pointer $data,
   uint32 $flags
 )

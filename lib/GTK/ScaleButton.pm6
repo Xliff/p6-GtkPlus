@@ -9,10 +9,12 @@ use GTK::Raw::ScaleButton;
 use GTK::Button;
 
 use GTK::Roles::Orientable;
+use GTK::Roles::Signals::Generic;
 
 class GTK::ScaleButton is GTK::Button {
   also does GTK::Roles::Orientable;
-  
+  also does GTK::Roles::Signals::Generic;
+
   has GtkScaleButton $!sb;
 
   method bless(*%attrinit) {
@@ -33,6 +35,10 @@ class GTK::ScaleButton is GTK::Button {
     }
     # For GTK::Roles::Orientable
     $!or = nativecast(GtkOrientable, $!sb);
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-generic;
   }
 
   multi method new (GtkWidget $button) {
@@ -68,17 +74,25 @@ class GTK::ScaleButton is GTK::Button {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkScaleButton, gpointer --> void
   method popdown {
     self.connect($!sb, 'popdown');
   }
 
+  # Is originally:
+  # GtkScaleButton, gpointer --> void
   method popup {
     self.connect($!sb, 'popup');
   }
 
+  # Is originally:
+  # GtkScaleButton, gdouble, gpointer --> void
   method value-changed {
-    self.connect($!sb, 'value-changed');
+    self.connect-double($!sb, 'value-changed');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

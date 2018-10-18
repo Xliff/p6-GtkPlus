@@ -7,42 +7,43 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::ShortcutsSection {
-  has %!signals-ss;
+role GTK::Roles::Signals::ScrolledWindow {
+  has %!signals-sw;
 
-  # Copy for each signal.
-  method connect-change-current-page (
+  # (guint, guint) --> guint
+  method connect-scroll-child (
     $obj,
-    $signal = 'change-current-page',
+    $signal = 'scroll-child',
     &handler?
   ) {
     my $hid;
-    %!signals-ss{$signal} //= do {
+    %!signals-sw{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_changePage($obj, $signal,
-        -> $ss, $p, $ud --> gboolean {
+      $hid = g-connect-scroll-child($obj, $signal,
+        -> $, $ui1, $ui2, $ud --> guint {
           CATCH {
             default { $s.quit($_) }
           }
+
           my $r = ReturnedValue.new;
-          $s.emit( [self, $p, $ud, $r] );
+          $s.emit( [self, $ui1, $ui2, $ud, $r] );
           $r.r;
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-ss{$signal}[0].tap(&handler) with &handler;
-    %!signals-ss{$signal}[0];
+    %!signals-sw{$signal}[0].tap(&handler) with &handler;
+    %!signals-sw{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g_connect_changePage(
+sub g-connect-scroll-child(
   Pointer $app,
   Str $name,
-  &handler (GtkShortcutsSection, gint, Pointer --> gboolean),
+  &handler (Pointer, guint, guint, Pointer --> guint),
   Pointer $data,
   uint32 $flags
 )
