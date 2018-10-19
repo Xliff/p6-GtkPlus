@@ -53,7 +53,7 @@ class GTK::Menu is GTK::MenuShell {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-menu;
+    self.disconnect-all($_) for %!signals, %!signals-menu;
   }
 
   multi method new {

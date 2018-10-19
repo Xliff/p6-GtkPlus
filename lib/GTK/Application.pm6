@@ -10,11 +10,11 @@ use GTK::Raw::Window;
 
 use GTK::Window;
 
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Application;
 
 class GTK::Application {
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;
   also does GTK::Roles::Types;
 
@@ -55,7 +55,7 @@ class GTK::Application {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-app);
+    self.disconnect-all($_) for %!signals, %!signals-app;
   }
 
   method setBuilder(GtkBuilder() $b) {

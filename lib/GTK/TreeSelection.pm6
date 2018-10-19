@@ -6,17 +6,21 @@ use GTK::Compat::Types;
 use GTK::Raw::TreeSelection;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 class GTK::TreeSelection {
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkTreeSelection $!ts;
 
   submethod BUILD(:$selection) {
     $!ts = $selection;
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals;
   }
 
   method new (GtkTreeSelection $selection) {

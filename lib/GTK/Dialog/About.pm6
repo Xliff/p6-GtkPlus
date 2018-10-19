@@ -46,7 +46,7 @@ class GTK::Dialog::About is GTK::Dialog {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
+    self.disconnect-all($_) for %!signals;
   }
 
   multi method new {

@@ -7,7 +7,6 @@ use GTK::Raw::EntryCompletion;
 use GTK::Raw::Types;
 
 use GTK::Roles::CellLayout;
-use GTK::Roles::Signals;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::EntryCompletion;
 
@@ -16,7 +15,6 @@ use GTK::Roles::Signals::EntryCompletion;
 
 class GTK::EntryCompletion {
   also does GTK::Roles::CellLayout;
-  also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::EntryCompletion;
 
@@ -40,7 +38,7 @@ class GTK::EntryCompletion {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-ec;
+    self.disconnect-all($_) for %!signals, %!signals-ec;
   }
 
   method new {

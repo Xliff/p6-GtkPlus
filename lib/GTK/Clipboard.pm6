@@ -6,11 +6,9 @@ use GTK::Compat::Types;
 use GTK::Raw::Clipboard;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals;
 use GTK::Roles::Signals::Generic;
 
 class GTK::Clipboard {
-  also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::Generic;
 
   has GtkClipboard $!cb;
@@ -20,7 +18,7 @@ class GTK::Clipboard {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
+    self.disconnect-all($_) for %!signals;
   }
 
   method GTK::Raw::Types::GtkClipboard {

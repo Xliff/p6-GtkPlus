@@ -3,11 +3,55 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::ReturnedValue;
 
 role GTK::Roles::Signals::Generic {
-  has %!signals-generic;
+  has %!signals;
+
+  method connect(
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals{$signal} //= do {
+      my $s = Supplier.new;
+      #"O: $obj".say;
+      #"S: $signal".say;
+      $hid = g_connect($obj, $signal,
+        -> $, $ {
+            $s.emit(self);
+            CATCH { default { $s.quit($_) } }
+        },
+        OpaquePointer, 0
+      );
+      [ $s.Supply, $obj, $hid ];
+    };
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
+  }
+
+  # Has this supply been created yet? If True, this is a good indication that
+  # that signal $name has been tapped.
+  #
+  # Must be overridden by all consumers that use another Signal-based role.
+  method is-connected(Str $name) {
+    %!signals{$name}:exists;
+  }
+
+  # If I cannot share attributes between roles, then each one will have
+  # to have its own signature, or clean-up routine.
+  method disconnect-all (%sigs) {
+    self.disconnect($_, %sigs) for %sigs.keys;
+  }
+
+  method disconnect($signal, %signals) {
+    # First parameter is good, but concerned about the second.
+    g_signal_handler_disconnect(%signals{$signal}[1], %signals{$signal}[2]);
+    %signals{$signal}:delete;
+  }
 
   method connect-event (
     $obj,
@@ -15,7 +59,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_event($obj, $signal,
         -> $, $e, $ud {
@@ -29,8 +73,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-rbool (
@@ -39,7 +83,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_rbool($obj, $signal,
         -> $, $ud --> gboolean {
@@ -56,8 +100,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-widget (
@@ -66,7 +110,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_widget($obj, $signal,
         -> $, $w, $ud {
@@ -80,8 +124,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-string (
@@ -90,7 +134,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_string($obj, $signal,
         -> $, $p, $ud {
@@ -104,8 +148,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-strstr (
@@ -114,7 +158,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_strstr($obj, $signal,
         -> $, $s1, $s2, $ud {
@@ -128,8 +172,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-int (
@@ -138,7 +182,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_int($obj, $signal,
         -> $, $i, $ud {
@@ -150,10 +194,10 @@ role GTK::Roles::Signals::Generic {
         },
         Pointer, 0
       );
-      [ $s.Supply, $obj, $hid];
+      [ $s.Supply, $obj, $hid ];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-uint (
@@ -162,7 +206,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_uint($obj, $signal,
         -> $, $ui, $ud {
@@ -176,8 +220,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-double (
@@ -186,7 +230,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_double($obj, $signal,
         -> $, $d, $ud {
@@ -200,8 +244,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-movement-step (
@@ -210,7 +254,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_movement_step($obj, $signal,
         -> $, $ms, $nc, $ud {
@@ -224,8 +268,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-move-cursor1 (
@@ -234,7 +278,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_move_cursor1($obj, $signal,
         -> $, $ms, $c, $ud {
@@ -248,8 +292,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-move-cursor2 (
@@ -258,7 +302,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_move_cursor2($obj, $signal,
         -> $, $ms, $c, $es, $ud {
@@ -272,8 +316,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-activate-link (
@@ -282,7 +326,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_activate_link($obj, $signal,
         -> $, $uri, $ud --> gboolean {
@@ -300,8 +344,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-menu (
@@ -310,7 +354,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_menu($obj, $signal,
         -> $, $m, $ud --> gboolean {
@@ -324,8 +368,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-int-rint (
@@ -334,7 +378,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_int_ruint($obj, $signal,
         -> $, $i, $ud --> gint {
@@ -351,8 +395,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-int-ruint (
@@ -361,7 +405,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_int_ruint($obj, $signal,
         -> $, $i, $ud --> guint {
@@ -378,8 +422,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-uint-ruint (
@@ -388,7 +432,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_uint_ruint($obj, $signal,
         -> $, $ui, $ud --> guint {
@@ -405,8 +449,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-delete (
@@ -415,7 +459,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g-connect-delete($obj, $signal,
         -> $, $t, $c, $ud {
@@ -429,8 +473,8 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
 
   method connect-gparam(
@@ -439,7 +483,7 @@ role GTK::Roles::Signals::Generic {
     &handler?
   ) {
     my $hid;
-    %!signals-generic{$signal} //= do {
+    %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g-connect-gparam($obj, $signal,
         -> $, $gp, $ud {
@@ -451,12 +495,22 @@ role GTK::Roles::Signals::Generic {
       );
       [ $s.Supply, $obj, $hid ];
     };
-    %!signals-generic{$signal}[0].tap(&handler) with &handler;
-    %!signals-generic{$signal}[0];
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
   }
-
-
 }
+
+sub g_connect(
+  Pointer $app,
+  Str $name,
+  &handler (GtkWidget $h_widget, Pointer $h_data),
+  Pointer $data,
+  uint32 $connect_flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
 
 # Define for each signal
 sub g_connect_event(
@@ -467,7 +521,7 @@ sub g_connect_event(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -479,7 +533,7 @@ sub g_connect_rbool(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -491,7 +545,7 @@ sub g_connect_widget(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -503,7 +557,7 @@ sub g_connect_string(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -515,7 +569,7 @@ sub g_connect_strstr(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -527,7 +581,7 @@ sub g_connect_int(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -564,7 +618,7 @@ sub g_connect_pointer(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -576,7 +630,7 @@ sub g_connect_menu(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -588,7 +642,7 @@ sub g_connect_movement_step(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -600,7 +654,7 @@ sub g_connect_move_cursor1(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -612,7 +666,7 @@ sub g_connect_move_cursor2(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -624,7 +678,7 @@ sub g_connect_activate_link(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -636,7 +690,7 @@ sub g_connect_int_ruint(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -648,7 +702,7 @@ sub g_connect_int_rint(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 
@@ -660,7 +714,7 @@ sub g_connect_uint_ruint(
   uint32 $flags
 )
   returns uint64
-  is native('gobject_2.0')
+  is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   { * }
 

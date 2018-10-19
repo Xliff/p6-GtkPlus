@@ -8,11 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::FileFilter;
 
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 role GTK::Roles::FileChooser {
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkFileChooser $!fc;

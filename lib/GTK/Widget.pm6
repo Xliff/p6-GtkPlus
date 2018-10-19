@@ -12,7 +12,6 @@ use GTK::Raw::Widget;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::Properties;
-use GTK::Roles::Signals;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
@@ -20,7 +19,6 @@ use GTK::Roles::Types;
 class GTK::Widget {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Properties;
-  also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
@@ -41,7 +39,7 @@ class GTK::Widget {
 
   submethod DESTROY {
     g_object_unref($!w.p);
-    self.disconnect-all($_) for %!signals-generic, %!signals-widget;
+    self.disconnect-all($_) for %!signals, %!signals-widget;
   }
 
   proto new(|) { * }

@@ -9,16 +9,10 @@ use GTK::Raw::CellRenderer;
 use GTK::Raw::Types;
 
 use GTK::Roles::Properties;
-use GTK::Roles::Signals;
-use GTK::Roles::Signals::CellRenderer;
-
-use GTK::Roles::Signals::CellRenderer;
-
 use GTK::Roles::Signals::CellRenderer;
 
 class GTK::CellRenderer {
   also does GTK::Roles::Properties;
-  also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::CellRenderer;
 
   has GtkCellRenderer $!cr;
@@ -33,7 +27,7 @@ class GTK::CellRenderer {
   }
 
   method disconnect-cellrenderer-signals {
-    self.disconnect-all(%!signals-cr);
+    self.disconnect-all for %!signals-cr;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

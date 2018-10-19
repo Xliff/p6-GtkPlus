@@ -19,7 +19,6 @@ GTK::Raw::VolumeButton
 GTK::Raw::Widget
 GTK::Raw::Window
 GTK::Roles::Signals::EntryBuffer
-GTK::Roles::Signals::Generic
 GTK::Compat::GSList
 GTK::Compat::LaunchContext
 GTK::Compat::MenuModel
@@ -166,15 +165,17 @@ GTK::Roles::Actionable
 GTK::Roles::AppChooser
 GTK::Roles::Buildable
 GTK::Roles::Orientable
-GTK::Roles::Signals
+GTK::Roles::Scrollable
 GTK::Roles::Signals::Application
 GTK::Roles::Signals::CellArea
 GTK::Roles::Signals::CellRenderer
 GTK::Roles::Signals::CellRendererAccel
 GTK::Roles::Signals::ComboBox
+GTK::Roles::Signals::Editable
 GTK::Roles::Signals::Entry
 GTK::Roles::Signals::EntryCompletion
 GTK::Roles::Signals::FlowBox
+GTK::Roles::Signals::Generic
 GTK::Roles::Signals::IconView
 GTK::Roles::Signals::Menu
 GTK::Roles::Signals::MenuShell
@@ -222,7 +223,6 @@ GTK::Roles::Editable
 GTK::Roles::FileChooser
 GTK::Roles::FontChooser
 GTK::Roles::Properties
-GTK::Roles::Scrollable
 GTK::Roles::TreeModel
 GTK::TextBuffer
 GTK::TreeModelFilter

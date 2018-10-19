@@ -5,12 +5,10 @@ use GTK::Compat::Types;
 use GTK::Raw::EntryBuffer;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals;
 use GTK::Roles::Signals::EntryBuffer;
 use GTK::Roles::Signals::Generic;
 
 class GTK::EntryBuffer {
-  also does GTK::Roles::Signals;
   also does GTK::Roles::Signals::EntryBuffer;
   also does GTK::Roles::Signals::Generic;
 
@@ -21,7 +19,7 @@ class GTK::EntryBuffer {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic, %!signals-eb;
+    self.disconnect-all($_) for %!signals, %!signals-eb;
   }
 
   method new (Str $text, Int() $text_len) {

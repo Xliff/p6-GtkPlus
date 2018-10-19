@@ -47,7 +47,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-generic);
+    self.disconnect-all(%!signals);
   }
 
   method GTK::Raw::Types::GtkCellRendererToggle {

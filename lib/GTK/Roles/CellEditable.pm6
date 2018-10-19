@@ -7,11 +7,11 @@ use GTK::Compat::Types;
 use GTK::Raw::CellEditable;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 role GTK::Roles::CellEditable {
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkCellEditable $!ce;

@@ -44,7 +44,6 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-generic;
     self.disconnect-cellrenderer-signals;
   }
 

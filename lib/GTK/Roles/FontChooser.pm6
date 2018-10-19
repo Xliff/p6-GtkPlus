@@ -7,11 +7,11 @@ use GTK::Raw::FontChooser;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 
 role GTK::Roles::FontChooser {
   also does GTK::Roles::Types;
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkFontChooser $!fc;
 
