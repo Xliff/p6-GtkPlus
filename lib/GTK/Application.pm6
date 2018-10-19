@@ -163,7 +163,7 @@ class GTK::Application {
       gtk_main();
     } else {
       my gint $z = 0;
-      g_application_run($!app, $z, OpaquePointer);
+      g_application_run($!app, $z, Pointer);
     }
   }
   # multi method run(GTK::Application:U: ) {

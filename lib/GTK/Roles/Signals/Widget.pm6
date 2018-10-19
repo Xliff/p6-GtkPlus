@@ -25,8 +25,9 @@ role GTK::Roles::Signals::Widget {
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
           $s.emit( [self, $e, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          $r.r = .Int if $r.r ~~ @valid-types.any;
+          # die 'Invalid return type' if $r.r ~~ @valid-types.any;
+          # $r.r = .Int if $r.r ~~ @valid-types.any;
+          $r.r;
         },
         OpaquePointer, 0
       );
@@ -52,8 +53,9 @@ role GTK::Roles::Signals::Widget {
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
           $s.emit( [self, $dc, $i1, $i2, $ui, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          $r.r = .Int if $r.r ~~ @valid-types.any;
+          # die 'Invalid return type' if $r.r ~~ @valid-types.any;
+          # $r.r = .Int if $r.r ~~ @valid-types.any;
+          $r.r;
         },
         OpaquePointer, 0
       );
@@ -79,8 +81,9 @@ role GTK::Roles::Signals::Widget {
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
           $s.emit( [self, $dc, $dr, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          $r.r = .Int if $r.r ~~ @valid-types.any;
+          # die 'Invalid return type' if $r.r ~~ @valid-types.any;
+          # $r.r = .Int if $r.r ~~ @valid-types.any;
+          $r.r;
         },
         OpaquePointer, 0
       );
@@ -106,8 +109,9 @@ role GTK::Roles::Signals::Widget {
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
           $s.emit( [self, $i1, $i2, $ui, $tt, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          $r.r = .Int if $r.r ~~ @valid-types.any;
+          # die 'Invalid return type' if $r.r ~~ @valid-types.any;
+          # $r.r = .Int if $r.r ~~ @valid-types.any;
+          $r.r;
         },
         OpaquePointer, 0
       );
@@ -132,8 +136,9 @@ role GTK::Roles::Signals::Widget {
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
           $s.emit( [self, $scr, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          $r.r = .Int if $r.r ~~ @valid-types.any;
+          # die 'Invalid return type' if $r.r ~~ @valid-types.any;
+          # $r.r = .Int if $r.r ~~ @valid-types.any;
+          $r.r;
         },
         OpaquePointer, 0
       );
@@ -157,8 +162,9 @@ role GTK::Roles::Signals::Widget {
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
           $s.emit( [self, $cr, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          $r.r = .Int if $r.r ~~ @valid-types.any;
+          #die 'Invalid return type' if $r.r ~~ @valid-types.any;
+          #$r.r = .Int if $r.r ~~ @valid-types.any;
+          $r.r;
         },
         OpaquePointer, 0
       );

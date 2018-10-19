@@ -27,7 +27,7 @@ role GTK::Roles::Signals::ComboBox {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $p, $ud, $r] );
-          die 'Return value is not a string!' unless $r.r ~~ Str;
+          # die 'Return value is not a string!' unless $r.r ~~ Str;
           $r.r;
         },
         OpaquePointer, 0

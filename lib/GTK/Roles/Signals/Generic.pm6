@@ -25,7 +25,7 @@ role GTK::Roles::Signals::Generic {
             $s.emit(self);
             CATCH { default { $s.quit($_) } }
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid ];
     };
@@ -69,7 +69,7 @@ role GTK::Roles::Signals::Generic {
 
           $s.emit( [self, $e, $ud] );
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
@@ -93,10 +93,11 @@ role GTK::Roles::Signals::Generic {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ Bool;
-          $r.r = .Int if $r.r ~~ Bool;
+          #die 'Invalid return type' if $r.r ~~ Bool;
+          #$r.r = .Int if $r.r ~~ Bool;
+          $r.r;
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
@@ -264,7 +265,7 @@ role GTK::Roles::Signals::Generic {
 
           $s.emit( [self, $ms, $nc, $ud ] );
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
@@ -336,8 +337,8 @@ role GTK::Roles::Signals::Generic {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $uri, $ud, $r] );
-          die 'Invalid return type' if $r.r ~~ Bool;
-          $r.r = .Int if $r.r ~~ Bool;
+          # die 'Invalid return type' if $r.r ~~ Bool;
+          # $r.r = .Int if $r.r ~~ Bool;
           $r.r;
         },
         Pointer, 0
@@ -388,7 +389,7 @@ role GTK::Roles::Signals::Generic {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $i, $ud, $r] );
-          $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
+          # $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
           $r.r;
         },
         Pointer, 0
@@ -415,7 +416,7 @@ role GTK::Roles::Signals::Generic {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $i, $ud, $r] );
-          $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
+          # $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
           $r.r;
         },
         Pointer, 0
@@ -442,7 +443,7 @@ role GTK::Roles::Signals::Generic {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $ui, $ud, $r] );
-          $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
+          # $r.r .= Int if $r.r ~~ (Bool, Enumeration).any;
           $r.r;
         },
         Pointer, 0
@@ -491,7 +492,7 @@ role GTK::Roles::Signals::Generic {
 
           $s.emit( [self, $gp, $ud] );
         },
-        OpaquePointer, 0
+        Pointer, 0
       );
       [ $s.Supply, $obj, $hid ];
     };

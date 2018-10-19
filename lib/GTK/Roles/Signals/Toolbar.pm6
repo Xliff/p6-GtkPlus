@@ -27,8 +27,8 @@ role GTK::Roles::Signals::Toolbar {
 
           my $r = ReturnedValue.new;
           $s.emit( [self, $i1, $i2, $i3, $ud, $r] );
-          die 'Invalid return type' unless $r.r ~~ (Bool, Int).any;
-          $r.r .= Int if $r.r ~~ Bool;
+          # die 'Invalid return type' unless $r.r ~~ (Bool, Int).any;
+          # $r.r .= Int if $r.r ~~ Bool;
           $r.r;
         },
         Pointer, 0

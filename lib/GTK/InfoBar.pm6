@@ -60,7 +60,7 @@ class GTK::InfoBar is GTK::Box {
   # - Made multi so as to not conflict with the implementation for
   #   gtk_info_bar_response
   multi method response {
-    self.connect-int($!ib);
+    self.connect-int($!ib, 'response');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

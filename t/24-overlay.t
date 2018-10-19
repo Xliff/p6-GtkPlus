@@ -1,7 +1,5 @@
 use v6.c;
 
-use NativeCall;
-
 # Example ported from:
 # https://github.com/sweckhoff/GTK-Cairo-Sinusoids/blob/master/gtk_cairo_sinusoid_plot.c
 
@@ -85,10 +83,10 @@ sub draw_callback($drawable, $packet) {
 
   # set_source_surface($drawable, $packet<plot_surface>, 0, 0);
   # cairo_paint($drawable);
-  my $dc = Cairo::Context.new( nativecast(Cairo::cairo_t, $drawable) );
+  my $dc = Cairo::Context.new( cast(Cairo::cairo_t, $drawable) );
   $dc.set_source_surface($packet<plot_surface>);
   $dc.paint;
-  0;
+  1;
 }
 
 $a.activate.tap({
@@ -129,8 +127,10 @@ $a.activate.tap({
   $packet<label>.name = 'radlabel';
 
   $drawing_area.set_size_request(400, 200);
+  # XXX - Problem here... AGAIN!
   $drawing_area.draw.tap(-> *@a {
-    draw_callback(@a[1], $packet);
+    # Remember the return value.
+    @a[*-1].r = draw_callback(@a[1], $packet);
   });
 
   $overlay.add($background);
@@ -156,6 +156,7 @@ $a.activate.tap({
   $hbox.pack_start($overlay, False, False);
   $hbox.pack_start($vbox, False, False);
   $a.window.add($hbox);
+  $a.window.resizable = False;
   $a.window.show_all;
 
   # set_timeout equivalent.

@@ -183,9 +183,7 @@ class GTK::Dialog is GTK::Window {
   }
 
   method run {
-    self.response.^name.say;
-    #tap(-> *@a { self.hide }) unless self.is-connected('response');
-
+    self.response.tap({ self.hide }) unless self.is-connected('response');
     my gint $rc = gtk_dialog_run($!d);
     GtkResponseType( $rc );
   }
