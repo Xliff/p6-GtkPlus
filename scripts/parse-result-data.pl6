@@ -15,7 +15,7 @@ grammar ParseBuildResults {
     <summary_type> \s* $<min>=(\d+) 'm' <sec=num> 's' \s*
   }
   regex header {
-    ^^ \s '=== ' <module> ' ===' $$
+    ^^ '=== ' <module> ' ===' $$
   }
   regex stage {
     ^^ 'Stage ' <stage_type> \s* ': ' [
@@ -25,7 +25,7 @@ grammar ParseBuildResults {
     ]
   }
   regex err_msg {
-    '===SORRY!===' .+? <?before \v ' ==='> $$
+    '===SORRY!===' .+? <?before \v '==='> $$
   }
   token module {
     (\w+)+ % '::'

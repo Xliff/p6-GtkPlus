@@ -54,6 +54,16 @@ class GTK::ToolPalette is GTK::Container {
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
+  # ↓↓↓↓ STATIC METHODS ↓↓↓↓
+  method get_drag_target_group {
+    gtk_tool_palette_get_drag_target_group();
+  }
+
+  method get_drag_target_item {
+    gtk_tool_palette_get_drag_target_item();
+  }
+  # ↑↑↑↑ METHODS ↑↑↑↑
+
   # ↓↓↓↓ METHODS ↓↓↓↓
   multi method add_drag_dest (
     GtkWidget() $widget,
@@ -68,14 +78,6 @@ class GTK::ToolPalette is GTK::Container {
 
   method get_drag_item (GtkSelectionData $selection) {
     gtk_tool_palette_get_drag_item($!tp, $selection);
-  }
-
-  method get_drag_target_group {
-    gtk_tool_palette_get_drag_target_group($!tp);
-  }
-
-  method get_drag_target_item {
-    gtk_tool_palette_get_drag_target_item($!tp);
   }
 
   method get_drop_group (Int() $x, Int() $y) {
