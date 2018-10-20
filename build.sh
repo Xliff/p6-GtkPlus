@@ -1,6 +1,6 @@
-#!/bin/sh
+#!/bin/bash
 
-if [ "x$1" == "xnew" ]; then
+if [ "$1" == "new" ]; then
   rm LastBuildResults*
 else
   perl6 scripts/backup_results.pl6

@@ -662,7 +662,7 @@ enum GtkPolicyType is export (
                                 #This can be used e.g. to make multiple scrolled windows share a scrollbar.
 );
 
-enum GtkToolPalleteDragTargets is export (
+enum GtkToolPaletteDragTargets is export (
   GTK_TOOL_PALETTE_DRAG_ITEMS  => 1,
   GTK_TOOL_PALETTE_DRAG_GROUPS => 2
 );

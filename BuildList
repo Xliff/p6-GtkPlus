@@ -1,6 +1,6 @@
+GTK::Raw::ReturnedValue
 GTK::Roles::Pointers
 GTK::Compat::Types
-GTK::Raw::ReturnedValue
 GTK::Roles::Types
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppInfo
@@ -21,7 +21,8 @@ GTK::Raw::Window
 GTK::Roles::Signals::EntryBuffer
 GTK::Compat::GSList
 GTK::Compat::LaunchContext
-GTK::Compat::MenuModel
+GTK::Compat::MenuAttributeIter
+GTK::Compat::MenuLinkIter
 GTK::Compat::Permission
 GTK::Compat::Pixbuf
 GTK::Compat::Raw::GList
@@ -213,6 +214,7 @@ GTK::CSSProvider
 GTK::Clipboard
 GTK::Compat::Cursor
 GTK::Compat::GList
+GTK::Compat::Roles::Signals
 GTK::Compat::Value
 GTK::EntryBuffer
 GTK::FileFilter
@@ -238,6 +240,7 @@ GTK::CellRendererProgress
 GTK::CellRendererSpinner
 GTK::CellRendererText
 GTK::CellRendererToggle
+GTK::Compat::MenuModel
 GTK::Container
 GTK::DrawingArea
 GTK::Entry

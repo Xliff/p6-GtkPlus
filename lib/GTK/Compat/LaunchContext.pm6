@@ -6,17 +6,17 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::AppInfo;
 
 class GTK::Compat::LaunchContext {
-  has GLaunchContext $!lc;
+  has GAppLaunchContext $!lc;
 
   submethod BUILD(:$context) {
     $!lc = $context
   }
 
   multi method new {
-    my $context = g_app_launch_context_new($!lc);
+    my $context = g_app_launch_context_new();
     self.bless(:$context);
   }
-  multi method new(GLaunchContext $context) {
+  multi method new(GAppLaunchContext $context) {
     self.bless(:$context);
   }
 

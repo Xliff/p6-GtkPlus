@@ -19,8 +19,19 @@ class GTK::Compat::Roles::AppInfo {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # Static methods
+  method create_from_commandline (
+    Str() $application_name,
+    uint32 $flags,              # GAppInfoCreateFlags $flags,
+    GError $error
+  ) {
+    g_app_info_create_from_commandline(
+      $application_name,
+      $flags,
+      $error
+    );
+  }
 
-  method get_all_for_type(Str() $content-type {
+  method get_all_for_type(Str() $content-type) {
     g_app_info_get_all_for_type($content-type);
   }
 
@@ -69,12 +80,19 @@ class GTK::Compat::Roles::AppInfo {
   }
 
   method launch_default_for_uri_finish (
-    GAsynchResult $result,
+    GAsyncResult $result,
     GError $error
   ) {
     g_app_info_launch_default_for_uri_finish($result, $error);
   }
 
+  method monitor_get {
+    g_app_info_monitor_get();
+  }
+
+  method monitor_get_type {
+    g_app_info_monitor_get_type();
+  }
 
   method reset_type_associations(Str() $content-type) {
     g_app_info_reset_type_associations($content-type);
@@ -93,19 +111,6 @@ class GTK::Compat::Roles::AppInfo {
 
   method can_remove_supports_type {
     g_app_info_can_remove_supports_type($!ai);
-  }
-
-  method create_from_commandline (
-    Str() $application_name,
-    uint32 $flags               # GAppInfoCreateFlags $flags,
-    GError $error
-  ) {
-    g_app_info_create_from_commandline(
-      $!ai,
-      $application_name,
-      $flags,
-      $error
-    );
   }
 
   method delete {
@@ -166,18 +171,10 @@ class GTK::Compat::Roles::AppInfo {
 
   method launch_uris (
     GList() $uris,
-    GAppLaunchContext $context = GAppLaunchContext,
-    GError $error is rw
+    GAppLaunchContext $context,
+    CArray[Pointer[GError]] $error is rw
   ) {
     g_app_info_launch_uris($!ai, $uris, $context, $error);
-  }
-
-  method monitor_get {
-    g_app_info_monitor_get($!ai);
-  }
-
-  method monitor_get_type {
-    g_app_info_monitor_get_type($!ai);
   }
 
   method remove_supports_type (

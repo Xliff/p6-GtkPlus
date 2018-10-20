@@ -206,20 +206,22 @@ class GTK::ListStore {
     die 'Values used in %values must be GTK::Compat::Value or GValue.'
       unless %values.values.all ~~ GValues;
 
-    for (%values.keys) {
-      my gint $i = $_.Int;
-      self.set_value($iter, $i, %values{$_}.gvalue);
-    }
+    self.set_valuesv(
+      $iter,
+      %values.keys,
+      %values.values.map( *.gvalue ),
+      %values.keys.elems
+    );
 
-    # gtk_list_store_set_valuesv(
-    #   $!ls,
-    #   $iter,
-    #   $c_columns,
-    #   $c_values,
-    #   $c_columns.elems
-    # );
   }
 
+  # gtk_list_store_set_valuesv(
+  #   $!ls,
+  #   $iter,
+  #   $c_columns,
+  #   $c_values,
+  #   $c_columns.elems
+  # );
   method set_valuesv (
     GtkTreeIter() $iter,
     @columns,

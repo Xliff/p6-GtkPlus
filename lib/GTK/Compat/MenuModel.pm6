@@ -2,13 +2,24 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::MenuAttributeIter;
+use GTK::Compat::MenuLinkIter;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::MenuModel;
+use GTK::Compat::Roles::Signals;
 
 use GTK::Roles::Types;
 
+sub EXPORT {
+  %(
+    GTK::Compat::MenuAttributeIter::,
+    GTK::Compat::MenuLinkIter::,
+  );
+}
+
 class GTK::Compat::MenuModel {
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Signals;
 
   has GMenuModel $!m;
 
@@ -16,12 +27,16 @@ class GTK::Compat::MenuModel {
     $!m = $model;
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%_) for %!signals-compat;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
   # GMenuModel, gint, gint, gint, gpointer
   method items-changed {
-    self.connect('items-changed');
+    self.connect-items-changed($!m);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -30,33 +45,6 @@ class GTK::Compat::MenuModel {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method g_menu_attribute_iter_next {
-    g_menu_attribute_iter_next($!m);
-  }
-
-  method g_menu_link_iter_get_name {
-    g_menu_link_iter_get_name($!m);
-  }
-
-  method g_menu_link_iter_get_next (
-    Str() $out_link,
-    GMenuModel $value
-  ) {
-    g_menu_link_iter_get_next($!m, $out_link, $value);
-  }
-
-  method g_menu_link_iter_get_type {
-    g_menu_link_iter_get_type($!m);
-  }
-
-  method g_menu_link_iter_get_value {
-    g_menu_link_iter_get_value($!m);
-  }
-
-  method g_menu_link_iter_next {
-    g_menu_link_iter_next($!m);
-  }
-
   method get_item_attribute_value (
     Int() $item_index,
     Str() $attribute,
@@ -96,12 +84,16 @@ class GTK::Compat::MenuModel {
 
   method iterate_item_attributes (Int() $item_index) {
     my gint $ii = self.RESOLVE-INT($item_index);
-    g_menu_model_iterate_item_attributes($!m, $ii);
+    GTK::Compat::MenuAttributeIter.new(
+      g_menu_model_iterate_item_attributes($!m, $ii);
+    );
   }
 
   method iterate_item_links (Int() $item_index) {
     my gint $ii = self.RESOLVE-INT($item_index);
-    g_menu_model_iterate_item_links($!m, $iii);
+    GTK::Compat::MenuLinkIter.new(
+      g_menu_model_iterate_item_links($!m, $ii);
+    );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
