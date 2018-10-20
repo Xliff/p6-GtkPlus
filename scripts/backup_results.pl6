@@ -1,19 +1,27 @@
 use File::Find;
 
 my @files = find
-  dir => 'lib',
-  name => /^ 'LastBuildResults' /;
+  dir     => '.',
+  name    => /^ 'LastBuildResults' /,
+  exclude => / '.json' $/;
 
-@files.map({ my $a = 0; s/ '.' (\d+) $//; [$_, $/[0] // 0] });
+@files .= map({
+  s/ '.' (\d+) $//;
+  [ $_, $/[0].Int // 0 ];
+});
 for @files.sort( *[1] ).reverse {
   my ($old, $new) = (
-    "{ $_[0] }.{ $_[1] }",
-    "{ $_[0] }.{ $_[1] + 1 }"
+    "{ $_[0] }.{ $_[1] // '' }",
+    "{ $_[0] }.{ ($_[1] // 0) + 1 }"
   );
 
   if $_[1] {
-    $old.IO.rename($new)
+    if $old.IO.e {
+      $old.IO.rename($new);
+    } else {
+      'LastBuildResults'.IO.rename('LastBuildResults.0');
+    }
   } else {
-    "{ $_[0] }".IO.rename($new);
+    'LastBuildResults'.IO.rename('LastBuildResults.0');
   }
 }
