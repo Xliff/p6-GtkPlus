@@ -7,6 +7,7 @@ use GTK::Raw::ListBox;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::ListBoxRow;
 
 my subset Ancestry where GtkListBox | GtkBuildable | GtkWidget;
 
@@ -105,26 +106,10 @@ class GTK::ListBox is GTK::Container {
     self.connect($!lb, 'unselect-all');
   }
 
-  # Is originally:
-  # GtkListBoxRow, gpointer --> void
-  method activate {
-    self.connect($!lb, 'activate');
-  }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method row_activatable is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        gtk_list_box_row_get_activatable($!lb);
-      },
-      STORE => sub ($, $activatable is copy) {
-        gtk_list_box_row_set_activatable($!lb, $activatable);
-      }
-    );
-  }
-
   method activate_on_single_click is rw {
     Proxy.new(
       FETCH => sub ($) {
@@ -143,28 +128,6 @@ class GTK::ListBox is GTK::Container {
       },
       STORE => sub ($, $adjustment is copy) {
         gtk_list_box_set_adjustment($!lb, $adjustment);
-      }
-    );
-  }
-
-  method row_header is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        gtk_list_box_row_get_header($!lb);
-      },
-      STORE => sub ($, $header is copy) {
-        gtk_list_box_row_set_header($!lb, $header);
-      }
-    );
-  }
-
-  method row_selectable is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        gtk_list_box_row_get_selectable($!lb);
-      },
-      STORE => sub ($, $selectable is copy) {
-        gtk_list_box_row_set_selectable($!lb, $selectable);
       }
     );
   }
@@ -210,15 +173,15 @@ class GTK::ListBox is GTK::Container {
   }
 
   method get_row_at_index (gint $index) {
-    gtk_list_box_get_row_at_index($!lb, $index);
+    GTK::ListBoxRow.new( gtk_list_box_get_row_at_index($!lb, $index) );
   }
 
   method get_row_at_y (gint $y) {
-    gtk_list_box_get_row_at_y($!lb, $y);
+    GTK::ListBoxRow( gtk_list_box_get_row_at_y($!lb, $y) );
   }
 
   method get_selected_row {
-    gtk_list_box_get_selected_row($!lb);
+    GTK::ListBoxRow.new( gtk_list_box_get_selected_row($!lb) );
   }
 
   method get_selected_rows {
@@ -247,22 +210,6 @@ class GTK::ListBox is GTK::Container {
 
   method prepend (GtkWidget() $child) {
     gtk_list_box_prepend($!lb, $child);
-  }
-
-  method row_changed {
-    gtk_list_box_row_changed($!lb);
-  }
-
-  method row_get_index {
-    gtk_list_box_row_get_index($!lb);
-  }
-
-  method row_is_selected {
-    gtk_list_box_row_is_selected($!lb);
-  }
-
-  method row_new {
-    gtk_list_box_row_new();
   }
 
   method select_all {
