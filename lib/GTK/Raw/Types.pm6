@@ -34,6 +34,10 @@ our constant GtkFlowBoxForeachFunc            is export := Pointer;
 our constant GtkFlowBoxSortFunc               is export := Pointer;
 our constant GtkFontFilterFunc                is export := Pointer;
 our constant GtkIconViewForeachFunc           is export := Pointer;
+our constant GtkListBoxCreateWidgetFunc       is export := Pointer;
+our constant GtkListBoxForeachFunc            is export := Pointer;
+our constant GtkListBoxSortFunc               is export := Pointer;
+our constant GtkListBoxUpdateHeaderFunc       is export := Pointer;
 our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkRecentFilterFunc              is export := Pointer;
@@ -948,8 +952,10 @@ class GtkLabel                is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkLayout               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLevelBar             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLinkButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkLockButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkListBox              is repr('CPointer') does GTK::Roles::Pointers is export { }\
+class GtkListBoxRow           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkListStore            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkLockButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMessageDialog        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenu                 is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkMenuBar              is repr('CPointer') does GTK::Roles::Pointers is export { }
