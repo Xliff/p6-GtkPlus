@@ -95,6 +95,7 @@ GTK::Raw::Label
 GTK::Raw::Layout
 GTK::Raw::LevelBar
 GTK::Raw::LinkButton
+GTK::Raw::ListBox
 GTK::Raw::ListStore
 GTK::Raw::LockButton
 GTK::Raw::Menu
@@ -178,6 +179,7 @@ GTK::Roles::Signals::EntryCompletion
 GTK::Roles::Signals::FlowBox
 GTK::Roles::Signals::Generic
 GTK::Roles::Signals::IconView
+GTK::Roles::Signals::ListBox
 GTK::Roles::Signals::Menu
 GTK::Roles::Signals::MenuShell
 GTK::Roles::Signals::Overlay
@@ -292,6 +294,7 @@ GTK::Frame
 GTK::IconView
 GTK::InfoBar
 GTK::LinkButton
+GTK::ListBoxRow
 GTK::LockButton
 GTK::MenuItem
 GTK::MenuShell
@@ -329,6 +332,7 @@ GTK::Dialog::FileChooser
 GTK::Dialog::FontChooser
 GTK::Dialog::Message
 GTK::FlowBox
+GTK::ListBox
 GTK::Menu
 GTK::MenuBar
 GTK::MenuButton
