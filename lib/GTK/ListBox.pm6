@@ -9,9 +9,13 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::ListBoxRow;
 
+use GTK::Roles::Signals::ListBox;
+
 my subset Ancestry where GtkListBox | GtkBuildable | GtkWidget;
 
 class GTK::ListBox is GTK::Container {
+  also does GTK::Roles::Signals::ListBox;
+  
   has GtkListBox $!lb;
 
   method bless(*%attrinit) {
@@ -30,22 +34,25 @@ class GTK::ListBox is GTK::Container {
             nativecast(GtkListBox, $_);
           }
           when GtkBuildable {
-            $!b = nativecast(GtkBuildable, $_);     # GTK::Roles::Buildable
             $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkListBox, $_);
+          }
           when GtkListBox {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
           }
         }
         self.setContainer($to-parent);
-        $!b //= nativecast(GtkBuildable, $_);       # GTK::Roles::Buildable
       }
       when GTK::ListBox {
       }
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-lb;
   }
 
   multi method new {
@@ -67,19 +74,19 @@ class GTK::ListBox is GTK::Container {
   # Is originally:
   # GtkListBox, GtkMovementStep, gint, gpointer --> void
   method move-cursor {
-    self.connect($!lb, 'move-cursor');
+    self.connect-move-cursor1($!lb, 'move-cursor');
   }
 
   # Is originally:
   # GtkListBox, GtkListBoxRow, gpointer --> void
   method row-activated {
-    self.connect($!lb, 'row-activated');
+    self.connect-listboxrow($!lb, 'row-activated');
   }
 
   # Is originally:
   # GtkListBox, GtkListBoxRow, gpointer --> void
   method row-selected {
-    self.connect($!lb, 'row-selected');
+    self.connect-listboxrow($!lb, 'row-selected');
   }
 
   # Is originally:
@@ -113,10 +120,11 @@ class GTK::ListBox is GTK::Container {
   method activate_on_single_click is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_list_box_get_activate_on_single_click($!lb);
+        so gtk_list_box_get_activate_on_single_click($!lb);
       },
-      STORE => sub ($, $single is copy) {
-        gtk_list_box_set_activate_on_single_click($!lb, $single);
+      STORE => sub ($, Int() $single is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($single);
+        gtk_list_box_set_activate_on_single_click($!lb, $s);
       }
     );
   }
@@ -124,9 +132,9 @@ class GTK::ListBox is GTK::Container {
   method adjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_list_box_get_adjustment($!lb);
+        GTK::Adjustment.new( gtk_list_box_get_adjustment($!lb) );
       },
-      STORE => sub ($, $adjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_list_box_set_adjustment($!lb, $adjustment);
       }
     );
@@ -135,10 +143,11 @@ class GTK::ListBox is GTK::Container {
   method selection_mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_list_box_get_selection_mode($!lb);
+        GtkSelectionMode( gtk_list_box_get_selection_mode($!lb) );
       },
-      STORE => sub ($, $mode is copy) {
-        gtk_list_box_set_selection_mode($!lb, $mode);
+      STORE => sub ($, Int() $mode is copy) {
+        my guint $m = self.RESOLVE-UINT($mode);
+        gtk_list_box_set_selection_mode($!lb, $m);
       }
     );
   }
@@ -172,12 +181,14 @@ class GTK::ListBox is GTK::Container {
     gtk_list_box_drag_unhighlight_row($!lb);
   }
 
-  method get_row_at_index (gint $index) {
-    GTK::ListBoxRow.new( gtk_list_box_get_row_at_index($!lb, $index) );
+  method get_row_at_index (Int() $index) {
+    my gint $i = self.RESOLVE-INT($index);
+    GTK::ListBoxRow.new( gtk_list_box_get_row_at_index($!lb, $i) );
   }
 
-  method get_row_at_y (gint $y) {
-    GTK::ListBoxRow( gtk_list_box_get_row_at_y($!lb, $y) );
+  method get_row_at_y (Int() $y) {
+    my gint $yy = self.RESOLVE-INT($y);
+    GTK::ListBoxRow( gtk_list_box_get_row_at_y($!lb, $yy) );
   }
 
   method get_selected_row {
@@ -192,8 +203,9 @@ class GTK::ListBox is GTK::Container {
     gtk_list_box_get_type();
   }
 
-  method insert (GtkWidget() $child, gint $position) {
-    gtk_list_box_insert($!lb, $child, $position);
+  method insert (GtkWidget() $child, Int() $position) {
+    my gint $p = self.RESOLVE-INT($position);
+    gtk_list_box_insert($!lb, $child, $p);
   }
 
   method invalidate_filter {
@@ -245,11 +257,11 @@ class GTK::ListBox is GTK::Container {
   }
 
   method set_sort_func (
-    GtkListBoxSortFunc $sort_func,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    &sort_func (GtkListBoxRow $a, GtkListBoxRow $b, gpointer $data),
+    gpointer $user_data = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   ) {
-    gtk_list_box_set_sort_func($!lb, $sort_func, $user_data, $destroy);
+    gtk_list_box_set_sort_func($!lb, &sort_func, $user_data, $destroy);
   }
 
   method unselect_all {

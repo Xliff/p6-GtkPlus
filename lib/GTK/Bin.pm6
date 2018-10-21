@@ -30,7 +30,6 @@ class GTK::Bin is GTK::Container {
   }
 
   method setBin($bin) {
-#    "setBin".say;
     my $to-parent;
     $!bin = do given $bin {
       when GtkBin {

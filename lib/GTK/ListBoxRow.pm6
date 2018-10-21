@@ -14,7 +14,9 @@ my subset Ancestry
   where GtkListBoxRow | GtkBuildable | GtkActionable | GtkWidget;
 
 class GTK::ListBoxRow is GTK::Bin {
-  has GtkListBoxRow $!lbrr;
+  also does GTK::Roles::Actionable;
+
+  has GtkListBoxRow $!lbr;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -26,7 +28,7 @@ class GTK::ListBoxRow is GTK::Bin {
     my $to-parent;
     given $row {
       when Ancestry {
-        $!lbrr = do {
+        $!lbr = do {
           when GtkWidget {
             $to-parent = $_;
             nativecast(GtkListBoxRow, $_);
@@ -37,7 +39,6 @@ class GTK::ListBoxRow is GTK::Bin {
             nativecast(GtkListBoxRow, $_);
           }
           when GtkBuildable {
-            $!b = nativecast(GtkActionable, $_);
             $to-parent = nativecast(GtkBin, $_);
             nativecast(GtkListBoxRow, $_);
           }
@@ -46,9 +47,8 @@ class GTK::ListBoxRow is GTK::Bin {
             $_;
           }
         }
-        self.setParent($to-parent);
-        $!b //= nativecast(GtkBuildable, $_);
-        $!action //= native(GtkActionable, $_);
+        self.setBin($to-parent);
+        $!action //= nativecast(GtkActionable, $_);
       }
       when GTK::ListBoxRow {
       }

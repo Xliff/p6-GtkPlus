@@ -212,7 +212,7 @@ ERR
       FETCH => sub ($) {
         gtk_builder_get_translation_domain($!b);
       },
-      STORE => sub ($, gchar $domain is copy) {
+      STORE => sub ($, Str() $domain is copy) {
         gtk_builder_set_translation_domain($!b, $domain);
       }
     );
@@ -221,14 +221,14 @@ ERR
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_callback_symbol (
-    gchar $callback_name,
+    Str() $callback_name,
     GCallback $callback_symbol = GCallback
   ) {
     gtk_builder_add_callback_symbol($!b, $callback_name, $callback_symbol);
   }
 
   method add_from_file (
-    gchar $filename,
+    Str() $filename,
     GError $error = GError
   ) {
     gtk_builder_add_from_file($!b, $filename, $error);
@@ -236,7 +236,7 @@ ERR
   }
 
   method add_from_resource (
-    gchar $resource_path,
+    Str() $resource_path,
     GError $error = GError
   ) {
     gtk_builder_add_from_resource($!b, $resource_path, $error);
@@ -244,52 +244,75 @@ ERR
   }
 
   method add_from_string (
-    gchar $buffer,
+    Str() $buffer,
     $length?,
-    $error?
+    $error = GError
   ) {
     with $length {
-      die "\$length cannot be negative" unless $length > -2;
+      die '$length cannot be negative' unless $length > -2;
     }
     with $error {
-      die "\$error must be a GError object or pointer"
+      die '$error must be a GError object or pointer'
         unless $error ~~ GError;
     }
 
     my gsize $l = $length // $buffer.chars;
-    my GError $e = $error // GError;
-    my $rc = gtk_builder_add_from_string($!b, $buffer, $l, $e);
+    my $rc = gtk_builder_add_from_string($!b, $buffer, $l, $error);
     self!postProcess(:ui_def($buffer));
     $rc;
   }
 
   method add_objects_from_file (
-    gchar $filename,
-    gchar $object_ids,
+    Str() $filename,
+    @object_ids,
     GError $error = GError
   ) {
-    gtk_builder_add_objects_from_file($!b, $filename, $object_ids, $error);
+    die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
+    my $oi = CArray[Str].new;
+    $oi[$++] = $_ for @object_ids;
+    gtk_builder_add_objects_from_file($!b, $filename, $oi, $error);
     #self!postHandle;
   }
 
   method add_objects_from_resource (
-    gchar $resource_path,
-    gchar $object_ids,
+    Str() $resource_path,
+    @object_ids,
     GError $error = GError
   ) {
-    gtk_builder_add_objects_from_resource($!b, $resource_path, $object_ids, $error);
+    die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
+    my $oi = CArray[Str].new;
+    $oi[$++] = $_ for @object_ids;
+    gtk_builder_add_objects_from_resource($!b, $resource_path, $oi, $error);
     #self!postProcess;
   }
 
-  method add_objects_from_string (
-    gchar $buffer,
+  multi method add_objects_from_string (
+    Str() $buffer,
+    @object_ids
+  ) {
+    samewith($buffer, -1, @object_ids);
+  }
+  multi method add_objects_from_string (
+    Str() $buffer,
     Int() $length,
-    gchar $object_ids,
+    @object_ids,
     GError $error = GError
   ) {
-    die "\$length cannot be negative" unless $length > -2;
+    die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
+    die '$length cannot be negative' unless $length > -2;
+
     my gsize $l = $length;
-    gtk_builder_add_objects_from_string($!b, $buffer, $length, $object_ids, $error);
+    my $oi = CArray[Str].new;
+    $oi[$++] = $_ for @object_ids;
+    my $rc = gtk_builder_add_objects_from_string(
+      $!b,
+      $buffer,
+      $length,
+      $oi,
+      $error
+    );
+    # Turn into a catchable exception!
+    die 'Failed to process UI file.' unless $rc;
     self!postProcess(:ui_def($buffer));
   }
 
@@ -308,18 +331,18 @@ ERR
     gtk_builder_error_quark();
   }
 
-  method expose_object (gchar $name, GObject $object) {
+  method expose_object (Str() $name, GObject $object) {
     gtk_builder_expose_object($!b, $name, $object);
   }
 
   multi method extend_with_template (
     GtkWidget() $widget,
     GType $template_type,
-    gchar $buffer,
+    Str() $buffer,
     Int() $length,
     GError $error = GError
   ) {
-    die "\$length cannot be negative" unless $length > -2;
+    die '$length cannot be negative' unless $length > -2;
     my gsize $l = $length;
     gtk_builder_extend_with_template(
       $!b, $widget, $template_type, $buffer, $l, $error
@@ -327,7 +350,7 @@ ERR
     self!postProcess;
   }
 
-  method get_object (gchar $name) {
+  method get_object (Str() $name) {
     my $o = gtk_builder_get_object($!b, $name);
     $o =:= GtkWidget ?? Nil !! $o;
   }
@@ -340,17 +363,17 @@ ERR
     gtk_builder_get_type();
   }
 
-  method get_type_from_name (gchar $type_name) {
+  method get_type_from_name (Str() $type_name) {
     gtk_builder_get_type_from_name($!b, $type_name);
   }
 
-  method lookup_callback_symbol (gchar $callback_name) {
+  method lookup_callback_symbol (Str() $callback_name) {
     gtk_builder_lookup_callback_symbol($!b, $callback_name);
   }
 
   method value_from_string (
     GParamSpec $pspec,
-    gchar $string,
+    Str() $string,
     GValue $value,
     GError $error = GError
   ) {
@@ -359,7 +382,7 @@ ERR
 
   method value_from_string_type (
     GType $type,
-    gchar $string,
+    Str() $string,
     GValue $value,
     GError $error = GError
   ) {

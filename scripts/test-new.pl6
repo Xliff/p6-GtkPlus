@@ -13,7 +13,7 @@ sub MAIN( $rev = 'HEAD' ) {
     next unless / '.pm6' $/;
     my $a = S/ '.pm6' //;
     $a = ( $a .= split("\/") )[1..*].join('::');
-    [ $_, $a, @buildlist.first(* eq $a, :k) ];
+    [ $_, $a, @buildlist.first(* eq $a, :k) // Inf ];
   });
 
   for @files.sort( *[2] ) {

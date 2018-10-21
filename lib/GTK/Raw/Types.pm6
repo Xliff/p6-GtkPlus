@@ -12,6 +12,16 @@ sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
 
+# Look into replacing these with subsets to see how they would look.
+# Example:
+# <Zoffix>
+  # class A {};
+  # subset Meows of Callable where .signature ~~ :(Str, Int, Str --> A);
+  # sub a (Meows \handler) { A.new };
+  # a sub (Str, Int --> A) {}
+# Also look into putting these with the ::Raw:: class that handles them,
+# and see if that would work. Would clean up this entire section.
+
 our constant GtkAccelGroupFindFunc            is export := Pointer;
 our constant GtkAssistantPageFunc             is export := Pointer;
 our constant GtkBuilderConnectFunc            is export := Pointer;
@@ -35,6 +45,7 @@ our constant GtkFlowBoxSortFunc               is export := Pointer;
 our constant GtkFontFilterFunc                is export := Pointer;
 our constant GtkIconViewForeachFunc           is export := Pointer;
 our constant GtkListBoxCreateWidgetFunc       is export := Pointer;
+our constant GtkListBoxFilterFunc             is export := Pointer;
 our constant GtkListBoxForeachFunc            is export := Pointer;
 our constant GtkListBoxSortFunc               is export := Pointer;
 our constant GtkListBoxUpdateHeaderFunc       is export := Pointer;
@@ -952,7 +963,7 @@ class GtkLabel                is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkLayout               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLevelBar             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLinkButton           is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkListBox              is repr('CPointer') does GTK::Roles::Pointers is export { }\
+class GtkListBox              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkListBoxRow           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkListStore            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkLockButton           is repr('CPointer') does GTK::Roles::Pointers is export { }

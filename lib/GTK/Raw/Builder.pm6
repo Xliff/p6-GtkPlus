@@ -50,7 +50,7 @@ sub gtk_builder_add_from_string (
 sub gtk_builder_add_objects_from_file (
   GtkBuilder $builder,
   gchar $filename,
-  gchar $object_ids,
+  CArray[Str] $object_ids,
   GError $error
 )
   returns guint
@@ -61,7 +61,7 @@ sub gtk_builder_add_objects_from_file (
 sub gtk_builder_add_objects_from_resource (
   GtkBuilder $builder,
   gchar $resource_path,
-  gchar $object_ids,
+  CArray[Str] $object_ids,
   GError $error
 )
   returns guint
@@ -73,7 +73,7 @@ sub gtk_builder_add_objects_from_string (
   GtkBuilder $builder,
   gchar $buffer,
   gsize $length,
-  gchar $object_ids,
+  CArray[Str] $object_ids,
   GError $error
 )
   returns guint
