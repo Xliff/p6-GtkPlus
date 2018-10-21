@@ -62,18 +62,19 @@ class GTK::Builder does Associative {
       # The answer: that information is REALLY NOT IMPORTANT in this stage of
       # GtkBuilder support!
 
-      # MUST define an activate handler!!
       $!window = GTK::Window.new(
         :widget( self.get_object($window-name) )
-      );
+      ) with $window-name;
 
-      die qq:to/ERR/ unless $!window;
-Application window '#application' was not found. Please do one of the following:
-   - Rename the top-level window to 'application' in the .ui file
-   OR
-   - Specify the name of the top-level window using the named parameter
-     :\$window-name in the constructor to GTK::Application
-ERR
+# ONLY DO THIS IF BUILDER IS NOT ACTING AS A TEMPLATE!  
+#
+#       die qq:to/ERR/ unless $!window;
+# Application window '#application' was not found. Please do one of the following:
+#    - Rename the top-level window to 'application' in the .ui file
+#    OR
+#    - Specify the name of the top-level window using the named parameter
+#      :\$window-name in the constructor to GTK::Application
+# ERR
     }
 
     with $style-data {
