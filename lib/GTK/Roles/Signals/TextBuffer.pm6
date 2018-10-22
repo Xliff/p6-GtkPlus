@@ -21,7 +21,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-tag($obj, $signal,
         -> $, $tt, $ti1, $ti2, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $tt, $ti1, $ti2, $ud] );
@@ -46,7 +46,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-delete-range($obj, $signal,
         -> $, $ti1, $ti2, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti1, $ti2, $ud] );
@@ -71,7 +71,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-insert-child-anchor($obj, $signal,
         -> $, $ti, $ca, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti, $ca, $ud] );
@@ -96,7 +96,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-insert-pixbuf($obj, $signal,
         -> $, $ti, $pix, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti, $pix, $ud] );
@@ -121,7 +121,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-insert-text($obj, $signal,
         -> $, $ti, $str, $i, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti, $str, $i, $ud] );
@@ -146,7 +146,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-mark-deleted($obj, $signal,
         -> $, $tm, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $tm, $ud] );
@@ -171,7 +171,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-mark-set($obj, $signal,
         -> $, $ti, $tm, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti, $tm, $ud] );
@@ -196,7 +196,7 @@ role GTK::Roles::Signals::TextBuffer {
       $hid = g-connect-paste-done($obj, $signal,
         -> $, $c, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $c, $ud] );

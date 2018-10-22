@@ -22,7 +22,7 @@ role GTK::Roles::Signals::TextTag {
       $hid = g-connect-event($obj, $signal,
         -> $, $go, $e, $ti, $ud --> gboolean {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my @valid-types = (Bool, Enumeration);

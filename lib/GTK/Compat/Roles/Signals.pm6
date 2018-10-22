@@ -20,7 +20,7 @@ role GTK::Compat::Roles::Signals {
       my $s = Supplier.new;
       $hid = g-connect-items-changed($obj, $signal,
         -> $, $i1, $i2, $i3, $ud  {
-            CATCH { default { $s.quit($_) } }
+            CATCH { default { note($_) } }
 
             $s.emit( [self, $i1, $i2, $i3, $ud] );
         },

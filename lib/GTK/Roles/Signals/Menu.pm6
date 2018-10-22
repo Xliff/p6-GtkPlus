@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Menu {
       $hid = g_connect_popped_up($obj, $signal,
         -> $m, $flpr, $finr, $fx, $fy, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;

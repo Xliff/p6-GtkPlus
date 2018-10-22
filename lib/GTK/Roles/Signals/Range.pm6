@@ -21,7 +21,7 @@ role GTK::Roles::Signals::Range {
       $hid = g-connect-change-value($obj, $signal,
         -> $ui, $d, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ui, $d, $ud] );

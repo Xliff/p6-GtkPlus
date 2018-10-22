@@ -22,7 +22,7 @@ role GTK::Roles::Signals::TextView {
       $hid = g-connect-extend-selection($obj, $signal,
         -> $, $es, $ti1, $ti2, $ti3, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti1, $ti2, $ti3, $ud] );

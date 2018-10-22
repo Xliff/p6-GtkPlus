@@ -20,7 +20,7 @@ role GTK::Roles::Signals::EntryBuffer {
       $hid = g_connect_inserted_text($obj, $signal,
         -> $b, $p, $str, $nc, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $p, $str, $nc, $ud] );

@@ -20,7 +20,7 @@ role GTK::Roles::Signals::CellRendererAccel {
       $hid = g_connect_accel_edited($obj, $signal,
         -> $ca, $ps, $ak, $am, $hk, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ps, $ak, $am, $hk, $ud] );

@@ -21,7 +21,7 @@ role GTK::Roles::Signals::Scale {
       $hid = g_connect_format_value($obj, $signal,
         -> $scale, $v, $ud --> Str {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $v, $ud, $r] );

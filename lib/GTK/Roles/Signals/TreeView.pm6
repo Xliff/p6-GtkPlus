@@ -22,7 +22,7 @@ role GTK::Roles::Signals::TreeView {
       $hid = g-connect-row($obj, $signal,
         -> $, $ti, $tp, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti, $tp, $ud] );
@@ -47,7 +47,7 @@ role GTK::Roles::Signals::TreeView {
       $hid = g-connect-test-row($obj, $signal,
         -> $, $ti, $tp, $ud --> gboolean {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ti, $tp, $ud] );
@@ -72,7 +72,7 @@ role GTK::Roles::Signals::TreeView {
       $hid = g-connect-expand-collapse($obj, $signal,
         -> $, $b1, $b2, $b3, $ud --> gboolean {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $b1, $b2, $b3, $ud] );

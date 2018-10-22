@@ -22,7 +22,7 @@ role GTK::Roles::Signals::FlowBox {
       $hid = g-connect-child-activated($obj, $signal,
         -> $, $fbc, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;

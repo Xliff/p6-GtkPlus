@@ -23,7 +23,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect($obj, $signal,
         -> $, $ {
             $s.emit(self);
-            CATCH { default { $s.quit($_) } }
+            CATCH { default { note($_) } }
         },
         Pointer, 0
       );
@@ -64,7 +64,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_event($obj, $signal,
         -> $, $e, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $e, $ud] );
@@ -88,7 +88,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_rbool($obj, $signal,
         -> $, $ud --> gboolean {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -116,7 +116,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_widget($obj, $signal,
         -> $, $w, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $w, $ud] );
@@ -140,7 +140,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_string($obj, $signal,
         -> $, $p, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $p, $ud] );
@@ -164,7 +164,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_strstr($obj, $signal,
         -> $, $s1, $s2, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $s1, $s2, $ud] );
@@ -188,7 +188,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_int($obj, $signal,
         -> $, $i, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $i, $ud] );
@@ -212,7 +212,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_uint($obj, $signal,
         -> $, $ui, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ui, $ud] );
@@ -236,7 +236,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_double($obj, $signal,
         -> $, $d, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $d, $ud] );
@@ -260,7 +260,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_movement_step($obj, $signal,
         -> $, $ms, $nc, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ms, $nc, $ud ] );
@@ -284,7 +284,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_move_cursor1($obj, $signal,
         -> $, $ms, $c, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ms, $c, $ud] );
@@ -308,7 +308,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_move_cursor2($obj, $signal,
         -> $, $ms, $c, $es, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ms, $c, $es, $ud] );
@@ -332,7 +332,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_activate_link($obj, $signal,
         -> $, $uri, $ud --> gboolean {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -360,7 +360,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_menu($obj, $signal,
         -> $, $m, $ud --> gboolean {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $m, $ud] );
@@ -384,7 +384,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_int_ruint($obj, $signal,
         -> $, $i, $ud --> gint {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -411,7 +411,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_int_ruint($obj, $signal,
         -> $, $i, $ud --> guint {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -438,7 +438,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g_connect_uint_ruint($obj, $signal,
         -> $, $ui, $ud --> guint {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;
@@ -465,7 +465,7 @@ role GTK::Roles::Signals::Generic {
       $hid = g-connect-delete($obj, $signal,
         -> $, $t, $c, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $t, $c, $ud] );
@@ -488,7 +488,7 @@ role GTK::Roles::Signals::Generic {
       my $s = Supplier.new;
       $hid = g-connect-gparam($obj, $signal,
         -> $, $gp, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $gp, $ud] );
         },

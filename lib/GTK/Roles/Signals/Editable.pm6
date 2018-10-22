@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Editable {
       $hid = g-connect-delete-text($obj, $signal,
         -> $, $i1, $i2, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $i1, $i2, $ud] );
@@ -51,7 +51,7 @@ role GTK::Roles::Signals::Editable {
       $hid = g-connect-insert-text($obj, $signal,
         -> $, $str, $i, $ptr-i, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $str, $i, $ptr-i, $ud] );

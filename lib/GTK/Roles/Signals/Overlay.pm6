@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Overlay {
       $hid = g-connect-widget-rect($obj, $signal,
         -> $, $w, $rect, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $w, $rect, $ud] );

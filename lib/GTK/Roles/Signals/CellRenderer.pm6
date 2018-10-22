@@ -22,7 +22,7 @@ role GTK::Roles::Signals::CellRenderer {
       $hid = g_connect_editing_started($obj, $signal,
         -> $cr, $ce, $p, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;

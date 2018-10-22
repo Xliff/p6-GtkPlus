@@ -22,7 +22,7 @@ role GTK::Roles::Signals::ScrolledWindow {
       $hid = g-connect-scroll-child($obj, $signal,
         -> $, $ui1, $ui2, $ud --> guint {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;

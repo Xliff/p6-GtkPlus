@@ -21,7 +21,7 @@ role GTK::Roles::Signals::IconView {
       $hid = g_connect_item_activated($obj, $signal,
         -> $iv, $ud --> gboolean {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $ud, $r] );
@@ -46,7 +46,7 @@ role GTK::Roles::Signals::IconView {
       $hid = g_connect_item_activated($obj, $signal,
         -> $iv, $tp, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $tp, $ud, $r] );
@@ -71,7 +71,7 @@ role GTK::Roles::Signals::IconView {
       $hid = g_connect_move_cursor($obj, $signal,
         -> $iv, $ms, $c, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
           my $r = ReturnedValue.new;
           $s.emit( [self, $ms, $c, $ud, $r] );

@@ -20,7 +20,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-widget-event($obj, $signal,
         -> $, $e, $ud --> uint32 {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
@@ -48,7 +48,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-drag-action($obj, $signal,
         -> $, $dc, $i1, $i2, $ui, $ud --> uint32 {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
@@ -76,7 +76,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-drag-failed($obj, $signal,
         -> $, $dc, $dr, $ud --> uint32 {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
@@ -104,7 +104,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-query-tooltip($obj, $signal,
         -> $, $i1, $i2, $ui, $tt, $ud --> uint32 {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
@@ -131,7 +131,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       g-connect-screen-changed($obj, $signal,
         -> $, $scr, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
@@ -157,7 +157,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       g-connect-draw($obj, $signal,
         -> $, $cr, $ud --> uint32 {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
@@ -185,7 +185,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-drag-failed($obj, $signal,
         -> $, $dc, $dr, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $dc, $dr, $ud] );
         },
@@ -208,7 +208,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-widget-drag($obj, $signal,
         -> $, $dc, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $dc, $ud] );
         },
@@ -231,7 +231,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-drag-data-get($obj, $signal,
         -> $, $dc, $sd, $ui1, $ui2, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $dc, $sd, $ui1, $ui2, $ud] );
         },
@@ -255,7 +255,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-widget-drag($obj, $signal,
         -> $, $dc, $i1, $i2, $sd, $ui1, $ui2, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $dc, $i1, $i2, $sd, $ui1, $ui2, $ud] );
         },
@@ -278,7 +278,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-selection-get($obj, $signal,
         -> $, $sd, $ui1, $ui2, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $sd, $ui1, $ui2, $ud] );
         },
@@ -301,7 +301,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-selection-received($obj, $signal,
         -> $, $sd, $ui, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $sd, $ui, $ud] );
         },
@@ -324,7 +324,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-size-allocate($obj, $signal,
         -> $, $rect, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $rect , $ud] );
         },
@@ -347,7 +347,7 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-style-set($obj, $signal,
         -> $, $style, $ud {
-          CATCH { default { $s.quit($_) } }
+          CATCH { default { note($_) } }
 
           $s.emit( [self, $style, $ud] );
         },

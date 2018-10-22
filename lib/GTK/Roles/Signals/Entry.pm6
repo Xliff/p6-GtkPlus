@@ -21,7 +21,7 @@ role GTK::Roles::Signals::Entry {
       $hid = g-connect-entry-icon($obj, $signal,
         -> $, $ip, $ev, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ip, $ev, $ud] );

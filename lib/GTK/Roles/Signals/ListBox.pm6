@@ -5,43 +5,42 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
-use GTK::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::MenuShell {
-  has %!signals-ms;
+role GTK::Roles::Signals::ListBox {
+  has %!signals-lb;
 
   # Copy for each signal.
-  method connect-insert (
+  method connect-listboxrow (
     $obj,
-    $signal = 'insert',
+    $signal,
     &handler?
   ) {
     my $hid;
-    %!signals-ms{$signal} //= do {
+    %!signals-lb{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-insert($obj, $signal,
-        -> $, $w, $i, $ud {
+      $hid = g-connect-listboxrow($obj, $signal,
+        -> $, $lbr, $ud {
           CATCH {
-            default { note($_) }
+            default { note $_ }
           }
 
-          $s.emit( [self, $w, $i, $ud] );
+          $s.emit( [self, $lbr, $ud] );
         },
         Pointer, 0
       );
       [ $s.Supply, $obj, $hid];
     };
-    %!signals-ms{$signal}[0].tap(&handler) with &handler;
-    %!signals-ms{$signal}[0];
+    %!signals-lb{$signal}[0].tap(&handler) with &handler;
+    %!signals-lb{$signal}[0];
   }
 
 }
 
 # Define for each signal
-sub g-connect-insert(
+sub g-connect-listboxrow(
   Pointer $app,
   Str $name,
-  &handler (Pointer, GtkWidget, gint, Pointer),
+  &handler (Pointer, GtkListBoxRow, Pointer),
   Pointer $data,
   uint32 $flags
 )

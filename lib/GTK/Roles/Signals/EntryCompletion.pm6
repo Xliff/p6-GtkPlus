@@ -22,7 +22,7 @@ role GTK::Roles::Signals::EntryCompletion {
       $hid = g-connect-on-match($obj, $signal,
         -> $, $tm, $ti, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $tm, $ti, $ud] );

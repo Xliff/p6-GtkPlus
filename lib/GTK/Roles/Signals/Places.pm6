@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Places {
       $hid = g-connect-drag-perform-drop($obj, $signal,
         -> $, $obj, $p, $i, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $obj, $p, $i, $ud] );
@@ -47,7 +47,7 @@ role GTK::Roles::Signals::Places {
       $hid = g-connect-drag-action-requested($obj, $signal,
         -> $, $dc, $obj, $p, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $dc, $obj, $p, $ud] );
@@ -72,7 +72,7 @@ role GTK::Roles::Signals::Places {
       $hid = g-connect-open-location($obj, $signal,
         -> $, $obj, $go, $ui, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $go, $ui, $ud] );
@@ -97,7 +97,7 @@ role GTK::Roles::Signals::Places {
       $hid = g-connect-populate-popup($obj, $signal,
         -> $, $w, $f, $v, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $w, $f, $v, $ud] );
@@ -122,7 +122,7 @@ role GTK::Roles::Signals::Places {
       $hid = g-connect-mount_op($obj, $signal,
         -> $, $mo, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $mo, $ud] );

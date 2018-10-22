@@ -21,7 +21,7 @@ role GTK::Roles::Signals::Statusbar {
       $hid = g-connect-text($obj, $signal,
         -> $, $ui, $str, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $ui, $str, $ud] );

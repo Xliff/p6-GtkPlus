@@ -26,7 +26,7 @@ role GTK::Roles::Signals::SpinButton {
       $hid = g-connect-input($obj, $signal,
         -> $, $d, $ud --> gint {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;

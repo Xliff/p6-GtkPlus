@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Application {
       $hid = g_connect_application_signal($obj, $signal,
         -> $a, $w, $ud {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           $s.emit( [self, $w, $ud] );

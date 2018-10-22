@@ -22,7 +22,7 @@ role GTK::Roles::Signals::Toolbar {
       $hid = g-connect-popup-context-menu($obj, $signal,
         -> $, $i1, $i2, $i3, $ud --> uint32 {
           CATCH {
-            default { $s.quit($_) }
+            default { note($_) }
           }
 
           my $r = ReturnedValue.new;
