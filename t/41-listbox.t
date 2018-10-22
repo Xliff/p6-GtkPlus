@@ -4,6 +4,7 @@ use lib <t .>;
 
 use DateTime::Format;
 use GTK::Raw::Types;
+use GTK::Application;
 use listbox_test;
 
 my (%messages, $avatar_other);
@@ -21,12 +22,12 @@ sub get-new-row-ui {
   state $c = 1;
 
   $ui-row ~~ s:g!
-    'template class="'
+    '<template class="'
     (\w+)
-    '" parent="'
+    '"' \s* 'parent="'
     (\w+)
     '"'
-  !object class="$1" id="{
+  !<object class="$1" id="{
       $0.Str.trim ~~ / <tcword>+ /;
       $/<tcword>[1..*].map( *.lc ).join('_') ~ '-r%%%'
   }"!;
@@ -73,6 +74,7 @@ sub new_row {
       (GTK_STATE_FLAG_PRELIGHT +| GTK_STATE_FLAG_SELECTED);
     $r.state_flags = $pf;
   });
+  $r;
 }
 
 sub new_message($m) {
@@ -148,14 +150,15 @@ $a.activate.tap({
   $listbox.activate_on_single_click = False;
   $listbox.row-activated.tap( -> $r { row-expand($r) } );
 
-  for '/listbox/messages.txt'.IO.open.slurp.lines {
-    my $message = new_message($_);
-    my $row = new_row($message);
+  my $msg_file = 'messages.txt';
+  $msg_file = 't/messages.txt' unless $msg_file.IO.e;
+  for $msg_file.IO.open.slurp.lines {
+    my ($message, $row) = (new_message($_), new_row);
 
     %messages{$row}<widgets> = $row;
     %messages{$row}<data> = $message;
-    $row.show;
     $listbox.add($row);
+    $row.show;
   }
 
   $a.window.show_all;

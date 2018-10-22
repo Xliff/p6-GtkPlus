@@ -6,7 +6,7 @@ use NativeCall;
 
 use GTK::Application;
 use GTK::Button;
-use GTK::Box;
+#use GTK::Box;
 
 my $a = GTK::Application.new(
   title  => 'org.genex.test.widget',

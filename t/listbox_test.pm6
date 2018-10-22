@@ -24,7 +24,7 @@ sub EXPORT {
   %(
     GTK::Raw::Types::EXPORT::ALL::,
     GTK::Compat::Types::EXPORT::DEFAULT::,
-    GTK::Application::EXPORT::DEFAULT::,
+    GTK::Application::EXPORT::ALL::,
     GTK::Builder::EXPORT::DEFAULT::,
     GTK::Button::EXPORT::DEFAULT::,
     GTK::Box::EXPORT::DEFAULT::,

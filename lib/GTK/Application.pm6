@@ -13,7 +13,7 @@ use GTK::Window;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Application;
 
-class GTK::Application {
+class GTK::Application is export {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;
   also does GTK::Roles::Types;
