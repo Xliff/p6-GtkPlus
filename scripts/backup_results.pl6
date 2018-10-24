@@ -14,7 +14,6 @@ for @files.sort( *[1] ).reverse {
   FIRST { $max = $_[1].chars }
 
   my $nc = sprintf( "\%0{ $max }d", ($_[1] // 0) + 1);
-  say $nc;
   my ($old, $new) = (
     "{ $_[0] }.{ $_[1] // '' }",
     "{ $_[0] }.{ $nc }"
