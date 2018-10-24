@@ -9,6 +9,10 @@ use listbox_test;
 
 my (%messages, $avatar_other);
 
+sub sort-func($a, $b) {
+  %messages{$a}<data><time> <=> %messages{$b}<data><time>
+};
+
 sub row-expand(GtkListBoxRow() $r) {
   my $revealer = %messages{$r}<widgets>.details_revealer;
   $revealer.reveal_child .= not;
@@ -29,11 +33,11 @@ sub get-new-row-ui {
     '"'
   !<object class="$1" id="{
       $0.Str.trim ~~ / <tcword>+ /;
-      $/<tcword>[1..*].map( *.lc ).join('_') ~ '-r%%%'
+      $/<tcword>[1..*].map( *.lc ).join('_') ~ '_r%%%'
   }"!;
 
   $ui-row ~~ s:g!'</template>'!</object>!;
-  $ui-row ~~ s/'%%%'/{ $c }/;
+  $ui-row ~~ s:g/'%%%'/{ $c }/;
   ($ui-row, $c++);
 }
 
@@ -41,8 +45,11 @@ sub new_row {
   # Needs GTK::Builder support, so test will need to be in the post 40s
   state $b = GTK::Builder.new;
   my ($ui, $c) = get-new-row-ui();
-  my $rid = "message_row-r{$c}";
-  $b.add_from_string( $ui, $rid.Array );
+  my $rid = "message_row_r{$c}";
+
+  say $ui;
+
+  $b.add_objects_from_string( $ui, $rid.Array );
 
   my $r = $b{$rid};
 
@@ -79,25 +86,25 @@ sub new_row {
 
 sub new_message($m) {
   my @msg = $m.split('|');
-  my $msg = Message.new;
+  my %msg;
   my $i = 0;
 
-  $msg.id          = @msg[$i++];
-  $msg.sender_name = @msg[$i++];
-  $msg.sender_nick = @msg[$i++];
-  $msg.message     = @msg[$i++];
-  $msg.time        = @msg[$i++];
+  %msg<id>          = @msg[$i++];
+  %msg<sender_name> = @msg[$i++];
+  %msg<sender_nick> = @msg[$i++];
+  %msg<message>     = @msg[$i++];
+  %msg<time>        = @msg[$i++];
   with @msg[$i] {
-    $msg.reply_to    = @msg[$i++];
+    %msg<reply_to>    = @msg[$i++];
     with @msg[$i] {
-      $msg.resent_by = @msg[$i++];
+      %msg<resent_by> = @msg[$i++];
       with @msg[$i] {
-        $msg.n_favorites = @msg[$i++];
-        $msg.reshares = @msg[$i] with @msg[$i];
+        %msg<n_favorites> = @msg[$i++];
+        %msg<reshares> = @msg[$i] with @msg[$i];
       }
     }
   }
-  $msg;
+  %msg;
 }
 
 sub row_update($r) {
@@ -144,9 +151,8 @@ $a.activate.tap({
   $vbox.pack_start($label);
   $vbox.pack_start($scrolled);
 
-  $listbox.set_sort_func(-> $a, $b {
-    %messages{$a}<data><time> <=> %messages{$b}<data><time>
-  });
+  # Fix when able
+  # $listbox.set_sort_func(&sort-func);
   $listbox.activate_on_single_click = False;
   $listbox.row-activated.tap( -> $r { row-expand($r) } );
 

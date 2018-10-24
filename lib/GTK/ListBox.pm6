@@ -15,7 +15,7 @@ my subset Ancestry where GtkListBox | GtkBuildable | GtkWidget;
 
 class GTK::ListBox is GTK::Container {
   also does GTK::Roles::Signals::ListBox;
-  
+
   has GtkListBox $!lb;
 
   method bless(*%attrinit) {

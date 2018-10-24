@@ -10,6 +10,7 @@ sub MAIN( $rev = 'HEAD' ) {
   mkdir '.touch' unless '.touch'.IO.d;
   my @files = qqx{git diff --name-only $rev}.chomp;
   @files = @files.split("\n").map({
+    next if / ^ 't/' /;
     next unless / '.pm6' $/;
     my $a = S/ '.pm6' //;
     $a = ( $a .= split("\/") )[1..*].join('::');

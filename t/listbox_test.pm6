@@ -42,16 +42,16 @@ sub EXPORT {
 
 
 class Message is export {
-  has        $.private     is rw;
-  has guint  $.id          is rw;
-  has Str    $.sender_name is rw;
-  has Str    $.sender_nick is rw;
-  has Str    $.message     is rw;
-  has gint64 $.time        is rw;
-  has guint  $.reply_to    is rw;
-  has Str    $.resent_by   is rw;
-  has int    $.n_favorites is rw;
-  has int    $.n_reshares  is rw;
+  has $.private     is rw;
+  has $.id          is rw;
+  has $.sender_name is rw;
+  has $.sender_nick is rw;
+  has $.message     is rw;
+  has $.time        is rw;
+  has $.reply_to    is rw;
+  has $.resent_by   is rw;
+  has $.n_favorites is rw;
+  has $.n_reshares  is rw;
 }
 
 class MessageWidgets is export {
@@ -78,15 +78,14 @@ sub load_at_scale (
   CArray[Pointer[GError]] $error = CArray[Pointer[GError]]
 )
   returns GdkPixbuf
-  is native('gdk-pixbuf-2.0')
+  is symbol('gdk_pixbuf_new_from_file_at_scale')
+  is native('gdk_pixbuf-2.0')
   is export
   { * }
 
 our $ui-template is export = q:to/TEMPLATE/;
 <?xml version="1.0" encoding="UTF-8"?>
-<interface domain="gtk40">
-  <!-- interface-requires gtk+ 3.10 -->
-  <!-- interface-requires gtkdemo 3.10 -->
+<interface>
   <object class="GtkMenu" id="menu1-r%%%">
     <child>
       <object class="GtkMenuItem" id="menuitem1-r%%%">
