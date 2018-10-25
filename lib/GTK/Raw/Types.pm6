@@ -52,6 +52,7 @@ our constant GtkListBoxUpdateHeaderFunc       is export := Pointer;
 our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkRecentFilterFunc              is export := Pointer;
+our constant GtkPrintSettingsFunc             is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
 our constant GtkTreeCellDataFunc              is export := Pointer;
@@ -178,6 +179,11 @@ class GtkAccelKey is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint  $.accel_key;
   has uint32 $.accel_mods;      # GdkModifierType accel_mods;
   has uint32 $.accel_flags;     # : 16;
+};
+
+class GtkPageRange is repr('CStruct') does GTK::Roles::Pointers is export {
+  has gint $.start;
+  has gint $.end;
 };
 
 our enum GtkAccelFlags is export <
@@ -886,7 +892,6 @@ our enum GtkTextExtendSelection is export <
   GTK_TEXT_EXTEND_SELECTION_LINE
 >;
 
-
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -983,6 +988,7 @@ class GtkPaperSize            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkPaned                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPlacesSidebar        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPopover              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPrintSettings        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkProgressBar          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRadioButton          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRadioMenuItem        is repr('CPointer') does GTK::Roles::Pointers is export { }

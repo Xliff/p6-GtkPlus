@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Raw::PageSetup;
 use GTK::Raw::Types;
 
-#use GTK::PaperSize;
+use GTK::PaperSize;
 
 class GTK::PageSetup {
   has GtkPageSetup $!ps;
