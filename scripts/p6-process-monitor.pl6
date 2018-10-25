@@ -1,7 +1,6 @@
 use v6.c;
 
 use Terminal::Print <T>;
-use Data::Dump;
 
 my %procs = (
   running => {},
@@ -67,6 +66,11 @@ class ProcGrammarActions {
   }
 }
 
+sub mq($c, $r, $s, $chr = '=') {
+  T.print-string($c,      $r, $s);
+  T.print-string($c,  $r + 1, $chr x $s.chars);
+}
+
 sub showHeader {
   my $t = DateTime.now;
   T.clear-screen;
@@ -77,15 +81,20 @@ sub showHeader {
   );
   T.print-string(T.columns - $t.Str.chars - 2, 0, $t.Str);
   $*row = 2;
-  T.print-string(0,  $*row, 'PID');
-  T.print-string(0,  $*row + 1,  '===');
-  T.print-string(10, $*row, 'Time');
-  T.print-string(10, $*row + 1,  '====');
-  T.print-string(20, $*row , 'Process');
-  T.print-string(20, $*row + 1, '=======');
+  mq(0, $*row, 'PID');
+  mq(0, $*row, 'Time');
+  mq(0, $*row, 'Process');
+}
+
+sub checkRunningProcs {
+  my @rp = %procs<running>.keys;
+  for @rp {
+    %procs<running>{$_}:delete unless "/proc/{$_}".IO.d;
+  }
 }
 
 sub displayProcesses {
+  state $c = 0;
   $*row++;
   %procs<running>.append: %procs<started>.pairs if %procs<started>.elems;
   for %procs<running>.keys.sort {
@@ -100,6 +109,7 @@ sub displayProcesses {
     %procs<started> = {};
     %procs<exited> = {};
   });
+  checkRunningProcs unless $c++ % 3;
 }
 
 sub processList {
@@ -128,12 +138,8 @@ sub MAIN (Int :$interval = 3) {
     whenever signal(SIGTERM) | signal(SIGINT) {
       once {
         T.shutdown-screen;
-        #say ‘Signal received, asking the process to stop’;
-        $proc.kill; # sends SIGHUP, change appropriately
-        # whenever signal($_).zip: Promise.in(2).Supply {
-        #     say ‘Kill it!’;
-        #     $proc.kill: SIGKILL
-        # }
+        # sends SIGHUP, change appropriately
+        $proc.kill;
       }
     }
   }
