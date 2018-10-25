@@ -8,7 +8,7 @@ my %procs = (
   started => {},
   exited  => {},
 );
-my $int;
+my ($int, $l);
 
 my grammar ProcGrammar {
   rule TOP {
@@ -52,7 +52,6 @@ class ProcGrammarActions {
         $process ~~ m/ 'rakudobrew/bin/perl6' /;
         if $/.defined {
           unless %procs<running>{$pid}:exists or %procs<started>{$pid}:exists {
-            "$pid $process".say;
             %procs<started>{$pid} = {
               pid     => $pid,
               process => $process.Str.split(/ \s+ /)[*-1],
@@ -62,7 +61,7 @@ class ProcGrammarActions {
         }
       }
       when 'exit' {
-        %procs<ended>{$pid} = 1;
+        %procs<exited>{$pid} = 1;
       }
     }
   }
@@ -70,11 +69,11 @@ class ProcGrammarActions {
 
 sub showHeader {
   my $t = DateTime.now;
-  #T.clear-screen;
+  T.clear-screen;
   T.print-string(
     0,
     0,
-    "Checking GTK-Plus Processes every { $*i } seconds"
+    "Checking GTK-Plus Processes every { $int } seconds"
   );
   T.print-string(T.columns - $t.Str.chars - 2, 0, $t.Str);
   $*row = 2;
@@ -88,31 +87,34 @@ sub showHeader {
 
 sub displayProcesses {
   $*row++;
-  %procs<running>.append: %procs<started> if %procs<started>.elems;
-  for %procs<runnng>.keys.sort {
+  %procs<running>.append: %procs<started>.pairs if %procs<started>.elems;
+  for %procs<running>.keys.sort {
     T.print-string(0, ++$*row, $_);
-    T.print-string(10,  $*row, $_<time>);
-    T.print-string(20,  $*row, $_<process>);
+    T.print-string(10,  $*row, %procs<running>{$_}<time>);
+    T.print-string(20,  $*row, %procs<running>{$_}<process>);
   }
-  for %procs<exited> {
-    %procs.<running>{$_}:delete;
-  }
-  %procs<exited> = {};
+  $l.protect({
+    for %procs<exited>.keys {
+      %procs.<running>{$_}:delete;
+    }
+    %procs<started> = {};
+    %procs<exited> = {};
+  });
 }
 
 sub processList {
   my $*row;
-  #showHeader;
-  #displayProcesses if %procs<running>.elems;
-  Dump %procs;
+  showHeader;
+  displayProcesses if %procs<running>.elems || %procs<started>.elems;
 }
 
 sub MAIN (Int :$interval = 3) {
-  #T.initialize-screen;
   my $proc = Proc::Async.new: :r, <forkstat -e exec,exit -l>;
-  my $*i = $interval;
+  $int = $interval;
+  T.initialize-screen;
+  $l = Lock.new;
 
-  $*SCHEDULER.cue({ say "PROCESSING!"; processList }, every => $*i);
+  $*SCHEDULER.cue(&processList, every => $int);
   react {
     # split input on \r\n, \n, and \r
     whenever $proc.stdout.lines {
@@ -125,7 +127,7 @@ sub MAIN (Int :$interval = 3) {
     }
     whenever signal(SIGTERM) | signal(SIGINT) {
       once {
-        #T.shutdown-screen;
+        T.shutdown-screen;
         #say ‘Signal received, asking the process to stop’;
         $proc.kill; # sends SIGHUP, change appropriately
         # whenever signal($_).zip: Promise.in(2).Supply {
