@@ -1,7 +1,7 @@
 use v6.c;
 
 use Terminal::Print <T>;
-use Data::Dump::Tree;
+use Data::Dump;
 
 my %procs = (
   running => {},
@@ -38,37 +38,33 @@ my grammar ProcGrammar {
 }
 
 class ProcGrammarActions {
-  method procline($/) {
+  # Action classes should use $/ is copy as parameter if performing further
+  # match operations.
+  method procline($/ is copy) {
     my $pid = $/<pid>.Str.trim.Int;
     my $event = $/<event>.Str.trim;
     my $time = $/<time>.Str.trim;
     my $process = $/<process>.Str.trim;
 
-    # When inside of an action class, you should always assign your match
-    # operations.s
-    my $match = $process ~~ m/ 'moar' | 'perl6' /;
-
-    # cw: Replace this filter with one of your own!
-    if $match {
-      given $event.trim {
-        when 'fork' | 'exec' | 'clone' {
+    given $event.trim {
+      when 'fork' | 'exec' | 'clone' {
+        # cw: Replace this filter with one of your own!
+        $process ~~ m/ 'rakudobrew/bin/perl6' /;
+        if $/.defined {
           unless %procs<running>{$pid}:exists or %procs<started>{$pid}:exists {
+            "$pid $process".say;
             %procs<started>{$pid} = {
               pid     => $pid,
-              process => $/<process>.made,
+              process => $process.Str.split(/ \s+ /)[*-1],
               time    => $time
             };
           }
         }
-        when 'exit' {
-          %procs<ended>{$pid} = 1;
-        }
+      }
+      when 'exit' {
+        %procs<ended>{$pid} = 1;
       }
     }
-  }
-  method process($/) {
-    my $proc = $/.Str.trim;
-    make $proc.Str.split(/ \s+ /)[*-1];
   }
 }
 
@@ -92,50 +88,50 @@ sub showHeader {
 
 sub displayProcesses {
   $*row++;
-  #ddt %procs;
   %procs<running>.append: %procs<started> if %procs<started>.elems;
   for %procs<runnng>.keys.sort {
     T.print-string(0, ++$*row, $_);
     T.print-string(10,  $*row, $_<time>);
     T.print-string(20,  $*row, $_<process>);
-    #ddt $_;
   }
   for %procs<exited> {
     %procs.<running>{$_}:delete;
   }
+  %procs<exited> = {};
 }
 
 sub processList {
   my $*row;
   #showHeader;
   #displayProcesses if %procs<running>.elems;
-  ddt %procs;
-  sleep $*i;
+  Dump %procs;
 }
 
 sub MAIN (Int :$interval = 3) {
   #T.initialize-screen;
-  my $proc = Proc::Async.new: :r, <stdbuf -oL forkstat>;
+  my $proc = Proc::Async.new: :r, <forkstat -e exec,exit -l>;
   my $*i = $interval;
 
+  $*SCHEDULER.cue({ say "PROCESSING!"; processList }, every => $*i);
   react {
-    whenever $proc.stdout.lines { # split input on \r\n, \n, and \r
+    # split input on \r\n, \n, and \r
+    whenever $proc.stdout.lines {
       ProcGrammar.parse( $_, actions => ProcGrammarActions );
     }
     whenever $proc.start {
-        $*SCHEDULER.cue(&processList, every => $*i);
         say ‘Proc finished: exitcode=’, .exitcode, ‘ signal=’, .signal;
-        done # gracefully jump from the react block
+        # gracefully jump from the react block
+        done
     }
     whenever signal(SIGTERM) | signal(SIGINT) {
       once {
         #T.shutdown-screen;
-        say ‘Signal received, asking the process to stop’;
+        #say ‘Signal received, asking the process to stop’;
         $proc.kill; # sends SIGHUP, change appropriately
-        whenever signal($_).zip: Promise.in(2).Supply {
-            say ‘Kill it!’;
-            $proc.kill: SIGKILL
-        }
+        # whenever signal($_).zip: Promise.in(2).Supply {
+        #     say ‘Kill it!’;
+        #     $proc.kill: SIGKILL
+        # }
       }
     }
   }
