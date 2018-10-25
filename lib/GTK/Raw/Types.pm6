@@ -978,6 +978,8 @@ class GtkNotebook             is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkOffscreen            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkOrientable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkOverlay              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPageSetup            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPaperSize            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPaned                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPlacesSidebar        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPopover              is repr('CPointer') does GTK::Roles::Pointers is export { }

@@ -527,6 +527,12 @@ our enum PangoVariant is export <
   PANGO_VARIANT_SMALL_CAPS
 >;
 
+our enum GKeyFileFlags is export (
+  G_KEY_FILE_NONE              => 0,
+  G_KEY_FILE_KEEP_COMMENTS     => 1,
+  G_KEY_FILE_KEEP_TRANSLATIONS => 2
+);
+
 
 class cairo_font_options_t  is repr('CPointer') is export { }
 class cairo_surface_t       is repr('CPointer') is export { }
@@ -554,6 +560,7 @@ class GFunc                 is repr('CPointer') is export { }
 class GHashTable            is repr('CPointer') is export { }
 class GIcon                 is repr('CPointer') is export { }
 class GInputStream          is repr('CPointer') is export { }
+class GKeyFile              is repr('CPointer') is export { }
 class GListModel            is repr('CPointer') is export { }
 class GMarkupParser         is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
