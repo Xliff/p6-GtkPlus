@@ -182,9 +182,6 @@ our $ui-template is export = q:to/TEMPLATE/;
             <property name="yalign">0</property>
             <property name="label" translatable="0">Message</property>
             <property name="wrap">1</property>
-            <accessibility>
-              <role type="static"/>
-            </accessibility>
           </object>
           <packing>
             <property name="left-attach">1</property>
@@ -261,7 +258,7 @@ our $ui-template is export = q:to/TEMPLATE/;
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkButton" id="favorite-buttton-r%%%">
+                  <object class="GtkButton" id="favorite-button-r%%%">
                     <property name="label" translatable="yes">Favorite</property>
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
@@ -277,7 +274,7 @@ our $ui-template is export = q:to/TEMPLATE/;
                     <property name="can-focus">1</property>
                     <property name="receives-default">1</property>
                     <property name="relief">none</property>
-                    <property name="popup">menu1</property>
+                    <property name="popup">menu1-r%%%</property>
                     <child>
                       <object class="GtkLabel" id="label7-r%%%">
                         <property name="label" translatable="yes">More...</property>

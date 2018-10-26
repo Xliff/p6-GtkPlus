@@ -48,15 +48,23 @@ class ProcGrammarActions {
     given $event.trim {
       when 'fork' | 'exec' | 'clone' {
         # cw: Replace this filter with one of your own!
-        $process ~~ m/ 'rakudobrew/bin/perl6' /;
-        if $/.defined {
-          unless %procs<running>{$pid}:exists or %procs<started>{$pid}:exists {
-            %procs<started>{$pid} = {
-              pid     => $pid,
-              process => $process.Str.split(/ \s+ /)[*-1],
-              time    => $time
-            };
+        my $process-shortname = do given $process {
+          when  / 'rakudobrew/bin/perl6' / {
+            $process.Str.split(/ \s+ /)[*-1]
           }
+          when / 'rakudobrew/moar-master/install/bin/moar' / {
+            / '(' ( (\w+)+ %% '::' ) ')' / ??
+              $/[0]
+              !!
+              $process.Str.split(/ \s+ /)[*-1];
+          }
+        }
+        unless %procs<running>{$pid}:exists or %procs<started>{$pid}:exists {
+          %procs<started>{$pid} = {
+            pid     => $pid,
+            process => $process-shortname,
+            time    => $time
+          };
         }
       }
       when 'exit' {
@@ -81,9 +89,9 @@ sub showHeader {
   );
   T.print-string(T.columns - $t.Str.chars - 2, 0, $t.Str);
   $*row = 2;
-  mq(0, $*row, 'PID');
-  mq(0, $*row, 'Time');
-  mq(0, $*row, 'Process');
+  mq( 0, $*row, 'PID');
+  mq(10, $*row, 'Time');
+  mq(20, $*row, 'Process');
 }
 
 sub checkRunningProcs {

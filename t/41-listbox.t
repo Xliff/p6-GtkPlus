@@ -3,9 +3,12 @@ use v6.c;
 use lib <t .>;
 
 use DateTime::Format;
+use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Application;
 use listbox_test;
+
+use NativeCall;
 
 my (%messages, $avatar_other);
 
@@ -45,14 +48,26 @@ sub new_row {
   # Needs GTK::Builder support, so test will need to be in the post 40s
   state $b = GTK::Builder.new;
   my ($ui, $c) = get-new-row-ui();
-  my $rid = "message_row_r{$c}";
+  my @rid = (
+#    "menu1-r{$c}",
+    "message_row_r{$c}"
+  );
 
-  say $ui;
+  # Proper way to handle a GError. Need a better way for client code to
+  # Access this.s
+  my $pge = Pointer[GError];
+  my $cge = CArray[Pointer[GError]].new;
+  $cge[0] = $pge;
+  try {
+    $b.add_from_string( $ui, -1, $cge );
+    CATCH {
+      default {
+        die "Error gist: " ~ $cge[0].deref.gist;
+      }
+    }
+  }
 
-  $b.add_objects_from_string( $ui, $rid.Array );
-
-  my $r = $b{$rid};
-
+  my $r = $b{@rid[0]};
   my $w = MessageWidgets.new;
   $w.content_label       = $b{"content_label-r{$c}"};
   $w.source_name         = $b{"source_name-r{$c}"};
@@ -76,7 +91,9 @@ sub new_row {
     %messages{$r}<data>.n_favorites++;
     row_update($r);
   });
-  $r.state-flags-changed.tap(-> $, $pf {
+  # Only gettingone argument, here?
+  $r.state-flags-changed.tap(-> $r, $pf {
+    $r.say;
     $w.extra_buttons_box.visible = $r.state_flags +&
       (GTK_STATE_FLAG_PRELIGHT +| GTK_STATE_FLAG_SELECTED);
     $r.state_flags = $pf;
@@ -143,6 +160,7 @@ $a.activate.tap({
 
   $a.window.title = 'List Box';
   $a.window.set_default_size(400, 600);
+  $a.window.add($vbox);
 
   $scrolled.set_policy(GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   $scrolled.vexpand = True;
@@ -150,6 +168,8 @@ $a.activate.tap({
 
   $vbox.pack_start($label);
   $vbox.pack_start($scrolled);
+
+  $a.window.show_all;
 
   # Fix when able
   # $listbox.set_sort_func(&sort-func);
@@ -159,15 +179,15 @@ $a.activate.tap({
   my $msg_file = 'messages.txt';
   $msg_file = 't/messages.txt' unless $msg_file.IO.e;
   for $msg_file.IO.open.slurp.lines {
-    my ($message, $row) = (new_message($_), new_row);
+    say "LINE: $_";
 
+    my ($message, $row) = (new_message($_), new_row);
     %messages{$row}<widgets> = $row;
     %messages{$row}<data> = $message;
     $listbox.add($row);
     $row.show;
   }
 
-  $a.window.show_all;
 });
 
 $a.run;

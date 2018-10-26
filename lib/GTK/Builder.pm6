@@ -66,7 +66,7 @@ class GTK::Builder does Associative {
         :widget( self.get_object($window-name) )
       ) with $window-name;
 
-# ONLY DO THIS IF BUILDER IS NOT ACTING AS A TEMPLATE!  
+# ONLY DO THIS IF BUILDER IS NOT ACTING AS A TEMPLATE!
 #
 #       die qq:to/ERR/ unless $!window;
 # Application window '#application' was not found. Please do one of the following:
@@ -247,14 +247,14 @@ class GTK::Builder does Associative {
   method add_from_string (
     Str() $buffer,
     $length?,
-    $error = GError
+    $error = CArray[Pointer[GError]]
   ) {
     with $length {
       die '$length cannot be negative' unless $length > -2;
     }
     with $error {
       die '$error must be a GError object or pointer'
-        unless $error ~~ GError;
+        unless $error ~~ CArray;
     }
 
     my gsize $l = $length // $buffer.chars;
@@ -289,7 +289,7 @@ class GTK::Builder does Associative {
 
   multi method add_objects_from_string (
     Str() $buffer,
-    @object_ids
+    @object_ids = ()
   ) {
     samewith($buffer, -1, @object_ids);
   }
@@ -297,9 +297,10 @@ class GTK::Builder does Associative {
     Str() $buffer,
     Int() $length,
     @object_ids,
-    GError $error = GError
+    CArray[Pointer[GError]] $error
   ) {
-    die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
+    die '@objects must be a list of strings'
+      unless @object_ids.elems.not || @object_ids.all ~~ Str;
     die '$length cannot be negative' unless $length > -2;
 
     my gsize $l = $length;
@@ -312,9 +313,9 @@ class GTK::Builder does Associative {
       $oi,
       $error
     );
-    # Turn into a catchable exception!
-    die 'Failed to process UI file.' unless $rc;
+    say "RC: { $rc }";
     self!postProcess(:ui_def($buffer));
+    $rc;
   }
 
   method connect_signals (gpointer $user_data) {
