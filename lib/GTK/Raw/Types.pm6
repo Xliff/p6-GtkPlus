@@ -52,6 +52,7 @@ our constant GtkListBoxUpdateHeaderFunc       is export := Pointer;
 our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkRecentFilterFunc              is export := Pointer;
+our constant GtkPageSetupDoneFunc             is export := Pointer;
 our constant GtkPrintSettingsFunc             is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
@@ -892,6 +893,32 @@ our enum GtkTextExtendSelection is export <
   GTK_TEXT_EXTEND_SELECTION_LINE
 >;
 
+our enum GtkPrintStatus is export <
+  GTK_PRINT_STATUS_INITIAL
+  GTK_PRINT_STATUS_PREPARING
+  GTK_PRINT_STATUS_GENERATING_DATA
+  GTK_PRINT_STATUS_SENDING_DATA
+  GTK_PRINT_STATUS_PENDING
+  GTK_PRINT_STATUS_PENDING_ISSUE
+  GTK_PRINT_STATUS_PRINTING
+  GTK_PRINT_STATUS_FINISHED
+  GTK_PRINT_STATUS_FINISHED_ABORTED
+>;
+
+our enum GtkPrintOperationResult is export <
+  GTK_PRINT_OPERATION_RESULT_ERROR
+  GTK_PRINT_OPERATION_RESULT_APPLY
+  GTK_PRINT_OPERATION_RESULT_CANCEL
+  GTK_PRINT_OPERATION_RESULT_IN_PROGRESS
+>;
+
+enum GtkPrintOperationAction is export <
+  GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG
+  GTK_PRINT_OPERATION_ACTION_PRINT
+  GTK_PRINT_OPERATION_ACTION_PREVIEW
+  GTK_PRINT_OPERATION_ACTION_EXPORT
+>;
+
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -988,6 +1015,7 @@ class GtkPaperSize            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkPaned                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPlacesSidebar        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPopover              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPrintOperation       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintSettings        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkProgressBar          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRadioButton          is repr('CPointer') does GTK::Roles::Pointers is export { }

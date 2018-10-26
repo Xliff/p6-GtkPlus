@@ -22,19 +22,28 @@ sub gtk_print_settings_foreach (
   is export
   { * }
 
-sub gtk_print_settings_get (GtkPrintSettings $settings, gchar $key)
+sub gtk_print_settings_get (
+  GtkPrintSettings $settings,
+  gchar $key
+)
   returns Str
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_print_settings_get_bool (GtkPrintSettings $settings, gchar $key)
+sub gtk_print_settings_get_bool (
+  GtkPrintSettings $settings,
+  gchar $key
+)
   returns uint32
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_print_settings_get_double (GtkPrintSettings $settings, gchar $key)
+sub gtk_print_settings_get_double (
+  GtkPrintSettings $settings,
+  gchar $key
+)
   returns gdouble
   is native('gtk-3')
   is export
@@ -50,7 +59,10 @@ sub gtk_print_settings_get_double_with_default (
   is export
   { * }
 
-sub gtk_print_settings_get_int (GtkPrintSettings $settings, gchar $key)
+sub gtk_print_settings_get_int (
+  GtkPrintSettings $settings,
+  gchar $key
+)
   returns gint
   is native('gtk-3')
   is export
@@ -69,7 +81,7 @@ sub gtk_print_settings_get_int_with_default (
 sub gtk_print_settings_get_length (
   GtkPrintSettings $settings,
   gchar $key,
-  GtkUnit $unit
+  uint32 $unit                # GtkUnit $unit
 )
   returns gdouble
   is native('gtk-3')
@@ -87,7 +99,7 @@ sub gtk_print_settings_get_page_ranges (
 
 sub gtk_print_settings_get_paper_height (
   GtkPrintSettings $settings,
-  GtkUnit $unit
+  uint32 $unit               # GtkUnit $unit
 )
   returns gdouble
   is native('gtk-3')
@@ -96,20 +108,24 @@ sub gtk_print_settings_get_paper_height (
 
 sub gtk_print_settings_get_paper_width (
   GtkPrintSettings $settings,
-  GtkUnit $unit
+  uint32 $unit                # GtkUnit $unit
 )
   returns gdouble
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_print_settings_get_resolution_x (GtkPrintSettings $settings)
+sub gtk_print_settings_get_resolution_x (
+  GtkPrintSettings $settings
+)
   returns gint
   is native('gtk-3')
   is export
   { * }
 
-sub gtk_print_settings_get_resolution_y (GtkPrintSettings $settings)
+sub gtk_print_settings_get_resolution_y (
+  GtkPrintSettings $settings
+)
   returns gint
   is native('gtk-3')
   is export
@@ -121,7 +137,10 @@ sub gtk_print_settings_get_type ()
   is export
   { * }
 
-sub gtk_print_settings_has_key (GtkPrintSettings $settings, gchar $key)
+sub gtk_print_settings_has_key (
+  GtkPrintSettings $settings,
+  gchar $key
+)
   returns uint32
   is native('gtk-3')
   is export
@@ -154,7 +173,10 @@ sub gtk_print_settings_new ()
   is export
   { * }
 
-sub gtk_print_settings_new_from_file (gchar $file_name, GError $error)
+sub gtk_print_settings_new_from_file (
+  gchar $file_name,
+  GError $error
+)
   returns GtkPrintSettings
   is native('gtk-3')
   is export
@@ -216,7 +238,7 @@ sub gtk_print_settings_set_length (
   GtkPrintSettings $settings,
   gchar $key,
   gdouble $value,
-  GtkUnit $unit
+  uint32 $unit                # GtkUnit $unit
 )
   is native('gtk-3')
   is export
@@ -234,7 +256,7 @@ sub gtk_print_settings_set_page_ranges (
 sub gtk_print_settings_set_paper_height (
   GtkPrintSettings $settings,
   gdouble $height,
-  GtkUnit $unit
+  uint32 $unit                # GtkUnit $unit
 )
   is native('gtk-3')
   is export
@@ -243,7 +265,7 @@ sub gtk_print_settings_set_paper_height (
 sub gtk_print_settings_set_paper_width (
   GtkPrintSettings $settings,
   gdouble $width,
-  GtkUnit $unit
+  uint32 $unit                # GtkUnit $unit
 )
   is native('gtk-3')
   is export
@@ -283,7 +305,10 @@ sub gtk_print_settings_to_key_file (
   is export
   { * }
 
-sub gtk_print_settings_unset (GtkPrintSettings $settings, gchar $key)
+sub gtk_print_settings_unset (
+  GtkPrintSettings $settings,
+  gchar $key
+)
   is native('gtk-3')
   is export
   { * }
@@ -295,7 +320,7 @@ sub gtk_print_settings_get_reverse (GtkPrintSettings $settings)
   { * }
 
 sub gtk_print_settings_get_print_pages (GtkPrintSettings $settings)
-  returns GtkPrintPages
+  returns uint32 # GtkPrintPages
   is native('gtk-3')
   is export
   { * }
@@ -313,7 +338,7 @@ sub gtk_print_settings_get_finishings (GtkPrintSettings $settings)
   { * }
 
 sub gtk_print_settings_get_duplex (GtkPrintSettings $settings)
-  returns GtkPrintDuplex
+  returns uint32 # GtkPrintDuplex
   is native('gtk-3')
   is export
   { * }
@@ -342,8 +367,10 @@ sub gtk_print_settings_get_media_type (GtkPrintSettings $settings)
   is export
   { * }
 
-sub gtk_print_settings_get_number_up_layout (GtkPrintSettings $settings)
-  returns GtkNumberUpLayout
+sub gtk_print_settings_get_number_up_layout (
+  GtkPrintSettings $settings
+)
+  returns uint32 # GtkNumberUpLayout
   is native('gtk-3')
   is export
   { * }
@@ -361,13 +388,13 @@ sub gtk_print_settings_get_printer_lpi (GtkPrintSettings $settings)
   { * }
 
 sub gtk_print_settings_get_paper_size (GtkPrintSettings $settings)
-  returns GtkPaperSize
+  returns uint32 # GtkPaperSize
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_print_settings_get_quality (GtkPrintSettings $settings)
-  returns GtkPrintQuality
+  returns uint32 # GtkPrintQuality
   is native('gtk-3')
   is export
   { * }
@@ -385,7 +412,7 @@ sub gtk_print_settings_get_printer (GtkPrintSettings $settings)
   { * }
 
 sub gtk_print_settings_get_orientation (GtkPrintSettings $settings)
-  returns GtkPageOrientation
+  returns uint32 # GtkPageOrientation
   is native('gtk-3')
   is export
   { * }
@@ -396,14 +423,16 @@ sub gtk_print_settings_get_resolution (GtkPrintSettings $settings)
   is export
   { * }
 
-sub gtk_print_settings_get_default_source (GtkPrintSettings $settings)
+sub gtk_print_settings_get_default_source (
+  GtkPrintSettings $settings
+)
   returns Str
   is native('gtk-3')
   is export
   { * }
 
 sub gtk_print_settings_get_page_set (GtkPrintSettings $settings)
-  returns GtkPageSet
+  returns uint32 # GtkPageSet
   is native('gtk-3')
   is export
   { * }
@@ -424,7 +453,7 @@ sub gtk_print_settings_set_reverse (
 
 sub gtk_print_settings_set_print_pages (
   GtkPrintSettings $settings,
-  GtkPrintPages $pages
+  uint32 $pages               # GtkPrintPages $pages
 )
   is native('gtk-3')
   is export
@@ -448,7 +477,7 @@ sub gtk_print_settings_set_finishings (
 
 sub gtk_print_settings_set_duplex (
   GtkPrintSettings $settings,
-  GtkPrintDuplex $duplex
+  uint32 $duplex              # GtkPrintDuplex $duplex
 )
   is native('gtk-3')
   is export
@@ -488,7 +517,7 @@ sub gtk_print_settings_set_media_type (
 
 sub gtk_print_settings_set_number_up_layout (
   GtkPrintSettings $settings,
-  GtkNumberUpLayout $number_up_layout
+  uint32 $nul                 # GtkNumberUpLayout $nul
 )
   is native('gtk-3')
   is export
@@ -520,7 +549,7 @@ sub gtk_print_settings_set_paper_size (
 
 sub gtk_print_settings_set_quality (
   GtkPrintSettings $settings,
-  GtkPrintQuality $quality
+  uint32 $quality             # GtkPrintQuality $quality
 )
   is native('gtk-3')
   is export
@@ -544,7 +573,7 @@ sub gtk_print_settings_set_printer (
 
 sub gtk_print_settings_set_orientation (
   GtkPrintSettings $settings,
-  GtkPageOrientation $orientation
+  uint32 $o                   # GtkPageOrientation $orientation
 )
   is native('gtk-3')
   is export
@@ -568,7 +597,7 @@ sub gtk_print_settings_set_default_source (
 
 sub gtk_print_settings_set_page_set (
   GtkPrintSettings $settings,
-  GtkPageSet $page_set
+  uint32 $ps                  # GtkPageSet $page_set
 )
   is native('gtk-3')
   is export
