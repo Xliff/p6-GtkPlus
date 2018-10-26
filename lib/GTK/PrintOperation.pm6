@@ -7,11 +7,13 @@ use GTK::Compat::Types;
 use GTK::Raw::PrintOperation;
 use GTK::Raw::Types;
 
-use GTK::Roles::Types;
 use GTK::Roles::Properties;
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Types;
 
 class GTK::PrintOperation {
   also does GTK::Roles::Properties;
+  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkPrintOperation $!po;
@@ -33,6 +35,84 @@ class GTK::PrintOperation {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+  # Is originally:
+  # GtkPrintOperation, GtkPrintContext, gpointer --> void
+  method begin-print {
+    self.connect($!po, 'begin-print');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, gpointer --> GObject
+  method create-custom-widget {
+    self.connect($!po, 'create-custom-widget');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, GtkWidget, gpointer --> void
+  method custom-widget-apply {
+    self.connect($!po, 'custom-widget-apply');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, uint32 (GtkPrintOperationResult), gpointer --> void
+  method done {
+    self.connect-uint($!po, 'done');
+  }
+
+  # Is originally:
+  # GtkPrintContext, gint, gpointer --> void
+  method draw-page {
+    self.connect-int($!po, 'draw-page');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, GtkPrintContext, gpointer --> void
+  method end-print {
+    self.connect($!po, 'end-print');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, GtkPrintContext, gpointer --> gboolean
+  method paginate {
+    self.connect($!po, 'paginate');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, GtkPrintOperationPreview, GtkPrintContext, GtkWindow, gpointer --> gboolean
+  method preview {
+    self.connect($!po, 'preview');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, GtkPrintContext, gint, GtkPageSetup, gpointer --> void
+  method request-page-setup {
+    self.connect($!po, 'request-page-setup');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, gpointer --> void
+  method status-changed {
+    self.connect($!po, 'status-changed');
+  }
+
+  # Is originally:
+  # GtkPrintOperation, GtkWidget, GtkPageSetup, GtkPrintSettings, gpointer --> void
+  method update-custom-widget {
+    self.connect($!po, 'update-custom-widget');
+  }
+
+  # Is originally:
+  # GtkPrintOperationPreview, GtkPrintContext, GtkPageSetup, gpointer --> void
+  method got-page-size {
+    self.connect($!po, 'got-page-size');
+  }
+
+  # Is originally:
+  # GtkPrintOperationPreview, GtkPrintContext, gpointer --> void
+  method ready {
+    self.connect($!po, 'ready');
+  }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
