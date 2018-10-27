@@ -194,6 +194,7 @@ GTK::Roles::Signals::Menu
 GTK::Roles::Signals::MenuShell
 GTK::Roles::Signals::Overlay
 GTK::Roles::Signals::Places
+GTK::Roles::Signals::PrintOperation
 GTK::Roles::Signals::Range
 GTK::Roles::Signals::Scale
 GTK::Roles::Signals::ScrolledWindow

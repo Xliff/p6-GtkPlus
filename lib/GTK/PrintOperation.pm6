@@ -9,17 +9,23 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::PrintOperation;
 use GTK::Roles::Types;
 
 class GTK::PrintOperation {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::PrintOperation;
   also does GTK::Roles::Types;
 
   has GtkPrintOperation $!po;
 
   submethod BUILD(:$op) {
     $!po = $op;
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals, %!signals-po;
   }
 
   multi method new (GtkPrintOperation $op) {
@@ -38,7 +44,7 @@ class GTK::PrintOperation {
   # Is originally:
   # GtkPrintOperation, GtkPrintContext, gpointer --> void
   method begin-print {
-    self.connect($!po, 'begin-print');
+    self.connect-printcontext($!po, 'begin-print');
   }
 
   # Is originally:
@@ -50,7 +56,7 @@ class GTK::PrintOperation {
   # Is originally:
   # GtkPrintOperation, GtkWidget, gpointer --> void
   method custom-widget-apply {
-    self.connect($!po, 'custom-widget-apply');
+    self.connect-widget($!po, 'custom-widget-apply');
   }
 
   # Is originally:
@@ -68,19 +74,19 @@ class GTK::PrintOperation {
   # Is originally:
   # GtkPrintOperation, GtkPrintContext, gpointer --> void
   method end-print {
-    self.connect($!po, 'end-print');
+    self.connect-printcontext($!po, 'end-print');
   }
 
   # Is originally:
   # GtkPrintOperation, GtkPrintContext, gpointer --> gboolean
   method paginate {
-    self.connect($!po, 'paginate');
+    self.connect-printcontext-rbool($!po, 'paginate');
   }
 
   # Is originally:
   # GtkPrintOperation, GtkPrintOperationPreview, GtkPrintContext, GtkWindow, gpointer --> gboolean
   method preview {
-    self.connect($!po, 'preview');
+    self.connect-preview($!po);
   }
 
   # Is originally:
@@ -110,7 +116,7 @@ class GTK::PrintOperation {
   # Is originally:
   # GtkPrintOperationPreview, GtkPrintContext, gpointer --> void
   method ready {
-    self.connect($!po, 'ready');
+    self.connect-printcontext($!po, 'ready');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
