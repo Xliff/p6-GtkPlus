@@ -53,6 +53,7 @@ our constant GtkMenuDetachFunc                is export := Pointer;
 our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkRecentFilterFunc              is export := Pointer;
 our constant GtkPageSetupDoneFunc             is export := Pointer;
+our constant GtkPrinterFunc                   is export := Pointer;
 our constant GtkPrintSettingsFunc             is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
@@ -919,6 +920,19 @@ enum GtkPrintOperationAction is export <
   GTK_PRINT_OPERATION_ACTION_EXPORT
 >;
 
+our enum GtkPrintCapabilities is export (
+  GTK_PRINT_CAPABILITY_PAGE_SET         => 1,
+  GTK_PRINT_CAPABILITY_COPIES           => 1 +< 1,
+  GTK_PRINT_CAPABILITY_COLLATE          => 1 +< 2,
+  GTK_PRINT_CAPABILITY_REVERSE          => 1 +< 3,
+  GTK_PRINT_CAPABILITY_SCALE            => 1 +< 4,
+  GTK_PRINT_CAPABILITY_GENERATE_PDF     => 1 +< 5,
+  GTK_PRINT_CAPABILITY_GENERATE_PS      => 1 +< 6,
+  GTK_PRINT_CAPABILITY_PREVIEW          => 1 +< 7,
+  GTK_PRINT_CAPABILITY_NUMBER_UP        => 1 +< 8,
+  GTK_PRINT_CAPABILITY_NUMBER_UP_LAYOUT => 1 +< 9
+);
+
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -1015,6 +1029,8 @@ class GtkPaperSize            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkPaned                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPlacesSidebar        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPopover              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPrinter              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPrintBackend         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintContext         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintOperation       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintSettings        is repr('CPointer') does GTK::Roles::Pointers is export { }

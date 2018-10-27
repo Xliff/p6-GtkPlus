@@ -67,16 +67,17 @@ sub MAIN ($control, :$var = 'w') {
       if $u eq 'char' {
         $u = 'string';
       }
-      $vtype-r = '        $gv.get_' ~ $u ~ ';';
-      $vtype-w = '$gv.set_' ~ $u ~ '($val);';
+      $vtype-r = '        $gv.' ~ $u ~ ';';
+      $vtype-w = '$gv.' ~ $u ~ ' = $val;';
     } else {
-      $vtype-r = '        #$gv.get_TYPE';
-      $vtype-w = '#$gv.set_TYPE($val);';
+      $vtype-r = '        #$gv.TYPE';
+      $vtype-w = '#$gv.TYPE = $val;';
     }
     with $rw {
       %c<read> =
-        '$gv = GTK::Compat::Value.new( self.prop_get( ' ~
-        "\$!{ $var }, \'{ $mn }\', \$gv) );\n" ~
+        '$gv = GTK::Compat::Value.new(' ~
+        "\n\t  " ~ "self.prop_get(\$!{ $var }, '{ $mn }', \$gv)\n" ~
+        "\t);\n" ~
         $vtype-r
       if $rw.any eq 'Read';
       %c<write> =
