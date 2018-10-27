@@ -1034,6 +1034,7 @@ class GtkOffscreen            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkOrientable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkOverlay              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPageSetup            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPageSetupUnixDialog  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPaperSize            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPaned                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPlacesSidebar        is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -1041,6 +1042,7 @@ class GtkPopover              is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkPrinter              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintBackend         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintContext         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPrintUnixDialog      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintJob             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintOperation       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintSettings        is repr('CPointer') does GTK::Roles::Pointers is export { }

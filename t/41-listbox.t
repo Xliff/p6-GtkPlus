@@ -74,8 +74,6 @@ sub new_row {
   $w.n_reshares_label    = $b{"n_reshares_label-r{ $c }"};
   $w.n_favorites_label   = $b{"n_favorites_label-r{ $c }"};
 
-  $r.show_all;
-
   $b{"reshare-button-r{$c}"}.clicked.tap({
     %messages{$r}<data>.n_reshares++;
     row_update($r);

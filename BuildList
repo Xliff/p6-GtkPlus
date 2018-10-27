@@ -32,6 +32,8 @@ GTK::Dialog::Raw::AppChooser
 GTK::Dialog::Raw::ColorChooser
 GTK::Dialog::Raw::FontChooser
 GTK::Dialog::Raw::Message
+GTK::Dialog::Raw::PageSetupUnix
+GTK::Dialog::Raw::PrintUnix
 GTK::Raw::AccelGroup
 GTK::Raw::AccelLabel
 GTK::Raw::ActionBar
@@ -115,6 +117,7 @@ GTK::Raw::PaperSize
 GTK::Raw::Places
 GTK::Raw::Popover
 GTK::Raw::PrintContext
+GTK::Raw::PrintJob
 GTK::Raw::PrintOperation
 GTK::Raw::PrintSettings
 GTK::Raw::Printer
@@ -268,6 +271,7 @@ GTK::ListStore
 GTK::Notebook
 GTK::PageSetup
 GTK::Pane
+GTK::PrintJob
 GTK::PrintOperation
 GTK::Printer
 GTK::ProgressBar
@@ -345,6 +349,8 @@ GTK::Dialog::ColorChooser
 GTK::Dialog::FileChooser
 GTK::Dialog::FontChooser
 GTK::Dialog::Message
+GTK::Dialog::PageSetupUnix
+GTK::Dialog::PrintUnix
 GTK::FlowBox
 GTK::ListBox
 GTK::Menu
