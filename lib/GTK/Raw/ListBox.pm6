@@ -201,7 +201,7 @@ sub gtk_list_box_row_get_selectable (GtkListBoxRow $row)
   { * }
 
 sub gtk_list_box_get_selection_mode (GtkListBox $box)
-  returns GtkSelectionMode
+  returns uint32 # GtkSelectionMode
   is native('gtk-3')
   is export
   { * }

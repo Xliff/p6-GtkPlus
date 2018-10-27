@@ -230,24 +230,26 @@ class GTK::Builder does Associative {
 
   method add_from_file (
     Str() $filename,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   ) {
     gtk_builder_add_from_file($!b, $filename, $error);
+    $ERROR = $error if $error[0].defined;
     self!postProcess(:file($filename));
   }
 
   method add_from_resource (
     Str() $resource_path,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   ) {
     gtk_builder_add_from_resource($!b, $resource_path, $error);
+    $ERROR = $error if $error[0].defined;
     self!postProcess(:resource($resource_path));
   }
 
   method add_from_string (
     Str() $buffer,
-    $length?,
-    $error = CArray[Pointer[GError]]
+    $length,
+    CArray[Pointer[GError]] $error #= gerror
   ) {
     with $length {
       die '$length cannot be negative' unless $length > -2;
@@ -260,30 +262,33 @@ class GTK::Builder does Associative {
     my gsize $l = $length // $buffer.chars;
     my $rc = gtk_builder_add_from_string($!b, $buffer, $l, $error);
     self!postProcess(:ui_def($buffer));
+    #$ERROR = $error if $error[0].defined;
     $rc;
   }
 
   method add_objects_from_file (
     Str() $filename,
     @object_ids,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   ) {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     $oi[$++] = $_ for @object_ids;
     gtk_builder_add_objects_from_file($!b, $filename, $oi, $error);
+    $ERROR = $error if $error[0].defined;
     #self!postHandle;
   }
 
   method add_objects_from_resource (
     Str() $resource_path,
     @object_ids,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   ) {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     $oi[$++] = $_ for @object_ids;
     gtk_builder_add_objects_from_resource($!b, $resource_path, $oi, $error);
+    $ERROR = $error if $error[0].defined;
     #self!postProcess;
   }
 
@@ -297,7 +302,7 @@ class GTK::Builder does Associative {
     Str() $buffer,
     Int() $length,
     @object_ids,
-    CArray[Pointer[GError]] $error
+    CArray[Pointer[GError]] $error = gerror
   ) {
     die '@objects must be a list of strings'
       unless @object_ids.elems.not || @object_ids.all ~~ Str;
@@ -313,7 +318,7 @@ class GTK::Builder does Associative {
       $oi,
       $error
     );
-    say "RC: { $rc }";
+    $ERROR = $error if $error[0].defined;
     self!postProcess(:ui_def($buffer));
     $rc;
   }
@@ -342,13 +347,14 @@ class GTK::Builder does Associative {
     GType $template_type,
     Str() $buffer,
     Int() $length,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   ) {
     die '$length cannot be negative' unless $length > -2;
     my gsize $l = $length;
     gtk_builder_extend_with_template(
       $!b, $widget, $template_type, $buffer, $l, $error
     );
+    $ERROR = $error if $error[0].defined;
     self!postProcess;
   }
 
@@ -377,18 +383,20 @@ class GTK::Builder does Associative {
     GParamSpec $pspec,
     Str() $string,
     GValue $value,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   ) {
     gtk_builder_value_from_string($!b, $pspec, $string, $value, $error);
+    $ERROR = $error if $error[0].defined;
   }
 
   method value_from_string_type (
     GType $type,
     Str() $string,
     GValue $value,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   ) {
     gtk_builder_value_from_string_type($!b, $type, $string, $value, $error);
+    $ERROR = $error if $error[0].defined;
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑

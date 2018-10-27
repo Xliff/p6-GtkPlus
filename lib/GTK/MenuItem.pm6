@@ -78,7 +78,7 @@ class GTK::MenuItem is GTK::Bin {
     my $menuitem = gtk_menu_item_new();
     self.bless(:$menuitem);
   }
-  multi method new (GtkWidget $menuitem) {
+  multi method new (Ancestry $menuitem) {
     self.bless(:$menuitem);
   }
   multi method new(

@@ -75,7 +75,7 @@ sub load_at_scale (
   gint $width,
   gint $height,
   gboolean $preserve_ar,
-  CArray[Pointer[GError]] $error = CArray[Pointer[GError]]
+  CArray[Pointer[GError]] $error = gerror
 )
   returns GdkPixbuf
   is symbol('gdk_pixbuf_new_from_file_at_scale')

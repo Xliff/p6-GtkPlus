@@ -10,7 +10,8 @@ use GTK::Bin;
 
 use GTK::Roles::Actionable;
 
-my subset Ancestry where GtkButton | GtkActionable | GtkWidget;
+my subset Ancestry
+  where GtkButton | GtkBuildable | GtkActionable | GtkWidget;
 
 class GTK::Button is GTK::Bin {
   also does GTK::Roles::Actionable;
@@ -47,6 +48,10 @@ class GTK::Button is GTK::Bin {
       }
       when GtkActionable {
         $!action //= nativecast(GtkActionable, $!b);    # GTK::Roles::Actionable
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkButton, $_);
+      }
+      when GtkBuildable {
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkButton, $_);
       }

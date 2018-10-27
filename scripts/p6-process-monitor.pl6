@@ -50,13 +50,16 @@ class ProcGrammarActions {
         # cw: Replace this filter with one of your own!
         my $process-shortname = do given $process {
           when  / 'rakudobrew/bin/perl6' / {
-            $process.Str.split(/ \s+ /)[*-1]
+            .split(/ \s+ /)[*-1] // 'Unknown P6 code'
           }
           when / 'rakudobrew/moar-master/install/bin/moar' / {
             / '(' ( (\w+)+ %% '::' ) ')' / ??
-              $/[0]
+              $/[0].Str
               !!
-              $process.Str.split(/ \s+ /)[*-1];
+              (.split(/ \s+ /)[*-1] // 'Unknown moar executable')
+          }
+          default {
+            .split(/ \s+ /)[*-1];
           }
         }
         unless %procs<running>{$pid}:exists or %procs<started>{$pid}:exists {
@@ -108,7 +111,7 @@ sub displayProcesses {
   for %procs<running>.keys.sort {
     T.print-string(0, ++$*row, $_);
     T.print-string(10,  $*row, %procs<running>{$_}<time>);
-    T.print-string(20,  $*row, %procs<running>{$_}<process>);
+    T.print-string(20,  $*row, %procs<running>{$_}<process> // 'Undefined');
   }
   $l.protect({
     for %procs<exited>.keys {

@@ -49,23 +49,15 @@ sub new_row {
   state $b = GTK::Builder.new;
   my ($ui, $c) = get-new-row-ui();
   my @rid = (
-#    "menu1-r{$c}",
-    "message_row_r{$c}"
+    "menu1-r{$c}",
+    "message_row_r{$c}",
+    "expand_button-r{$c}"
   );
 
   # Proper way to handle a GError. Need a better way for client code to
-  # Access this.s
-  my $pge = Pointer[GError];
-  my $cge = CArray[Pointer[GError]].new;
-  $cge[0] = $pge;
-  try {
-    $b.add_from_string( $ui, -1, $cge );
-    CATCH {
-      default {
-        die "Error gist: " ~ $cge[0].deref.gist;
-      }
-    }
-  }
+  # Access this.
+  $b.add_objects_from_string($ui, -1, @rid);
+  $ERROR[0].deref.gist.say if $ERROR.defined;
 
   my $r = $b{@rid[0]};
   my $w = MessageWidgets.new;
@@ -82,16 +74,18 @@ sub new_row {
   $w.n_reshares_label    = $b{"n_reshares_label-r{ $c }"};
   $w.n_favorites_label   = $b{"n_favorites_label-r{ $c }"};
 
-  $b{"expand_button-r{$c}"}.clicked.tap({ row-expand($r) });
+  $r.show_all;
+
   $b{"reshare-button-r{$c}"}.clicked.tap({
     %messages{$r}<data>.n_reshares++;
     row_update($r);
   });
+  $b{"expand_button-r{$c}"}.clicked.tap({ row-expand($r) });
   $b{"favorite-button-r{$c}"}.clicked.tap({
     %messages{$r}<data>.n_favorites++;
     row_update($r);
   });
-  # Only gettingone argument, here?
+  # Only getting one argument, here?
   $r.state-flags-changed.tap(-> $r, $pf {
     $r.say;
     $w.extra_buttons_box.visible = $r.state_flags +&

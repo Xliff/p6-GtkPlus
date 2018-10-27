@@ -11,6 +11,9 @@ use GTK::MenuShell;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Menu;
 
+my subset Ancestry
+  where GtkMenu | GtkMenuShell | GtkBuildable | GtkWidget;
+
 class GTK::Menu is GTK::MenuShell {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Menu;
@@ -26,9 +29,9 @@ class GTK::Menu is GTK::MenuShell {
   submethod BUILD(:$menu, :@items) {
     my $to-parent;
     given $menu {
-      when GtkMenu | GtkMenuShell | GtkWidget {
+      when Ancestry {
         $!m = do {
-          when GtkMenuShell | GtkWidget {
+          when GtkBuildable | GtkMenuShell | GtkWidget {
             $to-parent = $_;
             nativecast(GtkMenu, $_);
           }
@@ -60,7 +63,7 @@ class GTK::Menu is GTK::MenuShell {
     my $menu = gtk_menu_new();
     self.bless(:$menu);
   }
-  multi method new (GtkWidget $menu) {
+  multi method new (Ancestry $menu) {
     self.bless(:$menu);
   }
   multi method new (*@items) {
