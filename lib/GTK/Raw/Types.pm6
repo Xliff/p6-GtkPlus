@@ -54,6 +54,7 @@ our constant GtkMenuPositionFunc              is export := Pointer;
 our constant GtkRecentFilterFunc              is export := Pointer;
 our constant GtkPageSetupDoneFunc             is export := Pointer;
 our constant GtkPrinterFunc                   is export := Pointer;
+our constant GtkPrintJobCompleteFunc          is export := Pointer;
 our constant GtkPrintSettingsFunc             is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
@@ -1032,6 +1033,7 @@ class GtkPopover              is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkPrinter              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintBackend         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintContext         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPrintJob             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintOperation       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintSettings        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkProgressBar          is repr('CPointer') does GTK::Roles::Pointers is export { }
