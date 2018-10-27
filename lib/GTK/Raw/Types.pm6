@@ -1015,6 +1015,7 @@ class GtkPaperSize            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkPaned                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPlacesSidebar        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPopover              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkPrintContext         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintOperation       is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkPrintSettings        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkProgressBar          is repr('CPointer') does GTK::Roles::Pointers is export { }
