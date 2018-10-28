@@ -107,7 +107,7 @@ class BuilderActions {
     }
     for $/<child>.List {
       my $s = $_.made;
-      @children.push($s;)
+      @children.push($s)
     }
 
     make {
@@ -125,7 +125,10 @@ class BuilderActions {
   method template($/) {
     my $attrs = self!buildAttr($/);
     my @children;
-    @children.push($_.made) for $/<child>.List;
+    for $/<child>.List {
+      my $c = $_.made;
+      @children.push($_.made) if $c.defined && $c.elems;
+    }
     make {
       class    => $attrs<attrs><parent>,
       id       => "template{$++}",
@@ -159,12 +162,19 @@ class BuilderActions {
   }
   method property($/) {
     my $attrs = self!buildAttr($/);
-    make {
-      $attrs<name> => {
-        attrs => $attrs,
-        value => $/<value>.Str
+    my $extras = %( $attrs<attrs>.pairs.grep( *.key ne 'name' ) );
+    if $extras.elems {
+      make {
+        $attrs<name> => {
+          attrs => $extras,
+          value => $/<value>.Str
+        }
+      };
+    } else {
+      make {
+        $attrs<name> => $/<value>.Str;
       }
-    };
+    }
   }
   method style($/) {
     make {
@@ -183,3 +193,4 @@ sub MAIN {
   my $p = BuilderGrammar.parse($ui_row, actions => BuilderActions);
   ddt $p.made
 }
+s
