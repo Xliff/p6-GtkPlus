@@ -7,6 +7,7 @@ use GTK::Application;
 use GTK::Box;
 use GTK::Button;
 use GTK::ButtonBox;
+use GTK::CSSProvider;
 use GTK::Dialog::ColorChooser;
 use GTK::Dialog::FontChooser;
 use GTK::Frame;
@@ -37,9 +38,8 @@ $a.activate.tap({
   # Create TextView and add it to Frame.
   $f.border_width = $bf.border_width = 10;
   $f.set_size_request(280, 380);
-  ($f.margin_top, $f.margin_bottom, $f.margin_left, $f.margin_right) =
-  ($bf.margin_top, $bf.margin_bottom, $bf.margin_left, $bf.margin_right) =
-    (10 xx 4);
+  $f.margins = 10;
+  $bf.margins = 10;
   ($t.margin_left, $t.margin_right) = (10 xx 2);
   $t.name = 'tview';
   $t.text = 'This is a test of the dialog.';
@@ -103,7 +103,7 @@ $a.activate.tap({
   $a.window.destroy-signal.tap({
     # If exited by corner close button.
     $shutdown-latch = True;
-    #...
+    $t.text;
   });
   $a.shutdown.tap({
     # If exited by OK Button
@@ -111,6 +111,9 @@ $a.activate.tap({
       #...
     }
   });
+  # Of course, an even simpler solution would be to put the shutdown logic
+  # In the handler for the OK button AND in destroy-signal, and leave
+  # application.shutdown for resource cleanup!!
 
   $a.window.add($vb);
   $a.window.show_all;

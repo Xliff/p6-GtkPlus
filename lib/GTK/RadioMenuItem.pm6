@@ -110,6 +110,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   method group-changed {
     self.connect($!rmi, 'group-changed');
   }
+  
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓\

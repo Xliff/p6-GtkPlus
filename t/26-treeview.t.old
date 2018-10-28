@@ -1,0 +1,36 @@
+use v6.c;
+
+my %columns = (
+  _key_   => [    'ID', 0 ],
+  name    => [ 'Names', 1 ],
+  _desc_  => 'kids',
+);
+
+my %data = {
+  1 => {
+    name  => 'Billy Bob',
+    kids  => {
+      11  => {
+        name  => 'Billy Bob Jr',
+      },
+      12  => {
+        name  => 'Sue Bob'
+      },
+    }
+  },
+  2 => {
+    name  => 'Joey JoJo'
+  },
+  3 => {
+    name  => 'Rob McRoberts'
+    kids  => {
+      31  => {
+        name  => 'Xavier McRoberts',
+      },
+    }
+  }
+};
+
+sub insert_tree(%d) {
+  for %d.keys {
+    my ($k, $v)

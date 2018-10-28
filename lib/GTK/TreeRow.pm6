@@ -23,11 +23,11 @@ class GTK::TreeRow {
   }
 
   method new_proxy (
-    GObject $proxy
+    GObject $proxy,
     GtkTreeModel() $model,
     GtkTreePath() $path
   ) {
-    my $row gtk_tree_row_reference_new_proxy($proxy, $model, $path);
+    my $row = gtk_tree_row_reference_new_proxy($proxy, $model, $path);
     self.bless(:$row)
   }
 

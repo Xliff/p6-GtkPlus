@@ -8,12 +8,14 @@ use GTK::Raw::Types;
 use GTK::Raw::Application;
 use GTK::Raw::Window;
 
-use GTK::Builder;
-use GTK::CSSProvider;
 use GTK::Window;
 
-class GTK::Application {
-  also does GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Application;
+
+class GTK::Application is export {
+  also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::Application;
   also does GTK::Roles::Types;
 
   my $gapp;
@@ -22,8 +24,9 @@ class GTK::Application {
   has $!title;
   has $!width;
   has $!height;
+  has $!builder;
+  has $!init;
 
-  has $.builder;
   has $.window handles <show_all>;
 
   submethod BUILD(
@@ -32,103 +35,49 @@ class GTK::Application {
     uint32 :$flags = 0,
     uint32 :$width,
     uint32 :$height,
-    :$pod,
-    :$ui,
-    :$window-name,
-    :$style
+
   ) {
     $!app = $app;
     $!title = $title;
-
-    my %sections;
-    my ($ui-data, $style-data);
-    with $pod {
-      for $pod.grep( *.name eq <css ui>.any ).Array {
-        # This may not always be true. Keep up with POD spec!
-        %sections{ .name } //= $_.contents.map( *.contents[0] ).join("\n");
-        last when %sections<css>.defined && %sections<ui>.defined;
-      }
-      ($ui-data, $style-data) = %sections<ui css>;
-    } else {
-         $ui-data = $_ with $ui;
-      $style-data = $_ with $style;
-    }
-
-    with $ui-data {
-      $!builder = GTK::Builder.new;
-      $!builder.add_from_string($_);
-      # Set $!title, $!width, $!height from application window, but
-      # what would be the best way to get that from the builder?
-      #
-      # The answer: that information is REALLY NOT IMPORTANT in this stage of
-      # GtkBuilder support!
-
-      # MUST define an activate handler!!
-      $!window = GTK::Window.new(
-        :widget( $!builder.get_object($window-name) )
-      );
-
-      die qq:to/ERR/ unless $!window;
-Application window '#application' was not found. Please do one of the following:
-   - Rename the top-level window to 'application' in the .ui file
-   OR
-   - Specify the name of the top-level window using the named parameter
-     :\$window-name in the constructor to GTK::Application
-ERR
-
-    } else {
-      $!width = $width;
-      $!height = $height;
-    }
-
-    with $style-data {
-      my $cp = GTK::CSSProvider.new;
-      $cp.load_from_data($_);
-    }
+    $!width = $width;
+    $!height = $height;
+    $!init = Promise.new;
 
     self.activate.tap({
-      $!window //= GTK::Window.new(
-        :window( gtk_application_window_new($!app) )
-      );
-
-      # This looks to be unnecessary, now.
-      # self.window.realize-signal.tap({
-      #   # If destroy signal not set, then set an appropriate default.
-      #   self.window.destroy-signal.tap({ self.exit; })
-      #     unless self.window.is-connected('destroy');
-      # });
-
-      without $ui-data {
-        self.window.title = $title;
-        self.window.name = $window-name;
-        self.window.set_default_size($width, $height);
-      }
+       $!window //= GTK::Window.new(
+         :window( gtk_application_window_new($!app) ),
+         :$title,
+         :$width,
+         :$height
+       ) without $!builder;
+       $!init.keep;
     });
+  }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals, %!signals-app;
+  }
+
+  method setBuilder(GtkBuilder() $b) {
+    $!builder = $b;
+    $!window = $b.window;
   }
 
   method GTK::Raw::Types::GtkApplication {
     $!app;
   }
 
-  method control(Str $name?) {
-    without $name {
-      return $!builder;
-    }
-    die "GTK::Application.controls only available if using GTK::Builder support."
-      unless $!builder;
-    $!builder{$name};
-  }
-
   method init (GTK::Application:U: ) {
     my $argc = CArray[uint32].new;
-    $argc[0] = 1;
+    $argc[0] = 0;
     my $args = CArray[Str].new;
     $args[0] = $*PROGRAM.Str;
-    my $argv = CArray[CArray[Str]].new;
-    $argv[0] = $args;
 
-    gtk_init($argc, $argv);
+    gtk_init($argc, $args);
+  }
+
+  method wait-for-init {
+    await $!init;
   }
 
   method new(
@@ -203,11 +152,18 @@ ERR
     #
     # Cannot be done here as the activate signal has NOT occurred, yet.
 
+    # Application Startup Process
+    # Init
+    #   -- Builder init here.
+    # Application.startup
+    # Application.activate
+    #   -- Window must exist here.
+
     with $!builder {
       gtk_main();
     } else {
       my gint $z = 0;
-      g_application_run($!app, $z, OpaquePointer);
+      g_application_run($!app, $z, Pointer);
     }
   }
   # multi method run(GTK::Application:U: ) {
@@ -217,7 +173,7 @@ ERR
   # }
 
   method exit {
-    $.builder ?? gtk_main_quit() !! g_application_quit($!app);
+    $!builder ?? gtk_main_quit() !! g_application_quit($!app);
   }
 
   method activate {
@@ -231,6 +187,19 @@ ERR
   method shutdown {
     self.connect($!app, 'shutdown');
   }
+
+  # Is originally:
+  # GtkApplication, GtkWindow, gpointer --> void
+  method window-added {
+    self.connect-application-signal($!app, 'window-added');
+  }
+
+  # Is originally:
+  # GtkApplication, GtkWindow, gpointer --> void
+  method window-removed {
+    self.connect-application-signal($!app, 'window-removed');
+  }
+
 
   method add_accelerator (
     Str() $accelerator,

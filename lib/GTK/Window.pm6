@@ -87,7 +87,7 @@ class GTK::Window is GTK::Bin {
   # Is originally:
   # GtkWindow, gboolean, gpointer --> gboolean
   method enable-debugging {
-    self.connect($!win, 'enable-debugging');
+    self.connect-uint-ruint($!win, 'enable-debugging');
   }
 
   # Is originally:
@@ -99,7 +99,7 @@ class GTK::Window is GTK::Bin {
   # Is originally:
   # GtkWindow, GtkWidget, gpointer --> void
   method set-focus {
-    self.connect($!win, 'set-focus');
+    self.connect-widget($!win, 'set-focus');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

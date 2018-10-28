@@ -153,7 +153,7 @@ sub gdk_pixbuf_get_rowstride (GdkPixbuf $pixbuf)
 
 sub gdk_pixbuf_get_type ()
   returns GType
-  is native('gtk-3')
+  is native('gdk_pixbuf-2.0')
   is export
   { * }
 

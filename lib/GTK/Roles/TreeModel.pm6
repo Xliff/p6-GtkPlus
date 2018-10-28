@@ -65,11 +65,17 @@ role GTK::Roles::TreeModel {
   }
 
   multi method get(GtkTreeIter() $iter, @cols) {
-    samewith($iter, @cols.List);
+    samewith($iter, |@cols);
   }
   multi method get(GtkTreeIter() $iter, *@cols) {
     my @r;
-    @r.push( GTK::Compat::Value.new( self.get_value($iter, $_) ) ) for @cols;
+    @r.push(
+      do {
+        my $v = GValue.new;
+        self.get_value($iter, $_, $v);
+        GTK::Compat::Value.new($v)
+      }
+    ) for @cols;
     @r;
   }
 
@@ -106,7 +112,7 @@ role GTK::Roles::TreeModel {
     gtk_tree_model_get_string_from_iter($!tm, $iter);
   }
 
-  method get_type {
+  method get_treemodel_type {
     gtk_tree_model_get_type();
   }
 
@@ -114,7 +120,14 @@ role GTK::Roles::TreeModel {
   #   gtk_tree_model_get_valist($!tm, $iter, $var_args);
   # }
 
-  method get_value (GtkTreeIter() $iter, Int() $column, GValue() $value) {
+  multi method get_value(GtkTreeIter() $iter, Int() $column) {
+    my gint $c = self.RESOLVE-INT($column);
+    my $value = GValue.new;
+    gtk_tree_model_get_value($!tm, $iter, $c, $value);
+    GTK::Compat::Value.new($value);
+  }
+  multi method get_value (GtkTreeIter() $iter, Int() $column, GValue() $value) {
+    # TODO: Check iter for path.
     my gint $c = self.RESOLVE-INT($column);
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
   }

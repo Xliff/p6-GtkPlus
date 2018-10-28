@@ -19,7 +19,7 @@ sub gtk_builder_add_callback_symbol (
 sub gtk_builder_add_from_file (
   GtkBuilder $builder,
   gchar $filename,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns guint
   is native('gtk-3')
@@ -29,7 +29,7 @@ sub gtk_builder_add_from_file (
 sub gtk_builder_add_from_resource (
   GtkBuilder $builder,
   gchar $resource_path,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns guint
   is native('gtk-3')
@@ -40,7 +40,7 @@ sub gtk_builder_add_from_string (
   GtkBuilder $builder,
   gchar $buffer,
   gsize $length,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns guint
   is native('gtk-3')
@@ -50,8 +50,8 @@ sub gtk_builder_add_from_string (
 sub gtk_builder_add_objects_from_file (
   GtkBuilder $builder,
   gchar $filename,
-  gchar $object_ids,
-  GError $error
+  CArray[Str] $object_ids,
+  CArray[Pointer[GError]] $error
 )
   returns guint
   is native('gtk-3')
@@ -61,8 +61,8 @@ sub gtk_builder_add_objects_from_file (
 sub gtk_builder_add_objects_from_resource (
   GtkBuilder $builder,
   gchar $resource_path,
-  gchar $object_ids,
-  GError $error
+  CArray[Str] $object_ids,
+  CArray[Pointer[GError]] $error
 )
   returns guint
   is native('gtk-3')
@@ -73,8 +73,8 @@ sub gtk_builder_add_objects_from_string (
   GtkBuilder $builder,
   gchar $buffer,
   gsize $length,
-  gchar $object_ids,
-  GError $error
+  CArray[Str] $object_ids,
+  CArray[Pointer[GError]] $error
 )
   returns guint
   is native('gtk-3')
@@ -119,7 +119,7 @@ sub gtk_builder_extend_with_template (
   GType $template_type,
   gchar $buffer,
   gsize $length,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns guint
   is native('gtk-3')
@@ -185,7 +185,7 @@ sub gtk_builder_value_from_string (
   GParamSpec $pspec,
   gchar $string,
   GValue $value,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native('gtk-3')
@@ -197,7 +197,7 @@ sub gtk_builder_value_from_string_type (
   GType $type,
   gchar $string,
   GValue $value,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native('gtk-3')

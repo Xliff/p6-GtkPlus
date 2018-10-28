@@ -12,7 +12,7 @@ use GTK::Roles::Orientable;
 
 class GTK::ScaleButton is GTK::Button {
   also does GTK::Roles::Orientable;
-  
+
   has GtkScaleButton $!sb;
 
   method bless(*%attrinit) {
@@ -68,17 +68,25 @@ class GTK::ScaleButton is GTK::Button {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkScaleButton, gpointer --> void
   method popdown {
     self.connect($!sb, 'popdown');
   }
 
+  # Is originally:
+  # GtkScaleButton, gpointer --> void
   method popup {
     self.connect($!sb, 'popup');
   }
 
+  # Is originally:
+  # GtkScaleButton, gdouble, gpointer --> void
   method value-changed {
-    self.connect($!sb, 'value-changed');
+    self.connect-double($!sb, 'value-changed');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

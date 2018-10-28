@@ -7,14 +7,16 @@ use GTK::Raw::EntryCompletion;
 use GTK::Raw::Types;
 
 use GTK::Roles::CellLayout;
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::EntryCompletion;
 
 # THIS IS OFF OF THE TABLE UNTIL A VIABLE CONVERSION FOR GTKLISTSTORE
 # HAS BEEN DETERMINED.
 
 class GTK::EntryCompletion {
   also does GTK::Roles::CellLayout;
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::EntryCompletion;
 
   has GtkEntryCompletion $!ec;
 
@@ -35,6 +37,10 @@ class GTK::EntryCompletion {
     $!cl = nativecast(GtkCellLayout, $!ec);
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals, %!signals-ec;
+  }
+
   method new {
     my $entrycompletion = gtk_entry_completion_new();
     self.bless( :$entrycompletion );
@@ -46,25 +52,37 @@ class GTK::EntryCompletion {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkEntryCompletion, gint, gpointer --> void
   method action-activated {
-    self.connect($!ec, 'action-activated');
+    self.connect-int($!ec, 'action-activated');
   }
 
+  # Is originally:
+  # GtkEntryCompletion, GtkTreeModel, GtkTreeIter, gpointer --> gboolean
   method cursor-on-match {
-    self.connect($!ec, 'cursor-on-match');
+    self.connect-on-match($!ec, 'cursor-on-match');
   }
 
+  # Is originally:
+  # GtkEntryCompletion, gchar, gpointer --> gboolean
   method insert-prefix {
-    self.connect($!ec, 'insert-prefix');
+    self.connect-string($!ec, 'insert-prefix');
   }
 
+  # Is originally:
+  # GtkEntryCompletion, GtkTreeModel, GtkTreeIter, gpointer --> gboolean
   method match-selected {
-    self.connect($!ec, 'match-selected');
+    self.connect-on-match($!ec, 'match-selected');
   }
 
+  # Is originally:
+  # GtkEntryCompletion, gpointer --> void
   method no-matches {
     self.connect($!ec, 'no-matches');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

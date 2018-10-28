@@ -32,7 +32,7 @@ sub gtk_viewport_new (GtkAdjustment $hadjustment, GtkAdjustment $vadjustment)
   { * }
 
 sub gtk_viewport_get_shadow_type (GtkViewport $viewport)
-  returns GtkShadowType
+  returns uint32 # GtkShadowType
   is native('gtk-3')
   is export
   { * }
@@ -49,7 +49,10 @@ sub gtk_viewport_get_vadjustment (GtkViewport $viewport)
   is export
   { * }
 
-sub gtk_viewport_set_shadow_type (GtkViewport $viewport, GtkShadowType $type)
+sub gtk_viewport_set_shadow_type (
+  GtkViewport $viewport,
+  uint32 $type                  # GtkShadowType $type
+)
   is native('gtk-3')
   is export
   { * }

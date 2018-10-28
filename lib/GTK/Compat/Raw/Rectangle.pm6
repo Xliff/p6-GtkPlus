@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Rectangle
+unit package GTK::Compat::Raw::Rectangle;
 
 sub gdk_rectangle_equal (GdkRectangle $rect1, GdkRectangle $rect2)
   returns uint32

@@ -5,6 +5,7 @@ use Test;
 use NativeCall;
 
 use GTK::Application;
+use GTK::Builder;
 use GTK::Button;
 use GTK::Box;
 
@@ -12,10 +13,12 @@ my $a = GTK::Application.new(
   title  => 'org.genex.test.widget',
   width  => 400,
   height => 400,
-  pod    => $=pod,
 );
+my $b = GTK::Builder.new( pod => $=pod );
+$a.setBuilder($b);
 
 $a.activate.tap({
+  $a.wait-for-init;
   my $box = GTK::Box.new-vbox(6);
   my ($b1, $b2, $b3) = (
     GTK::Button.new_with_label('Click Me'),

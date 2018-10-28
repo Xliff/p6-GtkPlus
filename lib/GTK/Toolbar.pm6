@@ -53,25 +53,25 @@ class GTK::Toolbar is GTK::Container {
   # Is originally:
   # GtkToolbar, gboolean, gpointer --> gboolean
   method focus-home-or-end {
-    self.connect($!tb, 'focus-home-or-end');
+    self.connect-uint-rbool($!tb, 'focus-home-or-end');
   }
 
   # Is originally:
   # GtkToolbar, GtkOrientation, gpointer --> void
   method orientation-changed {
-    self.connect($!tb, 'orientation-changed');
+    self.connect-uint($!tb, 'orientation-changed');
   }
 
   # Is originally:
   # GtkToolbar, gint, gint, gint, gpointer --> gboolean
   method popup-context-menu {
-    self.connect($!tb, 'popup-context-menu');
+    self.connect-context-menu($!tb);
   }
 
   # Is originally:
   # GtkToolbar, GtkToolbarStyle, gpointer --> void
   method style-changed {
-    self.connect($!tb, 'style-changed');
+    self.connect-uint($!tb, 'style-changed');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

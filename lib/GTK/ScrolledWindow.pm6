@@ -9,7 +9,11 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::Bin;
 
+use GTK::Roles::Signals::ScrolledWindow;
+
 class GTK::ScrolledWindow is GTK::Bin {
+  also does GTK::Roles::Signals::ScrolledWindow;
+
   has GtkScrolledWindow $!sw;
 
   method bless(*%attrinit) {
@@ -29,6 +33,10 @@ class GTK::ScrolledWindow is GTK::Bin {
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-sw;
   }
 
   multi method new (GtkWidget $scrolled) {
@@ -66,25 +74,25 @@ class GTK::ScrolledWindow is GTK::Bin {
   # Is originally:
   # GtkScrolledWindow, GtkPositionType, gpointer --> void
   method edge-overshot {
-    self.connect($!sw, 'edge-overshot');
+    self.connect-uint($!sw, 'edge-overshot');
   }
 
   # Is originally:
   # GtkScrolledWindow, GtkPositionType, gpointer --> void
   method edge-reached {
-    self.connect($!sw, 'edge-reached');
+    self.connect-uint($!sw, 'edge-reached');
   }
 
   # Is originally:
   # GtkScrolledWindow, GtkDirectionType, gpointer --> void
   method move-focus-out {
-    self.connect($!sw, 'move-focus-out');
+    self.connect-uint($!sw, 'move-focus-out');
   }
 
   # Is originally:
   # GtkScrolledWindow, GtkScrollType, gboolean, gpointer --> gboolean
   method scroll-child {
-    self.connect($!sw, 'scroll-child');
+    self.connect-scroll-child($!sw, 'scroll-child');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

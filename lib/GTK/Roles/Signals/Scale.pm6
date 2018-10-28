@@ -5,49 +5,36 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
-
-class FormatValueHandler {
-  has $!s;
-  has $!o;
-  has %!sig;
-
-  submethod BUILD(:$!o, :$!s, :$sig) {
-    %!sig = %($sig);
-  }
-
-  method new($o, $s, $sig) {
-    self.bless(:$o, :$s, :$sig);
-  }
-
-  submethod DESTROY {
-    self.free;
-  }
-
-  method tap(&handler) {
-    if %!sig{$!s}:exists {
-      warn "{ $!s.tc } signal for GTK::Scale was already connected";
-      self.free;
-    }
-    my $sid = g_connect_format_value($!o, $!s, &handler, OpaquePointer, 0);
-    %!sig{$!s} = [ self, $sid ];
-  }
-
-  method free {
-    g_signal_handler_disconnect($!o, $_[1]) with %!sig{$!s};
-  }
-}
+use GTK::Raw::ReturnedValue;
 
 role GTK::Roles::Signals::Scale {
-  has %!signals;
+  has %!signals-scale;
 
-  method connect-format-value(
+  method connect-format-value (
     $obj,
+    $signal = 'format-value',
     &handler?
   ) {
-    my $r = FormatValueHandler.new($obj, 'format-value', %!signals);
-    $r.tap(&handler) with &handler;
-    $r;
+    my $hid;
+    %!signals-scale{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g_connect_format_value($obj, $signal,
+        -> $scale, $v, $ud --> Str {
+          CATCH {
+            default { note($_) }
+          }
+          my $r = ReturnedValue.new;
+          $s.emit( [self, $v, $ud, $r] );
+          $r.r;
+        },
+        OpaquePointer, 0
+      );
+      [ $s.Supply, $obj, $hid ];
+    };
+    %!signals-scale{$signal}[0].tap(&handler) with &handler;
+    %!signals-scale{$signal}[0];
   }
+
 }
 
 sub g_connect_format_value(
@@ -57,7 +44,7 @@ sub g_connect_format_value(
   Pointer $data,
   uint32 $flags
 )
-  returns uint32
+  returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
   is export

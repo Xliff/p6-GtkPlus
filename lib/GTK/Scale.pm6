@@ -44,6 +44,10 @@ class GTK::Scale is GTK::Range {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect($_, %!signals-scale) for %!signals-scale.keys;
+  }
+
   multi method new (
     GtkAdjustment() $adj,
     :$horizontal = False,
@@ -94,23 +98,13 @@ class GTK::Scale is GTK::Range {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
   # Is originally:
   # GtkScale, gdouble, gpointer --> Str
-  method format-value(:$supply = True) {
-    with %!signals<format-value> {
-      if $_[0] ~~ Supply {
-        die "Cannot mix <format-value> signal types" unless $supply;
-      } else {
-        die "Cannot mix <format-value> signal types" if $supply;
-      }
-    }
-
-    $supply ??
-      # Only useful if you are using some other control to display the value.
-      self.connect($!s, 'format-value')
-      !!
-      self.connect-format-value($!s);
+  method format-value {
+    self.connect-format-value($!s);
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

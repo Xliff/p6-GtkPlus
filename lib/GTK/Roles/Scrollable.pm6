@@ -6,11 +6,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Scrollable;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals;
-
-role GTK::Roles::Scrollable {
-  also does GTK::Roles::Signals;
-
+role GTK::Roles::Scrollable {;
   has GtkScrollable $!s;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -67,7 +63,7 @@ role GTK::Roles::Scrollable {
     gtk_scrollable_get_border($!s, $border);
   }
 
-  method get_type {
+  method get_scrollable_type {
     gtk_scrollable_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

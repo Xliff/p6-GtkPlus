@@ -8,15 +8,14 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-class GTK::MenuItem is GTK::Bin {
-  has GtkMenuItem $!mi;
+use GTK::Roles::Actionable;
 
-  # Thanks, Zoffix!
-  # method bless(*%attrinit) {
-  #   my $o := self.Mu::bless: |%attrinit;
-  #   $o.setType('GTK::MenuItem');
-  #   $o;
-  # }
+my subset Ancestry where GtkMenuItem | GtkActionable | GtkWidget;
+
+class GTK::MenuItem is GTK::Bin {
+  also does GTK::Roles::Actionable;
+
+  has GtkMenuItem $!mi;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -24,7 +23,7 @@ class GTK::MenuItem is GTK::Bin {
     $o;
   }
 
-  submethod BUILD(
+  submethod BUILD (
     :$menuitem,
     :$submenu,
     :$clicked,
@@ -32,7 +31,7 @@ class GTK::MenuItem is GTK::Bin {
     :$right
   ) {
     given $menuitem {
-      when GtkMenuItem | GtkWidget {
+      when Ancestry {
         self.setMenuItem($menuitem);
       }
       when GTK::MenuItem {
@@ -61,11 +60,17 @@ class GTK::MenuItem is GTK::Bin {
         $to-parent = $_;
         nativecast(GtkMenuItem, $_);
       }
+      when GtkActionable {
+        $!action = $_;
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkMenuItem, $_);
+      }
       when GtkMenuItem {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
     }
+    $!action //= nativecast(GtkActionable, $!mi);  # GTK::Roles::Actionable
     self.setBin($to-parent);
   }
 
@@ -73,7 +78,7 @@ class GTK::MenuItem is GTK::Bin {
     my $menuitem = gtk_menu_item_new();
     self.bless(:$menuitem);
   }
-  multi method new (GtkWidget $menuitem) {
+  multi method new (Ancestry $menuitem) {
     self.bless(:$menuitem);
   }
   multi method new(
@@ -154,13 +159,13 @@ class GTK::MenuItem is GTK::Bin {
   # Is originally:
   # GtkMenuItem, gint, gpointer --> void
   method toggle-size-allocate {
-    self.connect($!mi, 'toggle-size-allocate');
+    self.connect-int($!mi, 'toggle-size-allocate');
   }
 
   # Is originally:
   # GtkMenuItem, gpointer, gpointer --> void
   method toggle-size-request {
-    self.connect($!mi, 'toggle-size-request');
+    self.connect-pointer($!mi, 'toggle-size-request');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

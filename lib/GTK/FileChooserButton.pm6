@@ -10,6 +10,8 @@ use GTK::Bin;
 
 use GTK::Roles::FileChooser;
 
+my subset ParentChild where GtkFileChooserButton | GtkFileChooser | GtkWidget;
+
 class GTK::FileChooserButton is GTK::Bin {
   also does GTK::Roles::FileChooser;
 
@@ -24,10 +26,15 @@ class GTK::FileChooserButton is GTK::Bin {
   submethod BUILD(:$chooser) {
     my $to-parent;
     given $chooser {
-      when GtkFileChooserButton | GtkWidget {
+      when ParentChild {
         $!fcb = do {
           when GtkWidget {
             $to-parent = $_;
+            nativecast(GtkFileChooserButton, $_);
+          }
+          when GtkFileChooser {
+            $!fc = $_;                          # GTK::Roles::FileChooser
+            $to-parent = nativecast(GtkBin, $_);
             nativecast(GtkFileChooserButton, $_);
           }
           when GtkFileChooserButton {
@@ -42,8 +49,7 @@ class GTK::FileChooserButton is GTK::Bin {
       default {
       }
     }
-    # Assign for the role, as well.
-    $!fc = nativecast(GtkFileChooser, $!fcb);
+    $!fc //= nativecast(GtkFileChooser, $!fcb);   # GTK::Roles::FileChooser
   }
 
   multi method new (
@@ -54,7 +60,7 @@ class GTK::FileChooserButton is GTK::Bin {
     my $chooser = gtk_file_chooser_button_new($title, $a);
     self.bless(:$chooser);
   }
-  multi method new (GtkWidget $chooser) {
+  multi method new (ParentChild $chooser) {
     self.bless(:$chooser);
   }
 
@@ -84,12 +90,27 @@ class GTK::FileChooserButton is GTK::Bin {
         gtk_file_chooser_button_get_width_chars($!fcb);
       },
       STORE => sub ($, Int() $n_chars is copy) {
-        my uint32 $nc = $n_chars;
+        my int32 $nc = self.RESOLVE-INT($n_chars);
         gtk_file_chooser_button_set_width_chars($!fcb, $nc);
       }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # Type: GtkFileChooser
+  method dialog is rw {
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new( warn "dialog does not allow reading" );
+        nativecast(GtkFileChooser, $gv.object);
+      },
+      STORE => -> $, GtkFileChooser() $val is copy {
+        $gv.objecet = $val;
+        self.prop_set($!fcb, 'dialog', $gv);
+      }
+    );
+  }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type {

@@ -61,9 +61,13 @@ class GTK::LevelBar is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkLevelBar, gchar, gpointer --> void
   method offset-changed {
-    self.connect($!lb, 'offset-changed');
+    self.connect-string($!lb, 'offset-changed');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::Raw::Rectangle;
 
 class GTK::Compat::Rectangle {
   has GdkRectangle $!r;
@@ -45,15 +46,16 @@ class GTK::Compat::Rectangle {
   method union (GdkRectangle() $src2, GdkRectangle() $dest) {
     gdk_rectangle_union($!r, $src2, $dest);
   }
+  # ↑↑↑↑ METHODS ↑↑↑↑
 }
 
-sub infix:<∩> (GdkRectangle() $a, GtkRectangle() $b) is export {
+
+sub infix:<∩> (GdkRectangle() $a, GdkRectangle() $b) is export {
   my $d = GdkRectangle.new;
   GDK::Rectangle.new( $a.intersect($b, $d) );
 }
-# ↑↑↑↑ METHODS ↑↑↑↑
 
-sub infix:<∪> (GdkRectangle() $a, GtkRectangle() $b) is export {
+sub infix:<∪> (GdkRectangle() $a, GdkRectangle() $b) is export {
   my $d = GdkRectangle.new;
   GDK::Rectangle.new( $a.union($b, $d) );
 }

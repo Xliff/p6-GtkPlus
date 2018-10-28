@@ -8,13 +8,20 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
+use GTK::Roles::Signals::TextTag;
+
 class GTK::TextTag  {
   also does GTK::Roles::Types;
-  
+  also does GTK::Roles::Signals::TextTag;
+
   has GtkTextTag $!tt;
 
   submethod BUILD(:$tag) {
     $!tt = $tag;
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-tt;
   }
 
   method new(Str() $name) {
@@ -33,7 +40,7 @@ class GTK::TextTag  {
   # - Made multi so as to not conflict with the method implementing
   #   gtk_text_tag_event
   multi method event {
-    self.connect($!tt, 'event');
+    self.connect-event($!tt);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

@@ -106,9 +106,12 @@ class GTK::RadioButton is GTK::CheckButton {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Default handler
   method group-changed {
     self.connect($!rb, 'group-changed');
   }
+  
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

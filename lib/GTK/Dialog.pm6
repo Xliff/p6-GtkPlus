@@ -54,22 +54,55 @@ class GTK::Dialog is GTK::Window {
     self.bless(:$dialog);
   }
 
-  method new_with_buttons(
+  # Yes, I'm poking fun at the '...' limitation, at this point.
+  # This method can be pulled (or better yet ignored) if you lack
+  # a funny bone.
+  method new_with_button(
    Str()       $title,
    GtkWindow() $parent,
    uint32      $flags,          # GtkDialogFlags $flags
    Str()       $button_text,
-   gint        $button_response_id
+   Int()       $button_response_id
   ) {
+    my gint $br = self.RESOLVE-INT($button_response_id);
     my $dialog = gtk_dialog_new_with_buttons(
       $title,
       $parent,
       $flags,
       $button_text,
-      $button_response_id,
+      $br,
       Str
     );
     self.bless(:$dialog);
+  }
+
+  multi method new_with_buttons(
+   Str()       $title,
+   GtkWindow() $parent,
+   uint32      $flags,          # GtkDialogFlags $flags
+   *%buttons
+  ) {
+    samewith($title, $parent, $flags, %buttons.pairs.Array);
+  }
+  multi method new_with_buttons(
+   Str()       $title,
+   GtkWindow() $parent,
+   uint32      $flags,          # GtkDialogFlags $flags
+   @buttons
+  ) {
+    die '@buttons cannot be empty' unless +@buttons;
+    die '\@buttons is not an array of pair objects!'
+      unless @buttons.all ~~ Pair;
+    my $fb = @buttons.shift;
+    my $o = GTK::Dialog.new_with_button(
+      $title,
+      $parent,
+      $flags,
+      $fb.key,
+      self.RESOLVE-INT($fb.value)
+    );
+    $o.add_buttons(@buttons) if +@buttons;
+    $o;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -85,7 +118,7 @@ class GTK::Dialog is GTK::Window {
   # - Made multi so as to not conflict with the method implementing
   #   gtk_response_dialog()
   multi method response {
-    self.connect($!d, 'response');
+    self.connect-int($!d, 'response');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -96,6 +129,15 @@ class GTK::Dialog is GTK::Window {
   method add_action_widget (GtkWidget() $child, Int() $response_id) {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_dialog_add_action_widget($!d, $child, $ri);
+  }
+
+  multi method add_buttons(%buttons) {
+    samewith(%buttons.pairs);
+  }
+  multi method add_buttons(*@buttons) {
+    die '\@buttons is not an array of pair objects!'
+      unless @buttons.all ~~ Pair;
+    self.add_button(.key, .value) for @buttons;
   }
 
   method add_button (Str() $button_text, Int() $response_id) {

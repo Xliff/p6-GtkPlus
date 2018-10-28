@@ -74,7 +74,7 @@ role GTK::Roles::Buildable {
     gtk_buildable_get_internal_child($!b, $builder, $childname);
   }
 
-  method get_type {
+  method get_buildable_type {
     gtk_buildable_get_type();
   }
 

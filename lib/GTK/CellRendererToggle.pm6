@@ -8,9 +8,13 @@ use GTK::Raw::Types;
 
 use GTK::CellRenderer;
 
-my subset ParentChild where GtkCellRenderer | GtkCellRendererToggle;
+use GTK::Roles::Signals::Generic;
+
+my subset Ancestry where GtkCellRendererToggle | GtkCellRenderer | GtkWidget;
 
 class GTK::CellRendererToggle is GTK::CellRenderer {
+  also does GTK::Roles::Signals::Generic;
+
   has GtkCellRendererToggle $!crt;
 
   method bless(*%attrinit) {
@@ -21,10 +25,10 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
 
   submethod BUILD(:$celltoggle) {
     my $to-parent;
-    given $ {
-      when ParentChild {
-        $! = do {
-          when GtkCellRenderer {
+    given $celltoggle {
+      when Ancestry {
+        $!crt = do {
+          when GtkCellRenderer | GtkWidget {
             $to-parent = $_;
             nativecast(GtkCellRendererToggle, $_);
           }
@@ -42,6 +46,10 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all(%!signals);
+  }
+
   method GTK::Raw::Types::GtkCellRendererToggle {
     $!crt;
   }
@@ -50,7 +58,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     my $celltoggle = gtk_cell_renderer_toggle_new();
     self.bless(:$celltoggle);
   }
-  multi method new (ParentChild $celltoggle) {
+  multi method new (Ancestry $celltoggle) {
     self.bless(:$celltoggle);
   }
 
@@ -60,7 +68,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   # Is originally:
   # GtkCellRendererToggle, gchar, gpointer --> void
   method toggled {
-    self.connect($!crt, 'toggled');
+    self.connect-string($!crt, 'toggled');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

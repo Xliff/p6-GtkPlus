@@ -41,26 +41,63 @@ sub MAIN ($control, :$var = 'w') {
     }
 
     my %c;
+    my $types = @t.map(*.text.trim).join(', ');
+    my $gtype = do given $types {
+      when 'gboolean' { 'G_TYPE_BOOLEAN' }
+      when 'gint'     { 'G_TYPE_INT'     }
+      when 'guint'    { 'G_TYPE_UINT'    }
+      when 'gdouble'  { 'G_TYPE_DOUBLE'  }
+      when 'gfloat'   { 'G_TYPE_FLOAT'   }
+      when 'glong'    { 'G_TYPE_LONG'    }
+      when 'gulong'   { 'G_TYPE_ULONG'   }
+      when 'gint64'   { 'G_TYPE_INT64'   }
+      when 'guint64'  { 'G_TYPE_UINT64'  }
+
+      when 'gchar' | 'char' {
+        'G_TYPE_STRING';
+      }
+      default {
+        '-type-'
+      }
+    }
+    my ($vtype-r, $vtype-w);
+    if $gtype ne '-type-' {
+      $_ = $types;
+      my $u = S/^ 'g'//;
+      if $u eq 'char' {
+        $u = 'string';
+      }
+      $vtype-r = '        $gv.' ~ $u ~ ';';
+      $vtype-w = '$gv.' ~ $u ~ ' = $val;';
+    } else {
+      $vtype-r = '        #$gv.TYPE';
+      $vtype-w = '#$gv.TYPE = $val;';
+    }
     with $rw {
-      %c<read>  = "self.prop_get(\$!{ $var }, \'{ $mn }\', \$gv);"
-        if $rw.any eq 'Read';
-      %c<write> = "self.prop_set(\$!{ $var }, \'{ $mn }\', \$gv);"
-        if $rw.any eq 'Write';
+      %c<read> =
+        '$gv = GTK::Compat::Value.new(' ~
+        "\n\t  " ~ "self.prop_get(\$!{ $var }, '{ $mn }', \$gv)\n" ~
+        "\t);\n" ~
+        $vtype-r
+      if $rw.any eq 'Read';
+      %c<write> =
+        $vtype-w ~
+        "\n" ~
+        "        self.prop_set(\$!{ $var }, \'{ $mn }\', \$gv);"
+      if $rw.any eq 'Write';
     }
     %c<read>  //= "warn \"{ $mn } does not allow reading\"";
     %c<write> //= "warn \"{ $mn } does not allow writing\"";
 
     say qq:to/METH/;
-  # Type: { @t.map(*.text.trim).join(', ') }
+  # Type: { $types }
   method $mn is rw \{
-    my GTK::Compat::Value \$gv .= new( -type- );
+    my GTK::Compat::Value \$gv .= new( $gtype );
     Proxy.new(
       FETCH => -> \$ \{
-        \$gv = GTK::Compat::Value.new( { %c<read> } );
-#        \$gv.get_TYPE;
+        { %c<read> }
       \},
       STORE => -> \$, \$val is copy \{
-#        \$gv.set_TYPE(\$val);
         { %c<write> }
       \}
     );

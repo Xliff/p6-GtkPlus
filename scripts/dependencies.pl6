@@ -1,39 +1,9 @@
 use v6.c;
 
 use File::Find;
+use Dependency::Sort;
 
-my (%resolved-check, @resolved, %nodes);
-
-use Data::Dump::Tree;
-
-sub resolve($n, $l, $seen = {}) {
-  # I hate special casing, but this begs for it.
-  return if $n eq 'GTK';
-  die "No node information for $n" unless %nodes{$n}:exists;
-
-  my $i = "\t" x $l;
-  sub mark-resolved($rn) {
-    return if %resolved-check{$rn};
-    say "{ $i }Resolved: { $rn }";
-    @resolved.push: $rn;
-    %resolved-check{$rn} = True;
-    $seen{$rn}:delete;
-  }
-
-  say "{ $i }{ $n }";
-  $seen{$n} = True;
-  for %nodes{$n}<edges>.List {
-    unless %resolved-check{$_} {
-      my $level = $l;
-      die "Circular dependency detected: { $n } -> { $_ }" if $seen{$_};
-      resolve($_, ++$level, $seen);
-    }
-    LAST {
-      mark-resolved($_);
-    }
-  }
-  mark-resolved($n);
-}
+my %nodes;
 
 my @files = find
   dir => 'lib',
@@ -46,8 +16,16 @@ my @modules = @files
   .map({ $_[1] = $_[1].split('/').Array[1..*].join('::'); $_ })
   .sort( *[1] );
 
-%nodes{$_[1]} = ( filename => $_[0], edges => [] ).Hash for @modules;
+for @modules {
+  %nodes{$_[1]} = (
+    itemid => $++,
+    filename => $_[0],
+    edges => [],
+    name => $_[1]
+  ).Hash;
+}
 
+my $s = Dependency::Sort.new;
 my @others;
 for %nodes.pairs.sort( *.key ) -> $p {
   say "Processing requirements for module { $p.key }...";
@@ -63,19 +41,21 @@ for %nodes.pairs.sort( *.key ) -> $p {
       next;
     }
     %nodes{$p.key}<edges>.push: $mn;
+    $s.add_dependency(%nodes{$p.key}, %nodes{$mn}) unless $mn eq 'GTK';
   }
 }
 
-say "\nA resolution order is:\n";
+say "\nA resolution order is:";
 
-my %unresolved = %nodes.pairs.map( *.key => True );
-while (my @unresolved = %unresolved.keys.sort).elems {
-  my $l = 0;
-  my $seen = {}
-  resolve(@unresolved[0], $l, $seen);
-  %unresolved{$_}:delete for $seen.keys;
-  %unresolved{@unresolved[0]}:delete;
+my @module-order;
+if !$s.serialise {
+  die $s.error_message;
+} else {
+  @module-order.push($_<name>) for $s.result;
 }
+my $list = @module-order.grep(* ne 'GTK::Builder').join("\n");
+"BuildList".IO.open(:w).say($list);
+say $list;
 
 say "\nOther dependencies are:\n";
 say @others.unique.sort.join("\n");
@@ -90,9 +70,26 @@ sub space($a) {
   # equal the difference between the size plus the previous number modulo 8
   use Text::Table::Simple;
   say "\nProvides section:\n";
-  .say for lol2table(@modules.map({ $_.reverse.map({ qq["$_"] }) }),
+  my $table = lol2table(@modules.map({ $_.reverse.map({ qq["$_"] }) }),
     rows => {
-      column_separator => ': '
+      column_separator => ': ',
+      corner_marker    => ' ',
+      bottom_border    => ''
+    },
+    headers => {
+      top_border       => '',
+      column_separator => '',
+      corner_marker    => '',
+      bottom_border    => ''
+    },
+    footers => {
+      column_separator => '',
+      corner_marker    => '',
+      bottom_border    => ''
     }
-  );
+  ).join("\n");
+  $table ~~ s:g/^^':'//;
+  $table ~~ s:g/':' \s* $$/,/;
+  $table ~~ s/',' \s* $//;
+  say $table;
 }

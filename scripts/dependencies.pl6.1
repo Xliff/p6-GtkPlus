@@ -1,0 +1,122 @@
+use v6.c;
+
+use File::Find;
+
+my (%resolved-check, @resolved, %nodes);
+
+use Data::Dump::Tree;
+
+sub resolve($n, $l, $c, $seen = {}) {
+  # I hate special casing, but this begs for it.
+  return if $n eq 'GTK';
+  my @counts;
+  die "No node information for $n" unless %nodes{$n}:exists;
+
+  my $i = "\t" x $l;
+  sub mark-resolved($rn, $c) {
+    return if %resolved-check{$rn};
+    @resolved.push: $rn;
+    %resolved-check{$rn} = True;
+    $seen{$rn}:delete;
+    %nodes{$n}<total_dependencies> //= @counts.sum;
+    say "{ $i }Resolved: { $rn } ({ %nodes{$n}<total_dependencies> })";
+  }
+
+  say "{ $i }{ $n } ({ $c })";
+  my $count;
+  $count = $c;
+  $seen{$n} = True;
+  for %nodes{$n}<edges>.List {
+    if !%resolved-check{$_} {
+      my $level = $l;
+      die "Circular dependency detected: { $n } -> { $_ }" if $seen{$_};
+      @counts.push: resolve($_, ++$level, 0, $seen) // 0;
+    } else {
+      @counts.push: %nodes{$_}<total_dependencies>;
+    }
+    @counts.push: 1;
+    # LAST {
+    #   mark-resolved($_, --$count);
+    # }
+  }
+  mark-resolved($n, $count);
+  $count;
+}
+
+my @files = find
+  dir => 'lib',
+  name => /'.pm6' $/,
+  exclude => / 'lib/GTK.pm6' | 'lib/GTK/Compat/GFile.pm6' /;
+
+my @modules = @files
+  .map( *.path )
+  .map({ my $mn = $_; [ $mn, S/ '.pm6' // ] })
+  .map({ $_[1] = $_[1].split('/').Array[1..*].join('::'); $_ })
+  .sort( *[1] );
+
+%nodes{$_[1]} = ( filename => $_[0], edges => [] ).Hash for @modules;
+
+my @others;
+for %nodes.pairs.sort( *.key ) -> $p {
+  say "Processing requirements for module { $p.key }...";
+
+  my $f = $p.value<filename>;
+  my $m = $f.IO.open.slurp-rest ~~ m:g/'use' \s+ $<m>=((\w+)+ % '::') \s* ';'/;
+  for $m.list -> $mm {
+    my $mn = $mm;
+    $mn ~~ s/'use' \s+//;
+    $mn ~~ s/';' $//;
+    unless $mn ~~ /^ 'GTK'/ {
+      @others.push: $mn;
+      next;
+    }
+    %nodes{$p.key}<edges>.push: $mn;
+  }
+}
+
+say "\nA resolution order is:\n";
+
+my %unresolved = %nodes.pairs.map( *.key => True );
+while (my @unresolved = %unresolved.keys.sort).elems {
+  my $l = 0;
+  my $seen = {}
+  resolve(@unresolved[0], $l, $seen);
+  %unresolved{$_}:delete for $seen.keys;
+  %unresolved{@unresolved[0]}:delete;
+}
+
+say "\nOther dependencies are:\n";
+say @others.unique.sort.join("\n");
+
+sub space($a) {
+  ' ' x ($a.chars % 8);
+}
+
+{
+  # Not an optimal solution, but it will work with editing.
+  # Want to take the longest of $_[0], add a number of spaces
+  # equal the difference between the size plus the previous number modulo 8
+  use Text::Table::Simple;
+  say "\nProvides section:\n";
+  my $table = lol2table(@modules.map({ $_.reverse.map({ qq["$_"] }) }),
+    rows => {
+      column_separator => ': ',
+      corner_marker    => ' ',
+      bottom_border    => ''
+    },
+    headers => {
+      top_border       => '',
+      column_separator => '',
+      corner_marker    => '',
+      bottom_border    => ''
+    },
+    footers => {
+      column_separator => '',
+      corner_marker    => '',
+      bottom_border    => ''
+    }
+  ).join("\n");
+  $table ~~ s:g/^^':'//;
+  $table ~~ s:g/':' \s* $$/,/;
+  say $table;
+}

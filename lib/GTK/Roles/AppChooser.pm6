@@ -26,7 +26,7 @@ role GTK::Roles::AppChooser  {
     gtk_app_chooser_get_content_type($!ac);
   }
 
-  method get_appchooser_role_type {
+  method get_appchooser_type {
     gtk_app_chooser_get_type();
   }
 

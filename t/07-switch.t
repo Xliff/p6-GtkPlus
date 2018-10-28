@@ -32,7 +32,6 @@ $a.activate.tap({
   $vbox.pack_start($title, False, False, 0);
   $vbox.pack_start($hbox, False, False, 0);
 
-
   $a.window.destroy-signal.tap({ $a.exit });
   $a.window.add($vbox);
   $a.window.show_all;

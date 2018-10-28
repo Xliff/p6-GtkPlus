@@ -59,7 +59,6 @@ class GTK::ToggleToolButton is GTK::ToolButton {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-
   # Is originally:
   # GtkToggleToolButton, gpointer --> void
   method toggled {

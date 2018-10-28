@@ -10,9 +10,9 @@ unit package GTK::Raw::ToolPalette;
 sub gtk_tool_palette_add_drag_dest (
   GtkToolPalette $palette,
   GtkWidget $widget,
-  GtkDestDefaults $flags,
-  GtkToolPaletteDragTargets $targets,
-  GdkDragAction $actions
+  uint32 $flags,                # GtkDestDefaults $flags,
+  uint32 $targets,              # GtkToolPaletteDragTargets $targets,
+  uint32 $actions               # GdkDragAction $actions
 )
   is native('gtk-3')
   is export
@@ -99,7 +99,7 @@ sub gtk_tool_palette_get_icon_size (GtkToolPalette $palette)
   { * }
 
 sub gtk_tool_palette_get_style (GtkToolPalette $palette)
-  returns GtkToolbarStyle
+  returns uint32 # GtkToolbarStyle
   is native('gtk-3')
   is export
   { * }
@@ -124,7 +124,7 @@ sub gtk_tool_palette_new ()
 
 sub gtk_tool_palette_set_drag_source (
   GtkToolPalette $palette,
-  GtkToolPaletteDragTargets $targets
+  uint32 $targets               # GtkToolPaletteDragTargets $targets
 )
   is native('gtk-3')
   is export

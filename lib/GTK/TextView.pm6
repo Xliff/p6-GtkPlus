@@ -9,7 +9,11 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::TextBuffer;
 
+use GTK::Roles::Signals::TextView;
+
 class GTK::TextView is GTK::Container {
+  also does GTK::Roles::Signals::TextView;
+
   has GtkTextView $!tv;
 
   method bless(*%attrinit) {
@@ -39,6 +43,10 @@ class GTK::TextView is GTK::Container {
       default {
       }
     }
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-tv;
   }
 
   method new {
@@ -75,31 +83,32 @@ class GTK::TextView is GTK::Container {
   # Is originally:
   # GtkTextView, GtkDeleteType, gint, gpointer --> void
   method delete-from-cursor {
-    self.connect($!tv, 'delete-from-cursor');
+    self.connect-delete($!tv, 'delete-from-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkTextExtendSelection, GtkTextIter, GtkTextIter, GtkTextIter, gpointer --> gboolean
   method extend-selection {
-    self.connect($!tv, 'extend-selection');
+    self.connect-extend-selection($!tv);
   }
 
   # Is originally:
   # GtkTextView, gchar, gpointer --> void
   method insert-at-cursor {
-    self.connect($!tv, 'insert-at-cursor');
+    self.connect-string($!tv, 'insert-at-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkMovementStep, gint, gboolean, gpointer --> void
   method move-cursor {
-    self.connect($!tv, 'move-cursor');
+    self.connect-move-cursor2($!tv, 'move-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkScrollStep, gint, gpointer --> void
   method move-viewport {
-    self.connect($!tv, 'move-viewport');
+    # Yes, this is the correct handler.
+    self.connect-move-cursor1($!tv, 'move-viewport');
   }
 
   # Is originally:
@@ -111,19 +120,19 @@ class GTK::TextView is GTK::Container {
   # Is originally:
   # GtkTextView, GtkWidget, gpointer --> void
   method populate-popup {
-    self.connect($!tv, 'populate-popup');
+    self.connect-widget($!tv, 'populate-popup');
   }
 
   # Is originally:
   # GtkTextView, gchar, gpointer --> void
   method preedit-changed {
-    self.connect($!tv, 'preedit-changed');
+    self.connect-string($!tv, 'preedit-changed');
   }
 
   # Is originally:
   # GtkTextView, gboolean, gpointer --> void
   method select-all {
-    self.connect($!tv, 'select-all');
+    self.connect-uint($!tv, 'select-all');
   }
 
   # Is originally:
@@ -389,6 +398,26 @@ class GTK::TextView is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
+
+  # - XXX -
+  # MISSED DUE TO COMMENTS IN DEFINITION -- SHOULD IMPLEMENT
+  #
+  # void gtk_text_view_add_child_in_window (
+  #   GtkTextView          *text_view,
+  #   GtkWidget            *child,
+  #   GtkTextWindowType     which_window,
+  #   /* window coordinates */
+  #   gint                  xpos,
+  #   gint                  ypos);
+  #
+  # void gtk_text_view_move_child          (
+  #   GtkTextView          *text_view,
+  #   GtkWidget            *child,
+  #   /* window coordinates */
+  #   gint                  xpos,
+  #   gint                  ypos);
+
+
   method add_child_at_anchor (
     GtkWidget() $child,
     GtkTextChildAnchor() $anchor

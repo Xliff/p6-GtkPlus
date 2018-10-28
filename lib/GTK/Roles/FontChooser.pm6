@@ -7,11 +7,11 @@ use GTK::Raw::FontChooser;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 
 role GTK::Roles::FontChooser {
   also does GTK::Roles::Types;
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkFontChooser $!fc;
 
@@ -96,7 +96,7 @@ role GTK::Roles::FontChooser {
     gtk_font_chooser_get_font_size($!fc);
   }
 
-  method get_role_type {
+  method get_fontchooser_type {
     gtk_font_chooser_get_type();
   }
 

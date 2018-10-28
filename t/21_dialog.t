@@ -8,7 +8,11 @@ use GTK::Button;
 use GTK::Dialog;
 use GTK::Dialog::Message;
 use GTK::Frame;
+use GTK::Entry;
+use GTK::Grid;
+use GTK::Image;
 use GTK::Label;
+use GTK::Separator;
 
 my ($*entry1, $*entry2, $*md);
 
@@ -35,7 +39,7 @@ sub message_dialog_clicked(*@a) {
 
 sub interactive_dialog_clicked(*@a) {
   # Will need GTK::Dialog.new_with_buttons
-  my $d1 = GTK::Dialog.new_with_buttons(
+  my $d1 = GTK::Dialog.new_with_button(
     'Interactive Dialog',
     $a.window,
     GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,

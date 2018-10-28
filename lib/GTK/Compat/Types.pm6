@@ -1,3 +1,4 @@
+
 use v6.c;
 
 use NativeCall;
@@ -47,7 +48,7 @@ constant GCopyFunc           is export := Pointer;
 constant GDestroyNotify      is export := Pointer;
 constant GQuark              is export := uint32;
 constant GStrv               is export := CArray[Str];
-constant GType               is export := uint32;
+constant GType               is export := uint64;
 constant GVariant            is export := Pointer;
 
 constant GdkPixbufSaveFunc      is export := Pointer;
@@ -526,6 +527,12 @@ our enum PangoVariant is export <
   PANGO_VARIANT_SMALL_CAPS
 >;
 
+our enum GKeyFileFlags is export (
+  G_KEY_FILE_NONE              => 0,
+  G_KEY_FILE_KEEP_COMMENTS     => 1,
+  G_KEY_FILE_KEEP_TRANSLATIONS => 2
+);
+
 
 class cairo_font_options_t  is repr('CPointer') is export { }
 class cairo_surface_t       is repr('CPointer') is export { }
@@ -543,6 +550,8 @@ class PangoLayout           is repr('CPointer') is export { }
 
 class GActionGroup          is repr('CPointer') is export { }
 class GAppInfo              is repr('CPointer') is export { }
+class GAppInfoMonitor       is repr('CPointer') is export { }
+class GAppLaunchContext     is repr('CPointer') is export { }
 class GApplication          is repr('CPointer') is export { }
 class GAsyncResult          is repr('CPointer') is export { }
 class GBytes                is repr('CPointer') is export { }
@@ -551,14 +560,18 @@ class GFunc                 is repr('CPointer') is export { }
 class GHashTable            is repr('CPointer') is export { }
 class GIcon                 is repr('CPointer') is export { }
 class GInputStream          is repr('CPointer') is export { }
-class GParamSpec            is repr('CPointer') is export { }
-class GLaunchContext        is repr('CPointer') is export { }  # GAppLaunchContext
+class GKeyFile              is repr('CPointer') is export { }
 class GListModel            is repr('CPointer') is export { }
 class GMarkupParser         is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
+class GMenuAttributeIter    is repr('CPointer') is export { }
+class GMenuLinkIter         is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
+class GMountOperation       is repr('CPointer') is export { }
 class GObject               is repr('CPointer') is export { }
 class GOutputStream         is repr('CPointer') is export { }
+class GParamSpec            is repr('CPointer') is export { }
+class GVolume               is repr('CPointer') is export { }
 
 class GdkAtom               is repr('CPointer') is export { }
 class GdkDevice             is repr('CPointer') is export { }

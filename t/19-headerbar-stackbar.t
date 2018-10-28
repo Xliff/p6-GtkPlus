@@ -10,7 +10,9 @@ use GTK::Box;
 use GTK::HeaderBar;
 use GTK::Image;
 use GTK::Label;
+use GTK::Separator;
 use GTK::Stack;
+use GTK::StackSidebar;
 
 my @titles = (
   'Welcome to GTK+',

@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+use GTK::Roles::Signals::Statusbar;
+
 class GTK::Statusbar is GTK::Bin {
+  also does GTK::Roles::Signals::Statusbar;
+
   has GtkStatusbar $!sb;
 
   method bless(*%attrinit) {
@@ -40,6 +44,10 @@ class GTK::Statusbar is GTK::Bin {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-sb;
+  }
+
   multi method new {
     my $statusbar = gtk_statusbar_new();
     self.bless(:$statusbar)
@@ -53,13 +61,13 @@ class GTK::Statusbar is GTK::Bin {
   # Is originally:
   # GtkStatusbar, guint, gchar, gpointer --> void
   method text-popped {
-    self.connect($!sb, 'text-popped');
+    self.connect-text($!sb, 'text-popped');
   }
 
   # Is originally:
   # GtkStatusbar, guint, gchar, gpointer --> void
   method text-pushed {
-    self.connect($!sb, 'text-pushed');
+    self.connect-text($!sb, 'text-pushed');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -68,7 +76,7 @@ class GTK::Statusbar is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_context_id (gchar $context_description) {
+  method get_context_id (Str() $context_description) {
     gtk_statusbar_get_context_id($!sb, $context_description);
   }
 
@@ -85,7 +93,7 @@ class GTK::Statusbar is GTK::Bin {
     gtk_statusbar_pop($!sb, $ci);
   }
 
-  method push (Int() $context_id, gchar $text) {
+  method push (Int() $context_id, Str() $text) {
     my guint $ci = self.RESOLVE-UINT($context_id);
     gtk_statusbar_push($!sb, $ci, $text);
   }

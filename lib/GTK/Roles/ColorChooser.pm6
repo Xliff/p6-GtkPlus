@@ -7,9 +7,11 @@ use GTK::Raw::ColorChooser;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 
 role GTK::Roles::ColorChooser {
+  also does GTK::Roles::Signals::Generic;
+  
   has GtkColorChooser $!cc;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -50,8 +52,8 @@ role GTK::Roles::ColorChooser {
     $color;
   }
 
-  method get_role_type {
-    warn "There is no role type for GTK::Roles::ColorChooser";
+  method get_colorchooser_type {
+    warn 'There is no role type for GTK::Roles::ColorChooser';
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

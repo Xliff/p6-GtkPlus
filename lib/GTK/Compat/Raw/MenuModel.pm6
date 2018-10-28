@@ -18,7 +18,19 @@ sub g_menu_model_get_item_attribute (
   is native(gio)
   is export
   { * }
-  
+
+sub g_menu_attribute_iter_get_name (GMenuAttributeIter $iter)
+  returns Str
+  is native(gio)
+  is export
+  { * }
+
+sub g_menu_attribute_iter_get_value (GMenuAttributeIter $iter)
+  returns GVariant
+  is native(gio)
+  is export
+  { * }
+
 sub g_menu_attribute_iter_next (GMenuAttributeIter $iter)
   returns uint32
   is native(gio)
@@ -63,7 +75,7 @@ sub g_menu_model_get_item_attribute_value (
   GMenuModel $model,
   gint $item_index,
   gchar $attribute,
-  GVariantType $expected_type
+  uint32 $expected_type         # GVariantType $expected_type
 )
   returns GVariant
   is native(gio)

@@ -9,10 +9,12 @@ use GTK::Raw::Types;
 use GTK::Entry;
 
 use GTK::Roles::Editable;
+use GTK::Roles::Signals::SpinButton;
 
 class GTK::SpinButton is GTK::Entry {
   also does GTK::Roles::Editable;
-  
+  also does GTK::Roles::Signals::SpinButton;
+
   has GtkSpinButton $!sp;
 
   method bless(*%attrinit) {
@@ -46,6 +48,10 @@ class GTK::SpinButton is GTK::Entry {
     $!er = nativecast(GtkEditable, $!sp);
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-sp;
+  }
+
   multi method new (GtkWidget $spinbutton) {
     self.bless(:$spinbutton);
   }
@@ -71,17 +77,20 @@ class GTK::SpinButton is GTK::Entry {
   # Is originally:
   # GtkSpinButton, GtkScrollType, gpointer --> void
   method change-value {
-    self.connect($!sp, 'change-value');
+    self.connect-guint($!sp, 'change-value');
   }
 
   # Is originally:
-  # GtkSpinButton, gpointer, gpointer --> gint
+  # GtkSpinButton, gdouble is rw, gpointer --> gint
+  # NOTE: !!!
+  # Really is CArray[num64]. Assigning to anything BUT the first element
+  # will result in a crash.
   method input {
-    self.connect($!sp, 'input');
+    self.connect-input($!sp);
   }
 
   # Is originally:
-  # int, int --> gboolean
+  # GtkSpinButton, gpointer --> void (Corrected)
   method output {
     self.connect($!sp, 'output');
   }

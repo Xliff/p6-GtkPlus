@@ -8,7 +8,13 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+use GTK::Roles::Actionable;
+
+my subset Ancestry where GtkSwitch | GtkActionable | GtkWidget;
+
 class GTK::Switch is GTK::Widget {
+  also does GTK::Roles::Actionable;
+
   has GtkSwitch $!s;
 
   method bless(*%attrinit) {
@@ -20,11 +26,16 @@ class GTK::Switch is GTK::Widget {
   submethod BUILD(:$switch) {
     my $to-parent;
     given $switch {
-      when GtkSwitch | GtkWidget {
+      when Ancestry {
         $!s = do {
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkSwitch, $switch);
+            nativecast(GtkSwitch, $_);
+          }
+          when GtkActionable {
+            $!action = nativecast(GtkActionable, $_);
+            $to-parent = nativecast(GtkWidget, $_);
+            nativecast(GtkSwitch, $_);                # GTK::Roles::Actionable
           }
           when GtkSwitch {
             $to-parent = nativecast(GtkWidget, $_);
@@ -38,6 +49,7 @@ class GTK::Switch is GTK::Widget {
       default {
       }
     }
+    $!action //= nativecast(GtkActionable, $!s);       # GTK::Roles::Actionable
   }
 
   multi method new {
@@ -50,13 +62,19 @@ class GTK::Switch is GTK::Widget {
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkSwitch, gpointer --> void
   method activate {
     self.connect($!s, 'activate');
   }
 
+  # Is originally:
+  # GtkSwitch, gboolean, gpointer --> gboolean
   method state-set {
-    self.connect($!s, 'state-set');
+    self.connect-uint-ruint($!s, 'state-set');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

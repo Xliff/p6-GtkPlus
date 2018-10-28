@@ -6,15 +6,16 @@ use GTK::Compat::Types;
 use GTK::Raw::Editable;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Editable;
 use GTK::Roles::Types;
 
 role GTK::Roles::Editable {
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::Editable;
   also does GTK::Roles::Types;
 
   has GtkEditable $!er;
-
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -95,7 +96,7 @@ role GTK::Roles::Editable {
     gtk_editable_get_selection_bounds($!er, $start_pos, $end_pos);
   }
 
-  method get_type () {
+  method get_editable_type () {
     gtk_editable_get_type();
   }
 

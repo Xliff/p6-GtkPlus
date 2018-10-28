@@ -68,7 +68,7 @@ sub g_app_launch_context_get_display (
   { * }
 
 sub g_app_launch_context_get_environment (GAppLaunchContext $context)
-  returns CArray[char]
+  returns CArray[gchar]
   is native('gtk-3')
   is export
   { * }
@@ -78,7 +78,7 @@ sub g_app_launch_context_get_startup_notify_id (
   GAppInfo $info,
   GList $files
 )
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
@@ -99,8 +99,8 @@ sub g_app_launch_context_new ()
 
 sub g_app_launch_context_setenv (
   GAppLaunchContext $context,
-  char $variable,
-  char $value
+  gchar $variable,
+  gchar $value
 )
   is native('gtk-3')
   is export
@@ -108,7 +108,7 @@ sub g_app_launch_context_setenv (
 
 sub g_app_launch_context_unsetenv (
   GAppLaunchContext $context,
-  char $variable
+  gchar $variable
 )
   is native('gtk-3')
   is export
@@ -120,7 +120,7 @@ sub g_app_info_get_all ()
   is export
   { * }
 
-sub g_app_info_get_all_for_type (char $content_type)
+sub g_app_info_get_all_for_type (gchar $content_type)
   returns GList
   is native('gtk-3')
   is export
@@ -148,19 +148,19 @@ sub g_app_info_get_default_for_uri_scheme (gchar $uri_scheme)
   { * }
 
 sub g_app_info_get_description (GAppInfo $appinfo)
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
 
 sub g_app_info_get_display_name (GAppInfo $appinfo)
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
 
 sub g_app_info_get_executable (GAppInfo $appinfo)
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
@@ -178,13 +178,13 @@ sub g_app_info_get_icon (GAppInfo $appinfo)
   { * }
 
 sub g_app_info_get_id (GAppInfo $appinfo)
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
 
 sub g_app_info_get_name (GAppInfo $appinfo)
-  returns char
+  returns gchar
   is native('gtk-3')
   is export
   { * }
@@ -196,7 +196,7 @@ sub g_app_info_get_recommended_for_type (gchar $content_type)
   { * }
 
 sub g_app_info_get_supported_types (GAppInfo $appinfo)
-  returns CArray[char]
+  returns CArray[gchar]
   is native('gtk-3')
   is export
   { * }

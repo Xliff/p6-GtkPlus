@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+use GTK::Roles::Signals::Overlay;
+
 class GTK::Overlay is GTK::Bin {
+  also does GTK::Roles::Signals::Overlay;
+
   has GtkOverlay $!o;
 
   method bless(*%attrinit) {
@@ -40,6 +44,10 @@ class GTK::Overlay is GTK::Bin {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-o;
+  }
+
   multi method new {
     my $overlay = gtk_overlay_new();
     self.bless(:$overlay);
@@ -53,8 +61,9 @@ class GTK::Overlay is GTK::Bin {
   # Is originally:
   # GtkOverlay, GtkWidget, GdkRectangle, gpointer --> gboolean
   method get-child-position {
-    self.connect($!o, 'get-child-position');
+    self.connect-widget-rect($!o, 'get-child-position');
   }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓

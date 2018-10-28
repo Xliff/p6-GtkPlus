@@ -8,7 +8,11 @@ use GTK::Raw::Types;
 
 use GTK::Dialog;
 
+use GTK::Roles::Signals::Generic;
+
 class GTK::Dialog::About is GTK::Dialog {
+  also does GTK::Roles::Signals::Generic;
+
   has GtkAboutDialog $!ad;
 
   method bless(*%attrinit) {
@@ -41,6 +45,10 @@ class GTK::Dialog::About is GTK::Dialog {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals;
+  }
+
   multi method new {
     my $about = gtk_about_dialog_new();
     self.bless(:$about);
@@ -54,7 +62,7 @@ class GTK::Dialog::About is GTK::Dialog {
   # Is originally:
   # GtkAboutDialog, gchar, gpointer --> gboolean
   method activate-link {
-    self.connect($!ad, 'activate-link');
+    self.connect-activate-link($!ad);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

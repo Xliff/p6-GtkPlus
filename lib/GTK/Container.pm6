@@ -101,13 +101,13 @@ class GTK::Container is GTK::Widget {
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
   multi method add {
-    self.connect($!c, 'add');
+    self.connect-widget($!c, 'add');
   }
 
   # Signal - Last
   # Made multi to prevent a conflict with method remove (GtkWidget)
   multi method remove {
-    self.connect($!c, 'remove');
+    self.connect-widget($!c, 'remove');
   }
 
   # Signal - Last
@@ -117,7 +117,7 @@ class GTK::Container is GTK::Widget {
 
   # Signal - Last
   method set-focus-child {
-    self.connect($!c, 'set-focus-child');
+    self.connect-widget($!c, 'set-focus-child');
   }
 
 
