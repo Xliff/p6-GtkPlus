@@ -4,7 +4,7 @@ use v6.c;
 
 my %do_output;
 
-sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
+sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk') {
   my $fn = $filename;
 
   $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn ~~ /^ '/usr/include/' /;
@@ -228,7 +228,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
        say qq:to/SUB/;
        $subcall
          returns $m<p6_return>
-         is native('{ $lib }')
+         is native({ $lib })
          is export
          \{ * \}
        SUB
@@ -237,7 +237,7 @@ sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk-3') {
 
       say qq:to/SUB/;
       $subcall
-        is native('{ $lib }')
+        is native({ $lib })
         is export
         \{ * \}
       SUB
