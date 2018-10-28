@@ -3,7 +3,7 @@ use v6.c;
 use lib <t .>;
 
 use listbox_test;
-use Grammar::Tracer;
+#use Grammar::Tracer;
 use Data::Dump::Tree;
 
 grammar BuilderGrammar {
@@ -80,36 +80,41 @@ class BuilderActions {
 
   method TOP($/) {
     my @items;
-    my %obj;
-
     for $/<pieces>.List {
-      my %obj;
+      my $obj;
       my $item = do {
         when $_<object>.defined   { 'object'   }
         when $_<template>.defined { 'template' }
         default                   { 'WTF'      }
       }
-      %obj = $_{$item}.made;
-      %obj<order> = $++;
-      @items.push(%obj);
+      $obj = $_{$item}.made;
+      $obj<order> = $++;
+      @items.push($obj);
     }
+    make @items;
   }
 
   method object($/) {
-    my %attrs = self!buildAttr($/);
-    my (%props, %packing, %attributes, %style, @children);
-    for (%props, %packing, %attributes, %style) -> $hash {
+    my $attrs = self!buildAttr($/);
+    my (%property, %packing, %attributes, %style, @children);
+    for (%property, %packing, %attributes, %style) -> $hash {
       my $hname = $hash.name.substr(1);
       next unless $/{$hname}.defined;
-      $hash.append($_.made) for $/{$hname}.List;
+      for $/{$hname}.List {
+        my $s = $_.made;
+        $hash.append($s.pairs);
+      }
     }
-    @children.push($_.made) for $/<child>.List;
+    for $/<child>.List {
+      my $s = $_.made;
+      @children.push($s;)
+    }
 
     make {
-      class     => %attrs<class>,
-      id        => %attrs<id>,
+      class     => $attrs<attrs><class>,
+      id        => $attrs<attrs><id>,
       children  => @children,
-      props     => %props,
+      props     => %property,
       packing   => %packing,
       attrs     => %attributes,
       style     => %style,
@@ -118,11 +123,11 @@ class BuilderActions {
 
   # Is this right?
   method template($/) {
-    my %attrs = self!buildAttr($/);
+    my $attrs = self!buildAttr($/);
     my @children;
     @children.push($_.made) for $/<child>.List;
     make {
-      class    => %attrs<parent>,
+      class    => $attrs<attrs><parent>,
       id       => "template{$++}",
       children => @children
     };
@@ -133,7 +138,7 @@ class BuilderActions {
     for (%object, %packing) -> $hash {
       my $hname = $hash.name.substr(1);
       next unless $/{$hname}.defined;
-      $hash.append($_.made) for $/{$hname};
+      $hash.append($_.made.pairs) for $/{$hname};
     }
     make {
       attributes => %attrs,
@@ -144,12 +149,12 @@ class BuilderActions {
   method attributes($/) {
     my %attrs = self!buildAttr($_) for $/<attribute>.List;
     make {
-      %attrs<name> => %attrs<value>
+      %attrs<name> => %attrs<attrs><value>
     };
   }
   method packing($/) {
     my %pack;
-    %pack.append($_.made) for $/<property>.List;
+    %pack.append($_.made.pairs) for $/<property>.List;
     make %pack;
   }
   method property($/) {
@@ -157,8 +162,13 @@ class BuilderActions {
     make {
       $attrs<name> => {
         attrs => $attrs,
-        #value => $/<value>.Str
+        value => $/<value>.Str
       }
+    };
+  }
+  method style($/) {
+    make {
+      class => $/<attr>.made.value
     };
   }
   method attr($/) {
@@ -171,4 +181,5 @@ sub MAIN {
   $ui_row ~~ s:g/'%%%'/1/;
 
   my $p = BuilderGrammar.parse($ui_row, actions => BuilderActions);
+  ddt $p.made
 }
