@@ -12,7 +12,7 @@ sub gtk_cell_area_context_allocate (
   gint $width,
   gint $height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -21,13 +21,13 @@ sub gtk_cell_area_context_get_allocation (
   gint $width,
   gint $height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_area_context_get_area (GtkCellAreaContext $context)
   returns GtkCellArea
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -36,7 +36,7 @@ sub gtk_cell_area_context_get_preferred_height (
   gint $minimum_height,
   gint $natural_height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -46,7 +46,7 @@ sub gtk_cell_area_context_get_preferred_height_for_width (
   gint $minimum_height,
   gint $natural_height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -55,7 +55,7 @@ sub gtk_cell_area_context_get_preferred_width (
   gint $minimum_width,
   gint $natural_width
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -65,13 +65,13 @@ sub gtk_cell_area_context_get_preferred_width_for_height (
   gint $minimum_width,
   gint $natural_width
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_area_context_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -80,7 +80,7 @@ sub gtk_cell_area_context_push_preferred_height (
   gint $minimum_height,
   gint $natural_height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -89,11 +89,11 @@ sub gtk_cell_area_context_push_preferred_width (
   gint $minimum_width,
   gint $natural_width
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_area_context_reset (GtkCellAreaContext $context)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

@@ -9,29 +9,29 @@ unit package GTK::Dialog::Raw::Message;
 
 sub gtk_message_dialog_get_message_area (GtkMessageDialog $message_dialog)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_message_dialog_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_message_dialog_set_markup (GtkMessageDialog $message_dialog, gchar $str)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_message_dialog_get_image (GtkMessageDialog $dialog)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_message_dialog_set_image (GtkMessageDialog $dialog, GtkWidget $image)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -44,7 +44,7 @@ sub gtk_message_dialog_new (
   Str       $message_format
 )
   returns GtkMessageDialog
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -57,7 +57,7 @@ sub gtk_message_dialog_new_with_markup (
   Str       $message_format
 )
   returns GtkMessageDialog
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -66,7 +66,7 @@ sub gtk_message_dialog_format_secondary_text (
   GtkMessageDialog $message_dialog,
   Str $message_format
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -75,6 +75,6 @@ sub gtk_message_dialog_format_secondary_markup (
   GtkMessageDialog $message_dialog,
   Str $message_format
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

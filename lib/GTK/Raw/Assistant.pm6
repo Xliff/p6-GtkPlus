@@ -11,7 +11,7 @@ sub gtk_assistant_add_action_widget (
   GtkAssistant $assistant,
   GtkWidget $child
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -20,24 +20,24 @@ sub gtk_assistant_append_page (
   GtkWidget $page
 )
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_commit (GtkAssistant $assistant)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_get_n_pages (GtkAssistant $assistant)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_get_nth_page (GtkAssistant $assistant, gint $page_num)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -46,7 +46,7 @@ sub gtk_assistant_get_page_complete (
   GtkWidget $page
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -55,7 +55,7 @@ sub gtk_assistant_get_page_has_padding (
   GtkWidget $page
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -64,7 +64,7 @@ sub gtk_assistant_get_page_header_image (
   GtkWidget $page
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -73,7 +73,7 @@ sub gtk_assistant_get_page_side_image (
   GtkWidget $page
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -82,7 +82,7 @@ sub gtk_assistant_get_page_title (
   GtkWidget $page
 )
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -91,13 +91,13 @@ sub gtk_assistant_get_page_type (
   GtkWidget $page
 )
   returns uint32 # GtkAssistantPageType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -107,18 +107,18 @@ sub gtk_assistant_insert_page (
   gint $position
 )
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_new ()
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_next_page (GtkAssistant $assistant)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -127,12 +127,12 @@ sub gtk_assistant_prepend_page (
   GtkWidget $page
 )
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_previous_page (GtkAssistant $assistant)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -140,12 +140,12 @@ sub gtk_assistant_remove_action_widget (
   GtkAssistant $assistant,
   GtkWidget $child
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_remove_page (GtkAssistant $assistant, gint $page_num)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -155,7 +155,7 @@ sub gtk_assistant_set_forward_page_func (
   gpointer $data,
   GDestroyNotify $destroy
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -164,7 +164,7 @@ sub gtk_assistant_set_page_complete (
   GtkWidget $page,
   gboolean $complete
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -173,7 +173,7 @@ sub gtk_assistant_set_page_has_padding (
   GtkWidget $page,
   gboolean $has_padding
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -182,7 +182,7 @@ sub gtk_assistant_set_page_header_image (
   GtkWidget $page,
   GdkPixbuf $pixbuf
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -191,7 +191,7 @@ sub gtk_assistant_set_page_side_image (
   GtkWidget $page,
   GdkPixbuf $pixbuf
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -200,7 +200,7 @@ sub gtk_assistant_set_page_title (
   GtkWidget $page,
   gchar $title
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -209,22 +209,22 @@ sub gtk_assistant_set_page_type (
   GtkWidget $page,
   uint32 $type                # GtkAssistantPageType $type
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_update_buttons_state (GtkAssistant $assistant)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_get_current_page (GtkAssistant $assistant)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_assistant_set_current_page (GtkAssistant $assistant, gint $page_num)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

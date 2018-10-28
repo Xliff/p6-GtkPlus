@@ -9,12 +9,12 @@ unit package GTK::Dialog::Raw::ColorChooser;
 
 sub gtk_color_chooser_dialog_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_color_chooser_dialog_new (gchar $title, GtkWindow $parent)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

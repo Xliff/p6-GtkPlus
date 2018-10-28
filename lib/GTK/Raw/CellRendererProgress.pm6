@@ -9,12 +9,12 @@ unit package GTK::Raw::CellRendererProgress;
 
 sub gtk_cell_renderer_progress_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_progress_new ()
   returns GtkCellRenderer
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

@@ -13,12 +13,12 @@ sub gtk_cell_layout_add_attribute (
   gchar $attribute,
   gint $column
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_layout_clear (GtkCellLayout $cell_layout)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -26,25 +26,25 @@ sub gtk_cell_layout_clear_attributes (
   GtkCellLayout $cell_layout,
   GtkCellRenderer $cell
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_layout_get_area (GtkCellLayout $cell_layout)
   returns GtkCellArea
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_layout_get_cells (GtkCellLayout $cell_layout)
   returns GList
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_layout_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -53,7 +53,7 @@ sub gtk_cell_layout_pack_end (
   GtkCellRenderer $cell,
   gboolean $expand
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -62,7 +62,7 @@ sub gtk_cell_layout_pack_start (
   GtkCellRenderer $cell,
   gboolean $expand
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -71,7 +71,7 @@ sub gtk_cell_layout_reorder (
   GtkCellRenderer $cell,
   gint $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -82,7 +82,7 @@ sub gtk_cell_layout_set_cell_data_func (
   gpointer $func_data,
   GDestroyNotify $destroy
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -97,6 +97,6 @@ sub gtk_cell_layout_set_attributes (
   gint $column,
   Str
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

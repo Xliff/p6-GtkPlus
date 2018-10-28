@@ -9,7 +9,7 @@ unit package GTK::Raw::AspectFrame;
 
 sub gtk_aspect_frame_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -21,7 +21,7 @@ sub gtk_aspect_frame_new (
   gboolean $obey_child
 )
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -32,6 +32,6 @@ sub gtk_aspect_frame_set (
   gfloat $ratio,
   gboolean $obey_child
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

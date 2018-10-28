@@ -24,32 +24,32 @@ sub gtk_style_context_add_provider_for_screen(
   GdkStyleProvider $provider,
   guint $priority
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 
 sub gtk_css_provider_error_quark ()
   returns GQuark
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_css_provider_get_default ()
   returns GtkCSSProvider
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_css_provider_get_named (gchar $name, gchar $variant)
   returns GtkCSSProvider
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_css_provider_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -60,7 +60,7 @@ sub gtk_css_provider_load_from_data (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -70,7 +70,7 @@ sub gtk_css_provider_load_from_file (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -80,7 +80,7 @@ sub gtk_css_provider_load_from_path (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -88,18 +88,18 @@ sub gtk_css_provider_load_from_resource (
   GtkCSSProvider $css_provider,
   gchar $resource_path
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_css_provider_new ()
   returns GtkCSSProvider
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_css_provider_to_string (GtkCSSProvider $provider)
   returns gchar
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

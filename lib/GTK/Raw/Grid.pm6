@@ -15,7 +15,7 @@ sub gtk_grid_attach (
   gint $width,
   gint $height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -27,30 +27,30 @@ sub gtk_grid_attach_next_to (
   gint $width,
   gint $height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_child_at (GtkGrid $grid, gint $left, gint $top)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_row_baseline_position (GtkGrid $grid, gint $row)
   returns uint32 # GtkBaselinePosition
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_insert_column (GtkGrid $grid, gint $position)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -59,28 +59,28 @@ sub gtk_grid_insert_next_to (
   GtkWidget $sibling,
   uint32 $side                    # GtkPositionType $side
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_insert_row (GtkGrid $grid, gint $position)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_new ()
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_remove_column (GtkGrid $grid, gint $position)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_remove_row (GtkGrid $grid, gint $position)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -89,61 +89,61 @@ sub gtk_grid_set_row_baseline_position (
   gint $row,
   uint32                          # GtkBaselinePosition $pos
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_column_homogeneous (GtkGrid $grid)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_column_spacing (GtkGrid $grid)
   returns guint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_baseline_row (GtkGrid $grid)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_row_homogeneous (GtkGrid $grid)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_get_row_spacing (GtkGrid $grid)
   returns guint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_set_column_homogeneous (GtkGrid $grid, gboolean $homogeneous)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_set_column_spacing (GtkGrid $grid, guint $spacing)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_set_baseline_row (GtkGrid $grid, gint $row)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_set_row_homogeneous (GtkGrid $grid, gboolean $homogeneous)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_grid_set_row_spacing (GtkGrid $grid, guint $spacing)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

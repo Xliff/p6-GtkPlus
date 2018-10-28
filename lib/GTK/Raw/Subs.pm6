@@ -101,17 +101,17 @@ sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
 #
 sub gtk_application_window_new (GtkApplication $app)
   returns GtkWindow
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_window_set_title (GtkWindow $win, Str $title)
-  is native($LIBGTK)
+  is native(gtk)
   is export(:window)
   { * }
 
 sub gtk_window_set_default_size (GtkWindow $win, int32 $w, int32 $h)
-  is native($LIBGTK)
+  is native(gtk)
   is export(:window)
   { * }
 
@@ -131,21 +131,21 @@ sub g_application_quit(OpaquePointer)
 # cw:This signature is wrong, so go with something that works and circle back.
 #sub gtk_init(uint32 is rw, CArray[Str])
 sub gtk_init(CArray[uint32], CArray[Str])
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_init_check()
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_main()
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_main_quit()
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

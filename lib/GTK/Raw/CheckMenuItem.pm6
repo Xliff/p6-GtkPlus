@@ -9,48 +9,48 @@ unit package GTK::Raw::CheckMenuItem;
 
 sub gtk_check_menu_item_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_check_menu_item_new ()
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_check_menu_item_new_with_label (gchar $label)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_check_menu_item_new_with_mnemonic (gchar $label)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_check_menu_item_toggled (GtkCheckMenuItem $check_menu_item)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_check_menu_item_get_inconsistent (GtkCheckMenuItem $check_menu_item)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_check_menu_item_get_active (GtkCheckMenuItem $check_menu_item)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_check_menu_item_get_draw_as_radio (GtkCheckMenuItem $check_menu_item)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -58,7 +58,7 @@ sub gtk_check_menu_item_set_inconsistent (
   GtkCheckMenuItem $check_menu_item,
   gboolean $setting
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -66,7 +66,7 @@ sub gtk_check_menu_item_set_active (
   GtkCheckMenuItem $check_menu_item,
   gboolean $is_active
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -74,6 +74,6 @@ sub gtk_check_menu_item_set_draw_as_radio (
   GtkCheckMenuItem $check_menu_item,
   gboolean $draw_as_radio
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

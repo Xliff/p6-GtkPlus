@@ -9,13 +9,13 @@ unit package GTK::Raw::CellAreaBox;
 
 sub gtk_cell_area_box_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_area_box_new ()
   returns GtkCellArea
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -26,7 +26,7 @@ sub gtk_cell_area_box_pack_end (
   gboolean $align,
   gboolean $fixed
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -37,17 +37,17 @@ sub gtk_cell_area_box_pack_start (
   gboolean $align,
   gboolean $fixed
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_area_box_get_spacing (GtkCellAreaBox $box)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_area_box_set_spacing (GtkCellAreaBox $box, gint $spacing)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

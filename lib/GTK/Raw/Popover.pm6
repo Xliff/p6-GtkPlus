@@ -12,92 +12,92 @@ sub gtk_popover_bind_model (
   GMenuModel $model,
   gchar $action_namespace
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_pointing_to (GtkPopover $popover, GdkRectangle $rect)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_new (GtkWidget $relative_to)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_new_from_model (GtkWidget $relative_to, GMenuModel $model)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_popdown (GtkPopover $popover)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_popup (GtkPopover $popover)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_set_pointing_to (GtkPopover $popover, GdkRectangle $rect)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_default_widget (GtkPopover $popover)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_modal (GtkPopover $popover)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_position (GtkPopover $popover)
   returns uint32 # GtkPositionType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_relative_to (GtkPopover $popover)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_constrain_to (GtkPopover $popover)
   returns uint32 # GtkPopoverConstraint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_get_transitions_enabled (GtkPopover $popover)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_set_default_widget (GtkPopover $popover, GtkWidget $widget)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_set_modal (GtkPopover $popover, gboolean $modal)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -105,12 +105,12 @@ sub gtk_popover_set_position (
   GtkPopover $popover,
   uint32 $position              # GtkPositionType $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_popover_set_relative_to (GtkPopover $popover, GtkWidget $relative_to)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -118,7 +118,7 @@ sub gtk_popover_set_constrain_to (
   GtkPopover $popover,
   uint32 $constraint            # GtkPopoverConstraint $constraint
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -126,6 +126,6 @@ sub gtk_popover_set_transitions_enabled (
   GtkPopover $popover,
   gboolean $transitions_enabled
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

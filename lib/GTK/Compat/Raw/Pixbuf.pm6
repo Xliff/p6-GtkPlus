@@ -26,13 +26,13 @@ sub gdk_pixbuf_add_alpha (
   guchar $b
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_apply_embedded_orientation (GdkPixbuf $src)
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -44,13 +44,13 @@ sub gdk_pixbuf_calculate_rowstride (
   gint $height
 )
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_copy (GdkPixbuf $pixbuf)
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -64,90 +64,90 @@ sub gdk_pixbuf_copy_area (
   gint $dest_x,
   gint $dest_y
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_copy_options (GdkPixbuf $src_pixbuf, GdkPixbuf $dest_pixbuf)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_error_quark ()
   returns GQuark
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_fill (GdkPixbuf $pixbuf, guint32 $pixel)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_bits_per_sample (GdkPixbuf $pixbuf)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_byte_length (GdkPixbuf $pixbuf)
   returns gsize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_colorspace (GdkPixbuf $pixbuf)
   returns GdkColorspace
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_has_alpha (GdkPixbuf $pixbuf)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_height (GdkPixbuf $pixbuf)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_n_channels (GdkPixbuf $pixbuf)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_option (GdkPixbuf $pixbuf, gchar $key)
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_options (GdkPixbuf $pixbuf)
   returns GHashTable
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_pixels (GdkPixbuf $pixbuf)
   returns guchar
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_pixels_with_length (GdkPixbuf $pixbuf, guint $length)
   returns guchar
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_get_rowstride (GdkPixbuf $pixbuf)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -159,7 +159,7 @@ sub gdk_pixbuf_get_type ()
 
 sub gdk_pixbuf_get_width (GdkPixbuf $pixbuf)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -171,7 +171,7 @@ sub gdk_pixbuf_new (
   gint $height
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -185,7 +185,7 @@ sub gdk_pixbuf_new_from_bytes (
   gint $rowstride
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -201,13 +201,13 @@ sub gdk_pixbuf_new_from_data (
   gpointer $destroy_fn_data
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_new_from_file (gchar $filename, GError $error)
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -219,7 +219,7 @@ sub gdk_pixbuf_new_from_file_at_scale (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -231,7 +231,7 @@ sub gdk_pixbuf_new_from_file_at_scale_utf8 (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -242,7 +242,7 @@ sub gdk_pixbuf_new_from_file_at_size (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -253,13 +253,13 @@ sub gdk_pixbuf_new_from_file_at_size_utf8 (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_new_from_file_utf8 (gchar $filename, GError $error)
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -270,13 +270,13 @@ sub gdk_pixbuf_new_from_inline (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_new_from_resource (gchar $resource_path, GError $error)
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -288,7 +288,7 @@ sub gdk_pixbuf_new_from_resource_at_scale (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -298,7 +298,7 @@ sub gdk_pixbuf_new_from_stream (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -308,7 +308,7 @@ sub gdk_pixbuf_new_from_stream_async (
   GAsyncReadyCallback $callback,
   gpointer $user_data
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -321,7 +321,7 @@ sub gdk_pixbuf_new_from_stream_at_scale (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -334,7 +334,7 @@ sub gdk_pixbuf_new_from_stream_at_scale_async (
   GAsyncReadyCallback $callback,
   gpointer $user_data
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -343,13 +343,13 @@ sub gdk_pixbuf_new_from_stream_finish (
   GError $error
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_new_from_xpm_data (CArray[Str] $data)
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -361,31 +361,31 @@ sub gdk_pixbuf_new_subpixbuf (
   gint $height
 )
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_read_pixel_bytes (GdkPixbuf $pixbuf)
   returns GBytes
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_read_pixels (GdkPixbuf $pixbuf)
   returns guint8
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_ref (GdkPixbuf $pixbuf)
   returns GdkPixbuf
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_remove_option (GdkPixbuf $pixbuf, gchar $key)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -395,7 +395,7 @@ sub gdk_pixbuf_saturate_and_pixelate (
   gfloat $saturation,
   gboolean $pixelate
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -409,7 +409,7 @@ sub gdk_pixbuf_save_to_bufferv (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -423,7 +423,7 @@ sub gdk_pixbuf_save_to_callbackv (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -432,7 +432,7 @@ sub gdk_pixbuf_save_to_stream_finish (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -446,7 +446,7 @@ sub gdk_pixbuf_save_to_streamv (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -460,7 +460,7 @@ sub gdk_pixbuf_save_to_streamv_async (
   GAsyncReadyCallback $callback,
   gpointer $user_data
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -473,7 +473,7 @@ sub gdk_pixbuf_savev (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -486,17 +486,17 @@ sub gdk_pixbuf_savev_utf8 (
   GError $error
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_set_option (GdkPixbuf $pixbuf, gchar $key, gchar $value)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gdk_pixbuf_unref (GdkPixbuf $pixbuf)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

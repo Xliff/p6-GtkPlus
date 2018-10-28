@@ -9,18 +9,18 @@ unit package GTK::Raw::PaperSize;
 
 sub gtk_paper_size_copy (GtkPaperSize $other)
   returns GtkPaperSize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_free (GtkPaperSize $size)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_get_default ()
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -29,7 +29,7 @@ sub gtk_paper_size_get_default_bottom_margin (
   uint32 $unit                  # GtkUnit $unit
 )
   returns gdouble
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -38,7 +38,7 @@ sub gtk_paper_size_get_default_left_margin (
   uint32 $unit                  # GtkUnit $unit
 )
   returns gdouble
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -47,7 +47,7 @@ sub gtk_paper_size_get_default_right_margin (
   uint32 $unit                  # GtkUnit $unit
 )
   returns gdouble
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -56,13 +56,13 @@ sub gtk_paper_size_get_default_top_margin (
   uint32 $unit                  # GtkUnit $unit
 )
   returns gdouble
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_get_display_name (GtkPaperSize $size)
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -71,31 +71,31 @@ sub gtk_paper_size_get_height (
   uint32 $unit                  # GtkUnit $unit
 )
   returns gdouble
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_get_name (GtkPaperSize $size)
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_get_paper_sizes (gboolean $include_custom)
   returns GList
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_get_ppd_name (GtkPaperSize $size)
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -104,31 +104,31 @@ sub gtk_paper_size_get_width (
   uint32 $unit                  # GtkUnit $unit
 )
   returns gdouble
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_is_custom (GtkPaperSize $size)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_is_equal (GtkPaperSize $size1, GtkPaperSize $size2)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_is_ipp (GtkPaperSize $size)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_new (gchar $name)
   returns GtkPaperSize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -140,13 +140,13 @@ sub gtk_paper_size_new_custom (
   uint32 $unit                  # GtkUnit $unit
 )
   returns GtkPaperSize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_new_from_gvariant (GVariant $variant)
   returns GtkPaperSize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -156,7 +156,7 @@ sub gtk_paper_size_new_from_ipp (
   gdouble $height
 )
   returns GtkPaperSize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -166,7 +166,7 @@ sub gtk_paper_size_new_from_key_file (
   GError $error
 )
   returns GtkPaperSize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -177,7 +177,7 @@ sub gtk_paper_size_new_from_ppd (
   gdouble $height
 )
   returns GtkPaperSize
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -187,13 +187,13 @@ sub gtk_paper_size_set_size (
   gdouble $height,
   uint32 $unit                  # GtkUnit $unit
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_to_gvariant (GtkPaperSize $paper_size)
   returns GVariant
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -202,6 +202,6 @@ sub gtk_paper_size_to_key_file (
   GKeyFile $key_file,
   gchar $group_name
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

@@ -13,19 +13,19 @@ sub gtk_cell_view_get_size_of_row (
   GtkRequisition $requisition
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_new ()
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -34,25 +34,25 @@ sub gtk_cell_view_new_with_context (
   GtkCellAreaContext $context
 )
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_new_with_markup (gchar $markup)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_new_with_pixbuf (GdkPixbuf $pixbuf)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_new_with_text (gchar $text)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -60,36 +60,36 @@ sub gtk_cell_view_set_background_color (
   GtkCellView $cell_view,
   GdkColor $color
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_set_background_rgba (GtkCellView $cell_view, GdkRGBA $rgba)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_get_draw_sensitive (GtkCellView $cell_view)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_get_fit_model (GtkCellView $cell_view)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_get_displayed_row (GtkCellView $cell_view)
   returns GtkTreePath
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_get_model (GtkCellView $cell_view)
   returns GtkTreeModel
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -97,21 +97,21 @@ sub gtk_cell_view_set_draw_sensitive (
   GtkCellView $cell_view,
   gboolean $draw_sensitive
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_set_fit_model (GtkCellView $cell_view, gboolean $fit_model)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_set_displayed_row (GtkCellView $cell_view, GtkTreePath $path)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_view_set_model (GtkCellView $cell_view, GtkTreeModel $model)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

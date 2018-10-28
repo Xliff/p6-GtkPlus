@@ -12,7 +12,7 @@ sub gtk_text_buffer_add_mark (
   GtkTextMark $mark,
   GtkTextIter $where
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -20,7 +20,7 @@ sub gtk_text_buffer_add_selection_clipboard (
   GtkTextBuffer $buffer,
   GtkClipboard $clipboard
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -30,7 +30,7 @@ sub gtk_text_buffer_apply_tag (
   GtkTextIter $start,
   GtkTextIter $end
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -40,7 +40,7 @@ sub gtk_text_buffer_apply_tag_by_name (
   GtkTextIter $start,
   GtkTextIter $end
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -51,23 +51,23 @@ sub gtk_text_buffer_backspace (
   gboolean $default_editable
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_begin_user_action (GtkTextBuffer $buffer)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_copy_clipboard (GtkTextBuffer $buffer, GtkClipboard $clipboard)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_create_child_anchor (GtkTextBuffer $buffer, GtkTextIter $iter)
   returns GtkTextChildAnchor
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -78,7 +78,7 @@ sub gtk_text_buffer_create_mark (
   gboolean $left_gravity
 )
   returns GtkTextMark
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -87,7 +87,7 @@ sub gtk_text_buffer_cut_clipboard (
   GtkClipboard $clipboard,
   gboolean $default_editable
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -96,7 +96,7 @@ sub gtk_text_buffer_delete (
   GtkTextIter $start,
   GtkTextIter $end
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -107,17 +107,17 @@ sub gtk_text_buffer_delete_interactive (
   gboolean $default_editable
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_delete_mark (GtkTextBuffer $buffer, GtkTextMark $mark)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_delete_mark_by_name (GtkTextBuffer $buffer, gchar $name)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -127,12 +127,12 @@ sub gtk_text_buffer_delete_selection (
   gboolean $default_editable
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_end_user_action (GtkTextBuffer $buffer)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -141,36 +141,36 @@ sub gtk_text_buffer_get_bounds (
   GtkTextIter $start is rw,
   GtkTextIter $end is rw
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_char_count (GtkTextBuffer $buffer)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_copy_target_list (GtkTextBuffer $buffer)
   returns GtkTargetList
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_end_iter (GtkTextBuffer $buffer, GtkTextIter $iter)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_has_selection (GtkTextBuffer $buffer)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_insert (GtkTextBuffer $buffer)
   returns GtkTextMark
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -179,7 +179,7 @@ sub gtk_text_buffer_get_iter_at_child_anchor (
   GtkTextIter $iter,
   GtkTextChildAnchor $anchor
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -188,7 +188,7 @@ sub gtk_text_buffer_get_iter_at_line (
   GtkTextIter $iter,
   gint $line_number
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -198,7 +198,7 @@ sub gtk_text_buffer_get_iter_at_line_index (
   gint $line_number,
   gint $byte_index
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -208,7 +208,7 @@ sub gtk_text_buffer_get_iter_at_line_offset (
   gint $line_number,
   gint $char_offset
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -217,7 +217,7 @@ sub gtk_text_buffer_get_iter_at_mark (
   GtkTextIter $iter,
   GtkTextMark $mark
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -226,31 +226,31 @@ sub gtk_text_buffer_get_iter_at_offset (
   GtkTextIter $iter,
   gint $char_offset
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_line_count (GtkTextBuffer $buffer)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_mark (GtkTextBuffer $buffer, gchar $name)
   returns GtkTextMark
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_paste_target_list (GtkTextBuffer $buffer)
   returns GtkTargetList
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_selection_bound (GtkTextBuffer $buffer)
   returns GtkTextMark
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -260,7 +260,7 @@ sub gtk_text_buffer_get_selection_bounds (\
   GtkTextIter $end
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -271,18 +271,18 @@ sub gtk_text_buffer_get_slice (
   gboolean $include_hidden_chars
 )
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_start_iter (GtkTextBuffer $buffer, GtkTextIter $iter)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_tag_table (GtkTextBuffer $buffer)
   returns GtkTextTagTable
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -293,13 +293,13 @@ sub gtk_text_buffer_get_text (
   gboolean $include_hidden_chars
 )
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -309,12 +309,12 @@ sub gtk_text_buffer_insert (
   gchar $text,
   gint $len
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_insert_at_cursor (GtkTextBuffer $buffer, gchar $text, gint $len)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -323,7 +323,7 @@ sub gtk_text_buffer_insert_child_anchor (
   GtkTextIter $iter,
   GtkTextChildAnchor $anchor
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -335,7 +335,7 @@ sub gtk_text_buffer_insert_interactive (
   gboolean $default_editable
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -346,7 +346,7 @@ sub gtk_text_buffer_insert_interactive_at_cursor (
   gboolean $default_editable
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -356,7 +356,7 @@ sub gtk_text_buffer_insert_markup (
   gchar $markup,
   gint $len
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -365,7 +365,7 @@ sub gtk_text_buffer_insert_pixbuf (
   GtkTextIter $iter,
   GdkPixbuf $pixbuf
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -375,7 +375,7 @@ sub gtk_text_buffer_insert_range (
   GtkTextIter $start,
   GtkTextIter $end
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -387,7 +387,7 @@ sub gtk_text_buffer_insert_range_interactive (
   gboolean $default_editable
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -396,7 +396,7 @@ sub gtk_text_buffer_move_mark (
   GtkTextMark $mark,
   GtkTextIter $where
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -405,13 +405,13 @@ sub gtk_text_buffer_move_mark_by_name (
   gchar $name,
   GtkTextIter $where
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_new (GtkTextTagTable $table)
   returns GtkTextBuffer
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -421,12 +421,12 @@ sub gtk_text_buffer_paste_clipboard (
   GtkTextIter $override_location,
   gboolean $default_editable
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_place_cursor (GtkTextBuffer $buffer, GtkTextIter $where)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -435,7 +435,7 @@ sub gtk_text_buffer_remove_all_tags (
   GtkTextIter $start,
   GtkTextIter $end
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -443,7 +443,7 @@ sub gtk_text_buffer_remove_selection_clipboard (
   GtkTextBuffer $buffer,
   GtkClipboard $clipboard
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -453,7 +453,7 @@ sub gtk_text_buffer_remove_tag (
   GtkTextIter $start,
   GtkTextIter $end
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -463,7 +463,7 @@ sub gtk_text_buffer_remove_tag_by_name (
   GtkTextIter $start,
   GtkTextIter $end
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -472,22 +472,22 @@ sub gtk_text_buffer_select_range (
   GtkTextIter $ins,
   GtkTextIter $bound
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_set_text (GtkTextBuffer $buffer, gchar $text, gint $len)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_get_modified (GtkTextBuffer $buffer)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_text_buffer_set_modified (GtkTextBuffer $buffer, gboolean $setting)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

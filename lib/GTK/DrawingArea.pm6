@@ -9,12 +9,12 @@ use GTK::Widget;
 
 sub gtk_drawing_area_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   { * }
 
 sub gtk_drawing_area_new ()
   returns GtkDrawingArea
-  is native($LIBGTK)
+  is native(gtk)
   { * }
 
 class GTK::DrawingArea is GTK::Widget {

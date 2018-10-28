@@ -15,7 +15,7 @@ sub gtk_menu_attach (
   guint $top_attach,
   guint $bottom_attach
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -24,52 +24,52 @@ sub gtk_menu_attach_to_widget (
   GtkWidget $attach_widget,
   GtkMenuDetachFunc $detacher
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_detach (GtkMenu $menu)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_attach_widget (GtkMenu $menu)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_for_attach_widget (GtkWidget $widget)
   returns GList
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_new ()
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_new_from_model (GMenuModel $model)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_place_on_monitor (GtkMenu $menu, GdkMonitor $monitor)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_popdown (GtkMenu $menu)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -82,12 +82,12 @@ sub gtk_menu_popup (
   guint $button,
   guint32 $activate_time
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_popup_at_pointer (GtkMenu $menu, GdkEvent $trigger_event)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -99,7 +99,7 @@ sub gtk_menu_popup_at_rect (
   uint32 $menu_anchor,            # GdkGravity $menu_anchor,
   GdkEvent $trigger_event
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -110,7 +110,7 @@ sub gtk_menu_popup_at_widget (
   uint32 $menu_anchor,            # GdkGravity $menu_anchor,
   GdkEvent $trigger_event
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -125,7 +125,7 @@ sub gtk_menu_popup_for_device (
   guint $button,
   guint32 $activate_time
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -134,84 +134,84 @@ sub gtk_menu_reorder_child (
   GtkWidget $child,
   gint $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_reposition (GtkMenu $menu)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_set_screen (GtkMenu $menu, GdkScreen $screen)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_tearoff_state (GtkMenu $menu)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_accel_group (GtkMenu $menu)
   returns GtkAccelGroup
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_title (GtkMenu $menu)
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_accel_path (GtkMenu $menu)
   returns Str
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_active (GtkMenu $menu)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_reserve_toggle_size (GtkMenu $menu)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_get_monitor (GtkMenu $menu)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_set_tearoff_state (GtkMenu $menu, gboolean $torn_off)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_set_accel_group (GtkMenu $menu, GtkAccelGroup $accel_group)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_set_title (GtkMenu $menu, gchar $title)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_set_accel_path (GtkMenu $menu, gchar $accel_path)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_set_active (GtkMenu $menu, guint $index)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -219,11 +219,11 @@ sub gtk_menu_set_reserve_toggle_size (
   GtkMenu $menu,
   gboolean $reserve_toggle_size
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_menu_set_monitor (GtkMenu $menu, gint $monitor_num)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

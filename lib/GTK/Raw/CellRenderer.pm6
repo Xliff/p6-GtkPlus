@@ -17,7 +17,7 @@ sub gtk_cell_renderer_activate (
   uint32 $flags                 # GtkCellRendererState $flags
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -25,7 +25,7 @@ sub gtk_cell_renderer_activate (
 #   GtkCellRendererClass $renderer_class,
 #   GType $type
 # )
-#   is native($LIBGTK)
+#   is native(gtk)
 #   is export
 #   { * }
 
@@ -36,7 +36,7 @@ sub gtk_cell_renderer_get_aligned_area (
   GdkRectangle $cell_area,
   GdkRectangle $aligned_area
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -45,7 +45,7 @@ sub gtk_cell_renderer_get_alignment (
   gfloat $xalign,
   gfloat $yalign
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -54,7 +54,7 @@ sub gtk_cell_renderer_get_fixed_size (
   gint $width,
   gint $height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -63,7 +63,7 @@ sub gtk_cell_renderer_get_padding (
   gint $xpad,
   gint $ypad
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -73,7 +73,7 @@ sub gtk_cell_renderer_get_preferred_height (
   gint $minimum_size,
   gint $natural_size
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -84,7 +84,7 @@ sub gtk_cell_renderer_get_preferred_height_for_width (
   gint $minimum_height,
   gint $natural_height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -94,7 +94,7 @@ sub gtk_cell_renderer_get_preferred_size (
   GtkRequisition $minimum_size,
   GtkRequisition $natural_size
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -104,7 +104,7 @@ sub gtk_cell_renderer_get_preferred_width (
   gint $minimum_size,
   gint $natural_size
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -115,13 +115,13 @@ sub gtk_cell_renderer_get_preferred_width_for_height (
   gint $minimum_width,
   gint $natural_width
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_get_request_mode (GtkCellRenderer $cell)
   returns uint32 # GtkSizeRequestMode
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -134,7 +134,7 @@ sub gtk_cell_renderer_get_size (
   gint $width,
   gint $height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -144,19 +144,19 @@ sub gtk_cell_renderer_get_state (
   guint $cell_state             # GtkCellRendererState $cell_state
 )
   returns uint32 # GtkStateFlags
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_is_activatable (GtkCellRenderer $cell)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -168,7 +168,7 @@ sub gtk_cell_renderer_render (
   GdkRectangle $cell_area,
   uint32 $flags                 # GtkCellRendererState $flags
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -177,7 +177,7 @@ sub gtk_cell_renderer_set_alignment (
   gfloat $xalign,
   gfloat $yalign
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -186,7 +186,7 @@ sub gtk_cell_renderer_set_fixed_size (
   gint $width,
   gint $height
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -195,7 +195,7 @@ sub gtk_cell_renderer_set_padding (
   gint $xpad,
   gint $ypad
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -209,7 +209,7 @@ sub gtk_cell_renderer_start_editing (
   uint32 $flags                 # GtkCellRendererState $flags
 )
   returns GtkCellEditable
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -217,28 +217,28 @@ sub gtk_cell_renderer_stop_editing (
   GtkCellRenderer $cell,
   gboolean $canceled
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_get_visible (GtkCellRenderer $cell)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_get_sensitive (GtkCellRenderer $cell)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_set_visible (GtkCellRenderer $cell, gboolean $visible)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_set_sensitive (GtkCellRenderer $cell, gboolean $sensitive)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

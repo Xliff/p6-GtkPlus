@@ -12,7 +12,7 @@ sub gtk_tree_drag_source_drag_data_delete (
   GtkTreePath $path
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -22,7 +22,7 @@ sub gtk_tree_drag_source_drag_data_get (
   GtkSelectionData $selection_data
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -32,13 +32,13 @@ sub gtk_tree_drag_dest_drag_data_received (
   GtkSelectionData $selection_data
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_tree_drag_dest_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -48,7 +48,7 @@ sub gtk_tree_drag_dest_row_drop_possible (
   GtkSelectionData $selection_data
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -58,7 +58,7 @@ sub gtk_tree_get_row_drag_data (
   GtkTreePath $path
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -68,7 +68,7 @@ sub gtk_tree_set_row_drag_data (
   GtkTreePath $path
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -77,6 +77,6 @@ sub gtk_tree_drag_source_row_draggable (
   GtkTreePath $path
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

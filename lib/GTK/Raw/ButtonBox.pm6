@@ -12,7 +12,7 @@ sub gtk_button_box_get_child_non_homogeneous (
   GtkWidget $child
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -21,13 +21,13 @@ sub gtk_button_box_get_child_secondary (
   GtkWidget $child
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_button_box_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -35,7 +35,7 @@ sub gtk_button_box_new (
   uint32 $orientation           # GtkOrientation $orientation
 )
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -44,7 +44,7 @@ sub gtk_button_box_set_child_non_homogeneous (
   GtkWidget $child,
   gboolean $non_homogeneous
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -53,13 +53,13 @@ sub gtk_button_box_set_child_secondary (
   GtkWidget $child,
   gboolean $is_secondary
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_button_box_get_layout (GtkButtonBox $widget)
   returns uint32 # GtkButtonBoxStyle
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -67,6 +67,6 @@ sub gtk_button_box_set_layout (
   GtkButtonBox $widget,
   uint32 $layout_style           # GtkButtonBoxStyle $layout_style
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

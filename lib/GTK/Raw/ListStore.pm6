@@ -8,18 +8,18 @@ use GTK::Raw::Types;
 unit package GTK::Raw::ListStore;
 
 sub gtk_list_store_append (GtkListStore $list_store, GtkTreeIter $iter)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_list_store_clear (GtkListStore $list_store)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_list_store_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -28,7 +28,7 @@ sub gtk_list_store_insert (
   GtkTreeIter $iter,
   gint $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -37,7 +37,7 @@ sub gtk_list_store_insert_after (
   GtkTreeIter $iter,
   GtkTreeIter $sibling
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -46,7 +46,7 @@ sub gtk_list_store_insert_before (
   GtkTreeIter $iter,
   GtkTreeIter $sibling
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -58,13 +58,13 @@ sub gtk_list_store_insert_with_valuesv (
   CArray[GValue] $values,
   gint $n_values
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_list_store_iter_is_valid (GtkListStore $list_store, GtkTreeIter $iter)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -73,7 +73,7 @@ sub gtk_list_store_move_after (
   GtkTreeIter $iter,
   GtkTreeIter $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -82,29 +82,29 @@ sub gtk_list_store_move_before (
   GtkTreeIter $iter,
   GtkTreeIter $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_list_store_newv (gint $n_columns, CArray[uint64] $types)
   returns GtkListStore
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_list_store_prepend (GtkListStore $list_store, GtkTreeIter $iter)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_list_store_remove (GtkListStore $list_store, GtkTreeIter $iter)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_list_store_reorder (GtkListStore $store, CArray[gint] $new_order)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -113,7 +113,7 @@ sub gtk_list_store_set_column_types (
   gint $n_columns,
   CArray[GType] $types
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -122,7 +122,7 @@ sub gtk_list_store_set_column_types (
 #   GtkTreeIter $iter,
 #   va_list $var_args
 # )
-#   is native($LIBGTK)
+#   is native(gtk)
 #   is export
 #   { * }
 
@@ -132,7 +132,7 @@ sub gtk_list_store_set_value (
   gint $column,
   GValue $value
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -143,7 +143,7 @@ sub gtk_list_store_set_valuesv (
   CArray[GValue] $values,
   gint $n_values
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -152,6 +152,6 @@ sub gtk_list_store_swap (
   GtkTreeIter $a,
   GtkTreeIter $b
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

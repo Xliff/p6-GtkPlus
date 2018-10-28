@@ -12,7 +12,7 @@ sub gtk_dialog_add_action_widget (
   GtkWidget $child,
   gint $response_id
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -22,25 +22,25 @@ sub gtk_dialog_add_button (
   gint $response_id
 )
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_dialog_get_action_area (GtkDialog $dialog)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_dialog_get_content_area (GtkDialog $dialog)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_dialog_get_header_bar (GtkDialog $dialog)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -49,13 +49,13 @@ sub gtk_dialog_get_response_for_widget (
   GtkWidget $widget
 )
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_dialog_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -64,30 +64,30 @@ sub gtk_dialog_get_widget_for_response (
   gint $response_id
 )
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_alternative_dialog_button_order (GdkScreen $screen)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_dialog_new ()
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_dialog_response (GtkDialog $dialog, gint $response_id)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_dialog_run (GtkDialog $dialog)
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -96,7 +96,7 @@ sub gtk_dialog_set_alternative_button_order_from_array (
   gint $n_params,
   CArray[gint] $new_order
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -104,7 +104,7 @@ sub gtk_dialog_set_default_response (
   GtkDialog $dialog,
   gint $response_id
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -113,7 +113,7 @@ sub gtk_dialog_set_response_sensitive (
   gint $response_id,
   gboolean $setting
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -126,6 +126,6 @@ sub gtk_dialog_new_with_buttons(
   Str
 )
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

@@ -13,7 +13,7 @@ sub gtk_target_list_add (
   guint $flags,
   guint $info
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -22,7 +22,7 @@ sub gtk_target_list_add_image_targets (
   guint $info,
   gboolean $writable
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -32,7 +32,7 @@ sub gtk_target_list_add_rich_text_targets (
   gboolean $deserializable,
   GtkTextBuffer $buffer
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -41,29 +41,29 @@ sub gtk_target_list_add_table (
   GtkTargetEntry $targets,
   guint $ntargets
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_target_list_add_text_targets (GtkTargetList $list, guint $info)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_target_list_add_uri_targets (GtkTargetList $list, guint $info)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_target_list_find (GtkTargetList $list, GdkAtom $target, guint $info)
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_target_list_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -72,22 +72,22 @@ sub gtk_target_list_new (
   guint $ntargets
 )
   returns GtkTargetList
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_target_list_ref (GtkTargetList $list)
   returns GtkTargetList
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_target_list_remove (GtkTargetList $list, GdkAtom $target)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_target_list_unref (GtkTargetList $list)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

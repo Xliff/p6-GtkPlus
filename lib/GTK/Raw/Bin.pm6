@@ -9,12 +9,12 @@ unit package GTK::Raw::Bin;
 
 sub gtk_bin_get_child (GtkBin $bin)
   returns GtkWidget
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_bin_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }

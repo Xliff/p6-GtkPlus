@@ -31,18 +31,18 @@ sub gtk_tree_store_append (
   GtkTreeIter $iter,
   GtkTreeIter $parent
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_tree_store_clear (GtkTreeStore $tree_store)
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_tree_store_get_type ()
   returns GType
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -52,7 +52,7 @@ sub gtk_tree_store_insert (
   GtkTreeIter $parent,
   gint $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -62,7 +62,7 @@ sub gtk_tree_store_insert_after (
   GtkTreeIter $parent,
   GtkTreeIter $sibling
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -72,7 +72,7 @@ sub gtk_tree_store_insert_before (
   GtkTreeIter $parent,
   GtkTreeIter $sibling
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -85,7 +85,7 @@ sub gtk_tree_store_insert_with_valuesv (
   CArray[GValue] $values,
   gint $n_values
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -95,7 +95,7 @@ sub gtk_tree_store_is_ancestor (
   GtkTreeIter $descendant
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -104,7 +104,7 @@ sub gtk_tree_store_iter_depth (
   GtkTreeIter $iter
 )
   returns gint
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -113,7 +113,7 @@ sub gtk_tree_store_iter_is_valid (
   GtkTreeIter $iter
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -122,7 +122,7 @@ sub gtk_tree_store_move_after (
   GtkTreeIter $iter,
   GtkTreeIter $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -131,13 +131,13 @@ sub gtk_tree_store_move_before (
   GtkTreeIter $iter,
   GtkTreeIter $position
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
 sub gtk_tree_store_newv (gint $n_columns, CArray[GType] $types)
   returns GtkTreeStore
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -146,7 +146,7 @@ sub gtk_tree_store_prepend (
   GtkTreeIter $iter,
   GtkTreeIter $parent
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -155,7 +155,7 @@ sub gtk_tree_store_remove (
   GtkTreeIter $iter
 )
   returns uint32
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -164,7 +164,7 @@ sub gtk_tree_store_reorder (
   GtkTreeIter $parent,
   CArray[int32] $new_order
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -173,7 +173,7 @@ sub gtk_tree_store_set_column_types (
   gint $n_columns,
   CArray[GType] $types
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -182,7 +182,7 @@ sub gtk_tree_store_set_column_types (
 #   GtkTreeIter $iter,
 #   va_list $var_args
 # )
-#   is native($LIBGTK)
+#   is native(gtk)
 #   is export
 #   { * }
 
@@ -192,7 +192,7 @@ sub gtk_tree_store_set_value (
   gint $column,
   GValue $value
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -203,7 +203,7 @@ sub gtk_tree_store_set_valuesv (
   CArray[GValue] $values,
   gint $n_values
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
 
@@ -212,6 +212,6 @@ sub gtk_tree_store_swap (
   GtkTreeIter $a,
   GtkTreeIter $b
 )
-  is native($LIBGTK)
+  is native(gtk)
   is export
   { * }
