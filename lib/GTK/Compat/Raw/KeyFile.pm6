@@ -9,12 +9,12 @@ unit package GTK::Raw::KeyFile;
 
 sub g_key_file_error_quark ()
   returns GQuark
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_free (GKeyFile $key_file)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -25,7 +25,7 @@ sub g_key_file_get_boolean (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -37,7 +37,7 @@ sub g_key_file_get_boolean_list (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -48,7 +48,7 @@ sub g_key_file_get_comment (
   GError $error
 )
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -59,7 +59,7 @@ sub g_key_file_get_double (
   GError $error
 )
   returns gdouble
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -71,13 +71,13 @@ sub g_key_file_get_double_list (
   GError $error
 )
   returns gdouble
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_get_groups (GKeyFile $key_file, gsize $length)
   returns CArray[Str]
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -88,7 +88,7 @@ sub g_key_file_get_int64 (
   GError $error
 )
   returns gint64
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -99,7 +99,7 @@ sub g_key_file_get_integer (
   GError $error
 )
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -111,7 +111,7 @@ sub g_key_file_get_integer_list (
   GError $error
 )
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -122,7 +122,7 @@ sub g_key_file_get_keys (
   GError $error
 )
   returns CArray[Str]
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -133,7 +133,7 @@ sub g_key_file_get_locale_for_key (
   gchar $locale
 )
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -145,7 +145,7 @@ sub g_key_file_get_locale_string (
   GError $error
 )
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -158,13 +158,13 @@ sub g_key_file_get_locale_string_list (
   GError $error
 )
   returns CArray[Str]
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_get_start_group (GKeyFile $key_file)
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -175,7 +175,7 @@ sub g_key_file_get_string (
   GError $error
 )
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -187,7 +187,7 @@ sub g_key_file_get_string_list (
   GError $error
 )
   returns CArray[Str]
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -198,7 +198,7 @@ sub g_key_file_get_uint64 (
   GError $error
 )
   returns guint64
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -209,13 +209,13 @@ sub g_key_file_get_value (
   GError $error
 )
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_has_group (GKeyFile $key_file, gchar $group_name)
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -226,7 +226,7 @@ sub g_key_file_has_key (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -237,7 +237,7 @@ sub g_key_file_load_from_bytes (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -249,7 +249,7 @@ sub g_key_file_load_from_data (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -261,7 +261,7 @@ sub g_key_file_load_from_data_dirs (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -274,7 +274,7 @@ sub g_key_file_load_from_dirs (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -285,19 +285,19 @@ sub g_key_file_load_from_file (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_new ()
   returns GKeyFile
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_ref (GKeyFile $key_file)
   returns GKeyFile
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -308,7 +308,7 @@ sub g_key_file_remove_comment (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -318,7 +318,7 @@ sub g_key_file_remove_group (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -329,7 +329,7 @@ sub g_key_file_remove_key (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -339,7 +339,7 @@ sub g_key_file_save_to_file (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -349,7 +349,7 @@ sub g_key_file_set_boolean (
   gchar $key,
   gboolean $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -361,7 +361,7 @@ sub g_key_file_set_comment (
   GError $error
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -371,7 +371,7 @@ sub g_key_file_set_double (
   gchar $key,
   gdouble $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -381,7 +381,7 @@ sub g_key_file_set_int64 (
   gchar $key,
   gint64 $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -391,12 +391,12 @@ sub g_key_file_set_integer (
   gchar $key,
   gint $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_set_list_separator (GKeyFile $key_file, gchar $separator)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -407,7 +407,7 @@ sub g_key_file_set_locale_string (
   gchar $locale,
   gchar $string
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -417,7 +417,7 @@ sub g_key_file_set_string (
   gchar $key,
   gchar $string
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -427,7 +427,7 @@ sub g_key_file_set_uint64 (
   gchar $key,
   guint64 $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -437,17 +437,17 @@ sub g_key_file_set_value (
   gchar $key,
   gchar $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_to_data (GKeyFile $key_file, gsize $length, GError $error)
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub g_key_file_unref (GKeyFile $key_file)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

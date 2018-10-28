@@ -12,12 +12,12 @@ sub gtk_menu_shell_activate_item (
   GtkWidget $menu_item,
   gboolean $force_deactivate
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_append (GtkMenuShell $menu_shell, GtkWidget $child)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -27,40 +27,40 @@ sub gtk_menu_shell_bind_model (
   gchar $action_namespace,
   gboolean $with_separators
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_cancel (GtkMenuShell $menu_shell)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_deactivate (GtkMenuShell $menu_shell)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_deselect (GtkMenuShell $menu_shell)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_get_parent_shell (GtkMenuShell $menu_shell)
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_get_selected_item (GtkMenuShell $menu_shell)
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -69,12 +69,12 @@ sub gtk_menu_shell_insert (
   GtkWidget $child,
   gint $position
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_prepend (GtkMenuShell $menu_shell, GtkWidget $child)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -82,7 +82,7 @@ sub gtk_menu_shell_select_first (
   GtkMenuShell $menu_shell,
   gboolean $search_sensitive
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -90,13 +90,13 @@ sub gtk_menu_shell_select_item (
   GtkMenuShell $menu_shell,
   GtkWidget $menu_item
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_menu_shell_get_take_focus (GtkMenuShell $menu_shell)
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -104,6 +104,6 @@ sub gtk_menu_shell_set_take_focus (
   GtkMenuShell $menu_shell,
   gboolean $take_focus
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

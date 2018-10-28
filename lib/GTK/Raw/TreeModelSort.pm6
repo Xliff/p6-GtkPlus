@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 unit package GTK::Raw::TreeModelSort;
 
 sub gtk_tree_model_sort_clear_cache (GtkTreeModelSort $tree_model_sort)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -18,7 +18,7 @@ sub gtk_tree_model_sort_convert_child_iter_to_iter (
   GtkTreeIter $child_iter
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -27,7 +27,7 @@ sub gtk_tree_model_sort_convert_child_path_to_path (
   GtkTreePath $child_path
 )
   returns GtkTreePath
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -36,7 +36,7 @@ sub gtk_tree_model_sort_convert_iter_to_child_iter (
   GtkTreeIter $child_iter,
   GtkTreeIter $sorted_iter
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -45,19 +45,19 @@ sub gtk_tree_model_sort_convert_path_to_child_path (
   GtkTreePath $sorted_path
 )
   returns GtkTreePath
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_model_sort_get_model (GtkTreeModelSort $tree_model)
   returns GtkTreeModel
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_model_sort_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -66,19 +66,19 @@ sub gtk_tree_model_sort_iter_is_valid (
   GtkTreeIter $iter
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_model_sort_new_with_model (GtkTreeModel $child_model)
   returns GtkTreeModel
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_model_sort_reset_default_sort_func (
   GtkTreeModelSort $tree_model_sort
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

@@ -9,12 +9,12 @@ unit package GTK::Raw::CellRendererAccel;
 
 sub gtk_cell_renderer_accel_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_renderer_accel_new ()
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

@@ -9,12 +9,12 @@ unit package GTK::Raw::Separator;
 
 sub gtk_separator_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_separator_new (uint32 $o)
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

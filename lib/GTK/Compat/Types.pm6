@@ -7,6 +7,8 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Compat::Types;
 
+our my $LIBGTK  is export = 'gtk-3';
+
 constant glib     is export = 'glib-2.0',v0;
 constant gio      is export = 'gio-2.0',v0;
 constant gobject  is export = 'gobject-2.0',v0;
