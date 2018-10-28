@@ -13,7 +13,7 @@ sub gtk_selection_add_target (
   GdkAtom $target,
   guint $info
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -23,7 +23,7 @@ sub gtk_selection_add_targets (
   GtkTargetEntry $targets,
   guint $ntargets
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -31,7 +31,7 @@ sub gtk_selection_clear_targets (
   GtkWidget $widget,
   GdkAtom $selection
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -42,30 +42,30 @@ sub gtk_selection_convert (
   guint32 $time
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_copy (GtkSelectionData $data)
   returns GtkSelectionData
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_free (GtkSelectionData $data)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_data (GtkSelectionData $selection_data)
   returns CArray[Str]
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_data_type (GtkSelectionData $selection_data)
   returns GdkAtom
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -74,37 +74,37 @@ sub gtk_selection_data_get_data_with_length (
   gint $length
 )
   returns guchar
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_display (GtkSelectionData $selection_data)
   returns GdkDisplay
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_format (GtkSelectionData $selection_data)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_length (GtkSelectionData $selection_data)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_selection (GtkSelectionData $selection_data)
   returns GdkAtom
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_target (GtkSelectionData $selection_data)
   returns GdkAtom
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -114,13 +114,13 @@ sub gtk_selection_data_get_targets (
   gint $n_atoms
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_text (GtkSelectionData $selection_data)
   returns guchar
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -131,7 +131,7 @@ sub gtk_selection_data_set (
   guchar $data,
   gint $length
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -141,7 +141,7 @@ sub gtk_selection_data_set_text (
   gint $len
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -150,7 +150,7 @@ sub gtk_selection_data_targets_include_image (
   gboolean $writable
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -159,19 +159,19 @@ sub gtk_selection_data_targets_include_rich_text (
   GtkTextBuffer $buffer
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_targets_include_text (GtkSelectionData $selection_data)
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_targets_include_uri (GtkSelectionData $selection_data)
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -181,7 +181,7 @@ sub gtk_selection_owner_set (
   guint32 $time
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -192,24 +192,24 @@ sub gtk_selection_owner_set_for_display (
   guint32 $time
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_remove_all (GtkWidget $widget)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_uris (GtkSelectionData $selection_data)
   returns CArray[Str]
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_selection_data_get_pixbuf (GtkSelectionData $selection_data)
   returns GdkPixbuf
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -218,7 +218,7 @@ sub gtk_selection_data_set_uris (
   CArray[Str] $uris
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -227,6 +227,6 @@ sub gtk_selection_data_set_pixbuf (
   GdkPixbuf $pixbuf
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

@@ -9,12 +9,12 @@ unit package GTK::Raw::CellRendererCombo;
 
 sub gtk_cell_renderer_combo_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_renderer_combo_new ()
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

@@ -49,7 +49,7 @@ sub infix:<eqv> (GTK::Compat::RGBA $a, GTK::Compat::RGBA $b) {
 
 sub gdk_rgba_copy (GTK::Compat::RGBA $rgba)
   returns GTK::Compat::RGBA
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 

@@ -16,7 +16,7 @@ sub gtk_cell_area_activate (
   gboolean $edit_only
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -29,12 +29,12 @@ sub gtk_cell_area_activate_cell (
   uint32 $flags                 # GtkCellRendererState $flags
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_add (GtkCellArea $area, GtkCellRenderer $renderer)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -43,7 +43,7 @@ sub gtk_cell_area_add_focus_sibling (
   GtkCellRenderer $renderer,
   GtkCellRenderer $sibling
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -54,7 +54,7 @@ sub gtk_cell_area_apply_attributes (
   gboolean $is_expander,
   gboolean $is_expanded
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -64,7 +64,7 @@ sub gtk_cell_area_attribute_connect (
   gchar $attribute,
   gint $column
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -73,7 +73,7 @@ sub gtk_cell_area_attribute_disconnect (
   GtkCellRenderer $renderer,
   gchar $attribute
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -83,7 +83,7 @@ sub gtk_cell_area_attribute_get_column (
   gchar $attribute
 )
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -93,7 +93,7 @@ sub gtk_cell_area_cell_get_property (
   gchar $property_name,
   GValue $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -103,7 +103,7 @@ sub gtk_cell_area_cell_get_property (
 #   gchar $first_property_name,
 #   va_list $var_args
 # )
-#   is native('gtk-3')
+#   is native($LIBGTK)
 #   is export
 #   { * }
 
@@ -113,7 +113,7 @@ sub gtk_cell_area_cell_set_property (
   gchar $property_name,
   GValue $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -123,7 +123,7 @@ sub gtk_cell_area_cell_set_property (
 #   gchar $first_property_name,
 #   va_list $var_args
 # )
-#   is native('gtk-3')
+#   is native($LIBGTK)
 #   is export
 #   { * }
 
@@ -132,7 +132,7 @@ sub gtk_cell_area_cell_set_property (
 #    gchar $property_name
 # )
 #   returns GParamSpec
-#   is native('gtk-3')
+#   is native($LIBGTK)
 #   is export
 #   { * }
 
@@ -141,7 +141,7 @@ sub gtk_cell_area_cell_set_property (
 #   guint $property_id,
 #   GParamSpec $pspec
 # )
-#   is native('gtk-3')
+#   is native($LIBGTK)
 #   is export
 #   { * }
 
@@ -150,7 +150,7 @@ sub gtk_cell_area_cell_set_property (
 #   guint $n_properties
 # )
 #   returns CArray[GParamSpec]
-#   is native('gtk-3')
+#   is native($LIBGTK)
 #   is export
 #   { * }
 
@@ -159,13 +159,13 @@ sub gtk_cell_area_copy_context (
   GtkCellAreaContext $context
 )
   returns GtkCellAreaContext
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_create_context (GtkCellArea $area)
   returns GtkCellAreaContext
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -178,7 +178,7 @@ sub gtk_cell_area_event (
   uint32 $flags                 # GtkCellRendererState $flags
 )
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -187,7 +187,7 @@ sub gtk_cell_area_focus (
   uint32 $direction             # GtkDirectionType $direction
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -196,7 +196,7 @@ sub gtk_cell_area_foreach (
   GtkCellCallback $callback,
   gpointer $callback_data
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -209,7 +209,7 @@ sub gtk_cell_area_foreach_alloc (
   GtkCellAllocCallback $callback,
   gpointer $callback_data
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -221,7 +221,7 @@ sub gtk_cell_area_get_cell_allocation (
   GdkRectangle $cell_area,
   GdkRectangle $allocation
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -235,25 +235,25 @@ sub gtk_cell_area_get_cell_at_position (
   GdkRectangle $alloc_area
 )
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_get_current_path_string (GtkCellArea $area)
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_get_edit_widget (GtkCellArea $area)
   returns GtkCellEditable
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_get_edited_cell (GtkCellArea $area)
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -262,7 +262,7 @@ sub gtk_cell_area_get_focus_from_sibling (
   GtkCellRenderer $renderer
 )
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -271,7 +271,7 @@ sub gtk_cell_area_get_focus_siblings (
   GtkCellRenderer $renderer
 )
   returns GList
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -282,7 +282,7 @@ sub gtk_cell_area_get_preferred_height (
   gint $minimum_height,
   gint $natural_height
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -294,7 +294,7 @@ sub gtk_cell_area_get_preferred_height_for_width (
   gint $minimum_height,
   gint $natural_height
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -305,7 +305,7 @@ sub gtk_cell_area_get_preferred_width (
   gint $minimum_width,
   gint $natural_width
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -317,19 +317,19 @@ sub gtk_cell_area_get_preferred_width_for_height (
   gint $minimum_width,
   gint $natural_width
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_get_request_mode (GtkCellArea $area)
   returns uint32 # GtkSizeRequestMode
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -338,7 +338,7 @@ sub gtk_cell_area_has_renderer (
   GtkCellRenderer $renderer
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -348,13 +348,13 @@ sub gtk_cell_area_inner_cell_area (
   GdkRectangle $cell_area,
   GdkRectangle $inner_area
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_is_activatable (GtkCellArea $area)
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -364,12 +364,12 @@ sub gtk_cell_area_is_focus_sibling (
   GtkCellRenderer $sibling
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_remove (GtkCellArea $area, GtkCellRenderer $renderer)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -378,7 +378,7 @@ sub gtk_cell_area_remove_focus_sibling (
   GtkCellRenderer $renderer,
   GtkCellRenderer $sibling
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -392,7 +392,7 @@ sub gtk_cell_area_render (
   uint32 $flags,                # GtkCellRendererState $flags,
   gboolean $paint_focus
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -405,18 +405,18 @@ sub gtk_cell_area_request_renderer (
   gint $minimum_size,
   gint $natural_size
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_stop_editing (GtkCellArea $area, gboolean $canceled)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_area_get_focus_cell (GtkCellArea $area)
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -424,7 +424,7 @@ sub gtk_cell_area_set_focus_cell (
   GtkCellArea $area,
   GtkCellRenderer $renderer
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -435,7 +435,7 @@ sub gtk_cell_area_add_with_properties (
   GValue $value,
   Str
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -446,7 +446,7 @@ sub gtk_cell_area_cell_set (
   GValue $value,
   Str
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -457,6 +457,6 @@ sub gtk_cell_area_cell_get (
   GValue $value,
   Str
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

@@ -12,30 +12,30 @@ sub gtk_statusbar_get_context_id (
   gchar $context_description
 )
   returns guint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_statusbar_get_message_area (GtkStatusbar $statusbar)
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_statusbar_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_statusbar_new ()
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_statusbar_pop (GtkStatusbar $statusbar, guint $context_id)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -45,7 +45,7 @@ sub gtk_statusbar_push (
   gchar $text
 )
   returns guint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -54,11 +54,11 @@ sub gtk_statusbar_remove (
   guint $context_id,
   guint $message_id
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_statusbar_remove_all (GtkStatusbar $statusbar, guint $context_id)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

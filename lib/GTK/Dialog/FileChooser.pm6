@@ -116,10 +116,10 @@ sub gtk_file_chooser_dialog_new (
   Str
 )
 returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   { * }
 
 sub gtk_file_chooser_dialog_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   { * }

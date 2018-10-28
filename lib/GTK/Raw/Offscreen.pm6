@@ -9,24 +9,24 @@ unit package GTK::Raw::Offscreen;
 
 sub gtk_offscreen_window_get_pixbuf (GtkOffscreen $offscreen)
   returns GdkPixbuf
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_offscreen_window_get_surface (GtkOffscreen $offscreen)
   returns cairo_surface_t
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_offscreen_window_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_offscreen_window_new ()
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

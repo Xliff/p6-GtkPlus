@@ -9,13 +9,13 @@ unit package GTK::Raw::TreeSelection;
 
 sub gtk_tree_selection_count_selected_rows (GtkTreeSelection $selection)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_selection_get_select_function (GtkTreeSelection $selection)
   returns GtkTreeSelectionFunc
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -25,7 +25,7 @@ sub gtk_tree_selection_get_selected (
   GtkTreeIter $iter
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -34,25 +34,25 @@ sub gtk_tree_selection_get_selected_rows (
   GtkTreeModel $model is rw
 )
   returns GList
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_selection_get_tree_view (GtkTreeSelection $selection)
   returns GtkTreeView
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_selection_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_selection_get_user_data (GtkTreeSelection $selection)
   returns Pointer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -61,7 +61,7 @@ sub gtk_tree_selection_iter_is_selected (
   GtkTreeIter $iter
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -70,12 +70,12 @@ sub gtk_tree_selection_path_is_selected (
   GtkTreePath $path
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_selection_select_all (GtkTreeSelection $selection)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -83,7 +83,7 @@ sub gtk_tree_selection_select_iter (
   GtkTreeSelection $selection,
   GtkTreeIter $iter
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -91,7 +91,7 @@ sub gtk_tree_selection_select_path (
   GtkTreeSelection $selection,
   GtkTreePath $path
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -100,7 +100,7 @@ sub gtk_tree_selection_select_range (
   GtkTreePath $start_path,
   GtkTreePath $end_path
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -109,7 +109,7 @@ sub gtk_tree_selection_selected_foreach (
   GtkTreeSelectionForeachFunc $func,
   gpointer $data
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -119,12 +119,12 @@ sub gtk_tree_selection_set_select_function (
   gpointer $data,
   GDestroyNotify $destroy
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_selection_unselect_all (GtkTreeSelection $selection)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -132,7 +132,7 @@ sub gtk_tree_selection_unselect_iter (
   GtkTreeSelection $selection,
   GtkTreeIter $iter
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -140,7 +140,7 @@ sub gtk_tree_selection_unselect_path (
   GtkTreeSelection $selection,
   GtkTreePath $path
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -149,13 +149,13 @@ sub gtk_tree_selection_unselect_range (
   GtkTreePath $start_path,
   GtkTreePath $end_path
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_tree_selection_get_mode (GtkTreeSelection $selection)
   returns uint32 # GtkSelectionMode
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -163,6 +163,6 @@ sub gtk_tree_selection_set_mode (
   GtkTreeSelection $selection,
   uint32 $type                  # GtkSelectionMode $type
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

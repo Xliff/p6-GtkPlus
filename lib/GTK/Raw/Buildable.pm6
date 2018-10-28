@@ -13,7 +13,7 @@ sub gtk_buildable_add_child (
   GObject $child,
   gchar $type
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -23,7 +23,7 @@ sub gtk_buildable_construct_child (
   gchar $name
 )
   returns GObject
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -34,7 +34,7 @@ sub gtk_buildable_custom_finished (
   gchar $tagname,
   gpointer $data
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -45,7 +45,7 @@ sub gtk_buildable_custom_tag_end (
   gchar $tagname,
   gpointer $data
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -58,7 +58,7 @@ sub gtk_buildable_custom_tag_start (
   gpointer $data
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -68,13 +68,13 @@ sub gtk_buildable_get_internal_child (
   gchar $childname
 )
   returns GObject
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_buildable_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -82,7 +82,7 @@ sub gtk_buildable_parser_finished (
   GtkBuildable $buildable,
   GtkBuilder $builder
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -92,17 +92,17 @@ sub gtk_buildable_set_buildable_property (
   gchar $name,
   GValue $value
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_buildable_get_name (GtkBuildable $buildable)
   returns Str
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_buildable_set_name (GtkBuildable $buildable, gchar $name)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

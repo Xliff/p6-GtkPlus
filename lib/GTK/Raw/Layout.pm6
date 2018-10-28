@@ -9,7 +9,7 @@ unit package GTK::Raw::Layout;
 
 sub gtk_layout_get_bin_window (GtkLayout $layout)
   returns GdkWindow
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -18,13 +18,13 @@ sub gtk_layout_get_size (
   guint $width  is rw,
   guint $height is rw
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_layout_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -34,7 +34,7 @@ sub gtk_layout_move (
   gint $x,
   gint $y
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -43,7 +43,7 @@ sub gtk_layout_new (
   GtkAdjustment $vadjustment
 )
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -53,24 +53,24 @@ sub gtk_layout_put (
   gint $x,
   gint $y
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_layout_set_size (GtkLayout $layout, guint $width, guint $height)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_layout_get_hadjustment (GtkLayout $layout)
   returns GtkAdjustment
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_layout_get_vadjustment (GtkLayout $layout)
   returns GtkAdjustment
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -78,7 +78,7 @@ sub gtk_layout_set_hadjustment (
   GtkLayout $layout,
   GtkAdjustment $adjustment
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -86,6 +86,6 @@ sub gtk_layout_set_vadjustment (
   GtkLayout $layout,
   GtkAdjustment $adjustment
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

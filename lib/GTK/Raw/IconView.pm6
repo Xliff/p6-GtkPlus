@@ -14,13 +14,13 @@ sub gtk_icon_view_convert_widget_to_bin_window_coords (
   gint $bx,
   gint $by
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_create_drag_icon (GtkIconView $icon_view, GtkTreePath $path)
   returns cairo_surface_t
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -30,7 +30,7 @@ sub gtk_icon_view_enable_model_drag_dest (
   gint $n_targets,
   guint $actions                # GdkDragAction $actions
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -41,7 +41,7 @@ sub gtk_icon_view_enable_model_drag_source (
   gint $n_targets,
   guint $actions                # GdkDragAction $actions
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -52,7 +52,7 @@ sub gtk_icon_view_get_cell_rect (
   GdkRectangle $rect
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -62,7 +62,7 @@ sub gtk_icon_view_get_cursor (
   GtkCellRenderer $cell
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -74,7 +74,7 @@ sub gtk_icon_view_get_dest_item_at_pos (
   guint $pos                    # GtkIconViewDropPosition $pos
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -83,7 +83,7 @@ sub gtk_icon_view_get_drag_dest_item (
   GtkTreePath $path,
   guint $pos                    # GtkIconViewDropPosition $pos
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -95,31 +95,31 @@ sub gtk_icon_view_get_item_at_pos (
   GtkCellRenderer $cell
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_item_column (GtkIconView $icon_view, GtkTreePath $path)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_item_row (GtkIconView $icon_view, GtkTreePath $path)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_path_at_pos (GtkIconView $icon_view, gint $x, gint $y)
   returns GtkTreePath
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_selected_items (GtkIconView $icon_view)
   returns GList
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -133,13 +133,13 @@ sub gtk_icon_view_get_tooltip_context (
   GtkTreeIter $iter
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -149,30 +149,30 @@ sub gtk_icon_view_get_visible_range (
   GtkTreePath $end_path
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_item_activated (GtkIconView $icon_view, GtkTreePath $path)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_new ()
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_new_with_area (GtkCellArea $area)
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_new_with_model (GtkTreeModel $model)
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -181,7 +181,7 @@ sub gtk_icon_view_path_is_selected (
   GtkTreePath $path
 )
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -192,17 +192,17 @@ sub gtk_icon_view_scroll_to_path (
   gfloat $row_align,
   gfloat $col_align
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_select_all (GtkIconView $icon_view)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_select_path (GtkIconView $icon_view, GtkTreePath $path)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -211,7 +211,7 @@ sub gtk_icon_view_selected_foreach (
   GtkIconViewForeachFunc $func,
   gpointer $data
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -221,7 +221,7 @@ sub gtk_icon_view_set_cursor (
   GtkCellRenderer $cell,
   gboolean $start_editing
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -230,7 +230,7 @@ sub gtk_icon_view_set_drag_dest_item (
   GtkTreePath $path,
   guint $pos                    # GtkIconViewDropPosition $pos
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -240,7 +240,7 @@ sub gtk_icon_view_set_tooltip_cell (
   GtkTreePath $path,
   GtkCellRenderer $cell
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -249,128 +249,128 @@ sub gtk_icon_view_set_tooltip_item (
   GtkTooltip $tooltip,
   GtkTreePath $path
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_unselect_all (GtkIconView $icon_view)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_unselect_path (GtkIconView $icon_view, GtkTreePath $path)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_unset_model_drag_dest (GtkIconView $icon_view)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_unset_model_drag_source (GtkIconView $icon_view)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_row_spacing (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_selection_mode (GtkIconView $icon_view)
   returns uint32 # GtkSelectionMode
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_item_orientation (GtkIconView $icon_view)
   returns uint32 # GtkOrientation
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_activate_on_single_click (GtkIconView $icon_view)
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_item_width (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_pixbuf_column (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_columns (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_column_spacing (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_text_column (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_spacing (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_model (GtkIconView $icon_view)
   returns GtkTreeModel
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_tooltip_column (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_reorderable (GtkIconView $icon_view)
   returns uint32
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_markup_column (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_item_padding (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_get_margin (GtkIconView $icon_view)
   returns gint
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_row_spacing (GtkIconView $icon_view, gint $row_spacing)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -378,7 +378,7 @@ sub gtk_icon_view_set_selection_mode (
   GtkIconView $icon_view,
   uint32 $m                     # GtkSelectionMode $mode
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -386,7 +386,7 @@ sub gtk_icon_view_set_item_orientation (
   GtkIconView $icon_view,
   uint32 $o                     # GtkOrientation $orientation
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -394,22 +394,22 @@ sub gtk_icon_view_set_activate_on_single_click (
   GtkIconView $icon_view,
   gboolean $single
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_item_width (GtkIconView $icon_view, gint $item_width)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_pixbuf_column (GtkIconView $icon_view, gint $column)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_columns (GtkIconView $icon_view, gint $columns)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -417,27 +417,27 @@ sub gtk_icon_view_set_column_spacing (
   GtkIconView $icon_view,
   gint $column_spacing
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_text_column (GtkIconView $icon_view, gint $column)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_spacing (GtkIconView $icon_view, gint $spacing)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_model (GtkIconView $icon_view, GtkTreeModel $model)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_tooltip_column (GtkIconView $icon_view, gint $column)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -445,12 +445,12 @@ sub gtk_icon_view_set_reorderable (
   GtkIconView $icon_view,
   gboolean $reorderable
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_markup_column (GtkIconView $icon_view, gint $column)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
@@ -458,11 +458,11 @@ sub gtk_icon_view_set_item_padding (
   GtkIconView $icon_view,
   gint $item_padding
 )
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_icon_view_set_margin (GtkIconView $icon_view, gint $margin)
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

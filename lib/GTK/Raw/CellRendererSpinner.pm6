@@ -9,12 +9,12 @@ unit package GTK::Raw::CellRendererSpinner;
 
 sub gtk_cell_renderer_spinner_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_renderer_spinner_new ()
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

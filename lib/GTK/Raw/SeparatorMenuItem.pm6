@@ -9,12 +9,12 @@ unit package GTK::Raw::SeparatorMenuItem;
 
 sub gtk_separator_menu_item_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_separator_menu_item_new ()
   returns GtkWidget
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }

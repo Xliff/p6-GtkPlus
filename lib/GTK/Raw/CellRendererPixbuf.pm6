@@ -9,12 +9,12 @@ unit package GTK::Raw::CellRendererPixbuf;
 
 sub gtk_cell_renderer_pixbuf_get_type ()
   returns GType
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
 
 sub gtk_cell_renderer_pixbuf_new ()
   returns GtkCellRenderer
-  is native('gtk-3')
+  is native($LIBGTK)
   is export
   { * }
