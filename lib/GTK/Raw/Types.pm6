@@ -371,7 +371,11 @@ our enum GtkPositionType is export <
   GTK_POS_BOTTOM
 >;
 
-our constant GtkReliefStyle is export := GtkPositionType;
+our enum GtkReliefStyle is export <
+  GTK_RELIEF_NORMAL
+  GTK_RELIEF_HALF
+  GTK_RELIEF_NONE
+>;
 
 our enum GtkScrollType is export <
   GTK_SCROLL_NONE
@@ -1010,7 +1014,9 @@ class GtkFlowBox              is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkFlowBoxChild         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkGrid                 is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkHeaderBar            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkIconInfo             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconSet              is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkIconTheme            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconView             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkInfoBar              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage                is repr('CPointer') does GTK::Roles::Pointers is export { }

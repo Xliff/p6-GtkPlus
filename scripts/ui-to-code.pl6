@@ -105,7 +105,7 @@ class BuilderActions {
         $hash.append($s.pairs);
       }
     }
-    for $/<child>.List {
+    for $/<child>.List.grep( *<attrs><type>.defined.not ) {
       my $s = $_.made;
       @children.push($s)
     }
