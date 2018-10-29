@@ -6,7 +6,13 @@ use GTK::Compat::Types;
 use GTK::Raw::CSSProvider;
 use GTK::Raw::Types;
 
+use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::CSSProvider;
+
 class GTK::CSSProvider {
+  also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Signals::CSSProvider;
+
   has GtkCSSProvider $!css;
 
   submethod BUILD(
@@ -42,6 +48,10 @@ class GTK::CSSProvider {
     self.load_from_data($_) with $css;
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-css;
+  }
+
   method new(:$priority, :$pod) {
     my $provider = gtk_css_provider_new();
     self.bless(:$provider, :$priority, :$pod);
@@ -49,6 +59,13 @@ class GTK::CSSProvider {
 
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkCssProvider, GtkCssSection, GError, gpointer --> void
+  method parsing-error {
+    self.connect-parsing-error($!css);
+  }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -56,9 +73,9 @@ class GTK::CSSProvider {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  # method error_quark {
-  #   gtk_css_provider_error_quark($!css);
-  # }
+  method error_quark {
+    gtk_css_provider_error_quark();
+  }
 
   # method get_default {
   #   gtk_css_provider_get_default();
