@@ -22,6 +22,7 @@ sub MAIN( $rev = 'HEAD' ) {
       say "{ $_[0] } no longer exists.";
       next;
     }
+    next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
 
     my $rel = $_[0].IO.dirname.split('/')[1..*].join('/');
     mkdir ".touch/{ $rel }";

@@ -193,4 +193,3 @@ sub MAIN {
   my $p = BuilderGrammar.parse($ui_row, actions => BuilderActions);
   ddt $p.made
 }
-s

@@ -534,6 +534,16 @@ our enum GKeyFileFlags is export (
   G_KEY_FILE_KEEP_TRANSLATIONS => 2
 );
 
+our enum PangoDirection is export <
+  PANGO_DIRECTION_LTR
+  PANGO_DIRECTION_RTL
+  PANGO_DIRECTION_TTB_LTR
+  PANGO_DIRECTION_TTB_RTL
+  PANGO_DIRECTION_WEAK_LTR
+  PANGO_DIRECTION_WEAK_RTL
+  PANGO_DIRECTION_NEUTRA
+>;
+
 
 class cairo_font_options_t  is repr('CPointer') is export { }
 class cairo_surface_t       is repr('CPointer') is export { }

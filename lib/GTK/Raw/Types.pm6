@@ -946,6 +946,25 @@ our enum GtkPrintCapabilities is export (
   GTK_PRINT_CAPABILITY_NUMBER_UP_LAYOUT => 1 +< 9
 );
 
+our enum GtkIconLookupFlags is export (
+  GTK_ICON_LOOKUP_NO_SVG           => 1,
+  GTK_ICON_LOOKUP_FORCE_SVG        => 1 +< 1,
+  GTK_ICON_LOOKUP_USE_BUILTIN      => 1 +< 2,
+  GTK_ICON_LOOKUP_GENERIC_FALLBACK => 1 +< 3,
+  GTK_ICON_LOOKUP_FORCE_SIZE       => 1 +< 4,
+  GTK_ICON_LOOKUP_FORCE_REGULAR    => 1 +< 5,
+  GTK_ICON_LOOKUP_FORCE_SYMBOLIC   => 1 +< 6,
+  GTK_ICON_LOOKUP_DIR_LTR          => 1 +< 7,
+  GTK_ICON_LOOKUP_DIR_RTL          => 1 +< 8
+);
+
+our enum GtkStyleContextPrintFlags is export (
+  GTK_STYLE_CONTEXT_PRINT_NONE         => 0,
+  GTK_STYLE_CONTEXT_PRINT_RECURSE      => 1,
+  GTK_STYLE_CONTEXT_PRINT_SHOW_STYLE   => 2
+);
+
+
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -993,6 +1012,7 @@ class GtkComboBox             is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkComboBoxText         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkContainer            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkCSSProvider          is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkCssSection           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDialog               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDragContext          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkDrawingArea          is repr('CPointer') does GTK::Roles::Pointers is export { }
@@ -1084,6 +1104,7 @@ class GtkStackSwitcher        is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkStatusbar            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyle                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyleContext         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStyleProvider        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSwitch               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTargetList           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextBuffer           is repr('CPointer') does GTK::Roles::Pointers is export { }

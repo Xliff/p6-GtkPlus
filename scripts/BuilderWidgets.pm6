@@ -2,84 +2,13 @@ use v6.c;
 
 use GTK::Raw::Types;
 
-unit package BuilderWidgets;
+class BuilderWidgets does Pluggable {
+  method list-plugins {
+    @($.plugins).map( .^name ).join("\n").say;
+  }
+}
 
 our %widgets is export = (
-  GtkMenuItem   => {
-    create => -> $o {
-      my @c;
-      # We don't do anything with the "translatable" attribute, yet.
-      @c.push: qq:to/MI/.chomp;
-\${ $o<id> } = GTK::MenuItem.new_with_label("{ $o<props><label><value> }");
-MI
-
-      @c;
-    }
-    properties => -> $o {
-      my @c;
-      @c.push: "\${ $o<id> }.use_underline = $o<props><use-underline>;"
-        if $o<props><use-underline>.defined;
-      @c;
-    },
-  },
-
-  GtkMenu      => {
-    create => -> $o {
-      my @c;
-      @c.push: "\${ $o<id> } = GTK::Menu.new(};";
-      @c;
-    },
-    populate => -> $o {
-      my @c;
-      @c.push: "\${ $o<id> }.append(\${ $_<id> });"
-        for $o<children>.map( *<objects> );
-    }
-  }
-
-  GtkListBoxRow => {
-    create => -> $o {
-      my @c;
-      @c.push: "\${ $o<id> } = GTK::ListBoxRow.new()";
-      @c;
-    },
-    populate => -> $o {
-      my @c;
-      @c.push: "\${ $o<id> }.add(\${ $_<id> });"
-        for $o<children>.map( *<objects> );
-      @c;
-    }
-  }
-
-  GtkGrid => {
-    create => -> $o {
-      my @c;
-      @c.push: "\${ $o<id> } = GTK::Grid.new();";
-      @c;
-    },
-    properties => -> $o {
-      my @c;
-      for <GtkContainer GtkWidget> {
-        @c.append: %widgets{$_}.properties($o)
-          if %widgets{$_}.properties.defined;
-      }
-      @c;
-    }
-    populate => -> $o {
-      my @c;
-      for $o<children> {
-        @c.append: qq:to/ATTACH/.chomp;
-\${ $o<id> }.attach(
-  \${ $_<id> },
-  { $_<packing><left-attach> // 0 },
-  { $_<packing><top-attach>  // 0 },
-  { $_<packing><width>       // 1 },
-  { $_<packing><height>      // 1 }
-);
-ATTACH
-      }
-      @c;
-    }
-  },
 
   GtkFrame => {
     create => -> $o {
