@@ -26,11 +26,22 @@ class GTK::Builder::Label is GTK::Builder::Base {
     yalign
   >;
 
+  method !label_from_attributes($o) {
+    my $enclosed = "%s";
+    for
+    given $o<attrs><weight> {
+      when 'bold' {
+        $enclosed = "<b>{ $enclosed }</b>";
+      }
+    }
+    sprintf($enclosed, $o<props><label>);
+  }
+
   multi method properties($o) {
     my @c = self.properties(@attributes, $o, -> $prop is rw {
       # Per property special-cases
       when 'label' {
-        $o<props><label> = "'{ $o<props><label> }'";
+        $o<props><label> = "'{ self!label_from_atrributes($o) }'";
       }
     });
     @c;

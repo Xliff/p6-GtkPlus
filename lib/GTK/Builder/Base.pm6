@@ -1,6 +1,13 @@
 use v6.c;
 
-class GTK::Builder::Base {
+role GTK::Builder::Role {  # Add to a role.
+  method name {
+    ::?CLASS.^name ~~ / (\w+)+ %% '::' /; $/[0][*-1];
+  }
+}
+
+# Will do a base role.
+class GTK::Builder::Base does GTK::Builder::Role {
   my %mro = (
     'Calendar' => ('Widget'),
     'Container' => ('Widget'),
@@ -92,10 +99,6 @@ class GTK::Builder::Base {
     'RadioToolButton' => ('ToggleToolButton', 'ToolButton', 'ToolItem', 'Bin', 'Container', 'Widget'),
   );
 
-  method name {
-    ::?CLASS.^name ~~ / (\w+)+ %% '::' /; $/[0][*-1];
-  }
-
   method mro {
     %mro;
   }
@@ -106,19 +109,20 @@ class GTK::Builder::Base {
     @c;
   }
 
-  method properties($a, $o, $s) {
+  method properties(@a, $o, $s) {
     my @c;
     for $o<props>.keys {
       my $prop;
-      next unless $_ eq $a.any;
+      next unless $a.elems.not || $_ eq @a.any;
       # Per property special-cases
       $s($prop) with $s;
       @c.push: "\${ $o<id> }.{ $_ } = { $o<props>{$_} };";
       $o<props>{$_}:delete;
       $o<props>{$prop}:delete if $_ ne $prop;
-      for self.mro{self.name} {
-        require ::("GTK::Builder::$_");
-        @c.append: ::("GTK::Builder::$_").properties($o).flat;
+      if %mro{self.name}:exists {
+        my $no = "GTK::Builder::{ %mro{ self.name }[0] }";
+        require ::($no);
+        @c.append: ::($no).properties($o);
       }
     }
     @c;
