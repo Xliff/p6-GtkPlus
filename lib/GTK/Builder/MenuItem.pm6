@@ -1,6 +1,9 @@
 use v6.c;
 
-class GTK::Builder::MenuItem {
+use GTK::Builder::Base;
+
+class GTK::Builder::MenuItem is GTK::Builder::Base {
+  my @attributes = <use-underline>;
 
   method create($o) {
     my @c;
@@ -12,10 +15,12 @@ MI
     @c;
   }
 
-  method properties($o) {
-    my @c;
-    @c.push: "\${ $o<id> }.use_underline = $o<props><use-underline>;"
-      if $o<props><use-underline>.defined;
+  multi method properties($o) {
+    my @c = self.properties(@attributes, $o, -> $prop is rw {
+      when 'use-underline' {
+        $prop = 'use_underline';
+      }
+    });
     @c;
   }
 

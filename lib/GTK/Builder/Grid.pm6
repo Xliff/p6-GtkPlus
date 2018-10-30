@@ -1,19 +1,22 @@
 use v6.c;
 
-class GTK::Builder::Grid {
+use GTK::Builder::Base;
 
-  method create($o) {
-    my @c;
-    @c.push: "\${ $o<id> } = GTK::Grid.new();";
-    @c;
-  }
+class GTK::Builder::Grid is GTK::Builder::Base {
+  my @attributes = <
+    baseline-row
+    column-homogeneous
+    column-spacing
+    row-homogeneous
+    row-spacing
+  >;
 
   method properties($o) {
-    my @c;
-    for <GtkContainer GtkWidget> {
-      @c.append: %widgets{$_}.properties($o)
-        if %widgets{$_}.properties.defined;
-    }
+    my @c = self.properties(@attributes, $o, -> $prop is rw {
+      when @attributes.any {
+        $prop ~~ s:g/ '-' / '_' /;
+      }
+    });
     @c;
   }
 

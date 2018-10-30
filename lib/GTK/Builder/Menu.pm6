@@ -1,12 +1,8 @@
 use v6.c;
 
-class GTK::Builder::Menu {
+use GTK::Builder::Base;
 
-  method create($o) {
-    my @c;
-    @c.push: "\${ $o<id> } = GTK::Menu.new(};";
-    @c;
-  },
+class GTK::Builder::Menu is GTK::Builder::Base {
 
   method populate($o) {
     my @c;

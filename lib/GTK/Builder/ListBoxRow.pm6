@@ -1,12 +1,8 @@
 use v6.c;
 
-class GTK::Builder::ListBoxRow {
+use GTK::Builder::Base;
 
-  method create($o) {
-    my @c;
-    @c.push: "\${ $o<id> } = GTK::ListBoxRow.new()";
-    @c;
-  }
+class GTK::Builder::ListBoxRow is GTK::Builder::Base {
 
   method populate($o) {
     my @c;

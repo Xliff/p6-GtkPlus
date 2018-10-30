@@ -15,10 +15,6 @@ class GTK::BuilderWidgets does Pluggable {
       plugins-namespace => 'Builder',
       name-matcher      => /^ 'GTK::Builder::' <!before 'Base'>/
     );
-    GTK::Builder::Base.setMRO(
-      $_,
-      ::("GTK::{$_}").^mro.map( *.^name )
-    ) for @!plugins;
   }
 
   method list-plugins {

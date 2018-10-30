@@ -1,12 +1,11 @@
 use v6.c;
 
-class GTK::Builder::Widget {
+use GTK::Builder::Base;
 
-# Must remember to provide mechanism for descendent classes to REMOVE
-# attributes from the attribute list...maybe even without destroying the
-# original?
+class GTK::Builder::Widget is GTK::Builder::Base {
+  my @attributes;
 
-  method properties($o) {
+  multi method properties($o) {
     my @c;
     my ($height, $width) = (
       $o<props><height-request> // -1,
@@ -16,12 +15,17 @@ class GTK::Builder::Widget {
       if ($height, $width).any > 0;
     $o<props><height-request width-request>:delete;
 
-    for $o<props>.keys {
-      # Per property special-cases
-      #given $_ {
-      #}
-      @c.push: "\${ $o<id> }.{ $_ } = { $o<props>{$_} };"
-    }
+    @c.append: self.properties(@attributes, $o, -> $prop is rw {
+      when <valign halign>.any {
+        $o<props>{$_} = do given $o<props>{$_} {
+          when 'fill'     { 'GTK_ALIGN_FILL'     }
+          when 'start'    { 'GTK_ALIGN_START'    }
+          when 'end'      { 'GTK_ALIGN_END'      }
+          when 'center'   { 'GTK_ALIGN_CENTER'   }
+          when 'baseline' { 'GTK_ALIGN_BASELINE' }
+        }
+      }
+    });
     @c;
   }
 
