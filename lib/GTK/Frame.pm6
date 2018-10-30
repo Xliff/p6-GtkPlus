@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::Value;
 use GTK::Raw::Frame;
 use GTK::Raw::Types;
 
@@ -50,6 +51,40 @@ class GTK::Frame is GTK::Bin {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  # Type: gfloat
+  method label-xalign is rw {
+    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get($!f, 'label-xalign', $gv)
+        );
+        $gv.float;
+      },
+      STORE => -> $, Num() $val is copy {
+        $gv.float = $val;
+        self.prop_set($!f, 'label-xalign', $gv);
+      }
+    );
+  }
+
+  # Type: gfloat
+  method label-yalign is rw {
+    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get($!f, 'label-yalign', $gv)
+        );
+        $gv.float;
+      },
+      STORE => -> $, Num() $val is copy {
+        $gv.float = $val;
+        self.prop_set($!f, 'label-yalign', $gv);
+      }
+    );
+  }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method label is rw {
