@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Raw::Cursor;
+unit package GTK::Compat::Raw::Cursor;
 
 sub gdk_cursor_get_cursor_type (GdkCursor $cursor)
   returns uint32 # GdkCursorType

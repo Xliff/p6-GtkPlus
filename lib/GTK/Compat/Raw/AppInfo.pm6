@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Raw::AppInfo;
+unit package GTK::Compat::Raw::AppInfo;
 
 sub g_app_info_add_supports_type (
   GAppInfo $appinfo,

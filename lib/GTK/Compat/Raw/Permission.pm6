@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Raw::Permission;
+unit package GTK::Compat::Raw::Permission;
 
 sub g_permission_acquire (
   GPermission $permission,

@@ -5,7 +5,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
-unit package GTK::Raw::KeyFile;
+unit package GTK::Compat::Raw::KeyFile;
 
 sub g_key_file_error_quark ()
   returns GQuark

@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Pixbuf;
+unit package GTK::Compat::Raw::Pixbuf;
 
 # Function definition finished, but detected no match:
 # ' gboolean gdk_pixbuf_save           (GdkPixbuf  *pixbuf,                                      const char *filename,                                      const char *type,                                      GError    **error,                                     ...) G_GNUC_NULL_TERMINATED;'
