@@ -125,10 +125,11 @@ class GTK::Builder::Base does GTK::Builder::Role {
       $o<props>{$_}:delete;
       $o<props>{$prop}:delete if $_ ne $prop;
       if %mro{self.name}:exists {
-        #next if %mro{ self.name }[0] eq <Bin Container>.any;
-        #my $no = "GTK::Builder::{ %mro{ self.name }[0] }";
-        #require ::($no);
-        #@c.append: ::($no).properties($o);
+        next if %mro{ self.name }[0] eq <Bin Container>.any;
+        my $no = "GTK::Builder::{ %mro{ self.name }[0] }";
+        # say $no;
+        require ::($no);
+        @c.append: ::($no).properties($o);
       }
     }
     @c;

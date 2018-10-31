@@ -32,7 +32,8 @@ class GTK::Builder::Label is GTK::Builder::Base does GTK::Builder::Role {
         $enclosed = "<b>{ $enclosed }</b>";
       }
     }
-    sprintf($enclosed, $o<props><label><value>);
+    (my $label = $o<props><label><value>) ~~ s:g!\r?\n!\\n!;
+    sprintf($enclosed, $label);
   }
 
   multi method properties($o) {
@@ -40,7 +41,7 @@ class GTK::Builder::Label is GTK::Builder::Base does GTK::Builder::Role {
       # Per property special-cases
       given $prop {
         when 'label' {
-          $o<props><label> = "'{ self!label_from_attributes($o) }'";
+          $o<props><label> = "\"{ self!label_from_attributes($o) }\"";
         }
       }
     });
