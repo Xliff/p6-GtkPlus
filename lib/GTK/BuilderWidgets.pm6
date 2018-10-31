@@ -36,17 +36,17 @@ class GTK::BuilderWidgets does Pluggable {
     for $parser.List -> $o {
       # Skip any object that doesn't define its class.
       next without $o<objects><class>;
-      # print 'P: ';
-      # ddt $o;
+      #print 'P: ';
+      #ddt $o;
       (my $w = $o<objects><class>) ~~ s/^ 'Gtk' //;
       # say $w;
       @code.append: %!widgets{$w}.create($o<objects>);
       @code.append: %!widgets{$w}.properties($o<objects>);
       if $o<objects><children>.elems {
-        for $o<objects><children> {
-          @code.append: self.get-code-list($_);
-        }
-        @code.append: %!widgets{$w}.populate($o<objects>);
+        @code.append: self.get-code-list($_) for $o<objects><children>;
+        my $vc = $o<objects>.deepmap(-> $c is copy { $c });
+        $vc<children> .= grep( *<objects>.elems );
+        @code.append: %!widgets{$w}.populate($vc);
       }
     }
     @code;

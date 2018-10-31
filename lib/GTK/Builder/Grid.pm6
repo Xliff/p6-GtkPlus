@@ -24,16 +24,20 @@ class GTK::Builder::Grid is GTK::Builder::Base does GTK::Builder::Role {
 
   method populate($o) {
     my @c;
-    for $o<objects><children> {
+
+    use Data::Dump::Tree;
+
+    for $o<children>.List {
       my $attach = qq:to/ATTACH/.chomp;
 \${ $o<id> }.attach(
-  \${ $_<id> },
+\${ $_<objects><id> },
   { $_<packing><left-attach> // 0 },
   { $_<packing><top-attach>  // 0 },
   { $_<packing><width>       // 1 },
   { $_<packing><height>      // 1 }
 );
 ATTACH
+
       $attach ~~ s:g/\r?\n//;
       @c.append: $attach;
     }

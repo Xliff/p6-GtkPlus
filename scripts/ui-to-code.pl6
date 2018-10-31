@@ -114,7 +114,7 @@ class BuilderActions {
     make {
       class     => $attrs<attrs><class>,
       id        => $attrs<attrs><id>,
-      children  => @children,
+      children  => @children.Array,
       props     => %property,
       packing   => %packing,
       attrs     => %attributes,
@@ -133,7 +133,7 @@ class BuilderActions {
     make {
       class    => $attrs<attrs><parent>,
       id       => "template{$++}",
-      children => @children
+      children => @children.Array
     };
   }
   method child($/) {

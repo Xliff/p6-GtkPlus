@@ -33,10 +33,10 @@ class GTK::Builder::Box is GTK::Builder::Base does GTK::Builder::Role {
         $_<packing><position>.Int
         !!
         0
-    }).map( *<objects> ) {
+    }).List {
       my $pack = qq:to/PACK/.chomp;
 \${ $o<id> }.pack_start(
-  \${ $_<id> },
+\${ $_<objects><id> },
   { $_<packing><fill>    // 'False' },
   { $_<packing><expand>  // 'False' },
   { $_<packing><padding> // 0 }
