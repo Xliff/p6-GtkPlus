@@ -187,9 +187,12 @@ class BuilderActions {
 }
 
 sub MAIN {
+  use GTK::BuilderWidgets;
+
   my $ui_row = $ui-template;
   $ui_row ~~ s:g/'%%%'/1/;
 
+  my $bw = GTK::BuilderWidgets.new;
   my $p = BuilderGrammar.parse($ui_row, actions => BuilderActions);
-  ddt $p.made
+  say $bw.get-code-list($p.made);
 }
