@@ -109,10 +109,14 @@ class GTK::Builder::Base does GTK::Builder::Role {
     @c;
   }
 
-  method properties(@a, $o, $s?) {
+  multi method properties($o) {
+    # If no properties method defined, then no code to emit.
+    ();
+  }
+  multi method properties(@a, $o, $s?) {
     my @c;
     for $o<props>.keys {
-      my $prop;
+      my $prop = $_;
       next unless @a.elems.not || $_ eq @a.any;
       # Per property special-cases
       $s($prop) with $s;
@@ -126,6 +130,11 @@ class GTK::Builder::Base does GTK::Builder::Role {
       }
     }
     @c;
+  }
+
+  method populate($o) {
+    # Containers will override this.
+    ();
   }
 
 }

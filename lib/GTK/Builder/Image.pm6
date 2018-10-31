@@ -13,11 +13,13 @@ class GTK::Builder::Image is GTK::Builder::Base {
   multi method properties($o) {
     my @c = self.properties(@attributes, $o, -> $prop is rw {
       # Per property special-cases
-      when 'icon-name' {
-        $o<prop><icon-name> = "'{ $$o<prop><icon-name> }'";
-      }
-      when 'pixel-size' {
-        $prop = 'pixel_size';
+      given $prop {
+        when 'icon-name' {
+          $o<props><icon-name> = "'{ $$o<props><icon-name> }'";
+        }
+        when 'pixel-size' {
+          $prop = 'pixel_size';
+        }
       }
     });
     @c;

@@ -11,10 +11,12 @@ class GTK::Builder::Grid is GTK::Builder::Base {
     row-spacing
   >;
 
-  method properties($o) {
+  multi method properties($o) {
     my @c = self.properties(@attributes, $o, -> $prop is rw {
-      when @attributes.any {
-        $prop ~~ s:g/ '-' / '_' /;
+      given $prop {
+        when @attributes.any {
+          $prop ~~ s:g/ '-' / '_' /;
+        }
       }
     });
     @c;
@@ -22,7 +24,7 @@ class GTK::Builder::Grid is GTK::Builder::Base {
 
   method populate($o) {
     my @c;
-    for $o<children> {
+    for $o<objects><children> {
       @c.append: qq:to/ATTACH/.chomp;
 \${ $o<id> }.attach(
   \${ $_<id> },

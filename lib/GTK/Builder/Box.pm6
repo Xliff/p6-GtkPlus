@@ -11,13 +11,16 @@ class GTK::Builder::Box is GTK::Builder::Base {
 
   multi method properties($o) {
     my @c = self.properties(@attributes, $o, -> $prop is rw {
-      when 'baseline-position' {
-        $prop = 'baseline_position';
-        $o<props><baseline-position> = do given $o<props><baseline-position> {
-          when 'top'     { 'GTK_BASELINE_POSITION_TOP'    }
-          when 'center'  { 'GTK_BASELINE_POSITION_CENTER' }
-          when 'bottom'  { 'GTK_BASELINE_POSITION_BOTTOM' }
-        }
+      given $prop {
+        when 'baseline-position' {
+          $prop = 'baseline_position';
+          $o<props><baseline-position> = do
+            given $o<props><baseline-position> {
+              when 'top'     { 'GTK_BASELINE_POSITION_TOP'    }
+              when 'center'  { 'GTK_BASELINE_POSITION_CENTER' }
+              when 'bottom'  { 'GTK_BASELINE_POSITION_BOTTOM' }
+            }
+          }
       }
     });
     @c;
@@ -34,9 +37,9 @@ class GTK::Builder::Box is GTK::Builder::Base {
       @c.push: qq:to/PACK/.chomp;
 \${ $o<id> }.pack_start(
   \${ $_<id> },
-  \${ $_<packing><fill>    // 'False' },
-  \${ $_<packing><expand>  // 'False' },
-  \${ $_<packing><padding> // 0 }
+  \{ $_<packing><fill>    // 'False' },
+  \{ $_<packing><expand>  // 'False' },
+  \{ $_<packing><padding> // 0 }
 );
 PACK
     }

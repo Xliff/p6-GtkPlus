@@ -7,11 +7,13 @@ class GTK::Builder::LinkButton is GTK::Builder::Base {
 
   multi method properties($o) {
     my @c = self.properties(@attributes, $o, -> $prop is rw {
-      when 'uri' {
-        $o<props><uri> = "'$o<props><uri>'";
+      given $prop {
+        when 'uri' {
+          $o<props><uri> = "'$o<props><uri>'";
+        }
       }
     });
     @c;
   }
-  
+
 }

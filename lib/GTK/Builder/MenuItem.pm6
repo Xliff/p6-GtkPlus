@@ -17,8 +17,10 @@ MI
 
   multi method properties($o) {
     my @c = self.properties(@attributes, $o, -> $prop is rw {
-      when 'use-underline' {
-        $prop = 'use_underline';
+      given $prop {
+        when 'use-underline' {
+          $prop = 'use_underline';
+        }
       }
     });
     @c;

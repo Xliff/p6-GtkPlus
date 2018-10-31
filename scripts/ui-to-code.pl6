@@ -87,9 +87,10 @@ class BuilderActions {
         when $_<template>.defined { 'template' }
         default                   { 'WTF'      }
       }
-      $obj = $_{$item}.made;
-      $obj<order> = $++;
-      @items.push($obj);
+      @items.push(%(
+        objects => $_{$item}.made,
+        #order  => $++
+      ));
     }
     make @items;
   }
