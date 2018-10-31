@@ -109,14 +109,14 @@ class GTK::Builder::Base does GTK::Builder::Role {
     @c;
   }
 
-  method properties(@a, $o, $s) {
+  method properties(@a, $o, $s?) {
     my @c;
     for $o<props>.keys {
       my $prop;
-      next unless $a.elems.not || $_ eq @a.any;
+      next unless @a.elems.not || $_ eq @a.any;
       # Per property special-cases
       $s($prop) with $s;
-      @c.push: "\${ $o<id> }.{ $_ } = { $o<props>{$_} };";
+      @c.push: "\${ $o<id> }.{ $prop } = { $o<props>{$_} };";
       $o<props>{$_}:delete;
       $o<props>{$prop}:delete if $_ ne $prop;
       if %mro{self.name}:exists {

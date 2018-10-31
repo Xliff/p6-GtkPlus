@@ -52,6 +52,23 @@ class GTK::Revealer is GTK::Bin {
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
+  # Type: gboolean
+  method child-revealed is rw {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get($!r, 'child-revealed', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, $val is copy {
+        warn "child-revealed does not allow writing"
+      }
+    );
+  }
+
+
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method reveal_child is rw {
     Proxy.new(

@@ -1,10 +1,7 @@
 use v6.c;
 
-use GTK::Raw::Types;
-
 use Pluggable;
 
-use GTK;
 use GTK::Builder::Base;
 
 class GTK::BuilderWidgets does Pluggable {
