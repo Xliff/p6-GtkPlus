@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Builder::Base;
 
-class GTK::Builder::Button is GTK::Builder::Base {
+class GTK::Builder::Button is GTK::Builder::Base does GTK::Builder::Role {
   my @attributes = <relief>;
 
   multi method properties($o) {

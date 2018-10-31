@@ -17,7 +17,7 @@ class GTK::BuilderWidgets does Pluggable {
   submethod BUILD {
     @!plugins = plugins('GTK',
       plugins-namespace => 'Builder',
-      name-matcher      => /^ 'GTK::Builder::' <!before 'Base'>/
+      name-matcher      => /^ 'GTK::Builder::' <!before 'Base' | 'Role'>/
     );
     for @!plugins.map( &strip_mod ) {
       require ::("GTK::Builder::{ $_ }");
@@ -39,7 +39,7 @@ class GTK::BuilderWidgets does Pluggable {
       # print 'P: ';
       # ddt $o;
       (my $w = $o<objects><class>) ~~ s/^ 'Gtk' //;
-      say $w;
+      # say $w;
       @code.append: %!widgets{$w}.create($o<objects>);
       @code.append: %!widgets{$w}.properties($o<objects>);
       if $o<objects><children>.elems {

@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Builder::Base;
 
-class GTK::Builder::MenuItem is GTK::Builder::Base {
+class GTK::Builder::MenuItem is GTK::Builder::Base does GTK::Builder::Role {
   my @attributes = <use-underline>;
 
   method create($o) {

@@ -195,5 +195,5 @@ sub MAIN {
 
   my $bw = GTK::BuilderWidgets.new;
   my $p = BuilderGrammar.parse($ui_row, actions => BuilderActions);
-  say $bw.get-code-list($p.made);
+  say $bw.get-code-list($p.made).join("\n");
 }

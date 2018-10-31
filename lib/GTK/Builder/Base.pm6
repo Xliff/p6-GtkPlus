@@ -116,6 +116,7 @@ class GTK::Builder::Base does GTK::Builder::Role {
   multi method properties(@a, $o, $s?) {
     my @c;
     for $o<props>.keys {
+      next unless $_;
       my $prop = $_;
       next unless @a.elems.not || $_ eq @a.any;
       # Per property special-cases
@@ -124,9 +125,10 @@ class GTK::Builder::Base does GTK::Builder::Role {
       $o<props>{$_}:delete;
       $o<props>{$prop}:delete if $_ ne $prop;
       if %mro{self.name}:exists {
-        my $no = "GTK::Builder::{ %mro{ self.name }[0] }";
-        require ::($no);
-        @c.append: ::($no).properties($o);
+        #next if %mro{ self.name }[0] eq <Bin Container>.any;
+        #my $no = "GTK::Builder::{ %mro{ self.name }[0] }";
+        #require ::($no);
+        #@c.append: ::($no).properties($o);
       }
     }
     @c;

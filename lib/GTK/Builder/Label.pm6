@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Builder::Base;
 
-class GTK::Builder::Label is GTK::Builder::Base {
+class GTK::Builder::Label is GTK::Builder::Base does GTK::Builder::Role {
   my @attributes = <
     angle
     attributes
@@ -32,7 +32,7 @@ class GTK::Builder::Label is GTK::Builder::Base {
         $enclosed = "<b>{ $enclosed }</b>";
       }
     }
-    sprintf($enclosed, $o<props><label>);
+    sprintf($enclosed, $o<props><label><value>);
   }
 
   multi method properties($o) {

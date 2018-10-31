@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Builder::Base;
 
-class GTK::Builder::Grid is GTK::Builder::Base {
+class GTK::Builder::Grid is GTK::Builder::Base does GTK::Builder::Role {
   my @attributes = <
     baseline-row
     column-homogeneous
@@ -25,7 +25,7 @@ class GTK::Builder::Grid is GTK::Builder::Base {
   method populate($o) {
     my @c;
     for $o<objects><children> {
-      @c.append: qq:to/ATTACH/.chomp;
+      my $attach = qq:to/ATTACH/.chomp;
 \${ $o<id> }.attach(
   \${ $_<id> },
   { $_<packing><left-attach> // 0 },
@@ -34,6 +34,8 @@ class GTK::Builder::Grid is GTK::Builder::Base {
   { $_<packing><height>      // 1 }
 );
 ATTACH
+      $attach ~~ s:g/\r?\n//;
+      @c.append: $attach;
     }
     @c;
   }

@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Builder::Base;
 
-class GTK::Builder::Box is GTK::Builder::Base {
+class GTK::Builder::Box is GTK::Builder::Base does GTK::Builder::Role {
   my @attributes = <
     baseline-position
     homogeneous
@@ -34,14 +34,17 @@ class GTK::Builder::Box is GTK::Builder::Base {
         !!
         0
     }).map( *<objects> ) {
-      @c.push: qq:to/PACK/.chomp;
+      my $pack = qq:to/PACK/.chomp;
 \${ $o<id> }.pack_start(
   \${ $_<id> },
-  \{ $_<packing><fill>    // 'False' },
-  \{ $_<packing><expand>  // 'False' },
-  \{ $_<packing><padding> // 0 }
+  { $_<packing><fill>    // 'False' },
+  { $_<packing><expand>  // 'False' },
+  { $_<packing><padding> // 0 }
 );
 PACK
+
+      $pack ~~ s:g/\r?\n//;
+      @c.push: $pack;
     }
     @c;
   }
