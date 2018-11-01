@@ -35,7 +35,7 @@ class GTK::Builder::Box is GTK::Builder::Base does GTK::Builder::Role {
         0
     }).List {
       my $pack = qq:to/PACK/.chomp;
-\${ $o<id> }.pack_start(
+.pack_start(
 \${ $_<objects><id> },
   { $_<packing><fill>    // 'False' },
   { $_<packing><expand>  // 'False' },

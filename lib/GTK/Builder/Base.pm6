@@ -114,9 +114,15 @@ class GTK::Builder::Base does GTK::Builder::Role {
     sprintf($enclosed, $label);
   }
 
+  # Best to abstract this out, in case there are variable opttions in the
+  # future.
+  method var {
+    "\%{ $!var }";
+  }
+
   method create($o) {
     my @c;
-    @c.push: "\${ $o<id> } = GTK::{ self.name }.new();";
+    @c.push: " = GTK::{ self.name }.new();";
     @c;
   }
 
@@ -133,7 +139,7 @@ class GTK::Builder::Base does GTK::Builder::Role {
       next unless @a.elems.not || $_ eq @a.any;
       # Per property special-cases
       $s($prop) with $s;
-      @c.push: "\${ $o<id> }.{ $prop } = { $o<props>{$_} };";
+      @c.push: ".{ $prop } = { $o<props>{$_} };";
       $o<props>{$_}:delete;
       # This does not work when outside the loop.... WHY?!?
       $o<props>{$prop}:delete if $_ ne $prop;
@@ -149,7 +155,7 @@ class GTK::Builder::Base does GTK::Builder::Role {
     @c;
   }
 
-  method populate($o) {
+  multi method populate($o) {
     # Containers will override this.
     ();
   }

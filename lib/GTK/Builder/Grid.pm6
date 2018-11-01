@@ -29,7 +29,7 @@ class GTK::Builder::Grid is GTK::Builder::Base does GTK::Builder::Role {
 
     for $o<children>.List {
       my $attach = qq:to/ATTACH/.chomp;
-\${ $o<id> }.attach(
+.attach(
 \${ $_<objects><id> },
   { $_<packing><left-attach> // 0 },
   { $_<packing><top-attach>  // 0 },

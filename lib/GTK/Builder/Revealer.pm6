@@ -44,7 +44,7 @@ class GTK::Builder::Revealer is GTK::Builder::Base does GTK::Builder::Role {
 
   method populate($o) {
     my @c;
-    @c.push: "\${ $o<id> }.add(\${ $_<id> });"
+    @c.push: ".add(\${ $_<id> });"
       for $o<children>.map( *<objects> );
     @c;
   }

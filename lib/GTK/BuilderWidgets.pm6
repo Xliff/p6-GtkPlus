@@ -7,6 +7,7 @@ use GTK::Builder::Base;
 class GTK::BuilderWidgets does Pluggable {
   has @!plugins;
   has %!widgets;
+  has $!var;
 
   sub strip_mod($_) {
     my $a = $_.^name;
@@ -14,7 +15,8 @@ class GTK::BuilderWidgets does Pluggable {
     $a
   }
 
-  submethod BUILD {
+  submethod BUILD(:$var) {
+    $!var = $var;
     @!plugins = plugins('GTK',
       plugins-namespace => 'Builder',
       name-matcher      => /^ 'GTK::Builder::' <!before 'Base' | 'Role'>/
@@ -40,13 +42,17 @@ class GTK::BuilderWidgets does Pluggable {
       #ddt $o;
       (my $w = $o<objects><class>) ~~ s/^ 'Gtk' //;
       # say $w;
-      @code.append: %!widgets{$w}.create($o<objects>);
-      @code.append: %!widgets{$w}.properties($o<objects>);
+      @code.append: %!widgets{$w}.create($o<objects>).map({
+        "\%{ self.var }$_"
+      });
+      @code.append: %!widgets{$w}.properties($o<objects>).map({
+        "\%{ self.var }$_"
+      });
       if $o<objects><children>.elems {
         @code.append: self.get-code-list($_) for $o<objects><children>;
         my $vc = $o<objects>.deepmap(-> $c is copy { $c });
         $vc<children> .= grep( *<objects>.elems );
-        @code.append: %!widgets{$w}.populate($vc);
+        @code.append: %!widgets{$w}.populate($vc).map({ "\%{ self.var }$_" });
       }
     }
     @code;

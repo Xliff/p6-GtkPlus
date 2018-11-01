@@ -193,7 +193,7 @@ sub MAIN {
   my $ui_row = $ui-template;
   $ui_row ~~ s:g/'%%%'/1/;
 
-  my $bw = GTK::BuilderWidgets.new;
+  my $bw = GTK::BuilderWidgets.new(var => b);
   my $p = BuilderGrammar.parse($ui_row, actions => BuilderActions);
   say $bw.get-code-list($p.made).join("\n");
 }
