@@ -8,8 +8,8 @@ class GTK::Builder::Button is GTK::Builder::Base does GTK::Builder::Role {
     relief
   >;
 
-  multi method properties($o) {
-    my @c = self.properties(@attributes, $o, -> $prop is rw {
+  multi method properties($v, $o) {
+    my @c = self.properties($v, @attributes, $o, -> $prop is rw {
       # Per property special-cases
       given $prop {
         when 'label' {

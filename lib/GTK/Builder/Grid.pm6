@@ -11,8 +11,8 @@ class GTK::Builder::Grid is GTK::Builder::Base does GTK::Builder::Role {
     row-spacing
   >;
 
-  multi method properties($o) {
-    my @c = self.properties(@attributes, $o, -> $prop is rw {
+  multi method properties($v, $o) {
+    my @c = self.properties($v, @attributes, $o, -> $prop is rw {
       given $prop {
         when @attributes.any {
           $prop ~~ s:g/ '-' / '_' /;
@@ -22,15 +22,15 @@ class GTK::Builder::Grid is GTK::Builder::Base does GTK::Builder::Role {
     @c;
   }
 
-  method populate($o) {
+  method populate($v, $o) {
     my @c;
 
     use Data::Dump::Tree;
 
     for $o<children>.List {
       my $attach = qq:to/ATTACH/.chomp;
-.attach(
-\${ $_<objects><id> },
+{ sprintf($v, $o<id>) }.attach(
+{ sprintf($v, $_<objects><id>) },
   { $_<packing><left-attach> // 0 },
   { $_<packing><top-attach>  // 0 },
   { $_<packing><width>       // 1 },

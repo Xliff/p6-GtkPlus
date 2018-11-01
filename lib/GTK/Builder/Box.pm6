@@ -9,8 +9,8 @@ class GTK::Builder::Box is GTK::Builder::Base does GTK::Builder::Role {
     spacing
   >;
 
-  multi method properties($o) {
-    my @c = self.properties(@attributes, $o, -> $prop is rw {
+  multi method properties($v, $o) {
+    my @c = self.properties($v, @attributes, $o, -> $prop is rw {
       given $prop {
         when 'baseline-position' {
           $prop = 'baseline_position';
@@ -26,7 +26,7 @@ class GTK::Builder::Box is GTK::Builder::Base does GTK::Builder::Role {
     @c;
   }
 
-  method populate($o) {
+  method populate($v, $o) {
     my @c;
     for $o<children>.sort({
       $_<packing><position>.defined ??
@@ -35,8 +35,8 @@ class GTK::Builder::Box is GTK::Builder::Base does GTK::Builder::Role {
         0
     }).List {
       my $pack = qq:to/PACK/.chomp;
-.pack_start(
-\${ $_<objects><id> },
+{ sprintf($v, $o<id>) }.pack_start(
+{ sprintf($v, $_<objects><id>) },
   { $_<packing><fill>    // 'False' },
   { $_<packing><expand>  // 'False' },
   { $_<packing><padding> // 0 }

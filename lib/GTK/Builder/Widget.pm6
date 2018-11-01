@@ -4,13 +4,13 @@ use GTK::Builder::Base;
 
 class GTK::Builder::Widget is GTK::Builder::Base {
 
-  multi method properties($o) {
+  multi method properties($v, $o) {
     my @c;
     my ($height, $width) = (
       $o<props><height-request> // -1,
       $o<props><width-request>  // -1
     );
-    @c.push: "\${ $o<id> }.set_size_request($width, $height);"
+    @c.push: "{ sprintf($v, $o<id>) }.set_size_request($width, $height);"
       if ($height, $width).any > 0;
     $o<props><height-request width-request>:delete;
 
@@ -21,11 +21,11 @@ class GTK::Builder::Widget is GTK::Builder::Base {
       .Hash;
     my $min = %comps{@sides}.min;
     if $min > 0 && $min == %comps{@sides}.max {
-      @c.push: "\${ $o<id> }.margins = { $min };";
+      @c.push: "{ sprintf($v, $o<id>) }.margins = { $min };";
       $o<props>{@sides}:delete;
     }
 
-    @c.append: self.properties( (), $o, -> $prop is rw {
+    @c.append: self.properties($v,  (), $o, -> $prop is rw {
       given $prop {
         when / 'margin-' (
             'left'   |

@@ -4,9 +4,9 @@ use GTK::Builder::Base;
 
 class GTK::Builder::ListBoxRow is GTK::Builder::Base does GTK::Builder::Role {
 
-  multi method populate($o) {
+  multi method populate($v, $o) {
     my @c;
-    @c.push: ".add(\${ $_<id> });"
+    @c.push: "{ sprintf($v, $o<id>) }.add({ sprintf($v, $_<id>) });"
       for $o<children>.map( *<objects> );
     @c;
   }

@@ -16,8 +16,8 @@ class GTK::Builder::Revealer is GTK::Builder::Base does GTK::Builder::Role {
     transition_type
   >;
 
-  multi method properties($o) {
-    my @c = self.properties(@attributes, $o, -> $prop is rw {
+  multi method properties($v, $o) {
+    my @c = self.properties($v, @attributes, $o, -> $prop is rw {
       given $prop {
         when 'child-revealed' | 'child_revealed' {
           # Done to prevent from matching next when block
@@ -42,9 +42,9 @@ class GTK::Builder::Revealer is GTK::Builder::Base does GTK::Builder::Role {
     @c;
   }
 
-  method populate($o) {
+  method populate($v, $o) {
     my @c;
-    @c.push: ".add(\${ $_<id> });"
+    @c.push: "{ sprintf($v, $o<id>) }.add({ sprintf($v, $_<id>) });"
       for $o<children>.map( *<objects> );
     @c;
   }

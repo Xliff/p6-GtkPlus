@@ -15,8 +15,8 @@ class GTK::Builder::MenuButton is GTK::Builder::Base does GTK::Builder::Role {
     use_popover
   >;
 
-  multi method properties($o) {
-    my @c = self.properties(@attributes, $o, -> $prop is rw {
+  multi method properties($v, $o) {
+    my @c = self.properties($v, @attributes, $o, -> $prop is rw {
       given $prop {
         when / 'align' <[\-_]> 'widget' || 'menu' <[\-_]> 'model' / {
           warn "{ $_ } NYI";
@@ -36,9 +36,8 @@ class GTK::Builder::MenuButton is GTK::Builder::Base does GTK::Builder::Role {
           }
         }
         when 'popup' | 'popover' {
-          # This should be in the definition, if not, at worse it will be
-          # caught during compilation
-          $o<props>{$_} = '$' ~ $o<props>{$_};
+          # Should refer to a variable, hence the use of the template.
+          $o<props>{$_} = sprintf($v, $o<props>{$_});
         }
         when 'use-popover' {
           $prop = 'use_popover';

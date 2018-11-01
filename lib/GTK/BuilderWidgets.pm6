@@ -19,7 +19,9 @@ class GTK::BuilderWidgets does Pluggable {
     $!var = $var;
     @!plugins = plugins('GTK',
       plugins-namespace => 'Builder',
-      name-matcher      => /^ 'GTK::Builder::' <!before 'Base' | 'Role'>/
+      name-matcher      => /^
+        'GTK::Builder::'
+        <!before 'Base' | 'MRO' | 'Role'>/
     );
     for @!plugins.map( &strip_mod ) {
       require ::("GTK::Builder::{ $_ }");
@@ -27,8 +29,12 @@ class GTK::BuilderWidgets does Pluggable {
     }
   }
 
-  method list-plugins {
+  method get-widget-list {
     %!widgets.keys;
+  }
+
+  method var-temp {
+    "\%\%{ $!var }<\%s>"
   }
 
   method get-code-list($parser) {
@@ -41,18 +47,14 @@ class GTK::BuilderWidgets does Pluggable {
       #print 'P: ';
       #ddt $o;
       (my $w = $o<objects><class>) ~~ s/^ 'Gtk' //;
-      # say $w;
-      @code.append: %!widgets{$w}.create($o<objects>).map({
-        "\%{ self.var }$_"
-      });
-      @code.append: %!widgets{$w}.properties($o<objects>).map({
-        "\%{ self.var }$_"
-      });
+      #say $w;
+      @code.append: %!widgets{$w}.create(self.var-temp, $o<objects>);
+      @code.append: %!widgets{$w}.properties(self.var-temp, $o<objects>);
       if $o<objects><children>.elems {
         @code.append: self.get-code-list($_) for $o<objects><children>;
         my $vc = $o<objects>.deepmap(-> $c is copy { $c });
         $vc<children> .= grep( *<objects>.elems );
-        @code.append: %!widgets{$w}.populate($vc).map({ "\%{ self.var }$_" });
+        @code.append: %!widgets{$w}.populate(self.var-temp, $vc);
       }
     }
     @code;
