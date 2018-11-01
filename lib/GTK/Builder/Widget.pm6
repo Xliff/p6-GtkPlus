@@ -26,27 +26,27 @@ class GTK::Builder::Widget is GTK::Builder::Base {
     }
 
     @c.append: self.properties( (), $o, -> $prop is rw {
-    #   given $prop {
-    #     when / 'margin-' (
-    #         'left'   |
-    #         'right'  |
-    #         'bottom' |
-    #         'top'    |
-    #         'start'  |
-    #         'end'
-    #     ) / {
-    #       $prop = "margin_{ $/[0] }";
-    #     }
-    #     when <valign halign>.any {
-    #       $o<props>{$_} = do given $o<props>{$_} {
-    #         when 'fill'     { 'GTK_ALIGN_FILL'     }
-    #         when 'start'    { 'GTK_ALIGN_START'    }
-    #         when 'end'      { 'GTK_ALIGN_END'      }
-    #         when 'center'   { 'GTK_ALIGN_CENTER'   }
-    #         when 'baseline' { 'GTK_ALIGN_BASELINE' }
-    #       }
-    #     }
-    #   }
+      given $prop {
+        when / 'margin-' (
+            'left'   |
+            'right'  |
+            'bottom' |
+            'top'    |
+            'start'  |
+            'end'
+        ) / {
+          $prop = "margin_{ $/[0] }";
+        }
+        when <valign halign>.any {
+          $o<props>{$_} = do given $o<props>{$_} {
+            when 'fill'     { 'GTK_ALIGN_FILL'     }
+            when 'start'    { 'GTK_ALIGN_START'    }
+            when 'end'      { 'GTK_ALIGN_END'      }
+            when 'center'   { 'GTK_ALIGN_CENTER'   }
+            when 'baseline' { 'GTK_ALIGN_BASELINE' }
+          }
+        }
+      }
     });
     @c;
   }
