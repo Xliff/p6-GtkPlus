@@ -5,9 +5,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+#use GTK::Builder   ;
 use GTK::Box       ;
-use GTK::Builder   ;
 use GTK::Button    ;
+use GTK::Image     ;
 use GTK::Label     ;
 use GTK::LinkButton;
 use GTK::ListBox   ;
@@ -83,7 +84,7 @@ sub load_at_scale (
   is export
   { * }
 
-sub buildListRow {
+sub buildListRow is export {
   my %b;
   %b<menu1> = GTK::Menu.new();
   %b<menuitem1> = GTK::MenuItem.new_with_label("Email message");

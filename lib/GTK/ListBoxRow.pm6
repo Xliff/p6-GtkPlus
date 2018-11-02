@@ -57,6 +57,13 @@ class GTK::ListBoxRow is GTK::Bin {
     }
   }
 
+  method GTK::Raw::Types::ListBoxRow {
+    $!lbr;
+  }
+  method listboxrow {
+    $!lbr;
+  }
+
   multi method new {
     my $row = gtk_list_box_row_new();
     self.bless(:$row);

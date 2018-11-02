@@ -45,52 +45,39 @@ sub get-new-row-ui {
 }
 
 sub new_row {
+  ## GTK::Builder support for UI fragments is not yet working, correctly.
+  ## So this has been put off until it can be determined that it is
+  ## possible without writing a derivative widget class.
+  # ---------------------------------------------------------------
   # Needs GTK::Builder support, so test will need to be in the post 40s
-  state $b = GTK::Builder.new;
-  my ($ui, $c) = get-new-row-ui();
-  my @rid = (
-    "menu1-r{$c}",
-    "message_row_r{$c}",
-    "expand_button-r{$c}"
-  );
+  # state $b = GTK::Builder.new;
+  # my ($ui, $c) = get-new-row-ui();
+  # my @rid = (
+  #   "menu1-r{$c}",
+  #   "message_row_r{$c}",
+  #   "expand_button-r{$c}"
+  # );
 
   # Proper way to handle a GError. Need a better way for client code to
   # Access this.
-  $b.add_objects_from_string($ui, -1, @rid);
-  $ERROR[0].deref.gist.say if $ERROR.defined;
 
-  my $r = $b{@rid[0]};
-  my $w = MessageWidgets.new;
-  $w.content_label       = $b{"content_label-r{$c}"};
-  $w.source_name         = $b{"source_name-r{$c}"};
-  $w.source_nick         = $b{"source_nick-r{$c}"};
-  $w.short_time_label    = $b{"short_time_label-r{ $c }"};
-  $w.detailed_time_label = $b{"detailed_time_label-r{ $c }"};
-  $w.extra_buttons_box   = $b{"extra_buttons_box-r{ $c }"};
-  $w.details_revealer    = $b{"details_revealer-r{ $c }"};
-  $w.avatar_image        = $b{"avatar_image-r{ $c }"};
-  $w.resent_box          = $b{"resent_box-r{ $c }"};
-  $w.resent_by_button    = $b{"resent_by_button-r{ $c }"};
-  $w.n_reshares_label    = $b{"n_reshares_label-r{ $c }"};
-  $w.n_favorites_label   = $b{"n_favorites_label-r{ $c }"};
-
-  $b{"reshare-button-r{$c}"}.clicked.tap({
-    %messages{$r}<data>.n_reshares++;
-    row_update($r);
+  my %b = buildListRow;
+  %b<row> := %b<template0>;
+  %b<reshare-button>.clicked.tap({
+    %messages{%b<row>}<data>.n_reshares++;
+    row_update(%b<row>);
   });
-  $b{"expand_button-r{$c}"}.clicked.tap({ row-expand($r) });
-  $b{"favorite-button-r{$c}"}.clicked.tap({
-    %messages{$r}<data>.n_favorites++;
-    row_update($r);
+  %b<expand_button>.clicked.tap({ row-expand(%b<listrow>) });
+  %b<favorite-button>.clicked.tap({
+    %messages{%b<row>}<data>.n_favorites++;
+    row_update(%b<row>);
   });
-  # Only getting one argument, here?
-  $r.state-flags-changed.tap(-> $r, $pf {
-    $r.say;
-    $w.extra_buttons_box.visible = $r.state_flags +&
+  %b<listrow>.state-flags-changed.tap(-> $, $pf {
+    %b<extra_buttons_box>.visible = %b<row>.state_flags +&
       (GTK_STATE_FLAG_PRELIGHT +| GTK_STATE_FLAG_SELECTED);
-    $r.state_flags = $pf;
+    %b<listrow>.state_flags = $pf;
   });
-  $r;
+  %b;
 }
 
 sub new_message($m) {
@@ -117,27 +104,27 @@ sub new_message($m) {
 }
 
 sub row_update($r) {
-  my $d = %messages{$r}<data>;
-  my $w = %messages{$r}<widgets>;
+  my $d = %messages{$r.listboxrow}<data>;
+  my $w = %messages{$r.listboxrow}<widgets>;
 
-  $w.source_name.text          = $d.sender_name;
-  $w.source_nick.text          = $d.sender_nick;
-  $w.content_label.text        = $d.message;
-  $w.short_time_label.text     = strftime('%e %b %y', DateTime($d.time));
-  $w.detailed_time_label.text  = strftime('%X - %e %b %Y', DateTime($d.time));
+  $w<source_name>.text          = $d.sender_name;
+  $w<source_nick>.text          = $d.sender_nick;
+  $w<content_label>.text        = $d.message;
+  $w<short_time_label>.text     = strftime('%e %b %y', DateTime($d.time));
+  $w<detailed_time_label>.text  = strftime('%X - %e %b %Y', DateTime($d.time));
 
-  $w.n_favorites_label.visible = $d.n_favorites.so;
-  $w.n_favorites_label.markup  = sprintf('<b>%d</b>\nFavorites', $d.n_favorites);
-  $w.n_reshares_label.visible  = $d.n_reshares.so;
-  $w.n_reshares_label.markup   = sprintf('<b>%d</b>\nReshares', $d.n_reshares);
-  $w.resent_box.visible        = $d.resent_by.chars.so;
-  $w.resent_box.label          = $d.resent_by if $d.resent_by.chars.so;
+  $w<n_favorites_label>.visible = $d.n_favorites.so;
+  $w<n_favorites_label>.markup  = sprintf('<b>%d</b>\nFavorites', $d.n_favorites);
+  $w<n_reshares_label>.visible  = $d.n_reshares.so;
+  $w<n_reshares_label>.markup   = sprintf('<b>%d</b>\nReshares', $d.n_reshares);
+  $w<resent_box>.visible        = $d.resent_by.chars.so;
+  $w<resent_box>.label          = $d.resent_by if $d.resent_by.chars.so;
 
   if $d.sender_nick eq '@GTKtoolkit' {
-    $w.avatar_image.set_from_icon_name('gtk3-demo');
-    $w.avatar_image.icon_size = GTK_ICON_SIZE_LARGE_TOOLBAR;
+    $w<avatar_image>.set_from_icon_name('gtk3-demo');
+    $w<avatar_image>.icon_size = GTK_ICON_SIZE_LARGE_TOOLBAR;
   } else {
-    $w.avatar_image.set_from_pixbuf($avatar_other);
+    $w<avatar_image>.set_from_pixbuf($avatar_other);
   }
 }
 
@@ -174,8 +161,8 @@ $a.activate.tap({
     say "LINE: $_";
 
     my ($message, $row) = (new_message($_), new_row);
-    %messages{$row}<widgets> = $row;
-    %messages{$row}<data> = $message;
+    %messages{$row<row>.listboxrow}<widgets> = $row;
+    %messages{$row<row>.listboxrow}<data> = $message;
     $listbox.add($row);
     $row.show;
   }
