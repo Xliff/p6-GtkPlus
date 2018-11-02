@@ -29,6 +29,7 @@ sub EXPORT {
     GTK::Builder::EXPORT::DEFAULT::,
     GTK::Button::EXPORT::DEFAULT::,
     GTK::Box::EXPORT::DEFAULT::,
+    GTK::Image::EXPORT::DEFAULT::,
     GTK::Label::EXPORT::DEFAULT::,
     GTK::LinkButton::EXPORT::DEFAULT::,
     GTK::ListBox::EXPORT::DEFAULT::,

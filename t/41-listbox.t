@@ -67,7 +67,7 @@ sub new_row {
     %messages{%b<row>}<data>.n_reshares++;
     row_update(%b<row>);
   });
-  %b<expand_button>.clicked.tap({ row-expand(%b<listrow>) });
+  %b<expand_button>.clicked.tap({ row-expand(%b<row>) });
   %b<favorite-button>.clicked.tap({
     %messages{%b<row>}<data>.n_favorites++;
     row_update(%b<row>);
@@ -103,9 +103,9 @@ sub new_message($m) {
   %msg;
 }
 
-sub row_update($r) {
-  my $d = %messages{$r.listboxrow}<data>;
-  my $w = %messages{$r.listboxrow}<widgets>;
+sub row_update(GtkListBoxRow() $r) {
+  my $d = %messages{$r}<data>;
+  my $w = %messages{$r}<widgets>;
 
   $w<source_name>.text          = $d.sender_name;
   $w<source_nick>.text          = $d.sender_nick;
@@ -160,10 +160,10 @@ $a.activate.tap({
   for $msg_file.IO.open.slurp.lines {
     say "LINE: $_";
 
-    my ($message, $row) = (new_message($_), new_row);
-    %messages{$row<row>.listboxrow}<widgets> = $row;
-    %messages{$row<row>.listboxrow}<data> = $message;
-    $listbox.add($row);
+    my ($m, $w) = (new_message($_), new_row);
+    %messages{$row<row>.listboxrow}<widgets> = $w;
+    %messages{$row<row>.listboxrow}<data> = $m;
+    $listbox.add($w<row>);
     $row.show;
   }
 

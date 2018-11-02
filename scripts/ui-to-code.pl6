@@ -1,18 +1,25 @@
 use v6.c;
 
-use lib <t .>;
-
-use ui_to_code;
+#use lib <t .>;
+#use ui_to_code;
 #use Grammar::Tracer;
-use Data::Dump::Tree;
+#use Data::Dump::Tree;
 
 grammar BuilderGrammar {
   rule TOP {
     '<?xml version="1.0" encoding="UTF-8"?>'
+    <comment>?
     '<interface>' <pieces>+ '</interface>'
+    <comment>?
   }
   rule pieces {
-    <object> || <template>
+    <object> || <template> || <comment> || <requires>
+  }
+  rule comment {
+    '<!--' .+ '-->'
+  }
+  rule requires {
+    '<requires'  <attr>+ %% \s+ '/>'
   }
   rule object {
     '<object' <attr>+ %% \s+ '>'
@@ -32,8 +39,8 @@ grammar BuilderGrammar {
     '</template>'
   }
   rule child {
-    '<child>'
-    [ <object> | <packing> ]*
+    '<child'(\s+ <attr>+ %% \s+)?'>'
+    [ <object> | <packing> | '<placeholder'\s*'/>' ]*
     '</child>'
     |
     '<child' <attr>+ %% \s+ '/>'
@@ -57,10 +64,11 @@ grammar BuilderGrammar {
     '<property' <attr>+ %% \s+ '>'<value>'</property>'
   }
   token attr {
-    <name=ident>'="'<value=ident>'"'
+    # Double or single quotes
+    <name=ident>'="'<val=ident>'"'
   }
   token ident {
-    <[A..Za..z0..9_\-]>+
+    <[A..Za..z0..9_\-\+\.]>+
   }
   token value {
     <[A..Za..z0..9_:\-\.\@\/\&\;] + :space>+
@@ -153,7 +161,7 @@ class BuilderActions {
   method attributes($/) {
     my %attrs = self!buildAttr($_) for $/<attribute>.List;
     make {
-      %attrs<name> => %attrs<attrs><value>
+      %attrs<name> => %attrs<attrs><val>
     };
   }
   method packing($/) {
@@ -183,17 +191,16 @@ class BuilderActions {
     };
   }
   method attr($/) {
-    make $/<name>.Str => $/<value>.Str;
+    make $/<name>.Str => $/<val>.Str;
   }
 }
 
-sub MAIN {
+sub MAIN($filename) {
   use GTK::BuilderWidgets;
 
-  my $ui_row = $ui-template;
-  $ui_row ~~ s:g/'%%%'/1/;
-
+  die "Cannot find file '$filename'.\n" unless $filename.IO.e;
+  my $contents = $filename.IO.open.slurp;
   my $bw = GTK::BuilderWidgets.new(var => 'b');
-  my $p = BuilderGrammar.parse($ui_row, actions => BuilderActions);
+  my $p = BuilderGrammar.parse($contents, actions => BuilderActions);
   say $bw.get-code-list($p.made).join("\n");
 }

@@ -61,7 +61,13 @@ class GTK::Builder::Base does GTK::Builder::Role {
         $enclosed = "<b>{ $enclosed }</b>";
       }
     }
-    (my $label = $o<props><label><value>) ~~ s:g!\r?\n!\\n!;
+    (my $label = do given $o<props><label> {
+      when Hash { $_<value> }
+      when Str  { $_        }
+      default {
+        die "Unknown type found when handling a label: '{ .^name }'";
+      }
+    }) ~~ s:g!\r?\n!\\n!;
     sprintf($enclosed, $label);
   }
 
