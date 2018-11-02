@@ -198,8 +198,13 @@ class BuilderActions {
 sub MAIN($filename) {
   use GTK::BuilderWidgets;
 
-  die "Cannot find file '$filename'.\n" unless $filename.IO.e;
-  my $contents = $filename.IO.open.slurp;
+  my $contents;
+  if $filename ne '-' {
+    die "Cannot find file '$filename'.\n" unless $filename.IO.e;
+    $contents = $filename.IO.open.slurp;
+  } else {
+    $contents = slurp;
+  }
   my $bw = GTK::BuilderWidgets.new(var => 'b');
   my $p = BuilderGrammar.parse($contents, actions => BuilderActions);
   say $bw.get-code-list($p.made).join("\n");
