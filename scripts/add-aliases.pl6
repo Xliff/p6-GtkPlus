@@ -5,37 +5,54 @@ sub MAIN($filename) {
   my $contents = $filename.IO.open.slurp;
   # $filename.IO.rename("{ $filename }.bak");
 
-  my token numword {
-    <[A..Za..z0..9]>+
-  }
-  my token sep {
-    '_' | '-'
-  }
-  my regex params {
-    <[A..Za..z]>+'()'? \s+ \$ <numword>+ %% <sep>
-  }
-  my token paramsep {
-    \s* ',' \s*
-  }
-  my regex methodline1 {
-    # Need a *generic* method matcher, then determine if it needs
-    # replacement treatment.
-    #
-    # Must also handle traits!!!
-    'multi'? \s+ 'method' \s+ (<-[\s]>+) \s*
-    ['is' \s+ 'rw' \s+]?
-    $<also>=('is' \s+ 'also<' <-[>]>+ '>')?
-  }
-  my regex methodline2 {
-    # Need a *generic* method matcher, then determine if it needs
-    # replacement treatment.
-    #
-    # Must also handle traits!!!
-    'multi'? \s+ 'method' \s+ (<-[\s]>+) \s*
-    '(' \s* <params>+ %% <paramsep> \s* ')' \s+
-    ['is' \s+ 'rw' \s+]?
-    $<also>=('is' \s+ 'also<' <-[>]>+ '>')?
-  }
+  # my token numword {
+  #   <[A..Za..z0..9]>+
+  # }
+  # my token sep {
+  #   '_' | '-'
+  # }
+  # my regex params {
+  #   <[A..Za..z]>+'()'? \s+ \$ <numword>+ %% <sep>
+  # }
+  # my token paramsep {
+  #   \s* ',' \s*
+  # }
+  # my regex methodline1 {
+  #   # Need a *generic* method matcher, then determine if it needs
+  #   # replacement treatment.
+  #   #
+  #   # Must also handle traits!!!
+  #   'multi'? \s+ 'method' \s+ (<-[\s]>+) \s*
+  #   ['is' \s+ 'rw' \s+]?
+  #   $<also>=('is' \s+ 'also<' <-[>]>+ '>')?
+  # }
+  # my regex methodline2 {
+  #   # Need a *generic* method matcher, then determine if it needs
+  #   # replacement treatment.
+  #   #
+  #   # Must also handle traits!!!
+  #   'multi'? \s+ 'method' \s+ (<-[\s]>+) \s*
+  #   '(' \s* <params>+ %% <paramsep> \s* ')' \s+
+  #   ['is' \s+ 'rw' \s+]?
+  #   $<also>=('is' \s+ 'also<' <-[>]>+ '>')?
+  # }
+
+  # Note to self:
+  #  _   __            _____         _ _       _   _
+  # \ \ / /__  _   _  | ____|___  __| (_) ___ | |_| |
+  #  \ V / _ \| | | | |  _| / _ \/ _` | |/ _ \| __| |
+  #   | | (_) | |_| | | |__|  __/ (_| | | (_) | |_|_|
+  #   |_|\___/ \__,_| |_____\___|\__,_|_|\___/ \__(_)
+  #
+  # This is overthinking the problem. Keep adding lines to the output
+  # array until you find 'method'. Keep adding to the buffer until you find a '{'
+  # in the string. Add your alias before the '{' !!\
+  # Always remember the golden rule....
+  #                   __ __ ______________
+  #                  / //_//  _/ ___/ ___/
+  #                 / ,<   / / \__ \\__ \
+  #                / /| |_/ / ___/ /__/ /
+  #               /_/ |_/___//____/____/  
 
   my @lines;
   my $full_line;
