@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -11,7 +12,8 @@ use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::EntryCompletion;
 
 # THIS IS OFF OF THE TABLE UNTIL A VIABLE CONVERSION FOR GTKLISTSTORE
-# HAS BEEN DETERMINED.
+# HAS BEEN DETERMINED == which has been done. Will need to circle back
+# here.
 
 class GTK::EntryCompletion {
   also does GTK::Roles::CellLayout;
@@ -46,7 +48,7 @@ class GTK::EntryCompletion {
     self.bless( :$entrycompletion );
   }
 
-  method new_with_area (GtkCellArea $ca) {
+  method new_with_area (GtkCellArea $ca) is also<new-with-area> {
     my $entrycompletion = gtk_entry_completion_new_with_area($ca);
     self.bless( :$entrycompletion );
   }
@@ -55,38 +57,38 @@ class GTK::EntryCompletion {
 
   # Is originally:
   # GtkEntryCompletion, gint, gpointer --> void
-  method action-activated {
+  method action-activated is also<action_activated> {
     self.connect-int($!ec, 'action-activated');
   }
 
   # Is originally:
   # GtkEntryCompletion, GtkTreeModel, GtkTreeIter, gpointer --> gboolean
-  method cursor-on-match {
+  method cursor-on-match is also<cursor_on_match> {
     self.connect-on-match($!ec, 'cursor-on-match');
   }
 
   # Is originally:
   # GtkEntryCompletion, gchar, gpointer --> gboolean
-  method insert-prefix {
+  method insert-prefix is also<insert_prefix> {
     self.connect-string($!ec, 'insert-prefix');
   }
 
   # Is originally:
   # GtkEntryCompletion, GtkTreeModel, GtkTreeIter, gpointer --> gboolean
-  method match-selected {
+  method match-selected is also<match_selected> {
     self.connect-on-match($!ec, 'match-selected');
   }
 
   # Is originally:
   # GtkEntryCompletion, gpointer --> void
-  method no-matches {
+  method no-matches is also<no_matches> {
     self.connect($!ec, 'no-matches');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method inline_completion is rw {
+  method inline_completion is rw is also<inline-completion> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_inline_completion($!ec);
@@ -99,7 +101,7 @@ class GTK::EntryCompletion {
     );
   }
 
-  method inline_selection is rw {
+  method inline_selection is rw is also<inline-selection> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_inline_selection($!ec);
@@ -112,7 +114,7 @@ class GTK::EntryCompletion {
     );
   }
 
-  method minimum_key_length is rw {
+  method minimum_key_length is rw is also<minimum-key-length> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_minimum_key_length($!ec);
@@ -134,7 +136,7 @@ class GTK::EntryCompletion {
     );
   }
 
-  method popup_completion is rw {
+  method popup_completion is rw is also<popup-completion> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_popup_completion($!ec);
@@ -145,7 +147,7 @@ class GTK::EntryCompletion {
     );
   }
 
-  method popup_set_width is rw {
+  method popup_set_width is rw is also<popup-set-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_popup_set_width($!ec);
@@ -156,7 +158,7 @@ class GTK::EntryCompletion {
     );
   }
 
-  method popup_single_match is rw {
+  method popup_single_match is rw is also<popup-single-match> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_popup_single_match($!ec);
@@ -169,7 +171,7 @@ class GTK::EntryCompletion {
     );
   }
 
-  method text_column is rw {
+  method text_column is rw is also<text-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_text_column($!ec);
@@ -185,35 +187,35 @@ class GTK::EntryCompletion {
     gtk_entry_completion_complete($!ec);
   }
 
-  method compute_prefix (Str $key) {
+  method compute_prefix (Str $key) is also<compute-prefix> {
     gtk_entry_completion_compute_prefix($!ec, $key);
   }
 
-  method delete_action (gint $index) {
+  method delete_action (gint $index) is also<delete-action> {
     gtk_entry_completion_delete_action($!ec, $index);
   }
 
-  method get_completion_prefix {
+  method get_completion_prefix is also<get-completion-prefix> {
     gtk_entry_completion_get_completion_prefix($!ec);
   }
 
-  method get_entry {
+  method get_entry is also<get-entry> {
     gtk_entry_completion_get_entry($!ec);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_entry_completion_get_type();
   }
 
-  method insert_action_markup (gint $index_, gchar $markup) {
+  method insert_action_markup (gint $index_, gchar $markup) is also<insert-action-markup> {
     gtk_entry_completion_insert_action_markup($!ec, $index_, $markup);
   }
 
-  method insert_action_text (gint $index_, gchar $text) {
+  method insert_action_text (gint $index_, gchar $text) is also<insert-action-text> {
     gtk_entry_completion_insert_action_text($!ec, $index_, $text);
   }
 
-  method insert_prefix {
+  method emit_insert_prefix is also<emit-insert-prefix> {
     gtk_entry_completion_insert_prefix($!ec);
   }
 
@@ -221,7 +223,7 @@ class GTK::EntryCompletion {
     OpaquePointer $func,
     gpointer $func_data,
     GDestroyNotify $func_notify
-  ) {
+  ) is also<set-match-func> {
     gtk_entry_completion_set_match_func(
       $!ec, $func, $func_data, $func_notify
     );

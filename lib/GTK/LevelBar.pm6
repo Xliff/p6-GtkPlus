@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -54,7 +55,7 @@ class GTK::LevelBar is GTK::Widget {
     self.bless(:$level);
   }
 
-  method new_for_interval (Num() $max_value) {
+  method new_for_interval (Num() $max_value) is also<new-for-interval> {
     my gdouble $mv = $max_value;
     my $level = gtk_level_bar_new_for_interval($!lb, $mv);
     self.bless(:$level);
@@ -64,7 +65,7 @@ class GTK::LevelBar is GTK::Widget {
 
   # Is originally:
   # GtkLevelBar, gchar, gpointer --> void
-  method offset-changed {
+  method offset-changed is also<offset_changed> {
     self.connect-string($!lb, 'offset-changed');
   }
 
@@ -83,7 +84,7 @@ class GTK::LevelBar is GTK::Widget {
     );
   }
 
-  method max_value is rw {
+  method max_value is rw is also<max-value> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_level_bar_get_max_value($!lb);
@@ -95,7 +96,7 @@ class GTK::LevelBar is GTK::Widget {
     );
   }
 
-  method min_value is rw {
+  method min_value is rw is also<min-value> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_level_bar_get_min_value($!lb);
@@ -133,23 +134,24 @@ class GTK::LevelBar is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_offset_value (gchar $name, Num() $value) {
+  method get_offset_value (gchar $name, Num() $value) is also<get-offset-value> {
     my gdouble $v = $value;
     gtk_level_bar_get_offset_value($!lb, $name, $v);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_level_bar_get_type();
   }
 
-  method add_offset_value(Str() $name, Num() $value) {
+  method add_offset_value(Str() $name, Num() $value) is also<add-offset-value> {
     my gdouble $v = $value;
     gtk_level_bar_add_offset_value($!lb, $name, $v);
   }
 
-  method remove_offset_value(Str() $name) {
+  method remove_offset_value(Str() $name) is also<remove-offset-value> {
     gtk_level_bar_remove_offset_value($!lb, $name);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

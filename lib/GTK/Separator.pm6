@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -56,20 +57,21 @@ class GTK::Separator is GTK::Widget {
     self.bless(:$separator);
   }
 
-  method new-h-separator(GTK::Separator:U: ) {
+  method new-h-separator(GTK::Separator:U: ) is also<new_h_separator> {
     my guint $o = GTK_ORIENTATION_HORIZONTAL.Int;
     my $separator = gtk_separator_new($o);
     self.bless(:$separator);
   }
 
-  method new-v-separator(GTK::Separator:U: ) {
+  method new-v-separator(GTK::Separator:U: ) is also<new_v_separator> {
     my gint $o = GTK_ORIENTATION_VERTICAL.Int;
     my $separator = gtk_separator_new($o);
     self.bless(:$separator);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_separator_get_type();
   }
 
 }
+

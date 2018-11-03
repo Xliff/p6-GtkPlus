@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -45,7 +46,7 @@ class GTK::MenuShell is GTK::Container {
 
   # Is originally:
   # GtkMenuShell, gboolean, gpointer --> void
-  method activate-current {
+  method activate-current is also<activate_current> {
     self.connect-uint($!ms, 'activate-current');
   }
 
@@ -57,7 +58,7 @@ class GTK::MenuShell is GTK::Container {
 
   # Is originally:
   # GtkMenuShell, GtkDirectionType, gpointer --> void
-  method cycle-focus {
+  method cycle-focus is also<cycle_focus> {
     self.connect-uint($!ms, 'cycle-focus');
   }
 
@@ -76,25 +77,25 @@ class GTK::MenuShell is GTK::Container {
 
   # Is originally:
   # GtkMenuShell, GtkMenuDirectionType, gpointer --> void
-  method move-current {
+  method move-current is also<move_current> {
     self.connect-uint($!ms, 'move-current');
   }
 
   # Is originally:
   # GtkMenuShell, gint, gpointer --> gboolean
-  method move-selected {
+  method move-selected is also<move_selected> {
     self.connect-int-ruint($!ms, 'move-selected');
   }
 
   # Is originally:
   # GtkMenuShell, gpointer --> void
-  method selection-done {
+  method selection-done is also<selection_done> {
     self.connect($!ms, 'selection-done');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method take_focus is rw {
+  method take_focus is rw is also<take-focus> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_menu_shell_get_take_focus($!ms) );
@@ -111,12 +112,12 @@ class GTK::MenuShell is GTK::Container {
   method activate_item (
     GtkWidget() $menu_item,
     Int() $force_deactivate
-  ) {
+  ) is also<activate-item> {
     my gboolean $fd = self.RESOLVE-BOOL($force_deactivate);
     gtk_menu_shell_activate_item($!ms, $menu_item, $fd);
   }
 
-  multi method append-widgets (*@children) {
+  multi method append-widgets (*@children) is also<append_widgets> {
     die 'All children must be GTK::MenuItem or a GtkMenuItem reference.'
       unless @children.all ~~ (GTK::MenuItem, GtkMenuItem).any;
 
@@ -139,16 +140,16 @@ class GTK::MenuShell is GTK::Container {
     GMenuModel $model,
     gchar $action_namespace,
     Int() $with_separators
-  ) {
+  ) is also<bind-model> {
     my gboolean $ws = self.RESOLVE-BOOL($with_separators);
     gtk_menu_shell_bind_model($!ms, $model, $action_namespace, $ws);
   }
 
-  method emit-cancel {
+  method emit-cancel is also<emit_cancel> {
     gtk_menu_shell_cancel($!ms);
   }
 
-  method emit-deactivate {
+  method emit-deactivate is also<emit_deactivate> {
     gtk_menu_shell_deactivate($!ms);
   }
 
@@ -156,15 +157,15 @@ class GTK::MenuShell is GTK::Container {
     gtk_menu_shell_deselect($!ms);
   }
 
-  method get_parent_shell {
+  method get_parent_shell is also<get-parent-shell> {
     gtk_menu_shell_get_parent_shell($!ms);
   }
 
-  method get_selected_item {
+  method get_selected_item is also<get-selected-item> {
     gtk_menu_shell_get_selected_item($!ms);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_menu_shell_get_type();
   }
 
@@ -191,14 +192,15 @@ class GTK::MenuShell is GTK::Container {
     samewith($child.widget);
   }
 
-  method select_first (Int() $search_sensitive) {
+  method select_first (Int() $search_sensitive) is also<select-first> {
     my gboolean $ss = self.RESOLVE-BOOL($search_sensitive);
     gtk_menu_shell_select_first($!ms, $ss);
   }
 
-  method select_item (GtkWidget() $menu_item) {
+  method select_item (GtkWidget() $menu_item) is also<select-item> {
     gtk_menu_shell_select_item($!ms, $menu_item);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

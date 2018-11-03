@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -99,16 +100,29 @@ class GTK::Layout is GTK::Container {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_bin_window {
+  method get_bin_window is also<get-bin-window> {
     gtk_layout_get_bin_window($!l);
   }
 
+  multi method get-size {
+    self.get_size;
+  }
   multi method get_size {
     my ($w, $h);
     samewith($w, $h);
     ($w, $h);
   }
-  multi method get_size (Int() $width is rw, Int() $height is rw) {
+
+  multi method get-size (
+    Int() $width is rw,
+    Int() $height is rw
+  ) {
+    self.get_size($width, $height);
+  }
+  multi method get_size (
+    Int() $width is rw,
+    Int() $height is rw
+  ) {
     my @i = ($width, $height);
     my guint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_layout_get_size($!l, $w, $h);
@@ -116,7 +130,7 @@ class GTK::Layout is GTK::Container {
     Nil;
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_layout_get_type();
   }
 
@@ -132,7 +146,7 @@ class GTK::Layout is GTK::Container {
     gtk_layout_put($!l, $child_widget, $x, $y);
   }
 
-  method set_size (Int() $width, Int() $height) {
+  method set_size (Int() $width, Int() $height) is also<set-size> {
     my @i = ($width, $height);
     my guint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_layout_set_size($!l, $width, $height);

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -48,25 +49,26 @@ class GTK::TextMark {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_buffer {
+  method get_buffer is also<get-buffer> {
     GTK::TextBuffer( gtk_text_mark_get_buffer($!tm) );
   }
 
-  method get_deleted {
+  method get_deleted is also<get-deleted> {
     so gtk_text_mark_get_deleted($!tm);
   }
 
-  method get_left_gravity {
+  method get_left_gravity is also<get-left-gravity> {
     so gtk_text_mark_get_left_gravity($!tm);
   }
 
-  method get_name {
+  method get_name is also<get-name> {
     gtk_text_mark_get_name($!tm);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_text_mark_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

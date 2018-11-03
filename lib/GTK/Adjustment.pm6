@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -44,7 +45,7 @@ class GTK::Adjustment {
 
   # Is originally:
   # GtkAdjustment, gpointer --> void
-  method value-changed {
+  method value-changed is also<value_changed> {
     self.connect($!adj, 'value-changed');
   }
 
@@ -63,7 +64,7 @@ class GTK::Adjustment {
     );
   }
 
-  method page_increment is rw {
+  method page_increment is rw is also<page-increment> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_adjustment_get_page_increment($!adj);
@@ -75,7 +76,7 @@ class GTK::Adjustment {
     );
   }
 
-  method page_size is rw {
+  method page_size is rw is also<page-size> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_adjustment_get_page_size($!adj);
@@ -87,7 +88,7 @@ class GTK::Adjustment {
     );
   }
 
-  method step_increment is rw {
+  method step_increment is rw is also<step-increment> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_adjustment_get_step_increment($!adj);
@@ -130,7 +131,7 @@ class GTK::Adjustment {
   #   gtk_adjustment_changed($!adj);
   # }
 
-  method clamp_page (Num() $lower, Num() $upper) {
+  method clamp_page (Num() $lower, Num() $upper) is also<clamp-page> {
     my gdouble ($l, $u) = ($lower, $upper);
     gtk_adjustment_clamp_page($!adj, $l, $u);
   }
@@ -149,11 +150,11 @@ class GTK::Adjustment {
     gtk_adjustment_configure($!adj, $v, $l, $u, $si, $pi, $ps);
   }
 
-  method get_minimum_increment {
+  method get_minimum_increment is also<get-minimum-increment> {
     gtk_adjustment_get_minimum_increment($!adj);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_adjustment_get_type();
   }
 
@@ -164,3 +165,4 @@ class GTK::Adjustment {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

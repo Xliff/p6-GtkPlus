@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -76,7 +77,7 @@ class GTK::Application is export {
     gtk_init($argc, $args);
   }
 
-  method wait-for-init {
+  method wait-for-init is also<wait_for_init> {
     await $!init;
   }
 
@@ -124,7 +125,7 @@ class GTK::Application is export {
     $!height;
   }
 
-  method app_menu is rw {
+  method app_menu is rw is also<app-menu> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_application_get_app_menu($!app);
@@ -190,13 +191,13 @@ class GTK::Application is export {
 
   # Is originally:
   # GtkApplication, GtkWindow, gpointer --> void
-  method window-added {
+  method window-added is also<window_added> {
     self.connect-application-signal($!app, 'window-added');
   }
 
   # Is originally:
   # GtkApplication, GtkWindow, gpointer --> void
-  method window-removed {
+  method window-removed is also<window_removed> {
     self.connect-application-signal($!app, 'window-removed');
   }
 
@@ -205,44 +206,42 @@ class GTK::Application is export {
     Str() $accelerator,
     Str() $action_name,
     GVariant $parameter
-  ) {
+  ) is also<add-accelerator> {
     gtk_application_add_accelerator($!app, $accelerator, $action_name, $parameter);
   }
 
-  # Do we need to do anything here? Will leave this until answered.
-  multi method add_window (GtkWindow $window) {
+  method add_window (GtkWindow() $window) is also<add-window> {
     gtk_application_add_window($!app, $window);
   }
-  multi method add_window(GTK::Window $window) {
-    samewith($window.window);
-  }
 
-  method get_accels_for_action (Str() $detailed_action_name) {
+  method get_accels_for_action (Str() $detailed_action_name)
+    is also<get-accels-for-action>
+  {
     gtk_application_get_accels_for_action($!app, $detailed_action_name);
   }
 
-  method get_actions_for_accel (Str() $accel) {
+  method get_actions_for_accel (Str() $accel) is also<get-actions-for-accel> {
     gtk_application_get_actions_for_accel($!app, $accel);
   }
 
-  method get_active_window {
+  method get_active_window is also<get-active-window> {
     gtk_application_get_active_window($!app);
   }
 
-  method get_menu_by_id (Str() $id) {
+  method get_menu_by_id (Str() $id) is also<get-menu-by-id> {
     gtk_application_get_menu_by_id($!app, $id);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_application_get_type();
   }
 
-  method get_window_by_id (Int() $id) {
+  method get_window_by_id (Int() $id) is also<get-window-by-id> {
     my guint $i = self.RESOLVE-UINT($id);
     gtk_application_get_window_by_id($!app, $i);
   }
 
-  method get_windows {
+  method get_windows is also<get-windows> {
     gtk_application_get_windows($!app);
   }
 
@@ -258,24 +257,30 @@ class GTK::Application is export {
 
   method is_inhibited (
     Int() $flags                # GtkApplicationInhibitFlags $flags
-  ) {
+  )
+    is also<is-inhibited>
+  {
     my guint $f = self.RESOLVE-UINT($flags);
     gtk_application_is_inhibited($!app, $f);
   }
 
-  method list_action_descriptions {
+  method list_action_descriptions
+    is also<list-action-descriptions>
+  {
     gtk_application_list_action_descriptions($!app);
   }
 
-  method prefers_app_menu {
+  method prefers_app_menu is also<prefers-app-menu> {
     gtk_application_prefers_app_menu($!app);
   }
 
-  method remove_accelerator (Str() $action_name, GVariant $parameter) {
+  method remove_accelerator (Str() $action_name, GVariant $parameter)
+    is also<remove-accelerator>
+  {
     gtk_application_remove_accelerator($!app, $action_name, $parameter);
   }
 
-  method remove_window (GtkWindow() $window) {
+  method remove_window (GtkWindow() $window) is also<remove-window> {
     gtk_application_remove_window($!app, $window);
   }
 

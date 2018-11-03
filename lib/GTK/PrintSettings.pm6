@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -25,11 +26,11 @@ class GTK::PrintSettings {
   method new_from_file (
     Str() $filename,
     GError $error = GError
-  ) {
+  ) is also<new-from-file> {
     gtk_print_settings_new_from_file($filename, $error);
   }
 
-  method new_from_gvariant(GVariant $v)  {
+  method new_from_gvariant(GVariant $v)  is also<new-from-gvariant> {
     my $settings = gtk_print_settings_new_from_gvariant($v);
     self.bless(:$settings);
   }
@@ -38,7 +39,7 @@ class GTK::PrintSettings {
     Str() $keyfile,
     Str() $group_name,
     GError $error = GError
-  ) {
+  ) is also<new-from-key-file> {
     my $settings = gtk_print_settings_new_from_key_file(
       $keyfile,
       $group_name,
@@ -63,7 +64,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method default_source is rw {
+  method default_source is rw is also<default-source> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_default_source($!prnset);
@@ -107,7 +108,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method media_type is rw {
+  method media_type is rw is also<media-type> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_media_type($!prnset);
@@ -118,7 +119,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method n_copies is rw {
+  method n_copies is rw is also<n-copies> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_n_copies($!prnset);
@@ -129,7 +130,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method number_up is rw {
+  method number_up is rw is also<number-up> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_number_up($!prnset);
@@ -140,7 +141,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method number_up_layout is rw {
+  method number_up_layout is rw is also<number-up-layout> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_number_up_layout($!prnset);
@@ -163,7 +164,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method output_bin is rw {
+  method output_bin is rw is also<output-bin> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_output_bin($!prnset);
@@ -174,7 +175,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method page_set is rw {
+  method page_set is rw is also<page-set> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_page_set($!prnset);
@@ -185,7 +186,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method paper_size is rw {
+  method paper_size is rw is also<paper-size> {
     Proxy.new(
       FETCH => sub ($) {
         GTK::PaperSize.new( gtk_print_settings_get_paper_size($!prnset) );
@@ -196,7 +197,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method print_pages is rw {
+  method print_pages is rw is also<print-pages> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_print_pages($!prnset);
@@ -219,7 +220,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method printer_lpi is rw {
+  method printer_lpi is rw is also<printer-lpi> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_settings_get_printer_lpi($!prnset);
@@ -276,7 +277,7 @@ class GTK::PrintSettings {
     );
   }
 
-  method use_color is rw {
+  method use_color is rw is also<use-color> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_print_settings_get_use_color($!prnset);
@@ -305,24 +306,24 @@ class GTK::PrintSettings {
     gtk_print_settings_get($!prnset, $key);
   }
 
-  method get_bool (Str() $key) {
+  method get_bool (Str() $key) is also<get-bool> {
     so gtk_print_settings_get_bool($!prnset, $key);
   }
 
-  method get_double (Str() $key) {
+  method get_double (Str() $key) is also<get-double> {
     gtk_print_settings_get_double($!prnset, $key);
   }
 
-  method get_double_with_default (Str() $key, Num() $def) {
+  method get_double_with_default (Str() $key, Num() $def) is also<get-double-with-default> {
     my gdouble $d = $def;
     gtk_print_settings_get_double_with_default($!prnset, $key, $d);
   }
 
-  method get_int (Str() $key) {
+  method get_int (Str() $key) is also<get-int> {
     gtk_print_settings_get_int($!prnset, $key);
   }
 
-  method get_int_with_default (Str() $key, Int() $def) {
+  method get_int_with_default (Str() $key, Int() $def) is also<get-int-with-default> {
     my gint $d = self.RESOLVE-INT($def);
     gtk_print_settings_get_int_with_default($!prnset, $key, $d);
   }
@@ -330,50 +331,50 @@ class GTK::PrintSettings {
   method get_length (
     Str() $key,
     Int() $unit                # GtkUnit $unit
-  ) {
+  ) is also<get-length> {
     my guint $u = self.RESOLVE-UINT($unit);
     gtk_print_settings_get_length($!prnset, $key, $u);
   }
 
-  method get_page_ranges (Int() $num_ranges) {
+  method get_page_ranges (Int() $num_ranges) is also<get-page-ranges> {
     my gint $nr = self.RESOLVE-INT($num_ranges);
     gtk_print_settings_get_page_ranges($!prnset, $nr);
   }
 
   method get_paper_height (
     Int() $unit                # GtkUnit $unit
-  ) {
+  ) is also<get-paper-height> {
     my guint $u = self.RESOLVE-UINT($unit);
     gtk_print_settings_get_paper_height($!prnset, $u);
   }
 
   method get_paper_width (
     Int() $unit                # GtkUnit $unit
-  ) {
+  ) is also<get-paper-width> {
     my guint $u = self.RESOLVE-UINT($unit);
     gtk_print_settings_get_paper_width($!prnset, $u);
   }
 
-  method get_resolution_x {
+  method get_resolution_x is also<get-resolution-x> {
     gtk_print_settings_get_resolution_x($!prnset);
   }
 
-  method get_resolution_y {
+  method get_resolution_y is also<get-resolution-y> {
     gtk_print_settings_get_resolution_y($!prnset);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_print_settings_get_type();
   }
 
-  method has_key (Str() $key) {
+  method has_key (Str() $key) is also<has-key> {
     gtk_print_settings_has_key($!prnset, $key);
   }
 
   method load_file (
     Str() $file_name,
     GError $error = GError
-  ) {
+  ) is also<load-file> {
     gtk_print_settings_load_file($!prnset, $file_name, $error);
   }
 
@@ -381,7 +382,7 @@ class GTK::PrintSettings {
     GKeyFile() $key_file,
     Str() $group_name,
     GError $error = GError
-  ) {
+  ) is also<load-key-file> {
     gtk_print_settings_load_key_file($!prnset, $key_file, $group_name, $error);
   }
 
@@ -389,17 +390,17 @@ class GTK::PrintSettings {
     gtk_print_settings_set($!prnset, $key, $value);
   }
 
-  method set_bool (Str() $key, Int() $value) {
+  method set_bool (Str() $key, Int() $value) is also<set-bool> {
     my gboolean $v = self.RESOLVE-BOOL($value);
     gtk_print_settings_set_bool($!prnset, $key, $v);
   }
 
-  method set_double (Str() $key, Num() $value) {
+  method set_double (Str() $key, Num() $value) is also<set-double> {
     my gdouble $v = $value;
     gtk_print_settings_set_double($!prnset, $key, $v);
   }
 
-  method set_int (Str() $key, Int() $value) {
+  method set_int (Str() $key, Int() $value) is also<set-int> {
     my gint $v = self.RESOLVE-INT($value);
     gtk_print_settings_set_int($!prnset, $key, $v);
   }
@@ -408,13 +409,13 @@ class GTK::PrintSettings {
     Str() $key,
     Num() $value,
     Int() $unit                # GtkUnit $unit
-  ) {
+  ) is also<set-length> {
     my guint $u = self.RESOLVE-UINT($unit);
     my gdouble $v = $value;
     gtk_print_settings_set_length($!prnset, $key, $v, $u);
   }
 
-  method set_page_ranges (GtkPageRange $page_ranges, Int() $num_ranges) {
+  method set_page_ranges (GtkPageRange $page_ranges, Int() $num_ranges) is also<set-page-ranges> {
     my gint $nr = self.RESOLVE-INT($num_ranges);
     gtk_print_settings_set_page_ranges($!prnset, $page_ranges, $nr);
   }
@@ -422,7 +423,7 @@ class GTK::PrintSettings {
   method set_paper_height (
     gdouble $height,
     Int() $unit                # GtkUnit $unit
-  ) {
+  ) is also<set-paper-height> {
     my guint $u = self.RESOLVE-UINT($unit);
     gtk_print_settings_set_paper_height($!prnset, $height, $u);
   }
@@ -430,12 +431,12 @@ class GTK::PrintSettings {
   method set_paper_width (
     gdouble $width,
     Int() $unit                # GtkUnit $unit
-  ) {
+  ) is also<set-paper-width> {
     my guint $u = self.RESOLVE-UINT($unit);
     gtk_print_settings_set_paper_width($!prnset, $width, $u);
   }
 
-  method set_resolution_xy (Int() $resolution_x, Int() $resolution_y) {
+  method set_resolution_xy (Int() $resolution_x, Int() $resolution_y) is also<set-resolution-xy> {
     my @i = ($resolution_x, $resolution_y);
     my gint ($rx, $ry) = self.RESOLVE-INT(@i);
     gtk_print_settings_set_resolution_xy($!prnset, $resolution_x, $resolution_y);
@@ -444,18 +445,18 @@ class GTK::PrintSettings {
   method to_file (
     Str() $file_name,
     GError $error = GError
-  ) {
+  ) is also<to-file> {
     gtk_print_settings_to_file($!prnset, $file_name, $error);
   }
 
-  method to_gvariant {
+  method to_gvariant is also<to-gvariant> {
     gtk_print_settings_to_gvariant($!prnset);
   }
 
   method to_key_file (
     GKeyFile() $key_file,
     Str() $group_name
-  ) {
+  ) is also<to-key-file> {
     gtk_print_settings_to_key_file($!prnset, $key_file, $group_name);
   }
 
@@ -465,3 +466,4 @@ class GTK::PrintSettings {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

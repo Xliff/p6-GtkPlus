@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -50,7 +51,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GtkSizeGroup
-  method accel-size-group is rw {
+  method accel-size-group is rw is also<accel_size_group> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -80,7 +81,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
   }
 
   # Type: gchar
-  method action-name is rw {
+  method action-name is rw is also<action_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -125,7 +126,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
   }
 
   # Type: gboolean
-  method icon-set is rw {
+  method icon-set is rw is also<icon_set> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -140,7 +141,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
   }
 
   # Type: GtkShortcutType
-  method shortcut-type is rw {
+  method shortcut-type is rw is also<shortcut_type> {
     my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
@@ -170,7 +171,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
   }
 
   # Type: gboolean
-  method subtitle-set is rw {
+  method subtitle-set is rw is also<subtitle_set> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -200,7 +201,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
   }
 
   # Type: GtkSizeGroup
-  method title-size-group is rw {
+  method title-size-group is rw is also<title_size_group> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -220,3 +221,4 @@ class GTK::ShortcutsShortcut is GTK::Box {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

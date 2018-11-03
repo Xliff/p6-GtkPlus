@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -73,13 +74,13 @@ class GTK::ToolItem is GTK::Bin {
 
   # Is originally:
   # GtkToolItem, gpointer --> gboolean
-  method create-menu-proxy {
+  method create-menu-proxy is also<create_menu_proxy> {
     self.connect-rbool($!ti, 'create-menu-proxy');
   }
 
   # Is originally:
   # GtkToolItem, gpointer --> void
-  method toolbar-reconfigured {
+  method toolbar-reconfigured is also<toolbar_reconfigured> {
     self.connect($!ti, 'toolbar-reconfigured');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -109,7 +110,7 @@ class GTK::ToolItem is GTK::Bin {
     );
   }
 
-  method is_important is rw {
+  method is_important is rw is also<is-important> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_tool_item_get_is_important($!ti);
@@ -121,7 +122,7 @@ class GTK::ToolItem is GTK::Bin {
     );
   }
 
-  method use_drag_window is rw {
+  method use_drag_window is rw is also<use-drag-window> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_tool_item_get_use_drag_window($!ti);
@@ -133,7 +134,7 @@ class GTK::ToolItem is GTK::Bin {
     );
   }
 
-  method visible_horizontal is rw {
+  method visible_horizontal is rw is also<visible-horizontal> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_tool_item_get_visible_horizontal($!ti);
@@ -145,7 +146,7 @@ class GTK::ToolItem is GTK::Bin {
     );
   }
 
-  method visible_vertical is rw {
+  method visible_vertical is rw is also<visible-vertical> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_tool_item_get_visible_vertical($!ti);
@@ -159,70 +160,74 @@ class GTK::ToolItem is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_ellipsize_mode {
+  method get_ellipsize_mode is also<get-ellipsize-mode> {
     PangoEllipsizeMode( gtk_tool_item_get_ellipsize_mode($!ti) );
   }
 
-  method get_icon_size {
+  method get_icon_size is also<get-icon-size> {
     GtkIconSize( gtk_tool_item_get_icon_size($!ti) );
   }
 
-  method get_orientation {
+  method get_orientation is also<get-orientation> {
     GtkOrientation( gtk_tool_item_get_orientation($!ti) );
   }
 
-  method get_proxy_menu_item (gchar $menu_item_id) {
+  method get_proxy_menu_item (gchar $menu_item_id)
+    is also<get-proxy-menu-item>
+  {
     gtk_tool_item_get_proxy_menu_item($!ti, $menu_item_id);
   }
 
-  method get_relief_style {
+  method get_relief_style is also<get-relief-style> {
     GtkReliefStyle( gtk_tool_item_get_relief_style($!ti) );
   }
 
-  method get_text_alignment {
+  method get_text_alignment is also<get-text-alignment> {
     gtk_tool_item_get_text_alignment($!ti);
   }
 
-  method get_text_orientation {
+  method get_text_orientation is also<get-text-orientation> {
     GtkOrientation( gtk_tool_item_get_text_orientation($!ti) );
   }
 
-  method get_text_size_group {
+  method get_text_size_group is also<get-text-size-group> {
     GTK::SizeGroup.new( gtk_tool_item_get_text_size_group($!ti) );
   }
 
-  method get_toolbar_style {
+  method get_toolbar_style is also<get-toolbar-style> {
     GtkToolbarStyle( gtk_tool_item_get_toolbar_style($!ti) );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_tool_item_get_type();
   }
 
-  method rebuild_menu {
+  method rebuild_menu is also<rebuild-menu> {
     gtk_tool_item_rebuild_menu($!ti);
   }
 
-  method retrieve_proxy_menu_item {
+  method retrieve_proxy_menu_item is also<retrieve-proxy-menu-item> {
     gtk_tool_item_retrieve_proxy_menu_item($!ti);
   }
 
   method set_proxy_menu_item (
     gchar $menu_item_id,
     GtkWidget() $menu_item
-  ) {
+  )
+    is also<set-proxy-menu-item>
+  {
     gtk_tool_item_set_proxy_menu_item($!ti, $menu_item_id, $menu_item);
   }
 
-  method set_tooltip_markup (gchar $markup) {
+  method set_tooltip_markup (gchar $markup) is also<set-tooltip-markup> {
     gtk_tool_item_set_tooltip_markup($!ti, $markup);
   }
 
-  method set_tooltip_text (gchar $text) {
+  method set_tooltip_text (gchar $text) is also<set-tooltip-text> {
     gtk_tool_item_set_tooltip_text($!ti, $text);
   }
 
-  method toolbar_reconfigured {
+  method emit_toolbar_reconfigured is also<emit-toolbar-reconfigured> {
     gtk_tool_item_toolbar_reconfigured($!ti);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

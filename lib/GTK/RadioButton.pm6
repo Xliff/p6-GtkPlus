@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::GSList;
@@ -48,7 +49,7 @@ class GTK::RadioButton is GTK::CheckButton {
     my $radiobutton = gtk_radio_button_new($group);
     self.bless(:$radiobutton);
   }
-  method new-group (*@members) {
+  method new-group (*@members) is also<new_group> {
     my @m = @members.clone;
     my @radiobuttons = (
       GTK::RadioButton.new_with_label(GSList, @m.shift)
@@ -71,17 +72,17 @@ class GTK::RadioButton is GTK::CheckButton {
     $!rb;
   }
 
-  method new_from_widget (GtkRadioButton() $member) {
+  method new_from_widget (GtkRadioButton() $member) is also<new-from-widget> {
     my $radiobutton = gtk_radio_button_new_from_widget($member);
     self.bless(:$radiobutton);
   }
 
-  method new_with_label (GSList() $group, Str() $label) {
+  method new_with_label (GSList() $group, Str() $label) is also<new-with-label> {
     my $radiobutton = gtk_radio_button_new_with_label($group, $label);
     self.bless(:$radiobutton);
   }
 
-  method new_with_label_from_widget (GtkRadioButton() $member, Str() $label) {
+  method new_with_label_from_widget (GtkRadioButton() $member, Str() $label) is also<new-with-label-from-widget> {
     my $radiobutton = gtk_radio_button_new_with_label_from_widget(
       $member,
       $label
@@ -89,7 +90,7 @@ class GTK::RadioButton is GTK::CheckButton {
     self.bless(:$radiobutton);
   }
 
-  method new_with_mnemonic (GSList() $group, Str() $label) {
+  method new_with_mnemonic (GSList() $group, Str() $label) is also<new-with-mnemonic> {
     my $radiobutton = gtk_radio_button_new_with_mnemonic($group, $label);
     self.bless(:$radiobutton);
   }
@@ -97,7 +98,7 @@ class GTK::RadioButton is GTK::CheckButton {
   method new_with_mnemonic_from_widget (
     GtkRadioButton() $member,
     Str() $label
-  ) {
+  ) is also<new-with-mnemonic-from-widget> {
     my $radiobutton = gtk_radio_button_new_with_mnemonic_from_widget(
       $member,
       $label
@@ -108,7 +109,7 @@ class GTK::RadioButton is GTK::CheckButton {
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Default handler
-  method group-changed {
+  method group-changed is also<group_changed> {
     self.connect($!rb, 'group-changed');
   }
   
@@ -128,13 +129,14 @@ class GTK::RadioButton is GTK::CheckButton {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_radio_button_get_type();
   }
 
-  method join_group (GtkRadioButton() $group_source) {
+  method join_group (GtkRadioButton() $group_source) is also<join-group> {
     gtk_radio_button_join_group($!rb, $group_source);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

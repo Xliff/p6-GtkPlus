@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::GSList;
@@ -66,12 +67,12 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     self.bless(:$radiomenu);
   }
 
-  method new_from_widget (GtkRadioMenuItem() $group) {
+  method new_from_widget (GtkRadioMenuItem() $group) is also<new-from-widget> {
     my $radiomenu = gtk_radio_menu_item_new_from_widget($group);
     self.bless(:$radiomenu);
   }
 
-  method new_with_label (GSList() $group, gchar $label) {
+  method new_with_label (GSList() $group, gchar $label) is also<new-with-label> {
     my $radiomenu = gtk_radio_menu_item_new_with_label($group, $label);
     self.bless(:$radiomenu);
   }
@@ -79,7 +80,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   method new_with_label_from_widget (
     GtkRadioMenuItem() $group,
     gchar $label
-  ) {
+  ) is also<new-with-label-from-widget> {
     my $radiomenu = gtk_radio_menu_item_new_with_label_from_widget(
       $group,
       $label
@@ -87,7 +88,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     self.bless(:$radiomenu);
   }
 
-  method new_with_mnemonic (GSList() $group, gchar $label) {
+  method new_with_mnemonic (GSList() $group, gchar $label) is also<new-with-mnemonic> {
     my $radiomenu = gtk_radio_menu_item_new_with_mnemonic($group, $label);
     self.bless(:$radiomenu);
   }
@@ -95,7 +96,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   method new_with_mnemonic_from_widget (
     GtkRadioMenuItem() $group,
     gchar $label
-  ) {
+  ) is also<new-with-mnemonic-from-widget> {
     my $radiomenu = gtk_radio_menu_item_new_with_mnemonic_from_widget(
       $group,
       $label
@@ -107,7 +108,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
 
   # Is originally:
   # GtkRadioMenuItem, gpointer --> void
-  method group-changed {
+  method group-changed is also<group_changed> {
     self.connect($!rmi, 'group-changed');
   }
   
@@ -127,13 +128,14 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method join_group (GtkRadioMenuItem() $group_source) {
+  method join_group (GtkRadioMenuItem() $group_source) is also<join-group> {
     gtk_radio_menu_item_join_group($!rmi, $group_source);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_radio_menu_item_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

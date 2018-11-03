@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -53,7 +54,7 @@ class GTK::Frame is GTK::Bin {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # Type: gfloat
-  method label-xalign is rw {
+  method label-xalign is rw is also<label_xalign> {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
@@ -70,7 +71,7 @@ class GTK::Frame is GTK::Bin {
   }
 
   # Type: gfloat
-  method label-yalign is rw {
+  method label-yalign is rw is also<label_yalign> {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
@@ -98,7 +99,7 @@ class GTK::Frame is GTK::Bin {
     );
   }
 
-  method label_widget is rw {
+  method label_widget is rw is also<label-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_frame_get_label_widget($!f);
@@ -109,7 +110,7 @@ class GTK::Frame is GTK::Bin {
     );
   }
 
-  method shadow_type is rw {
+  method shadow_type is rw is also<shadow-type> {
     Proxy.new(
       FETCH => sub ($) {
         GtkShadowType( gtk_frame_get_shadow_type($!f) );
@@ -123,18 +124,18 @@ class GTK::Frame is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_label_align (Num() $xalign, Num() $yalign) {
+  method get_label_align (Num() $xalign, Num() $yalign) is also<get-label-align> {
     my num32 $x = $xalign;
     my num32 $y = $yalign;
 
     gtk_frame_get_label_align($!f, $x, $y);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_frame_get_type();
   }
 
-  method set_label_align (Num() $xalign, Num() $yalign) {
+  method set_label_align (Num() $xalign, Num() $yalign) is also<set-label-align> {
     my num32 $x = $xalign;
     my num32 $y = $yalign;
 
@@ -143,3 +144,4 @@ class GTK::Frame is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

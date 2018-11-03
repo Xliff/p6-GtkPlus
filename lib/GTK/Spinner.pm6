@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -55,7 +56,7 @@ class GTK::Spinner is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_spinner_get_type();
   }
 
@@ -69,3 +70,4 @@ class GTK::Spinner is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

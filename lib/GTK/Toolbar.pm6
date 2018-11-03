@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,31 +53,31 @@ class GTK::Toolbar is GTK::Container {
 
   # Is originally:
   # GtkToolbar, gboolean, gpointer --> gboolean
-  method focus-home-or-end {
+  method focus-home-or-end is also<focus_home_or_end> {
     self.connect-uint-rbool($!tb, 'focus-home-or-end');
   }
 
   # Is originally:
   # GtkToolbar, GtkOrientation, gpointer --> void
-  method orientation-changed {
+  method orientation-changed is also<orientation_changed> {
     self.connect-uint($!tb, 'orientation-changed');
   }
 
   # Is originally:
   # GtkToolbar, gint, gint, gint, gpointer --> gboolean
-  method popup-context-menu {
+  method popup-context-menu is also<popup_context_menu> {
     self.connect-context-menu($!tb);
   }
 
   # Is originally:
   # GtkToolbar, GtkToolbarStyle, gpointer --> void
-  method style-changed {
+  method style-changed is also<style_changed> {
     self.connect-uint($!tb, 'style-changed');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method show_arrow is rw {
+  method show_arrow is rw is also<show-arrow> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_toolbar_get_show_arrow($!tb);
@@ -90,7 +91,7 @@ class GTK::Toolbar is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_drop_index (Int() $x is rw, Int $y is rw) {
+  method get_drop_index (Int() $x is rw, Int $y is rw) is also<get-drop-index> {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-UINT(@u);
     my $rc = gtk_toolbar_get_drop_index($!tb, $xx, $yy);
@@ -99,32 +100,32 @@ class GTK::Toolbar is GTK::Container {
   }
   # Add a no-arg multi
 
-  method get_icon_size {
+  method get_icon_size is also<get-icon-size> {
     GtkIconSize( gtk_toolbar_get_icon_size($!tb) );
   }
 
-  multi method get_item_index (GtkToolItem() $item) {
+  multi method get_item_index (GtkToolItem() $item) is also<get-item-index> {
     gtk_toolbar_get_item_index($!tb, $item);
   }
 
-  method get_n_items {
+  method get_n_items is also<get-n-items> {
     gtk_toolbar_get_n_items($!tb);
   }
 
-  method get_nth_item (Int $n) {
+  method get_nth_item (Int $n) is also<get-nth-item> {
     my gint $nn = self.RESOLVE-INT($n);
     gtk_toolbar_get_nth_item($!tb, $nn);
   }
 
-  method get_relief_style {
+  method get_relief_style is also<get-relief-style> {
     GtkReliefStyle( gtk_toolbar_get_relief_style($!tb) );
   }
 
-  method get_style {
+  method get_style is also<get-style> {
     GtkToolbarStyle( gtk_toolbar_get_style($!tb) );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_toolbar_get_type();
   }
 
@@ -133,18 +134,19 @@ class GTK::Toolbar is GTK::Container {
     gtk_toolbar_insert($!tb, $item, $p);
   }
 
-  method set_drop_highlight_item (GtkToolItem() $tool_item, Int $index) {
+  method set_drop_highlight_item (GtkToolItem() $tool_item, Int $index) is also<set-drop-highlight-item> {
     my uint32 $i = self.RESOLVE-UINT($index);
     gtk_toolbar_set_drop_highlight_item($!tb, $tool_item, $i);
   }
 
-  method unset_icon_size {
+  method unset_icon_size is also<unset-icon-size> {
     gtk_toolbar_unset_icon_size($!tb);
   }
 
-  method unset_style {
+  method unset_style is also<unset-style> {
     gtk_toolbar_unset_style($!tb);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -62,7 +63,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # Type: gboolean
-  method follow-state is rw {
+  method follow-state is rw is also<follow_state> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -92,7 +93,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   }
 
   # Type: gchar
-  method icon-name is rw {
+  method icon-name is rw is also<icon_name> {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
@@ -122,7 +123,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   }
 
   # Type: GdkPixbuf
-  method pixbuf-expander-closed is rw {
+  method pixbuf-expander-closed is rw is also<pixbuf_expander_closed> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -137,7 +138,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   }
 
   # Type: GdkPixbuf
-  method pixbuf-expander-open is rw {
+  method pixbuf-expander-open is rw is also<pixbuf_expander_open> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -152,7 +153,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   }
 
   # Type: gchar
-  method stock-detail is rw {
+  method stock-detail is rw is also<stock_detail> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -167,7 +168,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   }
 
   # Type: gchar
-  method stock-id is rw {
+  method stock-id is rw is also<stock_id> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -182,7 +183,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   }
 
   # Type: guint
-  method stock-size is rw {
+  method stock-size is rw is also<stock_size> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -214,9 +215,10 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_renderer_pixbuf_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

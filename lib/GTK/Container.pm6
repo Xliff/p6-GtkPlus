@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -56,22 +57,22 @@ class GTK::Container is GTK::Widget {
     $!c;
   }
 
-  method SET-LATCH {
+  method SET-LATCH is also<SET_LATCH> {
     self.IS-PROTECTED;
     $!add-latch = True;
   }
 
-  method UNSET-LATCH {
+  method UNSET-LATCH is also<UNSET_LATCH> {
     self.IS-PROTECTED;
     $!add-latch = False;
   }
 
-  method IS-LATCHED {
+  method IS-LATCHED is also<IS_LATCHED> {
     self.IS-PROTECTED;
     $!add-latch;
   }
 
-  method INSERT-START ($child, $pos) {
+  method INSERT-START ($child, $pos) is also<INSERT_START> {
     self.IS-PROTECTED;
 
     my $last = @!start.elems - 1;
@@ -88,12 +89,12 @@ class GTK::Container is GTK::Widget {
     }
   }
 
-  method push-start($c) {
+  method push-start($c) is also<push_start> {
     # Write @!start.elems to GtkWidget under key GTKPlus-ContainerStart
     @!start.push: $c;
   }
 
-  method unshift-end($c) {
+  method unshift-end($c) is also<unshift_end> {
     # Write @!end.elems to GtkWidget under key GTKPlus-ContainerEnd
     @!end.unshift: $c;
   }
@@ -111,12 +112,12 @@ class GTK::Container is GTK::Widget {
   }
 
   # Signal - Last
-  method check-resize {
+  method check-resize is also<check_resize> {
     self.connect($!c, 'check-resize');
   }
 
   # Signal - Last
-  method set-focus-child {
+  method set-focus-child is also<set_focus_child> {
     self.connect-widget($!c, 'set-focus-child');
   }
 
@@ -143,7 +144,7 @@ class GTK::Container is GTK::Widget {
   #   );
   # }
 
-  method focus_vadjustment is rw {
+  method focus_vadjustment is rw is also<focus-vadjustment> {
     Proxy.new(
       FETCH => sub ($) {
         my $adjustment = gtk_container_get_focus_vadjustment($!c);
@@ -155,7 +156,7 @@ class GTK::Container is GTK::Widget {
     );
   }
 
-  method focus_child is rw {
+  method focus_child is rw is also<focus-child> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_container_get_focus_child($!c);
@@ -166,7 +167,7 @@ class GTK::Container is GTK::Widget {
     );
   }
 
-  method focus_hadjustment is rw {
+  method focus_hadjustment is rw is also<focus-hadjustment> {
     Proxy.new(
       FETCH => sub ($) {
         my $adjustment = gtk_container_get_focus_hadjustment($!c);
@@ -178,7 +179,7 @@ class GTK::Container is GTK::Widget {
     );
   }
 
-  method border_width is rw {
+  method border_width is rw is also<border-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_container_get_border_width($!c);
@@ -201,7 +202,7 @@ class GTK::Container is GTK::Widget {
     samewith($widget.widget);
   }
 
-  method check_resize {
+  method emit_check_resize is also<emit-check-resize> {
     gtk_container_check_resize($!c);
   }
 
@@ -209,7 +210,7 @@ class GTK::Container is GTK::Widget {
     GtkWidget() $child,
     gchar $property_name,
     GValue $value
-  ) {
+  ) is also<child-get-property> {
     gtk_container_child_get_property($!c, $child, $property_name, $value);
   }
 
@@ -223,11 +224,11 @@ class GTK::Container is GTK::Widget {
   #   samewith($child.widget, $first_property_name, $var_args);
   # }
 
-  method child_notify (GtkWidget() $child, gchar $child_property) {
+  method child_notify (GtkWidget() $child, gchar $child_property) is also<child-notify> {
     gtk_container_child_notify($!c, $child, $child_property);
   }
 
-  method child_notify_by_pspec (GtkWidget() $child, GParamSpec $pspec) {
+  method child_notify_by_pspec (GtkWidget() $child, GParamSpec $pspec) is also<child-notify-by-pspec> {
     gtk_container_child_notify_by_pspec($!c, $child, $pspec);
   }
 
@@ -235,7 +236,7 @@ class GTK::Container is GTK::Widget {
     GtkWidget() $child,
     gchar $property_name,
     GValue $value
-  ) {
+  ) is also<child-set-property> {
     gtk_container_child_set_property($!c, $child, $property_name, $value);
   }
 
@@ -249,7 +250,7 @@ class GTK::Container is GTK::Widget {
   #   samewith($child.widget, $first_property_name, $var_args);
   # }
 
-  method child_type {
+  method child_type is also<child-type> {
      gtk_container_child_type($!c);
   }
 
@@ -282,7 +283,7 @@ class GTK::Container is GTK::Widget {
     gtk_container_foreach($!c, $callback, $callback_data);
   }
 
-  method get_children(:$obj = True) {
+  method get_children(:$obj = True) is also<get-children> {
     # my @children;
     # my $list = gtk_container_get_children($!c);
     # say "List start: { $list }";
@@ -295,19 +296,19 @@ class GTK::Container is GTK::Widget {
     (@!start, @!end).flat;
   }
 
-  method get_focus_chain (GList $focusable_widgets) {
+  method get_focus_chain (GList $focusable_widgets) is also<get-focus-chain> {
     gtk_container_get_focus_chain($!c, $focusable_widgets);
   }
 
-  method get_path_for_child (GtkWidget() $child) {
+  method get_path_for_child (GtkWidget() $child) is also<get-path-for-child> {
     gtk_container_get_path_for_child($!c, $child);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_container_get_type();
   }
 
-  method propagate_draw (GtkWidget() $child, cairo_t $cr) {
+  method propagate_draw (GtkWidget() $child, cairo_t $cr) is also<propagate-draw> {
     gtk_container_propagate_draw($!c, $child, $cr);
   }
 
@@ -321,16 +322,16 @@ class GTK::Container is GTK::Widget {
     gtk_container_remove($!c, $widget);
   }
 
-  method resize_children {
+  method resize_children is also<resize-children> {
     gtk_container_resize_children($!c);
   }
 
-  method set_reallocate_redraws (Int() $needs_redraws) {
+  method set_reallocate_redraws (Int() $needs_redraws) is also<set-reallocate-redraws> {
     my gboolean $nr = self.RESOLVE-BOOL($needs_redraws, &?ROUTINE.name);
     gtk_container_set_reallocate_redraws($!c, $nr);
   }
 
-  method unset_focus_chain {
+  method unset_focus_chain is also<unset-focus-chain> {
     gtk_container_unset_focus_chain($!c);
   }
 }

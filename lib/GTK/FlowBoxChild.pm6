@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -73,12 +74,13 @@ class GTK::FlowBoxChild is GTK::Bin {
     gtk_flow_box_child_changed($!fbc);
   }
 
-  method get_index {
+  method get_index is also<get-index> {
     gtk_flow_box_child_get_index($!fbc);
   }
 
-  method is_selected {
+  method is_selected is also<is-selected> {
     gtk_flow_box_child_is_selected($!fbc);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 }
+

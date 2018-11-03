@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -59,8 +60,9 @@ class GTK::Scrollbar is GTK::Range {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_scrollbar_get_type();
   }
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -56,28 +57,28 @@ class GTK::CellView is GTK::Widget {
     self.bless(:$cellview);
   }
 
-  method new_with_context (GtkCellAreaContext() $context) {
+  method new_with_context (GtkCellAreaContext() $context) is also<new-with-context> {
     my $cellview = gtk_cell_view_new_with_context($context);
     self.bless(:$cellview);
   }
 
-  method new_with_markup (Str() $m) {
+  method new_with_markup (Str() $m) is also<new-with-markup> {
     my $cellview = gtk_cell_view_new_with_markup($m);
     self.bless(:$cellview);
   }
 
-  method new_with_pixbuf (Str() $p) {
+  method new_with_pixbuf (Str() $p) is also<new-with-pixbuf> {
     my $cellview = gtk_cell_view_new_with_pixbuf($p);
     self.bless(:$cellview);
   }
 
-  method new_with_text (Str() $t) {
+  method new_with_text (Str() $t) is also<new-with-text> {
     my $cellview = gtk_cell_view_new_with_text($t);
     self.bless(:$cellview);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method displayed_row is rw {
+  method displayed_row is rw is also<displayed-row> {
     Proxy.new(
       FETCH => sub ($) {
         GTK::TreePath.new( gtk_cell_view_get_displayed_row($!cv) );
@@ -88,7 +89,7 @@ class GTK::CellView is GTK::Widget {
     );
   }
 
-  method draw_sensitive is rw {
+  method draw_sensitive is rw is also<draw-sensitive> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_cell_view_get_draw_sensitive($!cv);
@@ -100,7 +101,7 @@ class GTK::CellView is GTK::Widget {
     );
   }
 
-  method fit_model is rw {
+  method fit_model is rw is also<fit-model> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_cell_view_get_fit_model($!cv);
@@ -146,7 +147,7 @@ class GTK::CellView is GTK::Widget {
   }
 
   # Type: GdkColor
-  method background-gdk is rw {
+  method background-gdk is rw is also<background_gdk> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -161,7 +162,7 @@ class GTK::CellView is GTK::Widget {
   }
 
   # Type: GdkRGBA
-  method background-rgba is rw {
+  method background-rgba is rw is also<background_rgba> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -176,7 +177,7 @@ class GTK::CellView is GTK::Widget {
   }
 
   # Type: gboolean
-  method background-set is rw {
+  method background-set is rw is also<background_set> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -191,7 +192,7 @@ class GTK::CellView is GTK::Widget {
   }
 
   # Type: GtkCellArea
-  method cell-area is rw {
+  method cell-area is rw is also<cell_area> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -206,7 +207,7 @@ class GTK::CellView is GTK::Widget {
   }
 
   # Type: GtkCellAreaContext
-  method cell-area-context is rw {
+  method cell-area-context is rw is also<cell_area_context> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -220,52 +221,22 @@ class GTK::CellView is GTK::Widget {
     );
   }
 
-  # Type: gboolean
-  method draw-sensitive is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
-    Proxy.new(
-      FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!cv, 'draw-sensitive', $gv); );
-        $gv.boolean;
-      },
-      STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!cv, 'draw-sensitive', $gv);
-      }
-    );
-  }
-
-  # Type: gboolean
-  method fit-model is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
-    Proxy.new(
-      FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!cv, 'fit-model', $gv); );
-        $gv.boolean;
-      },
-      STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOLEAN($val);
-        self.prop_set($!cv, 'fit-model', $gv);
-      }
-    );
-  }
-
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_size_of_row (GtkTreePath() $path, GtkRequisition() $requisition) {
+  method get_size_of_row (GtkTreePath() $path, GtkRequisition() $requisition) is also<get-size-of-row> {
     gtk_cell_view_get_size_of_row($!cv, $path, $requisition);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_view_get_type();
   }
 
-  method set_background_color (GdkColor $color) {
+  method set_background_color (GdkColor $color) is also<set-background-color> {
     gtk_cell_view_set_background_color($!cv, $color);
   }
 
-  method set_background_rgba (GTK::Compat::RGBA() $rgba) {
+  method set_background_rgba (GTK::Compat::RGBA() $rgba) is also<set-background-rgba> {
     gtk_cell_view_set_background_rgba($!cv, $rgba);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

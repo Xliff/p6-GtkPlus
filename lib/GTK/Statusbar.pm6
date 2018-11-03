@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -60,13 +61,13 @@ class GTK::Statusbar is GTK::Bin {
 
   # Is originally:
   # GtkStatusbar, guint, gchar, gpointer --> void
-  method text-popped {
+  method text-popped is also<text_popped> {
     self.connect-text($!sb, 'text-popped');
   }
 
   # Is originally:
   # GtkStatusbar, guint, gchar, gpointer --> void
-  method text-pushed {
+  method text-pushed is also<text_pushed> {
     self.connect-text($!sb, 'text-pushed');
   }
 
@@ -76,15 +77,15 @@ class GTK::Statusbar is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_context_id (Str() $context_description) {
+  method get_context_id (Str() $context_description) is also<get-context-id> {
     gtk_statusbar_get_context_id($!sb, $context_description);
   }
 
-  method get_message_area {
+  method get_message_area is also<get-message-area> {
     gtk_statusbar_get_message_area($!sb);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_statusbar_get_type();
   }
 
@@ -104,10 +105,11 @@ class GTK::Statusbar is GTK::Bin {
     gtk_statusbar_remove($!sb, $ci, $mi);
   }
 
-  method remove_all (Int() $context_id) {
+  method remove_all (Int() $context_id) is also<remove-all> {
     my guint $ci = self.RESOLVE-UINT($context_id);
     gtk_statusbar_remove_all($!sb, $ci);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

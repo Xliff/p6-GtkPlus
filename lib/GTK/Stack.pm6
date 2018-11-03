@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -97,7 +98,7 @@ class GTK::Stack is GTK::Container {
     );
   }
 
-  method interpolate_size is rw {
+  method interpolate_size is rw is also<interpolate-size> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_stack_get_interpolate_size($!s);
@@ -109,7 +110,7 @@ class GTK::Stack is GTK::Container {
     );
   }
 
-  method transition_duration is rw {
+  method transition_duration is rw is also<transition-duration> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_stack_get_transition_duration($!s);
@@ -121,7 +122,7 @@ class GTK::Stack is GTK::Container {
     );
   }
 
-  method transition_type is rw {
+  method transition_type is rw is also<transition-type> {
     Proxy.new(
       FETCH => sub ($) {
         GtkStackTransitionType( gtk_stack_get_transition_type($!s) );
@@ -145,7 +146,7 @@ class GTK::Stack is GTK::Container {
     );
   }
 
-  method visible_child is rw {
+  method visible_child is rw is also<visible-child> {
     Proxy.new(
       FETCH => sub ($) {
         # Resolve widget to object based on stored children.
@@ -157,7 +158,7 @@ class GTK::Stack is GTK::Container {
     );
   }
 
-  method visible_child_name is rw {
+  method visible_child_name is rw is also<visible-child-name> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_stack_get_visible_child_name($!s);
@@ -173,7 +174,10 @@ class GTK::Stack is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method add_named (GtkWidget $child, gchar $name) {
+  multi method add-named (GtkWidget $child, Str() $name) {
+    self.add_named($child, $name);
+  }
+  multi method add_named (GtkWidget $child, Str() $name) {
     unless self.IS-LATCHED {
       %!by-name{$name} = $child;
       self.push-start($child);
@@ -181,14 +185,20 @@ class GTK::Stack is GTK::Container {
     gtk_stack_add_named($!s, $child, $name);
     self.UNSET-LATCH;
   }
-  multi method add_named (GTK::Widget $child, gchar $name)  {
+  multi method add-named (GTK::Widget $child, Str() $name) {
+    self.add_named($child, $name);
+  }
+  multi method add_named (GTK::Widget $child, Str() $name) {
     self.SET-LATCH;
     %!by-name{$name} = $child;
     self.push-start($child);
     samewith($child.widget, $name);
   }
 
-  multi method add_titled (GtkWidget $child, gchar $name, gchar $title) {
+  multi method add-titled (GtkWidget $child, Str() $name, Str() $title) {
+    self.add_titled($child, $name, $title);
+  }
+  multi method add_titled (GtkWidget $child, Str() $name, Str() $title) {
     unless self.IS-LATCHED {
       %!by-title{$name} = $child;
       self.push-start($child);
@@ -196,35 +206,38 @@ class GTK::Stack is GTK::Container {
     gtk_stack_add_titled($!s, $child, $name, $title);
     self.UNSET-LATCH;
   }
-  multi method add_titled (GTK::Widget $child, gchar $name, gchar $title)  {
+  multi method add-titled (GTK::Widget $child, Str() $name, Str() $title) {
+    self.add_titled($child, $name, $title);
+  }
+  multi method add_titled (GTK::Widget $child, Str() $name, Str() $title) {
     self.SET-LATCH;
     %!by-title{$name} = $child;
     self.push-start($child);
     samewith($child.widget, $name, $title);
   }
 
-  method get_child_by_name (gchar $name) {
+  method get_child_by_name (Str() $name) is also<get-child-by-name> {
     %!by-name{$name}
     //
     %!by-name{$name} = gtk_stack_get_child_by_name($!s, $name);
   }
 
-  method get_child_by_title (Str $title) {
+  method get_child_by_title (Str $title) is also<get-child-by-title> {
     %!by-title{$title};
   }
 
-  method get_transition_running {
+  method get_transition_running is also<get-transition-running> {
     gtk_stack_get_transition_running($!s);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_stack_get_type();
   }
 
   method set_visible_child_full (
-    gchar $name,
+    Str() $name,
     Int() $transition
-  ) {
+  ) is also<set-visible-child-full> {
     my uint32 $t = self.RESOLVE-UINT($transition);
     gtk_stack_set_visible_child_full($!s, $name, $t);
   }
@@ -234,7 +247,7 @@ class GTK::Stack is GTK::Container {
     $!ss;
   }
   # Expose the Stack Switcher widget as GtkWidget
-  method switcher-widget {
+  method switcher-widget is also<switcher_widget> {
     nativecast(GtkWidget, $!ss);
   }
 
@@ -243,7 +256,7 @@ class GTK::Stack is GTK::Container {
     $!sb;
   }
   # Expose the StackSidebar GtkWidget
-  method sidebar-widget {
+  method sidebar-widget is also<sidebar_widget> {
     $!sb.widget;
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

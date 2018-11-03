@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -83,7 +84,7 @@ class GTK::ScaleButton is GTK::Button {
 
   # Is originally:
   # GtkScaleButton, gdouble, gpointer --> void
-  method value-changed {
+  method value-changed is also<value_changed> {
     self.connect-double($!sb, 'value-changed');
   }
 
@@ -117,25 +118,26 @@ class GTK::ScaleButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_minus_button {
+  method get_minus_button is also<get-minus-button> {
     gtk_scale_button_get_minus_button($!sb);
   }
 
-  method get_plus_button {
+  method get_plus_button is also<get-plus-button> {
     gtk_scale_button_get_plus_button($!sb);
   }
 
-  method get_popup {
+  method get_popup is also<get-popup> {
     gtk_scale_button_get_popup($!sb);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_scale_button_get_type();
   }
 
-  method set_icons (gchar $icons) {
+  method set_icons (gchar $icons) is also<set-icons> {
     gtk_scale_button_set_icons($!sb, $icons);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

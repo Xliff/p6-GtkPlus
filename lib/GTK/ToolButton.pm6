@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -61,7 +62,7 @@ class GTK::ToolButton is GTK::ToolItem {
 
   method new_from_stock (gchar $stock_id)
     is DEPRECATED('GTK::ToolButton.new( GTK::Image.new_from_icon_name() )')
-  {
+  is also<new-from-stock> {
     my $toolbutton = gtk_tool_button_new_from_stock($stock_id);
     self.bless(:$toolbutton);
   }
@@ -76,7 +77,7 @@ class GTK::ToolButton is GTK::ToolItem {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method icon_name is rw {
+  method icon_name is rw is also<icon-name> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tool_button_get_icon_name($!tb);
@@ -87,7 +88,7 @@ class GTK::ToolButton is GTK::ToolItem {
     );
   }
 
-  method icon_widget is rw {
+  method icon_widget is rw is also<icon-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tool_button_get_icon_widget($!tb);
@@ -109,7 +110,7 @@ class GTK::ToolButton is GTK::ToolItem {
     );
   }
 
-  method label_widget is rw {
+  method label_widget is rw is also<label-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tool_button_get_label_widget($!tb);
@@ -120,7 +121,7 @@ class GTK::ToolButton is GTK::ToolItem {
     );
   }
 
-  method stock_id is DEPRECATED is rw {
+  method stock_id is DEPRECATED is rw is also<stock-id> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tool_button_get_stock_id($!tb);
@@ -131,7 +132,7 @@ class GTK::ToolButton is GTK::ToolItem {
     );
   }
 
-  method use_underline is rw {
+  method use_underline is rw is also<use-underline> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tool_button_get_use_underline($!tb);
@@ -145,9 +146,10 @@ class GTK::ToolButton is GTK::ToolItem {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_tool_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

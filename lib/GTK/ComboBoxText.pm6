@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -54,7 +55,7 @@ class GTK::ComboBoxText is GTK::ComboBox {
     self.bless(:$combobox);
   }
 
-  method new_with_entry {
+  method new_with_entry is also<new-with-entry> {
     my $combobox = gtk_combo_box_text_new_with_entry();
     self.bless($combobox);
   }
@@ -70,15 +71,15 @@ class GTK::ComboBoxText is GTK::ComboBox {
     gtk_combo_box_text_append($!cbt, $id, $text);
   }
 
-  method append_text (Str() $text) {
+  method append_text (Str() $text) is also<append-text> {
     gtk_combo_box_text_append_text($!cbt, $text);
   }
 
-  method get_active_text {
+  method get_active_text is also<get-active-text> {
     gtk_combo_box_text_get_active_text($!cbt);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_combo_box_text_get_type();
   }
 
@@ -87,7 +88,7 @@ class GTK::ComboBoxText is GTK::ComboBox {
     gtk_combo_box_text_insert($!cbt, $p, $id, $text);
   }
 
-  method insert_text (Int() $position, Str() $text) {
+  method insert_text (Int() $position, Str() $text) is also<insert-text> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_combo_box_text_insert_text($!cbt, $p, $text);
   }
@@ -96,7 +97,7 @@ class GTK::ComboBoxText is GTK::ComboBox {
     gtk_combo_box_text_prepend($!cbt, $id, $text);
   }
 
-  method prepend_text (Str() $text) {
+  method prepend_text (Str() $text) is also<prepend-text> {
     gtk_combo_box_text_prepend_text($!cbt, $text);
   }
 
@@ -105,9 +106,10 @@ class GTK::ComboBoxText is GTK::ComboBox {
     gtk_combo_box_text_remove($!cbt, $p);
   }
 
-  method remove_all {
+  method remove_all is also<remove-all> {
     gtk_combo_box_text_remove_all($!cbt);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

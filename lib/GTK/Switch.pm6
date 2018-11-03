@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -71,7 +72,7 @@ class GTK::Switch is GTK::Widget {
 
   # Is originally:
   # GtkSwitch, gboolean, gpointer --> gboolean
-  method state-set {
+  method state-set is also<state_set> {
     self.connect-uint-ruint($!s, 'state-set');
   }
 
@@ -104,9 +105,10 @@ class GTK::Switch is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_switch_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

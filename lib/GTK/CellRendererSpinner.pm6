@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -111,9 +112,10 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_renderer_spinner_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

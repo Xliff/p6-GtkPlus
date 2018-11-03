@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::RGBA;
@@ -55,18 +56,18 @@ class GTK::ColorButton is GTK::Button {
     self.bless(:$button);
   }
 
-  method new_with_color (GdkColor $color) is DEPRECATED {
+  method new_with_color (GdkColor $color) is DEPRECATED is also<new-with-color> {
     my $button = gtk_color_button_new_with_color($color);
     self.bless(:$button);
   }
 
-  method new_with_rgba (GTK::Compat::RGBA $color) {
+  method new_with_rgba (GTK::Compat::RGBA $color) is also<new-with-rgba> {
     my $button = gtk_color_button_new_with_rgba($color);
     self.bless(:$button);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method color-set {
+  method color-set is also<color_set> {
     self.connect($!cb, 'color-set');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -95,7 +96,7 @@ class GTK::ColorButton is GTK::Button {
     );
   }
 
-  method use_alpha is rw {
+  method use_alpha is rw is also<use-alpha> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_color_button_get_use_alpha($!cb);
@@ -109,17 +110,18 @@ class GTK::ColorButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_color (GdkColor $color) is DEPRECATED {
+  method get_color (GdkColor $color) is DEPRECATED is also<get-color> {
     gtk_color_button_get_color($!cb, $color);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_color_button_get_type();
   }
 
-  method set_color (GdkColor $color) is DEPRECATED {
+  method set_color (GdkColor $color) is DEPRECATED is also<set-color> {
     gtk_color_button_set_color($!cb, $color);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -67,7 +68,7 @@ class GTK::ShortcutsWindow is GTK::Window {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: gchar
-  method section-name is rw {
+  method section-name is rw is also<section_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -82,7 +83,7 @@ class GTK::ShortcutsWindow is GTK::Window {
   }
 
   # Type: gchar
-  method view-name is rw {
+  method view-name is rw is also<view_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -102,3 +103,4 @@ class GTK::ShortcutsWindow is GTK::Window {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

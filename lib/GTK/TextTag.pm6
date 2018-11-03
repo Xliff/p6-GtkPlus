@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -73,9 +74,10 @@ class GTK::TextTag  {
     gtk_text_tag_event($!tt, $event_object, $event, $iter);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_text_tag_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

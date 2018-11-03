@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -70,27 +71,27 @@ class GTK::ComboBox is GTK::Bin {
     self.bless(:$combobox);
   }
 
-  method new_with_area(GtkCellArea() $area) {
+  method new_with_area(GtkCellArea() $area) is also<new-with-area> {
     my $combobox = gtk_combo_box_new_with_area($area);
     self.bless(:$combobox);
   }
 
-  method new_with_area_and_entry(GtkCellArea() $area) {
+  method new_with_area_and_entry(GtkCellArea() $area) is also<new-with-area-and-entry> {
     my $combobox = gtk_combo_box_new_with_area_and_entry($area);
     self.bless(:$combobox);
   }
 
-  method new_with_entry {
+  method new_with_entry is also<new-with-entry> {
     my $combobox = gtk_combo_box_new_with_entry();
     self.bless(:$combobox);
   }
 
-  method new_with_model (GtkTreeModel() $model) {
+  method new_with_model (GtkTreeModel() $model) is also<new-with-model> {
     my $combobox = gtk_combo_box_new_with_model($model);
     self.bless(:$combobox);
   }
 
-  method new_with_model_and_entry(GtkTreeModel() $model) {
+  method new_with_model_and_entry(GtkTreeModel() $model) is also<new-with-model-and-entry> {
     my $combobox = gtk_combo_box_new_with_model_and_entry($model);
     self.bless(:$combobox);
   }
@@ -105,13 +106,13 @@ class GTK::ComboBox is GTK::Bin {
 
   # Is originally:
   #
-  method format-entry-text {
+  method format-entry-text is also<format_entry_text> {
     self.connect-format-entry-text($!cb);
   }
 
   # Is originally:
   # GtkComboBox, GtkScrollType, gpointer --> void
-  method move-active {
+  method move-active is also<move_active> {
     self.connect-move-active($!cb);
   }
 
@@ -145,7 +146,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method active_id is rw {
+  method active_id is rw is also<active-id> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_active_id($!cb);
@@ -156,7 +157,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method add_tearoffs is rw {
+  method add_tearoffs is rw is also<add-tearoffs> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_add_tearoffs($!cb);
@@ -167,7 +168,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method button_sensitivity is rw {
+  method button_sensitivity is rw is also<button-sensitivity> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_button_sensitivity($!cb);
@@ -178,7 +179,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method column_span_column is rw {
+  method column_span_column is rw is also<column-span-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_column_span_column($!cb);
@@ -189,7 +190,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method entry_text_column is rw {
+  method entry_text_column is rw is also<entry-text-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_entry_text_column($!cb);
@@ -200,7 +201,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method focus_on_click is rw {
+  method focus_on_click is rw is also<focus-on-click> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_focus_on_click($!cb);
@@ -211,7 +212,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method id_column is rw {
+  method id_column is rw is also<id-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_id_column($!cb);
@@ -233,7 +234,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method popup_fixed_width is rw {
+  method popup_fixed_width is rw is also<popup-fixed-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_popup_fixed_width($!cb);
@@ -244,7 +245,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method row_span_column is rw {
+  method row_span_column is rw is also<row-span-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_row_span_column($!cb);
@@ -266,7 +267,7 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method wrap_width is rw {
+  method wrap_width is rw is also<wrap-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_combo_box_get_wrap_width($!cb);
@@ -279,39 +280,39 @@ class GTK::ComboBox is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_active_iter (GtkTreeIter() $iter) {
+  method get_active_iter (GtkTreeIter() $iter) is also<get-active-iter> {
     gtk_combo_box_get_active_iter($!cb, $iter);
   }
 
-  method get_has_entry {
+  method get_has_entry is also<get-has-entry> {
     gtk_combo_box_get_has_entry($!cb);
   }
 
-  method get_popup_accessible {
+  method get_popup_accessible is also<get-popup-accessible> {
     gtk_combo_box_get_popup_accessible($!cb);
   }
 
-  method get_row_separator_func {
+  method get_row_separator_func is also<get-row-separator-func> {
     gtk_combo_box_get_row_separator_func($!cb);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_combo_box_get_type();
   }
 
-  method emit-popdown {
+  method emit-popdown is also<emit_popdown> {
     gtk_combo_box_popdown($!cb);
   }
 
-  method emit-popup {
+  method emit-popup is also<emit_popup> {
     gtk_combo_box_popup($!cb);
   }
 
-  method popup_for_device (GdkDevice $device) {
+  method popup_for_device (GdkDevice $device) is also<popup-for-device> {
     gtk_combo_box_popup_for_device($!cb, $device);
   }
 
-  method set_active_iter (GtkTreeIter() $iter) {
+  method set_active_iter (GtkTreeIter() $iter) is also<set-active-iter> {
     gtk_combo_box_set_active_iter($!cb, $iter);
   }
 
@@ -319,9 +320,10 @@ class GTK::ComboBox is GTK::Bin {
     GtkTreeViewRowSeparatorFunc $func,
     gpointer $data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
-  ) {
+  ) is also<set-row-separator-func> {
     gtk_combo_box_set_row_separator_func($!cb, $func, $data, $destroy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,67 +53,67 @@ class GTK::Notebook is GTK::Container {
 
   # Is originally:
   # GtkNotebook, gint, gpointer --> gboolean
-  method change-current-page {
+  method change-current-page is also<change_current_page> {
     self.connect($!n, 'change-current-page');
   }
 
   # Is originally:
   # GtkNotebook, GtkWidget, gint, gint, gpointer --> GtkNotebook
-  method create-window {
+  method create-window is also<create_window> {
     self.connect($!n, 'create-window');
   }
 
   # Is originally:
   # GtkNotebook, GtkNotebookTab, gpointer --> gboolean
-  method focus-tab {
+  method focus-tab is also<focus_tab> {
     self.connect($!n, 'focus-tab');
   }
 
   # Is originally:
   # GtkNotebook, GtkDirectionType, gpointer --> void
-  method move-focus-out {
+  method move-focus-out is also<move_focus_out> {
     self.connect($!n, 'move-focus-out');
   }
 
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
-  method page-added {
+  method page-added is also<page_added> {
     self.connect($!n, 'page-added');
   }
 
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
-  method page-removed {
+  method page-removed is also<page_removed> {
     self.connect($!n, 'page-removed');
   }
 
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
-  method page-reordered {
+  method page-reordered is also<page_reordered> {
     self.connect($!n, 'page-reordered');
   }
 
   # Is originally:
   # GtkNotebook, GtkDirectionType, gboolean, gpointer --> gboolean
-  method reorder-tab {
+  method reorder-tab is also<reorder_tab> {
     self.connect($!n, 'reorder-tab');
   }
 
   # Is originally:
   # GtkNotebook, gboolean, gpointer --> gboolean
-  method select-page {
+  method select-page is also<select_page> {
     self.connect($!n, 'select-page');
   }
 
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
-  method switch-page {
+  method switch-page is also<switch_page> {
     self.connect($!n, 'switch-page');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method current_page is rw {
+  method current_page is rw is also<current-page> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_notebook_get_current_page($!n);
@@ -124,7 +125,7 @@ class GTK::Notebook is GTK::Container {
     );
   }
 
-  method group_name is rw {
+  method group_name is rw is also<group-name> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_notebook_get_group_name($!n);
@@ -147,7 +148,7 @@ class GTK::Notebook is GTK::Container {
     );
   }
 
-  method show_border is rw {
+  method show_border is rw is also<show-border> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_notebook_get_show_border($!n) );
@@ -159,7 +160,7 @@ class GTK::Notebook is GTK::Container {
     );
   }
 
-  method show_tabs is rw {
+  method show_tabs is rw is also<show-tabs> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_notebook_get_show_tabs($!n) );
@@ -171,7 +172,7 @@ class GTK::Notebook is GTK::Container {
     );
   }
 
-  method tab_pos is rw {
+  method tab_pos is rw is also<tab-pos> {
     Proxy.new(
       FETCH => sub ($) {
         GtkPositionType( gtk_notebook_get_tab_pos($!n) );
@@ -185,7 +186,7 @@ class GTK::Notebook is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_page (GtkWidget() $child, GtkWidget() $tab_label) {
+  method append_page (GtkWidget() $child, GtkWidget() $tab_label) is also<append-page> {
     gtk_notebook_append_page($!n, $child, $tab_label);
   }
 
@@ -193,63 +194,63 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $child,
     GtkWidget() $tab_label,
     GtkWidget() $menu_label
-  ) {
+  ) is also<append-page-menu> {
     gtk_notebook_append_page_menu($!n, $child, $tab_label, $menu_label);
   }
 
-  method detach_tab (GtkWidget() $child) {
+  method detach_tab (GtkWidget() $child) is also<detach-tab> {
     gtk_notebook_detach_tab($!n, $child);
   }
 
-  method get_action_widget (Int() $pack_type) {
+  method get_action_widget (Int() $pack_type) is also<get-action-widget> {
     my uint32 $pt = self.RESOLVE-UINT($pack_type);
     gtk_notebook_get_action_widget($!n, $pt);
   }
 
-  method get_menu_label (GtkWidget() $child) {
+  method get_menu_label (GtkWidget() $child) is also<get-menu-label> {
     gtk_notebook_get_menu_label($!n, $child);
   }
 
-  method get_menu_label_text (GtkWidget() $child) {
+  method get_menu_label_text (GtkWidget() $child) is also<get-menu-label-text> {
     gtk_notebook_get_menu_label_text($!n, $child);
   }
 
-  method get_n_pages {
+  method get_n_pages is also<get-n-pages> {
     gtk_notebook_get_n_pages($!n);
   }
 
   method get_nth_page (
     Int() $page_num               # gint $page_num
-  ) {
+  ) is also<get-nth-page> {
     my gint $pn = self.RESOLVE-INT($page_num);
     gtk_notebook_get_nth_page($!n, $pn);
   }
 
-  method get_tab_detachable (GtkWidget() $child) {
+  method get_tab_detachable (GtkWidget() $child) is also<get-tab-detachable> {
     gtk_notebook_get_tab_detachable($!n, $child);
   }
 
-  method get_tab_hborder {
+  method get_tab_hborder is also<get-tab-hborder> {
     gtk_notebook_get_tab_hborder($!n);
   }
 
-  method get_tab_label (GtkWidget() $child) {
+  method get_tab_label (GtkWidget() $child) is also<get-tab-label> {
     gtk_notebook_get_tab_label($!n, $child);
   }
 
-  method get_tab_label_text (GtkWidget() $child) {
+  method get_tab_label_text (GtkWidget() $child) is also<get-tab-label-text> {
     gtk_notebook_get_tab_label_text($!n, $child);
   }
 
-  multi method get_tab_reorderable (GtkWidget() $child) {
+  multi method get_tab_reorderable (GtkWidget() $child) is also<get-tab-reorderable> {
     gtk_notebook_get_tab_reorderable($!n, $child);
   }
 
-  method get_tab_vborder {
+  method get_tab_vborder is also<get-tab-vborder> {
     gtk_notebook_get_tab_vborder($!n);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_notebook_get_type();
   }
 
@@ -257,7 +258,7 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $child,
     GtkWidget() $tab_label,
     Int() $position
-  ) {
+  ) is also<insert-page> {
     my uint32 $p = self.RESOLVE-UINT($position);
     gtk_notebook_insert_page($!n, $child, $tab_label, $p);
   }
@@ -267,31 +268,31 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $tab_label,
     GtkWidget() $menu_label,
     Int() $position               # gint $position
-  ) {
+  ) is also<insert-page-menu> {
     my uint32 $p = self.RESOLVE-UINT($position);
     gtk_notebook_insert_page_menu($!n, $child, $tab_label, $menu_label, $p);
   }
 
-  method next_page {
+  method next_page is also<next-page> {
     gtk_notebook_next_page($!n);
   }
 
-  method page_num (GtkWidget() $child) {
+  method page_num (GtkWidget() $child) is also<page-num> {
     gtk_notebook_page_num($!n, $child);
   }
 
-  method popup_disable {
+  method popup_disable is also<popup-disable> {
     gtk_notebook_popup_disable($!n);
   }
 
-  method popup_enable {
+  method popup_enable is also<popup-enable> {
     gtk_notebook_popup_enable($!n);
   }
 
   method prepend_page (
     GtkWidget() $child,
     GtkWidget() $tab_label
-  ) {
+  ) is also<prepend-page> {
     gtk_notebook_prepend_page($!n, $child, $tab_label);
   }
 
@@ -299,20 +300,20 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $child,
     GtkWidget() $tab_label,
     GtkWidget() $menu_label
-  ) {
+  ) is also<prepend-page-menu> {
     gtk_notebook_prepend_page_menu($!n, $child, $tab_label, $menu_label);
   }
 
-  method prev_page {
+  method prev_page is also<prev-page> {
     gtk_notebook_prev_page($!n);
   }
 
-  method remove_page (Int() $page_num) {
+  method remove_page (Int() $page_num) is also<remove-page> {
     my gint $pn = self.RESOLVE-INT($page_num);
     gtk_notebook_remove_page($!n, $pn);
   }
 
-  method reorder_child (GtkWidget $child, Int() $position) {
+  method reorder_child (GtkWidget $child, Int() $position) is also<reorder-child> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_notebook_reorder_child($!n, $child, $p);
   }
@@ -320,44 +321,45 @@ class GTK::Notebook is GTK::Container {
   method set_action_widget (
     GtkWidget() $widget,
     int() $pack_type              # GtkPackType $pack_type)
-  ) {
+  ) is also<set-action-widget> {
     gtk_notebook_set_action_widget($!n, $widget, $pack_type);
   }
 
   method set_menu_label (
     GtkWidget() $child,
     GtkWidget() $menu_label
-  ) {
+  ) is also<set-menu-label> {
     gtk_notebook_set_menu_label($!n, $child, $menu_label);
   }
 
-  method set_menu_label_text (GtkWidget() $child, gchar $menu_text) {
+  method set_menu_label_text (GtkWidget() $child, gchar $menu_text) is also<set-menu-label-text> {
     gtk_notebook_set_menu_label_text($!n, $child, $menu_text);
   }
 
   method set_tab_detachable (
     GtkWidget() $child,
     Int() $detachable             # gboolean $detachable
-  ) {
+  ) is also<set-tab-detachable> {
     my gboolean $d = self.RESOLVE-BOOL($detachable);
     gtk_notebook_set_tab_detachable($!n, $child, $d);
   }
 
-  method set_tab_label (GtkWidget() $child, GtkWidget() $tab_label) {
+  method set_tab_label (GtkWidget() $child, GtkWidget() $tab_label) is also<set-tab-label> {
     gtk_notebook_set_tab_label($!n, $child, $tab_label);
   }
 
-  method set_tab_label_text (GtkWidget() $child, gchar $tab_text) {
+  method set_tab_label_text (GtkWidget() $child, gchar $tab_text) is also<set-tab-label-text> {
     gtk_notebook_set_tab_label_text($!n, $child, $tab_text);
   }
 
   method set_tab_reorderable (
     GtkWidget() $child,
     Int() $reorderable            # gboolean $reorderable
-  ) {
+  ) is also<set-tab-reorderable> {
     my $r = self.RESOLVE-BOOL($reorderable);
     gtk_notebook_set_tab_reorderable($!n, $child, $r);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

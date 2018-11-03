@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -59,7 +60,7 @@ class GTK::MenuBar is GTK::MenuShell {
     self.bless(:$menubar, :@items);
   }
 
-  method new_from_model (GMenuModel $model) {
+  method new_from_model (GMenuModel $model) is also<new-from-model> {
     my $menubar = gtk_menu_bar_new_from_model($model);
     self.bless(:$menubar);
   }
@@ -68,7 +69,7 @@ class GTK::MenuBar is GTK::MenuShell {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method child_pack_direction is rw {
+  method child_pack_direction is rw is also<child-pack-direction> {
     Proxy.new(
       FETCH => sub ($) {
         GtkPackDirection( gtk_menu_bar_get_child_pack_direction($!mb) );
@@ -80,7 +81,7 @@ class GTK::MenuBar is GTK::MenuShell {
     );
   }
 
-  method pack_direction is rw {
+  method pack_direction is rw is also<pack-direction> {
     Proxy.new(
       FETCH => sub ($) {
         GtkPackDirection( gtk_menu_bar_get_pack_direction($!mb) );
@@ -94,9 +95,10 @@ class GTK::MenuBar is GTK::MenuShell {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_menu_bar_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

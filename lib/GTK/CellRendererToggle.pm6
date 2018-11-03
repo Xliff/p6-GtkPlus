@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -129,7 +130,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   }
 
   # Type: gint
-  method indicator-size is rw {
+  method indicator-size is rw is also<indicator_size> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -146,9 +147,10 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_renderer_toggle_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

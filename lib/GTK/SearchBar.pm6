@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -53,7 +54,7 @@ class GTK::SearchBar is GTK::Bin {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method search_mode is rw {
+  method search_mode is rw is also<search-mode> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_search_bar_get_search_mode($!sb);
@@ -65,7 +66,7 @@ class GTK::SearchBar is GTK::Bin {
     );
   }
 
-  method show_close_button is rw {
+  method show_close_button is rw is also<show-close-button> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_search_bar_get_show_close_button($!sb);
@@ -79,17 +80,18 @@ class GTK::SearchBar is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method connect_entry (GtkEntry() $entry) {
+  method connect_entry (GtkEntry() $entry) is also<connect-entry> {
     gtk_search_bar_connect_entry($!sb, $entry);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_search_bar_get_type();
   }
 
-  method handle_event (GdkEvent $event) {
+  method handle_event (GdkEvent $event) is also<handle-event> {
     gtk_search_bar_handle_event($!sb, $event);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

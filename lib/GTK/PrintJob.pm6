@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -42,7 +43,7 @@ class GTK::PrintJob {
 
   # Is originally:
   # GtkPrintJob, gpointer --> void
-  method status-changed {
+  method status-changed is also<status_changed> {
     self.connect($!prnjob, 'status-changed');
   }
 
@@ -61,7 +62,7 @@ class GTK::PrintJob {
     );
   }
 
-  method n_up is rw {
+  method n_up is rw is also<n-up> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_job_get_n_up($!prnjob);
@@ -72,7 +73,7 @@ class GTK::PrintJob {
     );
   }
 
-  method n_up_layout is rw {
+  method n_up_layout is rw is also<n-up-layout> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_job_get_n_up_layout($!prnjob);
@@ -83,7 +84,7 @@ class GTK::PrintJob {
     );
   }
 
-  method num_copies is rw {
+  method num_copies is rw is also<num-copies> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_job_get_num_copies($!prnjob);
@@ -94,7 +95,7 @@ class GTK::PrintJob {
     );
   }
 
-  method page_set is rw {
+  method page_set is rw is also<page-set> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_job_get_page_set($!prnjob);
@@ -149,7 +150,7 @@ class GTK::PrintJob {
     );
   }
 
-  method track_print_status is rw {
+  method track_print_status is rw is also<track-print-status> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_job_get_track_print_status($!prnjob);
@@ -165,7 +166,7 @@ class GTK::PrintJob {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GtkPageSetup
-  method page-setup is rw {
+  method page-setup is rw is also<page_setup> {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
@@ -235,31 +236,31 @@ class GTK::PrintJob {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method get_page_ranges (gint $n_ranges) {
+  method get_page_ranges (gint $n_ranges) is also<get-page-ranges> {
     gtk_print_job_get_page_ranges($!prnjob, $n_ranges);
   }
 
-  method get_printer {
+  method get_printer is also<get-printer> {
     gtk_print_job_get_printer($!prnjob);
   }
 
-  method get_settings {
+  method get_settings is also<get-settings> {
     gtk_print_job_get_settings($!prnjob);
   }
 
-  method get_status {
+  method get_status is also<get-status> {
     gtk_print_job_get_status($!prnjob);
   }
 
-  method get_surface (CArray[Pointer[GError]] $error) {
+  method get_surface (CArray[Pointer[GError]] $error) is also<get-surface> {
     gtk_print_job_get_surface($!prnjob, $error);
   }
 
-  method get_title {
+  method get_title is also<get-title> {
     gtk_print_job_get_title($!prnjob);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_print_job_get_type();
   }
 
@@ -274,24 +275,25 @@ class GTK::PrintJob {
   method set_page_ranges (
     GtkPageRange $ranges,
     gint $n_ranges
-  ) {
+  ) is also<set-page-ranges> {
     gtk_print_job_set_page_ranges($!prnjob, $ranges, $n_ranges);
   }
 
   method set_source_fd (
     int $fd,
     CArray[Pointer[GError]] $error
-  ) {
+  ) is also<set-source-fd> {
     gtk_print_job_set_source_fd($!prnjob, $fd, $error);
   }
 
   method set_source_file (
     gchar $filename,
     CArray[Pointer[GError]] $error
-  ) {
+  ) is also<set-source-file> {
     gtk_print_job_set_source_file($!prnjob, $filename, $error);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Raw::Bin;
@@ -44,14 +45,15 @@ class GTK::Bin is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  multi method get_child {
+  multi method get_child is also<get-child> {
     gtk_bin_get_child($!bin);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_bin_get_type();
   }
 
   # XXX - Override add to take only one child?
 
 }
+

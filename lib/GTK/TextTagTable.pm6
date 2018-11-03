@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -45,11 +46,11 @@ class GTK::TextTagTable {
     gtk_text_tag_table_foreach($!ttt, $func, $data);
   }
 
-  method get_size {
+  method get_size is also<get-size> {
     gtk_text_tag_table_get_size($!ttt);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_text_tag_table_get_type();
   }
 
@@ -63,3 +64,4 @@ class GTK::TextTagTable {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

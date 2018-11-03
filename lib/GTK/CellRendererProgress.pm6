@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -106,7 +107,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   }
 
   # Type: gfloat
-  method text-xalign is rw {
+  method text-xalign is rw is also<text_xalign> {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
@@ -121,7 +122,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   }
 
   # Type: gfloat
-  method text-yalign is rw {
+  method text-yalign is rw is also<text_yalign> {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
@@ -156,9 +157,10 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type () {
+  method get_type () is also<get-type> {
     gtk_cell_renderer_progress_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

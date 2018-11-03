@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -68,9 +69,10 @@ class GTK::LockButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_lock_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

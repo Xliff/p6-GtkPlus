@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -49,7 +50,7 @@ class GTK::ShortcutsSection is GTK::Box {
 
   # Is originally:
   # GtkShortcutsSection, gint, gpointer --> gboolean
-  method change-current-page {
+  method change-current-page is also<change_current_page> {
     self.connect-int-ruint($!ss);
   }
 
@@ -61,7 +62,7 @@ class GTK::ShortcutsSection is GTK::Box {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: guint
-  method max-height is rw {
+  method max-height is rw is also<max_height> {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
@@ -76,7 +77,7 @@ class GTK::ShortcutsSection is GTK::Box {
   }
 
   # Type: gchar
-  method section-name is rw {
+  method section-name is rw is also<section_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -106,7 +107,7 @@ class GTK::ShortcutsSection is GTK::Box {
   }
 
   # Type: gchar
-  method view-name is rw {
+  method view-name is rw is also<view_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -126,3 +127,4 @@ class GTK::ShortcutsSection is GTK::Box {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

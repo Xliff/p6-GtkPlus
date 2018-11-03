@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,7 +53,7 @@ class GTK::HeaderBar is GTK::Container {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method custom_title is rw {
+  method custom_title is rw is also<custom-title> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_header_bar_get_custom_title($!hb);
@@ -63,7 +64,7 @@ class GTK::HeaderBar is GTK::Container {
     );
   }
 
-  method decoration_layout is rw {
+  method decoration_layout is rw is also<decoration-layout> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_header_bar_get_decoration_layout($!hb);
@@ -74,7 +75,7 @@ class GTK::HeaderBar is GTK::Container {
     );
   }
 
-  method has_subtitle is rw {
+  method has_subtitle is rw is also<has-subtitle> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_header_bar_get_has_subtitle($!hb);
@@ -86,7 +87,7 @@ class GTK::HeaderBar is GTK::Container {
     );
   }
 
-  method show_close_button is rw {
+  method show_close_button is rw is also<show-close-button> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_header_bar_get_show_close_button($!hb) );
@@ -122,27 +123,39 @@ class GTK::HeaderBar is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_header_bar_get_type();
   }
 
+  multi method pack-end (GtkWidget $child) {
+    self.pack_end($child);
+  }
   multi method pack_end (GtkWidget $child) {
     self.unshift-end($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_header_bar_pack_end($!hb, $child);
   }
-  multi method pack_end (GTK::Widget $child)  {
+  multi method pack-end (GTK::Widget $child) {
+    self.pack_end($child);
+  }
+  multi method pack_end (GTK::Widget $child) {
     self.unshift-end($child);
     self.SET-LATCH;
     samewith($child.widget);
   }
 
   multi method pack_start (GtkWidget $child) {
+    self.pack_start($child);
+  }
+  multi method pack_start (GtkWidget $child) {
     self.push-start($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_header_bar_pack_start($!hb, $child);
   }
-  multi method pack_start (GTK::Widget $child)  {
+  multi method pack-start (GTK::Widget $child) {
+    self.pack_start($child);
+  }
+  multi method pack_start (GTK::Widget $child) {
     self.push-start($child);
     self.SET-LATCH;
     samewith($child.widget);

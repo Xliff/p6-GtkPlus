@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -54,7 +55,7 @@ class GTK::FontButton is GTK::Button {
     self.bless(:$button);
   }
 
-  method new_with_font (Str $font) {
+  method new_with_font (Str $font) is also<new-with-font> {
     my $button = gtk_font_button_new_with_font($font);
     self.bless(:$button);
   }
@@ -63,14 +64,14 @@ class GTK::FontButton is GTK::Button {
 
   # Is originally:
   # GtkFontButton, gpointer --> void
-  method font-set {
+  method font-set is also<font_set> {
     self.connect($!fb, 'font-set');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method font_name is rw {
+  method font_name is rw is also<font-name> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_font_button_get_font_name($!fb);
@@ -81,7 +82,7 @@ class GTK::FontButton is GTK::Button {
     );
   }
 
-  method show_size is rw {
+  method show_size is rw is also<show-size> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_font_button_get_show_size($!fb);
@@ -93,7 +94,7 @@ class GTK::FontButton is GTK::Button {
     );
   }
 
-  method show_style is rw {
+  method show_style is rw is also<show-style> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_font_button_get_show_style($!fb);
@@ -116,7 +117,7 @@ class GTK::FontButton is GTK::Button {
     );
   }
 
-  method use_font is rw {
+  method use_font is rw is also<use-font> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_font_button_get_use_font($!fb);
@@ -128,7 +129,7 @@ class GTK::FontButton is GTK::Button {
     );
   }
 
-  method use_size is rw {
+  method use_size is rw is also<use-size> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_font_button_get_use_size($!fb);
@@ -142,9 +143,10 @@ class GTK::FontButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_font_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

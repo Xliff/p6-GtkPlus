@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::RGBA;
@@ -75,7 +76,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: gboolean
-  method align-set is rw {
+  method align-set is rw is also<align_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -134,7 +135,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: GdkColor
-  method background-gdk is rw {
+  method background-gdk is rw is also<background_gdk> {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
@@ -149,7 +150,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: GdkRGBA
-  method background-rgba is rw {
+  method background-rgba is rw is also<background_rgba> {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
@@ -164,7 +165,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method background-set is rw {
+  method background-set is rw is also<background_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -194,7 +195,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method editable-set is rw {
+  method editable-set is rw is also<editable_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -224,7 +225,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method ellipsize-set is rw {
+  method ellipsize-set is rw is also<ellipsize_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -254,7 +255,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method family-set is rw {
+  method family-set is rw is also<family_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -284,7 +285,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: PangoFontDescription
-  method font-desc is rw {
+  method font-desc is rw is also<font_desc> {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
@@ -313,7 +314,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: GdkColor
-  method foreground-gdk is rw {
+  method foreground-gdk is rw is also<foreground_gdk> {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
@@ -328,7 +329,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: GdkRGBA
-  method foreground-rgba is rw {
+  method foreground-rgba is rw is also<foreground_rgba> {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
@@ -343,7 +344,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method foreground-set is rw {
+  method foreground-set is rw is also<foreground_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -373,7 +374,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method language-set is rw {
+  method language-set is rw is also<language_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -402,7 +403,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gint
-  method max-width-chars is rw {
+  method max-width-chars is rw is also<max_width_chars> {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
@@ -417,7 +418,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gchar
-  method placeholder-text is rw {
+  method placeholder-text is rw is also<placeholder_text> {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
@@ -447,7 +448,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method rise-set is rw {
+  method rise-set is rw is also<rise_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -477,7 +478,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method scale-set is rw {
+  method scale-set is rw is also<scale_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -492,7 +493,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method single-paragraph-mode is rw {
+  method single-paragraph-mode is rw is also<single_paragraph_mode> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -522,7 +523,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gdouble
-  method size-points is rw {
+  method size-points is rw is also<size_points> {
     my GTK::Compat::Value $gv .= new(G_TYPE_DOUBLE);
     Proxy.new(
       FETCH => -> $ {
@@ -537,7 +538,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method size-set is rw {
+  method size-set is rw is also<size_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -567,7 +568,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method stretch-set is rw {
+  method stretch-set is rw is also<stretch_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -597,7 +598,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method strikethrough-set is rw {
+  method strikethrough-set is rw is also<strikethrough_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -627,7 +628,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method style-set is rw {
+  method style-set is rw is also<style_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -672,7 +673,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method underline-set is rw {
+  method underline-set is rw is also<underline_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -702,7 +703,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method variant-set is rw {
+  method variant-set is rw is also<variant_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -732,7 +733,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gboolean
-  method weight-set is rw {
+  method weight-set is rw is also<weight_set> {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
@@ -747,7 +748,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gint
-  method width-chars is rw {
+  method width-chars is rw is also<width_chars> {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
@@ -762,7 +763,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: PangoWrapMode
-  method wrap-mode is rw {
+  method wrap-mode is rw is also<wrap_mode> {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
@@ -777,7 +778,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: gint
-  method wrap-width is rw {
+  method wrap-width is rw is also<wrap_width> {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
@@ -794,14 +795,15 @@ class GTK::CellRendererText is GTK::CellRenderer {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_renderer_text_get_type();
   }
 
-  method set_fixed_height_from_font (Int() $number_of_rows) {
+  method set_fixed_height_from_font (Int() $number_of_rows) is also<set-fixed-height-from-font> {
     my gint $nr = self.RESOLVE-INT($number_of_rows);
     gtk_cell_renderer_text_set_fixed_height_from_font($!crt, $nr);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

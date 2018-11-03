@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,7 +53,7 @@ class GTK::AccelLabel is GTK::Label {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method accel_widget is rw {
+  method accel_widget is rw is also<accel-widget> {
     Proxy.new(
       FETCH => sub ($) {
         # This should actually return a GTK::Widget, but again... we'd need
@@ -72,7 +73,7 @@ class GTK::AccelLabel is GTK::Label {
   method get_accel (
     Int() $accelerator_key,
     Int() $accelerator_mods is rw
-  ) {
+  ) is also<get-accel> {
     my guint @u = ($accelerator_key, $accelerator_mods);
     my uint32 ($ak, $am) = self.RESOLVE-UINT(@u);
     my $rc = gtk_accel_label_get_accel($!al, $ak, $am);
@@ -80,11 +81,11 @@ class GTK::AccelLabel is GTK::Label {
     $rc;
   }
 
-  method get_accel_width {
+  method get_accel_width is also<get-accel-width> {
     gtk_accel_label_get_accel_width($!al);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_accel_label_get_type();
   }
 
@@ -95,16 +96,17 @@ class GTK::AccelLabel is GTK::Label {
   method set_accel (
     Int() $accelerator_key,       # guint $accelerator_key,
     Int() $accelerator_mods       # GdkModifierType $accelerator_mods
-  ) {
+  ) is also<set-accel> {
     my @u = ($accelerator_key, $accelerator_mods);
     my uint32 ($ak, $am) = self.RESOLVE-UINT(@u);
 
     gtk_accel_label_set_accel($!al, $ak, $am);
   }
 
-  method set_accel_closure (GClosure $accel_closure) {
+  method set_accel_closure (GClosure $accel_closure) is also<set-accel-closure> {
     gtk_accel_label_set_accel_closure($!al, $accel_closure);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

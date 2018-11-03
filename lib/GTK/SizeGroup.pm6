@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -44,7 +45,7 @@ class GTK::SizeGroup {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method ignore_hidden is rw {
+  method ignore_hidden is rw is also<ignore-hidden> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_size_group_get_ignore_hidden($!sg) );
@@ -70,21 +71,22 @@ class GTK::SizeGroup {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_widget (GtkWidget() $widget) {
+  method add_widget (GtkWidget() $widget) is also<add-widget> {
     gtk_size_group_add_widget($!sg, $widget);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_size_group_get_type();
   }
 
-  method get_widgets {
+  method get_widgets is also<get-widgets> {
     gtk_size_group_get_widgets($!sg);
   }
 
-  method remove_widget (GtkWidget() $widget) {
+  method remove_widget (GtkWidget() $widget) is also<remove-widget> {
     gtk_size_group_remove_widget($!sg, $widget);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

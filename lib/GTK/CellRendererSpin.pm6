@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -80,7 +81,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   }
 
   # Type: gdouble
-  method climb-rate is rw {
+  method climb-rate is rw is also<climb_rate> {
     my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => -> $ {
@@ -112,9 +113,10 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_renderer_spin_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

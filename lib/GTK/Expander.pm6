@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -56,7 +57,7 @@ class GTK::Expander is GTK::Bin {
     self.bless(:$expander);
   }
 
-  method new_with_mnemonic (Str() $label) {
+  method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $expander = gtk_expander_new_with_mnemonic($label);
     self.bless(:$expander);
   }
@@ -69,7 +70,7 @@ class GTK::Expander is GTK::Bin {
     self.connect($!e, 'activate');
   }
 
-  method notify-expanded {
+  method notify-expanded is also<notify_expanded> {
     self.connect-gparam($!e, 'notify::expanded');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -98,7 +99,7 @@ class GTK::Expander is GTK::Bin {
     );
   }
 
-  method label_fill is rw {
+  method label_fill is rw is also<label-fill> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_expander_get_label_fill($!e);
@@ -110,7 +111,7 @@ class GTK::Expander is GTK::Bin {
     );
   }
 
-  method label_widget is rw {
+  method label_widget is rw is also<label-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_expander_get_label_widget($!e);
@@ -121,7 +122,7 @@ class GTK::Expander is GTK::Bin {
     );
   }
 
-  method resize_toplevel is rw {
+  method resize_toplevel is rw is also<resize-toplevel> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_expander_get_resize_toplevel($!e);
@@ -146,7 +147,7 @@ class GTK::Expander is GTK::Bin {
   #   );
   # }
 
-  method use_markup is rw {
+  method use_markup is rw is also<use-markup> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_expander_get_use_markup($!e);
@@ -158,7 +159,7 @@ class GTK::Expander is GTK::Bin {
     );
   }
 
-  method use_underline is rw {
+  method use_underline is rw is also<use-underline> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_expander_get_use_underline($!e);
@@ -172,9 +173,10 @@ class GTK::Expander is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_expander_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -72,31 +73,36 @@ class GTK::Button is GTK::Bin {
     self.bless(:$button);
   }
 
-  method new_with_mnemonic (GTK::Button:U: Str() $label) {
+  method new_with_mnemonic (GTK::Button:U: Str() $label) is also<new-with-mnemonic> {
     my $button = gtk_button_new_with_mnemonic($label);
     self.bless(:$button)
   }
 
-  method new_from_icon_name (GTK::Button:U: Str() $icon_name, GtkIconSize $size) {
+  method new_from_icon_name (GTK::Button:U: Str() $icon_name, GtkIconSize $size) is also<new-from-icon-name> {
     my $button = gtk_button_new_from_icon_name($icon_name, $size);
     self.bless(:$button);
   }
 
-  method new_from_stock (GTK::Button:U: Str() $stock_id) {
+  method new_from_stock (GTK::Button:U: Str() $stock_id) is also<new-from-stock> {
     my $button = gtk_button_new_from_stock($stock_id);
     self.bless(:$button);
   }
 
-  method new_with_label (GTK::Button:U: Str() $label) {
+  method new_with_label (GTK::Button:U: Str() $label) is also<new-with-label> {
     my $button = gtk_button_new_with_label($label);
     self.bless(:$button);
   }
 
   # Renamed from "clicked" due to conflict with the signal.
-  method emit-clicked {
+  method emit-clicked is also<emit_clicked> {
     gtk_button_clicked($!b);
   }
 
+  multi method get-alignment (Num() $xalign is rw, Num() $yalign is rw)
+    is DEPRECATED
+  {
+    self.get_alignment($xalign, $yalign);
+  }
   multi method get_alignment (Num() $xalign is rw, Num() $yalign is rw)
     is DEPRECATED
   {
@@ -105,13 +111,16 @@ class GTK::Button is GTK::Bin {
     ($xalign, $yalign) = ($xa, $ya);
     $rc;
   }
+  multi method get-alignment is DEPRECATED {
+    self.get_alignment;
+  }
   multi method get_alignment is DEPRECATED {
     my ($x, $y);
     samewith($x, $y);
     ($x, $y);
   }
 
-  method get_event_window {
+  method get_event_window is also<get-event-window> {
     gtk_button_get_event_window($!b);
   }
 
@@ -121,12 +130,12 @@ class GTK::Button is GTK::Bin {
   #}
 
 
-  method set_alignment (Num() $xalign, Num() $yalign) {
+  method set_alignment (Num() $xalign, Num() $yalign) is also<set-alignment> {
     my gfloat ($xa, $ya) = ($xalign, $yalign);
     gtk_button_set_alignment($!b, $xalign, $yalign);
   }
 
-  method always_show_image is rw {
+  method always_show_image is rw is also<always-show-image> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_button_get_always_show_image($!b) );
@@ -138,7 +147,7 @@ class GTK::Button is GTK::Bin {
     );
   }
 
-  method focus_on_click is rw {
+  method focus_on_click is rw is also<focus-on-click> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_button_get_focus_on_click($!b) );
@@ -161,7 +170,7 @@ class GTK::Button is GTK::Bin {
     );
   }
 
-  method image_position is rw {
+  method image_position is rw is also<image-position> {
     Proxy.new(
       FETCH => sub ($) {
         GtkPositionType( gtk_button_get_image_position($!b) );
@@ -196,7 +205,7 @@ class GTK::Button is GTK::Bin {
     );
   }
 
-  method use_stock is rw {
+  method use_stock is rw is also<use-stock> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_button_get_use_stock($!b) );
@@ -208,7 +217,7 @@ class GTK::Button is GTK::Bin {
     );
   }
 
-  method use_underline is rw {
+  method use_underline is rw is also<use-underline> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_button_get_use_underline($!b) );

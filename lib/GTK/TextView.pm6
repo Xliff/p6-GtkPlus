@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -54,7 +55,7 @@ class GTK::TextView is GTK::Container {
     self.bless(:$textview);
   }
 
-  method new_with_buffer (GtkTextBuffer() $buffer) {
+  method new_with_buffer (GtkTextBuffer() $buffer) is also<new-with-buffer> {
     my $textview = gtk_text_view_new_with_buffer($buffer);
     self.bless(:$textview);
   }
@@ -70,92 +71,92 @@ class GTK::TextView is GTK::Container {
 
   # Is originally:
   # GtkTextView, gpointer --> void
-  method copy-clipboard {
+  method copy-clipboard is also<copy_clipboard> {
     self.connect($!tv, 'copy-clipboard');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
-  method cut-clipboard {
+  method cut-clipboard is also<cut_clipboard> {
     self.connect($!tv, 'cut-clipboard');
   }
 
   # Is originally:
   # GtkTextView, GtkDeleteType, gint, gpointer --> void
-  method delete-from-cursor {
+  method delete-from-cursor is also<delete_from_cursor> {
     self.connect-delete($!tv, 'delete-from-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkTextExtendSelection, GtkTextIter, GtkTextIter, GtkTextIter, gpointer --> gboolean
-  method extend-selection {
+  method extend-selection is also<extend_selection> {
     self.connect-extend-selection($!tv);
   }
 
   # Is originally:
   # GtkTextView, gchar, gpointer --> void
-  method insert-at-cursor {
+  method insert-at-cursor is also<insert_at_cursor> {
     self.connect-string($!tv, 'insert-at-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkMovementStep, gint, gboolean, gpointer --> void
-  method move-cursor {
+  method move-cursor is also<move_cursor> {
     self.connect-move-cursor2($!tv, 'move-cursor');
   }
 
   # Is originally:
   # GtkTextView, GtkScrollStep, gint, gpointer --> void
-  method move-viewport {
+  method move-viewport is also<move_viewport> {
     # Yes, this is the correct handler.
     self.connect-move-cursor1($!tv, 'move-viewport');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
-  method paste-clipboard {
+  method paste-clipboard is also<paste_clipboard> {
     self.connect($!tv, 'paste-clipboard');
   }
 
   # Is originally:
   # GtkTextView, GtkWidget, gpointer --> void
-  method populate-popup {
+  method populate-popup is also<populate_popup> {
     self.connect-widget($!tv, 'populate-popup');
   }
 
   # Is originally:
   # GtkTextView, gchar, gpointer --> void
-  method preedit-changed {
+  method preedit-changed is also<preedit_changed> {
     self.connect-string($!tv, 'preedit-changed');
   }
 
   # Is originally:
   # GtkTextView, gboolean, gpointer --> void
-  method select-all {
+  method select-all is also<select_all> {
     self.connect-uint($!tv, 'select-all');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
-  method set-anchor {
+  method set-anchor is also<set_anchor> {
     self.connect($!tv, 'set-anchor');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
-  method toggle-cursor-visible {
+  method toggle-cursor-visible is also<toggle_cursor_visible> {
     self.connect($!tv, 'toggle-cursor-visible');
   }
 
   # Is originally:
   # GtkTextView, gpointer --> void
-  method toggle-overwrite {
+  method toggle-overwrite is also<toggle_overwrite> {
     self.connect($!tv, 'toggle-overwrite');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method accepts_tab is rw {
+  method accepts_tab is rw is also<accepts-tab> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_text_view_get_accepts_tab($!tv) );
@@ -167,7 +168,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method bottom_margin is rw {
+  method bottom_margin is rw is also<bottom-margin> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_view_get_bottom_margin($!tv);
@@ -190,7 +191,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method cursor_visible is rw {
+  method cursor_visible is rw is also<cursor-visible> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_text_view_get_cursor_visible($!tv) );
@@ -226,7 +227,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method input_hints is rw {
+  method input_hints is rw is also<input-hints> {
     Proxy.new(
       FETCH => sub ($) {
         GtkInputHints( gtk_text_view_get_input_hints($!tv) );
@@ -238,7 +239,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method input_purpose is rw {
+  method input_purpose is rw is also<input-purpose> {
     Proxy.new(
       FETCH => sub ($) {
         GtkInputPurpose( gtk_text_view_get_input_purpose($!tv) );
@@ -262,7 +263,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method left_margin is rw {
+  method left_margin is rw is also<left-margin> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_view_get_left_margin($!tv);
@@ -298,7 +299,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method pixels_above_lines is rw {
+  method pixels_above_lines is rw is also<pixels-above-lines> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_view_get_pixels_above_lines($!tv);
@@ -310,7 +311,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method pixels_below_lines is rw {
+  method pixels_below_lines is rw is also<pixels-below-lines> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_view_get_pixels_below_lines($!tv);
@@ -322,7 +323,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method pixels_inside_wrap is rw {
+  method pixels_inside_wrap is rw is also<pixels-inside-wrap> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_view_get_pixels_inside_wrap($!tv);
@@ -334,7 +335,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method right_margin is rw {
+  method right_margin is rw is also<right-margin> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_view_get_right_margin($!tv);
@@ -357,7 +358,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method top_margin is rw {
+  method top_margin is rw is also<top-margin> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_view_get_top_margin($!tv);
@@ -369,7 +370,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method wrap_mode is rw {
+  method wrap_mode is rw is also<wrap-mode> {
     Proxy.new(
       FETCH => sub ($) {
         GtkWrapMode( gtk_text_view_get_wrap_mode($!tv) );
@@ -421,15 +422,15 @@ class GTK::TextView is GTK::Container {
   method add_child_at_anchor (
     GtkWidget() $child,
     GtkTextChildAnchor() $anchor
-  ) {
+  ) is also<add-child-at-anchor> {
     gtk_text_view_add_child_at_anchor($!tv, $child, $anchor);
   }
 
-  method backward_display_line (GtkTextIter() $iter) {
+  method backward_display_line (GtkTextIter() $iter) is also<backward-display-line> {
     gtk_text_view_backward_display_line($!tv, $iter);
   }
 
-  method backward_display_line_start (GtkTextIter() $iter) {
+  method backward_display_line_start (GtkTextIter() $iter) is also<backward-display-line-start> {
     gtk_text_view_backward_display_line_start($!tv, $iter);
   }
 
@@ -439,22 +440,22 @@ class GTK::TextView is GTK::Container {
     Int() $buffer_y,
     Int() $window_x,
     Int() $window_y
-  ) {
+  ) is also<buffer-to-window-coords> {
     my @u = ($buffer_x, $buffer_y, $window_x, $window_y);
     my gint ($bx, $by,$wx, $wy) = self.RESOLVE-INT(@u);
     my uint32 $w = self.RESOLVE-UINT($win);
     gtk_text_view_buffer_to_window_coords($!tv, $w, $bx, $by, $wx, $wy);
   }
 
-  method forward_display_line (GtkTextIter() $iter) {
+  method forward_display_line (GtkTextIter() $iter) is also<forward-display-line> {
     gtk_text_view_forward_display_line($!tv, $iter);
   }
 
-  method forward_display_line_end (GtkTextIter() $iter) {
+  method forward_display_line_end (GtkTextIter() $iter) is also<forward-display-line-end> {
     gtk_text_view_forward_display_line_end($!tv, $iter);
   }
 
-  method get_border_window_size (GtkTextWindowType $type) {
+  method get_border_window_size (GtkTextWindowType $type) is also<get-border-window-size> {
     gtk_text_view_get_border_window_size($!tv, $type);
   }
 
@@ -462,15 +463,15 @@ class GTK::TextView is GTK::Container {
     GtkTextIter() $iter,
     GdkRectangle() $strong,
     GdkRectangle() $weak
-  ) {
+  ) is also<get-cursor-locations> {
     gtk_text_view_get_cursor_locations($!tv, $iter, $strong, $weak);
   }
 
-  method get_default_attributes {
+  method get_default_attributes is also<get-default-attributes> {
     gtk_text_view_get_default_attributes($!tv);
   }
 
-  method get_hadjustment {
+  method get_hadjustment is also<get-hadjustment> {
     gtk_text_view_get_hadjustment($!tv);
   }
 
@@ -478,7 +479,7 @@ class GTK::TextView is GTK::Container {
     GtkTextIter() $iter,
     Int() $x,
     Int() $y
-  ) {
+  ) is also<get-iter-at-location> {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@u);
     gtk_text_view_get_iter_at_location($!tv, $iter, $xx, $yy);
@@ -489,13 +490,13 @@ class GTK::TextView is GTK::Container {
     Int() $trailing,
     Int() $x,
     Int() $y
-  ) {
+  ) is also<get-iter-at-position> {
     my @u = ($trailing, $x, $y);
     my gint ($t, $xx, $yy) = self.RESOLVE-INT(@u);
     gtk_text_view_get_iter_at_position($!tv, $iter, $t, $xx, $yy);
   }
 
-  method get_iter_location (GtkTextIter() $iter, GdkRectangle() $location) {
+  method get_iter_location (GtkTextIter() $iter, GdkRectangle() $location) is also<get-iter-location> {
     gtk_text_view_get_iter_location($!tv, $iter, $location);
   }
 
@@ -503,67 +504,67 @@ class GTK::TextView is GTK::Container {
     GtkTextIter() $target_iter,
     Int() $y,
     Int() $line_top
-  ) {
+  ) is also<get-line-at-y> {
     my @u = ($y, $line_top);
     my gint ($yy, $lt) = self.RESOLVE-INT(@u);
     gtk_text_view_get_line_at_y($!tv, $target_iter, $yy, $lt);
   }
 
-  method get_line_yrange (GtkTextIter() $iter, Int() $y, Int() $height) {
+  method get_line_yrange (GtkTextIter() $iter, Int() $y, Int() $height) is also<get-line-yrange> {
     my @u = ($y, $height);
     my gint ($yy, $h) = self.RESOLVE-INT(@u);
     gtk_text_view_get_line_yrange($!tv, $iter, $yy, $h);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_text_view_get_type();
   }
 
-  method get_vadjustment {
+  method get_vadjustment is also<get-vadjustment> {
     gtk_text_view_get_vadjustment($!tv);
   }
 
-  method get_visible_rect (GdkRectangle() $visible_rect) {
+  method get_visible_rect (GdkRectangle() $visible_rect) is also<get-visible-rect> {
     gtk_text_view_get_visible_rect($!tv, $visible_rect);
   }
 
   method get_window (
     Int() $win                  # GtkTextWindowType $win
-  ) {
+  ) is also<get-window> {
     my uint32 $w = self.RESOLVE-UINT($win);
     gtk_text_view_get_window($!tv, $w);
   }
 
-  method get_window_type (GdkWindow $window) {
+  method get_window_type (GdkWindow $window) is also<get-window-type> {
     gtk_text_view_get_window_type($!tv, $window);
   }
 
-  method im_context_filter_keypress (GdkEventKey $event) {
+  method im_context_filter_keypress (GdkEventKey $event) is also<im-context-filter-keypress> {
     gtk_text_view_im_context_filter_keypress($!tv, $event);
   }
 
-  method move_mark_onscreen (GtkTextMark() $mark) {
+  method move_mark_onscreen (GtkTextMark() $mark) is also<move-mark-onscreen> {
     gtk_text_view_move_mark_onscreen($!tv, $mark);
   }
 
-  method move_visually (GtkTextIter() $iter, Int() $count) {
+  method move_visually (GtkTextIter() $iter, Int() $count) is also<move-visually> {
     my gint $c = self.RESOLVE-INT($count);
     gtk_text_view_move_visually($!tv, $iter, $c);
   }
 
-  method place_cursor_onscreen {
+  method place_cursor_onscreen is also<place-cursor-onscreen> {
     gtk_text_view_place_cursor_onscreen($!tv);
   }
 
-  method reset_cursor_blink {
+  method reset_cursor_blink is also<reset-cursor-blink> {
     gtk_text_view_reset_cursor_blink($!tv);
   }
 
-  method reset_im_context {
+  method reset_im_context is also<reset-im-context> {
     gtk_text_view_reset_im_context($!tv);
   }
 
-  method scroll_mark_onscreen (GtkTextMark() $mark) {
+  method scroll_mark_onscreen (GtkTextMark() $mark) is also<scroll-mark-onscreen> {
     gtk_text_view_scroll_mark_onscreen($!tv, $mark);
   }
 
@@ -573,7 +574,7 @@ class GTK::TextView is GTK::Container {
     Bool() $use_align,
     Num()  $xalign,
     Num()  $yalign
-  ) {
+  ) is also<scroll-to-iter> {
     my gdouble ($wm, $xa, $ya) = ($within_margin, $xalign, $yalign);
     my gboolean $ua = $use_align.Int;
     gtk_text_view_scroll_to_iter($!tv, $iter, $wm, $ua, $xa, $ya);
@@ -585,7 +586,7 @@ class GTK::TextView is GTK::Container {
     Bool() $use_align,
     Num()  $xalign,
     Num()  $yalign
-  ) {
+  ) is also<scroll-to-mark> {
     my gdouble ($wm, $xa, $ya) = ($within_margin, $xalign, $yalign);
     # Was it really this simple?
     my gboolean $ua = $use_align.Int;
@@ -595,13 +596,13 @@ class GTK::TextView is GTK::Container {
   method set_border_window_size (
     Int() $type,                # GtkTextWindowType $type,
     Int() $size                 # gint $size
-  ) {
+  ) is also<set-border-window-size> {
     my uint32 $t = self.RESOLVE-UINT($type);
     my gint $s = self.RESOLVE-INT($size);
     gtk_text_view_set_border_window_size($!tv, $t, $s);
   }
 
-  method starts_display_line (GtkTextIter() $iter) {
+  method starts_display_line (GtkTextIter() $iter) is also<starts-display-line> {
     gtk_text_view_starts_display_line($!tv, $iter);
   }
 
@@ -611,7 +612,7 @@ class GTK::TextView is GTK::Container {
     Int() $window_y,
     Int() $buffer_x,
     Int() $buffer_y
-  ) {
+  ) is also<window-to-buffer-coords> {
     my @u = ($window_x, $window_y, $buffer_x, $buffer_y);
     my gint ($wx, $wy, $bx, $by) = self.RESOLVE-INT(@u);
     my uint32 $w = self.RESOLVE-UINT($win);
@@ -620,3 +621,4 @@ class GTK::TextView is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

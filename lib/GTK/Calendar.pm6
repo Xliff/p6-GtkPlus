@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,50 +53,50 @@ class GTK::Calendar is GTK::Widget {
 
   # Is originally:
   # GtkCalendar, gpointer --> void
-  method day-selected {
+  method day-selected is also<day_selected> {
     self.connect($!cal, 'day-selected');
   }
 
   # Is originally:
   # GtkCalendar, gpointer --> void
-  method day-selected-double-click {
+  method day-selected-double-click is also<day_selected_double_click> {
     self.connect($!cal, 'day-selected-double-click');
   }
 
   # Is originally:
   # GtkCalendar, gpointer --> void
-  method month-changed {
+  method month-changed is also<month_changed> {
     self.connect($!cal, 'month-changed');
   }
 
   # Is originally:
   # GtkCalendar, gpointer --> void
-  method next-month {
+  method next-month is also<next_month> {
     self.connect($!cal, 'next-month');
   }
 
   # Is originally:
   # GtkCalendar, gpointer --> void
-  method next-year {
+  method next-year is also<next_year> {
     self.connect($!cal, 'next-year');
   }
 
   # Is originally:
   # GtkCalendar, gpointer --> void
-  method prev-month {
+  method prev-month is also<prev_month> {
     self.connect($!cal, 'prev-month');
   }
 
   # Is originally:
   # GtkCalendar, gpointer --> void
-  method prev-year {
+  method prev-year is also<prev_year> {
     self.connect($!cal, 'prev-year');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method detail_height_rows is rw {
+  method detail_height_rows is rw is also<detail-height-rows> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_calendar_get_detail_height_rows($!cal);
@@ -107,7 +108,7 @@ class GTK::Calendar is GTK::Widget {
     );
   }
 
-  method detail_width_chars is rw {
+  method detail_width_chars is rw is also<detail-width-chars> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_calendar_get_detail_width_chars($!cal);
@@ -119,7 +120,7 @@ class GTK::Calendar is GTK::Widget {
     );
   }
 
-  method display_options is rw {
+  method display_options is rw is also<display-options> {
     Proxy.new(
       FETCH => sub ($) {
         GtkCalendarDisplayOptions(
@@ -135,42 +136,57 @@ class GTK::Calendar is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method clear_marks {
+  method clear_marks is also<clear-marks> {
     gtk_calendar_clear_marks($!cal);
   }
 
-  multi method get_date (Int() $year is rw, Int() $month is rw, Int() $day is rw) {
+  multi method get-date (
+    Int() $year is rw,
+    Int() $month is rw,
+    Int() $day is rw
+  ) {
+    self.get_date($year, $month, $day);
+  }
+  multi method get_date (
+    Int() $year is rw,
+    Int() $month is rw,
+    Int() $day is rw
+  ) {
     my @u = ($year, $month, $day);
     my uint32 ($y, $m, $d) = self.RESOLVE-UINT(@u);
     gtk_calendar_get_date($!cal, $y, $m, $d);
     $m++;
     ($year, $month, $day) = ($y, $m, $d);
   }
+  multi method get-date {
+    self.get_date;
+  }
   multi method get_date {
     my ($y, $m, $d) = (0 xx 3);
     samewith($y, $m, $d);
   }
 
-  method get_day_is_marked (Int() $day) {
+
+  method get_day_is_marked (Int() $day) is also<get-day-is-marked> {
     my guint $d = self.RESOLVE-UINT($day);
     Bool( gtk_calendar_get_day_is_marked($!cal, $d) );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_calendar_get_type();
   }
 
-  method mark_day (Int() $day) {
+  method mark_day (Int() $day) is also<mark-day> {
     my guint $d = self.RESOLVE-UINT($day);
     gtk_calendar_mark_day($!cal, $d);
   }
 
-  method select_day (Int() $day) {
+  method select_day (Int() $day) is also<select-day> {
     my guint $d = self.RESOLVE-UINT($day);
     gtk_calendar_select_day($!cal, $d);
   }
 
-  method select_month (Int() $month, Int() $year) {
+  method select_month (Int() $month, Int() $year) is also<select-month> {
     my @u = ($month, $year);
     my guint ($m, $y) = self.RESOLVE-UINT(@u);
     gtk_calendar_select_month($!cal, $m, $y);
@@ -180,11 +196,11 @@ class GTK::Calendar is GTK::Widget {
     GtkCalendarDetailFunc $func,
     gpointer $data,
     GDestroyNotify $destroy
-  ) {
+  ) is also<set-detail-func> {
     gtk_calendar_set_detail_func($!cal, $func, $data, $destroy);
   }
 
-  method unmark_day (Int() $day) {
+  method unmark_day (Int() $day) is also<unmark-day> {
     my guint $d = self.RESOLVE-UINT($day);
     gtk_calendar_unmark_day($!cal, $d);
   }

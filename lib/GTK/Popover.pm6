@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -48,12 +49,12 @@ class GTK::Popover is GTK::Bin {
     self.bless(:$popover);
   }
 
-  method new-relative-to(GtkWidget() $relative) {
+  method new-relative-to(GtkWidget() $relative) is also<new_relative_to> {
     my $popover = gtk_popover_new($relative);
     self.bless(:$popover);
   }
 
-  method new_from_model (GtkWidget() $relative, GMenuModel $model) {
+  method new_from_model (GtkWidget() $relative, GMenuModel $model) is also<new-from-model> {
     my $popover = gtk_popover_new_from_model($relative, $model);
     self.bless(:$popover);
   }
@@ -68,7 +69,7 @@ class GTK::Popover is GTK::Bin {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method constrain_to is rw {
+  method constrain_to is rw is also<constrain-to> {
     Proxy.new(
       FETCH => sub ($) {
         GtkPopoverConstraint( gtk_popover_get_constrain_to($!p) );
@@ -80,7 +81,7 @@ class GTK::Popover is GTK::Bin {
     );
   }
 
-  method default_widget is rw {
+  method default_widget is rw is also<default-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_popover_get_default_widget($!p);
@@ -115,7 +116,7 @@ class GTK::Popover is GTK::Bin {
     );
   }
 
-  method relative_to is rw {
+  method relative_to is rw is also<relative-to> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_popover_get_relative_to($!p);
@@ -126,7 +127,7 @@ class GTK::Popover is GTK::Bin {
     );
   }
 
-  method transitions_enabled is rw {
+  method transitions_enabled is rw is also<transitions-enabled> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_popover_get_transitions_enabled($!p);
@@ -140,15 +141,15 @@ class GTK::Popover is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method bind_model (GMenuModel $model, gchar $action_namespace) {
+  method bind_model (GMenuModel $model, gchar $action_namespace) is also<bind-model> {
     gtk_popover_bind_model($!p, $model, $action_namespace);
   }
 
-  method get_pointing_to (GdkRectangle() $rect) {
+  method get_pointing_to (GdkRectangle() $rect) is also<get-pointing-to> {
     gtk_popover_get_pointing_to($!p, $rect);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_popover_get_type();
   }
 
@@ -160,9 +161,10 @@ class GTK::Popover is GTK::Bin {
     gtk_popover_popup($!p);
   }
 
-  method set_pointing_to (GdkRectangle() $rect) {
+  method set_pointing_to (GdkRectangle() $rect) is also<set-pointing-to> {
     gtk_popover_set_pointing_to($!p, $rect);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

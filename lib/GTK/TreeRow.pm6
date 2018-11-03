@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -26,7 +27,7 @@ class GTK::TreeRow {
     GObject $proxy,
     GtkTreeModel() $model,
     GtkTreePath() $path
-  ) {
+  ) is also<new-proxy> {
     my $row = gtk_tree_row_reference_new_proxy($proxy, $model, $path);
     self.bless(:$row)
   }
@@ -70,7 +71,7 @@ class GTK::TreeRow {
     gtk_tree_row_reference_free($!tr);
   }
 
-  method get_model {
+  method get_model is also<get-model> {
     gtk_tree_row_reference_get_model($!tr);
   }
 
@@ -80,3 +81,4 @@ class GTK::TreeRow {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

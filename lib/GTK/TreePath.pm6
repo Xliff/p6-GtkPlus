@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -25,19 +26,19 @@ class GTK::TreePath {
     self.bless(:$path);
   }
 
-  method new_first {
+  method new_first is also<new-first> {
     my $path = gtk_tree_path_new_first();
     self.bless(:$path);
   }
 
-  method new_from_indicesv (Int @indicies) {
+  method new_from_indicesv (Int @indicies) is also<new-from-indicesv> {
     my CArray[gint] $i = CArray[gint].new;
     $i[$++] = self.RESOLVE-INT($_) for @indicies;
     my $path = gtk_tree_path_new_from_indicesv($i, $i.elems);
     self.bless(:$path);
   }
 
-  method new_from_string (Str() $newpath) {
+  method new_from_string (Str() $newpath) is also<new-from-string> {
     my $path = gtk_tree_path_new_from_string($newpath);
     self.bless(:$path);
   }
@@ -53,7 +54,7 @@ class GTK::TreePath {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_index (Int() $index) {
+  method append_index (Int() $index) is also<append-index> {
     my gint $i = self.RESOLVE-INT($index);
     gtk_tree_path_append_index($!tp, $i);
   }
@@ -74,24 +75,24 @@ class GTK::TreePath {
     gtk_tree_path_free($!tp);
   }
 
-  method get_depth {
+  method get_depth is also<get-depth> {
     gtk_tree_path_get_depth($!tp);
   }
 
-  method get_indices {
+  method get_indices is also<get-indices> {
     gtk_tree_path_get_indices($!tp);
   }
 
-  method get_indices_with_depth (Int() $depth) {
+  method get_indices_with_depth (Int() $depth) is also<get-indices-with-depth> {
     my gint $d = self.RESOLVE-INT($depth);
     gtk_tree_path_get_indices_with_depth($!tp, $depth);
   }
 
-  method is_ancestor (GtkTreePath() $descendant) {
+  method is_ancestor (GtkTreePath() $descendant) is also<is-ancestor> {
     gtk_tree_path_is_ancestor($!tp, $descendant);
   }
 
-  method is_descendant (GtkTreePath() $ancestor) {
+  method is_descendant (GtkTreePath() $ancestor) is also<is-descendant> {
     gtk_tree_path_is_descendant($!tp, $ancestor);
   }
 
@@ -99,7 +100,7 @@ class GTK::TreePath {
     gtk_tree_path_next($!tp);
   }
 
-  method prepend_index (Int() $index) {
+  method prepend_index (Int() $index) is also<prepend-index> {
     my gint $i = self.RESOLVE-INT($index);
     gtk_tree_path_prepend_index($!tp, $i);
   }
@@ -108,7 +109,7 @@ class GTK::TreePath {
     gtk_tree_path_prev($!tp);
   }
 
-  method to_string {
+  method to_string is also<to-string> {
     gtk_tree_path_to_string($!tp);
   }
 
@@ -118,3 +119,4 @@ class GTK::TreePath {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

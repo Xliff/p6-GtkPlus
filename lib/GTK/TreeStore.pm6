@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -86,7 +87,7 @@ class GTK::TreeStore  {
     gtk_tree_store_clear($!tree);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_tree_store_get_type();
   }
 
@@ -103,7 +104,7 @@ class GTK::TreeStore  {
     GtkTreeIter() $iter,
     GtkTreeIter() $parent,
     GtkTreeIter() $sibling
-  ) {
+  ) is also<insert-after> {
     gtk_tree_store_insert_after($!tree, $iter, $parent, $sibling);
   }
 
@@ -111,7 +112,7 @@ class GTK::TreeStore  {
     GtkTreeIter() $iter,
     GtkTreeIter() $parent,
     GtkTreeIter() $sibling
-  ) {
+  ) is also<insert-before> {
     gtk_tree_store_insert_before($!tree, $iter, $parent, $sibling);
   }
 
@@ -120,7 +121,7 @@ class GTK::TreeStore  {
     GtkTreeIter() $pt, # parent
     Int() $position,
     %values
-  ) {
+  ) is also<insert-with-values> {
     my @c = %values.keys.map( *.Int ).sort;
     my @v;
     @v.push(%values{$_}) for @c;
@@ -133,7 +134,7 @@ class GTK::TreeStore  {
     Int() $position,
     @columns,
     @values,
-  ) {
+  ) is also<insert-with-valuesv> {
     my ($c, $v) = self!checkCV(@columns, @values);
     my gint $p = self.RESOLVE-INT($position);
     gtk_tree_store_insert_with_valuesv($!tree, $iter, $pt, $p, $c, $v, $c.elems);
@@ -142,29 +143,29 @@ class GTK::TreeStore  {
   method is_ancestor (
     GtkTreeIter() $iter,
     GtkTreeIter() $descendant
-  ) {
+  ) is also<is-ancestor> {
     gtk_tree_store_is_ancestor($!tree, $iter, $descendant);
   }
 
-  method iter_depth (GtkTreeIter() $iter) {
+  method iter_depth (GtkTreeIter() $iter) is also<iter-depth> {
     gtk_tree_store_iter_depth($!tree, $iter);
   }
 
-  method iter_is_valid (GtkTreeIter() $iter) {
+  method iter_is_valid (GtkTreeIter() $iter) is also<iter-is-valid> {
     gtk_tree_store_iter_is_valid($!tree, $iter);
   }
 
   method move_after (
     GtkTreeIter() $iter,
     GtkTreeIter() $position
-  ) {
+  ) is also<move-after> {
     gtk_tree_store_move_after($!tree, $iter, $position);
   }
 
   method move_before (
     GtkTreeIter() $iter,
     GtkTreeIter() $position
-  ) {
+  ) is also<move-before> {
     gtk_tree_store_move_before($!tree, $iter, $position);
   }
 
@@ -186,7 +187,7 @@ class GTK::TreeStore  {
     gtk_tree_store_reorder($!tree, $parent, $no);
   }
 
-  method set_column_types (*@types) {
+  method set_column_types (*@types) is also<set-column-types> {
     die '@types must consist of integers'
       unless @types.all ~~ (Int, IntStr).any;
     my $t = CArray[uint64].new( @types.map( *.Int ) );
@@ -197,12 +198,12 @@ class GTK::TreeStore  {
   #   gtk_tree_store_set_valist($!tree, $iter, $var_args);
   # }
 
-  method set_value (GtkTreeIter() $iter, Int() $column, GValue() $value) {
+  method set_value (GtkTreeIter() $iter, Int() $column, GValue() $value) is also<set-value> {
     my gint $c = self.RESOLVE-INT($column);
     gtk_tree_store_set_value($!tree, $iter, $c, $value);
   }
 
-  method set_values(GtkTreeIter() $iter, %values) {
+  method set_values(GtkTreeIter() $iter, %values) is also<set-values> {
     my @c = %values.keys.map( *.Int ).sort;
     my @v;
     @v.push(%values{$_}) for @c;
@@ -213,7 +214,7 @@ class GTK::TreeStore  {
     GtkTreeIter() $iter,
     @columns,
     @values,
-  ) {
+  ) is also<set-valuesv> {
     my ($c, $v) = self!checkCV(@columns, @values);
     gtk_tree_store_set_valuesv($!tree, $iter, $c, $v, $c.elems);
   }
@@ -227,3 +228,4 @@ class GTK::TreeStore  {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -54,7 +55,7 @@ class GTK::MenuButton is GTK::ToggleButton {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method align_widget is rw {
+  method align_widget is rw is also<align-widget> {
     Proxy.new(
       FETCH => sub ($) {
         GTK::Container.new( gtk_menu_button_get_align_widget($!mb) );
@@ -77,7 +78,7 @@ class GTK::MenuButton is GTK::ToggleButton {
     );
   }
 
-  method menu_model is rw {
+  method menu_model is rw is also<menu-model> {
     # GtkMenuModel (really is GMenuModel)
     Proxy.new(
       FETCH => sub ($) {
@@ -113,7 +114,7 @@ class GTK::MenuButton is GTK::ToggleButton {
     );
   }
 
-  method use_popover is rw {
+  method use_popover is rw is also<use-popover> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_menu_button_get_use_popover($!mb);
@@ -128,9 +129,10 @@ class GTK::MenuButton is GTK::ToggleButton {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_menu_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -55,7 +56,7 @@ class GTK::Fixed is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_fixed_get_type();
   }
 
@@ -73,3 +74,4 @@ class GTK::Fixed is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

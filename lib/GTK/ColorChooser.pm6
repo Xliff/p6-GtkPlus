@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::RGBA;
@@ -73,16 +74,17 @@ class GTK::ColorChooser is GTK::Box {
     Int() $colors_per_line,
     Int() $n_colors,
     GTK::Compat::RGBA $colors
-  ) {
+  ) is also<add-palette> {
     my uint32 $o = self.RESOLVE-UINT($orientation);
     my @i = ($colors_per_line, $n_colors);
     my gint ($cpl, $nc) = self.RESOLVE-INT(@i);
     gtk_color_chooser_add_palette($!cc, $o, $cpl, $nc, $colors);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_color_chooser_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

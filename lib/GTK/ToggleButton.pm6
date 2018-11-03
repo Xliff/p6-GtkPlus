@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -51,12 +52,12 @@ class GTK::ToggleButton is GTK::Button {
     self.bless(:$togglebutton);
   }
 
-  method new_with_label (Str $label) {
+  method new_with_label (Str $label) is also<new-with-label> {
     my $togglebutton = gtk_toggle_button_new_with_label($label);
     self.bless(:$togglebutton);
   }
 
-  method new_with_mnemonic (Str $label) {
+  method new_with_mnemonic (Str $label) is also<new-with-mnemonic> {
     my $togglebutton = gtk_toggle_button_new_with_mnemonic($label);
     self.bless(:$togglebutton);
   }
@@ -113,13 +114,14 @@ class GTK::ToggleButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_toggle_button_get_type();
   }
 
-  method emit-toggled {
+  method emit-toggled is also<emit_toggled> {
     gtk_toggle_button_toggled($!tb);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

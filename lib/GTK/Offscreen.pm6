@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -55,17 +56,18 @@ class GTK::Offscreen is GTK::Window {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_pixbuf {
+  method get_pixbuf is also<get-pixbuf> {
     gtk_offscreen_window_get_pixbuf($!ow);
   }
 
-  method get_surface {
+  method get_surface is also<get-surface> {
     gtk_offscreen_window_get_surface($!ow);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_offscreen_window_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

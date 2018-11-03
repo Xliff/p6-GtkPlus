@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Value;
@@ -26,13 +27,13 @@ class GTK::AccelGroup          {
 
   # Is originally:
   # GtkAccelGroup, GObject, guint, GdkModifierType, gpointer --> gboolean
-  method accel-activate {
+  method accel-activate is also<accel_activate> {
     self.connect($!ag, 'accel-activate');
   }
 
   # Is originally:
   # GtkAccelGroup, guint, GdkModifierType, GClosure, gpointer --> void
-  method accel-changed {
+  method accel-changed is also<accel_changed> {
     self.connect($!ag, 'accel-changed');
   }
 
@@ -44,11 +45,13 @@ class GTK::AccelGroup          {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: gboolean
-  method is-locked is rw {
+  method is-locked is rw is also<is_locked> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!ag, 'is-locked', $gv); );
+        $gv = GTK::Compat::Value.new(
+          self.prop_get($!ag, 'is-locked', $gv)
+         );
         $gv.boolean;
       },
       STORE => -> $, $val is copy {
@@ -58,11 +61,13 @@ class GTK::AccelGroup          {
   }
 
   # Type: GdkModifierType
-  method modifier-mask is rw {
+  method modifier-mask is rw is also<modifier_mask> {
     my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!ag, 'modifier-mask', $gv); );
+        $gv = GTK::Compat::Value.new(
+          self.prop_get($!ag, 'modifier-mask', $gv)
+        );
         GdkModifierType( $gv.enum );
       },
       STORE => -> $, $val is copy {
@@ -72,6 +77,101 @@ class GTK::AccelGroup          {
   }
 
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
+
+  # ↓↓↓↓ STATIC METHODS ↓↓↓↓
+  method accelerator_get_default_mod_mask
+    is also<accelerator-get-default-mod-mask>
+  {
+    gtk_accelerator_get_default_mod_mask();
+  }
+
+  method accelerator_get_label (GdkModifierType $accelerator_mods)
+    is also<accelerator-get-label>
+  {
+    gtk_accelerator_get_label($!ag, $accelerator_mods);
+  }
+
+  method acceelerator_get_label_with_keycode (
+    GdkDisplay $display,
+    guint $accelerator_key,
+    guint $keycode,
+    GdkModifierType $accelerator_mods
+  )
+    is also<acceelerator-get-label-with-keycode>
+  {
+    gtk_accelerator_get_label_with_keycode(
+      $display,
+      $accelerator_key,
+      $keycode,
+      $accelerator_mods
+    );
+  }
+
+  method accelerator_name (
+    guint $accel_key,
+    GdkModifierType $accelerator_mods
+  ) is also<accelerator-name> {
+    gtk_accelerator_name($accel_key, $accelerator_mods);
+  }
+
+  method accelerator_name_with_keycode (
+    GdkDisplay $display,
+    guint $accelerator_key,
+    guint $keycode,
+    GdkModifierType $accelerator_mods
+  )
+    is also<accelerator-name-with-keycode>
+  {
+    gtk_accelerator_name_with_keycode(
+      $display,
+      $accelerator_key,
+      $keycode,
+      $accelerator_mods
+    );
+  }
+
+  method accelerator_parse (
+    Str() $accelerator,
+    guint $accelerator_key,
+    GdkModifierType $accelerator_mods
+  )
+    is also<accelerator-parse>
+  {
+    gtk_accelerator_parse(
+      $accelerator,
+      $accelerator_key,
+      $accelerator_mods
+    );
+  }
+
+  method accelerator_parse_with_keycode (
+    Str() $accelerator,
+    guint $accelerator_key,
+    guint $accelerator_codes,
+    GdkModifierType $accelerator_mods
+  )
+    is also<accelerator-parse-with-keycode>
+  {
+    gtk_accelerator_parse_with_keycode(
+      $accelerator,
+      $accelerator_key,
+      $accelerator_codes,
+      $accelerator_mods
+    );
+  }
+
+  method accelerator_set_default_mod_mask
+    is also<accelerator-set-default-mod-mask>
+  {
+    gtk_accelerator_set_default_mod_mask($!ag);
+  }
+
+  method accelerator_valid (GdkModifierType $modifiers)
+    is also<accelerator-valid>
+  {
+    gtk_accelerator_valid($!ag, $modifiers);
+  }
+  # ↑↑↑↑ STATIC METHODS ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method activate (
@@ -95,10 +195,18 @@ class GTK::AccelGroup          {
     GtkAccelFlags $accel_flags,
     GClosure $closure
   ) {
-    gtk_accel_group_connect($!ag, $accel_key, $accel_mods, $accel_flags, $closure);
+    gtk_accel_group_connect(
+      $!ag,
+      $accel_key,
+      $accel_mods,
+      $accel_flags,
+      $closure
+    );
   }
 
-  method connect_by_path (gchar $accel_path, GClosure $closure) {
+  method connect_by_path (gchar $accel_path, GClosure $closure)
+    is also<connect-by-path>
+  {
     gtk_accel_group_connect_by_path($!ag, $accel_path, $closure);
   }
 
@@ -106,7 +214,9 @@ class GTK::AccelGroup          {
     gtk_accel_group_disconnect($!ag, $closure);
   }
 
-  method disconnect_key (guint $accel_key, GdkModifierType $accel_mods) {
+  method disconnect_key (guint $accel_key, GdkModifierType $accel_mods)
+    is also<disconnect-key>
+  {
     gtk_accel_group_disconnect_key($!ag, $accel_key, $accel_mods);
   }
 
@@ -114,19 +224,21 @@ class GTK::AccelGroup          {
     gtk_accel_group_find($!ag, $find_func, $data);
   }
 
-  method from_accel_closure (GClosure $closure) {
+  method from_accel_closure (GClosure $closure)
+    is also<from-accel-closure>
+  {
     gtk_accel_group_from_accel_closure($closure);
   }
 
-  method get_is_locked {
+  method get_is_locked is also<get-is-locked> {
     gtk_accel_group_get_is_locked($!ag);
   }
 
-  method get_modifier_mask {
+  method get_modifier_mask is also<get-modifier-mask> {
     gtk_accel_group_get_modifier_mask($!ag);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_accel_group_get_type();
   }
 
@@ -134,89 +246,14 @@ class GTK::AccelGroup          {
     GObject $object,
     guint $accel_key,
     GdkModifierType $accel_mods
-  ) {
+  )
+    is also<accel-groups-activate>
+  {
     gtk_accel_groups_activate($object, $accel_key, $accel_mods);
   }
 
-  method groups_from_object (GObject $o) {
+  method groups_from_object (GObject $o) is also<groups-from-object> {
     gtk_accel_groups_from_object($o);
-  }
-
-  method get_default_mod_mask {
-    gtk_accelerator_get_default_mod_mask();
-  }
-
-  method gtk_accelerator_get_label (GdkModifierType $accelerator_mods) {
-    gtk_accelerator_get_label($!ag, $accelerator_mods);
-  }
-
-  method get_label_with_keycode (
-    GdkDisplay $display,
-    guint $accelerator_key,
-    guint $keycode,
-    GdkModifierType $accelerator_mods
-  ) {
-    gtk_accelerator_get_label_with_keycode(
-      $display,
-      $accelerator_key,
-      $keycode,
-      $accelerator_mods
-    );
-  }
-
-  method accelerator_name (
-    guint $accel_key,
-    GdkModifierType $accelerator_mods
-  ) {
-    gtk_accelerator_name($accel_key, $accelerator_mods);
-  }
-
-  method accelerator_name_with_keycode (
-    GdkDisplay $display,
-    guint $accelerator_key,
-    guint $keycode,
-    GdkModifierType $accelerator_mods
-  ) {
-    gtk_accelerator_name_with_keycode(
-      $display,
-      $accelerator_key,
-      $keycode,
-      $accelerator_mods
-    );
-  }
-
-  method gtk_accelerator_parse (
-    Str() $accelerator,
-    guint $accelerator_key,
-    GdkModifierType $accelerator_mods
-  ) {
-    gtk_accelerator_parse(
-      $accelerator,
-      $accelerator_key,
-      $accelerator_mods
-    );
-  }
-
-  method gtk_accelerator_parse_with_keycode (
-    Str() $accelerator,
-    guint $accelerator_key,
-    guint $accelerator_codes,
-    GdkModifierType $accelerator_mods
-  ) {
-    gtk_accelerator_parse_with_keycode(
-      $accelerator,
-      $accelerator_key,
-      $accelerator_codes,
-      $accelerator_mods
-    );
-  }
-
-  method gtk_accelerator_set_default_mod_mask {
-    gtk_accelerator_set_default_mod_mask($!ag);
-  }
-
-  method gtk_accelerator_valid (GdkModifierType $modifiers) {
-    gtk_accelerator_valid($!ag, $modifiers);
   }
 
   method lock {

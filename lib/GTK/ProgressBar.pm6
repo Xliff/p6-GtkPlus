@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -95,7 +96,7 @@ class GTK::ProgressBar is GTK::Widget {
     );
   }
 
-  method pulse_step is rw {
+  method pulse_step is rw is also<pulse-step> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_progress_bar_get_pulse_step($!bar);
@@ -107,7 +108,7 @@ class GTK::ProgressBar is GTK::Widget {
     );
   }
 
-  method show_text is rw {
+  method show_text is rw is also<show-text> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_progress_bar_get_show_text($!bar) );
@@ -132,7 +133,7 @@ class GTK::ProgressBar is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_progress_bar_get_type();
   }
 
@@ -142,3 +143,4 @@ class GTK::ProgressBar is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

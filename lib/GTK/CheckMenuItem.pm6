@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -63,12 +64,12 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     self.bless(:$checkmenuitem);
   }
 
-  method new_with_label(Str $label) {
+  method new_with_label(Str $label) is also<new-with-label> {
     my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
     self.bless(:$checkmenuitem);
   }
 
-  method new_with_mnemonic(Str $label) {
+  method new_with_mnemonic(Str $label) is also<new-with-mnemonic> {
     my $checkmenuitem = gtk_check_menu_item_new_with_mnemonic($label);
     self.bless(:$checkmenuitem);
   }
@@ -95,7 +96,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     );
   }
 
-  method draw_as_radio is rw {
+  method draw_as_radio is rw is also<draw-as-radio> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_check_menu_item_get_draw_as_radio($!cmi);
@@ -121,14 +122,15 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_check_menu_item_get_type();
   }
 
   # Alias to emit_toggled for C-ppl
-  method emit-toggled {
+  method emit-toggled is also<emit_toggled> {
     gtk_check_menu_item_toggled($!cmi);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

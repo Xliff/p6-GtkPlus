@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -69,9 +70,10 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_separator_tool_item_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

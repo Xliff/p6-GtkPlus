@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -55,13 +56,13 @@ class GTK::Box is GTK::Container {
     self.bless(:$box);
   }
 
-  method new-hbox(Int $spacing = 2) {
+  method new-hbox(Int $spacing = 2) is also<new_hbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL.Int, $s);
     self.bless(:$box);
   }
 
-  method new-vbox(Int $spacing = 2) {
+  method new-vbox(Int $spacing = 2) is also<new_vbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL.Int, $s);
     self.bless(:$box);
@@ -82,7 +83,7 @@ class GTK::Box is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  method baseline_position is rw {
+  method baseline_position is rw is also<baseline-position> {
     Proxy.new(
       FETCH => sub ($) {
         GtkBaselinePosition( gtk_box_get_baseline_position($!b) );
@@ -94,7 +95,7 @@ class GTK::Box is GTK::Container {
     );
   }
 
-  method center_widget is rw {
+  method center_widget is rw is also<center-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_box_get_center_widget($!b);
@@ -129,10 +130,18 @@ class GTK::Box is GTK::Container {
     );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_box_get_type();
   }
 
+  multi method pack-end (
+    GtkWidget $child,
+    Int() $expand  = 0,
+    Int() $fill    = 0,
+    Int() $padding = 0
+  ) {
+    self.pack_end($child, $expand, $fill, $padding);
+  }
   multi method pack_end (
     GtkWidget $child,
     Int() $expand  = 0,
@@ -145,6 +154,14 @@ class GTK::Box is GTK::Container {
     self.UNSET-LATCH;
     gtk_box_pack_end($!b, $child, $e, $f, $p);
   }
+  multi method pack-end (
+    GTK::Widget $child,
+    Int() $expand  = 0,
+    Int() $fill    = 0,
+    Int() $padding = 0
+  ) {
+    self.pack_end($child, $expand, $fill, $padding);
+  }
   multi method pack_end (
     GTK::Widget $child,
     Int() $expand  = 0,
@@ -156,6 +173,14 @@ class GTK::Box is GTK::Container {
     samewith($child.widget, $expand, $fill, $padding);
   }
 
+  multi method pack-start (
+    GtkWidget $child,
+    Int() $expand  = 0,
+    Int() $fill    = 0,
+    Int() $padding = 0
+  ) {
+    self.pack_start($child, $expand, $fill, $padding);
+  }
   multi method pack_start (
     GtkWidget $child,
     Int() $expand  = 0,
@@ -168,6 +193,14 @@ class GTK::Box is GTK::Container {
     self.UNSET-LATCH;
     gtk_box_pack_start($!b, $child, $e, $f, $p);
   }
+  multi method pack-start (
+    GTK::Widget $child,
+    Int() $expand  = 0,
+    Int() $fill    = 0,
+    Int() $padding = 0
+  ) {
+    self.pack_start($child, $expand, $fill, $padding);
+  }
   multi method pack_start (
     GTK::Widget $child,
     Int() $expand  = 0,
@@ -179,10 +212,22 @@ class GTK::Box is GTK::Container {
     samewith($child.widget, $expand, $fill, $padding);
   }
 
+  multi method query-child-packing (GtkWidget() $child) {
+    self.query-child-packing($child);
+  }
   multi method query_child_packing (GtkWidget() $child) {
     my ($e, $f, $p, $pt) = (0 xx 4);
     callwith($child, $e, $f, $p, $pt);
     ($e, $f, $p, GtkPackType($pt));
+  }
+  multi method query-child-packing (
+    GtkWidget() $child,
+    Int() $expand is rw,
+    Int() $fill is rw,
+    Int() $padding is rw,
+    Int() $pack_type is rw
+  ) {
+    self.query_child_packing($child, $expand, $fill, $padding, $pack_type);
   }
   multi method query_child_packing (
     GtkWidget() $child,
@@ -200,7 +245,9 @@ class GTK::Box is GTK::Container {
     $rc;
   }
 
-  multi method reorder_child (GtkWidget() $child, Int() $position) {
+  multi method reorder_child (GtkWidget() $child, Int() $position)
+    is also<reorder-child>
+  {
     my gint $p = self.RESOLVE-INT($position);
     gtk_box_reorder_child($!b, $child, $p);
   }
@@ -211,7 +258,9 @@ class GTK::Box is GTK::Container {
     Int() $fill,
     Int() $padding,
     Int() $pack_type
-  ) {
+  )
+    is also<set-child-packing>
+  {
     my @b = ($expand, $fill);
     my @ui = ($padding, $pack_type);
     my ($e, $f) = self.RESOLVE-BOOL(@b);

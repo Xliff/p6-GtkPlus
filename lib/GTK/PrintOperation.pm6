@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Value;
@@ -43,19 +44,19 @@ class GTK::PrintOperation {
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # Is originally:
   # GtkPrintOperation, GtkPrintContext, gpointer --> void
-  method begin-print {
+  method begin-print is also<begin_print> {
     self.connect-printcontext($!po, 'begin-print');
   }
 
   # Is originally:
   # GtkPrintOperation, gpointer --> GObject
-  method create-custom-widget {
+  method create-custom-widget is also<create_custom_widget> {
     self.connect($!po, 'create-custom-widget');
   }
 
   # Is originally:
   # GtkPrintOperation, GtkWidget, gpointer --> void
-  method custom-widget-apply {
+  method custom-widget-apply is also<custom_widget_apply> {
     self.connect-widget($!po, 'custom-widget-apply');
   }
 
@@ -67,13 +68,13 @@ class GTK::PrintOperation {
 
   # Is originally:
   # GtkPrintContext, gint, gpointer --> void
-  method draw-page {
+  method draw-page is also<draw_page> {
     self.connect-int($!po, 'draw-page');
   }
 
   # Is originally:
   # GtkPrintOperation, GtkPrintContext, gpointer --> void
-  method end-print {
+  method end-print is also<end_print> {
     self.connect-printcontext($!po, 'end-print');
   }
 
@@ -91,25 +92,25 @@ class GTK::PrintOperation {
 
   # Is originally:
   # GtkPrintOperation, GtkPrintContext, gint, GtkPageSetup, gpointer --> void
-  method request-page-setup {
+  method request-page-setup is also<request_page_setup> {
     self.connect($!po, 'request-page-setup');
   }
 
   # Is originally:
   # GtkPrintOperation, gpointer --> void
-  method status-changed {
+  method status-changed is also<status_changed> {
     self.connect($!po, 'status-changed');
   }
 
   # Is originally:
   # GtkPrintOperation, GtkWidget, GtkPageSetup, GtkPrintSettings, gpointer --> void
-  method update-custom-widget {
+  method update-custom-widget is also<update_custom_widget> {
     self.connect($!po, 'update-custom-widget');
   }
 
   # Is originally:
   # GtkPrintOperationPreview, GtkPrintContext, GtkPageSetup, gpointer --> void
-  method got-page-size {
+  method got-page-size is also<got_page_size> {
     self.connect($!po, 'got-page-size');
   }
 
@@ -122,7 +123,7 @@ class GTK::PrintOperation {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method default_page_setup is rw {
+  method default_page_setup is rw is also<default-page-setup> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_operation_get_default_page_setup($!po);
@@ -136,7 +137,7 @@ class GTK::PrintOperation {
     );
   }
 
-  method embed_page_setup is rw {
+  method embed_page_setup is rw is also<embed-page-setup> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_operation_get_embed_page_setup($!po);
@@ -147,7 +148,7 @@ class GTK::PrintOperation {
     );
   }
 
-  method has_selection is rw {
+  method has_selection is rw is also<has-selection> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_operation_get_has_selection($!po);
@@ -158,7 +159,7 @@ class GTK::PrintOperation {
     );
   }
 
-  method print_settings is rw {
+  method print_settings is rw is also<print-settings> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_operation_get_print_settings($!po);
@@ -172,7 +173,7 @@ class GTK::PrintOperation {
     );
   }
 
-  method support_selection is rw {
+  method support_selection is rw is also<support-selection> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_print_operation_get_support_selection($!po);
@@ -190,7 +191,7 @@ class GTK::PrintOperation {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: gboolean
-  method allow-async is rw {
+  method allow-async is rw is also<allow_async> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -207,7 +208,7 @@ class GTK::PrintOperation {
   }
 
   # Type: gint
-  method current-page is rw {
+  method current-page is rw is also<current_page> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -225,7 +226,7 @@ class GTK::PrintOperation {
 
 
   # Type: Str()
-  method custom-tab-label is rw {
+  method custom-tab-label is rw is also<custom_tab_label> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -242,7 +243,7 @@ class GTK::PrintOperation {
   }
 
   # Type: Str()
-  method export-filename is rw {
+  method export-filename is rw is also<export_filename> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -260,7 +261,7 @@ class GTK::PrintOperation {
 
 
   # Type: Str()
-  method job-name is rw {
+  method job-name is rw is also<job_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -278,7 +279,7 @@ class GTK::PrintOperation {
 
 
   # Type: gint
-  method n-pages is rw {
+  method n-pages is rw is also<n_pages> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -295,7 +296,7 @@ class GTK::PrintOperation {
   }
 
   # Type: gint
-  method n-pages-to-print is rw {
+  method n-pages-to-print is rw is also<n_pages_to_print> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -311,7 +312,7 @@ class GTK::PrintOperation {
   }
 
   # Type: gboolean
-  method show-progress is rw {
+  method show-progress is rw is also<show_progress> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -344,7 +345,7 @@ class GTK::PrintOperation {
   }
 
   # Type: Str()
-  method status-string is rw {
+  method status-string is rw is also<status_string> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -360,7 +361,7 @@ class GTK::PrintOperation {
   }
 
   # Type: gboolean
-  method track-print-status is rw {
+  method track-print-status is rw is also<track_print_status> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -395,7 +396,7 @@ class GTK::PrintOperation {
   }
 
   # Type: gboolean
-  method use-full-page is rw {
+  method use-full-page is rw is also<use_full_page> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -417,7 +418,7 @@ class GTK::PrintOperation {
     GtkWindow() $parent,
     GtkPageSetup() $page_setup,
     GtkPrintSettings() $settings
-  ) {
+  ) is also<gtk-print-run-page-setup-dialog> {
     gtk_print_run_page_setup_dialog($parent, $page_setup, $settings);
   }
 
@@ -427,7 +428,7 @@ class GTK::PrintOperation {
     GtkPrintSettings() $settings,
     GtkPageSetupDoneFunc $done_cb,
     gpointer $data = gpointer
-  ) {
+  ) is also<gtk-print-run-page-setup-dialog-async> {
     gtk_print_run_page_setup_dialog_async(
       $parent,
       $page_setup,
@@ -443,35 +444,35 @@ class GTK::PrintOperation {
     gtk_print_operation_cancel($!po);
   }
 
-  method draw_page_finish {
+  method draw_page_finish is also<draw-page-finish> {
     gtk_print_operation_draw_page_finish($!po);
   }
 
-  method get_error (GError $error) {
+  method get_error (GError $error) is also<get-error> {
     gtk_print_operation_get_error($!po, $error);
   }
 
-  method get_n_pages_to_print {
+  method get_n_pages_to_print is also<get-n-pages-to-print> {
     gtk_print_operation_get_n_pages_to_print($!po);
   }
 
-  method get_status {
+  method get_status is also<get-status> {
     gtk_print_operation_get_status($!po);
   }
 
-  method get_status_string {
+  method get_status_string is also<get-status-string> {
     gtk_print_operation_get_status_string($!po);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_print_operation_get_type();
   }
 
-  method gtk_print_error_quark {
+  method gtk_print_error_quark is also<gtk-print-error-quark> {
     gtk_print_error_quark();
   }
 
-  method is_finished {
+  method is_finished is also<is-finished> {
     gtk_print_operation_is_finished($!po);
   }
 
@@ -483,50 +484,51 @@ class GTK::PrintOperation {
     gtk_print_operation_run($!po, $action, $parent, $error);
   }
 
-  method set_allow_async (gboolean $allow_async) {
+  method set_allow_async (gboolean $allow_async) is also<set-allow-async> {
     gtk_print_operation_set_allow_async($!po, $allow_async);
   }
 
-  method set_current_page (gint $current_page) {
+  method set_current_page (gint $current_page) is also<set-current-page> {
     gtk_print_operation_set_current_page($!po, $current_page);
   }
 
-  method set_custom_tab_label (Str() $label) {
+  method set_custom_tab_label (Str() $label) is also<set-custom-tab-label> {
     gtk_print_operation_set_custom_tab_label($!po, $label);
   }
 
-  method set_defer_drawing {
+  method set_defer_drawing is also<set-defer-drawing> {
     gtk_print_operation_set_defer_drawing($!po);
   }
 
-  method set_export_filename (Str() $filename) {
+  method set_export_filename (Str() $filename) is also<set-export-filename> {
     gtk_print_operation_set_export_filename($!po, $filename);
   }
 
-  method set_job_name (Str() $job_name) {
+  method set_job_name (Str() $job_name) is also<set-job-name> {
     gtk_print_operation_set_job_name($!po, $job_name);
   }
 
-  method set_n_pages (gint $n_pages) {
+  method set_n_pages (gint $n_pages) is also<set-n-pages> {
     gtk_print_operation_set_n_pages($!po, $n_pages);
   }
 
-  method set_show_progress (gboolean $show_progress) {
+  method set_show_progress (gboolean $show_progress) is also<set-show-progress> {
     gtk_print_operation_set_show_progress($!po, $show_progress);
   }
 
-  method set_track_print_status (gboolean $track_status) {
+  method set_track_print_status (gboolean $track_status) is also<set-track-print-status> {
     gtk_print_operation_set_track_print_status($!po, $track_status);
   }
 
-  method set_unit (Int() $unit) {
+  method set_unit (Int() $unit) is also<set-unit> {
     my guint $u = self.RESOLVE-UINT($unit);
     gtk_print_operation_set_unit($!po, $u);
   }
 
-  method set_use_full_page (gboolean $full_page) {
+  method set_use_full_page (gboolean $full_page) is also<set-use-full-page> {
     gtk_print_operation_set_use_full_page($!po, $full_page);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

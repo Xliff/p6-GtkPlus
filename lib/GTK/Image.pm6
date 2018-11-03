@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,12 +53,12 @@ class GTK::Image is GTK::Widget {
     self.bless(:$image);
   }
 
-  method new_from_animation (GdkPixbufAnimation $animation) {
+  method new_from_animation (GdkPixbufAnimation $animation) is also<new-from-animation> {
     my $image = gtk_image_new_from_animation($animation);
     self.bless(:$image);
   }
 
-  method new_from_file (Str $file) {
+  method new_from_file (Str $file) is also<new-from-file> {
     my $image = gtk_image_new_from_file($file);
     self.bless(:$image);
   }
@@ -65,7 +66,7 @@ class GTK::Image is GTK::Widget {
   method new_from_gicon (
     GIcon $icon,
     Int() $size                  # GtkIconSize $size
-  ) {
+  ) is also<new-from-gicon> {
     my guint32 $s = self.RESOLVE-UINT($size);
     my $image = gtk_image_new_from_gicon($icon, $s);
     self.bless(:$image);
@@ -74,7 +75,7 @@ class GTK::Image is GTK::Widget {
   method new_from_icon_name (
     Str $name,
     Int() $size                  # GtkIconSize $size
-  ) {
+  ) is also<new-from-icon-name> {
     my guint32 $s = self.RESOLVE-UINT($size);
     my $image = gtk_image_new_from_icon_name($name, $s);
     self.bless(:$image);
@@ -84,18 +85,18 @@ class GTK::Image is GTK::Widget {
     GtkIconSet $set,
     Int() $size                  # GtkIconSize $size
 
-  ) {
+  ) is also<new-from-icon-set> {
     my guint32 $s = self.RESOLVE-UINT($size);
     my $image = gtk_image_new_from_icon_set($set, $s);
     self.bless(:$image);
   }
 
-  method new_from_pixbuf (GdkPixbuf $pixbuf) {
+  method new_from_pixbuf (GdkPixbuf $pixbuf) is also<new-from-pixbuf> {
     my $image = gtk_image_new_from_pixbuf($pixbuf);
     self.bless(:$image);
   }
 
-  method new_from_resource (Str $resource) {
+  method new_from_resource (Str $resource) is also<new-from-resource> {
     my $image = gtk_image_new_from_resource($resource);
     self.bless(:$image);
   }
@@ -104,7 +105,7 @@ class GTK::Image is GTK::Widget {
   #  gtk_image_new_from_stock($stock_id, $size);
   #}
 
-  method new_from_surface (cairo_surface_t $surface) {
+  method new_from_surface (cairo_surface_t $surface) is also<new-from-surface> {
     my $image = gtk_image_new_from_surface($surface);
     self.bless(:$image);
   }
@@ -149,7 +150,7 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: gchar
-  method icon-name is rw {
+  method icon-name is rw is also<icon_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -166,7 +167,7 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: GtkIconTheme (was GtkIconSet)
-  method icon-set is rw {
+  method icon-set is rw is also<icon_set> {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
@@ -183,7 +184,7 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: gint
-  method icon-size is rw {
+  method icon-size is rw is also<icon_size> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -217,7 +218,7 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: GdkPixbufAnimation
-  method pixbuf-animation is rw {
+  method pixbuf-animation is rw is also<pixbuf_animation> {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
@@ -268,7 +269,7 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: GtkImageType
-  method storage-type is rw {
+  method storage-type is rw is also<storage_type> {
     my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
@@ -301,7 +302,7 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: gboolean
-  method use-fallback is rw {
+  method use-fallback is rw is also<use_fallback> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -319,7 +320,7 @@ class GTK::Image is GTK::Widget {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method pixel_size is rw {
+  method pixel_size is rw is also<pixel-size> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_image_get_pixel_size($!i);
@@ -337,14 +338,14 @@ class GTK::Image is GTK::Widget {
     gtk_image_clear($!i);
   }
 
-  method get_animation {
+  method get_animation is also<get-animation> {
     gtk_image_get_animation($!i);
   }
 
   method get_gicon (
     GIcon $gicon,
     uint32 $size                  # GtkIconSize $size
-  ) {
+  ) is also<get-gicon> {
     my guint32 $s = self.RESOLVE-UINT($size);
     gtk_image_get_gicon($!i, $gicon, $s);
   }
@@ -352,7 +353,7 @@ class GTK::Image is GTK::Widget {
   method get_icon_name (
     gchar $icon_name,
     uint32 $size                  # GtkIconSize $size
-  ) {
+  ) is also<get-icon-name> {
     my guint32 $s = self.RESOLVE-UINT($size);
     gtk_image_get_icon_name($!i, $icon_name, $s);
   }
@@ -360,12 +361,12 @@ class GTK::Image is GTK::Widget {
   method get_icon_set (
     GtkIconSet $icon_set,
     uint32 $size                  # GtkIconSize $size
-  ) {
+  ) is also<get-icon-set> {
     my guint32 $s = self.RESOLVE-UINT($size);
     gtk_image_get_icon_set($!i, $icon_set, $s);
   }
 
-  method get_pixbuf {
+  method get_pixbuf is also<get-pixbuf> {
     gtk_image_get_pixbuf($!i);
   }
 
@@ -373,26 +374,26 @@ class GTK::Image is GTK::Widget {
   #  gtk_image_get_stock($!i, $stock_id, $size);
   #}
 
-  method get_storage_type {
+  method get_storage_type is also<get-storage-type> {
     gtk_image_get_storage_type($!i);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_image_get_type();
   }
 
-  method set_from_animation (GdkPixbufAnimation $animation) {
+  method set_from_animation (GdkPixbufAnimation $animation) is also<set-from-animation> {
     gtk_image_set_from_animation($!i, $animation);
   }
 
-  method set_from_file (gchar $filename) {
+  method set_from_file (gchar $filename) is also<set-from-file> {
     gtk_image_set_from_file($!i, $filename);
   }
 
   method set_from_gicon (
     GIcon $icon,
     uint32 $size                  # GtkIconSize $size
-  ) {
+  ) is also<set-from-gicon> {
     my guint32 $s = self.RESOLVE-UINT($size);
     gtk_image_set_from_gicon($!i, $icon, $s);
   }
@@ -400,7 +401,7 @@ class GTK::Image is GTK::Widget {
   method set_from_icon_name (
     gchar $icon_name,
     uint32 $size                  # GtkIconSize $size
-  ) {
+  ) is also<set-from-icon-name> {
     my guint32 $s = self.RESOLVE-UINT($size);
     gtk_image_set_from_icon_name($!i, $icon_name, $s);
   }
@@ -408,29 +409,30 @@ class GTK::Image is GTK::Widget {
   method set_from_icon_set (
     GtkIconSet $icon_set,
     uint32 $size                  # GtkIconSize $size
-  ) {
+  ) is also<set-from-icon-set> {
     my guint32 $s = self.RESOLVE-UINT($size);
     gtk_image_set_from_icon_set($!i, $icon_set, $s);
   }
 
-  method set_from_pixbuf (GdkPixbuf $pixbuf) {
+  method set_from_pixbuf (GdkPixbuf $pixbuf) is also<set-from-pixbuf> {
     gtk_image_set_from_pixbuf($!i, $pixbuf);
   }
 
-  method set_from_resource (gchar $resource_path) {
+  method set_from_resource (gchar $resource_path) is also<set-from-resource> {
     gtk_image_set_from_resource($!i, $resource_path);
   }
 
   method set_from_stock (
     gchar $stock_id,
     uint32 $size                  # GtkIconSize $size
-  ) {
+  ) is also<set-from-stock> {
     gtk_image_set_from_stock($!i, $stock_id, $size);
   }
 
-  method set_from_surface (cairo_surface_t $surface) {
+  method set_from_surface (cairo_surface_t $surface) is also<set-from-surface> {
     gtk_image_set_from_surface($!i, $surface);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

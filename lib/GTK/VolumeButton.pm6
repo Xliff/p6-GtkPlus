@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -61,9 +62,10 @@ class GTK::VolumeButton is GTK::ScaleButton {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_volume_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

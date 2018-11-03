@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -58,25 +59,25 @@ class GTK::SearchEntry is GTK::Entry {
 
   # Is originally:
   # GtkSearchEntry, gpointer --> void
-  method next-match {
+  method next-match is also<next_match> {
     self.connect($!se, 'next-match');
   }
 
   # Is originally:
   # GtkSearchEntry, gpointer --> void
-  method previous-match {
+  method previous-match is also<previous_match> {
     self.connect($!se, 'previous-match');
   }
 
   # Is originally:
   # GtkSearchEntry, gpointer --> void
-  method search-changed {
+  method search-changed is also<search_changed> {
     self.connect($!se, 'search-changed');
   }
 
   # Is originally:
   # GtkSearchEntry, gpointer --> void
-  method stop-search {
+  method stop-search is also<stop_search> {
     self.connect($!se, 'stop-search');
   }
 
@@ -86,13 +87,14 @@ class GTK::SearchEntry is GTK::Entry {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_search_entry_get_type();
   }
 
-  method handle_event (GdkEvent $event) {
+  method handle_event (GdkEvent $event) is also<handle-event> {
     gtk_search_entry_handle_event($!se, $event);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -50,10 +51,9 @@ class GTK::Entry is GTK::Widget {
     self.bless(:$entry);
   }
 
-  multi method new_with_buffer (GTK::EntryBuffer $b) {
-    samewith($b.buffer);
-  }
-  multi method new_with_buffer (GtkEntryBuffer $b) {
+  multi method new_with_buffer (GtkEntryBuffer() $b)
+    is also<new-with-buffer>
+  {
     my $entry = gtk_entry_new_with_buffer($b);
     self.bless(:$entry);
   }
@@ -96,73 +96,73 @@ class GTK::Entry is GTK::Widget {
 
   # Is originally:
   # GtkEntry, gpointer --> void
-  method copy-clipboard {
+  method copy-clipboard is also<copy_clipboard> {
     self.connect($!e, 'copy-clipboard');
   }
 
   # Is originally:
   # GtkEntry, gpointer --> void
-  method cut-clipboard {
+  method cut-clipboard is also<cut_clipboard> {
     self.connect($!e, 'cut-clipboard');
   }
 
   # Is originally:
   # GtkEntry, GtkDeleteType, gint, gpointer --> void
-  method delete-from-cursor {
+  method delete-from-cursor is also<delete_from_cursor> {
     self.connect-delete($!e, 'delete-from-cursor');
   }
 
   # Is originally:
   # GtkEntry, GtkEntryIconPosition, GdkEvent, gpointer --> void
-  method icon-press {
+  method icon-press is also<icon_press> {
     self.connect-entry-icon($!e, 'icon-press');
   }
 
   # Is originally:
   # GtkEntry, GtkEntryIconPosition, GdkEvent, gpointer --> void
-  method icon-release {
+  method icon-release is also<icon_release> {
     self.connect-entry-icon($!e, 'icon-release');
   }
 
   # Is originally:
   # GtkEntry, gchar, gpointer --> void
-  method insert-at-cursor {
+  method insert-at-cursor is also<insert_at_cursor> {
     self.connect-string($!e, 'insert-at-cursor');
   }
 
   # Is originally:
   # GtkEntry, gpointer --> void
-  method insert-emoji {
+  method insert-emoji is also<insert_emoji> {
     self.connect($!e, 'insert-emoji');
   }
 
   # Is originally:
   # GtkEntry, GtkMovementStep, gint, gboolean, gpointer --> void
-  method move-cursor {
+  method move-cursor is also<move_cursor> {
     self.connect-move-cursor2($!e, 'move-cursor');
   }
 
   # Is originally:
   # GtkEntry, gpointer --> void
-  method paste-clipboard {
+  method paste-clipboard is also<paste_clipboard> {
     self.connect($!e, 'paste-clipboard');
   }
 
   # Is originally:
   # GtkEntry, GtkWidget, gpointer --> void
-  method populate-popup {
+  method populate-popup is also<populate_popup> {
     self.connect-widget($!e, 'populate-popup');
   }
 
   # Is originally:
   # GtkEntry, gchar, gpointer --> void
-  method preedit-changed {
+  method preedit-changed is also<preedit_changed> {
     self.connect-string($!e, 'preedit-changed');
   }
 
   # Is originally:
   # GtkEntry, gpointer --> void
-  method toggle-overwrite {
+  method toggle-overwrite is also<toggle_overwrite> {
     self.connect($!e, 'toggle-overwrite');
   }
 
@@ -172,7 +172,7 @@ class GTK::Entry is GTK::Widget {
 
   # Needs refinement
 
-  method activates_default is rw {
+  method activates_default is rw is also<activates-default> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_activates_default($!e);
@@ -227,7 +227,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method cursor_hadjustment is rw {
+  method cursor_hadjustment is rw is also<cursor-hadjustment> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_cursor_hadjustment($!e);
@@ -238,7 +238,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method has_frame is rw {
+  method has_frame is rw is also<has-frame> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_has_frame($!e);
@@ -249,7 +249,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method inner_border is rw {
+  method inner_border is rw is also<inner-border> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_inner_border($!e);
@@ -260,7 +260,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method input_hints is rw {
+  method input_hints is rw is also<input-hints> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_input_hints($!e);
@@ -271,7 +271,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method input_purpose is rw {
+  method input_purpose is rw is also<input-purpose> {
     Proxy.new(
       FETCH => sub ($) {
         GtkInputPurpose( gtk_entry_get_input_purpose($!e) );
@@ -283,7 +283,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method max_length is rw {
+  method max_length is rw is also<max-length> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_max_length($!e);
@@ -294,7 +294,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method max_width_chars is rw {
+  method max_width_chars is rw is also<max-width-chars> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_max_width_chars($!e);
@@ -305,7 +305,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method overwrite_mode is rw {
+  method overwrite_mode is rw is also<overwrite-mode> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_overwrite_mode($!e);
@@ -316,7 +316,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method placeholder_text is rw {
+  method placeholder_text is rw is also<placeholder-text> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_placeholder_text($!e);
@@ -327,7 +327,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method progress_fraction is rw {
+  method progress_fraction is rw is also<progress-fraction> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_progress_fraction($!e);
@@ -338,7 +338,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method progress_pulse_step is rw {
+  method progress_pulse_step is rw is also<progress-pulse-step> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_progress_pulse_step($!e);
@@ -382,7 +382,7 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method width_chars is rw {
+  method width_chars is rw is also<width-chars> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_get_width_chars($!e);
@@ -394,13 +394,13 @@ class GTK::Entry is GTK::Widget {
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
-  method get_current_icon_drag_source {
+  method get_current_icon_drag_source is also<get-current-icon-drag-source> {
     gtk_entry_get_current_icon_drag_source($!e);
   }
 
   method get_icon_activatable (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-activatable> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_activatable($!e, $ip);
   }
@@ -408,12 +408,12 @@ class GTK::Entry is GTK::Widget {
   method get_icon_area (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GdkRectangle() $icon_area
-  ) {
+  ) is also<get-icon-area> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_area($!e, $ip, $icon_area);
   }
 
-  method get_icon_at_pos (Int() $x, Int() $y) {
+  method get_icon_at_pos (Int() $x, Int() $y) is also<get-icon-at-pos> {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_entry_get_icon_at_pos($!e, $x, $y);
@@ -421,111 +421,111 @@ class GTK::Entry is GTK::Widget {
 
   method get_icon_gicon (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-gicon> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_gicon($!e, $ip);
   }
 
   method get_icon_name (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-name> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_name($!e, $ip);
   }
 
   method get_icon_pixbuf (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-pixbuf> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_pixbuf($!e, $ip);
   }
 
   method get_icon_sensitive (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-sensitive> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_sensitive($!e, $ip);
   }
 
   method get_icon_stock (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-stock> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_stock($!e, $ip);
   }
 
   method get_icon_storage_type (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-storage-type> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     GtkImageType( gtk_entry_get_icon_storage_type($!e, $ip) );
   }
 
   method get_icon_tooltip_markup (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-tooltip-markup> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_tooltip_markup($!e, $ip);
   }
 
   method get_icon_tooltip_text (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) {
+  ) is also<get-icon-tooltip-text> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_tooltip_text($!e, $icon_pos);
   }
 
-  method get_invisible_char {
+  method get_invisible_char is also<get-invisible-char> {
     gtk_entry_get_invisible_char($!e);
   }
 
-  method get_layout {
+  method get_layout is also<get-layout> {
     gtk_entry_get_layout($!e);
   }
 
-  method get_layout_offsets (Int() $x, Int() $y) {
+  method get_layout_offsets (Int() $x, Int() $y) is also<get-layout-offsets> {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_entry_get_layout_offsets($!e, $xx, $yy);
   }
 
-  method get_text_area (GdkRectangle() $text_area) {
+  method get_text_area (GdkRectangle() $text_area) is also<get-text-area> {
     gtk_entry_get_text_area($!e, $text_area);
   }
 
-  method get_text_length {
+  method get_text_length is also<get-text-length> {
     gtk_entry_get_text_length($!e);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_entry_get_type();
   }
 
-  method grab_focus_without_selecting {
+  method grab_focus_without_selecting is also<grab-focus-without-selecting> {
     gtk_entry_grab_focus_without_selecting($!e);
   }
 
-  method im_context_filter_keypress (GdkEventKey $event) {
+  method im_context_filter_keypress (GdkEventKey $event) is also<im-context-filter-keypress> {
     gtk_entry_im_context_filter_keypress($!e, $event);
   }
 
-  method layout_index_to_text_index (Int() $layout_index) {
+  method layout_index_to_text_index (Int() $layout_index) is also<layout-index-to-text-index> {
     my gint $li = self.RESOLVE-INT($layout_index);
     gtk_entry_layout_index_to_text_index($!e, $li);
   }
 
-  method progress_pulse {
+  method progress_pulse is also<progress-pulse> {
     gtk_entry_progress_pulse($!e);
   }
 
-  method reset_im_context {
+  method reset_im_context is also<reset-im-context> {
     gtk_entry_reset_im_context($!e);
   }
 
   method set_icon_activatable (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Int() $activatable
-  ) {
+  ) is also<set-icon-activatable> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     my gboolean $a = self.RESOLVE-BOOL($activatable);
     gtk_entry_set_icon_activatable($!e, $ip, $a);
@@ -535,7 +535,7 @@ class GTK::Entry is GTK::Widget {
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GtkTargetList() $target_list,
     Int() $actions            # GdkDragAction $actions
-  ) {
+  ) is also<set-icon-drag-source> {
     my @u = ($icon_pos, $actions);
     my uint32 ($ip, $a) = self.RESOLVE-INT(@u);
     gtk_entry_set_icon_drag_source($!e, $ip, $target_list, $a);
@@ -544,7 +544,7 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_gicon (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GIcon $icon
-  ) {
+  ) is also<set-icon-from-gicon> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_gicon($!e, $ip, $icon);
   }
@@ -552,7 +552,7 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_icon_name (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Str() $icon_name
-  ) {
+  ) is also<set-icon-from-icon-name> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_icon_name($!e, $ip, $icon_name);
   }
@@ -560,7 +560,7 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_pixbuf (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GdkPixbuf() $pixbuf
-  ) {
+  ) is also<set-icon-from-pixbuf> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_pixbuf($!e, $ip, $pixbuf);
   }
@@ -568,7 +568,7 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_stock (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     gchar $stock_id
-  ) {
+  ) is also<set-icon-from-stock> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_stock($!e, $ip, $stock_id);
   }
@@ -576,7 +576,7 @@ class GTK::Entry is GTK::Widget {
   method set_icon_sensitive (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     gboolean $sensitive
-  ) {
+  ) is also<set-icon-sensitive> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_sensitive($!e, $ip, $sensitive);
   }
@@ -584,7 +584,7 @@ class GTK::Entry is GTK::Widget {
   method set_icon_tooltip_markup (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Str() $tooltip
-  ) {
+  ) is also<set-icon-tooltip-markup> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_tooltip_markup($!e, $ip, $tooltip);
   }
@@ -592,17 +592,17 @@ class GTK::Entry is GTK::Widget {
   method set_icon_tooltip_text (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Str() $tooltip
-  ) {
+  ) is also<set-icon-tooltip-text> {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_tooltip_text($!e, $ip, $tooltip);
   }
 
-  method text_index_to_layout_index (Int() $text_index) {
+  method text_index_to_layout_index (Int() $text_index) is also<text-index-to-layout-index> {
     my gint $ti = self.RESOLVE-INT($text_index);
     gtk_entry_text_index_to_layout_index($!e, $text_index);
   }
 
-  method unset_invisible_char {
+  method unset_invisible_char is also<unset-invisible-char> {
     gtk_entry_unset_invisible_char($!e);
   }
 

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -57,10 +58,10 @@ class GTK::DrawingArea is GTK::Widget {
   method GTK::Raw::Types::GtkDrawingArea {
     $!da;
   }
-  method GTK::Compat::Types::cairo_t {
+  method GTK::Compat::Types::cairo_t is also<GTK::Compat::Types::cairo-t> {
     nativecast(cairo_t, $!da);
   }
-  method cairo_t {
+  method cairo_t is also<cairo-t> {
     nativecast(cairo_t, $!da);
   }
   method p {
@@ -74,9 +75,10 @@ class GTK::DrawingArea is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_drawing_area_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

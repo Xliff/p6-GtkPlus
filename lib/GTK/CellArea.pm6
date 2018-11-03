@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -26,7 +27,7 @@ class GTK::CellArea {
     $!ca;
   }
 
-  method disconnect-cellarea-signals {
+  method disconnect-cellarea-signals is also<disconnect_cellarea_signals> {
     self.disconnect-all(%!signals-ca);
   }
 
@@ -34,32 +35,32 @@ class GTK::CellArea {
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, GtkCellEditable, GdkRectangle, gchar, gpointer --> void
-  method add-editable {
+  method add-editable is also<add_editable> {
     self.connect-add-editable($!ca);
   }
 
   # Is originally:
   # GtkCellArea, GtkTreeModel, GtkTreeIter, gboolean, gboolean, gpointer --> void
-  method apply-attributes {
+  method apply-attributes is also<apply_attributes> {
     self.connect-apply-attributes($!ca);
   }
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, gchar, gpointer --> void
-  method focus-changed {
+  method focus-changed is also<focus_changed> {
     self.connect-focus-changed($!ca);
   }
 
   # Is originally:
   # GtkCellArea, GtkCellRenderer, GtkCellEditable, gpointer --> void
-  method remove-editable {
+  method remove-editable is also<remove_editable> {
     self.connect-remove-editable($!ca);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method focus_cell is rw {
+  method focus_cell is rw is also<focus-cell> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_cell_area_get_focus_cell($!ca);
@@ -90,7 +91,7 @@ class GTK::CellArea {
     GdkEvent $e,
     GdkRectangle() $ca,
     Int() $flags                # GtkCellRendererState $flags
-  ) {
+  ) is also<activate-cell> {
     my guint $f = self.RESOLVE-UINT($flags);
     gtk_cell_area_activate_cell($!ca, $widget, $r, $e, $ca, $f);
   }
@@ -103,7 +104,9 @@ class GTK::CellArea {
   method add_focus_sibling (
     GtkCellRenderer() $renderer,
     GtkCellRenderer() $sibling
-  ) {
+  )
+    is also<add-focus-sibling>
+  {
     gtk_cell_area_add_focus_sibling($!ca, $renderer, $sibling);
   }
 
@@ -116,12 +119,14 @@ class GTK::CellArea {
     gtk_cell_area_add_with_properties($area, $renderer, $name, $value, Str);
   }
 
-  method apply_attributes (
+  method apply_connected_attributes (
     GtkTreeModel() $tree_model,
     GtkTreeIter() $iter,
     Int() $is_expander,
     Int() $is_expanded
-  ) {
+  )
+    is also<apply-connected-attributes>
+  {
     my @b = ($is_expander, $is_expanded);
     my gboolean ($ie1, $ie2) = self.RESOLVE-BOOL(@b);
     gtk_cell_area_apply_attributes($!ca, $tree_model, $iter, $ie1, $ie2);
@@ -131,7 +136,9 @@ class GTK::CellArea {
     GtkCellRenderer() $renderer,
     Str() $attribute,
     Int() $column
-  ) {
+  )
+    is also<attribute-connect>
+  {
     my gint $c = self.RESOLVE-INT($column);
     gtk_cell_area_attribute_connect($!ca, $renderer, $attribute, $c);
   }
@@ -139,14 +146,18 @@ class GTK::CellArea {
   method attribute_disconnect (
     GtkCellRenderer() $renderer,
     Str() $attribute
-  ) {
+  )
+    is also<attribute-disconnect>
+  {
     gtk_cell_area_attribute_disconnect($!ca, $renderer, $attribute);
   }
 
   method attribute_get_column (
     GtkCellRenderer() $renderer,
     Str() $attribute
-  ) {
+  )
+    is also<attribute-get-column>
+  {
     gtk_cell_area_attribute_get_column($!ca, $renderer, $attribute);
   }
 
@@ -155,7 +166,9 @@ class GTK::CellArea {
     GtkCellRenderer() $renderer,
     Str() $name,
     GValue() $value
-  ) {
+  )
+    is also<cell-get>
+  {
     gtk_cell_area_cell_get($area, $renderer, $name, $value, Str);
   }
 
@@ -164,7 +177,9 @@ class GTK::CellArea {
     GtkCellRenderer() $renderer,
     Str() $name,
     GValue() $value
-  ) {
+  )
+    is also<cell-set>
+  {
     gtk_cell_area_cell_set($area, $renderer, $name, $value, Str);
   }
 
@@ -172,7 +187,9 @@ class GTK::CellArea {
     GtkCellRenderer() $renderer,
     Str() $property_name,
     GValue() $value
-  ) {
+  )
+    is also<cell-get-property>
+  {
     gtk_cell_area_cell_get_property($!ca, $renderer, $property_name, $value);
   }
 
@@ -184,7 +201,9 @@ class GTK::CellArea {
     GtkCellRenderer() $renderer,
     Str() $property_name,
     GValue() $value
-  ) {
+  )
+    is also<cell-set-property>
+  {
     gtk_cell_area_cell_set_property($!ca, $renderer, $property_name, $value);
   }
 
@@ -204,11 +223,15 @@ class GTK::CellArea {
   #   gtk_cell_area_class_list_cell_properties($!ca, $n_properties);
   # }
 
-  method copy_context (GtkCellAreaContext() $context) {
+  method copy_context (GtkCellAreaContext() $context)
+    is also<copy-context>
+  {
     gtk_cell_area_copy_context($!ca, $context);
   }
 
-  method create_context {
+  method create_context
+    is also<create-context>
+  {
     gtk_cell_area_create_context($!ca);
   }
 
@@ -241,7 +264,9 @@ class GTK::CellArea {
     GdkRectangle() $background_area,
     GtkCellAllocCallback $callback,
     gpointer $callback_data
-  ) {
+  )
+    is also<foreach-alloc>
+  {
     gtk_cell_area_foreach_alloc(
       $!ca,
       $context,
@@ -259,7 +284,9 @@ class GTK::CellArea {
     GtkCellRenderer() $renderer,
     GdkRectangle() $cell_area,
     GdkRectangle() $allocation
-  ) {
+  )
+    is also<get-cell-allocation>
+  {
     gtk_cell_area_get_cell_allocation(
       $!ca,
       $context,
@@ -277,7 +304,9 @@ class GTK::CellArea {
     Int() $x,
     Int() $y,
     GdkRectangle $alloc_area
-  ) {
+  )
+    is also<get-cell-at-position>
+  {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-UINT(@i);
     gtk_cell_area_get_cell_at_position(
@@ -291,23 +320,27 @@ class GTK::CellArea {
     );
   }
 
-  method get_current_path_string {
+  method get_current_path_string is also<get-current-path-string> {
     gtk_cell_area_get_current_path_string($!ca);
   }
 
-  method get_edit_widget {
+  method get_edit_widget is also<get-edit-widget> {
     gtk_cell_area_get_edit_widget($!ca);
   }
 
-  method get_edited_cell {
+  method get_edited_cell is also<get-edited-cell> {
     gtk_cell_area_get_edited_cell($!ca);
   }
 
-  method get_focus_from_sibling (GtkCellRenderer() $renderer) {
+  method get_focus_from_sibling (GtkCellRenderer() $renderer)
+    is also<get-focus-from-sibling>
+  {
     gtk_cell_area_get_focus_from_sibling($!ca, $renderer);
   }
 
-  method get_focus_siblings (GtkCellRenderer() $renderer) {
+  method get_focus_siblings (GtkCellRenderer() $renderer)
+    is also<get-focus-siblings>
+  {
     gtk_cell_area_get_focus_siblings($!ca, $renderer);
   }
 
@@ -316,7 +349,9 @@ class GTK::CellArea {
     GtkWidget() $widget,
     Int() $minimum_height,
     Int() $natural_height
-  ) {
+  )
+    is also<get-preferred-height>
+  {
     my @i = ($minimum_height, $natural_height);
     my ($mh, $nh) = self.RESOLVE-INT(@i);
     gtk_cell_area_get_preferred_height($!ca, $context, $widget, $mh, $nh);
@@ -328,7 +363,9 @@ class GTK::CellArea {
     Int() $width,
     Int() $minimum_height,
     Int() $natural_height
-  ) {
+  )
+    is also<get-preferred-height-for-width>
+  {
     my @i = ($width, $minimum_height, $natural_height);
     my ($w, $mh, $nh) = self.RESOLVE-INT(@i);
     gtk_cell_area_get_preferred_height_for_width(
@@ -346,7 +383,9 @@ class GTK::CellArea {
     GtkWidget() $widget,
     Int() $minimum_width,
     Int() $natural_width
-  ) {
+  )
+    is also<get-preferred-width>
+  {
     my @i = ($minimum_width, $natural_width);
     my ($mw, $nw) = self.RESOLVE-INT(@i);
     gtk_cell_area_get_preferred_width($!ca, $context, $widget, $mw, $nw);
@@ -358,7 +397,9 @@ class GTK::CellArea {
     Int() $height,
     Int() $minimum_width,
     Int() $natural_width
-  ) {
+  )
+    is also<get-preferred-width-for-height>
+  {
     my @i = ($height, $minimum_width, $natural_width);
     my ($h, $mw, $nw) = self.RESOLVE-INT(@i);
     gtk_cell_area_get_preferred_width_for_height(
@@ -371,15 +412,17 @@ class GTK::CellArea {
     );
   }
 
-  method get_request_mode {
+  method get_request_mode is also<get-request-mode> {
     gtk_cell_area_get_request_mode($!ca);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_area_get_type();
   }
 
-  method has_renderer (GtkCellRenderer() $renderer) {
+  method has_renderer (GtkCellRenderer() $renderer)
+    is also<has-renderer>
+  {
     gtk_cell_area_has_renderer($!ca, $renderer);
   }
 
@@ -387,18 +430,22 @@ class GTK::CellArea {
     GtkWidget() $widget,
     GdkRectangle() $cell_area,
     GdkRectangle() $inner_area
-  ) {
+  )
+    is also<inner-cell-area>
+  {
     gtk_cell_area_inner_cell_area($!ca, $widget, $cell_area, $inner_area);
   }
 
-  method is_activatable {
+  method is_activatable is also<is-activatable> {
     gtk_cell_area_is_activatable($!ca);
   }
 
   method is_focus_sibling (
     GtkCellRenderer() $renderer,
     GtkCellRenderer() $sibling
-  ) {
+  )
+    is also<is-focus-sibling>
+  {
     gtk_cell_area_is_focus_sibling($!ca, $renderer, $sibling);
   }
 
@@ -409,7 +456,9 @@ class GTK::CellArea {
   method remove_focus_sibling (
     GtkCellRenderer() $renderer,
     GtkCellRenderer() $sibling
-  ) {
+  )
+    is also<remove-focus-sibling>
+  {
     gtk_cell_area_remove_focus_sibling($!ca, $renderer, $sibling);
   }
 
@@ -443,7 +492,9 @@ class GTK::CellArea {
     Int() $for_size,
     Int() $minimum_size,
     Int() $natural_size
-  ) {
+  )
+    is also<request-renderer>
+  {
     my guint $o = self.RESOLVE-UINT($orientation);
     my @i = ($for_size, $minimum_size, $natural_size);
     my gint ($fs, $ms, $ns) = self.RESOLVE-INT(@i);
@@ -458,7 +509,7 @@ class GTK::CellArea {
     );
   }
 
-  method stop_editing (Int() $canceled) {
+  method stop_editing (Int() $canceled) is also<stop-editing> {
     my gboolean $c = self.RESOLVE-BOOL($canceled);
     gtk_cell_area_stop_editing($!ca, $c);
   }

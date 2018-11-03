@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use Pluggable;
 
 use GTK::Builder::Base;
@@ -29,15 +30,15 @@ class GTK::BuilderWidgets does Pluggable {
     }
   }
 
-  method get-widget-list {
+  method get-widget-list is also<get_widget_list> {
     %!widgets.keys;
   }
 
-  method var-temp {
+  method var-temp is also<var_temp> {
     "\%\%{ $!var }<\%s>"
   }
 
-  method get-code-list($parser) {
+  method get-code-list($parser) is also<get_code_list> {
     use Data::Dump::Tree;
 
     my @code;

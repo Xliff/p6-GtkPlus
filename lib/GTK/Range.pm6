@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -45,25 +46,25 @@ class GTK::Range is GTK::Widget {
   # Is originally:
 
   # GtkRange, gdouble, gpointer --> void
-  method adjust-bounds {
+  method adjust-bounds is also<adjust_bounds> {
     self.connect-double($!r, 'adjust-bounds');
   }
 
   # Is originally:
   # GtkRange, GtkScrollType, gdouble, gpointer --> gboolean
-  method change-value {
+  method change-value is also<change_value> {
     self.connect($!r, 'change-value');
   }
 
   # Is originally:
   # GtkRange, GtkScrollType, gpointer --> void
-  method move-slider {
+  method move-slider is also<move_slider> {
     self.connect-uint($!r, 'move-slider');
   }
 
   # Is originally:
   # GtkRange, gpointer --> void
-  method value-changed {
+  method value-changed is also<value_changed> {
     self.connect($!r, 'value-changed');
   }
 
@@ -81,7 +82,7 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method fill_level is rw {
+  method fill_level is rw is also<fill-level> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_range_get_fill_level($!r);
@@ -117,7 +118,7 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method lower_stepper_sensitivity is rw {
+  method lower_stepper_sensitivity is rw is also<lower-stepper-sensitivity> {
     Proxy.new(
       FETCH => sub ($) {
         GtkSensitivityType( gtk_range_get_lower_stepper_sensitivity($!r) );
@@ -132,7 +133,7 @@ class GTK::Range is GTK::Widget {
   method min_slider_size
     is DEPRECATED('use CSS min-height/min-width')
     is rw
-  {
+  is also<min-slider-size> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_range_get_min_slider_size($!r);
@@ -144,7 +145,7 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method restrict_to_fill_level is rw {
+  method restrict_to_fill_level is rw is also<restrict-to-fill-level> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_range_get_restrict_to_fill_level($!r);
@@ -156,7 +157,7 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method round_digits is rw {
+  method round_digits is rw is also<round-digits> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_range_get_round_digits($!r);
@@ -168,7 +169,7 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method show_fill_level is rw {
+  method show_fill_level is rw is also<show-fill-level> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_range_get_show_fill_level($!r);
@@ -180,7 +181,7 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method slider_size_fixed is rw {
+  method slider_size_fixed is rw is also<slider-size-fixed> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_range_get_slider_size_fixed($!r);
@@ -192,7 +193,7 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method upper_stepper_sensitivity is rw {
+  method upper_stepper_sensitivity is rw is also<upper-stepper-sensitivity> {
     Proxy.new(
       FETCH => sub ($) {
         GtkSensitivityType( gtk_range_get_upper_stepper_sensitivity($!r) );
@@ -218,29 +219,30 @@ class GTK::Range is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_range_rect (GdkRectangle() $range_rect) {
+  method get_range_rect (GdkRectangle() $range_rect) is also<get-range-rect> {
     gtk_range_get_range_rect($!r, $range_rect);
   }
 
-  method get_slider_range (Int() $slider_start, Int() $slider_end) {
+  method get_slider_range (Int() $slider_start, Int() $slider_end) is also<get-slider-range> {
     my @i = ($slider_start, $slider_end);
     my gint ($s, $e) = self.RESOLVE-INT(@i);
     gtk_range_get_slider_range($!r, $s, $e);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_range_get_type();
   }
 
-  method set_increments (Num() $step, Num() $page) {
+  method set_increments (Num() $step, Num() $page) is also<set-increments> {
     my gdouble ($s, $p) = ($step, $page);
     gtk_range_set_increments($!r, $s, $p);
   }
 
-  method set_range (Num() $min, Num() $max) {
+  method set_range (Num() $min, Num() $max) is also<set-range> {
     my gdouble ($mn, $mx) = ($min, $max);
     gtk_range_set_range($!r, $mn, $mx);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

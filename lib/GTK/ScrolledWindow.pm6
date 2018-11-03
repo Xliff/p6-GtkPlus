@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -73,32 +74,32 @@ class GTK::ScrolledWindow is GTK::Bin {
 
   # Is originally:
   # GtkScrolledWindow, GtkPositionType, gpointer --> void
-  method edge-overshot {
+  method edge-overshot is also<edge_overshot> {
     self.connect-uint($!sw, 'edge-overshot');
   }
 
   # Is originally:
   # GtkScrolledWindow, GtkPositionType, gpointer --> void
-  method edge-reached {
+  method edge-reached is also<edge_reached> {
     self.connect-uint($!sw, 'edge-reached');
   }
 
   # Is originally:
   # GtkScrolledWindow, GtkDirectionType, gpointer --> void
-  method move-focus-out {
+  method move-focus-out is also<move_focus_out> {
     self.connect-uint($!sw, 'move-focus-out');
   }
 
   # Is originally:
   # GtkScrolledWindow, GtkScrollType, gboolean, gpointer --> gboolean
-  method scroll-child {
+  method scroll-child is also<scroll_child> {
     self.connect-scroll-child($!sw, 'scroll-child');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method capture_button_press is rw {
+  method capture_button_press is rw is also<capture-button-press> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_scrolled_window_get_capture_button_press($!sw);
@@ -123,7 +124,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method kinetic_scrolling is rw {
+  method kinetic_scrolling is rw is also<kinetic-scrolling> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_scrolled_window_get_kinetic_scrolling($!sw);
@@ -135,7 +136,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method max_content_height is rw {
+  method max_content_height is rw is also<max-content-height> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_scrolled_window_get_max_content_height($!sw);
@@ -147,7 +148,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method max_content_width is rw {
+  method max_content_width is rw is also<max-content-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_scrolled_window_get_max_content_width($!sw);
@@ -159,7 +160,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method min_content_height is rw {
+  method min_content_height is rw is also<min-content-height> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_scrolled_window_get_min_content_height($!sw);
@@ -171,7 +172,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method min_content_width is rw {
+  method min_content_width is rw is also<min-content-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_scrolled_window_get_min_content_width($!sw);
@@ -183,7 +184,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method overlay_scrolling is rw {
+  method overlay_scrolling is rw is also<overlay-scrolling> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_scrolled_window_get_overlay_scrolling($!sw);
@@ -195,7 +196,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method propagate_natural_height is rw {
+  method propagate_natural_height is rw is also<propagate-natural-height> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_scrolled_window_get_propagate_natural_height($!sw);
@@ -207,7 +208,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method propagate_natural_width is rw {
+  method propagate_natural_width is rw is also<propagate-natural-width> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_scrolled_window_get_propagate_natural_width($!sw);
@@ -219,7 +220,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     );
   }
 
-  method shadow_type is rw {
+  method shadow_type is rw is also<shadow-type> {
     Proxy.new(
       FETCH => sub ($) {
         GtkShadowType( gtk_scrolled_window_get_shadow_type($!sw) );
@@ -246,18 +247,24 @@ class GTK::ScrolledWindow is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_with_viewport (GtkWidget() $child) {
+  method add_with_viewport (GtkWidget() $child) is also<add-with-viewport> {
     gtk_scrolled_window_add_with_viewport($!sw, $child);
   }
 
-  method get_hscrollbar {
+  method get_hscrollbar is also<get-hscrollbar> {
     gtk_scrolled_window_get_hscrollbar($!sw);
   }
 
-  method get_placement {
+  method get_placement is also<get-placement> {
     GtkCornerType( gtk_scrolled_window_get_placement($!sw) );
   }
 
+  multi method get-policy (
+    Int() $hscrollbar_policy is rw,     # GtkPolicyType
+    Int() $vscrollbar_policy is rw      # GtkPolicyType
+  ) {
+    self.get_policy($hscrollbar_policy, $vscrollbar_policy);
+  }
   multi method get_policy (
     Int() $hscrollbar_policy is rw,     # GtkPolicyType
     Int() $vscrollbar_policy is rw      # GtkPolicyType
@@ -268,27 +275,30 @@ class GTK::ScrolledWindow is GTK::Bin {
     ($hscrollbar_policy, $vscrollbar_policy) = ($hp, $vp);
     $rc;
   }
+  multi method get-policy {
+    self.get_policy;
+  }
   multi method get_policy {
     my ($hp, $vp);
     samewith($hp, $vp);
     ($hp, $vp);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_scrolled_window_get_type();
   }
 
-  method get_vscrollbar {
+  method get_vscrollbar is also<get-vscrollbar> {
     gtk_scrolled_window_get_vscrollbar($!sw);
   }
 
-  method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy) {
+  method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy) is also<set-policy> {
     my @u = ($hscrollbar_policy, $vscrollbar_policy);
     my uint32 ($hp, $vp) = self.RESOLVE-UINT(@u);
     gtk_scrolled_window_set_policy($!sw, $hp, $vp);
   }
 
-  method unset_placement {
+  method unset_placement is also<unset-placement> {
     gtk_scrolled_window_unset_placement($!sw);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

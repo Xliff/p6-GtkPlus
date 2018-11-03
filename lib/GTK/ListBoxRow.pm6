@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -124,13 +125,14 @@ class GTK::ListBoxRow is GTK::Bin {
     gtk_list_box_row_changed($!lbr);
   }
 
-  method get_index {
+  method get_index is also<get-index> {
     gtk_list_box_row_get_index($!lbr);
   }
 
-  method is_selected {
+  method is_selected is also<is-selected> {
     gtk_list_box_row_is_selected($!lbr);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -55,7 +56,7 @@ class GTK::ShortcutsGroup is GTK::Box {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GtkSizeGroup
-  method accel-size-group is rw {
+  method accel-size-group is rw is also<accel_size_group> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -99,7 +100,7 @@ class GTK::ShortcutsGroup is GTK::Box {
   }
 
   # Type: GtkSizeGroup
-  method title-size-group is rw {
+  method title-size-group is rw is also<title_size_group> {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
@@ -134,3 +135,4 @@ class GTK::ShortcutsGroup is GTK::Box {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

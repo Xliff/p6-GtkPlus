@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -68,7 +69,7 @@ class GTK::Grid is GTK::Container {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method baseline_row is rw {
+  method baseline_row is rw is also<baseline-row> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_grid_get_baseline_row($!g);
@@ -80,7 +81,7 @@ class GTK::Grid is GTK::Container {
     );
   }
 
-  method column_homogeneous is rw {
+  method column_homogeneous is rw is also<column-homogeneous> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_grid_get_column_homogeneous($!g);
@@ -92,7 +93,7 @@ class GTK::Grid is GTK::Container {
     );
   }
 
-  method column_spacing is rw {
+  method column_spacing is rw is also<column-spacing> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_grid_get_column_spacing($!g);
@@ -104,7 +105,7 @@ class GTK::Grid is GTK::Container {
     );
   }
 
-  method row_homogeneous is rw {
+  method row_homogeneous is rw is also<row-homogeneous> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_grid_get_row_homogeneous($!g) );
@@ -116,7 +117,7 @@ class GTK::Grid is GTK::Container {
     );
   }
 
-  method row_spacing is rw {
+  method row_spacing is rw is also<row-spacing> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_grid_get_row_spacing($!g);
@@ -148,29 +149,29 @@ class GTK::Grid is GTK::Container {
     GtkPositionType $side,
     gint $width,
     gint $height
-  ) {
+  ) is also<attach-next-to> {
     my $s = self.RESOLVE-UINT($side);
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_grid_attach_next_to($!g, $child, $sibling, $s, $w, $h);
   }
 
-  method get_child_at (Int() $left, Int() $top) {
+  method get_child_at (Int() $left, Int() $top) is also<get-child-at> {
     my @i = ($left, $top);
     my gint ($l, $t) = self.RESOLVE-INT(@i);
     gtk_grid_get_child_at($!g, $l, $t);
   }
 
-  method get_row_baseline_position (Int() $row) {
+  method get_row_baseline_position (Int() $row) is also<get-row-baseline-position> {
     my gint $r = self.RESOLVE-INT($row);
     gtk_grid_get_row_baseline_position($!g, $row);
   }
 
-  method get_type () {
+  method get_type () is also<get-type> {
     gtk_grid_get_type();
   }
 
-  method insert_column (Int() $position) {
+  method insert_column (Int() $position) is also<insert-column> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_grid_insert_column($!g, $p);
   }
@@ -178,22 +179,22 @@ class GTK::Grid is GTK::Container {
   method insert_next_to (
     GtkWidget() $sibling,
     Int() $side                     # GtkPositionType $side
-  ) {
+  ) is also<insert-next-to> {
     my uint32 $s = self.RESOLVE-UINT($side);
     gtk_grid_insert_next_to($!g, $sibling, $s);
   }
 
-  method insert_row (Int() $position) {
+  method insert_row (Int() $position) is also<insert-row> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_grid_insert_row($!g, $p);
   }
 
-  method remove_column (Int() $position) {
+  method remove_column (Int() $position) is also<remove-column> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_grid_remove_column($!g, $p);
   }
 
-  method remove_row (Int() $position) {
+  method remove_row (Int() $position) is also<remove-row> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_grid_remove_row($!g, $p);
   }
@@ -201,7 +202,7 @@ class GTK::Grid is GTK::Container {
   multi method set_row_baseline_position (
     Int() $row,                   # gint $row,
     Int() $pos                    # GtkBaselinePosition $pos
-  ) {
+  ) is also<set-row-baseline-position> {
     my gint $r =  self.RESOLVE-INT($row);
     my uint32 $p = self.RESOLVE-UINT($pos);
     gtk_grid_set_row_baseline_position($!g, $r, $p);
@@ -209,3 +210,4 @@ class GTK::Grid is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

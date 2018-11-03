@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,12 +53,12 @@ class GTK::CheckButton is GTK::ToggleButton {
     self.bless(:$checkbutton);
   }
 
-  method new_with_label (Str $label) {
+  method new_with_label (Str $label) is also<new-with-label> {
     my $checkbutton = gtk_check_button_new_with_label($label);
     self.bless(:$checkbutton);
   }
 
-  method new_with_mnemonic (Str $label) {
+  method new_with_mnemonic (Str $label) is also<new-with-mnemonic> {
     my $checkbutton = gtk_check_button_new_with_mnemonic($label);
     self.bless(:$checkbutton);
   }
@@ -69,9 +70,10 @@ class GTK::CheckButton is GTK::ToggleButton {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_check_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

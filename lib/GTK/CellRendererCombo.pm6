@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -64,7 +65,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: gboolean
-  method has-entry is rw {
+  method has-entry is rw is also<has_entry> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -94,7 +95,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
   }
 
   # Type: gint
-  method text-column is rw {
+  method text-column is rw is also<text_column> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -111,9 +112,10 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_renderer_combo_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

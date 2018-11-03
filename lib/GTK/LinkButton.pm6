@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -48,13 +49,13 @@ class GTK::LinkButton is GTK::Button {
     self.bless(:$button);
   }
 
-  method new_with_label (gchar $uri, gchar $label) {
+  method new_with_label (gchar $uri, gchar $label) is also<new-with-label> {
     my $button = gtk_link_button_new_with_label($uri, $label);
     self.bless(:$button);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method activate-link {
+  method activate-link is also<activate_link> {
     self.connect($!lb, 'activate-link');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -85,9 +86,10 @@ class GTK::LinkButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_link_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

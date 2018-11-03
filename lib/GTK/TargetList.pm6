@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -57,7 +58,7 @@ class GTK::TargetList {
     gtk_target_list_add($!tl, $target, $f, $i);
   }
 
-  method add_image_targets (Int() $info, Int() $writeable) {
+  method add_image_targets (Int() $info, Int() $writeable) is also<add-image-targets> {
     my @u = ($info, $writeable);
     my guint ($i, $w) = self.RESOLVE-UINT(@u);
     gtk_target_list_add_image_targets($!tl, $i, $w);
@@ -67,24 +68,24 @@ class GTK::TargetList {
     Int() $info,
     Int() $deserializable,
     GtkTextBuffer() $buffer
-  ) {
+  ) is also<add-rich-text-targets> {
     my guint $i = self.RESOLVE-UINT($info);
     my gboolean $d = self.RESOLVE-BOOL($deserializable);
     gtk_target_list_add_rich_text_targets($!tl, $i, $d, $buffer);
   }
 
-  method add_table (GtkTargetEntry @targets) {
+  method add_table (GtkTargetEntry @targets) is also<add-table> {
     my CArray[GtkTargetEntry] $t = CArray[GtkTargetEntry].new;
     $t[$++] = $_ for @targets;
     gtk_target_list_add_table($!tl, $t, $t.elems);
   }
 
-  method add_text_targets (Int() $info) {
+  method add_text_targets (Int() $info) is also<add-text-targets> {
     my guint $i = self.RESOLVE-UINT($info);
     gtk_target_list_add_text_targets($!tl, $i);
   }
 
-  method add_uri_targets (Int() $info) {
+  method add_uri_targets (Int() $info) is also<add-uri-targets> {
     my guint $i = self.RESOLVE-UINT($info);
     gtk_target_list_add_uri_targets($!tl, $i);
   }
@@ -108,3 +109,4 @@ class GTK::TargetList {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

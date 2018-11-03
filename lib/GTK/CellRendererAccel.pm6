@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -63,13 +64,13 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Is originally:
   # GtkCellRendererAccel, gchar, gpointer --> void
-  method accel-cleared {
+  method accel-cleared is also<accel_cleared> {
     self.connect-string($!cra, 'accel-cleared');
   }
 
   # Is originally:
   # GtkCellRendererAccel, gchar, guint, GdkModifierType, guint, gpointer --> void
-  method accel-edited {
+  method accel-edited is also<accel_edited> {
     self.connect-accel-edited($!cra);
   }
 
@@ -81,7 +82,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: guint
-  method accel-key is rw {
+  method accel-key is rw is also<accel_key> {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
@@ -96,7 +97,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   }
 
   # Type: GtkCellRendererAccelMode
-  method accel-mode is rw {
+  method accel-mode is rw is also<accel_mode> {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
@@ -111,7 +112,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   }
 
   # Type: GdkModifierType
-  method accel-mods is rw {
+  method accel-mods is rw is also<accel_mods> {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
@@ -144,9 +145,10 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_renderer_accel_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

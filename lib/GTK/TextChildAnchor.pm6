@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -32,18 +33,19 @@ class GTK::TextChildAnchor {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_deleted {
+  method get_deleted is also<get-deleted> {
     gtk_text_child_anchor_get_deleted($!ta);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_text_child_anchor_get_type();
   }
 
   # Create a new GTK::Compat::GList when working.
-  method get_widgets {
+  method get_widgets is also<get-widgets> {
     gtk_text_child_anchor_get_widgets($!ta);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

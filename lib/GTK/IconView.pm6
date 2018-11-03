@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -65,12 +66,12 @@ class GTK::IconView is GTK::Container {
     self.bless(:$iconview);
   }
 
-  method new_with_area(GtkCellArea() $area) {
+  method new_with_area(GtkCellArea() $area) is also<new-with-area> {
     my $iconview = gtk_icon_view_new_with_area($area);
     self.bless(:$iconview);
   }
 
-  method new_with_model(GtkTreeModel() $model) {
+  method new_with_model(GtkTreeModel() $model) is also<new-with-model> {
     my $iconview = gtk_icon_view_new_with_model($model);
     self.bless(:$iconview);
   }
@@ -79,56 +80,56 @@ class GTK::IconView is GTK::Container {
 
   # Is originally:
   # GtkIconView, gpointer --> gboolean
-  method activate-cursor-item {
+  method activate-cursor-item is also<activate_cursor_item> {
     self.connect-activate-cursor-item($!iv);
   }
 
   # Is originally:
   # GtkIconView, GtkTreePath, gpointer --> void
-  method item-activated {
+  method item-activated is also<item_activated> {
     self.connect-item-activated($!iv);
   }
 
   # Is originally:
   # GtkIconView, GtkMovementStep, gint, gpointer --> gboolean
-  method move-cursor {
+  method move-cursor is also<move_cursor> {
     self.connect-move-cursor1($!iv);
   }
 
   # Is originally:
   # GtkIconView, gpointer --> void
-  method select-all {
+  method select-all is also<select_all> {
     self.connect($!iv, 'select-all');
   }
 
   # Is originally:
   # GtkIconView, gpointer --> void
-  method select-cursor-item {
+  method select-cursor-item is also<select_cursor_item> {
     self.connect($!iv, 'select-cursor-item');
   }
 
   # Is originally:
   # GtkIconView, gpointer --> void
-  method selection-changed {
+  method selection-changed is also<selection_changed> {
     self.connect($!iv, 'selection-changed');
   }
 
   # Is originally:
   # GtkIconView, gpointer --> void
-  method toggle-cursor-item {
+  method toggle-cursor-item is also<toggle_cursor_item> {
     self.connect($!iv, 'toggle-cursor-item');
   }
 
   # Is originally:
   # GtkIconView, gpointer --> void
-  method unselect-all {
+  method unselect-all is also<unselect_all> {
     self.connect($!iv, 'unselect-all');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method activate_on_single_click is rw {
+  method activate_on_single_click is rw is also<activate-on-single-click> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_icon_view_get_activate_on_single_click($!iv);
@@ -140,7 +141,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method column_spacing is rw {
+  method column_spacing is rw is also<column-spacing> {
     Proxy.new(
       FETCH => sub ($) {
         GTK::CellArea.new( gtk_icon_view_get_column_spacing($!iv) );
@@ -163,7 +164,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method item_orientation is rw {
+  method item_orientation is rw is also<item-orientation> {
     Proxy.new(
       FETCH => sub ($) {
         GtkOrientation( gtk_icon_view_get_item_orientation($!iv) );
@@ -175,7 +176,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method item_padding is rw {
+  method item_padding is rw is also<item-padding> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_icon_view_get_item_padding($!iv);
@@ -187,7 +188,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method item_width is rw {
+  method item_width is rw is also<item-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_icon_view_get_item_width($!iv);
@@ -211,7 +212,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method markup_column is rw {
+  method markup_column is rw is also<markup-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_icon_view_get_markup_column($!iv);
@@ -234,7 +235,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method pixbuf_column is rw {
+  method pixbuf_column is rw is also<pixbuf-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_icon_view_get_pixbuf_column($!iv);
@@ -258,7 +259,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method row_spacing is rw {
+  method row_spacing is rw is also<row-spacing> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_icon_view_get_row_spacing($!iv);
@@ -270,7 +271,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method selection_mode is rw {
+  method selection_mode is rw is also<selection-mode> {
     Proxy.new(
       FETCH => sub ($) {
         GtkSelectionMode( gtk_icon_view_get_selection_mode($!iv) );
@@ -294,7 +295,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method text_column is rw {
+  method text_column is rw is also<text-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_icon_view_get_text_column($!iv);
@@ -306,7 +307,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method tooltip_column is rw {
+  method tooltip_column is rw is also<tooltip-column> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_icon_view_get_tooltip_column($!iv);
@@ -330,7 +331,9 @@ class GTK::IconView is GTK::Container {
     Int() $wy,
     Int() $bx,
     Int() $by
-  ) {
+  )
+    is also<convert-widget-to-bin-window-coords>
+  {
     my @i = ($wx, $wy, $bx, $by);
     my ($wxx, $wyy, $bxx, $byy) = self.RESOLVE-INT(@i);
     gtk_icon_view_convert_widget_to_bin_window_coords(
@@ -342,7 +345,7 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method create_drag_icon (GtkTreePath() $path) {
+  method create_drag_icon (GtkTreePath() $path) is also<create-drag-icon> {
     gtk_icon_view_create_drag_icon($!iv, $path);
   }
 
@@ -350,7 +353,9 @@ class GTK::IconView is GTK::Container {
     GtkTargetEntry() $targets,
     Int() $n_targets,
     Int() $actions             # GdkDragAction $actions
-  ) {
+  )
+    is also<enable-model-drag-dest>
+  {
     my gint $nt = self.RESOLVE-INT($n_targets);
     my uint32 $a = self.RESOLVE-UINT($actions);
     gtk_icon_view_enable_model_drag_dest($!iv, $targets, $nt, $a);
@@ -361,7 +366,9 @@ class GTK::IconView is GTK::Container {
     GtkTargetEntry() $targets,
     Int() $n_targets,
     Int() $actions             # GdkDragAction $actions
-  ) {
+  )
+    is also<enable-model-drag-source>
+  {
     my @u = ($start_button_mask, $actions);
     my guint ($s, $a) = self.RESOLVE-UINT(@u);
     my gint $nt = self.RESOLVE-INT($n_targets);
@@ -372,11 +379,15 @@ class GTK::IconView is GTK::Container {
     GtkTreePath() $path,
     GtkCellRenderer() $cell,
     GdkRectangle() $rect
-  ) {
+  )
+    is also<get-cell-rect>
+  {
     gtk_icon_view_get_cell_rect($!iv, $path, $cell, $rect);
   }
 
-  method get_cursor (GtkTreePath() $path, GtkCellRenderer() $cell) {
+  method get_cursor (GtkTreePath() $path, GtkCellRenderer() $cell)
+    is also<get-cursor>
+  {
     gtk_icon_view_get_cursor($!iv, $path, $cell);
   }
 
@@ -385,7 +396,9 @@ class GTK::IconView is GTK::Container {
     Int() $drag_y,
     GtkTreePath() $path,
     uint32 $pos                 # GtkIconViewDropPosition $pos
-  ) {
+  )
+    is also<get-dest-item-at-pos>
+  {
     my @i = ($drag_x, $drag_y);
     my gint ($dx, $dy) = self.RESOLVE-INT(@i);
     my uint32 $p = self.RESOLVE-UINT($pos);
@@ -395,7 +408,9 @@ class GTK::IconView is GTK::Container {
   method get_drag_dest_item (
     GtkTreePath() $path,
     uint32 $pos                 # GtkIconViewDropPosition $pos
-  ) {
+  )
+    is also<get-drag-dest-item>
+  {
     my uint32 $p = self.RESOLVE-UINT($pos);
     gtk_icon_view_get_drag_dest_item($!iv, $path, $p);
   }
@@ -405,27 +420,35 @@ class GTK::IconView is GTK::Container {
     Int() $y,
     GtkTreePath() $path,
     GtkCellRenderer() $cell
-  ) {
+  )
+    is also<get-item-at-pos>
+  {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_icon_view_get_item_at_pos($!iv, $xx, $yy, $path, $cell);
   }
 
-  method get_item_column (GtkTreePath() $path) {
+  method get_item_column (GtkTreePath() $path)
+    is also<get-item-column>
+  {
     gtk_icon_view_get_item_column($!iv, $path);
   }
 
-  method get_item_row (GtkTreePath() $path) {
+  method get_item_row (GtkTreePath() $path)
+    is also<get-item-row>
+  {
     gtk_icon_view_get_item_row($!iv, $path);
   }
 
-  method get_path_at_pos (Int() $x, Int() $y) {
+  method get_path_at_pos (Int() $x, Int() $y)
+    is also<get-path-at-pos>
+  {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_icon_view_get_path_at_pos($!iv, $xx, $yy);
   }
 
-  method get_selected_items {
+  method get_selected_items is also<get-selected-items> {
     gtk_icon_view_get_selected_items($!iv);
   }
 
@@ -436,7 +459,9 @@ class GTK::IconView is GTK::Container {
     GtkTreeModel() $model,
     GtkTreePath() $path,
     GtkTreeIter() $iter
-  ) {
+  )
+    is also<get-tooltip-context>
+  {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     my gboolean $kt = self.RESOLVE-BOOL($keyboard_tip);
@@ -451,22 +476,26 @@ class GTK::IconView is GTK::Container {
     );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_icon_view_get_type();
   }
 
   method get_visible_range (
     GtkTreePath() $start_path,
     GtkTreePath() $end_path
-  ) {
+  )
+    is also<get-visible-range>
+  {
     gtk_icon_view_get_visible_range($!iv, $start_path, $end_path);
   }
 
-  method item_activated (GtkTreePath() $path) {
+  method emit_item_activated (GtkTreePath() $path)
+    is also<emit-item-activated>
+  {
     gtk_icon_view_item_activated($!iv, $path);
   }
 
-  method path_is_selected (GtkTreePath() $path) {
+  method path_is_selected (GtkTreePath() $path) is also<path-is-selected> {
     gtk_icon_view_path_is_selected($!iv, $path);
   }
 
@@ -475,24 +504,28 @@ class GTK::IconView is GTK::Container {
     Int() $use_align,
     Num() $row_align,
     Num() $col_align
-  ) {
+  )
+    is also<scroll-to-path>
+  {
     my guint $ua = self.RESOLVE-BOOL($use_align);
     my num32 ($ra, $ca) = ($row_align, $col_align);
     gtk_icon_view_scroll_to_path($!iv, $path, $ua, $ra, $ca);
   }
 
-  method select_all {
+  method select_all_icons is also<select-all-icons> {
     gtk_icon_view_select_all($!iv);
   }
 
-  method select_path (GtkTreePath() $path) {
+  method select_path (GtkTreePath() $path) is also<select-path> {
     gtk_icon_view_select_path($!iv, $path);
   }
 
   method selected_foreach (
     GtkIconViewForeachFunc $func,
     gpointer $data
-  ) {
+  )
+    is also<selected-foreach>
+  {
     gtk_icon_view_selected_foreach($!iv, $func, $data);
   }
 
@@ -500,7 +533,9 @@ class GTK::IconView is GTK::Container {
     GtkTreePath() $path,
     GtkCellRenderer() $cell,
     Int() $start_editing
-  ) {
+  )
+    is also<set-cursor>
+  {
     my gboolean $se = self.RESOLVE-BOOL($start_editing);
     gtk_icon_view_set_cursor($!iv, $path, $cell, $se);
   }
@@ -508,7 +543,9 @@ class GTK::IconView is GTK::Container {
   method set_drag_dest_item (
     GtkTreePath() $path,
     uint32 $pos                 # GtkIconViewDropPosition $pos
-  ) {
+  )
+    is also<set-drag-dest-item>
+  {
     my uint32 $p = self.RESOLVE-UINT($pos);
     gtk_icon_view_set_drag_dest_item($!iv, $path, $p);
   }
@@ -517,27 +554,31 @@ class GTK::IconView is GTK::Container {
     GtkTooltip() $tooltip,
     GtkTreePath() $path,
     GtkCellRenderer() $cell
-  ) {
+  )
+    is also<set-tooltip-cell>
+  {
     gtk_icon_view_set_tooltip_cell($!iv, $tooltip, $path, $cell);
   }
 
-  method set_tooltip_item (GtkTooltip() $tooltip, GtkTreePath() $path) {
+  method set_tooltip_item (GtkTooltip() $tooltip, GtkTreePath() $path)
+    is also<set-tooltip-item>
+  {
     gtk_icon_view_set_tooltip_item($!iv, $tooltip, $path);
   }
 
-  method unselect_all {
+  method unselect_all_icons is also<unselect-all-icons> {
     gtk_icon_view_unselect_all($!iv);
   }
 
-  method unselect_path (GtkTreePath() $path) {
+  method unselect_path (GtkTreePath() $path) is also<unselect-path> {
     gtk_icon_view_unselect_path($!iv, $path);
   }
 
-  method unset_model_drag_dest {
+  method unset_model_drag_dest is also<unset-model-drag-dest> {
     gtk_icon_view_unset_model_drag_dest($!iv);
   }
 
-  method unset_model_drag_source {
+  method unset_model_drag_source is also<unset-model-drag-source> {
     gtk_icon_view_unset_model_drag_source($!iv);
   }
 

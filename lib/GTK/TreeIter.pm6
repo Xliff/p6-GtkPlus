@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Raw::Types;
@@ -39,3 +40,4 @@ class GTK::TreeIter is export {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

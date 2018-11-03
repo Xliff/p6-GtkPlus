@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -64,7 +65,7 @@ class GTK::FileChooserButton is GTK::Bin {
     self.bless(:$chooser);
   }
 
-  method new_with_dialog (GtkWidget() $dialog) {
+  method new_with_dialog (GtkWidget() $dialog) is also<new-with-dialog> {
     my $chooser = gtk_file_chooser_button_new_with_dialog($dialog);
     self.bless(:$chooser);
   }
@@ -84,7 +85,7 @@ class GTK::FileChooserButton is GTK::Bin {
     );
   }
 
-  method width_chars is rw {
+  method width_chars is rw is also<width-chars> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_file_chooser_button_get_width_chars($!fcb);
@@ -113,9 +114,10 @@ class GTK::FileChooserButton is GTK::Bin {
   }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_file_chooser_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

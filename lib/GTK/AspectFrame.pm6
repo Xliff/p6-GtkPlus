@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -64,7 +65,7 @@ class GTK::AspectFrame is GTK::Frame {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: gboolean
-  method obey-child is rw {
+  method obey-child is rw is also<obey_child> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -126,7 +127,7 @@ class GTK::AspectFrame is GTK::Frame {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_aspect_frame_get_type();
   }
 
@@ -143,3 +144,4 @@ class GTK::AspectFrame is GTK::Frame {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

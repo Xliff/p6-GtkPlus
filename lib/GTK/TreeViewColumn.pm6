@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -32,7 +33,7 @@ class GTK::TreeViewColumn {
     self.bless(:$treeview);
   }
 
-  method new_with_area(GtkCellArea $area) {
+  method new_with_area(GtkCellArea $area) is also<new-with-area> {
     my $treeview = gtk_tree_view_column_new_with_area($area);
     self.bless(:$treeview);
   }
@@ -85,7 +86,7 @@ class GTK::TreeViewColumn {
     );
   }
 
-  method fixed_width is rw {
+  method fixed_width is rw is also<fixed-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tree_view_column_get_fixed_width($!tvc);
@@ -97,7 +98,7 @@ class GTK::TreeViewColumn {
     );
   }
 
-  method max_width is rw {
+  method max_width is rw is also<max-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tree_view_column_get_max_width($!tvc);
@@ -109,7 +110,7 @@ class GTK::TreeViewColumn {
     );
   }
 
-  method min_width is rw {
+  method min_width is rw is also<min-width> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tree_view_column_get_min_width($!tvc);
@@ -157,7 +158,7 @@ class GTK::TreeViewColumn {
     );
   }
 
-  method sort_column_id is rw {
+  method sort_column_id is rw is also<sort-column-id> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tree_view_column_get_sort_column_id($!tvc);
@@ -169,7 +170,7 @@ class GTK::TreeViewColumn {
     );
   }
 
-  method sort_indicator is rw {
+  method sort_indicator is rw is also<sort-indicator> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_tree_view_column_get_sort_indicator($!tvc);
@@ -181,7 +182,7 @@ class GTK::TreeViewColumn {
     );
   }
 
-  method sort_order is rw {
+  method sort_order is rw is also<sort-order> {
     Proxy.new(
       FETCH => sub ($) {
         GtkSortType( gtk_tree_view_column_get_sort_order($!tvc) );
@@ -244,7 +245,7 @@ class GTK::TreeViewColumn {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GtkCellArea
-  method cell-area is rw {
+  method cell-area is rw is also<cell_area> {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
@@ -273,7 +274,7 @@ class GTK::TreeViewColumn {
   }
 
   # Type: gint
-  method x-offset is rw {
+  method x-offset is rw is also<x_offset> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -293,7 +294,7 @@ class GTK::TreeViewColumn {
     GtkCellRenderer() $cell_renderer,
     Str() $attribute,
     Int() $column
-  ) {
+  ) is also<add-attribute> {
     my gint $c = self.RESOLVE-INT($column);
     gtk_tree_view_column_add_attribute($!tvc, $cell_renderer, $attribute, $c);
   }
@@ -302,7 +303,7 @@ class GTK::TreeViewColumn {
     GtkCellRenderer() $cell_renderer,
     Int() $x_offset,
     Int() $width
-  ) {
+  ) is also<cell-get-position> {
     my @i = ($x_offset, $width);
     my gint ($xo, $w) = self.RESOLVE-INT(@i);
     gtk_tree_view_column_cell_get_position($!tvc, $cell_renderer, $xo, $w);
@@ -314,13 +315,13 @@ class GTK::TreeViewColumn {
     Int() $y_offset,
     Int() $width,
     Int() $height
-  ) {
+  ) is also<cell-get-size> {
     my @i = ($x_offset, $y_offset, $width, $height);
     my gint ($xo, $yo, $w, $h) = self.RESOLVE-INT(@i);
     gtk_tree_view_column_cell_get_size($!tvc, $cell_area, $xo, $yo, $w, $h);
   }
 
-  method cell_is_visible {
+  method cell_is_visible is also<cell-is-visible> {
     gtk_tree_view_column_cell_is_visible($!tvc);
   }
 
@@ -329,7 +330,7 @@ class GTK::TreeViewColumn {
     GtkTreeIter() $iter,
     Int() $is_expander,
     Int() $is_expanded
-  ) {
+  ) is also<cell-set-cell-data> {
     my @b = ($is_expander, $is_expanded);
     my ($er, $ed) = self.RESOLVE-BOOL(@b);
     gtk_tree_view_column_cell_set_cell_data(
@@ -345,49 +346,49 @@ class GTK::TreeViewColumn {
     gtk_tree_view_column_clear($!tvc);
   }
 
-  method clear_attributes (GtkCellRenderer() $cell_renderer) {
+  method clear_attributes (GtkCellRenderer() $cell_renderer) is also<clear-attributes> {
     gtk_tree_view_column_clear_attributes($!tvc, $cell_renderer);
   }
 
-  method emit-clicked {
+  method emit-clicked is also<emit_clicked> {
     gtk_tree_view_column_clicked($!tvc);
   }
 
-  method focus_cell (GtkCellRenderer() $cell) {
+  method focus_cell (GtkCellRenderer() $cell) is also<focus-cell> {
     gtk_tree_view_column_focus_cell($!tvc, $cell);
   }
 
-  method get_button {
+  method get_button is also<get-button> {
     gtk_tree_view_column_get_button($!tvc);
   }
 
-  method get_tree_view {
+  method get_tree_view is also<get-tree-view> {
     gtk_tree_view_column_get_tree_view($!tvc);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_tree_view_column_get_type();
   }
 
-  method get_width {
+  method get_width is also<get-width> {
     gtk_tree_view_column_get_width($!tvc);
   }
 
-  method get_x_offset {
+  method get_x_offset is also<get-x-offset> {
     gtk_tree_view_column_get_x_offset($!tvc);
   }
 
-  method pack_end (GtkCellRenderer() $cell, Int() $expand) {
+  method pack_end (GtkCellRenderer() $cell, Int() $expand) is also<pack-end> {
     my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_tree_view_column_pack_end($!tvc, $cell, $e);
   }
 
-  method pack_start (GtkCellRenderer() $cell, Int() $expand) {
+  method pack_start (GtkCellRenderer() $cell, Int() $expand) is also<pack-start> {
     my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_tree_view_column_pack_start($!tvc, $cell, $e);
   }
 
-  method queue_resize {
+  method queue_resize is also<queue-resize> {
     gtk_tree_view_column_queue_resize($!tvc);
   }
 
@@ -396,7 +397,7 @@ class GTK::TreeViewColumn {
     GtkTreeCellDataFunc $func,
     gpointer $func_data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
-  ) {
+  ) is also<set-cell-data-func> {
     gtk_tree_view_column_set_cell_data_func(
       $!tvc,
       $cell_renderer,
@@ -408,3 +409,4 @@ class GTK::TreeViewColumn {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

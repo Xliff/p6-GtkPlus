@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -21,7 +22,7 @@ class GTK::IconInfo {
     self.bless(:$info);
   }
 
-  method new_for_pixbuf (GtkIconTheme() $theme, GdkPixbuf() $pixbuf) {
+  method new_for_pixbuf (GtkIconTheme() $theme, GdkPixbuf() $pixbuf) is also<new-for-pixbuf> {
     my $info = gtk_icon_info_new_for_pixbuf($theme, $pixbuf);
     self.bless(:$info);
   }
@@ -45,45 +46,45 @@ class GTK::IconInfo {
     gtk_icon_info_free($!ii);
   }
 
-  method get_attach_points (GdkPoint $points, gint $n_points) {
+  method get_attach_points (GdkPoint $points, gint $n_points) is also<get-attach-points> {
     gtk_icon_info_get_attach_points($!ii, $points, $n_points);
   }
 
-  method get_base_scale {
+  method get_base_scale is also<get-base-scale> {
     gtk_icon_info_get_base_scale($!ii);
   }
 
-  method get_base_size {
+  method get_base_size is also<get-base-size> {
     gtk_icon_info_get_base_size($!ii);
   }
 
-  method get_builtin_pixbuf {
+  method get_builtin_pixbuf is also<get-builtin-pixbuf> {
     gtk_icon_info_get_builtin_pixbuf($!ii);
   }
 
-  method get_display_name {
+  method get_display_name is also<get-display-name> {
     gtk_icon_info_get_display_name($!ii);
   }
 
-  method get_embedded_rect (GdkRectangle() $rectangle) {
+  method get_embedded_rect (GdkRectangle() $rectangle) is also<get-embedded-rect> {
     gtk_icon_info_get_embedded_rect($!ii, $rectangle);
   }
 
-  method get_filename {
+  method get_filename is also<get-filename> {
     gtk_icon_info_get_filename($!ii);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_icon_info_get_type();
   }
 
-  method is_symbolic {
+  method is_symbolic is also<is-symbolic> {
     gtk_icon_info_is_symbolic($!ii);
   }
 
   method load_icon (
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-icon> {
     gtk_icon_info_load_icon($!ii, $error);
   }
 
@@ -91,7 +92,7 @@ class GTK::IconInfo {
     GCancellable $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data
-  ) {
+  ) is also<load-icon-async> {
     gtk_icon_info_load_icon_async(
       $!ii,
       $cancellable,
@@ -103,14 +104,14 @@ class GTK::IconInfo {
   method load_icon_finish (
     GAsyncResult $res,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-icon-finish> {
     gtk_icon_info_load_icon_finish($!ii, $res, $error);
   }
 
   method load_surface (
     GdkWindow $for_window,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-surface> {
     gtk_icon_info_load_surface($!ii, $for_window, $error);
   }
 
@@ -121,7 +122,7 @@ class GTK::IconInfo {
     GdkRGBA $error_color,
     gboolean $was_symbolic,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-symbolic> {
     gtk_icon_info_load_symbolic(
       $!ii,
       $fg,
@@ -141,7 +142,7 @@ class GTK::IconInfo {
     GCancellable $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data
-  ) {
+  ) is also<load-symbolic-async> {
     gtk_icon_info_load_symbolic_async(
       $!ii,
       $fg,
@@ -158,7 +159,7 @@ class GTK::IconInfo {
     GAsyncResult $res,
     gboolean $was_symbolic,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-symbolic-finish> {
     gtk_icon_info_load_symbolic_finish($!ii, $res, $was_symbolic, $error);
   }
 
@@ -166,7 +167,7 @@ class GTK::IconInfo {
     GtkStyleContext $context,
     gboolean $was_symbolic,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-symbolic-for-context> {
     gtk_icon_info_load_symbolic_for_context(
       $!ii,
       $context,
@@ -180,7 +181,7 @@ class GTK::IconInfo {
     GCancellable $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data
-  ) {
+  ) is also<load-symbolic-for-context-async> {
     gtk_icon_info_load_symbolic_for_context_async(
       $!ii,
       $context,
@@ -194,7 +195,7 @@ class GTK::IconInfo {
     GAsyncResult $res,
     gboolean $was_symbolic,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-symbolic-for-context-finish> {
     gtk_icon_info_load_symbolic_for_context_finish(
       $!ii,
       $res,
@@ -208,7 +209,7 @@ class GTK::IconInfo {
     Int() $state,               # GtkStateType $state,
     gboolean $was_symbolic,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<load-symbolic-for-style> {
     my guint $s = self.RESOLVE-UINT($state);
     gtk_icon_info_load_symbolic_for_style(
       $!ii,
@@ -219,10 +220,11 @@ class GTK::IconInfo {
     );
   }
 
-  method set_raw_coordinates (gboolean $raw_coordinates) {
+  method set_raw_coordinates (gboolean $raw_coordinates) is also<set-raw-coordinates> {
     gtk_icon_info_set_raw_coordinates($!ii, $raw_coordinates);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

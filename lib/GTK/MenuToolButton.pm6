@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,7 +53,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
 
   # Is originally:
   # GtkMenuToolButton, gpointer --> void
-  method show-menu {
+  method show-menu is also<show_menu> {
     self.connect($!mtb, 'show-menu');
   }
 
@@ -72,17 +73,18 @@ class GTK::MenuToolButton is GTK::ToolButton {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_menu_tool_button_get_type();
   }
 
-  method set_arrow_tooltip_markup (gchar $markup) {
+  method set_arrow_tooltip_markup (gchar $markup) is also<set-arrow-tooltip-markup> {
     gtk_menu_tool_button_set_arrow_tooltip_markup($!mtb, $markup);
   }
 
-  method set_arrow_tooltip_text (gchar $text) {
+  method set_arrow_tooltip_text (gchar $text) is also<set-arrow-tooltip-text> {
     gtk_menu_tool_button_set_arrow_tooltip_text($!mtb, $text);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

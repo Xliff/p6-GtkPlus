@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -69,12 +70,12 @@ class GTK::Pane is GTK::Container {
     samewith($orientation);
   }
 
-  method new-hpane {
+  method new-hpane is also<new_hpane> {
     my $pane = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL.Int);
     self.bless(:$pane);
   }
 
-  method new-vpane {
+  method new-vpane is also<new_vpane> {
     my $pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL.Int);
     self.bless(:$pane);
   }
@@ -83,37 +84,37 @@ class GTK::Pane is GTK::Container {
 
   # Is originally:
   # GtkPaned, gpointer --> gboolean
-  method accept-position {
+  method accept-position is also<accept_position> {
     self.connect($!p, 'accept-position');
   }
 
   # Is originally:
   # GtkPaned, gpointer --> gboolean
-  method cancel-position {
+  method cancel-position is also<cancel_position> {
     self.connect($!p, 'cancel-position');
   }
 
   # Is originally:
   # GtkPaned, gboolean, gpointer --> gboolean
-  method cycle-child-focus {
+  method cycle-child-focus is also<cycle_child_focus> {
     self.connect-uint-ruint($!p, 'cycle-child-focus');
   }
 
   # Is originally:
   # GtkPaned, gboolean, gpointer --> gboolean
-  method cycle-handle-focus {
+  method cycle-handle-focus is also<cycle_handle_focus> {
     self.connect-uint-ruint($!p, 'cycle-handle-focus');
   }
 
   # Is originally:
   # GtkPaned, GtkScrollType, gpointer --> gboolean
-  method move-handle {
+  method move-handle is also<move_handle> {
     self.connect-uint-ruint($!p, 'move-handle');
   }
 
   # Is originally:
   # GtkPaned, gpointer --> gboolean
-  method toggle-handle-focus {
+  method toggle-handle-focus is also<toggle_handle_focus> {
     self.connect($!p, 'toggle-handle-focus');
   }
 
@@ -132,7 +133,7 @@ class GTK::Pane is GTK::Container {
     );
   }
 
-  method wide_handle is rw {
+  method wide_handle is rw is also<wide-handle> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_paned_get_wide_handle($!p);
@@ -169,20 +170,20 @@ class GTK::Pane is GTK::Container {
   }
 
   # Use the attribute only if it's a GtkPlus object.
-  method get_child1 {
+  method get_child1 is also<get-child1> {
     @!child1 ~~ GTK::Widget ?? @!child1[0] !! gtk_paned_get_child1($!p);
   }
 
   # Use the  attribute only if it's a GtkPlus object.
-  method get_child2 {
+  method get_child2 is also<get-child2> {
     @!child2 ~~ GTK::Widget ?? @!child2[0] !! gtk_paned_get_child2($!p);
   }
 
-  method get_handle_window {
+  method get_handle_window is also<get-handle-window> {
     gtk_paned_get_handle_window($!p);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_paned_get_type();
   }
 
@@ -230,3 +231,4 @@ class GTK::Pane is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

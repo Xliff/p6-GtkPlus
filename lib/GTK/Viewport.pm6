@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -63,7 +64,7 @@ class GTK::Viewport is GTK::Bin {
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
 
-  method shadow_type is rw {
+  method shadow_type is rw is also<shadow-type> {
     Proxy.new(
       FETCH => sub ($) {
         GtkShadowType( gtk_viewport_get_shadow_type($!v) );
@@ -81,17 +82,18 @@ class GTK::Viewport is GTK::Bin {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_bin_window {
+  method get_bin_window is also<get-bin-window> {
     gtk_viewport_get_bin_window($!v);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_viewport_get_type();
   }
 
-  method get_view_window {
+  method get_view_window is also<get-view-window> {
     gtk_viewport_get_view_window($!v);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

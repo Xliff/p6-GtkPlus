@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -71,7 +72,7 @@ class GTK::Menu is GTK::MenuShell {
     self.bless(:$menu, :@items);
   }
 
-  method new_from_model (GMenuModel $model) {
+  method new_from_model (GMenuModel $model) is also<new-from-model> {
     my $menu = gtk_menu_new_from_model($model);
     self.bless(:$menu);
   }
@@ -80,19 +81,19 @@ class GTK::Menu is GTK::MenuShell {
 
   # Is originally:
   # GtkMenu, GtkScrollType, gpointer --> void
-  method move-scroll {
+  method move-scroll is also<move_scroll> {
     self.connect-uint($!m, 'move-scroll');
   }
 
   # Is originally:
   # GtkMenu, gpointer, gpointer, gboolean, gboolean, gpointer --> void
-  method popped-up {
+  method popped-up is also<popped_up> {
     self.connect-popped-up($!m);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method accel_group is rw {
+  method accel_group is rw is also<accel-group> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_menu_get_accel_group($!m);
@@ -104,7 +105,7 @@ class GTK::Menu is GTK::MenuShell {
     );
   }
 
-  method accel_path is rw {
+  method accel_path is rw is also<accel-path> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_menu_get_accel_path($!m);
@@ -139,7 +140,7 @@ class GTK::Menu is GTK::MenuShell {
     );
   }
 
-  method reserve_toggle_size is rw {
+  method reserve_toggle_size is rw is also<reserve-toggle-size> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_menu_get_reserve_toggle_size($!m);
@@ -151,7 +152,7 @@ class GTK::Menu is GTK::MenuShell {
     );
   }
 
-  method tearoff_state is rw {
+  method tearoff_state is rw is also<tearoff-state> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_menu_get_tearoff_state($!m);
@@ -191,7 +192,7 @@ class GTK::Menu is GTK::MenuShell {
   method attach_to_widget (
     GtkWidget() $attach_widget,
     GtkMenuDetachFunc $detacher
-  ) {
+  ) is also<attach-to-widget> {
     gtk_menu_attach_to_widget($!m, $attach_widget, $detacher);
   }
 
@@ -199,19 +200,19 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_detach($!m);
   }
 
-  method get_attach_widget {
+  method get_attach_widget is also<get-attach-widget> {
     gtk_menu_get_attach_widget($!m);
   }
 
-  method get_for_attach_widget {
+  method get_for_attach_widget is also<get-for-attach-widget> {
     gtk_menu_get_for_attach_widget($!m.widget);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_menu_get_type();
   }
 
-  method place_on_monitor (GdkMonitor $monitor) {
+  method place_on_monitor (GdkMonitor $monitor) is also<place-on-monitor> {
     gtk_menu_place_on_monitor($!m, $monitor);
   }
 
@@ -234,7 +235,7 @@ class GTK::Menu is GTK::MenuShell {
     );
   }
 
-  method popup_at_pointer (GdkEvent $trigger_event) {
+  method popup_at_pointer (GdkEvent $trigger_event) is also<popup-at-pointer> {
     gtk_menu_popup_at_pointer($!m, $trigger_event);
   }
 
@@ -244,7 +245,7 @@ class GTK::Menu is GTK::MenuShell {
     GdkGravity $rect_anchor,
     GdkGravity $menu_anchor,
     GdkEvent $trigger_event
-  ) {
+  ) is also<popup-at-rect> {
     gtk_menu_popup_at_rect(
       $!m, $rect_window, $rect, $rect_anchor, $menu_anchor, $trigger_event
     );
@@ -255,7 +256,7 @@ class GTK::Menu is GTK::MenuShell {
     GdkGravity $widget_anchor,
     GdkGravity $menu_anchor,
     GdkEvent $trigger_event
-  ) {
+  ) is also<popup-at-widget> {
     gtk_menu_popup_at_widget(
       $!m, $widget, $widget_anchor, $menu_anchor, $trigger_event
     );
@@ -270,7 +271,7 @@ class GTK::Menu is GTK::MenuShell {
     GDestroyNotify $destroy,
     Int() $button,
     Int() $activate_time
-  ) is DEPRECATED {
+  ) is DEPRECATED is also<popup-for-device> {
     my @u = ($button, $activate_time);
     my guint32 ($b, $at) = self.RESOLVE-UINT(@u);
     gtk_menu_popup_for_device(
@@ -286,7 +287,7 @@ class GTK::Menu is GTK::MenuShell {
     );
   }
 
-  method reorder_child (GtkWidget() $child, Int() $position) {
+  method reorder_child (GtkWidget() $child, Int() $position) is also<reorder-child> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_menu_reorder_child($!m, $child, $p);
   }
@@ -295,9 +296,10 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_reposition($!m);
   }
 
-  method set_screen (GdkScreen $screen) {
+  method set_screen (GdkScreen $screen) is also<set-screen> {
     gtk_menu_set_screen($!m, $screen);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

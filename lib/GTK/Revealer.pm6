@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -53,7 +54,7 @@ class GTK::Revealer is GTK::Bin {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # Type: gboolean
-  method child-revealed is rw {
+  method child-revealed is rw is also<child_revealed> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -70,7 +71,7 @@ class GTK::Revealer is GTK::Bin {
 
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method reveal_child is rw {
+  method reveal_child is rw is also<reveal-child> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_revealer_get_reveal_child($!r);
@@ -82,7 +83,7 @@ class GTK::Revealer is GTK::Bin {
     );
   }
 
-  method transition_duration is rw {
+  method transition_duration is rw is also<transition-duration> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_revealer_get_transition_duration($!r);
@@ -94,7 +95,7 @@ class GTK::Revealer is GTK::Bin {
     );
   }
 
-  method transition_type is rw {
+  method transition_type is rw is also<transition-type> {
     Proxy.new(
       FETCH => sub ($) {
         GtkRevealerTransitionType( gtk_revealer_get_transition_type($!r) );
@@ -108,13 +109,14 @@ class GTK::Revealer is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_child_revealed {
+  method get_child_revealed is also<get-child-revealed> {
     gtk_revealer_get_child_revealed($!r);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_revealer_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

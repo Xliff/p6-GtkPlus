@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -75,12 +76,12 @@ class GTK::Scale is GTK::Range {
     self.bless(:$scale);
   }
 
-  method new-hscale(GtkAdjustment() $adj) {
+  method new-hscale(GtkAdjustment() $adj) is also<new_hscale> {
     my $scale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, $adj);
     self.bless(:$scale);
   }
 
-  method new-vscale(GtkAdjustment() $adj) {
+  method new-vscale(GtkAdjustment() $adj) is also<new_vscale> {
     my $scale = gtk_scale_new(GTK_ORIENTATION_VERTICAL, $adj);
     self.bless(:$scale);
   }
@@ -90,7 +91,7 @@ class GTK::Scale is GTK::Range {
     Num() $min,
     Num() $max,
     Num() $step
-  ) {
+  ) is also<new-with-range> {
     my uint32 $o = self.RESOLVE-UINT($orientation);
     my num64 ($mn, $mx, $st) = ($min, $max, $step);
     my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
@@ -101,7 +102,7 @@ class GTK::Scale is GTK::Range {
 
   # Is originally:
   # GtkScale, gdouble, gpointer --> Str
-  method format-value {
+  method format-value is also<format_value> {
     self.connect-format-value($!s);
   }
 
@@ -120,7 +121,7 @@ class GTK::Scale is GTK::Range {
     );
   }
 
-  method draw_value is rw {
+  method draw_value is rw is also<draw-value> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_scale_get_draw_value($!s);
@@ -132,7 +133,7 @@ class GTK::Scale is GTK::Range {
     );
   }
 
-  method has_origin is rw {
+  method has_origin is rw is also<has-origin> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_scale_get_has_origin($!s);
@@ -144,7 +145,7 @@ class GTK::Scale is GTK::Range {
     );
   }
 
-  method value_pos is rw {
+  method value_pos is rw is also<value-pos> {
     Proxy.new(
       FETCH => sub ($) {
         GtkPositionType( gtk_scale_get_value_pos($!s) );
@@ -162,29 +163,30 @@ class GTK::Scale is GTK::Range {
     Num() $value,
     Int() $position,
     gchar $markup
-  ) {
+  ) is also<add-mark> {
     my uint32 $p = self.RESOLVE-UINT($position);
     my num64 $v = $value;
     gtk_scale_add_mark($!s, $v, $p, $markup);
   }
 
-  method clear_marks {
+  method clear_marks is also<clear-marks> {
     gtk_scale_clear_marks($!s);
   }
 
-  method get_layout {
+  method get_layout is also<get-layout> {
     gtk_scale_get_layout($!s);
   }
 
-  method get_layout_offsets (Int $x, Int $y) {
+  method get_layout_offsets (Int $x, Int $y) is also<get-layout-offsets> {
     my gint $_x = $x;
     my gint $_y = $y;
     gtk_scale_get_layout_offsets($!s, $_x, $_y);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_scale_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -62,7 +63,7 @@ class GTK::CSSProvider {
 
   # Is originally:
   # GtkCssProvider, GtkCssSection, GError, gpointer --> void
-  method parsing-error {
+  method parsing-error is also<parsing_error> {
     self.connect-parsing-error($!css);
   }
 
@@ -73,7 +74,7 @@ class GTK::CSSProvider {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method error_quark {
+  method error_quark is also<error-quark> {
     gtk_css_provider_error_quark();
   }
 
@@ -81,11 +82,11 @@ class GTK::CSSProvider {
   #   gtk_css_provider_get_default();
   # }
 
-  method get_named (Str() $name, Str() $variant) {
+  method get_named (Str() $name, Str() $variant) is also<get-named> {
     gtk_css_provider_get_named($name, $variant);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_css_provider_get_type();
   }
 
@@ -93,27 +94,28 @@ class GTK::CSSProvider {
     Str() $data,
     Int() $length = -1,
     GError $error = GError
-  ) {
+  ) is also<load-from-data> {
     my gssize $l = $length;
     gtk_css_provider_load_from_data($!css, $data, $l, $error);
   }
 
-  method load_from_file (GFile $file, GError $error) {
+  method load_from_file (GFile $file, GError $error) is also<load-from-file> {
     gtk_css_provider_load_from_file($!css, $file, $error);
   }
 
-  method load_from_path (gchar $path, GError $error) {
+  method load_from_path (gchar $path, GError $error) is also<load-from-path> {
     gtk_css_provider_load_from_path($!css, $path, $error);
   }
 
-  method load_from_resource (gchar $resource_path) {
+  method load_from_resource (gchar $resource_path) is also<load-from-resource> {
     gtk_css_provider_load_from_resource($!css, $resource_path);
   }
 
-  method to_string {
+  method to_string is also<to-string> {
     gtk_css_provider_to_string($!css);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

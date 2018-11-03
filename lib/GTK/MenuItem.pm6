@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -116,12 +117,12 @@ class GTK::MenuItem is GTK::Bin {
   #   self.bless(:$menuitem);
   # }
 
-  method new_with_label (Str() $label) {
+  method new_with_label (Str() $label) is also<new-with-label> {
     my $menuitem = gtk_menu_item_new_with_label($label);
     self.bless(:$menuitem);
   }
 
-  method new_with_mnemonic (Str() $label) {
+  method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $menuitem = gtk_menu_item_new_with_mnemonic($label);
     self.bless(:$menuitem);
   }
@@ -140,7 +141,7 @@ class GTK::MenuItem is GTK::Bin {
 
   # Is originally:
   # GtkMenuItem, gpointer --> void
-  method activate-item {
+  method activate-item is also<activate_item> {
     self.connect($!mi, 'activate-item');
   }
 
@@ -158,19 +159,19 @@ class GTK::MenuItem is GTK::Bin {
 
   # Is originally:
   # GtkMenuItem, gint, gpointer --> void
-  method toggle-size-allocate {
+  method toggle-size-allocate is also<toggle_size_allocate> {
     self.connect-int($!mi, 'toggle-size-allocate');
   }
 
   # Is originally:
   # GtkMenuItem, gpointer, gpointer --> void
-  method toggle-size-request {
+  method toggle-size-request is also<toggle_size_request> {
     self.connect-pointer($!mi, 'toggle-size-request');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method accel_path is rw {
+  method accel_path is rw is also<accel-path> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_menu_item_get_accel_path($!mi);
@@ -192,7 +193,7 @@ class GTK::MenuItem is GTK::Bin {
     );
   }
 
-  method reserve_indicator is rw {
+  method reserve_indicator is rw is also<reserve-indicator> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_menu_item_get_reserve_indicator($!mi);
@@ -204,7 +205,7 @@ class GTK::MenuItem is GTK::Bin {
     );
   }
 
-  method right_justified is DEPRECATED is rw {
+  method right_justified is DEPRECATED is rw is also<right-justified> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_menu_item_get_right_justified($!mi);
@@ -227,7 +228,7 @@ class GTK::MenuItem is GTK::Bin {
     );
   }
 
-  method use_underline is rw {
+  method use_underline is rw is also<use-underline> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_menu_item_get_use_underline($!mi);
@@ -241,28 +242,32 @@ class GTK::MenuItem is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method emit-activate {
+  method emit-activate is also<emit_activate> {
     gtk_menu_item_activate($!mi);
   }
 
-  method emit-deselect {
+  method emit-deselect is also<emit_deselect> {
     gtk_menu_item_deselect($!mi);
   }
 
-  method emit-select {
+  method emit-select is also<emit_select> {
     gtk_menu_item_select($!mi);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_menu_item_get_type();
   }
 
-  method toggle_size_allocate (Int() $allocation) {
+  method emit_toggle_size_allocate (Int() $allocation)
+    is also<emit-toggle-size-allocate>
+  {
     my gint $a = self.RESOLVE-INT($allocation);
     gtk_menu_item_toggle_size_allocate($!mi, $a);
   }
 
-  method toggle_size_request (Int() $requisition) {
+  method emit_toggle_size_request (Int() $requisition)
+    is also<emit-toggle-size-request> 
+  {
     my gint $r = self.RESOLVE-INT($requisition);
     gtk_menu_item_toggle_size_request($!mi, $r);
   }

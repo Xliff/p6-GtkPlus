@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -65,7 +66,7 @@ class GTK::AppButton is GTK::ComboBox {
 
   # Is originally:
   # GtkAppChooserButton, gchar, gpointer --> void
-  method custom-item-activated {
+  method custom-item-activated is also<custom_item_activated> {
     self.connect-string($!acb, 'custom-item-activated');
   }
 
@@ -83,7 +84,7 @@ class GTK::AppButton is GTK::ComboBox {
     );
   }
 
-  method show_default_item is rw {
+  method show_default_item is rw is also<show-default-item> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_app_chooser_button_get_show_default_item($!acb);
@@ -95,7 +96,7 @@ class GTK::AppButton is GTK::ComboBox {
     );
   }
 
-  method show_dialog_item is rw {
+  method show_dialog_item is rw is also<show-dialog-item> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_app_chooser_button_get_show_dialog_item($!acb);
@@ -109,23 +110,24 @@ class GTK::AppButton is GTK::ComboBox {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_custom_item (Str() $name, Str() $label, GIcon $icon) {
+  method append_custom_item (Str() $name, Str() $label, GIcon $icon) is also<append-custom-item> {
     gtk_app_chooser_button_append_custom_item(
       $!acb, $name, $label, $icon
     );
   }
 
-  method append_separator {
+  method append_separator is also<append-separator> {
     gtk_app_chooser_button_append_separator($!acb);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_app_chooser_button_get_type();
   }
 
-  method set_active_custom_item (Str() $name) {
+  method set_active_custom_item (Str() $name) is also<set-active-custom-item> {
     gtk_app_chooser_button_set_active_custom_item($!acb, $name);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

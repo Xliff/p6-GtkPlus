@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Raw::EntryBuffer;
@@ -29,22 +31,22 @@ class GTK::EntryBuffer {
     self.bless(:$buffer);
   }
 
-  method buffer {
+  method GTK::Raw::Types::GtkEntryBuffer is also<buffer> {
     $!b;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method deleted-text {
+  method deleted-text is also<deleted_text> {
     self.connect-movement-step($!b, 'deleted-text');
   }
 
-  method inserted-text {
+  method inserted-text is also<inserted_text> {
     self.connect-inserted-textt($!b);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method max_length is rw {
+  method max_length is rw is also<max-length> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_buffer_get_max_length($!b);
@@ -82,43 +84,51 @@ class GTK::EntryBuffer {
     );
   }
 
-  method delete_text (Int() $position, Int() $n_chars) {
+  method delete_text (Int() $position, Int() $n_chars)
+    is also<delete-text>
+  {
     my guint $p = self.RESOLVE-UINT($position);
     my gint $nc = self.RESOLVE-INT($n_chars);
     gtk_entry_buffer_delete_text($!b, $p, $nc);
   }
 
-  method emit_deleted_text (Int() $position, Int() $n_chars) {
+  method emit_deleted_text (Int() $position, Int() $n_chars)
+    is also<emit-deleted-text>
+  {
     my guint $p = self.RESOLVE-UINT($position);
     my gint $nc = self.RESOLVE-INT($n_chars);
     gtk_entry_buffer_emit_deleted_text($!b, $p, $nc);
   }
 
-  method emit_inserted_text (Int() $position, Str() $chars, Int() $n_chars) {
+  method emit_inserted_text (Int() $position, Str() $chars, Int() $n_chars)
+    is also<emit-inserted-text>
+  {
     my guint $p = self.RESOLVE-UINT($position);
     my gint $nc = self.RESOLVE-INT($n_chars);
     gtk_entry_buffer_emit_inserted_text($!b, $p, $chars, $nc);
   }
 
-  method get_bytes {
+  method get_bytes is also<get-bytes> {
     gtk_entry_buffer_get_bytes($!b);
   }
 
-  method get_length {
+  method get_length is also<get-length> {
     gtk_entry_buffer_get_length($!b);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_entry_buffer_get_type();
   }
 
-  method insert_text (guint $position, Str() $chars, Int() $n_chars) {
+  method insert_text (guint $position, Str() $chars, Int() $n_chars)
+    is also<insert-text>
+  {
     my guint $p = self.RESOLVE-UINT($position);
     my gint $nc = self.RESOLVE-INT($n_chars);
     gtk_entry_buffer_insert_text($!b, $p, $chars, $nc);
   }
 
-  method set_text (Str() $chars, Int() $n_chars) {
+  method set_text (Str() $chars, Int() $n_chars) is also<set-text> {
     my gint $nc = self.RESOLVE-INT($n_chars);
     gtk_entry_buffer_set_text($!b, $chars, $nc);
   }

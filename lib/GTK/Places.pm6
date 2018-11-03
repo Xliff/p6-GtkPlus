@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::GSList;
@@ -61,19 +62,19 @@ class GTK::Places is GTK::ScrolledWindow {
 
   # Is originally:
   # GtkPlacesSidebar, gint, gpointer --> gint
-  method drag-action-ask {
+  method drag-action-ask is also<drag_action_ask> {
     self.connect-int-rint($!ps, 'drag-action-ask');
   }
 
   # Is originally:
   # GtkPlacesSidebar, GdkDragContext, GObject, gpointer, gpointer --> gint
-  method drag-action-requested {
+  method drag-action-requested is also<drag_action_requested> {
     self.connect-drag-action-requested($!ps);
   }
 
   # Is originally:
   # GtkPlacesSidebar, GObject, gpointer, gint, gpointer --> void
-  method drag-perform-drop {
+  method drag-perform-drop is also<drag_perform_drop> {
     self.connect-drag-perform-drop($!ps);
   }
 
@@ -85,49 +86,51 @@ class GTK::Places is GTK::ScrolledWindow {
 
   # Is originally:
   # GtkPlacesSidebar, GObject, GtkPlacesOpenFlags, gpointer --> void
-  method open-location {
+  method open-location is also<open_location> {
     self.connect-open-location($!ps);
   }
 
   # Is originally:
   # GtkPlacesSidebar, GtkWidget, GFile, GVolume, gpointer --> void
-  method populate-popup {
+  method populate-popup is also<populate_popup> {
     self.connect-populate-popup($!ps);
   }
 
   # Is originally:
   # GtkPlacesSidebar, gpointer --> void
-  method show-connect-to-server {
+  method show-connect-to-server is also<show_connect_to_server> {
     self.connect($!ps, 'show-connect-to-server');
   }
 
   # Is originally:
   # GtkPlacesSidebar, gpointer --> void
-  method show-enter-location {
+  method show-enter-location is also<show_enter_location> {
     self.connect($!ps, 'show-enter-location');
   }
 
   # Is originally:
   # GtkPlacesSidebar, gchar, gchar, gpointer --> void
-  method show-error-message {
+  method show-error-message is also<show_error_message> {
     self.connect-strstr($!ps, 'show-error-message');
   }
 
   # Is originally:
   # GtkPlacesSidebar, gpointer --> void
-  method show-other-locations {
+  method show-other-locations is also<show_other_locations> {
     self.connect($!ps, 'show-other-locations');
   }
 
   # Is originally:
   # GtkPlacesSidebar, GtkPlacesOpenFlags, gpointer --> void
-  method show-other-locations-with-flags {
+  method show-other-locations-with-flags
+    is also<show_other_locations_with_flags>
+  {
     self.connect-uint($!ps, 'show-other-locations-with-flags');
   }
 
   # Is originally:
   # GtkPlacesSidebar, GtkPlacesOpenFlags, gpointer --> void
-  method show-starred-location {
+  method show-starred-location is also<show_starred_location> {
     self.connect-uint($!ps, 'show-starred-location');
   }
 
@@ -139,7 +142,7 @@ class GTK::Places is GTK::ScrolledWindow {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method local_only is rw {
+  method local_only is rw is also<local-only> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_places_sidebar_get_local_only($!ps);
@@ -166,7 +169,7 @@ class GTK::Places is GTK::ScrolledWindow {
     );
   }
 
-  method open_flags is rw {
+  method open_flags is rw is also<open-flags> {
     Proxy.new(
       FETCH => sub ($) {
         GtkPlacesOpenFlags( gtk_places_sidebar_get_open_flags($!ps) );
@@ -178,19 +181,19 @@ class GTK::Places is GTK::ScrolledWindow {
     );
   }
 
-  method show_connect_to_server is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        so gtk_places_sidebar_get_show_connect_to_server($!ps);
-      },
-      STORE => sub ($, Int() $show_connect_to_server is copy) {
-        my gboolean $scs = self.RESOLVE-BOOL($show_connect_to_server);
-        gtk_places_sidebar_set_show_connect_to_server($!ps, $scs);
-      }
-    );
-  }
+  # method show_connect_to_server is rw is also<show-connect-to-server> {
+  #   Proxy.new(
+  #     FETCH => sub ($) {
+  #       so gtk_places_sidebar_get_show_connect_to_server($!ps);
+  #     },
+  #     STORE => sub ($, Int() $show_connect_to_server is copy) {
+  #       my gboolean $scs = self.RESOLVE-BOOL($show_connect_to_server);
+  #       gtk_places_sidebar_set_show_connect_to_server($!ps, $scs);
+  #     }
+  #   );
+  # }
 
-  method show_desktop is rw {
+  method show_desktop is rw is also<show-desktop> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_places_sidebar_get_show_desktop($!ps);
@@ -202,7 +205,7 @@ class GTK::Places is GTK::ScrolledWindow {
     );
   }
 
-  method show_enter_location is rw {
+  method show_enterlocation is rw is also<show-enterlocation> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_places_sidebar_get_show_enter_location($!ps);
@@ -214,7 +217,7 @@ class GTK::Places is GTK::ScrolledWindow {
     );
   }
 
-  method show_other_locations is rw {
+  method show_otherlocations is rw is also<show-otherlocations> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_places_sidebar_get_show_other_locations($!ps);
@@ -226,7 +229,7 @@ class GTK::Places is GTK::ScrolledWindow {
     );
   }
 
-  method show_recent is rw {
+  method show_recent is rw is also<show-recent> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_places_sidebar_get_show_recent($!ps);
@@ -238,7 +241,7 @@ class GTK::Places is GTK::ScrolledWindow {
     );
   }
 
-  method show_starred_location is rw {
+  method show_starredlocation is rw is also<show-starredlocation> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_places_sidebar_get_show_starred_location($!ps);
@@ -250,7 +253,7 @@ class GTK::Places is GTK::ScrolledWindow {
     );
   }
 
-  method show_trash is rw {
+  method show_trash is rw is also<show-trash> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_places_sidebar_get_show_trash($!ps);
@@ -264,32 +267,34 @@ class GTK::Places is GTK::ScrolledWindow {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_shortcut (GFile $location) {
+  method add_shortcut (GFile $location) is also<add-shortcut> {
     gtk_places_sidebar_add_shortcut($!ps, $location);
   }
 
-  method get_nth_bookmark (Int() $n) {
+  method get_nth_bookmark (Int() $n) is also<get-nth-bookmark> {
     die "GFile NYI";
     my $nn = self.RESOLVE-INT($n);
     GFile.new(  gtk_places_sidebar_get_nth_bookmark($!ps, $nn) );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_places_sidebar_get_type();
   }
 
-  method list_shortcuts {
+  method list_shortcuts is also<list-shortcuts> {
     GTK::Compat::GSList.new( gtk_places_sidebar_list_shortcuts($!ps) );
   }
 
-  method remove_shortcut (GFile $location) {
+  method remove_shortcut (GFile $location) is also<remove-shortcut> {
     gtk_places_sidebar_remove_shortcut($!ps, $location);
   }
 
   method set_drop_targets_visible (
     Int() $visible,
     GdkDragContext $context = GdkDragContext
-  ) {
+  )
+    is also<set-drop-targets-visible>
+  {
     my $v = self.RESOLVE-BOOL($visible);
     gtk_places_sidebar_set_drop_targets_visible($!ps, $v, $context);
   }

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -60,7 +61,7 @@ class GTK::Overlay is GTK::Bin {
 
   # Is originally:
   # GtkOverlay, GtkWidget, GdkRectangle, gpointer --> gboolean
-  method get-child-position {
+  method get-child-position is also<get_child_position> {
     self.connect-widget-rect($!o, 'get-child-position');
   }
 
@@ -70,19 +71,19 @@ class GTK::Overlay is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_overlay (GtkWidget() $widget) {
+  method add_overlay (GtkWidget() $widget) is also<add-overlay> {
     gtk_overlay_add_overlay($!o, $widget);
   }
 
-  method get_overlay_pass_through (GtkWidget() $widget) {
+  method get_overlay_pass_through (GtkWidget() $widget) is also<get-overlay-pass-through> {
     gtk_overlay_get_overlay_pass_through($!o, $widget);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_overlay_get_type();
   }
 
-  method reorder_overlay (GtkWidget() $child, Int() $position) {
+  method reorder_overlay (GtkWidget() $child, Int() $position) is also<reorder-overlay> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_overlay_reorder_overlay($!o, $child, $p);
   }
@@ -90,10 +91,11 @@ class GTK::Overlay is GTK::Bin {
   method set_overlay_pass_through (
     GtkWidget() $widget,
     Int() $pass_through
-  ) {
+  ) is also<set-overlay-pass-through> {
     my gboolean $pt = self.RESOLVE-BOOL($pass_through);
     gtk_overlay_set_overlay_pass_through($!o, $widget, $pt);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

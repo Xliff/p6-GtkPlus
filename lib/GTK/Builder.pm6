@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use Data::Dump::Tree;
@@ -93,17 +94,17 @@ class GTK::Builder does Associative {
     self.bless(:$builder, :$pod, :$ui, :$window-name, :$style);
   }
 
-  method new_from_file (Str() $filename) {
+  method new_from_file (Str() $filename) is also<new-from-file> {
     my $builder = gtk_builder_new_from_file($filename);
     self.bless(:$builder);
   }
 
-  method new_from_resource (Str() $resource) {
+  method new_from_resource (Str() $resource) is also<new-from-resource> {
     my $builder = gtk_builder_new_from_resource($resource);
     self.bless(:$builder);
   }
 
-  method new_from_string (Str() $string, Int() $length = -1) {
+  method new_from_string (Str() $string, Int() $length = -1) is also<new-from-string> {
     die '$length must not be negative' unless $length > -2;
     my gssize $l = $length;
     my $builder = gtk_builder_new_from_string($string, $l);
@@ -112,7 +113,7 @@ class GTK::Builder does Associative {
 
   #  new-from-buf??
 
-  method AT-KEY(Str $key) {
+  method AT-KEY(Str $key) is also<AT_KEY> {
     die "Requested control '$key' does not exist."
       unless  %!widgets{$key}:exists;
     %!widgets{$key};
@@ -208,7 +209,7 @@ class GTK::Builder does Associative {
     );
   }
 
-  method translation_domain is rw {
+  method translation_domain is rw is also<translation-domain> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_builder_get_translation_domain($!b);
@@ -224,14 +225,14 @@ class GTK::Builder does Associative {
   method add_callback_symbol (
     Str() $callback_name,
     GCallback $callback_symbol = GCallback
-  ) {
+  ) is also<add-callback-symbol> {
     gtk_builder_add_callback_symbol($!b, $callback_name, $callback_symbol);
   }
 
   method add_from_file (
     Str() $filename,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<add-from-file> {
     gtk_builder_add_from_file($!b, $filename, $error);
     $ERROR = $error if $error[0].defined;
     self!postProcess(:file($filename));
@@ -240,7 +241,7 @@ class GTK::Builder does Associative {
   method add_from_resource (
     Str() $resource_path,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<add-from-resource> {
     gtk_builder_add_from_resource($!b, $resource_path, $error);
     $ERROR = $error if $error[0].defined;
     self!postProcess(:resource($resource_path));
@@ -250,7 +251,7 @@ class GTK::Builder does Associative {
     Str() $buffer,
     $length,
     CArray[Pointer[GError]] $error #= gerror
-  ) {
+  ) is also<add-from-string> {
     with $length {
       die '$length cannot be negative' unless $length > -2;
     }
@@ -270,7 +271,7 @@ class GTK::Builder does Associative {
     Str() $filename,
     @object_ids,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<add-objects-from-file> {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     $oi[$++] = $_ for @object_ids;
@@ -283,7 +284,7 @@ class GTK::Builder does Associative {
     Str() $resource_path,
     @object_ids,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<add-objects-from-resource> {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     $oi[$++] = $_ for @object_ids;
@@ -295,7 +296,7 @@ class GTK::Builder does Associative {
   multi method add_objects_from_string (
     Str() $buffer,
     @object_ids = ()
-  ) {
+  ) is also<add-objects-from-string> {
     samewith($buffer, -1, @object_ids);
   }
   multi method add_objects_from_string (
@@ -303,7 +304,7 @@ class GTK::Builder does Associative {
     Int() $length,
     @object_ids,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<add-objects-from-string> {
     die '@objects must be a list of strings'
       unless @object_ids.elems.not || @object_ids.all ~~ Str;
     die '$length cannot be negative' unless $length > -2;
@@ -323,22 +324,22 @@ class GTK::Builder does Associative {
     $rc;
   }
 
-  method connect_signals (gpointer $user_data) {
+  method connect_signals (gpointer $user_data) is also<connect-signals> {
     gtk_builder_connect_signals($!b, $user_data);
   }
 
   method connect_signals_full (
     GtkBuilderConnectFunc $func,
     gpointer $user_data
-  ) {
+  ) is also<connect-signals-full> {
     gtk_builder_connect_signals_full($!b, $func, $user_data);
   }
 
-  method error_quark {
+  method error_quark is also<error-quark> {
     gtk_builder_error_quark();
   }
 
-  method expose_object (Str() $name, GObject $object) {
+  method expose_object (Str() $name, GObject $object) is also<expose-object> {
     gtk_builder_expose_object($!b, $name, $object);
   }
 
@@ -348,7 +349,7 @@ class GTK::Builder does Associative {
     Str() $buffer,
     Int() $length,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<extend-with-template> {
     die '$length cannot be negative' unless $length > -2;
     my gsize $l = $length;
     gtk_builder_extend_with_template(
@@ -358,24 +359,24 @@ class GTK::Builder does Associative {
     self!postProcess;
   }
 
-  method get_object (Str() $name) {
+  method get_object (Str() $name) is also<get-object> {
     my $o = gtk_builder_get_object($!b, $name);
     $o =:= GtkWidget ?? Nil !! $o;
   }
 
-  method get_objects {
+  method get_objects is also<get-objects> {
     GTK::Compat::GSList.new( gtk_builder_get_objects($!b) );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_builder_get_type();
   }
 
-  method get_type_from_name (Str() $type_name) {
+  method get_type_from_name (Str() $type_name) is also<get-type-from-name> {
     gtk_builder_get_type_from_name($!b, $type_name);
   }
 
-  method lookup_callback_symbol (Str() $callback_name) {
+  method lookup_callback_symbol (Str() $callback_name) is also<lookup-callback-symbol> {
     gtk_builder_lookup_callback_symbol($!b, $callback_name);
   }
 
@@ -384,7 +385,7 @@ class GTK::Builder does Associative {
     Str() $string,
     GValue $value,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<value-from-string> {
     gtk_builder_value_from_string($!b, $pspec, $string, $value, $error);
     $ERROR = $error if $error[0].defined;
   }
@@ -394,7 +395,7 @@ class GTK::Builder does Associative {
     Str() $string,
     GValue $value,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<value-from-string-type> {
     gtk_builder_value_from_string_type($!b, $type, $string, $value, $error);
     $ERROR = $error if $error[0].defined;
   }
@@ -402,3 +403,4 @@ class GTK::Builder does Associative {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

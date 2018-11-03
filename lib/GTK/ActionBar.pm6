@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,7 +53,7 @@ class GTK::ActionBar is GTK::Bin {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method center_widget is rw {
+  method center_widget is rw is also<center-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_action_bar_get_center_widget($!ab);
@@ -65,27 +66,39 @@ class GTK::ActionBar is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_action_bar_get_type();
   }
 
+  multi method pack-end (GtkWidget $child) {
+    self.pack_end($child);
+  }
   multi method pack_end (GtkWidget $child) {
     self.unshift-end($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_action_bar_pack_end($!ab, $child);
   }
-  multi method pack_end (GTK::Widget $child)  {
+  multi method pack-end (GTK::Widget $child) {
+    self.pack_end($child);
+  }
+  multi method pack_end (GTK::Widget $child) {
     self.SET-LATCH;
     self.unshift-end($child);
     samewith($child.widget);
   }
 
+  multi method pack-start (GtkWidget $child) {
+    self.pack_start($child);
+  }
   multi method pack_start (GtkWidget $child) {
     self.unshift-end($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_action_bar_pack_start($!ab, $child);
   }
-  multi method pack_start (GTK::Widget $child)  {
+  multi method pack-start (GTK::Widget $child) {
+    self.pack_start($child);
+  }
+  multi method pack_start (GTK::Widget $child) {
     self.SET-LATCH;
     self.push-start($child.widget);
     samewith($child.widget);

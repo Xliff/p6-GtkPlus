@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -95,7 +96,7 @@ class GTK::CellAreaBox is GTK::CellArea {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_cell_area_box_get_type();
   }
 
@@ -104,7 +105,7 @@ class GTK::CellAreaBox is GTK::CellArea {
     Int() $expand,
     Int() $align,
     Int() $fixed
-  ) {
+  ) is also<pack-end> {
     my @b = ($expand, $align, $fixed);
     my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
     gtk_cell_area_box_pack_end($!cab, $renderer, $e, $a, $f);
@@ -115,7 +116,7 @@ class GTK::CellAreaBox is GTK::CellArea {
     Int() $expand,
     Int() $align,
     Int() $fixed
-  ) {
+  ) is also<pack-start> {
     my @b = ($expand, $align, $fixed);
     my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
     gtk_cell_area_box_pack_start($!cab, $renderer, $e, $a, $f);
@@ -124,3 +125,4 @@ class GTK::CellAreaBox is GTK::CellArea {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

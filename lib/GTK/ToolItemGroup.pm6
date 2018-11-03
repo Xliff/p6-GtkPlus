@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -82,7 +83,7 @@ class GTK::ToolItemGroup is GTK::Container {
     );
   }
 
-  method header_relief is rw {
+  method header_relief is rw is also<header-relief> {
     Proxy.new(
       FETCH => sub ($) {
         GtkReliefStyle(
@@ -107,7 +108,7 @@ class GTK::ToolItemGroup is GTK::Container {
     );
   }
 
-  method label_widget is rw {
+  method label_widget is rw is also<label-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_tool_item_group_get_label_widget($!tig);
@@ -120,26 +121,26 @@ class GTK::ToolItemGroup is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_drop_item (Int() $x, Int() $y) {
+  method get_drop_item (Int() $x, Int() $y) is also<get-drop-item> {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_tool_item_group_get_drop_item($!tig, $xx, $yy);
   }
 
-  method get_item_position (GtkToolItem() $item) {
+  method get_item_position (GtkToolItem() $item) is also<get-item-position> {
     gtk_tool_item_group_get_item_position($!tig, $item);
   }
 
-  method get_n_items {
+  method get_n_items is also<get-n-items> {
     gtk_tool_item_group_get_n_items($!tig);
   }
 
-  method get_nth_item (guint $index) {
+  method get_nth_item (guint $index) is also<get-nth-item> {
     my guint $i = self.RESOLVE-UINT($index);
     gtk_tool_item_group_get_nth_item($!tig, $i);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_tool_item_group_get_type();
   }
 
@@ -148,10 +149,11 @@ class GTK::ToolItemGroup is GTK::Container {
     gtk_tool_item_group_insert($!tig, $item, $p);
   }
 
-  method set_item_position (GtkToolItem() $item, Int() $position) {
+  method set_item_position (GtkToolItem() $item, Int() $position) is also<set-item-position> {
     my gint $p = self.RESOLVE-INT($position);
     gtk_tool_item_group_set_item_position($!tig, $item, $p);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

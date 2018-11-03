@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -54,7 +55,7 @@ class GTK::ListStore {
     gtk_list_store_clear($!ls);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_list_store_get_type();
   }
 
@@ -64,12 +65,12 @@ class GTK::ListStore {
     gtk_list_store_insert($!ls, $iter, $position);
   }
 
-  method insert_after (GtkTreeIter() $iter, GtkTreeIter() $sibling) {
+  method insert_after (GtkTreeIter() $iter, GtkTreeIter() $sibling) is also<insert-after> {
     $!accessed = True;
     gtk_list_store_insert_after($!ls, $iter, $sibling);
   }
 
-  method insert_before (GtkTreeIter() $iter, GtkTreeIter() $sibling) {
+  method insert_before (GtkTreeIter() $iter, GtkTreeIter() $sibling) is also<insert-before> {
     $!accessed = True;
     gtk_list_store_insert_before($!ls, $iter, $sibling);
   }
@@ -80,7 +81,7 @@ class GTK::ListStore {
     Int @columns,
     @values,
     Int() $n_values
-  ) {
+  ) is also<insert-with-valuesv> {
     die '$position cannot be less than -1 (append)' unless $position >= -1;
     die '@columns must consist of Integers.'
       unless @columns.all ~~ (Int, IntStr).any;
@@ -117,7 +118,7 @@ class GTK::ListStore {
     GtkTreeIter() $iter,
     Int() $position,
     %values
-  ) {
+  ) is also<insert-with-values> {
     die 'Keys used %values must be integers.'
       unless %values.keys.all ~~ (Int, IntStr).any;
     die 'Values used in %values must be GTK::Compat::Value or GValue.'
@@ -140,17 +141,17 @@ class GTK::ListStore {
     );
   }
 
-  method iter_is_valid (GtkTreeIter() $iter) {
+  method iter_is_valid (GtkTreeIter() $iter) is also<iter-is-valid> {
     $!accessed = True;
     gtk_list_store_iter_is_valid($!ls, $iter);
   }
 
-  method move_after (GtkTreeIter() $iter, GtkTreeIter() $position) {
+  method move_after (GtkTreeIter() $iter, GtkTreeIter() $position) is also<move-after> {
     $!accessed = True;
     gtk_list_store_move_after($!ls, $iter, $position);
   }
 
-  method move_before (GtkTreeIter() $iter, GtkTreeIter() $position) {
+  method move_before (GtkTreeIter() $iter, GtkTreeIter() $position) is also<move-before> {
     $!accessed = True;
     gtk_list_store_move_before($!ls, $iter, $position);
   }
@@ -170,7 +171,7 @@ class GTK::ListStore {
     gtk_list_store_reorder($!ls, $new_order);
   }
 
-  method set_column_types (*@types) {
+  method set_column_types (*@types) is also<set-column-types> {
     die 'Cannot use GTK::ListStore.set_column_types after store has been accessed.'
       if $!accessed;
     die 'Elements of @types must be integers, and must not exceeed column size'
@@ -188,7 +189,7 @@ class GTK::ListStore {
     GtkTreeIter() $iter,
     Int() $column,
     GValue() $value
-  ) {
+  ) is also<set-value> {
     my gint $c = self.RESOLVE-INT($column);
     gtk_list_store_set_value($!ls, $iter, $c, $value);
   }
@@ -196,7 +197,7 @@ class GTK::ListStore {
   method set_values (
     GtkTreeIter() $iter,
     %values
-  ) {
+  ) is also<set-values> {
     $!accessed = True;
     for %values.keys {
       unless $_ ~~ (Int, IntStr).any {
@@ -227,7 +228,7 @@ class GTK::ListStore {
     @columns,
     @values,
     Int() $n_values
-  ) {
+  ) is also<set-valuesv> {
     if $n_values > @columns.elems {
       $n_values = @columns.elems;
       warn '$n_values was greater than column count, and was corrected.';
@@ -251,3 +252,4 @@ class GTK::ListStore {
   }
 
 }
+

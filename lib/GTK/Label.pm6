@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -52,7 +53,7 @@ class GTK::Label is GTK::Widget {
     self.setWidget( $!l = nativecast(GtkLabel, $label) );
   }
 
-  method new_with_mnemonic ($text) {
+  method new_with_mnemonic ($text) is also<new-with-mnemonic> {
     my $label = gtk_label_new_with_mnemonic($text);
     self.bless(:$label);
   }
@@ -61,31 +62,31 @@ class GTK::Label is GTK::Widget {
 
   # Is originally:
   # GtkLabel, gpointer --> void
-  method activate-current-link {
+  method activate-current-link is also<activate_current_link> {
     self.connect($!l, 'activate-current-link');
   }
 
   # Is originally:
   # GtkLabel, gchar, gpointer --> gboolean
-  method activate-link {
+  method activate-link is also<activate_link> {
     self.connect-activate-link($!l);
   }
 
   # Is originally:
   # GtkLabel, gpointer --> void
-  method copy-clipboard {
+  method copy-clipboard is also<copy_clipboard> {
     self.connect($!l, 'copy-clipboard');
   }
 
   # Is originally:
   # GtkLabel, GtkMovementStep, gint, gboolean, gpointer --> void
-  method move-cursor {
+  method move-cursor is also<move_cursor> {
     self.connect-move-cursor2($!l, 'move-cursor');
   }
 
   # Is originally:
   # GtkLabel, GtkMenu, gpointer --> void
-  method populate-popup {
+  method populate-popup is also<populate_popup> {
     self.connect-menu($!l, 'populate-popup');
   }
 
@@ -149,7 +150,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method line_wrap is rw {
+  method line_wrap is rw is also<line-wrap> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_label_get_line_wrap($!l) );
@@ -161,7 +162,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method line_wrap_mode is rw {
+  method line_wrap_mode is rw is also<line-wrap-mode> {
     Proxy.new(
       FETCH => sub ($) {
         PangoWrapMode( gtk_label_get_line_wrap_mode($!l) );
@@ -185,7 +186,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method max_width_chars is rw {
+  method max_width_chars is rw is also<max-width-chars> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_label_get_max_width_chars($!l);
@@ -197,7 +198,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method mnemonic_widget is rw {
+  method mnemonic_widget is rw is also<mnemonic-widget> {
     Proxy.new(
       FETCH => sub ($) {
         # Needs widget resolution.
@@ -221,7 +222,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method single_line_mode is rw {
+  method single_line_mode is rw is also<single-line-mode> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_label_get_single_line_mode($!l) );
@@ -244,7 +245,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method track_visited_links is rw {
+  method track_visited_links is rw is also<track-visited-links> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_label_get_track_visited_links($!l) );
@@ -256,7 +257,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method use_markup is rw {
+  method use_markup is rw is also<use-markup> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_label_get_use_markup($!l) );
@@ -268,7 +269,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method use_underline is rw {
+  method use_underline is rw is also<use-underline> {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_label_get_use_underline($!l) );
@@ -280,7 +281,7 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method width_chars is rw {
+  method width_chars is rw is also<width-chars> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_label_get_width_chars($!l);
@@ -316,54 +317,55 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method get_current_uri {
+  method get_current_uri is also<get-current-uri> {
     gtk_label_get_current_uri($!l);
   }
 
-  method get_layout {
+  method get_layout is also<get-layout> {
     gtk_label_get_layout($!l);
   }
 
-  method get_layout_offsets (Int() $x, Int() $y) {
+  method get_layout_offsets (Int() $x, Int() $y) is also<get-layout-offsets> {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_label_get_layout_offsets($!l, $xx, $yy);
   }
 
-  method get_mnemonic_keyval {
+  method get_mnemonic_keyval is also<get-mnemonic-keyval> {
     gtk_label_get_mnemonic_keyval($!l);
   }
 
-  method get_selection_bounds (Int() $start, Int() $end) {
+  method get_selection_bounds (Int() $start, Int() $end) is also<get-selection-bounds> {
     my @i = ($start, $end);
     my gint ($s, $e) = self.RESOLVE-INT(@i);
     gtk_label_get_selection_bounds($!l, $start, $end);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_label_get_type();
   }
 
-  method select_region (Int() $start_offset, Int() $end_offset) {
+  method select_region (Int() $start_offset, Int() $end_offset) is also<select-region> {
     my @i = ($start_offset, $end_offset);
     my gint ($so, $eo) = self.RESOLVE-INT(@i);
     gtk_label_select_region($!l, $so, $eo);
   }
 
-  method set_markup (gchar $str) {
+  method set_markup (gchar $str) is also<set-markup> {
     gtk_label_set_markup($!l, $str);
   }
 
-  method set_markup_with_mnemonic (gchar $str) {
+  method set_markup_with_mnemonic (gchar $str) is also<set-markup-with-mnemonic> {
     gtk_label_set_markup_with_mnemonic($!l, $str);
   }
 
-  method set_pattern (gchar $pattern) {
+  method set_pattern (gchar $pattern) is also<set-pattern> {
     gtk_label_set_pattern($!l, $pattern);
   }
 
-  method set_text_with_mnemonic (gchar $str) {
+  method set_text_with_mnemonic (gchar $str) is also<set-text-with-mnemonic> {
     gtk_label_set_text_with_mnemonic($!l, $str);
   }
 
 }
+

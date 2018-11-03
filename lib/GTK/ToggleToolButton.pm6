@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -81,9 +82,10 @@ class GTK::ToggleToolButton is GTK::ToolButton {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_toggle_tool_button_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+
