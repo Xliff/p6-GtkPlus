@@ -52,63 +52,48 @@ sub MAIN($filename) {
   #                  / //_//  _/ ___/ ___/
   #                 / ,<   / / \__ \\__ \
   #                / /| |_/ / ___/ /__/ /
-  #               /_/ |_/___//____/____/  
+  #               /_/ |_/___//____/____/
+
+  my regex method_start {
+    ^^ \s* ('multi' \s+)? 'method'
+  }
+  my regex method_def {
+    ( <method_start> \s* (<-[\s(]>+) <-[{]>+ ) '{'
+  }
 
   my @lines;
   my $full_line;
   my ($add, $method) = (False, False);
   for $contents.lines {
     $full_line ~= $_;
+
     given $full_line {
       when $full_line ~~ /^ 'use NativeCall' / {
-        @lines.push('use Method::Also;');
+        @lines.push("use Method::Also;\n");
         $add = True;
       }
-      when !$method && $full_line ~~ /
-        ^^ \s* 'multi'? \s+ 'method' \s+ (<-[\s(]>+)
-      / {
-        say ($method = $/[0].Str);
-        if $/[0] !~~ /<sep>/ {
-          $add = False;
-          $method = False;
-        } else {
-          $add = True;
-        }
+      when $full_line ~~ &method_start {
+        $method = True;
         proceed;
       }
-      when $method !~~ Bool {
-        my $m;
-        say 'M1: ' ~ ($m = $full_line ~~ ::("&methodline1")).gist;
-        say 'M2: ' ~ ($m = $full_line ~~ ::("&methodline2")).gist unless $m;
-
-        sub replace($mm) {
-          say "In replace: { $mm.gist }";
-          my $sep = $mm[0] ~~ /(<[\-_>]>)/;
+      when $method and $full_line ~~ &method_def {
+        my $fm = $/;
+        say $fm.gist.say;
+        if $fm[0][0] ~~ /(<[\-_>]>)/ {
           my $ad = $/[0] eq '-' ?? '_' !! '-';
-          my $al = $mm[0].split($/[0]).join($ad);
-          my $tbr = $mm.Str;
-          say "Replace!";
+          my $al = $fm[0][0].split($/[0]).join($ad);
+          my $tbr = $fm[0].Str;
           $full_line ~~ s!$tbr!{$tbr}is also<{$al}> !;
-          ($add, $method) = (True, False);
-          succeed;
         }
-
-        for <methodline2 methodline1> {
-          my $reg = "\&$_";
-          $reg.say;
-          my $r = $full_line ~~ ::($reg);
-          replace($r) if $r;
-          say ("R<$_>: { $r.gist.say }");
-        }
-        $full_line ~= "\n";
-        $add = False;
+        $add = True;
+        $method = False;
       }
       default {
         $add = True;
       }
     }
     if $add {
-      @lines.push("{$full_line}\n");
+      @lines.push("{ $full_line }\n");
       $full_line = '';
       $add = False;
     }
