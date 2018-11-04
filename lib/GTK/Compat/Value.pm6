@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Raw::Value;
@@ -32,10 +33,7 @@ class GTK::Compat::Value {
     self.bless(:$value);
   }
 
-  method GTK::Compat::Types::GValue {
-    $!v;
-  }
-  method gvalue {
+  method GTK::Compat::Types::GValue is also<gvalue> {
     $!v;
   }
 

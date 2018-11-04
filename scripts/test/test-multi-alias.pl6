@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-class M {
+role MM {
   proto method m(|) is also<M> { * }
 
   multi method m {
@@ -13,4 +13,8 @@ class M {
   }
 }
 
-M.m.say;
+class M does MM {
+
+}
+
+M.M.say;

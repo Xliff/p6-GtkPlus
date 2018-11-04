@@ -43,8 +43,9 @@ class GTK::Box is GTK::Container {
   }
 
   multi method new (
-    Int() $orientation,          # GtkOrientation,
-    Int() $spacing
+    # Default orientation established from Glade.
+    Int() $orientation = GTK_ORIENTATION_HORIZONTAL,  # GtkOrientation,
+    Int() $spacing = 2
   ) {
     # This works because it is NOT the array version.
     my guint $o = self.RESOLVE-UINT($orientation);

@@ -61,7 +61,9 @@ sub new_row {
   # Proper way to handle a GError. Need a better way for client code to
   # Access this.
 
+  say "pBLR";
   my %b = buildListRow;
+  say "ppBLR";
   %b<row> := %b<template0>;
   %b<reshare-button>.clicked.tap({
     %messages{%b<row>}<data>.n_reshares++;
@@ -160,11 +162,13 @@ $a.activate.tap({
   for $msg_file.IO.open.slurp.lines {
     say "LINE: $_";
 
-    my ($m, $w) = (new_message($_), new_row);
+    my $m = new_message($_);
+    my $w = new_row;
     %messages{$w<row>.listboxrow}<widgets> = $w;
     %messages{$w<row>.listboxrow}<data> = $m;
     $listbox.add($w<row>);
     $w<row>.show;
+
   }
 
 });
