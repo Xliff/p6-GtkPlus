@@ -121,13 +121,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'file', $gv)
+          self.prop_get('file', $gv)
         );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!i, 'file', $gv);
+        self.prop_set('file', $gv);
       }
     );
   }
@@ -138,13 +138,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'gicon', $gv)
+          self.prop_get('gicon', $gv)
         );
         nativecast(GIcon, $gv.object);
       },
       STORE => -> $, GIcon $val is copy {
         $gv.object = $val;
-        self.prop_set($!i, 'gicon', $gv);
+        self.prop_set('gicon', $gv);
       }
     );
   }
@@ -155,13 +155,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'icon-name', $gv)
+          self.prop_get('icon-name', $gv)
         );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!i, 'icon-name', $gv);
+        self.prop_set('icon-name', $gv);
       }
     );
   }
@@ -172,13 +172,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'icon-set', $gv)
+          self.prop_get('icon-set', $gv)
         );
         nativecast(GtkIconSet, $gv.object);
       },
       STORE => -> $, GtkIconTheme() $val is copy {
         $gv.object = $val;
-        self.prop_set($!i, 'icon-set', $gv);
+        self.prop_set('icon-set', $gv);
       }
     );
   }
@@ -189,13 +189,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'icon-size', $gv)
+          self.prop_get('icon-size', $gv)
         );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!i, 'icon-size', $gv);
+        self.prop_set('icon-size', $gv);
       }
     );
   }
@@ -206,13 +206,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'pixbuf', $gv)
+          self.prop_get('pixbuf', $gv)
         );
         nativecast(GdkPixbuf, $gv.object);
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
-        self.prop_set($!i, 'pixbuf', $gv);
+        self.prop_set('pixbuf', $gv);
       }
     );
   }
@@ -223,13 +223,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'pixbuf-animation', $gv)
+          self.prop_get('pixbuf-animation', $gv)
         );
         nativecast(GdkPixbufAnimation, $gv.object);
       },
       STORE => -> $, GdkPixbufAnimation $val is copy {
         $gv.object = $val;
-        self.prop_set($!i, 'pixbuf-animation', $gv);
+        self.prop_set('pixbuf-animation', $gv);
       }
     );
   }
@@ -240,13 +240,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'resource', $gv)
+          self.prop_get('resource', $gv)
         );
         $gv.string;
       },
       STORE => -> $, $val is copy {
         $gv.string = $val;
-        self.prop_set($!i, 'resource', $gv);
+        self.prop_set('resource', $gv);
       }
     );
   }
@@ -257,13 +257,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'stock', $gv)
+          self.prop_get('stock', $gv)
         );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!i, 'stock', $gv);
+        self.prop_set('stock', $gv);
       }
     );
   }
@@ -274,7 +274,7 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'storage-type', $gv)
+          self.prop_get('storage-type', $gv)
         );
         GtkImageType( $gv.enum );
       },
@@ -290,13 +290,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'surface', $gv)
+          self.prop_get('surface', $gv)
         );
         nativecast(cairo_surface_t, $gv.pointer);
       },
       STORE => -> $, cairo_surface_t $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!i, 'surface', $gv);
+        self.prop_set('surface', $gv);
       }
     );
   }
@@ -307,13 +307,13 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!i, 'use-fallback', $gv)
+          self.prop_get('use-fallback', $gv)
         );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!i, 'use-fallback', $gv);
+        self.prop_set('use-fallback', $gv);
       }
     );
   }
@@ -435,4 +435,3 @@ class GTK::Image is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

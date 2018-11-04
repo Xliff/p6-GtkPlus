@@ -171,13 +171,13 @@ class GTK::PrintJob {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!prnjob, 'page-setup', $gv)
+          self.prop_get('page-setup', $gv)
         );
         GTK::PageSetup.new( nativecast(GtkPrintStatus, $gv.object) );
       },
       STORE => -> $, GtkPageSetup() $val is copy {
         $gv.object = $val;
-        self.prop_set($!prnjob, 'page-setup', $gv);
+        self.prop_set('page-setup', $gv);
       }
     );
   }
@@ -188,13 +188,13 @@ class GTK::PrintJob {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!prnjob, 'printer', $gv)
+          self.prop_get('printer', $gv)
         );
         GTK::Printer.new( nativecast(GtkPrinter, $gv.object) );
       },
       STORE => -> $, GtkPrinter() $val is copy {
         $gv.object = $val;
-        self.prop_set($!prnjob, 'printer', $gv);
+        self.prop_set('printer', $gv);
       }
     );
   }
@@ -205,13 +205,13 @@ class GTK::PrintJob {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!prnjob, 'settings', $gv)
+          self.prop_get('settings', $gv)
         );
         GTK::PrintSettings.new( nativecast(GtkPrintSettings, $gv.object) );
       },
       STORE => -> $, GtkPrintSettings() $val is copy {
         $gv.object = $val;
-        self.prop_set($!prnjob, 'settings', $gv);
+        self.prop_set('settings', $gv);
       }
     );
   }
@@ -222,13 +222,13 @@ class GTK::PrintJob {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!prnjob, 'title', $gv)
+          self.prop_get('title', $gv)
         );
         $gv.string;
       },
       STORE => -> $, $val is copy {
         $gv.string = $val;
-        self.prop_set($!prnjob, 'title', $gv);
+        self.prop_set('title', $gv);
       }
     );
   }

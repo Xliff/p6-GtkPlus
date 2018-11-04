@@ -72,12 +72,12 @@ class GTK::ShortcutsWindow is GTK::Window {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!sw, 'section-name', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('section-name', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!sw, 'section-name', $gv);
+        self.prop_set('section-name', $gv);
       }
     );
   }
@@ -87,12 +87,12 @@ class GTK::ShortcutsWindow is GTK::Window {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!sw, 'view-name', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('view-name', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!sw, 'view-name', $gv);
+        self.prop_set('view-name', $gv);
       }
     );
   }

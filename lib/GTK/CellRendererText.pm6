@@ -80,12 +80,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'align-set', $gv);
+        self.prop_get('align-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'align-set', $gv);
+        self.prop_set('align-set', $gv);
       }
     );
   }
@@ -95,12 +95,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'alignment', $gv);
+        self.prop_get('alignment', $gv);
         PangoAlignment( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!crt, 'alignment', $gv);
+        self.prop_set('alignment', $gv);
       }
     );
   }
@@ -110,12 +110,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'attributes', $gv);
+        self.prop_get('attributes', $gv);
         nativecast(PangoAttrList, $gv.pointer);
       },
       STORE => -> $, PangoAttrList $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!crt, 'attributes', $gv);
+        self.prop_set('attributes', $gv);
       }
     );
   }
@@ -129,7 +129,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'background', $gv);
+        self.prop_set('background', $gv);
       }
     );
   }
@@ -139,12 +139,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'background-gdk', $gv);
+        self.prop_get('background-gdk', $gv);
         nativecast(GdkColor, $gv.pointer);
       },
       STORE => -> $, GdkColor $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!crt, 'background-gdk', $gv);
+        self.prop_set('background-gdk', $gv);
       }
     );
   }
@@ -154,12 +154,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'background-rgba', $gv);
+        self.prop_get('background-rgba', $gv);
         nativecast(GTK::Compat::RGBA, $gv.pointer);
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
         $gv.pointer = nativecast(Pointer, $val);
-        self.prop_set($!crt, 'background-rgba', $gv);
+        self.prop_set('background-rgba', $gv);
       }
     );
   }
@@ -169,12 +169,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'background-set', $gv);
+        self.prop_get('background-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'background-set', $gv);
+        self.prop_set('background-set', $gv);
       }
     );
   }
@@ -184,12 +184,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'editable', $gv);
+        self.prop_get('editable', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'editable', $gv);
+        self.prop_set('editable', $gv);
       }
     );
   }
@@ -199,12 +199,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'editable-set', $gv);
+        self.prop_get('editable-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'editable-set', $gv);
+        self.prop_set('editable-set', $gv);
       }
     );
   }
@@ -214,12 +214,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'ellipsize', $gv);
+        self.prop_get('ellipsize', $gv);
         PangoEllipsizeMode( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-INT($val);
-        self.prop_set($!crt, 'ellipsize', $gv);
+        self.prop_set('ellipsize', $gv);
       }
     );
   }
@@ -229,12 +229,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'ellipsize-set', $gv);
+        self.prop_get('ellipsize-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'ellipsize-set', $gv);
+        self.prop_set('ellipsize-set', $gv);
       }
     );
   }
@@ -244,12 +244,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'family', $gv);
+        self.prop_get('family', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'family', $gv);
+        self.prop_set('family', $gv);
       }
     );
   }
@@ -259,12 +259,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'family-set', $gv);
+        self.prop_get('family-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
-        self.prop_set($!crt, 'family-set', $gv);
+        self.prop_set('family-set', $gv);
       }
     );
   }
@@ -274,12 +274,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'font', $gv);
+        self.prop_get('font', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'font', $gv);
+        self.prop_set('font', $gv);
       }
     );
   }
@@ -289,12 +289,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'font-desc', $gv);
+        self.prop_get('font-desc', $gv);
         PangoFontDescription( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!crt, 'font-desc', $gv);
+        self.prop_set('font-desc', $gv);
       }
     );
   }
@@ -308,7 +308,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'foreground', $gv);
+        self.prop_set('foreground', $gv);
       }
     );
   }
@@ -318,12 +318,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'foreground-gdk', $gv);
+        self.prop_get('foreground-gdk', $gv);
         $gv.pointer;
       },
       STORE => -> $, GdkColor $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!crt, 'foreground-gdk', $gv);
+        self.prop_set('foreground-gdk', $gv);
       }
     );
   }
@@ -333,12 +333,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'foreground-rgba', $gv);
+        self.prop_get('foreground-rgba', $gv);
         nativecast(GTK::Compat::RGBA, $gv.pointer);
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
         $gv.pointer = nativecast(Pointer, $val);
-        self.prop_set($!crt, 'foreground-rgba', $gv);
+        self.prop_set('foreground-rgba', $gv);
       }
     );
   }
@@ -348,12 +348,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'foreground-set', $gv);
+        self.prop_get('foreground-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'foreground-set', $gv);
+        self.prop_set('foreground-set', $gv);
       }
     );
   }
@@ -363,12 +363,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'language', $gv);
+        self.prop_get('language', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'language', $gv);
+        self.prop_set('language', $gv);
       }
     );
   }
@@ -378,12 +378,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'language-set', $gv);
+        self.prop_get('language-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'language-set', $gv);
+        self.prop_set('language-set', $gv);
       }
     );
   }
@@ -397,7 +397,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'markup', $gv);
+        self.prop_set('markup', $gv);
       }
     );
   }
@@ -407,12 +407,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'max-width-chars', $gv);
+        self.prop_get('max-width-chars', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!crt, 'max-width-chars', $gv);
+        self.prop_set('max-width-chars', $gv);
       }
     );
   }
@@ -422,12 +422,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'placeholder-text', $gv);
+        self.prop_get('placeholder-text', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'placeholder-text', $gv);
+        self.prop_set('placeholder-text', $gv);
       }
     );
   }
@@ -437,12 +437,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'rise', $gv);
+        self.prop_get('rise', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!crt, 'rise', $gv);
+        self.prop_set('rise', $gv);
       }
     );
   }
@@ -452,12 +452,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'rise-set', $gv);
+        self.prop_get('rise-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'rise-set', $gv);
+        self.prop_set('rise-set', $gv);
       }
     );
   }
@@ -467,12 +467,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_DOUBLE);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'scale', $gv);
+        self.prop_get('scale', $gv);
         $gv.double;
       },
       STORE => -> $, Num() $val is copy {
         $gv.double = $val;
-        self.prop_set($!crt, 'scale', $gv);
+        self.prop_set('scale', $gv);
       }
     );
   }
@@ -482,12 +482,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'scale-set', $gv);
+        self.prop_get('scale-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'scale-set', $gv);
+        self.prop_set('scale-set', $gv);
       }
     );
   }
@@ -497,12 +497,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'single-paragraph-mode', $gv);
+        self.prop_get('single-paragraph-mode', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'single-paragraph-mode', $gv);
+        self.prop_set('single-paragraph-mode', $gv);
       }
     );
   }
@@ -512,12 +512,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'size', $gv);
+        self.prop_get('size', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!crt, 'size', $gv);
+        self.prop_set('size', $gv);
       }
     );
   }
@@ -527,12 +527,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_DOUBLE);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'size-points', $gv);
+        self.prop_get('size-points', $gv);
         $gv.double;
       },
       STORE => -> $, Num() $val is copy {
         $gv.double = $val;
-        self.prop_set($!crt, 'size-points', $gv);
+        self.prop_set('size-points', $gv);
       }
     );
   }
@@ -542,12 +542,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'size-set', $gv);
+        self.prop_get('size-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'size-set', $gv);
+        self.prop_set('size-set', $gv);
       }
     );
   }
@@ -557,12 +557,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'stretch', $gv);
+        self.prop_get('stretch', $gv);
         PangoStretch( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!crt, 'stretch', $gv);
+        self.prop_set('stretch', $gv);
       }
     );
   }
@@ -572,12 +572,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'stretch-set', $gv);
+        self.prop_get('stretch-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'stretch-set', $gv);
+        self.prop_set('stretch-set', $gv);
       }
     );
   }
@@ -587,12 +587,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'strikethrough', $gv);
+        self.prop_get('strikethrough', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'strikethrough', $gv);
+        self.prop_set('strikethrough', $gv);
       }
     );
   }
@@ -602,12 +602,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'strikethrough-set', $gv);
+        self.prop_get('strikethrough-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'strikethrough-set', $gv);
+        self.prop_set('strikethrough-set', $gv);
       }
     );
   }
@@ -617,12 +617,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'style', $gv);
+        self.prop_get('style', $gv);
         PangoStyle( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!crt, 'style', $gv);
+        self.prop_set('style', $gv);
       }
     );
   }
@@ -632,12 +632,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'style-set', $gv);
+        self.prop_get('style-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'style-set', $gv);
+        self.prop_set('style-set', $gv);
       }
     );
   }
@@ -647,12 +647,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'text', $gv);
+        self.prop_get('text', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!crt, 'text', $gv);
+        self.prop_set('text', $gv);
       }
     );
   }
@@ -662,12 +662,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'underline', $gv);
+        self.prop_get('underline', $gv);
         PangoUnderline( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!crt, 'underline', $gv);
+        self.prop_set('underline', $gv);
       }
     );
   }
@@ -677,12 +677,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'underline-set', $gv);
+        self.prop_get('underline-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'underline-set', $gv);
+        self.prop_set('underline-set', $gv);
       }
     );
   }
@@ -692,12 +692,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'variant', $gv);
+        self.prop_get('variant', $gv);
         PangoVariant( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!crt, 'variant', $gv);
+        self.prop_set('variant', $gv);
       }
     );
   }
@@ -707,12 +707,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'variant-set', $gv);
+        self.prop_get('variant-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOLEAN($val);
-        self.prop_set($!crt, 'variant-set', $gv);
+        self.prop_set('variant-set', $gv);
       }
     );
   }
@@ -722,12 +722,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'weight', $gv);
+        self.prop_get('weight', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!crt, 'weight', $gv);
+        self.prop_set('weight', $gv);
       }
     );
   }
@@ -737,12 +737,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'weight-set', $gv);
+        self.prop_get('weight-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crt, 'weight-set', $gv);
+        self.prop_set('weight-set', $gv);
       }
     );
   }
@@ -752,12 +752,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'width-chars', $gv);
+        self.prop_get('width-chars', $gv);
         $gv.int
       },
       STORE => -> $, Int() $val is copy {
         $gv.int =  self.RESOLVE-INT($val);
-        self.prop_set($!crt, 'width-chars', $gv);
+        self.prop_set('width-chars', $gv);
       }
     );
   }
@@ -767,12 +767,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'wrap-mode', $gv);
+        self.prop_get('wrap-mode', $gv);
         PangoWrapMode( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!crt, 'wrap-mode', $gv);
+        self.prop_set('wrap-mode', $gv);
       }
     );
   }
@@ -782,12 +782,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!crt, 'wrap-width', $gv);
+        self.prop_get('wrap-width', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!crt, 'wrap-width', $gv);
+        self.prop_set('wrap-width', $gv);
       }
     );
   }

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -34,6 +35,8 @@ role GTK::Roles::Properties {
     });
   }
 
+  proto method set_prop(|) is also<prop_set> { * }
+
   multi method set_prop(Str() $name, GValue() $value) {
     samewith( $name.Array, ($value) );
   }
@@ -51,6 +54,8 @@ role GTK::Roles::Properties {
 
     g_object_setv($!prop, $n.elems, $n, $v);
   }
+
+  proto method get_prop(|) is also<prop_get> { * }
 
   multi method get_prop(Str() $name, GValue() $value is rw) {
     my @v = ($value);

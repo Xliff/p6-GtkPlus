@@ -75,7 +75,7 @@ class GTK::EntryBuffer {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!b, 'length', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('length', $gv); );
         $gv.uint;
       },
       STORE => -> $, $val is copy {

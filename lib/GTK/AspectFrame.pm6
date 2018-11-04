@@ -69,12 +69,12 @@ class GTK::AspectFrame is GTK::Frame {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!af, 'obey-child', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('obey-child', $gv); );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!af, 'obey-child', $gv);
+        self.prop_set('obey-child', $gv);
       }
     );
   }
@@ -84,12 +84,12 @@ class GTK::AspectFrame is GTK::Frame {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!af, 'ratio', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('ratio', $gv); );
         $gv.float
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set($!af, 'ratio', $gv);
+        self.prop_set('ratio', $gv);
       }
     );
   }
@@ -99,12 +99,12 @@ class GTK::AspectFrame is GTK::Frame {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!af, 'xalign', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('xalign', $gv); );
         $gv.float;
       },
        STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set($!af, 'xalign', $gv);
+        self.prop_set('xalign', $gv);
       }
     );
   }
@@ -114,12 +114,12 @@ class GTK::AspectFrame is GTK::Frame {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!af, 'yalign', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('yalign', $gv); );
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set($!af, 'yalign', $gv);
+        self.prop_set('yalign', $gv);
       }
     );
   }

@@ -202,7 +202,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_boolean($val);
-        self.prop_set($!po, 'allow-async', $gv);
+        self.prop_set('allow-async', $gv);
       }
     );
   }
@@ -219,7 +219,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_int($val);
-        self.prop_set($!po, 'current-page', $gv);
+        self.prop_set('current-page', $gv);
       }
     );
   }
@@ -237,7 +237,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_string($val);
-        self.prop_set($!po, 'custom-tab-label', $gv);
+        self.prop_set('custom-tab-label', $gv);
       }
     );
   }
@@ -254,7 +254,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_string($val);
-        self.prop_set($!po, 'export-filename', $gv);
+        self.prop_set('export-filename', $gv);
       }
     );
   }
@@ -272,7 +272,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_string($val);
-        self.prop_set($!po, 'job-name', $gv);
+        self.prop_set('job-name', $gv);
       }
     );
   }
@@ -290,7 +290,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_int($val);
-        self.prop_set($!po, 'n-pages', $gv);
+        self.prop_set('n-pages', $gv);
       }
     );
   }
@@ -323,7 +323,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_boolean($val);
-        self.prop_set($!po, 'show-progress', $gv);
+        self.prop_set('show-progress', $gv);
       }
     );
   }
@@ -334,7 +334,7 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!po, 'status', $gv)
+          self.prop_get('status', $gv)
         );
         GtkPrintStatus( $gv.get_enum );
       },
@@ -372,7 +372,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_boolean($val);
-        self.prop_set($!po, 'track-print-status', $gv);
+        self.prop_set('track-print-status', $gv);
       }
     );
   }
@@ -383,14 +383,14 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!po, 'unit', $gv)
+          self.prop_get('unit', $gv)
         );
         GtkUnit( $gv.get_TYPE );
       },
       STORE => -> $, Int() $val is copy {
         my guint $v = self.RESOLVE-UINT($val);
         $gv.set_enum($v);
-        self.prop_set($!po, 'unit', $gv);
+        self.prop_set('unit', $gv);
       }
     );
   }
@@ -407,7 +407,7 @@ class GTK::PrintOperation {
       },
       STORE => -> $, $val is copy {
         $gv.set_boolean($val);
-        self.prop_set($!po, 'use-full-page', $gv);
+        self.prop_set('use-full-page', $gv);
       }
     );
   }

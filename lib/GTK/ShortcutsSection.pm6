@@ -66,12 +66,12 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!ss, 'max-height', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('max-height', $gv); );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = self.RESOLVE-UINT($val);
-        self.prop_set($!ss, 'max-height', $gv);
+        self.prop_set('max-height', $gv);
       }
     );
   }
@@ -81,12 +81,12 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!ss, 'section-name', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('section-name', $gv); );
         $gv.string
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!ss, 'section-name', $gv);
+        self.prop_set('section-name', $gv);
       }
     );
   }
@@ -96,12 +96,12 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!ss, 'title', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!ss, 'title', $gv);
+        self.prop_set('title', $gv);
       }
     );
   }
@@ -111,12 +111,12 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!ss, 'view-name', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('view-name', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!ss, 'view-name', $gv);
+        self.prop_set('view-name', $gv);
       }
     );
   }

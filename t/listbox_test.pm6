@@ -6,15 +6,18 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 #use GTK::Builder   ;
-use GTK::Box       ;
-use GTK::Button    ;
-use GTK::Image     ;
-use GTK::Label     ;
-use GTK::LinkButton;
-use GTK::ListBox   ;
-use GTK::ListBoxRow;
-use GTK::Revealer  ;
-use GTK::Widget    ;
+use GTK::Box           ;
+use GTK::Button        ;
+use GTK::Grid          ;
+use GTK::Image         ;
+use GTK::Label         ;
+use GTK::LinkButton    ;
+use GTK::ListBox       ;
+use GTK::ListBoxRow    ;
+use GTK::Menu          ;
+use GTK::Revealer      ;
+use GTK::ScrolledWindow;
+use GTK::Widget        ;
 
 unit package listbox_test;
 
@@ -29,12 +32,15 @@ sub EXPORT {
     GTK::Builder::EXPORT::DEFAULT::,
     GTK::Button::EXPORT::DEFAULT::,
     GTK::Box::EXPORT::DEFAULT::,
+    GTK::Grid::EXPORT::DEFAULT::,
     GTK::Image::EXPORT::DEFAULT::,
     GTK::Label::EXPORT::DEFAULT::,
     GTK::LinkButton::EXPORT::DEFAULT::,
     GTK::ListBox::EXPORT::DEFAULT::,
     GTK::ListBoxRow::EXPORT::DEFAULT::,
+    GTK::Menu::EXPORT::DEFAULT::,
     GTK::Revealer::EXPORT::DEFAULT::,
+    GTK::ScrolledWindow::EXPORT::DEFAULT::,
     GTK::Widget::EXPORT::DEFAULT::,
 
     'Message' => Message,

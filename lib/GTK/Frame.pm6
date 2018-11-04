@@ -59,13 +59,13 @@ class GTK::Frame is GTK::Bin {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!f, 'label-xalign', $gv)
+          self.prop_get('label-xalign', $gv)
         );
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set($!f, 'label-xalign', $gv);
+        self.prop_set('label-xalign', $gv);
       }
     );
   }
@@ -76,13 +76,13 @@ class GTK::Frame is GTK::Bin {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!f, 'label-yalign', $gv)
+          self.prop_get('label-yalign', $gv)
         );
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set($!f, 'label-yalign', $gv);
+        self.prop_set('label-yalign', $gv);
       }
     );
   }

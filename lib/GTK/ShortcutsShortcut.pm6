@@ -60,7 +60,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
       },
       STORE => -> $, GtkSizeGroup() $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!s, 'accel-size-group', $gv);
+        self.prop_set('accel-size-group', $gv);
       }
     );
   }
@@ -70,12 +70,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'accelerator', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('accelerator', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string;
-        self.prop_set($!s, 'accelerator', $gv);
+        self.prop_set('accelerator', $gv);
       }
     );
   }
@@ -85,12 +85,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'action-name', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('action-name', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!s, 'action-name', $gv);
+        self.prop_set('action-name', $gv);
       }
     );
   }
@@ -100,12 +100,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'direction', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('direction', $gv); );
         GtkTextDirection( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!s, 'direction', $gv);
+        self.prop_set('direction', $gv);
       }
     );
   }
@@ -115,12 +115,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'icon', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('icon', $gv); );
         nativecast(GIcon, $gv.pointer);
       },
       STORE => -> $, GIcon $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!s, 'icon', $gv);
+        self.prop_set('icon', $gv);
       }
     );
   }
@@ -130,12 +130,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'icon-set', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('icon-set', $gv); );
         $gv.boolean;
       },
       STORE => -> $, $val is copy {
         $gv.boolean = self.RESOLVE-BOOLEAN($val);
-        self.prop_set($!s, 'icon-set', $gv);
+        self.prop_set('icon-set', $gv);
       }
     );
   }
@@ -145,12 +145,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'shortcut-type', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('shortcut-type', $gv); );
         GtkShortcutType( $gv.enum );
       },
       STORE => -> $, $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!s, 'shortcut-type', $gv);
+        self.prop_set('shortcut-type', $gv);
       }
     );
   }
@@ -160,12 +160,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'subtitle', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('subtitle', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!s, 'subtitle', $gv);
+        self.prop_set('subtitle', $gv);
       }
     );
   }
@@ -175,12 +175,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'subtitle-set', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('subtitle-set', $gv); );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!s, 'subtitle-set', $gv);
+        self.prop_set('subtitle-set', $gv);
       }
     );
   }
@@ -190,12 +190,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!s, 'title', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!s, 'title', $gv);
+        self.prop_set('title', $gv);
       }
     );
   }
@@ -210,7 +210,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
       },
       STORE => -> $, GtkSizeGroup() $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!s, 'title-size-group', $gv);
+        self.prop_set('title-size-group', $gv);
       }
     );
   }

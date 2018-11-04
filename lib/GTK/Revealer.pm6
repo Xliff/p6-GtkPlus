@@ -59,7 +59,7 @@ class GTK::Revealer is GTK::Bin {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!r, 'child-revealed', $gv)
+          self.prop_get('child-revealed', $gv)
         );
         $gv.boolean;
       },

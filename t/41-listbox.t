@@ -161,10 +161,10 @@ $a.activate.tap({
     say "LINE: $_";
 
     my ($m, $w) = (new_message($_), new_row);
-    %messages{$row<row>.listboxrow}<widgets> = $w;
-    %messages{$row<row>.listboxrow}<data> = $m;
+    %messages{$w<row>.listboxrow}<widgets> = $w;
+    %messages{$w<row>.listboxrow}<data> = $m;
     $listbox.add($w<row>);
-    $row.show;
+    $w<row>.show;
   }
 
 });

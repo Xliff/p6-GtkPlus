@@ -69,12 +69,12 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!crc, 'has-entry', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('has-entry', $gv); );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!crc, 'has-entry', $gv);
+        self.prop_set('has-entry', $gv);
       }
     );
   }
@@ -84,12 +84,12 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!crc, 'model', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('model', $gv); );
         nativecast(GtkTreeModel, $gv.pointer);
       },
       STORE => -> $, GtkTreeModel() $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!crc, 'model', $gv);
+        self.prop_set('model', $gv);
       }
     );
   }
@@ -99,12 +99,12 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!crc, 'text-column', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('text-column', $gv); );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!crc, 'text-column', $gv);
+        self.prop_set('text-column', $gv);
       }
     );
   }

@@ -36,12 +36,12 @@ class GTK::TreeModelFilter {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!tmf, 'child-model', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('child-model', $gv); );
         $gv.object;
       },
       STORE => -> $, GtkTreeModel() $val is copy {
         $gv.object = $val;
-        self.prop_set($!tmf, 'child-model', $gv);
+        self.prop_set('child-model', $gv);
       }
     );
   }
@@ -51,12 +51,12 @@ class GTK::TreeModelFilter {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!tmf, 'virtual-root', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('virtual-root', $gv); );
         $gv.object;
       },
       STORE => -> $, GtkTreePath() $val is copy {
         $gv.object = $val;
-        self.prop_set($!tmf, 'virtual-root', $gv);
+        self.prop_set('virtual-root', $gv);
       }
     );
   }

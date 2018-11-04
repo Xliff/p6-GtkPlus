@@ -1134,7 +1134,7 @@ class GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!w, 'composite-child', $gv)
+          self.prop_get('composite-child', $gv)
         );
         $gv.boolean;
       },
@@ -1151,13 +1151,13 @@ class GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!w, 'expand', $gv)
+          self.prop_get('expand', $gv)
         );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!w, 'expand', $gv);
+        self.prop_set('expand', $gv);
       }
     );
   }
@@ -1168,13 +1168,13 @@ class GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!w, 'has-focus', $gv)
+          self.prop_get('has-focus', $gv)
         );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!w, 'has-focus', $gv);
+        self.prop_set('has-focus', $gv);
       }
     );
   }
@@ -1185,13 +1185,13 @@ class GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!w, 'height-request', $gv)
+          self.prop_get('height-request', $gv)
         );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!w, 'height-request', $gv);
+        self.prop_set('height-request', $gv);
       }
     );
   }
@@ -1201,12 +1201,12 @@ class GTK::Widget {
     my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'is-focus', $gv) );
+        $gv = GTK::Compat::Value.new( self.prop_get('is-focus', $gv) );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!w, 'is-focus', $gv);
+        self.prop_set('is-focus', $gv);
       }
     );
   }
@@ -1216,12 +1216,12 @@ class GTK::Widget {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!w, 'margin', $gv) );
+        $gv = GTK::Compat::Value.new( self.prop_get('margin', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!w, 'margin', $gv);
+        self.prop_set('margin', $gv);
       }
     );
   }
@@ -1248,12 +1248,12 @@ class GTK::Widget {
   #   my GValue $gv .= new;
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new( self.prop_get($!w, 'style', $gv) );
+  #       $gv = GTK::Compat::Value.new( self.prop_get('style', $gv) );
   # #        $gv.get_TYPE;
   #     },
   #     STORE => -> $, GValue() $val is copy {
   # #        $gv.set_TYPE($val);
-  #       self.prop_set($!w, 'style', $gv);
+  #       self.prop_set('style', $gv);
   #     }
   #   );
   # }
@@ -1270,7 +1270,7 @@ class GTK::Widget {
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!w, 'width-request', $gv);
+        self.prop_set('width-request', $gv);
       }
     );
   }

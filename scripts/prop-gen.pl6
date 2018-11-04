@@ -76,14 +76,14 @@ sub MAIN ($control, :$var = 'w') {
     with $rw {
       %c<read> =
         '$gv = GTK::Compat::Value.new(' ~
-        "\n\t  " ~ "self.prop_get(\$!{ $var }, '{ $mn }', \$gv)\n" ~
+        "\n\t  " ~ "self.prop_get('{ $mn }', \$gv)\n" ~
         "\t);\n" ~
         $vtype-r
       if $rw.any eq 'Read';
       %c<write> =
         $vtype-w ~
         "\n" ~
-        "        self.prop_set(\$!{ $var }, \'{ $mn }\', \$gv);"
+        "        self.prop_set(\'{ $mn }\', \$gv);"
       if $rw.any eq 'Write';
     }
     %c<read>  //= "warn \"{ $mn } does not allow reading\"";

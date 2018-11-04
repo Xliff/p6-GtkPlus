@@ -84,7 +84,7 @@ class GTK::CellRenderer {
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!cr, 'cell-background', $gv);
+        self.prop_set('cell-background', $gv);
       }
     );
   }
@@ -94,12 +94,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'cell-background-gdk', $gv);
+        self.prop_get('cell-background-gdk', $gv);
         nativecast(GdkColor, $gv.pointer);
       },
       STORE => -> $, GdkColor $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!cr, 'cell-background-gdk', $gv);
+        self.prop_set('cell-background-gdk', $gv);
       }
     );
   }
@@ -109,12 +109,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'cell-background-rgba', $gv);
+        self.prop_get('cell-background-rgba', $gv);
         nativecast(GTK::Compat::RGBA, $gv.pointer);
       },
       STORE => -> $, GTK::Compat::RGBA() $val is copy {
         $gv.pointer = nativecast(Pointer, $val);
-        self.prop_set($!cr, 'cell-background-rgba', $gv);
+        self.prop_set('cell-background-rgba', $gv);
       }
     );
   }
@@ -124,12 +124,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'cell-background-set', $gv);
+        self.prop_get('cell-background-set', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!cr, 'cell-background-set', $gv);
+        self.prop_set('cell-background-set', $gv);
       }
     );
   }
@@ -139,7 +139,7 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'editing', $gv);
+        self.prop_get('editing', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -153,12 +153,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'height', $gv);
+        self.prop_get('height', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!cr, 'height', $gv);
+        self.prop_set('height', $gv);
       }
     );
   }
@@ -168,12 +168,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'is-expanded', $gv);
+        self.prop_get('is-expanded', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!cr, 'is-expanded', $gv);
+        self.prop_set('is-expanded', $gv);
       }
     );
   }
@@ -183,12 +183,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'is-expander', $gv);
+        self.prop_get('is-expander', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!cr, 'is-expander', $gv);
+        self.prop_set('is-expander', $gv);
       }
     );
   }
@@ -198,12 +198,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'mode', $gv);
+        self.prop_get('mode', $gv);
         GtkCellRendererMode($gv.enum);
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!cr, 'mode', $gv);
+        self.prop_set('mode', $gv);
       }
     );
   }
@@ -213,12 +213,12 @@ class GTK::CellRenderer {
   #   my GValue $gv .= new;
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       self.prop_get($!cr, 'sensitive', $gv);
+  #       self.prop_get('sensitive', $gv);
   # #        $gv.get_TYPE;
   #     },
   #     STORE => -> $, $val is copy {
   # #        $gv.set_TYPE($val);
-  #       self.prop_set($!cr, 'sensitive', $gv);
+  #       self.prop_set('sensitive', $gv);
   #     }
   #   );
   # }
@@ -228,12 +228,12 @@ class GTK::CellRenderer {
   #   my GValue $gv .= new;
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       self.prop_get($!cr, 'visible', $gv);
+  #       self.prop_get('visible', $gv);
   # #        $gv.get_TYPE;
   #     },
   #     STORE => -> $, $val is copy {
   # #        $gv.set_TYPE($val);
-  #       self.prop_set($!cr, 'visible', $gv);
+  #       self.prop_set('visible', $gv);
   #     }
   #   );
   # }
@@ -243,12 +243,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'width', $gv);
+        self.prop_get('width', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!cr, 'width', $gv);
+        self.prop_set('width', $gv);
       }
     );
   }
@@ -258,12 +258,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'xalign', $gv);
+        self.prop_get('xalign', $gv);
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set($!cr, 'xalign', $gv);
+        self.prop_set('xalign', $gv);
       }
     );
   }
@@ -273,12 +273,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'xpad', $gv);
+        self.prop_get('xpad', $gv);
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = self.RESOLVE-UINT($val);
-        self.prop_set($!cr, 'xpad', $gv);
+        self.prop_set('xpad', $gv);
       }
     );
   }
@@ -288,12 +288,12 @@ class GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'yalign', $gv);
+        self.prop_get('yalign', $gv);
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set($!cr, 'yalign', $gv);
+        self.prop_set('yalign', $gv);
       }
     );
   }
@@ -303,12 +303,12 @@ class GTK::CellRenderer {
     my GValue $gv .= new;
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cr, 'ypad', $gv);
+        self.prop_get('ypad', $gv);
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = self.RESOLVE-UINT($val);
-        self.prop_set($!cr, 'ypad', $gv);
+        self.prop_set('ypad', $gv);
       }
     );
   }

@@ -46,13 +46,13 @@ class GTK::StyleContext {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!sc, 'direction', $gv)
+          self.prop_get('direction', $gv)
         );
         GtkTextDirection( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!sc, 'direction', $gv);
+        self.prop_set('direction', $gv);
       }
     );
   }
@@ -63,13 +63,13 @@ class GTK::StyleContext {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!sc, 'paint-clock', $gv)
+          self.prop_get('paint-clock', $gv)
         );
         nativecast(GdkFrameClock, $gv.object);
       },
       STORE => -> $, GdkFrameClock $val is copy {
         $gv.object = $val;
-        self.prop_set($!sc, 'paint-clock', $gv);
+        self.prop_set('paint-clock', $gv);
       }
     );
   }
@@ -80,13 +80,13 @@ class GTK::StyleContext {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!sc, 'parent', $gv)
+          self.prop_get('parent', $gv)
         );
         GTK::StyleContext.new( nativecast(GtkStyleContext, $gv.object ) );
       },
       STORE => -> $, GtkStyleContext() $val is copy {
         $gv.object = $val;
-        self.prop_set($!sc, 'parent', $gv);
+        self.prop_set('parent', $gv);
       }
     );
   }
@@ -97,13 +97,13 @@ class GTK::StyleContext {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!sc, 'screen', $gv)
+          self.prop_get('screen', $gv)
         );
         nativecast(GdkScreen, $gv.object);
       },
       STORE => -> $, GdkScreen $val is copy {
         $gv.object = $val;
-        self.prop_set($!sc, 'screen', $gv);
+        self.prop_set('screen', $gv);
       }
     );
   }

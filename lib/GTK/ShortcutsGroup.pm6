@@ -65,7 +65,7 @@ class GTK::ShortcutsGroup is GTK::Box {
       },
       STORE => -> $, GtkSizeGroup() $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!sg, 'accel-size-group', $gv);
+        self.prop_set('accel-size-group', $gv);
       }
     );
   }
@@ -75,7 +75,7 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!sg, 'height', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv); );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
@@ -89,12 +89,12 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!sg, 'title', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!sg, 'title', $gv);
+        self.prop_set('title', $gv);
       }
     );
   }
@@ -109,7 +109,7 @@ class GTK::ShortcutsGroup is GTK::Box {
       },
       STORE => -> $, GtkSizeGroup() $val is copy {
         $gv.poiner = $val;
-        self.prop_set($!sg, 'title-size-group', $gv);
+        self.prop_set('title-size-group', $gv);
       }
     );
   }
@@ -119,12 +119,12 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!sg, 'view', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('view', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!sg, 'view', $gv);
+        self.prop_set('view', $gv);
       }
     );
   }

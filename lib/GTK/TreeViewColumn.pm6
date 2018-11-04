@@ -249,12 +249,12 @@ class GTK::TreeViewColumn {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!tvc, 'cell-area', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('cell-area', $gv); );
         GTK::CellArea.new( nativecast(GtkCellArea, $gv.object) );
       },
       STORE => -> $, GtkCellArea() $val is copy {
         $gv.object = $val;
-        self.prop_set($!tvc, 'cell-area', $gv);
+        self.prop_set('cell-area', $gv);
       }
     );
   }
@@ -264,7 +264,7 @@ class GTK::TreeViewColumn {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!tvc, 'width', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('width', $gv); );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -278,7 +278,7 @@ class GTK::TreeViewColumn {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!tvc, 'x-offset', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('x-offset', $gv); );
         $gv.int;
       },
       STORE => -> $, $val is copy {

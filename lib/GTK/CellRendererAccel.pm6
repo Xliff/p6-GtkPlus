@@ -86,12 +86,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cra, 'accel-key', $gv);
+        self.prop_get('accel-key', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!cra, 'accel-key', $gv);
+        self.prop_set('accel-key', $gv);
       }
     );
   }
@@ -101,12 +101,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cra, 'accel-mode', $gv);
+        self.prop_get('accel-mode', $gv);
         GtkCellRendererAccelMode( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!cra, 'accel-mode', $gv);
+        self.prop_set('accel-mode', $gv);
       }
     );
   }
@@ -116,12 +116,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cra, 'accel-mods', $gv);
+        self.prop_get('accel-mods', $gv);
         GdkModifierType( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set($!cra, 'accel-mods', $gv);
+        self.prop_set('accel-mods', $gv);
       }
     );
   }
@@ -131,12 +131,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get($!cra, 'keycode', $gv);
+        self.prop_get('keycode', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!cra, 'keycode', $gv);
+        self.prop_set('keycode', $gv);
       }
     );
   }

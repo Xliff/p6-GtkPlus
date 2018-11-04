@@ -141,7 +141,7 @@ class GTK::CellView is GTK::Widget {
       },
       STORE => -> $, Int() $val is copy {
         $gv.string = $val;
-        self.prop_set($!cv, 'background', $gv);
+        self.prop_set('background', $gv);
       }
     );
   }
@@ -151,12 +151,12 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!cv, 'background-gdk', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('background-gdk', $gv); );
         nativecast(GdkColor, $gv.pointer);
       },
       STORE => -> $, GdkColor $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!cv, 'background-gdk', $gv);
+        self.prop_set('background-gdk', $gv);
       }
     );
   }
@@ -166,12 +166,12 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!cv, 'background-rgba', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('background-rgba', $gv); );
         nativecast(GTK::Compat::RGBA, $gv.pointer);
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
         $gv.pointer = nativecast(Pointer, $val);
-        self.prop_set($!cv, 'background-rgba', $gv);
+        self.prop_set('background-rgba', $gv);
       }
     );
   }
@@ -181,12 +181,12 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!cv, 'background-set', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('background-set', $gv); );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set($!cv, 'background-set', $gv);
+        self.prop_set('background-set', $gv);
       }
     );
   }
@@ -196,12 +196,12 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!cv, 'cell-area', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('cell-area', $gv); );
         GTK::CellArea.new( nativecast(GtkCellArea, $gv.pointer) );
       },
       STORE => -> $, GtkCellArea() $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!cv, 'cell-area', $gv);
+        self.prop_set('cell-area', $gv);
       }
     );
   }
@@ -211,12 +211,12 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!cv, 'cell-area-context', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('cell-area-context', $gv); );
         GTK::CellAreaContext.new( nativecast(GtkCellAreaContext, $gv.pointer) );
       },
       STORE => -> $, GtkCellAreaContext() $val is copy {
         $gv.pointer = $val;
-        self.prop_set($!cv, 'cell-area-context', $gv);
+        self.prop_set('cell-area-context', $gv);
       }
     );
   }

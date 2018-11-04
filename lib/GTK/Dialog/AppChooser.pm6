@@ -79,12 +79,12 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!acd, 'gfile', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('gfile', $gv); );
         nativecast(GFile, $gv.object);
       },
       STORE => -> $, GFile() $val is copy {
         $gv.object = $val;
-        self.prop_set($!acd, 'gfile', $gv);
+        self.prop_set('gfile', $gv);
       }
     );
   }
@@ -94,12 +94,12 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!acd, 'heading', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('heading', $gv); );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set($!acd, 'heading', $gv);
+        self.prop_set('heading', $gv);
       }
     );
   }

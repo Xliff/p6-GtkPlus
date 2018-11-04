@@ -50,7 +50,7 @@ class GTK::AccelGroup          {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!ag, 'is-locked', $gv)
+          self.prop_get('is-locked', $gv)
          );
         $gv.boolean;
       },
@@ -66,7 +66,7 @@ class GTK::AccelGroup          {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get($!ag, 'modifier-mask', $gv)
+          self.prop_get('modifier-mask', $gv)
         );
         GdkModifierType( $gv.enum );
       },

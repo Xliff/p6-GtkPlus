@@ -72,12 +72,12 @@ class GTK::Layout is GTK::Container {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!l, 'height', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv); );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!l, 'height', $gv);
+        self.prop_set('height', $gv);
       }
     );
   }
@@ -87,12 +87,12 @@ class GTK::Layout is GTK::Container {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get($!l, 'width', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('width', $gv); );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set($!l, 'width', $gv);
+        self.prop_set('width', $gv);
       }
     );
   }

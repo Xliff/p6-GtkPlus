@@ -77,7 +77,7 @@ class GTK::Printer {
       },
       STORE => -> $, GtkPrintBackend() $val is copy {
         $gv.object = $val;
-        self.prop_set($!prn, 'backend', $gv);
+        self.prop_set('backend', $gv);
       }
     );
   }
@@ -142,7 +142,7 @@ class GTK::Printer {
       },
       STORE => -> $, $val is copy {
         $gv.string = $val;
-        self.prop_set($!prn, 'name', $gv);
+        self.prop_set('name', $gv);
       }
     );
   }

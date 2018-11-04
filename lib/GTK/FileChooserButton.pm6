@@ -108,7 +108,7 @@ class GTK::FileChooserButton is GTK::Bin {
       },
       STORE => -> $, GtkFileChooser() $val is copy {
         $gv.objecet = $val;
-        self.prop_set($!fcb, 'dialog', $gv);
+        self.prop_set('dialog', $gv);
       }
     );
   }
