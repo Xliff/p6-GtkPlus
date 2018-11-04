@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -21,31 +22,31 @@ role GTK::Roles::FileChooser {
 
   # Is originally:
   # gchar
-  method confirm-overwrite {
+  method confirm-overwrite is also<confirm_overwrite> {
     self.connect($!fc, 'confirm-overwrite');
   }
 
   # Is originally:
   # GtkFileChooser, gpointer --> void
-  method current-folder-changed {
+  method current-folder-changed is also<current_folder_changed> {
     self.connect($!fc, 'current-folder-changed');
   }
 
   # Is originally:
   # GtkFileChooser, gpointer --> void
-  method file-activated {
+  method file-activated is also<file_activated> {
     self.connect($!fc, 'file-activated');
   }
 
   # Is originally:
   # GtkFileChooser, gpointer --> void
-  method selection-changed {
+  method selection-changed is also<selection_changed> {
     self.connect($!fc, 'selection-changed');
   }
 
   # Is originally:
   # GtkFileChooser, gpointer --> void
-  method update-preview {
+  method update-preview is also<update_preview> {
     self.connect($!fc, 'update-preview');
   }
 
@@ -64,7 +65,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method create_folders is rw {
+  method create_folders is rw is also<create-folders> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_file_chooser_get_create_folders($!fc);
@@ -76,7 +77,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method current_folder is rw {
+  method current_folder is rw is also<current-folder> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_file_chooser_get_current_folder($!fc);
@@ -87,7 +88,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method current_folder_uri is rw {
+  method current_folder_uri is rw is also<current-folder-uri> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_file_chooser_get_current_folder_uri($!fc);
@@ -98,7 +99,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method current_name is rw {
+  method current_name is rw is also<current-name> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_file_chooser_get_current_name($!fc);
@@ -109,7 +110,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method do_overwrite_confirmation is rw {
+  method do_overwrite_confirmation is rw is also<do-overwrite-confirmation> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_file_chooser_get_do_overwrite_confirmation($!fc);
@@ -121,7 +122,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method extra_widget is rw {
+  method extra_widget is rw is also<extra-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_file_chooser_get_extra_widget($!fc);
@@ -154,7 +155,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method local_only is rw {
+  method local_only is rw is also<local-only> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_file_chooser_get_local_only($!fc);
@@ -166,7 +167,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method preview_widget is rw {
+  method preview_widget is rw is also<preview-widget> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_file_chooser_get_preview_widget($!fc);
@@ -177,7 +178,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method preview_widget_active is rw {
+  method preview_widget_active is rw is also<preview-widget-active> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_file_chooser_get_preview_widget_active($!fc);
@@ -189,7 +190,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method select_multiple is rw {
+  method select_multiple is rw is also<select-multiple> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_file_chooser_get_select_multiple($!fc);
@@ -201,7 +202,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method show_hidden is rw {
+  method show_hidden is rw is also<show-hidden> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_file_chooser_get_show_hidden($!fc);
@@ -224,7 +225,7 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method use_preview_label is rw {
+  method use_preview_label is rw is also<use-preview-label> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_file_chooser_get_use_preview_label($!fc);
@@ -243,152 +244,153 @@ role GTK::Roles::FileChooser {
     Str() $label,
     Str() $options,
     Str() $option_labels
-  ) {
+  ) is also<add-choice> {
     gtk_file_chooser_add_choice($!fc, $id, $label, $options, $option_labels);
   }
 
-  method add_filter (GtkFileFilter $filter) {
+  method add_filter (GtkFileFilter $filter) is also<add-filter> {
     gtk_file_chooser_add_filter($!fc, $filter);
   }
 
-  method add_shortcut_folder (Str() $folder, GError $error) {
+  method add_shortcut_folder (Str() $folder, GError $error) is also<add-shortcut-folder> {
     gtk_file_chooser_add_shortcut_folder($!fc, $folder, $error);
   }
 
-  method add_shortcut_folder_uri (Str() $uri, GError $error) {
+  method add_shortcut_folder_uri (Str() $uri, GError $error) is also<add-shortcut-folder-uri> {
     gtk_file_chooser_add_shortcut_folder_uri($!fc, $uri, $error);
   }
 
-  method error_quark {
+  method error_quark is also<error-quark> {
     gtk_file_chooser_error_quark();
   }
 
-  method get_choice (Str() $id) {
+  method get_choice (Str() $id) is also<get-choice> {
     gtk_file_chooser_get_choice($!fc, $id);
   }
 
-  method get_current_folder_file {
+  method get_current_folder_file is also<get-current-folder-file> {
     gtk_file_chooser_get_current_folder_file($!fc);
   }
 
-  method get_file {
+  method get_file is also<get-file> {
     gtk_file_chooser_get_file($!fc);
   }
 
-  method get_filenames {
+  method get_filenames is also<get-filenames> {
     gtk_file_chooser_get_filenames($!fc);
   }
 
-  method get_files {
+  method get_files is also<get-files> {
     gtk_file_chooser_get_files($!fc);
   }
 
-  method get_preview_file {
+  method get_preview_file is also<get-preview-file> {
     gtk_file_chooser_get_preview_file($!fc);
   }
 
-  method get_preview_filename {
+  method get_preview_filename is also<get-preview-filename> {
     gtk_file_chooser_get_preview_filename($!fc);
   }
 
-  method get_preview_uri {
+  method get_preview_uri is also<get-preview-uri> {
     gtk_file_chooser_get_preview_uri($!fc);
   }
 
-  method get_filechooser_type {
+  method get_filechooser_type is also<get-filechooser-type> {
     gtk_file_chooser_get_type();
   }
 
-  method get_uris {
+  method get_uris is also<get-uris> {
     gtk_file_chooser_get_uris($!fc);
   }
 
-  method list_filters {
+  method list_filters is also<list-filters> {
     gtk_file_chooser_list_filters($!fc);
   }
 
-  method list_shortcut_folder_uris {
+  method list_shortcut_folder_uris is also<list-shortcut-folder-uris> {
     gtk_file_chooser_list_shortcut_folder_uris($!fc);
   }
 
-  method list_shortcut_folders {
+  method list_shortcut_folders is also<list-shortcut-folders> {
     gtk_file_chooser_list_shortcut_folders($!fc);
   }
 
-  method remove_choice (Str() $id) {
+  method remove_choice (Str() $id) is also<remove-choice> {
     gtk_file_chooser_remove_choice($!fc, $id);
   }
 
-  method remove_filter (GtkFileFilter $filter) {
+  method remove_filter (GtkFileFilter $filter) is also<remove-filter> {
     gtk_file_chooser_remove_filter($!fc, $filter);
   }
 
   method remove_shortcut_folder (
     Str() $folder,
     GError $error = GError
-  ) {
+  ) is also<remove-shortcut-folder> {
     gtk_file_chooser_remove_shortcut_folder($!fc, $folder, $error);
   }
 
   method remove_shortcut_folder_uri (
     Str() $uri,
     GError $error = GError
-  ) {
+  ) is also<remove-shortcut-folder-uri> {
     gtk_file_chooser_remove_shortcut_folder_uri($!fc, $uri, $error);
   }
 
-  method select_all {
+  method select_all is also<select-all> {
     gtk_file_chooser_select_all($!fc);
   }
 
   method select_file (
     GFile $file,
     GError $error = GError
-  ) {
+  ) is also<select-file> {
     gtk_file_chooser_select_file($!fc, $file, $error);
   }
 
-  method select_filename (Str() $filename) {
+  method select_filename (Str() $filename) is also<select-filename> {
     gtk_file_chooser_select_filename($!fc, $filename);
   }
 
-  method select_uri (Str() $uri) {
+  method select_uri (Str() $uri) is also<select-uri> {
     gtk_file_chooser_select_uri($!fc, $uri);
   }
 
-  method set_choice (Str() $id, Str() $option) {
+  method set_choice (Str() $id, Str() $option) is also<set-choice> {
     gtk_file_chooser_set_choice($!fc, $id, $option);
   }
 
   method set_current_folder_file (
     GFile $file,
     GError $error = GError
-  ) {
+  ) is also<set-current-folder-file> {
     gtk_file_chooser_set_current_folder_file($!fc, $file, $error);
   }
 
   method set_file (
     GFile $file,
     GError $error = GError
-  ) {
+  ) is also<set-file> {
     gtk_file_chooser_set_file($!fc, $file, $error);
   }
 
-  method unselect_all {
+  method unselect_all is also<unselect-all> {
     gtk_file_chooser_unselect_all($!fc);
   }
 
-  method unselect_file (GFile $file) {
+  method unselect_file (GFile $file) is also<unselect-file> {
     gtk_file_chooser_unselect_file($!fc, $file);
   }
 
-  method unselect_filename (Str() $filename) {
+  method unselect_filename (Str() $filename) is also<unselect-filename> {
     gtk_file_chooser_unselect_filename($!fc, $filename);
   }
 
-  method unselect_uri (Str() $uri) {
+  method unselect_uri (Str() $uri) is also<unselect-uri> {
     gtk_file_chooser_unselect_uri($!fc, $uri);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

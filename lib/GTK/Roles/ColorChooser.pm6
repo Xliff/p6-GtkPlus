@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -15,7 +16,7 @@ role GTK::Roles::ColorChooser {
   has GtkColorChooser $!cc;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
-  method color-activated {
+  method color-activated is also<color_activated> {
     self.connect($!cc, 'color-activated');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -34,7 +35,7 @@ role GTK::Roles::ColorChooser {
     );
   }
 
-  method use_alpha is rw {
+  method use_alpha is rw is also<use-alpha> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_color_chooser_get_use_alpha($!cc);
@@ -47,14 +48,15 @@ role GTK::Roles::ColorChooser {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_rgba (GTK::Compat::RGBA $color is rw) {
+  method get_rgba (GTK::Compat::RGBA $color is rw) is also<get-rgba> {
     gtk_color_chooser_get_rgba($!cc, $color);
     $color;
   }
 
-  method get_colorchooser_type {
+  method get_colorchooser_type is also<get-colorchooser-type> {
     warn 'There is no role type for GTK::Roles::ColorChooser';
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

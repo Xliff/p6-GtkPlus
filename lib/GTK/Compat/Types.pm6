@@ -5,6 +5,9 @@ use NativeCall;
 
 use GTK::Roles::Pointers;
 
+# Number of times I've had to force a compile.
+constant forced = 0;
+
 unit package GTK::Compat::Types;
 
 constant gtk      is export = 'gtk-3',v0;
@@ -543,6 +546,12 @@ our enum PangoDirection is export <
   PANGO_DIRECTION_WEAK_RTL
   PANGO_DIRECTION_NEUTRA
 >;
+
+our enum GFileCreateFlags is export (
+  G_FILE_CREATE_NONE                => 0,
+  G_FILE_CREATE_PRIVATE             => 1,
+  G_FILE_CREATE_REPLACE_DESTINATION => 2
+);
 
 
 class cairo_font_options_t  is repr('CPointer') is export { }

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -27,13 +28,13 @@ role GTK::Roles::Editable {
 
   # Is originally:
   # GtkEditable, gint, gint, gpointer --> void
-  method delete-text {
+  method delete-text is also<delete_text> {
     self.connect($!er, 'delete-text');
   }
 
   # Is originally:
   # GtkEditable, gchar, gint, gpointer, gpointer --> void
-  method insert-text {
+  method insert-text is also<insert_text> {
     self.connect($!er, 'insert-text');
   }
 
@@ -66,55 +67,63 @@ role GTK::Roles::Editable {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method copy_clipboard {
+  method copy_clipboard is also<copy-clipboard> {
     gtk_editable_copy_clipboard($!er);
   }
 
-  method cut_clipboard {
+  method cut_clipboard is also<cut-clipboard> {
     gtk_editable_cut_clipboard($!er);
   }
 
-  method delete_selection {
+  method delete_selection is also<delete-selection> {
     gtk_editable_delete_selection($!er);
   }
 
-  method delete_text (Int() $start_pos, Int() $end_pos) {
+  method delete_text_between (Int() $start_pos, Int() $end_pos)
+    is also<delete-text-between>
+  {
     my @u = ($start_pos, $end_pos);
     my gint ($sp, $ep) = self.RESOLVE-INT(@u);
     gtk_editable_delete_text($!er, $sp, $ep);
   }
 
-  method get_chars (Int() $start_pos, Int() $end_pos) {
+  method get_chars (Int() $start_pos, Int() $end_pos) is also<get-chars> {
     my @i = ($start_pos, $end_pos);
     my gint ($sp, $ep) = self.RESOLVE-INT(@i);
     gtk_editable_get_chars($!er, $start_pos, $end_pos);
   }
 
-  method get_selection_bounds (Int() $start_pos, Int() $end_pos) {
+  method get_selection_bounds (Int() $start_pos, Int() $end_pos)
+    is also<get-selection-bounds>
+  {
     my @i = ($start_pos, $end_pos);
     my gint ($sp, $ep) = self.RESOLVE-INT(@i);
     gtk_editable_get_selection_bounds($!er, $start_pos, $end_pos);
   }
 
-  method get_editable_type () {
+  method get_editable_type () is also<get-editable-type> {
     gtk_editable_get_type();
   }
 
-  method insert_text (
+  method insert_text_at (
     Str() $new_text,
     gint $new_text_length,
     gint $position)
+  is
+    also<insert-text-at>
   {
     my @i = ($new_text_length, $position);
     my gint ($n, $p) = self.RESOLVE-INT(@i);
     gtk_editable_insert_text($!er, $new_text, $n, $p);
   }
 
-  method paste_clipboard {
+  method paste_clipboard is also<paste-clipboard> {
     gtk_editable_paste_clipboard($!er);
   }
 
-  method select_region (Int() $start_pos, Int() $end_pos) {
+  method select_region (Int() $start_pos, Int() $end_pos)
+    is also<select-region>
+  {
     my @i = ($start_pos, $end_pos);
     my gint ($sp, $ep) = self.RESOLVE-INT(@i);
     gtk_editable_select_region($!er, $sp, $ep);

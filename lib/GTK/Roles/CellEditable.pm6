@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Value;
@@ -20,13 +21,13 @@ role GTK::Roles::CellEditable {
 
   # Is originally:
   # GtkCellEditable, gpointer --> void
-  method editing-done {
+  method editing-done is also<editing_done> {
     self.connect($!ce, 'editing-done');
   }
 
   # Is originally:
   # GtkCellEditable, gpointer --> void
-  method remove-widget {
+  method remove-widget is also<remove_widget> {
     self.connect($!ce, 'remove-widget');
   }
 
@@ -35,7 +36,7 @@ role GTK::Roles::CellEditable {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: gboolean
-  method editing-canceled is rw {
+  method editing-canceled is rw is also<editing_canceled> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -53,19 +54,19 @@ role GTK::Roles::CellEditable {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method editing_done {
+  method emit_editing_done is also<emit-editing-done> {
     gtk_cell_editable_editing_done($!ce);
   }
 
-  method get_celleditable_type {
+  method get_celleditable_type is also<get-celleditable-type> {
     gtk_cell_editable_get_type();
   }
 
-  method remove_widget {
+  method emit_remove_widget is also<emit-remove-widget> {
     gtk_cell_editable_remove_widget($!ce);
   }
 
-  method start_editing (GdkEvent $event) {
+  method start_editing (GdkEvent $event) is also<start-editing> {
     gtk_cell_editable_start_editing($!ce, $event);
   }
 

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -19,7 +20,7 @@ role GTK::Roles::FontChooser {
 
   # Is originally:
    # GtkFontChooser, gchar, gpointer --> void
-   method font-activated {
+   method font-activated is also<font_activated> {
      self.connect($!fc, 'font-activated');
    }
 
@@ -37,7 +38,7 @@ role GTK::Roles::FontChooser {
     );
   }
 
-  method font_desc is rw {
+  method font_desc is rw is also<font-desc> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_font_chooser_get_font_desc($!fc);
@@ -48,7 +49,7 @@ role GTK::Roles::FontChooser {
     );
   }
 
-  method font_map is rw {
+  method font_map is rw is also<font-map> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_font_chooser_get_font_map($!fc);
@@ -59,7 +60,7 @@ role GTK::Roles::FontChooser {
     );
   }
 
-  method preview_text is rw {
+  method preview_text is rw is also<preview-text> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_font_chooser_get_preview_text($!fc);
@@ -70,7 +71,7 @@ role GTK::Roles::FontChooser {
     );
   }
 
-  method show_preview_entry is rw {
+  method show_preview_entry is rw is also<show-preview-entry> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_font_chooser_get_show_preview_entry($!fc);
@@ -84,19 +85,19 @@ role GTK::Roles::FontChooser {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_font_face {
+  method get_font_face is also<get-font-face> {
     gtk_font_chooser_get_font_face($!fc);
   }
 
-  method get_font_family {
+  method get_font_family is also<get-font-family> {
     gtk_font_chooser_get_font_family($!fc);
   }
 
-  method get_font_size {
+  method get_font_size is also<get-font-size> {
     gtk_font_chooser_get_font_size($!fc);
   }
 
-  method get_fontchooser_type {
+  method get_fontchooser_type is also<get-fontchooser-type> {
     gtk_font_chooser_get_type();
   }
 
@@ -104,9 +105,10 @@ role GTK::Roles::FontChooser {
     GtkFontFilterFunc $filter,
     gpointer $user_data,
     GDestroyNotify $destroy
-  ) {
+  ) is also<set-filter-func> {
     gtk_font_chooser_set_filter_func($!fc, $filter, $user_data, $destroy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+

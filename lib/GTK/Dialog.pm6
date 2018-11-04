@@ -159,7 +159,7 @@ class GTK::Dialog is GTK::Window {
   multi method add-buttons(*@buttons) {
     self.add_buttons(@buttons);
   }
-  multi method add_buttons(*@buttons)s {
+  multi method add_buttons(*@buttons) {
     die '\@buttons is not an array of pair objects!'
       unless @buttons.all ~~ Pair;
     self.add_button(.key, .value) for @buttons;
