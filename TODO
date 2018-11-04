@@ -6,13 +6,14 @@
 - New dependency: https://github.com/timo/cairo-p6
 - GDK
 + Feature Request: GTK::TextBuffer.buffer to accept from Str or Buf. This should also apply to .text()
-+ METHOD ALIASING! - This has mostly been accomplished, but in the case of container-based classes and others where manual aliasing was done, the best thing to do would be a proto method. See: https://gist.github.com/Xliff/34b9d2e3e27c76696ec60e6791075634
+√ METHOD ALIASING! - This has mostly been accomplished, but in the case of container-based classes and others where manual aliasing was done, the best thing to do would be a proto method. See: https://gist.github.com/Xliff/34b9d2e3e27c76696ec60e6791075634
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
 - Convert Perl6 additions to GTK::Container into a role. (GTK::Roles::Containable)
 - Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
 + Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get (MOSTLY DONE! See scripts/prop-get.pl6)
 - Fix lack of icons in GTK::IconView
 - Add to project if I'm completely insane: GVariant
+- Move signals to Object.signal<name> to fix issue with method name conflicts
 
 
 Applications
