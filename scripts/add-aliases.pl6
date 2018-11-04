@@ -36,8 +36,7 @@ sub MAIN($filename) {
           my $tbr = $fm.Str;
           $full_line ~~ s!$tbr!{$tbr}is also<{$al}> !;
         }
-        $add = True;
-        $method = False;
+        ($add, $method) = (True, False);
       }
       when $method {
         $add = False;

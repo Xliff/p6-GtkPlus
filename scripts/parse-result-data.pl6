@@ -15,7 +15,7 @@ grammar ParseBuildResults {
     <summary_type> \s* $<min>=(\d+) 'm' <sec=num> 's' \s*
   }
   regex header {
-    ^^ '=== ' <module> ' ===' $$
+    ^^ \s* '=== ' <module> ' ===' $$
   }
   regex stage {
     ^^ 'Stage ' <stage_type> \s* ': ' [

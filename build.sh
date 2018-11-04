@@ -7,6 +7,6 @@ else
 fi
 time (
   for a in `cat BuildList`; do
-    (echo " === $a ==="; perl6 --stagestats -Ilib -e "use $a") | tee -a LastBuildResults
+    (echo " === $a ==="; perl6 --stagestats -Ilib -e "use $a" 2>&1) | tee -a LastBuildResults
   done
 )
