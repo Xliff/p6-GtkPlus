@@ -11,12 +11,20 @@ class GTK::Builder::Frame is GTK::Builder::Base does GTK::Builder::Role {
     shadow-type
   >;
 
+  method create($v, $o) {
+    my @c;
+    # We don't do anything with the "translatable" attribute, yet.
+    @c.push: qq:to/MI/.chomp;
+{ sprintf($v, $o<id>) } = GTK::Frame.new("{ $o<props><label><value> // '' }");
+MI
+
+    $o<props><label>:delete;
+    @c;
+  }
+
   multi method properties($v, $o) {
     my @c = self.properties($v, @attributes, $o, -> $prop is rw {
       given $prop {
-        when 'label' {
-          $o<props><label> = "'{ $o<props><label> }'";
-        }
         when 'label-widget' {
           $prop = 'label_widget';
         }

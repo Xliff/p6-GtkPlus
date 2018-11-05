@@ -29,13 +29,11 @@ class GTK::Widget {
   submethod BUILD (:$widget) {
     given $widget {
       when GtkWidget {
-        $!w = $widget;
+        self.setWidget($widget);
       }
       default {
       }
     }
-    $!prop = nativecast(GObject, $!w);    # GTK::Roles::Properties
-    $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
   }
 
   submethod DESTROY {
@@ -66,6 +64,8 @@ class GTK::Widget {
          die "GTK::Widget initialized from unexpected source!";
       }
     };
+    $!prop = nativecast(GObject, $!w);    # GTK::Roles::Properties
+    $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
   }
 
   method setType($typeName) {

@@ -126,10 +126,10 @@ class GTK::ListStore {
 
     my CArray[gint] $c_columns;
     my CArray[GValue] $c_values;
+    my $c = 0;
     for %values.keys.sort {
-      my $c = $++;
       $c_columns[$c] = $_.Int;
-      $c_values[$c] = %values{$_};
+      $c_values[$c++] = %values{$_};
     }
     self.insert_with_valuesv(
       $!ls,
@@ -234,14 +234,14 @@ class GTK::ListStore {
       warn '$n_values was greater than column count, and was corrected.';
     }
 
-    die '@columns must contain GTypeEnum or integer values.'
-      unless @columns.all ~~ (IntStr, Int);
+    die '@columns must contain values that have an integer representation.'
+      unless @columns.map( *.^can('Int').elems ).all > 0;
     die '@values must contain GTK::Compat::Value or GValue elements'
       unless @values.all ~~ GValues;
     $!accessed = True;
     my $c_columns = CArray[gint].new;
-    my $c_values = CArray[gint].new;
-    $c_columns[$_] = @columns[$_] for (^$n_values);
+    my $c_values = CArray[GValue].new;
+    $c_columns[$_] = @columns[$_].Int for (^$n_values);
     $c_values[$_]  = @values[$_]  for (^$n_values);
     gtk_list_store_set_valuesv($!ls, $iter, $c_columns, $c_values, $n_values);
   }
@@ -252,4 +252,3 @@ class GTK::ListStore {
   }
 
 }
-

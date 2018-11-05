@@ -61,9 +61,7 @@ sub new_row {
   # Proper way to handle a GError. Need a better way for client code to
   # Access this.
 
-  say "pBLR";
   my %b = buildListRow;
-  say "ppBLR";
   %b<row> := %b<template0>;
   %b<reshare-button>.clicked.tap({
     %messages{%b<row>}<data>.n_reshares++;
@@ -74,10 +72,10 @@ sub new_row {
     %messages{%b<row>}<data>.n_favorites++;
     row_update(%b<row>);
   });
-  %b<listrow>.state-flags-changed.tap(-> $, $pf {
+  %b<row>.state-flags-changed.tap(-> *@a {
     %b<extra_buttons_box>.visible = %b<row>.state_flags +&
       (GTK_STATE_FLAG_PRELIGHT +| GTK_STATE_FLAG_SELECTED);
-    %b<listrow>.state_flags = $pf;
+    %b<row>.state_flags = @a[1];
   });
   %b;
 }

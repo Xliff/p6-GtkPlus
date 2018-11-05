@@ -76,7 +76,8 @@ class GTK::TargetList {
 
   method add_table (GtkTargetEntry @targets) is also<add-table> {
     my CArray[GtkTargetEntry] $t = CArray[GtkTargetEntry].new;
-    $t[$++] = $_ for @targets;
+    my $i = 0;
+    $t[$i++] = $_ for @targets;
     gtk_target_list_add_table($!tl, $t, $t.elems);
   }
 
@@ -109,4 +110,3 @@ class GTK::TargetList {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

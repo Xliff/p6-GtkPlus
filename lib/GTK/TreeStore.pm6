@@ -39,7 +39,8 @@ class GTK::TreeStore  {
         unless $_.Int (elem) GTypeEnum.enums.values;
     }
     my $t = CArray[GType].new;
-    $t[$++] = $_ for @types;
+    my $i = 0;
+    $t[$i++] = $_ for @types;
     my gint $c = @types.elems;
     my $treestore = gtk_tree_store_newv($c, $t);
     self.bless(:$treestore);
@@ -228,4 +229,3 @@ class GTK::TreeStore  {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

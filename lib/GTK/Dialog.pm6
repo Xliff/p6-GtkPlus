@@ -229,7 +229,8 @@ class GTK::Dialog is GTK::Window {
   {
     my gint $np = self.RESOLVE-INT($n_params);
     my CArray[gint] $no = CArray[gint].new;
-    $no[$++] = $_ for @new_order;
+    my $i = 0;
+    $no[$i++] = $_ for @new_order;
 
     gtk_dialog_set_alternative_button_order_from_array($!d, $np, $no);
   }

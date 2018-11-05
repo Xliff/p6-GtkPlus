@@ -155,7 +155,7 @@ class GTK::Image is GTK::Widget {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get('icon-name', $gv)
+          self.prop_get('icon-name', $gv);
         );
         $gv.string;
       },

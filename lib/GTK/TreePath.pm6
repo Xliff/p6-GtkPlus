@@ -33,7 +33,8 @@ class GTK::TreePath {
 
   method new_from_indicesv (Int @indicies) is also<new-from-indicesv> {
     my CArray[gint] $i = CArray[gint].new;
-    $i[$++] = self.RESOLVE-INT($_) for @indicies;
+    my $ii = 0;
+    $i[$ii++] = self.RESOLVE-INT($_) for @indicies;
     my $path = gtk_tree_path_new_from_indicesv($i, $i.elems);
     self.bless(:$path);
   }
@@ -119,4 +120,3 @@ class GTK::TreePath {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

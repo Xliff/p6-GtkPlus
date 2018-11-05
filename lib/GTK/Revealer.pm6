@@ -20,7 +20,7 @@ class GTK::Revealer is GTK::Bin {
 
   submethod BUILD(:$revealer) {
     my $to-parent;
-    given $ {
+    given $revealer {
       when GtkRevealer | GtkWidget {
         $!r = do {
           when GtkWidget {
@@ -119,4 +119,3 @@ class GTK::Revealer is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

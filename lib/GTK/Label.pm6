@@ -150,7 +150,10 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method line_wrap is rw is also<line-wrap> {
+  method line_wrap is rw
+    is also<line-wrap>
+    is also<wrap>
+  {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_label_get_line_wrap($!l) );
@@ -162,7 +165,11 @@ class GTK::Label is GTK::Widget {
     );
   }
 
-  method line_wrap_mode is rw is also<line-wrap-mode> {
+  method line_wrap_mode is rw
+    is also<line-wrap-mode>
+    is also<wrap-mode>
+    is also<wrap_mode>
+  {
     Proxy.new(
       FETCH => sub ($) {
         PangoWrapMode( gtk_label_get_line_wrap_mode($!l) );
@@ -368,4 +375,3 @@ class GTK::Label is GTK::Widget {
   }
 
 }
-

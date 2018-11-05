@@ -52,7 +52,8 @@ class GTK::Selection {
       },
       STORE => sub ($, Str @uris is copy) {
         my CArray[Str] $u = CArray[Str].new;
-        $u[$++] = $_ for @uris;
+        my $i = 0;
+        $u[$i++] = $_ for @uris;
         gtk_selection_data_set_uris($!s, $u);
       }
     );
@@ -194,4 +195,3 @@ class GTK::Selection {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

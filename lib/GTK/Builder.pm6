@@ -274,7 +274,8 @@ class GTK::Builder does Associative {
   ) is also<add-objects-from-file> {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
-    $oi[$++] = $_ for @object_ids;
+    my $i = 0;
+    $oi[$i++] = $_ for @object_ids;
     gtk_builder_add_objects_from_file($!b, $filename, $oi, $error);
     $ERROR = $error if $error[0].defined;
     #self!postHandle;
@@ -287,7 +288,8 @@ class GTK::Builder does Associative {
   ) is also<add-objects-from-resource> {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
-    $oi[$++] = $_ for @object_ids;
+    my $i = 0;
+    $oi[$i++] = $_ for @object_ids;
     gtk_builder_add_objects_from_resource($!b, $resource_path, $oi, $error);
     $ERROR = $error if $error[0].defined;
     #self!postProcess;
@@ -311,7 +313,8 @@ class GTK::Builder does Associative {
 
     my gsize $l = $length;
     my $oi = CArray[Str].new;
-    $oi[$++] = $_ for @object_ids;
+    my $i = 0;
+    $oi[$i++] = $_ for @object_ids;
     my $rc = gtk_builder_add_objects_from_string(
       $!b,
       $buffer,
@@ -403,4 +406,3 @@ class GTK::Builder does Associative {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
