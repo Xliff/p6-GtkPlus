@@ -17,9 +17,10 @@ sub sort-func($a, $b) {
 };
 
 sub row-expand(GtkListBoxRow() $r) {
-  my $revealer = %messages{$r}<widgets>.details_revealer;
+  my $revealer = %messages{+$r.p}<widgets><details_revealer>;
+  (+$r.p).say;
   $revealer.reveal_child .= not;
-  %messages{$r}<widgets>.expand_button.label = $revealer.reveal_child ??
+  %messages{+$r.p}<widgets><expand_button>.label = $revealer.reveal_child ??
     'Hide' !! 'Expand';
 }
 
@@ -153,7 +154,9 @@ $a.activate.tap({
   # Fix when able
   # $listbox.set_sort_func(&sort-func);
   $listbox.activate_on_single_click = False;
-  $listbox.row-activated.tap( -> $r { row-expand($r) } );
+  $listbox.row-activated.tap( -> *@a {
+    row-expand(@a[1])
+  } );
 
   my $msg_file = 'messages.txt';
   $msg_file = 't/messages.txt' unless $msg_file.IO.e;
@@ -162,12 +165,13 @@ $a.activate.tap({
 
     my $m = new_message($_);
     my $w = new_row;
-    %messages{$w<row>.listboxrow}<widgets> = $w;
-    %messages{$w<row>.listboxrow}<data> = $m;
+    %messages{+$w<row>.listboxrow.p}<widgets> = $w;
+    %messages{+$w<row>.listboxrow.p}<data> = $m;
     $listbox.add($w<row>);
     $w<row>.show;
-
   }
+
+  %messages.gist.say;
 
 });
 

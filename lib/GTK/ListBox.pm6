@@ -176,7 +176,9 @@ class GTK::ListBox is GTK::Container {
     );
   }
 
-  method drag_highlight_row (GtkListBoxRow() $row) is also<drag-highlight-row> {
+  method drag_highlight_row (GtkListBoxRow() $row)
+    is also<drag-highlight-row>
+  {
     gtk_list_box_drag_highlight_row($!lb, $row);
   }
 
