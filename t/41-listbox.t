@@ -147,7 +147,7 @@ $a.activate.tap({
   $scrolled.add($listbox);
 
   $vbox.pack_start($label);
-  $vbox.pack_start($scrolled);
+  $vbox.pack_start($scrolled, True, True);
 
   $a.window.show_all;
 
@@ -156,7 +156,7 @@ $a.activate.tap({
   $listbox.activate_on_single_click = False;
   $listbox.row-activated.tap( -> *@a {
     row-expand(@a[1])
-  } );
+  });
 
   my $msg_file = 'messages.txt';
   $msg_file = 't/messages.txt' unless $msg_file.IO.e;
@@ -170,8 +170,6 @@ $a.activate.tap({
     $listbox.add($w<row>);
     $w<row>.show;
   }
-
-  %messages.gist.say;
 
 });
 

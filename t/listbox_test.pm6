@@ -233,6 +233,10 @@ sub buildListRow is export {
   %b<grid1>.attach(%b<details_revealer>,  1,  4,  1,  1);
   %b<template0>.add(%b<grid1>);
 
+  %b{$_}.show for %b.keys.grep({
+    $_ ne <menu1 menuitem1 menuitem2 template0>.any
+  });
+
   %b;
 }
 
