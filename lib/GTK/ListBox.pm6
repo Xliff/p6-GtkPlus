@@ -270,12 +270,20 @@ class GTK::ListBox is GTK::Container {
   }
 
   method set_sort_func (
-    &sort_func (GtkListBoxRow $a, GtkListBoxRow $b, gpointer $data),
+    #&sort_func:(GtkListBoxRow, GtkListBoxRow, gpointer --> gint),
+    &sort_func,
     gpointer $user_data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-sort-func>
   {
+    # my $sf := &sort_func;
+    # if $sf ~~ Sub {
+    #   $sf = -> $a, $b --> gint {
+    #     &sort_func($a, $b);
+    #   }
+    # }
+
     gtk_list_box_set_sort_func($!lb, &sort_func, $user_data, $destroy);
   }
 

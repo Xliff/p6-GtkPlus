@@ -13,12 +13,11 @@ use NativeCall;
 my (%messages, $avatar_other);
 
 sub sort-func($a, $b) {
-  %messages{$a}<data><time> <=> %messages{$b}<data><time>
+
 };
 
 sub row-expand(GtkListBoxRow() $r) {
   my $revealer = %messages{+$r.p}<widgets><details_revealer>;
-  (+$r.p).say;
   $revealer.reveal_child .= not;
   %messages{+$r.p}<widgets><expand_button>.label = $revealer.reveal_child ??
     'Hide' !! 'Expand';
@@ -65,12 +64,12 @@ sub new_row {
   my %b = buildListRow;
   %b<row> := %b<template0>;
   %b<reshare-button>.clicked.tap({
-    %messages{%b<row>}<data>.n_reshares++;
+    %messages{+%b<row>.listboxrow.p}<data><n_reshares>++;
     row_update(%b<row>);
   });
   %b<expand_button>.clicked.tap({ row-expand(%b<row>) });
   %b<favorite-button>.clicked.tap({
-    %messages{%b<row>}<data>.n_favorites++;
+    %messages{+%b<row>.listboxrow.p}<data><n_favorites>++;
     row_update(%b<row>);
   });
   %b<row>.state-flags-changed.tap(-> *@a {
@@ -91,37 +90,45 @@ sub new_message($m) {
   %msg<sender_nick> = @msg[$i++];
   %msg<message>     = @msg[$i++];
   %msg<time>        = @msg[$i++];
-  with @msg[$i] {
-    %msg<reply_to>    = @msg[$i++];
-    with @msg[$i] {
-      %msg<resent_by> = @msg[$i++];
-      with @msg[$i] {
-        %msg<n_favorites> = @msg[$i++];
-        %msg<reshares> = @msg[$i] with @msg[$i];
-      }
-    }
-  }
+  %msg<reply_to>    = @msg[$i++] // '';
+  %msg<resent_by>   = @msg[$i++] // '';
+  %msg<n_favorites> = @msg[$i++];
+  %msg<reshares>    = @msg[$i];
+
   %msg;
 }
 
 sub row_update(GtkListBoxRow() $r) {
-  my $d = %messages{$r}<data>;
-  my $w = %messages{$r}<widgets>;
+  my $d = %messages{+$r.p}<data>;
+  my $w = %messages{+$r.p}<widgets>;
 
-  $w<source_name>.text          = $d.sender_name;
-  $w<source_nick>.text          = $d.sender_nick;
-  $w<content_label>.text        = $d.message;
-  $w<short_time_label>.text     = strftime('%e %b %y', DateTime($d.time));
-  $w<detailed_time_label>.text  = strftime('%X - %e %b %Y', DateTime($d.time));
+  $w<source_nick>.text          = $d<sender_nick>;
+  $w<content_label>.text        = $d<message>;
+  $w<short_time_label>.text     = strftime(
+    '%e %b %y',
+    DateTime.new($d<time>.Int)
+  );
+  $w<detailed_time_label>.text  = strftime(
+    '%X - %e %b %Y',
+    DateTime.new($d<time>.Int)
+  );
 
-  $w<n_favorites_label>.visible = $d.n_favorites.so;
-  $w<n_favorites_label>.markup  = sprintf('<b>%d</b>\nFavorites', $d.n_favorites);
-  $w<n_reshares_label>.visible  = $d.n_reshares.so;
-  $w<n_reshares_label>.markup   = sprintf('<b>%d</b>\nReshares', $d.n_reshares);
-  $w<resent_box>.visible        = $d.resent_by.chars.so;
-  $w<resent_box>.label          = $d.resent_by if $d.resent_by.chars.so;
+  $w<n_favorites_label>.visible = $d<n_favorites>.so;
+  $w<n_favorites_label>.set_markup(sprintf(
+    "<b>\%d</b>\nFavorites",
+    $d<n_favorites>
+  ));
+  $w<n_reshares_label>.visible  = $d<n_reshares>.so;
+  $w<n_reshares_label>.set_markup(sprintf(
+    "<b>\%d</b>\nReshares",
+    $d<n_reshares>
+  ));
+  $w<resent_box>.visible    = $d<resent_by>.chars.so;
+  $w<label4>.label          = "Resent by { $d<resent_by> // '' }";
 
-  if $d.sender_nick eq '@GTKtoolkit' {
+  $w<source_name>.set_markup( sprintf('<b>%s</b>', $d<sender_name>) );
+
+  if $d<sender_nick> eq '@GTKtoolkit' {
     $w<avatar_image>.set_from_icon_name('gtk3-demo');
     $w<avatar_image>.icon_size = GTK_ICON_SIZE_LARGE_TOOLBAR;
   } else {
@@ -132,12 +139,14 @@ sub row_update(GtkListBoxRow() $r) {
 my $a = GTK::Application.new( title => 'org.genex.listbox' );
 
 $a.activate.tap({
-  my $avatar_pixbuf = load_at_scale("/listbox/apple-red.png", 32, 32, 0);
   my $vbox = GTK::Box.new-vbox(12);
   my $label = GTK::Label.new('Messages from Gtk+ and Friends');
   my $scrolled = GTK::ScrolledWindow.new;
   my $listbox = GTK::ListBox.new;
 
+  my $filename = 'apple-red.png';
+  $filename = "t/{ $filename }" unless $filename.IO.e;
+  $avatar_other = load_at_scale($filename, 32, 32, 0);
   $a.window.title = 'List Box';
   $a.window.set_default_size(400, 600);
   $a.window.add($vbox);
@@ -152,7 +161,9 @@ $a.activate.tap({
   $a.window.show_all;
 
   # Fix when able
-  # $listbox.set_sort_func(&sort-func);
+  # $listbox.set_sort_func(-> $a, $b --> gint {
+  #   %messages{$a}<data><time> <=> %messages{$b}<data><time>
+  # });
   $listbox.activate_on_single_click = False;
   $listbox.row-activated.tap( -> *@a {
     row-expand(@a[1])
@@ -161,12 +172,11 @@ $a.activate.tap({
   my $msg_file = 'messages.txt';
   $msg_file = 't/messages.txt' unless $msg_file.IO.e;
   for $msg_file.IO.open.slurp.lines {
-    say "LINE: $_";
-
     my $m = new_message($_);
     my $w = new_row;
     %messages{+$w<row>.listboxrow.p}<widgets> = $w;
     %messages{+$w<row>.listboxrow.p}<data> = $m;
+    row_update($w<row>);
     $listbox.add($w<row>);
     $w<row>.show;
   }

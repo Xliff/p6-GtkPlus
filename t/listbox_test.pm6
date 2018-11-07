@@ -127,7 +127,9 @@ sub buildListRow is export {
   %b<button2>.valign = GTK_ALIGN_BASELINE;
   %b<source_name> = GTK::Label.new();
   %b<source_name>.label = "Username";
+  %b<source_name>.use_markup = 1;
   %b<source_name>.valign = GTK_ALIGN_BASELINE;
+  %b<button2>.add(%b<source_name>);
   %b<source_nick> = GTK::Label.new();
   %b<source_nick>.label = "@nick";
   %b<source_nick>.valign = GTK_ALIGN_BASELINE;
@@ -185,6 +187,7 @@ sub buildListRow is export {
   %b<more-button>.receives-default = 1;
   %b<label7> = GTK::Label.new();
   %b<label7>.label = "More...";
+  %b<more-button>.add(%b<label7>);
   %b<extra_buttons_box>.pack_start(%b<reply-button>,  False,  False,  0);
   %b<extra_buttons_box>.pack_start(%b<reshare-button>,  False,  False,  0);
   %b<extra_buttons_box>.pack_start(%b<favorite-button>,  False,  False,  0);
@@ -201,13 +204,13 @@ sub buildListRow is export {
   %b<frame1> = GTK::Frame.new("");
   %b<frame1>.shadow_type = GTK_SHADOW_NONE;
   %b<n_reshares_label> = GTK::Label.new();
-  %b<n_reshares_label>.label = "&lt;b&gt;2&lt;/b&gt;\nReshares";
+  %b<n_reshares_label>.label = "&lt;b&gt;2&lt;/b&gt;&lt;br /&gt;Reshares";
   %b<n_reshares_label>.use-markup = 1;
   %b<frame1>.add(%b<n_reshares_label>);
   %b<frame2> = GTK::Frame.new("");
   %b<frame2>.shadow_type = GTK_SHADOW_NONE;
   %b<n_favorites_label> = GTK::Label.new();
-  %b<n_favorites_label>.label = "&lt;b&gt;2&lt;/b&gt;\nFAVORITES";
+  %b<n_favorites_label>.label = "&lt;b&gt;2&lt;/b&gt;&lt;br /&gt;FAVORITES";
   %b<n_favorites_label>.use-markup = 1;
   %b<frame2>.add(%b<n_favorites_label>);
   %b<box7>.pack_start(%b<frame1>,  False,  False,  0);
@@ -234,7 +237,7 @@ sub buildListRow is export {
   %b<template0>.add(%b<grid1>);
 
   %b{$_}.show for %b.keys.grep({
-    $_ ne <menu1 menuitem1 menuitem2 template0>.any
+    $_ ne 'template0'
   });
 
   %b;
