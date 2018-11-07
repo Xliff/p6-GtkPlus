@@ -76,7 +76,7 @@ class GTK::Menu is GTK::MenuShell {
     $!m;
   }
 
-  method new_from_model (GMenuModel $model) is also<new-from-model> {
+  method new_from_model (GMenuModel() $model) is also<new-from-model> {
     my $menu = gtk_menu_new_from_model($model);
     self.bless(:$menu);
   }

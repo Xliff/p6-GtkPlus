@@ -162,9 +162,9 @@ $a.activate.tap({
   $a.window.show_all;
 
   # Fix when able
-  # $listbox.set_sort_func(-> $a, $b --> gint {
-  #   %messages{$a}<data><time> <=> %messages{$b}<data><time>
-  # });
+  $listbox.set_sort_func(-> $a, $b --> gint {
+    %messages{$a}<data><time> <=> %messages{$b}<data><time>
+  });
   $listbox.activate_on_single_click = False;
   $listbox.row-activated.tap( -> *@a {
     row-expand(@a[1])

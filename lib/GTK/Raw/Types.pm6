@@ -14,12 +14,6 @@ sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
 
-sub gerror is export {
-  my $cge = CArray[Pointer[GError]].new;
-  $cge[0] = Pointer[GError];
-  $cge;
-}
-
 # Look into replacing these with subsets to see how they would look.
 # Example:
 # <Zoffix>

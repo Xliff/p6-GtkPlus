@@ -28,9 +28,18 @@ class GTK::Compat::MenuModel {
     $!m = $model;
   }
 
+  method setMenuModel($model) {
+    $!m = nativecast(GMenuModel, $model);
+  }
+
   submethod DESTROY {
     self.disconnect-all(%_) for %!signals-compat;
   }
+
+  method GTK::Compat::Types::GMenuModel is also<menumodel> {
+    $!m;
+  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -50,7 +59,9 @@ class GTK::Compat::MenuModel {
     Int() $item_index,
     Str() $attribute,
     GVariantType $expected_type
-  ) is also<get-item-attribute-value> {
+  )
+    is also<get-item-attribute-value>
+  {
     my gint $ii = self.RESOLVE-INT($item_index);
     g_menu_model_get_item_attribute_value(
       $!m, $ii, $attribute, $expected_type
@@ -60,7 +71,9 @@ class GTK::Compat::MenuModel {
   method get_item_link (
     Int() $item_index,
     Str() $link
-  ) is also<get-item-link> {
+  )
+    is also<get-item-link>
+  {
     my gint $ii = self.RESOLVE-INT($item_index);
     g_menu_model_get_item_link($!m, $ii, $link);
   }
@@ -77,20 +90,26 @@ class GTK::Compat::MenuModel {
     Int() $position,
     Int() $removed,
     Int() $added
-  ) is also<emit-items-changed> {
+  )
+    is also<emit-items-changed>
+  {
     my @i = ($position, $removed, $added);
     my gint ($p, $r, $a) = self.RESOLVE-INT(@i);
     g_menu_model_items_changed($!m, $position, $removed, $added);
   }
 
-  method iterate_item_attributes (Int() $item_index) is also<iterate-item-attributes> {
+  method iterate_item_attributes (Int() $item_index)
+    is also<iterate-item-attributes>
+  {
     my gint $ii = self.RESOLVE-INT($item_index);
     GTK::Compat::MenuAttributeIter.new(
       g_menu_model_iterate_item_attributes($!m, $ii);
     );
   }
 
-  method iterate_item_links (Int() $item_index) is also<iterate-item-links> {
+  method iterate_item_links (Int() $item_index)
+    is also<iterate-item-links>
+  {
     my gint $ii = self.RESOLVE-INT($item_index);
     GTK::Compat::MenuLinkIter.new(
       g_menu_model_iterate_item_links($!m, $ii);

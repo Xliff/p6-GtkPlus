@@ -9,6 +9,7 @@ use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
 use GTK::Container;
+use GTK::Menu;
 use GTK::Popover;
 use GTK::ToggleButton;
 
@@ -105,12 +106,9 @@ class GTK::MenuButton is GTK::ToggleButton {
   method popup is rw {
     Proxy.new(
       FETCH => sub ($) {
-        # GTK::Menu.new(
-          gtk_menu_button_get_popup($!mb)
-        #);
+        GTK::Menu.new( gtk_menu_button_get_popup($!mb) );
       },
       STORE => sub ($, GtkMenu() $menu is copy) {
-        gtk_widget_show_all( nativecast(GtkWidget, $menu) );
         gtk_menu_button_set_popup($!mb, $menu);
       }
     );

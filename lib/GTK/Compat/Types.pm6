@@ -10,6 +10,30 @@ constant forced = 1;
 
 unit package GTK::Compat::Types;
 
+our GError $ERROR is export;
+
+class GError is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32        $.domain;
+  has int32         $.code;
+  has Str           $.message;
+}
+
+sub gerror is export {
+  my $cge = CArray[Pointer[GError]].new;
+  $cge[0] = Pointer[GError];
+  $cge;
+}
+
+sub g_error_free(GError $err)
+  is native(glib)
+  is export
+  { *  }
+
+sub clear_error($error = $ERROR) is export {
+  g_error_free($error[0]) with $error[0];
+  $ERROR = Nil;
+}
+
 constant gtk      is export = 'gtk-3',v0;
 constant glib     is export = 'glib-2.0',v0;
 constant gio      is export = 'gio-2.0',v0;
@@ -59,12 +83,6 @@ constant GdkPixbufSaveFunc      is export := Pointer;
 constant GdkPixbufDestroyNotify is export := Pointer;
 
 constant PangoTabArray is export := CArray[gint];
-
-class GError is repr('CStruct') does GTK::Roles::Pointers is export {
-  has uint32        $.domain;
-  has int32         $.code;
-  has Str           $.message;
-}
 
 class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $.data;
