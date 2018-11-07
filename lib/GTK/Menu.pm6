@@ -196,7 +196,9 @@ class GTK::Menu is GTK::MenuShell {
   method attach_to_widget (
     GtkWidget() $attach_widget,
     GtkMenuDetachFunc $detacher
-  ) is also<attach-to-widget> {
+  )
+    is also<attach-to-widget>
+  {
     gtk_menu_attach_to_widget($!m, $attach_widget, $detacher);
   }
 
@@ -239,7 +241,9 @@ class GTK::Menu is GTK::MenuShell {
     );
   }
 
-  method popup_at_pointer (GdkEvent $trigger_event) is also<popup-at-pointer> {
+  method popup_at_pointer (GdkEvent $trigger_event)
+    is also<popup-at-pointer>
+  {
     gtk_menu_popup_at_pointer($!m, $trigger_event);
   }
 
@@ -249,7 +253,9 @@ class GTK::Menu is GTK::MenuShell {
     GdkGravity $rect_anchor,
     GdkGravity $menu_anchor,
     GdkEvent $trigger_event
-  ) is also<popup-at-rect> {
+  )
+    is also<popup-at-rect>
+  {
     gtk_menu_popup_at_rect(
       $!m, $rect_window, $rect, $rect_anchor, $menu_anchor, $trigger_event
     );
@@ -260,7 +266,9 @@ class GTK::Menu is GTK::MenuShell {
     GdkGravity $widget_anchor,
     GdkGravity $menu_anchor,
     GdkEvent $trigger_event
-  ) is also<popup-at-widget> {
+  )
+    is also<popup-at-widget>
+  {
     gtk_menu_popup_at_widget(
       $!m, $widget, $widget_anchor, $menu_anchor, $trigger_event
     );
@@ -275,7 +283,10 @@ class GTK::Menu is GTK::MenuShell {
     GDestroyNotify $destroy,
     Int() $button,
     Int() $activate_time
-  ) is DEPRECATED is also<popup-for-device> {
+  )
+    is DEPRECATED
+    is also<popup-for-device>
+  {
     my @u = ($button, $activate_time);
     my guint32 ($b, $at) = self.RESOLVE-UINT(@u);
     gtk_menu_popup_for_device(
@@ -291,7 +302,9 @@ class GTK::Menu is GTK::MenuShell {
     );
   }
 
-  method reorder_child (GtkWidget() $child, Int() $position) is also<reorder-child> {
+  method reorder_child (GtkWidget() $child, Int() $position)
+    is also<reorder-child>
+  {
     my gint $p = self.RESOLVE-INT($position);
     gtk_menu_reorder_child($!m, $child, $p);
   }

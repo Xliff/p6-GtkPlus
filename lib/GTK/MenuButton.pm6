@@ -6,6 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::MenuButton;
 use GTK::Raw::Types;
+use GTK::Raw::Widget;
 
 use GTK::Container;
 use GTK::Popover;
@@ -109,6 +110,7 @@ class GTK::MenuButton is GTK::ToggleButton {
         #);
       },
       STORE => sub ($, GtkMenu() $menu is copy) {
+        gtk_widget_show_all( nativecast(GtkWidget, $menu) );
         gtk_menu_button_set_popup($!mb, $menu);
       }
     );
@@ -135,4 +137,3 @@ class GTK::MenuButton is GTK::ToggleButton {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

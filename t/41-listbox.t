@@ -92,8 +92,8 @@ sub new_message($m) {
   %msg<time>        = @msg[$i++];
   %msg<reply_to>    = @msg[$i++] // '';
   %msg<resent_by>   = @msg[$i++] // '';
-  %msg<n_favorites> = @msg[$i++];
-  %msg<reshares>    = @msg[$i];
+  %msg<n_favorites> = @msg[$i++] // 0;
+  %msg<n_reshares>  = @msg[$i]   // 0;
 
   %msg;
 }
@@ -113,18 +113,19 @@ sub row_update(GtkListBoxRow() $r) {
     DateTime.new($d<time>.Int)
   );
 
-  $w<n_favorites_label>.visible = $d<n_favorites>.so;
+  $w<n_favorites_label>.visible = $d<n_favorites>.Int.so;
   $w<n_favorites_label>.set_markup(sprintf(
     "<b>\%d</b>\nFavorites",
     $d<n_favorites>
   ));
-  $w<n_reshares_label>.visible  = $d<n_reshares>.so;
+  $w<n_reshares_label>.visible  = $d<n_reshares>.Int.so;
   $w<n_reshares_label>.set_markup(sprintf(
     "<b>\%d</b>\nReshares",
-    $d<n_reshares>
+    $d<n_reshares> // 0
   ));
-  $w<resent_box>.visible    = $d<resent_by>.chars.so;
-  $w<label4>.label          = "Resent by { $d<resent_by> // '' }";
+  my $resent = $d<resent_by> // '';
+  $w<resent_box>.visible    = $resent.chars.so;
+  $w<label4>.label          = "Resent by { $resent }";
 
   $w<source_name>.set_markup( sprintf('<b>%s</b>', $d<sender_name>) );
 
