@@ -158,7 +158,7 @@ sub gtk_list_box_set_placeholder (GtkListBox $box, GtkWidget $placeholder)
 
 sub gtk_list_box_set_sort_func (
   GtkListBox $box,
-  GtkListBoxSortFunc $sort_func,
+  &sort_func (GtkListBoxRow, GtkListBoxRow, Pointer --> gint),
   gpointer $user_data,
   GDestroyNotify $destroy
 )

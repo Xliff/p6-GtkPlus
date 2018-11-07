@@ -10,13 +10,19 @@ constant forced = 1;
 
 unit package GTK::Compat::Types;
 
-our GError $ERROR is export;
+constant gtk      is export = 'gtk-3',v0;
+constant glib     is export = 'glib-2.0',v0;
+constant gio      is export = 'gio-2.0',v0;
+constant gobject  is export = 'gobject-2.0',v0;
+constant cairo    is export = 'cairo',v2;
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
   has int32         $.code;
   has Str           $.message;
 }
+
+our $ERROR is export;
 
 sub gerror is export {
   my $cge = CArray[Pointer[GError]].new;
@@ -33,12 +39,6 @@ sub clear_error($error = $ERROR) is export {
   g_error_free($error[0]) with $error[0];
   $ERROR = Nil;
 }
-
-constant gtk      is export = 'gtk-3',v0;
-constant glib     is export = 'glib-2.0',v0;
-constant gio      is export = 'gio-2.0',v0;
-constant gobject  is export = 'gobject-2.0',v0;
-constant cairo    is export = 'cairo',v2;
 
 constant cairo_t             is export := Pointer;
 constant cairo_region_t      is export := Pointer;

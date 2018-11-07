@@ -8,8 +8,6 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-our $ERROR is export;
-
 sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
