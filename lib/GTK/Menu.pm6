@@ -218,7 +218,9 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_get_type();
   }
 
-  method place_on_monitor (GdkMonitor $monitor) is also<place-on-monitor> {
+  method place_on_monitor (GdkMonitor $monitor)
+    is also<place-on-monitor>
+  {
     gtk_menu_place_on_monitor($!m, $monitor);
   }
 

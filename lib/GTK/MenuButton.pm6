@@ -108,8 +108,15 @@ class GTK::MenuButton is GTK::ToggleButton {
       FETCH => sub ($) {
         GTK::Menu.new( gtk_menu_button_get_popup($!mb) );
       },
-      STORE => sub ($, GtkMenu() $menu is copy) {
-        gtk_menu_button_set_popup($!mb, $menu);
+      STORE => sub ($, $menu is copy) {
+        my $widget = do given $menu {
+          when GTK::Menu { $menu.widget }
+          when GtkMenu   { nativecast(GtkWidget, $menu) }
+          default {
+            die "Invalid type { .^name } passed to GTK::MenuButton.popup";
+          }
+        }
+        gtk_menu_button_set_popup($!mb, $widget);
       }
     );
   }
