@@ -2,10 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-use gio::Compat::Types;
-use gio::Raw::Types;
+use GTK::Compat::Types;
+use GTK::Raw::Types;
 
-unit package gio::Compat::Raw::Menu;
+unit package GTK::Compat::Raw::Menu;
 
 sub g_menu_append (GMenu $menu, gchar $label, gchar $detailed_action)
   is native(gio)
@@ -70,7 +70,7 @@ sub g_menu_insert_submenu (
 sub g_menu_item_get_attribute_value (
   GMenuItem $menu_item,
   gchar $attribute,
-  GVariantType $expected_type
+  uint32 $expected_type       # GVariantType $expected_type
 )
   returns GVariant
   is native(gio)

@@ -2,9 +2,9 @@ use v6.c;
 
 use NativeCall;
 
-use gio::Compat::Types;
+use GTK::Compat::Types;
 
-unit package gio::Compat::Raw::Icon;
+unit package GTK::Compat::Raw::Icon;
 
 sub g_icon_deserialize (GVariant $value)
   returns GIcon
@@ -30,7 +30,7 @@ sub g_icon_hash (gconstpointer $icon)
   is export
   { * }
 
-sub g_icon_new_for_string (gchar $str, GError $error)
+sub g_icon_new_for_string (gchar $str, CArray[Pointer[GError]] $error)
   returns GIcon
   is native(gio)
   is export

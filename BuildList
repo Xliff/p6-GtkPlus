@@ -17,18 +17,16 @@ GTK::Builder::Revealer
 GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
-GTK::Compat::Raw::Menu
-GTK::Compat::Raw::Icon
 GTK::Raw::ReturnedValue
 GTK::Roles::Pointers
 GTK::Compat::Types
 GTK::Roles::Types
 GTK::Builder::Actionable
-GTK::Compat::Menu
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::GSList
+GTK::Compat::Raw::Icon
 GTK::Compat::Raw::MenuModel
 GTK::Compat::Raw::Permission
 GTK::Compat::Raw::Pixbuf
@@ -51,6 +49,7 @@ GTK::Compat::Permission
 GTK::Compat::Pixbuf
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::KeyFile
+GTK::Compat::Raw::Menu
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
 GTK::Dialog::Raw::ColorChooser
@@ -255,6 +254,7 @@ GTK::Clipboard
 GTK::Compat::Cursor
 GTK::Compat::GList
 GTK::Compat::KeyFile
+GTK::Compat::MenuItem
 GTK::Compat::Roles::Signals
 GTK::Compat::Value
 GTK::EntryBuffer
@@ -334,6 +334,7 @@ GTK::ColorButton
 GTK::ColorChooser
 GTK::ComboBox
 GTK::ComboBoxText
+GTK::Compat::Menu
 GTK::EntryCompletion
 GTK::Expander
 GTK::FileChooserButton

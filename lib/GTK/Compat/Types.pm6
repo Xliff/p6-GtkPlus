@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force a compile.
-constant forced = 1;
+constant forced = 5;
 
 unit package GTK::Compat::Types;
 
@@ -518,6 +518,54 @@ our enum GdkCursorType is export (
   GDK_CURSOR_IS_PIXMAP    => -1
 );
 
+our enum GdkVisibilityState is export <
+  GDK_VISIBILITY_UNOBSCURED
+  GDK_VISIBILITY_PARTIAL
+  GDK_VISIBILITY_FULLY_OBSCURED
+>;
+
+our enum GdkCrossingMode is export <
+  GDK_CROSSING_NORMAL
+  GDK_CROSSING_GRAB
+  GDK_CROSSING_UNGRAB
+  GDK_CROSSING_GTK_GRAB
+  GDK_CROSSING_GTK_UNGRAB
+  GDK_CROSSING_STATE_CHANGED
+  GDK_CROSSING_TOUCH_BEGIN
+  GDK_CROSSING_TOUCH_END
+  GDK_CROSSING_DEVICE_SWITCH
+>;
+
+our enum GdkNotifyType is export (
+  GDK_NOTIFY_ANCESTOR           => 0,
+  GDK_NOTIFY_VIRTUAL            => 1,
+  GDK_NOTIFY_INFERIOR           => 2,
+  GDK_NOTIFY_NONLINEAR          => 3,
+  GDK_NOTIFY_NONLINEAR_VIRTUAL  => 4,
+  GDK_NOTIFY_UNKNOWN            => 5
+);
+
+our enum GdkWindowState is export (
+  GDK_WINDOW_STATE_WITHDRAWN        => 1,
+  GDK_WINDOW_STATE_ICONIFIED        => 1 +< 1,
+  GDK_WINDOW_STATE_MAXIMIZED        => 1 +< 2,
+  GDK_WINDOW_STATE_STICKY           => 1 +< 3,
+  GDK_WINDOW_STATE_FULLSCREEN       => 1 +< 4,
+  GDK_WINDOW_STATE_ABOVE            => 1 +< 5,
+  GDK_WINDOW_STATE_BELOW            => 1 +< 6,
+  GDK_WINDOW_STATE_FOCUSED          => 1 +< 7,
+  GDK_WINDOW_STATE_TILED            => 1 +< 8,
+  GDK_WINDOW_STATE_TOP_TILED        => 1 +< 9,
+  GDK_WINDOW_STATE_TOP_RESIZABLE    => 1 +< 10,
+  GDK_WINDOW_STATE_RIGHT_TILED      => 1 +< 11,
+  GDK_WINDOW_STATE_RIGHT_RESIZABLE  => 1 +< 12,
+  GDK_WINDOW_STATE_BOTTOM_TILED     => 1 +< 13,
+  GDK_WINDOW_STATE_BOTTOM_RESIZABLE => 1 +< 14,
+  GDK_WINDOW_STATE_LEFT_TILED       => 1 +< 15,
+  GDK_WINDOW_STATE_LEFT_RESIZABLE   => 1 +< 16
+);
+
+
 our enum PangoStretch is export <
   PANGO_STRETCH_ULTRA_CONDENSED
   PANGO_STRETCH_EXTRA_CONDENSED
@@ -602,6 +650,7 @@ class GKeyFile              is repr('CPointer') is export { }
 class GListModel            is repr('CPointer') is export { }
 class GMarkupParser         is repr('CPointer') is export { }
 class GMenu                 is repr('CPointer') is export { }
+class GMenuItem             is repr('CPointer') is export { }
 class GMenuAttributeIter    is repr('CPointer') is export { }
 class GMenuLinkIter         is repr('CPointer') is export { }
 class GMenuModel            is repr('CPointer') is export { }
@@ -620,16 +669,6 @@ class GdkDragContext        is repr('CPointer') is export { }
 class GdkEvent              is repr('CPointer') is export { }
 class GdkEventAny           is repr('CPointer') is export { }
 class GdkEventButton        is repr('CPointer') is export { }
-class GdkEventConfigure     is repr('CPointer') is export { }
-class GdkEventCrossing      is repr('CPointer') is export { }
-class GdkEventExpose        is repr('CPointer') is export { }
-class GdkEventFocus         is repr('CPointer') is export { }
-class GdkEventGrabBroken    is repr('CPointer') is export { }
-class GdkEventMotion        is repr('CPointer') is export { }
-class GdkEventScroll        is repr('CPointer') is export { }
-class GdkEventSelection     is repr('CPointer') is export { }
-class GdkEventVisibility    is repr('CPointer') is export { }
-class GdkEventWindowState   is repr('CPointer') is export { }
 class GdkFrameClock         is repr('CPointer') is export { }
 class GdkModifierIntent     is repr('CPointer') is export { }
 class GdkMonitor            is repr('CPointer') is export { }
@@ -649,7 +688,7 @@ class GdkColor is repr('CStruct') does GTK::Roles::Pointers is export {
 }
 
 class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
-  has uint32       $.type;      # GdkEventType
+  has uint32       $.type;              # GdkEventType
   has GdkWindow    $.window;
   has int8         $.send_event;
   has uint32       $.time;
@@ -673,7 +712,7 @@ class GdkGeometry is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint       $.height_inc;
   has gdouble    $.min_aspect;
   has gdouble    $.max_aspect;
-  has guint      $.win_gravity;       # GdkGravity
+  has guint      $.win_gravity;         # GdkGravity
 }
 
 class GdkRectangle is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -687,3 +726,155 @@ class GdkPoint is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint $.x is rw;
   has gint $.y is rw;
 }
+
+class GdkEventExpose is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has GdkRectangle   $.area;
+  has cairo_region_t $.region;
+  has int32          $.count;
+}
+
+class GdkEventCrossing is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has GdkWindow      $.subwindow;
+  has uint32         $.time;
+  has num64          $.x;
+  has num64          $.y;
+  has num64          $.x_root;
+  has num64          $.y_root;
+  has uint32         $.mode;            # GdkCrossingMode
+  has uint32         $.detail;          # GdkNotifyType
+  has gboolean       $.focus;
+  has guint          $.state;
+}
+
+class GdkEventFocus is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has int16          $.in;
+}
+
+class GdkEventConfigure is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has int32          $.x;
+  has int32          $.y;
+  has int32          $.width;
+  has int32          $.height;
+}
+
+class GdkEventProperty is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has GdkAtom        $.atom;
+  has uint32         $.time;
+  has uint32         $.state;
+}
+
+class GdkEventSelection is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has GdkAtom        $.selection;
+  has GdkAtom        $.target;
+  has GdkAtom        $.property;
+  has uint32         $.time;
+  has GdkWindow      $.requestor;
+}
+
+class GdkEventDnD is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has GdkDragContext $.context;
+  has uint32         $.time;
+  has int16          $.x_root;
+  has int16          $.y_root;
+}
+
+class GdkEventProximity is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has uint32         $.time;
+  has GdkDevice      $.device;
+}
+
+class GdkEventWindowState is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has uint32         $.changed_mask;
+  has uint32         $.new_window_state;
+}
+
+class GdkEventSetting is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has uint32         $.action;
+  has Str            $.name;
+}
+
+class GdkEventOwnerChange is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has GdkWindow      $.owner;
+  has uint32         $.reason;          # GdkOwnerChange
+  has GdkAtom        $.selection;
+  has uint32         $.time;
+  has uint32         $.selection_time;
+}
+
+class GdkEventGrabBroken is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has gboolean       $.keyboard;
+  has gboolean       $.implicit;
+  has GdkWindow      $.grab_window;
+}
+
+# class GdkEventTouchpadSwipe
+# class GdkEventTouchpadPinch
+# class GdkEventPadButton
+# class GdkEventPadAxis
+# class GdkEventPadGroupMode
