@@ -17,11 +17,14 @@ GTK::Builder::Revealer
 GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
+GTK::Compat::Raw::Menu
+GTK::Compat::Raw::Icon
 GTK::Raw::ReturnedValue
 GTK::Roles::Pointers
 GTK::Compat::Types
 GTK::Roles::Types
 GTK::Builder::Actionable
+GTK::Compat::Menu
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::Cursor
@@ -33,6 +36,7 @@ GTK::Compat::Raw::Rectangle
 GTK::Compat::Raw::Value
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
+GTK::Compat::Roles::Icon
 GTK::Raw::Types
 GTK::Raw::Viewport
 GTK::Raw::VolumeButton
@@ -394,3 +398,5 @@ GTK::TreeView
 GTK::MenuToolButton
 GTK::ToggleToolButton
 GTK::RadioToolButton
+GTK
+GTK::Builder

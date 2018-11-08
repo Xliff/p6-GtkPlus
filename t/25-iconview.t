@@ -126,6 +126,7 @@ $a.activate.tap({
   my ($vbox, $toolbar, $home_button, $sw);
 
   $a.window.title = 'GtkIconView Demo';
+  $a.window.set_size_request(750,300);
   load_pixbufs;
 
   $vbox = GTK::Box.new-vbox();

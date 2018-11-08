@@ -8,12 +8,19 @@ my %nodes;
 my @files = find
   dir => 'lib',
   name => /'.pm6' $/,
-  exclude => / 'lib/GTK.pm6' | 'lib/GTK/Compat/GFile.pm6' /;
+  exclude => / 'lib/GTK/Compat/GFile.pm6' /;
 
 my @modules = @files
   .map( *.path )
-  .map({ my $mn = $_; [ $mn, S/ '.pm6' // ] })
-  .map({ $_[1] = $_[1].split('/').Array[1..*].join('::'); $_ })
+  .map({
+    my $mn = $_;
+    my $a = [ $mn, S/ '.pm6' // ];
+    $a[1] = do given $a[1] {
+      when 'lib/GTK.pm6' { 'GTK' }
+      default            { .split('/').Array[1..*].join('::') }
+    }
+    $a;
+  })
   .sort( *[1] );
 
 for @modules {
@@ -30,18 +37,19 @@ my @others;
 for %nodes.pairs.sort( *.key ) -> $p {
   say "Processing requirements for module { $p.key }...";
 
+  my token useneed { 'use' | 'need' }
   my $f = $p.value<filename>;
-  my $m = $f.IO.open.slurp-rest ~~ m:g/'use' \s+ $<m>=((\w+)+ % '::') \s* ';'/;
+  my $m = $f.IO.open.slurp-rest ~~ m:g/<useneed>  \s+ $<m>=((\w+)+ % '::') \s* ';'/;
   for $m.list -> $mm {
     my $mn = $mm;
-    $mn ~~ s/'use' \s+//;
+    $mn ~~ s/<useneed> \s+//;
     $mn ~~ s/';' $//;
     unless $mn ~~ /^ 'GTK'/ {
       @others.push: $mn;
       next;
     }
     %nodes{$p.key}<edges>.push: $mn;
-    $s.add_dependency(%nodes{$p.key}, %nodes{$mn}) unless $mn eq 'GTK';
+    $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
   }
 }
 
@@ -51,11 +59,15 @@ my @module-order;
 if !$s.serialise {
   die $s.error_message;
 } else {
-  @module-order.push($_<name>) for $s.result;
+  @module-order.push( $_<name> => $++ ) for $s.result;
 }
-my $list = @module-order.grep(* ne 'GTK::Builder').join("\n");
+my %module-order = @module-order.Hash;
+my $list = @module-order.map({ $_.key }).join("\n");
 "BuildList".IO.open(:w).say($list);
 say $list;
+
+# Add module order to modules.
+$_.push( %module-order{$_[1]} ) for @modules;
 
 say "\nOther dependencies are:\n";
 say @others.unique.sort.join("\n");
@@ -70,7 +82,12 @@ sub space($a) {
   # equal the difference between the size plus the previous number modulo 8
   use Text::Table::Simple;
   say "\nProvides section:\n";
-  my $table = lol2table(@modules.map({ $_.reverse.map({ qq["$_"] }) }),
+  my $table = lol2table(
+    @modules.sort({
+      ($^a[2] // 0).Int <=> ($^b[2] // 0).Int
+    }).map({
+      $_.reverse.map({ qq["{ $_ // '' }"] })[1..2]
+    }),
     rows => {
       column_separator => ': ',
       corner_marker    => ' ',
