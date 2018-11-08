@@ -248,3 +248,14 @@ sub g_value_init (GValue $value, uint64 $type)
   is native(gobject)
   is export
   { * }
+
+sub g_value_set_enum (GValue $value, gint $enum)
+  is native(gobject)
+  is export
+  { * }
+
+sub g_value_get_enum (GValue $value)
+  returns gint
+  is native(gobject)
+  is export
+  { * }

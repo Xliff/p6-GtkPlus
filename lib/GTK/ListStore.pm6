@@ -65,12 +65,16 @@ class GTK::ListStore {
     gtk_list_store_insert($!ls, $iter, $position);
   }
 
-  method insert_after (GtkTreeIter() $iter, GtkTreeIter() $sibling) is also<insert-after> {
+  method insert_after (GtkTreeIter() $iter, GtkTreeIter() $sibling)
+    is also<insert-after>
+  {
     $!accessed = True;
     gtk_list_store_insert_after($!ls, $iter, $sibling);
   }
 
-  method insert_before (GtkTreeIter() $iter, GtkTreeIter() $sibling) is also<insert-before> {
+  method insert_before (GtkTreeIter() $iter, GtkTreeIter() $sibling)
+    is also<insert-before>
+  {
     $!accessed = True;
     gtk_list_store_insert_before($!ls, $iter, $sibling);
   }
@@ -81,7 +85,9 @@ class GTK::ListStore {
     Int @columns,
     @values,
     Int() $n_values
-  ) is also<insert-with-valuesv> {
+  )
+    is also<insert-with-valuesv>
+  {
     die '$position cannot be less than -1 (append)' unless $position >= -1;
     die '@columns must consist of Integers.'
       unless @columns.all ~~ (Int, IntStr).any;
@@ -95,13 +101,13 @@ class GTK::ListStore {
     $!accessed = True;
     # Throw exception if columns mismatch?
     my $c_columns = CArray[gint].new(@columns);
-    my $c_values = CArray[Pointer].new;
+    my $c_values = CArray[GValue].new;
     $c_columns[$_] = @columns[$_] for (^$n_values);
     for (^$n_values) {
       $c_values[$_] = do given @values[$_] {
         # NOTE! $_ is now the current element of @value
         when GValue { $_ }
-        default     { $_.GValue }
+        default     { $_.gvalue }
       }
     }
     gtk_list_store_insert_with_valuesv(
@@ -118,7 +124,9 @@ class GTK::ListStore {
     GtkTreeIter() $iter,
     Int() $position,
     %values
-  ) is also<insert-with-values> {
+  )
+    is also<insert-with-values>
+  {
     die 'Keys used %values must be integers.'
       unless %values.keys.all ~~ (Int, IntStr).any;
     die 'Values used in %values must be GTK::Compat::Value or GValue.'
@@ -146,12 +154,16 @@ class GTK::ListStore {
     gtk_list_store_iter_is_valid($!ls, $iter);
   }
 
-  method move_after (GtkTreeIter() $iter, GtkTreeIter() $position) is also<move-after> {
+  method move_after (GtkTreeIter() $iter, GtkTreeIter() $position)
+    is also<move-after>
+  {
     $!accessed = True;
     gtk_list_store_move_after($!ls, $iter, $position);
   }
 
-  method move_before (GtkTreeIter() $iter, GtkTreeIter() $position) is also<move-before> {
+  method move_before (GtkTreeIter() $iter, GtkTreeIter() $position)
+    is also<move-before>
+  {
     $!accessed = True;
     gtk_list_store_move_before($!ls, $iter, $position);
   }
@@ -189,7 +201,9 @@ class GTK::ListStore {
     GtkTreeIter() $iter,
     Int() $column,
     GValue() $value
-  ) is also<set-value> {
+  )
+    is also<set-value>
+  {
     my gint $c = self.RESOLVE-INT($column);
     gtk_list_store_set_value($!ls, $iter, $c, $value);
   }
@@ -197,7 +211,9 @@ class GTK::ListStore {
   method set_values (
     GtkTreeIter() $iter,
     %values
-  ) is also<set-values> {
+  )
+    is also<set-values>
+  {
     $!accessed = True;
     for %values.keys {
       unless $_ ~~ (Int, IntStr).any {
@@ -207,10 +223,12 @@ class GTK::ListStore {
     die 'Values used in %values must be GTK::Compat::Value or GValue.'
       unless %values.values.all ~~ GValues;
 
+    %values.gist.say;
+
     self.set_valuesv(
       $iter,
-      %values.keys,
-      %values.values.map( *.gvalue ),
+      %values.keys.sort,
+      %values.keys.sort.map({ %values{$_} }),
       %values.keys.elems
     );
 
@@ -228,7 +246,9 @@ class GTK::ListStore {
     @columns,
     @values,
     Int() $n_values
-  ) is also<set-valuesv> {
+  )
+    is also<set-valuesv>
+  {
     if $n_values > @columns.elems {
       $n_values = @columns.elems;
       warn '$n_values was greater than column count, and was corrected.';
@@ -242,7 +262,16 @@ class GTK::ListStore {
     my $c_columns = CArray[gint].new;
     my $c_values = CArray[GValue].new;
     $c_columns[$_] = @columns[$_].Int for (^$n_values);
-    $c_values[$_]  = @values[$_]  for (^$n_values);
+    for (^$n_values) {
+      $c_values[$_]  = do given @values[$_] {
+        when GTK::Compat::Value { .gvalue }
+        when GValue             { $_      }
+        default {
+          die "Unknown type '{ .^name }' passed to GTK::ListStore.set_valuesv";
+        }
+      }
+      say "SV{ $_ }: { $c_values[$_].gist }";
+    }
     gtk_list_store_set_valuesv($!ls, $iter, $c_columns, $c_values, $n_values);
   }
 

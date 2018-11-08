@@ -132,6 +132,17 @@ class GTK::Compat::Value {
     );
   }
 
+  method enum is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        g_value_get_enum($!v);
+      },
+      STORE => sub ($, Int() $v_int is copy) {
+        g_value_set_enum($!v, self.RESOLVE-INT($v_int));
+      }
+    );
+  }
+
   method int is rw {
     Proxy.new(
       FETCH => sub ($) {

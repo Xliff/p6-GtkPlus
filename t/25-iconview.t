@@ -27,17 +27,18 @@ my enum Columns <
   NUM_COLS
 >;
 
-my ($parent, %pixbufs, $store, $icon_view, $up_button);
+my ($parent, %pixbufs, $store, $icon_view, $up_button, $pb_type);
 
 sub load_pixbufs {
   return if %pixbufs;
 
-  %pixbufs<file>   = GTK::Image.new_from_icon_name(
-    'x-office-document', GTK_ICON_SIZE_DND
-  );
-  %pixbufs<folder> = GTK::Image.new_from_icon_name(
-    'folder', GTK_ICON_SIZE_DND
-  );
+  my  $dir-image = 'gnome-fs-directory.png';
+  my $file-image = 'gnome-fs-regular.png';
+  $file-image = "t/{$file-image}" unless $file-image.IO.e;
+   $dir-image = "t/{$dir-image}" unless $dir-image.IO.e;
+
+  %pixbufs<file>   = GTK::Image.new_from_file($file-image);
+  %pixbufs<folder> = GTK::Image.new_from_file($dir-image);
 }
 
 sub fill_store {
@@ -48,7 +49,7 @@ sub fill_store {
     my %data = (
       0 => GTK::Compat::Value.new(G_TYPE_STRING) ,
       1 => GTK::Compat::Value.new(G_TYPE_STRING) ,
-      #2 => GTK::Compat::Value.new(GTK::Compat::Pixbuf.get_type()),
+      #2 => GTK::Compat::Value.new($pb_type),
       2 => GTK::Compat::Value.new(G_TYPE_OBJECT) ,
       3 => GTK::Compat::Value.new(G_TYPE_BOOLEAN),
     );
@@ -59,7 +60,8 @@ sub fill_store {
     %data<3>.boolean = .d;
 
     $store.append($iter);
-    $store.set_values($iter, %data);
+    # $store.set_values($iter, %data);
+    $store.set_value($iter, $_, %data{$_}) for %data.keys;
   }
 }
 
@@ -148,13 +150,13 @@ $a.activate.tap({
   $vbox.pack_start($sw, True, True);
 
   $parent = '/'.IO;
-  create_store();
-  fill_store();
+  create_store;
+  fill_store;
   $icon_view = GTK::IconView.new_with_model($store);
   $icon_view.selection_mode = GTK_SELECTION_MULTIPLE;
 
-    $up_button.clicked.tap({ up_clicked()   });
-  $home_button.clicked.tap({ home_clicked() });
+    $up_button.clicked.tap({ up_clicked   });
+  $home_button.clicked.tap({ home_clicked });
 
   $icon_view.item-activated.tap(-> *@a { item_activated(|@a) });
 
