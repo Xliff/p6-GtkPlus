@@ -19,7 +19,7 @@ sub gtk_print_operation_draw_page_finish (GtkPrintOperation $op)
 
 sub gtk_print_operation_get_error (
   GtkPrintOperation $op,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   is native(gtk)
   is export
@@ -92,7 +92,7 @@ sub gtk_print_operation_run (
   GtkPrintOperation $op,
   uint32 $a,                  # GtkPrintOperationAction $action,
   GtkWindow $parent,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32 # GtkPrintOperationResult
   is native(gtk)

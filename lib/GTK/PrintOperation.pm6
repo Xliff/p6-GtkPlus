@@ -13,6 +13,9 @@ use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::PrintOperation;
 use GTK::Roles::Types;
 
+use GTK::PageSetup;
+use GTK::PrintSettings;
+
 class GTK::PrintOperation {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
@@ -126,9 +129,11 @@ class GTK::PrintOperation {
   method default_page_setup is rw is also<default-page-setup> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_print_operation_get_default_page_setup($!po);
+        GTK::PageSetup.new(
+          gtk_print_operation_get_default_page_setup($!po)
+        );
       },
-      STORE => sub ($, $default_page_setup is copy) {
+      STORE => sub ($, GtkPageSetup() $default_page_setup is copy) {
         gtk_print_operation_set_default_page_setup(
           $!po,
           $default_page_setup
@@ -140,10 +145,11 @@ class GTK::PrintOperation {
   method embed_page_setup is rw is also<embed-page-setup> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_print_operation_get_embed_page_setup($!po);
+        so gtk_print_operation_get_embed_page_setup($!po);
       },
-      STORE => sub ($, $embed is copy) {
-        gtk_print_operation_set_embed_page_setup($!po, $embed);
+      STORE => sub ($, Int() $embed is copy) {
+        my gboolean $e = self.RESOLVE-BOOL($embed);
+        gtk_print_operation_set_embed_page_setup($!po, $e);
       }
     );
   }
@@ -151,10 +157,11 @@ class GTK::PrintOperation {
   method has_selection is rw is also<has-selection> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_print_operation_get_has_selection($!po);
+        so gtk_print_operation_get_has_selection($!po);
       },
-      STORE => sub ($, $has_selection is copy) {
-        gtk_print_operation_set_has_selection($!po, $has_selection);
+      STORE => sub ($, Int() $has_selection is copy) {
+        my gboolean $hs = self.RESOLVE-BOOL($has_selection);
+        gtk_print_operation_set_has_selection($!po, $hs);
       }
     );
   }
@@ -162,9 +169,11 @@ class GTK::PrintOperation {
   method print_settings is rw is also<print-settings> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_print_operation_get_print_settings($!po);
+        GTK::PrintSettings.new(
+          gtk_print_operation_get_print_settings($!po)
+        );
       },
-      STORE => sub ($, $print_settings is copy) {
+      STORE => sub ($, GtkPrintSettings() $print_settings is copy) {
         gtk_print_operation_set_print_settings(
           $!po,
           $print_settings
@@ -176,13 +185,11 @@ class GTK::PrintOperation {
   method support_selection is rw is also<support-selection> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_print_operation_get_support_selection($!po);
+        so gtk_print_operation_get_support_selection($!po);
       },
-      STORE => sub ($, $support_selection is copy) {
-        gtk_print_operation_set_support_selection(
-          $!po,
-          $support_selection
-        );
+      STORE => sub ($, Int() $support_selection is copy) {
+        my gboolean $ss = self.RESOLVE-BOOL($support_selection);
+        gtk_print_operation_set_support_selection($!po, $ss);
       }
     );
   }
@@ -200,7 +207,7 @@ class GTK::PrintOperation {
         );
         $gv.get_boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.set_boolean($val);
         self.prop_set('allow-async', $gv);
       }
@@ -217,7 +224,7 @@ class GTK::PrintOperation {
         );
         $gv.get_int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.set_int($val);
         self.prop_set('current-page', $gv);
       }
@@ -235,7 +242,7 @@ class GTK::PrintOperation {
         );
         $gv.get_string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.set_string($val);
         self.prop_set('custom-tab-label', $gv);
       }
@@ -252,7 +259,7 @@ class GTK::PrintOperation {
         );
         $gv.get_string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.set_string($val);
         self.prop_set('export-filename', $gv);
       }
@@ -270,7 +277,7 @@ class GTK::PrintOperation {
         );
         $gv.get_string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.set_string($val);
         self.prop_set('job-name', $gv);
       }
@@ -288,7 +295,7 @@ class GTK::PrintOperation {
         );
         $gv.get_int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.set_int($val);
         self.prop_set('n-pages', $gv);
       }
@@ -321,7 +328,7 @@ class GTK::PrintOperation {
         );
         $gv.get_boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.set_boolean($val);
         self.prop_set('show-progress', $gv);
       }
@@ -330,7 +337,7 @@ class GTK::PrintOperation {
 
   # Type: GtkPrintStatus
   method status is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
@@ -370,7 +377,7 @@ class GTK::PrintOperation {
         );
         $gv.get_boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.set_boolean($val);
         self.prop_set('track-print-status', $gv);
       }
@@ -379,17 +386,16 @@ class GTK::PrintOperation {
 
   # Type: GtkUnit
   method unit is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('unit', $gv)
         );
-        GtkUnit( $gv.get_TYPE );
+        GtkUnit( $gv.get_uint );
       },
       STORE => -> $, Int() $val is copy {
-        my guint $v = self.RESOLVE-UINT($val);
-        $gv.set_enum($v);
+        $gv.set_uint($val);
         self.prop_set('unit', $gv);
       }
     );
@@ -418,7 +424,9 @@ class GTK::PrintOperation {
     GtkWindow() $parent,
     GtkPageSetup() $page_setup,
     GtkPrintSettings() $settings
-  ) is also<gtk-print-run-page-setup-dialog> {
+  )
+    is also<gtk-print-run-page-setup-dialog>
+  {
     gtk_print_run_page_setup_dialog($parent, $page_setup, $settings);
   }
 
@@ -428,7 +436,9 @@ class GTK::PrintOperation {
     GtkPrintSettings() $settings,
     GtkPageSetupDoneFunc $done_cb,
     gpointer $data = gpointer
-  ) is also<gtk-print-run-page-setup-dialog-async> {
+  )
+    is also<gtk-print-run-page-setup-dialog-async>
+  {
     gtk_print_run_page_setup_dialog_async(
       $parent,
       $page_setup,
@@ -448,8 +458,15 @@ class GTK::PrintOperation {
     gtk_print_operation_draw_page_finish($!po);
   }
 
-  method get_error (GError $error) is also<get-error> {
-    gtk_print_operation_get_error($!po, $error);
+  method get_error (
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<get-error>
+  {
+    clear_error;
+    my $rc = gtk_print_operation_get_error($!po, $error);
+    $ERROR = $error with $error[0];
+    $rc;
   }
 
   method get_n_pages_to_print is also<get-n-pages-to-print> {
@@ -457,7 +474,7 @@ class GTK::PrintOperation {
   }
 
   method get_status is also<get-status> {
-    gtk_print_operation_get_status($!po);
+    GtkPrintStatus( gtk_print_operation_get_status($!po) );
   }
 
   method get_status_string is also<get-status-string> {
@@ -473,23 +490,28 @@ class GTK::PrintOperation {
   }
 
   method is_finished is also<is-finished> {
-    gtk_print_operation_is_finished($!po);
+    so gtk_print_operation_is_finished($!po);
   }
 
   method run (
     GtkPrintOperationAction $action,
-    GtkWindow $parent,
-    GError $error = GError
+    GtkWindow() $parent,
+    CArray[Pointer[GError]] $error = gerror
   ) {
-    gtk_print_operation_run($!po, $action, $parent, $error);
+    clear_error;
+    my $rc = gtk_print_operation_run($!po, $action, $parent, $error);
+    $ERROR = $error with $error[0];
+    $rc;
   }
 
-  method set_allow_async (gboolean $allow_async) is also<set-allow-async> {
-    gtk_print_operation_set_allow_async($!po, $allow_async);
+  method set_allow_async (Int() $allow_async) is also<set-allow-async> {
+    my gboolean $aa = self.RESOLVE-BOOL($allow_async);
+    gtk_print_operation_set_allow_async($!po, $aa);
   }
 
-  method set_current_page (gint $current_page) is also<set-current-page> {
-    gtk_print_operation_set_current_page($!po, $current_page);
+  method set_current_page (Int() $current_page) is also<set-current-page> {
+    my gint $cp = self.RESOLVE-INT($current_page);
+    gtk_print_operation_set_current_page($!po, $cp);
   }
 
   method set_custom_tab_label (Str() $label) is also<set-custom-tab-label> {
@@ -500,7 +522,9 @@ class GTK::PrintOperation {
     gtk_print_operation_set_defer_drawing($!po);
   }
 
-  method set_export_filename (Str() $filename) is also<set-export-filename> {
+  method set_export_filename (Str() $filename)
+    is also<set-export-filename>
+  {
     gtk_print_operation_set_export_filename($!po, $filename);
   }
 
@@ -508,16 +532,23 @@ class GTK::PrintOperation {
     gtk_print_operation_set_job_name($!po, $job_name);
   }
 
-  method set_n_pages (gint $n_pages) is also<set-n-pages> {
-    gtk_print_operation_set_n_pages($!po, $n_pages);
+  method set_n_pages (Int() $n_pages) is also<set-n-pages> {
+    my gint $np = self.RESOLVE-INT($n_pages);
+    gtk_print_operation_set_n_pages($!po, $np);
   }
 
-  method set_show_progress (gboolean $show_progress) is also<set-show-progress> {
-    gtk_print_operation_set_show_progress($!po, $show_progress);
+  method set_show_progress (Int() $show_progress)
+    is also<set-show-progress>
+  {
+    my gboolean $sp = self.RESOLVE-BOOL($show_progress);
+    gtk_print_operation_set_show_progress($!po, $sp);
   }
 
-  method set_track_print_status (gboolean $track_status) is also<set-track-print-status> {
-    gtk_print_operation_set_track_print_status($!po, $track_status);
+  method set_track_print_status (Int() $track_status)
+    is also<set-track-print-status>
+  {
+    my gboolean $ts = self.RESOLVE-BOOL($track_status);
+    gtk_print_operation_set_track_print_status($!po, $ts);
   }
 
   method set_unit (Int() $unit) is also<set-unit> {
@@ -525,10 +556,10 @@ class GTK::PrintOperation {
     gtk_print_operation_set_unit($!po, $u);
   }
 
-  method set_use_full_page (gboolean $full_page) is also<set-use-full-page> {
-    gtk_print_operation_set_use_full_page($!po, $full_page);
+  method set_use_full_page (Int() $full_page) is also<set-use-full-page> {
+    my gboolean $fp = self.RESOLVE-BOOL($full_page);
+    gtk_print_operation_set_use_full_page($!po, $fp);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -57,7 +57,9 @@ class GTK::PrintContext {
     Num() $bottom,
     Num() $left,
     Num() $right
-  ) is also<get-hard-margins> {
+  )
+    is also<get-hard-margins>
+  {
     my gdouble ($t, $b, $l, $r) = ($top, $bottom, $left, $right);
     gtk_print_context_get_hard_margins($!pc, $t, $b, $l, $r);
   }
@@ -82,7 +84,9 @@ class GTK::PrintContext {
     gtk_print_context_get_width($!pc);
   }
 
-  method set_cairo_context (cairo_t $cr, Num() $dpi_x, Num() $dpi_y) is also<set-cairo-context> {
+  method set_cairo_context (cairo_t $cr, Num() $dpi_x, Num() $dpi_y)
+    is also<set-cairo-context>
+  {
     my gdouble ($dx, $dy) = ($dpi_x, $dpi_y);
     gtk_print_context_set_cairo_context($!pc, $cr, $dx, $dy);
   }
@@ -90,4 +94,3 @@ class GTK::PrintContext {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

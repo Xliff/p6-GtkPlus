@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::GList;
 use GTK::Compat::Types;
 use GTK::Raw::Printer;
 use GTK::Raw::Types;
@@ -29,8 +30,13 @@ class GTK::Printer {
   multi method new (GtkPrinter() $printer) {
     self.bless(:$printer);
   }
-  multi method new (Str $name, GtkPrintBackend() $backend, gboolean $virtual) {
-    my $printer = gtk_printer_new($name, $backend, $virtual);
+  multi method new (
+    Str $name,
+    GtkPrintBackend() $backend,
+    Int() $virtual
+  ) {
+    my gboolean $v = self.RESOLVE-BOOL($virtual);
+    my $printer = gtk_printer_new($name, $backend, $v);
     self.bless(:$printer);
   }
 
@@ -140,7 +146,7 @@ class GTK::Printer {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('name', $gv);
       }
@@ -181,17 +187,28 @@ class GTK::Printer {
 
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
+  method compare (GtkPrinter $a, GtkPrinter $b) {
+    gtk_printer_compare($a, $b);
+  }
+
+  method enumerate_printers (
+    GtkPrinterFunc $func,
+    gpointer $data,
+    GDestroyNotify $destroy,
+    gboolean $wait
+  )
+    is also<enumerate-printers>
+  {
+    gtk_enumerate_printers($func, $data, $destroy, $wait);
+  }
+
   # ↓↓↓↓ METHODS ↓↓↓↓
   method accepts_pdf is also<accepts-pdf> {
-    gtk_printer_accepts_pdf($!prn);
+    so gtk_printer_accepts_pdf($!prn);
   }
 
   method accepts_ps is also<accepts-ps> {
-    gtk_printer_accepts_ps($!prn);
-  }
-
-  method compare (GtkPrinter $b) {
-    gtk_printer_compare($!prn, $b);
+    so gtk_printer_accepts_ps($!prn);
   }
 
   method get_backend is also<get-backend> {
@@ -199,7 +216,7 @@ class GTK::Printer {
   }
 
   method get_capabilities is also<get-capabilities> {
-    gtk_printer_get_capabilities($!prn);
+    GtkPrintCapabilities( gtk_printer_get_capabilities($!prn) );
   }
 
   method get_default_page_size is also<get-default-page-size> {
@@ -215,7 +232,9 @@ class GTK::Printer {
     Num() $bottom,
     Num() $left,
     Num() $right
-  ) is also<get-hard-margins> {
+  )
+    is also<get-hard-margins>
+  {
     my gdouble ($t, $b, $l, $r) = ($top, $bottom, $left, $right);
     gtk_printer_get_hard_margins($!prn, $t, $b, $l, $r);
   }
@@ -244,41 +263,32 @@ class GTK::Printer {
     gtk_printer_get_type();
   }
 
-  method gtk_enumerate_printers (
-    GtkPrinterFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy,
-    gboolean $wait
-  ) is also<gtk-enumerate-printers> {
-    gtk_enumerate_printers($func, $data, $destroy, $wait);
-  }
-
   method has_details is also<has-details> {
-    gtk_printer_has_details($!prn);
+    so gtk_printer_has_details($!prn);
   }
 
   method is_accepting_jobs is also<is-accepting-jobs> {
-    gtk_printer_is_accepting_jobs($!prn);
+    so gtk_printer_is_accepting_jobs($!prn);
   }
 
   method is_active is also<is-active> {
-    gtk_printer_is_active($!prn);
+    so gtk_printer_is_active($!prn);
   }
 
   method is_default is also<is-default> {
-    gtk_printer_is_default($!prn);
+    so gtk_printer_is_default($!prn);
   }
 
   method is_paused is also<is-paused> {
-    gtk_printer_is_paused($!prn);
+    so gtk_printer_is_paused($!prn);
   }
 
   method is_virtual is also<is-virtual> {
-    gtk_printer_is_virtual($!prn);
+    so gtk_printer_is_virtual($!prn);
   }
 
   method list_papers is also<list-papers> {
-    gtk_printer_list_papers($!prn);
+    GTK::Compat::GList.new( gtk_printer_list_papers($!prn) );
   }
 
   method request_details is also<request-details> {

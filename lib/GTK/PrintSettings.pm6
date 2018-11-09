@@ -18,7 +18,14 @@ class GTK::PrintSettings {
     $!prnset = $settings;
   }
 
-  method new {
+  method GTK::Raw::Types::GtkPrintSettings is also<printsettings> {
+    $!prnset;
+  }
+
+  multi method new (GtkPrintSettings $settings) {
+    self.bless(:$settings);
+  }
+  multi method new {
     my $settings = gtk_print_settings_new();
     self.bless(:$settings);
   }
