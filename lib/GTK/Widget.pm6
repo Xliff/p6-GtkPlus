@@ -1331,7 +1331,9 @@ class GTK::Widget {
   method override_background_color (
     GtkStateFlags $state,
     GTK::Compat::RGBA $color
-  ) is also<override-background-color> {
+  )
+    is also<override-background-color>
+  {
     gtk_widget_override_background_color($!w, $state, $color);
   }
 
@@ -1360,7 +1362,9 @@ class GTK::Widget {
   method get_preferred_size (
     GtkRequisition $minimum_size,
     GtkRequisition $natural_size
-  ) is also<get-preferred-size> {
+  )
+    is also<get-preferred-size>
+  {
     gtk_widget_get_preferred_size($!w, $minimum_size, $natural_size);
   }
 
@@ -1848,10 +1852,11 @@ class GTK::Widget {
     gtk_widget_get_child_requisition($!w, $requisition);
   }
 
-  method get_allocated_size (GtkAllocation $allocation, int $baseline)
+  method get_allocated_size (GtkAllocation $allocation, Int() $baseline)
     is also<get-allocated-size>
   {
-    gtk_widget_get_allocated_size($!w, $allocation, $baseline);
+    my gint $b = self.RESOLVE-INT($baseline);
+    gtk_widget_get_allocated_size($!w, $allocation, $);
   }
 
   #method class_set_template_from_resource (GtkWidgetClass $widget_class, Str() $resource_name) {
@@ -1892,7 +1897,9 @@ class GTK::Widget {
     guint $accel_key,
     GdkModifierType $accel_mods,
     GtkAccelFlags $accel_flags
-  ) is also<add-accelerator> {
+  )
+    is also<add-accelerator>
+  {
     gtk_widget_add_accelerator(
       $!w,
       $accel_signal,

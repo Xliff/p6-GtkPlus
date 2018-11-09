@@ -19,24 +19,22 @@ class GTK::Container is GTK::Widget {
   has @!start;
   has @!end;
 
-  submethod BUILD (:$container) {
-    given $container {
-      when GtkContainer | GtkWidget {
-        self.setContainer($container);
-      }
-      when GTK::Container {
-      }
-      default {
-      }
-    }
-  }
-
+  # GTK::Container is abstract, so no need for BUILD or DESTROY
+  # submethod BUILD (:$container) {
+  #   given $container {
+  #     when GtkContainer | GtkWidget {
+  #       self.setContainer($container);
+  #     }
+  #     when GTK::Container {
+  #     }
+  #     default {
+  #     }
+  #   }
+  # }
   #submethod DESTROY {
   #  g_object_unref($_.data) for self.get_children.Array;
   #  g_object_unref(self.widget);
   #}
-
-  # GTK::Container is abstract, so no need for new.
 
   method setContainer($container) {
     my $to-parent;
