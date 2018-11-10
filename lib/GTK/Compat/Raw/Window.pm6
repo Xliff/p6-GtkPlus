@@ -68,7 +68,7 @@ sub gdk_window_begin_paint_region (GdkWindow $window, cairo_region_t $region)
 
 sub gdk_window_begin_resize_drag (
   GdkWindow $window,
-  GdkWindowEdge $edge,
+  uint32 $edge,                   # GdkWindowEdge $edge,
   gint $button,
   gint $root_x,
   gint $root_y,
@@ -80,7 +80,7 @@ sub gdk_window_begin_resize_drag (
 
 sub gdk_window_begin_resize_drag_for_device (
   GdkWindow $window,
-  GdkWindowEdge $edge,
+  uint32 $edge,                   # GdkWindowEdge $edge,
   GdkDevice $device,
   gint $button,
   gint $root_x,
@@ -98,7 +98,7 @@ sub gdk_window_configure_finished (GdkWindow $window)
 
 sub gdk_window_constrain_size (
   GdkGeometry $geometry,
-  GdkWindowHints $flags,
+  uint32 $flags,                  #GdkWindowHints
   gint $width,
   gint $height,
   gint $new_width,
@@ -141,10 +141,10 @@ sub gdk_window_create_gl_context (
 
 sub gdk_window_create_similar_image_surface (
   GdkWindow $window,
-  cairo_format_t $format,
-  int $width,
-  int $height,
-  int $scale
+  uint32 $format,                 # cairo_format_t $format,
+  gint $width,
+  gint $height,
+  gint $scale
 )
   returns cairo_surface_t
   is native(gdk)
@@ -154,8 +154,8 @@ sub gdk_window_create_similar_image_surface (
 sub gdk_window_create_similar_surface (
   GdkWindow $window,
   cairo_content_t $content,
-  int $width,
-  int $height
+  gint $width,
+  gint $height
 )
   returns cairo_surface_t
   is native(gdk)
@@ -263,7 +263,7 @@ sub gdk_window_get_clip_region (GdkWindow $window)
 
 sub gdk_window_get_decorations (
   GdkWindow $window,
-  GdkWMDecoration $decorations
+  uint32 $decoorations            # GdkWMDecoration $decorations
 )
   returns uint32
   is native(gdk)
@@ -277,7 +277,7 @@ sub gdk_window_get_device_cursor (GdkWindow $window, GdkDevice $device)
   { * }
 
 sub gdk_window_get_device_events (GdkWindow $window, GdkDevice $device)
-  returns GdkEventMask
+  returns uint32 # GdkEventMask
   is native(gdk)
   is export
   { * }
@@ -287,7 +287,7 @@ sub gdk_window_get_device_position (
   GdkDevice $device,
   gint $x,
   gint $y,
-  GdkModifierType $mask
+  uint32 $mask                    # GdkModifierType $mask
 )
   returns GdkWindow
   is native(gdk)
@@ -299,7 +299,7 @@ sub gdk_window_get_device_position_double (
   GdkDevice $device,
   gdouble $x,
   gdouble $y,
-  GdkModifierType $mask
+  uint32 $mask                    # GdkModifierType $mask
 )
   returns GdkWindow
   is native(gdk)
@@ -353,7 +353,7 @@ sub gdk_window_get_geometry (
   { * }
 
 sub gdk_window_get_height (GdkWindow $window)
-  returns int
+  returns gint
   is native(gdk)
   is export
   { * }
@@ -374,7 +374,7 @@ sub gdk_window_get_pointer (
   GdkWindow $window,
   gint $x,
   gint $y,
-  GdkModifierType $mask
+  uint32 $mask                    # GdkModifierType $mask
 )
   returns GdkWindow
   is native(gdk)
@@ -415,13 +415,13 @@ sub gdk_window_get_screen (GdkWindow $window)
   { * }
 
 sub gdk_window_get_source_events (GdkWindow $window, GdkInputSource $source)
-  returns GdkEventMask
+  returns uint32 # GdkEventMask
   is native(gdk)
   is export
   { * }
 
 sub gdk_window_get_state (GdkWindow $window)
-  returns GdkWindowState
+  returns uint32 # GdkWindowState
   is native(gdk)
   is export
   { * }
@@ -462,13 +462,13 @@ sub gdk_window_get_visual (GdkWindow $window)
   { * }
 
 sub gdk_window_get_width (GdkWindow $window)
-  returns int
+  returns gint
   is native(gdk)
   is export
   { * }
 
 sub gdk_window_get_window_type (GdkWindow $window)
-  returns GdkWindowType
+  returns uint32 # GdkWindowType
   is native(gdk)
   is export
   { * }
@@ -611,9 +611,9 @@ sub gdk_window_move_resize (
 sub gdk_window_move_to_rect (
   GdkWindow $window,
   GdkRectangle $rect,
-  GdkGravity $rect_anchor,
-  GdkGravity $window_anchor,
-  GdkAnchorHints $anchor_hints,
+  uint32 $rect_anchor,            # GdkGravity
+  uint32 $window_anchor,          # GdkGravity
+  uint32 $anchor_hints,           # GdkAnchorHints
   gint $rect_anchor_dx,
   gint $rect_anchor_dy
 )
@@ -722,7 +722,7 @@ sub gdk_window_set_debug_updates (gboolean $setting)
 
 sub gdk_window_set_decorations (
   GdkWindow $window,
-  GdkWMDecoration $decorations
+  uint32 $decoorations            # GdkWMDecoration $decorations
 )
   is native(gdk)
   is export
@@ -740,7 +740,7 @@ sub gdk_window_set_device_cursor (
 sub gdk_window_set_device_events (
   GdkWindow $window,
   GdkDevice $device,
-  GdkEventMask $event_mask
+  uint32 $event_mask              # GdkEventMask $event_mask
 )
   is native(gdk)
   is export
@@ -754,7 +754,7 @@ sub gdk_window_set_functions (GdkWindow $window, GdkWMFunction $functions)
 sub gdk_window_set_geometry_hints (
   GdkWindow $window,
   GdkGeometry $geometry,
-  GdkWindowHints $geom_mask
+  uint32 $mask,                  #GdkWindowHints
 )
   is native(gdk)
   is export
@@ -838,7 +838,7 @@ sub gdk_window_set_skip_taskbar_hint (
 sub gdk_window_set_source_events (
   GdkWindow $window,
   GdkInputSource $source,
-  GdkEventMask $event_mask
+  uint32 $event_mask              # GdkEventMask $event_mask
 )
   is native(gdk)
   is export
@@ -967,7 +967,7 @@ sub gdk_window_get_event_compression (GdkWindow $window)
   { * }
 
 sub gdk_window_get_events (GdkWindow $window)
-  returns GdkEventMask
+  returns uint32 # GdkEventMask
   is native(gdk)
   is export
   { * }
@@ -997,7 +997,7 @@ sub gdk_window_get_composited (GdkWindow $window)
   { * }
 
 sub gdk_window_get_type_hint (GdkWindow $window)
-  returns GdkWindowTypeHint
+  returns uint32 # GdkWindowTypeHint
   is native(gdk)
   is export
   { * }
@@ -1051,7 +1051,10 @@ sub gdk_window_set_event_compression (
   is export
   { * }
 
-sub gdk_window_set_events (GdkWindow $window, GdkEventMask $event_mask)
+sub gdk_window_set_events (
+  GdkWindow $window,
+  uint32 $event_mask              # GdkEventMask $event_mask
+)
   is native(gdk)
   is export
   { * }
@@ -1079,7 +1082,10 @@ sub gdk_window_set_composited (GdkWindow $window, gboolean $composited)
   is export
   { * }
 
-sub gdk_window_set_type_hint (GdkWindow $window, GdkWindowTypeHint $hint)
+sub gdk_window_set_type_hint (
+  GdkWindow $window,
+  uint32 $hint                    # GdkWindowTypeHint
+)
   is native(gdk)
   is export
   { * }

@@ -7,7 +7,7 @@ my @files = find
 
 @files .= map({
   s/ '.' (\d+) $//;
-  [ $_, $/[0].Int // 0 ];
+  [ $_, ($/[0] // 0).Int ];
 });
 my $max;
 for @files.sort( *[1] ).reverse {

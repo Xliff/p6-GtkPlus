@@ -11,6 +11,7 @@ constant forced = 5;
 unit package GTK::Compat::Types;
 
 constant gtk      is export = 'gtk-3',v0;
+constant gdk      is export = 'gdk-3', v0;
 constant glib     is export = 'glib-2.0',v0;
 constant gio      is export = 'gio-2.0',v0;
 constant gobject  is export = 'gobject-2.0',v0;
@@ -41,6 +42,7 @@ sub clear_error($error = $ERROR) is export {
 }
 
 constant cairo_t             is export := Pointer;
+constant cairo_pattern_t     is export := Pointer;
 constant cairo_region_t      is export := Pointer;
 
 constant gboolean            is export := uint32;
@@ -79,8 +81,12 @@ constant GStrv               is export := CArray[Str];
 constant GType               is export := uint64;
 constant GVariant            is export := Pointer;
 
-constant GdkPixbufSaveFunc      is export := Pointer;
-constant GdkPixbufDestroyNotify is export := Pointer;
+constant GdkFilterFunc                  is export := Pointer;
+constant GdkPixbufDestroyNotify         is export := Pointer;
+constant GdkPixbufSaveFunc              is export := Pointer;
+constant GdkWindowChildFunc             is export := Pointer;
+constant GdkWindowInvalidateHandlerFunc is export := Pointer;
+constant GdkWMFunction                  is export := Pointer;
 
 constant PangoTabArray is export := CArray[gint];
 
@@ -246,18 +252,6 @@ our enum GdkGravity is export (
   'GDK_GRAVITY_SOUTH_EAST',
   'GDK_GRAVITY_STATIC'
 );
-
-our enum GdkWindowHints is export <
-  GDK_HINT_POS
-  GDK_HINT_MIN_SIZE
-  GDK_HINT_MAX_SIZE
-  GDK_HINT_BASE_SIZE
-  GDK_HINT_ASPECT
-  GDK_HINT_RESIZE_INC
-  GDK_HINT_WIN_GRAVITY
-  GDK_HINT_USER_POS
-  GDK_HINT_USER_SIZE
->;
 
 our enum GdkWindowTypeHint is export <
   GDK_WINDOW_TYPE_HINT_NORMAL
@@ -620,65 +614,70 @@ our enum GFileCreateFlags is export (
 );
 
 
-class cairo_font_options_t  is repr('CPointer') is export { }
-class cairo_surface_t       is repr('CPointer') is export { }
+class cairo_content_t       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class cairo_font_options_t  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Pointers { }
 
-class AtkObject             is repr('CPointer') is export { }
+class AtkObject             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
-class PangoAttrList         is repr('CPointer') is export { }
-class PangoContext          is repr('CPointer') is export { }
-class PangoFontDescription  is repr('CPointer') is export { }
-class PangoFontFace         is repr('CPointer') is export { }
-class PangoFontFamily       is repr('CPointer') is export { }
-class PangoFontMap          is repr('CPointer') is export { }
-class PangoLanguage         is repr('CPointer') is export { }
-class PangoLayout           is repr('CPointer') is export { }
+class PangoAttrList         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class PangoContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class PangoFontDescription  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class PangoFontFace         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class PangoFontFamily       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class PangoFontMap          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class PangoLanguage         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class PangoLayout           is repr('CPointer') is export does GTK::Roles::Pointers { }
 
-class GActionGroup          is repr('CPointer') is export { }
-class GAppInfo              is repr('CPointer') is export { }
-class GAppInfoMonitor       is repr('CPointer') is export { }
-class GAppLaunchContext     is repr('CPointer') is export { }
-class GApplication          is repr('CPointer') is export { }
-class GAsyncResult          is repr('CPointer') is export { }
-class GBytes                is repr('CPointer') is export { }
-class GFile                 is repr('CPointer') is export { }
-class GFunc                 is repr('CPointer') is export { }
-class GHashTable            is repr('CPointer') is export { }
-class GIcon                 is repr('CPointer') is export { }
-class GInputStream          is repr('CPointer') is export { }
-class GKeyFile              is repr('CPointer') is export { }
-class GListModel            is repr('CPointer') is export { }
-class GMarkupParser         is repr('CPointer') is export { }
-class GMenu                 is repr('CPointer') is export { }
-class GMenuItem             is repr('CPointer') is export { }
-class GMenuAttributeIter    is repr('CPointer') is export { }
-class GMenuLinkIter         is repr('CPointer') is export { }
-class GMenuModel            is repr('CPointer') is export { }
-class GMountOperation       is repr('CPointer') is export { }
-class GObject               is repr('CPointer') is export { }
-class GOutputStream         is repr('CPointer') is export { }
-class GParamSpec            is repr('CPointer') is export { }
-class GVolume               is repr('CPointer') is export { }
+class GActionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GAppInfo              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GAppInfoMonitor       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GAppLaunchContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GApplication          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GAsyncResult          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFunc                 is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GHashTable            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GInputStream          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GKeyFile              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GListModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMarkupParser         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMenu                 is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMenuItem             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMenuAttributeIter    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMenuLinkIter         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMenuModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMountOperation       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
 
-class GdkAtom               is repr('CPointer') is export { }
-class GdkDevice             is repr('CPointer') is export { }
-class GdkColorspace         is repr('CPointer') is export { }
-class GdkCursor             is repr('CPointer') is export { }
-class GdkDisplay            is repr('CPointer') is export { }
-class GdkDragContext        is repr('CPointer') is export { }
-class GdkEvent              is repr('CPointer') is export { }
-class GdkEventAny           is repr('CPointer') is export { }
-class GdkEventButton        is repr('CPointer') is export { }
-class GdkFrameClock         is repr('CPointer') is export { }
-class GdkModifierIntent     is repr('CPointer') is export { }
-class GdkMonitor            is repr('CPointer') is export { }
-class GdkPixbuf             is repr('CPointer') is export { }
-class GdkPixbufAnimation    is repr('CPointer') is export { }
-class GdkScreen             is repr('CPointer') is export { }
-class GdkStyleProvider      is repr('CPointer') is export { }
-class GdkTouchEvent         is repr('CPointer') is export { }
-class GdkVisual             is repr('CPointer') is export { }
-class GdkWindow             is repr('CPointer') is export { }
+class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDevice             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkColorspace         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkCursor             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDragProtocol       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkEvent              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkEventAny           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkEventButton        is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkFrameClock         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkGLContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkInputSource        is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkModifierIntent     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkMonitor            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkPixbuf             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkPixbufAnimation    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkScreen             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkStyleProvider      is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkTouchEvent         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkVisual             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkWindow             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GdkColor is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint   $.pixel;
@@ -878,3 +877,77 @@ class GdkEventGrabBroken is repr('CStruct')
 # class GdkEventPadButton
 # class GdkEventPadAxis
 # class GdkEventPadGroupMode
+
+class GdkWindowAttr is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has Str       $.title;
+  has gint      $.event_mask;
+  has gint      $.x;
+  has gint      $.y;
+  has gint      $.width;
+  has gint      $.height;
+  has uint32    $.wclass;         # GdkWindowWindowClass
+  has GdkVisual $.visual;
+  has uint32    $.window_type;    # GdkWindowType
+  has GdkCursor $.cursor;
+  has Str       $.wmclass_name;
+  has Str       $.wmclass_class;
+  has gboolean  $.override_redirect;
+  has uint32    $.type_hint;      # GdkWindowTypeHint
+};
+
+our enum GdkWindowWindowClass is export (
+  'GDK_INPUT_OUTPUT',             # nick=input-output
+  'GDK_INPUT_ONLY'                # nick=input-only
+);
+
+our enum GdkWindowHints is export (
+  GDK_HINT_POS         => 1,
+  GDK_HINT_MIN_SIZE    => 1 +< 1,
+  GDK_HINT_MAX_SIZE    => 1 +< 2,
+  GDK_HINT_BASE_SIZE   => 1 +< 3,
+  GDK_HINT_ASPECT      => 1 +< 4,
+  GDK_HINT_RESIZE_INC  => 1 +< 5,
+  GDK_HINT_WIN_GRAVITY => 1 +< 6,
+  GDK_HINT_USER_POS    => 1 +< 7,
+  GDK_HINT_USER_SIZE   => 1 +< 8
+);
+
+our enum GdkWMDecoration is export (
+  GDK_DECOR_ALL         => 1,
+  GDK_DECOR_BORDER      => 1 +< 1,
+  GDK_DECOR_RESIZEH     => 1 +< 2,
+  GDK_DECOR_TITLE       => 1 +< 3,
+  GDK_DECOR_MENU        => 1 +< 4,
+  GDK_DECOR_MINIMIZE    => 1 +< 5,
+  GDK_DECOR_MAXIMIZE    => 1 +< 6
+);
+
+our enum GdkWindowType is export <
+  GDK_WINDOW_ROOT
+  GDK_WINDOW_TOPLEVEL
+  GDK_WINDOW_CHILD
+  GDK_WINDOW_TEMP
+  GDK_WINDOW_FOREIGN
+  GDK_WINDOW_OFFSCREEN
+  GDK_WINDOW_SUBSURFACE
+>;
+
+our enum GdkAnchorHints is export (
+  GDK_ANCHOR_FLIP_X   => 1,
+  GDK_ANCHOR_FLIP_Y   => 1 +< 1,
+  GDK_ANCHOR_SLIDE_X  => 1 +< 2,
+  GDK_ANCHOR_SLIDE_Y  => 1 +< 3,
+  GDK_ANCHOR_RESIZE_X => 1 +< 4,
+  GDK_ANCHOR_RESIZE_Y => 1 +< 5,
+  GDK_ANCHOR_FLIP     =>        1 +| (1 +< 1),
+  GDK_ANCHOR_SLIDE    => (1 +< 2) +| (1 +< 3),
+  GDK_ANCHOR_RESIZE   => (1 +< 4) +| (1 +< 4)
+);
+
+our enum GdkFullscreenMode is export <
+  GDK_FULLSCREEN_ON_CURRENT_MONITOR
+  GDK_FULLSCREEN_ON_ALL_MONITORS
+>;

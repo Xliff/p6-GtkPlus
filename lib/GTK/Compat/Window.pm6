@@ -4,6 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::RGBA;
 use GTK::Compat::Raw::Window;
 
 use GTK::Compat::Roles::Signals::Window;
@@ -165,13 +166,13 @@ class GTK::Compat::Window {
     );
   }
 
-  method modal_hgint is rw is also<modal-hgint> {
+  method modal_hint is rw is also<modal-hint> {
     Proxy.new(
       FETCH => sub ($) {
-        gdk_window_get_modal_hgint($!window);
+        gdk_window_get_modal_hint($!window);
       },
       STORE => sub ($, $modal is copy) {
-        gdk_window_set_modal_hgint($!window, $modal);
+        gdk_window_set_modal_hint($!window, $modal);
       }
     );
   }
@@ -198,13 +199,13 @@ class GTK::Compat::Window {
     );
   }
 
-  method type_hgint is rw is also<type-hgint> {
+  method type_hint is rw is also<type-hint> {
     Proxy.new(
       FETCH => sub ($) {
-        gdk_window_get_type_hgint($!window);
+        gdk_window_get_type_hint($!window);
       },
-      STORE => sub ($, $hgint is copy) {
-        gdk_window_set_type_hgint($!window, $hgint);
+      STORE => sub ($, $hint is copy) {
+        gdk_window_set_type_hint($!window, $hint);
       }
     );
   }
@@ -221,8 +222,8 @@ class GTK::Compat::Window {
     gdk_window_add_filter($!window, $function, $data);
   }
 
-  method at_poginter (gint $win_y) is also<at-poginter> {
-    gdk_window_at_poginter($!window, $win_y);
+  method at_pointer (gint $win_y) is also<at-pointer> {
+    gdk_window_at_pointer($!window, $win_y);
   }
 
   method beep {
@@ -269,16 +270,16 @@ class GTK::Compat::Window {
     );
   }
 
-  method begin_pagint_rect (GdkRectangle $rectangle)
-    is also<begin-pagint-rect>
+  method begin_paint_rect (GdkRectangle $rectangle)
+    is also<begin-paint-rect>
   {
-    gdk_window_begin_pagint_rect($!window, $rectangle);
+    gdk_window_begin_paint_rect($!window, $rectangle);
   }
 
-  method begin_pagint_region (cairo_region_t $region)
-    is also<begin-pagint-region>
+  method begin_paint_region (cairo_region_t $region)
+    is also<begin-paint-region>
   {
-    gdk_window_begin_pagint_region($!window, $region);
+    gdk_window_begin_paint_region($!window, $region);
   }
 
   method begin_resize_drag (
@@ -326,7 +327,8 @@ class GTK::Compat::Window {
   }
 
   method constrain_size (
-    GdkWindowHgints $flags,
+    GdkGeometry $geometry,
+    GdkWindowHints $flags,
     gint $width,
     gint $height,
     gint $new_width,
@@ -335,7 +337,7 @@ class GTK::Compat::Window {
     is also<constrain-size>
   {
     gdk_window_constrain_size(
-      $!window,
+      $geometry,
       $flags,
       $width,
       $height,
@@ -366,7 +368,9 @@ class GTK::Compat::Window {
     gdk_window_coords_to_parent($!window, $x, $y, $parent_x, $parent_y);
   }
 
-  method create_gl_context (CArray[Poginter[GError]] $error = gerror)
+  method create_gl_context (
+    CArray[Pointer[GError]] $error = gerror
+  )
     is also<create-gl-context>
   {
     gdk_window_create_gl_context($!window, $error);
@@ -415,8 +419,8 @@ class GTK::Compat::Window {
     gdk_window_end_draw_frame($!window, $context);
   }
 
-  method end_pagint is also<end-pagint> {
-    gdk_window_end_pagint($!window);
+  method end_paint is also<end-paint> {
+    gdk_window_end_paint($!window);
   }
 
   method ensure_native is also<ensure-native> {
@@ -454,7 +458,7 @@ class GTK::Compat::Window {
   method gdk_get_default_root_window
     is also<gdk-get-default-root-window>
   {
-    gdk_get_default_root_window($!window);
+    gdk_get_default_root_window();
   }
 
   method offscreen_window_get_surface
@@ -559,10 +563,10 @@ class GTK::Compat::Window {
     gdk_window_get_parent($!window);
   }
 
-  method get_poginter (gint $x, gint $y, GdkModifierType $mask)
-    is also<get-poginter>
+  method get_pointer (gint $x, gint $y, GdkModifierType $mask)
+    is also<get-pointer>
   {
-    gdk_window_get_poginter($!window, $x, $y, $mask);
+    gdk_window_get_pointer($!window, $x, $y, $mask);
   }
 
   method get_position (gint $x, gint $y) is also<get-position> {
@@ -713,8 +717,8 @@ class GTK::Compat::Window {
     gdk_window_lower($!window);
   }
 
-  method mark_pagint_from_clip (cairo_t $cr) is also<mark-pagint-from-clip> {
-    gdk_window_mark_pagint_from_clip($!window, $cr);
+  method mark_paint_from_clip (cairo_t $cr) is also<mark-paint-from-clip> {
+    gdk_window_mark_paint_from_clip($!window, $cr);
   }
 
   method maximize {
@@ -749,7 +753,7 @@ class GTK::Compat::Window {
     GdkRectangle $rect,
     GdkGravity $rect_anchor,
     GdkGravity $window_anchor,
-    GdkAnchorHgints $anchor_hgints,
+    GdkAnchorHints $anchor_hints,
     gint $rect_anchor_dx,
     gint $rect_anchor_dy
   )
@@ -760,7 +764,7 @@ class GTK::Compat::Window {
       $rect,
       $rect_anchor,
       $window_anchor,
-      $anchor_hgints,
+      $anchor_hints,
       $rect_anchor_dx,
       $rect_anchor_dy
     );
@@ -775,7 +779,7 @@ class GTK::Compat::Window {
   }
 
   method process_all_updates is also<process-all-updates> {
-    gdk_window_process_all_updates($!window);
+    gdk_window_process_all_updates();
   }
 
   method process_updates (gboolean $update_children)
@@ -818,7 +822,9 @@ class GTK::Compat::Window {
     gdk_window_set_background($!window, $color);
   }
 
-  method set_background_rgba (GdkRGBA $rgba) is also<set-background-rgba> {
+  method set_background_rgba (GTK::Compat::RGBA $rgba)
+    is also<set-background-rgba>
+  {
     gdk_window_set_background_rgba($!window, $rgba);
   }
 
@@ -856,13 +862,13 @@ class GTK::Compat::Window {
     gdk_window_set_functions($!window, $functions);
   }
 
-  method set_geometry_hgints (
+  method set_geometry_hints (
     GdkGeometry $geometry,
-    GdkWindowHgints $geom_mask
+    GdkWindowHints $geom_mask
   )
-    is also<set-geometry-hgints>
+    is also<set-geometry-hints>
   {
-    gdk_window_set_geometry_hgints($!window, $geometry, $geom_mask);
+    gdk_window_set_geometry_hints($!window, $geometry, $geom_mask);
   }
 
   method set_icon_list (GList $pixbufs) is also<set-icon-list> {
@@ -916,16 +922,16 @@ class GTK::Compat::Window {
     gdk_window_set_shadow_width($!window, $left, $right, $top, $bottom);
   }
 
-  method set_skip_pager_hgint (gboolean $skips_pager)
-    is also<set-skip-pager-hgint>
+  method set_skip_pager_hint (gboolean $skips_pager)
+    is also<set-skip-pager-hint>
   {
-    gdk_window_set_skip_pager_hgint($!window, $skips_pager);
+    gdk_window_set_skip_pager_hint($!window, $skips_pager);
   }
 
-  method set_skip_taskbar_hgint (gboolean $skips_taskbar)
-    is also<set-skip-taskbar-hgint>
+  method set_skip_taskbar_hint (gboolean $skips_taskbar)
+    is also<set-skip-taskbar-hint>
   {
-    gdk_window_set_skip_taskbar_hgint($!window, $skips_taskbar);
+    gdk_window_set_skip_taskbar_hint($!window, $skips_taskbar);
   }
 
   method set_source_events (
@@ -955,8 +961,8 @@ class GTK::Compat::Window {
     gdk_window_set_transient_for($!window, $parent);
   }
 
-  method set_urgency_hgint (gboolean $urgent) is also<set-urgency-hgint> {
-    gdk_window_set_urgency_hgint($!window, $urgent);
+  method set_urgency_hint (gboolean $urgent) is also<set-urgency-hint> {
+    gdk_window_set_urgency_hint($!window, $urgent);
   }
 
   method set_user_data (gpointer $user_data) is also<set-user-data> {

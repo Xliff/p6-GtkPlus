@@ -35,11 +35,13 @@ GTK::Compat::Raw::Value
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
 GTK::Compat::Roles::Icon
+GTK::Compat::Roles::Signals::Window
 GTK::Raw::Types
 GTK::Raw::Viewport
 GTK::Raw::VolumeButton
 GTK::Raw::Widget
 GTK::Raw::Window
+GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
 GTK::Compat::GSList
 GTK::Compat::LaunchContext
@@ -50,6 +52,8 @@ GTK::Compat::Pixbuf
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Menu
+GTK::Compat::Raw::Window
+GTK::Compat::Window
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
 GTK::Dialog::Raw::ColorChooser
@@ -278,6 +282,7 @@ GTK::TreeModelFilter
 GTK::TreeModelSort
 GTK::TreeStore
 GTK::Widget
+GTK::WindowGroup
 GTK::AccelGroup
 GTK::Calendar
 GTK::CellAreaContext
