@@ -4,7 +4,14 @@ use v6.c;
 
 my %do_output;
 
-sub MAIN ($filename, :$remove, :$var, :$output = 'all', :$lib = 'gtk') {
+sub MAIN (
+  $filename,
+  :$remove,
+  :$var,
+  :$output = 'all',
+  :$lib = 'gtk',
+  :$args = 1
+) {
   my $fn = $filename;
 
   $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn ~~ /^ '/usr/include/' /;

@@ -978,7 +978,7 @@ class GTK::Widget {
       FETCH => sub ($) {
         gtk_widget_get_parent($!w);
       },
-      STORE => sub ($, $parent is copy) {
+      STORE => sub ($, GtkWidget() $parent is copy) {
         gtk_widget_set_parent($!w, $parent);
       }
     );
