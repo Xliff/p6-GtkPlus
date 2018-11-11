@@ -25,6 +25,7 @@ GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::Cursor
+GTK::Compat::Raw::Display
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
 GTK::Compat::Raw::Icon
@@ -36,12 +37,13 @@ GTK::Compat::Raw::Pixbuf
 GTK::Compat::Raw::Rectangle
 GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Value
+GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::Signals::Window
-GTK::Compat::Screen
+GTK::Compat::Visual
 GTK::Compat::Window
 GTK::Raw::Types
 GTK::Raw::Viewport
@@ -262,7 +264,9 @@ GTK::Adjustment
 GTK::CSSProvider
 GTK::Clipboard
 GTK::Compat::Cursor
+GTK::Compat::Display
 GTK::Compat::Roles::Signals
+GTK::Compat::Screen
 GTK::Compat::Value
 GTK::EntryBuffer
 GTK::FileFilter
@@ -295,6 +299,7 @@ GTK::CellRendererSpinner
 GTK::CellRendererText
 GTK::CellRendererToggle
 GTK::Compat::MenuModel
+GTK::Compat::Raw::Monitor
 GTK::Container
 GTK::DrawingArea
 GTK::Entry
@@ -342,6 +347,7 @@ GTK::ColorChooser
 GTK::ComboBox
 GTK::ComboBoxText
 GTK::Compat::Menu
+GTK::Compat::Monitor
 GTK::EntryCompletion
 GTK::Expander
 GTK::FileChooserButton

@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::Value;
 
 unit package GTK::Compat::Raw::Monitor;
 
@@ -24,13 +25,13 @@ sub gdk_monitor_get_height_mm (GdkMonitor $monitor)
   { * }
 
 sub gdk_monitor_get_manufacturer (GdkMonitor $monitor)
-  returns char
+  returns Str
   is native(gdk)
   is export
   { * }
 
 sub gdk_monitor_get_model (GdkMonitor $monitor)
-  returns char
+  returns Str
   is native(gdk)
   is export
   { * }
