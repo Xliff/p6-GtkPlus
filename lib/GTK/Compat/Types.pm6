@@ -889,20 +889,35 @@ class GdkWindowAttr is repr('CStruct')
   does GTK::Roles::Pointers
   is export
 {
-  has Str       $.title;
-  has gint      $.event_mask;
-  has gint      $.x;
-  has gint      $.y;
-  has gint      $.width;
-  has gint      $.height;
-  has uint32    $.wclass;         # GdkWindowWindowClass
-  has GdkVisual $.visual;
-  has uint32    $.window_type;    # GdkWindowType
-  has GdkCursor $.cursor;
-  has Str       $.wmclass_name;
-  has Str       $.wmclass_class;
-  has gboolean  $.override_redirect;
-  has uint32    $.type_hint;      # GdkWindowTypeHint
+  has Str       $.title             is rw;
+  has gint      $.event_mask        is rw;
+  has gint      $.x                 is rw;
+  has gint      $.y                 is rw;
+  has gint      $.width             is rw;
+  has gint      $.height            is rw;
+  has uint32    $.wclass            is rw;    # GdkWindowWindowClass
+  has GdkVisual $!visual                 ;
+  has uint32    $.window_type       is rw;    # GdkWindowType
+  has GdkCursor $.cursor            is rw;
+  has Str       $.wmclass_name      is rw;
+  has Str       $.wmclass_class     is rw;
+  has gboolean  $.override_redirect is rw;
+  has uint32    $.type_hint         is rw;    # GdkWindowTypeHint
+
+  method visual is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        $!visual
+      },
+      STORE => -> $, $new {
+        use nqp;
+        nqp::bindattr(
+          nqp::decont(self), GdkWindowAttr, '$!visual', nqp::decont($new)
+        )
+      }
+    );
+  };
+
 };
 
 our enum GdkWindowWindowClass is export (

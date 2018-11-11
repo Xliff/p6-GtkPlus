@@ -7,24 +7,34 @@ use GTK::Compat::Types;
 use GTK::Compat::RGBA;
 use GTK::Compat::Raw::Window;
 
+use GTK::Roles::Types;
 use GTK::Compat::Roles::Signals::Window;
 
 class GTK::Compat::Window {
+  also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Signals::Window;
 
   has GdkWindow $!window;
 
   submethod BUILD(:$window) {
-    $!window
+    $!window = $window;
   }
 
   method GTK::Compat::Types::GdkWindow is also<gdkwindow> {
     $!window;
   }
 
-  method new (GdkWindowAttr $attributes, gint $attributes_mask) {
+  multi method new (GdkWindow $window) {
+    self.bless(:$window);
+  }
+  multi method new (
+    GdkWindow() $parent,
+    GdkWindowAttr $attributes,
+    Int() $attributes_mask
+  ) {
+    my gint $am = self.RESOLVE-INT($attributes_mask);
     self.bless(
-      window => gdk_window_new($!window, $attributes, $attributes_mask)
+      window => gdk_window_new($parent, $attributes, $am)
     );
   }
 
@@ -39,7 +49,7 @@ class GTK::Compat::Window {
   # Is originally:
   # GdkWindow, gdouble, gdouble, gpointer, gpointer, gpointer --> void
   method from-embedder is also<from_embedder> {
-    self.connect-from-embedder($!window, 'from-embedder');
+    self.connect-embedder($!window, 'from-embedder');
   }
 
   # Is originally:
@@ -57,7 +67,7 @@ class GTK::Compat::Window {
   # Is originally:
   # GdkWindow, gdouble, gdouble, gpointer, gpointer, gpointer --> void
   method to-embedder is also<to_embedder> {
-    self.connect-to-embedder($!window, 'to-embedder');
+    self.connect-embedder($!window, 'to-embedder');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -113,9 +123,9 @@ class GTK::Compat::Window {
   {
     Proxy.new(
       FETCH => sub ($) {
-        gdk_offscreen_window_get_embedder($!window);
+        GTK::Compat::Window.new( gdk_offscreen_window_get_embedder($!window) );
       },
-      STORE => sub ($, $embedder is copy) {
+      STORE => sub ($, GdkWindow() $embedder is copy) {
         gdk_offscreen_window_set_embedder($!window, $embedder);
       }
     );
@@ -560,12 +570,12 @@ class GTK::Compat::Window {
   }
 
   method get_geometry (gint $x, gint $y, gint $width, gint $height)
-    is also<get-geometry>
+    is also<get-geometry geometry>
   {
     gdk_window_get_geometry($!window, $x, $y, $width, $height);
   }
 
-  method get_height is also<get-height> {
+  method get_height is also<get-height height> {
     gdk_window_get_height($!window);
   }
 
@@ -602,7 +612,7 @@ class GTK::Compat::Window {
   }
 
   method get_screen is also<get-screen> {
-    gdk_window_get_screen($!window);
+    GTK::Compat::Screen.new( gdk_window_get_screen($!window) );
   }
 
   method get_source_events (GdkInputSource $source)
@@ -639,7 +649,7 @@ class GTK::Compat::Window {
     gdk_window_get_visual($!window);
   }
 
-  method get_width is also<get-width> {
+  method get_width is also<get-width width> {
     gdk_window_get_width($!window);
   }
 

@@ -679,7 +679,7 @@ sub gtk_widget_activate (GtkWidget $widget)
 
 # --> GtkStyleContext
 sub gtk_widget_get_style_context (GtkWidget $widget)
-  returns uint32
+  returns GtkStyleContext
   is native(gtk)
   is export
   { * }

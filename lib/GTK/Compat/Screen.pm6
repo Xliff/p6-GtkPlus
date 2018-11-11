@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Raw::Screen;
@@ -26,6 +25,10 @@ class GTK::Compat::Screen {
 
   method GTK::Compat::Types::GdkScreen is also<screen> {
     $!screen;
+  }
+
+  method new (GdkScreen() $screen) {
+    self.bless(:$screen);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -158,7 +161,9 @@ class GTK::Compat::Screen {
     gdk_screen_get_rgba_visual($!screen);
   }
 
-  method get_root_window is also<get-root-window> {
+  method get_root_window
+    is also<get-root-window root-window root_window>
+  {
     gdk_screen_get_root_window($!screen);
   }
 

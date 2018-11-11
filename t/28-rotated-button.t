@@ -3,51 +3,53 @@ use v6.c;
 use Cairo;
 use GTK::Compat::Screen;
 use GTK::Compat::Types;
+use GTK::Compat::Window;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
 
 use GTK::Application;
 use GTK::Box;
-use GTK::Bin;
 use GTK::Button;
+use GTK::Layout;
 use GTK::Offscreen;
 use GTK::Scale;
+use GTK::StyleContext;
 use GTK::Widget;
 use GTK::Window;
 
-class RotatedBin is GTK::Bin {
-  has GTK::Widget $.child;
-  has GdkWindow   $.offscreen_window;
-  has             $.angle;
+# Using layout since it is the closest non-abstract to GtkContainer
+class RotatedBin is GTK::Layout {
+  has GTK::Widget           $.child;
+  has GTK::Compat::Window   $.offscreen_window;
+  has                       $.angle;
 
   submethod BUILD(:$rotatedbin) {
     self.setType('RotatedBin');
 
-    self.setBin($rotatedbin);
-    self.set_has_window(self, True);
+    self.setLayout($rotatedbin);
+    self.has_window = True;
 
     self.damage-event.tap(-> *@a {
-      self.window.invalidate_rect(Nil, 0);
+      self.window.invalidate_rect(GdkRectangle, 0);
       @a[*-1].r = 1;
-    });
-
-    self.pick-embedded-child.tap(-> *@a {
-      @a[*-1].r = self.pick_offscreen_child(|@a[1..2]);
     });
 
     # May not be necessary, but just in case.
     self.draw.tap(-> *@a {
-      @a[*-1].r = self.draw(|@a);
+      with $!offscreen_window {
+        @a[*-1].r = self.draw(|@a[0..1]);
+      } else {
+        @a[*-1].r = 1;
+      }
     });
 
     self.realize-signal  .tap(-> *@a { self.do_realize   });
     self.unrealize-signal.tap(-> *@a { self.do_unrealize });
-    self.draw            .tap(-> *@a { self.do_draw      });
   }
 
   method new {
     self.bless(
-      rotatedbin => g_object_new(GTK::Bin.get_type, Str)
+      rotatedbin => cast(GtkLayout, g_object_new(GTK::Layout.get_type, Str) )
     )
   }
 
@@ -72,22 +74,21 @@ class RotatedBin is GTK::Bin {
   }
 
   method do_realize {
-    my ($attribute_mask, $border_width);
-    my GtkAllocation $allocation;
-    my GdkWindow $window;
-    my GtkRequisition $child_requisition;
-    my GdkWindowAttr $attributes;
+    my ($attribute_mask, $border_width, $window, $attributes);
+    my ($allocation, $child_requisition) =
+      (GtkAllocation.new, GtkRequisition.new);
 
+    $attributes = GdkWindowAttr.new;
     self.realized = True;
     self.get_allocation($allocation);
-    $border_width = self.get_border_width;
+    $border_width = self.border_width;
 
     my @awh = ($allocation.width, $allocation.height);
     # The C code is more declaritive, but I'm learning hyper ops. They're fun!
     ($attributes.x, $attributes.y) =
-      ($allocation.x, $allocation.y) »+« $border_width xx 2;
+      ($allocation.x, $allocation.y) »+« ($border_width xx 2);
     ($attributes.width, $attributes.height) =
-      ($allocation.width, $allocation.height) »-« (2 * $border_width) xx 2;
+      ($allocation.width, $allocation.height) »-« ((2 * $border_width) xx 2);
     $attributes.window_type = GDK_WINDOW_CHILD;
     $attributes.event_mask = [+|](self.events, |(
       GDK_EXPOSURE_MASK,     GDK_POINTER_MOTION_MASK, GDK_BUTTON_PRESS_MASK,
@@ -95,8 +96,12 @@ class RotatedBin is GTK::Bin {
       GDK_LEAVE_NOTIFY_MASK
     ) );
     $attributes.visual = self.visual;
-    $attributes.mask = [+|](GDK_WA_X, GDK_WA_Y, GDK_WA_VISUAL);
-    $window = GTK::Compat::Window.(self.parent_window);
+    $attribute_mask = [+|](GDK_WA_X, GDK_WA_Y, GDK_WA_VISUAL);
+    $window = GTK::Compat::Window.new(
+      self.parent_window,
+      $attributes,
+      $attribute_mask
+    );
     self.window = $window;
     $window.set_user_data(self.widget.p);
 
@@ -118,13 +123,13 @@ class RotatedBin is GTK::Bin {
         ($child_allocation.width, $child_allocation.height);
     }
     $!offscreen_window = GTK::Compat::Window.new(
-      GTK::Compat::Screen.get_root_window(self.get_screen),
+      self.get_screen.root-window,
       $attributes,
-      $attributes.mask
+      $attribute_mask
     );
     $!offscreen_window.set_user_data(self.widget.p);
     .parent_window = $window with $!child;
-    $!offscreen_window.set_embedder($window);
+    $!offscreen_window.offscreen_window_embedder = $window;
 
     $!offscreen_window.to-embedder.tap(-> *@a {
       self.to_parent( |@a[1..4] );
@@ -163,7 +168,7 @@ class RotatedBin is GTK::Bin {
     if $!child =:= $widget {
       $widget.unparent;
       $!child = Nil;
-       self.queue_resize if $was_visible && self.visible;
+      self.queue_resize if $was_visible && self.visible;
     }
   }
 
@@ -183,7 +188,7 @@ class RotatedBin is GTK::Bin {
     my ($s, $c, $w, $h, $dbw);
 
     $child_req.width = $child_req.height = 0;
-    $!child.get_preferred_size($child_req, Nil)
+    $!child.get_preferred_size($child_req, GtkRequisition)
       if $!child.defined && $!child.visible;
 
     my @wh = ($child_req.width, $child_req.height);
@@ -246,11 +251,10 @@ class RotatedBin is GTK::Bin {
     }
   }
 
-  method draw (GtkWidget $widget, cairo_t $cairo_t) {
-    my ($s, $c, $w, $h, $cr);
-    my GdkWindow $window;
+  multi method draw ($, cairo_t $cairo_t) {
+    my ($s, $c, $w, $h, $cr, $window);
 
-    $window = self.get_window;
+    $window = self.window;
     if GTK::Widget.cairo_should_draw_window($cairo_t, $window) {
       my Cairo::cairo_surface_t $surface;
       my GtkAllocation $child_area .= new;
@@ -279,14 +283,13 @@ class RotatedBin is GTK::Bin {
       }
     }
 
-    my $cr_p = cast(cairo_t, $cr);
-    if GTK::Widget.should_draw_window($cr_p, $!offscreen_window) {
-      GTK::StyleContext.render_background(
-        self.get_style_context,
+    if GTK::Widget.cairo_should_draw_window($cairo_t, $!offscreen_window) {
+      self.get_style_context.render_background(
+        $cairo_t,
         0, 0,
         $!offscreen_window.width, $!offscreen_window.height
       );
-      self.propagate_draw($!child, $cr_p) if $!child.defined;
+      self.propagate_draw($!child, $cairo_t) if $!child.defined;
     }
     0;
   }

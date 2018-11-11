@@ -25,26 +25,32 @@ class GTK::Layout is GTK::Container {
   }
 
   submethod BUILD(:$layout) {
-    my $to-parent;
     given $layout {
       when ParentChild {
-        $!l = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkLayout, $_);
-          }
-          when GtkLayout  {
-            $to-parent = nativecast(GtkContainer, $_);
-            $_;
-          }
-        }
-        self.setContainer($to-parent);
+        self.setLayout($layout);
       }
       when GTK::Layout {
       }
       default {
       }
     }
+  }
+
+  method setLayout($layout) {
+    my $to-parent;
+    $!l = do {
+      given $layout {
+        when GtkWidget {
+          $to-parent = $_;
+          nativecast(GtkLayout, $_);
+        }
+        when GtkLayout  {
+          $to-parent = nativecast(GtkContainer, $_);
+          $_;
+        }
+      }
+    }
+    self.setContainer($to-parent);
     $!s = nativecast(GtkScrollable, $!l);     # GTK::Roles::Scrollable
   }
 

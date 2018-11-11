@@ -68,7 +68,8 @@ our constant GtkTreeViewRowSeparatorFunc      is export := Pointer;
 our constant GtkTreeViewSearchEqualFunc       is export := Pointer;
 our constant GtkTreeViewSearchPositionFunc    is export := Pointer;
 
-our constant GdkRGBA is export := GTK::Compat::RGBA;
+our constant GdkRGBA       is export := GTK::Compat::RGBA;
+our constant GtkAllocation is export := GdkRectangle;
 
 class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
   has int16 $.left;
@@ -961,7 +962,6 @@ class GtkAccelLabel           is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkActionBar            is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAspectFrame          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAdjustment           is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkAllocation           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAppChooser           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAppChooserButton     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAppChooserDialog     is repr('CPointer') does GTK::Roles::Pointers is export { }

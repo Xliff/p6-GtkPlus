@@ -26,6 +26,7 @@ use GTK::Raw::Types;
 # DEFAULT
 #
 sub g_object_new (uint64 $object_type, Str)
+  returns gpointer
   is native(gobject)
   is export
   { * }

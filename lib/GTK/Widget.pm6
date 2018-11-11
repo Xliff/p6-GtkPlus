@@ -6,6 +6,8 @@ use NativeCall;
 use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Compat::Value;
+use GTK::Compat::Screen;
+use GTK::Compat::Window;
 
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
@@ -16,6 +18,8 @@ use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
+
+use GTK::StyleContext;
 
 class GTK::Widget {
   also does GTK::Roles::Buildable;
@@ -100,8 +104,9 @@ class GTK::Widget {
 
   # Static methods
   method cairo_should_draw_window (
-    GTK::Widget:U: cairo_t $cr,
-    GdkWindow $window
+    GTK::Widget:U:
+    cairo_t $cr,
+    GdkWindow() $window
   )
     is also<cairo-should-draw-window>
   {
@@ -810,9 +815,9 @@ class GTK::Widget {
   method window is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_window($!w);
+        GTK::Compat::Window.new( gtk_widget_get_window($!w) );
       },
-      STORE => sub ($, $window is copy) {
+      STORE => sub ($, GdkWindow() $window is copy) {
         gtk_widget_set_window($!w, $window);
       }
     );
@@ -1520,7 +1525,7 @@ class GTK::Widget {
   }
 
   method get_style_context is also<get-style-context> {
-    gtk_widget_get_style_context($!w);
+    GTK::StyleContext.new( gtk_widget_get_style_context($!w) );
   }
 
   method get_clip (GtkAllocation $clip) is also<get-clip> {
@@ -1939,7 +1944,7 @@ class GTK::Widget {
   }
 
   method get_screen is also<get-screen> {
-    gtk_widget_get_screen($!w);
+    GTK::Compat::Screen.new( gtk_widget_get_screen($!w) );
   }
 
   method queue_resize is also<queue-resize> {

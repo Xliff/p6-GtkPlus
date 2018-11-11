@@ -127,7 +127,7 @@ $a.activate.tap({
   $packet<label>.name = 'radlabel';
 
   $drawing_area.set_size_request(400, 200);
-  # XXX - Problem here... AGAIN!
+  # XXX - Problem here... it stops dead after a while. GC issue?
   $drawing_area.draw.tap(-> *@a {
     # Remember the return value.
     @a[*-1].r = draw_callback(@a[1], $packet);

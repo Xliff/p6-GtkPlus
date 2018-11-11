@@ -64,9 +64,6 @@ class GTK::DrawingArea is GTK::Widget {
   method cairo_t is also<cairo-t> {
     nativecast(cairo_t, $!da);
   }
-  method p {
-    nativecast(Pointer, $!da);
-  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -81,4 +78,3 @@ class GTK::DrawingArea is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

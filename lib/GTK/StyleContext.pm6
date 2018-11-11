@@ -27,6 +27,14 @@ class GTK::StyleContext {
     self.disconnect-all($_) for %!signals;
   }
 
+  multi method new(GtkStyleContext $context) {
+    self.bless(:$context);
+  }
+  multi method new {
+    my $context = gtk_style_context_new();
+    self.bless(:$context);
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
@@ -125,7 +133,7 @@ class GTK::StyleContext {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_activity (
-    GtkStyleContext $context,
+    GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
@@ -163,12 +171,13 @@ class GTK::StyleContext {
   multi method render_background (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    samewith($!sc, $cr, $x, $y, $width, $height);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    samewith($!sc, $cr, $xx, $yy, $w, $h);
   }
   multi method render_background (
     GtkStyleContext() $context,
@@ -747,10 +756,6 @@ class GTK::StyleContext {
 
   method lookup_icon_set (Str() $stock_id) is also<lookup-icon-set> {
     gtk_style_context_lookup_icon_set($!sc, $stock_id);
-  }
-
-  method new {
-    gtk_style_context_new();
   }
 
   method notify_state_change (

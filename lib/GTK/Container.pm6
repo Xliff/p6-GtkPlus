@@ -206,9 +206,11 @@ class GTK::Container is GTK::Widget {
 
   method child_get_property (
     GtkWidget() $child,
-    gchar $property_name,
-    GValue $value
-  ) is also<child-get-property> {
+    Str() $property_name,
+    GValue() $value
+  )
+    is also<child-get-property>
+  {
     gtk_container_child_get_property($!c, $child, $property_name, $value);
   }
 
@@ -222,11 +224,15 @@ class GTK::Container is GTK::Widget {
   #   samewith($child.widget, $first_property_name, $var_args);
   # }
 
-  method child_notify (GtkWidget() $child, gchar $child_property) is also<child-notify> {
+  method child_notify (GtkWidget() $child, Str() $child_property)
+    is also<child-notify>
+  {
     gtk_container_child_notify($!c, $child, $child_property);
   }
 
-  method child_notify_by_pspec (GtkWidget() $child, GParamSpec $pspec) is also<child-notify-by-pspec> {
+  method child_notify_by_pspec (GtkWidget() $child, GParamSpec $pspec)
+    is also<child-notify-by-pspec>
+  {
     gtk_container_child_notify_by_pspec($!c, $child, $pspec);
   }
 
@@ -234,7 +240,9 @@ class GTK::Container is GTK::Widget {
     GtkWidget() $child,
     gchar $property_name,
     GValue $value
-  ) is also<child-set-property> {
+  )
+    is also<child-set-property>
+  {
     gtk_container_child_set_property($!c, $child, $property_name, $value);
   }
 
@@ -294,11 +302,15 @@ class GTK::Container is GTK::Widget {
     (@!start, @!end).flat;
   }
 
-  method get_focus_chain (GList $focusable_widgets) is also<get-focus-chain> {
+  method get_focus_chain (GList $focusable_widgets)
+    is also<get-focus-chain>
+  {
     gtk_container_get_focus_chain($!c, $focusable_widgets);
   }
 
-  method get_path_for_child (GtkWidget() $child) is also<get-path-for-child> {
+  method get_path_for_child (GtkWidget() $child)
+    is also<get-path-for-child>
+  {
     gtk_container_get_path_for_child($!c, $child);
   }
 
@@ -306,15 +318,17 @@ class GTK::Container is GTK::Widget {
     gtk_container_get_type();
   }
 
-  method propagate_draw (GtkWidget() $child, cairo_t $cr) is also<propagate-draw> {
+  method propagate_draw (GtkWidget() $child, cairo_t $cr)
+    is also<propagate-draw>
+  {
     gtk_container_propagate_draw($!c, $child, $cr);
   }
 
   multi method remove (GtkWidget() $widget) {
     @!end .= grep({
       do {
-        when GtkWidget   {        $_ !== $widget }
-        when GTK::Widget { $_.widget !== $widget }
+        when GtkWidget   {        +$_.p !== +$widget.p }
+        when GTK::Widget { +$_.widget.p !== +$widget.p }
       }
     });
     gtk_container_remove($!c, $widget);
@@ -324,8 +338,10 @@ class GTK::Container is GTK::Widget {
     gtk_container_resize_children($!c);
   }
 
-  method set_reallocate_redraws (Int() $needs_redraws) is also<set-reallocate-redraws> {
-    my gboolean $nr = self.RESOLVE-BOOL($needs_redraws, &?ROUTINE.name);
+  method set_reallocate_redraws (Int() $needs_redraws)
+    is also<set-reallocate-redraws>
+  {
+    my gboolean $nr = self.RESOLVE-BOOL($needs_redraws);
     gtk_container_set_reallocate_redraws($!c, $nr);
   }
 
