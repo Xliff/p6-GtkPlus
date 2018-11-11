@@ -18,6 +18,16 @@ class GTK::Compat::Window {
     $!window
   }
 
+  method GTK::Compat::Types::GdkWindow is also<gdkwindow> {
+    $!window;
+  }
+
+  method new (GdkWindowAttr $attributes, gint $attributes_mask) {
+    self.bless(
+      window => gdk_window_new($!window, $attributes, $attributes_mask)
+    );
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
@@ -768,10 +778,6 @@ class GTK::Compat::Window {
       $rect_anchor_dx,
       $rect_anchor_dy
     );
-  }
-
-  method new (GdkWindowAttr $attributes, gint $attributes_mask) {
-    gdk_window_new($!window, $attributes, $attributes_mask);
   }
 
   method peek_children is also<peek-children> {

@@ -6,9 +6,13 @@ use NativeCall;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force a compile.
-constant forced = 5;
+constant forced = 6;
 
 unit package GTK::Compat::Types;
+
+sub cast($cast-to, $obj) is export {
+  nativecast($cast-to, $obj);
+}
 
 constant gtk      is export = 'gtk-3',v0;
 constant gdk      is export = 'gdk-3', v0;
@@ -951,3 +955,14 @@ our enum GdkFullscreenMode is export <
   GDK_FULLSCREEN_ON_CURRENT_MONITOR
   GDK_FULLSCREEN_ON_ALL_MONITORS
 >;
+
+our enum GdkWindowAttributesType is export (
+  GDK_WA_TITLE     => 1,
+  GDK_WA_X         => 1 +< 2,
+  GDK_WA_Y         => 1 +< 3,
+  GDK_WA_CURSOR    => 1 +< 4,
+  GDK_WA_VISUAL    => 1 +< 5,
+  GDK_WA_WMCLASS   => 1 +< 6,
+  GDK_WA_NOREDIR   => 1 +< 7,
+  GDK_WA_TYPE_HINT => 1 +< 8
+);

@@ -25,8 +25,13 @@ use GTK::Raw::Types;
 #
 # DEFAULT
 #
+sub g_object_new (uint64 $object_type, Str)
+  is native(gobject)
+  is export
+  { * }
+
 sub g_object_unref(OpaquePointer $p)
-  is native('gobject-2.0')
+  is native(gobject)
   is export
   { * }
 
@@ -37,19 +42,19 @@ sub g_signal_connect_data(
   OpaquePointer $data
 )
   returns uint64
-  is native('gobject-2.0')
+  is native(gobject)
   is export
   { * }
 
 sub g_object_set_string(OpaquePointer $o, gchar $key, Str $data)
-  is native('gobject-2.0')
+  is native(gobject)
   is symbol('g_object_set_data')
   is export
   { * }
 
 sub g_object_get_string(OpaquePointer $o, gchar $key)
   returns Str
-  is native('gobject-2.0')
+  is native(gobject)
   is symbol('g_object_set_data')
   is export
   { * }
@@ -62,7 +67,7 @@ sub g_signal_connect_wd(
   uint32 $connect_flags
 )
   returns uint64
-  is native('gobject-2.0')
+  is native(gobject)
   is symbol('g_signal_connect_object')
   is export
   { * }
@@ -75,14 +80,14 @@ sub g_signal_connect_handler(
   uint32 $connect_flags
 )
   returns uint64
-  is native('gobject-2.0')
+  is native(gobject)
   is symbol('g_signal_connect_object')
   is export
   { * }
 
 
 sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
-  is native('gobject-2.0')
+  is native(gobject)
   is export
   { * }
 

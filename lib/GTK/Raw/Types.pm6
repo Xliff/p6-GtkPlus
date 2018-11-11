@@ -8,10 +8,6 @@ use GTK::Roles::Pointers;
 
 unit package GTK::Raw::Types;
 
-sub cast($cast-to, $obj) is export {
-  nativecast($cast-to, $obj);
-}
-
 # Look into replacing these with subsets to see how they would look.
 # Example:
 # <Zoffix>
@@ -1029,6 +1025,7 @@ class GtkHeaderBar            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkIconInfo             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconSet              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconTheme            is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkIconSource           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkIconView             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkInfoBar              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkImage                is repr('CPointer') does GTK::Roles::Pointers is export { }

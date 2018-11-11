@@ -23,7 +23,7 @@ for @files.sort( *[1] ).reverse {
     if $old.IO.e {
       $old.IO.rename($new);
     } else {
-      'LastBuildResults'.IO.rename('LastBuildResults.0');
+      # 'LastBuildResults'.IO.rename('LastBuildResults.0');
     }
   } else {
     'LastBuildResults'.IO.rename('LastBuildResults.0');

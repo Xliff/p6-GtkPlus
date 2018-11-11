@@ -3,7 +3,6 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::Types;
 
 unit package GTK::Compat::Raw::Window;
 
@@ -979,7 +978,7 @@ sub gdk_window_get_focus_on_map (GdkWindow $window)
   { * }
 
 sub gdk_window_get_fullscreen_mode (GdkWindow $window)
-  returns GdkFullscreenMode
+  returns uint32 # GdkFullscreenMode
   is native(gdk)
   is export
   { * }
@@ -1066,7 +1065,7 @@ sub gdk_window_set_focus_on_map (GdkWindow $window, gboolean $focus_on_map)
 
 sub gdk_window_set_fullscreen_mode (
   GdkWindow $window,
-  GdkFullscreenMode $mode
+  uint32                          # GdkFullscreenMode $mode
 )
   is native(gdk)
   is export
