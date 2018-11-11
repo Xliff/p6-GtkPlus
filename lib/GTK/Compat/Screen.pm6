@@ -8,9 +8,11 @@ use GTK::Compat::Raw::Screen;
 use GTK::Compat::Types;
 
 use GTK::Roles::Types;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Compat::Screen {
   also does GTK::Roles::Types;
+  also does GTK::Roles::Signals::Generic;
 
   has GdkScreen $!screen;
 
@@ -18,11 +20,34 @@ class GTK::Compat::Screen {
     $!screen = $screen;
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals;
+  }
+
   method GTK::Compat::Types::GdkScreen is also<screen> {
     $!screen;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GdkScreen, gpointer --> void
+  method composited-changed {
+    self.connect($!screen, 'composited-changed');
+  }
+
+  # Is originally:
+  # GdkScreen, gpointer --> void
+  method monitors-changed {
+    self.connect($!screen, 'monitors-changed');
+  }
+
+  # Is originally:
+  # GdkScreen, gpointer --> void
+  method size-changed {
+    self.connect($!screen, 'size-changed');
+  }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -42,7 +67,7 @@ class GTK::Compat::Screen {
       FETCH => sub ($) {
         gdk_screen_get_resolution($!screen);
       },
-      STORE => sub ($, $dpi is copy) {
+      STORE => sub ($, Num() $dpi is copy) {
         gdk_screen_set_resolution($!screen, $dpi);
       }
     );

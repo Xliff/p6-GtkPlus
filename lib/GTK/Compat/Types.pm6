@@ -659,10 +659,12 @@ class GOutputStream         is repr('CPointer') is export does GTK::Roles::Point
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
 
+class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDevice             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkColorspace         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkCursor             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDevice             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDeviceManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDragProtocol       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -678,6 +680,7 @@ class GdkMonitor            is repr('CPointer') is export does GTK::Roles::Point
 class GdkPixbuf             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkPixbufAnimation    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkScreen             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkSeat               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkStyleProvider      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkTouchEvent         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkVisual             is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -979,4 +982,13 @@ our enum GdkVisualType is export <
 our enum GdkByteOrder is export <
   GDK_LSB_FIRST
   GDK_MSB_FIRST
+>;
+
+our enum GdkSubpixelLayout is export <
+  GDK_SUBPIXEL_LAYOUT_UNKNOWN
+  GDK_SUBPIXEL_LAYOUT_NONE
+  GDK_SUBPIXEL_LAYOUT_HORIZONTAL_RGB
+  GDK_SUBPIXEL_LAYOUT_HORIZONTAL_BGR
+  GDK_SUBPIXEL_LAYOUT_VERTICAL_RGB
+  GDK_SUBPIXEL_LAYOUT_VERTICAL_BGR
 >;

@@ -8,7 +8,6 @@ sub MAIN (
   :$var = 'w',
   :$prefix = "https://developer.gnome.org/gtk3/stable/")
 {
-
   my $dom = Mojo::DOM.new(
     LWP::Simple.new.get(
       "{ $prefix }{ $control }.html"

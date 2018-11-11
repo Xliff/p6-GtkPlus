@@ -3,11 +3,14 @@ use v6.c;
 use LWP::Simple;
 use Mojo::DOM:from<Perl5>;
 
-sub MAIN ($control, :$var = 'w') {
-
+sub MAIN (
+  $control,
+  :$var = 'w',
+  :$prefix = "https://developer.gnome.org/gtk3/stable/"
+) {
   my $dom = Mojo::DOM.new(
     LWP::Simple.new.get(
-      "https://developer.gnome.org/gtk3/stable/{ $control }.html"
+      "{ $prefix }{ $control }.html"
     )
   );
 
