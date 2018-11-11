@@ -8,6 +8,8 @@ use GTK::Compat::Value;
 use GTK::Raw::StyleContext;
 use GTK::Raw::Types;
 
+use GTK::Render;
+
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
@@ -110,56 +112,99 @@ class GTK::StyleContext {
 
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
-  method render_activity (
+  proto method render_activity(|) is also<render-activity> { * }
+
+  multi method render_activity(
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_activity (
     GtkStyleContext $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-    is also<render-activity>
-  {
-    gtk_render_activity($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.activity($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_arrow  (
+  proto method render_arror (|) is also<render-arrow> { * }
+
+  multi method render_arrow  (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $angle,
+    gdouble $x,
+    gdouble $y,
+    gdouble $size
+  ) {
+    samewith($!sc, $cr, $angle, $x, $y, $size);
+  }
+  multi method render_arrow  (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $angle,
     gdouble $x,
     gdouble $y,
     gdouble $size
-  )
-    is also<render-arrow>
-  {
-    gtk_render_arrow($context, $cr, $angle, $x, $y, $size);
+  ) {
+    GTK::Render.arrow($context, $cr, $angle, $x, $y, $size);
   }
 
-  method render_background (
+  proto method render_background (|) is also<render-background> { * }
+
+  multi method render_background (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_background (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-    is also<render-background>
-  {
-    gtk_render_background($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.background($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_background_get_clip  (
+  proto method render_background_get_clip (|)
+    is also<render-background-get-clip>
+    { * }
+
+  multi method render_background_get_clip  (
+    GTK::StyleContext:D:
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height,
+    GdkRectangle $out_clip
+  ) {
+    samewith($!sc, $x, $y, $width, $height, $out_clip);
+  }
+
+  multi method ender_background_get_clip  (
     GtkStyleContext() $context,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height,
     GdkRectangle $out_clip
-  )
-    is also<render_background_get-clip>
-  {
-    gtk_render_background_get_clip(
+  ) {
+    GTK::Render.background_get_clip(
       $context,
       $x, $y,
       $width, $height,
@@ -167,33 +212,66 @@ class GTK::StyleContext {
     );
   }
 
-  method render_check (
+  proto method render_check (|) is also<render-check> { * }
+
+  multi method render_check (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_check (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-    is also<render-check>
-  {
-    gtk_render_check($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.check($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_expander (
+  proto method render_expander (|) is also<render-expander> { * }
+
+  multi method render_expander (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_expander (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-    is also<render-expander>
-  {
-    gtk_render_expander($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.expander($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_extension (
+  proto method render_extension (|) is also<render-extension> { * }
+
+  multi method render_extension (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height,
+    GtkPositionType $gap_side
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height, $gap_side);
+  }
+  multi method render_extension (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
@@ -201,39 +279,79 @@ class GTK::StyleContext {
     gdouble $width,
     gdouble $height,
     GtkPositionType $gap_side
-  )
-    is also<render-extension>
-  {
-    gtk_render_extension($context, $cr, $x, $y, $width, $height, $gap_side);
+  ) {
+    GTK::Render.extension($context, $cr, $x, $y, $width, $height, $gap_side);
   }
 
-  method render_focus (
+  proto method render_focus (|) is also<render-focus> { * }
+
+  multi method render_focus (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_focus (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-    is also<render-focus>
-  {
-    gtk_render_focus($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.focus($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_frame (
+  proto method render_frame (|) is also<render-frame> { * }
+
+  multi method render_frame (
+    GTK::StyleContext:D: $context,
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_frame (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-    is also<render-frame>
-  {
-    gtk_render_frame($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.frame($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_frame_gap (
+  proto method render_frame_gap (|) is also<render-frame-gap> { * }
+
+  multi method render_frame_gap (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height,
+    GtkPositionType $gap_side,
+    gdouble $xy0_gap,
+    gdouble $xy1_gap
+  ) {
+    samewith(
+      $!sc,
+      $cr,
+      $x, $y,
+      $width, $height,
+      $gap_side,
+      $xy0_gap, $xy1_gap
+    );
+  }
+  multi method render_frame_gap (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
@@ -243,10 +361,8 @@ class GTK::StyleContext {
     GtkPositionType $gap_side,
     gdouble $xy0_gap,
     gdouble $xy1_gap
-  )
-    is also<render_frame-gap>
-  {
-    gtk_render_frame_gap(
+  ) {
+    GTK::Render.frame_gap(
       $context,
       $cr,
       $x, $y,
@@ -256,92 +372,171 @@ class GTK::StyleContext {
     );
   }
 
-  method render_handle (
+  proto method render_handle (|) is also<render-handle> { * }
+
+  multi method render_handle (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_handle (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-   is also<render-handle>
-  {
-    gtk_render_handle($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.handle($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_icon (
+  proto method render_icon (|) is also<render-icon> { * }
+
+  multi method render_icon (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    GdkPixbuf() $pixbuf,
+    gdouble $x,
+    gdouble $y
+  ) {
+    samewith($!sc, $cr, $pixbuf, $x, $y);
+  }
+  multi method render_icon (
     GtkStyleContext() $context,
     cairo_t $cr,
     GdkPixbuf() $pixbuf,
     gdouble $x,
     gdouble $y
-  )
-    is also<render-icon>
-  {
-    gtk_render_icon($context, $cr, $pixbuf, $x, $y);
+  ) {
+    GTK::Render.icon($context, $cr, $pixbuf, $x, $y);
   }
 
-  method render_icon_pixbuf (
+  proto method render_icon_pixbuf (|) is also<render-icon-pixbuf> { * }
+
+  multi method render_icon_pixbuf (
+    GTK::StyleContext:D:
+    GtkIconSource $source,
+    GtkIconSize $size
+  ) {
+    samewith($!sc, $source, $size);
+  }
+  multi method render_icon_pixbuf (
     GtkStyleContext() $context,
     GtkIconSource $source,
     GtkIconSize $size
   )
     is also<render_icon-pixbuf>
   {
-    gtk_render_icon_pixbuf($context, $source, $size);
+    GTK::Render.icon_pixbuf($context, $source, $size);
   }
 
-  method render_icon_surface (
+  proto method render_icon_surface (|) is also<render-icon-surface> { * }
+
+  multi method render_icon_surface (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    cairo_surface_t $surface,
+    gdouble $x,
+    gdouble $y
+  ) {
+    samewith($!sc, $cr, $surface, $x, $y);
+  }
+  multi method render_icon_surface (
     GtkStyleContext() $context,
     cairo_t $cr,
     cairo_surface_t $surface,
     gdouble $x,
     gdouble $y
-  )
-    is also<render_icon-surface>
-  {
-    gtk_render_icon_surface($context, $cr, $surface, $x, $y);
+  ) {
+    GTK::Render.icon_surface($context, $cr, $surface, $x, $y);
   }
 
-  method render_layout  (
+  proto method render_layout (|) is also<render-layout> { * }
+
+  multi method render_layout  (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    PangoLayout $layout
+  ) {
+    samewith($!sc, $cr, $x, $y, $layout);
+  }
+  multi method render_layout  (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     PangoLayout $layout
-  )
-    is also<render-layout>
-  {
-    gtk_render_layout($context, $cr, $x, $y, $layout);
+  ) {
+    GTK::Render.layout($context, $cr, $x, $y, $layout);
   }
 
-  method render_line (
+  proto method render_line (|) is also<render-line> { * }
+
+  multi method render_line (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x0,
+    gdouble $y0,
+    gdouble $x1,
+    gdouble $y1
+  ) {
+    samewith($!sc, $cr, $x0, $y0, $x1, $y1);
+  }
+  multi method render_line (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x0,
     gdouble $y0,
     gdouble $x1,
     gdouble $y1
-  )
-    is also<render-line>
-  {
-    gtk_render_line($context, $cr, $x0, $y0, $x1, $y1);
+  ) {
+    GTK::Render.line($context, $cr, $x0, $y0, $x1, $y1);
   }
 
-  method render_option is (
+  proto method render_option (|) is also<render-option> { * }
+
+  multi method render_option (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height);
+  }
+  multi method render_option (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
     gdouble $y,
     gdouble $width,
     gdouble $height
-  )
-    is also<render-option>
-  {
-    gtk_render_option($context, $cr, $x, $y, $width, $height);
+  ) {
+    GTK::Render.option($context, $cr, $x, $y, $width, $height);
   }
 
-  method render_slider (
+  proto method render_slider (|) is also<render-slider> { * }
+
+  multi method render_slider (
+    GTK::StyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    gdouble $width,
+    gdouble $height,
+    GtkOrientation $orientation
+  ) {
+    samewith($!sc, $cr, $x, $y, $width, $height, $orientation);
+  }
+  multi method render_slider (
     GtkStyleContext() $context,
     cairo_t $cr,
     gdouble $x,
@@ -349,10 +544,8 @@ class GTK::StyleContext {
     gdouble $width,
     gdouble $height,
     GtkOrientation $orientation
-  )
-    is also<render-slider>
-  {
-    gtk_render_slider($context, $cr, $x, $y, $width, $height, $orientation);
+  ) {
+    GTK::Render.slider($context, $cr, $x, $y, $width, $height, $orientation);
   }
 
 
@@ -598,7 +791,7 @@ class GTK::StyleContext {
   }
 
   method remove_provider_for_screen (
-    GdkScreen $screen,
+    GdkScreen() $screen,
     GtkStyleProvider $provider
   )
     is also<remove-provider-for-screen>
@@ -610,7 +803,7 @@ class GTK::StyleContext {
     gtk_style_context_remove_region($!sc, $region_name);
   }
 
-  method reset_widgets(GdkScreen $screen) is also<reset-widgets> {
+  method reset_widgets(GdkScreen() $screen) is also<reset-widgets> {
     gtk_style_context_reset_widgets($screen);
   }
 
@@ -622,13 +815,13 @@ class GTK::StyleContext {
     gtk_style_context_save($!sc);
   }
 
-  method scroll_animations (GdkWindow $window, gint $dx, gint $dy)
+  method scroll_animations (GdkWindow() $window, gint $dx, gint $dy)
     is also<scroll-animations>
   {
     gtk_style_context_scroll_animations($!sc, $window, $dx, $dy);
   }
 
-  method set_background (GdkWindow $window) is also<set-background> {
+  method set_background (GdkWindow() $window) is also<set-background> {
     gtk_style_context_set_background($!sc, $window);
   }
 

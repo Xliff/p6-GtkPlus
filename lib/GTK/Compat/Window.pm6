@@ -421,11 +421,15 @@ class GTK::Compat::Window {
     gdk_window_destroy($!window);
   }
 
-  method enable_synchronized_configure is also<enable-synchronized-configure> {
+  method enable_synchronized_configure
+    is also<enable-synchronized-configure>
+  {
     gdk_window_enable_synchronized_configure($!window);
   }
 
-  method end_draw_frame (GdkDrawingContext $context) is also<end-draw-frame> {
+  method end_draw_frame (GdkDrawingContext $context)
+    is also<end-draw-frame>
+  {
     gdk_window_end_draw_frame($!window, $context);
   }
 

@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 
 unit package GTK::Compat::Raw::Window;
@@ -699,7 +700,10 @@ sub gdk_window_set_background (GdkWindow $window, GdkColor $color)
   is export
   { * }
 
-sub gdk_window_set_background_rgba (GdkWindow $window, GdkRGBA $rgba)
+sub gdk_window_set_background_rgba (
+  GdkWindow $window,
+  GTK::Compat::RGBA $rgba
+)
   is native(gdk)
   is export
   { * }

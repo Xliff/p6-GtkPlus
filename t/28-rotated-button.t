@@ -20,12 +20,10 @@ class RotatedBin is GTK::Bin {
   has GdkWindow   $.offscreen_window;
   has             $.angle;
 
-  submethod BUILD {
+  submethod BUILD(:$rotatedbin) {
     self.setType('RotatedBin');
 
-    self.setBin(
-      bin => g_object_new(GTK::Bin.get_type, Str)
-    );
+    self.setBin($rotatedbin);
     self.set_has_window(self, True);
 
     self.damage-event.tap(-> *@a {
@@ -42,9 +40,15 @@ class RotatedBin is GTK::Bin {
       @a[*-1].r = self.draw(|@a);
     });
 
-    self.realize  .tap({ self.do_realize   });
-    self.unrealize.tap({ self.do_unrealize });
-    self.draw     .tap({ self.do_draw      });
+    self.realize-signal  .tap(-> *@a { self.do_realize   });
+    self.unrealize-signal.tap(-> *@a { self.do_unrealize });
+    self.draw            .tap(-> *@a { self.do_draw      });
+  }
+
+  method new {
+    self.bless(
+      rotatedbin => g_object_new(GTK::Bin.get_type, Str)
+    )
   }
 
   method pick_offscreen_child($wx, $wy) {
@@ -273,7 +277,6 @@ class RotatedBin is GTK::Bin {
         $cr.set_source_surface($surface, 0, 0);
         $cr.paint;
       }
-      0;
     }
 
     my $cr_p = cast(cairo_t, $cr);
@@ -285,6 +288,7 @@ class RotatedBin is GTK::Bin {
       );
       self.propagate_draw($!child, $cr_p) if $!child.defined;
     }
+    0;
   }
 
   method to-parent ($wx, $wy, $xo is rw, $yo is rw) {
