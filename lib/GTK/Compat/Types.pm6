@@ -966,3 +966,17 @@ our enum GdkWindowAttributesType is export (
   GDK_WA_NOREDIR   => 1 +< 7,
   GDK_WA_TYPE_HINT => 1 +< 8
 );
+
+our enum GdkVisualType is export <
+  GDK_VISUAL_STATIC_GRAY
+  GDK_VISUAL_GRAYSCALE
+  GDK_VISUAL_STATIC_COLOR
+  GDK_VISUAL_PSEUDO_COLOR
+  GDK_VISUAL_TRUE_COLOR
+  GDK_VISUAL_DIRECT_COLOR
+>;
+
+our enum GdkByteOrder is export <
+  GDK_LSB_FIRST
+  GDK_MSB_FIRST
+>;
