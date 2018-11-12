@@ -8,7 +8,7 @@
     "version": "r0.2",
     "meta-version": "0",
     "license": "GPL-3.0",
-    "source-url": "https://git@github.com/Xliff/p6-GtkPlus.git",
+    "source-url": "https://github.com/Xliff/p6-GtkPlus",
     "provides": {
       "GTK::Builder::MRO"                      :  "lib/GTK/Builder/MRO.pm6"                     ,
       "GTK::Builder::Role"                     :  "lib/GTK/Builder/Role.pm6"                    ,
