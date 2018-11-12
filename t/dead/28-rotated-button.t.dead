@@ -10,12 +10,15 @@ use GTK::Raw::Types;
 use GTK::Application;
 use GTK::Box;
 use GTK::Button;
+use GTK::Image;
 use GTK::Layout;
 use GTK::Offscreen;
 use GTK::Scale;
 use GTK::StyleContext;
 use GTK::Widget;
 use GTK::Window;
+
+my $a = GTK::Application.new( title => 'org.genex.rotated-button' );
 
 # Using layout since it is the closest non-abstract to GtkContainer
 class RotatedBin is GTK::Layout {
@@ -24,8 +27,9 @@ class RotatedBin is GTK::Layout {
   has                       $.angle;
 
   submethod BUILD(:$rotatedbin) {
-    self.setType('RotatedBin');
+    $!angle = 0;
 
+    self.setType('RotatedBin');
     self.setLayout($rotatedbin);
     self.has_window = True;
 
@@ -36,11 +40,7 @@ class RotatedBin is GTK::Layout {
 
     # May not be necessary, but just in case.
     self.draw.tap(-> *@a {
-      with $!offscreen_window {
-        @a[*-1].r = self.draw(|@a[0..1]);
-      } else {
-        @a[*-1].r = 1;
-      }
+      @a[*-1].r = self.draw(|@a[0..1]);
     });
 
     self.realize-signal  .tap(-> *@a { self.do_realize   });
@@ -96,6 +96,7 @@ class RotatedBin is GTK::Layout {
       GDK_LEAVE_NOTIFY_MASK
     ) );
     $attributes.visual = self.visual;
+    $attributes.wclass = GDK_INPUT_OUTPUT;
     $attribute_mask = [+|](GDK_WA_X, GDK_WA_Y, GDK_WA_VISUAL);
     $window = GTK::Compat::Window.new(
       self.parent_window,
@@ -114,6 +115,7 @@ class RotatedBin is GTK::Layout {
       );
     });
 
+    $attributes.window_type = GDK_WINDOW_OFFSCREEN;
     $child_requisition.width = $child_requisition.height = 0;
     if $!child && self.visible {
       my GtkAllocation $child_allocation .= new;
@@ -138,13 +140,14 @@ class RotatedBin is GTK::Layout {
       self.to_child( |@a[1..4] )
     });
 
-    $!offscreen_window.show;
+    # Makes duplicate window with nothing in it as it is OFFSCREEN!
+    #$!offscreen_window.show;
   }
 
   method do_unrealize {
     $!offscreen_window.set_user_data(gpointer);
     $!offscreen_window.destroy;
-    $!offscreen_window = GdkWindow;
+    $!offscreen_window = GTK::Compat::Window;
     # XXX - Call unrealize on superclass
   }
 
@@ -159,6 +162,11 @@ class RotatedBin is GTK::Layout {
       $widget.parent_window = $!offscreen_window;
       $widget.parent = self;
       $!child := $widget;
+      # Since we can't override the internal GTK call that iterates through
+      # all the widgets (as is done with GTK::Widget.show_all), we must
+      # do it ourselves.
+      $!child.show;
+      #$!offscreen_window.show;
     }
   }
 
@@ -251,46 +259,63 @@ class RotatedBin is GTK::Layout {
     }
   }
 
+  method set_source_surface(
+    Cairo::cairo_t $ccr,
+    Cairo::cairo_surface_t $cs,
+    Num() $x,
+    Num() $y
+  ) {
+    my $ccs = cast(cairo_surface_t, $cs);
+    my gdouble ($xx, $yy) = ($x, $y);
+    $ccr.set_source_surface($ccs, $xx, $yy);
+  }
+
   multi method draw ($, cairo_t $cairo_t) {
-    my ($s, $c, $w, $h, $cr, $window);
+    my ($s, $c, $w, $h, $cr);
 
-    $window = self.window;
-    if GTK::Widget.cairo_should_draw_window($cairo_t, $window) {
+    if GTK::Widget.cairo_should_draw_window($cairo_t, self.window) {
       my Cairo::cairo_surface_t $surface;
-      my GtkAllocation $child_area .= new;
+      my $child_area = GtkAllocation.new;
+      my $ccr = cast(Cairo::cairo_t, $cairo_t);
 
-      $cr = Cairo::Context.new( cast(Cairo::cairo_t, $cairo_t) );
+      $cr = Cairo::Context.new($ccr);
       if $!child.defined && $!child.visible {
         $surface = cast(
           Cairo::cairo_surface_t,
-          $!offscreen_window.get_surface
+          $!offscreen_window.offscreen_window_get_surface
         );
         $!child.get_allocation($child_area);
 
         my @wh = ($child_area.width, $child_area.height);
         ($s, $c) = ($!angle.sin, $!angle.cos);
         ($w, $h) = ( [+]( ($c, $s) »*« @wh ), [+]( ($s, $c) »*« @wh ) );
-        my @h = ($child_area.width, $child_area.height) »/« 2 xx 2;
-        my ($tw, $th) = ( ($w, $h) »/« 2 xx 2 ) »+« @h;
+        my @h = ($child_area.width, $child_area.height) »/« (2 xx 2);
+        my ($tw, $th) = ( ($w, $h) »/« (2 xx 2) ) »+« @h;
         $cr.translate($tw, $th);
         $cr.translate(|@h);
         $cr.rotate($!angle);
-        $cr.translate( |(@h »*« -1 xx 2) );
-        $cr.rectangle(0, 0, $!offscreen_window.width, $!offscreen_window.height);
+        $cr.translate( |( @h »*« (-1 xx 2) ) );
+        $cr.rectangle(
+          0, 0,
+          $!offscreen_window.width, $!offscreen_window.height
+        );
         $cr.clip;
-        $cr.set_source_surface($surface, 0, 0);
+        self.set_source_surface($ccr, $surface, 0, 0);
         $cr.paint;
       }
     }
 
-    if GTK::Widget.cairo_should_draw_window($cairo_t, $!offscreen_window) {
+    #if GTK::Widget.cairo_should_draw_window($cairo_t, $!offscreen_window) {
       self.get_style_context.render_background(
         $cairo_t,
         0, 0,
         $!offscreen_window.width, $!offscreen_window.height
       );
-      self.propagate_draw($!child, $cairo_t) if $!child.defined;
-    }
+      # Force the child to draw. This is usually done by
+      # GTK::Container.propgate_draw, but that will not work, since we are
+      # working AROUND the normak GTK inheritance method.
+      $!child.draw($cairo_t);
+    #}
     0;
   }
 
@@ -334,8 +359,6 @@ class RotatedBin is GTK::Layout {
 
 }
 
-my $a = GTK::Application.new( title => 'org.genex.rotated-button' );
-
 $a.activate.tap({
   my $vbox  = GTK::Box.new-vbox;
   my $scale = GTK::Scale.new_with_range(
@@ -346,14 +369,17 @@ $a.activate.tap({
   my $button = GTK::Button.new_with_label('A Button');
   my $bin = RotatedBin.new;
 
-  $scale.value-changed.tap( -> *@a { $bin.set_angle($scale.value) });
-
-  $a.window.border-width = 10;
-  $scale.draw_value = False;
+  $bin.set_size_request(200, 200);
   $bin.add($button);
+
+  $scale.value-changed.tap( -> *@a { $bin.set_angle($scale.value) });
+  $scale.draw_value = False;
+
+  $a.window.title = 'Rotated Button';
+  $a.window.border-width = 10;
+  $a.window.add($vbox);
   $vbox.pack_start($scale);
   $vbox.pack_start($bin, True, True, 0);
-  $a.window.add($vbox);
 
   $a.window.show_all;
 });

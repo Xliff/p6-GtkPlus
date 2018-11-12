@@ -298,7 +298,7 @@ class GTK::Widget {
   }
 
   # Signal gboolean Run Last
-  # Multi to allow for method draw(GtkWidget, cairo_t)
+  # Multi to allow for method draw(cairo_t)
   # Is originally:
   # GtkWidget, cairo_t, gpointer --> gboolean
   multi method draw {
@@ -1301,7 +1301,7 @@ class GTK::Widget {
   }
 
   # Multi to allow for handler to signal draw.
-  multi method draw (GtkWidget $!w, cairo_t $cr) {
+  multi method draw (cairo_t $cr) {
     gtk_widget_draw($!w, $cr);
   }
 
