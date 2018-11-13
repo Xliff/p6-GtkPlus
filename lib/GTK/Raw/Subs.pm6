@@ -31,7 +31,11 @@ sub g_object_new (uint64 $object_type, Str)
   is export
   { * }
 
-sub g_object_unref(OpaquePointer $p)
+sub g_object_ref(Pointer $p)
+  is native(gobject)
+  is export
+  { * }
+sub g_object_unref(Pointer $p)
   is native(gobject)
   is export
   { * }

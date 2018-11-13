@@ -171,12 +171,12 @@ class GTK::Pane is GTK::Container {
 
   # Use the attribute only if it's a GtkPlus object.
   method get_child1 is also<get-child1 child1> {
-    @!child1 ~~ GTK::Widget ?? @!child1[0] !! gtk_paned_get_child1($!p);
+    @!child1[0] ~~ GTK::Widget ?? @!child1[0] !! gtk_paned_get_child1($!p);
   }
 
   # Use the  attribute only if it's a GtkPlus object.
   method get_child2 is also<get-child2 child2> {
-    @!child2 ~~ GTK::Widget ?? @!child2[0] !! gtk_paned_get_child2($!p);
+    @!child2[0] ~~ GTK::Widget ?? @!child2[0] !! gtk_paned_get_child2($!p);
   }
 
   method get_children is also<children> {
@@ -214,8 +214,8 @@ class GTK::Pane is GTK::Container {
 
   multi method pack2 (
     GtkWidget $child,
-    gboolean $resize,
-    gboolean $shrink
+    Int() $resize,
+    Int() $shrink
   ) {
     my @b = ($resize, $shrink);
     my gboolean ($r, $s) = self.RESOLVE-BOOL(@b);

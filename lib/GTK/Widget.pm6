@@ -55,6 +55,10 @@ class GTK::Widget {
     $!w;
   }
 
+  # We use these for inc/dec ops
+  method upref   {   g_object_ref($!w.p) }
+  method downref { g_object_unref($!w.p) }
+
   method setWidget($widget) {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.

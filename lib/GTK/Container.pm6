@@ -70,23 +70,6 @@ class GTK::Container is GTK::Widget {
     $!add-latch;
   }
 
-  method INSERT-START ($child, $pos) is also<INSERT_START> {
-    self.IS-PROTECTED;
-
-    my $last = @!start.elems - 1;
-    if $pos == 0 {
-      self.prepend($child)
-    } elsif $pos > $last {
-      self.append($child);
-    } else {
-      @!start = (
-        @!start[ 0..$pos-1 ],
-        $child,
-        @!start[ $pos..$last ]
-      ).flat;
-    }
-  }
-
   method push-start($c) is also<push_start> {
     # Write @!start.elems to GtkWidget under key GTKPlus-ContainerStart
     @!start.push: $c;
@@ -324,13 +307,16 @@ class GTK::Container is GTK::Widget {
     gtk_container_propagate_draw($!c, $child, $cr);
   }
 
+  # Buggered. Doesn't check @!start.
   multi method remove (GtkWidget() $widget) {
-    @!end .= grep({
-      do {
-        when GtkWidget   {        +$_.p !== +$widget.p }
-        when GTK::Widget { +$_.widget.p !== +$widget.p }
-      }
-    });
+    for (@!start, @!end) -> @l {
+      @l .= grep({
+        do {
+          when GtkWidget   {        +.p !== +$widget.p }
+          when GTK::Widget { +.widget.p !== +$widget.p }
+        }
+      });
+    }
     gtk_container_remove($!c, $widget);
   }
 

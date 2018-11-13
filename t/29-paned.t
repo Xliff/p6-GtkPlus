@@ -24,6 +24,8 @@ sub create_pane_options($pane, $flabel, $l1, $l2) {
   );
   my ($child1, $child2) = $pane.get_children;
 
+  say "C1: { $child1 } / C2: { $child2 }";
+
   %widgets<frame>.border_width = 4;
   %widgets<frame>.add(%widgets<table>);
   for (0, 1) {
@@ -33,24 +35,31 @@ sub create_pane_options($pane, $flabel, $l1, $l2) {
       GTK::CheckButton.new_with_mnemonic('_Shrink')
     );
 
+    my $child = ::("\$child{$num}");
     $cbutton2.active = True;
     $cbutton1.active = so $num == 2;
     $cbutton1.toggled.tap(-> *@a {
-      my $child = ::("\$child{$num}");
+      say "C{$num}: $child";
+      $child.upref();
       $pane.remove($child);
+      say "c{$num}: $child";
       $num == 1 ??
         $pane.pack1($child, $cbutton1.active.not, $cbutton2.active)
         !!
-        $pane.pack2($child, $cbutton1.active.not, $cbutton2.active)
+        $pane.pack2($child, $cbutton1.active.not, $cbutton2.active);
+      $child.downref();
     });
 
     $cbutton2.toggled.tap(-> *@a {
-      my $child = ::("\$child{$num}");
+      say "C{$num}: $child";
+      $child.upref();
       $pane.remove($child);
+      say "c{$num}: $child";
       $num == 1 ??
         $pane.pack1($child, $cbutton1.active, $cbutton2.active.not)
         !!
-        $pane.pack2($child, $cbutton1.active, $cbutton2.active.not)
+        $pane.pack2($child, $cbutton1.active, $cbutton2.active.not);
+      $child.downref();
     });
 
     %widgets<table>.attach(%widgets{"label{$num}"}, $_, 0, 1, 1);
@@ -77,7 +86,7 @@ $a.activate.tap({
   $button = GTK::Button.new_with_mnemonic('_Hi there');
   $frame1 = GTK::Frame.new('');
   $frame1.shadow_type = GTK_SHADOW_IN;
-  $button.set_size_request(60, 60);
+  $frame1.set_size_request(60, 60);
   $frame1.add($button);
   $hpaned.add1($frame1);
 
