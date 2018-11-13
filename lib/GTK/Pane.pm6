@@ -170,13 +170,17 @@ class GTK::Pane is GTK::Container {
   }
 
   # Use the attribute only if it's a GtkPlus object.
-  method get_child1 is also<get-child1> {
+  method get_child1 is also<get-child1 child1> {
     @!child1 ~~ GTK::Widget ?? @!child1[0] !! gtk_paned_get_child1($!p);
   }
 
   # Use the  attribute only if it's a GtkPlus object.
-  method get_child2 is also<get-child2> {
+  method get_child2 is also<get-child2 child2> {
     @!child2 ~~ GTK::Widget ?? @!child2[0] !! gtk_paned_get_child2($!p);
+  }
+
+  method get_children is also<children> {
+    (self.get_child1, self.get_child2);
   }
 
   method get_handle_window is also<get-handle-window> {
@@ -231,4 +235,3 @@ class GTK::Pane is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
