@@ -149,20 +149,26 @@ class GTK::Grid is GTK::Container {
     GtkPositionType $side,
     gint $width,
     gint $height
-  ) is also<attach-next-to> {
+  )
+    is also<attach-next-to>
+  {
     my $s = self.RESOLVE-UINT($side);
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_grid_attach_next_to($!g, $child, $sibling, $s, $w, $h);
   }
 
-  method get_child_at (Int() $left, Int() $top) is also<get-child-at> {
+  method get_child_at (Int() $left, Int() $top)
+    is also<get-child-at>
+  {
     my @i = ($left, $top);
     my gint ($l, $t) = self.RESOLVE-INT(@i);
     gtk_grid_get_child_at($!g, $l, $t);
   }
 
-  method get_row_baseline_position (Int() $row) is also<get-row-baseline-position> {
+  method get_row_baseline_position (Int() $row)
+    is also<get-row-baseline-position>
+  {
     my gint $r = self.RESOLVE-INT($row);
     gtk_grid_get_row_baseline_position($!g, $row);
   }
@@ -202,7 +208,9 @@ class GTK::Grid is GTK::Container {
   multi method set_row_baseline_position (
     Int() $row,                   # gint $row,
     Int() $pos                    # GtkBaselinePosition $pos
-  ) is also<set-row-baseline-position> {
+  )
+    is also<set-row-baseline-position>
+  {
     my gint $r =  self.RESOLVE-INT($row);
     my uint32 $p = self.RESOLVE-UINT($pos);
     gtk_grid_set_row_baseline_position($!g, $r, $p);
@@ -210,4 +218,3 @@ class GTK::Grid is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
