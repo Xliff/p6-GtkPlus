@@ -73,22 +73,37 @@ class GTK::Button is GTK::Bin {
     self.bless(:$button);
   }
 
-  method new_with_mnemonic (GTK::Button:U: Str() $label) is also<new-with-mnemonic> {
+  method new_with_mnemonic (GTK::Button:U: Str() $label)
+    is also<new-with-mnemonic>
+  {
     my $button = gtk_button_new_with_mnemonic($label);
     self.bless(:$button)
   }
 
-  method new_from_icon_name (GTK::Button:U: Str() $icon_name, GtkIconSize $size) is also<new-from-icon-name> {
+  method new_from_icon_name (
+    GTK::Button:U: Str() $icon_name,
+    GtkIconSize $size
+  )
+    is also<new-from-icon-name>
+  {
     my $button = gtk_button_new_from_icon_name($icon_name, $size);
     self.bless(:$button);
   }
 
-  method new_from_stock (GTK::Button:U: Str() $stock_id) is also<new-from-stock> {
+  method new_from_stock (
+    GTK::Button:U: Str() $stock_id
+  )
+    is also<new-from-stock>
+  {
     my $button = gtk_button_new_from_stock($stock_id);
     self.bless(:$button);
   }
 
-  method new_with_label (GTK::Button:U: Str() $label) is also<new-with-label> {
+  method new_with_label (
+    GTK::Button:U: Str() $label
+  )
+    is also<new-with-label>
+  {
     my $button = gtk_button_new_with_label($label);
     self.bless(:$button);
   }
@@ -130,7 +145,9 @@ class GTK::Button is GTK::Bin {
   #}
 
 
-  method set_alignment (Num() $xalign, Num() $yalign) is also<set-alignment> {
+  method set_alignment (Num() $xalign, Num() $yalign)
+    is also<set-alignment>
+  {
     my gfloat ($xa, $ya) = ($xalign, $yalign);
     gtk_button_set_alignment($!b, $xalign, $yalign);
   }

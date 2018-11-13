@@ -109,29 +109,44 @@ class GTK::Window is GTK::Bin {
   # *
   # * STATIC METHODS
   # *
-  method set_auto_startup_notification (GTK::Window:U: Int() $setting) is also<set-auto-startup-notification> {
+  method set_auto_startup_notification (GTK::Window:U: Int() $setting)
+    is also<set-auto-startup-notification>
+  {
     # Static, so cannot use RESOLVE-BOOL
     my $s = $setting == 0 ?? 0 !! 1;
     gtk_window_set_auto_startup_notification($s);
   }
 
-  method set_default_icon (GTK::Window:U: GdkPixbuf $icon) is also<set-default-icon> {
+  method set_default_icon (GTK::Window:U: GdkPixbuf $icon)
+    is also<set-default-icon>
+  {
     gtk_window_set_default_icon($icon);
   }
 
-  method set_default_icon_from_file (GTK::Window:U: gchar $filename, GError $err) is also<set-default-icon-from-file> {
+  method set_default_icon_from_file (
+    GTK::Window:U: Str() $filename,
+    CArray[Pointer[GError]] $err = gerror
+  )
+    is also<set-default-icon-from-file>
+  {
     gtk_window_set_default_icon_from_file($filename, $err);
   }
 
-  method set_default_icon_list (GTK::Window:U: GList $list) is also<set-default-icon-list> {
+  method set_default_icon_list (GTK::Window:U: GList() $list)
+    is also<set-default-icon-list>
+  {
     gtk_window_set_default_icon_list($list);
   }
 
-  method set_default_icon_name (GTK::Window:U: gchar $name) is also<set-default-icon-name> {
+  method set_default_icon_name (GTK::Window:U: Str() $name)
+    is also<set-default-icon-name>
+  {
     gtk_window_set_default_icon_name($name);
   }
 
-  method set_interactive_debugging (GTK::Window:U: Int() $enable) is also<set-interactive-debugging> {
+  method set_interactive_debugging (GTK::Window:U: Int() $enable)
+    is also<set-interactive-debugging>
+  {
     # Static, so cannot use RESOLVE-BOOL
     my gboolean $e = $enable == 0 ?? 0 !! 1;
     gtk_window_set_interactive_debugging($enable);
@@ -269,7 +284,10 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method hide_titlebar_when_maximized is rw is also<hide-titlebar-when-maximized> {
+  method hide_titlebar_when_maximized
+    is rw
+    is also<hide-titlebar-when-maximized>
+  {
     Proxy.new(
       FETCH => sub ($) {
         Bool( gtk_window_get_hide_titlebar_when_maximized($!win) );
@@ -668,7 +686,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_move($!win, $xx, $yy);
   }
 
-  method parse_geometry (gchar $geometry) is also<parse-geometry> {
+  method parse_geometry (Str() $geometry) is also<parse-geometry> {
     gtk_window_parse_geometry($!win, $geometry);
   }
 
@@ -696,7 +714,9 @@ class GTK::Window is GTK::Bin {
   method remove_mnemonic (
     Int() $keyval,                # guint $keyval,
     GtkWidget() $target
-  ) is also<remove-mnemonic> {
+  )
+    is also<remove-mnemonic>
+  {
     my guint $kv = self.RESOLVE-UINT($keyval);
     gtk_window_remove_mnemonic($!win, $kv, $target);
   }
@@ -767,7 +787,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_has_user_ref_count($!win, $setting);
   }
 
-  method set_icon_from_file (gchar $filename, GError $err)
+  method set_icon_from_file (Str() $filename, GError $err)
     is also<set-icon-from-file>
   {
     gtk_window_set_icon_from_file($!win, $filename, $err);
@@ -788,11 +808,11 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_position($!win, $p);
   }
 
-  method set_startup_id (gchar $startup_id) is also<set-startup-id> {
+  method set_startup_id (Str() $startup_id) is also<set-startup-id> {
     gtk_window_set_startup_id($!win, $startup_id);
   }
 
-  method set_wmclass (gchar $wmclass_name, gchar $wmclass_class)
+  method set_wmclass (Str() $wmclass_name, Str() $wmclass_class)
     is also<set-wmclass>
   {
     gtk_window_set_wmclass($!win, $wmclass_name, $wmclass_class);

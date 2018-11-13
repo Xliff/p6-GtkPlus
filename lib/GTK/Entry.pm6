@@ -394,13 +394,17 @@ class GTK::Entry is GTK::Widget {
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
-  method get_current_icon_drag_source is also<get-current-icon-drag-source> {
+  method get_current_icon_drag_source
+    is also<get-current-icon-drag-source>
+  {
     gtk_entry_get_current_icon_drag_source($!e);
   }
 
   method get_icon_activatable (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-activatable> {
+  )
+    is also<get-icon-activatable>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_activatable($!e, $ip);
   }
@@ -408,7 +412,9 @@ class GTK::Entry is GTK::Widget {
   method get_icon_area (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GdkRectangle() $icon_area
-  ) is also<get-icon-area> {
+  )
+    is also<get-icon-area>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_area($!e, $ip, $icon_area);
   }
@@ -421,56 +427,72 @@ class GTK::Entry is GTK::Widget {
 
   method get_icon_gicon (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-gicon> {
+  )
+    is also<get-icon-gicon>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_gicon($!e, $ip);
   }
 
   method get_icon_name (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-name> {
+  )
+    is also<get-icon-name>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_name($!e, $ip);
   }
 
   method get_icon_pixbuf (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-pixbuf> {
+  )
+    is also<get-icon-pixbuf>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_pixbuf($!e, $ip);
   }
 
   method get_icon_sensitive (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-sensitive> {
+  )
+    is also<get-icon-sensitive>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_sensitive($!e, $ip);
   }
 
   method get_icon_stock (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-stock> {
+  )
+    is also<get-icon-stock>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_stock($!e, $ip);
   }
 
   method get_icon_storage_type (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-storage-type> {
+  )
+    is also<get-icon-storage-type>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     GtkImageType( gtk_entry_get_icon_storage_type($!e, $ip) );
   }
 
   method get_icon_tooltip_markup (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-tooltip-markup> {
+  )
+    is also<get-icon-tooltip-markup>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_tooltip_markup($!e, $ip);
   }
 
   method get_icon_tooltip_text (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-  ) is also<get-icon-tooltip-text> {
+  )
+    is also<get-icon-tooltip-text>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_get_icon_tooltip_text($!e, $icon_pos);
   }
@@ -483,7 +505,9 @@ class GTK::Entry is GTK::Widget {
     gtk_entry_get_layout($!e);
   }
 
-  method get_layout_offsets (Int() $x, Int() $y) is also<get-layout-offsets> {
+  method get_layout_offsets (Int() $x, Int() $y)
+    is also<get-layout-offsets>
+  {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_entry_get_layout_offsets($!e, $xx, $yy);
@@ -501,15 +525,21 @@ class GTK::Entry is GTK::Widget {
     gtk_entry_get_type();
   }
 
-  method grab_focus_without_selecting is also<grab-focus-without-selecting> {
+  method grab_focus_without_selecting
+    is also<grab-focus-without-selecting>
+  {
     gtk_entry_grab_focus_without_selecting($!e);
   }
 
-  method im_context_filter_keypress (GdkEventKey $event) is also<im-context-filter-keypress> {
+  method im_context_filter_keypress (GdkEventKey $event)
+    is also<im-context-filter-keypress>
+  {
     gtk_entry_im_context_filter_keypress($!e, $event);
   }
 
-  method layout_index_to_text_index (Int() $layout_index) is also<layout-index-to-text-index> {
+  method layout_index_to_text_index (Int() $layout_index)
+    is also<layout-index-to-text-index>
+  {
     my gint $li = self.RESOLVE-INT($layout_index);
     gtk_entry_layout_index_to_text_index($!e, $li);
   }
@@ -525,7 +555,9 @@ class GTK::Entry is GTK::Widget {
   method set_icon_activatable (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Int() $activatable
-  ) is also<set-icon-activatable> {
+  )
+    is also<set-icon-activatable>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     my gboolean $a = self.RESOLVE-BOOL($activatable);
     gtk_entry_set_icon_activatable($!e, $ip, $a);
@@ -535,7 +567,9 @@ class GTK::Entry is GTK::Widget {
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GtkTargetList() $target_list,
     Int() $actions            # GdkDragAction $actions
-  ) is also<set-icon-drag-source> {
+  )
+    is also<set-icon-drag-source>
+  {
     my @u = ($icon_pos, $actions);
     my uint32 ($ip, $a) = self.RESOLVE-INT(@u);
     gtk_entry_set_icon_drag_source($!e, $ip, $target_list, $a);
@@ -544,7 +578,9 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_gicon (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GIcon $icon
-  ) is also<set-icon-from-gicon> {
+  )
+    is also<set-icon-from-gicon>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_gicon($!e, $ip, $icon);
   }
@@ -552,7 +588,9 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_icon_name (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Str() $icon_name
-  ) is also<set-icon-from-icon-name> {
+  )
+    is also<set-icon-from-icon-name>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_icon_name($!e, $ip, $icon_name);
   }
@@ -560,7 +598,9 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_pixbuf (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     GdkPixbuf() $pixbuf
-  ) is also<set-icon-from-pixbuf> {
+  )
+    is also<set-icon-from-pixbuf>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_pixbuf($!e, $ip, $pixbuf);
   }
@@ -568,7 +608,9 @@ class GTK::Entry is GTK::Widget {
   method set_icon_from_stock (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     gchar $stock_id
-  ) is also<set-icon-from-stock> {
+  )
+    is also<set-icon-from-stock>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_from_stock($!e, $ip, $stock_id);
   }
@@ -576,7 +618,9 @@ class GTK::Entry is GTK::Widget {
   method set_icon_sensitive (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     gboolean $sensitive
-  ) is also<set-icon-sensitive> {
+  )
+    is also<set-icon-sensitive>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_sensitive($!e, $ip, $sensitive);
   }
@@ -584,7 +628,9 @@ class GTK::Entry is GTK::Widget {
   method set_icon_tooltip_markup (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Str() $tooltip
-  ) is also<set-icon-tooltip-markup> {
+  )
+    is also<set-icon-tooltip-markup>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_tooltip_markup($!e, $ip, $tooltip);
   }
@@ -592,12 +638,16 @@ class GTK::Entry is GTK::Widget {
   method set_icon_tooltip_text (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
     Str() $tooltip
-  ) is also<set-icon-tooltip-text> {
+  )
+    is also<set-icon-tooltip-text>
+  {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
     gtk_entry_set_icon_tooltip_text($!e, $ip, $tooltip);
   }
 
-  method text_index_to_layout_index (Int() $text_index) is also<text-index-to-layout-index> {
+  method text_index_to_layout_index (Int() $text_index)
+    is also<text-index-to-layout-index>
+  {
     my gint $ti = self.RESOLVE-INT($text_index);
     gtk_entry_text_index_to_layout_index($!e, $text_index);
   }

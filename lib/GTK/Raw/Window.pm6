@@ -280,7 +280,10 @@ sub gtk_window_set_default_icon (GdkPixbuf $icon)
   is export
   { * }
 
-sub gtk_window_set_default_icon_from_file (gchar $filename, GError $err)
+sub gtk_window_set_default_icon_from_file (
+  gchar $filename,
+  CArray[Pointer[GError]] $err
+)
   returns uint32
   is native(gtk)
   is export

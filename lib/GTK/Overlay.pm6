@@ -68,6 +68,24 @@ class GTK::Overlay is GTK::Bin {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  method passthrough
+    is rw
+    is also<
+      pass-through
+      pass_through
+    >
+  {
+    Proxy.new(
+      FETCH => -> $ {
+        self.get_overlay_passthrough;
+      },
+      STORE => -> $, *@list {
+        die "GTK::Overlay.passthrough only takes a list of 2 elements."
+          unless @list.elems == 2;
+        self.set_overlay_passthrough( |@list );
+      }
+    );
+  }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -75,7 +93,13 @@ class GTK::Overlay is GTK::Bin {
     gtk_overlay_add_overlay($!o, $widget);
   }
 
-  method get_overlay_pass_through (GtkWidget() $widget) is also<get-overlay-pass-through> {
+  method get_overlay_pass_through (GtkWidget() $widget)
+    is also<
+      get-overlay-pass-through
+      get_overlay_passthrough
+      get-overlay-passthrough
+    >
+  {
     gtk_overlay_get_overlay_pass_through($!o, $widget);
   }
 
@@ -83,7 +107,9 @@ class GTK::Overlay is GTK::Bin {
     gtk_overlay_get_type();
   }
 
-  method reorder_overlay (GtkWidget() $child, Int() $position) is also<reorder-overlay> {
+  method reorder_overlay (GtkWidget() $child, Int() $position)
+    is also<reorder-overlay>
+  {
     my gint $p = self.RESOLVE-INT($position);
     gtk_overlay_reorder_overlay($!o, $child, $p);
   }
@@ -91,11 +117,16 @@ class GTK::Overlay is GTK::Bin {
   method set_overlay_pass_through (
     GtkWidget() $widget,
     Int() $pass_through
-  ) is also<set-overlay-pass-through> {
+  )
+    is also<
+      set-overlay-pass-through
+      set_overlay_passthrough
+      set-overlay-passthrough
+    >
+  {
     my gboolean $pt = self.RESOLVE-BOOL($pass_through);
     gtk_overlay_set_overlay_pass_through($!o, $widget, $pt);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
