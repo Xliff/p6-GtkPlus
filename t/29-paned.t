@@ -24,8 +24,6 @@ sub create_pane_options($pane, $flabel, $l1, $l2) {
   );
   my ($child1, $child2) = $pane.get_children;
 
-  say "C1: { $child1 } / C2: { $child2 }";
-
   %widgets<frame>.border_width = 4;
   %widgets<frame>.add(%widgets<table>);
   for (0, 1) {

@@ -10,9 +10,11 @@ use GTK::Raw::Types;
 use GTK::Container;
 
 use GTK::Roles::Orientable;
+use GTK::Roles::Signals::Generic;
 
 class GTK::Pane is GTK::Container {
   also does GTK::Roles::Orientable;
+  also does GTK::Roles::Signals::Generic;
 
   has GtkPaned $!p;
 
@@ -50,6 +52,10 @@ class GTK::Pane is GTK::Container {
     $!or = nativecast(GtkOrientable, $!p);
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals;
+  }
+
   multi method new (GtkWidget $pane) {
     self.bless(:$pane);
   }
@@ -85,13 +91,13 @@ class GTK::Pane is GTK::Container {
   # Is originally:
   # GtkPaned, gpointer --> gboolean
   method accept-position is also<accept_position> {
-    self.connect($!p, 'accept-position');
+    self.connect-rbool($!p, 'accept-position');
   }
 
   # Is originally:
   # GtkPaned, gpointer --> gboolean
   method cancel-position is also<cancel_position> {
-    self.connect($!p, 'cancel-position');
+    self.connect-rbool($!p, 'cancel-position');
   }
 
   # Is originally:
@@ -115,7 +121,7 @@ class GTK::Pane is GTK::Container {
   # Is originally:
   # GtkPaned, gpointer --> gboolean
   method toggle-handle-focus is also<toggle_handle_focus> {
-    self.connect($!p, 'toggle-handle-focus');
+    self.connect-rbool($!p, 'toggle-handle-focus');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
