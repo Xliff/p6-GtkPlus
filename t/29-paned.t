@@ -38,27 +38,24 @@ sub create_pane_options($pane, $flabel, $l1, $l2) {
     my $child = ::("\$child{$num}");
     $cbutton2.active = True;
     $cbutton1.active = so $num == 2;
+
     $cbutton1.toggled.tap(-> *@a {
-      say "C{$num}: $child";
       $child.upref();
       $pane.remove($child);
-      say "c{$num}: $child";
       $num == 1 ??
-        $pane.pack1($child, $cbutton1.active.not, $cbutton2.active)
+        $pane.pack1($child, $cbutton1.active, $cbutton2.active)
         !!
-        $pane.pack2($child, $cbutton1.active.not, $cbutton2.active);
+        $pane.pack2($child, $cbutton1.active, $cbutton2.active);
       $child.downref();
     });
 
     $cbutton2.toggled.tap(-> *@a {
-      say "C{$num}: $child";
       $child.upref();
       $pane.remove($child);
-      say "c{$num}: $child";
       $num == 1 ??
-        $pane.pack1($child, $cbutton1.active, $cbutton2.active.not)
+        $pane.pack1($child, $cbutton1.active, $cbutton2.active)
         !!
-        $pane.pack2($child, $cbutton1.active, $cbutton2.active.not);
+        $pane.pack2($child, $cbutton1.active, $cbutton2.active);
       $child.downref();
     });
 
