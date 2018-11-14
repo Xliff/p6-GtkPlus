@@ -23,7 +23,14 @@ class GTK::Compat::Display {
     self.disconnect-all($_) for %!signals;
   }
 
-  method new(Str() $name) is also<open> {
+  method GTK::Compat::Types::GdkDisplay is also<gdkdisplay> {
+    $!d;
+  }
+
+  multi method new (GdkDisplay $display) {
+    self.bless(:$display);
+  }
+  multi method new(Str() $name) is also<open> {
     self.bless(
       display => gdk_display_open($name)
     );

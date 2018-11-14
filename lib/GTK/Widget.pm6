@@ -3,10 +3,11 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Display;
 use GTK::Compat::RGBA;
+use GTK::Compat::Screen;
 use GTK::Compat::Types;
 use GTK::Compat::Value;
-use GTK::Compat::Screen;
 use GTK::Compat::Window;
 
 use GTK::Raw::Subs;
@@ -1528,7 +1529,11 @@ class GTK::Widget {
     gtk_widget_get_allocation($!w, $allocation);
   }
 
-  method get_style_context is also<get-style-context> {
+  method get_style_context is also<
+    get-style-context
+    style-context
+    style_context
+  > {
     GTK::StyleContext.new( gtk_widget_get_style_context($!w) );
   }
 
@@ -1762,8 +1767,8 @@ class GTK::Widget {
     gtk_widget_get_allocated_baseline($!w);
   }
 
-  method get_display is also<get-display> {
-    gtk_widget_get_display($!w);
+  method get_display is also<get-display display> {
+    GTK::Compat::Display.new( gtk_widget_get_display($!w) );
   }
 
   method list_accel_closures is also<list-accel-closures> {
@@ -1789,8 +1794,11 @@ class GTK::Widget {
     gtk_widget_insert_action_group($!w, $name, $group);
   }
 
-  method get_toplevel is also<get-toplevel> {
-    gtk_widget_get_toplevel($!w);
+  method get_toplevel is also<
+    get-toplevel
+    toplevel
+  > {
+    GTK::Widget.new( gtk_widget_get_toplevel($!w) );
   }
 
   method set_device_events (GdkDevice $device, GdkEventMask $events)

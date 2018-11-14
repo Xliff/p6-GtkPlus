@@ -3,9 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Cursor;
 use GTK::Compat::Types;
 use GTK::Compat::RGBA;
 use GTK::Compat::Raw::Window;
+
+use GTK::Raw::Subs;
 
 use GTK::Roles::Types;
 use GTK::Compat::Roles::Signals::Window;
@@ -109,10 +112,13 @@ class GTK::Compat::Window {
   method cursor is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gdk_window_get_cursor($!window);
+        GTK::Compat::Cursor.new( gdk_window_get_cursor($!window) );
       },
-      STORE => sub ($, $cursor is copy) {
+      STORE => sub ($, GdkCursor() $cursor is copy) {
+        my $c = gdk_window_get_cursor($!window);
+        g_object_unref($c.p);
         gdk_window_set_cursor($!window, $cursor);
+        g_object_ref($cursor.p)
       }
     );
   }

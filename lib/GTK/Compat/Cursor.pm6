@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Display;
 use GTK::Compat::Pixbuf;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Cursor;
@@ -18,14 +19,21 @@ class GTK::Compat::Cursor {
     $!c = $cursor
   }
 
-  method new (Int() $cursor_type) {
+  multi method new (GdkCursor $cursor) {
+    self.bless(:$cursor);
+  }
+  multi method new (Int() $cursor_type) {
     my uint32 $ct = self.RESOLVE-UINT($cursor_type);
     my $cursor = gdk_cursor_new($ct);
     self.bless(:$cursor);
   }
 
+  method GTK::Compat::Types::GdkCursor is also<gdkcursor> {
+    $!c;
+  }
+
   method new_for_display (
-    GdkDisplay $display,
+    GdkDisplay() $display,
     Int() $cursor_type          # GdkCursorType $cursor_type
   )
     is also<new-for-display>
@@ -35,7 +43,7 @@ class GTK::Compat::Cursor {
     self.bless(:$cursor);
   }
 
-  method new_from_name (GdkDisplay $display, Str() $name)
+  method new_from_name (GdkDisplay() $display, Str() $name)
     is also<new-from-name>
   {
     my $cursor = gdk_cursor_new_from_name($display, $name);
@@ -43,10 +51,10 @@ class GTK::Compat::Cursor {
   }
 
   method new_from_pixbuf (
-    GdkDisplay $display,
-    GdkPixbuf $pixbuf,
-    gint $x,
-    gint $y
+    GdkDisplay() $display,
+    GdkPixbuf() $pixbuf,
+    Int() $x,
+    Int() $y
   )
     is also<new-from-pixbuf>
   {
@@ -57,7 +65,7 @@ class GTK::Compat::Cursor {
   }
 
   method new_from_surface (
-    GdkDisplay $display,
+    GdkDisplay() $display,
     cairo_surface_t $surface,
     Num() $x,
     Num() $y
@@ -79,12 +87,12 @@ class GTK::Compat::Cursor {
   method cursor_type is also<cursor-type> {
     GdkCursorType( gdk_cursor_get_cursor_type($!c) );
   }
-  
+
   method display
     is also<get-display>
     is also<get_display>
   {
-    gdk_cursor_get_display($!c);
+    GTK::Compat::Display.new( gdk_cursor_get_display($!c) );
   }
 
   method get_image is also<get-image> {
