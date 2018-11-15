@@ -5,10 +5,13 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Compat::Value;
+use GTK::Compat::Screen;
+
 use GTK::Raw::StyleContext;
 use GTK::Raw::Types;
 
 use GTK::Render;
+use GTK::WidgetPath;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
@@ -46,26 +49,100 @@ class GTK::StyleContext {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
-
-  # ↓↓↓↓ PROPERTIES ↓↓↓↓
-
-  # Type: GtkTextDirection
   method direction is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
-      FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
-          self.prop_get('direction', $gv)
-        );
-        GtkTextDirection( $gv.enum );
+      FETCH => sub ($) {
+        GtkTextDirection( gtk_style_context_get_direction($!sc) );
       },
-      STORE => -> $, Int() $val is copy {
-        $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set('direction', $gv);
+      STORE => sub ($, Int() $direction is copy) {
+        my guint $d = self.RESOLVE-UINT($direction);
+        gtk_style_context_set_direction($!sc, $d);
       }
     );
   }
+
+  method frame_clock is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        gtk_style_context_get_frame_clock($!sc);
+      },
+      STORE => sub ($, $frame_clock is copy) {
+        gtk_style_context_set_frame_clock($!sc, $frame_clock);
+      }
+    );
+  }
+
+  method junction_sides is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        GtkJunctionSides( gtk_style_context_get_junction_sides($!sc) );
+      },
+      STORE => sub ($, Int() $sides is copy) {
+        my guint $s = self.RESOLVE-UINT($sides);
+        gtk_style_context_set_junction_sides($!sc, $s);
+      }
+    );
+  }
+
+  method parent is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        GTK::StyleContext.new( gtk_style_context_get_parent($!sc) );
+      },
+      STORE => sub ($, GtkStyleContext() $parent is copy) {
+        gtk_style_context_set_parent($!sc, $parent);
+      }
+    );
+  }
+
+  method path is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        GTK::WidgetPath.new( gtk_style_context_get_path($!sc) );
+      },
+      STORE => sub ($, GtkWidgetPath() $path is copy) {
+        gtk_style_context_set_path($!sc, $path);
+      }
+    );
+  }
+
+  method scale is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        gtk_style_context_get_scale($!sc);
+      },
+      STORE => sub ($, Int() $scale is copy) {
+        my gint $s = self.RESOLVE-UINT($scale);
+        gtk_style_context_set_scale($!sc, $s);
+      }
+    );
+  }
+
+  method screen is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        GTK::Compat::Screen.new( gtk_style_context_get_screen($!sc) );
+      },
+      STORE => sub ($, GTK::Compat::Types::GdkScreen() $screen is copy) {
+        gtk_style_context_set_screen($!sc, $screen);
+      }
+    );
+  }
+
+  method state is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        gtk_style_context_get_state($!sc);
+      },
+      STORE => sub ($, $flags is copy) {
+        gtk_style_context_set_state($!sc, $flags);
+      }
+    );
+  }
+
+  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GdkFrameClock
   method paint-clock is rw is also<paint_clock> {
@@ -83,41 +160,6 @@ class GTK::StyleContext {
       }
     );
   }
-
-  # Type: GtkStyleContext
-  method parent is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
-    Proxy.new(
-      FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
-          self.prop_get('parent', $gv)
-        );
-        GTK::StyleContext.new( nativecast(GtkStyleContext, $gv.object ) );
-      },
-      STORE => -> $, GtkStyleContext() $val is copy {
-        $gv.object = $val;
-        self.prop_set('parent', $gv);
-      }
-    );
-  }
-
-  # Type: GdkScreen
-  method screen is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
-    Proxy.new(
-      FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
-          self.prop_get('screen', $gv)
-        );
-        nativecast(GdkScreen, $gv.object);
-      },
-      STORE => -> $, GdkScreen $val is copy {
-        $gv.object = $val;
-        self.prop_set('screen', $gv);
-      }
-    );
-  }
-
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   proto method render_activity(|) is also<render-activity> { * }
@@ -465,6 +507,31 @@ class GTK::StyleContext {
     GTK::Render.icon_surface($context, $cr, $surface, $x, $y);
   }
 
+  proto method render_insertion_cursor is also<render-insertion-cursor> { * }
+
+  multi method render_insertion_cursor(
+    GtkStyleContext:D:
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    PangoLayout $l,
+    gint $i,
+    PangoDirection $d
+  ) {
+    samewith($!sc, $cr, $x, $y, $l, $i, $d);
+  }
+  multi method render_insertion_cursor(
+    GtkStyleContext() $context,
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    PangoLayout $l,
+    gint $i,
+    PangoDirection $d
+  ) {
+    GTK::Render.insertion_cursor($context, $cr, $x, $y, $l, $i, $d);
+  }
+
   proto method render_layout (|) is also<render-layout> { * }
 
   multi method render_layout  (
@@ -655,75 +722,6 @@ class GTK::StyleContext {
 
   method get_type is also<get-type> {
     gtk_style_context_get_type();
-  }
-
-  method gtk_draw_insertion_cursor (
-    GtkWidget() $widget,
-    cairo_t $cr,
-    GdkRectangle $location,
-    gboolean $is_primary,
-    GtkTextDirection $direction,
-    gboolean $draw_arrow
-  )
-    is also<gtk-draw-insertion-cursor>
-  {
-    gtk_draw_insertion_cursor(
-      $widget,
-      $cr,
-      $location,
-      $is_primary,
-      $direction,
-      $draw_arrow
-    );
-  }
-
-  method gtk_icon_set_render_icon_pixbuf (
-    GtkIconSet $set,
-    GtkStyleContext $context,
-    GtkIconSize $size
-  )
-    is also<gtk-icon-set-render-icon-pixbuf>
-  {
-    gtk_icon_set_render_icon_pixbuf($set, $context, $size);
-  }
-
-  method gtk_icon_set_render_icon_surface (
-    GtkIconSet $set,
-    GtkStyleContext $context,
-    GtkIconSize $size,
-    gint $scale,
-    GdkWindow $for_window
-  )
-    is also<gtk-icon-set-render-icon-surface>
-  {
-    gtk_icon_set_render_icon_surface(
-      $set,
-      $context,
-      $size,
-      $scale,
-      $for_window
-    );
-  }
-
-  method gtk_render_insertion_cursor (
-    cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    PangoLayout $layout,
-    int $index,
-    PangoDirection $direction
-  )
-    is also<gtk-render-insertion-cursor>
-  {
-    gtk_render_insertion_cursor(
-      $!sc,
-      $cr,
-      $x,
-      $y,
-      $layout,
-      $index,
-      $direction
-    );
   }
 
   method has_class (Str() $class_name) is also<has-class> {

@@ -192,6 +192,20 @@ class GTK::Render {
     gtk_render_icon_surface($context, $cr, $surface, $x, $y);
   }
 
+  method insertion_cursor (
+    GtkStyleContext() $context,
+    cairo_t $cr,
+    gdouble $x,
+    gdouble $y,
+    PangoLayout $l,
+    gint $i,
+    PangoDirection $d
+  )
+    is also<insertion-cursor>
+  {
+    gtk_render_insertion_cursor($context, $cr, $x, $y, $l, $i, $d);
+  }
+
   method layout  (
     GtkStyleContext() $context,
     cairo_t $cr,

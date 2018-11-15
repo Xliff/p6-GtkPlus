@@ -222,3 +222,16 @@ sub gtk_render_slider (
   is native(gtk)
   is export
   { * }
+
+sub gtk_render_insertion_cursor (
+  GtkStyleContext $context,
+  cairo_t $cr,
+  gdouble $x,
+  gdouble $y,
+  uint32 $l,                      # PangoLayout $layout
+  gint $i,
+  uint32 $d                       # PangoDirection $direction
+)
+  is native(gtk)
+  is export
+  { * }
