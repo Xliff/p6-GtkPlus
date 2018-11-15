@@ -1455,6 +1455,10 @@ class GTK::Widget {
     gtk_widget_create_pango_context($!w);
   }
 
+  method create_pango_layout(Str() $text) is also<create-pango-layout> {
+    gtk_widget_create_pango_layout($!w, $text);
+  }
+
   method get_device_events (GdkDevice $device) is also<get-device-events> {
     gtk_widget_get_device_events($!w, $device);
   }

@@ -5,6 +5,8 @@ use Cairo;
 use GTK::Application;
 use GTK::Box;
 use GTK::DrawingArea;
+use GTK::Render;
+use GTK::StyleContext;
 use GTK::WidgetPath;
 
 my $da;
@@ -64,7 +66,6 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
 
   GTK::Render.background($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
   GTK::Render.frame($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
-  ($x, $y);
 }
 sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw)
   $cx += $*cax + %*b<border>.left   + %*b<padding>.left;
@@ -75,7 +76,7 @@ sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw)
                  %*b<border>.bottom - %*b<padding>.bottom;
 }
 
-multi sub draw_style_common-ro ($cc, $ww, $hh) {
+multi sub draw_style_common-ro ($cc, $ww, $hh is rw) {
   my ($*cax, $*cay, $*caw, $*cah);
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
@@ -85,11 +86,10 @@ multi sub draw_style_common-ro ($cc, $ww, $hh) {
 multi sub draw_style_common ($cc, $ww, $hh) {
   samewith($cc, Nil, Nil, $ww, $hh);
 }
-multi sub draw_style_common ($cc, $xx, $yy, $ww, $hh) {
+multi sub draw_style_common ($cc, $xx, $yy, $ww, $hh is rw) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
-  my ($*cax, $*cay, $*caw, $*cah) = (;
   common_draw($cc, $xx, $yy, $ww, $hh);
   common_adjust($*cw, $*cy, $*cw, $*ch);
 }
@@ -143,16 +143,58 @@ sub get_style_with_siblings ($pp, $s, @sibs, $p) {
   create_context_for_path($p, $pp);
 }
 
-sub draw_progress($p) {
-  my ($bc, $tc, $pc);
+sub draw_horizontal_scrollbar($p, $s) {
 
+}
+
+sub draw_text($w, $t, $s) {
+  my ($lc, $sc, $c, $l);
+
+  $lc = get_sytle(Nil, 'label.view');
+  $sc = get_style($lc, 'selection');
+  $c = $s +& GTK_STATE_FLAG_SELECTED ?? $sc !! $lc;
+
+  $l = $w.create_pango_layout($t);
+  GTK::Render.background($c, $*cr, $*x, $*y, $*w, $*h);
+  GTK::Render.frame($c, $*cr, $*x, $*y, $*w, $*h);
+  GTK::Render.layout($c, $*cr, $*x, $*y, $l);
+
+  .downref for $l, $sc, $lc;
+}
+
+sub _draw_checkradio($s, $t) {
+  my ($bc, $cc, $*cx, $*cy, $*cw, $*ch);
+
+  $bc = get_style(Nil, "{ $t }button");
+  $cc = get_style($bc, $t);
+  $cc.state = $s;
+  $*w = $*h = 0;
+  query_size($_, $*w, $*h) for $bc, $cc;
+  draw_style_common-ro($bc, $*w, $*h);
+  draw_style_common($cc, $*w, $*h)
+  GTK::Render.check($cc, $*cr, $*cx, $*cy, $*cw, $ch);
+  .downref for $cc, $bc;
+}
+
+sub draw_check($s) {
+  draw_checkradio($s, 'check');
+}
+
+sub draw_radio($s) {
+  draw_checkradio($s, 'radio');
+}
+
+sub draw_progress($p, $h) {
+  my ($bc, $tc, $pc, $lh);
+
+  $lh := $h.defined ?? $h !! $*ch;
   $bc = get_style( Nil, 'progressbar.horizontal');
   $tc = get_style( $cc, 'trough');
   $pc = get_style( $tc, 'progress.left');
 
-  $*h = 0;
+  $lh = 0;
   query_size($_, $, $h) for $bc, $tc, $pc;
-  draw_style_common-ro($_, $, $, $, $_ =:= $pc ?? $p !! $, $) 
+  draw_style_common-ro($_, $, $, $, $_ =:= $pc ?? $p !! $, $lh)
     for $bc, $tc, $pc;
   .downref for $bc, $tc, $pc;
 }
@@ -275,7 +317,7 @@ sub do_draw($da, $cairo_t) {
     GTK_STATE_FLAG_PRELIGHT
     GTK_STATE_FLAG_ACTIVE +| GTK_STATE_FLAG_PRELIGHT
   ) -> {
-    draw_horizontal_scrollbar($pw - 20, 30 + $++ * 10 , $_, $h);
+    draw_horizontal_scrollbar($pw - 20, 30 + $++ * 10 , $_);
     $*y += $*h + 8;
   }
 
