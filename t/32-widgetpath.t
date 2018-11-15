@@ -76,33 +76,30 @@ sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw)
                  %*b<border>.bottom - %*b<padding>.bottom;
 }
 
-multi sub draw_style_common-ro ($cc, $ww, $hh is rw) {
-  my ($*cax, $*cay, $*caw, $*cah);
+multi sub draw_style_common-ro ($c, $w, $h is rw) {
+  samewith($c, $, $, ($w // $*w), $h);
+}
+multi sub draw_style_common-ro ($c, $x, $y, $w, $h is rw) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
-  common_draw($cc, $xx, $yy, $ww, $hh);
+  common_draw($c, ($x // $*cx), ($y / $*cy), ($w // $*cw), $h);
 }
-multi sub draw_style_common ($cc, $ww, $hh) {
-  samewith($cc, Nil, Nil, $ww, $hh);
+multi sub draw_style_common ($c, $w, $h is rw) {
+  samewith($c,  $,  $, $ww, $h, $, $, $, $);
 }
-multi sub draw_style_common ($cc, $xx, $yy, $ww, $hh is rw) {
-  my %*b = (
-    margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
-  );
-  common_draw($cc, $xx, $yy, $ww, $hh);
-  common_adjust($*cw, $*cy, $*cw, $*ch);
+multi sub draw_style_common ($c, $x, $y, $w, $h is rw) {
+  samewith($c, $x, $y,  $w, $h, $, $, $, $);
 }
 multi sub draw_style_common (
-  $cc, $xx, $yy, $ww, $hh
-  $cxx is rw, $cyy is rw, $cww is rw, $chh is rw
+  $c, $x, $y, $w, $h
+  $cx is rw, $cy is rw, $cwis rw, $ch is rw
 ) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
-  my ($*cax, $*cay, $*caw, $*cah);
-  common_draw($cc, $xx, $yy, $ww, $hh);
-  common_adjust($cxx, $cyy, $cww, $chh);
+  common_draw($c, $x // $*x,   $y // $*y,   $w // $*w ,  $h // $*h);
+  common_adjust($cx // $*cx, $cy // $*cy, $cw // $*cw, $ch // $*ch);
 }
 
 multi sub query_size($cc, $w is rw, $h is rw) {
@@ -143,8 +140,68 @@ sub get_style_with_siblings ($pp, $s, @sibs, $p) {
   create_context_for_path($p, $pp);
 }
 
-sub draw_horizontal_scrollbar($p, $s) {
+sub draw_menubar($w) {
+  my ($fc, $bc, $mc, $hc, $mic, $*cx, $*cy, $*cw, $*ch, $iw);
 
+  $fc  = get_style(Nil, 'frame');
+  $bc  = get_style($fc, 'border');
+  $mc  = get_style(Nil, 'menubar');
+  $hc  = get_style($mc, 'menuitem:hover');
+  $mic = get_style($mc, 'menuitem');
+
+  $*h = 0;
+  query_size($_, $, $*h) for $hc, $bc, $mc, $hc, $mic;
+
+  draw_style_common-ro($fc);
+  draw_style_common($hc);
+  draw_style_common-ro( $mc, $*cx, $*cy, $*cw, $*ch);
+  $iw = $*cw / 3;
+  draw_style_common-ro( $hc,           $*cx, $*cy, $iw, $*ch);
+  draw_style_common-ro($mic, $*cw + $iw * 2, $*cy, $iw, $*ch);
+
+  .downref for $mic, $hc, $mc, $bc, $fc;
+}
+
+sub draw_notebook {
+  my ($nc, $hc, $tc, $t1c, $t2c, $sc, $hh);
+  my ($*cx, $*cy, $*cw, $*ch);
+
+  $nc  = get_style(Nil, 'notebook.frame');
+  $sc  = get_style($nc, 'stack');
+  $hc  = get_style($nc, 'header.top');
+  $tc  = get_style($hc, 'tabs');
+  $t1c = get_style($tc, 'tab:checked');
+  $t2c = get_style($tc, 'tab:hober');
+
+  $hh = 0;
+  query_size($_, $, $hh) for $nc, $hc, $tc, $t1c, $t2c;
+
+  draw_style_common-ro($_, $*w, $_ =:= $nc ?? $*h !! $hh) for $nc, $hc, $tc;
+  draw_style_common($t1c, $w/2, $hh);
+  draw_style_common-ro($t2c, $*x + $*w/2,          $, $*w / 2,       $hh);
+  draw_style_common-ro( $sc,         $*x, $*y ++ $hh,       $, $*h - $hh):
+
+  .downref for $sc, $tc, $t1c, $t2c, $hc, $nc;
+}
+
+sub draw_horizontal_scrollbar($p, $s) {
+  my ($c, $cc, $tc, $slc, $sw);
+
+  $sc  = get_style(Nil, 'scrollbar.horizontal.bottom');
+  $cc  = get_style($sc, 'contents');
+  $tc  = get_style($cc, 'trough');
+  $slc = get_style($tc, 'slider');
+
+  .state = $s for $sc, $cc, $tc, $slc;
+
+  $*h = 0;
+  query_size($_, $, $*h) for $sc, $cc, $tc, $slc;
+  $sw = $sc.get($sc.state, 'min-width');
+
+  draw_style_common-ro($_) for $sc, $cc, $tc;
+  draw_style_common-ro($slc, $*x + $p, $, $sw, $);
+
+  .downref for $sc, $tc, $cc, $slc;
 }
 
 sub draw_text($w, $t, $s) {
@@ -247,8 +304,8 @@ sub draw_combobox($he) {
   @c.splice(2, 0, $ec) if $he;
   query_size($_) for @c;
 
-  my $aw = $ac.style_context_get($ac.get_state, 'min-width');
-  my $ah = $ac.style_context_get($ac.get_state, 'min-height');
+  my $aw = $ac.get($ac.state, 'min-width');
+  my $ah = $ac.get($ac.state, 'min-height');
   my $as = ($aw, $ah).min;
   draw_style_common($_) for $cc, $bc;
 
