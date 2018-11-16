@@ -228,7 +228,7 @@ sub draw_menubar ($w) {
   $*h = 0;
   query_size($_, $, $*h) for $hc, $bc, $mc, $hc, $mic;
 
-  draw_style_common-ro($fc);
+  draw_style_common-ro($fc, $, $);
   draw_style_common($hc);
   draw_style_common-ro( $mc, $*cx, $*cy, $*cw, $*ch);
   $iw = $*cw / 3;
@@ -274,7 +274,7 @@ sub draw_horizontal_scrollbar($p, $s) {
   query_size($_, $, $*h) for $sc, $cc, $tc, $slc;
   $sw = $sc.get($sc.state, 'min-width');
 
-  draw_style_common-ro($_) for $sc, $cc, $tc;
+  draw_style_common-ro($_, $, $) for $sc, $cc, $tc;
   draw_style_common-ro($slc, $*x + $p, $, $sw, $);
 
   .downref for $sc, $tc, $cc, $slc;
@@ -342,7 +342,8 @@ sub draw_scale($p) {
   $hc  = get_style($slc, 'highlight.top');
 
   $*h = 0;
-  query_size($_, $, $) for $sc, $cc, $tc, $slc, $hc;
+  my $xx = 0;
+  query_size($_, $xx, $) for $sc, $cc, $tc, $slc, $hc;
 
   draw_style_common($sc);
   draw_style_common($cc, $*cx, $*cy, $*cw, $*ch);
@@ -352,9 +353,9 @@ sub draw_scale($p) {
   $sh = 0;
   query_size($_, $, $sh) for $slc, $hc;
   $th += $sh;
-  draw_style_common( $tc, $,      $*cx, $*cy,     $*cw,  $th);
-  draw_style_common( $hc, $,      $*cw, $*cy, $*cw / 2, $*ch);
-  draw_style_common($slc, $, $*cx + $p, $*cy,     $*ch, $*ch);
+  draw_style_common( $tc,      $*cx, $*cy,     $*cw,  $th);
+  draw_style_common( $hc,      $*cw, $*cy, $*cw / 2, $*ch);
+  draw_style_common($slc, $*cx + $p, $*cy,     $*ch, $*ch);
 
   .downref for $sc, $cc, $tc, $slc,  $hc
 }
@@ -380,7 +381,8 @@ sub draw_combobox($xx, $w, $he) {
   $*h = 0;
   my @c = ($cc, $bc, $btc, $bbc, $ac);
   @c.splice(2, 0, $ec) if $he;
-  query_size($_) for @c;
+  my $xxx;
+  query_size($_, $xxx, $) for @c;
 
   my $as = ($ac.get($ac.state,  'min-width').int,
             $ac.get($ac.state, 'min-height').int ).min;
@@ -413,7 +415,8 @@ sub draw_spinbutton($w) {
   $dc = get_style($uc, 'button.down:focus');
 
   $*h = 0;
-  query_size($_) for $sc, $ec, $uc, $dc;
+  my $xxx;
+  query_size($_, $xxx, $) for $sc, $ec, $uc, $dc;
   $bw = $*h;
 
   draw_style_common($_) for $sc, $ec;
