@@ -701,7 +701,7 @@ class GTK::StyleContext {
   }
 
   # Replaces valist version, but returns GValue
-  method get (GtkStateValue $state, Str() $property) {
+  method get (Int() $state, Str() $property) {
     my $v = GValue.new;
     self.get_property($property, $state, $v);
     $v;
@@ -709,12 +709,13 @@ class GTK::StyleContext {
 
   method get_property (
     Str() $property,
-    GtkStateFlags $state,
+    Int() $state,
     GValue $value
   )
-    is also<get-property get>
+    is also<get-property>
   {
-    gtk_style_context_get_property($!sc, $property, $state, $value);
+    my gint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_property($!sc, $property, $s, $value);
   }
 
   method get_section (Str() $property) is also<get-section> {

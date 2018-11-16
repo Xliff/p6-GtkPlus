@@ -1606,12 +1606,6 @@ class GTK::Widget {
     gtk_widget_add_device_events($!w, $device, $events);
   }
 
-  method create_pango_layout (Str() $text)
-    is also<create-pango-layout>
-  {
-    gtk_widget_create_pango_layout($!w, $text);
-  }
-
   method remove_tick_callback (guint $id)
     is also<remove-tick-callback>
   {
