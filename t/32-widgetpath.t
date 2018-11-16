@@ -65,8 +65,8 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
 
   $*cax += %*b<margin>.left;
   $*cay += %*b<margin>.top;
-  $*caw = $ww - %*b<margin>.left + %*b<margin>.right;
-  $*cah = $hh - %*b<margin>.top  + %*b<margin>.bottom;
+  $*caw -= %*b<margin>.left + %*b<margin>.right;
+  $*cah -= %*b<margin>.top  + %*b<margin>.bottom;
   ($*caw, $*cah) = ( ($*caw, $mw).min, ($*cah, $mh).min );
 
   GTK::Render.background($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
@@ -88,7 +88,7 @@ multi sub draw_style_common-ro ($c, $x, $y, $w, $h is rw) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
-  common_draw($c, ($x // $*cx), ($y / $*cy), ($w // $*cw), $h);
+  common_draw($c, $x // $*cx, $y // $*cy, $w // $*cw, $h // $*ch);
 }
 multi sub draw_style_common ($c) {
   samewith($c,  $,  $,  $,  $, $, $, $, $);

@@ -920,6 +920,11 @@ class GdkWindowAttr is repr('CStruct')
 
 };
 
+class GArray is repr('CStruct') is export {
+  gchar $.deata;
+  guint $.len;
+}
+
 our enum GdkWindowWindowClass is export (
   'GDK_INPUT_OUTPUT',             # nick=input-output
   'GDK_INPUT_ONLY'                # nick=input-only
