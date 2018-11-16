@@ -6,6 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Render;
+use GTK::Raw::Utils;
 
 class GTK::Render {
 
@@ -22,232 +23,245 @@ class GTK::Render {
   method activity (
     GtkStyleContext $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_activity($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_activity($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method arrow  (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $angle,
-    gdouble $x,
-    gdouble $y,
-    gdouble $size
+    Num() $angle,
+    Num() $x,
+    Num() $y,
+    Num() $size
   ) {
-    gtk_render_arrow($context, $cr, $angle, $x, $y, $size);
+    my gdouble ($a, $xx, $yy, $ss) = ($angle, $x, $y, $size);
+    gtk_render_arrow($context, $cr, $a, $xx, $yy, $ss);
   }
 
   method background (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_background($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_background($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method background_get_clip  (
     GtkStyleContext() $context,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GdkRectangle $out_clip
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    GdkRectangle() $out_clip
   )
     is also<background-get-clip>
   {
-    gtk_render_background_get_clip(
-      $context,
-      $x, $y,
-      $width, $height,
-      $out_clip
-    );
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_background_get_clip($context,$xx, $yy, $ww, $hh, $out_clip);
   }
 
   method check (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_check($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_check($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method expander (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_expander($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_expander($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method extension (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkPositionType $gap_side
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $gap_side
   ) {
-    gtk_render_extension($context, $cr, $x, $y, $width, $height, $gap_side);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    my guint $gs = resolve-uint($gap_side);
+    gtk_render_extension($context, $cr, $xx, $yy, $ww, $hh, $gs);
   }
 
   method focus (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_focus($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_focus($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method frame (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_frame($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_frame($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method frame_gap (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkPositionType $gap_side,
-    gdouble $xy0_gap,
-    gdouble $xy1_gap
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $gap_side,
+    Num() $xy0_gap,
+    Num() $xy1_gap
   )
     is also<frame-gap>
   {
-    gtk_render_frame_gap(
-      $context,
-      $cr,
-      $x, $y,
-      $width, $height,
-      $gap_side,
-      $xy0_gap, $xy1_gap
-    );
+    my gdouble ($xx, $yy, $ww, $hh, $g0, $g1) =
+      ($x, $y, $width, $height, $xy0_gap, $xy1_gap);
+    my guint $gs = self.resolve-uint($gap_side);
+    gtk_render_frame_gap($context, $cr, $xx, $yy, $ww, $hh, $gs, $g0, $g1);
   }
 
   method handle (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_handle($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_handle($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method icon (
     GtkStyleContext() $context,
     cairo_t $cr,
     GdkPixbuf() $pixbuf,
-    gdouble $x,
-    gdouble $y
+    Num() $x,
+    Num() $y
   ) {
-    gtk_render_icon($context, $cr, $pixbuf, $x, $y);
+    my gdouble ($xx, $yy) = ($x, $y);
+    gtk_render_icon($context, $cr, $pixbuf, $xx, $yy);
   }
 
   method icon_pixbuf (
     GtkStyleContext() $context,
     GtkIconSource $source,
-    GtkIconSize $size
+    Int() $size
   )
     is also<icon-pixbuf>
   {
-    gtk_render_icon_pixbuf($context, $source, $size);
+    my guint $s = self.resolve-uint($size);
+    gtk_render_icon_pixbuf($context, $source, $s);
   }
 
   method icon_surface (
     GtkStyleContext() $context,
     cairo_t $cr,
     cairo_surface_t $surface,
-    gdouble $x,
-    gdouble $y
+    Num() $x,
+    Num() $y
   )
     is also<icon-surface>
   {
-    gtk_render_icon_surface($context, $cr, $surface, $x, $y);
+    my gdouble ($xx, $yy) = ($x, $y);
+    gtk_render_icon_surface($context, $cr, $surface, $xx, $yy);
   }
 
   method insertion_cursor (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
+    Num() $x,
+    Num() $y,
     PangoLayout $l,
-    gint $i,
-    PangoDirection $d
+    Int() $i,
+    Int() $d                  # PangoDirection
   )
     is also<insertion-cursor>
   {
-    gtk_render_insertion_cursor($context, $cr, $x, $y, $l, $i, $d);
+    my gdouble ($xx, $yy) = ($x, $y);
+    my guint $dd = resolve-uint($d);
+    my gint $ii = resolve-int($i);
+    gtk_render_insertion_cursor($context, $cr, $xx, $yy, $l, $ii, $dd);
   }
 
   method layout  (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    PangoLayout $layout
+    Num() $x,
+    Num() $y,
+    PangoLayout $l
   ) {
-    gtk_render_layout($context, $cr, $x, $y, $layout);
+    my gdouble ($xx, $yy) = ($x, $y);
+    gtk_render_layout($context, $cr, $xx, $yy, $l);
   }
 
   method line (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x0,
-    gdouble $y0,
-    gdouble $x1,
-    gdouble $y1
+    Num() $x0,
+    Num() $y0,
+    Num() $x1,
+    Num() $y1
   ) {
-    gtk_render_line($context, $cr, $x0, $y0, $x1, $y1);
+    my gdouble ($xx0, $yy0, $xx1, $yy1) = ($x0, $y0, $x1, $y1);
+    gtk_render_line($context, $cr, $xx0, $yy0, $xx1, $yy1);
   }
 
   method option (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    gtk_render_option($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    gtk_render_option($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   method slider (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkOrientation $orientation
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $orientation
   ) {
-    gtk_render_slider($context, $cr, $x, $y, $width, $height, $orientation);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    my guint $o = resolve-uint($orientation);
+    gtk_render_slider($context, $cr, $xx, $yy, $ww, $hh, $o);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

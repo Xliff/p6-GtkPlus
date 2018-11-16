@@ -8,6 +8,7 @@ use GTK::Compat::Value;
 use GTK::Compat::Screen;
 
 use GTK::Raw::StyleContext;
+use GTK::Raw::Subs;
 use GTK::Raw::Types;
 
 use GTK::Render;
@@ -28,6 +29,18 @@ class GTK::StyleContext {
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
+  }
+
+  method upref {
+    g_object_ref($!sc.p);
+  }
+
+  method downref {
+    g_object_unref($!sc.p);
+  }
+
+  method GTK::Raw::Types::GtkStyleContext is also<stylecontext> {
+    $!sc;
   }
 
   multi method new(GtkStyleContext $context) {
@@ -668,10 +681,11 @@ class GTK::StyleContext {
     gtk_style_context_get_background_color($!sc, $state, $color);
   }
 
-  method get_border (GtkStateFlags $state, GtkBorder $border)
+  method get_border (Int() $state, GtkBorder $border)
     is also<get-border>
   {
-    gtk_style_context_get_border($!sc, $state, $border);
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_border($!sc, $s, $border);
   }
 
   method get_border_color (GtkStateFlags $state, GdkRGBA $color)
@@ -688,29 +702,31 @@ class GTK::StyleContext {
     gtk_style_context_get_font($!sc, $state);
   }
 
-  method get_margin (GtkStateFlags $state, GtkBorder $margin)
+  method get_margin (Int() $state, GtkBorder $margin)
     is also<get-margin>
   {
-    gtk_style_context_get_margin($!sc, $state, $margin);
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_margin($!sc, $s, $margin);
   }
 
-  method get_padding (GtkStateFlags $state, GtkBorder $padding)
+  method get_padding (Int() $state, GtkBorder $padding)
     is also<get-padding>
   {
-    gtk_style_context_get_padding($!sc, $state, $padding);
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_padding($!sc, $s, $padding);
   }
 
   # Replaces valist version, but returns GValue
   method get (Int() $state, Str() $property) {
     my $v = GValue.new;
     self.get_property($property, $state, $v);
-    $v;
+    GTK::Compat::Value.new($v);
   }
 
   method get_property (
     Str() $property,
     Int() $state,
-    GValue $value
+    GValue() $value
   )
     is also<get-property>
   {

@@ -62,8 +62,8 @@ class GTK::WidgetPath {
     gtk_widget_path_append_with_siblings($!wp, $siblings, $si);
   }
 
-  method copy {
-    GTK::WidgetPath.new( gtk_widget_path_copy($!wp) );
+  method copy (GTK::WidgetPath:U: GtkWidgetPath() $path) {
+    GTK::WidgetPath.new( gtk_widget_path_copy($path) );
   }
 
   method free {

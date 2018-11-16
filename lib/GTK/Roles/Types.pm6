@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Raw::Utils;
 
 role GTK::Roles::Types {
   # cw: This is a HACK, but it should work with careful use.
@@ -34,18 +35,7 @@ role GTK::Roles::Types {
   multi method RESOLVE-BOOL($rb) {
     self.IS-PROTECTED;
     # Check if caller comes drom a GTK:: object, otherwise throw exception.
-    do given $rb {
-      when Bool { $rb.Int; }
-      when Int  { $rb;     }
-      default {
-        so $rb.can('Bool') ??
-          $rb.Bool
-          !!
-          die X::TypeCheck
-            .new(payload => "Invalid type to RESOLVE-BOOL: { .^name }")
-            .throw;
-      }
-    };
+    resolve-bool($rb);
   }
 
   multi method RESOLVE-INT(@ri) {
@@ -55,7 +45,7 @@ role GTK::Roles::Types {
   }
   multi method RESOLVE-INT($ri) {
     self.IS-PROTECTED;
-    ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
+    resolve-int($ri);
   }
 
   multi method RESOLVE-UINT(@ru) {
@@ -65,7 +55,7 @@ role GTK::Roles::Types {
   }
   multi method RESOLVE-UINT($ru) {
     self.IS-PROTECTED;
-    $ru +& 0xffff;
+    resolve-uint($ru);
   }
 
   # Alias to RESOLVE-LONG
@@ -74,9 +64,9 @@ role GTK::Roles::Types {
     # This will not work if called before 'self' exists!
     @ri.map({ samewith($_) });
   }
-  multi method RESOLVE-LINT($ri) {
+  multi method RESOLVE-LINT($rl) {
     self.IS-PROTECTED;
-    ($ri.abs +& 0x7fffffff) * ($ri < 0 ?? -1 !! 1);
+    resolve-lint($rl);
   }
 
   # Alias to RESOLVE-ULONG
@@ -85,34 +75,24 @@ role GTK::Roles::Types {
     # This will not work if called before 'self' exists!
     @ru.map({ samewith($_) });
   }
-  multi method RESOLVE-ULINT($ru) {
+  multi method RESOLVE-ULINT($rul) {
     self.IS-PROTECTED;
-    $ru +& 0xffffffff;
+    resolve-ulint($rul);
   }
 
   multi method RESOLVE-GTYPE(@gt) {
     @gt.map({ samewith($_.Int) });
   }
   multi method RESOLVE-GTYPE(Int() $gt) {
-    die "{ $gt } is not a valid GType value"
-      unless $gt (elem) GTypeEnum.enums.values;
-    $gt;
+    resolve-gtype($gt);
   }
 
-  multi method RESOLVE-GSTRV(@ri) {
+  multi method RESOLVE-GSTRV(@rg) {
     self.IS-PROTECTED;
-    my $gs = CArray[Str].new;
-    my $c = 0;
-    for @ri {
-      die "Cannot coerce element { $_.^name } to string."
-        unless $_ ~~ Str || $_.^can('Str').elems;
-      $gs[$c++] = $_.Str;
-    }
-    $gs[$gs.elems] = Str unless $gs[*-1] =:= Str;
-    $gs;
+    resolve-gstrv(@rg)
   }
-  multi method RESOLVE-GSTRV(Str $ri) {
+  multi method RESOLVE-GSTRV(Str $rg) {
     self.IS-PROTECTED;
-    samewith($ri.Array);
+    samewith($rg.Array);
   }
 }
