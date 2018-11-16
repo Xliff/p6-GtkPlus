@@ -700,12 +700,19 @@ class GTK::StyleContext {
     gtk_style_context_get_padding($!sc, $state, $padding);
   }
 
+  # Replaces valist version, but returns GValue
+  method get (GtkStateValue $state, Str() $property) {
+    my $v = GValue.new;
+    self.get_property($property, $state, $v);
+    $v;
+  }
+
   method get_property (
     Str() $property,
     GtkStateFlags $state,
     GValue $value
   )
-    is also<get-property>
+    is also<get-property get>
   {
     gtk_style_context_get_property($!sc, $property, $state, $value);
   }

@@ -55,13 +55,13 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
 
   $cc."get_{ $_ }"( $cc, $cc,state, %b{$_}) for %b.keys;
 
-  my $mw = $cc.get($cc.state,  'min-width');
-  my $mh = $cc.get($cc.state, 'min-height');
+  my $mw = $cc.get($cc.state,  'min-width').int;
+  my $mh = $cc.get($cc.state, 'min-height').int;
 
   $x += %*b<margin>.left;
   $y += %*b<margin>.top;
   $*caw = $ww - %*b<margin>.left + %*b<margin>.right;
-  $*cah = $hh - %*b<margin>.top + %*b<margin>.bottom;
+  $*cah = $hh - %*b<margin>.top  + %*b<margin>.bottom;
   ($w, $h) = ( ($w, $mw).min, ($h, $mh).min )
 
   GTK::Render.background($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
@@ -93,7 +93,7 @@ multi sub draw_style_common ($c, $x, $y, $w, $h is rw) {
 }
 multi sub draw_style_common (
   $c, $x, $y, $w, $h
-  $cx is rw, $cy is rw, $cwis rw, $ch is rw
+  $cx is rw, $cy is rw, $cw rw, $ch is rw
 ) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
@@ -108,8 +108,8 @@ multi sub query_size($cc, $w is rw, $h is rw) {
   );
   $cc."get_{ $_ }"( $cc, $cc,state, %b{$_}) for %b.keys;
 
-  my $mw = $cc.get($cc.state,  'min-width');
-  my $mh = $cc.get($cc.state, 'min-height');
+  my $mw = $cc.get($cc.state,  'min-width').int;
+  my $mh = $cc.get($cc.state, 'min-height').int;
 
   for ($mw, $mh) -> $min is rw {
     for <left right> X <margin border padding> -> ($m, $t) {
@@ -139,6 +139,76 @@ sub get_style_with_siblings ($pp, $s, @sibs, $p) {
   $sp.downref;
   create_context_for_path($p, $pp);
 }
+
+sub draw_menubar($m, $w) {
+  my ($mc, $mic, $hmc, $hac, $amc, $cmc, $dac. $dmc, $dcc, $rmc. $drc, $smc);
+  my (@mh, $*cx, $*cy, $*cw, $*ch, $mx, $my, $mw, $mh);
+  my ($aw, $ah, $as, $tx, $ty, $tw, $th);
+
+  $mc  = get_style($m.style_context, 'menu');
+  $hmc = get_style( $mc, 'menuitem:hover');
+  $hac = get_style($hmc, 'arrow.right:dir(ltr)');
+  $mic = get_style( $mc, 'menuitem');
+  $amc = get_style($mic, 'arrow:dir(rtl)');
+  $dmc = get_style( $mc, 'menuitem:disabled');
+  $dac = get_style($dmc, 'arrow:dir(rtl)');
+  $cmc = get_style($mic, 'check:checked');
+  $dcc = get_style($dmc, 'check');
+  $smc = get_style( $mc, 'separator:disabled');
+  $rmc = get_style($mic, 'radio:checked');
+  $drc = get_style($dmc, 'radio');
+
+  @mh = (0 xx 6);
+  $*h = 0;
+  query_size( $mc, $, $*h);
+  query_size($hmc, $, @mh[1]);
+  query_size($hac, $, @mh[1]);
+  $*h += @mh[1];
+  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[2]) for $mc, $mic, $amc, $dac;
+  $*h += @mh[2];
+  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[3]) for $mc, $mic, $cmc, $dcc;
+  $*h += @mh[3];
+  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
+  $*h += @mh4;
+  query_size($_, $, $mh[5]) for $mc, $mic, $rmc, $drc;
+
+  draw_style_common( $mc, $, $, $, $, $mx, $my, $mw, $mh);
+  $as = ( $hac.get($hac.state,  'min-width').int,
+          $hac.get($hac.state, 'min-height').int ).min;
+  draw_style_common($hmc, $mx, $my, $mw, $mh, @mh[1]);
+  GTK::Render.arrow(
+    $hmc, $*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as
+  );
+
+  draw_style_common($mic, $mx, $my + @mh[1], $mw, @mh[2]);
+  $as = ( $amc.get($amc.state,  'min-width').int,
+          $amc.get($amc.state, 'min-height').int ).min;
+  GTK::Render.arrow($amc, $*cr, π/2, $*cx, $*cy + ($*ch - $as) / 2, $as);
+  $as = ( $dmc.get($dmc.state,  'min-width').int,
+          $dmc.get($dmc.state, 'min-height').int ).min;
+  GTK::Render.arrow(
+    $dmc, $*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as
+  );
+
+  # Separator
+  draw_style_common-ro($smc, $mx, $my + @mh[1..3].sum, $mw, @mh[4]);
+
+  # Left check enabled, sensitive, and right check unchecked, insensitive
+  draw_style_common($mic, $mx, $my + @mh[1..4].sum, $mw, @mh[5]);
+  ($tw, $th) = ( $rmc.get($rmc.state, 'min-width').int,
+                 $rmc.get($rmc.state, 'min-width').int );
+  draw_style_common($rmc, $*cx, $*cy, $tw, $th, $tx, $ty, $tw, $th);
+  GTK::Render.check($rmc, $*cr,  $tx, $ty, $tw, $th);
+  ($tw, $th) = ( $drc.get($drc.state, 'min-width').int,
+                 $drc.get($drc.state, 'min-width').int );
+  draw_style_common($drc, $*cx + $*cw - $tw, $*cy, $tw, $th,
+                    $tx, $ty, $tw, $th);
+  GTK::Render.check($drc, $*cr, $tx, $ty, $tw, $th);
+
+  .downref for  $mc, $mic, $hmc, $hac, $amc, $cmc, $dac, $dcc, $rmc, $dmc,
+               $drc, $smc;
+}
+
 
 sub draw_menubar($w) {
   my ($fc, $bc, $mc, $hc, $mic, $*cx, $*cy, $*cw, $*ch, $iw);
@@ -283,7 +353,10 @@ sub draw_scale($p) {
   .downref for $sc, $cc, $tc, $slc,  $hc
 }
 
-sub draw_combobox($he) {
+sub draw_combobox($xx, $yy, $w, $he) {
+  my $xx := ($xx // $*cx);
+  my $yy := ($yy // $*cy);
+
   my ($ec, $btc, $bbc, $ac, $bw, $*cx, $*cy, $*cw, $*ch);
   my $cc = get_style(Nil, 'combobox:focus');
   my $bc = get_style($cc, 'box.horizontal.linked');
@@ -304,23 +377,22 @@ sub draw_combobox($he) {
   @c.splice(2, 0, $ec) if $he;
   query_size($_) for @c;
 
-  my $aw = $ac.get($ac.state, 'min-width');
-  my $ah = $ac.get($ac.state, 'min-height');
-  my $as = ($aw, $ah).min;
+  my $as = ($ac.get($ac.state,  'min-width').int,
+            $ac.get($ac.state, 'min-height').int ).min;
   draw_style_common($_) for $cc, $bc;
 
   if $he {
     $bw = $*h;
-    draw_style_common($ec, Nil, Nil, Nil, $*w - $bw, $*h);
-    draw_style_common($bc, Nil, $*x + $*w - $bw, Nil, $bw);
+    draw_style_common($ec, $w - $bw, $*h);
+    draw_style_common($bc, $xx + $w - $bw, $, $bw);
   } else {
     $bw = $*w;
-    draw_style_common($bc, Nil, $*x + $*w - $bw, Nil, $bw);
+    draw_style_common($bc, $*x + $w - $bw, $, $bw);
   }
 
-  draw_style_common($bbc, Nil, $cx, $cy, $cw, $ch);
-  draw_style_common( $ac, Nil, $cx, $cy, $cw, $ch);
-  $ac.render_arrow($*cr, π/2, $cx + $cw - $as, $cy + ($ch - $as) / 2, $as);
+  draw_style_common($bbc, $*cx, $*cy, $*cw, $*ch);
+  draw_style_common( $ac, $*cx, $*cy, $*cw, $*ch);
+  $ac.render_arrow($*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as);
 
   @c = $he ?? ($ac, $ec, $bc, $cc) !! ($ac, $bc, $cc);
   .downref for @c;
@@ -343,9 +415,8 @@ sub draw_spinbutton($h) {
 
   for <add remove> {
     $it = GTK::IconTheme.get_for_screen($da.screen);
-    $iw = $uc.style_context_get($uc.state, 'min-width');
-    $ih = $uc.style_context_get($uc.state, 'min-height');
-    $is = ($iw, $ih).min;
+    $is = ( $uc.style_context_get($uc.state,  'min-width').int,
+            $uc.style_context_get($uc.state, 'min-height').int ).min ;
     $ii = $it.lookup_icon("list-{$_}-symnbolic", $is, 0);
     $p  = $ii.load_symbolic_for_context($uc);
     {
@@ -416,9 +487,9 @@ sub do_draw($da, $cairo_t) {
   draw_spinbutton($pw - 30);
 
   $*y += $*h + 30;
-  draw_combobox(     Nil, Nil, $pw - 20, False);
+  draw_combobox(       $, $, $pw - 20, False);
   $*y += $*h + 10;
-  draw_combobox(10 + $pw, Nil, $pw - 20,  True);
+  draw_combobox(10 + $pw, $, $pw - 20,  True);
 
   0;
 }
