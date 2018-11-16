@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 
 unit package GTK::Compat::Raw::Array;
 
-sub g_array_append_vals (GArray $array, gconstpointer $data, guint $len)
+sub g_array_append_vals (GArray $array, Pointer $data, guint $len)
   returns GArray
   is native(glib)
   is export
@@ -120,7 +120,7 @@ sub g_ptr_array_add (GPtrArray $array, gpointer $data)
 
 sub g_ptr_array_find (
   GPtrArray $haystack,
-  gconstpointer $needle,
+  Pointer $needle,
   guint $index_
 )
   returns uint32
@@ -130,7 +130,7 @@ sub g_ptr_array_find (
 
 sub g_ptr_array_find_with_equal_func (
   GPtrArray $haystack,
-  gconstpointer $needle,
+  Pointer $needle,
   GEqualFunc $equal_func,
   guint $index
 )
@@ -265,7 +265,7 @@ sub g_array_get_element_size (GArray $array)
 
 sub g_array_insert_vals (
   GArray $array, guint $index,
-  gconstpointer $data,
+  Pointer $data,
   guint $len
 )
   returns GArray
@@ -283,7 +283,7 @@ sub g_array_new (
   is export
   { * }
 
-sub g_array_prepend_vals (GArray $array, gconstpointer $data, guint $len)
+sub g_array_prepend_vals (GArray $array, Pointer $data, guint $len)
   returns GArray
   is native(glib)
   is export

@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
-constant forced = 7;
+constant forced = 8;
 
 unit package GTK::Compat::Types;
 
@@ -80,6 +80,7 @@ constant GCompareDataFunc    is export := Pointer;
 constant GCompareFunc        is export := Pointer;
 constant GCopyFunc           is export := Pointer;
 constant GDestroyNotify      is export := Pointer;
+constant GEqualFunc          is export := Pointer;
 constant GQuark              is export := uint32;
 constant GStrv               is export := CArray[Str];
 constant GType               is export := uint64;
@@ -639,6 +640,7 @@ class GAppInfoMonitor       is repr('CPointer') is export does GTK::Roles::Point
 class GAppLaunchContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GApplication          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAsyncResult          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GByteArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFunc                 is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -657,6 +659,7 @@ class GMountOperation       is repr('CPointer') is export does GTK::Roles::Point
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GPtrArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -915,14 +918,13 @@ class GdkWindowAttr is repr('CStruct')
           nqp::decont(self), GdkWindowAttr, '$!visual', nqp::decont($new)
         )
       }
-    );
-  };
+    )
+  }
+}
 
-};
-
-class GArray is repr('CStruct') is export {
-  gchar $.deata;
-  guint $.len;
+class GArray is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str   $.data;
+  has guint $.len;
 }
 
 our enum GdkWindowWindowClass is export (

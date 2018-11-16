@@ -63,13 +63,13 @@ class GTK::Compat::Array {
     g_array_remove_index($!a, $index);
   }
 
-  method remove_index_fast (Int) $index) {
+  method remove_index_fast (Int() $index) {
     my guint $i = resolve-int($index);
     g_array_remove_index_fast($!a, $i);
   }
 
   method remove_range (Int() $index, Int() $length) {
-    my @u = ($index, $len);
+    my @u = ($index, $length);
     my guint ($i, $l) = resolve-uint(@u);
     g_array_remove_range($!a, $i, $l);
   }

@@ -20,10 +20,12 @@ GTK::BuilderWidgets
 GTK::Raw::ReturnedValue
 GTK::Roles::Pointers
 GTK::Compat::Types
+GTK::Raw::Utils
 GTK::Roles::Types
 GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppInfo
+GTK::Compat::Raw::Array
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Display
 GTK::Compat::Raw::GList
@@ -52,6 +54,7 @@ GTK::Raw::WidgetPath
 GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
+GTK::Compat::Array
 GTK::Compat::GList
 GTK::Compat::GSList
 GTK::Compat::KeyFile
