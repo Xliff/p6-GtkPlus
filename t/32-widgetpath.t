@@ -53,11 +53,6 @@ sub create_context_for_path ($p, $pp) {
 }
 
 sub common_draw($cc, $xx, $yy, $ww, $hh) {
-  my $*cax = $xx // $*x;
-  my $*cay = $yy // $*y;
-  my $*caw = $ww // $*w;
-  my $*cah = $hh // $*h;
-
   $cc."get_{ $_ }"($cc.state, %*b{$_}) for %*b.keys;
 
   my $mw = $cc.get($cc.state,  'min-width').int;
@@ -88,6 +83,10 @@ multi sub draw_style_common-ro ($c, $x, $y, $w, $h is rw) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
+  my $*cax  = $x // $*x;
+  my $*cay  = $y // $*y;
+  my $*caw  = $w // $*w;
+  my $*cah := $h // $*h;
   common_draw($c, $x // $*cx, $y // $*cy, $w // $*cw, $h // $*ch);
 }
 multi sub draw_style_common ($c) {
@@ -100,9 +99,13 @@ multi sub draw_style_common ($c, $x, $y, $w, $h is rw) {
   samewith($c, $x, $y,  $w, $h, $, $, $, $);
 }
 multi sub draw_style_common (
-  $c, $x, $y, $w, $h,
+  $c, $x, $y, $w, $h is rw,
   $cx is rw, $cy is rw, $cw is rw, $ch is rw
 ) {
+  my $*cax  = $x // $*x;
+  my $*cay  = $y // $*y;
+  my $*caw  = $w // $*w;
+  my $*cah := $h // $*h;
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
@@ -320,17 +323,16 @@ sub draw_radio($s) {
   _draw_checkradio($s, 'radio');
 }
 
-sub draw_progress($p, $h) {
+sub draw_progress($w, $p) {
   my ($bc, $tc, $pc, $lh);
 
-  $lh := $h.defined ?? $h !! $*ch;
   $bc  = get_style( Nil, 'progressbar.horizontal');
   $tc  = get_style( $bc, 'trough');
   $pc  = get_style( $tc, 'progress.left');
 
-  $lh = 0;
-  query_size($_, $, $h) for $bc, $tc, $pc;
-  draw_style_common-ro($_, $, $, $, $_ =:= $pc ?? $p !! $, $lh)
+  $*h = 0;
+  query_size($_, $, $*y) for $bc, $tc, $pc;
+  draw_style_common-ro($_, $, $, $_ =:= $pc ?? $p !! $w, $)
     for $bc, $tc, $pc;
   .downref for $bc, $tc, $pc;
 }
