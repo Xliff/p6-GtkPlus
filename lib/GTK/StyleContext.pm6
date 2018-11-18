@@ -180,22 +180,23 @@ class GTK::StyleContext {
   multi method render_activity(
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_activity (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    GTK::Render.activity($context, $cr, $x, $y, $width, $height);
+    my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+    GTK::Render.activity($context, $cr, $xx, $yy, $ww, $hh);
   }
 
   proto method render_arror (|) is also<render-arrow> { * }
@@ -203,22 +204,23 @@ class GTK::StyleContext {
   multi method render_arrow  (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $angle,
-    gdouble $x,
-    gdouble $y,
-    gdouble $size
+    Num() $angle,
+    Num() $x,
+    Num() $y,
+    Num() $size
   ) {
     samewith($!sc, $cr, $angle, $x, $y, $size);
   }
   multi method render_arrow  (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $angle,
-    gdouble $x,
-    gdouble $y,
-    gdouble $size
+    Num() $angle,
+    Num() $x,
+    Num() $y,
+    Num() $size
   ) {
-    GTK::Render.arrow($context, $cr, $angle, $x, $y, $size);
+    my gdouble ($aa, $xx, $yy, $ss) = ($angle, $x, $y, $size);
+    GTK::Render.arrow($context, $cr, $angle, $xx, $yy, $ss);
   }
 
   proto method render_background (|) is also<render-background> { * }
@@ -231,18 +233,19 @@ class GTK::StyleContext {
     Num() $width,
     Num() $height
   ) {
-    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    my gdouble ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
     samewith($!sc, $cr, $xx, $yy, $w, $h);
   }
   multi method render_background (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    GTK::Render.background($context, $cr, $x, $y, $width, $height);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    GTK::Render.background($context, $cr, $xx, $yy, $w, $h);
   }
 
   proto method render_background_get_clip (|)
@@ -251,29 +254,25 @@ class GTK::StyleContext {
 
   multi method render_background_get_clip  (
     GTK::StyleContext:D:
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GdkRectangle $out_clip
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    GdkRectangle() $out_clip
   ) {
     samewith($!sc, $x, $y, $width, $height, $out_clip);
   }
 
-  multi method ender_background_get_clip  (
+  multi method render_background_get_clip  (
     GtkStyleContext() $context,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GdkRectangle $out_clip
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    GdkRectangle() $out_clip
   ) {
-    GTK::Render.background_get_clip(
-      $context,
-      $x, $y,
-      $width, $height,
-      $out_clip
-    );
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    GTK::Render.background_get_clip($context, $xx, $yy, $w, $h, $out_clip);
   }
 
   proto method render_check (|) is also<render-check> { * }
@@ -281,21 +280,22 @@ class GTK::StyleContext {
   multi method render_check (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_check (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
+    my num64 ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
     GTK::Render.check($context, $cr, $x, $y, $width, $height);
   }
 
@@ -304,22 +304,23 @@ class GTK::StyleContext {
   multi method render_expander (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_expander (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    GTK::Render.expander($context, $cr, $x, $y, $width, $height);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    GTK::Render.expander($context, $cr, $xx, $yy, $w, $h);
   }
 
   proto method render_extension (|) is also<render-extension> { * }
@@ -327,24 +328,26 @@ class GTK::StyleContext {
   multi method render_extension (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkPositionType $gap_side
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $gap_side           # GtkPositionType $gap_side
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height, $gap_side);
   }
   multi method render_extension (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkPositionType $gap_side
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $gap_side
   ) {
-    GTK::Render.extension($context, $cr, $x, $y, $width, $height, $gap_side);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    my guint $gs = self.RESOLVE-UINT($gap_side);
+    GTK::Render.extension($context, $cr, $xx, $yy, $w, $h, $gs);
   }
 
   proto method render_focus (|) is also<render-focus> { * }
@@ -352,22 +355,23 @@ class GTK::StyleContext {
   multi method render_focus (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_focus (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    GTK::Render.focus($context, $cr, $x, $y, $width, $height);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    GTK::Render.focus($context, $cr, $xx, $yy, $w, $h);
   }
 
   proto method render_frame (|) is also<render-frame> { * }
@@ -375,22 +379,23 @@ class GTK::StyleContext {
   multi method render_frame (
     GTK::StyleContext:D: $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_frame (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    GTK::Render.frame($context, $cr, $x, $y, $width, $height);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    GTK::Render.frame($context, $cr, $xx, $yy, $w, $h);
   }
 
   proto method render_frame_gap (|) is also<render-frame-gap> { * }
@@ -398,13 +403,13 @@ class GTK::StyleContext {
   multi method render_frame_gap (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkPositionType $gap_side,
-    gdouble $xy0_gap,
-    gdouble $xy1_gap
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $gap_side,
+    Num() $xy0_gap,
+    Num() $xy1_gap
   ) {
     samewith(
       $!sc,
@@ -418,22 +423,18 @@ class GTK::StyleContext {
   multi method render_frame_gap (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkPositionType $gap_side,
-    gdouble $xy0_gap,
-    gdouble $xy1_gap
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $gap_side,          # GtkPositionType $gap_side,
+    Num() $xy0_gap,
+    Num() $xy1_gap
   ) {
-    GTK::Render.frame_gap(
-      $context,
-      $cr,
-      $x, $y,
-      $width, $height,
-      $gap_side,
-      $xy0_gap, $xy1_gap
-    );
+    my num64 ($xx, $yy, $w, $h, $g0, $g1)
+      = ($x, $y, $width, $height, $xy0_gap, $xy1_gap);
+    my guint $gs = self.RESOLVE-UINT($gap_side);
+    GTK::Render.frame_gap($context, $cr, $xx, $yy, $w, $h, $gs, $g0, $g1);
   }
 
   proto method render_handle (|) is also<render-handle> { * }
@@ -441,22 +442,23 @@ class GTK::StyleContext {
   multi method render_handle (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_handle (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    GTK::Render.handle($context, $cr, $x, $y, $width, $height);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    GTK::Render.handle($context, $cr, $xx, $yy, $w, $h);
   }
 
   proto method render_icon (|) is also<render-icon> { * }
@@ -465,8 +467,8 @@ class GTK::StyleContext {
     GTK::StyleContext:D:
     cairo_t $cr,
     GdkPixbuf() $pixbuf,
-    gdouble $x,
-    gdouble $y
+    Num() $x,
+    Num() $y
   ) {
     samewith($!sc, $cr, $pixbuf, $x, $y);
   }
@@ -474,10 +476,11 @@ class GTK::StyleContext {
     GtkStyleContext() $context,
     cairo_t $cr,
     GdkPixbuf() $pixbuf,
-    gdouble $x,
-    gdouble $y
+    Num() $x,
+    Num() $y
   ) {
-    GTK::Render.icon($context, $cr, $pixbuf, $x, $y);
+    my num64 ($xx, $yy) = ($x, $y);
+    GTK::Render.icon($context, $cr, $pixbuf, $xx, $yy);
   }
 
   proto method render_icon_pixbuf (|) is also<render-icon-pixbuf> { * }
@@ -485,18 +488,19 @@ class GTK::StyleContext {
   multi method render_icon_pixbuf (
     GTK::StyleContext:D:
     GtkIconSource $source,
-    GtkIconSize $size
+    Int() $size               # GtkIconSize $size
   ) {
     samewith($!sc, $source, $size);
   }
   multi method render_icon_pixbuf (
     GtkStyleContext() $context,
     GtkIconSource $source,
-    GtkIconSize $size
+    Int() $size               # GtkIconSize $size
   )
     is also<render_icon-pixbuf>
   {
-    GTK::Render.icon_pixbuf($context, $source, $size);
+    my guint $s = self.RESOLVE-UINT($size);
+    GTK::Render.icon_pixbuf($context, $source, $s);
   }
 
   proto method render_icon_surface (|) is also<render-icon-surface> { * }
@@ -505,8 +509,8 @@ class GTK::StyleContext {
     GTK::StyleContext:D:
     cairo_t $cr,
     cairo_surface_t $surface,
-    gdouble $x,
-    gdouble $y
+    Num() $x,
+    Num() $y
   ) {
     samewith($!sc, $cr, $surface, $x, $y);
   }
@@ -514,10 +518,11 @@ class GTK::StyleContext {
     GtkStyleContext() $context,
     cairo_t $cr,
     cairo_surface_t $surface,
-    gdouble $x,
-    gdouble $y
+    Num() $x,
+    Num() $y
   ) {
-    GTK::Render.icon_surface($context, $cr, $surface, $x, $y);
+    my num64 ($xx, $yy) = ($x, $y);
+    GTK::Render.icon_surface($context, $cr, $surface, $xx, $yy);
   }
 
   proto method render_insertion_cursor is also<render-insertion-cursor> { * }
@@ -525,24 +530,28 @@ class GTK::StyleContext {
   multi method render_insertion_cursor(
     GtkStyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    PangoLayout $l,
-    gint $i,
-    PangoDirection $d
+    Num() $x,
+    Num() $y,
+    Int() $l,                 # PangoLayout $l,
+    Int() $i,
+    Int() $d                  # PangoDirection $d
   ) {
     samewith($!sc, $cr, $x, $y, $l, $i, $d);
   }
   multi method render_insertion_cursor(
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    PangoLayout $l,
-    gint $i,
-    PangoDirection $d
+    Num() $x,
+    Num() $y,
+    Int() $l,                 # PangoLayout $l,
+    Int() $i,
+    Int() $d                  # PangoDirection $d
   ) {
-    GTK::Render.insertion_cursor($context, $cr, $x, $y, $l, $i, $d);
+    my @u = ($l, $d);
+    my guint ($ll, $dd) = self.RESOLVE-UINT(@u);
+    my gdouble ($xx, $yy) = ($x, $y);
+    my gint $ii = self.RESOLVE-INT($i);
+    GTK::Render.insertion_cursor($context, $cr, $xx, $yy, $ll, $ii, $dd);
   }
 
   proto method render_layout (|) is also<render-layout> { * }
@@ -550,20 +559,22 @@ class GTK::StyleContext {
   multi method render_layout  (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    PangoLayout $layout
+    Num() $x,
+    Num() $y,
+    Int() $l                  # PangoLayout $l,
   ) {
-    samewith($!sc, $cr, $x, $y, $layout);
+    samewith($!sc, $cr, $x, $y, $l);
   }
   multi method render_layout  (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    PangoLayout $layout
+    Num() $x,
+    Num() $y,
+    Int() $l                  # PangoLayout $l
   ) {
-    GTK::Render.layout($context, $cr, $x, $y, $layout);
+    my gdouble ($xx, $yy) = ($x, $y);
+    my guint $ll = self.RESOLVE-UINT($l);
+    GTK::Render.layout($context, $cr, $xx, $yy, $ll);
   }
 
   proto method render_line (|) is also<render-line> { * }
@@ -571,22 +582,23 @@ class GTK::StyleContext {
   multi method render_line (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x0,
-    gdouble $y0,
-    gdouble $x1,
-    gdouble $y1
+    Num() $x0,
+    Num() $y0,
+    Num() $x1,
+    Num() $y1
   ) {
     samewith($!sc, $cr, $x0, $y0, $x1, $y1);
   }
   multi method render_line (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x0,
-    gdouble $y0,
-    gdouble $x1,
-    gdouble $y1
+    Num() $x0,
+    Num() $y0,
+    Num() $x1,
+    Num() $y1
   ) {
-    GTK::Render.line($context, $cr, $x0, $y0, $x1, $y1);
+    my gdouble ($xx0, $yy0, $xx1, $yy1);
+    GTK::Render.line($context, $cr, $xx0, $yy0, $xx1, $yy1);
   }
 
   proto method render_option (|) is also<render-option> { * }
@@ -594,22 +606,23 @@ class GTK::StyleContext {
   multi method render_option (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height);
   }
   multi method render_option (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height
   ) {
-    GTK::Render.option($context, $cr, $x, $y, $width, $height);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    GTK::Render.option($context, $cr, $xx, $yy, $w, $h);
   }
 
   proto method render_slider (|) is also<render-slider> { * }
@@ -617,24 +630,26 @@ class GTK::StyleContext {
   multi method render_slider (
     GTK::StyleContext:D:
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkOrientation $orientation
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $orientation
   ) {
     samewith($!sc, $cr, $x, $y, $width, $height, $orientation);
   }
   multi method render_slider (
     GtkStyleContext() $context,
     cairo_t $cr,
-    gdouble $x,
-    gdouble $y,
-    gdouble $width,
-    gdouble $height,
-    GtkOrientation $orientation
+    Num() $x,
+    Num() $y,
+    Num() $width,
+    Num() $height,
+    Int() $orientation
   ) {
-    GTK::Render.slider($context, $cr, $x, $y, $width, $height, $orientation);
+    my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+    my guint $o = self.RESOLVE-UINT($orientation);
+    GTK::Render.slider($context, $cr, $xx, $yy, $w, $h, $o);
   }
 
 
@@ -643,20 +658,22 @@ class GTK::StyleContext {
     gtk_style_context_add_class($!sc, $class_name);
   }
 
-  method add_provider (GtkStyleProvider $provider, guint $priority)
+  method add_provider (GtkStyleProvider $provider, Int() $priority)
     is also<add-provider>
   {
-    gtk_style_context_add_provider($!sc, $provider, $priority);
+    my guint $p = self.RESOLVE-UINT($priority);
+    gtk_style_context_add_provider($!sc, $provider, $p);
   }
 
   method add_provider_for_screen (
-    GdkScreen $screen,
+    GdkScreen() $screen,
     GtkStyleProvider $provider,
-    guint $priority
+    Int() $priority
   )
     is also<add-provider-for-screen>
   {
-    gtk_style_context_add_provider_for_screen($screen, $provider, $priority);
+    my guint $p = self.RESOLVE-UINT($priority);
+    gtk_style_context_add_provider_for_screen($screen, $provider, $p);
   }
 
   method add_region (
@@ -738,7 +755,7 @@ class GTK::StyleContext {
     gtk_style_context_get_section($!sc, $property);
   }
 
-  method get_style_property (Str() $property_name, GValue $value)
+  method get_style_property (Str() $property_name, GValue() $value)
     is also<get-style-property>
   {
     gtk_style_context_get_style_property($!sc, $property_name, $value);
@@ -752,10 +769,11 @@ class GTK::StyleContext {
     gtk_style_context_has_class($!sc, $class_name);
   }
 
-  method has_region (Str() $region_name, GtkRegionFlags $flags_return)
+  method has_region (Str() $region_name, Int() $flags_return)
     is also<has-region>
   {
-    gtk_style_context_has_region($!sc, $region_name, $flags_return);
+    my guint $fr = self.RESOLVE-UINT($flags_return);
+    gtk_style_context_has_region($!sc, $region_name, $fr);
   }
 
   method invalidate {
@@ -781,20 +799,16 @@ class GTK::StyleContext {
   }
 
   method notify_state_change (
-    GdkWindow $window,
+    GdkWindow() $window,
     gpointer $region_id,
-    GtkStateType $state,
-    gboolean $state_value
+    Int() $state,             # GtkStateType $state,
+    Int() $state_value
   )
     is also<notify-state-change>
   {
-    gtk_style_context_notify_state_change(
-      $!sc,
-      $window,
-      $region_id,
-      $state,
-      $state_value
-    );
+    my @u = ($state, $state_value);
+    my guint ($s, $sv) = self.RESOLVE-UINT(@u);
+    gtk_style_context_notify_state_change($!sc, $window, $region_id, $s, $sv);
   }
 
   method pop_animatable_region is also<pop-animatable-region> {
@@ -842,24 +856,29 @@ class GTK::StyleContext {
     gtk_style_context_save($!sc);
   }
 
-  method scroll_animations (GdkWindow() $window, gint $dx, gint $dy)
+  method scroll_animations (GdkWindow() $window, Int() $dx, Int() $dy)
     is also<scroll-animations>
   {
-    gtk_style_context_scroll_animations($!sc, $window, $dx, $dy);
+    my @i = ($dx, $dy);
+    my gint ($ddx, $ddy) = self.RESOLVE-INT(@i);
+    gtk_style_context_scroll_animations($!sc, $window, $ddx, $ddy);
   }
 
   method set_background (GdkWindow() $window) is also<set-background> {
     gtk_style_context_set_background($!sc, $window);
   }
 
-  method state_is_running (GtkStateType $state, gdouble $progress)
+  method state_is_running (Int() $state, Num() $progress)
     is also<state-is-running>
   {
-    gtk_style_context_state_is_running($!sc, $state, $progress);
+    my gdouble $pp = $p;
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_state_is_running($!sc, $s, $p);
   }
 
-  method to_string (GtkStyleContextPrintFlags $flags) is also<to-string> {
-    gtk_style_context_to_string($!sc, $flags);
+  method to_string (Int() $flags) is also<to-string> {
+    my guint $f = self.RESOLVE-UINT($flags);
+    gtk_style_context_to_string($!sc, $f);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

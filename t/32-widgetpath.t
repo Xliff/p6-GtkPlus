@@ -149,15 +149,15 @@ sub get_style_with_siblings ($pp, $s, @sibs, $pos) {
 
   my $sp = GTK::WidgetPath.new;
   append_element($sp, $_) for @sibs;
-  $p.append_with_siblings($p, $sp, $pos);
+  $p.append_with_siblings($sp, $pos);
   $sp.downref;
   create_context_for_path($p, $pp);
 }
 
 sub draw_menu($w) {
   my ($mc, $mic, $hmc, $hac, $amc, $cmc, $dac, $dmc, $dcc, $rmc, $drc, $smc);
-  my (@mh, $*cx, $*cy, $*cw, $*ch, $mx, $my, $mw, $mh);
-  my ($aw, $ah, $as, $tx, $ty, $tw, $th);
+  my ($aw, $ah, $as, $tx, $ty, $tw, $th, @mh);
+  my ($*cx, $*cy, $*cw, $*ch, $mx, $my, $mw, $mh) = (0 xx 8);
 
   $tx = $ty = $tw = $tx = 0;
   $mc  = get_style($da.style_context, 'menu');
@@ -185,7 +185,7 @@ sub draw_menu($w) {
   $*h += @mh[3];
   query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
   $*h += @mh[4];
-  query_size($_, $, $mh[5]) for $mc, $mic, $rmc, $drc;
+  query_size($_, $, @mh[5]) for $mc, $mic, $rmc, $drc;
   draw_style_common( $mc, $, $, $, $, $mx, $my, $mw, $mh);
 
   # Hovered with right arrow
@@ -229,7 +229,8 @@ sub draw_menu($w) {
 
 
 sub draw_menubar ($w) {
-  my ($fc, $bc, $mc, $hc, $mic, $*cx, $*cy, $*cw, $*ch, $iw);
+  my ($fc, $bc, $mc, $hc, $mic, $iw);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
 
   $fc  = get_style(Nil, 'frame');
   $bc  = get_style($fc, 'border');
@@ -252,7 +253,7 @@ sub draw_menubar ($w) {
 
 sub draw_notebook($w, $h) {
   my ($nc, $hc, $tc, $t1c, $t2c, $sc, $hh);
-  my ($*cx, $*cy, $*cw, $*ch);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
 
   $nc  = get_style(Nil, 'notebook.frame');
   $sc  = get_style($nc, 'stack');
@@ -273,7 +274,8 @@ sub draw_notebook($w, $h) {
 }
 
 sub draw_horizontal_scrollbar($w, $p, $s) {
-  my ($sc, $cc, $tc, $slc, $sw, $*cx, $*cy, $*cw, $*ch);
+  my ($sc, $cc, $tc, $slc, $sw);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
 
   $sc  = get_style(Nil, 'scrollbar.horizontal.bottom');
   $cc  = get_style($sc, 'contents');
@@ -294,7 +296,8 @@ sub draw_horizontal_scrollbar($w, $p, $s) {
 }
 
 sub draw_text($w, $h, $t, $s) {
-  my ($lc, $sc, $c, $l, $*cx, $*cy, $*cw, $*ch);
+  my ($lc, $sc, $c, $l);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
 
   $lc = get_style(Nil, 'label.view');
   $sc = get_style($lc, 'selection');
@@ -308,7 +311,8 @@ sub draw_text($w, $h, $t, $s) {
 }
 
 sub _draw_checkradio($s, $t) {
-  my ($bc, $cc, $*cx, $*cy, $*cw, $*ch);
+  my ($bc, $cc);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
 
   $bc = get_style(Nil, "{ $t }button");
   $cc = get_style($bc, $t);
@@ -345,7 +349,8 @@ sub draw_progress($w, $p) {
 }
 
 sub draw_scale($w, $p) {
-  my ($sc, $cc, $tc, $slc, $hc, $*cx, $*cy, $*cw, $*ch, $th, $sh);
+  my ($sc, $cc, $tc, $slc, $hc, $th, $sh);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
 
   $sc  = get_style( Nil, 'scale.horizontal');
   $cc  = get_style( $sc, 'contents');
@@ -374,8 +379,8 @@ sub draw_scale($w, $p) {
 
 sub draw_combobox($xx, $w, $he) {
   my $x := ($xx // $*cx);
-
-  my ($ec, $btc, $bbc, $ac, $bw, $*cx, $*cy, $*cw, $*ch);
+  my ($ec, $btc, $bbc, $ac, $bw);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
   my $cc = get_style(Nil, 'combobox:focus');
   my $bc = get_style($cc, 'box.horizontal.linked');
 
@@ -406,7 +411,7 @@ sub draw_combobox($xx, $w, $he) {
     draw_style_common($bc, $x + $w - $bw,  $,      $bw,   $);
   } else {
     $bw = $*w;
-    draw_style_common($bc, $x + $w - $bw, $, $bw);
+    draw_style_common($bc, $x + $w - $bw, $, $bw, $);
   }
 
   draw_style_common($bbc, $*cx, $*cy, $*cw, $*ch);
@@ -419,8 +424,8 @@ sub draw_combobox($xx, $w, $he) {
 
 sub draw_spinbutton($w) {
   my ($sc, $ec, $uc, $dc, $it, $ii, $p);
-  my ($iw, $ih, $is, $bw, $*cx, $*cy, $*cw, $*ch);
-  $*cx, $*cy, $*cw, $*ch = 0;
+  my ($iw, $ih, $is, $bw);
+  my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
 
   $sc = get_style(Nil, 'spinbutton.horizontal:focus');
   $ec = get_style($sc, 'entry:focus');
