@@ -176,7 +176,7 @@ sub gtk_icon_info_load_symbolic (
   GdkRGBA $success_color,
   GdkRGBA $warning_color,
   GdkRGBA $error_color,
-  gboolean $was_symbolic,
+  gboolean $was_symbolic is rw,
   CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf

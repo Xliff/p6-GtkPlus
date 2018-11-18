@@ -8,6 +8,7 @@ use GTK::Raw::Types;
 use GTK::Application;
 use GTK::Box;
 use GTK::DrawingArea;
+use GTK::IconTheme;
 use GTK::Render;
 use GTK::StyleContext;
 use GTK::WidgetPath;
@@ -68,44 +69,46 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
   GTK::Render.frame($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
 }
 sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw) {
+  say 'CA: ' ~ ($*cax, $*cay, $*caw, $*cah).map({ $_ // ''}).join(',');
   $cx += $*cax + %*b<border>.left   + %*b<padding>.left;
   $cy += $*cay + %*b<border>.top    + %*b<padding>.top;
   $cw += $*caw - %*b<border>.left   - %*b<padding>.left -
                  %*b<border>.right  - %*b<padding>.right;
   $ch += $*cah - %*b<border>.top    - %*b<padding>.top -
                  %*b<border>.bottom - %*b<padding>.bottom;
+  say 'C: ' ~ ($cx, $cy, $cw, $ch).map({ $_ // ''}).join(',');
 }
 
-multi sub draw_style_common-ro ($c, $w, $h is rw) {
+multi sub draw_style_common-ro ($c, $w, $h) {
   samewith($c, $, $, ($w // $*w), $h);
 }
-multi sub draw_style_common-ro ($c, $x, $y, $w, $h is rw) {
+multi sub draw_style_common-ro ($c, $x, $y, $w, $h) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
-  my $*cax  = $x // $*x;
-  my $*cay  = $y // $*y;
-  my $*caw  = $w // $*w;
-  my $*cah := $h // $*h;
-  common_draw($c, $x // $*cx, $y // $*cy, $w // $*cw, $h // $*ch);
+  my $*cax = $x // $*x;
+  my $*cay = $y // $*y;
+  my $*caw = $w // $*w;
+  my $*cah = $h // $*h;
+  common_draw($c, $x // $*cax, $y // $*cay, $w // $*caw, $h // $*cah);
 }
 multi sub draw_style_common ($c) {
   samewith($c,  $,  $,  $,  $, $, $, $, $);
 }
-multi sub draw_style_common ($c, $w, $h is rw) {
+multi sub draw_style_common ($c, $w, $h) {
   samewith($c,  $,  $, $w, $h, $, $, $, $);
 }
-multi sub draw_style_common ($c, $x, $y, $w, $h is rw) {
+multi sub draw_style_common ($c, $x, $y, $w, $h) {
   samewith($c, $x, $y,  $w, $h, $, $, $, $);
 }
 multi sub draw_style_common (
-  $c, $x, $y, $w, $h is rw,
+  $c, $x, $y, $w, $h,
   $cx is rw, $cy is rw, $cw is rw, $ch is rw
 ) {
-  my $*cax  = $x // $*x;
-  my $*cay  = $y // $*y;
-  my $*caw  = $w // $*w;
-  my $*cah := $h // $*h;
+  my $*cax = $x // $*x;
+  my $*cay = $y // $*y;
+  my $*caw = $w // $*w;
+  my $*cah = $h // $*h;
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
@@ -156,6 +159,7 @@ sub draw_menu($w) {
   my (@mh, $*cx, $*cy, $*cw, $*ch, $mx, $my, $mw, $mh);
   my ($aw, $ah, $as, $tx, $ty, $tw, $th);
 
+  $tx = $ty = $tw = $tx = 0;
   $mc  = get_style($da.style_context, 'menu');
   $hmc = get_style( $mc, 'menuitem:hover');
   $hac = get_style($hmc, 'arrow.right:dir(ltr)');
@@ -182,15 +186,17 @@ sub draw_menu($w) {
   query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
   $*h += @mh[4];
   query_size($_, $, $mh[5]) for $mc, $mic, $rmc, $drc;
-
   draw_style_common( $mc, $, $, $, $, $mx, $my, $mw, $mh);
+
+  # Hovered with right arrow
   $as = ( $hac.get($hac.state,  'min-width').int,
           $hac.get($hac.state, 'min-height').int ).min;
-  draw_style_common($hmc, $mx, $my, $mw, $mh, @mh[1]);
+  draw_style_common($hmc, $mx, $my, $mw, @mh[1]);
   GTK::Render.arrow(
     $hmc, $*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as
   );
 
+  # Left arrow sensitive, and right arrow insensitive
   draw_style_common($mic, $mx, $my + @mh[1], $mw, @mh[2]);
   $as = ( $amc.get($amc.state,  'min-width').int,
           $amc.get($amc.state, 'min-height').int ).min;
@@ -201,20 +207,21 @@ sub draw_menu($w) {
     $dmc, $*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as
   );
 
-  # Separator
-  draw_style_common-ro($smc, $mx, $my + @mh[1..3].sum, $mw, @mh[4]);
-
   # Left check enabled, sensitive, and right check unchecked, insensitive
   draw_style_common($mic, $mx, $my + @mh[1..4].sum, $mw, @mh[5]);
   ($tw, $th) = ( $rmc.get($rmc.state, 'min-width').int,
                  $rmc.get($rmc.state, 'min-width').int );
+  $tx = $ty = 0;
   draw_style_common($rmc, $*cx, $*cy, $tw, $th, $tx, $ty, $tw, $th);
-  GTK::Render.check($rmc, $*cr,  $tx, $ty, $tw, $th);
+  GTK::Render.check($rmc, $*cr, $tx, $ty, $tw, $th);
   ($tw, $th) = ( $drc.get($drc.state, 'min-width').int,
                  $drc.get($drc.state, 'min-width').int );
   draw_style_common($drc, $*cx + $*cw - $tw, $*cy, $tw, $th,
                     $tx, $ty, $tw, $th);
   GTK::Render.check($drc, $*cr, $tx, $ty, $tw, $th);
+
+  # Separator
+  draw_style_common-ro($smc, $mx, $my + @mh[1..3].sum, $mw, @mh[4]);
 
   .downref for  $mc, $mic, $hmc, $hac, $amc, $cmc, $dac, $dcc, $rmc, $dmc,
                $drc, $smc;
@@ -243,7 +250,7 @@ sub draw_menubar ($w) {
   .downref for $mic, $hc, $mc, $bc, $fc;
 }
 
-sub draw_notebook {
+sub draw_notebook($w, $h) {
   my ($nc, $hc, $tc, $t1c, $t2c, $sc, $hh);
   my ($*cx, $*cy, $*cw, $*ch);
 
@@ -252,15 +259,15 @@ sub draw_notebook {
   $hc  = get_style($nc, 'header.top');
   $tc  = get_style($hc, 'tabs');
   $t1c = get_style($tc, 'tab:checked');
-  $t2c = get_style($tc, 'tab:hober');
+  $t2c = get_style($tc, 'tab:hover');
 
   $hh = 0;
   query_size($_, $, $hh) for $nc, $hc, $tc, $t1c, $t2c;
 
-  draw_style_common-ro($_, $*w, $_ =:= $nc ?? $*h !! $hh) for $nc, $hc, $tc;
-  draw_style_common($t1c, $*w/2, $hh);
-  draw_style_common-ro($t2c, $*x + $*w/2,          $, $*w / 2,       $hh);
-  draw_style_common-ro( $sc,         $*x,  $*y + $hh,       $, $*h - $hh);
+  draw_style_common-ro($_, $w, $_ =:= $nc ?? $h !! $hh) for $nc, $hc, $tc;
+  draw_style_common($t1c, $w/2, $hh);
+  draw_style_common-ro($t2c,  $*x + $w/2,          $, $w/2,       $hh);
+  draw_style_common-ro( $sc,         $*x,  $*y + $hh,   $w, $*h - $hh);
 
   .downref for $sc, $tc, $t1c, $t2c, $hc, $nc;
 }
@@ -308,9 +315,9 @@ sub _draw_checkradio($s, $t) {
   $cc.state = $s;
   $*w = $*h = 0;
   query_size($_, $*w, $*h) for $bc, $cc;
-  draw_style_common-ro($bc, $*w, $*h);
-  # Check the $*ca?
-  draw_style_common($cc, $*w, $*h);
+  my ($w, $h) = ($*w, $*h);
+  draw_style_common-ro($bc, $w, $h);
+  draw_style_common($cc, $w, $h);
   GTK::Render.check($cc, $*cr, $*cx, $*cy, $*cw, $*ch);
   .downref for $cc, $bc;
 }
@@ -337,7 +344,7 @@ sub draw_progress($w, $p) {
   .downref for $bc, $tc, $pc;
 }
 
-sub draw_scale($p) {
+sub draw_scale($w, $p) {
   my ($sc, $cc, $tc, $slc, $hc, $*cx, $*cy, $*cw, $*ch, $th, $sh);
 
   $sc  = get_style( Nil, 'scale.horizontal');
@@ -350,7 +357,7 @@ sub draw_scale($p) {
   my $xx = 0;
   query_size($_, $xx, $) for $sc, $cc, $tc, $slc, $hc;
 
-  draw_style_common($sc);
+  draw_style_common($sc, $w, $);
   draw_style_common($cc, $*cx, $*cy, $*cw, $*ch);
 
   $th = 0;
@@ -413,10 +420,11 @@ sub draw_combobox($xx, $w, $he) {
 sub draw_spinbutton($w) {
   my ($sc, $ec, $uc, $dc, $it, $ii, $p);
   my ($iw, $ih, $is, $bw, $*cx, $*cy, $*cw, $*ch);
+  $*cx, $*cy, $*cw, $*ch = 0;
 
   $sc = get_style(Nil, 'spinbutton.horizontal:focus');
   $ec = get_style($sc, 'entry:focus');
-  $uc = get_style($uc, 'button.up:focus:active');
+  $uc = get_style($ec, 'button.up:focus:active');
   $dc = get_style($uc, 'button.down:focus');
 
   $*h = 0;
@@ -428,10 +436,10 @@ sub draw_spinbutton($w) {
 
   for <add remove> {
     $it = GTK::IconTheme.get_for_screen($da.screen);
-    $is = ( $uc.style_context_get($uc.state,  'min-width').int,
-            $uc.style_context_get($uc.state, 'min-height').int ).min ;
-    $ii = $it.lookup_icon("list-{$_}-symnbolic", $is, 0);
-    $p  = $ii.load_symbolic_for_context($uc);
+    $is = ( $uc.get($uc.state,  'min-width').int,
+            $uc.get($uc.state, 'min-height').int ).min ;
+    $ii = $it.lookup_icon("list-{$_}-symbolic", $is, 0);
+    $p  = $ii.load_symbolic_for_context($uc, $);
     {
       my $ctx = $_ eq 'add' ?? $uc !! $dc;
       my $x = $*x + $w - ($_ eq 'add' ?? 1 !! 2) * $bw;
@@ -440,7 +448,7 @@ sub draw_spinbutton($w) {
     }
   }
 
-  .downref for $p, $dc, $uc, $ec, $sc;
+  .downref for $dc, $uc, $ec, $sc;
 }
 
 sub do_draw($ct) {

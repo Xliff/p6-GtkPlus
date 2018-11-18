@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::IconTheme;
 use GTK::Raw::Types;
 
+use GTK::IconInfo;
+
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
@@ -32,6 +34,11 @@ class GTK::IconTheme {
     self.bless(:$theme);
   }
 
+  method get_for_screen(GdkScreen() $screen) is also<get-for-screen> {
+    my $theme = gtk_icon_theme_get_for_screen($screen);
+    self.bless(:$theme);
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
@@ -49,7 +56,9 @@ class GTK::IconTheme {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_builtin_icon (Str $name, gint $size, GdkPixbuf $pixbuf) is also<add-builtin-icon> {
+  method add_builtin_icon (Str $name, gint $size, GdkPixbuf $pixbuf)
+    is also<add-builtin-icon>
+  {
     gtk_icon_theme_add_builtin_icon($name, $size, $pixbuf);
   }
 
@@ -73,10 +82,6 @@ class GTK::IconTheme {
     gtk_icon_theme_get_example_icon_name($!it);
   }
 
-  method get_for_screen(GdkScreen $screen) is also<get-for-screen> {
-    gtk_icon_theme_get_for_screen($screen);
-  }
-
   method get_icon_sizes (Str() $icon_name) is also<get-icon-sizes> {
     gtk_icon_theme_get_icon_sizes($!it, $icon_name);
   }
@@ -95,93 +100,98 @@ class GTK::IconTheme {
 
   method load_icon (
     Str() $icon_name,
-    gint $size,
-    GtkIconLookupFlags $flags,
+    Int() $size,
+    Int() $flags,             # GtkIconLookupFlags $flags,
     CArray[Pointer[GError]] $error = gerror
-  ) is also<load-icon> {
-    gtk_icon_theme_load_icon($!it, $icon_name, $size, $flags, $error);
+  )
+    is also<load-icon>
+  {
+    my gint $s = self.RESOLVE-INT($size);
+    my guint $f = self.RESOLVE-UINT($flags);
+    gtk_icon_theme_load_icon($!it, $icon_name, $s, $f, $error);
   }
 
   method load_icon_for_scale (
-    Str() $icon_name,
-    gint $size,
-    gint $scale,
-    GtkIconLookupFlags $flags,
+    Str() $name,
+    Int() $size,
+    Int() $scale,
+    Int() $flags,             # GtkIconLookupFlags $flags,
     CArray[Pointer[GError]] $error = gerror
-  ) is also<load-icon-for-scale> {
-    gtk_icon_theme_load_icon_for_scale(
-      $!it,
-      $icon_name,
-      $size,
-      $scale,
-      $flags,
-      $error
-    );
+  )
+    is also<load-icon-for-scale>
+  {
+    my @i = ($size, $scale);
+    my gint ($si, $sc) = self.RESOLVE-INT(@i);
+    my guint $f = self.RESOLVE-UINT($flags);
+    gtk_icon_theme_load_icon_for_scale($!it, $name, $si, $sc, $f, $error);
   }
 
   method load_surface (
-    Str() $icon_name,
-    gint $size,
-    gint $scale,
-    GdkWindow $for_window,
-    GtkIconLookupFlags $flags,
+    Str() $name,
+    Int() $size,
+    Int() $scale,
+    GdkWindow() $fw,
+    Int() $flags,             # GtkIconLookupFlags $flags,
     CArray[Pointer[GError]] $error = gerror
-  ) is also<load-surface> {
-    gtk_icon_theme_load_surface(
-      $!it,
-      $icon_name,
-      $size,
-      $scale,
-      $for_window,
-      $flags,
-      $error
-    );
+  )
+    is also<load-surface>
+  {
+    my @i = ($size, $scale);
+    my gint ($si, $sc) = self.RESOLVE-INT(@i);
+    my guint $f = self.RESOLVE-UINT($flags);
+    gtk_icon_theme_load_surface($!it, $name, $si, $sc, $fw, $f, $error);
   }
 
   method lookup_by_gicon (
     GIcon $icon,
-    gint $size,
-    GtkIconLookupFlags $flags
-  ) is also<lookup-by-gicon> {
-    gtk_icon_theme_lookup_by_gicon($!it, $icon, $size, $flags);
+    Int() $size,
+    Int() $flags
+  )
+    is also<lookup-by-gicon>
+  {
+    my guint $f = self.RESOLVE-INT($flags);
+    my gint $s = self.RESOLVE-INT($size);
+    gtk_icon_theme_lookup_by_gicon($!it, $icon, $s, $f);
   }
 
   method lookup_by_gicon_for_scale (
     GIcon $icon,
-    gint $size,
-    gint $scale,
-    GtkIconLookupFlags $flags
-  ) is also<lookup-by-gicon-for-scale> {
-    gtk_icon_theme_lookup_by_gicon_for_scale(
-      $!it,
-      $icon,
-      $size,
-      $scale,
-      $flags
-    );
+    Int() $size,
+    Int() $scale,
+    Int() $flags              # GtkIconLookupFlags $flags,
+  )
+    is also<lookup-by-gicon-for-scale>
+  {
+    my @i = ($size, $scale);
+    my gint ($si, $sc) = self.RESOLVE-INT(@i);
+    my guint $f = self.RESOLVE-UINT($flags);
+    gtk_icon_theme_lookup_by_gicon_for_scale($!it, $icon, $si, $sc, $f);
   }
 
   method lookup_icon (
     Str() $icon_name,
-    gint $size,
-    GtkIconLookupFlags $flags
-  ) is also<lookup-icon> {
-    gtk_icon_theme_lookup_icon($!it, $icon_name, $size, $flags);
+    Int() $size,
+    Int() $flags              # GtkIconLookupFlags $flags,
+  )
+    is also<lookup-icon>
+  {
+    my gint $s = self.RESOLVE-INT($size);
+    my guint $f = self.RESOLVE-UINT($flags);
+    GTK::IconInfo.new( gtk_icon_theme_lookup_icon($!it, $icon_name, $s, $f) );
   }
 
   method lookup_icon_for_scale (
     Str() $icon_name,
-    gint $size,
-    gint $scale,
-    GtkIconLookupFlags $flags
-  ) is also<lookup-icon-for-scale> {
-    gtk_icon_theme_lookup_icon_for_scale(
-      $!it,
-      $icon_name,
-      $size,
-      $scale,
-      $flags
-    );
+    Int() $size,
+    Int() $scale,
+    Int() $flags              # GtkIconLookupFlags $flags,
+  )
+    is also<lookup-icon-for-scale>
+  {
+    my @i = ($size, $scale);
+    my gint ($si, $sc) = self.RESOLVE-INT(@i);
+    my guint $f = self.RESOLVE-UINT($flags);
+    gtk_icon_theme_lookup_icon_for_scale($!it, $icon_name, $si, $sc, $f);
   }
 
   method prepend_search_path (Str() $path) is also<prepend-search-path> {
@@ -196,11 +206,10 @@ class GTK::IconTheme {
     gtk_icon_theme_set_custom_theme($!it, $theme_name);
   }
 
-  method set_screen (GdkScreen $screen) is also<set-screen> {
+  method set_screen (GdkScreen() $screen) is also<set-screen> {
     gtk_icon_theme_set_screen($!it, $screen);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

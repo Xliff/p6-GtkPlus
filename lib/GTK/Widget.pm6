@@ -1351,9 +1351,11 @@ class GTK::Widget {
     gtk_widget_trigger_tooltip_query($!w);
   }
 
-  method get_size_request (gint $width, gint $height)
+  method get_size_request (Int() $width, Int() $height)
     is also<get-size-request>
   {
+    my @i = ($width, $height);
+    my gint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_widget_get_size_request($!w, $width, $height);
   }
 
@@ -1361,20 +1363,34 @@ class GTK::Widget {
     gtk_widget_has_default($!w);
   }
 
-  method get_root_window is also<get-root-window> {
+  method get_root_window is also<
+    get-root-window
+    root-window
+    root_window
+  > {
     gtk_widget_get_root_window($!w);
   }
 
-  method get_frame_clock is also<get-frame-clock> {
+  method get_frame_clock is also<
+    get-frame-clock
+    frame-clock
+    frame_clock
+  > {
     gtk_widget_get_frame_clock($!w);
   }
 
-  method get_preferred_size (
+  proto method get_preferred_size(|) is also<get-preferred-size> { * }
+
+  # Only use the shortened name for the no parameter variant.
+  multi method get_preferred_size is also<preferred_size preferred-size> {
+    my ($ms, $ns) = (GtkRequisition.new xx 2);
+    samewith($ms, $ns);
+    ($ms, $ns)
+  }
+  multi method get_preferred_size (
     GtkRequisition $minimum_size,
     GtkRequisition $natural_size
-  )
-    is also<get-preferred-size>
-  {
+  ) {
     gtk_widget_get_preferred_size($!w, $minimum_size, $natural_size);
   }
 
@@ -1953,7 +1969,7 @@ class GTK::Widget {
     gtk_widget_get_preferred_width($!w, $minimum_width, $natural_width);
   }
 
-  method get_screen is also<get-screen> {
+  method get_screen is also<get-screen screen> {
     GTK::Compat::Screen.new( gtk_widget_get_screen($!w) );
   }
 

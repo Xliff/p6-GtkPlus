@@ -11,6 +11,10 @@ class GTK::Compat::RGBA is repr('CStruct') is export {
   has gdouble $.blue;
   has gdouble $.alpha;
 
+  method GTK::Compat::Types::GdkRGBA {
+    self;
+  }
+
   method copy {
     gdk_rgba_copy(self);
   }
