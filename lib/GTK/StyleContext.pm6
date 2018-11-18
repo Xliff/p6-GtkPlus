@@ -145,10 +145,12 @@ class GTK::StyleContext {
   method state is rw {
     Proxy.new(
       FETCH => sub ($) {
+        # Flag/Mask means NO use of the enum.
         gtk_style_context_get_state($!sc);
       },
-      STORE => sub ($, $flags is copy) {
-        gtk_style_context_set_state($!sc, $flags);
+      STORE => sub ($, Int() $flags is copy) {
+        my guint $f = self.RESOLVE-UINT($flags);
+        gtk_style_context_set_state($!sc, $f);
       }
     );
   }

@@ -6,6 +6,13 @@ use GTK::Compat::Types;
 
 unit package GTK::Raw::Utils;
 
+sub get_flags($t, $s) is export {
+  $t.enums
+    .map({ $s +& .value ?? .key !! '' })
+    .grep(* ne '')
+    .join(', ');
+}
+
 multi sub resolve-bool(@rb) is export {
   @rb.map({ samewith($_) });
 }

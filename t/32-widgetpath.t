@@ -4,6 +4,7 @@ use Cairo;
 
 use GTK::Compat::Types;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::Application;
 use GTK::Box;
@@ -80,7 +81,7 @@ sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw) {
 }
 
 multi sub draw_style_common-ro ($c, $w, $h) {
-  samewith($c, $, $, ($w // $*w), $h);
+  samewith($c, $, $, ($w // $*w), ($h // $*h));
 }
 multi sub draw_style_common-ro ($c, $x, $y, $w, $h) {
   my %*b = (
@@ -120,6 +121,7 @@ multi sub query_size($cc, $w is rw, $h is rw) {
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
+  # Warning: dynamic method call.
   $cc."get_{ $_ }"($cc.state, %*b{$_}) for %*b.keys;
 
   my $mw = $cc.get($cc.state,  'min-width').int;
@@ -127,6 +129,7 @@ multi sub query_size($cc, $w is rw, $h is rw) {
 
   for ($mw, $mh) -> $min is rw {
     for <left right> X <margin border padding> -> ($m, $t) {
+      # Warning: dynamic method call.
       $min += %*b{$t}."$m"();
     }
   }
@@ -285,10 +288,14 @@ sub draw_horizontal_scrollbar($w, $p, $s) {
   .state = $s for $sc, $cc, $tc, $slc;
 
   $*h = 0;
-  query_size($_, $, $*h) for $sc, $cc, $tc, $slc;
+  for $sc, $cc, $tc, $slc {
+    say "L({$s.Int}): { $_.VAR.name }";
+    query_size($_, $, $*h);
+  }
   $sw = $sc.get($sc.state, 'min-width').int;
 
-  # No $*cy, and what about the $*ca[xywh] vars?
+  say "SW ({ get_flags(GtkStateFlags, $sc.state) }): $sw";
+
   draw_style_common-ro($_, $w, $) for $sc, $cc, $tc;
   draw_style_common-ro($slc, $*x + $p, $, $sw, $);
 
@@ -303,8 +310,8 @@ sub draw_text($w, $h, $t, $s) {
   $sc = get_style($lc, 'selection');
   $c = ($s +& GTK_STATE_FLAG_SELECTED) ?? $sc !! $lc;
   $l = $da.create_pango_layout($t);
-  GTK::Render.background($c, $*cr, $*x, $*y, $*w, $h);
-  GTK::Render.frame($c, $*cr, $*x, $*y, $*w, $h);
+  GTK::Render.background($c, $*cr, $*x, $*y, $w, $h);
+  GTK::Render.frame($c, $*cr, $*x, $*y, $w, $h);
   GTK::Render.layout($c, $*cr, $*x, $*y, $l);
 
   .downref for $sc, $lc;
@@ -467,6 +474,7 @@ sub do_draw($ct) {
   $cr.rgb(0.9, 0.9, 0.9);
   $cr.fill;
 
+  say 'Scrollbar';
   $*x = $*y = 10;
   for (
     GTK_STATE_FLAG_NORMAL,
@@ -477,6 +485,7 @@ sub do_draw($ct) {
     $*y += $*h + 8;
   }
 
+  say 'Text';
   #$*y += $*h + 8;
   for (GTK_STATE_FLAG_NORMAL, GTK_STATE_FLAG_SELECTED) {
     my $l = ($_ == GTK_STATE_FLAG_NORMAL) ?? 'Not selected' !! 'Selected';
@@ -487,6 +496,7 @@ sub do_draw($ct) {
   $*x = 10;
   $*y += 20 + 10;
   for (&draw_check, &draw_radio) -> $func {
+    say $func === &draw_check ?? 'Check' !! 'Radio';
     for <NORMAL CHECKED> {
       $func( ::("GTK_STATE_FLAG_$_") );
       $*x += $*w + 10;
@@ -494,9 +504,11 @@ sub do_draw($ct) {
   }
   $*x = 10;
 
+  say 'Progress';
   $*y += $*h + 10;
   draw_progress($pw - 20, 50);
 
+  say 'Scale';
   $*y += $*h + 10;
   draw_scale($pw - 20, 75);
 
