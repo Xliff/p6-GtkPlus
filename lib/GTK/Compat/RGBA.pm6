@@ -35,14 +35,11 @@ class GTK::Compat::RGBA is repr('CStruct') is export {
     gdk_rgba_hash(self);
   }
 
-  method parse (gchar $spec) {
+  method parse (Str() $spec) {
     so gdk_rgba_parse(self, $spec);
   }
 
-  method Str {
-    gdk_rgba_to_string(self);
-  }
-  method to_string is also<to-string> {
+  method to_string is also<to-string Str> {
     gdk_rgba_to_string(self);
   }
 

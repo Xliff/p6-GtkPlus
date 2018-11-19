@@ -692,12 +692,13 @@ class GTK::StyleContext {
   }
 
   method get_background_color (
-    GtkStateFlags $state,
+    Int() $state,
     GdkRGBA $color
   )
     is also<get-background-color>
   {
-    gtk_style_context_get_background_color($!sc, $state, $color);
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_background_color($!sc, $s, $color);
   }
 
   method get_border (Int() $state, GtkBorder $border)
@@ -707,18 +708,21 @@ class GTK::StyleContext {
     gtk_style_context_get_border($!sc, $s, $border);
   }
 
-  method get_border_color (GtkStateFlags $state, GdkRGBA $color)
+  method get_border_color (Int() $state, GdkRGBA $color)
     is also<get-border-color>
   {
-    gtk_style_context_get_border_color($!sc, $state, $color);
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_border_color($!sc, $s, $color);
   }
 
-  method get_color (GtkStateFlags $state, GdkRGBA $color) is also<get-color> {
-    gtk_style_context_get_color($!sc, $state, $color);
+  method get_color (Int() $state, GdkRGBA $color) is also<get-color> {
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_color($!sc, $s, $color);
   }
 
   method get_font (GtkStateFlags $state) is also<get-font> {
-    gtk_style_context_get_font($!sc, $state);
+    my guint $s = self.RESOLVE-UINT($state);
+    gtk_style_context_get_font($!sc, $s);
   }
 
   method get_margin (Int() $state, GtkBorder $margin)
@@ -783,6 +787,7 @@ class GTK::StyleContext {
   }
 
   method list_classes is also<list-classes> {
+    # GET GLIST WORKING!!!
     gtk_style_context_list_classes($!sc);
   }
 

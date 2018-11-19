@@ -199,7 +199,7 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method get_selected_children is also<get-selected-children> {
-    GList.new( gtk_flow_box_get_selected_children($!fb) );
+    GList.new( GtkFlowBoxChild, gtk_flow_box_get_selected_children($!fb) );
   }
 
   method get_type is also<get-type> {

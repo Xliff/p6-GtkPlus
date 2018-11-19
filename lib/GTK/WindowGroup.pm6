@@ -49,7 +49,7 @@ class GTK::WindowGroup {
   }
 
   method list_windows {
-    GTK::Compat::GList.new( gtk_window_group_list_windows($!wg) );
+    GTK::Compat::GList.new( GtkWindow, gtk_window_group_list_windows($!wg) );
   }
 
   method remove_window (GtkWindow() $window) {

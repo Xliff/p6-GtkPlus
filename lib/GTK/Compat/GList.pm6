@@ -1,52 +1,86 @@
 use v6.c;
 
-use GTK::Compat::Raw::GList;
+use Method::Also;
+use NativeCall;
 
+use GTK::Compat::Raw::GList;
 use GTK::Compat::Types;
 
 class GTK::Compat::GList {
-  has GList $!list;
-  has @!nat;
-  has $!dirty = False;
+  also does Positional;
+  also does Iterator;
 
-  submethod BUILD(:$!list) { say $!list; }
+  has GTK::Compat::Types::GList $!list;
+  has GTK::Compat::Types::GList $!cur;
+  has @!nat handles <pull-one elems AT-POS EXISTS-POS>;
+  has $!dirty = False;
+  has $!type;
+
+  submethod BUILD(:$type, :$list) {
+    die 'Must use a type object for $type when creating a GTK::Compat::GSList'
+      if $type.defined;
+
+    $!cur = $!list = $list;
+    $!type = $type;
+    while $!cur.defined {
+      @!nat.push: self.data;
+      $!cur .= next;
+    }
+    $!cur = $!list;
+  }
 
   submethod DESTROY {
     self.free;
   }
 
-  multi method new {
+  multi method new($type) {
     my $list = g_list_alloc();
     die "Cannot allocate GList" unless $list;
 
-    self.bless(:$list);
+    self.bless(:$type, :$list);
   }
-  multi method new($list) {
-    self.bless(:$list);
+  multi method new($type, GTK::Compat::Types::GList $list) {
+    self.bless(:$type, :$list);
   }
 
-  method GTK::Compat::Types::GList {
+  method GTK::Compat::Types::GList is also<glist> {
     $!list;
   }
 
-  method data {
-    $!list.data;
+  method List {
+    @!nat.clone;
   }
 
+  method data {
+    given $!type {
+      when  uint64 | uint32 | uint16 | uint8 |
+             int64 |  int32 |  int16 |  int8 |
+             num64 |  num32
+      {
+        $!cur.data.deref;
+      }
+
+      when .REPR eq <CPointer CStruct>.any {
+        nativecast($_, $!cur.data);
+      }
+
+      default {
+        die "Unknown type '{ .^name }' passed to GTK::Compat::List.new()";
+      }
+    }
+  }
+
+  # Need a current pointer.
   method next {
-    $!list.next;
+    $!cur .= next;
   }
 
   method prev {
-    $!list.prev;
+    $!cur .= prev;
   }
 
   method !rebuild {
     my GList $l;
-
-    say $!list.data;
-    say $!list.prev;
-    say $!list.next;
 
     @!nat = ();
     loop ($l = self.first; $l != GList; $l = $l.next) {
@@ -100,7 +134,7 @@ class GTK::Compat::GList {
 
   method first {
     #g_list_first($!list);
-    $!list;
+    $!cur = $!list;
   }
 
   method foreach (GFunc $func, gpointer $user_data) {

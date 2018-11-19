@@ -187,7 +187,7 @@ class GTK::Printer {
 
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
-  method compare (GtkPrinter $a, GtkPrinter $b) {
+  method compare (GtkPrinter() $a, GtkPrinter() $b) {
     gtk_printer_compare($a, $b);
   }
 
@@ -195,11 +195,12 @@ class GTK::Printer {
     GtkPrinterFunc $func,
     gpointer $data,
     GDestroyNotify $destroy,
-    gboolean $wait
+    Int() $wait
   )
     is also<enumerate-printers>
   {
-    gtk_enumerate_printers($func, $data, $destroy, $wait);
+    my gboolean $w = self.RESOLVE-BOOL($wait);
+    gtk_enumerate_printers($func, $data, $destroy, $w);
   }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -288,7 +289,7 @@ class GTK::Printer {
   }
 
   method list_papers is also<list-papers> {
-    GTK::Compat::GList.new( gtk_printer_list_papers($!prn) );
+    GTK::Compat::GList.new( GtkPageSetup, gtk_printer_list_papers($!prn) );
   }
 
   method request_details is also<request-details> {

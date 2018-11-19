@@ -134,7 +134,7 @@ sub g_list_nth (GList $list, guint $n)
   { * }
 
 sub g_list_nth_data (GList $list, guint $n)
-  returns OpaquePointer
+  returns Pointer
   is native(glib)
   is export
   { * }

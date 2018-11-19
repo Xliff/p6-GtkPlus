@@ -103,7 +103,9 @@ class GTK::PageSetup {
   method load_file (
     Str() $file_name,
     GError $error = GError
-  ) is also<load-file> {
+  )
+    is also<load-file>
+  {
     gtk_page_setup_load_file($!ps, $file_name, $error);
   }
 
@@ -111,11 +113,15 @@ class GTK::PageSetup {
     GKeyFile $key_file,
     Str() $group_name,
     GError $error = GError
-  ) is also<load-key-file> {
+  )
+    is also<load-key-file>
+  {
     gtk_page_setup_load_key_file($!ps, $key_file, $group_name, $error);
   }
 
-  method new_from_file (Str() $filename, GError $error = GError) is also<new-from-file> {
+  method new_from_file (Str() $filename, GError $error = GError)
+    is also<new-from-file>
+  {
     gtk_page_setup_new_from_file($filename, $error);
   }
 
@@ -127,27 +133,43 @@ class GTK::PageSetup {
     Str() $filename,
     Str() $group_name,
     GError $error = GError
-  ) is also<new-from-key-file> {
+  )
+    is also<new-from-key-file>
+  {
     gtk_page_setup_new_from_key_file($filename, $group_name, $error);
   }
 
-  method set_bottom_margin (gdouble $margin, Int() $unit) is also<set-bottom-margin> {
+  method set_bottom_margin (Num() $margin, Int() $unit)
+    is also<set-bottom-margin>
+  {
+    my gdouble $m = $margin;
     gtk_page_setup_set_bottom_margin($!ps, $margin, $unit);
   }
 
-  method set_left_margin (gdouble $margin, Int() $unit) is also<set-left-margin> {
+  method set_left_margin (Num() $margin, Int() $unit)
+    is also<set-left-margin>
+  {
+    my gdouble $m = $margin;
     gtk_page_setup_set_left_margin($!ps, $margin, $unit);
   }
 
-  method set_paper_size_and_default_margins (GtkPaperSize() $size) is also<set-paper-size-and-default-margins> {
+  method set_paper_size_and_default_margins (GtkPaperSize() $size)
+    is also<set-paper-size-and-default-margins>
+  {
     gtk_page_setup_set_paper_size_and_default_margins($!ps, $size);
   }
 
-  method set_right_margin (gdouble $margin, Int() $unit) is also<set-right-margin> {
+  method set_right_margin (Num() $margin, Int() $unit)
+    is also<set-right-margin>
+  {
+    my gdouble $m = $margin;
     gtk_page_setup_set_right_margin($!ps, $margin, $unit);
   }
 
-  method set_top_margin (gdouble $margin, Int() $unit) is also<set-top-margin> {
+  method set_top_margin (Num() $margin, Int() $unit)
+    is also<set-top-margin>
+  {
+    my gdouble $m = $margin;
     gtk_page_setup_set_top_margin($!ps, $margin, $unit);
   }
 
@@ -159,7 +181,9 @@ class GTK::PageSetup {
     gtk_page_setup_to_gvariant($!ps);
   }
 
-  method to_key_file (GKeyFile() $key_file, Str() $group_name) is also<to-key-file> {
+  method to_key_file (GKeyFile() $key_file, Str() $group_name)
+    is also<to-key-file>
+  {
     gtk_page_setup_to_key_file($!ps, $key_file, $group_name);
   }
 

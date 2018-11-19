@@ -189,7 +189,7 @@ class GTK::WidgetPath {
 
   method iter_list_classes (gint $pos) is also<iter-list-classes> {
     my gint $p = self.RESOLVE-INT($pos);
-    GTK::Compat::GSList.new( gtk_widget_path_iter_list_classes($!wp, $p) );
+    gtk_widget_path_iter_list_classes($!wp, $p);
   }
 
   method iter_list_regions (gint $pos) is also<iter-list-regions> {
@@ -251,7 +251,7 @@ class GTK::WidgetPath {
     gtk_widget_path_ref($!wp);
   }
 
-  method to_string is also<to-string> {
+  method to_string is also<to-string Str> {
     gtk_widget_path_to_string($!wp);
   }
 

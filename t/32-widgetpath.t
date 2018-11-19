@@ -2,6 +2,7 @@ use v6.c;
 
 use Cairo;
 
+#use GTK::Compat::GList;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -55,6 +56,8 @@ sub create_context_for_path ($p, $pp) {
 }
 
 sub common_draw($cc, $xx, $yy, $ww, $hh) {
+  say 'CD: ' ~ ($xx, $yy, $ww, $hh).map({ $_ // ''}).join(',');
+
   $cc."get_{ $_ }"($cc.state, %*b{$_}) for %*b.keys;
 
   my $mw = $cc.get($cc.state,  'min-width').int;
@@ -67,7 +70,7 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
   ($*caw, $*cah) = ( ($*caw, $mw).min, ($*cah, $mh).min );
 
   GTK::Render.background($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
-  GTK::Render.frame($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
+       GTK::Render.frame($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
 }
 sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw) {
   say 'CA: ' ~ ($*cax, $*cay, $*caw, $*cah).map({ $_ // ''}).join(',');
@@ -81,7 +84,7 @@ sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw) {
 }
 
 multi sub draw_style_common-ro ($c, $w, $h) {
-  samewith($c, $, $, ($w // $*w), ($h // $*h));
+  samewith($c, $, $, $w, $h);
 }
 multi sub draw_style_common-ro ($c, $x, $y, $w, $h) {
   my %*b = (
@@ -91,7 +94,9 @@ multi sub draw_style_common-ro ($c, $x, $y, $w, $h) {
   my $*cay = $y // $*y;
   my $*caw = $w // $*w;
   my $*cah = $h // $*h;
-  common_draw($c, $x // $*cax, $y // $*cay, $w // $*caw, $h // $*cah);
+  say "X: {$x // ''} / \*X: $*x / CAX: $*cax";
+  say "W: {$x // ''} / \*W: $*w / CAW: $*caw";
+  common_draw($c, $*cax, $*cay, $*caw, $*cah);
 }
 multi sub draw_style_common ($c) {
   samewith($c,  $,  $,  $,  $, $, $, $, $);
@@ -113,7 +118,7 @@ multi sub draw_style_common (
   my %*b = (
     margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
   );
-  common_draw($c, $x // $*x,   $y // $*y,   $w // $*w ,  $h // $*h);
+  common_draw($c, $*cax, $*cay, $*caw, $*cah);
   common_adjust($cx // $*cx, $cy // $*cy, $cw // $*cw, $ch // $*ch);
 }
 
@@ -285,19 +290,34 @@ sub draw_horizontal_scrollbar($w, $p, $s) {
   $tc  = get_style($cc, 'trough');
   $slc = get_style($tc, 'slider');
 
-  .state = $s for $sc, $cc, $tc, $slc;
+  say "P: $p";
+
+  for $sc, $cc, $tc, $slc {
+    $_.state = $s;
+    say "SS: { .state } / $s";
+  }
 
   $*h = 0;
   for $sc, $cc, $tc, $slc {
-    say "L({$s.Int}): { $_.VAR.name }";
+    for '', 'background', 'border' -> $tt {
+      my $t = $tt.chars ?? "_{ $tt}" !! '';
+      my $c = GTK::Compat::RGBA.new;
+      ."get{$t}_color"($s, $c);
+      say "{ $_.VAR.name }( $s ) get{$t}_color: { $c }";
+    }
     query_size($_, $, $*h);
   }
-  $sw = $sc.get($sc.state, 'min-width').int;
+  $sw = $slc.get($slc.state, 'min-width').int;
 
-  say "SW ({ get_flags(GtkStateFlags, $sc.state) }): $sw";
+  say "SW ({ get_flags(GtkStateFlags, $sc.state) }): $sw, $w";
+  say "XYWH: $*x, $*y, $w, $*h";
 
-  draw_style_common-ro($_, $w, $) for $sc, $cc, $tc;
-  draw_style_common-ro($slc, $*x + $p, $, $sw, $);
+  draw_style_common-ro($_, $w, $) for $sc, $cc;
+  say '→ TC ←';
+  draw_style_common-ro($_, $w, $) for $tc;
+  say '→ SLC ←';
+  my $xp = $*x + $p;
+  draw_style_common-ro($slc, $xp, $, $sw + 30, $);
 
   .downref for $sc, $tc, $cc, $slc;
 }
@@ -481,7 +501,7 @@ sub do_draw($ct) {
     GTK_STATE_FLAG_PRELIGHT,
     GTK_STATE_FLAG_ACTIVE +| GTK_STATE_FLAG_PRELIGHT
   ) {
-    draw_horizontal_scrollbar($pw - 20, 30 + $++ * 10 , $_);
+    draw_horizontal_scrollbar($pw - 20, 30 + $++ * 10, $_);
     $*y += $*h + 8;
   }
 

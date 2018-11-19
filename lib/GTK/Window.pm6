@@ -313,7 +313,7 @@ class GTK::Window is GTK::Bin {
   method icon_list is rw is also<icon-list> {
     Proxy.new(
       FETCH => sub ($) {
-        GList.new( gtk_window_get_icon_list($!win) );
+        GTK::Compat::GList.new( GdkPixbuf, gtk_window_get_icon_list($!win) );
       },
       STORE => sub ($, GList() $list is copy) {
         gtk_window_set_icon_list($!win, $list);
@@ -662,7 +662,7 @@ class GTK::Window is GTK::Bin {
   }
 
   method list_toplevels is also<list-toplevels> {
-    GList.new( gtk_window_list_toplevels() );
+    GList.new( GtkWidget, gtk_window_list_toplevels() );
   }
 
   method maximize {
