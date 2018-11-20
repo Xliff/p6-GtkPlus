@@ -9,7 +9,7 @@ unit package GTK::Raw::TreeSortable;
 
 sub gtk_tree_sortable_get_sort_column_id (
   GtkTreeSortable $sortable,
-  gint $sort_column_id,
+  gint $sort_column_id is rw,
   guint $order                  # GtkSortType $order
 )
   returns uint32

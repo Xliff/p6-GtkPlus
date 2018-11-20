@@ -14,6 +14,16 @@ class GTK::Compat::Array {
     $!a = $array;
   }
 
+  method GTK::Compat::Types::GArray is also<garray> {
+    $!a;
+  }
+
+  method new (Int() $clear, Int() $element_size) {
+    my @u = ($clear, $element_size);
+    my guint ($c, $es) = resolve-uint(@u);
+    g_array_new($!a, $c, $es);
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -44,12 +54,6 @@ class GTK::Compat::Array {
     g_array_insert_vals($!a, $i, $data, $l);
   }
 
-  method new (gboolean $clear, guint $element_size) {
-    my @u = ($clear, $element_size);
-    my guint ($c, $es) = resolve-uint(@u);
-    g_array_new($!a, $c, $es);
-  }
-
   method prepend_vals (Pointer $data, Int() $len) {
     my guint $l = resolve-uint($len);
     g_array_prepend_vals($!a, $data, $l);
@@ -59,7 +63,8 @@ class GTK::Compat::Array {
     g_array_ref($!a);
   }
 
-  method remove_index (guint $index) {
+  method remove_index (Int() $index) {
+    my guint $i = resolve-uint($index);
     g_array_remove_index($!a, $index);
   }
 

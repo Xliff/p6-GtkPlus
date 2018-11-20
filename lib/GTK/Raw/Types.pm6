@@ -953,6 +953,10 @@ our enum GtkStyleContextPrintFlags is export (
   GTK_STYLE_CONTEXT_PRINT_SHOW_STYLE   => 2
 );
 
+our enum GtkTreeSortableSortColumnId is export (
+  GTK_TREE_SORTABLE_DEFAULT_SORT_COLUMN_ID  => -1,
+  GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID => -2
+);
 
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }

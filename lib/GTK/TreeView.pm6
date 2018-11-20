@@ -697,7 +697,7 @@ class GTK::TreeView is GTK::Container {
 
   method get_cursor (
     GtkTreePath() $path,
-    GtkTreeViewColumn() $focus_column
+    GtkTreeViewColumn() $focus_column = GtkTreeViewColumn
   )
     is also<get-cursor>
   {
@@ -759,7 +759,7 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_get_search_position_func($!tv);
   }
 
-  method get_selection is also<get-selection> {
+  method get_selection is also<get-selection selection> {
     GTK::TreeSelection.new( gtk_tree_view_get_selection($!tv) );
   }
 

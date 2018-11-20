@@ -81,12 +81,21 @@ class GTK::TreePath {
   }
 
   method get_indices is also<get-indices> {
-    gtk_tree_path_get_indices($!tp);
+    my CArray[gint] $r := gtk_tree_path_get_indices($!tp);
+    my @r;
+    my $i = 0;
+    @r[$i] = $r[$i++] for (^self.get_depth);
   }
 
-  method get_indices_with_depth (Int() $depth) is also<get-indices-with-depth> {
+  method get_indices_with_depth (Int() $depth)
+    is also<get-indices-with-depth>
+  {
     my gint $d = self.RESOLVE-INT($depth);
-    gtk_tree_path_get_indices_with_depth($!tp, $depth);
+    my CArray[gint] $r := gtk_tree_path_get_indices_with_depth($!tp, $depth);
+    my @r;
+    my $i = 0;
+    @r[$i] = $r[$i++] for (^self.get_depth);
+
   }
 
   method is_ancestor (GtkTreePath() $descendant) is also<is-ancestor> {

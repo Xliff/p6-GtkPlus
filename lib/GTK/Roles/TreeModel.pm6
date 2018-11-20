@@ -65,16 +65,17 @@ role GTK::Roles::TreeModel {
     gtk_tree_model_foreach($!tm, $func, $user_data);
   }
 
-  multi method get(GtkTreeIter() $iter, @cols) {
-    samewith($iter, |@cols);
+  multi method get(GtkTreeIter() $iter, @types, @cols) {
+    samewith($iter, @types, |@cols);
   }
-  multi method get(GtkTreeIter() $iter, *@cols) {
+  multi method get(GtkTreeIter() $iter, @types, *@cols) {
     my @r;
+    my $t = 0;
     @r.push(
       do {
         my $v = GValue.new;
         self.get_value($iter, $_, $v);
-        GTK::Compat::Value.new($v)
+        GTK::Compat::Value.new($v);
       }
     ) for @cols;
     @r;
@@ -89,7 +90,12 @@ role GTK::Roles::TreeModel {
     GtkTreeModelFlags( gtk_tree_model_get_flags($!tm) );
   }
 
-  method get_iter (GtkTreeIter() $iter, GtkTreePath() $path)
+  multi method get_iter (GtkTreePath() $path) {
+    my $iter = GTK::TreeIter.new;
+    samewith($iter, $path);
+    $iter;
+  }
+  multi method get_iter (GtkTreeIter() $iter, GtkTreePath() $path)
     is also<get-iter>
   {
     so gtk_tree_model_get_iter($!tm, $iter, $path);

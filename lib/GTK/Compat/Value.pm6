@@ -45,7 +45,7 @@ class GTK::Compat::Value {
   }
 
   method value {
-    do given $!v.g_type {
+    do given self.type {
       when G_TYPE_CHAR     { self.char;       }
       when G_TYPE_UCHAR    { self.uchar;      }
       when G_TYPE_BOOLEAN  { so self.boolean; }
@@ -121,15 +121,18 @@ class GTK::Compat::Value {
   }
 
   # Alias back to original name of gtype.
-  method type is rw {
-    Proxy.new(
-      FETCH => sub ($) {
-        GTypeEnum( g_value_get_gtype($!v) );
-      },
-      STORE => sub ($, Int() $v_gtype is copy) {
-        g_value_set_gtype($!v, self.RESOLVE-UINT($v_gtype));
-      }
-    );
+  # method type is rw {
+  #   Proxy.new(
+  #     FETCH => sub ($) {
+  #       GTypeEnum( g_value_get_gtype($!v) );
+  #     },
+  #     STORE => sub ($, Int() $v_gtype is copy) {
+  #       g_value_set_gtype($!v, self.RESOLVE-UINT($v_gtype));
+  #     }
+  #   );
+  # }
+  method type {
+    GTypeEnum( $!v.g_type );
   }
 
   method enum is rw {

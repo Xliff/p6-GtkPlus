@@ -32,7 +32,7 @@ class GTK::ListStore {
     $!tm = nativecast(GtkTreeModel, $!ls);      # GTK::Roles::TreeSortable
   }
 
-  method new (@types) {
+  method new (*@types) {
     for @types {
       next if $_ ~~ (Int, IntStr).any || .^can('Int').elems;
       die '@types must consist of Integers or objects that will convert to Integer';
@@ -45,7 +45,12 @@ class GTK::ListStore {
     self.bless(:$liststore, :$columns);
   }
 
-  method append (GtkTreeIter() $iter) {
+  multi method append {
+    my $iter = GTK::ListIter.new;
+    self.append($iter);
+    $iter;
+  }
+  multi method append (GtkTreeIter() $iter) {
     $!accessed = True;
     gtk_list_store_append($!ls, $iter);
   }
