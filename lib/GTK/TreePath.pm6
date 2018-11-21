@@ -84,7 +84,8 @@ class GTK::TreePath {
     my CArray[gint] $r := gtk_tree_path_get_indices($!tp);
     my @r;
     my $i = 0;
-    @r[$i] = $r[$i++] for (^self.get_depth);
+    @r[$i] = $r[$i++] for ^self.get_depth;
+    @r;
   }
 
   method get_indices_with_depth (Int() $depth)
@@ -95,7 +96,6 @@ class GTK::TreePath {
     my @r;
     my $i = 0;
     @r[$i] = $r[$i++] for (^self.get_depth);
-
   }
 
   method is_ancestor (GtkTreePath() $descendant) is also<is-ancestor> {

@@ -121,9 +121,12 @@ sub add_columns($v, $mi, $mn) {
   $r1.editable = True;
   $r1.edited.tap(-> *@a { cell_edited( $r1, $mi, |@a[1..2] ) });
   $r1.editing-started.tap(-> *@a {
-    $r1.combobox_obj.set_row_separator_func(-> *@b --> guint {
+    GTK::ComboBox.new(@a[1]).set_row_separator_func(-> *@b --> guint {
       my $p = $mn.get_path(@b[1]);
-      my $idx = $mn.get_indicies($p)[0];
+      # This is NOT supposed to be a 1-based array, but somehow that's what
+      # we are given. This still might be an issue with CArray, and the
+      # valgrind tests may happen sooner, rather than later.
+      my $idx = ($p.get_indices())[1];
       $p.free;
       ($idx == 5).Int;
     })

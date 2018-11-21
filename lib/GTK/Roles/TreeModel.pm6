@@ -9,6 +9,7 @@ use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
 
 use GTK::TreeIter;
+use GTK::TreePath;
 
 use GTK::Roles::Types;
 
@@ -127,7 +128,7 @@ role GTK::Roles::TreeModel {
   }
 
   method get_path (GtkTreeIter() $iter) is also<get-path> {
-    gtk_tree_model_get_path($!tm, $iter);
+    GTK::TreePath.new( gtk_tree_model_get_path($!tm, $iter) );
   }
 
   method get_string_from_iter (GtkTreeIter() $iter)

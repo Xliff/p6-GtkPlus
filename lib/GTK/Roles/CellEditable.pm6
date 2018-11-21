@@ -7,13 +7,12 @@ use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Raw::CellEditable;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
 
 role GTK::Roles::CellEditable {
   also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Types;
 
   has GtkCellEditable $!ce;
 
@@ -44,7 +43,7 @@ role GTK::Roles::CellEditable {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = resolve-bool($val);
         self.prop_set('editing-canceled', $gv);
       }
     );

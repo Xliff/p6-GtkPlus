@@ -9,12 +9,15 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+use GTK::Roles::CellEditable;
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::ComboBox;
 
-my subset Ancestry where GtkComboBox | GtkCellLayout | GtkWidget;
+my subset Ancestry
+  where GtkComboBox | GtkCellEditable | GtkCellLayout | GtkWidget;
 
 class GTK::ComboBox is GTK::Bin {
+  also does GTK::Roles::CellEditable;
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::ComboBox;
 
@@ -49,6 +52,11 @@ class GTK::ComboBox is GTK::Bin {
         $to-parent = $_;
         nativecast(GtkComboBox, $_);
       }
+      when GtkCellEditable {
+        $!ce = $_;                               # GTK::Roles::CellEditable
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkComboBox, $_);
+      }
       when GtkCellLayout {
         $!cl = $_;                               # GTK::Roles::CellLayout
         $to-parent = nativecast(GtkBin, $_);
@@ -60,6 +68,7 @@ class GTK::ComboBox is GTK::Bin {
       }
     }
     $!cl //= nativecast(GtkCellLayout, $!cb);   # GTK::Roles::CellLayout
+    $!ce //= nativecast(GtkCellLayout, $!cb);   # GTK::Roles::CellEditable
     self.setBin($to-parent);
   }
 

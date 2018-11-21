@@ -46,14 +46,6 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
     $!crc;
   }
 
-  method GTK::Raw::Types::GtkComboBox is also<combobox> {
-    nativecast(GtkComboBox, $!crc);
-  }
-
-  method combobox_obj {
-    GTK::ComboBox.new( self.combobox );
-  }
-
   multi method new {
     my $cellcombo = gtk_cell_renderer_combo_new();
     self.bless(:$cellcombo);
