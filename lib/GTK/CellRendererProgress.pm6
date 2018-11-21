@@ -163,4 +163,3 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

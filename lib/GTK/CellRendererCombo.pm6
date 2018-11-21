@@ -8,6 +8,7 @@ use GTK::Raw::CellRendererCombo;
 use GTK::Raw::Types;
 
 use GTK::CellRendererText;
+use GTK::ComboBox;
 
 class GTK::CellRendererCombo is GTK::CellRendererText {
   has GtkCellRendererCombo $!crc;
@@ -43,6 +44,14 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
 
   method GTK::Raw::Types::GtkCellRendererCombo {
     $!crc;
+  }
+
+  method GTK::Raw::Types::GtkComboBox is also<combobox> {
+    nativecast(GtkComboBox, $!crc);
+  }
+
+  method combobox_obj {
+    GTK::ComboBox.new( self.combobox );
   }
 
   multi method new {
@@ -81,15 +90,16 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
 
   # Type: GtkTreeModel
   method model is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new(G_TYPE_OBJECT);
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get('model', $gv); );
-        nativecast(GtkTreeModel, $gv.pointer);
+        nativecast(GtkTreeModel, $gv.object);
       },
       STORE => -> $, GtkTreeModel() $val is copy {
-        $gv.pointer = $val;
-        self.prop_set('model', $gv);
+        # $gv.object = $val;
+        # self.prop_set('model', $gv);
+        raw_set_cellrenderercombo_model($!crc, 'model', $val, Str);
       }
     );
   }
@@ -118,4 +128,3 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

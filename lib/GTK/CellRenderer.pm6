@@ -9,25 +9,32 @@ use GTK::Compat::Value;
 use GTK::Raw::CellRenderer;
 use GTK::Raw::Types;
 
+use GTK::Roles::Data;
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::CellRenderer;
+use GTK::Roles::Types;
 
 class GTK::CellRenderer {
+  also does GTK::Roles::Data;
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::CellRenderer;
+  also does GTK::Roles::Types;
 
   has GtkCellRenderer $!cr;
 
   method setCellRenderer($renderer) {
     $!cr = $renderer;
     $!prop = nativecast(GObject, $!cr);
+    $!data = $!cr;                          # GTK::Roles::Data
   }
 
   method GTK::Raw::Types::GtkCellRenderer {
     $!cr;
   }
 
-  method disconnect-cellrenderer-signals is also<disconnect_cellrenderer_signals> {
+  method disconnect-cellrenderer-signals
+    is also<disconnect_cellrenderer_signals>
+  {
     self.disconnect-all for %!signals-cr;
   }
 
@@ -345,7 +352,9 @@ class GTK::CellRenderer {
     Int() $flags,               # GtkCellRendererState $flags,
     GdkRectangle() $cell_area,
     GdkRectangle() $aligned_area
-  ) is also<get-aligned-area> {
+  )
+    is also<get-aligned-area>
+  {
     my uint32 $f = self.RESOLVE-UINT($flags);
     gtk_cell_renderer_get_aligned_area(
       $!cr,
@@ -356,12 +365,16 @@ class GTK::CellRenderer {
     );
   }
 
-  method get_alignment (Num() $xalign, Num() $yalign) is also<get-alignment> {
+  method get_alignment (Num() $xalign, Num() $yalign)
+    is also<get-alignment>
+  {
     my gfloat ($xa, $ya) = ($xalign, $yalign);
     gtk_cell_renderer_get_alignment($!cr, $xa, $ya);
   }
 
-  method get_fixed_size (Int() $width, Int() $height) is also<get-fixed-size> {
+  method get_fixed_size (Int() $width, Int() $height)
+    is also<get-fixed-size>
+  {
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_get_fixed_size($!cr, $w, $h);
@@ -377,7 +390,9 @@ class GTK::CellRenderer {
     GtkWidget() $widget,
     Int() $minimum_size,
     Int() $natural_size
-  ) is also<get-preferred-height> {
+  )
+    is also<get-preferred-height>
+  {
     my @i = ($minimum_size, $natural_size);
     my ($ms, $ns) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_get_preferred_height(
@@ -393,7 +408,9 @@ class GTK::CellRenderer {
     Int() $width,
     Int() $minimum_height,
     Int() $natural_height
-  ) is also<get-preferred-height-for-width> {
+  )
+    is also<get-preferred-height-for-width>
+  {
     my @i = ($width, $minimum_height, $natural_height);
     my gint ($w, $mh, $nh) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_get_preferred_height_for_width(
@@ -409,7 +426,9 @@ class GTK::CellRenderer {
     GtkWidget() $widget,
     GtkRequisition $minimum_size,
     GtkRequisition $natural_size
-  ) is also<get-preferred-size> {
+  )
+    is also<get-preferred-size>
+  {
     gtk_cell_renderer_get_preferred_size(
       $!cr,
       $widget,
@@ -422,7 +441,9 @@ class GTK::CellRenderer {
     GtkWidget() $widget,
     Int() $minimum_size,
     Int() $natural_size
-  ) is also<get-preferred-width> {
+  )
+    is also<get-preferred-width>
+  {
     my @i = ($minimum_size, $natural_size);
     my ($ms, $ns) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_get_preferred_width($!cr, $widget, $ms, $ns);
@@ -433,7 +454,9 @@ class GTK::CellRenderer {
     Int() $height,
     Int() $minimum_width,
     Int() $natural_width
-  ) is also<get-preferred-width-for-height> {
+  )
+    is also<get-preferred-width-for-height>
+  {
     my @i = ($height, $minimum_width, $natural_width);
     my gint ($h, $mw, $nw) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_get_preferred_width_for_height(
@@ -456,7 +479,9 @@ class GTK::CellRenderer {
     Int() $y_offset,
     Int() $width,
     Int() $height
-  ) is also<get-size> {
+  )
+    is also<get-size>
+  {
     my @i = ($x_offset, $y_offset, $width, $height);
     my gint ($xo, $yo, $w, $h) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_get_size($!cr, $widget, $cell_area, $xo, $yo, $w, $h);
@@ -465,7 +490,9 @@ class GTK::CellRenderer {
   method get_state (
     GtkWidget() $widget,
     Int() $cell_state           # GtkCellRendererState $cell_state
-  ) is also<get-state> {
+  )
+    is also<get-state>
+  {
     my guint $cs = self.RESOLVE-UINT($cell_state);
     gtk_cell_renderer_get_state($!cr, $widget, $cs);
   }
@@ -496,12 +523,16 @@ class GTK::CellRenderer {
     );
   }
 
-  method set_alignment (Num() $xalign, Num() $yalign) is also<set-alignment> {
+  method set_alignment (Num() $xalign, Num() $yalign)
+    is also<set-alignment>
+  {
     my gfloat ($xa, $ya) = ($xalign, $yalign);
     gtk_cell_renderer_set_alignment($!cr, $xa, $ya);
   }
 
-  method set_fixed_size (Int() $width, Int() $height) is also<set-fixed-size> {
+  method set_fixed_size (Int() $width, Int() $height)
+    is also<set-fixed-size>
+  {
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_cell_renderer_set_fixed_size($!cr, $w, $h);
@@ -520,7 +551,9 @@ class GTK::CellRenderer {
     GdkRectangle() $background_area,
     GdkRectangle() $cell_area,
     guint $flags                # GtkCellRendererState $flags
-  ) is also<start-editing> {
+  )
+    is also<start-editing>
+  {
     my uint32 $f = self.RESOLVE-UINT($flags);
     gtk_cell_renderer_start_editing(
       $!cr,
@@ -540,4 +573,3 @@ class GTK::CellRenderer {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

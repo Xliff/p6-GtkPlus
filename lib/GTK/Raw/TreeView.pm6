@@ -7,13 +7,19 @@ use GTK::Raw::Types;
 
 unit package GTK::Raw::TreeView;
 
-# gint  gtk_tree_view_insert_column_with_attributes (
-#   GtkTreeView               *tree_view,
-#   gint                       position,
-#   const gchar               *title,
-#   GtkCellRenderer           *cell,
-#   ...
-# ) G_GNUC_NULL_TERMINATED;
+sub gtk_tree_view_insert_column_with_attributes (
+  GtkTreeView     $tree_view,
+  gint            $position,
+  Str             $title,
+  GtkCellRenderer $cell,
+  Str             $attribute,
+  guint           $value,
+  Str
+)
+  returns gint
+  is native(gtk)
+  is export
+  { * }
 
 sub gtk_tree_view_append_column (
   GtkTreeView $tree_view,
@@ -469,7 +475,7 @@ sub gtk_tree_view_set_drag_dest_row (
 
 sub gtk_tree_view_set_row_separator_func (
   GtkTreeView $tree_view,
-  GtkTreeViewRowSeparatorFunc $func,
+  &func (GtkTreeModel, GtkTreeIter, Pointer --> uint32),
   gpointer $data,
   GDestroyNotify $destroy
 )

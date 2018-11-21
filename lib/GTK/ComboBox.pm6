@@ -317,13 +317,12 @@ class GTK::ComboBox is GTK::Bin {
   }
 
   method set_row_separator_func (
-    GtkTreeViewRowSeparatorFunc $func,
+    &func,
     gpointer $data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
   ) is also<set-row-separator-func> {
-    gtk_combo_box_set_row_separator_func($!cb, $func, $data, $destroy);
+    gtk_combo_box_set_row_separator_func($!cb, &func, $data, $destroy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

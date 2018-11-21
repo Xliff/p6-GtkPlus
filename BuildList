@@ -217,6 +217,7 @@ GTK::Render
 GTK::Roles::Actionable
 GTK::Roles::AppChooser
 GTK::Roles::Buildable
+GTK::Roles::Data
 GTK::Roles::Orientable
 GTK::Roles::Scrollable
 GTK::Roles::Signals::Application

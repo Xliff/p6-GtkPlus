@@ -813,6 +813,20 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_insert_column($!tv, $column, $p);
   }
 
+  method insert_column_with_attributes(
+    gint              $position,
+    Str()             $title,
+    GtkCellRenderer() $cell,
+    Str               $attr,
+    guint             $value
+  ) {
+    my gint  $p = self.RESOLVE-INT($position);
+    my guint $v = self.RESOLVE-UINT($value);
+    gtk_tree_view_insert_column_with_attributes(
+      $!tv, $p, $title, $cell, $attr, $v, Str
+    );
+  }
+
   method insert_column_with_data_func (
     Int() $position,
     Str() $title,
@@ -967,13 +981,13 @@ class GTK::TreeView is GTK::Container {
   }
 
   method set_row_separator_func (
-    GtkTreeViewRowSeparatorFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy
+    &func,
+    gpointer $data = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-row-separator-func>
   {
-    gtk_tree_view_set_row_separator_func($!tv, $func, $data, $destroy);
+    gtk_tree_view_set_row_separator_func($!tv, &func, $data, $destroy);
   }
 
   method set_search_equal_func (

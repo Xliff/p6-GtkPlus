@@ -8,6 +8,8 @@ use GTK::Compat::Value;
 use GTK::Raw::ListStore;
 use GTK::Raw::Types;
 
+use GTK::TreeIter;
+
 use GTK::Roles::Buildable;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
@@ -46,9 +48,9 @@ class GTK::ListStore {
   }
 
   multi method append {
-    my $iter = GTK::ListIter.new;
+    my $iter = GtkTreeIter.new;
     self.append($iter);
-    $iter;
+    GTK::TreeIter.new($iter);
   }
   multi method append (GtkTreeIter() $iter) {
     $!accessed = True;

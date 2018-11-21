@@ -151,4 +151,3 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

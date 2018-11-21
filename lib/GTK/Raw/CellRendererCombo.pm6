@@ -18,3 +18,14 @@ sub gtk_cell_renderer_combo_new ()
   is native(gtk)
   is export
   { * }
+
+sub raw_set_cellrenderercombo_model(
+  GtkCellRendererCombo,
+  Str,
+  GtkTreeModel,
+  Str
+)
+  is native(gobject)
+  is symbol('g_object_set')
+  is export
+  { * }

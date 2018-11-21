@@ -14,7 +14,7 @@ use GTK::Raw::Types;
 #   my $hid;
 #   %sig-hash{$signal-name} //= do {
 #     my $s = Supplier.new;
-#     $hid = &c_call($obj, $signal-name, &handler, OpaquePointer, 0);
+#     $hid = &c_call($obj, $signal-name, &handler, Pointer, 0);
 #     [ $s.Supply, $obj, $hid];
 #   };
 #   %sig-hash{$signal-name}[0].tap(&handler) with &handler;
@@ -41,24 +41,37 @@ sub g_object_unref(Pointer $p)
   { * }
 
 sub g_signal_connect_data(
-  OpaquePointer $p,
+  Pointer $p,
   Str $signal,
-  &handler (OpaquePointer, OpaquePointer),
-  OpaquePointer $data
+  &handler (Pointer, Pointer),
+  Pointer $data
 )
   returns uint64
   is native(gobject)
   is export
   { * }
 
-sub g_object_set_string(OpaquePointer $o, gchar $key, Str $data)
+sub g_object_set_string(Pointer $o, gchar $key, Str $data)
   is native(gobject)
   is symbol('g_object_set_data')
   is export
   { * }
 
-sub g_object_get_string(OpaquePointer $o, gchar $key)
+sub g_object_get_string(Pointer $o, gchar $key)
   returns Str
+  is native(gobject)
+  is symbol('g_object_set_data')
+  is export
+  { * }
+
+sub g_object_set_uint(Pointer $o, gchar $key, uint32 $data is rw)
+  is native(gobject)
+  is symbol('g_object_set_data')
+  is export
+  { * }
+
+sub g_object_get_ptr(Pointer $o, gchar $key)
+  returns Pointer
   is native(gobject)
   is symbol('g_object_set_data')
   is export
@@ -78,10 +91,10 @@ sub g_signal_connect_wd(
   { * }
 
 sub g_signal_connect_handler(
-  OpaquePointer $app,
+  Pointer $app,
   Str $name,
-  OpaquePointer $handler,
-  OpaquePointer $data,
+  Pointer $handler,
+  Pointer $data,
   uint32 $connect_flags
 )
   returns uint64
@@ -91,7 +104,7 @@ sub g_signal_connect_handler(
   { * }
 
 
-sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
+sub g_signal_handler_disconnect(Pointer $app, uint64 $handler)
   is native(gobject)
   is export
   { * }
@@ -100,8 +113,8 @@ sub g_signal_handler_disconnect(OpaquePointer $app, uint64 $handler)
 #
 # CLASS
 #
-#sub g_type_check_class_cast (OpaquePointer $tc, int32 $it)
-#  returns OpaquePointer
+#sub g_type_check_class_cast (Pointer $tc, int32 $it)
+#  returns Pointer
 #  is native('glib-2.0')
 #  is export(:class)
 #  { * }
@@ -128,12 +141,12 @@ sub gtk_window_set_default_size (GtkWindow $win, int32 $w, int32 $h)
 #
 # APPLICATION
 #
-sub g_application_run(OpaquePointer, int32, CArray[Str])
+sub g_application_run(Pointer, int32, CArray[Str])
   is native('gio-2.0')
   is export
   { * }
 
-sub g_application_quit(OpaquePointer)
+sub g_application_quit(Pointer)
   is native('gio-2.0')
   is export
   { * }

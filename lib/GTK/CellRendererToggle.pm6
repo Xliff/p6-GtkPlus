@@ -153,4 +153,3 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

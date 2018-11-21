@@ -8,6 +8,8 @@ use GTK::Compat::Value;
 use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
 
+use GTK::TreeIter;
+
 use GTK::Roles::Types;
 
 role GTK::Roles::TreeModel {
@@ -90,24 +92,33 @@ role GTK::Roles::TreeModel {
     GtkTreeModelFlags( gtk_tree_model_get_flags($!tm) );
   }
 
+  proto method get_iter (|) is also<get-iter> { * }
   multi method get_iter (GtkTreePath() $path) {
-    my $iter = GTK::TreeIter.new;
-    samewith($iter, $path);
-    $iter;
+    my $iter = GtkTreeIter.new;
+    samewith($iter, $path) ?? GTK::TreeIter.new($iter) !! Nil;
   }
-  multi method get_iter (GtkTreeIter() $iter, GtkTreePath() $path)
-    is also<get-iter>
-  {
+  multi method get_iter (GtkTreeIter() $iter, GtkTreePath() $path) {
     so gtk_tree_model_get_iter($!tm, $iter, $path);
   }
 
-  method get_iter_first (GtkTreeIter() $iter) is also<get-iter-first> {
+  proto method get_iter_first(|) is also<get-iter-first> { * }
+  multi method get_iter_first {
+    my $iter = GtkTreeIter.new;
+    samewith($iter) ?? GTK::TreeIter.new($iter) !! Nil;
+  }
+  multi method get_iter_first (GtkTreeIter() $iter) {
     so gtk_tree_model_get_iter_first($!tm, $iter);
   }
 
-  method get_iter_from_string (GtkTreeIter() $iter, Str() $path_string)
-    is also<get-iter-from-string>
-  {
+  proto method get_iter_from_string(|) is also<get-iter-from-string> { * }
+  multi method get_iter_from_string (Str() $path_string) {
+    my $iter = GtkTreeIter.new;
+    samewith($iter, $path_string) ?? GTK::TreeIter.new($iter) !! Nil;
+  }
+  multi method get_iter_from_string (
+    GtkTreeIter() $iter,
+    Str() $path_string
+  ) {
     so gtk_tree_model_get_iter_from_string($!tm, $iter, $path_string);
   }
 

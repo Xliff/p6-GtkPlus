@@ -118,4 +118,3 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

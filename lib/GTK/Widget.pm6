@@ -15,6 +15,7 @@ use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
 use GTK::Roles::Buildable;
+use GTK::Roles::Data;
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
@@ -24,6 +25,7 @@ use GTK::StyleContext;
 
 class GTK::Widget {
   also does GTK::Roles::Buildable;
+  also does GTK::Roles::Data;
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
@@ -75,19 +77,7 @@ class GTK::Widget {
     };
     $!prop = nativecast(GObject, $!w);    # GTK::Roles::Properties
     $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
-  }
-
-  method setType($typeName) {
-    self.IS-PROTECTED;
-
-    my $oldType = self.getType;
-    with $oldType {
-      warn "WARNING -- Resetting type from $oldType to $typeName"
-        unless $oldType eq 'GTK::Widget' || $oldType eq $typeName;
-    }
-
-    g_object_set_string($!w.p, 'GTKPLUS-Type', $typeName)
-      unless ($oldType // '') ne $typeName;
+    $!data = $!w.p;                       # GTK::Roles::Data
   }
 
   # REALLY EXPERIMENTAL attempt to create a global object creation
@@ -1286,10 +1276,6 @@ class GTK::Widget {
   }
 
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
-
-  method getType {
-    g_object_get_string($!w.p, 'GTKPLUS-Type');
-  }
 
   method add_events (gint $events) is also<add-events> {
     gtk_widget_add_events($!w, $events);

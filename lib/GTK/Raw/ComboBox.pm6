@@ -104,7 +104,7 @@ sub gtk_combo_box_set_active_iter (
 
 sub gtk_combo_box_set_row_separator_func (
   GtkComboBox $combo_box,
-  GtkTreeViewRowSeparatorFunc $func,
+  &func (GtkTreeModel, GtkTreeIter, Pointer --> gboolean),
   gpointer $data,
   GDestroyNotify $destroy
 )

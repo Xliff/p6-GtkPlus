@@ -221,4 +221,3 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

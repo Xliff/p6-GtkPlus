@@ -119,4 +119,3 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -104,7 +104,8 @@ class GTK::Compat::Value {
         g_value_get_double($!v);
       },
       STORE => sub ($, Num() $v_double is copy) {
-        g_value_set_double($!v, $v_double);
+        my num64 $vd = $v_double;
+        g_value_set_double($!v, $vd);
       }
     );
   }
@@ -115,7 +116,8 @@ class GTK::Compat::Value {
         g_value_get_float($!v);
       },
       STORE => sub ($, Num() $v_float is copy) {
-        g_value_set_float($!v, $v_float);
+        my num32 $vf = $v_float;
+        g_value_set_float($!v, $vf);
       }
     );
   }

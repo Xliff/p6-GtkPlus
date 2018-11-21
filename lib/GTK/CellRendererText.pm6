@@ -17,6 +17,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   has GtkCellRendererText $!crt;
 
+  method bless(*%attrinit) {
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+    $o.setType('GTK::CellRendererText');
+    $o;
+  }
+
   submethod BUILD(:$celltext) {
     given $celltext {
       when GtkCellRendererText | GtkCellRenderer {
@@ -806,4 +812,3 @@ class GTK::CellRendererText is GTK::CellRenderer {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

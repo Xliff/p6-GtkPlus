@@ -230,6 +230,7 @@
       "GTK::Roles::Actionable"                 :  "lib/GTK/Roles/Actionable.pm6"                ,
       "GTK::Roles::AppChooser"                 :  "lib/GTK/Roles/AppChooser.pm6"                ,
       "GTK::Roles::Buildable"                  :  "lib/GTK/Roles/Buildable.pm6"                 ,
+      "GTK::Roles::Data"                       :  "lib/GTK/Roles/Data.pm6"                      ,
       "GTK::Roles::Orientable"                 :  "lib/GTK/Roles/Orientable.pm6"                ,
       "GTK::Roles::Scrollable"                 :  "lib/GTK/Roles/Scrollable.pm6"                ,
       "GTK::Roles::Signals::Application"       :  "lib/GTK/Roles/Signals/Application.pm6"       ,
