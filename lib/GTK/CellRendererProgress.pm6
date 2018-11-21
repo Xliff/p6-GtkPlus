@@ -20,7 +20,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   submethod BUILD(:$cellprogress) {
     my $to-parent;
-    given $ {
+    given $cellprogress {
       when GtkCellRendererProgress | GtkCellRenderer {
         $!crp = do {
           when GtkCellRenderer {

@@ -23,8 +23,7 @@ class GTK::CellRenderer {
   has GtkCellRenderer $!cr;
 
   method setCellRenderer($renderer) {
-    $!cr = $renderer;
-    $!prop = nativecast(GObject, $!cr);
+    $!prop = nativecast(GObject, $!cr = $renderer);
     $!data = $!cr;                          # GTK::Roles::Data
   }
 

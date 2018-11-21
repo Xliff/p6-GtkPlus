@@ -17,18 +17,16 @@ my enum Cols <COLUMN_ITEM_NUMBER COLUMN_ITEM_PRODUCT COLUMN_ITEM_YUMMY>;
 
 sub set_values($model, $iter, $i) {
   my $idx = 0;
-  for $i.elems {
-    my $v = GTK::Compat::Value.new(
-      do {
-        when Str { G_TYPE_STRING }
-        default  { G_TYPE_INT    }
-      }
-    );
+  for $i.Array -> $e {
+    my $v = GTK::Compat::Value.new(do given $e {
+      when Str { G_TYPE_STRING }
+      default  { G_TYPE_UINT   }
+    });
     given $idx {
-      when 0 | 2 {   $v.int  = $_[$idx++]; }
-      default    { $v.string = $_[$idx++]; }
+      when 0 | 2 {   $v.uint = $e }
+      default    { $v.string = $e }
     }
-    $model.set_value($iter, $idx, $v)
+    $model.set_value($iter, $idx++, $v)
   }
 }
 
@@ -117,7 +115,6 @@ sub cell_edited($c, $m, $ps, $nt) {
 
 sub add_columns($v, $mi, $mn) {
   my $r1 = GTK::CellRendererCombo.new;
-
   $r1.model = $mn;
   $r1.text-column = 0;
   $r1.has-entry = False;
