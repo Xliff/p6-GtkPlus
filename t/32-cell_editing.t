@@ -61,38 +61,41 @@ sub create_numbers_model {
   $model;
 }
 
-sub add_item ($v) {
-  my $p = GTK::TreePath.new;
-  my $m = GTK::ListStore.new($v.model);
+sub add_item ($v, $m) {
+  # GTK::TreeView.get_cursor() returns list, so assignment must be list.
+  my $iter = GtkTreeIter.new;
 
-  $v.get_cursor($p);
-  my $iter = do given $p {
+  my ($p, $) = $v.get_cursor;
+  given $p {
     when .defined {
-      my $c = $p.get_iter($p);
-      $m.insert_after($c);
+      my $c = $m.get_iter($$p);
+      $m.insert_after($iter, $c);
     }
     default {
-      $m.insert(-1);
+      $m.insert($iter, -1);
     }
-  };
+  }
   set_values( $m, $iter, [0, 'Description here', 50] );
   $p = $m.get_path($iter);
 
   my $col = $v.get_column(0);
-  $col.set_cursor($p, $col, False);
+  $v.set_cursor($p, $col, False);
   $p.free;
 }
 
-sub remove_item($v) {
-  my $iter = GTK::TreeIter.new;
-  my $m = GTK::ListStore.new($v.model);
+sub remove_item($v, $m) {
+  my $iter = GtkTreeIter.new;
   my $s = $v.selection;
 
-  if $s.selected($iter) {
-    my $p = $m.get_path($iter);
-    my $i = $p.get_indicies($p)[0];
-    $m.remove($i);
-    $p.free;
+  # GTK::TreeSelection returns a list, so assignment must be, as well. Note
+  # that this list will be pointers and not objects!
+  ($, $iter) = $s.selected;
+  with $iter {
+    # Commented lines removed because they serve no purpose in THIS example.
+    #my $p = $m.get_path($iter);
+    #my $i = $p.get_indices()[1];
+    $m.remove($iter);
+    #$p.free;
   }
 }
 
@@ -100,7 +103,7 @@ sub cell_edited($c, $m, $ps, $nt) {
   my $p = GTK::TreePath.new_from_string($ps);
   my $iter = $m.get_iter($p);
   my $col = $c.get_data_uint('column');
-  my $idx = $p.get_indicies()[0];
+  my $idx = $p.get_indicies()[1];
 
   my $v = GTK::Compat::Value.new($col == 0 ?? G_TYPE_INT !! G_TYPE_STRING);
   if $col == 0 {
@@ -182,8 +185,8 @@ $a.activate.tap({
   $sw.add($tv);
   $hbox.homogeneous = True;
   $hbox.pack_start($_, True, True) for $ab, $rb;
-  $ab.clicked.tap({ add_item($tv)    });
-  $rb.clicked.tap({ remove_item($tv) });
+  $ab.clicked.tap({ add_item($tv, $mi)    });
+  $rb.clicked.tap({ remove_item($tv, $mi) });
 
   $a.window.show_all;
 });

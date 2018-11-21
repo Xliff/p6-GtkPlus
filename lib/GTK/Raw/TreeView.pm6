@@ -194,8 +194,8 @@ sub gtk_tree_view_get_columns (GtkTreeView $tree_view)
 
 sub gtk_tree_view_get_cursor (
   GtkTreeView $tree_view,
-  GtkTreePath $path,
-  GtkTreeViewColumn $focus_column
+  CArray[Pointer[GtkTreePath]] $path,
+  CArray[Pointer[GtkTreeViewColumn]] $focus_column
 )
   is native(gtk)
   is export

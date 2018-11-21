@@ -695,13 +695,27 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_get_columns($!tv);
   }
 
-  method get_cursor (
+  proto method get_cursor (|) is also<get-cursor> { * }
+
+  multi method get_cursor {
+    my $p = GtkTreePath;
+    my $fc = GtkTreeViewColumn;
+    my ($p1, $p2) = samewith($p, $fc);
+    $p1 = GTK::TreePath.new($p1) with $p1;
+    $p2 = GTK::TreeViewColumn.new($p2) with $p2;
+    ($p1, $p2);
+  }
+  multi method get_cursor (
     GtkTreePath() $path,
-    GtkTreeViewColumn() $focus_column = GtkTreeViewColumn
-  )
-    is also<get-cursor>
-  {
-    gtk_tree_view_get_cursor($!tv, $path, $focus_column);
+    GtkTreeViewColumn $focus_column is rw
+  ) {
+    my $pc = CArray[Pointer[GtkTreePath]].new;
+    my $fc = CArray[Pointer[GtkTreeViewColumn]].new;
+    $pc[0] = cast(Pointer[GtkTreePath], $path) with $path;
+    $fc[0] = cast(Pointer[GtkTreeViewColumn], $focus_column)
+      with $focus_column;
+    gtk_tree_view_get_cursor($!tv, $pc, $fc);
+    ( $pc[0].defined ?? $pc[0] !! Nil, $fc[0].defined ?? $fc[0] !! Nil );
   }
 
   method get_dest_row_at_pos (

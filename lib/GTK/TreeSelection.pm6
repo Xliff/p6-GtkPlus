@@ -64,22 +64,16 @@ class GTK::TreeSelection {
     gtk_tree_selection_get_select_function($!ts);
   }
 
-  multi method get-selected {
-    self.get_selected;
-  }
+  proto method get_selected(|) is also<get-selected selected> { * }
+
   multi method get_selected {
     my GtkTreeModel $model = GtkTreeModel.new;
     my GtkTreeIter $iter = GtkTreeIter.new;
     ($model, $iter) if samewith($model, $iter);
   }
-  multi method get-selected (
-    GtkTreeModel() $model is rw,
-    GtkTreeIter() $iter
-  ) {
-   self.get_selected($model, $iter);
-  }
+  # Insure we have a proper r/w container by forcing the type.
   multi method get_selected (
-    GtkTreeModel() $model is rw,
+    GtkTreeModel $model is rw,
     GtkTreeIter() $iter
   ) {
     gtk_tree_selection_get_selected($!ts, $model, $iter);
