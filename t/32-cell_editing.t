@@ -99,11 +99,13 @@ sub remove_item($v, $m) {
   }
 }
 
-sub cell_edited($c, $m, $ps, $nt) {
+sub cell_edited($c, $m, $col, $ps, $nt) {
   my $p = GTK::TreePath.new_from_string($ps);
   my $iter = $m.get_iter($p);
-  my $col = $c.get_data_uint('column');
-  my $idx = $p.get_indicies()[1];
+  # Still not sure why this does not work, but it can be worked around, in
+  # this instance.
+  #my $col = $c.get_data_uint('column');
+  my $idx = $p.get_indices()[1];
 
   my $v = GTK::Compat::Value.new($col == 0 ?? G_TYPE_INT !! G_TYPE_STRING);
   if $col == 0 {
@@ -112,7 +114,7 @@ sub cell_edited($c, $m, $ps, $nt) {
     # Should free the old value, but currently can't get the direct pointer.
     $v.string = $nt;
   }
-  $m.store($iter, $col, $v);
+  $m.set_value($iter, $col, $v);
   $p.free;
 }
 
@@ -122,7 +124,9 @@ sub add_columns($v, $mi, $mn) {
   $r1.text-column = 0;
   $r1.has-entry = False;
   $r1.editable = True;
-  $r1.edited.tap(-> *@a { cell_edited( $r1, $mi, |@a[1..2] ) });
+  $r1.edited.tap(-> *@a {
+    cell_edited( $r1, $mi, COLUMN_ITEM_NUMBER, |@a[1..2] )
+  });
   $r1.editing-started.tap(-> *@a {
     GTK::ComboBox.new(@a[1]).set_row_separator_func(-> *@b --> guint {
       my $p = $mn.get_path(@b[1]);
@@ -134,7 +138,7 @@ sub add_columns($v, $mi, $mn) {
       ($idx == 5).Int;
     })
   });
-  $r1.set_data_uint('column', COLUMN_ITEM_NUMBER);
+  #$r1.set_data_uint('column', COLUMN_ITEM_NUMBER);
   $v.insert_column_with_attributes(
     -1, 'Number', $r1, 'text', COLUMN_ITEM_NUMBER
   );
@@ -142,16 +146,15 @@ sub add_columns($v, $mi, $mn) {
   my $r2 = GTK::CellRendererText.new;
   $r2.editable = True;
   $r2.edited.tap(-> *@a {
-    say "MI: { $mi }";
-    cell_edited($r2, $mi, |@a[1..2] )
+    cell_edited($r2, $mi, COLUMN_ITEM_PRODUCT, |@a[1..2] )
   });
-  $r2.set_data_uint('column', COLUMN_ITEM_PRODUCT);
+  #$r2.set_data_uint('column', COLUMN_ITEM_PRODUCT);
   $v.insert_column_with_attributes(
     -1, 'Product', $r2, 'text', COLUMN_ITEM_PRODUCT
   );
 
   my $r3 = GTK::CellRendererProgress.new;
-  $r3.set_data_uint('column', COLUMN_ITEM_YUMMY);
+  #$r3.set_data_uint('column', COLUMN_ITEM_YUMMY);
   $v.insert_column_with_attributes(
     -1, 'Yummy', $r3, 'value', COLUMN_ITEM_YUMMY
   );

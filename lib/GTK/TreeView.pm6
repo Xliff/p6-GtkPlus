@@ -701,8 +701,8 @@ class GTK::TreeView is GTK::Container {
     my $p = GtkTreePath;
     my $fc = GtkTreeViewColumn;
     my ($p1, $p2) = samewith($p, $fc);
-    $p1 = GTK::TreePath.new($p1) with $p1;
-    $p2 = GTK::TreeViewColumn.new($p2) with $p2;
+    $p1 = GTK::TreePath.new($_) with $p1;
+    $p2 = GTK::TreeViewColumn.new($_) with $p2;
     ($p1, $p2);
   }
   multi method get_cursor (
@@ -711,11 +711,19 @@ class GTK::TreeView is GTK::Container {
   ) {
     my $pc = CArray[Pointer[GtkTreePath]].new;
     my $fc = CArray[Pointer[GtkTreeViewColumn]].new;
-    $pc[0] = cast(Pointer[GtkTreePath], $path) with $path;
-    $fc[0] = cast(Pointer[GtkTreeViewColumn], $focus_column)
-      with $focus_column;
+    $pc[0] = $path.defined ??
+      cast(Pointer[GtkTreePath], $path) !!
+      Pointer[GtkTreePath];
+    $fc[0] = $focus_column.defined ??
+      cast(Pointer[GtkTreeViewColumn], $focus_column) !!
+      Pointer[GtkTreeViewColumn];
     gtk_tree_view_get_cursor($!tv, $pc, $fc);
-    ( $pc[0].defined ?? $pc[0] !! Nil, $fc[0].defined ?? $fc[0] !! Nil );
+
+    # Returned list.
+    (
+      $pc[0].defined ?? $pc[0].deref !! Nil,
+      $fc[0].defined ?? $fc[0].deref !! Nil
+    );
   }
 
   method get_dest_row_at_pos (

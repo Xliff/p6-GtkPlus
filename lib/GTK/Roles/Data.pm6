@@ -16,7 +16,8 @@ role GTK::Roles::Data {
   }
 
   method get_data_uint(Str() $key) {
-    my Pointer[uint32] $pi = g_object_get_ptr($!data, $key);
+    my Pointer[uint32] $pi =
+      nativecast( Pointer[uint32], g_object_get_ptr($!data, $key) );
     $pi.defined ?? $pi.deref !! Nil;
   }
   method set_data_uint(Str() $key, Int() $val) {

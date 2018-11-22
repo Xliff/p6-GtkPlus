@@ -28,7 +28,10 @@ class GTK::TreeViewColumn {
     $!tvc;
   }
 
-  method new {
+  multi method new (GtkTreeViewColumn $treeview) {
+    self.bless(:$treeview);
+  }
+  multi method new {
     my $treeview = gtk_tree_view_column_new();
     self.bless(:$treeview);
   }
@@ -409,4 +412,3 @@ class GTK::TreeViewColumn {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
