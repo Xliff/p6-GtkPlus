@@ -549,7 +549,12 @@ class GTK::Widget {
   # Signal void Run First
   # Is originally:
   # GtkWidget, GdkRectangle, gpointer --> void
-  method size-allocate is also<size_allocate> {
+  # Made multi so as to not conflict with the method of the same name.
+  # Aliases made manually.
+  multi method size-allocate {
+    self.connect-size-allocate($!w);
+  }
+  multi method size_allocate {
     self.connect-size-allocate($!w);
   }
 
@@ -1927,10 +1932,13 @@ class GTK::Widget {
     );
   }
 
-  method allocate_size (GtkAllocation $allocation)
-    is also<allocate-size>
-  {
+  # Multi methods so as to not conflict with the signal handler of the same
+  # name. Aliases implemented manually.
+  multi method size_allocate (GtkAllocation $allocation) {
     gtk_widget_size_allocate($!w, $allocation);
+  }
+  multi method size-allocate (GtkAllocation $allocation) {
+    self.size_allocate($allocation);
   }
 
   method emit_keynav_failed (GtkDirectionType $direction)

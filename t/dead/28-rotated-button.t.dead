@@ -225,8 +225,8 @@ class RotatedBin is GTK::Layout {
 
     self.set_allocation($allocation);
     $dbw = ($border_width = self.border_width) * 2;
-    ($w, $h) = ($allocation.width, $allocation.height) »-« $dbw xx 2;
-    self.move_resize(
+    ($w, $h) = ($allocation.width, $allocation.height) »-« ($dbw xx 2);
+    $!offscreen_window.move_resize(
       $allocation.x + $border_width,
       $allocation.y + $border_width,
       $w,
@@ -240,13 +240,16 @@ class RotatedBin is GTK::Layout {
       ($s, $c) = ($!angle.sin, $!angle.cos);
       $!child.get_preferred_size($child_req, GtkRequisition);
       $child_allo.x = $child_allo.y = 0;
+      say "C: {$c} / S: {$s} / W: {$w} / H: {$h}";
       if $c =~= 0 {
-        $child_allo.width = $h / $s;
+        $child_allo.width = ($h / $s).Int;
+      } elsif $s =~= 0 {
+        $child_allo.width = ($w / $c).Int;
       } else {
         $child_allo.width = (
           $w - $s * $child_allo.height / $c,
           $h - $c * $child_allo.height / $s
-        ).min;
+        ).min.Int;
       }
       $!offscreen_window.move_resize(
         $child_allo.x,
@@ -371,6 +374,15 @@ $a.activate.tap({
 
   $bin.set_size_request(200, 200);
   $bin.add($button);
+
+  my $a1 = GtkAllocation.new;
+  $bin.size_allocate($a1);
+
+  $bin.draw.tap(-> *@a {
+    my $aloc = GtkAllocation.new;
+    $bin.size_allocate($aloc);
+    @a[*-1].r = $bin.draw( @a[1] );
+  });
 
   $scale.value-changed.tap( -> *@a { $bin.set_angle($scale.value) });
   $scale.draw_value = False;
