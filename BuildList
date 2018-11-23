@@ -113,10 +113,14 @@ GTK::Raw::ComboBox
 GTK::Raw::ComboBoxText
 GTK::Raw::Container
 GTK::Raw::Dialog
+GTK::Raw::DnD
+GTK::Raw::DragDest
+GTK::Raw::DragSource
 GTK::Raw::Editable
 GTK::Raw::Entry
 GTK::Raw::EntryBuffer
 GTK::Raw::EntryCompletion
+GTK::Raw::EventBox
 GTK::Raw::Expander
 GTK::Raw::FileChooser
 GTK::Raw::FileChooserButton
@@ -274,6 +278,7 @@ GTK::Compat::Display
 GTK::Compat::Roles::Signals
 GTK::Compat::Screen
 GTK::Compat::Value
+GTK::DragContext
 GTK::EntryBuffer
 GTK::FileFilter
 GTK::IconInfo
@@ -358,6 +363,7 @@ GTK::ColorButton
 GTK::ColorChooser
 GTK::ComboBox
 GTK::ComboBoxText
+GTK::EventBox
 GTK::Expander
 GTK::FileChooserButton
 GTK::FlowBoxChild

@@ -44,6 +44,26 @@ class GTK::IconInfo {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
+  # From gtkiconfactory.h which is now deprecated. This was the best fit.
+  # It is a static method.
+  proto method size_lookup (|) is also<size-lookup> { * }
+
+  multi method size_lookup (GtkIconSize $size) {
+    my Int ($w, $h);
+    samewith($size, $w, $h);
+    ($w, $h);
+  }
+  multi method size_lookup (
+    Int() $size,
+    Int() $width is rw,
+    Int() $height is rw
+  ) {
+    my gint ($w, $h);
+    my guint32 $s = self.RESOLVE-UINT($size);
+    my $rc = gtk_icon_size_lookup($s, $w, $h);
+    ($width, $height) = ($rc ?? $w !! Nil, $rc ?? $h !! Nil);
+  }
+
   # ↓↓↓↓ METHODS ↓↓↓↓
   method copy {
     gtk_icon_info_copy($!ii);

@@ -8,9 +8,11 @@ use GTK::Raw::Clipboard;
 use GTK::Raw::Types;
 
 use GTK::Roles::Signals::Generic;
+use GTK::Roles::Types;
 
 class GTK::Clipboard {
   also does GTK::Roles::Signals::Generic;
+  also does GTK::Roles::Types;
 
   has GtkClipboard $!cb;
 
@@ -30,27 +32,31 @@ class GTK::Clipboard {
     my $clipboard = GTK::Clipboard.get($sel);
     self.bless(:$clipboard);
   }
-  multi method new (GdkDisplay $display, GdkAtom $sel) {
+  multi method new (GdkDisplay() $display, GdkAtom $sel) {
     my $clipboard = GTK::Clipboard.get_for_display($display, $sel);
     self.bless(:$clipboard);
   }
-  multi method new (GdkDisplay $display) {
+  multi method new (GdkDisplay() $display) {
     my $clipboard = GTK::Clipboard.get_default($display);
     self.bless(:$clipboard);
   }
-
   # Static methods used in multi new(). Should these just be eliminated
   # for the default object accessors?
   method get(GdkAtom $sel) {
-    gtk_clipboard_get($sel);
+    my $clipboard = gtk_clipboard_get($sel);
+    self.bless(:$clipboard);
   }
 
-  method get_default(GdkDisplay $display) is also<get-default> {
-    gtk_clipboard_get_default($display);
+  method get_default(GdkDisplay() $display) is also<get-default> {
+    my $clipboard = gtk_clipboard_get_default($display);
+    self.bless(:$clipboard);
   }
 
-  method get_for_display (GdkDisplay $display, GdkAtom $selection) is also<get-for-display> {
-    gtk_clipboard_get_for_display($display, $selection);
+  method get_for_display (GdkDisplay() $display, GdkAtom $selection)
+    is also<get-for-display>
+  {
+    my $clipboard = gtk_clipboard_get_for_display($display, $selection);
+    self.bless(:$clipboard);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -64,6 +70,33 @@ class GTK::Clipboard {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  #      - or -
+  # Minor helper function for masochists.
+
+  method text is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        warn 'GTK::Clipboard.text does not support retrieval';
+        '';
+      },
+      STORE => -> $, Str() $text {
+        self.set_text($text, -1);
+      }
+    );
+  }
+
+  method image is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        warn 'GTK::Clipboard.image does not support retrieval';
+        Nil;
+      },
+      STORE => -> $, GdkPixbuf() $pix {
+        self.set_image($pix);
+      }
+    );
+  }
+
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -90,70 +123,89 @@ class GTK::Clipboard {
   method request_contents (
     GdkAtom $target,
     GtkClipboardReceivedFunc $callback,
-    gpointer $user_data
-  ) is also<request-contents> {
+    gpointer $user_data = gpointer
+  )
+    is also<request-contents>
+  {
     gtk_clipboard_request_contents($!cb, $target, $callback, $user_data);
   }
 
   method request_image (
     GtkClipboardImageReceivedFunc $callback,
-    gpointer $user_data
-  ) is also<request-image> {
+    gpointer $user_data = gpointer
+  )
+    is also<request-image>
+  {
     gtk_clipboard_request_image($!cb, $callback, $user_data);
   }
 
   method request_rich_text (
     GtkTextBuffer() $buffer,
     GtkClipboardRichTextReceivedFunc $callback,
-    gpointer $user_data
-  ) is also<request-rich-text> {
+    gpointer $user_data = gpointer
+  )
+    is also<request-rich-text>
+  {
     gtk_clipboard_request_rich_text($!cb, $buffer, $callback, $user_data);
   }
 
   method request_targets (
     GtkClipboardTargetsReceivedFunc $callback,
-    gpointer $user_data
-  ) is also<request-targets> {
+    gpointer $user_data = gpointer
+  )
+    is also<request-targets>
+  {
     gtk_clipboard_request_targets($!cb, $callback, $user_data);
   }
 
   method request_text (
     GtkClipboardTextReceivedFunc $callback,
-    gpointer $user_data
-  ) is also<request-text> {
+    gpointer $user_data = gpointer
+  )
+    is also<request-text>
+  {
     gtk_clipboard_request_text($!cb, $callback, $user_data);
   }
 
   method request_uris (
     GtkClipboardURIReceivedFunc $callback,
-    gpointer $user_data
-  ) is also<request-uris> {
+    gpointer $user_data = gpointer
+  )
+    is also<request-uris>
+  {
     gtk_clipboard_request_uris($!cb, $callback, $user_data);
   }
 
-  method set_can_store (GtkTargetEntry() $targets, gint $n_targets) is also<set-can-store> {
-    gtk_clipboard_set_can_store($!cb, $targets, $n_targets);
+  method set_can_store (GtkTargetEntry() $targets, Int() $n_targets)
+    is also<set-can-store>
+  {
+    my gint $nt = self.RESOLVE-INT($n_targets);
+    gtk_clipboard_set_can_store($!cb, $targets, $nt);
   }
 
   method set_image (GdkPixbuf $pixbuf) is also<set-image> {
     gtk_clipboard_set_image($!cb, $pixbuf);
   }
 
-  method set_text (gchar $text, gint $len) is also<set-text> {
-    gtk_clipboard_set_text($!cb, $text, $len);
+  method set_text (Str() $text, Int() $len) is also<set-text> {
+    my gint $l = self.RESOLVE-INT($len);
+    gtk_clipboard_set_text($!cb, $text, $l);
   }
 
   method set_with_data (
     GtkTargetEntry() $targets,
-    guint $n_targets,
+    Int() $n_targets,
     GtkClipboardGetFunc $get_func,
     GtkClipboardClearFunc $clear_func,
-    gpointer $user_data
-  ) is also<set-with-data> {
+    gpointer $user_data = gpointer
+  )
+    is also<set-with-data>
+  {
+    my gint $nt = self.RESOLVE-INT($n_targets);
     gtk_clipboard_set_with_data(
       $!cb,
       $targets,
-      $n_targets,
+      $nt,
       $get_func,
       $clear_func,
       $user_data
@@ -162,15 +214,18 @@ class GTK::Clipboard {
 
   method set_with_owner (
     GtkTargetEntry() $targets,
-    guint $n_targets,
+    Int() $n_targets,
     GtkClipboardGetFunc $get_func,
     GtkClipboardClearFunc $clear_func,
     GObject $owner
-  ) is also<set-with-owner> {
+  )
+    is also<set-with-owner>
+  {
+    my gint $nt = self.RESOLVE-INT($n_targets);
     gtk_clipboard_set_with_owner(
       $!cb,
       $targets,
-      $n_targets,
+      $nt,
       $get_func,
       $clear_func,
       $owner
@@ -193,12 +248,17 @@ class GTK::Clipboard {
     GtkTextBuffer() $buffer,
     GdkAtom $format,
     gsize $length
-  ) is also<wait-for-rich-text> {
+  )
+    is also<wait-for-rich-text>
+  {
     gtk_clipboard_wait_for_rich_text($!cb, $buffer, $format, $length);
   }
 
-  method wait_for_targets (GdkAtom $targets, gint $n_targets) is also<wait-for-targets> {
-    gtk_clipboard_wait_for_targets($!cb, $targets, $n_targets);
+  method wait_for_targets (GdkAtom $targets, Int() $n_targets)
+    is also<wait-for-targets>
+  {
+    my gint $nt = self.RESOLVE-INT($n_targets);
+    gtk_clipboard_wait_for_targets($!cb, $targets, $nt);
   }
 
   method wait_for_text is also<wait-for-text> {
@@ -213,11 +273,15 @@ class GTK::Clipboard {
     gtk_clipboard_wait_is_image_available($!cb);
   }
 
-  method wait_is_rich_text_available (GtkTextBuffer() $buffer) is also<wait-is-rich-text-available> {
+  method wait_is_rich_text_available (GtkTextBuffer() $buffer)
+    is also<wait-is-rich-text-available>
+  {
     gtk_clipboard_wait_is_rich_text_available($!cb, $buffer);
   }
 
-  method wait_is_target_available (GdkAtom $target) is also<wait-is-target-available> {
+  method wait_is_target_available (GdkAtom $target)
+    is also<wait-is-target-available>
+  {
     gtk_clipboard_wait_is_target_available($!cb, $target);
   }
 
@@ -231,4 +295,3 @@ class GTK::Clipboard {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

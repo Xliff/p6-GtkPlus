@@ -10,6 +10,8 @@ use GTK::Compat::Types;
 use GTK::Compat::Value;
 use GTK::Compat::Window;
 
+use GTK::Raw::DragDest;
+use GTK::Raw::DragSource;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
@@ -2050,6 +2052,114 @@ class GTK::Widget {
     is also<add-tick-callback>
   {
     gtk_widget_add_tick_callback($!w, $callback, $user_data, $notify);
+  }
+
+
+  # GTK Drag and Drop destination routines.
+
+  method dest_add_image_targets is also<dest-add-image-targets> {
+    gtk_drag_dest_add_image_targets($!w);
+  }
+
+  method dest_add_text_targets is also<dest-add-text-targets> {
+    gtk_drag_dest_add_text_targets($!w);
+  }
+
+  method dest_add_uri_targets is also<dest-add-uri-targets> {
+    gtk_drag_dest_add_uri_targets($!w);
+  }
+
+  method dest_find_target (
+    GdkDragContext $context,
+    GtkTargetList() $target_list
+  )
+    is also<dest-find-target>
+  {
+    gtk_drag_dest_find_target($!w, $context, $target_list);
+  }
+
+  method dest_set (
+    GtkDestDefaults $flags,
+    GtkTargetEntry $targets,
+    Int() $n_targets,
+    Int() $actions
+  )
+    is also<dest-set>
+  {
+    my gint $nt = self.RESOLVE-INT($n_targets);
+    my guint $a = self.RESOLVE-UINT($actions);
+    gtk_drag_dest_set($!w, $flags, $targets, $nt, $a);
+  }
+
+  method dest_set_proxy (
+    GdkWindow $proxy_window,
+    Int() $protocol,
+    Int() $use_coordinates
+  )
+    is also<dest-set-proxy>
+  {
+    my guint $p = self.RESOLVE-UINT($protocol);
+    my gboolean $uc = self.RESOLVE-BOOL($use_coordinates);
+    gtk_drag_dest_set_proxy($!w, $proxy_window, $p, $uc);
+  }
+
+  method dest_unset is also<dest-unset> {
+    gtk_drag_dest_unset($!w);
+  }
+
+  # GTK Drag and Drop Source routines.
+  method source_add_image_targets is also<source-add-image-targets>{
+    gtk_drag_source_add_image_targets($!w);
+  }
+
+  method source_add_text_targets is also<source-add-text-targets> {
+    gtk_drag_source_add_text_targets($!w);
+  }
+
+  method source_add_uri_targets is also<source-add-uri-targets> {
+    gtk_drag_source_add_uri_targets($!w);
+  }
+
+  method source_set (
+    Int() $start_button_mask,
+    GtkTargetEntry $targets,
+    Int() $n_targets,
+    Int() $actions
+  )
+    is also<source-set>
+  {
+    my @u = ($start_button_mask, $actions);
+    my guint ($sbm, $a) = self.RESOLVE-UINT(@u);
+    my gint $nt = self.RESOLVE-INT($n_targets);
+    gtk_drag_source_set($!w, $sbm, $targets, $nt, $a);
+  }
+
+  method source_set_icon_gicon (GIcon $icon)
+    is also<source-set-icon-gicon>
+  {
+    gtk_drag_source_set_icon_gicon($!w, $icon);
+  }
+
+  method source_set_icon_name (Str() $icon_name)
+    is also<source-set-icon-name source-set-icon>
+  {
+    gtk_drag_source_set_icon_name($!w, $icon_name);
+  }
+
+  method source_set_icon_pixbuf (GdkPixbuf() $pixbuf)
+    is also<source-set-icon-pixbuf source-set-pixbuf>
+  {
+    gtk_drag_source_set_icon_pixbuf($!w, $pixbuf);
+  }
+
+  method source_set_icon_stock (Str() $stock_id)
+    is also<source-set-icon-stock source-set-stock>
+  {
+    gtk_drag_source_set_icon_stock($!w, $stock_id);
+  }
+
+  method source_unset is also<source-unset> {
+    gtk_drag_source_unset($!w);
   }
 
 }

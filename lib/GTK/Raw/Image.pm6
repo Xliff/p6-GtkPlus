@@ -19,19 +19,30 @@ sub gtk_image_get_animation (GtkImage $image)
   { * }
 
 #(GtkImage $image, GIcon $gicon, GtkIconSize $size)
-sub gtk_image_get_gicon (GtkImage $image, GIcon $gicon, uint32 $size)
+sub gtk_image_get_gicon (
+  GtkImage $image,
+  GIcon $gicon is rw,
+  uint32 $size is rw
+)
   is native(gtk)
   is export
   { * }
 
 #(GtkImage $image, gchar $icon_name, GtkIconSize $size)
-sub gtk_image_get_icon_name (GtkImage $image, gchar $icon_name, uint32 $size)
+sub gtk_image_get_icon_name (
+  GtkImage $image,
+  Str $icon_name,
+  uint32 $size is rw
+)
   is native(gtk)
   is export
   { * }
 
 #(GtkImage $image, GtkIconSet $icon_set, GtkIconSize $size)
-sub gtk_image_get_icon_set (GtkImage $image, GtkIconSet $icon_set, uint32 $size)
+sub gtk_image_get_icon_set (GtkImage $image,
+  GtkIconSet $icon_set is rw,
+  uint32 $size is rw
+)
   is native(gtk)
   is export
   { * }
@@ -43,7 +54,11 @@ sub gtk_image_get_pixbuf (GtkImage $image)
   { * }
 
 # (GtkImage $image, gchar $stock_id, GtkIconSize $size)
-sub gtk_image_get_stock (GtkImage $image, gchar $stock_id, uint32 $size)
+sub gtk_image_get_stock (
+  GtkImage $image,
+  gchar $stock_id,
+  uint32 $size is rw
+)
   is native(gtk)
   is export
   { * }
@@ -124,7 +139,10 @@ sub gtk_image_new_from_surface (cairo_surface_t $surface)
   is export
   { * }
 
-sub gtk_image_set_from_animation (GtkImage $image, GdkPixbufAnimation $animation)
+sub gtk_image_set_from_animation (
+  GtkImage $image,
+  GdkPixbufAnimation $animation
+)
   is native(gtk)
   is export
   { * }
@@ -141,13 +159,21 @@ sub gtk_image_set_from_gicon (GtkImage $image, GIcon $icon, uint32 $size)
   { * }
 
 # (GtkImage $image, gchar $icon_name, GtkIconSize $size)
-sub gtk_image_set_from_icon_name (GtkImage $image, gchar $icon_name, uint32 $size)
+sub gtk_image_set_from_icon_name (
+  GtkImage $image,
+  gchar $icon_name,
+  uint32 $size
+)
   is native(gtk)
   is export
   { * }
 
 # (GtkImage $image, GtkIconSet $icon_set, GtkIconSize $size)
-sub gtk_image_set_from_icon_set (GtkImage $image, GtkIconSet $icon_set, uint32 $size)
+sub gtk_image_set_from_icon_set (
+  GtkImage $image,
+  GtkIconSet $icon_set,
+  uint32 $size
+)
   is native(gtk)
   is export
   { * }
@@ -163,7 +189,11 @@ sub gtk_image_set_from_resource (GtkImage $image, gchar $resource_path)
   { * }
 
 # (GtkImage $image, gchar $stock_id, GtkIconSize $size)
-sub gtk_image_set_from_stock (GtkImage $image, gchar $stock_id, uint32 $size)
+sub gtk_image_set_from_stock (
+  GtkImage $image,
+  gchar $stock_id,
+  uint32 $size
+)
   is native(gtk)
   is export
   { * }

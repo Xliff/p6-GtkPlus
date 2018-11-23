@@ -670,7 +670,6 @@ class GdkDevice             is repr('CPointer') is export does GTK::Roles::Point
 class GdkDeviceManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDragProtocol       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkEvent              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkEventAny           is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1014,3 +1013,14 @@ our enum GdkSubpixelLayout is export <
   GDK_SUBPIXEL_LAYOUT_VERTICAL_RGB
   GDK_SUBPIXEL_LAYOUT_VERTICAL_BGR
 >;
+
+our enum GdkDragProtocol is export (
+  GDK_DRAG_PROTO_NONE => 0,
+  'GDK_DRAG_PROTO_MOTIF',
+  'GDK_DRAG_PROTO_XDND',
+  'GDK_DRAG_PROTO_ROOTWIN',
+  'GDK_DRAG_PROTO_WIN32_DROPFILES',
+  'GDK_DRAG_PROTO_OLE2',
+  'GDK_DRAG_PROTO_LOCAL',
+  'GDK_DRAG_PROTO_WAYLAND'
+);

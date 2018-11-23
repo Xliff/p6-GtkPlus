@@ -1012,6 +1012,7 @@ class GtkEditable             is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkEntry                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryBuffer          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkEntryCompletion      is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkEventBox             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkExpander             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFileChooser          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkFileChooserButton    is repr('CPointer') does GTK::Roles::Pointers is export { }

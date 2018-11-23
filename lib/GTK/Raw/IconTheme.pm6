@@ -406,3 +406,13 @@ sub gtk_icon_theme_set_screen (GtkIconTheme $icon_theme, GdkScreen $screen)
   is native(gtk)
   is export
   { * }
+
+# Rescued from deprecated gtkiconfactory.h
+sub gtk_icon_size_lookup (
+  uint32 $size,                 # GtkIconSize $size,
+  gint $width is rw,
+  gint $height is rw
+)
+  is native(gtk)
+  is export
+  { * }

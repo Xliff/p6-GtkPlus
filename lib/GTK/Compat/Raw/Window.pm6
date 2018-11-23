@@ -313,7 +313,7 @@ sub gdk_window_get_display (GdkWindow $window)
   { * }
 
 sub gdk_window_get_drag_protocol (GdkWindow $window, GdkWindow $target)
-  returns GdkDragProtocol
+  returns uint32 # GdkDragProtocol
   is native(gdk)
   is export
   { * }

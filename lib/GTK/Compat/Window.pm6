@@ -556,7 +556,7 @@ class GTK::Compat::Window {
   }
 
   method get_drag_protocol (GdkWindow $target) is also<get-drag-protocol> {
-    gdk_window_get_drag_protocol($!window, $target);
+    GdkDragProtocol( gdk_window_get_drag_protocol($!window, $target) );
   }
 
   method get_effective_parent is also<get-effective-parent> {
