@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
-constant forced = 8;
+constant forced = 9;
 
 unit package GTK::Compat::Types;
 

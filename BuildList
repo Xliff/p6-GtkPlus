@@ -317,7 +317,6 @@ GTK::Calendar
 GTK::CellArea
 GTK::CellAreaBox
 GTK::CellRendererAccel
-GTK::CellRendererCombo
 GTK::CellRendererSpin
 GTK::CellView
 GTK::Compat::Menu
@@ -394,6 +393,7 @@ GTK::AppButton
 GTK::Application
 GTK::AspectFrame
 GTK::Assistant
+GTK::CellRendererCombo
 GTK::CheckButton
 GTK::CheckMenuItem
 GTK::Dialog
