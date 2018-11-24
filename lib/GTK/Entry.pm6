@@ -365,7 +365,7 @@ class GTK::Entry is GTK::Widget {
       FETCH => sub ($) {
         gtk_entry_get_text($!e);
       },
-      STORE => sub ($, $text is copy) {
+      STORE => sub ($, Str() $text is copy) {
         gtk_entry_set_text($!e, $text);
       }
     );

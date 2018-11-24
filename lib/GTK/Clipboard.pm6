@@ -29,16 +29,13 @@ class GTK::Clipboard {
   }
 
   multi method new (GdkAtom $sel) {
-    my $clipboard = GTK::Clipboard.get($sel);
-    self.bless(:$clipboard);
+    GTK::Clipboard.get($sel);
   }
   multi method new (GdkDisplay() $display, GdkAtom $sel) {
-    my $clipboard = GTK::Clipboard.get_for_display($display, $sel);
-    self.bless(:$clipboard);
+    GTK::Clipboard.get_for_display($display, $sel);
   }
   multi method new (GdkDisplay() $display) {
-    my $clipboard = GTK::Clipboard.get_default($display);
-    self.bless(:$clipboard);
+    GTK::Clipboard.get_default($display);
   }
   # Static methods used in multi new(). Should these just be eliminated
   # for the default object accessors?
@@ -122,58 +119,58 @@ class GTK::Clipboard {
 
   method request_contents (
     GdkAtom $target,
-    GtkClipboardReceivedFunc $callback,
+    &callback,
     gpointer $user_data = gpointer
   )
     is also<request-contents>
   {
-    gtk_clipboard_request_contents($!cb, $target, $callback, $user_data);
+    gtk_clipboard_request_contents($!cb, $target, &callback, $user_data);
   }
 
   method request_image (
-    GtkClipboardImageReceivedFunc $callback,
+    &callback,
     gpointer $user_data = gpointer
   )
     is also<request-image>
   {
-    gtk_clipboard_request_image($!cb, $callback, $user_data);
+    gtk_clipboard_request_image($!cb, &callback, $user_data);
   }
 
   method request_rich_text (
     GtkTextBuffer() $buffer,
-    GtkClipboardRichTextReceivedFunc $callback,
+    &callback,
     gpointer $user_data = gpointer
   )
     is also<request-rich-text>
   {
-    gtk_clipboard_request_rich_text($!cb, $buffer, $callback, $user_data);
+    gtk_clipboard_request_rich_text($!cb, $buffer, &callback, $user_data);
   }
 
   method request_targets (
-    GtkClipboardTargetsReceivedFunc $callback,
+    &callback,
     gpointer $user_data = gpointer
   )
     is also<request-targets>
   {
-    gtk_clipboard_request_targets($!cb, $callback, $user_data);
+    gtk_clipboard_request_targets($!cb, &callback, $user_data);
   }
 
   method request_text (
-    GtkClipboardTextReceivedFunc $callback,
+    &callback,
     gpointer $user_data = gpointer
   )
     is also<request-text>
   {
-    gtk_clipboard_request_text($!cb, $callback, $user_data);
+    gtk_clipboard_request_text($!cb, &callback, $user_data);
   }
 
   method request_uris (
-    GtkClipboardURIReceivedFunc $callback,
+    &callback,
     gpointer $user_data = gpointer
   )
     is also<request-uris>
   {
-    gtk_clipboard_request_uris($!cb, $callback, $user_data);
+    gtk_clipboard_request_uris($!cb, &callback, $user_data);
   }
 
   method set_can_store (GtkTargetEntry() $targets, Int() $n_targets)
@@ -195,8 +192,8 @@ class GTK::Clipboard {
   method set_with_data (
     GtkTargetEntry() $targets,
     Int() $n_targets,
-    GtkClipboardGetFunc $get_func,
-    GtkClipboardClearFunc $clear_func,
+    &get_func,
+    &clear_func,
     gpointer $user_data = gpointer
   )
     is also<set-with-data>
@@ -206,8 +203,8 @@ class GTK::Clipboard {
       $!cb,
       $targets,
       $nt,
-      $get_func,
-      $clear_func,
+      &get_func,
+      &clear_func,
       $user_data
     );
   }
@@ -215,8 +212,8 @@ class GTK::Clipboard {
   method set_with_owner (
     GtkTargetEntry() $targets,
     Int() $n_targets,
-    GtkClipboardGetFunc $get_func,
-    GtkClipboardClearFunc $clear_func,
+    &get_func,
+    &clear_func,
     GObject $owner
   )
     is also<set-with-owner>
@@ -226,8 +223,8 @@ class GTK::Clipboard {
       $!cb,
       $targets,
       $nt,
-      $get_func,
-      $clear_func,
+      &get_func,
+      &clear_func,
       $owner
     );
   }

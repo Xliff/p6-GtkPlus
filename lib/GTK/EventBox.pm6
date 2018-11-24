@@ -38,7 +38,7 @@ class GTK::EventBox is GTK::Bin {
             $_;
           }
         }
-        self.setParent($to-parent);
+        self.setBin($to-parent);
       }
       when GTK::EventBox {
       }

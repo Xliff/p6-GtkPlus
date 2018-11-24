@@ -60,7 +60,7 @@ sub gtk_clipboard_get_type ()
 sub gtk_clipboard_request_contents (
   GtkClipboard $clipboard,
   GdkAtom $target,
-  GtkClipboardReceivedFunc $callback,
+  &req_contents (GtkClipboard, GtkSelectionData, gpointer),
   gpointer $user_data
 )
   is native(gtk)
@@ -69,7 +69,7 @@ sub gtk_clipboard_request_contents (
 
 sub gtk_clipboard_request_image (
   GtkClipboard $clipboard,
-  GtkClipboardImageReceivedFunc $callback,
+  &req_image (GtkClipboard, GdkPixbuf, gpointer),
   gpointer $user_data
 )
   is native(gtk)
@@ -79,7 +79,7 @@ sub gtk_clipboard_request_image (
 sub gtk_clipboard_request_rich_text (
   GtkClipboard $clipboard,
   GtkTextBuffer $buffer,
-  GtkClipboardRichTextReceivedFunc $callback,
+  &req_rtf (GtkClipboard, GdkAtom, Str, gsize, gpointer),
   gpointer $user_data
 )
   is native(gtk)
@@ -88,7 +88,7 @@ sub gtk_clipboard_request_rich_text (
 
 sub gtk_clipboard_request_targets (
   GtkClipboard $clipboard,
-  GtkClipboardTargetsReceivedFunc $callback,
+  &req_targets (GtkClipboard, GdkAtom, gint, gpointer),
   gpointer $user_data
 )
   is native(gtk)
@@ -97,7 +97,7 @@ sub gtk_clipboard_request_targets (
 
 sub gtk_clipboard_request_text (
   GtkClipboard $clipboard,
-  GtkClipboardTextReceivedFunc $callback,
+  &req_text (GtkClipboard, Str, gpointer),
   gpointer $user_data
 )
   is native(gtk)
@@ -106,7 +106,7 @@ sub gtk_clipboard_request_text (
 
 sub gtk_clipboard_request_uris (
   GtkClipboard $clipboard,
-  GtkClipboardURIReceivedFunc $callback,
+  &req_uris (GtkClipboard, CArray[Str], gpointer),
   gpointer $user_data
 )
   is native(gtk)
@@ -143,8 +143,8 @@ sub gtk_clipboard_set_with_data (
   GtkClipboard $clipboard,
   GtkTargetEntry $targets,
   guint $n_targets,
-  GtkClipboardGetFunc $get_func,
-  GtkClipboardClearFunc $clear_func,
+  &get_func (GtkClipboard, GtkSelectionData, guint, gpointer),
+  &clear_func (GtkClipboard, gpointer),
   gpointer $user_data
 )
   returns uint32
@@ -156,8 +156,8 @@ sub gtk_clipboard_set_with_owner (
   GtkClipboard $clipboard,
   GtkTargetEntry $targets,
   guint $n_targets,
-  GtkClipboardGetFunc $get_func,
-  GtkClipboardClearFunc $clear_func,
+  &get_func (GtkClipboard, GtkSelectionData, guint, gpointer),
+  &clear_func (GtkClipboard, gpointer),
   GObject $owner
 )
   returns uint32

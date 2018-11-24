@@ -671,9 +671,6 @@ class GdkDeviceManager      is repr('CPointer') is export does GTK::Roles::Point
 class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkEvent              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkEventAny           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkEventButton        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkFrameClock         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkGLContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkInputSource        is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -684,7 +681,6 @@ class GdkPixbufAnimation    is repr('CPointer') is export does GTK::Roles::Point
 class GdkScreen             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkSeat               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkStyleProvider      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkTouchEvent         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkVisual             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkWindow             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
@@ -694,6 +690,14 @@ class GdkColor is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint16 $.green;
   has guint16 $.blue;
 }
+
+class GdkEventAny is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32       $.type;              # GdkEventType
+  has GdkWindow    $.window;
+  has int8         $.send_event;
+}
+
+constant GdkEvent is export := GdkEventAny;
 
 class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32       $.type;              # GdkEventType
@@ -733,6 +737,21 @@ class GdkRectangle is repr('CStruct') does GTK::Roles::Pointers is export {
 class GdkPoint is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint $.x is rw;
   has gint $.y is rw;
+}
+
+class GdkEventButton is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has guint32        $.time;
+  has gdouble        $.x;
+  has gdouble        $.y;
+  has gdouble        $.axes is rw;
+  has guint          $.state;
+  has guint          $.button;
+  has GdkDevice      $.device;
+  has gdouble        $.x_root;
+  has gdouble        $.y_root;
 }
 
 class GdkEventExpose is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -1023,4 +1042,29 @@ our enum GdkDragProtocol is export (
   'GDK_DRAG_PROTO_OLE2',
   'GDK_DRAG_PROTO_LOCAL',
   'GDK_DRAG_PROTO_WAYLAND'
+);
+
+sub gdkMakeAtom($i) is export {
+  my gint $ii = $i +& 0x7fff;
+  my $c = CArray[int32].new($ii);
+  nativecast(GdkAtom, $c);
+}
+
+our enum GdkSelectionAtom is export (
+  GDK_SELECTION_PRIMARY        => 1,
+  GDK_SELECTION_SECONDARY      => 2,
+  GDK_SELECTION_CLIPBOARD      => 69,
+  GDK_TARGET_BITMAP            => 5,
+  GDK_TARGET_COLORMAP          => 7,
+  GDK_TARGET_DRAWABLE          => 17,
+  GDK_TARGET_PIXMAP            => 20,
+  GDK_TARGET_STRING            => 31,
+  GDK_SELECTION_TYPE_ATOM      => 4,
+  GDK_SELECTION_TYPE_BITMAP    => 5,
+  GDK_SELECTION_TYPE_COLORMAP  => 7,
+  GDK_SELECTION_TYPE_DRAWABLE  => 17,
+  GDK_SELECTION_TYPE_INTEGER   => 19,
+  GDK_SELECTION_TYPE           => 20,
+  GDK_SELECTION_TYPE_WINDOW    => 33,
+  GDK_SELECTION_TYPE_STRING    => 31,
 );
