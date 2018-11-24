@@ -31,7 +31,7 @@ sub gtk_image_get_gicon (
 #(GtkImage $image, gchar $icon_name, GtkIconSize $size)
 sub gtk_image_get_icon_name (
   GtkImage $image,
-  Str $icon_name,
+  CArray[Str] $icon_name,
   uint32 $size is rw
 )
   is native(gtk)

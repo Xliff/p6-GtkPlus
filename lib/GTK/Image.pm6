@@ -162,11 +162,11 @@ class GTK::Image is GTK::Widget {
 
   # Type: Str()
   method icon-name is rw is also<icon_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my $gv = GTK::Compat::Value.new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get('icon-name', $gv);
+          self.prop_get('icon-name', $gv)
         );
         $gv.string;
       },
@@ -373,18 +373,19 @@ class GTK::Image is GTK::Widget {
 
   proto method get_icon_name (|) is also<get-icon-name> { * }
   multi method get_icon_name {
-    my Str $name;
-    my Int $size;
+    my Str $name = '';
+    my Int $size = 0;
     samewith($name, $size);
-    ($name, $size);
   }
   multi method get_icon_name (
     Str() $icon_name is rw,
     Int() $size is rw             # GtkIconSize $size
   ) {
     my guint32 $s = self.RESOLVE-UINT($size);
-    gtk_image_get_icon_name($!i, $icon_name, $s);
-    $size = $s;
+    my $n = CArray[Str].new;
+    $n[0] = $icon_name;
+    gtk_image_get_icon_name($!i, $n, $s);
+    ($icon_name, $size) = ( $n[0], GtkIconSize($s) );
   }
 
   proto method get_icon_set (|) is also<get-icon-set> { * }

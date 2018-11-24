@@ -109,9 +109,8 @@ class GTK::IconTheme {
   {
     my gint $s = self.RESOLVE-INT($size);
     my guint $f = self.RESOLVE-UINT($flags);
-    GTK::Compat::Pixbuf.new(
-      gtk_icon_theme_load_icon($!it, $icon_name, $s, $f, $error)
-    );
+    my $p = gtk_icon_theme_load_icon($!it, $icon_name, $s, $f, $error);
+    $p.defined ?? GTK::Compat::Pixbuf.new($p) !! Nil;
   }
 
   method load_icon_for_scale (

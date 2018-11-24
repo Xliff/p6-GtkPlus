@@ -8,6 +8,8 @@ use GTK::Roles::Pointers;
 # Number of times I've had to force compile the whole project.
 constant forced = 9;
 
+our $DEBUG is export = 0;
+
 unit package GTK::Compat::Types;
 
 sub cast($cast-to, $obj) is export {
@@ -1067,4 +1069,10 @@ our enum GdkSelectionAtom is export (
   GDK_SELECTION_TYPE           => 20,
   GDK_SELECTION_TYPE_WINDOW    => 33,
   GDK_SELECTION_TYPE_STRING    => 31,
+);
+
+our enum GdkButtons is export (
+  GDK_BUTTON_PRIMARY           => 1,
+  GDK_BUTTON_MIDDLE            => 2,
+  GDK_BUTTON_SECONDARY         => 3
 );

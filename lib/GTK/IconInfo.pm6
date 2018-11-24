@@ -48,7 +48,7 @@ class GTK::IconInfo {
   # It is a static method.
   proto method size_lookup (|) is also<size-lookup> { * }
 
-  multi method size_lookup (GtkIconSize $size) {
+  multi method size_lookup (Int() $size) {
     my Int ($w, $h);
     samewith($size, $w, $h);
     ($w, $h);

@@ -70,7 +70,7 @@ class GTK::DragContext {
     gtk_drag_set_icon_name($!dc, $icon_name, $hx, $hy);
   }
 
-  method set_icon_pixbuf (GdkPixbuf $pixbuf, Int() $hot_x, Int() $hot_y)
+  method set_icon_pixbuf (GdkPixbuf() $pixbuf, Int() $hot_x, Int() $hot_y)
     is also<set-icon-pixbuf>
   {
     my @i = ($hot_x, $hot_y);
