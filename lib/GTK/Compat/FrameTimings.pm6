@@ -6,8 +6,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::FrameTimings;
 
-class GTK::FrameTimings {
-  has GtkFrameTimings $!ft;
+class GTK::Compat::FrameTimings {
+  has GdkFrameTimings $!ft;
 
   submethod BUILD(:$timings) {
     $!ft = $timings;

@@ -4,6 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Pixbuf;
+use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Raw::IconTheme;
 use GTK::Raw::Types;

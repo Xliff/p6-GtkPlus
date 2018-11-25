@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Raw::CellView;
 use GTK::Raw::Types;

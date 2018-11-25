@@ -1,0 +1,4362 @@
+{
+  "GTK::Roles::Pointers": {
+    "optimize": 0.001e0,
+    "parse": 1.019e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::TargetList": {
+    "parse": 2.015e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::AccelGroup": {
+    "parse": 1.496e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Roles::Types": {
+    "optimize": 0.001e0,
+    "parse": 1.361e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::TextTagTable": {
+    "parse": 1.262e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::BuilderWidgets": {
+    "optimize": 0.001e0,
+    "parse": 4.427e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::MenuShell": {
+    "optimize": 0.001e0,
+    "parse": 2.285e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::CheckButton": {
+    "optimize": 0.001e0,
+    "parse": 2.039e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.02e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::IconInfo": {
+    "mast": 0.018e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.442e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Array": {
+    "optimize": 0.001e0,
+    "parse": 1.312e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Dialog::Raw::AppChooser": {
+    "optimize": 0.001e0,
+    "parse": 1.567e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Roles::Signals::CellRendererAccel": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.403e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Selection": {
+    "parse": 2.092e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::PrintOperation": {
+    "parse": 2.198e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::MenuShell": {
+    "parse": 2.175e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::Raw::Menu": {
+    "optimize": 0.002e0,
+    "parse": 2.697e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::TreeStore": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.796e0
+  },
+  "GTK::Compat::Window": {
+    "optimize": 0.001e0,
+    "parse": 2.788e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Builder::Base": {
+    "parse": 1.49e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Widget": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 5.083e0
+  },
+  "GTK::Toolbar": {
+    "parse": 2.038e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::EventBox": {
+    "parse": 1.965e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Compat::Raw::Pixbuf": {
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.002e0,
+    "parse": 4.099e0
+  },
+  "GTK::RecentFilter": {
+    "parse": 1.242e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Scale": {
+    "parse": 2.151e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::ToolItemGroup": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.105e0
+  },
+  "GTK::Compat::Raw::Permission": {
+    "parse": 1.63e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::ProgressBar": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.076e0,
+    "optimize": 0.002e0
+  },
+  "GTK::CellArea": {
+    "optimize": 0.001e0,
+    "parse": 1.969e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::SearchEntry": {
+    "optimize": 0.001e0,
+    "parse": 2.059e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::ButtonBox": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 2.096e0
+  },
+  "GTK::Compat::Raw::Pixbuf::Transforms": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.491e0,
+    "optimize": 0.002e0
+  },
+  "GTK::ScrolledWindow": {
+    "optimize": 0.001e0,
+    "parse": 2.351e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Dialog::PageSetupUnix": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.339e0
+  },
+  "GTK::Raw::FileChooser": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "parse": 5.773e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::Spinner": {
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.371e0,
+    "optimize": 0.001e0
+  },
+  "GTK::FileFilter": {
+    "parse": 1.346e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Expander": {
+    "parse": 2.487e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::CellView": {
+    "optimize": 0.002e0,
+    "parse": 5.016e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Roles::Signals::Places": {
+    "optimize": 0.001e0,
+    "parse": 2.179e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::ComboBox": {
+    "optimize": 0.002e0,
+    "parse": 4.254e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::CellRendererProgress": {
+    "parse": 1.232e0,
+    "optimize": 0.001e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Stack": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.931e0
+  },
+  "GTK::Raw::HeaderBar": {
+    "optimize": 0.002e0,
+    "parse": 2.247e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Compat::Raw::Screen": {
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.77e0
+  },
+  "GTK::Stack": {
+    "parse": 2.37e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::CellAreaContext": {
+    "optimize": 0.001e0,
+    "parse": 1.508e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::StackSidebar": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.378e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Raw::Cursor": {
+    "optimize": 0.002e0,
+    "parse": 1.728e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::CellEditable": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.431e0,
+    "optimize": 0.001e0
+  },
+  "GTK::TextChildAnchor": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.156e0,
+    "optimize": 0.001e0
+  },
+  "GTK::TreeIter": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.172e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Roles::ColorChooser": {
+    "optimize": 0.001e0,
+    "parse": 1.351e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Dialog::FileChooser": {
+    "optimize": 0.001e0,
+    "parse": 2.489e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0
+  },
+  "GTK::Raw::Utils": {
+    "parse": 1.25e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::TreeRow": {
+    "parse": 1.296e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Separator": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.003e0,
+    "parse": 1.885e0
+  },
+  "GTK::Raw::EntryBuffer": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.978e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::TextTag": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.601e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Types": {
+    "parse": 4.909e0,
+    "optimize": 0.011e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.023e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.014e0
+  },
+  "GTK::Raw::ToggleButton": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.934e0,
+    "optimize": 0.001e0
+  },
+  "GTK::PrintSettings": {
+    "syntaxcheck": 0e0,
+    "mast": 0.016e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.045e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::Button": {
+    "optimize": 0.002e0,
+    "parse": 2.971e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0
+  },
+  "GTK::Raw::ToggleToolButton": {
+    "optimize": 0.001e0,
+    "parse": 1.479e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Roles::Scrollable": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.316e0
+  },
+  "GTK::Compat::Monitor": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.517e0
+  },
+  "GTK::Roles::Signals::TextBuffer": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.807e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Button": {
+    "optimize": 0.001e0,
+    "parse": 2.329e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::VolumeButton": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.002e0,
+    "parse": 2.063e0
+  },
+  "GTK::Raw::EventBox": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.534e0
+  },
+  "GTK::Roles::Signals::CSSProvider": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.439e0
+  },
+  "GTK::Compat::Pixbuf": {
+    "optimize": 0.001e0,
+    "parse": 2.178e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Dialog::FontChooser": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.197e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::RadioButton": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.859e0
+  },
+  "GTK::ColorButton": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 4.433e0
+  },
+  "GTK::Raw::Revealer": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.728e0,
+    "optimize": 0.001e0
+  },
+  "GTK::TreeSelection": {
+    "parse": 1.541e0,
+    "optimize": 0.001e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Container": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.178e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::ButtonBox": {
+    "optimize": 0.001e0,
+    "parse": 1.709e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::TreeModelSort": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.863e0
+  },
+  "GTK::SeparatorMenuItem": {
+    "parse": 1.965e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::SearchBar": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.029e0
+  },
+  "GTK::Raw::EntryCompletion": {
+    "optimize": 0.002e0,
+    "parse": 3.066e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Assistant": {
+    "optimize": 0.001e0,
+    "parse": 2.4e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Builder::LinkButton": {
+    "parse": 0.938e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::AppButton": {
+    "optimize": 0.001e0,
+    "parse": 2.223e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::TargetList": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.352e0
+  },
+  "GTK::Render": {
+    "parse": 1.627e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::AccelGroup": {
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "parse": 2.879e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Roles::FileChooser": {
+    "optimize": 0.001e0,
+    "parse": 2.109e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::ComboBox": {
+    "parse": 2.502e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.018e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::PageSetup": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 3.156e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::DnD": {
+    "parse": 2.293e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::DrawingArea": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.029e0
+  },
+  "GTK::Bin": {
+    "optimize": 0.001e0,
+    "parse": 1.887e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Dialog::AppChooser": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "optimize": 0.001e0,
+    "parse": 2.218e0
+  },
+  "GTK::Raw::MenuButton": {
+    "optimize": 0.002e0,
+    "parse": 2.144e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Roles::CellLayout": {
+    "parse": 1.45e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::Separator": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.277e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::DragSource": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.888e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::MenuBar": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.655e0
+  },
+  "GTK::Compat::Raw::Array": {
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.002e0,
+    "parse": 3.783e0
+  },
+  "GTK::Raw::WindowGroup": {
+    "optimize": 0.001e0,
+    "parse": 1.657e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::Statusbar": {
+    "optimize": 0.001e0,
+    "parse": 1.692e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::TextMark": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.277e0
+  },
+  "GTK::Switch": {
+    "optimize": 0.001e0,
+    "parse": 2.022e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Dialog::ColorChooser": {
+    "optimize": 0.001e0,
+    "parse": 2.227e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::TreeViewColumn": {
+    "optimize": 0.001e0,
+    "parse": 2.013e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::CellRendererToggle": {
+    "parse": 1.738e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::TextChildAnchor": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.017e0,
+    "optimize": 0.001e0,
+    "parse": 1.382e0
+  },
+  "GTK::Raw::StyleContext": {
+    "optimize": 0.002e0,
+    "parse": 5.156e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0
+  },
+  "GTK::Raw::CheckMenuItem": {
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.899e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Compat::Roles::AppInfo": {
+    "optimize": 0.001e0,
+    "parse": 1.322e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Roles::Data": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.16e0
+  },
+  "GTK::WindowGroup": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.322e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::Range": {
+    "mast": 0.024e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 3.206e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::CellRendererSpinner": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.289e0
+  },
+  "GTK::Roles::Signals::Widget": {
+    "parse": 4.122e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Layout": {
+    "optimize": 0.001e0,
+    "parse": 2.082e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Frame": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.107e0
+  },
+  "GTK::Raw::ScrolledWindow": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "parse": 3.41e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Builder::Image": {
+    "parse": 0.903e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Fixed": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.918e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::TargetEntry": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.431e0,
+    "optimize": 0.001e0
+  },
+  "GTK::ToolItem": {
+    "parse": 2.254e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::AspectFrame": {
+    "parse": 2.128e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::IconView": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.875e0
+  },
+  "GTK::Raw::SearchEntry": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.007e0,
+    "parse": 1.348e0
+  },
+  "GTK::Compat::Roles::Signals::Window": {
+    "optimize": 0.002e0,
+    "parse": 1.797e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::Assistant": {
+    "parse": 3.234e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Buildable": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.915e0
+  },
+  "GTK::Raw::TextBuffer": {
+    "optimize": 0.002e0,
+    "parse": 5.498e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Scrollbar": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.932e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Roles::Signals::ScrolledWindow": {
+    "parse": 1.44e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::FileChooserButton": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.764e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Compat::GList": {
+    "optimize": 0.001e0,
+    "parse": 1.547e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Compat::Permission": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.199e0
+  },
+  "GTK::Compat::FrameTimings": {
+    "optimize": 0.001e0,
+    "parse": 1.529e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Adjustment": {
+    "optimize": 0.001e0,
+    "parse": 1.395e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::CellRenderer": {
+    "parse": 2.975e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::Raw::Value": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "parse": 3.393e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::CellAreaBox": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.555e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::MenuToolButton": {
+    "parse": 1.617e0,
+    "optimize": 0.002e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::Scrollbar": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.263e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Builder::MRO": {
+    "optimize": 0.001e0,
+    "parse": 1.221e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Raw::CSSProvider": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.002e0,
+    "parse": 2.027e0
+  },
+  "GTK::RadioButton": {
+    "optimize": 0.001e0,
+    "parse": 2.219e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Roles::TreeSortable": {
+    "optimize": 0.001e0,
+    "parse": 1.309e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Grid": {
+    "optimize": 0.002e0,
+    "parse": 2.3e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0
+  },
+  "GTK::Raw::Entry": {
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.01e0,
+    "optimize": 0.003e0,
+    "parse": 6.477e0
+  },
+  "GTK::Raw::DragDest": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.924e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Roles::Signals::Toolbar": {
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.449e0,
+    "optimize": 0.001e0
+  },
+  "GTK::PrintJob": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.833e0
+  },
+  "GTK::ToolPalette": {
+    "optimize": 0.001e0,
+    "parse": 2.135e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::Scrollable": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.797e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::CellRendererText": {
+    "optimize": 0.001e0,
+    "parse": 1.315e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Builder::ToggleButton": {
+    "optimize": 0.001e0,
+    "parse": 0.906e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::Builder": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 3.069e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Roles::CellEditable": {
+    "parse": 1.374e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::ComboBoxText": {
+    "optimize": 0.001e0,
+    "parse": 2.201e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Notebook": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.376e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::TreeSelection": {
+    "optimize": 0.002e0,
+    "parse": 2.596e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::PaperSize": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.405e0,
+    "optimize": 0.001e0
+  },
+  "GTK::ToggleToolButton": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.171e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::Selection": {
+    "parse": 3.231e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Layout": {
+    "optimize": 0.002e0,
+    "parse": 1.92e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::TextTagTable": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "optimize": 0.002e0,
+    "parse": 1.653e0
+  },
+  "GTK::Raw::InfoBar": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.158e0
+  },
+  "GTK::Raw::ScaleButton": {
+    "parse": 1.79e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Roles::Signals::ListBox": {
+    "optimize": 0.001e0,
+    "parse": 1.404e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Range": {
+    "parse": 2.273e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::MenuItem": {
+    "parse": 2.233e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.011e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::Raw::Window": {
+    "optimize": 0.004e0,
+    "parse": 9.93e0,
+    "mbc": 0.004e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.011e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Roles::Signals::Application": {
+    "parse": 1.4e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::PageSetup": {
+    "parse": 1.458e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::ActionBar": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.01e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Builder::Menu": {
+    "optimize": 0.002e0,
+    "parse": 0.934e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::FlowBox": {
+    "parse": 3.655e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "moar": 0e0,
+    "mbc": 0.002e0
+  },
+  "GTK::Raw::Adjustment": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.515e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Roles::Signals::CellRenderer": {
+    "parse": 1.435e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::SeparatorToolItem": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.478e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Roles::Signals::Scale": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.436e0
+  },
+  "GTK::Roles::Signals::ComboBox": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.621e0
+  },
+  "GTK::Raw::Orientable": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.323e0
+  },
+  "GTK::Dialog::Raw::Message": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.827e0,
+    "optimize": 0.001e0
+  },
+  "GTK::TreePath": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "optimize": 0.002e0,
+    "parse": 1.42e0
+  },
+  "GTK::Raw::Toolbar": {
+    "mast": 0.016e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.235e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Compat::Screen": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.479e0,
+    "optimize": 0.001e0
+  },
+  "GTK::MenuButton": {
+    "parse": 2.466e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Dialog::Raw::PageSetupUnix": {
+    "optimize": 0.001e0,
+    "parse": 1.58e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Roles::Properties": {
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.589e0,
+    "optimize": 0.001e0
+  },
+  "GTK::TreeView": {
+    "moar": 0e0,
+    "mbc": 0.028e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.033e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.015e0,
+    "parse": 4.051e0
+  },
+  "GTK::Roles::Signals::Overlay": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.393e0
+  },
+  "GTK::Clipboard": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.606e0
+  },
+  "GTK::Compat::Menu": {
+    "optimize": 0.001e0,
+    "parse": 1.296e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::CellRendererPixbuf": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.237e0
+  },
+  "GTK::Compat::Raw::Rectangle": {
+    "parse": 1.282e0,
+    "optimize": 0.002e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::Raw::GSList": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.633e0
+  },
+  "GTK::Compat::LaunchContext": {
+    "optimize": 0.001e0,
+    "parse": 1.155e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::AppButton": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.921e0
+  },
+  "GTK::Builder::ListBoxRow": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 0.91e0
+  },
+  "GTK::Roles::Signals::IconView": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.865e0
+  },
+  "GTK::TreeModelSort": {
+    "optimize": 0.001e0,
+    "parse": 1.428e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.011e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::FontButton": {
+    "optimize": 0.001e0,
+    "parse": 2.17e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::Places": {
+    "parse": 3.031e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Frame": {
+    "optimize": 0.001e0,
+    "parse": 1.827e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.013e0
+  },
+  "GTK::Roles::Signals::Editable": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.635e0,
+    "optimize": 0.001e0
+  },
+  "GTK::PrintContext": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.282e0
+  },
+  "GTK::RadioMenuItem": {
+    "optimize": 0.001e0,
+    "parse": 2.113e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Dialog::Raw::FontChooser": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.272e0
+  },
+  "GTK::Raw::SpinButton": {
+    "parse": 2.944e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::Container": {
+    "optimize": 0.002e0,
+    "parse": 3.333e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::Clipboard": {
+    "parse": 3.415e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::TextMark": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.667e0,
+    "optimize": 0.001e0
+  },
+  "GTK::WidgetPath": {
+    "parse": 1.692e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::LinkButton": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.604e0,
+    "optimize": 0.001e0
+  },
+  "GTK::CellRendererToggle": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.477e0
+  },
+  "GTK::Compat::Raw::Monitor": {
+    "parse": 1.734e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0
+  },
+  "GTK::Compat::Value": {
+    "parse": 1.754e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::SizeGroup": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.738e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::Grid": {
+    "optimize": 0.002e0,
+    "parse": 2.662e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Roles::Signals::EntryCompletion": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.428e0
+  },
+  "GTK::Roles::TreeDnD": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.299e0,
+    "optimize": 0.001e0
+  },
+  "GTK::StackSidebar": {
+    "parse": 1.978e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::Offscreen": {
+    "optimize": 0.001e0,
+    "parse": 1.418e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Raw::Window": {
+    "optimize": 0.003e0,
+    "parse": 9.625e0,
+    "mbc": 0.003e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.01e0
+  },
+  "GTK::Roles::Orientable": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.284e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Builder::Box": {
+    "optimize": 0.001e0,
+    "parse": 1.103e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::ToolButton": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 2.256e0
+  },
+  "GTK::Spinner": {
+    "optimize": 0.001e0,
+    "parse": 1.868e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::RecentFilter": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.065e0
+  },
+  "GTK::Raw::Overlay": {
+    "parse": 1.576e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::Menu": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "parse": 3.376e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Compat::Raw::FrameTimings": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.511e0
+  },
+  "GTK::Raw::IconView": {
+    "optimize": 0.002e0,
+    "parse": 5.856e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Builder::Orientable": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 0.923e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Roles::Actionable": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.25e0
+  },
+  "GTK::Compat::Rectangle": {
+    "optimize": 0.001e0,
+    "parse": 1.281e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0
+  },
+  "GTK::Roles::AppChooser": {
+    "optimize": 0.001e0,
+    "parse": 1.288e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Roles::Signals::Statusbar": {
+    "optimize": 0.001e0,
+    "parse": 1.395e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Roles::Buildable": {
+    "parse": 1.316e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.012e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::TextTag": {
+    "optimize": 0.002e0,
+    "parse": 1.314e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::MenuToolButton": {
+    "optimize": 0.001e0,
+    "parse": 2.106e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Compat::Raw::KeyFile": {
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 3.578e0
+  },
+  "GTK::Roles::Signals::MenuShell": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.412e0
+  },
+  "GTK::Raw::Calendar": {
+    "optimize": 0.002e0,
+    "parse": 2.212e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::CellRendererCombo": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 2.198e0
+  },
+  "GTK::Box": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.33e0,
+    "optimize": 0.001e0
+  },
+  "GTK::AccelLabel": {
+    "optimize": 0.001e0,
+    "parse": 1.998e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::LockButton": {
+    "optimize": 0.001e0,
+    "parse": 1.983e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::ListStore": {
+    "optimize": 0.002e0,
+    "parse": 2.443e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::FlowBoxChild": {
+    "parse": 1.974e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::CellRendererProgress": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.496e0,
+    "optimize": 0.001e0
+  },
+  "GTK::InfoBar": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.085e0
+  },
+  "GTK::Raw::CellRendererAccel": {
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.252e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::FrameClock": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.263e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Calendar": {
+    "parse": 2.146e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::ShortcutsShortcut": {
+    "parse": 2.222e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Dialog": {
+    "optimize": 0.001e0,
+    "parse": 2.427e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.01e0
+  },
+  "GTK::Raw::ComboBoxText": {
+    "parse": 2.051e0,
+    "optimize": 0.002e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::EntryBuffer": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.478e0,
+    "optimize": 0.001e0
+  },
+  "GTK::ListBox": {
+    "parse": 2.311e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::MenuItem": {
+    "optimize": 0.01e0,
+    "parse": 2.657e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::ToggleButton": {
+    "parse": 2.121e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Dialog::Message": {
+    "parse": 2.271e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::TreeSortable": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.637e0
+  },
+  "GTK::Raw::Editable": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.142e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Places": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.014e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.436e0
+  },
+  "GTK::Raw::TextIter": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.01e0,
+    "moar": 0e0,
+    "mbc": 0.003e0,
+    "parse": 7.608e0,
+    "optimize": 0.003e0
+  },
+  "GTK::ShortcutsGroup": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.076e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::VolumeButton": {
+    "parse": 1.257e0,
+    "optimize": 0.001e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Label": {
+    "parse": 4.639e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.01e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.002e0
+  },
+  "GTK::Compat::Raw::AppInfo": {
+    "parse": 3.331e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Widget": {
+    "optimize": 0.005e0,
+    "parse": 17.675e0,
+    "mbc": 0.005e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.012e0
+  },
+  "GTK::Raw::Fixed": {
+    "optimize": 0.002e0,
+    "parse": 1.439e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Tooltip": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.288e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Cairo": {
+    "optimize": 0.001e0,
+    "parse": 1.23e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::CellAreaBox": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.52e0,
+    "optimize": 0.001e0
+  },
+  "GTK::CellRendererSpin": {
+    "optimize": 0.001e0,
+    "parse": 1.46e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Roles::Signals::Range": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.438e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Image": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.527e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::RadioToolButton": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.672e0
+  },
+  "GTK::Roles::Signals::EntryBuffer": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.385e0
+  },
+  "GTK::Raw::CellRendererSpin": {
+    "parse": 1.238e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::HeaderBar": {
+    "parse": 2.068e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::TextBuffer": {
+    "optimize": 0.001e0,
+    "parse": 2.122e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::Viewport": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.822e0,
+    "optimize": 0.006e0
+  },
+  "GTK::Compat::MenuAttributeIter": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.032e0
+  },
+  "GTK::Raw::Bin": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.283e0
+  },
+  "GTK::Roles::Signals::Generic": {
+    "optimize": 0.002e0,
+    "parse": 5.185e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::CheckMenuItem": {
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.149e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Pixbuf::Transforms": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.33e0
+  },
+  "GTK::Roles::Signals::Menu": {
+    "optimize": 0.006e0,
+    "parse": 1.457e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Pane": {
+    "mast": 0.007e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.383e0,
+    "optimize": 0.001e0
+  },
+  "GTK::ScaleButton": {
+    "parse": 2.119e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Compat::KeyFile": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.558e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Dialog::Raw::About": {
+    "parse": 3.513e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.002e0
+  },
+  "GTK::Raw::ReturnedValue": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 0.672e0,
+    "optimize": 0.001e0
+  },
+  "GTK::SeparatorToolItem": {
+    "parse": 2.111e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::PrintContext": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.952e0
+  },
+  "GTK::TargetEntry": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.222e0
+  },
+  "GTK::StyleContext": {
+    "parse": 2.744e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::TextView": {
+    "parse": 6.274e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.002e0
+  },
+  "GTK::Roles::Signals::TextView": {
+    "parse": 1.432e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::TreeDnD": {
+    "parse": 1.715e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::TextView": {
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.959e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::PrintOperation": {
+    "optimize": 0.002e0,
+    "parse": 3.448e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::Pane": {
+    "optimize": 0.002e0,
+    "parse": 2.024e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.018e0
+  },
+  "GTK::IconTheme": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 3.148e0
+  },
+  "GTK::ListStore": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.805e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Raw::Visual": {
+    "parse": 2.161e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Dialog": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.269e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::Application": {
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.619e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Compat::MenuItem": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.184e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::ToolButton": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.235e0
+  },
+  "GTK::ListBoxRow": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.098e0
+  },
+  "GTK::TextIter": {
+    "parse": 2.035e0,
+    "optimize": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Viewport": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.076e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Roles::Signals::Entry": {
+    "parse": 1.458e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::Raw::Cairo": {
+    "optimize": 0.002e0,
+    "parse": 2.045e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Roles::Signals::CellArea": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.108e0
+  },
+  "GTK::ShorcutsWindow": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.105e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::Actionable": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.548e0
+  },
+  "GTK::Raw::IconTheme": {
+    "parse": 5.005e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "moar": 0e0,
+    "mbc": 0.002e0
+  },
+  "GTK::SpinButton": {
+    "optimize": 0.001e0,
+    "parse": 2.344e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::FontChooser": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.165e0
+  },
+  "GTK::Expander": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.116e0,
+    "optimize": 0.001e0
+  },
+  "GTK::ColorChooser": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.064e0
+  },
+  "GTK::Statusbar": {
+    "optimize": 0.001e0,
+    "parse": 2.056e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Dialog::About": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.621e0,
+    "optimize": 0.001e0
+  },
+  "GTK::DragContext": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "optimize": 0.001e0,
+    "parse": 1.314e0
+  },
+  "GTK::Raw::PrintJob": {
+    "parse": 3.449e0,
+    "optimize": 0.002e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::TreeModelFilter": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.991e0
+  },
+  "GTK::Builder::Frame": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.037e0
+  },
+  "GTK::Roles::Signals::TextTag": {
+    "optimize": 0.001e0,
+    "parse": 1.444e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::LevelBar": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 2.016e0
+  },
+  "GTK::Raw::CheckButton": {
+    "parse": 1.43e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::RGBA": {
+    "optimize": 0.001e0,
+    "parse": 1.551e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::CellRendererPixbuf": {
+    "optimize": 0.001e0,
+    "parse": 1.639e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Builder::Revealer": {
+    "parse": 1.06e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Raw::AspectFrame": {
+    "optimize": 0.001e0,
+    "parse": 1.339e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Printer": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.686e0
+  },
+  "GTK::Raw::TreeViewColumn": {
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "parse": 4.841e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::WidgetPath": {
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "parse": 3.756e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::Box": {
+    "parse": 2.231e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Render": {
+    "parse": 2.613e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::AccelLabel": {
+    "parse": 1.759e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::Subs": {
+    "parse": 3.072e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::ToolItemGroup": {
+    "parse": 2.485e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Compat::Raw::Icon": {
+    "optimize": 0.002e0,
+    "parse": 1.402e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Builder::Grid": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 8.487e0
+  },
+  "GTK::Raw::ToolPalette": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.599e0
+  },
+  "GTK::LinkButton": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.055e0,
+    "optimize": 0.001e0
+  },
+  "GTK::FileChooserButton": {
+    "optimize": 0.001e0,
+    "parse": 2.167e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0
+  },
+  "GTK::Revealer": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 2.046e0
+  },
+  "GTK::Application": {
+    "parse": 2.476e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::MenuLinkIter": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.052e0
+  },
+  "GTK::Entry": {
+    "parse": 2.805e0,
+    "optimize": 0.001e0,
+    "mast": 0.013e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::MenuBar": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 2.152e0
+  },
+  "GTK::Raw::Popover": {
+    "optimize": 0.002e0,
+    "parse": 2.526e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0
+  },
+  "GTK::Compat::Raw::Display": {
+    "parse": 3.675e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "mbc": 0.002e0,
+    "moar": 0e0
+  },
+  "GTK::SizeGroup": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.327e0
+  },
+  "GTK::Raw::CellRendererCombo": {
+    "optimize": 0.001e0,
+    "parse": 1.411e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Compat::Roles::Signals": {
+    "parse": 1.462e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Overlay": {
+    "optimize": 0.001e0,
+    "parse": 2.239e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::LockButton": {
+    "optimize": 0.001e0,
+    "parse": 1.398e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::ListBox": {
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "parse": 4.011e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::Tooltip": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.878e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::Types": {
+    "optimize": 0.012e0,
+    "parse": 8.628e0,
+    "moar": 0e0,
+    "mbc": 0.022e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.028e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Menu": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 2.505e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::CellArea": {
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.002e0,
+    "parse": 4.305e0
+  },
+  "GTK::Roles::Signals::FlowBox": {
+    "parse": 1.429e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Roles::FontChooser": {
+    "optimize": 0.001e0,
+    "parse": 1.436e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::ShortcutsSection": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "optimize": 0.001e0,
+    "parse": 2.038e0
+  },
+  "GTK::RadioToolButton": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.299e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::FileFilter": {
+    "parse": 1.944e0,
+    "optimize": 0.002e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Compat::Raw::GList": {
+    "parse": 2.739e0,
+    "optimize": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Builder::MenuButton": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.021e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.049e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Cursor": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.409e0
+  },
+  "GTK::CellRendererAccel": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.508e0
+  },
+  "GTK::Builder::Button": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 0.939e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Builder::Label": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 0.983e0
+  },
+  "GTK::Compat::Visual": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.302e0
+  },
+  "GTK::Raw::TreeView": {
+    "mast": 0.014e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.003e0,
+    "parse": 8.352e0,
+    "optimize": 0.003e0
+  },
+  "GTK::Raw::ActionBar": {
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.621e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::PrintSettings": {
+    "parse": 6.474e0,
+    "optimize": 0.003e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.01e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.003e0,
+    "moar": 0e0
+  },
+  "GTK::Builder::MenuItem": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 0.934e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Compat::Raw::MenuModel": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.009e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 1.967e0
+  },
+  "GTK::Roles::Signals::SpinButton": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.55e0
+  },
+  "GTK::Dialog::Raw::PrintUnix": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.442e0,
+    "optimize": 0.002e0
+  },
+  "GTK::CellRendererText": {
+    "optimize": 0.001e0,
+    "parse": 2.494e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::Image": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 3.268e0
+  },
+  "GTK::Raw::CellView": {
+    "optimize": 0.002e0,
+    "parse": 2.777e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Compat::Display": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.565e0,
+    "optimize": 0.001e0
+  },
+  "GTK::EntryCompletion": {
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.014e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.645e0,
+    "optimize": 0.001e0
+  },
+  "GTK::TreeModelFilter": {
+    "parse": 1.488e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Offscreen": {
+    "parse": 2.173e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Window": {
+    "optimize": 0.001e0,
+    "parse": 3.243e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Builder::Actionable": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.001e0,
+    "parse": 0.896e0
+  },
+  "GTK::Roles::Signals::PrintOperation": {
+    "parse": 2.426e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Compat::Roles::Icon": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 1.204e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Roles::Signals::TreeView": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.834e0
+  },
+  "GTK::Raw::ProgressBar": {
+    "optimize": 0.002e0,
+    "parse": 2.167e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::ColorButton": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.556e0
+  },
+  "GTK::Raw::SearchBar": {
+    "optimize": 0.001e0,
+    "parse": 1.693e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Builder::MenuShell": {
+    "optimize": 0.001e0,
+    "parse": 0.859e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::ToolItem": {
+    "parse": 3.125e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "mbc": 0.002e0,
+    "moar": 0e0
+  },
+  "GTK::Compat::GSList": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.352e0
+  },
+  "GTK::Roles::TreeModel": {
+    "parse": 1.899e0,
+    "optimize": 0.001e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Raw::AppChooser": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 1.395e0
+  },
+  "GTK::CSSProvider": {
+    "optimize": 0.001e0,
+    "parse": 1.382e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0
+  },
+  "GTK::Raw::RadioMenuItem": {
+    "optimize": 0.002e0,
+    "parse": 1.844e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::Scale": {
+    "optimize": 0.002e0,
+    "parse": 2.214e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Raw::PaperSize": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "optimize": 0.002e0,
+    "parse": 2.987e0
+  },
+  "GTK::Raw::Switch": {
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.545e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::SeparatorMenuItem": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "optimize": 0.001e0,
+    "parse": 1.245e0
+  },
+  "GTK::Dialog::PrintUnix": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "optimize": 0.001e0,
+    "parse": 2.374e0
+  },
+  "GTK::Raw::Notebook": {
+    "optimize": 0.002e0,
+    "parse": 4.373e0,
+    "moar": 0e0,
+    "mbc": 0.002e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "ast": 0e0,
+    "start": 0e0
+  },
+  "GTK::Raw::CellLayout": {
+    "parse": 1.943e0,
+    "optimize": 0.002e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Roles::Editable": {
+    "parse": 1.514e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::Builder::Widget": {
+    "optimize": 0.001e0,
+    "parse": 1.061e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0
+  },
+  "GTK::Dialog::Raw::ColorChooser": {
+    "parse": 1.258e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::Popover": {
+    "optimize": 0.001e0,
+    "parse": 2.145e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::LevelBar": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.228e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Compat::Raw::FrameClock": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.008e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.878e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::CellAreaContext": {
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.002e0,
+    "parse": 1.933e0
+  },
+  "GTK::Raw::TreeStore": {
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.01e0,
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "parse": 2.642e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Label": {
+    "parse": 2.434e0,
+    "optimize": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.013e0,
+    "syntaxcheck": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0
+  },
+  "GTK::CellRenderer": {
+    "optimize": 0.001e0,
+    "parse": 2.069e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.007e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::Raw::Printer": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "optimize": 0.002e0,
+    "parse": 2.878e0
+  },
+  "GTK::Raw::FontButton": {
+    "ast": 0e0,
+    "start": 0e0,
+    "mast": 0.01e0,
+    "syntaxcheck": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0,
+    "parse": 2.163e0,
+    "optimize": 0.002e0
+  },
+  "GTK::Raw::ColorChooser": {
+    "parse": 1.627e0,
+    "optimize": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.017e0,
+    "start": 0e0,
+    "ast": 0e0,
+    "mbc": 0.001e0,
+    "moar": 0e0
+  },
+  "GTK::CellRendererSpinner": {
+    "optimize": 0.001e0,
+    "parse": 1.454e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "start": 0e0,
+    "ast": 0e0
+  },
+  "GTK::FlowBox": {
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "optimize": 0.001e0,
+    "parse": 2.319e0
+  },
+  "GTK::Compat::MenuModel": {
+    "syntaxcheck": 0e0,
+    "mast": 0.008e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "moar": 0e0,
+    "mbc": 0.001e0,
+    "parse": 1.307e0,
+    "optimize": 0.001e0
+  },
+  "GTK::Raw::TreeModel": {
+    "mbc": 0.002e0,
+    "moar": 0e0,
+    "ast": 0e0,
+    "start": 0e0,
+    "syntaxcheck": 0e0,
+    "mast": 0.009e0,
+    "optimize": 0.002e0,
+    "parse": 5.11e0
+  }
+}

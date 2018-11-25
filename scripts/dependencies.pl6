@@ -105,8 +105,21 @@ sub space($a) {
       bottom_border    => ''
     }
   ).join("\n");
-  $table ~~ s:g/^^':'//;
+  $table ~~ s:g/^^':'/    /;
   $table ~~ s:g/':' \s* $$/,/;
   $table ~~ s/',' \s* $//;
-  say $table;
+
+  my $extra = 'META6.json';
+  if $extra.IO.e {
+    my $meta = $extra.IO.slurp;
+    $meta ~~ s/ '"provides": ' '{' ~ '}' <-[\}]>+ /"provides": \{\n{$table}\n    }/;
+    $extra.IO.rename("{ $extra }.bak");
+    my $fh = $extra.IO.open(:w);
+    $fh.say: $meta;
+    $fh.close;
+
+    say 'New provides section written to META6.json.';
+  } else {
+    say $table;
+  }
 }
