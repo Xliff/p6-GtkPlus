@@ -65,6 +65,8 @@ constant gpointer            is export := Pointer;
 constant gsize               is export := uint64;
 constant gssize              is export := int64;
 constant guchar              is export := Str;
+constant gshort              is export := int8;
+constant gushort             is export := uint8;
 constant guint               is export := uint32;
 constant guint16             is export := uint16;
 constant guint32             is export := uint32;
@@ -661,12 +663,11 @@ class GMountOperation       is repr('CPointer') is export does GTK::Roles::Point
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GPtrArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GPtrArray             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkColorspace         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkCursor             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDevice             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDeviceManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -674,6 +675,7 @@ class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Point
 class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkFrameClock         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkFrameTimings       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkGLContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkInputSource        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkModifierIntent     is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1075,4 +1077,40 @@ our enum GdkButtons is export (
   GDK_BUTTON_PRIMARY           => 1,
   GDK_BUTTON_MIDDLE            => 2,
   GDK_BUTTON_SECONDARY         => 3
+);
+
+our enum GdkColorspace is export <GDK_COLORSPACE_RGB>;
+
+our enum GdkPixbufError is export (
+  # image data hosed */
+  'GDK_PIXBUF_ERROR_CORRUPT_IMAGE',
+  # no mem to load image
+  'GDK_PIXBUF_ERROR_INSUFFICIENT_MEMORY',
+  # bad option passed to save routine
+  'GDK_PIXBUF_ERROR_BAD_OPTION',
+  # unsupported image type (sort of an ENOSYS)
+  'GDK_PIXBUF_ERROR_UNKNOWN_TYPE',
+  # unsupported operation (load, save) for image type
+  'GDK_PIXBUF_ERROR_UNSUPPORTED_OPERATION',
+  'GDK_PIXBUF_ERROR_FAILED',
+  'GDK_PIXBUF_ERROR_INCOMPLETE_ANIMATION'
+);
+
+our enum GdkPixbufAlphaMode is export <
+  GDK_PIXBUF_ALPHA_BILEVEL
+  GDK_PIXBUF_ALPHA_FULL
+>;
+
+our enum GdkInterpType is export <
+  GDK_INTERP_NEAREST
+  GDK_INTERP_TILES
+  GDK_INTERP_BILINEAR
+  GDK_INTERP_HYPER
+>;
+
+our enum GdkPixbufRotation is export (
+  GDK_PIXBUF_ROTATE_NONE             =>   0,
+  GDK_PIXBUF_ROTATE_COUNTERCLOCKWISE =>  90,
+  GDK_PIXBUF_ROTATE_UPSIDEDOWN       => 180,
+  GDK_PIXBUF_ROTATE_CLOCKWISE        => 270
 );

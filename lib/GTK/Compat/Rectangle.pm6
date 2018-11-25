@@ -1,18 +1,19 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Rectangle;
 
 class GTK::Compat::Rectangle {
-  has GdkRectangle $!r;
+  has GdkRectangle $!r handles <x y width height>;
 
   submethod BUILD(:$rectangle) {
     $!r = $rectangle;
   }
 
-  method GTK::Compat::Types::GdkRectangle {
+  method GTK::Compat::Types::GdkRectangle is also<rectangle> {
     $!r;
   }
 
@@ -52,10 +53,12 @@ class GTK::Compat::Rectangle {
 
 sub infix:<∩> (GdkRectangle() $a, GdkRectangle() $b) is export {
   my $d = GdkRectangle.new;
-  GDK::Rectangle.new( $a.intersect($b, $d) );
+  gdk_rectangle_intersect($a, $b, $d);
+  GTK::Compat::Rectangle.new($d);
 }
 
 sub infix:<∪> (GdkRectangle() $a, GdkRectangle() $b) is export {
   my $d = GdkRectangle.new;
-  GDK::Rectangle.new( $a.union($b, $d) );
+  gdk_rectangle_union($a, $b, $d);
+  GTK::Compat::Rectangle.new($d);
 }

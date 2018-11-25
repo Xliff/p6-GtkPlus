@@ -7,13 +7,13 @@ use GTK::Compat::Types;
 unit package GTK::Compat::Raw::Pixbuf;
 
 # Function definition finished, but detected no match:
-# ' gboolean gdk_pixbuf_save           (GdkPixbuf  *pixbuf,                                      const char *filename,                                      const char *type,                                      GError    **error,                                     ...) G_GNUC_NULL_TERMINATED;'
+# ' gboolean gdk_pixbuf_save           (GdkPixbuf  *pixbuf,                                      const char *filename,                                      const char *type,                                      CArray[Pointer[GError]]    **error,                                     ...) G_GNUC_NULL_TERMINATED;'
 # Function definition finished, but detected no match:
-# ' gboolean gdk_pixbuf_save_to_callback    (GdkPixbuf  *pixbuf,                                   GdkPixbufSaveFunc save_func,                                  gpointer user_data,                                      const char *type,                                       GError    **error,                            ...) G_GNUC_NULL_TERMINATED;'
+# ' gboolean gdk_pixbuf_save_to_callback    (GdkPixbuf  *pixbuf,                                   GdkPixbufSaveFunc save_func,                                  gpointer user_data,                                      const char *type,                                       CArray[Pointer[GError]]    **error,                            ...) G_GNUC_NULL_TERMINATED;'
 # Function definition finished, but detected no match:
-# ' gboolean gdk_pixbuf_save_to_buffer      (GdkPixbuf  *pixbuf,                                   gchar     **buffer,                                     gsize      *buffer_size,                                       const char *type,                                       GError    **error,                            ...) G_GNUC_NULL_TERMINATED;'
+# ' gboolean gdk_pixbuf_save_to_buffer      (GdkPixbuf  *pixbuf,                                   gchar     **buffer,                                     gsize      *buffer_size,                                       const char *type,                                       CArray[Pointer[GError]]    **error,                            ...) G_GNUC_NULL_TERMINATED;'
 # Function definition finished, but detected no match:
-# ' gboolean   gdk_pixbuf_save_to_stream    (GdkPixbuf      *pixbuf,                                          GOutputStream  *stream,                                          const char     *type,                                      GCancellable   *cancellable,                                          GError        **error,                                          ...);'
+# ' gboolean   gdk_pixbuf_save_to_stream    (GdkPixbuf      *pixbuf,                                          GOutputStream  *stream,                                          const char     *type,                                      GCancellable   *cancellable,                                          CArray[Pointer[GError]]        **error,                                          ...);'
 # Function definition finished, but detected no match:
 # ' void gdk_pixbuf_save_to_stream_async (GdkPixbuf           *pixbuf,                                  GOutputStream       *stream,                                  const gchar         *type,                                       GCancellable        *cancellable,                                       GAsyncReadyCallback  callback,                                 gpointer             user_data,                                 ...);'
 
@@ -37,7 +37,7 @@ sub gdk_pixbuf_apply_embedded_orientation (GdkPixbuf $src)
   { * }
 
 sub gdk_pixbuf_calculate_rowstride (
-  GdkColorspace $colorspace,
+  guint $colorspace,
   gboolean $has_alpha,
   gint $bits_per_sample,
   gint $width,
@@ -98,7 +98,7 @@ sub gdk_pixbuf_get_byte_length (GdkPixbuf $pixbuf)
   { * }
 
 sub gdk_pixbuf_get_colorspace (GdkPixbuf $pixbuf)
-  returns GdkColorspace
+  returns guint
   is native(gtk)
   is export
   { * }
@@ -164,7 +164,7 @@ sub gdk_pixbuf_get_width (GdkPixbuf $pixbuf)
   { * }
 
 sub gdk_pixbuf_new (
-  GdkColorspace $colorspace,
+  guint $colorspace,
   gboolean $has_alpha,
   gint $bits_per_sample,
   gint $width,
@@ -177,7 +177,7 @@ sub gdk_pixbuf_new (
 
 sub gdk_pixbuf_new_from_bytes (
   GBytes $data,
-  GdkColorspace $colorspace,
+  guint $colorspace,
   gboolean $has_alpha,
   gint $bits_per_sample,
   gint $width,
@@ -191,7 +191,7 @@ sub gdk_pixbuf_new_from_bytes (
 
 sub gdk_pixbuf_new_from_data (
   guchar $data,
-  GdkColorspace $colorspace,
+  guint $colorspace,
   gboolean $has_alpha,
   gint $bits_per_sample,
   gint $width,
@@ -205,7 +205,7 @@ sub gdk_pixbuf_new_from_data (
   is export
   { * }
 
-sub gdk_pixbuf_new_from_file (gchar $filename, GError $error)
+sub gdk_pixbuf_new_from_file (gchar $filename, CArray[Pointer[GError]] $error)
   returns GdkPixbuf
   is native(gtk)
   is export
@@ -216,7 +216,7 @@ sub gdk_pixbuf_new_from_file_at_scale (
   gint $width,
   gint $height,
   gboolean $preserve_aspect_ratio,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
@@ -228,7 +228,7 @@ sub gdk_pixbuf_new_from_file_at_scale_utf8 (
   gint $width,
   gint $height,
   gboolean $preserve_aspect_ratio,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
@@ -239,7 +239,7 @@ sub gdk_pixbuf_new_from_file_at_size (
   gchar $filename,
   gint $width,
   gint $height,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
@@ -250,14 +250,14 @@ sub gdk_pixbuf_new_from_file_at_size_utf8 (
   gchar $filename,
   gint $width,
   gint $height,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
   is export
   { * }
 
-sub gdk_pixbuf_new_from_file_utf8 (gchar $filename, GError $error)
+sub gdk_pixbuf_new_from_file_utf8 (gchar $filename, CArray[Pointer[GError]] $error)
   returns GdkPixbuf
   is native(gtk)
   is export
@@ -267,14 +267,14 @@ sub gdk_pixbuf_new_from_inline (
   gint $data_length,
   guint8 $data,
   gboolean $copy_pixels,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
   is export
   { * }
 
-sub gdk_pixbuf_new_from_resource (gchar $resource_path, GError $error)
+sub gdk_pixbuf_new_from_resource (gchar $resource_path, CArray[Pointer[GError]] $error)
   returns GdkPixbuf
   is native(gtk)
   is export
@@ -285,7 +285,7 @@ sub gdk_pixbuf_new_from_resource_at_scale (
   gint $width,
   gint $height,
   gboolean $preserve_aspect_ratio,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
@@ -295,7 +295,7 @@ sub gdk_pixbuf_new_from_resource_at_scale (
 sub gdk_pixbuf_new_from_stream (
   GInputStream $stream,
   GCancellable $cancellable,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
@@ -318,7 +318,7 @@ sub gdk_pixbuf_new_from_stream_at_scale (
   gint $height,
   gboolean $preserve_aspect_ratio,
   GCancellable $cancellable,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
@@ -340,7 +340,7 @@ sub gdk_pixbuf_new_from_stream_at_scale_async (
 
 sub gdk_pixbuf_new_from_stream_finish (
   GAsyncResult $async_result,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
   is native(gtk)
@@ -401,12 +401,12 @@ sub gdk_pixbuf_saturate_and_pixelate (
 
 sub gdk_pixbuf_save_to_bufferv (
   GdkPixbuf $pixbuf,
-  gchar $buffer,
+  CArray[Str] $buffer,
   gsize $buffer_size,
-  gchar $type,
-  gchar $option_keys,
-  gchar $option_values,
-  GError $error
+  Str $type,
+  CArray[Str] $option_keys,
+  CArray[Str] $option_values,
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)
@@ -417,10 +417,10 @@ sub gdk_pixbuf_save_to_callbackv (
   GdkPixbuf $pixbuf,
   GdkPixbufSaveFunc $save_func,
   gpointer $user_data,
-  gchar $type,
-  gchar $option_keys,
-  gchar $option_values,
-  GError $error
+  Str $type,
+  CArray[Str] $option_keys,
+  CArray[Str] $option_values,
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)
@@ -429,7 +429,7 @@ sub gdk_pixbuf_save_to_callbackv (
 
 sub gdk_pixbuf_save_to_stream_finish (
   GAsyncResult $async_result,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)
@@ -439,11 +439,11 @@ sub gdk_pixbuf_save_to_stream_finish (
 sub gdk_pixbuf_save_to_streamv (
   GdkPixbuf $pixbuf,
   GOutputStream $stream,
-  gchar $type,
-  gchar $option_keys,
-  gchar $option_values,
+  Str $type,
+  CArray[Str] $option_keys,
+  CArray[Str] $option_values,
   GCancellable $cancellable,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)
@@ -453,9 +453,9 @@ sub gdk_pixbuf_save_to_streamv (
 sub gdk_pixbuf_save_to_streamv_async (
   GdkPixbuf $pixbuf,
   GOutputStream $stream,
-  gchar $type,
-  gchar $option_keys,
-  gchar $option_values,
+  Str $type,
+  CArray[Str] $option_keys,
+  CArray[Str] $option_values,
   GCancellable $cancellable,
   GAsyncReadyCallback $callback,
   gpointer $user_data
@@ -466,11 +466,11 @@ sub gdk_pixbuf_save_to_streamv_async (
 
 sub gdk_pixbuf_savev (
   GdkPixbuf $pixbuf,
-  gchar $filename,
-  gchar $type,
-  gchar $option_keys,
-  gchar $option_values,
-  GError $error
+  Str $filename,
+  Str $type,
+  CArray[Str] $option_keys,
+  CArray[Str] $option_values,
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)
@@ -479,11 +479,11 @@ sub gdk_pixbuf_savev (
 
 sub gdk_pixbuf_savev_utf8 (
   GdkPixbuf $pixbuf,
-  gchar $filename,
-  gchar $type,
-  gchar $option_keys,
-  gchar $option_values,
-  GError $error
+  Str $filename,
+  Str $type,
+  CArray[Str] $option_keys,
+  CArray[Str] $option_values,
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)

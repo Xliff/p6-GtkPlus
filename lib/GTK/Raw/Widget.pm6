@@ -56,7 +56,10 @@ sub gtk_widget_get_allocated_height (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_set_redraw_on_allocate (GtkWidget $widget, gboolean $redraw_on_allocate)
+sub gtk_widget_set_redraw_on_allocate (
+  GtkWidget $widget,
+  gboolean $redraw_on_allocate
+)
   is native(gtk)
   is export
   { * }
@@ -77,7 +80,10 @@ sub gtk_widget_queue_compute_expand (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_shape_combine_region (GtkWidget $widget, cairo_region_t $region)
+sub gtk_widget_shape_combine_region (
+  GtkWidget $widget,
+  cairo_region_t $region
+)
   is native(gtk)
   is export
   { * }
@@ -106,7 +112,10 @@ sub gtk_widget_keynav_failed (GtkWidget $widget, uint32 $direction)
   is export
   { * }
 
-sub gtk_widget_get_requisition (GtkWidget $widget, GtkRequisition $requisition)
+sub gtk_widget_get_requisition (
+  GtkWidget $widget,
+  GtkRequisition $requisition
+)
   is native(gtk)
   is export
   { * }
@@ -157,7 +166,10 @@ sub gtk_widget_has_screen (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_input_shape_combine_region (GtkWidget $widget, cairo_region_t $region)
+sub gtk_widget_input_shape_combine_region (
+  GtkWidget $widget,
+  cairo_region_t $region
+)
   is native(gtk)
   is export
   { * }
@@ -167,12 +179,20 @@ sub gtk_requisition_free (GtkRequisition $requisition)
   is export
   { * }
 
-sub gtk_widget_get_preferred_size (GtkWidget $widget, GtkRequisition $minimum_size, GtkRequisition $natural_size)
+sub gtk_widget_get_preferred_size (
+  GtkWidget $widget,
+  GtkRequisition $minimum_size,
+  GtkRequisition $natural_size
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_widget_set_size_request (GtkWidget $widget, gint $width, gint $height)
+sub gtk_widget_set_size_request (
+  GtkWidget $widget,
+  gint $width,
+  gint $height
+)
   is native(gtk)
   is export
   { * }
@@ -183,7 +203,11 @@ sub gtk_widget_is_composited (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_cairo_transform_to_window (cairo_t $cr, GtkWidget $widget, GdkWindow $window)
+sub gtk_cairo_transform_to_window (
+  cairo_t $cr,
+  GtkWidget $widget,
+  GdkWindow $window
+)
   is native(gtk)
   is export
   { * }
@@ -260,7 +284,12 @@ sub gtk_widget_get_valign_with_baseline (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_get_preferred_width_for_height (GtkWidget $widget, gint $height, gint $minimum_width, gint $natural_width)
+sub gtk_widget_get_preferred_width_for_height (
+  GtkWidget $widget,
+  gint $height,
+  gint $minimum_width,
+  gint $natural_width
+)
   is native(gtk)
   is export
   { * }
@@ -271,7 +300,11 @@ sub gtk_widget_set_default_direction (uint32 $dir)
   is export
   { * }
 
-sub gtk_widget_size_allocate_with_baseline (GtkWidget $widget, GtkAllocation $allocation, gint $baseline)
+sub gtk_widget_size_allocate_with_baseline (
+  GtkWidget $widget,
+  GtkAllocation $allocation,
+  gint $baseline
+)
   is native(gtk)
   is export
   { * }
@@ -294,19 +327,32 @@ sub gtk_widget_hide_on_delete (GtkWidget $widget)
   { * }
 
 # GtkIconSize $size
-sub gtk_widget_render_icon_pixbuf (GtkWidget $widget, gchar $stock_id, uint32 $size)
+sub gtk_widget_render_icon_pixbuf (
+  GtkWidget $widget,
+  gchar $stock_id,
+  uint32 $size
+)
   returns GdkPixbuf
   is native(gtk)
   is export
   { * }
 
-sub gtk_widget_add_tick_callback (GtkWidget $widget, GtkTickCallback $callback, gpointer $user_data, GDestroyNotify $notify)
+sub gtk_widget_add_tick_callback (
+  GtkWidget $widget,
+  &callback (GtkWidget, GdkFrameClock, gpointer --> gboolean),
+  gpointer $user_data,
+  GDestroyNotify $notify
+)
   returns guint
   is native(gtk)
   is export
   { * }
 
-sub gtk_widget_get_preferred_width (GtkWidget $widget, gint $minimum_width, gint $natural_width)
+sub gtk_widget_get_preferred_width (
+  GtkWidget $widget,
+  gint $minimum_width,
+  gint $natural_width
+)
   is native(gtk)
   is export
   { * }
@@ -334,7 +380,14 @@ sub gtk_widget_remove_tick_callback (GtkWidget $widget, guint $id)
   is export
   { * }
 
-sub gtk_widget_get_preferred_height_and_baseline_for_width (GtkWidget $widget, gint $width, gint $minimum_height, gint $natural_height, gint $minimum_baseline, gint $natural_baseline)
+sub gtk_widget_get_preferred_height_and_baseline_for_width (
+  GtkWidget $widget,
+  gint $width,
+  gint $minimum_height,
+  gint $natural_height,
+  gint $minimum_baseline,
+  gint $natural_baseline
+)
   is native(gtk)
   is export
   { * }
@@ -361,7 +414,10 @@ sub gtk_widget_get_ancestor (GtkWidget $widget, GType $widget_type)
   is export
   { * }
 
-sub gtk_widget_get_modifier_mask (GtkWidget $widget, GdkModifierIntent $intent)
+sub gtk_widget_get_modifier_mask (
+  GtkWidget $widget,
+  GdkModifierIntent $intent
+)
   returns uint32 # GdkModifierType
   is native(gtk)
   is export
@@ -400,13 +456,24 @@ sub gtk_widget_unparent (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_translate_coordinates (GtkWidget $src_widget, GtkWidget $dest_widget, gint $src_x, gint $src_y, gint $dest_x, gint $dest_y)
+sub gtk_widget_translate_coordinates (
+  GtkWidget $src_widget,
+  GtkWidget $dest_widget,
+  gint $src_x,
+  gint $src_y,
+  gint $dest_x,
+  gint $dest_y
+)
   returns uint32
   is native(gtk)
   is export
   { * }
 
-sub gtk_widget_style_get_property (GtkWidget $widget, gchar $property_name, GValue $value)
+sub gtk_widget_style_get_property (
+  GtkWidget $widget,
+  gchar $property_name,
+  GValue $value
+)
   is native(gtk)
   is export
   { * }
@@ -422,7 +489,13 @@ sub gtk_widget_get_settings (GtkWidget $widget)
 #  is export
 #  { * }
 
-sub gtk_widget_queue_draw_area (GtkWidget $widget, gint $x, gint $y, gint $width, gint $height)
+sub gtk_widget_queue_draw_area (
+  GtkWidget $widget,
+  gint $x,
+  gint $y,
+  gint $width,
+  gint $height
+)
   is native(gtk)
   is export
   { * }
@@ -443,7 +516,11 @@ sub gtk_widget_init_template (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_get_template_child (GtkWidget $widget, GType $widget_type, gchar $name)
+sub gtk_widget_get_template_child (
+  GtkWidget $widget,
+  GType $widget_type,
+  gchar $name
+)
   returns GObject
   is native(gtk)
   is export
@@ -454,7 +531,10 @@ sub gtk_widget_reparent (GtkWidget $widget, GtkWidget $new_parent)
   is export
   { * }
 
-sub gtk_widget_mnemonic_activate (GtkWidget $widget, gboolean $group_cycling)
+sub gtk_widget_mnemonic_activate (
+  GtkWidget $widget,
+  gboolean $group_cycling
+)
   returns uint32
   is native(gtk)
   is export
@@ -529,7 +609,11 @@ sub gtk_requisition_new ()
   is export
   { * }
 
-sub gtk_widget_intersect (GtkWidget $widget, GdkRectangle $area, GdkRectangle $intersection)
+sub gtk_widget_intersect (
+  GtkWidget $widget,
+  GdkRectangle $area,
+  GdkRectangle $intersection
+)
   returns uint32
   is native(gtk)
   is export
@@ -598,7 +682,11 @@ sub gtk_widget_set_clip (GtkWidget $widget, GtkAllocation $clip)
   is export
   { * }
 
-sub gtk_widget_set_device_enabled (GtkWidget $widget, GdkDevice $device, gboolean $enabled)
+sub gtk_widget_set_device_enabled (
+  GtkWidget $widget,
+  GdkDevice $device,
+  gboolean $enabled
+)
   is native(gtk)
   is export
   { * }
@@ -691,7 +779,11 @@ sub gtk_widget_get_request_mode (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_set_accel_path (GtkWidget $widget, gchar $accel_path, GtkAccelGroup $accel_group)
+sub gtk_widget_set_accel_path (
+  GtkWidget $widget,
+  gchar $accel_path,
+  GtkAccelGroup $accel_group
+)
   is native(gtk)
   is export
   { * }
@@ -714,7 +806,12 @@ sub gtk_widget_list_mnemonic_labels (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_get_preferred_height_for_width (GtkWidget $widget, gint $width, gint $minimum_height, gint $natural_height)
+sub gtk_widget_get_preferred_height_for_width (
+  GtkWidget $widget,
+  gint $width,
+  gint $minimum_height,
+  gint $natural_height
+)
   is native(gtk)
   is export
   { * }
@@ -752,7 +849,11 @@ sub gtk_widget_create_pango_context (GtkWidget $widget)
 #  is export
 #  { * }
 
-sub gtk_widget_get_preferred_height (GtkWidget $widget, gint $minimum_height, gint $natural_height)
+sub gtk_widget_get_preferred_height (
+  GtkWidget $widget,
+  gint $minimum_height,
+  gint $natural_height
+)
   is native(gtk)
   is export
   { * }
@@ -785,7 +886,11 @@ sub gtk_widget_trigger_tooltip_query (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_insert_action_group (GtkWidget $widget, gchar $name, GActionGroup $group)
+sub gtk_widget_insert_action_group (
+  GtkWidget $widget,
+  gchar $name,
+  GActionGroup $group
+)
   is native(gtk)
   is export
   { * }
@@ -796,7 +901,10 @@ sub gtk_widget_get_root_window (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_size_request (GtkWidget $widget, GtkRequisition $requisition)
+sub gtk_widget_size_request (
+  GtkWidget $widget,
+  GtkRequisition $requisition
+)
   is native(gtk)
   is export
   { * }
@@ -806,12 +914,19 @@ sub gtk_widget_show_all (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_get_child_requisition (GtkWidget $widget, GtkRequisition $requisition)
+sub gtk_widget_get_child_requisition (
+  GtkWidget $widget,
+  GtkRequisition $requisition
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_widget_get_size_request (GtkWidget $widget, gint $width, gint $height)
+sub gtk_widget_get_size_request (
+  GtkWidget $widget,
+  gint $width,
+  gint $height
+)
   is native(gtk)
   is export
   { * }
@@ -858,7 +973,10 @@ sub gtk_widget_show (GtkWidget $widget)
   is export
   { * }
 
-sub gtk_widget_override_font (GtkWidget $widget, PangoFontDescription $font_desc)
+sub gtk_widget_override_font (
+  GtkWidget $widget,
+  PangoFontDescription $font_desc
+)
   is native(gtk)
   is export
   { * }
@@ -1157,12 +1275,18 @@ sub gtk_widget_set_can_focus (GtkWidget $widget, gboolean $can_focus)
   is export
   { * }
 
-sub gtk_widget_set_support_multidevice (GtkWidget $widget, gboolean $support_multidevice)
+sub gtk_widget_set_support_multidevice (
+  GtkWidget $widget,
+  gboolean $support_multidevice
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_widget_set_parent_window (GtkWidget $widget, GdkWindow $parent_window)
+sub gtk_widget_set_parent_window (
+  GtkWidget $widget,
+  GdkWindow $parent_window
+)
   is native(gtk)
   is export
   { * }
@@ -1240,7 +1364,10 @@ sub gtk_widget_set_opacity (GtkWidget $widget, num64 $opacity)
   is export
   { * }
 
-sub gtk_widget_set_double_buffered (GtkWidget $widget, gboolean $double_buffered)
+sub gtk_widget_set_double_buffered (
+  GtkWidget $widget,
+  gboolean $double_buffered
+)
   is native(gtk)
   is export
   { * }
@@ -1260,7 +1387,10 @@ sub gtk_widget_set_window (GtkWidget $widget, GdkWindow $window)
   is export
   { * }
 
-sub gtk_widget_set_app_paintable (GtkWidget $widget, gboolean $app_paintable)
+sub gtk_widget_set_app_paintable (
+  GtkWidget $widget,
+  gboolean $app_paintable
+)
   is native(gtk)
   is export
   { * }
@@ -1281,12 +1411,18 @@ sub gtk_widget_set_state (GtkWidget $widget, uint32 $state)
   is export
   { * }
 
-sub gtk_widget_set_receives_default (GtkWidget $widget, gboolean $receives_default)
+sub gtk_widget_set_receives_default (
+  GtkWidget $widget,
+  gboolean $receives_default
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_widget_set_tooltip_window (GtkWidget $widget, GtkWindow $custom_window)
+sub gtk_widget_set_tooltip_window (
+  GtkWidget $widget,
+  GtkWindow $custom_window
+)
   is native(gtk)
   is export
   { * }
@@ -1311,7 +1447,10 @@ sub gtk_widget_set_has_window (GtkWidget $widget, gboolean $has_window)
   is export
   { * }
 
-sub gtk_widget_set_focus_on_click (GtkWidget $widget, gboolean $focus_on_click)
+sub gtk_widget_set_focus_on_click (
+  GtkWidget $widget,
+  gboolean $focus_on_click
+)
   is native(gtk)
   is export
   { * }
@@ -1352,7 +1491,10 @@ sub gtk_widget_set_direction (GtkWidget $widget, uint32 $dir)
   is export
   { * }
 
-sub gtk_widget_set_font_options (GtkWidget $widget, cairo_font_options_t $options)
+sub gtk_widget_set_font_options (
+  GtkWidget $widget,
+  cairo_font_options_t $options
+)
   is native(gtk)
   is export
   { * }

@@ -2045,13 +2045,13 @@ class GTK::Widget {
   }
 
   method add_tick_callback (
-    GtkTickCallback $callback,
-    gpointer $user_data,
-    GDestroyNotify $notify
+    &callback,
+    gpointer $user_data = gpointer,
+    GDestroyNotify $notify = GDestroyNotify
   )
     is also<add-tick-callback>
   {
-    gtk_widget_add_tick_callback($!w, $callback, $user_data, $notify);
+    gtk_widget_add_tick_callback($!w, &callback, $user_data, $notify);
   }
 
 

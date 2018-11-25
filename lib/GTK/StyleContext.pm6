@@ -3,9 +3,10 @@ v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::RGBA;
+use GTK::Compat::Screen;
 use GTK::Compat::Types;
 use GTK::Compat::Value;
-use GTK::Compat::Screen;
 
 use GTK::Raw::StyleContext;
 use GTK::Raw::Subs;

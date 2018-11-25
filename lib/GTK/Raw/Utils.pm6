@@ -31,6 +31,20 @@ multi sub resolve-bool($rb) is export {
   }
 }
 
+multi resolve-short(@rs) is export {
+  @rs.map({ samewith($_) });
+}
+multi sub resolve-short($rs) is export {
+  ($rs.abs +& 0x7f) * ($rs < 0 ?? -1 !! 1);
+}
+
+multi resolve-ushort(@rus) is export {
+  @rus.map({ samewith($_) });
+}
+multi sub resolve-ushort($rus) is export {
+  $rus +& 0xff;
+}
+
 multi resolve-int(@ri) is export {
   @ri.map({ samewith($_) });
 }

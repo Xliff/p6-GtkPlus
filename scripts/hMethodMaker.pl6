@@ -10,7 +10,8 @@ sub MAIN (
   :$var,
   :$output = 'all',
   :$lib = 'gtk',
-  :$args = 1
+  :$args = 1,
+  :$static = 0
 ) {
   my $fn = $filename;
 
@@ -88,7 +89,7 @@ sub MAIN (
         });
         my $o_call = (@t [Z] @v).join(', ');
 
-        if $attr {
+        if $attr && $static.not {
           @v.shift if +@v;
           @t.shift if +@t;
         }

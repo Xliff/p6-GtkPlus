@@ -5,7 +5,11 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-class GTK::Compat::RGBA is repr('CStruct') is export {
+class GTK::Compat::RGBA is repr('CStruct') is export { ... }
+
+our constant GdkRGBA is export := GTK::Compat::RGBA;
+
+class GTK::Compat::RGBA {
   has gdouble $.red;
   has gdouble $.green;
   has gdouble $.blue;

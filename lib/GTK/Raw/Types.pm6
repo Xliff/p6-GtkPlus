@@ -60,7 +60,6 @@ our constant GtkTreeViewRowSeparatorFunc      is export := Pointer;
 our constant GtkTreeViewSearchEqualFunc       is export := Pointer;
 our constant GtkTreeViewSearchPositionFunc    is export := Pointer;
 
-our constant GdkRGBA       is export := GTK::Compat::RGBA;
 our constant GtkAllocation is export := GdkRectangle;
 
 class GtkBorder is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -1099,7 +1098,6 @@ class GtkTextMark             is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkTextTag              is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextTagTable         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextView             is repr('CPointer') does GTK::Roles::Pointers is export { }
-class GtkTickCallback         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToggleButton         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToggleToolButton     is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkToolbar              is repr('CPointer') does GTK::Roles::Pointers is export { }
