@@ -75,7 +75,7 @@ sub g_list_free_1 (GList $list)
   is export
   { * }
 
-sub g_list_free_full (GList $list, &free_func (Pointer) )
+sub g_list_free_full (GList $list, &func (Pointer))
   is native(glib)
   is export
   { * }

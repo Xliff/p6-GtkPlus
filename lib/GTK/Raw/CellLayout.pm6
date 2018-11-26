@@ -80,7 +80,7 @@ sub gtk_cell_layout_set_cell_data_func (
   GtkCellRenderer $cell,
   GtkCellLayoutDataFunc $func,
   gpointer $func_data,
-  GDestroyNotify $destroy
+  &destroy (Pointer)
 )
   is native(gtk)
   is export

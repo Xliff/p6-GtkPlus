@@ -9,7 +9,15 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+use GTK::Roles::Orientable;
+
+my subset Ancestry where
+  GtkToolPalette | GtkOrientable | GtkContainer | GtkBuildable |
+  GtkWidget;
+
 class GTK::ToolPalette is GTK::Container {
+  also does GTK::Roles::Orientable;
+
   has GtkToolPalette $!tp;
 
   method bless(*%attrinit) {
@@ -21,10 +29,15 @@ class GTK::ToolPalette is GTK::Container {
   submethod BUILD(:$palette) {
     my $to-parent;
     given $palette {
-      when GtkToolPalette | GtkWidget {
+      when Ancestry {
         $!tp = do {
           when GtkWidget {
             $to-parent = $_;
+            nativecast(GtkToolPalette, $palette);
+          }
+          when GtkOrientable {
+            $!or = $_;
+            $to-parent = nativecast(GtkContainer, $palette);
             nativecast(GtkToolPalette, $palette);
           }
           when GtkToolPalette  {
@@ -39,20 +52,33 @@ class GTK::ToolPalette is GTK::Container {
       default {
       }
     }
+    $!or //= nativecast(GtkOrientable, $palette); # GTK::Roles::Orientable
   }
 
-  multi method new {
-    my $palette = gtk_tool_palette_new();
+  multi method new (Ancestry $palette) {
     self.bless(:$palette);
   }
-  multi method new (GtkWidget $palette) {
+  multi method new {
+    my $palette = gtk_tool_palette_new();
     self.bless(:$palette);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
-  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓\
+  method style is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        GtkToolbarStyle( gtk_tool_palette_get_style($!tp) );
+      },
+      STORE => -> $, Int() $val {
+        my guint $v = self.RESOLVE-UINT($val);
+        gtk_tool_palette_set_style($!tp, $v);
+      }
+    );
+  }
+
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ STATIC METHODS ↓↓↓↓
@@ -113,10 +139,6 @@ class GTK::ToolPalette is GTK::Container {
     GtkIconSize( gtk_tool_palette_get_icon_size($!tp) );
   }
 
-  method get_style is also<get-style> {
-    GtkToolbarStyle( gtk_tool_palette_get_style($!tp) );
-  }
-
   method get_type is also<get-type> {
     gtk_tool_palette_get_type();
   }
@@ -157,4 +179,3 @@ class GTK::ToolPalette is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

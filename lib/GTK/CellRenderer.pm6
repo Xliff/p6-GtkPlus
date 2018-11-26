@@ -27,7 +27,7 @@ class GTK::CellRenderer {
     $!data = $!cr;                          # GTK::Roles::Data
   }
 
-  method GTK::Raw::Types::GtkCellRenderer {
+  method GTK::Raw::Types::GtkCellRenderer is also<cellrenderer> {
     $!cr;
   }
 

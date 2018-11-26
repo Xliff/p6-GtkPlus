@@ -162,6 +162,11 @@ sub gtk_tool_palette_unset_icon_size (GtkToolPalette $palette)
   is export
   { * }
 
+sub gtk_tool_palette_set_style(GtkToolPalette $palette, guint $style)
+  is native(gtk)
+  is export
+  { * }
+
 sub gtk_tool_palette_unset_style (GtkToolPalette $palette)
   is native(gtk)
   is export

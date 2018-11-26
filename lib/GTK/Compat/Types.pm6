@@ -24,6 +24,10 @@ constant gio      is export = 'gio-2.0',v0;
 constant gobject  is export = 'gobject-2.0',v0;
 constant cairo    is export = 'cairo',v2;
 
+sub g_destroy_none(Pointer)
+  is export
+  { }
+
 sub g_free (Pointer)
   is native(glib)
   is export

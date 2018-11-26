@@ -8,6 +8,7 @@ use GTK::Raw::ComboBox;
 use GTK::Raw::Types;
 
 use GTK::Bin;
+use GTK::TreeIter;
 
 use GTK::Roles::CellEditable;
 use GTK::Roles::CellLayout;
@@ -53,12 +54,12 @@ class GTK::ComboBox is GTK::Bin {
         nativecast(GtkComboBox, $_);
       }
       when GtkCellEditable {
-        $!ce = $_;                               # GTK::Roles::CellEditable
+        $!ce = $_;                                # GTK::Roles::CellEditable
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkComboBox, $_);
       }
       when GtkCellLayout {
-        $!cl = $_;                               # GTK::Roles::CellLayout
+        $!cl = $_;                                # GTK::Roles::CellLayout
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkComboBox, $_);
       }
@@ -67,8 +68,8 @@ class GTK::ComboBox is GTK::Bin {
         $_;
       }
     }
-    $!cl //= nativecast(GtkCellLayout, $!cb);   # GTK::Roles::CellLayout
-    $!ce //= nativecast(GtkCellLayout, $!cb);   # GTK::Roles::CellEditable
+    $!cl //= nativecast(GtkCellLayout, $!cb);     # GTK::Roles::CellLayout
+    $!ce //= nativecast(GtkCellEditable, $!cb);   # GTK::Roles::CellEditable
     self.setBin($to-parent);
   }
 
@@ -298,7 +299,7 @@ class GTK::ComboBox is GTK::Bin {
     { * }
 
   multi method get_active_iter is also<active_iter active-iter> {
-    my GtkTreeIter $iter;
+    my GtkTreeIter $iter = GtkTreeIter.new;
     samewith($iter);
     GTK::TreeIter.new($iter);
   }
@@ -342,7 +343,7 @@ class GTK::ComboBox is GTK::Bin {
   method set_row_separator_func (
     &func,
     gpointer $data = gpointer,
-    &destroy = &g_free
+    &destroy = &g_destroy_none
   )
     is also<set-row-separator-func>
   {

@@ -2,6 +2,7 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Compat::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::Utils;
 
@@ -37,8 +38,12 @@ role GTK::Roles::Data {
       unless ($oldType // '') ne $typeName;
   }
 
-  method getType {
+  multi method getType {
     self.get_data_string('GTKPLUS-Type');
+  }
+
+  multi method getType($w) {
+    g_object_get_string( nativecast(GObject, $w), 'GTKPLUS-Type' );
   }
 
 }

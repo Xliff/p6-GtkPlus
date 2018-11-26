@@ -52,6 +52,10 @@ class GTK::ToolButton is GTK::ToolItem {
     $!action = nativecast(GtkActionable, $!tb);   GTK::Roles::Actionable
   }
 
+  multi method new {
+    my $toolbutton = gtk_tool_button_new(GtkWidget, Str);
+    self.bless(:$toolbutton);
+  }
   multi method new (GtkWidget $toolbutton) {
     self.bless(:$toolbutton);
   }
@@ -152,4 +156,3 @@ class GTK::ToolButton is GTK::ToolItem {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

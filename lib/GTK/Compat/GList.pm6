@@ -13,7 +13,7 @@ class GTK::Compat::GList {
   has GTK::Compat::Types::GList $!list;
   has GTK::Compat::Types::GList $!cur;
   has @!nat handles
-    «pull-one iterator elems AT-POS EXISTS-POS :p6sort('sort')»;
+    «pull-one iterator elems AT-POS EXISTS-POS join :p6sort('sort')»;
   has $!dirty = False;
   has $!type;
 
@@ -61,7 +61,11 @@ class GTK::Compat::GList {
         $!cur.data.deref;
       }
 
-      when Str | .REPR eq <CPointer CStruct>.any {
+      when Str {
+        nativecast($_, $!cur.data);
+      }
+
+      when .REPR eq <CPointer CStruct>.any {
         nativecast($_, $!cur.data);
       }
 
@@ -150,8 +154,9 @@ class GTK::Compat::GList {
     g_list_free_1($!list);
   }
 
-  method free_full (&free_func = &g_free) {
-    g_list_free_full($!list, &free_func);
+  method free_full(&free_func?) {
+    my &func := &free_func // &g_destroy_none;
+    g_list_free_full($!list, &func);
   }
 
   method index (gconstpointer $data) {

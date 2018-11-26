@@ -12,12 +12,14 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::Widget;
 
+use GTK::Roles::LatchedContents;
+
 class GTK::Container is GTK::Widget {
+  also does GTK::Roles::LatchedContents;
+
   # Maybe this should be done as the base class.
   has $!c;
-  has $!add-latch;
-  has @!start;
-  has @!end;
+
 
   # GTK::Container is abstract, so no need for BUILD or DESTROY
   # submethod BUILD (:$container) {
@@ -55,31 +57,6 @@ class GTK::Container is GTK::Widget {
     $!c;
   }
 
-  method SET-LATCH is also<SET_LATCH> {
-    self.IS-PROTECTED;
-    $!add-latch = True;
-  }
-
-  method UNSET-LATCH is also<UNSET_LATCH> {
-    self.IS-PROTECTED;
-    $!add-latch = False;
-  }
-
-  method IS-LATCHED is also<IS_LATCHED> {
-    self.IS-PROTECTED;
-    $!add-latch;
-  }
-
-  method push-start($c) is also<push_start> {
-    # Write @!start.elems to GtkWidget under key GTKPlus-ContainerStart
-    @!start.push: $c;
-  }
-
-  method unshift-end($c) is also<unshift_end> {
-    # Write @!end.elems to GtkWidget under key GTKPlus-ContainerEnd
-    @!end.unshift: $c;
-  }
-
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
   multi method add {
@@ -107,7 +84,7 @@ class GTK::Container is GTK::Widget {
     Str() $prop,
     Int $val is rw
   )
-    is also<child_set_bool>
+    is also<child_get_bool>
   {
     my guint $v = self.RESOLVE-UINT($val);
     # CArray[guint]?
@@ -120,7 +97,7 @@ class GTK::Container is GTK::Widget {
     Str() $prop,
     Int() $val
   )
-    is also<child_get_bool>
+    is also<child_set_bool>
   {
     my guint $v = self.RESOLVE-UINT($val);
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);

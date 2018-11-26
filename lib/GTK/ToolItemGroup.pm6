@@ -41,7 +41,7 @@ class GTK::ToolItemGroup is GTK::Container {
     }
   }
 
-  multi method new(Str() $label) {
+  multi method new(Str() $label = '') {
     my $toolgroup = gtk_tool_item_group_new($label);
     self.bless(:$toolgroup);
   }
@@ -156,4 +156,3 @@ class GTK::ToolItemGroup is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

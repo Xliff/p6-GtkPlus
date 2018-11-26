@@ -12,6 +12,9 @@ use GTK::Container;
 
 use GTK::Roles::Orientable;
 
+my subset Ancestry
+  where GtkBox| GtkContainer | GtkOrientable | GtkBuildable | GtkWidget;
+
 class GTK::Box is GTK::Container {
   also does GTK::Roles::Orientable;
 
@@ -28,7 +31,7 @@ class GTK::Box is GTK::Container {
 
   submethod BUILD(:$box) {
     given $box {
-      when GtkWidget | GtkBox {
+      when Ancestry {
         self.setBox($box);
       }
       when GTK::Box {
@@ -38,14 +41,36 @@ class GTK::Box is GTK::Container {
       default {
       }
     }
-    # For GTK::Roles::Orientable
-    $!or = nativecast(GtkOrientable, $!b);
   }
 
+  method setBox($box) {
+    my $to-parent;
+    $!b = do given $box {
+      when GtkBox {
+        $to-parent = nativecast(GtkContainer, $_);
+        $_;
+      }
+      when GtkOrientable {
+        $!or = $box;                            # For GTK::Roles::Orientable
+        $to-parent = nativecast(GtkContainer, $_);
+        nativecast(GtkBox, $_);
+      }
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkBox, $_);
+      }
+    }
+    self.setContainer($to-parent);
+    $!or //= nativecast(GtkOrientable, $!b);    # For GTK::Roles::Orientable
+  }
+
+  multi method new (Ancestry $box) {
+    self.bless(:$box);
+  }
   multi method new (
     # Default orientation established from Glade.
     Int() $orientation = GTK_ORIENTATION_HORIZONTAL,  # GtkOrientation,
-    Int() $spacing = 2
+    Int() $spacing = 0
   ) {
     # This works because it is NOT the array version.
     my guint $o = self.RESOLVE-UINT($orientation);
@@ -53,35 +78,17 @@ class GTK::Box is GTK::Container {
     my $box = gtk_box_new($o, $s);
     self.bless(:$box);
   }
-  multi method new (GtkWidget $box) {
-    self.bless(:$box);
-  }
 
-  method new-hbox(Int $spacing = 2) is also<new_hbox> {
+  method new-hbox(Int $spacing = 0) is also<new_hbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL.Int, $s);
     self.bless(:$box);
   }
 
-  method new-vbox(Int $spacing = 2) is also<new_vbox> {
+  method new-vbox(Int $spacing = 0) is also<new_vbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL.Int, $s);
     self.bless(:$box);
-  }
-
-  method setBox($box) {
-    my $to-parent;
-    $!b = do given $box {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkBox, $_);
-      }
-      when GtkBox {
-        $to-parent = nativecast(GtkContainer, $_);
-        $_;
-      }
-    }
-    self.setContainer($to-parent);
   }
 
   method baseline_position is rw is also<baseline-position> {
