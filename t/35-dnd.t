@@ -179,9 +179,7 @@ sub canvas_drag_leave($can, $c, $x, $y, $t, $d) {
 
 sub orientation_changed($cb, $pal, $sw, $m) {
   my $iter = $cb.get_active_iter;
-
-  say "Iter: $iter";
-
+  
   return unless $iter;
   my $val = $m.get_value($iter, 1).int;
   $pal.orientation = $val;
@@ -249,14 +247,11 @@ sub create_entry_item($s) {
 sub load_special_items($p) {
   my ($item, $group, $lb);
 
-  say 'S1';
-
   $group = GTK::ToolItemGroup.new;
   $lb = GTK::Button.new_with_label('Advanced Features');
   $group.label-widget = $lb;
+  $lb.show;
   $p.add($group);
-
-  say 'S2';
 
   # 'h' is only used for the first element, but got stick in the rest, too.
   for <h he hef her> {
@@ -267,15 +262,11 @@ sub load_special_items($p) {
 
     @special_items.push: ( $item = create_entry_item($s) );
 
-    say "I: $item";
-
     $group.insert($item, -1);
-    $item.homogeneous = False;
-    $group.child_set_bool($item, 'expand',  True)  if .contains('e');
-    $group.child_set_bool($item, 'fill',   False)  if .contains('f');
-    $group.child_set_bool($item, 'new-row', True)  if .contains('r');
-
-    .say;
+    $group.child_set_bool($item, 'homogeneous', False);
+    $group.child_set_bool($item, 'expand',       True) if .contains('e');
+    $group.child_set_bool($item, 'fill',        False) if .contains('f');
+    $group.child_set_bool($item, 'new-row',      True) if .contains('r');
   }
 
   say 'S3';
@@ -350,8 +341,7 @@ $a.activate.tap({
   $box.pack_start($hbox, True, True);
 
   my $palette = GTK::ToolPalette.new;
-  # for <icon toggle special> {
-  for <icon> {
+  for <icon toggle special> {
     ::("\&load_{ $_ }_items")($palette);
   }
 

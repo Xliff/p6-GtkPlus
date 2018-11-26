@@ -83,7 +83,8 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
   method group is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::GSList.new( gtk_radio_tool_button_get_group($!rtb) );
+        #GTK::Compat::GSList.new( gtk_radio_tool_button_get_group($!rtb) );
+        gtk_radio_tool_button_get_group($!rtb);
       },
       STORE => sub ($, GSList() $group is copy) {
         gtk_radio_tool_button_set_group($!rtb, $group);
@@ -99,4 +100,3 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
