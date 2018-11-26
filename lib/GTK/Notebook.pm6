@@ -186,7 +186,9 @@ class GTK::Notebook is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_page (GtkWidget() $child, GtkWidget() $tab_label) is also<append-page> {
+  method append_page (GtkWidget() $child, GtkWidget() $tab_label)
+    is also<append-page>
+  {
     gtk_notebook_append_page($!n, $child, $tab_label);
   }
 
@@ -194,7 +196,9 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $child,
     GtkWidget() $tab_label,
     GtkWidget() $menu_label
-  ) is also<append-page-menu> {
+  )
+    is also<append-page-menu>
+  {
     gtk_notebook_append_page_menu($!n, $child, $tab_label, $menu_label);
   }
 
@@ -211,7 +215,9 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_get_menu_label($!n, $child);
   }
 
-  method get_menu_label_text (GtkWidget() $child) is also<get-menu-label-text> {
+  method get_menu_label_text (GtkWidget() $child)
+    is also<get-menu-label-text>
+  {
     gtk_notebook_get_menu_label_text($!n, $child);
   }
 
@@ -221,12 +227,16 @@ class GTK::Notebook is GTK::Container {
 
   method get_nth_page (
     Int() $page_num               # gint $page_num
-  ) is also<get-nth-page> {
+  )
+    is also<get-nth-page>
+  {
     my gint $pn = self.RESOLVE-INT($page_num);
     gtk_notebook_get_nth_page($!n, $pn);
   }
 
-  method get_tab_detachable (GtkWidget() $child) is also<get-tab-detachable> {
+  method get_tab_detachable (GtkWidget() $child)
+    is also<get-tab-detachable>
+  {
     gtk_notebook_get_tab_detachable($!n, $child);
   }
 
@@ -238,11 +248,15 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_get_tab_label($!n, $child);
   }
 
-  method get_tab_label_text (GtkWidget() $child) is also<get-tab-label-text> {
+  method get_tab_label_text (GtkWidget() $child)
+    is also<get-tab-label-text>
+  {
     gtk_notebook_get_tab_label_text($!n, $child);
   }
 
-  multi method get_tab_reorderable (GtkWidget() $child) is also<get-tab-reorderable> {
+  multi method get_tab_reorderable (GtkWidget() $child)
+    is also<get-tab-reorderable>
+  {
     gtk_notebook_get_tab_reorderable($!n, $child);
   }
 
@@ -258,7 +272,9 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $child,
     GtkWidget() $tab_label,
     Int() $position
-  ) is also<insert-page> {
+  )
+    is also<insert-page>
+  {
     my uint32 $p = self.RESOLVE-UINT($position);
     gtk_notebook_insert_page($!n, $child, $tab_label, $p);
   }
@@ -268,7 +284,9 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $tab_label,
     GtkWidget() $menu_label,
     Int() $position               # gint $position
-  ) is also<insert-page-menu> {
+  )
+    is also<insert-page-menu>
+  {
     my uint32 $p = self.RESOLVE-UINT($position);
     gtk_notebook_insert_page_menu($!n, $child, $tab_label, $menu_label, $p);
   }
@@ -292,7 +310,9 @@ class GTK::Notebook is GTK::Container {
   method prepend_page (
     GtkWidget() $child,
     GtkWidget() $tab_label
-  ) is also<prepend-page> {
+  )
+    is also<prepend-page>
+  {
     gtk_notebook_prepend_page($!n, $child, $tab_label);
   }
 
@@ -300,7 +320,9 @@ class GTK::Notebook is GTK::Container {
     GtkWidget() $child,
     GtkWidget() $tab_label,
     GtkWidget() $menu_label
-  ) is also<prepend-page-menu> {
+  )
+    is also<prepend-page-menu>
+  {
     gtk_notebook_prepend_page_menu($!n, $child, $tab_label, $menu_label);
   }
 
@@ -313,53 +335,68 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_remove_page($!n, $pn);
   }
 
-  method reorder_child (GtkWidget $child, Int() $position) is also<reorder-child> {
+  method reorder_child (GtkWidget $child, Int() $position)
+    is also<reorder-child>
+  {
     my gint $p = self.RESOLVE-INT($position);
     gtk_notebook_reorder_child($!n, $child, $p);
   }
 
   method set_action_widget (
     GtkWidget() $widget,
-    int() $pack_type              # GtkPackType $pack_type)
-  ) is also<set-action-widget> {
+    Int() $pack_type              # GtkPackType $pack_type)
+  )
+    is also<set-action-widget>
+  {
     gtk_notebook_set_action_widget($!n, $widget, $pack_type);
   }
 
   method set_menu_label (
     GtkWidget() $child,
     GtkWidget() $menu_label
-  ) is also<set-menu-label> {
+  )
+    is also<set-menu-label>
+  {
     gtk_notebook_set_menu_label($!n, $child, $menu_label);
   }
 
-  method set_menu_label_text (GtkWidget() $child, gchar $menu_text) is also<set-menu-label-text> {
+  method set_menu_label_text (GtkWidget() $child, gchar $menu_text)
+    is also<set-menu-label-text>
+  {
     gtk_notebook_set_menu_label_text($!n, $child, $menu_text);
   }
 
   method set_tab_detachable (
     GtkWidget() $child,
     Int() $detachable             # gboolean $detachable
-  ) is also<set-tab-detachable> {
+  )
+    is also<set-tab-detachable>
+  {
     my gboolean $d = self.RESOLVE-BOOL($detachable);
     gtk_notebook_set_tab_detachable($!n, $child, $d);
   }
 
-  method set_tab_label (GtkWidget() $child, GtkWidget() $tab_label) is also<set-tab-label> {
+  method set_tab_label (GtkWidget() $child, GtkWidget() $tab_label)
+    is also<set-tab-label>
+  {
     gtk_notebook_set_tab_label($!n, $child, $tab_label);
   }
 
-  method set_tab_label_text (GtkWidget() $child, gchar $tab_text) is also<set-tab-label-text> {
+  method set_tab_label_text (GtkWidget() $child, gchar $tab_text)
+    is also<set-tab-label-text>
+  {
     gtk_notebook_set_tab_label_text($!n, $child, $tab_text);
   }
 
   method set_tab_reorderable (
     GtkWidget() $child,
     Int() $reorderable            # gboolean $reorderable
-  ) is also<set-tab-reorderable> {
+  )
+    is also<set-tab-reorderable>
+  {
     my $r = self.RESOLVE-BOOL($reorderable);
     gtk_notebook_set_tab_reorderable($!n, $child, $r);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -75,7 +75,7 @@ sub g_list_free_1 (GList $list)
   is export
   { * }
 
-sub g_list_free_full (GList $list, GDestroyNotify $free_func)
+sub g_list_free_full (GList $list, &free_func (Pointer) )
   is native(glib)
   is export
   { * }

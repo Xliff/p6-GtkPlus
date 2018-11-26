@@ -106,7 +106,7 @@ sub gtk_combo_box_set_row_separator_func (
   GtkComboBox $combo_box,
   &func (GtkTreeModel, GtkTreeIter, Pointer --> gboolean),
   gpointer $data,
-  GDestroyNotify $destroy
+  &destroy (Pointer)
 )
   is native(gtk)
   is export

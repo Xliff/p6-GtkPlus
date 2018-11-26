@@ -2071,7 +2071,7 @@ class GTK::Widget {
 
   method dest_find_target (
     GdkDragContext $context,
-    GtkTargetList() $target_list
+    GtkTargetList $target_list = GtkTargetList
   )
     is also<dest-find-target>
   {

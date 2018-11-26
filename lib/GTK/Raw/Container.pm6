@@ -1,5 +1,6 @@
 use v6.c;
 
+use Cairo;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -23,12 +24,21 @@ sub gtk_container_check_resize (GtkContainer $container)
   is export
   { * }
 
-sub gtk_container_child_set_valist (GtkContainer $container, GtkWidget $child, gchar $first_property_name, va_list $var_args)
-  is native(gtk)
-  is export
-  { * }
+# sub gtk_container_child_set_valist (
+#   GtkContainer $container,
+#   GtkWidget $child,
+#   gchar $first_property_name,
+#   va_list $var_args
+# )
+#   is native(gtk)
+#   is export
+#   { * }
 
-sub gtk_container_foreach (GtkContainer $container, GtkCallback $callback, gpointer $callback_data)
+sub gtk_container_foreach (
+  GtkContainer $container,
+  GtkCallback $callback,
+  gpointer $callback_data
+)
   is native(gtk)
   is export
   { * }
@@ -39,7 +49,12 @@ sub gtk_container_get_children (GtkContainer $container)
   is export
   { * }
 
-sub gtk_container_child_get_property (GtkContainer $container, GtkWidget $child, gchar $property_name, GValue $value)
+sub gtk_container_child_get_property (
+  GtkContainer $container,
+  GtkWidget $child,
+  gchar $property_name,
+  GValue $value
+)
   is native(gtk)
   is export
   { * }
@@ -55,13 +70,19 @@ sub gtk_container_add (GtkContainer $container, GtkWidget $widget)
   is export
   { * }
 
-sub gtk_container_get_path_for_child (GtkContainer $container, GtkWidget $child)
+sub gtk_container_get_path_for_child (
+  GtkContainer $container,
+  GtkWidget $child
+)
   returns GtkWidgetPath
   is native(gtk)
   is export
   { * }
 
-sub gtk_container_get_focus_chain (GtkContainer $container, GList $focusable_widgets)
+sub gtk_container_get_focus_chain (
+  GtkContainer $container,
+  GList $focusable_widgets
+)
   returns uint32
   is native(gtk)
   is export
@@ -83,27 +104,47 @@ sub gtk_container_resize_children (GtkContainer $container)
   is export
   { * }
 
-sub gtk_container_propagate_draw (GtkContainer $container, GtkWidget $child, cairo_t $cr)
+sub gtk_container_propagate_draw (
+  GtkContainer $container,
+  GtkWidget $child,
+  Cairo::cairo_t $cr
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_container_child_get_valist (GtkContainer $container, GtkWidget $child, gchar $first_property_name, va_list $var_args)
+# sub gtk_container_child_get_valist (
+#   GtkContainer $container,
+#   GtkWidget $child,
+#   gchar $first_property_name,
+#   va_list $var_args
+# )
+#   is native(gtk)
+#   is export
+#   { * }
+
+sub gtk_container_forall (
+  GtkContainer $container,
+  GtkCallback $callback,
+  gpointer $callback_data
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_container_forall (GtkContainer $container, GtkCallback $callback, gpointer $callback_data)
+sub gtk_container_set_reallocate_redraws (
+  GtkContainer $container,
+  gboolean $needs_redraws)
   is native(gtk)
   is export
   { * }
 
-sub gtk_container_set_reallocate_redraws (GtkContainer $container, gboolean $needs_redraws)
-  is native(gtk)
-  is export
-  { * }
-
-sub gtk_container_child_set_property (GtkContainer $container, GtkWidget $child, gchar $property_name, GValue $value)
+sub gtk_container_child_set_property (
+  GtkContainer $container,
+  GtkWidget $child,
+  gchar $property_name,
+  GValue $value
+)
   is native(gtk)
   is export
   { * }
@@ -129,12 +170,20 @@ sub gtk_container_get_type ()
   is export
   { * }
 
-sub gtk_container_child_notify_by_pspec (GtkContainer $container, GtkWidget $child, GParamSpec $pspec)
+sub gtk_container_child_notify_by_pspec (
+  GtkContainer $container,
+  GtkWidget $child,
+  GParamSpec $pspec
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_container_child_notify (GtkContainer $container, GtkWidget $child, gchar $child_property)
+sub gtk_container_child_notify (
+  GtkContainer $container,
+  GtkWidget $child,
+  gchar $child_property
+)
   is native(gtk)
   is export
   { * }
@@ -172,28 +221,64 @@ sub gtk_container_get_focus_child (GtkContainer $container)
   is export
   { * }
 
-sub gtk_container_set_border_width (GtkContainer $container, guint $border_width)
+sub gtk_container_set_border_width (
+  GtkContainer $container,
+  guint $border_width
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_container_set_focus_vadjustment (GtkContainer $container, GtkAdjustment $adjustment)
+sub gtk_container_set_focus_vadjustment (
+  GtkContainer $container,
+  GtkAdjustment $adjustment
+)
   is native(gtk)
   is export
   { * }
 
 # GtkResizeMode $resize_mode
-sub gtk_container_set_resize_mode (GtkContainer $container, uint32 $resize_mode)
+sub gtk_container_set_resize_mode (
+  GtkContainer $container,
+  uint32 $resize_mode
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_container_set_focus_hadjustment (GtkContainer $container, GtkAdjustment $adjustment)
+sub gtk_container_set_focus_hadjustment (
+  GtkContainer $container,
+  GtkAdjustment $adjustment
+)
   is native(gtk)
   is export
   { * }
 
 sub gtk_container_set_focus_child (GtkContainer $container, GtkWidget $child)
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_container_child_get_uint(
+  GtkContainer $container,
+  GtkWidget $child,
+  Str $prop,
+  guint $v is rw,
+  Str
+)
+  is symbol('gtk_container_child_get')
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_container_child_set_uint(
+  GtkContainer $container,
+  GtkWidget $child,
+  Str $prop,
+  guint $v,
+  Str
+)
+  is symbol('gtk_container_child_set')
   is native(gtk)
   is export
   { * }

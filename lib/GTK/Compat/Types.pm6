@@ -3,6 +3,7 @@ use v6.c;
 
 use NativeCall;
 
+use Cairo;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
@@ -22,6 +23,11 @@ constant glib     is export = 'glib-2.0',v0;
 constant gio      is export = 'gio-2.0',v0;
 constant gobject  is export = 'gobject-2.0',v0;
 constant cairo    is export = 'cairo',v2;
+
+sub g_free (Pointer)
+  is native(glib)
+  is export
+  { * }
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
@@ -47,8 +53,8 @@ sub clear_error($error = $ERROR) is export {
   $ERROR = Nil;
 }
 
-constant cairo_t             is export := Pointer;
-constant cairo_pattern_t     is export := Pointer;
+constant cairo_t             is export := Cairo::cairo_t;
+constant cairo_pattern_t     is export := Cairo::cairo_pattern_t;
 constant cairo_region_t      is export := Pointer;
 
 constant gboolean            is export := uint32;

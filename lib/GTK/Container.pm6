@@ -102,6 +102,30 @@ class GTK::Container is GTK::Widget {
     self.connect-widget($!c, 'set-focus-child');
   }
 
+  method child-get-bool (
+    GtkWidget() $child,
+    Str() $prop,
+    Int $val is rw
+  )
+    is also<child_set_bool>
+  {
+    my guint $v = self.RESOLVE-UINT($val);
+    # CArray[guint]?
+    gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
+    $val = $v;
+  }
+
+  method child-set-bool(
+    GtkWidget() $child,
+    Str() $prop,
+    Int() $val
+  )
+    is also<child_get_bool>
+  {
+    my guint $v = self.RESOLVE-UINT($val);
+    gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
+  }
+
 
 #Function definition finished, but detected no match:
 #' void         gtk_container_add_with_properties                (GtkContainer      *container,                      GtkWidget          *widget,                                                      const gchar       *first_prop_name,                                                         ...) G_GNUC_NULL_TERMINATED;'

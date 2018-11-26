@@ -85,7 +85,9 @@ class GTK::ComboBox is GTK::Bin {
     self.bless(:$combobox);
   }
 
-  method new_with_area_and_entry(GtkCellArea() $area) is also<new-with-area-and-entry> {
+  method new_with_area_and_entry(GtkCellArea() $area)
+    is also<new-with-area-and-entry>
+  {
     my $combobox = gtk_combo_box_new_with_area_and_entry($area);
     self.bless(:$combobox);
   }
@@ -100,7 +102,9 @@ class GTK::ComboBox is GTK::Bin {
     self.bless(:$combobox);
   }
 
-  method new_with_model_and_entry(GtkTreeModel() $model) is also<new-with-model-and-entry> {
+  method new_with_model_and_entry(GtkTreeModel() $model)
+    is also<new-with-model-and-entry>
+  {
     my $combobox = gtk_combo_box_new_with_model_and_entry($model);
     self.bless(:$combobox);
   }
@@ -289,7 +293,17 @@ class GTK::ComboBox is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_active_iter (GtkTreeIter() $iter) is also<get-active-iter> {
+  proto method get_active_iter (|)
+    is also<get-active-iter>
+    { * }
+
+  multi method get_active_iter is also<active_iter active-iter> {
+    my GtkTreeIter $iter;
+    samewith($iter);
+    GTK::TreeIter.new($iter);
+  }
+
+  multi method get_active_iter (GtkTreeIter() $iter) {
     gtk_combo_box_get_active_iter($!cb, $iter);
   }
 
@@ -328,9 +342,11 @@ class GTK::ComboBox is GTK::Bin {
   method set_row_separator_func (
     &func,
     gpointer $data = gpointer,
-    GDestroyNotify $destroy = GDestroyNotify
-  ) is also<set-row-separator-func> {
-    gtk_combo_box_set_row_separator_func($!cb, &func, $data, $destroy);
+    &destroy = &g_free
+  )
+    is also<set-row-separator-func>
+  {
+    gtk_combo_box_set_row_separator_func($!cb, &func, $data, &destroy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

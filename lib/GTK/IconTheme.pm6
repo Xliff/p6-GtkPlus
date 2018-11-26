@@ -93,17 +93,17 @@ class GTK::IconTheme {
   }
 
   method list_contexts is also<list-contexts> {
-    gtk_icon_theme_list_contexts($!it);
+    GTK::Compat::GList.new( Str, gtk_icon_theme_list_contexts($!it) );
   }
 
   method list_icons (Str() $context) is also<list-icons> {
-    gtk_icon_theme_list_icons($!it, $context);
+    GTK::Compat::GList.new( Str, gtk_icon_theme_list_icons($!it, $context) );
   }
 
   method load_icon (
     Str() $icon_name,
     Int() $size,
-    Int() $flags,             # GtkIconLookupFlags $flags,
+    Int() $flags = GTK_ICON_LOOKUP_GENERIC_FALLBACK,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-icon>
