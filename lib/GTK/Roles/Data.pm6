@@ -33,9 +33,7 @@ role GTK::Roles::Data {
       warn "WARNING -- Resetting type from $oldType to $typeName"
         unless $oldType eq 'GTK::Widget' || $oldType eq $typeName;
     }
-
-    self.set_data_string('GTKPLUS-Type', $typeName)
-      unless ($oldType // '') ne $typeName;
+    self.set_data_string('GTKPLUS-Type', $typeName);
   }
 
   multi method getType {
@@ -43,7 +41,7 @@ role GTK::Roles::Data {
   }
 
   multi method getType($w) {
-    g_object_get_string( nativecast(GObject, $w), 'GTKPLUS-Type' );
+    g_object_get_string($w.p, 'GTKPLUS-Type');
   }
 
 }

@@ -97,13 +97,17 @@ class GTK::ToolPalette is GTK::Container {
     Int() $flags,
     Int() $targets,
     Int() $actions
-  ) is also<add-drag-dest> {
+  )
+    is also<add-drag-dest>
+  {
     my @u = ($flags, $targets, $actions);
     my uint32 ($f, $t, $a) = self.RESOLVE-UINT(@u);
     gtk_tool_palette_add_drag_dest($!tp, $widget, $f, $t, $a);
   }
 
-  method get_drag_item (GtkSelectionData $selection) is also<get-drag-item> {
+  method get_drag_item (GtkSelectionData $selection)
+    is also<get-drag-item>
+  {
     gtk_tool_palette_get_drag_item($!tp, $selection);
   }
 
@@ -127,7 +131,9 @@ class GTK::ToolPalette is GTK::Container {
     gtk_tool_palette_get_expand($!tp, $group);
   }
 
-  method get_group_position (GtkToolItemGroup() $group) is also<get-group-position> {
+  method get_group_position (GtkToolItemGroup() $group)
+    is also<get-group-position>
+  {
     gtk_tool_palette_get_group_position($!tp, $group);
   }
 
@@ -149,22 +155,30 @@ class GTK::ToolPalette is GTK::Container {
 
   multi method set_drag_source (
     Int() $targets           # GtkToolPaletteDragTargets $targets
-  ) is also<set-drag-source> {
+  )
+    is also<set-drag-source>
+  {
     my $t = self.RESOLVE-UINT($targets);
     gtk_tool_palette_set_drag_source($!tp, $t);
   }
 
-  method set_exclusive (GtkToolItemGroup() $group, Int() $exclusive) is also<set-exclusive> {
+  method set_exclusive (GtkToolItemGroup() $group, Int() $exclusive)
+    is also<set-exclusive>
+  {
     my gboolean $e = self.RESOLVE-BOOL($exclusive);
     gtk_tool_palette_set_exclusive($!tp, $group, $e);
   }
 
-  method set_expand (GtkToolItemGroup() $group, Int() $expand) is also<set-expand> {
+  method set_expand (GtkToolItemGroup() $group, Int() $expand)
+    is also<set-expand>
+  {
     my gboolean $e = self.RESOLVE-BOOL($expand);
     gtk_tool_palette_set_expand($!tp, $group, $e);
   }
 
-  method set_group_position (GtkToolItemGroup() $group, Int() $position) is also<set-group-position> {
+  method set_group_position (GtkToolItemGroup() $group, Int() $position)
+    is also<set-group-position>
+  {
     my gint $p = self.RESOLVE-INT($position);
     gtk_tool_palette_set_group_position($!tp, $group, $p);
   }

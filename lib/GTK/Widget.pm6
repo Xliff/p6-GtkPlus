@@ -87,7 +87,7 @@ class GTK::Widget {
   method CreateObject(GtkWidget $o) {
     self.IS-PROTECTED;
 
-    my $type = g_object_get_string($o.p, 'GTKPLUS-Type');
+    my $type = self.getType($o);
     # In this situation, GTK::Widget CANNOT validate what will happen
     # if there is no type. The caller has to INSURE that if this call is
     # made, they are aware of this possibility.
@@ -983,7 +983,8 @@ class GTK::Widget {
   method parent is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_parent($!w);
+        my $w = gtk_widget_get_parent($!w);
+        $w.DEFINITE ?? GTK::Widget.new($w) !! Nil;
       },
       STORE => sub ($, GtkWidget() $parent is copy) {
         gtk_widget_set_parent($!w, $parent);

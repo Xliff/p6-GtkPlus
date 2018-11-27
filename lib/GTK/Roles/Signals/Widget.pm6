@@ -253,8 +253,9 @@ role GTK::Roles::Signals::Widget {
     my $hid;
     %!signals-widget{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-widget-drag($obj, $signal,
+      $hid = g-connect-drag-data-received($obj, $signal,
         -> $, $dc, $i1, $i2, $sd, $ui1, $ui2, $ud {
+          say 'base drag-data-received';
           CATCH { default { note($_) } }
 
           $s.emit( [self, $dc, $i1, $i2, $sd, $ui1, $ui2, $ud] );

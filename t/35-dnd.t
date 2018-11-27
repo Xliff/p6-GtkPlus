@@ -2,6 +2,7 @@ use v6.c;
 
 use Cairo;
 
+use GTK::Compat::Cairo;
 use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
@@ -10,6 +11,7 @@ use GTK::Application;
 use GTK::Box;
 use GTK::Button;
 use GTK::ComboBox;
+use GTK::DragContext;
 use GTK::DrawingArea;
 use GTK::Entry;
 use GTK::Label;
@@ -30,10 +32,10 @@ my (@canvas_items, @special_items, $drop_item);
 my $dd_req_drop = False;
 
 sub canvas_item_new($widget, $b, $x, $y) {
-  my $name = $b.get_icon_name;
+  my $name = $b.icon_name;
   my $theme = GTK::IconTheme.get_for_screen($widget.get_screen);
   my ($w) = GTK::IconInfo.size_lookup(GTK_ICON_SIZE_DIALOG);
-  my $p = $theme.load_icon($name, $w);
+  my $p = $theme.load_icon($name, $w // 0);
   my %i;
   %i<pixbuf x y> = ($p, $x, $y) with $p;
   %i;
@@ -53,7 +55,7 @@ sub canvas_item_draw($i, $cr, $pre) {
 }
 
 sub canvas_draw($w, $cr, $d, $r) {
-  $cr.set_source_rgb(1, 1, 1);
+  $cr.set_source_rgb(1.Num, 1.Num, 1.Num);
   $cr.paint;
   canvas_item_draw($_, $cr, False) for @canvas_items;
   canvas_item_draw($drop_item, $cr, True) with $drop_item;
@@ -61,6 +63,8 @@ sub canvas_draw($w, $cr, $d, $r) {
 }
 
 sub palette_drop_item ($di, $dg, $x, $y) {
+  say 'PDI';
+
   my ($drag_group, $drop_item) = ( $di.parent, $dg.get_drop_item($x, $y) );
   my $drop_pos = $drop_item ?? -1 !! $dg.get_item_position($drop_item);
 
@@ -88,11 +92,13 @@ sub palette_drop_group ($p, $dragg, $dropg) {
 }
 
 sub palette_drag_data_received ($p, $c, $x, $y, $sel, $i, $t, $d) {
-  my $dc = GTK::DragContext.new($c).drag_get_source_widget;
+  say 'Palette DDR';
+
+  my $dc = GTK::DragContext.new($c).get_source_widget;
   my ($drop_group, $drag_item, $drag_p);
 
   # This is Pseudo-Code until more is understood about the intent
-  $drag_p = $dc.drag_get_source_widget;
+  $drag_p = $dc.get_source_widget;
   while $drag_p {
     say "P_DDR_W Type: { GTK::Widget.getType($drag_p) }";
     $drag_p .= parent
@@ -111,6 +117,8 @@ sub palette_drag_data_received ($p, $c, $x, $y, $sel, $i, $t, $d) {
 }
 
 sub canvas_drag_motion($pal, $c, $x, $y, $t, $d, $r) {
+  say 'CDM';
+
   my $dc = GTK::DragContext.new($c);
   if $drop_item {
     $drop_item<x> = $x;
@@ -126,25 +134,21 @@ sub canvas_drag_motion($pal, $c, $x, $y, $t, $d, $r) {
   $r.r = 1;
 }
 
-sub canvas_ddr1($can, $c, $x, $y, $sel, $i, $t, $d) {
+sub canvas_ddr1($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
   my $dc = GTK::DragContext.new($c);
-  my ($dp, $ti) = ($dc.drag_get_source_widget);
-
-  while $dp {
-    say "C_DDR1 Type: { GTK::Widget.getType($dp) }";
-    $dp .= parent
+  my $ti = $pal.get_drag_item($sel);
+  with $ti {
+    $ti = GTK::ToolButton.new( cast(GtkToolButton, $ti) );
+    @canvas_items.push: canvas_item_new($pal, $ti, $x, $y);
   }
-  # while $dp !~~ ToolPalette { $dp .= parent }
-  # $ti = $dp.get_drag_item($sel) with $dp;
-  # with $tool_item {
-  #   @canvas_items.push: canvas_item_new($pal, $ti, $x, $y) if $ti ~~ ToolItem;
-  # }
   $can.queue_draw;
 }
 
 sub canvas_ddr2($can, $c, $x, $y, $sel, $i, $t, $d) {
+  say 'Interractive';
+
   my $dc = GTK::DragContext.new($c);
-  my ($dp, $ti) = ($dc.drag_get_source_widget);
+  my ($dp, $ti) = ($dc.get_source_widget);
   $ti = $dp.get_drag_item($sel) with $dp;
   say "C_DDR2: { GTK::Widget.getType($ti) }";
   return;
@@ -163,6 +167,8 @@ sub canvas_ddr2($can, $c, $x, $y, $sel, $i, $t, $d) {
 }
 
 sub canvas_drag_drop($can, $c, $x, $y, $t, $d, $r) {
+  say 'Drop';
+
   my $tgt = $can.drag_dest_find_target($c);
   $r.r = 0;
   return unless $tgt;
@@ -171,6 +177,7 @@ sub canvas_drag_drop($can, $c, $x, $y, $t, $d, $r) {
 }
 
 sub canvas_drag_leave($can, $c, $x, $y, $t, $d) {
+  say 'CDL';
   if $drop_item {
     free_drop_item;
     $can.queue_draw with $can;
@@ -179,7 +186,7 @@ sub canvas_drag_leave($can, $c, $x, $y, $t, $d) {
 
 sub orientation_changed($cb, $pal, $sw, $m) {
   my $iter = $cb.get_active_iter;
-  
+
   return unless $iter;
   my $val = $m.get_value($iter, 1).int;
   $pal.orientation = $val;
@@ -269,8 +276,6 @@ sub load_special_items($p) {
     $group.child_set_bool($item, 'new-row',      True) if .contains('r');
   }
 
-  say 'S3';
-
   my @buttons = (
     'go-up',           'Show on vertical palettes only',
     'go-next',         'Show on horizontal palettes only',
@@ -345,8 +350,6 @@ $a.activate.tap({
     ::("\&load_{ $_ }_items")($palette);
   }
 
-  say '0';
-
   my $scroller = GTK::ScrolledWindow.new;
   $scroller.set_policy(GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
   ($scroller.border_width, $scroller.hexpand) = (6, True);
@@ -366,43 +369,40 @@ $a.activate.tap({
   my $notebook = GTK::Notebook.new;
   $notebook.border_width = 6;
   $hbox.pack_end($notebook);
-  #
-  # $palette.drag-data-received.tap(-> *@a { palette_drag_data_received(|@a) });
+
+  $palette.drag-data-received.tap(-> *@a {
+    say 'Palette DDR Tap';
+    palette_drag_data_received(|@a)
+  });
   # $palette.add_drag_dest(
   #   $palette,
   #   GTK_DEST_DEFAULT_ALL,
   #   GTK_TOOL_PALETTE_DRAG_ITEMS +| GTK_TOOL_PALETTE_DRAG_GROUPS,
   #   GDK_ACTION_MOVE
   # );
-  #
-  # say '2';
-  #
-  # # Common dest
+
+  # Common dest
   my ($contents1, $contents2) = (GTK::DrawingArea.new xx 2);
   my ($scroll1, $scroll2) = (GTK::ScrolledWindow.new xx 2);
   for 1, 2 {
-  #   ::('$contents' ~ $_).app_paintable = True ;
-  #   $palette.add_drag_dest(
-  #     ::('$contents' ~ $_),
-  #     GTK_DEST_DEFAULT_ALL,
-  #     GTK_TOOL_PALETTE_DRAG_ITEMS,
-  #     GDK_ACTION_COPY
-  #   );
+    ::('$contents' ~ $_).app_paintable = True ;
+    $palette.add_drag_dest(
+      ::('$contents' ~ $_),
+      GTK_DEST_DEFAULT_ALL,
+      GTK_TOOL_PALETTE_DRAG_ITEMS,
+      GDK_ACTION_COPY
+    );
     ::('$scroll' ~ $_).set_policy(GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
     ::('$scroll' ~ $_).border_width = 6;
-    # ::('$scroll' ~ $_).add( ::('$contents' ~ $_) );
-    # ::('$contents' ~ $_).draw.tap(-> *@a { canvas_draw(|@a) });
+    ::('$scroll' ~ $_).add( ::('$contents' ~ $_) );
+    ::('$contents' ~ $_).draw.tap(-> *@a { canvas_draw(|@a) });
   }
-  #
-  # say '3';
-  #
-  # # Passove Dnd Dest
+
+  # Passove Dnd Dest
   my $l_scroll1 = GTK::Label.new('Passive DnD Mode');
-  # $contents1.drag-data-received.tap(-> *@a { canvas_ddr1(|@a) });
+  $contents1.drag-data-received.tap(-> *@a { canvas_ddr1($palette, |@a) });
   $notebook.append_page($scroll1, $l_scroll1);
-  #
-  # say '4';
-  #
+
   # # Interractive DnD dest
   my $l_scroll2 = GTK::Label.new('Interractive DnD Mode');
   # $contents2.drag-motion.tap(-> *@a { canvas_drag_motion(|@a) });

@@ -11,6 +11,10 @@ use GTK::ToolItem;
 
 use GTK::Roles::Actionable;
 
+my subset Ancestry
+  where GtkToolButton | GtkToolItem | GtkActionable | GtkBuildable |
+        GtkWidget;
+
 class GTK::ToolButton is GTK::ToolItem {
   also does GTK::Roles::Actionable;
 
@@ -24,7 +28,7 @@ class GTK::ToolButton is GTK::ToolItem {
 
   submethod BUILD(:$toolbutton) {
     given $toolbutton {
-      when GtkToolButton | GtkToolItem | GtkWidget {
+      when Ancestry {
         self.setToolButton($toolbutton);
       }
       when GTK::ToolButton {
@@ -39,8 +43,13 @@ class GTK::ToolButton is GTK::ToolItem {
 
     my $to-parent;
     $!tb = do given $toolbutton {
-      when GtkToolItem | GtkWidget {
+      when GtkToolItem | GtkBuildable | GtkWidget {
         $to-parent = $toolbutton;
+        nativecast(GtkToolButton, $toolbutton);
+      }
+      when GtkActionable {
+        $!action = $_;
+        $to-parent = nativecast(GtkToolItem, $toolbutton);
         nativecast(GtkToolButton, $toolbutton);
       }
       when GtkToolButton {
@@ -49,14 +58,14 @@ class GTK::ToolButton is GTK::ToolItem {
       }
     }
     self.setToolItem($to-parent);
-    $!action = nativecast(GtkActionable, $!tb);   GTK::Roles::Actionable
+    $!action //= nativecast(GtkActionable, $!tb);   GTK::Roles::Actionable
   }
 
   multi method new {
     my $toolbutton = gtk_tool_button_new(GtkWidget, Str);
     self.bless(:$toolbutton);
   }
-  multi method new (GtkWidget $toolbutton) {
+  multi method new (Ancestry $toolbutton) {
     self.bless(:$toolbutton);
   }
   multi method new (GtkWidget() $widget, Str() $label) {
