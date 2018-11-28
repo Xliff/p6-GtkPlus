@@ -3,6 +3,7 @@ use v6.c;
 use Cairo;
 
 use GTK::Compat::Cairo;
+use GTK::Compat::DragContext;
 use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
@@ -32,12 +33,18 @@ my (@canvas_items, @special_items, $drop_item);
 my $dd_req_drop = False;
 
 sub canvas_item_new($widget, $b, $x, $y) {
+  say 'Cid';
   my $name = $b.icon_name;
+  say "Name: { $b.icon_name }";
   my $theme = GTK::IconTheme.get_for_screen($widget.get_screen);
+  say 'Iis';
   my ($w) = GTK::IconInfo.size_lookup(GTK_ICON_SIZE_DIALOG);
+  say 'Iis'.flip;
   my $p = $theme.load_icon($name, $w // 0);
   my %i;
+  say "P: $p / X: $x / Y: $y";
   %i<pixbuf x y> = ($p, $x, $y) with $p;
+  say 'Cid'.flip;
   %i;
 }
 
@@ -47,11 +54,13 @@ sub free_drop_item {
 }
 
 sub canvas_item_draw($i, $cr, $pre) {
+  say 'Pre' if $pre;
   my ($cx, $cy) = $i<pixbuf>.size;
   GTK::Compat::Cairo.set_source_pixbuf(
     $cr, $i<pixbuf>, $i<x> - $cx * 0.5, $i<y> - $cy * 0.5
   );
-  $pre ?? $cr.paint_with_alpha(0.6) !! $cr.paint;
+  $pre ?? $cr.paint_with_alpha( (0.6).Num ) !! $cr.paint;
+  say 'Pre'.flip if $pre;
 }
 
 sub canvas_draw($w, $cr, $d, $r) {
@@ -116,26 +125,29 @@ sub palette_drag_data_received ($p, $c, $x, $y, $sel, $i, $t, $d) {
   # }
 }
 
-sub canvas_drag_motion($pal, $c, $x, $y, $t, $d, $r) {
-  say 'CDM';
-
-  my $dc = GTK::DragContext.new($c);
-  if $drop_item {
+sub canvas_drag_motion($can, $c, $x, $y, $t, $d, $r) {
+  my $dc = GTK::Compat::DragContext.new($c);
+  say 'Dm';
+  if $drop_item.defined {
+    say 'Dm DI';
     $drop_item<x> = $x;
     $drop_item<y> = $y;
-    $pal.queue_draw;
-    $c.status(GDK_ACTION_COPY, $t);
+    $can.queue_draw;
+    $dc.status(GDK_ACTION_COPY, $t);
   } else {
-    my $t = $pal.drag_dest_find_target($c);
-    return 0 without $t;
+    say 'Find TGT';
+    my $tgt = $can.dest_find_target($c);
+    without $tgt { say 'No TGT'; $r.r = 0; return }
     $dd_req_drop = False;
-    $pal.drag_get_data($c, $t, $t);
+    # start here
+    $can.drag_get_data($c, $tgt, $t);
+    say 'Find TGT'.flip;
   }
+  say 'Dm'.flip;
   $r.r = 1;
 }
 
 sub canvas_ddr1($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
-  my $dc = GTK::DragContext.new($c);
   my $ti = $pal.get_drag_item($sel);
   with $ti {
     $ti = GTK::ToolButton.new( cast(GtkToolButton, $ti) );
@@ -144,25 +156,27 @@ sub canvas_ddr1($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
   $can.queue_draw;
 }
 
-sub canvas_ddr2($can, $c, $x, $y, $sel, $i, $t, $d) {
-  say 'Interractive';
+sub canvas_ddr2($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
+  my $dc = GTK::Compat::DragContext.new($c);
+  my $ti = $pal.get_drag_item($sel);
 
-  my $dc = GTK::DragContext.new($c);
-  my ($dp, $ti) = ($dc.get_source_widget);
-  $ti = $dp.get_drag_item($sel) with $dp;
-  say "C_DDR2: { GTK::Widget.getType($ti) }";
-  return;
-  #return unless $ti ~~ ToolItem;
+  say 'DDR2';
+
+  $ti = GTK::ToolButton.new( cast(GtkToolButton, $ti) ) with $ti;
   free_drop_item with $drop_item;
   my $ci = canvas_item_new($can, $ti, $x, $y);
   if $dd_req_drop {
+    say 'DDrq';
     @canvas_items.push: $ci;
     $drop_item = Nil;
     $dc.finish(True, False, $t);
   } else {
+    say 'Dis';
     $drop_item = $ci;
     $dc.status(GDK_ACTION_COPY, $t);
+    say 'Dis'.flip;
   }
+  say 'DDR2'.flip;
   $can.queue_draw;
 }
 
@@ -405,10 +419,12 @@ $a.activate.tap({
 
   # # Interractive DnD dest
   my $l_scroll2 = GTK::Label.new('Interractive DnD Mode');
-  # $contents2.drag-motion.tap(-> *@a { canvas_drag_motion(|@a) });
-  # $contents2.drag-data-received.tap(-> *@a { canvas_ddr2(|@a) });
-  # $contents2.drag-leave.tap(-> *@a  {  canvas_drag_leave(|@a) });
-  # $contents2.drag-drop.tap( -> *@a  {   canvas_drag_drop(|@a) });
+  $contents2.drag-motion.tap(-> *@a { canvas_drag_motion(|@a) });
+  $contents2.drag-leave.tap(->  *@a {  canvas_drag_leave(|@a) });
+  $contents2.drag-drop.tap(->   *@a {   canvas_drag_drop(|@a) });
+
+  $contents2.drag-data-received.tap(-> *@a { canvas_ddr2($palette, |@a) });
+
   $notebook.append_page($scroll2, $l_scroll2);
 
   $a.window.show_all;

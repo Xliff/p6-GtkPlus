@@ -1124,3 +1124,9 @@ our enum GdkPixbufRotation is export (
   GDK_PIXBUF_ROTATE_UPSIDEDOWN       => 180,
   GDK_PIXBUF_ROTATE_CLOCKWISE        => 270
 );
+
+our enum GdkDragCancelReason is export <
+  GDK_DRAG_CANCEL_NO_TARGET
+  GDK_DRAG_CANCEL_USER_CANCELLED
+  GDK_DRAG_CANCEL_ERROR
+>;

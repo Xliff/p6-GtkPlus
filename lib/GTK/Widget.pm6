@@ -10,6 +10,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Value;
 use GTK::Compat::Window;
 
+use GTK::Raw::DnD;
 use GTK::Raw::DragDest;
 use GTK::Raw::DragSource;
 use GTK::Raw::Subs;
@@ -2161,6 +2162,17 @@ class GTK::Widget {
 
   method source_unset is also<source-unset> {
     gtk_drag_source_unset($!w);
+  }
+
+  method drag_get_data(
+    GdkDragContext() $context,
+    GdkAtom $target,
+    Int() $time
+  )
+    is also<drag-get-data>
+  {
+    my guint $t = self.RESOLVE-UINT($time);
+    gtk_drag_get_data($!w, $context, $target, $t);
   }
 
 }

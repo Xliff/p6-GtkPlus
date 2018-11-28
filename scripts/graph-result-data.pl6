@@ -1,48 +1,84 @@
 use v6.c;
 
-use SVG;
 use JSON::Fast;
+use RandomColor;
+use SVG;
 
-sub MAIN ($filename) {
+my %graph-data;
+
+sub MAIN (*@filenames) {
   my @bl = "BuildList".IO.slurp.lines;
-  my (%order, @points, @dp);
+  my (%order, @points);
   my $idx = 0;
   %order{$_} = $idx++ for @bl;
 
-  my %data = from-json($filename.IO.slurp);
-  @points[%order{$_}] = %data{$_} for %data.keys;
+  #  Generate random colors. Using date of initial completion as the current
+  #  seed. This will change to something more presentable, if necessary.
+  my @colors = RandomColor.new(
+    seed   => 20181127,
+    count  => +@filenames,
+    format => 'color'
+  ).list;
 
-  my @text-lines;
-  my @polyline;
-  $idx = 0;
-  for @bl {
-    my $a = text => [ :x(20), :y(10 + $idx * 30), :font-size(8), $_ ];
-    my ($px, $py) = ( (200 + @points[$idx]<parse> * 25).Int, 6 + $idx * 30);
-    my $c = circle => [
-      :cx($px), :cy($py), :r(4), :fill<red>,
-      title => [ @points[$idx++]<parse> ]
+  my $c = 0;
+  die "Cannot load '$_'!" unless .IO.e for @filenames;
+  for @filenames -> $filename {
+    my (@text-lines, @polyline, @dp);
+    my %data = from-json($filename.IO.slurp);
+    @points[%order{$_}] = %data{$_} for %data.keys;
+
+    my $rgbh = @colors[$c].lighten(10).to-string('rgb');
+    my $rgb = @colors[$c++].to-string('rgb');
+    $idx = 0;
+    for @bl -> $bl {
+      if %graph-data<text>:!exists {
+        my $p = text => [ :x(20), :y(10 + $idx * 30), :font-size(8), $bl ];
+        @text-lines.push: $p;
+      }
+
+      with @points[$idx] {
+        my ($px, $py) = ( (200 + @points[$idx]<parse> * 25).Int,
+                          6 + $idx * 30 );
+        @polyline.push: "{$px},{$py}";
+        @dp.push: (circle => [
+          :cx($px), :cy($py), :r(4), :fill($rgb),
+          title => [ @points[$idx]<parse> ]
+        ]);
+      }
+      $idx++;
+    }
+
+    %graph-data<text> //= @text-lines;
+
+    my $avg-parse = %data.values.map( *<parse> ).sum / %data.keys.elems,
+    my ($x0, $y1) = (200 + 25 * $avg-parse, 10 + @points.elems * 30);
+    my $l-style = "stroke:{ $rgbh };stroke-width:1";
+    my $pl-style = "fill:none;stroke:{ $rgb };stroke-width:3";
+    %graph-data<series>.push: [
+      line   => [ :x1($x0), :y1(0), :x2($x0), :y2($y1), :style($l-style) ],
+      polyline => [ :points(@polyline.join(' ')), :style($pl-style) ],
+      |@dp
     ];
-    @polyline.push: "{$px},{$py}";
-    @text-lines.push: $a;
-    @dp.push: $c;
   }
-  my $avg-parse = %data.values.map( *<parse> ).sum / %data.keys.elems;  
-  my ($x0, $y1) = (200 + 25 * $avg-parse, 10 + @points.elems * 30);
-  my $s = SVG.serialize('svg' => [
-    :width(700), :height(10 + @bl.elems * 30),
-    |@text-lines,
-    polyline => [
-      :points(@polyline.join(' ')),
-      :style<fill:none;stroke:red;stroke-width:3>
-    ],
-    line => [
-      :x1($x0), :y1(0), :x2($x0), :y2($y1),
-      :style<stroke:red;stroke-width:1>
-    ],
-    |@dp
-  ]);
 
-  my $f = "$filename.svg".IO.open;
-  $f.put($s);
+  my $svg = [
+    width => 700,
+    height => 10 + @bl.elems * 30,
+    |%graph-data<text>,
+  ];
+
+  # Labelling?
+  $svg.push: |$_ for %graph-data<series>.values;
+
+  my $outputname = @filenames[0];
+  if @filenames.elems > 1 {
+    my $ser = DateTime.now(
+      formatter => { sprintf "%4d%d%d", .year, .month, .day }
+    );
+    $outputname = "OutputGraph-{ $ser }";
+  }
+
+  my $f = "$outputname.svg".IO.open(:w);
+  $f.say( SVG.serialize( svg => $svg ) );
   $f.close;
 }

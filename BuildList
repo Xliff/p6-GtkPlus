@@ -21,6 +21,8 @@ GTK::Raw::ReturnedValue
 GTK::Roles::Pointers
 GTK::Compat::Types
 GTK::Raw::Utils
+GTK::Roles::Protection
+GTK::Roles::LatchedContents
 GTK::Roles::Types
 GTK::Builder::Actionable
 GTK::Compat::RGBA
@@ -28,6 +30,7 @@ GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::Array
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Display
+GTK::Compat::Raw::DragContext
 GTK::Compat::Raw::FrameTimings
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
@@ -57,6 +60,7 @@ GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
 GTK::Compat::Array
+GTK::Compat::DragContext
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList

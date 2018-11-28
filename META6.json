@@ -34,14 +34,16 @@
       "GTK::Roles::Pointers"                   :  "lib/GTK/Roles/Pointers.pm6"                  ,
       "GTK::Compat::Types"                     :  "lib/GTK/Compat/Types.pm6"                    ,
       "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
+      "GTK::Roles::Protection"                 :  "lib/GTK/Roles/Protection.pm6"                ,
+      "GTK::Roles::LatchedContents"            :  "lib/GTK/Roles/LatchedContents.pm6"           ,
       "GTK::Roles::Types"                      :  "lib/GTK/Roles/Types.pm6"                     ,
       "GTK::Builder::Actionable"               :  "lib/GTK/Builder/Actionable.pm6"              ,
-      "GTK::Compat::Pixbuf::Raw::Transforms"   :  "lib/GTK/Compat/Pixbuf/Raw/Transforms.pm6"    ,
       "GTK::Compat::RGBA"                      :  "lib/GTK/Compat/RGBA.pm6"                     ,
       "GTK::Compat::Raw::AppInfo"              :  "lib/GTK/Compat/Raw/AppInfo.pm6"              ,
       "GTK::Compat::Raw::Array"                :  "lib/GTK/Compat/Raw/Array.pm6"                ,
       "GTK::Compat::Raw::Cursor"               :  "lib/GTK/Compat/Raw/Cursor.pm6"               ,
       "GTK::Compat::Raw::Display"              :  "lib/GTK/Compat/Raw/Display.pm6"              ,
+      "GTK::Compat::Raw::DragContext"          :  "lib/GTK/Compat/Raw/DragContext.pm6"          ,
       "GTK::Compat::Raw::FrameTimings"         :  "lib/GTK/Compat/Raw/FrameTimings.pm6"         ,
       "GTK::Compat::Raw::GList"                :  "lib/GTK/Compat/Raw/GList.pm6"                ,
       "GTK::Compat::Raw::GSList"               :  "lib/GTK/Compat/Raw/GSList.pm6"               ,
@@ -71,6 +73,7 @@
       "GTK::Raw::WindowGroup"                  :  "lib/GTK/Raw/WindowGroup.pm6"                 ,
       "GTK::Roles::Signals::EntryBuffer"       :  "lib/GTK/Roles/Signals/EntryBuffer.pm6"       ,
       "GTK::Compat::Array"                     :  "lib/GTK/Compat/Array.pm6"                    ,
+      "GTK::Compat::DragContext"               :  "lib/GTK/Compat/DragContext.pm6"              ,
       "GTK::Compat::FrameTimings"              :  "lib/GTK/Compat/FrameTimings.pm6"             ,
       "GTK::Compat::GList"                     :  "lib/GTK/Compat/GList.pm6"                    ,
       "GTK::Compat::GSList"                    :  "lib/GTK/Compat/GSList.pm6"                   ,
@@ -449,7 +452,7 @@
       "GTK::ToggleToolButton"                  :  "lib/GTK/ToggleToolButton.pm6"                ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
       "GTK"                                    :  "lib/GTK.pm6"                                 ,
-      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"
+      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"                         
     },
     "name": "Perl6-GtkPlus",
     "perl": "6.c",
@@ -458,3 +461,4 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
