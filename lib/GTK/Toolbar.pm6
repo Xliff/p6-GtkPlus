@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Toolbar;
 use GTK::Raw::Types;
 
+use GTK::Roles::Orientable;
 use GTK::Roles::ToolShell;
 
 use GTK::Container;

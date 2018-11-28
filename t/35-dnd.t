@@ -64,7 +64,12 @@ sub palette_drop_item ($pal, $di, $dg, $x, $y) {
   say "DROP GROUP: { $dg } / { $dg.label }";
   my $drop_item = $dg.get_drop_item($x, $y);
   say "DROP ITEM ($x, $y): { $drop_item // '' }";
-  my $drop_pos = $drop_item ?? -1 !! $dg.get_item_position($drop_item);
+  my $drop_pos = $drop_item ?? $dg.get_item_position($drop_item) !! -1;
+  say "DROP POS: $drop_pos";
+
+  say
+    "DRAG GROUP: { +$drag_group.widet.p
+  } / DROP GROUP: { +$dg.widget.p }";
 
   if +$dg.widget.p != +$drag_group.widget.p {
     # If drop group and drag group are the same....
@@ -87,7 +92,7 @@ sub palette_drop_item ($pal, $di, $dg, $x, $y) {
 # opt out
 sub palette_drop_group ($p, $dragg, $dropg) {
   $p.set_group_position(
-    $dragg, $dropg ?? -1 !! $p.get_group_position($dropg)
+    $dragg, $dropg ?? $p.get_group_position($dropg) !! -1
   );
 }
 
@@ -95,6 +100,8 @@ sub palette_drag_data_received ($p, $w, $c, $x, $y, $sel, $i, $t, $d) {
   my $tgt = $p.dest_find_target($c);
   my $tgt-name = gdk_atom_name($$tgt);
   my $drag_item = $p.get_drag_item($sel);
+  # Without using $w, which is the actual widget, we don't know if
+  # this properly references the right group.
   my $drop_group = $p.get_drop_group($x, $y);
 
   say "PAL DRAG ITEM: $drag_item";
