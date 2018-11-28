@@ -698,6 +698,12 @@ class GdkStyleProvider      is repr('CPointer') is export does GTK::Roles::Point
 class GdkVisual             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkWindow             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
+sub gdk_atom_name(GdkAtom)
+  returns Str
+  is native(gdk)
+  is export
+  { * }
+
 class GdkColor is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint   $.pixel;
   has guint16 $.red;

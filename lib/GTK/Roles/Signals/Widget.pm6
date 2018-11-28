@@ -255,7 +255,6 @@ role GTK::Roles::Signals::Widget {
       my $s = Supplier.new;
       $hid = g-connect-drag-data-received($obj, $signal,
         -> $, $dc, $i1, $i2, $sd, $ui1, $ui2, $ud {
-          say 'base drag-data-received';
           CATCH { default { note($_) } }
 
           $s.emit( [self, $dc, $i1, $i2, $sd, $ui1, $ui2, $ud] );
@@ -469,7 +468,16 @@ sub g-connect-drag-data-get(
 sub g-connect-drag-data-received(
   Pointer $app,
   Str $name,
-  &handler (Pointer, GdkDragContext, gint, gint, GtkSelectionData, guint, guint, Pointer),
+  &handler (
+    Pointer,
+    GdkDragContext,
+    gint,
+    gint,
+    GtkSelectionData,
+    guint,
+    guint,
+    Pointer
+  ),
   Pointer $data,
   uint32 $flags
 )

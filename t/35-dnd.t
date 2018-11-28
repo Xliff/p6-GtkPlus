@@ -34,19 +34,10 @@ my $dd_req_drop = False;
 
 sub canvas_item_new($widget, $b, $x, $y) {
   my $name = $b.icon_name;
-  say "Name: { $b.icon_name }";
   my $theme = GTK::IconTheme.get_for_screen($widget.get_screen);
   my ($w) = GTK::IconInfo.size_lookup(GTK_ICON_SIZE_DIALOG);
   my $p = $theme.load_icon($name, $w // 0);
-  my %i;
-  say "P: $p / X: $x / Y: $y";
-  %i<pixbuf x y> = ($p, $x, $y) with $p;
-  %i;
-}
-
-sub free_drop_item {
-  $drop_item.downref;
-  $drop_item = Nil;
+  %( pixbuf => $p, x => $x, y => $y );
 }
 
 sub canvas_item_draw($i, $cr, $pre) {
@@ -65,20 +56,26 @@ sub canvas_draw($w, $cr, $d, $r) {
   $r.r = 1;
 }
 
-sub palette_drop_item ($di, $dg, $x, $y) {
-  say 'PDI';
-
-  my ($drag_group, $drop_item) = ( $di.parent, $dg.get_drop_item($x, $y) );
+sub palette_drop_item ($pal, $di, $dg, $x, $y) {
+  my $drag_group = GTK::ToolItemGroup.new(
+    cast(GtkToolItemGroup, $di.parent.widget)
+  );
+  # WHY THE FUCK IS THE LAST PART AN OBJECT REFERENCE?
+  say "DROP GROUP: { $dg } / { $dg.label }";
+  my $drop_item = $dg.get_drop_item($x, $y);
+  say "DROP ITEM ($x, $y): { $drop_item // '' }";
   my $drop_pos = $drop_item ?? -1 !! $dg.get_item_position($drop_item);
 
-  if $dg === $drag_group {
-    my ($h, $e, $f, $nr);
+  if +$dg.widget.p != +$drag_group.widget.p {
+    # If drop group and drag group are the same....
+    my ($h, $e, $f, $nr) = (0 xx 4);
     my @p = (
       ['homogeneous', $h], ['expand', $e], ['fill', $f], ['new-row', $nr]
     );
     $di.upref;
     $drag_group.child_get_bool($di, $_[0], $_[1]) for @p;
     $drag_group.remove($di);
+    say "DI: $di";
     $dg.insert($di, $drop_pos);
     $dg.child_set_bool($di, $_[0], $_[1]) for @p;
     $di.downref;
@@ -94,50 +91,43 @@ sub palette_drop_group ($p, $dragg, $dropg) {
   );
 }
 
-sub palette_drag_data_received ($p, $c, $x, $y, $sel, $i, $t, $d) {
-  say 'Palette DDR';
+sub palette_drag_data_received ($p, $w, $c, $x, $y, $sel, $i, $t, $d) {
+  my $tgt = $p.dest_find_target($c);
+  my $tgt-name = gdk_atom_name($$tgt);
+  my $drag_item = $p.get_drag_item($sel);
+  my $drop_group = $p.get_drop_group($x, $y);
 
-  my $dc = GTK::DragContext.new($c).get_source_widget;
-  my ($drop_group, $drag_item, $drag_p);
+  say "PAL DRAG ITEM: $drag_item";
+  say "PAL DROP GROUP ($x, $y): $drop_group";
 
-  # This is Pseudo-Code until more is understood about the intent
-  $drag_p = $dc.get_source_widget;
-  while $drag_p {
-    say "P_DDR_W Type: { GTK::Widget.getType($drag_p) }";
-    $drag_p .= parent
+  if $tgt-name.ends-with('-group') {
+    $drag_item = GTK::ToolItemGroup.new( cast(GtkToolItemGroup, $drag_item) );
+    palette_drop_group($p, $drag_item, $drop_group);
+  } else {
+    my $a = $drop_group.get_allocation;
+    $drag_item = GTK::ToolItem.new( cast(GtkToolItem, $drag_item) );
+    palette_drop_item($p, $drag_item, $drop_group, $x - $a.x, $y - $a.y);
   }
-  # with $drag_p {
-  #   $drag_item = $dp.get_drag_item($sel);
-  #   $drop_group = $p.get_drop_group($x, $y);
-  # }
-  # if $drag_item ~~ ToolItemGroup {
-  #   palette_drop_group($dp, $drag_item, $drop_group);
-  # } elsif $drag_item ~~ ToolItem && $drop_group.defined {
-  #   my $a = GtkAllocation.new;
-  #   $drop_group.get_allocation($a);
-  #   $drag_item.drop_item($drop_group, $x - $a.x, $y - $a.y);
-  # }
 }
 
 sub canvas_drag_motion($can, $c, $x, $y, $t, $d, $r) {
+  say "$x, $y";
   my $dc = GTK::Compat::DragContext.new($c);
-  say 'Dm';
   if $drop_item.defined {
-    say 'Dm DI';
     $drop_item<x> = $x;
     $drop_item<y> = $y;
     $can.queue_draw;
     $dc.status(GDK_ACTION_COPY, $t);
   } else {
-    say 'Find TGT';
     my $tgt = $can.dest_find_target($c);
-    without $tgt { say 'No TGT'; $r.r = 0; return }
+    without $tgt { $r.r = 0; return }
     $dd_req_drop = False;
-    # start here
-    $can.drag_get_data($c, $tgt, $t);
-    say 'Find TGT'.flip;
+    # Calling drag-data-received on canvas starts something
+    # that is not properly finalized. Therefore, if uncommented,
+    # this next method will hang the code.
+    say "{ gdk_atom_name($tgt) } = $tgt";
+    #$can.drag_get_data($c, $tgt, $t);
   }
-  say 'Dm'.flip;
   $r.r = 1;
 }
 
@@ -151,63 +141,49 @@ sub canvas_ddr1($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
 }
 
 sub canvas_ddr2($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
-  my $dc = GTK::Compat::DragContext.new($c);
   my $ti = $pal.get_drag_item($sel);
 
-  say 'DDR2';
+  say "DDR2: {$x}, {$y}";
 
   $ti = GTK::ToolButton.new( cast(GtkToolButton, $ti) ) with $ti;
   with $drop_item {
-    # free_drop_item;
     $drop_item = Nil;
   }
   my $ci = canvas_item_new($can, $ti, $x, $y);
   if $dd_req_drop {
-    say 'DDrq';
     @canvas_items.push: $ci;
     $drop_item = Nil;
-    $dc.finish(True, False, $t);
+    GTK::DragContext.new($c).finish(True, False, $t);
   } else {
-    say 'Dis';
     $drop_item = $ci;
-    $dc.status(GDK_ACTION_COPY, $t);
-    say 'Dis'.flip;
+    GTK::Compat::DragContext.new($c).status(GDK_ACTION_COPY, $t);
   }
-  say 'DDR2'.flip;
   $can.queue_draw;
 }
 
 sub canvas_drag_drop($can, $c, $x, $y, $t, $d, $r) {
-  say 'Drop';
-
-  my $tgt = $can.drag_dest_find_target($c);
+  my $tgt = $can.dest_find_target($c);
   $r.r = 0;
   return unless $tgt;
   $dd_req_drop = True;
   $can.drag_get_data($c, $tgt, $t);
   $r.r = 1;
-  say 'Drop'.flip;
 }
 
 sub canvas_drag_leave($can, $c, $t, $d) {
-  say 'CDL';
-  if $drop_item {
-    #free_drop_item;
-    #$can.queue_draw with $can;
-  }
-  say 'CDL'.flip;
+  return without $drop_item;
+  $drop_item = Nil;
+  $can.queue_draw with $can;
 }
 
 sub orientation_changed($cb, $pal, $sw, $m) {
   my $iter = $cb.get_active_iter;
 
+  my @p = (GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER);
   return unless $iter;
   my $val = $m.get_value($iter, 1).int;
   $pal.orientation = $val;
-  $val == GTK_ORIENTATION_HORIZONTAL ??
-    $sw.set_policy(GTK_POLICY_AUTOMATIC, GTK_POLICY_NEVER)
-    !!
-    $sw.set_policy(GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+  $sw.set_policy( |($val == GTK_ORIENTATION_HORIZONTAL ?? @p !! @p.reverse) );
 }
 
 sub style_changed($cb, $pal, $m) {
@@ -385,15 +361,14 @@ $a.activate.tap({
   $hbox.pack_end($notebook);
 
   $palette.drag-data-received.tap(-> *@a {
-    say 'Palette DDR Tap';
-    palette_drag_data_received(|@a)
+    palette_drag_data_received($palette, |@a)
   });
-  # $palette.add_drag_dest(
-  #   $palette,
-  #   GTK_DEST_DEFAULT_ALL,
-  #   GTK_TOOL_PALETTE_DRAG_ITEMS +| GTK_TOOL_PALETTE_DRAG_GROUPS,
-  #   GDK_ACTION_MOVE
-  # );
+  $palette.add_drag_dest(
+    $palette,
+    GTK_DEST_DEFAULT_ALL,
+    GTK_TOOL_PALETTE_DRAG_ITEMS +| GTK_TOOL_PALETTE_DRAG_GROUPS,
+    GDK_ACTION_MOVE
+  );
 
   # Common dest
   my ($contents1, $contents2) = (GTK::DrawingArea.new xx 2);
@@ -426,7 +401,6 @@ $a.activate.tap({
   $contents2.drag-data-received.tap(-> *@a { canvas_ddr2($palette, |@a) });
 
   $notebook.append_page($scroll2, $l_scroll2);
-
   $a.window.show_all;
 });
 

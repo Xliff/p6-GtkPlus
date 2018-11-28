@@ -43,7 +43,13 @@ class GTK::DragContext {
     gtk_drag_finish($!dc, $s, $d, $t);
   }
 
-  method get_source_widget is also<get-source-widget> {
+  method get_source_widget
+    is also<
+      get-source-widget
+      source-widget
+      source_widget
+    >
+  {
     # Returns GtkWidget.
     # May need to use GTK::Widget.CreateObject for this. For now, leave
     # up to the caller.

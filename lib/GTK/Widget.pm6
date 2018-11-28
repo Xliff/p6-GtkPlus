@@ -1540,7 +1540,14 @@ class GTK::Widget {
     gtk_widget_get_allocated_height($!w);
   }
 
-  method get_allocation (GtkAllocation $allocation) is also<get-allocation> {
+  proto method get_allocation (|) is also<get-allocation> { * }
+
+  multi method get_allocation {
+    my GtkAllocation $a .= new;
+    samewith($a);
+    $a;
+  }
+  multi method get_allocation (GtkAllocation $allocation) {
     gtk_widget_get_allocation($!w, $allocation);
   }
 

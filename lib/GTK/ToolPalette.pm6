@@ -8,6 +8,8 @@ use GTK::Raw::ToolPalette;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::ToolItemGroup;
+use GTK::ToolItem;
 
 use GTK::Roles::Orientable;
 
@@ -114,13 +116,15 @@ class GTK::ToolPalette is GTK::Container {
   method get_drop_group (Int() $x, Int() $y) is also<get-drop-group> {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@u);
-    gtk_tool_palette_get_drop_group($!tp, $xx, $yy);
+    GTK::ToolItemGroup.new(
+      gtk_tool_palette_get_drop_group($!tp, $xx, $yy)
+    );
   }
 
   method get_drop_item (Int() $x, Int() $y) is also<get-drop-item> {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@u);
-    gtk_tool_palette_get_drop_item($!tp, $xx, $yy);
+    GTK::ToolItem.new( gtk_tool_palette_get_drop_item($!tp, $xx, $yy) );
   }
 
   method get_exclusive (GtkToolItemGroup() $group) is also<get-exclusive> {
