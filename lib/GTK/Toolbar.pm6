@@ -7,7 +7,13 @@ use GTK::Compat::Types;
 use GTK::Raw::Toolbar;
 use GTK::Raw::Types;
 
+use GTK::Roles::ToolShell;
+
 use GTK::Container;
+
+my subset Ancestry
+  where GtkToolbar | GtkToolShell | GtkContainer | GtkOrientable |
+        GtkBuilder | GtkWidget;
 
 class GTK::Toolbar is GTK::Container {
   has GtkToolbar $!tb;
@@ -21,10 +27,20 @@ class GTK::Toolbar is GTK::Container {
   submethod BUILD(:$toolbar) {
     my $to-parent;
     given $toolbar {
-      when GtkToolbar | GtkWidget {
+      when Ancestry {
         $!tb = do {
-          when GtkWidget {
+          when GtkWidget | GtkContainer | GtkBuilder {
             $to-parent = $_;
+            nativecast(GtkToolbar, $_);
+          }
+          when GtkOrientable {
+            $!or = $_;
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkToolbar, $_);
+          }
+          when GtkToolShell {
+            $!shell = $_;
+            $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkToolbar, $_);
           }
           when GtkToolbar {
@@ -32,6 +48,8 @@ class GTK::Toolbar is GTK::Container {
             $_;
           }
         }
+        $!or //= nativecast(GtkOrientable, $toolbar)    # GTK::Roles::Orientable
+        $!shell //= nativecast(GtkToolShell, $toolbar)  # GTK::Roles::ToolShell
         self.setContainer($to-parent);
       }
       when GTK::Toolbar {
@@ -41,11 +59,11 @@ class GTK::Toolbar is GTK::Container {
     }
   }
 
-  multi method new {
-    my $toolbar = gtk_toolbar_new();
+  multi method new (Ancestry $toolbar) {
     self.bless(:$toolbar);
   }
-  multi method new (GtkWidget $toolbar) {
+  multi method new {
+    my $toolbar = gtk_toolbar_new();
     self.bless(:$toolbar);
   }
 
@@ -149,4 +167,3 @@ class GTK::Toolbar is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -9,7 +9,15 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+my subset Ancestry
+  where GtkToolItemGroup | GtkContainer | GtkBuildable | GtkToolShell |
+        GtkWidget;
+
+use GTK::Roles::ToolShell;
+
 class GTK::ToolItemGroup is GTK::Container {
+  also does GTK::Roles::ToolShell;
+
   has GtkToolItemGroup $!tig;
 
   method bless(*%attrinit) {
@@ -21,10 +29,15 @@ class GTK::ToolItemGroup is GTK::Container {
   submethod BUILD(:$toolgroup) {
     my $to-parent;
     given $toolgroup {
-      when GtkToolItemGroup | GtkWidget {
+      when Ancestry {
         $!tig = do {
-          when GtkWidget {
+          when GtkWidget | GtkContainer | GtkBuilder {
             $to-parent = $_;
+            nativecast(GtkToolItemGroup, $_);
+          }
+          when GtkToolShell {
+            $!shell = $_;
+            $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkToolItemGroup, $_);
           }
           when GtkToolItemGroup  {
@@ -32,6 +45,7 @@ class GTK::ToolItemGroup is GTK::Container {
             $_;
           }
         }
+        $!shell //= nativecast(GtkToolShell, $toolgroup);
         self.setContainer($to-parent);
       }
       when GTK::ToolItemGroup {
@@ -45,7 +59,7 @@ class GTK::ToolItemGroup is GTK::Container {
     my $toolgroup = gtk_tool_item_group_new($label);
     self.bless(:$toolgroup);
   }
-  multi method new (GtkWidget $toolgroup) {
+  multi method new (Ancestry $toolgroup) {
     self.bless(:$toolgroup);
   }
 

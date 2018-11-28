@@ -204,7 +204,6 @@ sub load_icon_items ($p) {
 
     $p.add($g);
     next if $ctx eq 'Animations';
-
     say "Got context: '{$ctx}'";
     $in = $it.list_icons($ctx);
     for $in.p6sort -> $id {
