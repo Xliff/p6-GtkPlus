@@ -33,18 +33,14 @@ my (@canvas_items, @special_items, $drop_item);
 my $dd_req_drop = False;
 
 sub canvas_item_new($widget, $b, $x, $y) {
-  say 'Cid';
   my $name = $b.icon_name;
   say "Name: { $b.icon_name }";
   my $theme = GTK::IconTheme.get_for_screen($widget.get_screen);
-  say 'Iis';
   my ($w) = GTK::IconInfo.size_lookup(GTK_ICON_SIZE_DIALOG);
-  say 'Iis'.flip;
   my $p = $theme.load_icon($name, $w // 0);
   my %i;
   say "P: $p / X: $x / Y: $y";
   %i<pixbuf x y> = ($p, $x, $y) with $p;
-  say 'Cid'.flip;
   %i;
 }
 
@@ -54,20 +50,18 @@ sub free_drop_item {
 }
 
 sub canvas_item_draw($i, $cr, $pre) {
-  say 'Pre' if $pre;
   my ($cx, $cy) = $i<pixbuf>.size;
   GTK::Compat::Cairo.set_source_pixbuf(
     $cr, $i<pixbuf>, $i<x> - $cx * 0.5, $i<y> - $cy * 0.5
   );
   $pre ?? $cr.paint_with_alpha( (0.6).Num ) !! $cr.paint;
-  say 'Pre'.flip if $pre;
 }
 
 sub canvas_draw($w, $cr, $d, $r) {
   $cr.set_source_rgb(1.Num, 1.Num, 1.Num);
   $cr.paint;
   canvas_item_draw($_, $cr, False) for @canvas_items;
-  canvas_item_draw($drop_item, $cr, True) with $drop_item;
+  canvas_item_draw($drop_item, $cr, False) with $drop_item;
   $r.r = 1;
 }
 
@@ -163,7 +157,10 @@ sub canvas_ddr2($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
   say 'DDR2';
 
   $ti = GTK::ToolButton.new( cast(GtkToolButton, $ti) ) with $ti;
-  free_drop_item with $drop_item;
+  with $drop_item {
+    # free_drop_item;
+    $drop_item = Nil;
+  }
   my $ci = canvas_item_new($can, $ti, $x, $y);
   if $dd_req_drop {
     say 'DDrq';
@@ -188,14 +185,17 @@ sub canvas_drag_drop($can, $c, $x, $y, $t, $d, $r) {
   return unless $tgt;
   $dd_req_drop = True;
   $can.drag_get_data($c, $tgt, $t);
+  $r.r = 1;
+  say 'Drop'.flip;
 }
 
-sub canvas_drag_leave($can, $c, $x, $y, $t, $d) {
+sub canvas_drag_leave($can, $c, $t, $d) {
   say 'CDL';
   if $drop_item {
-    free_drop_item;
-    $can.queue_draw with $can;
+    #free_drop_item;
+    #$can.queue_draw with $can;
   }
+  say 'CDL'.flip;
 }
 
 sub orientation_changed($cb, $pal, $sw, $m) {

@@ -183,7 +183,7 @@ role GTK::Roles::Signals::Widget {
     my $hid;
     %!signals-widget{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-drag-failed($obj, $signal,
+      $hid = g-connect-drag-leave($obj, $signal,
         -> $, $dc, $dr, $ud {
           CATCH { default { note($_) } }
 
