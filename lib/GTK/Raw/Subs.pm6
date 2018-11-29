@@ -60,7 +60,7 @@ sub g_object_set_string(Pointer $o, Str $key, Str $data)
 sub g_object_get_string(Pointer $o, Str $key)
   returns Str
   is native(gobject)
-  is symbol('g_object_set_data')
+  is symbol('g_object_get_data')
   is export
   { * }
 
@@ -73,7 +73,7 @@ sub g_object_set_uint(Pointer $o, Str $key, uint32 $data is rw)
 sub g_object_get_ptr(Pointer $o, Str $key)
   returns Pointer
   is native(gobject)
-  is symbol('g_object_set_data')
+  is symbol('g_object_get_data')
   is export
   { * }
 

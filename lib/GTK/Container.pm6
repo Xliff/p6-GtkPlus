@@ -308,7 +308,6 @@ class GTK::Container is GTK::Widget {
     gtk_container_propagate_draw($!c, $child, $cr);
   }
 
-  # Buggered. Doesn't check @!start.
   multi method remove (GtkWidget() $widget) {
     for (@!start, @!end) -> @l {
       @l .= grep({

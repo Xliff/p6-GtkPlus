@@ -28,12 +28,9 @@ role GTK::Roles::Data {
 
   method setType($typeName) {
     my $oldType = self.getType;
-    # This block may be unnecesary.
-    with $oldType {
-      warn "WARNING -- Resetting type from $oldType to $typeName"
-        unless $oldType eq 'GTK::Widget' || $oldType eq $typeName;
-    }
-    self.set_data_string('GTKPLUS-Type', $typeName);
+    self.set_data_string('GTKPLUS-Type', $typeName) without $oldType;
+    warn "WARNING -- Using a $oldType as a $typeName"
+      unless $oldType.defined.not || $oldType eq $typeName;
   }
 
   multi method getType {

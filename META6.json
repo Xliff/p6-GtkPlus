@@ -73,7 +73,6 @@
       "GTK::Raw::WindowGroup"                  :  "lib/GTK/Raw/WindowGroup.pm6"                 ,
       "GTK::Roles::Signals::EntryBuffer"       :  "lib/GTK/Roles/Signals/EntryBuffer.pm6"       ,
       "GTK::Compat::Array"                     :  "lib/GTK/Compat/Array.pm6"                    ,
-      "GTK::Compat::DragContext"               :  "lib/GTK/Compat/DragContext.pm6"              ,
       "GTK::Compat::FrameTimings"              :  "lib/GTK/Compat/FrameTimings.pm6"             ,
       "GTK::Compat::GList"                     :  "lib/GTK/Compat/GList.pm6"                    ,
       "GTK::Compat::GSList"                    :  "lib/GTK/Compat/GSList.pm6"                   ,
@@ -228,6 +227,7 @@
       "GTK::Raw::ToolItem"                     :  "lib/GTK/Raw/ToolItem.pm6"                    ,
       "GTK::Raw::ToolItemGroup"                :  "lib/GTK/Raw/ToolItemGroup.pm6"               ,
       "GTK::Raw::ToolPalette"                  :  "lib/GTK/Raw/ToolPalette.pm6"                 ,
+      "GTK::Raw::ToolShell"                    :  "lib/GTK/Raw/ToolShell.pm6"                   ,
       "GTK::Raw::Toolbar"                      :  "lib/GTK/Raw/Toolbar.pm6"                     ,
       "GTK::Raw::Tooltip"                      :  "lib/GTK/Raw/Tooltip.pm6"                     ,
       "GTK::Raw::TreeDnD"                      :  "lib/GTK/Raw/TreeDnD.pm6"                     ,
@@ -298,6 +298,7 @@
       "GTK::Clipboard"                         :  "lib/GTK/Clipboard.pm6"                       ,
       "GTK::Compat::Cairo"                     :  "lib/GTK/Compat/Cairo.pm6"                    ,
       "GTK::Compat::Display"                   :  "lib/GTK/Compat/Display.pm6"                  ,
+      "GTK::Compat::DragContext"               :  "lib/GTK/Compat/DragContext.pm6"              ,
       "GTK::Compat::FrameClock"                :  "lib/GTK/Compat/FrameClock.pm6"               ,
       "GTK::Compat::Pixbuf"                    :  "lib/GTK/Compat/Pixbuf.pm6"                   ,
       "GTK::Compat::Roles::Signals"            :  "lib/GTK/Compat/Roles/Signals.pm6"            ,
@@ -318,6 +319,7 @@
       "GTK::Roles::FileChooser"                :  "lib/GTK/Roles/FileChooser.pm6"               ,
       "GTK::Roles::FontChooser"                :  "lib/GTK/Roles/FontChooser.pm6"               ,
       "GTK::Roles::Properties"                 :  "lib/GTK/Roles/Properties.pm6"                ,
+      "GTK::Roles::ToolShell"                  :  "lib/GTK/Roles/ToolShell.pm6"                 ,
       "GTK::Roles::TreeModel"                  :  "lib/GTK/Roles/TreeModel.pm6"                 ,
       "GTK::StyleContext"                      :  "lib/GTK/StyleContext.pm6"                    ,
       "GTK::TextBuffer"                        :  "lib/GTK/TextBuffer.pm6"                      ,
@@ -376,7 +378,6 @@
       "GTK::Switch"                            :  "lib/GTK/Switch.pm6"                          ,
       "GTK::TextView"                          :  "lib/GTK/TextView.pm6"                        ,
       "GTK::ToolItemGroup"                     :  "lib/GTK/ToolItemGroup.pm6"                   ,
-      "GTK::ToolPalette"                       :  "lib/GTK/ToolPalette.pm6"                     ,
       "GTK::Toolbar"                           :  "lib/GTK/Toolbar.pm6"                         ,
       "GTK::TreeViewColumn"                    :  "lib/GTK/TreeViewColumn.pm6"                  ,
       "GTK::AccelLabel"                        :  "lib/GTK/AccelLabel.pm6"                      ,
@@ -415,6 +416,7 @@
       "GTK::Statusbar"                         :  "lib/GTK/Statusbar.pm6"                       ,
       "GTK::ToggleButton"                      :  "lib/GTK/ToggleButton.pm6"                    ,
       "GTK::ToolItem"                          :  "lib/GTK/ToolItem.pm6"                        ,
+      "GTK::ToolPalette"                       :  "lib/GTK/ToolPalette.pm6"                     ,
       "GTK::TreeView"                          :  "lib/GTK/TreeView.pm6"                        ,
       "GTK::Viewport"                          :  "lib/GTK/Viewport.pm6"                        ,
       "GTK::VolumeButton"                      :  "lib/GTK/VolumeButton.pm6"                    ,
@@ -461,4 +463,5 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 

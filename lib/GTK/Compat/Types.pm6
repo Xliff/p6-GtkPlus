@@ -39,6 +39,12 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str           $.message;
 }
 
+# Used ONLY in those situations where cheating is just plain REQUIRED.
+class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint64  $.g_type_instance;
+  has uint32   $.ref_count;
+}
+
 our $ERROR is export;
 
 sub gerror is export {

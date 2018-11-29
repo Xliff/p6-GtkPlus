@@ -60,7 +60,6 @@ sub palette_drop_item ($pal, $di, $dg, $x, $y) {
   my $drag_group = GTK::ToolItemGroup.new(
     cast(GtkToolItemGroup, $di.parent.widget)
   );
-  # WHY THE FUCK IS THE LAST PART AN OBJECT REFERENCE?
   say "DROP GROUP: { $dg } / { $dg.label }";
   my $drop_item = $dg.get_drop_item($x, $y);
   say "DROP ITEM ($x, $y): { $drop_item // '' }";
@@ -68,8 +67,9 @@ sub palette_drop_item ($pal, $di, $dg, $x, $y) {
   say "DROP POS: $drop_pos";
 
   say
-    "DRAG GROUP: { +$drag_group.widet.p
-  } / DROP GROUP: { +$dg.widget.p }";
+    "DRAG GROUP: {
+      +$drag_group.widget.p
+    } / DROP GROUP: { +$dg.widget.p }";
 
   if +$dg.widget.p != +$drag_group.widget.p {
     # If drop group and drag group are the same....
@@ -77,6 +77,7 @@ sub palette_drop_item ($pal, $di, $dg, $x, $y) {
     my @p = (
       ['homogeneous', $h], ['expand', $e], ['fill', $f], ['new-row', $nr]
     );
+    # Need two, since the original object will go out of scope.
     $di.upref;
     $drag_group.child_get_bool($di, $_[0], $_[1]) for @p;
     $drag_group.remove($di);
@@ -100,8 +101,6 @@ sub palette_drag_data_received ($p, $w, $c, $x, $y, $sel, $i, $t, $d) {
   my $tgt = $p.dest_find_target($c);
   my $tgt-name = gdk_atom_name($$tgt);
   my $drag_item = $p.get_drag_item($sel);
-  # Without using $w, which is the actual widget, we don't know if
-  # this properly references the right group.
   my $drop_group = $p.get_drop_group($x, $y);
 
   say "PAL DRAG ITEM: $drag_item";
@@ -112,7 +111,9 @@ sub palette_drag_data_received ($p, $w, $c, $x, $y, $sel, $i, $t, $d) {
     palette_drop_group($p, $drag_item, $drop_group);
   } else {
     my $a = $drop_group.get_allocation;
-    $drag_item = GTK::ToolItem.new( cast(GtkToolItem, $drag_item) );
+    # Getting warnings if this is not the correct type.
+    # Try with CreateObject?
+    $drag_item = GTK::Widget.CreateObject($drag_item);
     palette_drop_item($p, $drag_item, $drop_group, $x - $a.x, $y - $a.y);
   }
 }
@@ -141,7 +142,7 @@ sub canvas_drag_motion($can, $c, $x, $y, $t, $d, $r) {
 sub canvas_ddr1($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
   my $ti = $pal.get_drag_item($sel);
   with $ti {
-    $ti = GTK::ToolButton.new( cast(GtkToolButton, $ti) );
+    $ti = GTK::Widget.CreateObject($ti);
     @canvas_items.push: canvas_item_new($pal, $ti, $x, $y);
   }
   $can.queue_draw;
@@ -152,7 +153,7 @@ sub canvas_ddr2($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
 
   say "DDR2: {$x}, {$y}";
 
-  $ti = GTK::ToolButton.new( cast(GtkToolButton, $ti) ) with $ti;
+  $ti = GTK::Widget.CreateObject($ti) with $ti;
   with $drop_item {
     $drop_item = Nil;
   }

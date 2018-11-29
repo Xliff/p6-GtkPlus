@@ -1,5 +1,6 @@
 #!/bin/bash
 
+perl6 scripts/dependencies.pl6
 if [ "$1" == "new" ]; then
   rm LastBuildResults*
 else

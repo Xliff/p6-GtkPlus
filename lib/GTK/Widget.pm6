@@ -46,9 +46,15 @@ class GTK::Widget {
     }
   }
 
+  # Check all widgets to insure that %!signals is left for THIS object
+  # and THIS object only!
   submethod DESTROY {
-    g_object_unref($!w.p);
-    self.disconnect-all($_) for %!signals, %!signals-widget;
+    self.downref;
+    # All widget-dependents may need a variation of this.
+    my $w_cheat = nativecast(GObjectStruct, $!w);
+    unless $w_cheat.ref_count {
+      self.disconnect-all($_) for %!signals, %!signals-widget
+    }
   }
 
   proto new(|) { * }

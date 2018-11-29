@@ -17,6 +17,9 @@ my subset Ancestry
         GtkBuilder | GtkWidget;
 
 class GTK::Toolbar is GTK::Container {
+  also does GTK::Roles::Orientable;
+  also does GTK::Roles::ToolShell;
+  
   has GtkToolbar $!tb;
 
   method bless(*%attrinit) {
@@ -49,8 +52,8 @@ class GTK::Toolbar is GTK::Container {
             $_;
           }
         }
-        $!or //= nativecast(GtkOrientable, $toolbar)    # GTK::Roles::Orientable
-        $!shell //= nativecast(GtkToolShell, $toolbar)  # GTK::Roles::ToolShell
+        $!or //= nativecast(GtkOrientable, $toolbar);   # GTK::Roles::Orientable
+        $!shell //= nativecast(GtkToolShell, $toolbar); # GTK::Roles::ToolShell
         self.setContainer($to-parent);
       }
       when GTK::Toolbar {

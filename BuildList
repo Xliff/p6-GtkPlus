@@ -60,7 +60,6 @@ GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
 GTK::Compat::Array
-GTK::Compat::DragContext
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
@@ -215,6 +214,7 @@ GTK::Raw::ToolButton
 GTK::Raw::ToolItem
 GTK::Raw::ToolItemGroup
 GTK::Raw::ToolPalette
+GTK::Raw::ToolShell
 GTK::Raw::Toolbar
 GTK::Raw::Tooltip
 GTK::Raw::TreeDnD
@@ -285,6 +285,7 @@ GTK::CSSProvider
 GTK::Clipboard
 GTK::Compat::Cairo
 GTK::Compat::Display
+GTK::Compat::DragContext
 GTK::Compat::FrameClock
 GTK::Compat::Pixbuf
 GTK::Compat::Roles::Signals
@@ -305,6 +306,7 @@ GTK::Roles::Editable
 GTK::Roles::FileChooser
 GTK::Roles::FontChooser
 GTK::Roles::Properties
+GTK::Roles::ToolShell
 GTK::Roles::TreeModel
 GTK::StyleContext
 GTK::TextBuffer
@@ -363,7 +365,6 @@ GTK::Spinner
 GTK::Switch
 GTK::TextView
 GTK::ToolItemGroup
-GTK::ToolPalette
 GTK::Toolbar
 GTK::TreeViewColumn
 GTK::AccelLabel
@@ -402,6 +403,7 @@ GTK::StackSidebar
 GTK::Statusbar
 GTK::ToggleButton
 GTK::ToolItem
+GTK::ToolPalette
 GTK::TreeView
 GTK::Viewport
 GTK::VolumeButton

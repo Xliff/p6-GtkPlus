@@ -42,16 +42,11 @@ role GTK::Roles::ToolShell {
     GtkIconSize( gtk_tool_shell_get_icon_size($!shell) );
   }
 
-  method get_orientation is also<get-orientation orientation> {
+  method get_orientation is also<get-orientation> {
     GtkOrientation( gtk_tool_shell_get_orientation($!shell) );
   }
 
-  method get_relief_style
-    is also<
-      get-relief-style
-      relief-style
-      relief_style
-    >
+  method get_relief_style is also<get-relief-style>
   {
     GtkReliefStyle( gtk_tool_shell_get_relief_style($!shell) );
   }
