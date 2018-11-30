@@ -12,7 +12,7 @@ use GTK::Bin;
 use GTK::Roles::Actionable;
 
 my subset Ancestry
-  where GtkListBoxRow | GtkBuildable | GtkActionable | GtkWidget;
+  where GtkListBoxRow | GtkActionable | GtkBin | GtkBuildable | GtkWidget;
 
 class GTK::ListBoxRow is GTK::Bin {
   also does GTK::Roles::Actionable;
@@ -30,23 +30,20 @@ class GTK::ListBoxRow is GTK::Bin {
     given $row {
       when Ancestry {
         $!lbr = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkListBoxRow, $_);
+          when GtkListBoxRow {
+            $to-parent = nativecast(GtkBin, $_);
+            $_;
           }
           when GtkActionable {
             $!action = nativecast(GtkActionable, $_);
             $to-parent = nativecast(GtkBin, $_);
             nativecast(GtkListBoxRow, $_);
           }
-          when GtkBuildable {
-            $to-parent = nativecast(GtkBin, $_);
+          default {
+            $to-parent = $_;
             nativecast(GtkListBoxRow, $_);
           }
-          when GtkListBoxRow {
-            $to-parent = nativecast(GtkBin, $_);
-            $_;
-          }
+
         }
         self.setBin($to-parent);
         $!action //= nativecast(GtkActionable, $_);
@@ -62,11 +59,13 @@ class GTK::ListBoxRow is GTK::Bin {
     $!lbr;
   }
 
+  multi method new (Ancestry $row) {
+    my $o = self.bless(:$row);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $row = gtk_list_box_row_new();
-    self.bless(:$row);
-  }
-  multi method new (Ancestry $row) {
     self.bless(:$row);
   }
 

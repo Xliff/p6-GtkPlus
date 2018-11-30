@@ -232,6 +232,7 @@ GTK::Roles::AppChooser
 GTK::Roles::Buildable
 GTK::Roles::Data
 GTK::Roles::Orientable
+GTK::Roles::References
 GTK::Roles::Scrollable
 GTK::Roles::Signals::Application
 GTK::Roles::Signals::CSSProvider

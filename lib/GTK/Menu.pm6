@@ -13,10 +13,9 @@ use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Menu;
 
 my subset Ancestry
-  where GtkMenu | GtkMenuShell | GtkBuildable | GtkWidget;
+  where GtkMenu | GtkMenuShell | GtkContainer | GtkBuildable | GtkWidget;
 
 class GTK::Menu is GTK::MenuShell {
-  also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Menu;
 
   has GtkMenu $!m;
@@ -32,13 +31,13 @@ class GTK::Menu is GTK::MenuShell {
     given $menu {
       when Ancestry {
         $!m = do {
-          when GtkBuildable | GtkMenuShell | GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkMenu, $_);
-          }
           when GtkMenu {
             $to-parent = nativecast(GtkMenuShell, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkMenu, $_);
           }
         };
         self.setMenuShell($to-parent);
@@ -50,21 +49,25 @@ class GTK::Menu is GTK::MenuShell {
     }
 
     with @items {
-      die 'All items in @append must be GTK::MenuItems or GtkMenuItem references.'
-        unless @items.all ~~ (GTK::MenuItem, GtkMenuItem).any;
+      die qq:to/D/.chomp unless @items.all ~~ (GTK::MenuItem, GtkMenuItem).any;
+All items in @append must be GTK::MenuItems or GtkMenuItem references.
+D
+
       self.append-widgets($_) for @items;
     }
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals, %!signals-menu;
+    self.disconnect-all($_) for %!signals-menu;
   }
 
+  multi method new (Ancestry $menu) {
+    my $o = self.bless(:$menu);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $menu = gtk_menu_new();
-    self.bless(:$menu);
-  }
-  multi method new (Ancestry $menu) {
     self.bless(:$menu);
   }
   multi method new (*@items) {
@@ -235,7 +238,9 @@ class GTK::Menu is GTK::MenuShell {
     gpointer $data,
     Int() $button,
     Int() $activate_time
-  ) is DEPRECATED {
+  )
+    is DEPRECATED
+  {
     my @u = ($button, $activate_time);
     my guint32 ($b, $at) = self.RESOLVE-UINT(@u);
     gtk_menu_popup(
@@ -277,7 +282,7 @@ class GTK::Menu is GTK::MenuShell {
   }
 
   method popup_for_device (
-    GdkDevice $device,
+    GdkDevice() $device,
     GtkWidget() $parent_menu_shell,
     GtkWidget() $parent_menu_item,
     GtkMenuPositionFunc $func,
@@ -315,7 +320,7 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_reposition($!m);
   }
 
-  method set_screen (GdkScreen $screen) is also<set-screen> {
+  method set_screen (GdkScreen() $screen) is also<set-screen> {
     gtk_menu_set_screen($!m, $screen);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

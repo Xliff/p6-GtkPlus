@@ -31,10 +31,6 @@ class GTK::ToolItemGroup is GTK::Container {
     given $toolgroup {
       when Ancestry {
         $!tig = do {
-          when GtkWidget | GtkContainer | GtkBuilder {
-            $to-parent = $_;
-            nativecast(GtkToolItemGroup, $_);
-          }
           when GtkToolShell {
             $!shell = $_;
             $to-parent = nativecast(GtkContainer, $_);
@@ -43,6 +39,10 @@ class GTK::ToolItemGroup is GTK::Container {
           when GtkToolItemGroup  {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkToolItemGroup, $_);
           }
         }
         $!shell //= nativecast(GtkToolShell, $toolgroup);
@@ -55,11 +55,13 @@ class GTK::ToolItemGroup is GTK::Container {
     }
   }
 
+  multi method new (Ancestry $toolgroup) {
+    my $o = self.bless(:$toolgroup);
+    $o.upref;
+    $o;
+  }
   multi method new(Str() $label = '') {
     my $toolgroup = gtk_tool_item_group_new($label);
-    self.bless(:$toolgroup);
-  }
-  multi method new (Ancestry $toolgroup) {
     self.bless(:$toolgroup);
   }
 
@@ -149,7 +151,7 @@ class GTK::ToolItemGroup is GTK::Container {
     gtk_tool_item_group_get_n_items($!tig);
   }
 
-  method get_nth_item (guint $index) is also<get-nth-item> {
+  method get_nth_item (Int() $index) is also<get-nth-item> {
     my guint $i = self.RESOLVE-UINT($index);
     gtk_tool_item_group_get_nth_item($!tig, $i);
   }
@@ -163,7 +165,9 @@ class GTK::ToolItemGroup is GTK::Container {
     gtk_tool_item_group_insert($!tig, $item, $p);
   }
 
-  method set_item_position (GtkToolItem() $item, Int() $position) is also<set-item-position> {
+  method set_item_position (GtkToolItem() $item, Int() $position)
+    is also<set-item-position>
+  {
     my gint $p = self.RESOLVE-INT($position);
     gtk_tool_item_group_set_item_position($!tig, $item, $p);
   }

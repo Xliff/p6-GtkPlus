@@ -1,23 +1,27 @@
-- Mechanism for providing PROPER event handlers for all events
++ Mechanism for providing PROPER event handlers for all events (in progress...)
 - Insure all method-level gchar paramters are converted to Str()
 - COMPLETE a working GSList implementation
 - Add a working GList implementation
 √ META6.json
-- New dependency: https://github.com/timo/cairo-p6
+√ New dependency: https://github.com/timo/cairo-p6
 - GDK
 + Feature Request: GTK::TextBuffer.buffer to accept from Str or Buf. This should also apply to .text()
 √ METHOD ALIASING! - This has mostly been accomplished, but in the case of container-based classes and others where manual aliasing was done, the best thing to do would be a proto method. See: https://gist.github.com/Xliff/34b9d2e3e27c76696ec60e6791075634
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
-- Convert Perl6 additions to GTK::Container into a role. (GTK::Roles::Containable)
-- Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
+- Convert Perl6 additions to GTK::Container into a role. (done as GTK::Roles::LatchedContainer)
+√ Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
 + Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get (MOSTLY DONE! See scripts/prop-get.pl6)
-- Fix lack of icons in GTK::IconView
-- Add to project if I'm completely insane: GVariant
-- Move signals to Object.signal<name> to fix issue with method name conflicts
+√ Fix lack of icons in GTK::IconView
+- Add-to-project-if-I'm-completely-insane: GVariant
+- Move signals to %Object.signal<name> to fix issue with method name conflicts
 - GTK::ScrolledWindow.new_with_policy is in desperate need of being written
+- GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!
+- Add type specific signal handling to; GTK::Notebook
+- Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher or GtkStackSidebar
+- Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 
 
 Applications
 ============
 - A text editor in Perl6. Think about using it as a visual Regex tester.
-- Glade UI to p6-GtkPerl application
++ Glade UI to p6-GtkPerl application (in progress see GTK::Builder:: objects and ui-to-code.pl6)

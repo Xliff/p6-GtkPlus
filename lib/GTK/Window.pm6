@@ -7,9 +7,14 @@ use GTK::Bin;
 use GTK::Widget;
 
 use GTK::Compat::GList;
+use GTK::Compat::Pixbuf;
 use GTK::Compat::Types;
+use GTK::Compat::Screen;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
+
+my subset Ancestry
+  where GtkWindow | GtkBin | GtkContainer | GtkBuildable | GtkWidget;
 
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
@@ -24,7 +29,7 @@ class GTK::Window is GTK::Bin {
 
   submethod BUILD(:$window) {
     given $window {
-      when GtkWindow | GtkWidget {
+      when Ancestry {
         self.setWindow($window);
       }
       when GTK::Window {
@@ -34,37 +39,37 @@ class GTK::Window is GTK::Bin {
     }
   }
 
-  multi method new (
-    GtkWindowType $type,
-    Str :$title = 'Window',
-    Int :$width  = 200,
-    Int :$height = 200
-  ) {
-    my $window = gtk_window_new($type);
-    gtk_window_set_title($window, $title);
-    gtk_window_set_default_size($window, $width, $height);
-    samewith(:$window);
-  }
-  multi method new (GtkWidget $widget) {
-    self.bless(:window($widget));
-  }
-  multi method new (GtkWindow $window) {
-    self.bless(:$window);
-  }
-
   method setWindow($window) {
     my $to-parent;
     $!win = do given $window {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkWindow, $_);
-      }
       when GtkWindow {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
+      default {
+        $to-parent = $_;
+        nativecast(GtkWindow, $_);
+      }
     }
     self.setBin($to-parent);
+  }
+
+  multi method new (Ancestry $window) {
+    my $o = self.bless(:$window);
+    $o.upref;
+    $o;
+  }
+  multi method new (
+    Int() $type,                    # GtkWindowType $type,
+    Str :$title = 'Window',
+    Int :$width  = 200,
+    Int :$height = 200
+  ) {
+    my guint $t = self.RESOLVE-UINT($type);
+    my $window = gtk_window_new($t);
+    gtk_window_set_title($window, $title);
+    gtk_window_set_default_size($window, $width, $height);
+    samewith(:$window);
   }
 
   method GTK::Raw::Types::GtkWindow {
@@ -117,7 +122,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_auto_startup_notification($s);
   }
 
-  method set_default_icon (GTK::Window:U: GdkPixbuf $icon)
+  method set_default_icon (GTK::Window:U: GdkPixbuf() $icon)
     is also<set-default-icon>
   {
     gtk_window_set_default_icon($icon);
@@ -158,7 +163,7 @@ class GTK::Window is GTK::Bin {
   method accept_focus is rw is also<accept-focus> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_accept_focus($!win) );
+        so gtk_window_get_accept_focus($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -204,7 +209,7 @@ class GTK::Window is GTK::Bin {
   method deletable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_deletable($!win) );
+        so gtk_window_get_deletable($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -216,7 +221,7 @@ class GTK::Window is GTK::Bin {
   method destroy_with_parent is rw is also<destroy-with-parent> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_destroy_with_parent($!win) );
+        so gtk_window_get_destroy_with_parent($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -239,7 +244,7 @@ class GTK::Window is GTK::Bin {
   method focus_on_map is rw is also<focus-on-map> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_focus_on_map($!win) );
+        so gtk_window_get_focus_on_map($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -251,7 +256,7 @@ class GTK::Window is GTK::Bin {
   method focus_visible is rw is also<focus-visible> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_focus_visible($!win) );
+        so gtk_window_get_focus_visible($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -263,7 +268,7 @@ class GTK::Window is GTK::Bin {
   method gravity is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_gravity($!win);
+        GdkGravity( gtk_window_get_gravity($!win) );
       },
       STORE => sub ($, Int() $gravity is copy) {
         my uint32 $g = self.RESOLVE-UINT($gravity);
@@ -275,7 +280,7 @@ class GTK::Window is GTK::Bin {
   method has_resize_grip is rw is also<has-resize-grip> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_has_resize_grip($!win) );
+        so gtk_window_get_has_resize_grip($!win);
       },
       STORE => sub ($, Int() $value is copy) {
         my gboolean $v = self.RESOLVE-UINT($value);
@@ -290,7 +295,7 @@ class GTK::Window is GTK::Bin {
   {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_hide_titlebar_when_maximized($!win) );
+        so gtk_window_get_hide_titlebar_when_maximized($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -302,9 +307,9 @@ class GTK::Window is GTK::Bin {
   method icon is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_icon($!win);
+        GTK::Compat::Pixbuf( gtk_window_get_icon($!win) );
       },
-      STORE => sub ($, GdkPixbuf $icon is copy) {
+      STORE => sub ($, GdkPixbuf() $icon is copy) {
         gtk_window_set_icon($!win, $icon);
       }
     );
@@ -347,7 +352,7 @@ class GTK::Window is GTK::Bin {
   method mnemonics_visible is rw is also<mnemonics-visible> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_mnemonics_visible($!win) );
+        so gtk_window_get_mnemonics_visible($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -359,7 +364,7 @@ class GTK::Window is GTK::Bin {
   method modal is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_modal($!win) );
+        so gtk_window_get_modal($!win);
       },
       STORE => sub ($, Int() $modal is copy) {
         my gboolean $m = self.RESOLVE-BOOL($modal);
@@ -386,7 +391,7 @@ class GTK::Window is GTK::Bin {
   method resizable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_resizable($!win) );
+        so gtk_window_get_resizable($!win);
       },
       STORE => sub ($, Int() $resizable is copy) {
         my gboolean $r = self.RESOLVE-BOOL($resizable);
@@ -409,9 +414,9 @@ class GTK::Window is GTK::Bin {
   method screen is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_screen($!win);
+        GTK::Compat::Screen.new( gtk_window_get_screen($!win) );
       },
-      STORE => sub ($, GdkScreen $screen is copy) {
+      STORE => sub ($, GdkScreen() $screen is copy) {
         gtk_window_set_screen($!win, $screen);
       }
     );
@@ -420,7 +425,7 @@ class GTK::Window is GTK::Bin {
   method skip_pager_hint is rw is also<skip-pager-hint> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_skip_pager_hint($!win) );
+        so gtk_window_get_skip_pager_hint($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -432,7 +437,7 @@ class GTK::Window is GTK::Bin {
   method skip_taskbar_hint is rw is also<skip-taskbar-hint> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_skip_taskbar_hint($!win);
+        so gtk_window_get_skip_taskbar_hint($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -489,7 +494,7 @@ class GTK::Window is GTK::Bin {
   method urgency_hint is rw is also<urgency-hint> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_urgency_hint($!win) );
+        so gtk_window_get_urgency_hint($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -567,7 +572,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_fullscreen($!win);
   }
 
-  method fullscreen_on_monitor (GdkScreen $screen, Int() $monitor)
+  method fullscreen_on_monitor (GdkScreen() $screen, Int() $monitor)
     is also<fullscreen-on-monitor>
   {
     my gint $m = self.RESOLVE-INT($monitor);

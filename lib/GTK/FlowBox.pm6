@@ -11,7 +11,14 @@ use GTK::Raw::Types;
 use GTK::FlowBoxChild;
 use GTK::Container;
 
+use GTK::Roles::Orientable;
+
+my subset Ancestry
+  where GtkFlowBox | GtkOrientable | GtkContainer | GtkWidget;
+
 class GTK::FlowBox is GTK::Container {
+  also does GTK::Roles::Orientable;
+
   has GtkFlowBox $!fb;
 
   method bless(*%attrinit) {
@@ -23,15 +30,20 @@ class GTK::FlowBox is GTK::Container {
   submethod BUILD(:$flowbox) {
     my $to-parent;
     given $flowbox {
-      when GtkFlowBox | GtkWidget {
+      when Ancestry {
         $!fb = do {
-          when GtkWidget  {
-            $to-parent = $_;
-            nativecast(GtkFlowBox, $_);
-          }
           when GtkFlowBox {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          when GtkOrientable {
+            $!or = $_;
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkFlowBox, $_);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkFlowBox, $_);
           }
         };
         self.setContainer($flowbox);
@@ -41,13 +53,16 @@ class GTK::FlowBox is GTK::Container {
       default {
       }
     }
+    $!or //= nativecast(GtkOrientable, $flowbox);
   }
 
+  multi method new (Ancestry $flowbox) {
+    my $o = self.bless(:$flowbox);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $flowbox = gtk_flow_box_new();
-    self.bless(:$flowbox);
-  }
-  multi method new (GtkWidget $flowbox) {
     self.bless(:$flowbox);
   }
 

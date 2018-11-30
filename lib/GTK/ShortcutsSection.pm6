@@ -8,7 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-subset ParentChild where GtkShortcutsSection | GtkWidget;
+my subset Ancestry where GtkShortcutsSection | GtkBox       | GtkOrientable |
+                         GtkContainer        | GtkBuildable | GtkWidget;
 
 class GTK::ShortcutsSection is GTK::Box {
   has GtkShortcutsSection $!ss;
@@ -22,15 +23,15 @@ class GTK::ShortcutsSection is GTK::Box {
   submethod BUILD(:$section) {
     my $to-parent;
     given $section {
-      when ParentChild {
+      when Ancestry {
         $!ss = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkShortcutsSection, $_);
-          }
           when GtkShortcutsSection  {
             $to-parent = nativecast(GtkBox, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkShortcutsSection, $_);
           }
         }
         self.setBox($to-parent);
@@ -42,8 +43,10 @@ class GTK::ShortcutsSection is GTK::Box {
     }
   }
 
-  method new (ParentChild $section) {
-    self.bless(:$section);
+  method new (Ancestry $section) {
+    my $o = self.bless(:$section);
+    $o.upref;
+    $o;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -66,7 +69,7 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('max-height', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('max-height', $gv) );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
@@ -81,7 +84,7 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('section-name', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('section-name', $gv) );
         $gv.string
       },
       STORE => -> $, Str() $val is copy {
@@ -96,7 +99,7 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -111,7 +114,7 @@ class GTK::ShortcutsSection is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('view-name', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('view-name', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -127,4 +130,3 @@ class GTK::ShortcutsSection is GTK::Box {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

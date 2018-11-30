@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Button;
 
+my subset Ancestry
+  where GtkToggleButton | GtkButton | GtkActionable | GtkBin | GtkContainer |
+        GtkBuildable    | GtkWidget;
+
 class GTK::ToggleButton is GTK::Button {
   has GtkToggleButton $!tb;
 
@@ -21,15 +25,15 @@ class GTK::ToggleButton is GTK::Button {
   submethod BUILD(:$togglebutton) {
     my $to-parent;
     given $togglebutton {
-      when GtkToggleButton | GtkWidget {
+      when Ancestry {
         $!tb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkToggleButton, $_);
-          }
           when GtkToggleButton {
             $to-parent = nativecast(GtkButton, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkToggleButton, $_);
           }
         };
         self.setButton($to-parent);
@@ -41,14 +45,13 @@ class GTK::ToggleButton is GTK::Button {
     }
   }
 
+  multi method new (Ancestry $togglebutton) {
+    my $o = self.bless(:$togglebutton);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $togglebutton = gtk_toggle_button_new();
-    self.bless(:$togglebutton);
-  }
-  multi method new (GtkToggleButton $togglebutton) {
-    self.bless(:$togglebutton);
-  }
-  multi method new (GtkWidget $togglebutton) {
     self.bless(:$togglebutton);
   }
 
@@ -124,4 +127,3 @@ class GTK::ToggleButton is GTK::Button {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -10,7 +11,9 @@ use GTK::Dialog;
 use GTK::Roles::FileChooser;
 
 my subset Ancestry
-  where GtkFileChooserDialog | GtkDialog | GtkFileChooser | GtkWidget;
+  where GtkFileChooserDialog | GtkFileChooser | GtkDialog | GtkWindow    |
+        GtkContainer         | GtkWindow      | GtkBin    | GtkContainer |
+        GtkWidget;
 
 class GTK::FileChooserDialog is GTK::Dialog {
   also does GTK::Roles::FileChooser;
@@ -28,18 +31,18 @@ class GTK::FileChooserDialog is GTK::Dialog {
     given $dialog {
       when Ancestry {
         $!fcd = do {
-          when GtkWidget | GtkDialog {
-            $to-parent = $_;
-            nativecast(GtkFileChooserDialog, $_);
+          when GtkFileChooserDialog  {
+            $to-parent = nativecast(GtkDialog, $_);
+            $_;
           }
           when GtkFileChooser {
             $!fc = $_;                            # GTK::Roles::FileChooser
             $to-parent = nativecast(GtkDialog, $_);
             nativecast(GtkFileChooserDialog, $_);
           }
-          when GtkFileChooserDialog  {
-            $to-parent = nativecast(GtkDialog, $_);
-            $_;
+          default {
+            $to-parent = $_;
+            nativecast(GtkFileChooserDialog, $_);
           }
         }
         self.setDialog($to-parent);
@@ -52,6 +55,11 @@ class GTK::FileChooserDialog is GTK::Dialog {
     $!fc //= nativecast(GtkFileChooser, $!fcd);   # GTK::Roles::FileChooser
   }
 
+  multi method new (Ancestry $dialog) {
+    my $o = self.bless(:$dialog);
+    $o.upref;
+    $o;
+  }
   multi method new (
     Str() $title,
     GtkWindow() $parent,
@@ -99,7 +107,7 @@ class GTK::FileChooserDialog is GTK::Dialog {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_file_chooser_dialog_get_type();
   }
 

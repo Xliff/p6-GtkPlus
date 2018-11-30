@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::MenuShell;
 
+my subset Ancestry
+  where GtkMenuBar | GtkMenuShell | GtkContainer | GtkBuilder | GtkWidget;
+
 class GTK::MenuBar is GTK::MenuShell {
   has GtkMenuBar $!mb;
 
@@ -21,15 +24,15 @@ class GTK::MenuBar is GTK::MenuShell {
   submethod BUILD(:$menubar, :@items) {
     given $menubar {
       my $to-parent;
-      when GtkMenuBar | GtkMenuShell | GtkWidget {
+      when Ancestry {
         $!mb = do {
-          when GtkMenuShell | GtkWidget  {
-            $to-parent = $_;
-            nativecast(GtkMenuBar, $_);
-          }
           when GtkMenuBar {
             $to-parent = nativecast(GtkMenuShell, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkMenuBar, $_);
           }
         }
         self.setMenuShell($to-parent);
@@ -48,11 +51,13 @@ class GTK::MenuBar is GTK::MenuShell {
     }
   }
 
+  multi method new (Ancestry $menubar) {
+    my $o = self.bless(:$menubar);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $menubar = gtk_menu_bar_new();
-    self.bless(:$menubar);
-  }
-  multi method new (GtkWidget $menubar) {
     self.bless(:$menubar);
   }
   multi method new (*@items) {
@@ -101,4 +106,3 @@ class GTK::MenuBar is GTK::MenuShell {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

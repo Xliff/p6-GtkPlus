@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::MenuItem;
 
+my subset Ancestry
+  where GtkCheckMenuItem | GtkMenuItem | GtkActionable | GtkBin |
+        GtkContainer     | GtkWidget;
+
 class GTK::CheckMenuItem is GTK::MenuItem {
   has GtkCheckMenuItem $!cmi;
 
@@ -21,7 +25,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   submethod BUILD(:$checkmenuitem) {
     my $to-parent;
     given $checkmenuitem {
-      when GtkCheckMenuItem | GtkWidget {
+      when Ancestry {
         self.setCheckMenuItem($checkmenuitem);
       }
       when GTK::CheckMenuItem {
@@ -34,23 +38,25 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   method setCheckMenuItem($checkmenuitem) {
     my $to-parent;
     $!cmi = do given $checkmenuitem {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkCheckMenuItem, $_);
-      }
       when GtkCheckMenuItem {
         $to-parent = nativecast(GtkMenuItem, $_);
         $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkCheckMenuItem, $_);
       }
     }
     self.setMenuItem($to-parent);
   }
 
+  multi method new (Ancestry $checkmenuitem) {
+    my $o = self.bless(:$checkmenuitem);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $checkmenuitem = gtk_check_menu_item_new();
-    self.bless(:$checkmenuitem);
-  }
-  multi method new (GtkWidget $checkmenuitem) {
     self.bless(:$checkmenuitem);
   }
   multi method new(Str() :$label, Str() :$mnemonic) {
@@ -133,4 +139,3 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

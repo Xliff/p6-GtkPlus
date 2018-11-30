@@ -12,9 +12,15 @@ use GTK::TreePath;
 use GTK::Widget;
 
 use GTK::Roles::CellLayout;
+use GTK::Roles::Orientable;
+
+my subset Ancestry
+  where GtkCellView | GtkCellLayout | GtkOrientable | GtkBuildable |
+        GtkWidget;
 
 class GTK::CellView is GTK::Widget {
   also does GTK::Roles::CellLayout;
+  also does GTK::Roles::Orientable;
 
   has GtkCellView $!cv;
 
@@ -27,16 +33,27 @@ class GTK::CellView is GTK::Widget {
   submethod BUILD(:$cellview) {
     my $to-parent;
     given $cellview {
-      when GtkCellView | GtkWidget {
+      when Ancestry {
         $!cv = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkCellView, $_);
-          }
           when GtkCellView {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
           }
+          when GtkOrientable {
+            $!or = $_;                          # GTK::Roles::Orientable
+            $to-parent = nativecast(GtkWidget, $_);
+            nativecast(GtkCellView, $_);
+          }
+          when GtkCellLayout {
+            $!cl = $_;                          # GTK::Roles::CellLayout
+            $to-parent = nativecast(GtkWidget, $_);
+            nativecast(GtkCellView, $_);
+          }
+          when GtkWidget | GtkBuildable {
+            $to-parent = $_;
+            nativecast(GtkCellView, $_);
+          }
+
         }
         self.setWidget($to-parent);
       }
@@ -45,20 +62,27 @@ class GTK::CellView is GTK::Widget {
       default {
       }
     }
-    # For GTK::Roles::CellLayout
-    $!cl = nativecast(GtkCellLayout, $!cv);
+    $!or //= nativecast(GtkOrientable, $!cv);   # GTK::Roles::Orientable
+    $!cl //= nativecast(GtkCellLayout, $!cv);   # GTK::Roles::CellLayout
   }
 
   method GTK::Raw::Types::CellView {
     $!cv;
   }
 
-  method new {
+  multi method new (Ancestry :$cellview) {
+    my $o = self.bless(:$cellview);
+    $o.upref;
+    $o;
+  }
+  multi method new {
     my $cellview = gtk_cell_view_new();
     self.bless(:$cellview);
   }
 
-  method new_with_context (GtkCellAreaContext() $context) is also<new-with-context> {
+  method new_with_context (GtkCellAreaContext() $context)
+    is also<new-with-context>
+  {
     my $cellview = gtk_cell_view_new_with_context($context);
     self.bless(:$cellview);
   }
@@ -137,8 +161,8 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( warn "background does not allow reading" );
-        $gv.string;
+        warn "background does not allow reading" if $DEBUG;
+        Nil;
       },
       STORE => -> $, Int() $val is copy {
         $gv.string = $val;
@@ -152,7 +176,7 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('background-gdk', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('background-gdk', $gv) );
         nativecast(GdkColor, $gv.pointer);
       },
       STORE => -> $, GdkColor $val is copy {
@@ -167,7 +191,9 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('background-rgba', $gv); );
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('background-rgba', $gv)
+        );
         nativecast(GTK::Compat::RGBA, $gv.pointer);
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
@@ -182,7 +208,9 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('background-set', $gv); );
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('background-set', $gv)
+        );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -197,7 +225,7 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('cell-area', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('cell-area', $gv) );
         GTK::CellArea.new( nativecast(GtkCellArea, $gv.pointer) );
       },
       STORE => -> $, GtkCellArea() $val is copy {
@@ -212,8 +240,12 @@ class GTK::CellView is GTK::Widget {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('cell-area-context', $gv); );
-        GTK::CellAreaContext.new( nativecast(GtkCellAreaContext, $gv.pointer) );
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('cell-area-context', $gv)
+        );
+        GTK::CellAreaContext.new(
+          nativecast(GtkCellAreaContext, $gv.pointer)
+        );
       },
       STORE => -> $, GtkCellAreaContext() $val is copy {
         $gv.pointer = $val;
@@ -225,7 +257,12 @@ class GTK::CellView is GTK::Widget {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_size_of_row (GtkTreePath() $path, GtkRequisition() $requisition) is also<get-size-of-row> {
+  method get_size_of_row (
+    GtkTreePath() $path,
+    GtkRequisition() $requisition
+  )
+    is also<get-size-of-row>
+  {
     gtk_cell_view_get_size_of_row($!cv, $path, $requisition);
   }
 
@@ -233,11 +270,15 @@ class GTK::CellView is GTK::Widget {
     gtk_cell_view_get_type();
   }
 
-  method set_background_color (GdkColor $color) is also<set-background-color> {
+  method set_background_color (GdkColor $color)
+    is also<set-background-color>
+  {
     gtk_cell_view_set_background_color($!cv, $color);
   }
 
-  method set_background_rgba (GTK::Compat::RGBA() $rgba) is also<set-background-rgba> {
+  method set_background_rgba (GTK::Compat::RGBA() $rgba)
+    is also<set-background-rgba>
+  {
     gtk_cell_view_set_background_rgba($!cv, $rgba);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

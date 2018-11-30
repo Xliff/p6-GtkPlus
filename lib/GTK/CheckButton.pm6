@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::ToggleButton;
 
+my subset Ancestry
+  where GtkCheckButton | GtkToggleButton | GtkButton  | GtkActionable |
+        GtkBin         | GtkContainer    | GtkBuilder | GtkWidget;
+
 class GTK::CheckButton is GTK::ToggleButton {
   has GtkCheckButton $!cb;
 
@@ -33,23 +37,27 @@ class GTK::CheckButton is GTK::ToggleButton {
   method setCheckButton($checkbutton) {
     my $to-parent;
     $!cb = do given $checkbutton {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkCheckButton, $checkbutton);
-      }
-      when GtkCheckButton {
-        $to-parent = nativecast(GtkToggleButton, $_);
-        $checkbutton;
+      when Ancestry {
+        when GtkCheckButton {
+          $to-parent = nativecast(GtkToggleButton, $_);
+          $_;
+        }
+        default {
+          $to-parent = $_;
+          nativecast(GtkCheckButton, $checkbutton);
+        }
       }
     };
     self.setToggleButton($to-parent);
   }
 
+  multi method new (Ancestry $checkbutton) {
+    my $o = self.bless(:$checkbutton);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $checkbutton = gtk_check_button_new();
-    self.bless(:$checkbutton);
-  }
-  multi method new (GtkWidget $checkbutton) {
     self.bless(:$checkbutton);
   }
 
@@ -76,4 +84,3 @@ class GTK::CheckButton is GTK::ToggleButton {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

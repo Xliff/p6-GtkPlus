@@ -10,6 +10,11 @@ use GTK::Raw::Types;
 
 use GTK::CheckButton;
 
+my subset Ancestry
+  where GtkRadioButton | GtkCheckButton | GtkToggleButton | GtkActionable |
+        GtkButton      | GtkBin         | GtkContainer    | GtkWidget;
+
+
 class GTK::RadioButton is GTK::CheckButton {
   has GtkRadioButton $!rb;
 
@@ -22,15 +27,15 @@ class GTK::RadioButton is GTK::CheckButton {
   submethod BUILD(:$radiobutton) {
     my $to-parent;
     given $radiobutton {
-      when GtkRadioButton | GtkWidget {
+      when Ancestry {
         $!rb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkRadioButton, $_);
-          }
           when GtkRadioButton {
             $to-parent = nativecast(GtkCheckButton, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkRadioButton, $_);
           }
         };
         self.setCheckButton($radiobutton);
@@ -42,8 +47,10 @@ class GTK::RadioButton is GTK::CheckButton {
     }
   }
 
-  multi method new (GtkWidget $radiobutton) {
-    self.bless(:$radiobutton);
+  multi method new (Ancestry $radiobutton) {
+    my $o = self.bless(:$radiobutton);
+    $o.upref;
+    $o;
   }
   multi method new(GSList() $group) {
     my $radiobutton = gtk_radio_button_new($group);
@@ -72,17 +79,23 @@ class GTK::RadioButton is GTK::CheckButton {
     $!rb;
   }
 
-  method new_from_widget (GtkRadioButton() $member) is also<new-from-widget> {
+  method new_from_widget (GtkRadioButton() $member)
+    is also<new-from-widget>
+  {
     my $radiobutton = gtk_radio_button_new_from_widget($member);
     self.bless(:$radiobutton);
   }
 
-  method new_with_label (GSList() $group, Str() $label) is also<new-with-label> {
+  method new_with_label (GSList() $group, Str() $label)
+    is also<new-with-label>
+  {
     my $radiobutton = gtk_radio_button_new_with_label($group, $label);
     self.bless(:$radiobutton);
   }
 
-  method new_with_label_from_widget (GtkRadioButton() $member, Str() $label) is also<new-with-label-from-widget> {
+  method new_with_label_from_widget (GtkRadioButton() $member, Str() $label)
+    is also<new-with-label-from-widget>
+  {
     my $radiobutton = gtk_radio_button_new_with_label_from_widget(
       $member,
       $label
@@ -90,7 +103,9 @@ class GTK::RadioButton is GTK::CheckButton {
     self.bless(:$radiobutton);
   }
 
-  method new_with_mnemonic (GSList() $group, Str() $label) is also<new-with-mnemonic> {
+  method new_with_mnemonic (GSList() $group, Str() $label)
+    is also<new-with-mnemonic>
+  {
     my $radiobutton = gtk_radio_button_new_with_mnemonic($group, $label);
     self.bless(:$radiobutton);
   }
@@ -98,7 +113,9 @@ class GTK::RadioButton is GTK::CheckButton {
   method new_with_mnemonic_from_widget (
     GtkRadioButton() $member,
     Str() $label
-  ) is also<new-with-mnemonic-from-widget> {
+  )
+    is also<new-with-mnemonic-from-widget>
+  {
     my $radiobutton = gtk_radio_button_new_with_mnemonic_from_widget(
       $member,
       $label
@@ -112,7 +129,7 @@ class GTK::RadioButton is GTK::CheckButton {
   method group-changed is also<group_changed> {
     self.connect($!rb, 'group-changed');
   }
-  
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -139,4 +156,3 @@ class GTK::RadioButton is GTK::CheckButton {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

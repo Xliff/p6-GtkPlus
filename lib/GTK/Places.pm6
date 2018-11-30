@@ -12,6 +12,10 @@ use GTK::ScrolledWindow;
 
 use GTK::Roles::Signals::Places;
 
+my subset Ancestry
+  where GtkPlacesSidebar | GtkScrolledWindow | GtkBin | GtkContainer |
+        GtkBuilder       | GtkWidget;
+
 class GTK::Places is GTK::ScrolledWindow {
   also does GTK::Roles::Signals::Places;
 
@@ -26,15 +30,15 @@ class GTK::Places is GTK::ScrolledWindow {
   submethod BUILD(:$places) {
     my $to-parent;
     given $places {
-      when GtkPlacesSidebar | GtkWidget {
+      when Ancestry {
         $!ps = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkPlacesSidebar, $_);
-          }
           when GtkPlacesSidebar {
             $to-parent = nativecast(GtkScrolledWindow, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkPlacesSidebar, $_);
           }
         }
         self.setScrolledWindow($to-parent);
@@ -50,11 +54,13 @@ class GTK::Places is GTK::ScrolledWindow {
     self.disconnect-all($_) for %!signals-p;
   }
 
+  multi method new (Ancestry $places) {
+    my $o = self.bless(:$places);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $places = gtk_places_sidebar_new();
-    self.bless(:$places);
-  }
-  multi method new (GtkWidget $places) {
     self.bless(:$places);
   }
 

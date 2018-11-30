@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+my subset Ancestry
+  where GtkSearchBar | GtkBin | GtkContainer | GtkBuildable | GtkWidget;
+
 class GTK::SearchBar is GTK::Bin {
   has GtkSearchBar $!sb;
 
@@ -21,15 +24,15 @@ class GTK::SearchBar is GTK::Bin {
   submethod BUILD(:$searchbar) {
     my $to-parent;
     given $searchbar {
-      when GtkSearchBar | GtkWidget {
+      when Ancestry {
         $!sb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkSearchBar, $_);
-          }
           when GtkSearchBar {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkSearchBar, $_);
           }
         }
         self.setBin($to-parent);
@@ -41,12 +44,13 @@ class GTK::SearchBar is GTK::Bin {
     }
   }
 
+  multi method new (Ancestry $searchbar) {
+    my $o = self.bless(:$searchbar);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $searchbar = gtk_search_bar_new();
-    self.bless(:$searchbar);
-  }
-
-  multi method new (GtkWidget $searchbar) {
     self.bless(:$searchbar);
   }
 
@@ -94,4 +98,3 @@ class GTK::SearchBar is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

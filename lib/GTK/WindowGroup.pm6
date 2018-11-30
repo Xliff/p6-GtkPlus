@@ -7,15 +7,25 @@ use GTK::Compat::Types;
 use GTK::Raw::WindowGroup;
 use GTK::Raw::Types;
 
+use GTK::Roles::References;
+
 class GTK::WindowGroup {
+  also does GTK::Roles::References;
+
   has GtkWindowGroup $!wg;
 
   submethod BUILD(:$group) {
-    $!wg = $group;
+    $!ref = ($!wg = $group).p;
+  }
+
+  submethod DESTROY {
+    self.downref;
   }
 
   multi method new (GtkWindowGroup $group) {
-    self.bless(:$group);
+    my $o = self.bless(:$group);
+    $o.upref;
+    $o;
   }
   multi method new {
     my $group = gtk_window_group_new();
@@ -36,7 +46,7 @@ class GTK::WindowGroup {
     gtk_window_group_add_window($!wg, $window);
   }
 
-  method get_current_device_grab (GdkDevice $device) {
+  method get_current_device_grab (GdkDevice() $device) {
     gtk_window_group_get_current_device_grab($!wg, $device);
   }
 
@@ -49,7 +59,9 @@ class GTK::WindowGroup {
   }
 
   method list_windows {
-    GTK::Compat::GList.new( GtkWindow, gtk_window_group_list_windows($!wg) );
+    GTK::Compat::GList.new(
+      GtkWindow, gtk_window_group_list_windows($!wg)
+    );
   }
 
   method remove_window (GtkWindow() $window) {

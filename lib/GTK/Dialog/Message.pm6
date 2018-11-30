@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -9,6 +10,10 @@ use GTK::Raw::Types;
 use GTK::Box;
 use GTK::Dialog;
 use GTK::Image;
+
+my subset Ancestry
+  where GtkMessageDialog | GtkDialog | GtkWindow | GtkBin | GtkContainer |
+        GtkBuilder       | GtkWidget;
 
 class GTK::Dialog::Message is GTK::Dialog {
   has GtkMessageDialog $!md;
@@ -22,15 +27,15 @@ class GTK::Dialog::Message is GTK::Dialog {
   submethod BUILD(:$dialog) {
     my $to-parent;
     given $dialog {
-      when GtkMessageDialog | GtkWidget {
+      when Ancestry {
         $!md = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkMessageDialog, $_);
-          }
           when GtkMessageDialog {
             $to-parent = nativecast(GtkDialog, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkMessageDialog, $_);
           }
         }
         self.setDialog($to-parent);
@@ -42,7 +47,12 @@ class GTK::Dialog::Message is GTK::Dialog {
     }
   }
 
-  method new (
+  multi method new (Ancestry $dialog) {
+    my $o = self.bless(:$dialog);
+    $o.upref;
+    $o;
+  }
+  multi method new (
     GtkWindow() $parent,
     Int()       $flags,             # GtkDialogFlags flags
     Int()       $type,              # GtkMessageType type
@@ -68,7 +78,7 @@ class GTK::Dialog::Message is GTK::Dialog {
     Int()       $type,              # GtkMessageType type
     Int()       $buttons,           # GtkButtonsType buttons
     Str         $message_format
-  ) {
+  ) is also<new-with-markup> {
     #my @u = ($flags, $type, $buttons);
     #my guint ($f, $t, $b) = self.RESOLVE-UINT(@u);
     my $dialog = gtk_message_dialog_new(
@@ -99,23 +109,23 @@ class GTK::Dialog::Message is GTK::Dialog {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_message_area {
+  method get_message_area is also<get-message-area> {
     GTK::Box( gtk_message_dialog_get_message_area($!md) );
   }
 
-  method format_secondary_markup (Str() $message_format) {
+  method format_secondary_markup (Str() $message_format) is also<format-secondary-markup> {
     gtk_message_dialog_format_secondary_markup($!md, $message_format);
   }
 
-  method format_secondary_text (Str() $message_format) {
+  method format_secondary_text (Str() $message_format) is also<format-secondary-text> {
     gtk_message_dialog_format_secondary_text($!md, $message_format);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_message_dialog_get_type();
   }
 
-  method set_markup (Str() $str) {
+  method set_markup (Str() $str) is also<set-markup> {
     gtk_message_dialog_set_markup($!md, $str);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

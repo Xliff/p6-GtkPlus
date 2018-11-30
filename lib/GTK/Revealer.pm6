@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+my subset Ancestry
+  where GtkRevealer | GtkBin | GtkContainer | GtkBuilder | GtkWidget;
+
 class GTK::Revealer is GTK::Bin {
   has GtkRevealer $!r;
 
@@ -23,13 +26,13 @@ class GTK::Revealer is GTK::Bin {
     given $revealer {
       when GtkRevealer | GtkWidget {
         $!r = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkRevealer, $_);
-          }
           when GtkRevealer {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkRevealer, $_);
           }
         }
         self.setBin($to-parent);
@@ -41,14 +44,15 @@ class GTK::Revealer is GTK::Bin {
     }
   }
 
+  multi method new (GtkWidget $revealer) {
+    my $o = self.bless(:$revealer);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $revealer = gtk_revealer_new();
     self.bless(:$revealer);
   }
-  multi method new (GtkWidget $revealer) {
-    self.bless(:$revealer);
-  }
-
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑

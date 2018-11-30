@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -9,6 +10,10 @@ use GTK::Raw::Types;
 use GTK::Dialog;
 
 use GTK::Roles::FontChooser;
+
+my subset Ancestry
+  where GtkFontChooserDialog | GtkFontChooser | GtkDialog  | GtkWindow |
+        GtkBin               | GtkContainer   | GtkBuilder | GtkWidget;
 
 class GTK::Dialog::FontChooser is GTK::Dialog {
   also does GTK::Roles::FontChooser;
@@ -24,15 +29,20 @@ class GTK::Dialog::FontChooser is GTK::Dialog {
   submethod BUILD(:$dialog) {
     my $to-parent;
     given $dialog {
-      when GtkFontChooserDialog | GtkWidget {
+      when Ancestry {
         $!fcd = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkFontChooserDialog, $_);
-          }
           when GtkFontChooserDialog {
             $to-parent = nativecast(GtkDialog, $_);
             $_;
+          }
+          when GtkFontChooser {
+            $!fc = $_;                          # For GTK::Roles::GtkFontChooser
+            $to-parent = nativecast(GtkDialog, $_);
+            nativecast(GtkFontChooserDialog, $_);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkFontChooserDialog, $_);
           }
         }
         self.setDialog($to-parent);
@@ -42,8 +52,7 @@ class GTK::Dialog::FontChooser is GTK::Dialog {
       default {
       }
     }
-    # For GTK::Roles::GtkFontChooser
-    $!fc = nativecast(GtkFontChooser, $!fcd);
+    $!fc = nativecast(GtkFontChooser, $!fcd);   # For GTK::Roles::GtkFontChooser
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -53,15 +62,17 @@ class GTK::Dialog::FontChooser is GTK::Dialog {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_font_chooser_dialog_get_type();
   }
 
+  multi method new(Ancestry $dialog) {
+    my $o = self.bless(:$dialog);
+    $o.upref;
+    $o;
+  }
   multi method new (Str() $title, GtkWindow() $parent) {
     my $dialog = gtk_font_chooser_dialog_new($title, $parent);
-    self.bless(:$dialog);
-  }
-  multi method new(GtkWidget $dialog) {
     self.bless(:$dialog);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

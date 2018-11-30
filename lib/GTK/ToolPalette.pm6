@@ -33,18 +33,18 @@ class GTK::ToolPalette is GTK::Container {
     given $palette {
       when Ancestry {
         $!tp = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkToolPalette, $palette);
+          when GtkToolPalette  {
+            $to-parent = nativecast(GtkContainer, $palette);
+            $palette;
           }
           when GtkOrientable {
             $!or = $_;
             $to-parent = nativecast(GtkContainer, $palette);
             nativecast(GtkToolPalette, $palette);
           }
-          when GtkToolPalette  {
-            $to-parent = nativecast(GtkContainer, $palette);
-            $palette;
+          default {
+            $to-parent = $_;
+            nativecast(GtkToolPalette, $palette);
           }
         }
         self.setContainer($to-parent);
@@ -58,7 +58,9 @@ class GTK::ToolPalette is GTK::Container {
   }
 
   multi method new (Ancestry $palette) {
-    self.bless(:$palette);
+    my $o = self.bless(:$palette);
+    $o.upref;
+    $o;
   }
   multi method new {
     my $palette = gtk_tool_palette_new();

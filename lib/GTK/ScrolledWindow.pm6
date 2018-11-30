@@ -12,6 +12,10 @@ use GTK::Bin;
 
 use GTK::Roles::Signals::ScrolledWindow;
 
+my subset Ancestry
+  where GtkScrolledWindow | GtkScrollable | GtkBin | GtkContainer |
+        GtkBuilder        | GtkWidget;
+
 class GTK::ScrolledWindow is GTK::Bin {
   also does GTK::Roles::Signals::ScrolledWindow;
 
@@ -26,7 +30,7 @@ class GTK::ScrolledWindow is GTK::Bin {
 
   submethod BUILD(:$scrolled) {
     given $scrolled {
-      when GtkScrolledWindow | GtkWidget {
+      when Ancestry {
         self.setScrolledWindow($scrolled);
       }
       when GTK::ScrolledWindow {
@@ -40,8 +44,25 @@ class GTK::ScrolledWindow is GTK::Bin {
     self.disconnect-all($_) for %!signals-sw;
   }
 
-  multi method new (GtkWidget $scrolled) {
-    self.bless(:$scrolled);
+  method setScrolledWindow($scrolled) {
+    my $to-parent;
+    $!sw = do given $scrolled {
+      when GtkScrolledWindow {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkScrolledWindow, $_);
+      }
+    }
+    self.setBin($to-parent);
+  }
+
+  multi method new (Ancestry $scrolled) {
+    my $o = self.bless(:$scrolled);
+    $o.upref;
+    $o;
   }
   multi method new (
     GtkAdjustment() $hadjustment = GtkAdjustment,
@@ -49,25 +70,6 @@ class GTK::ScrolledWindow is GTK::Bin {
   ) {
     my $scrolled = gtk_scrolled_window_new($hadjustment, $vadjustment);
     self.bless(:$scrolled);
-  }
-
-  method setScrolledWindow($scrolled) {
-    my $to-parent;
-    given $scrolled {
-      when GtkScrolledWindow | GtkWidget {
-        $!sw = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkScrolledWindow, $_);
-          }
-          when GtkScrolledWindow {
-            $to-parent = nativecast(GtkBin, $_);
-            $_;
-          }
-        }
-        self.setBin($to-parent);
-      }
-    }
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -120,6 +122,20 @@ class GTK::ScrolledWindow is GTK::Bin {
       },
       STORE => sub ($, GtkAdjustment() $hadjustment is copy) {
         gtk_scrolled_window_set_hadjustment($!sw, $hadjustment);
+      }
+    );
+  }
+
+  method adjustment is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        (self.hadjustment, self.vadjustment);
+      },
+      STORE => -> $, *@a {
+        die qq:to/D/.chomp unless @a.elems == 2;
+Invalid number of arguments passed to GTK::ScrolledWindow.adjustment
+D
+        (self.hadjustment, self.vadjustment) = @a;
       }
     );
   }
@@ -247,7 +263,9 @@ class GTK::ScrolledWindow is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_with_viewport (GtkWidget() $child) is also<add-with-viewport> {
+  method add_with_viewport (GtkWidget() $child)
+    is also<add-with-viewport>
+  {
     gtk_scrolled_window_add_with_viewport($!sw, $child);
   }
 
@@ -292,7 +310,9 @@ class GTK::ScrolledWindow is GTK::Bin {
     gtk_scrolled_window_get_vscrollbar($!sw);
   }
 
-  method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy) is also<set-policy> {
+  method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy)
+    is also<set-policy>
+  {
     my @u = ($hscrollbar_policy, $vscrollbar_policy);
     my uint32 ($hp, $vp) = self.RESOLVE-UINT(@u);
     gtk_scrolled_window_set_policy($!sw, $hp, $vp);

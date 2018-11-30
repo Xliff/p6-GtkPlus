@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::ToolButton;
 
+my subset Ancestry
+  where GtkMenuToolButton | GtkToolButton | GtkActionable | GtkToolItem |
+        GtkBin            | GtkContainer  | GtkBuilder    | GtkWidget;
+
 class GTK::MenuToolButton is GTK::ToolButton {
   has GtkMenuToolButton $!mtb;
 
@@ -21,15 +25,15 @@ class GTK::MenuToolButton is GTK::ToolButton {
   submethod BUILD(:$menutoolbutton) {
     my $to-parent;
     given $menutoolbutton {
-      when GtkMenuToolButton | GtkToolItem | GtkWidget {
+      when Ancestry {
         $!mtb = do {
-          when GtkWidget | GtkToolItem {
-            $to-parent = $_;
-            nativecast(GtkMenuToolButton, $_);
-          }
           when GtkMenuToolButton {
             $to-parent = nativecast(GtkToolButton, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkMenuToolButton, $_);
           }
         }
         self.setToolButton($to-parent);
@@ -41,10 +45,12 @@ class GTK::MenuToolButton is GTK::ToolButton {
     }
   }
 
-  multi method new (GtkWidget $menutoolbutton) {
-    self.bless(:$menutoolbutton);
+  multi method new (Ancestry $menutoolbutton) {
+    my $o = self.bless(:$menutoolbutton);
+    $o.upref;
+    $o;
   }
-  multi method new (GtkWidget $widget, gchar $label) {
+  multi method new (GtkWidget() $widget, Str() $label) {
     my $menutoolbutton = gtk_menu_tool_button_new($widget, $label);
     self.bless(:$menutoolbutton);
   }
@@ -77,14 +83,17 @@ class GTK::MenuToolButton is GTK::ToolButton {
     gtk_menu_tool_button_get_type();
   }
 
-  method set_arrow_tooltip_markup (gchar $markup) is also<set-arrow-tooltip-markup> {
+  method set_arrow_tooltip_markup (Str() $markup)
+    is also<set-arrow-tooltip-markup>
+  {
     gtk_menu_tool_button_set_arrow_tooltip_markup($!mtb, $markup);
   }
 
-  method set_arrow_tooltip_text (gchar $text) is also<set-arrow-tooltip-text> {
+  method set_arrow_tooltip_text (Str() $text)
+    is also<set-arrow-tooltip-text>
+  {
     gtk_menu_tool_button_set_arrow_tooltip_text($!mtb, $text);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

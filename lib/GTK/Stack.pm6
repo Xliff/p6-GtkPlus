@@ -10,6 +10,9 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::StackSidebar;
 
+my subset Ancestry
+  where GtkStack | GtkContainer | GtkBuildable | GtkWidget;
+
 class GTK::Stack is GTK::Container {
   has GtkStack $!s;
   has GtkStackSwitcher $!ss;
@@ -26,15 +29,15 @@ class GTK::Stack is GTK::Container {
   submethod BUILD(:$stack, :$switcher, :$sidebar) {
     my $to-parent;
     given $stack {
-      when GtkStack | GtkWidget {
+      when Ancestry {
         $!s = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkStack, $_);
-          }
           when GtkStack  {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkStack, $_);
           }
         }
         self.setContainer($to-parent);
@@ -55,12 +58,14 @@ class GTK::Stack is GTK::Container {
     }
   }
 
+  multi method new (Ancestry $stack) {
+    my $o = self.bless(:$stack);
+    $o.upref;
+    $o;
+  }
   multi method new (GtkStack $stack) {
     my $switcher = True;
     self.bless(:$stack, :$switcher);
-  }
-  multi method new (GtkWidget $stack) {
-    self.bless(:$stack);
   }
   multi method new(:$switcher, :$sidebar) {
     die 'Please use $switcher OR $sidebar when creating a GTK::Stack'
@@ -237,7 +242,9 @@ class GTK::Stack is GTK::Container {
   method set_visible_child_full (
     Str() $name,
     Int() $transition
-  ) is also<set-visible-child-full> {
+  )
+    is also<set-visible-child-full>
+  {
     my uint32 $t = self.RESOLVE-UINT($transition);
     gtk_stack_set_visible_child_full($!s, $name, $t);
   }

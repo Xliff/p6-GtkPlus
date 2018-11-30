@@ -10,6 +10,10 @@ use GTK::Raw::Types;
 
 use GTK::MenuItem;
 
+my subset Ancestry
+  where GtkRadioMenuItem | GtkCheckMenuItem | GtkMenuItem | GtkActionable |
+        GtkBin           | GtkContainer     | GtkBuilder  | GtkWidget;
+
 class GTK::RadioMenuItem is GTK::MenuItem {
   has GtkRadioMenuItem $!rmi;
 
@@ -22,18 +26,18 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   submethod BUILD(:$radiomenu) {
     my $to-parent;
     given $radiomenu {
-      when GtkRadioMenuItem | GtkWidget {
+      when Ancestry {
         $!rmi = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkRadioMenuItem, $_);
-          }
           when GtkRadioMenuItem {
             $to-parent = nativecast(GtkMenuItem, $_);
             $_;
           }
+          default {
+            $to-parent = $_;
+            nativecast(GtkRadioMenuItem, $_);
+          }
         }
-        self.setParent($to-parent);
+        self.setMenuItem($to-parent);
       }
       when GTK::RadioMenuItem {
       }
@@ -51,8 +55,10 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     $!rmi;
   }
 
-  multi method new (GtkWidget $radiomenu) {
-    self.bless(:$radiomenu);
+  multi method new (Ancestry $radiomenu) {
+    my $o = self.bless(:$radiomenu);
+    $o.upref;
+    $o;
   }
   multi method new(GSList() $group, Str() :$label, :$mnemonic = False) {
     my $radiomenu;
@@ -67,20 +73,26 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     self.bless(:$radiomenu);
   }
 
-  method new_from_widget (GtkRadioMenuItem() $group) is also<new-from-widget> {
+  method new_from_widget (GtkRadioMenuItem() $group)
+    is also<new-from-widget>
+  {
     my $radiomenu = gtk_radio_menu_item_new_from_widget($group);
     self.bless(:$radiomenu);
   }
 
-  method new_with_label (GSList() $group, gchar $label) is also<new-with-label> {
+  method new_with_label (GSList() $group, Str() $label)
+    is also<new-with-label>
+  {
     my $radiomenu = gtk_radio_menu_item_new_with_label($group, $label);
     self.bless(:$radiomenu);
   }
 
   method new_with_label_from_widget (
     GtkRadioMenuItem() $group,
-    gchar $label
-  ) is also<new-with-label-from-widget> {
+    Str() $label
+  )
+    is also<new-with-label-from-widget>
+  {
     my $radiomenu = gtk_radio_menu_item_new_with_label_from_widget(
       $group,
       $label
@@ -88,15 +100,19 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     self.bless(:$radiomenu);
   }
 
-  method new_with_mnemonic (GSList() $group, gchar $label) is also<new-with-mnemonic> {
+  method new_with_mnemonic (GSList() $group, Str() $label)
+    is also<new-with-mnemonic>
+  {
     my $radiomenu = gtk_radio_menu_item_new_with_mnemonic($group, $label);
     self.bless(:$radiomenu);
   }
 
   method new_with_mnemonic_from_widget (
     GtkRadioMenuItem() $group,
-    gchar $label
-  ) is also<new-with-mnemonic-from-widget> {
+    Str() $label
+  )
+    is also<new-with-mnemonic-from-widget>
+  {
     my $radiomenu = gtk_radio_menu_item_new_with_mnemonic_from_widget(
       $group,
       $label
@@ -111,7 +127,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   method group-changed is also<group_changed> {
     self.connect($!rmi, 'group-changed');
   }
-  
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓\
@@ -138,4 +154,3 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -12,17 +12,19 @@ use GTK::Raw::Types;
 
 use GTK::IconInfo;
 
+use GTK::Roles::References;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 class GTK::IconTheme {
+  also does GTK::Roles::References;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkIconTheme $!it;
 
   submethod BUILD(:$theme) {
-    $!it = $theme;
+    $!ref = ($!it = $theme).p;
   }
 
   submethod DESTROY {
@@ -30,7 +32,9 @@ class GTK::IconTheme {
   }
 
   multi method new (GtkIconTheme $theme) {
-    self.bless(:$theme);
+    my $o = self.bless(:$theme);
+    $o.upref;
+    $o;
   }
   multi method new {
     my $theme = gtk_icon_theme_new();

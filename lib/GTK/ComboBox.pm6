@@ -78,7 +78,9 @@ class GTK::ComboBox is GTK::Bin {
     self.bless(:$combobox);
   }
   multi method new (Ancestry $combobox) {
-    self.bless(:$combobox);
+    my $o = self.bless(:$combobox);
+    $o.upref;
+    $o;
   }
 
   method new_with_area(GtkCellArea() $area) is also<new-with-area> {

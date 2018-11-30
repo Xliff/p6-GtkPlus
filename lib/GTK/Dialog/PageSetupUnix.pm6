@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -11,7 +12,8 @@ use GTK::PageSetup;
 use GTK::PrintSettings;
 
 my subset Ancestry
-  where GtkPageSetupUnixDialog | GtkDialog | GtkBuildable | GtkWidget;
+  where GtkPageSetupUnixDialog | GtkDialog    | GtkWindow | GtkBin | 
+        GtkContainer           | GtkBuildable | GtkWidget;
 
 class GTK::Dialog::PageSetupUnix is GTK::Dialog {
   has GtkPageSetupUnixDialog $!psd;
@@ -27,13 +29,13 @@ class GTK::Dialog::PageSetupUnix is GTK::Dialog {
     given $dialog {
       when Ancestry {
         $!psd = do {
-          when GtkWidget | GtkDialog {
-            $to-parent = $_;
-            nativecast(GtkPageSetupUnixDialog, $_);
-          }
           when GtkPageSetupUnixDialog {
             $to-parent = nativecast(GtkDialog, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkPageSetupUnixDialog, $_);
           }
         }
         self.setDialog($to-parent);
@@ -45,18 +47,21 @@ class GTK::Dialog::PageSetupUnix is GTK::Dialog {
     }
   }
 
+  multi method new (Ancestry $dialog) {
+    my $o = self.bless(:$dialog);
+    $o.upref;
+    $o;
+  }
   multi method new (Str() $title, GtkWindow() $parent) {
     gtk_page_setup_unix_dialog_new($title, $parent);
-  }
-  multi method new (Ancestry $dialog) {
-    self.bless(:$dialog);
+
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method page_setup is rw {
+  method page_setup is rw is also<page-setup> {
     Proxy.new(
       FETCH => sub ($) {
         GTK::PageSetup.new(
@@ -69,7 +74,7 @@ class GTK::Dialog::PageSetupUnix is GTK::Dialog {
     );
   }
 
-  method print_settings is rw {
+  method print_settings is rw is also<print-settings> {
     Proxy.new(
       FETCH => sub ($) {
         GTK::PrintSettings(
@@ -90,7 +95,7 @@ class GTK::Dialog::PageSetupUnix is GTK::Dialog {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_page_setup_unix_dialog_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

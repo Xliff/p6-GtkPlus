@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Window;
 
+my subset Ancestry
+  where GtkOffscreen | GtkWindow | GtkBin | GtkContainer | GtkBuildable |
+        GtkWidget;
+
 class GTK::Offscreen is GTK::Window {
   has GtkOffscreen $!ow;
 
@@ -21,15 +25,15 @@ class GTK::Offscreen is GTK::Window {
   submethod BUILD(:$offscreen) {
     my $to-parent;
     given $offscreen {
-      when GtkOffscreen | GtkWidget {
+      when Ancestry {
         $!ow = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkOffscreen, $_);
-          }
           when GtkOffscreen  {
             $to-parent = nativecast(GtkWindow, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkOffscreen, $_);
           }
         }
         self.setParent($to-parent);
@@ -41,11 +45,11 @@ class GTK::Offscreen is GTK::Window {
     }
   }
 
-  multi method new {
-    my $offscreen = gtk_offscreen_window_new();
+  multi method new (Ancestry $offscreen) {
     self.bless(:$offscreen);
   }
-  multi method new (GtkWidget $offscreen) {
+  multi method new {
+    my $offscreen = gtk_offscreen_window_new();
     self.bless(:$offscreen);
   }
 
@@ -70,4 +74,3 @@ class GTK::Offscreen is GTK::Window {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

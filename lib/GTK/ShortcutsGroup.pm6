@@ -9,7 +9,8 @@ use GTK::Raw::Types;
 use GTK::Box;
 use GTK::SizeGroup;
 
-my subset ParentChild where GtkShortcutsGroup | GtkWidget;
+my subset Ancestry where GtkShortcutsGroup | GtkBox       | GtkOrientable |
+                         GtkContainer      | GtkBuildable | GtkWidget;
 
 class GTK::ShortcutsGroup is GTK::Box {
   has GtkShortcutsGroup $!sg;
@@ -23,15 +24,15 @@ class GTK::ShortcutsGroup is GTK::Box {
   submethod BUILD(:$group) {
     my $to-parent;
     given $group {
-      when ParentChild {
+      when Ancestry {
         $!sg = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkShortcutsGroup, $_);
-          }
-          when GtkShortcutsGroup  {
+          when GtkShortcutsGroup {
             $to-parent = nativecast(GtkBox, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkShortcutsGroup, $_);
           }
         }
         self.setBox($to-parent);
@@ -43,8 +44,10 @@ class GTK::ShortcutsGroup is GTK::Box {
     }
   }
 
-  method new (ParentChild $group) {
-    self.bless(:$group);
+  method new (Ancestry $group) {
+    my $o = self.bless(:$group);
+    $o.upref;
+    $o;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -60,8 +63,8 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( warn "accel-size-group does not allow reading" );
-        GTK::SizeGroup.new( nativecast(GtkSizeGroup, $gv.pointer ) );
+        warn 'accel-size-group does not allow reading' if $DEBUG;
+        Nil;
       },
       STORE => -> $, GtkSizeGroup() $val is copy {
         $gv.pointer = $val;
@@ -75,11 +78,11 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv) );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
-        warn "height does not allow writing"
+        warn 'height does not allow writing'
       }
     );
   }
@@ -89,7 +92,7 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -104,8 +107,8 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( warn "title-size-group does not allow reading" );
-        GTK::SizeGroup.new( nativecast(GtkSizeGroup, $gv.pointer) );
+        warn 'title-size-group does not allow reading' if $DEBUG;
+        Nil;
       },
       STORE => -> $, GtkSizeGroup() $val is copy {
         $gv.poiner = $val;
@@ -119,7 +122,7 @@ class GTK::ShortcutsGroup is GTK::Box {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('view', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('view', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -135,4 +138,3 @@ class GTK::ShortcutsGroup is GTK::Box {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

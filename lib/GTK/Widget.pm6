@@ -20,6 +20,7 @@ use GTK::Raw::Widget;
 use GTK::Roles::Buildable;
 use GTK::Roles::Data;
 use GTK::Roles::Properties;
+use GTK::Roles::References;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
@@ -30,6 +31,7 @@ class GTK::Widget {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Data;
   also does GTK::Roles::Properties;
+  also does GTK::Roles::References;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
@@ -67,10 +69,6 @@ class GTK::Widget {
     $!w;
   }
 
-  # We use these for inc/dec ops
-  method upref   {   g_object_ref($!w.p) }
-  method downref { g_object_unref($!w.p) }
-
   method setWidget($widget) {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
@@ -86,7 +84,8 @@ class GTK::Widget {
     };
     $!prop = nativecast(GObject, $!w);    # GTK::Roles::Properties
     $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
-    $!data = $!w.p;                       # GTK::Roles::Data
+    $!ref = $!data = $!w.p;               # GTK::Roles::Data
+                                          # GTK::Roles::Reference
   }
 
   # REALLY EXPERIMENTAL attempt to create a global object creation

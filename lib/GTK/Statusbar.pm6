@@ -7,11 +7,15 @@ use GTK::Compat::Types;
 use GTK::Raw::Statusbar;
 use GTK::Raw::Types;
 
-use GTK::Bin;
+use GTK::Box;
 
 use GTK::Roles::Signals::Statusbar;
 
-class GTK::Statusbar is GTK::Bin {
+my subset Ancestry
+  where GtkStatusbar | GtkBox | GtkOrientable | GtkContainer | GtkBuilder |
+        GtkWidget;
+
+class GTK::Statusbar is GTK::Box {
   also does GTK::Roles::Signals::Statusbar;
 
   has GtkStatusbar $!sb;
@@ -25,18 +29,18 @@ class GTK::Statusbar is GTK::Bin {
   submethod BUILD(:$statusbar) {
     my $to-parent;
     given $statusbar {
-      when GtkStatusbar | GtkWidget {
+      when Ancestry {
         $!sb = do {
           when GtkStatusbar {
             $to-parent = nativecast(GtkBin, $_);
             $_;
           }
-          when GtkWidget {
+          default {
             $to-parent = $_;
             nativecast(GtkStatusbar, $_);
           }
         };
-        self.setBin($to-parent);
+        self.setBox($to-parent);
       }
       when GTK::Statusbar {
       }
@@ -49,12 +53,14 @@ class GTK::Statusbar is GTK::Bin {
     self.disconnect-all($_) for %!signals-sb;
   }
 
+  multi method new (GtkWidget $statusbar) {
+    my $o = self.bless(:$statusbar);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $statusbar = gtk_statusbar_new();
     self.bless(:$statusbar)
-  }
-  multi method new (GtkWidget $statusbar) {
-    self.bless(:$statusbar);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -77,7 +83,9 @@ class GTK::Statusbar is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_context_id (Str() $context_description) is also<get-context-id> {
+  method get_context_id (Str() $context_description)
+    is also<get-context-id>
+  {
     gtk_statusbar_get_context_id($!sb, $context_description);
   }
 
@@ -112,4 +120,3 @@ class GTK::Statusbar is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -11,7 +11,8 @@ use GTK::Bin;
 
 use GTK::Roles::Scrollable;
 
-my subset ParentChild where GtkViewport | GtkWidget;
+my subset Ancestry
+  where GtkViewport | GtkScrollable | GtkContainer | GtkBuilder | GtkWidget;
 
 class GTK::Viewport is GTK::Bin {
   also does GTK::Roles::Scrollable;
@@ -27,15 +28,20 @@ class GTK::Viewport is GTK::Bin {
   submethod BUILD(:$viewport) {
     my $to-parent;
     given $viewport {
-      when ParentChild {
+      when Ancestry {
         $!v = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkViewport, $_);
-          }
           when GtkViewport {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          when GtkScrollable {
+            $!s = $_;                         # GTK::Roles::Scrollable
+            $to-parent = nativecast(GtkBin, $_);
+            nativecast(GtkViewport, $_);
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkViewport, $_);
           }
         }
         self.setBin($to-parent);
@@ -45,11 +51,13 @@ class GTK::Viewport is GTK::Bin {
       default {
       }
     }
-    $!s = nativecast(GtkScrollable, $!v)    # GTK::Roles::Scrollable
+    $!s //= nativecast(GtkScrollable, $!v)    # GTK::Roles::Scrollable
   }
 
-  multi method new (ParentChild $viewport) {
-    self.bless(:$viewport);
+  multi method new (Ancestry $viewport) {
+    my $o = self.bless(:$viewport);
+    $o.upref;
+    $o;
   }
   multi method new (
     GtkAdjustment() $hadjustment,
@@ -96,4 +104,3 @@ class GTK::Viewport is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

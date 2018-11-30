@@ -65,7 +65,9 @@ class GTK::Box is GTK::Container {
   }
 
   multi method new (Ancestry $box) {
-    self.bless(:$box);
+    my $o = self.bless(:$box);
+    $o.upref;
+    $o;
   }
   multi method new (
     # Default orientation established from Glade.

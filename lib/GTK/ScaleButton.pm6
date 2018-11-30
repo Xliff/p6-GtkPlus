@@ -11,6 +11,10 @@ use GTK::Button;
 
 use GTK::Roles::Orientable;
 
+my subset Ancestry
+  where GtkScaleButton | GtkOrientable | GtkButton | GtkActionable | GtkBin |
+        GtkContainer   | GtkBuilder    | GtkWidget;
+
 class GTK::ScaleButton is GTK::Button {
   also does GTK::Roles::Orientable;
 
@@ -24,7 +28,7 @@ class GTK::ScaleButton is GTK::Button {
 
   submethod BUILD(:$button) {
     given $button {
-      when GtkScaleButton | GtkWidget {
+      when Ancestry {
         self.setScaleButton($button);
       }
       when GTK::ScaleButton {
@@ -32,12 +36,33 @@ class GTK::ScaleButton is GTK::Button {
       default {
       }
     }
-    # For GTK::Roles::Orientable
-    $!or = nativecast(GtkOrientable, $!sb);
   }
 
-  multi method new (GtkWidget $button) {
-    self.bless(:$button);
+  method setScaleButton($button) {
+    my $to-parent;
+    $!sb = do given $button {
+      when GtkScaleButton {
+        $to-parent = nativecast(GtkButton, $_);
+        $_;
+      }
+      when GtkOrientable {
+        $!or = $_;
+        $to-parent = nativecast(GtkButton, $_);
+        nativecast(GtkScaleButton, $_);
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkScaleButton, $_);
+      }
+    };
+    self.setButton($to-parent);
+    $!or //= nativecast(GtkOrientable, $!sb);     # GTK::Roles::Orientable
+  }
+
+  multi method new (Ancestry $button) {
+    my $o = self.bless(:$button);
+    $o.upref;
+    $o;
   }
   multi method new (
     Int() $size,
@@ -51,21 +76,6 @@ class GTK::ScaleButton is GTK::Button {
     my GStrv $i = self.RESOLVE-GSTRV(@icons);
     my $button = gtk_scale_button_new($s, $mn, $mx, $st, $i);
     self.bless(:$button);
-  }
-
-  method setScaleButton($button) {
-    my $to-parent;
-    $!sb = do given $button {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkScaleButton, $_);
-      }
-      when GtkScaleButton {
-        $to-parent = nativecast(GtkButton, $_);
-        $_;
-      }
-    };
-    self.setButton($to-parent);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -140,4 +150,3 @@ class GTK::ScaleButton is GTK::Button {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

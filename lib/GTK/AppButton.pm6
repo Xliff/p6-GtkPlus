@@ -11,7 +11,9 @@ use GTK::ComboBox;
 
 use GTK::Roles::AppChooser;
 
-my subset Ancestry where GtkAppChooserButton | GtkAppChooser | GtkWidget;
+my subset Ancestry
+  where GtkAppChooserButton | GtkAppChooser | GtkComboBox | GtkBin |
+        GtkContainer        | GtkBuilder    | GtkWidget;
 
 class GTK::AppButton is GTK::ComboBox {
   also does GTK::Roles::AppChooser;
@@ -38,7 +40,7 @@ class GTK::AppButton is GTK::ComboBox {
             $to-parent = nativecast(GtkComboBox, $_);
             nativecast(GtkAppChooserButton, $_);
           }
-          when GtkWidget {
+          default {
             $to-parent = $_;
             nativecast(GtkAppChooserButton, $_);
           }
@@ -54,11 +56,13 @@ class GTK::AppButton is GTK::ComboBox {
     $!ac //= nativecast(GtkAppChooser, $!acb);
   }
 
+  multi method new (Ancestry $appbutton) {
+    my $o = self.bless(:$appbutton);
+    $o.upref;
+    $o;
+  }
   multi method new(Str $content-type) {
     my $appbutton = gtk_app_chooser_button_new($content-type);
-    self.bless(:$appbutton);
-  }
-  multi method new (Ancestry $appbutton) {
     self.bless(:$appbutton);
   }
 
@@ -110,7 +114,9 @@ class GTK::AppButton is GTK::ComboBox {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_custom_item (Str() $name, Str() $label, GIcon $icon) is also<append-custom-item> {
+  method append_custom_item (Str() $name, Str() $label, GIcon $icon)
+    is also<append-custom-item>
+  {
     gtk_app_chooser_button_append_custom_item(
       $!acb, $name, $label, $icon
     );
@@ -124,10 +130,11 @@ class GTK::AppButton is GTK::ComboBox {
     gtk_app_chooser_button_get_type();
   }
 
-  method set_active_custom_item (Str() $name) is also<set-active-custom-item> {
+  method set_active_custom_item (Str() $name)
+    is also<set-active-custom-item>
+  {
     gtk_app_chooser_button_set_active_custom_item($!acb, $name);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

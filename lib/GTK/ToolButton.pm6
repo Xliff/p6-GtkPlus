@@ -58,14 +58,16 @@ class GTK::ToolButton is GTK::ToolItem {
       }
     }
     self.setToolItem($to-parent);
-    $!action //= nativecast(GtkActionable, $!tb);   GTK::Roles::Actionable
+    $!action //= nativecast(GtkActionable, $!tb);   # GTK::Roles::Actionable
   }
 
+  multi method new (Ancestry $toolbutton) {
+    my $o = self.bless(:$toolbutton);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $toolbutton = gtk_tool_button_new(GtkWidget, Str);
-    self.bless(:$toolbutton);
-  }
-  multi method new (Ancestry $toolbutton) {
     self.bless(:$toolbutton);
   }
   multi method new (GtkWidget() $widget, Str() $label) {

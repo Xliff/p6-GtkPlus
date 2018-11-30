@@ -65,13 +65,16 @@ class GTK::Button is GTK::Bin {
     $!action //= nativecast(GtkActionable, $!b);        # GTK::Roles::Actionable
   }
 
+  multi method new(Ancestry $button) {
+    my $o = self.bless(:$button);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $button = gtk_button_new();
     self.bless(:$button);
   }
-  multi method new(Ancestry $button) {
-    self.bless(:$button);
-  }
+
 
   method new_with_mnemonic (GTK::Button:U: Str() $label)
     is also<new-with-mnemonic>

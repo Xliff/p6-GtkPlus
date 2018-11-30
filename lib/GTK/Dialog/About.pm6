@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -8,11 +9,11 @@ use GTK::Raw::Types;
 
 use GTK::Dialog;
 
-use GTK::Roles::Signals::Generic;
+my subset Ancestry
+  where GtkAboutDialog | GtkDialog | GtkWindow | GtkBin | GtkContainer |
+        GtkBuilder     | GtkWidget;
 
 class GTK::Dialog::About is GTK::Dialog {
-  also does GTK::Roles::Signals::Generic;
-
   has GtkAboutDialog $!ad;
 
   method bless(*%attrinit) {
@@ -25,15 +26,15 @@ class GTK::Dialog::About is GTK::Dialog {
   submethod BUILD(:$about) {
     my $to-parent;
     given $about {
-      when GtkAboutDialog | GtkWidget {
+      when Ancestry {
         $!ad = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkAboutDialog, $_);
-          }
           when GtkAboutDialog  {
             $to-parent = nativecast(GtkDialog, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkAboutDialog, $_);
           }
         }
         self.setDialog($to-parent);
@@ -45,15 +46,13 @@ class GTK::Dialog::About is GTK::Dialog {
     }
   }
 
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals;
+  multi method new (Ancestry $about) {
+    my $o = self.bless(:$about);
+    $o.upref;
+    $o;
   }
-
   multi method new {
     my $about = gtk_about_dialog_new();
-    self.bless(:$about);
-  }
-  multi method new (GtkWidget $about) {
     self.bless(:$about);
   }
 
@@ -61,7 +60,7 @@ class GTK::Dialog::About is GTK::Dialog {
 
   # Is originally:
   # GtkAboutDialog, gchar, gpointer --> gboolean
-  method activate-link {
+  method activate-link is also<activate_link> {
     self.connect-activate-link($!ad);
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -73,8 +72,10 @@ class GTK::Dialog::About is GTK::Dialog {
         gtk_about_dialog_get_artists($!ad);
       },
       STORE => sub ($, $artists is copy) {
-        die "Cannot accept { $artists.^name } for GTK::Dialog::About.artists"
-          unless $artists ~~ (Str, Array).any;
+        die qq:to/D/ unless $artists ~~ (Str, Array).any;
+Cannot accept { $artists.^name } for GTK::Dialog::About.artists
+D
+
         my $a = self.RESOLVE-GSTRV($artists);
         gtk_about_dialog_set_artists($!ad, $a);
       }
@@ -87,8 +88,10 @@ class GTK::Dialog::About is GTK::Dialog {
         gtk_about_dialog_get_authors($!ad);
       },
       STORE => sub ($, $authors is copy) {
-        die "Cannot accept { $authors.^name } for GTK::Dialog::About.authors"
-          unless $authors ~~ (Str, Array).any;
+        die qq:to/D/ unless $authors ~~ (Str, Array).any;
+Cannot accept { $authors.^name } for GTK::Dialog::About.authors
+D
+
         my $a = self.RESOLVE-GSTRV($authors);
         gtk_about_dialog_set_authors($!ad, $a);
       }
@@ -123,8 +126,10 @@ class GTK::Dialog::About is GTK::Dialog {
         gtk_about_dialog_get_documenters($!ad);
       },
       STORE => sub ($, $documenters is copy) {
-        die "Cannot accept { $documenters.^name } for GTK::Dialog::About.documenters"
-          unless $documenters ~~ (Str, Array).any;
+        die qq:to/D/.chomp unless $documenters ~~ (Str, Array).any;
+Cannot accept { $documenters.^name } for GTK::Dialog::About.documenters
+D
+
         my $d = self.RESOLVE-GSTRV($documenters);
         gtk_about_dialog_set_documenters($!ad, $d);
       }
@@ -142,7 +147,7 @@ class GTK::Dialog::About is GTK::Dialog {
     );
   }
 
-  method license_type is rw {
+  method license_type is rw is also<license-type> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_about_dialog_get_license_type($!ad);
@@ -165,7 +170,7 @@ class GTK::Dialog::About is GTK::Dialog {
     );
   }
 
-  method logo_icon_name is rw {
+  method logo_icon_name is rw is also<logo-icon-name> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_about_dialog_get_logo_icon_name($!ad);
@@ -176,7 +181,7 @@ class GTK::Dialog::About is GTK::Dialog {
     );
   }
 
-  method program_name is rw {
+  method program_name is rw is also<program-name> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_about_dialog_get_program_name($!ad);
@@ -187,7 +192,7 @@ class GTK::Dialog::About is GTK::Dialog {
     );
   }
 
-  method translator_credits is rw {
+  method translator_credits is rw is also<translator-credits> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_about_dialog_get_translator_credits($!ad);
@@ -222,7 +227,7 @@ class GTK::Dialog::About is GTK::Dialog {
     );
   }
 
-  method website_label is rw {
+  method website_label is rw is also<website-label> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_about_dialog_get_website_label($!ad);
@@ -233,7 +238,7 @@ class GTK::Dialog::About is GTK::Dialog {
     );
   }
 
-  method wrap_license is rw {
+  method wrap_license is rw is also<wrap-license> {
     Proxy.new(
       FETCH => sub ($) {
         gtk_about_dialog_get_wrap_license($!ad);
@@ -247,12 +252,14 @@ class GTK::Dialog::About is GTK::Dialog {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_credit_section (Str() $section_name, @people) {
+  method add_credit_section (Str() $section_name, @people)
+    is also<add-credit-section>
+  {
     my $ac = self.RESOLVE-GSTR(@people);
     gtk_about_dialog_add_credit_section($!ad, $section_name, $ac);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_about_dialog_get_type();
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

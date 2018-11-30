@@ -282,3 +282,51 @@ sub gtk_container_child_set_uint(
   is native(gtk)
   is export
   { * }
+
+sub gtk_container_child_get_int(
+  GtkContainer $container,
+  GtkWidget $child,
+  Str $prop,
+  gint $v is rw,
+  Str
+)
+  is symbol('gtk_container_child_get')
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_container_child_set_int(
+  GtkContainer $container,
+  GtkWidget $child,
+  Str $prop,
+  gint $v,
+  Str
+)
+  is symbol('gtk_container_child_set')
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_container_child_get_str(
+  GtkContainer $container,
+  GtkWidget $child,
+  Str $prop,
+  Str $v,
+  Str
+)
+  is symbol('gtk_container_child_get')
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_container_child_set_str(
+  GtkContainer $container,
+  GtkWidget $child,
+  Str $prop,
+  Str $v,
+  Str
+)
+  is symbol('gtk_container_child_set')
+  is native(gtk)
+  is export
+  { * }

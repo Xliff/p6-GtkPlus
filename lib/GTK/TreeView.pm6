@@ -16,8 +16,11 @@ use GTK::TreeStore;
 use GTK::TreeViewColumn;
 
 use GTK::Roles::Scrollable;
-use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::TreeView;
+
+my subset Ancestry
+  where GtkTreeView | GtkScrollable | GtkContainer | GtkBuildable |
+        GtkWidget;
 
 sub EXPORT {
   %(
@@ -48,15 +51,20 @@ class GTK::TreeView is GTK::Container {
   submethod BUILD(:$treeview) {
     my $to-parent;
     given $treeview {
-      when GtkTreeView | GtkWidget {
+      when Ancestry {
         $!tv = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkTreeView, $_);
-          }
           when GtkTreeView {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          when GtkScrollable {
+            $!s = $_;                           # GTK::Roles::Scrollable
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkTreeView, $_);
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkTreeView, $_);
           }
         }
         self.setContainer($to-parent);
@@ -66,14 +74,19 @@ class GTK::TreeView is GTK::Container {
       default {
       }
     }
-    $!s = nativecast(GtkScrollable, $!tv);    # GTK::Roles::Scrollable
+    $!s //= nativecast(GtkScrollable, $!tv);    # GTK::Roles::Scrollable
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-tv;
   }
 
-  method new {
+  multi method new (Ancestry $treeview) {
+    my $o = self.bless(:$treeview);
+    $o.upref;
+    $o;
+  }
+  multi method new {
     my $treeview = gtk_tree_view_new();
     self.bless(:$treeview);
   }
@@ -433,7 +446,9 @@ class GTK::TreeView is GTK::Container {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_column (GtkTreeViewColumn() $column) is also<append-column> {
+  method append_column (GtkTreeViewColumn() $column)
+    is also<append-column>
+  {
     gtk_tree_view_append_column($!tv, $column);
   }
 
@@ -449,7 +464,7 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_columns_autosize($!tv);
   }
 
-  method convert-bin-window-to-tree-coords (Int() $bx, Int() $by) {
+  multi method convert-bin-window-to-tree-coords (Int() $bx, Int() $by) {
     self.convert_bin_window_to_tree_coords($bx, $by);
   }
   multi method convert_bin_window_to_tree_coords (Int() $bx, Int() $by) {
@@ -457,7 +472,7 @@ class GTK::TreeView is GTK::Container {
     samewith($bxx, $byy, $txx, $tyy);
     ($txx, $tyy);
   }
-  multi method convert-bin-window-tree-coords (
+  multi method convert-bin-window-to-tree-coords (
     Int() $bx,
     Int() $by,
     Int $tx is rw,
@@ -543,7 +558,7 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_convert_tree_to_bin_window_coords($!tv, $tx, $ty, $bx, $by);
   }
 
-  multi method convert-widget-to-bin-window-coords ( \
+  multi method convert-widget-to-bin-window-coords (
     Int() $wx,
     Int() $wy
   ) {

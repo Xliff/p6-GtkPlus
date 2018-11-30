@@ -245,6 +245,7 @@
       "GTK::Roles::Buildable"                  :  "lib/GTK/Roles/Buildable.pm6"                 ,
       "GTK::Roles::Data"                       :  "lib/GTK/Roles/Data.pm6"                      ,
       "GTK::Roles::Orientable"                 :  "lib/GTK/Roles/Orientable.pm6"                ,
+      "GTK::Roles::References"                 :  "lib/GTK/Roles/References.pm6"                ,
       "GTK::Roles::Scrollable"                 :  "lib/GTK/Roles/Scrollable.pm6"                ,
       "GTK::Roles::Signals::Application"       :  "lib/GTK/Roles/Signals/Application.pm6"       ,
       "GTK::Roles::Signals::CSSProvider"       :  "lib/GTK/Roles/Signals/CSSProvider.pm6"       ,
@@ -463,5 +464,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
+
 
 

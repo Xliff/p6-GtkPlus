@@ -79,14 +79,73 @@ class GTK::Container is GTK::Widget {
     self.connect-widget($!c, 'set-focus-child');
   }
 
-  method child-get-bool (
+  # EXPERIMENTAL! -- Do not use unless ready to test!
+  method child-get(*@propval) is also<child_get> {
+    die qq:to/D/.chomp if @propval.flat.elems % 2;
+GTK::Container.child-get() must be a list containing <prop> followed by
+<variable> elements.
+D
+
+    subset SignedInt of Int where * < 0;
+    for @propval -> $p, $v is rw {
+      given $v {
+        when Str       { self.child-get-string($p, $v) }
+        when SignedInt {    self.child-get-int($p, $v) }
+        when Int       {   self.child-get-uint($p, $v) }
+        when Bool      {   self.child-get-bool($p, $v) }
+
+        when int64 | int32 | int16 | int8 {
+          self.child-get-int($p);
+        }
+
+        default {
+          die qq:to/D/.chomp;
+          Unsupported type { .^name } passed to GTK::Container.child-get
+          D
+        }
+      }
+    }
+  }
+
+  # For child attributes.
+  proto method child-get-string (|) is also<child_get_string> { * }
+
+  multi method child-get-string(GtkWidget() $child, Str() $prop) {
+    my Str $a = '';
+    samewith($child, $prop, $a);
+    $a
+  }
+  multi method child-get-string (
+    GtkWidget() $child,
+    Str() $prop,
+    Str $val is rw
+  ) {
+    gtk_container_child_get_str($!c, $child, $prop, $val, Str);
+  }
+
+  method child-set-string(
+    GtkWidget() $child,
+    Str() $prop,
+    Str() $v
+  )
+    is also<child_set_string>
+  {
+    gtk_container_child_set_str($!c, $child, $prop, $v, Str);
+  }
+
+  proto method child-get-bool (|) is also<child_get_bool> { * }
+
+  multi method child-get-bool(GtkWidget() $child, Str() $prop) {
+    my uint32 $b = 0;
+    samewith($child, $prop, $b);
+    $b;
+  }
+  multi method child-get-bool (
     GtkWidget() $child,
     Str() $prop,
     Int $val is rw
-  )
-    is also<child_get_bool>
-  {
-    my guint $v = self.RESOLVE-UINT($val);
+  ) {
+    my guint $v = self.RESOLVE-BOOL($val);
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
     $val = $v;
@@ -99,10 +158,69 @@ class GTK::Container is GTK::Widget {
   )
     is also<child_set_bool>
   {
-    my guint $v = self.RESOLVE-UINT($val);
+    my guint $v = self.RESOLVE-BOOL($val);
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
 
+  proto method child-get-int (|) is also<child_get_int> { * }
+
+  multi method child-get-int (GtkWidget() $child, Str() $prop) {
+    my gint $i = 0;
+    samewith($child, $prop, $i);
+    $i;
+  }
+
+  multi method child-get-int (
+    GtkWidget() $child,
+    Str() $prop,
+    Int $val is rw
+  ) {
+    my guint $v = self.RESOLVE-INT($val);
+    # CArray[guint]?
+    gtk_container_child_get_int($!c, $child, $prop, $v, Str);
+    $val = $v
+  }
+
+  method child-set-int (
+    GtkWidget() $child,
+    Str() $prop,
+    Int() $val
+  )
+    is also<child_set_int>
+  {
+    my gint $v = self.RESOLVE-INT($val);
+    gtk_container_child_set_int($!c, $child, $prop, $v, Str);
+  }
+
+  proto method child-get-uint (|) is also<child_get_uint> { * }
+
+  multi method child-get-uint (GtkWidget() $child, Str() $prop) {
+    my guint $i = 0;
+    samewith($child, $prop, $i);
+    $i;
+  }
+
+  multi method child-get-uint (
+    GtkWidget() $child,
+    Str() $prop,
+    Int $val is rw
+  ) {
+    my guint $v = self.RESOLVE-UINT($val);
+    # CArray[guint]?
+    gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
+    $val = $v;
+  }
+
+  method child-set-uint (
+    GtkWidget() $child,
+    Str() $prop,
+    Int() $val
+  )
+    is also<child_set_uint>
+  {
+    my gint $v = self.RESOLVE-UINT($val);
+    gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
+  }
 
 #Function definition finished, but detected no match:
 #' void         gtk_container_add_with_properties                (GtkContainer      *container,                      GtkWidget          *widget,                                                      const gchar       *first_prop_name,                                                         ...) G_GNUC_NULL_TERMINATED;'

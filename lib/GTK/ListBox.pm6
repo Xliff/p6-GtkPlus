@@ -10,11 +10,14 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::ListBoxRow;
 
+use GTK::Roles::Actionable;
 use GTK::Roles::Signals::ListBox;
 
-my subset Ancestry where GtkListBox | GtkBuildable | GtkWidget;
+my subset Ancestry where GtkListBox | GtkActionable | GtkBuildable |
+                         GtkWidget;
 
 class GTK::ListBox is GTK::Container {
+  also does GTK::Roles::Actionable;
   also does GTK::Roles::Signals::ListBox;
 
   has GtkListBox $!lb;
@@ -30,17 +33,18 @@ class GTK::ListBox is GTK::Container {
     given $listbox {
       when Ancestry {
         $!lb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkListBox, $_);
-          }
-          when GtkBuildable {
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkListBox, $_);
-          }
           when GtkListBox {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          when GtkActionable {
+            $!action = $_;
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkListBox, $_);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkListBox, $_);
           }
         }
         self.setContainer($to-parent);
@@ -50,19 +54,23 @@ class GTK::ListBox is GTK::Container {
       default {
       }
     }
+    $!action //= nativecast(GtkActionable, $listbox);
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-lb;
   }
 
+  multi method new (Ancestry $listbox) {
+    my $o = self.bless(:$listbox);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $listbox = gtk_list_box_new();
     self.bless(:$listbox);
   }
-  multi method new (Ancestry $listbox) {
-    self.bless(:$listbox);
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 

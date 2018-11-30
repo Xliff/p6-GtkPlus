@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+my subset Ancestry
+  where GtkStackSidebar | GtkBin | GtkContainer | GtkBuilder | GtkWidget;
+
 class GTK::StackSidebar is GTK::Bin {
   has GtkStackSidebar $!ss;
 
@@ -21,15 +24,15 @@ class GTK::StackSidebar is GTK::Bin {
   submethod BUILD(:$sidebar) {
     my $to-parent;
     given $sidebar {
-      when GtkStackSidebar | GtkWidget {
+      when Ancestry {
         $!ss = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkStackSidebar, $_);
-          }
           when GtkStackSidebar {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkStackSidebar, $_);
           }
         }
         self.setBin($to-parent);
@@ -41,11 +44,13 @@ class GTK::StackSidebar is GTK::Bin {
     }
   }
 
+  multi method new (Ancestry $sidebar) {
+    my $o = self.bless(:$sidebar);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $sidebar = gtk_stack_sidebar_new();
-    self.bless(:$sidebar);
-  }
-  multi method new (GtkWidget $sidebar) {
     self.bless(:$sidebar);
   }
 
@@ -75,4 +80,3 @@ class GTK::StackSidebar is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

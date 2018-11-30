@@ -19,7 +19,7 @@ my subset Ancestry
 class GTK::Toolbar is GTK::Container {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::ToolShell;
-  
+
   has GtkToolbar $!tb;
 
   method bless(*%attrinit) {
@@ -33,9 +33,9 @@ class GTK::Toolbar is GTK::Container {
     given $toolbar {
       when Ancestry {
         $!tb = do {
-          when GtkWidget | GtkContainer | GtkBuilder {
-            $to-parent = $_;
-            nativecast(GtkToolbar, $_);
+          when GtkToolbar {
+            $to-parent = nativecast(GtkContainer, $_);
+            $_;
           }
           when GtkOrientable {
             $!or = $_;
@@ -47,9 +47,9 @@ class GTK::Toolbar is GTK::Container {
             $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkToolbar, $_);
           }
-          when GtkToolbar {
-            $to-parent = nativecast(GtkContainer, $_);
-            $_;
+          default {
+            $to-parent = $_;
+            nativecast(GtkToolbar, $_);
           }
         }
         $!or //= nativecast(GtkOrientable, $toolbar);   # GTK::Roles::Orientable
@@ -64,7 +64,9 @@ class GTK::Toolbar is GTK::Container {
   }
 
   multi method new (Ancestry $toolbar) {
-    self.bless(:$toolbar);
+    my $o = self.bless(:$toolbar);
+    $o.upref;
+    $o;
   }
   multi method new {
     my $toolbar = gtk_toolbar_new();
@@ -113,7 +115,9 @@ class GTK::Toolbar is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_drop_index (Int() $x is rw, Int $y is rw) is also<get-drop-index> {
+  method get_drop_index (Int() $x is rw, Int() $y is rw)
+    is also<get-drop-index>
+  {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-UINT(@u);
     my $rc = gtk_toolbar_get_drop_index($!tb, $xx, $yy);
@@ -156,7 +160,9 @@ class GTK::Toolbar is GTK::Container {
     gtk_toolbar_insert($!tb, $item, $p);
   }
 
-  method set_drop_highlight_item (GtkToolItem() $tool_item, Int $index) is also<set-drop-highlight-item> {
+  method set_drop_highlight_item (GtkToolItem() $tool_item, Int() $index) 
+    is also<set-drop-highlight-item>
+  {
     my uint32 $i = self.RESOLVE-UINT($index);
     gtk_toolbar_set_drop_highlight_item($!tb, $tool_item, $i);
   }

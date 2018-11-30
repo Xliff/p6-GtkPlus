@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Window;
 
+my subset Ancestry
+  where GtkAssistant | GtkWindow | GtkBin | GtkContainer | GtkBuildable |
+        GtkWidget;
+
 class GTK::Assistant is GTK::Window {
   has GtkAssistant $!asst;
 
@@ -21,18 +25,18 @@ class GTK::Assistant is GTK::Window {
   submethod BUILD(:$assistant) {
     my $to-parent;
     given $assistant {
-      when GtkAssistant | GtkWidget {
+      when Ancestry {
         $!asst = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkAssistant, $_);
-          }
           when GtkAssistant  {
             $to-parent = nativecast(GtkWindow, $_);
             $_;
           }
+          default {
+            $to-parent = $_;
+            nativecast(GtkAssistant, $_);
+          }
         }
-        self.setParent($to-parent);
+        self.setWindow($to-parent);
       }
       when GTK::Assistant {
       }
@@ -41,11 +45,13 @@ class GTK::Assistant is GTK::Window {
     }
   }
 
+  multi method new (Ancestry $assistant) {
+    my $o = self.bless(:$assistant);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $assistant = gtk_assistant_new();
-    self.bless(:$assistant);
-  }
-  multi method new (GtkWidget $assistant) {
     self.bless(:$assistant);
   }
 
@@ -118,19 +124,27 @@ class GTK::Assistant is GTK::Window {
     gtk_assistant_get_nth_page($!asst, $pn);
   }
 
-  method get_page_complete (GtkWidget() $page) is also<get-page-complete> {
+  method get_page_complete (GtkWidget() $page)
+    is also<get-page-complete>
+  {
     gtk_assistant_get_page_complete($!asst, $page);
   }
 
-  method get_page_has_padding (GtkWidget() $page) is also<get-page-has-padding> {
+  method get_page_has_padding (GtkWidget() $page)
+    is also<get-page-has-padding>
+  {
     gtk_assistant_get_page_has_padding($!asst, $page);
   }
 
-  method get_page_header_image (GtkWidget() $page) is also<get-page-header-image> {
+  method get_page_header_image (GtkWidget() $page)
+    is also<get-page-header-image>
+  {
     gtk_assistant_get_page_header_image($!asst, $page);
   }
 
-  method get_page_side_image (GtkWidget() $page) is also<get-page-side-image> {
+  method get_page_side_image (GtkWidget() $page)
+    is also<get-page-side-image>
+  {
     gtk_assistant_get_page_side_image($!asst, $page);
   }
 
@@ -146,7 +160,9 @@ class GTK::Assistant is GTK::Window {
     gtk_assistant_get_type();
   }
 
-  method insert_page (GtkWidget() $page, Int() $position) is also<insert-page> {
+  method insert_page (GtkWidget() $page, Int() $position)
+    is also<insert-page>
+  {
     my gint $p = self.RESOLVE-INT($position);
     gtk_assistant_insert_page($!asst, $page, $position);
   }
@@ -163,7 +179,9 @@ class GTK::Assistant is GTK::Window {
     gtk_assistant_previous_page($!asst);
   }
 
-  method remove_action_widget (GtkWidget() $child) is also<remove-action-widget> {
+  method remove_action_widget (GtkWidget() $child)
+    is also<remove-action-widget>
+  {
     gtk_assistant_remove_action_widget($!asst, $child);
   }
 
@@ -176,21 +194,29 @@ class GTK::Assistant is GTK::Window {
     GtkAssistantPageFunc $page_func,
     gpointer $data,
     GDestroyNotify $destroy
-  ) is also<set-forward-page-func> {
+  )
+    is also<set-forward-page-func>
+  {
     gtk_assistant_set_forward_page_func($!asst, $page_func, $data, $destroy);
   }
 
-  method set_page_complete (GtkWidget() $page, Int() $complete) is also<set-page-complete> {
+  method set_page_complete (GtkWidget() $page, Int() $complete)
+    is also<set-page-complete>
+  {
     my gboolean $c = self.RESOLVE-BOOLEAN($complete);
     gtk_assistant_set_page_complete($!asst, $page, $complete);
   }
 
-  method set_page_has_padding (GtkWidget() $page, Int() $has_padding) is also<set-page-has-padding> {
+  method set_page_has_padding (GtkWidget() $page, Int() $has_padding)
+    is also<set-page-has-padding>
+  {
     my gboolean $hp = self.RESOLVE-BOOLEAN($has_padding);
     gtk_assistant_set_page_has_padding($!asst, $page, $hp);
   }
 
-  method set_page_header_image (GtkWidget() $page, GdkPixbuf $pixbuf) is also<set-page-header-image> {
+  method set_page_header_image (GtkWidget() $page, GdkPixbuf() $pixbuf)
+    is also<set-page-header-image>
+  {
     gtk_assistant_set_page_header_image($!asst, $page, $pixbuf);
   }
 
@@ -213,4 +239,3 @@ class GTK::Assistant is GTK::Window {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

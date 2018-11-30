@@ -10,6 +10,11 @@ use GTK::Raw::Types;
 
 use GTK::ToggleToolButton;
 
+my subset Ancestry
+  where GtkRadioToolButton | GtkActionable | GtkToggleToolButton |
+        GtkToolButton      | GtkToolItem   | GtkBin              |
+        GtkContainer       | GtkBuilder    | GtkWidget;
+
 class GTK::RadioToolButton is GTK::ToggleToolButton {
   has GtkRadioToolButton $!rtb;
 
@@ -21,16 +26,16 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
 
   submethod BUILD(:$radiotoolbutton) {
     given $radiotoolbutton {
-      when GtkRadioToolButton | GtkToolItem | GtkWidget {
+      when Ancestry {
         my $to-parent;
         $!rtb = do {
-          when GtkToolItem | GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkRadioToolButton, $_);
-          }
           when GtkRadioToolButton {
             $to-parent = nativecast(GtkToggleToolButton, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkRadioToolButton, $_);
           }
         }
         self.setToggleToolButton($to-parent);
@@ -42,8 +47,10 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     }
   }
 
-  multi method new (GtkWidget $radiotoolbutton) {
-    self.bless(:$radiotoolbutton);
+  multi method new (Ancestry $radiotoolbutton) {
+    my $o = self.bless(:$radiotoolbutton);
+    $o.upref;
+    $o;
   }
   multi method new(GSList() $group) {
     my $radiotoolbutton = gtk_radio_tool_button_new($group);
@@ -59,7 +66,9 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     self.bless(:$radiotoolbutton);
   }
 
-  method new_from_widget(GtkRadioToolButton() $group) is also<new-from-widget> {
+  method new_from_widget(GtkRadioToolButton() $group)
+    is also<new-from-widget>
+  {
     my $radiotoolbutton = gtk_radio_tool_button_new_from_widget($group);
     self.bless(:$radiotoolbutton);
   }
@@ -69,7 +78,8 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     gchar $stock_id
   )
     is DEPRECATED( 'GTK::RadioToolButton.new_from_widget()' )
-  is also<new-with-stock-from-widget> {
+    is also<new-with-stock-from-widget>
+  {
     my $radiotoolbutton = gtk_radio_tool_button_new_with_stock_from_widget(
       $group, $stock_id
     );

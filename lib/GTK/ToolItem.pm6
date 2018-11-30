@@ -10,13 +10,10 @@ use GTK::Raw::Types;
 use GTK::Bin;
 use GTK::SizeGroup;
 
-use GTK::Roles::Actionable;
-
-my subset Ancestry where GtkToolItem | GtkActionable | GtkWidget;
+my subset Ancestry
+  where GtkToolItem | GtkBin | GtkContainer | GtkBuilder | GtkWidget;
 
 class GTK::ToolItem is GTK::Bin {
-  also does GTK::Roles::Actionable;
-
   has GtkToolItem $!ti;
 
   method bless(*%attrinit) {
@@ -44,25 +41,22 @@ class GTK::ToolItem is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
-      when GtkActionable {
-        $!action = nativecast(GtkActionable, $!ti);  # GTK::Roles::Actionable
-        $to-parent = nativecast(GtkBin, $_);
-        nativecast(GtkToolItem, $_);
-      }
-      when GtkWidget {
+      
+      default {
         $to-parent = $_;
         nativecast(GtkToolItem, $_);
       }
     }
     self.setBin($to-parent);
-    $!action //= nativecast(GtkActionable, $!ti);    # GTK::Roles::Actionable
   }
 
+  multi method new (Ancestry $toolitem) {
+    my $o = self.bless(:$toolitem);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $toolitem = gtk_tool_item_new();
-    self.bless(:$toolitem);
-  }
-  multi method new (Ancestry $toolitem) {
     self.bless(:$toolitem);
   }
 

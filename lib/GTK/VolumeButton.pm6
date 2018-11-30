@@ -11,6 +11,10 @@ use GTK::ScaleButton;
 
 use GTK::Roles::Orientable;
 
+my subset Ancestry
+  where GtkVolumeButton | GtkScaleButton | GtkOrientable | GtkButton |
+        GtkBin          | GtkContainer   | GtkBuilder    | GtkWidget;
+
 class GTK::VolumeButton is GTK::ScaleButton {
   also does GTK::Roles::Orientable;
 
@@ -25,15 +29,15 @@ class GTK::VolumeButton is GTK::ScaleButton {
   submethod BUILD(:$button) {
     given $button {
       my $to-parent;
-      when GtkVolumeButton | GtkWidget {
+      when Ancestry {
         $!vb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkVolumeButton, $_);
-          }
           when GtkVolumeButton {
             $to-parent = nativecast(GtkScaleButton, $_);
             $_;
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkVolumeButton, $_);
           }
         }
         self.setScaleButton($to-parent);
@@ -43,15 +47,15 @@ class GTK::VolumeButton is GTK::ScaleButton {
       default {
       }
     }
-    # For GTK::Roles::Orientable
-    $!or = nativecast(GtkOrientable, $!vb);
   }
 
+  multi method new (Ancestry $button) {
+    my $o = self.bless(:$button);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $button = gtk_volume_button_new();
-    self.bless(:$button);
-  }
-  multi method new (GtkWidget $button) {
     self.bless(:$button);
   }
 
@@ -68,4 +72,3 @@ class GTK::VolumeButton is GTK::ScaleButton {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

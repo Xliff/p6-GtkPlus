@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+my subset Ancestry
+  where GtkNotebook | GtkContainer | GtkBuilder | GtkWidget;
+
 class GTK::Notebook is GTK::Container {
   has GtkNotebook $!n;
 
@@ -21,13 +24,13 @@ class GTK::Notebook is GTK::Container {
   submethod BUILD(:$notebook) {
     my $to-parent;
     given $notebook {
-      when GtkNotebook | GtkWidget {
+      when Ancestry {
         $!n = do {
           when GtkNotebook {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
           }
-          when GtkWidget   {
+          when GtkContainer | GtkWidget | GtkBuilder {
             $to-parent = $_;
             nativecast(GtkNotebook, $_);
           }
@@ -41,11 +44,13 @@ class GTK::Notebook is GTK::Container {
     }
   }
 
+  multi method new (Ancestry $notebook) {
+    my $o = self.bless(:$notebook);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $notebook = gtk_notebook_new();
-    self.bless(:$notebook);
-  }
-  multi method new (GtkWidget $notebook) {
     self.bless(:$notebook);
   }
 
@@ -54,7 +59,7 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, gint, gpointer --> gboolean
   method change-current-page is also<change_current_page> {
-    self.connect($!n, 'change-current-page');
+    self.connect-int-rbool($!n, 'change-current-page');
   }
 
   # Is originally:
@@ -66,13 +71,13 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, GtkNotebookTab, gpointer --> gboolean
   method focus-tab is also<focus_tab> {
-    self.connect($!n, 'focus-tab');
+    self.connect-uint-rbool($!n, 'focus-tab');
   }
 
   # Is originally:
   # GtkNotebook, GtkDirectionType, gpointer --> void
   method move-focus-out is also<move_focus_out> {
-    self.connect($!n, 'move-focus-out');
+    self.connect-uint($!n, 'move-focus-out');
   }
 
   # Is originally:
@@ -102,7 +107,7 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, gboolean, gpointer --> gboolean
   method select-page is also<select_page> {
-    self.connect($!n, 'select-page');
+    self.connect-uint-rbool($!n, 'select-page');
   }
 
   # Is originally:
@@ -139,7 +144,7 @@ class GTK::Notebook is GTK::Container {
   method scrollable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_notebook_get_scrollable($!n) );
+        so gtk_notebook_get_scrollable($!n);
       },
       STORE => sub ($, Int() $scrollable is copy) {
         my gboolean $s = self.RESOLVE-BOOL($scrollable);
@@ -151,7 +156,7 @@ class GTK::Notebook is GTK::Container {
   method show_border is rw is also<show-border> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_notebook_get_show_border($!n) );
+        so gtk_notebook_get_show_border($!n);
       },
       STORE => sub ($, Int() $show_border is copy) {
         my gboolean $sb = self.RESOLVE-BOOL($show_border);
@@ -163,7 +168,7 @@ class GTK::Notebook is GTK::Container {
   method show_tabs is rw is also<show-tabs> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_notebook_get_show_tabs($!n) );
+        so gtk_notebook_get_show_tabs($!n);
       },
       STORE => sub ($, $show_tabs is copy) {
         my gboolean $st = self.RESOLVE-BOOL($show_tabs);
@@ -360,7 +365,7 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_set_menu_label($!n, $child, $menu_label);
   }
 
-  method set_menu_label_text (GtkWidget() $child, gchar $menu_text)
+  method set_menu_label_text (GtkWidget() $child, Str() $menu_text)
     is also<set-menu-label-text>
   {
     gtk_notebook_set_menu_label_text($!n, $child, $menu_text);
@@ -382,7 +387,7 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_set_tab_label($!n, $child, $tab_label);
   }
 
-  method set_tab_label_text (GtkWidget() $child, gchar $tab_text)
+  method set_tab_label_text (GtkWidget() $child, Str() $tab_text)
     is also<set-tab-label-text>
   {
     gtk_notebook_set_tab_label_text($!n, $child, $tab_text);

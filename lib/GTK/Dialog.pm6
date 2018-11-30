@@ -11,6 +11,10 @@ use GTK::Box;
 use GTK::HeaderBar;
 use GTK::Window;
 
+my subset Ancestry
+  where GtkDialog | GtkWindow | GtkBin | GtkContainer | GtkBuilder |
+        GtkWidget;
+
 class GTK::Dialog is GTK::Window {
   has GtkDialog $!d;
 
@@ -22,7 +26,7 @@ class GTK::Dialog is GTK::Window {
 
   submethod BUILD(:$dialog) {
     given $dialog {
-      when GtkDialog | GtkWidget {
+      when Ancestry {
         self.setDialog($dialog);
       }
       when GTK::Dialog {
@@ -35,25 +39,28 @@ class GTK::Dialog is GTK::Window {
   method setDialog($dialog) {
     my $to-parent;
     $!d = do given $dialog {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkDialog, $_);
-      }
       when GtkDialog {
         $to-parent = nativecast(GtkWindow, $_);
         $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkDialog, $_);
       }
     }
     self.setWindow($to-parent);
   }
 
+  multi method new (Ancestry $dialog) {
+    my $o = self.bless(:$dialog);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $dialog = gtk_dialog_new();
     self.bless(:$dialog);
   }
-  multi method new (GtkWidget $dialog) {
-    self.bless(:$dialog);
-  }
+
 
   # Yes, I'm poking fun at the '...' limitation, at this point.
   # This method can be pulled (or better yet ignored) if you lack
@@ -64,7 +71,9 @@ class GTK::Dialog is GTK::Window {
    uint32      $flags,          # GtkDialogFlags $flags
    Str()       $button_text,
    Int()       $button_response_id
-  ) is also<new-with-button> {
+  )
+    is also<new-with-button>
+  {
     my gint $br = self.RESOLVE-INT($button_response_id);
     my $dialog = gtk_dialog_new_with_buttons(
       $title,

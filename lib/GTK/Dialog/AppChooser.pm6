@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -10,7 +11,9 @@ use GTK::Dialog;
 
 use GTK::Roles::AppChooser;
 
-subset ParentChild where GtkAppChooserDialog | GtkDialog;
+my subset Ancestry
+  where GtkAppChooserDialog | GtkAppChooser | GtkDialog | GtkWindow |
+        GtkContainer        | GtkBuilder    | GtkWidget;
 
 class GTK::Dialog::AppChooser is GTK::Dialog {
   also does GTK::Roles::AppChooser;
@@ -26,44 +29,59 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
   submethod BUILD(:$dialog) {
     my $to-parent;
     given $dialog {
-      when ParentChild {
+      when Ancestry {
         $!acd = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkAppChooserDialog, $_);
-          }
           when GtkAppChooserDialog {
             $to-parent = nativecast(GtkDialog, $_);
             $_;
           }
+          when GtkAppChooser {
+            $!ac = $_;                                # GTK::Roles::AppChooser
+            $to-parent = nativecast(GtkDialog, $_);
+            nativecast(GtkAppChooserDialog, $_);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkAppChooserDialog, $_);
+          }
         }
-        self.setParent($to-parent);
+        self.setDialog($to-parent);
       }
       when GTK::Dialog::AppChooser {
       }
       default {
-
       }
     }
-    $!ac = nativecast(GtkAppChooser, $!acd)     # GTK::Roles::AppChooser
+    $!ac //= nativecast(GtkAppChooser, $!acd)        # GTK::Roles::AppChooser
   }
 
-  method new (
+  multi method new (Ancestry $dialog) {
+    my $o = self.bless($dialog);
+    $o.upref;
+    $o;
+  }
+  multi method new (
     GtkWindow() $parent,
     Int() $flags,               # GtkDialogFlags $flags,
     GFile $file
   ) {
     my guint $f = self.RESOLVE-UINT($flags);
-    gtk_app_chooser_dialog_new($parent, $f, $file);
+    my $dialog = gtk_app_chooser_dialog_new($parent, $f, $file);
+    self.bless(:$dialog);
   }
 
   method new_for_content_type (
     GtkWindow() $parent,
     Int() $flags,               # GtkDialogFlags $flags,
     Str() $content_type
-  ) {
+  )
+    is also<new-for-content-type>
+  {
     my guint $f = self.RESOLVE-UINT($flags);
-    gtk_app_chooser_dialog_new_for_content_type($parent, $f, $content_type);
+    my $dialog = gtk_app_chooser_dialog_new_for_content_type(
+      $parent, $f, $content_type
+    );
+    self.bless(:$dialog);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -79,7 +97,7 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('gfile', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('gfile', $gv) );
         nativecast(GFile, $gv.object);
       },
       STORE => -> $, GFile() $val is copy {
@@ -94,7 +112,7 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('heading', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('heading', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -107,11 +125,11 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type {
+  method get_type is also<get-type> {
     gtk_app_chooser_dialog_get_type();
   }
 
-  method get_widget {
+  method get_widget is also<get-widget> {
     gtk_app_chooser_dialog_get_widget($!acd);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
