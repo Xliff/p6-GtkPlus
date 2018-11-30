@@ -14,25 +14,25 @@ use GTK::Widget;
 
 use GTK::Roles::LatchedContents;
 
+my subset Ancestry where GtkContainer | GtkBuildable | GtkWidget;
+
 class GTK::Container is GTK::Widget {
   also does GTK::Roles::LatchedContents;
 
   # Maybe this should be done as the base class.
   has $!c;
 
+  # Even though an abstract class, we have to be able to instantiate from
+  # a lowest common denominator amongst descendants.
+  submethod BUILD(:$container) {
+    when Ancestry {
+      self.setContainer($container);
+    }
+    default {
+      die "GTK::Container cannot create from object of type { .^name }";
+    }
+  }
 
-  # GTK::Container is abstract, so no need for BUILD or DESTROY
-  # submethod BUILD (:$container) {
-  #   given $container {
-  #     when GtkContainer | GtkWidget {
-  #       self.setContainer($container);
-  #     }
-  #     when GTK::Container {
-  #     }
-  #     default {
-  #     }
-  #   }
-  # }
   #submethod DESTROY {
   #  g_object_unref($_.data) for self.get_children.Array;
   #  g_object_unref(self.widget);
@@ -41,16 +41,22 @@ class GTK::Container is GTK::Widget {
   method setContainer($container) {
     my $to-parent;
     $!c = do given $container {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkContainer, $_);
-      }
       when GtkContainer {
         $to-parent = nativecast(GtkWidget, $_);
         $_;
       }
+      default {
+        $to-parent = $_;
+        nativecast(GtkContainer, $_);
+      }
     }
     self.setWidget($to-parent);
+  }
+
+  method new (Ancestry $container) {
+    my $o = self.bless(:$container);
+    $o.upref;
+    $o;
   }
 
   method GTK::Raw::Types::GtkContainer {

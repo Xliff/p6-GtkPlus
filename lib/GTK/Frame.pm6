@@ -10,6 +10,9 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+my subset Ancestry where GtkFrame  | GtkBin | GtkContainer | GtkBuildable |
+                         GtkWidget;
+
 class GTK::Frame is GTK::Bin {
   has GtkFrame $!f;
 
@@ -22,15 +25,15 @@ class GTK::Frame is GTK::Bin {
   submethod BUILD(:$frame) {
     my $to-parent;
     given $frame {
-      when GtkFrame | GtkWidget {
+      when Ancestry {
         $!f = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkFrame, $_);
-          }
           when GtkFrame {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkFrame, $_);
           }
         };
         self.setBin($to-parent);
@@ -42,8 +45,10 @@ class GTK::Frame is GTK::Bin {
     }
   }
 
-  multi method new (GtkWidget $frame) {
-    self.bless(:$frame);
+  multi method new (Ancestry $frame) {
+    my $o = self.bless(:$frame);
+    $o.upref;
+    $o;
   }
   multi method new(Str() $label) {
     my $frame = gtk_frame_new($label);
@@ -124,7 +129,9 @@ class GTK::Frame is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_label_align (Num() $xalign, Num() $yalign) is also<get-label-align> {
+  method get_label_align (Num() $xalign, Num() $yalign)
+    is also<get-label-align>
+  {
     my num32 $x = $xalign;
     my num32 $y = $yalign;
 
@@ -135,7 +142,9 @@ class GTK::Frame is GTK::Bin {
     gtk_frame_get_type();
   }
 
-  method set_label_align (Num() $xalign, Num() $yalign) is also<set-label-align> {
+  method set_label_align (Num() $xalign, Num() $yalign)
+    is also<set-label-align>
+  {
     my num32 $x = $xalign;
     my num32 $y = $yalign;
 
@@ -144,4 +153,3 @@ class GTK::Frame is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

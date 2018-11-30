@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+my subset Ancestry where GtkImage | GtkBuildable | GtkWidget;
+
 class GTK::Image is GTK::Widget {
   has GtkImage $!i;
 
@@ -21,15 +23,15 @@ class GTK::Image is GTK::Widget {
   submethod BUILD(:$image) {
     my $to-parent;
     given $image {
-      when GtkImage | GtkWidget {
+      when Ancestry {
         $!i = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkImage, $_);
-          }
           when GtkImage {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkImage, $_);
           }
         }
         self.setWidget($to-parent);
@@ -48,11 +50,13 @@ class GTK::Image is GTK::Widget {
     $!i;
   }
 
+  multi method new (Ancestry $image) {
+    my $o = self.bless(:$image);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $image = gtk_image_new();
-    self.bless(:$image);
-  }
-  multi method new (GtkWidget $image) {
     self.bless(:$image);
   }
 
@@ -94,7 +98,10 @@ class GTK::Image is GTK::Widget {
     GtkIconSet $set,
     Int() $size                  # GtkIconSize $size
 
-  ) is also<new-from-icon-set> {
+  )
+    is DEPRECATED
+    is also<new-from-icon-set>
+  {
     my guint32 $s = self.RESOLVE-UINT($size);
     my $image = gtk_image_new_from_icon_set($set, $s);
     self.bless(:$image);
@@ -219,7 +226,6 @@ class GTK::Image is GTK::Widget {
         $gv = GTK::Compat::Value.new(
           self.prop_get('pixbuf', $gv)
         );
-        say "PB: { +nativecast(Pointer, $gv.object) }";
         nativecast(GdkPixbuf, $gv.object);
       },
       STORE => -> $, GdkPixbuf() $val is copy {
@@ -291,7 +297,7 @@ class GTK::Image is GTK::Widget {
         GtkImageType( $gv.int );
       },
       STORE => -> $, $val is copy {
-        warn "storage-type does not allow writing"
+        warn 'storage-type does not allow writing';
       }
     );
   }
@@ -372,6 +378,7 @@ class GTK::Image is GTK::Widget {
   }
 
   proto method get_icon_name (|) is also<get-icon-name> { * }
+  
   multi method get_icon_name {
     my Str $name = '';
     my Int $size = 0;

@@ -14,7 +14,6 @@ need GTK::CheckButton;
 need GTK::CheckMenuItem;
 need GTK::Clipboard;
 need GTK::ColorButton;
-need GTK::ColorChooser;
 need GTK::Container;
 need GTK::Dialog;
 need GTK::Dialog::About;

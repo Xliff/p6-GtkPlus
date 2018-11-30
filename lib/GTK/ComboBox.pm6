@@ -15,7 +15,8 @@ use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::ComboBox;
 
 my subset Ancestry
-  where GtkComboBox | GtkCellEditable | GtkCellLayout | GtkWidget;
+  where GtkComboBox  | GtkCellEditable | GtkCellLayout | GtkBin |
+        GtkContainer | GtkBuildable    | GtkWidget;
 
 class GTK::ComboBox is GTK::Bin {
   also does GTK::Roles::CellEditable;
@@ -49,9 +50,9 @@ class GTK::ComboBox is GTK::Bin {
   method setComboBox($combobox) {
     my $to-parent;
     $!cb = do given $combobox {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkComboBox, $_);
+      when GtkComboBox  {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
       }
       when GtkCellEditable {
         $!ce = $_;                                # GTK::Roles::CellEditable
@@ -63,9 +64,9 @@ class GTK::ComboBox is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkComboBox, $_);
       }
-      when GtkComboBox  {
-        $to-parent = nativecast(GtkBin, $_);
-        $_;
+      default {
+        $to-parent = $_;
+        nativecast(GtkComboBox, $_);
       }
     }
     $!cl //= nativecast(GtkCellLayout, $!cb);     # GTK::Roles::CellLayout
@@ -73,14 +74,14 @@ class GTK::ComboBox is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new {
-    my $combobox = gtk_combo_box_new();
-    self.bless(:$combobox);
-  }
   multi method new (Ancestry $combobox) {
     my $o = self.bless(:$combobox);
     $o.upref;
     $o;
+  }
+  multi method new {
+    my $combobox = gtk_combo_box_new();
+    self.bless(:$combobox);
   }
 
   method new_with_area(GtkCellArea() $area) is also<new-with-area> {

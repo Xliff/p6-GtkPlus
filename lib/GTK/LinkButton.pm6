@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Button;
 
+my subset Ancestry where GtkLinkButton | GtkButton    | GtkActionable |
+                         GtkBin        | GtkContainer | GtkBuildable  |
+                         GtkWidget;
+
 class GTK::LinkButton is GTK::Button {
   has GtkLinkButton $!lb;
 
@@ -21,15 +25,15 @@ class GTK::LinkButton is GTK::Button {
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
-      when GtkLinkButton | GtkWidget {
+      when Ancestry {
         $!lb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkLinkButton, $_);
-          }
           when GtkLinkButton {
             $to-parent = nativecast(GtkButton, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkLinkButton, $_);
           }
         };
         self.setButton($to-parent);
@@ -41,15 +45,19 @@ class GTK::LinkButton is GTK::Button {
     }
   }
 
-  multi method new($uri) {
+  multi method new (Ancestry $button) {
+    my $o = self.bless(:$button);
+    $o.upref;
+    $o;
+  }
+  multi method new ($uri) {
     my $button = gtk_link_button_new($uri);
     self.bless(:$button);
   }
-  multi method new (GtkWidget $button) {
-    self.bless(:$button);
-  }
 
-  method new_with_label (gchar $uri, gchar $label) is also<new-with-label> {
+  method new_with_label (Str() $uri, Str() $label)
+    is also<new-with-label>
+  {
     my $button = gtk_link_button_new_with_label($uri, $label);
     self.bless(:$button);
   }
@@ -92,4 +100,3 @@ class GTK::LinkButton is GTK::Button {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

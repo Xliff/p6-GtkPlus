@@ -533,3 +533,26 @@ sub gtk_text_view_set_indent (GtkTextView $text_view, gint $indent)
   is native(gtk)
   is export
   { * }
+
+sub gtk_text_view_add_child_in_window (
+  GtkTextView $text_view,
+  GtkWidget   $child,
+  uint32      $which_window,
+  # window coordinates
+  gint        $xpos,
+  gint        $ypos
+)
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_text_view_move_child (
+  GtkTextView $text_view,
+  GtkWidget   $child,
+  # window coordinates
+  gint        $xpos,
+  gint        $ypos
+)
+ is native(gtk)
+ is export
+ { * }

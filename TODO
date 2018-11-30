@@ -19,6 +19,7 @@
 - Add type specific signal handling to; GTK::Notebook
 - Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher or GtkStackSidebar
 - Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
+- Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
 
 
 Applications

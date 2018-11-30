@@ -11,7 +11,7 @@ use GTK::Widget;
 
 use GTK::Roles::Actionable;
 
-my subset Ancestry where GtkSwitch | GtkActionable | GtkWidget;
+my subset Ancestry where GtkSwitch | GtkActionable | GtkBuildable | GtkWidget;
 
 class GTK::Switch is GTK::Widget {
   also does GTK::Roles::Actionable;
@@ -29,18 +29,18 @@ class GTK::Switch is GTK::Widget {
     given $switch {
       when Ancestry {
         $!s = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkSwitch, $_);
+          when GtkSwitch {
+            $to-parent = nativecast(GtkWidget, $_);
+            $_;
           }
           when GtkActionable {
             $!action = nativecast(GtkActionable, $_);
             $to-parent = nativecast(GtkWidget, $_);
             nativecast(GtkSwitch, $_);                # GTK::Roles::Actionable
           }
-          when GtkSwitch {
-            $to-parent = nativecast(GtkWidget, $_);
-            $_;
+          default {
+            $to-parent = $_;
+            nativecast(GtkSwitch, $_);
           }
         };
         self.setWidget($to-parent);
@@ -50,15 +50,16 @@ class GTK::Switch is GTK::Widget {
       default {
       }
     }
-    $!action //= nativecast(GtkActionable, $!s);       # GTK::Roles::Actionable
+    $!action //= nativecast(GtkActionable, $!s);      # GTK::Roles::Actionable
   }
 
+  multi method new(Ancestry $switch) {
+    my $o = self.bless(:$switch);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $switch = gtk_switch_new();
-    self.bless(:$switch);
-  }
-  multi method new(GtkWidget $switch) {
-    # cw: Check type before-hand?
     self.bless(:$switch);
   }
 
@@ -111,4 +112,3 @@ class GTK::Switch is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

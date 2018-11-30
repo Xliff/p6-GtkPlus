@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::ComboBox;
 
+my subset Ancestry where GtkComboBoxText | GtkComboBox  | GtkCellEditable |
+                         GtkCellLayout   | GtkBin       | GtkContainer    |
+                         GtkBuildable    | GtkWidget;
+
 class GTK::ComboBoxText is GTK::ComboBox {
   has GtkComboBoxText $!cbt;
 
@@ -21,15 +25,15 @@ class GTK::ComboBoxText is GTK::ComboBox {
   submethod BUILD(:$combobox) {
     my $to-parent;
     given $combobox {
-      when GtkComboBoxText | GtkWidget {
+      when Ancestry {
         $!cbt = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkComboBoxText, $_);
-          }
           when GtkComboBoxText {
             $to-parent = nativecast(GtkComboBox, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkComboBoxText, $_);
           }
         }
         self.setComboBox($to-parent);
@@ -41,6 +45,11 @@ class GTK::ComboBoxText is GTK::ComboBox {
     }
   }
 
+  multi method new(GtkWidget $combobox) {
+    my $o = self.bless(:$combobox);
+    $o.upref;
+    $o;
+  }
   multi method new(:$entry) {
     my $combobox = $entry ??
       gtk_combo_box_text_new_with_entry() !! gtk_combo_box_text_new();
@@ -50,9 +59,6 @@ class GTK::ComboBoxText is GTK::ComboBox {
     my $o = samewith(:$entry);
     $o.append_text(~$_) for @list;
     $o;
-  }
-  multi method new(GtkWidget $combobox) {
-    self.bless(:$combobox);
   }
 
   method new_with_entry is also<new-with-entry> {
@@ -112,4 +118,3 @@ class GTK::ComboBoxText is GTK::ComboBox {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

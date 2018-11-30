@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
+my subset Ancestry
+  where GtkButtonBox | GtkBox | GtkOrientable | GtkContainer | GtkBuildable |
+        GtkWidget;
+
 class GTK::ButtonBox is GTK::Box {
   has GtkButtonBox $!bb;
 
@@ -21,15 +25,15 @@ class GTK::ButtonBox is GTK::Box {
   submethod BUILD(:$buttonbox) {
     my $to-parent;
     given $buttonbox {
-      when GtkButtonBox | GtkWidget {
+      when Ancestry {
         $!bb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkButtonBox, $_);
-          }
           when GtkButtonBox {
             $to-parent = nativecast(GtkBox, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkButtonBox, $_);
           }
         }
         self.setBox($to-parent);
@@ -41,12 +45,12 @@ class GTK::ButtonBox is GTK::Box {
     }
   }
 
-  multi method new (GtkWidget $buttonbox) {
-    self.bless(:$buttonbox);
+  multi method new (Ancestry $buttonbox) {
+    my $o = self.bless(:$buttonbox);
+    $o.upref;
+    $o;
   }
-  multi method new ($orientation) {
-    die "Can't coerce argument to GTK::ButtonBox.new to an integer."
-      unless $orientation.^can('Int').elems > 0;
+  multi method new (Int() $orientation) {
     my guint $o = self.RESOLVE-UINT($orientation.Int);
     my $buttonbox = gtk_button_box_new($o);
     self.bless(:$buttonbox);
@@ -89,22 +93,28 @@ class GTK::ButtonBox is GTK::Box {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_child_non_homogeneous (GtkWidget() $child) is also<get-child-non-homogeneous> {
+  method get_child_non_homogeneous (GtkWidget() $child)
+    is also<get-child-non-homogeneous>
+  {
     gtk_button_box_get_child_non_homogeneous($!bb, $child);
   }
 
-  method get_child_secondary (GtkWidget() $child) is also<get-child-secondary> {
+  method get_child_secondary (GtkWidget() $child)
+    is also<get-child-secondary>
+  {
     gtk_button_box_get_child_secondary($!bb, $child);
   }
 
-  method get_type () is also<get-type> {
+  method get_type is also<get-type> {
     gtk_button_box_get_type();
   }
 
   multi method set_child_non_homogeneous (
     GtkWidget() $child,
     Int() $non_homogeneous
-  ) is also<set-child-non-homogeneous> {
+  )
+    is also<set-child-non-homogeneous>
+  {
     my gboolean $nh = self.RESOLVE-BOOL($non_homogeneous);
     gtk_button_box_set_child_non_homogeneous($!bb, $child, $nh);
   }
@@ -112,11 +122,12 @@ class GTK::ButtonBox is GTK::Box {
   multi method set_child_secondary (
     GtkWidget $child,
     Int() $is_secondary
-  ) is also<set-child-secondary> {
+  )
+    is also<set-child-secondary>
+  {
     my gboolean $is = self.RESOLVE-BOOL($is_secondary);
     gtk_button_box_set_child_secondary($!bb, $child, $is);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

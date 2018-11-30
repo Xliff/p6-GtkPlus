@@ -13,6 +13,8 @@ use GTK::EntryBuffer;
 use GTK::Roles::Editable;
 use GTK::Roles::Signals::Entry;
 
+my subset Ancestry where GtkEntry | GtkEditable | GtkBuildable | GtkWidget;
+
 class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Editable;
   also does GTK::Roles::Signals::Entry;
@@ -27,7 +29,7 @@ class GTK::Entry is GTK::Widget {
 
   submethod BUILD(:$entry) {
     given $entry {
-      when GtkEntry | GtkWidget {
+      when Ancestry {
         self.setEntry($entry);
       }
       when GTK::Entry {
@@ -35,19 +37,40 @@ class GTK::Entry is GTK::Widget {
       default {
       }
     }
-    # For GTK::Roles::Editable
-    $!er = nativecast(GtkEditable, $!e);
+  }
+
+  method setEntry($entry) {
+    my $to-parent;
+    $!e = do given $entry {
+      when GtkEntry {
+        $to-parent = nativecast(GtkWidget, $_);
+        $_;
+      }
+      when GtkEditable {
+        $!er = $_;                              # GTK::Roles::Editable
+        $to-parent = nativecast(GtkWidget, $_);
+        nativecast(GtkEntry, $_);
+      }
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkEntry, $_);
+      }
+    };
+    self.setWidget($to-parent);
+    $!er //= nativecast(GtkEditable, $!e);      # GTK::Roles::Editable
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-e;
   }
 
+  multi method new (Ancestry $entry) {
+    my $o = self.bless(:$entry);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $entry = gtk_entry_new();
-    self.bless(:$entry);
-  }
-  multi method new (GtkWidget $entry) {
     self.bless(:$entry);
   }
 
@@ -58,25 +81,7 @@ class GTK::Entry is GTK::Widget {
     self.bless(:$entry);
   }
 
-  method setEntry($entry) {
-    my $to-parent;
-    $!e = do given $entry {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkEntry, $_);
-      }
-      when GtkEntry {
-        $to-parent = nativecast(GtkWidget, $_);
-        $_;
-      }
-    };
-    self.setWidget($to-parent);
-  }
-
-  method GTK::Raw::Types::GtkEntry {
-    $!e;
-  }
-  method entry {
+  method GTK::Raw::Types::GtkEntry is also<entry> {
     $!e;
   }
 

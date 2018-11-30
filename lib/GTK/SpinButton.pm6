@@ -9,11 +9,16 @@ use GTK::Raw::Types;
 
 use GTK::Entry;
 
-use GTK::Roles::Editable;
+use GTK::Roles::Orientable;
+
 use GTK::Roles::Signals::SpinButton;
 
+my subset Ancestry
+  where GtkSpinButton | GtkOrientable | GtkEntry  | GtkCellEditable |
+        GtkEditable   | GtkBuildable  | GtkWidget;
+
 class GTK::SpinButton is GTK::Entry {
-  also does GTK::Roles::Editable;
+  also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::SpinButton;
 
   has GtkSpinButton $!sp;
@@ -27,15 +32,20 @@ class GTK::SpinButton is GTK::Entry {
   submethod BUILD(:$spinbutton) {
     my $to-parent;
     given $spinbutton {
-      when GtkSpinButton | GtkWidget {
+      when Ancestry {
         $!sp = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkSpinButton, $_);
-          }
           when GtkSpinButton {
             $to-parent = nativecast(GtkEntry, $_);
             $_;
+          }
+          when GtkOrientable {
+            $!or = $_;                                  # GTK::Roles::Orientable
+            $to-parent = nativecast(GtkEntry, $_);
+            nativecast(GtkSpinButton, $_);
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkSpinButton, $_);
           }
         };
         self.setEntry($_);
@@ -45,16 +55,17 @@ class GTK::SpinButton is GTK::Entry {
       default {
       }
     }
-    # For GTK::Roles::Editable
-    $!er = nativecast(GtkEditable, $!sp);
+    $!or //= nativecast(GtkOrientable, $!sp)            # GTK::Roles::Orientable
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-sp;
   }
 
-  multi method new (GtkWidget $spinbutton) {
-    self.bless(:$spinbutton);
+  multi method new (Ancestry $spinbutton) {
+    my $o = self.bless(:$spinbutton);
+    $o.upref;
+    $o;
   }
   multi method new (
     GtkAdjustment() $adjustment,
@@ -67,7 +78,9 @@ class GTK::SpinButton is GTK::Entry {
     self.bless(:$spinbutton);
   }
 
-  method new_with_range (Num() $min, Num() $max, Num() $step) is also<new-with-range> {
+  method new_with_range (Num() $min, Num() $max, Num() $step)
+    is also<new-with-range>
+  {
     my gdouble ($mn, $mx, $st) = ($min, $max, $step);
     my $spinbutton = gtk_spin_button_new_with_range($mn, $mx, $st);
     self.bless(:$spinbutton);
@@ -246,4 +259,3 @@ class GTK::SpinButton is GTK::Entry {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

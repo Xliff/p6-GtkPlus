@@ -11,7 +11,9 @@ use GTK::Bin;
 
 use GTK::Roles::FileChooser;
 
-my subset ParentChild where GtkFileChooserButton | GtkFileChooser | GtkWidget;
+my subset Ancestry
+  where GtkFileChooserButton | GtkFileChooser | GtkBox     | GtkOrientable |
+        GtkContainer         | GtkBuildable   | GtkWidget;
 
 class GTK::FileChooserButton is GTK::Bin {
   also does GTK::Roles::FileChooser;
@@ -27,20 +29,20 @@ class GTK::FileChooserButton is GTK::Bin {
   submethod BUILD(:$chooser) {
     my $to-parent;
     given $chooser {
-      when ParentChild {
+      when Ancestry {
         $!fcb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkFileChooserButton, $_);
-          }
-          when GtkFileChooser {
-            $!fc = $_;                          # GTK::Roles::FileChooser
-            $to-parent = nativecast(GtkBin, $_);
-            nativecast(GtkFileChooserButton, $_);
-          }
           when GtkFileChooserButton {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          when GtkFileChooser {
+            $!fc = $_;                            # GTK::Roles::FileChooser
+            $to-parent = nativecast(GtkBin, $_);
+            nativecast(GtkFileChooserButton, $_);
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkFileChooserButton, $_);
           }
         }
         self.setBin($to-parent);
@@ -53,15 +55,17 @@ class GTK::FileChooserButton is GTK::Bin {
     $!fc //= nativecast(GtkFileChooser, $!fcb);   # GTK::Roles::FileChooser
   }
 
+  multi method new (Ancestry $chooser) {
+    my $o = self.bless(:$chooser);
+    $o.upref;
+    $o;
+  }
   multi method new (
     Str() $title,
     Int() $action                 # GtkFileChooserAction $action
   ) {
     my uint32 $a = self.RESOLVE-UINT($action);
     my $chooser = gtk_file_chooser_button_new($title, $a);
-    self.bless(:$chooser);
-  }
-  multi method new (ParentChild $chooser) {
     self.bless(:$chooser);
   }
 
@@ -103,8 +107,9 @@ class GTK::FileChooserButton is GTK::Bin {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( warn "dialog does not allow reading" );
-        nativecast(GtkFileChooser, $gv.object);
+        warn 'GTK::FileChooserButton.dialog does not allow reading'
+          if $DEBUG;
+        Nil;
       },
       STORE => -> $, GtkFileChooser() $val is copy {
         $gv.objecet = $val;
@@ -120,4 +125,3 @@ class GTK::FileChooserButton is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

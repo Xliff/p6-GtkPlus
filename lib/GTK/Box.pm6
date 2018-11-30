@@ -55,7 +55,7 @@ class GTK::Box is GTK::Container {
         $to-parent = nativecast(GtkContainer, $_);
         nativecast(GtkBox, $_);
       }
-      when GtkWidget {
+      default {
         $to-parent = $_;
         nativecast(GtkBox, $_);
       }

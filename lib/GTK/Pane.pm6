@@ -10,11 +10,12 @@ use GTK::Raw::Types;
 use GTK::Container;
 
 use GTK::Roles::Orientable;
-use GTK::Roles::Signals::Generic;
+
+my subset Ancestry where GtkPaned     | GtkOrientable | GtkContainer |
+                         GtkBuildable | GtkWidget;
 
 class GTK::Pane is GTK::Container {
   also does GTK::Roles::Orientable;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkPaned $!p;
 
@@ -30,15 +31,20 @@ class GTK::Pane is GTK::Container {
   submethod BUILD(:$pane) {
     my $to-parent;
     given $pane {
-      when GtkPaned | GtkWidget {
+      when Ancestry {
         $!p = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkPaned, $pane);
-          }
           when GtkPaned {
             $to-parent = nativecast(GtkContainer, $_);
             $pane;
+          }
+          when GtkOrientable {
+            $!or = $_;                            # GTK::Roles::GtkOrientable
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkPaned, $pane);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkPaned, $pane);
           }
         };
         self.setContainer($to-parent);
@@ -48,16 +54,13 @@ class GTK::Pane is GTK::Container {
       default {
       }
     }
-    # For GTK::Roles::GtkOrientable
-    $!or = nativecast(GtkOrientable, $!p);
+    $!or //= nativecast(GtkOrientable, $!p);      # GTK::Roles::GtkOrientable
   }
 
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals;
-  }
-
-  multi method new (GtkWidget $pane) {
-    self.bless(:$pane);
+  multi method new (Ancestry $pane) {
+    my $o = self.bless(:$pane);
+    $o.upref;
+    $o;
   }
   multi method new (Int() $orientation) {
     my uint32 $o = self.RESOLVE-UINT($orientation);

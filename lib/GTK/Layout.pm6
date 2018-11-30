@@ -11,7 +11,7 @@ use GTK::Container;
 
 use GTK::Roles::Scrollable;
 
-my subset ParentChild where GtkLayout | GtkWidget;
+my subset Ancestry where GtkLayout | GtkScrollable | GtkBuilder | GtkWidget;
 
 class GTK::Layout is GTK::Container {
   also does GTK::Roles::Scrollable;
@@ -26,7 +26,7 @@ class GTK::Layout is GTK::Container {
 
   submethod BUILD(:$layout) {
     given $layout {
-      when ParentChild {
+      when Ancestry {
         self.setLayout($layout);
       }
       when GTK::Layout {
@@ -40,22 +40,29 @@ class GTK::Layout is GTK::Container {
     my $to-parent;
     $!l = do {
       given $layout {
-        when GtkWidget {
-          $to-parent = $_;
-          nativecast(GtkLayout, $_);
-        }
         when GtkLayout  {
           $to-parent = nativecast(GtkContainer, $_);
           $_;
         }
+        when GtkScrollable {
+          $!s = $_ ;                            # GTK::Roles::Scrollable
+          $to-parent = nativecast(GtkContainer, $_);
+          nativecast(GtkLayout, $_);
+        }
+        default {
+          $to-parent = $_;
+          nativecast(GtkLayout, $_);
+        }
       }
     }
     self.setContainer($to-parent);
-    $!s = nativecast(GtkScrollable, $!l);     # GTK::Roles::Scrollable
+    $!s //= nativecast(GtkScrollable, $!l);     # GTK::Roles::Scrollable
   }
 
-  multi method new (ParentChild $layout) {
-    self.bless(:$layout);
+  multi method new (Ancestry $layout) {
+    my $o = self.bless(:$layout);
+    $o.upref;
+    $o;
   }
   multi method new (
     GtkAdjustment() $hadjustment,
@@ -78,7 +85,7 @@ class GTK::Layout is GTK::Container {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -93,7 +100,7 @@ class GTK::Layout is GTK::Container {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('width', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('width', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {

@@ -9,7 +9,14 @@ use GTK::Raw::Separator;
 
 use GTK::Widget;
 
+use GTK::Roles::Orientable;
+
+my subset Ancestry
+  where GtkSeparator | GtkOrientable | GtkBuildable | GtkWidget;
+
 class GTK::Separator is GTK::Widget {
+  also does GTK::Roles::Orientable;
+
   has GtkSeparator $!s;
 
   method bless(*%attrinit) {
@@ -21,15 +28,20 @@ class GTK::Separator is GTK::Widget {
   submethod BUILD(:$separator) {
     my $to-parent;
     given $separator {
-      when GtkSeparator | GtkWidget {
+      when Ancestry {
         $!s = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkSeparator, $_);
-          }
           when GtkSeparator {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
+          }
+          when GtkOrientable {
+            $!or = $_;                                # GTK::Roles::Orientable
+            $to-parent = nativecast(GtkWidget, $_);
+            nativecast(GtkSeparator, $_);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkSeparator, $_);
           }
         };
         self.setWidget($to-parent);
@@ -39,14 +51,20 @@ class GTK::Separator is GTK::Widget {
       default {
       }
     }
+    $!or //= nativecast(GtkOrientable, $separator);   # GTK::Roles::Orientable
   }
 
-  multi method new (GtkWidget $separator) {
-    self.bless(:$separator);
+  multi method new (Ancestry $separator) {
+    my $o = self.bless(:$separator);
+    $o.upref;
+    $o;
   }
   multi method new(:$horizontal, :$vertical)  {
-    die "Please specify only ONE of \$horizontal and \$vertical when creating a GTK::Separator"
-      unless $horizontal ^^ $vertical;
+    # Single line HEREDOC that spans more than one in the source!
+    die qq:to/D/ unless $horizontal ^^ $vertical;
+Please specify only ONE of \$horizontal and \$vertical when creating a {
+}GTK::Separator"
+D
 
     my guint $o = do {
       when $horizontal { GTK_ORIENTATION_HORIZONTAL.Int; }
@@ -74,4 +92,3 @@ class GTK::Separator is GTK::Widget {
   }
 
 }
-

@@ -12,13 +12,23 @@ use GTK::Widget;
 use GTK::Roles::Orientable;
 use GTK::Roles::Signals::Range;
 
+my subset Ancestry where GtkRange | GtkOrientable | GtkBuildable | GtkWidget;
+
 class GTK::Range is GTK::Widget {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::Range;
 
   has GtkRange $!r;
 
-  # Abstract code, so no need for BUILD or new
+  submethod BUILD(:$range) {
+    given $range {
+      when Ancestry {
+        self.setRange($range);
+      }
+      default {
+      }
+    }
+  }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-r;
@@ -27,18 +37,29 @@ class GTK::Range is GTK::Widget {
   method setRange($range) {
     my $to-parent;
     $!r = do given $range {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkRange, $_);
-      }
       when GtkRange {
         $to-parent = nativecast(GtkWidget, $_);
         $_;
       }
+      when GtkOrientable {
+        $!or = $_;                                  # GTK::Roles::Orientable
+        $to-parent = nativecast(GtkWidget, $_);
+        nativecast(GtkRange, $_);
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkRange, $_);
+      }
     }
     self.setWidget($to-parent);
-    # For GTK::Roles::Orientable
-    $!or = nativecast(GtkOrientable, $!r);
+    $!or //= nativecast(GtkOrientable, $!r);        # GTK::Roles::Orientable
+  }
+
+  # This is an abstract class, but can have instances of it's descendants
+  method new (Ancestry $range) {
+    my $o = self.bless(:$range);
+    $o.upref;
+    $o;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -118,7 +139,10 @@ class GTK::Range is GTK::Widget {
     );
   }
 
-  method lower_stepper_sensitivity is rw is also<lower-stepper-sensitivity> {
+  method lower_stepper_sensitivity
+    is rw
+    is also<lower-stepper-sensitivity>
+  {
     Proxy.new(
       FETCH => sub ($) {
         GtkSensitivityType( gtk_range_get_lower_stepper_sensitivity($!r) );
@@ -133,7 +157,8 @@ class GTK::Range is GTK::Widget {
   method min_slider_size
     is DEPRECATED('use CSS min-height/min-width')
     is rw
-  is also<min-slider-size> {
+    is also<min-slider-size>
+  {
     Proxy.new(
       FETCH => sub ($) {
         gtk_range_get_min_slider_size($!r);
@@ -219,11 +244,15 @@ class GTK::Range is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_range_rect (GdkRectangle() $range_rect) is also<get-range-rect> {
+  method get_range_rect (GdkRectangle() $range_rect)
+    is also<get-range-rect>
+  {
     gtk_range_get_range_rect($!r, $range_rect);
   }
 
-  method get_slider_range (Int() $slider_start, Int() $slider_end) is also<get-slider-range> {
+  method get_slider_range (Int() $slider_start, Int() $slider_end)
+    is also<get-slider-range>
+  {
     my @i = ($slider_start, $slider_end);
     my gint ($s, $e) = self.RESOLVE-INT(@i);
     gtk_range_get_slider_range($!r, $s, $e);
@@ -233,7 +262,9 @@ class GTK::Range is GTK::Widget {
     gtk_range_get_type();
   }
 
-  method set_increments (Num() $step, Num() $page) is also<set-increments> {
+  method set_increments (Num() $step, Num() $page)
+    is also<set-increments>
+  {
     my gdouble ($s, $p) = ($step, $page);
     gtk_range_set_increments($!r, $s, $p);
   }
@@ -245,4 +276,3 @@ class GTK::Range is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

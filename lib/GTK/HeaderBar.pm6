@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+my subset Ancestry
+  where GtkHeaderBar | GtkContainer | GtkBuildable | GtkWidget;
+
 class GTK::HeaderBar is GTK::Container {
   has GtkHeaderBar $!hb;
 
@@ -21,15 +24,15 @@ class GTK::HeaderBar is GTK::Container {
   submethod BUILD(:$headerbar) {
     my $to-parent;
     given $headerbar {
-      when GtkHeaderBar | GtkWidget {
+      when Ancestry {
         $!hb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkHeaderBar, $_);
-          }
           when GtkHeaderBar {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkHeaderBar, $_);
           }
         };
         self.setContainer($to-parent);
@@ -41,11 +44,11 @@ class GTK::HeaderBar is GTK::Container {
     }
   }
 
-  multi method new {
-    my $headerbar = gtk_header_bar_new();
+  multi method new (Ancestry $headerbar) {
     self.bless(:$headerbar);
   }
-  multi method new (GtkWidget $headerbar) {
+  multi method new {
+    my $headerbar = gtk_header_bar_new();
     self.bless(:$headerbar);
   }
 

@@ -140,7 +140,9 @@ class GTK::MenuShell is GTK::Container {
     GMenuModel $model,
     gchar $action_namespace,
     Int() $with_separators
-  ) is also<bind-model> {
+  )
+    is also<bind-model>
+  {
     my gboolean $ws = self.RESOLVE-BOOL($with_separators);
     gtk_menu_shell_bind_model($!ms, $model, $action_namespace, $ws);
   }
@@ -203,4 +205,3 @@ class GTK::MenuShell is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

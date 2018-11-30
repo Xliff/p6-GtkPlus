@@ -48,7 +48,10 @@ for %nodes.pairs.sort( *.key ) -> $p {
       @others.push: $mn;
       next;
     }
-    %nodes{$p.key}<edges>.push: $mn;
+
+    #%nodes{$p.key}<edges>.push: $mn;
+    #say "P: {$p.key} / { %nodes{$p.key}.gist }";
+
     $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
   }
 }

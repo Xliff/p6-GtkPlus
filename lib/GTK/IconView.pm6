@@ -14,7 +14,8 @@ use GTK::Roles::CellLayout;
 use GTK::Roles::Scrollable;
 use GTK::Roles::Signals::IconView;
 
-my subset ParentChild where GtkIconView | GtkWidget;
+my subset Ancestry where GtkIconView | GtkCellLayout | GtkScrollable |
+                         GtkBuilder  | GtkWidget;
 
 class GTK::IconView is GTK::Container {
   also does GTK::Roles::CellLayout;
@@ -30,21 +31,31 @@ class GTK::IconView is GTK::Container {
   }
 
   submethod DESTROY {
-    self.disconnect-all(%!signals-iv{$_});
+    self.disconnect-all($_) for %!signals-iv;
   }
 
   submethod BUILD(:$iconview) {
     my $to-parent;
     given $iconview {
-      when ParentChild {
+      when Ancestry {
         $!iv = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkIconView, $_);
-          }
           when GtkIconView  {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          when GtkCellLayout {
+            $!cl = $_;                      # GTK::Roles::CellLayout
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkIconView, $_);
+          }
+          when GtkScrollable {
+            $!s = $_;                       # GTK::Roles::CellLayout
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkIconView, $_);
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkIconView, $_);
           }
         }
         self.setContainer($to-parent);
@@ -58,20 +69,20 @@ class GTK::IconView is GTK::Container {
     $!s = nativecast(GtkScrollable, $!iv);  # GTK::Roles::Scrollable
   }
 
+  multi method new (Ancestry $iconview) {
+    self.bless(:$iconview);
+  }
   multi method new {
     my $iconview = gtk_icon_view_new();
     self.bless(:$iconview);
   }
-  multi method new (ParentChild $iconview) {
-    self.bless(:$iconview);
-  }
 
-  method new_with_area(GtkCellArea() $area) is also<new-with-area> {
+  method new_with_area (GtkCellArea() $area) is also<new-with-area> {
     my $iconview = gtk_icon_view_new_with_area($area);
     self.bless(:$iconview);
   }
 
-  method new_with_model(GtkTreeModel() $model) is also<new-with-model> {
+  method new_with_model (GtkTreeModel() $model) is also<new-with-model> {
     my $iconview = gtk_icon_view_new_with_model($model);
     self.bless(:$iconview);
   }

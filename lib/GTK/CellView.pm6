@@ -49,7 +49,7 @@ class GTK::CellView is GTK::Widget {
             $to-parent = nativecast(GtkWidget, $_);
             nativecast(GtkCellView, $_);
           }
-          when GtkWidget | GtkBuildable {
+          default {
             $to-parent = $_;
             nativecast(GtkCellView, $_);
           }

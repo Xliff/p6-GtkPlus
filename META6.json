@@ -387,7 +387,6 @@
       "GTK::Button"                            :  "lib/GTK/Button.pm6"                          ,
       "GTK::ButtonBox"                         :  "lib/GTK/ButtonBox.pm6"                       ,
       "GTK::ColorButton"                       :  "lib/GTK/ColorButton.pm6"                     ,
-      "GTK::ColorChooser"                      :  "lib/GTK/ColorChooser.pm6"                    ,
       "GTK::ComboBox"                          :  "lib/GTK/ComboBox.pm6"                        ,
       "GTK::ComboBoxText"                      :  "lib/GTK/ComboBoxText.pm6"                    ,
       "GTK::EventBox"                          :  "lib/GTK/EventBox.pm6"                        ,
@@ -464,6 +463,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 

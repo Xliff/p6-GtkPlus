@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
+my subset Ancestry where GtkInfoBar   | GtkBox       | GtkOrientable |
+                         GtkContainer | GtkBuildable | GtkWidget;
+
 class GTK::InfoBar is GTK::Box {
   has GtkInfoBar $!ib;
 
@@ -21,15 +24,15 @@ class GTK::InfoBar is GTK::Box {
   submethod BUILD(:$infobar) {
     my $to-parent;
     given $infobar {
-      when GtkInfoBar | GtkWidget {
+      when Ancestry {
         $!ib = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkInfoBar, $_);
-          }
           when GtkInfoBar {
             $to-parent = nativecast(GtkBox, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkInfoBar, $_);
           }
         };
         self.setBox($to-parent);
@@ -41,11 +44,13 @@ class GTK::InfoBar is GTK::Box {
     }
   }
 
+  multi method new (Ancestry $infobar) {
+    my $o = self.bless(:$infobar);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $infobar = gtk_info_bar_new();
-    self.bless(:$infobar);
-  }
-  multi method new (GtkWidget $infobar) {
     self.bless(:$infobar);
   }
 
@@ -104,12 +109,16 @@ class GTK::InfoBar is GTK::Box {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_action_widget (GtkWidget() $child, Int() $response_id) is also<add-action-widget> {
+  method add_action_widget (GtkWidget() $child, Int() $response_id)
+    is also<add-action-widget>
+  {
     my gint $r = self.RESOLVE-INT($response_id);
     gtk_info_bar_add_action_widget($!ib, $child, $r);
   }
 
-  method add_button (Str() $button_text, Int() $response_id) is also<add-button> {
+  method add_button (Str() $button_text, Int() $response_id)
+    is also<add-button>
+  {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_info_bar_add_button($!ib, $button_text, $ri);
   }
@@ -133,12 +142,16 @@ class GTK::InfoBar is GTK::Box {
     gtk_info_bar_response($!ib, $ri);
   }
 
-  method set_default_response (Int() $response_id) is also<set-default-response> {
+  method set_default_response (Int() $response_id)
+    is also<set-default-response>
+  {
     my gint $ri = self.RESOLVE-INT($response_id);
     gtk_info_bar_set_default_response($!ib, $ri);
   }
 
-  method set_response_sensitive (Int() $response_id, Int() $setting) is also<set-response-sensitive> {
+  method set_response_sensitive (Int() $response_id, Int() $setting)
+    is also<set-response-sensitive>
+  {
     my gint $ri = self.RESOLVE-INT($response_id);
     my gboolean $s = self.RESOLVE-BOOL($setting);
     gtk_info_bar_set_response_sensitive($!ib, $ri, $s);
@@ -146,4 +159,3 @@ class GTK::InfoBar is GTK::Box {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -43,22 +43,18 @@ class GTK::Button is GTK::Bin {
   method setButton($button) {
     my $to-parent;
     $!b = do given $button {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkButton, $_);
+      when GtkButton {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
       }
       when GtkActionable {
         $!action //= nativecast(GtkActionable, $!b);    # GTK::Roles::Actionable
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkButton, $_);
       }
-      when GtkBuildable {
-        $to-parent = nativecast(GtkBin, $_);
+      default {
+        $to-parent = $_;
         nativecast(GtkButton, $_);
-      }
-      when GtkButton {
-        $to-parent = nativecast(GtkBin, $_);
-        $_;
       }
     };
     self.setBin($button);

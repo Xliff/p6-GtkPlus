@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+my subset Ancestry when GtkPopover | GtkBin | GtkContainer | GtkBuildable |
+                        GtkWidget;
+
 class GTK::Popover is GTK::Bin {
   has GtkPopover $!p;
 
@@ -20,7 +23,7 @@ class GTK::Popover is GTK::Bin {
 
   submethod BUILD(:$popover) {
     given $popover {
-      when GtkPopover | GtkWidget {
+      when Ancestry {
         self.setPopover($popover);
       }
       when GTK::Popover {
@@ -33,20 +36,23 @@ class GTK::Popover is GTK::Bin {
   method setPopover($popover) {
     my $to-parent;
     $!p = do given $popover {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkPopover, $_);
-      }
       when GtkPopover {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
+      default {
+        $to-parent = $_;
+        nativecast(GtkPopover, $_);
+      }
+
     }
     self.setBin($to-parent);
   }
 
-  method new (GtkWidget $popover) {
-    self.bless(:$popover);
+  method new (Ancestry $popover) {
+    my $o = self.bless(:$popover);
+    $o.upref;
+    $o;
   }
 
   method new-relative-to(GtkWidget() $relative) is also<new_relative_to> {
@@ -54,7 +60,9 @@ class GTK::Popover is GTK::Bin {
     self.bless(:$popover);
   }
 
-  method new_from_model (GtkWidget() $relative, GMenuModel $model) is also<new-from-model> {
+  method new_from_model (GtkWidget() $relative, GMenuModel $model)
+    is also<new-from-model>
+  {
     my $popover = gtk_popover_new_from_model($relative, $model);
     self.bless(:$popover);
   }
@@ -141,7 +149,9 @@ class GTK::Popover is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method bind_model (GMenuModel $model, gchar $action_namespace) is also<bind-model> {
+  method bind_model (GMenuModel $model, Str() $action_namespace)
+    is also<bind-model>
+  {
     gtk_popover_bind_model($!p, $model, $action_namespace);
   }
 
@@ -167,4 +177,3 @@ class GTK::Popover is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+my subset Ancestry where GtkCalendar | GtkBuildable | GtkWidget;
+
 class GTK::Calendar is GTK::Widget {
   has GtkCalendar $!cal;
 
@@ -21,15 +23,15 @@ class GTK::Calendar is GTK::Widget {
   submethod BUILD(:$calendar) {
     my $to-parent;
     given $calendar {
-      when GtkCalendar | GtkWidget {
+      when Ancestry {
         $!cal = do {
-          when GtkWidget   {
-            $to-parent = $_;
-            nativecast(GtkCalendar, $calendar);
-          }
           when GtkCalendar {
             $to-parent = nativecast(GtkWidget, $calendar);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkCalendar, $calendar);
           }
         };
         self.setWidget($to-parent);
@@ -41,11 +43,13 @@ class GTK::Calendar is GTK::Widget {
     }
   }
 
+  multi method new (Ancestry $calendar) {
+    my $o = self.bless(:$calendar);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $calendar = gtk_calendar_new();
-    self.bless(:$calendar);
-  }
-  multi method new (GtkWidget $calendar) {
     self.bless(:$calendar);
   }
 
@@ -196,7 +200,9 @@ class GTK::Calendar is GTK::Widget {
     GtkCalendarDetailFunc $func,
     gpointer $data,
     GDestroyNotify $destroy
-  ) is also<set-detail-func> {
+  )
+    is also<set-detail-func>
+  {
     gtk_calendar_set_detail_func($!cal, $func, $data, $destroy);
   }
 

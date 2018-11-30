@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+my subset Ancestry where GtkFixed | GtkContainer | GtkBuildable | GtkWidget;
+
 class GTK::Fixed is GTK::Container {
   has GtkFixed $!f;
 
@@ -21,15 +23,15 @@ class GTK::Fixed is GTK::Container {
   submethod BUILD(:$fixed) {
     my $to-parent;
     given $fixed {
-      when GtkFixed | GtkWidget {
+      when Ancestry {
         $!f = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkFixed, $_);
-          }
           when GtkFixed {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkFixed, $_);
           }
         };
         self.setContainer($to-parent);
@@ -41,11 +43,13 @@ class GTK::Fixed is GTK::Container {
     }
   }
 
+  multi method new (Ancestry $fixed) {
+    my $o = self.bless(:$fixed);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $fixed = gtk_fixed_new();
-    self.bless(:$fixed);
-  }
-  multi method new (GtkWidget $fixed) {
     self.bless(:$fixed);
   }
 
@@ -74,4 +78,3 @@ class GTK::Fixed is GTK::Container {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

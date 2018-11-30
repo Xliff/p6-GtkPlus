@@ -35,7 +35,7 @@ class GTK::ListBoxRow is GTK::Bin {
             $_;
           }
           when GtkActionable {
-            $!action = nativecast(GtkActionable, $_);
+            $!action = $_;                          # GTK::Roles::Actionable
             $to-parent = nativecast(GtkBin, $_);
             nativecast(GtkListBoxRow, $_);
           }
@@ -46,7 +46,7 @@ class GTK::ListBoxRow is GTK::Bin {
 
         }
         self.setBin($to-parent);
-        $!action //= nativecast(GtkActionable, $_);
+        $!action //= nativecast(GtkActionable, $_); # GTK::Roles::Actionable
       }
       when GTK::ListBoxRow {
       }

@@ -11,7 +11,8 @@ use GTK::Bin;
 
 use GTK::Roles::Actionable;
 
-my subset Ancestry where GtkMenuItem | GtkActionable | GtkWidget;
+my subset Ancestry where GtkMenuItem | GtkActionable | GtkContainer |
+                         GtkWidget;
 
 class GTK::MenuItem is GTK::Bin {
   also does GTK::Roles::Actionable;
@@ -57,31 +58,37 @@ class GTK::MenuItem is GTK::Bin {
   method setMenuItem($menuitem) {
     my $to-parent;
     $!mi = do given $menuitem {
-      when GtkWidget {
-        $to-parent = $_;
-        nativecast(GtkMenuItem, $_);
-      }
-      when GtkActionable {
-        $!action = $_;
-        $to-parent = nativecast(GtkBin, $_);
-        nativecast(GtkMenuItem, $_);
-      }
       when GtkMenuItem {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
+
+      when GtkActionable {
+        $!action = $_;                            # GTK::Roles::Actionable
+        $to-parent = nativecast(GtkBin, $_);
+        nativecast(GtkMenuItem, $_);
+      }
+
+      default {
+        $to-parent = $_;
+        nativecast(GtkMenuItem, $_);
+      }
+
     }
-    $!action //= nativecast(GtkActionable, $!mi);  # GTK::Roles::Actionable
+    $!action //= nativecast(GtkActionable, $!mi); # GTK::Roles::Actionable
     self.setBin($to-parent);
   }
 
+  multi method new (Ancestry $menuitem) {
+    my $o = self.bless(:$menuitem);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $menuitem = gtk_menu_item_new();
     self.bless(:$menuitem);
   }
-  multi method new (Ancestry $menuitem) {
-    self.bless(:$menuitem);
-  }
+
   multi method new(
     Str() $label,
     :$clicked,
@@ -266,7 +273,7 @@ class GTK::MenuItem is GTK::Bin {
   }
 
   method emit_toggle_size_request (Int() $requisition)
-    is also<emit-toggle-size-request> 
+    is also<emit-toggle-size-request>
   {
     my gint $r = self.RESOLVE-INT($requisition);
     gtk_menu_item_toggle_size_request($!mi, $r);

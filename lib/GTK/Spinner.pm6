@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+my subset Ancestry where GtkSpinner | GtkBuildable | GtkWidget;
+
 class GTK::Spinner is GTK::Widget {
   has GtkSpinner $!spin;
 
@@ -21,15 +23,15 @@ class GTK::Spinner is GTK::Widget {
   submethod BUILD(:$spin) {
     my $to-parent;
     given $spin {
-      when GtkSpinner | GtkWidget {
+      when Ancestry {
         $!spin = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkSpinner, $_);
-          }
           when GtkSpinner {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkSpinner, $_);
           }
         };
         self.setWidget($to-parent);
@@ -41,13 +43,16 @@ class GTK::Spinner is GTK::Widget {
     }
   }
 
+  multi method new (Ancestry $spin) {
+    my $o = self.bless(:$spin);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $spin = gtk_spinner_new();
     self.bless(:$spin);
   }
-  multi method new (GtkWidget $spin) {
-    self.bless(:$spin);
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -70,4 +75,3 @@ class GTK::Spinner is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

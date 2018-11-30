@@ -11,6 +11,9 @@ use GTK::Widget;
 
 use GTK::Roles::Orientable;
 
+my subset Ancestry
+  where GtkLevelBar | GtkOrientable | GtkBuildable | GtkWidget;
+
 class GTK::LevelBar is GTK::Widget {
   also does GTK::Roles::Orientable;
 
@@ -25,15 +28,20 @@ class GTK::LevelBar is GTK::Widget {
   submethod BUILD(:$level) {
     my $to-parent;
     given $level {
-      when GtkLevelBar | GtkWidget {
+      when Ancestry {
         $!lb = do {
-          when GtkWidget   {
-            $to-parent = $_;
-            nativecast(GtkLevelBar, $_);
-          }
           when GtkLevelBar {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
+          }
+          when GtkOrientable {
+            $!or = $_;
+            $to-parent = nativecast(GtkWidget, $_);
+            nativecast(GtkLevelBar, $_);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkLevelBar, $_);
           }
         };
         self.setWidget($to-parent);
@@ -44,14 +52,16 @@ class GTK::LevelBar is GTK::Widget {
       }
     }
     # For GTK::Roles::Orientable
-    $!or = nativecast(GtkOrientable, $!lb);
+    $!or //= nativecast(GtkOrientable, $!lb);
   }
 
+  multi method new (Ancestry $level) {
+    my $o = self.bless(:$level);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $level = gtk_level_bar_new();
-    self.bless(:$level);
-  }
-  multi method new (GtkWidget $level) {
     self.bless(:$level);
   }
 
@@ -77,7 +87,7 @@ class GTK::LevelBar is GTK::Widget {
       FETCH => sub ($) {
         so gtk_level_bar_get_inverted($!lb);
       },
-      STORE => sub ($, $inverted is copy) {
+      STORE => sub ($, Int() $inverted is copy) {
         my gboolean $i = self.RESOLVE-BOOL($inverted);
         gtk_level_bar_set_inverted($!lb, $i);
       }
@@ -113,7 +123,7 @@ class GTK::LevelBar is GTK::Widget {
       FETCH => sub ($) {
         GtkLevelBarMode( gtk_level_bar_get_mode($!lb) );
       },
-      STORE => sub ($, $mode is copy) {
+      STORE => sub ($, Int() $mode is copy) {
         my guint32 $m = self.RESOLVE-uint($mode);
         gtk_level_bar_set_mode($!lb, $m);
       }
@@ -134,7 +144,9 @@ class GTK::LevelBar is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_offset_value (gchar $name, Num() $value) is also<get-offset-value> {
+  method get_offset_value (gchar $name, Num() $value)
+    is also<get-offset-value>
+  {
     my gdouble $v = $value;
     gtk_level_bar_get_offset_value($!lb, $name, $v);
   }
@@ -143,7 +155,9 @@ class GTK::LevelBar is GTK::Widget {
     gtk_level_bar_get_type();
   }
 
-  method add_offset_value(Str() $name, Num() $value) is also<add-offset-value> {
+  method add_offset_value(Str() $name, Num() $value)
+    is also<add-offset-value>
+  {
     my gdouble $v = $value;
     gtk_level_bar_add_offset_value($!lb, $name, $v);
   }
@@ -154,4 +168,3 @@ class GTK::LevelBar is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -9,11 +9,12 @@ use GTK::Raw::Types;
 
 use GTK::Entry;
 
-use GTK::Roles::Editable;
+my subset Ancestry
+  where GtkSearchEntry | GtkEntry  | GtkCellEditable | GtkEditable |
+        GtkBuildable   | GtkWidget;
+
 
 class GTK::SearchEntry is GTK::Entry {
-  also does GTK::Roles::Editable;
-
   has GtkSearchEntry $!se;
 
   method bless(*%attrinit) {
@@ -25,15 +26,16 @@ class GTK::SearchEntry is GTK::Entry {
   submethod BUILD(:$searchentry) {
     my $to-parent;
     given $searchentry {
-      when GtkSearchEntry | GtkWidget {
+      when Ancestry {
         $!se = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkSearchEntry, $_);
-          }
           when GtkSearchEntry {
             $to-parent = nativecast(GtkEntry, $_);
             $searchentry;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkSearchEntry, $_);
+
           }
         };
         self.setEntry($to-parent);
@@ -43,15 +45,15 @@ class GTK::SearchEntry is GTK::Entry {
       default {
       }
     }
-    # For GTK::Roles::GtkEditable
-    $!er = nativecast(GtkEditable, $!se);
   }
 
+  multi method new (Ancestry $searchentry) {
+    my $o = self.bless(:$searchentry);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $searchentry = gtk_search_entry_new();
-    self.bless(:$searchentry);
-  }
-  multi method new (GtkWidget $searchentry) {
     self.bless(:$searchentry);
   }
 
@@ -97,4 +99,3 @@ class GTK::SearchEntry is GTK::Entry {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

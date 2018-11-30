@@ -12,9 +12,12 @@ use GTK::Widget;
 
 use GTK::Roles::Orientable;
 
+my subset Ancestry
+  where GtkProgressBar | GtkOrientable | GtkBuilder | GtkWidget;
+
 class GTK::ProgressBar is GTK::Widget {
   also does GTK::Roles::Orientable;
-  
+
   has GtkProgressBar $!bar;
 
   method bless(*%attrinit) {
@@ -26,15 +29,20 @@ class GTK::ProgressBar is GTK::Widget {
   submethod BUILD(:$bar) {
     my $to-parent;
     given $bar {
-      when GtkProgressBar | GtkWidget {
+      when Ancestry {
         $!bar = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkProgressBar, $_);
-          }
           when GtkProgressBar {
             $to-parent = nativecast(GtkProgressBar, $_);
             $_;
+          }
+          when GtkOrientable {
+            $!or = $_;                                # GTK::Roles::Orientable
+            $to-parent = nativecast(GtkProgressBar, $_);
+            nativecast(GtkProgressBar, $_);
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkProgressBar, $_);
           }
         };
         self.setWidget($to-parent);
@@ -44,15 +52,16 @@ class GTK::ProgressBar is GTK::Widget {
       default {
       }
     }
-    # For GTK::Roles::Orientable
-    $!or = nativecast(GtkOrientable, $!bar);
+    $!or = nativecast(GtkOrientable, $!bar);          # GTK::Roles::Orientable
   }
 
+  multi method new (GtkWidget $bar) {
+    my $o = self.bless(:$bar);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $bar = gtk_progress_bar_new();
-    self.bless(:$bar);
-  }
-  multi method new (GtkWidget $bar) {
     self.bless(:$bar);
   }
 
@@ -87,7 +96,7 @@ class GTK::ProgressBar is GTK::Widget {
   method inverted is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_progress_bar_get_inverted($!bar) );
+        so gtk_progress_bar_get_inverted($!bar);
       },
       STORE => sub ($, Int() $inverted is copy) {
         my gboolean $i = self.RESOLVE-BOOL($inverted);
@@ -111,7 +120,7 @@ class GTK::ProgressBar is GTK::Widget {
   method show_text is rw is also<show-text> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_progress_bar_get_show_text($!bar) );
+        so gtk_progress_bar_get_show_text($!bar);
       },
       STORE => sub ($, Int() $show_text is copy) {
         my gboolean $st = self.RESOLVE-BOOL($show_text);
@@ -143,4 +152,3 @@ class GTK::ProgressBar is GTK::Widget {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

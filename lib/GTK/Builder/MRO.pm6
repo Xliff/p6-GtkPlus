@@ -103,3 +103,4 @@ our %mro is export = (
 'GTK::ToggleToolButton' => ('GTK::ToolButton', 'GTK::Roles::Actionable', 'GTK::ToolItem', 'GTK::Bin', 'GTK::Roles::LatchedContents', 'GTK::Container', 'GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'GTK::Widget', 'Any', 'Mu'),
 'GTK::RadioToolButton' => ('GTK::ToggleToolButton', 'GTK::ToolButton', 'GTK::Roles::Actionable', 'GTK::ToolItem', 'GTK::Bin', 'GTK::Roles::LatchedContents', 'GTK::Container', 'GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'GTK::Widget', 'Any', 'Mu'),
 );
+

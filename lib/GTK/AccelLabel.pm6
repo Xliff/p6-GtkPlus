@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Label;
 
+my subset Ancestry where GtkAccelLabel | GtkLabel | GtkBuildable | GtkWidget;
+
 class GTK::AccelLabel is GTK::Label {
   has GtkAccelLabel $!al;
 
@@ -21,13 +23,13 @@ class GTK::AccelLabel is GTK::Label {
   submethod BUILD(:$alabel) {
     my $to-parent;
     given $alabel {
-      when GtkAccelLabel | GtkWidget {
+      when Ancestry {
         $!al = do {
           when GtkAccelLabel {
             $to-parent = nativecast(GtkLabel, $_);
             $_;
           }
-          when GtkWidget {
+          default {
             $to-parent = $_;
             nativecast(GtkAccelLabel, $_);
           }
@@ -41,13 +43,16 @@ class GTK::AccelLabel is GTK::Label {
     }
   }
 
+  multi method new (Ancestry $alabel) {
+    my $o = self.bless(:$alabel);
+    $o.upref;
+    $o;
+  }
   multi method new (Str $label) {
     my $alabel = gtk_accel_label_new($label);
     self.bless(:$alabel);
   }
-  multi method new (GtkWidget $alabel) {
-    self.bless(:$alabel);
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -73,7 +78,9 @@ class GTK::AccelLabel is GTK::Label {
   method get_accel (
     Int() $accelerator_key,
     Int() $accelerator_mods is rw
-  ) is also<get-accel> {
+  )
+    is also<get-accel>
+  {
     my guint @u = ($accelerator_key, $accelerator_mods);
     my uint32 ($ak, $am) = self.RESOLVE-UINT(@u);
     my $rc = gtk_accel_label_get_accel($!al, $ak, $am);
@@ -96,17 +103,20 @@ class GTK::AccelLabel is GTK::Label {
   method set_accel (
     Int() $accelerator_key,       # guint $accelerator_key,
     Int() $accelerator_mods       # GdkModifierType $accelerator_mods
-  ) is also<set-accel> {
+  )
+    is also<set-accel>
+  {
     my @u = ($accelerator_key, $accelerator_mods);
     my uint32 ($ak, $am) = self.RESOLVE-UINT(@u);
 
     gtk_accel_label_set_accel($!al, $ak, $am);
   }
 
-  method set_accel_closure (GClosure $accel_closure) is also<set-accel-closure> {
+  method set_accel_closure (GClosure $accel_closure)
+    is also<set-accel-closure>
+  {
     gtk_accel_label_set_accel_closure($!al, $accel_closure);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

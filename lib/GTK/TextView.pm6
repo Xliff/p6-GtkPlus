@@ -10,9 +10,15 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::TextBuffer;
 
+use GTK::Roles::Scrollable;
+
 use GTK::Roles::Signals::TextView;
 
+my subset Ancestry where GtkTextView  | GtkScrollable | GtkContainer |
+                         GtkBuildable | GtkWidget;
+
 class GTK::TextView is GTK::Container {
+  also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::TextView;
 
   has GtkTextView $!tv;
@@ -26,15 +32,20 @@ class GTK::TextView is GTK::Container {
   submethod BUILD(:$textview) {
     my $to-parent;
     given $textview {
-      when GtkTextView | GtkWidget {
+      when Ancestry {
         $!tv = do {
-          when GtkWidget   {
-            $to-parent = $_;
-            nativecast(GtkTextView, $_);
-          }
           when GtkTextView {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
+          }
+          when GtkScrollable {
+            $!s = $_;                                   # GTK::Roles::Scrollable
+            $to-parent = nativecast(GtkContainer, $_);
+            nativecast(GtkTextView, $_);
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkTextView, $_);
           }
         }
         self.setContainer($to-parent);
@@ -44,13 +55,19 @@ class GTK::TextView is GTK::Container {
       default {
       }
     }
+    $!s //= nativecast(GtkScrollable, $textview);       # GTK::Roles::Scrollable
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-tv;
   }
 
-  method new {
+  multi method new (Ancestry $textview) {
+    my $o = self.bless(:$textview);
+    $o.upref;
+    $o;
+  }
+  multi method new {
     my $textview = gtk_text_view_new();
     self.bless(:$textview);
   }
@@ -402,24 +419,31 @@ class GTK::TextView is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  # - XXX -
-  # MISSED DUE TO COMMENTS IN DEFINITION -- SHOULD IMPLEMENT
-  #
-  # void gtk_text_view_add_child_in_window (
-  #   GtkTextView          *text_view,
-  #   GtkWidget            *child,
-  #   GtkTextWindowType     which_window,
-  #   /* window coordinates */
-  #   gint                  xpos,
-  #   gint                  ypos);
-  #
-  # void gtk_text_view_move_child          (
-  #   GtkTextView          *text_view,
-  #   GtkWidget            *child,
-  #   /* window coordinates */
-  #   gint                  xpos,
-  #   gint                  ypos);
+  method add_child_in_window (
+    GtkWidget() $child,
+    Int()       $which_window,
+    Int()       $xpos,
+    Int()       $ypos
+  )
+    is also<add-child-in-window>
+  {
+    my guint $ww = self.RESOLVE-UINT($which_window);
+    my @i = ($xpos, $ypos);
+    my gint ($xp, $yp) = self.RESOLVE-INT(@i);
+    gtk_text_view_add_child_in_window($!tv, $child, $ww, $xp, $yp);
+  }
 
+  method move_child (
+    GtkWidget() $child,
+    Int()       $xpos,
+    Int()       $ypos
+  )
+    is also<move-child>
+  {
+    my @i = ($xpos, $ypos);
+    my gint ($xp, $yp) = self.RESOLVE-INT(@i);
+    gtk_text_view_add_child_in_window($!tv, $child, $xp, $yp);
+  }
 
   method add_child_at_anchor (
     GtkWidget() $child,

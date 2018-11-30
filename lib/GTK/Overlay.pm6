@@ -11,6 +11,9 @@ use GTK::Bin;
 
 use GTK::Roles::Signals::Overlay;
 
+my subset Ancestry where GtkOverlay | GtkBin | GtkContainer | GtkBuildable |
+                         GtkWidget;
+
 class GTK::Overlay is GTK::Bin {
   also does GTK::Roles::Signals::Overlay;
 
@@ -25,15 +28,15 @@ class GTK::Overlay is GTK::Bin {
   submethod BUILD(:$overlay) {
     my $to-parent;
     given $overlay {
-      when GtkOverlay | GtkWidget {
+      when Ancestry {
         $!o = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkOverlay, $_);
-          }
           when GtkOverlay  {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkOverlay, $_);
           }
         }
         self.setBin($to-parent);
@@ -49,13 +52,16 @@ class GTK::Overlay is GTK::Bin {
     self.disconnect-all($_) for %!signals-o;
   }
 
+  multi method new (Ancestry $overlay) {
+    my $o = self.bless(:$overlay);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $overlay = gtk_overlay_new();
     self.bless(:$overlay);
   }
-  multi method new (GtkWidget $overlay) {
-    self.bless(:$overlay);
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 

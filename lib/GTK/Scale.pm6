@@ -11,6 +11,9 @@ use GTK::Range;
 
 use GTK::Roles::Signals::Scale;
 
+my subset Ancestry
+  where GtkScale | GtkRange | GtkOrientable | GtkBuildable | GtkWidget;
+
 class GTK::Scale is GTK::Range {
   also does GTK::Roles::Signals::Scale;
 
@@ -25,15 +28,15 @@ class GTK::Scale is GTK::Range {
   submethod BUILD(:$scale) {
     my $to-parent;
     given $scale {
-      when GtkScale | GtkWidget {
+      when Ancestry {
         $!s = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkScale, $_);
-          }
-          when GtkScale  {
+          when GtkScale {
             $to-parent = nativecast(GtkRange, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkScale, $_);
           }
         };
         self.setRange($to-parent);
@@ -46,9 +49,14 @@ class GTK::Scale is GTK::Range {
   }
 
   submethod DESTROY {
-    self.disconnect($_, %!signals-scale) for %!signals-scale.keys;
+    self.disconnect-all($_) for %!signals-scale;
   }
 
+  multi method new (Ancestry $scale) {
+    my $o = self.bless(:$scale);
+    $o.upref;
+    $o;
+  }
   multi method new (
     GtkAdjustment() $adj,
     :$horizontal = False,
@@ -62,9 +70,6 @@ class GTK::Scale is GTK::Range {
       when $vertical   { GTK_ORIENTATION_VERTICAL.Int;   }
     };
     my $scale = gtk_scale_new($or, $adj);
-    self.bless(:$scale);
-  }
-  multi method new (GtkWidget $scale) {
     self.bless(:$scale);
   }
   multi method new (
@@ -91,7 +96,9 @@ class GTK::Scale is GTK::Range {
     Num() $min,
     Num() $max,
     Num() $step
-  ) is also<new-with-range> {
+  )
+    is also<new-with-range>
+  {
     my uint32 $o = self.RESOLVE-UINT($orientation);
     my num64 ($mn, $mx, $st) = ($min, $max, $step);
     my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
@@ -162,8 +169,10 @@ class GTK::Scale is GTK::Range {
   method add_mark (
     Num() $value,
     Int() $position,
-    gchar $markup
-  ) is also<add-mark> {
+    Str() $markup
+  )
+    is also<add-mark>
+  {
     my uint32 $p = self.RESOLVE-UINT($position);
     my num64 $v = $value;
     gtk_scale_add_mark($!s, $v, $p, $markup);
@@ -177,7 +186,9 @@ class GTK::Scale is GTK::Range {
     gtk_scale_get_layout($!s);
   }
 
-  method get_layout_offsets (Int $x, Int $y) is also<get-layout-offsets> {
+  method get_layout_offsets (Int() $x, Int() $y)
+    is also<get-layout-offsets>
+  {
     my gint $_x = $x;
     my gint $_y = $y;
     gtk_scale_get_layout_offsets($!s, $_x, $_y);
@@ -189,4 +200,3 @@ class GTK::Scale is GTK::Range {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

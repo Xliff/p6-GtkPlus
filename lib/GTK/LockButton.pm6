@@ -9,6 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Button;
 
+my subset Ancestry
+  when GtkLockButton | GtkActionable  | GtkButton | GtkBin | GtkContainer |
+       GtkBuildable  | GtkWidget;
+
 class GTK::LockButton is GTK::Button {
   has GtkLockButton $!lb;
 
@@ -21,15 +25,15 @@ class GTK::LockButton is GTK::Button {
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
-      when GtkLockButton | GtkWidget {
+      when Ancestry {
         $!lb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkLockButton, $button);
-          }
           when GtkLockButton {
             $to-parent = nativecast(GtkButton, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkLockButton, $button);
           }
         };
         self.setButton($to-parent);
@@ -41,13 +45,16 @@ class GTK::LockButton is GTK::Button {
     }
   }
 
+  multi method new (Ancestry $button) {
+    my $o = self.bless(:$button);
+    $o.upref;
+    $o;
+  }
   multi method new (GPermission $p) {
     my $button = gtk_lock_button_new($p);
     self.bless(:$button);
   }
-  multi method new (GtkWidget $button) {
-    self.bless(:$button);
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -75,4 +82,3 @@ class GTK::LockButton is GTK::Button {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
+my subset Ancestry where GtkLabel | GtkBuildable | GtkWidget;
+
 class GTK::Label is GTK::Widget {
   has GtkLabel $!l;
 
@@ -21,15 +23,15 @@ class GTK::Label is GTK::Widget {
   submethod BUILD(:$label) {
     my $to-parent;
     given $label {
-      when GtkLabel | GtkWidget {
+      when Ancestry {
         $!l = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkLabel, $label);
-          }
           when GtkLabel  {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkLabel, $label);
           }
         };
         self.setWidget($to-parent);
@@ -41,11 +43,13 @@ class GTK::Label is GTK::Widget {
     }
   }
 
+  multi method new (Ancestry $label) {
+    my $o = self.bless(:$label);
+    $o.upref;
+    $o;
+  }
   multi method new ($text = Str) {
     my $label = gtk_label_new($text);
-    self.bless(:$label);
-  }
-  multi method new (GtkWidget $label) {
     self.bless(:$label);
   }
 
@@ -67,7 +71,7 @@ class GTK::Label is GTK::Widget {
   }
 
   # Is originally:
-  # GtkLabel, gchar, gpointer --> gboolean
+  # GtkLabel, Str(), gpointer --> gboolean
   method activate-link is also<activate_link> {
     self.connect-activate-link($!l);
   }
@@ -144,15 +148,17 @@ class GTK::Label is GTK::Widget {
       FETCH => sub ($) {
         gtk_label_get_label($!l);
       },
-      STORE => sub ($, gchar $str is copy) {
+      STORE => sub ($, Str() $str is copy) {
         gtk_label_set_label($!l, $str);
       }
     );
   }
 
   method line_wrap is rw
-    is also<line-wrap>
-    is also<wrap>
+    is also<
+      line-wrap
+      wrap
+    >
   {
     Proxy.new(
       FETCH => sub ($) {
@@ -166,9 +172,11 @@ class GTK::Label is GTK::Widget {
   }
 
   method line_wrap_mode is rw
-    is also<line-wrap-mode>
-    is also<wrap-mode>
-    is also<wrap_mode>
+    is also<
+      line-wrap-mode
+      wrap-mode
+      wrap_mode
+    >
   {
     Proxy.new(
       FETCH => sub ($) {
@@ -246,7 +254,7 @@ class GTK::Label is GTK::Widget {
       FETCH => sub ($) {
         gtk_label_get_text($!l);
       },
-      STORE => sub ($, gchar $str is copy) {
+      STORE => sub ($, Str() $str is copy) {
         gtk_label_set_text($!l, $str);
       }
     );
@@ -332,7 +340,9 @@ class GTK::Label is GTK::Widget {
     gtk_label_get_layout($!l);
   }
 
-  method get_layout_offsets (Int() $x, Int() $y) is also<get-layout-offsets> {
+  method get_layout_offsets (Int() $x, Int() $y)
+    is also<get-layout-offsets>
+  {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_label_get_layout_offsets($!l, $xx, $yy);
@@ -342,7 +352,9 @@ class GTK::Label is GTK::Widget {
     gtk_label_get_mnemonic_keyval($!l);
   }
 
-  method get_selection_bounds (Int() $start, Int() $end) is also<get-selection-bounds> {
+  method get_selection_bounds (Int() $start, Int() $end)
+    is also<get-selection-bounds>
+  {
     my @i = ($start, $end);
     my gint ($s, $e) = self.RESOLVE-INT(@i);
     gtk_label_get_selection_bounds($!l, $start, $end);
@@ -352,25 +364,31 @@ class GTK::Label is GTK::Widget {
     gtk_label_get_type();
   }
 
-  method select_region (Int() $start_offset, Int() $end_offset) is also<select-region> {
+  method select_region (Int() $start_offset, Int() $end_offset)
+    is also<select-region>
+  {
     my @i = ($start_offset, $end_offset);
     my gint ($so, $eo) = self.RESOLVE-INT(@i);
     gtk_label_select_region($!l, $so, $eo);
   }
 
-  method set_markup (gchar $str) is also<set-markup> {
+  method set_markup (Str() $str) is also<set-markup> {
     gtk_label_set_markup($!l, $str);
   }
 
-  method set_markup_with_mnemonic (gchar $str) is also<set-markup-with-mnemonic> {
+  method set_markup_with_mnemonic (Str() $str)
+    is also<set-markup-with-mnemonic>
+  {
     gtk_label_set_markup_with_mnemonic($!l, $str);
   }
 
-  method set_pattern (gchar $pattern) is also<set-pattern> {
+  method set_pattern (Str() $pattern) is also<set-pattern> {
     gtk_label_set_pattern($!l, $pattern);
   }
 
-  method set_text_with_mnemonic (gchar $str) is also<set-text-with-mnemonic> {
+  method set_text_with_mnemonic (Str() $str)
+    is also<set-text-with-mnemonic>
+  {
     gtk_label_set_text_with_mnemonic($!l, $str);
   }
 

@@ -11,6 +11,10 @@ use GTK::Button;
 
 use GTK::Roles::FontChooser;
 
+my subset Ancestry where GtkFontButton | GtkFontChooser | GtkButton |
+                         GtkActionable | GtkButton      | GtkBin    |
+                         GtkBuildable  | GtkWidget;
+
 class GTK::FontButton is GTK::Button {
   also does GTK::Roles::FontChooser;
 
@@ -25,15 +29,20 @@ class GTK::FontButton is GTK::Button {
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
-      when GtkFontButton | GtkWidget {
+      when Ancestry {
         $!fb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkFontButton, $_);
-          }
           when GtkFontButton {
             $to-parent = nativecast(GtkButton, $_);
             $_;
+          }
+          when GtkFontChooser {
+            $!fc = $_;                            # GTK::Roles::FontChooser
+            $to-parent = nativecast(GtkButton, $_);
+            nativecast(GtkFontButton, $_);
+          }
+          when GtkWidget {
+            $to-parent = $_;
+            nativecast(GtkFontButton, $_);
           }
         };
         self.setButton($to-parent);
@@ -43,17 +52,19 @@ class GTK::FontButton is GTK::Button {
       default {
       }
     }
-    # For GTK::Roles::FontChooser
-    $!fc = nativecast(GtkFontChooser, $!fb);
+    $!fc //= nativecast(GtkFontChooser, $!fb);    # GTK::Roles::FontChooser
   }
 
+  multi method new (Ancestry $button) {
+    my $o = self.bless(:$button);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $button = gtk_font_button_new();
     self.bless(:$button);
   }
-  multi method new (GtkWidget $button) {
-    self.bless(:$button);
-  }
+
 
   method new_with_font (Str $font) is also<new-with-font> {
     my $button = gtk_font_button_new_with_font($font);
@@ -149,4 +160,3 @@ class GTK::FontButton is GTK::Button {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

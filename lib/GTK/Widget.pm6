@@ -27,6 +27,8 @@ use GTK::Roles::Types;
 
 use GTK::StyleContext;
 
+my subset Ancestry where GtkBuildable | GtkWidget;
+
 class GTK::Widget {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Data;
@@ -40,7 +42,7 @@ class GTK::Widget {
 
   submethod BUILD (:$widget) {
     given $widget {
-      when GtkWidget {
+      when Ancestry {
         self.setWidget($widget);
       }
       default {
@@ -61,8 +63,10 @@ class GTK::Widget {
 
   proto new(|) { * }
 
-  method new($widget) {
-    self.bless(:$widget);
+  method new(Ancestry $widget) {
+    my $o = self.bless(:$widget);
+    $o.upref;
+    $o;
   }
 
   method GTK::Raw::Types::GtkWidget is also<widget> {
@@ -73,6 +77,10 @@ class GTK::Widget {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
     $!w = do given $widget {
+      when GtkBuildable {
+        $!b = $_;
+        nativecast(GtkWidget, $_);
+      }
       when GtkWidget {
         $_;
       }

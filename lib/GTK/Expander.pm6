@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
+my subset Ancestry where GtkExpander | GtkBin | GtkContainer | GtkBuildable |
+                         GtkWidget;
+
 class GTK::Expander is GTK::Bin {
   has GtkExpander $!e;
 
@@ -22,15 +25,16 @@ class GTK::Expander is GTK::Bin {
   submethod BUILD(:$expander) {
     my $to-parent;
     given $expander {
-      when GtkExpander | GtkWidget {
+      when Ancestry {
         $!e = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkExpander, $_);
-          }
           when GtkExpander {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+
+          default {
+            $to-parent = $_;
+            nativecast(GtkExpander, $_);
           }
         }
         self.setBin($to-parent);
@@ -42,12 +46,14 @@ class GTK::Expander is GTK::Bin {
     }
   }
 
+  multi method new (Ancestry $expander) {
+    my $o = self.bless($expander);
+    $o.upref;
+    $o;
+  }
   multi method new (Str $label) {
     my $expander = gtk_expander_new($label);
     self.bless(:$expander);
-  }
-  multi method new (GtkWidget $expander) {
-    self.bless($expander);
   }
   multi method new (Str $label, :$mnemonic) {
     my $expander = do {
@@ -179,4 +185,3 @@ class GTK::Expander is GTK::Bin {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

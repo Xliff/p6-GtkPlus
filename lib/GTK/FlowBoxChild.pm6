@@ -16,6 +16,9 @@ use GTK::Bin;
 # One could almost think this could just be a GTK::Bin. The jury is hung, at
 # the moment.
 
+my subset Ancestry where GtkFlowBoxChild | GtkBin    | GtkContainer |
+                         GtkBuildable    | GtkWidget;
+
 class GTK::FlowBoxChild is GTK::Bin {
   has GtkFlowBoxChild $!fbc;
 
@@ -30,13 +33,14 @@ class GTK::FlowBoxChild is GTK::Bin {
     given $flowboxchild {
       when GtkFlowBoxChild | GtkWidget {
         $!fbc = do {
-          when GtkWidget  {
-            $to-parent = $_;
-            nativecast(GtkFlowBoxChild, $_);
-          }
           when GtkFlowBoxChild {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+
+          default {
+            $to-parent = $_;
+            nativecast(GtkFlowBoxChild, $_);
           }
         };
         self.setBin($to-parent);
@@ -48,13 +52,16 @@ class GTK::FlowBoxChild is GTK::Bin {
     }
   }
 
+  multi method new (Ancestry $flowboxchild) {
+    my $o = self.bless(:$flowboxchild);
+    $o.upref;
+    $o;
+  }
   multi method new {
     my $flowboxchild = gtk_flow_box_child_new();
     self.bless(:$flowboxchild);
   }
-  multi method new (GtkWidget $flowboxchild) {
-    self.bless(:$flowboxchild);
-  }
+
 
   method GTK::Raw::Types::GtkFlowBoxChild {
     $!fbc
@@ -79,8 +86,7 @@ class GTK::FlowBoxChild is GTK::Bin {
   }
 
   method is_selected is also<is-selected> {
-    gtk_flow_box_child_is_selected($!fbc);
+    so gtk_flow_box_child_is_selected($!fbc);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 }
-

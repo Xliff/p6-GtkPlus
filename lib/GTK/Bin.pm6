@@ -8,6 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+my subset Ancestry where GtkBin | GtkContainer | GtkBuildable | GtkWidget;
+
 class GTK::Bin is GTK::Container {
   has GtkBin $!bin;
 
@@ -18,15 +20,17 @@ class GTK::Bin is GTK::Container {
   }
 
   submethod BUILD(:$bin) {
-    when GtkBin | GtkWidget {
-      self.setBin($bin);
-    }
-    when GTK::Bin {
-      my $c = ::?CLASS.^name;
-      warn "To copy a { $c } object, use { $c }.clone.";
-    }
-    default {
-      # Throw exception
+    given $bin {
+      when Ancestry {
+        self.setBin($bin);
+      }
+      when GTK::Bin {
+        my $c = ::?CLASS.^name;
+        warn "To copy a { $c } object, use { $c }.clone.";
+      }
+      default {
+        # Throw exception
+      }
     }
   }
 
@@ -37,12 +41,18 @@ class GTK::Bin is GTK::Container {
         $to-parent = nativecast(GtkContainer, $_);
         $_;
       }
-      when GtkWidget {
+      default {
         $to-parent = $_;
         nativecast(GtkBin, $_);
       }
     };
     self.setContainer($to-parent);
+  }
+
+  method new(Ancestry $bin) {
+    my $o = self.bless(:$bin);
+    $o.upref;
+    $o;
   }
 
   multi method get_child is also<get-child> {
@@ -56,4 +66,3 @@ class GTK::Bin is GTK::Container {
   # XXX - Override add to take only one child?
 
 }
-
