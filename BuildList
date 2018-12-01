@@ -374,6 +374,7 @@ GTK::Box
 GTK::Button
 GTK::ButtonBox
 GTK::ColorButton
+GTK::ColorChooser
 GTK::ComboBox
 GTK::ComboBoxText
 GTK::EventBox
