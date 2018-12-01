@@ -16,7 +16,7 @@ my subset Ancestry
 class GTK::Stack is GTK::Container {
   has GtkStack $!s;
   has GtkStackSwitcher $!ss;
-  has $!sb;
+  has GTK::StackSidebar $!sb;
   has %!by-name;
   has %!by-title;
 
@@ -67,9 +67,11 @@ class GTK::Stack is GTK::Container {
     my $switcher = True;
     self.bless(:$stack, :$switcher);
   }
-  multi method new(:$switcher, :$sidebar) {
+  multi method new(:$switcher is copy, :$sidebar is copy) {
     die 'Please use $switcher OR $sidebar when creating a GTK::Stack'
       if $switcher.defined && $sidebar.defined;
+
+    $switcher = True unless $switcher.defined || $sidebar.defined;
 
     my $stack = gtk_stack_new();
     self.bless(:$stack, :$switcher, :$sidebar);
@@ -174,7 +176,8 @@ class GTK::Stack is GTK::Container {
     );
   }
 
-  # XXX - Add attribute for 'control' to add either GtkStackSwitcher or GtkStackSidebar
+  # XXX - Add attribute for 'control' to add either GtkStackSwitcher or
+  #       GtkStackSidebar
 
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 

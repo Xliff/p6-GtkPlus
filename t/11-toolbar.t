@@ -55,10 +55,10 @@ $a.activate.tap({
     ['view-fullscreen', 'Full-Screen'],
     ['view-restore', 'Restore']
   ) {
-    %buttons{$_[0]} = GTK::ToolButton.new(
-      GTK::Image.new_from_icon_name($_[0], icon_size),
-      $_[1]
-    );
+    # Must assign images to something or at least upref their pointers or
+    # they go away.
+    %buttons<IMAGES>{$_[0]} = GTK::Image.new_from_icon_name($_[0], icon_size);
+    %buttons{$_[0]} = GTK::ToolButton.new(%buttons<IMAGES>{$_[0]}, $_[1]);
     %buttons{$_[0]}.is_important = True;
     # Use of $_ in closures is STILL a bad idea.
     my $a = $_;

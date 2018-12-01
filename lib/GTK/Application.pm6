@@ -44,6 +44,7 @@ class GTK::Application is export {
     $!height = $height;
     $!init = Promise.new;
 
+    $DEBUG = so %*ENV<P6_GTKPLUS_DEBUG>;
     self.activate.tap({
        $!window //= GTK::Window.new(
          gtk_application_window_new($!app),

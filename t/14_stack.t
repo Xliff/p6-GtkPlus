@@ -59,6 +59,7 @@ $a.activate.tap({
   $stack.add_titled( newBoxText('third page'), 'key3', 'Third Page' );
 
   # Now the controls.
+  say "{ $stack.switcher-widget }";
   $box.pack_start($stack.switcher-widget, False, False, 0);
   $box.pack_start($stack, True, True, 0);
   $a.window.add($box);
