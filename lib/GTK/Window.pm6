@@ -71,6 +71,16 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_default_size($window, $width, $height);
     samewith(:$window);
   }
+  multi method new (
+    GtkWindow $window,
+    Str :$title = 'Window',
+    Int :$width  = 200,
+    Int :$height = 200
+  ) {
+    gtk_window_set_title($window, $title);
+    gtk_window_set_default_size($window, $width, $height);
+    samewith(:$window);
+  }
 
   method GTK::Raw::Types::GtkWindow {
     $!win;

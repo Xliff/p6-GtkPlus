@@ -6,17 +6,13 @@ use GTK::Menu;
 use GTK::MenuBar;
 use GTK::MenuItem;
 
-# Test GTK::Dialog::About?
-
 my $a = GTK::Application.new( title => 'org.genex.menus' );
 
 $a.activate.tap({
-  # For a lark... let's see if subs can be pre-defined.
   sub open-menu  { ... }
   sub close-menu { ... }
   sub help       { ... }
 
-  # Normal inline defs.
   sub option1   { &?ROUTINE.name.say; }
   sub option2   { &?ROUTINE.name.say; }
   sub option3   { &?ROUTINE.name.say; }
@@ -41,7 +37,7 @@ $a.activate.tap({
          )
        )
     ),
-    # Takes a double click, because... EXPEXTING SUB!
+    # Takes a double click, because... EXPEXTING SUBMENU!
     GTK::MenuItem.new('Help', :clicked(&help), :right)
   );
 
@@ -63,7 +59,6 @@ $a.activate.tap({
 
   $a.window.add($vbox);
   $a.window.show_all;
-
 });
 
 $a.run;

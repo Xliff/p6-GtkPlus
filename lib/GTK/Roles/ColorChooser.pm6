@@ -12,7 +12,7 @@ use GTK::Roles::Signals::Generic;
 
 role GTK::Roles::ColorChooser {
   also does GTK::Roles::Signals::Generic;
-  
+
   has GtkColorChooser $!cc;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -59,4 +59,3 @@ role GTK::Roles::ColorChooser {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

@@ -12,7 +12,8 @@ use GTK::Bin;
 use GTK::Roles::Actionable;
 
 my subset Ancestry
-  where GtkButton | GtkBuildable | GtkActionable | GtkWidget;
+  where GtkButton | GtkBin | GtkContainer | GtkActionable | GtkBuildable |
+        GtkWidget;
 
 class GTK::Button is GTK::Bin {
   also does GTK::Roles::Actionable;
@@ -35,7 +36,7 @@ class GTK::Button is GTK::Bin {
         warn "To copy a { $c } object, use { $c }.clone.";
       }
       default {
-        # Throw exception here
+        # DO NOT throw an exception!
       }
     }
   }

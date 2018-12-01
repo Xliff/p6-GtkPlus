@@ -46,7 +46,7 @@ class GTK::Application is export {
 
     self.activate.tap({
        $!window //= GTK::Window.new(
-         :window( gtk_application_window_new($!app) ),
+         gtk_application_window_new($!app),
          :$title,
          :$width,
          :$height
