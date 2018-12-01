@@ -4,9 +4,17 @@ use JSON::Fast;
 
 grammar ParseBuildResults {
   regex TOP {
+    <top_section>?
     <section>*
     \v+
     <summary>*
+  }
+  regex top_section {
+    ^^ 'Dependency Generation' \s+
+    ^^ '=====================' \s+
+    ^^ 'real' \s+ <num> \s+
+    ^^ 'user' \s+ <num> \s+
+    ^^ 'sys'  \s+ <num> \v+
   }
   regex section {
     <header> \s+ <stage>*

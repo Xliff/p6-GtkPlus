@@ -25,11 +25,14 @@ class GTK::Container is GTK::Widget {
   # Even though an abstract class, we have to be able to instantiate from
   # a lowest common denominator amongst descendants.
   submethod BUILD(:$container) {
-    when Ancestry {
-      self.setContainer($container);
-    }
-    default {
-      die "GTK::Container cannot create from object of type { .^name }";
+    given $container {
+      when Ancestry {
+        self.setContainer($container);
+      }
+      default {
+        # Can't die here since descendants depend on this getting through
+        # the custom bless. This only applies for abstract classes.
+      }
     }
   }
 

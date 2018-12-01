@@ -1138,12 +1138,20 @@ class GTK::Widget {
           self.margin_bottom
         );
       },
-      STORE => -> $, Int() $margin {
-        my $m = self.RESOLVE-UINT($margin);
-        self.margin_left =
-        self.margin_right =
-        self.margin_top =
-        self.margin_bottom = $m;
+      STORE => -> $, *@margins {
+        die 'GTK::Widget.margins will only accept numeric values'
+          unless @margins.grep( *.^can('Int').elems ) == @margins.elems;
+        if +@margins == 1 {
+          my $m = self.RESOLVE-UINT(@margins[0]);
+          self.margins = $m xx 4;
+        } elsif +@margins > 4 {
+          my $i = 0;
+          for <margin_left margin_right margin_top margin_bottom> {
+            self."$_"() = $_ with @margins[$i++];
+          }
+        } else {
+          die 'GTK::Widget.margins will only accept up to 4 values';
+        }
       }
     );
   }

@@ -29,7 +29,8 @@ class GTK::Bin is GTK::Container {
         warn "To copy a { $c } object, use { $c }.clone.";
       }
       default {
-        # Throw exception
+        # DO NOT throw exception here due to BUILD path logic and descendant
+        # creation!
       }
     }
   }
