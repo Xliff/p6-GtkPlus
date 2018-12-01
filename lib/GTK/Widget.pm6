@@ -53,6 +53,7 @@ class GTK::Widget {
   # Check all widgets to insure that %!signals is left for THIS object
   # and THIS object only!
   submethod DESTROY {
+    warn "DESTROYING -- { self.getType }" if $DEBUG;
     self.downref;
     # All widget-dependents may need a variation of this.
     my $w_cheat = nativecast(GObjectStruct, $!w);
@@ -1144,10 +1145,10 @@ class GTK::Widget {
         if +@margins == 1 {
           my $m = self.RESOLVE-UINT(@margins[0]);
           self.margins = $m xx 4;
-        } elsif +@margins > 4 {
+        } elsif +@margins <= 4 {
           my $i = 0;
-          for <margin_left margin_right margin_top margin_bottom> {
-            self."$_"() = $_ with @margins[$i++];
+          for <margin_left margin_right margin_top margin_bottom>  -> $m {
+            self."$m"() = $_ with @margins[$i++];
           }
         } else {
           die 'GTK::Widget.margins will only accept up to 4 values';
