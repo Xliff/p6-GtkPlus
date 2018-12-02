@@ -57,7 +57,7 @@ sub gtk_css_provider_load_from_data (
   GtkCSSProvider $css_provider,
   gchar $data,
   gssize $length,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)
@@ -67,7 +67,7 @@ sub gtk_css_provider_load_from_data (
 sub gtk_css_provider_load_from_file (
   GtkCSSProvider $css_provider,
   GFile $file,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)
@@ -77,7 +77,7 @@ sub gtk_css_provider_load_from_file (
 sub gtk_css_provider_load_from_path (
   GtkCSSProvider $css_provider,
   gchar $path,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gtk)

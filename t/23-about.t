@@ -22,7 +22,7 @@ $a.activate.tap({
   $d.program_name = '23-about.t';
 	$d.comments = 'We are testers... dun da dun dun dun dun dun...';
 	$d.copyright = 'Copyright © 2018 by Xliff';
-	$d.version = 'ε';
+	$d.version = 'Version ε';
 
 	$d.license = qq:to/L/;
 Why would this piece of 💩 need a license? Why would this piece of 💩 need a license? Why would this piece of 💩 need a license?'

@@ -4,18 +4,19 @@ use Test;
 
 use NativeCall;
 
-use GTK::Application;
-use GTK::Builder;
+use GTK::Raw::Types;
+
+use GTK::Application;;
 use GTK::Button;
 use GTK::Box;
+use GTK::CSSProvider;
 
 my $a = GTK::Application.new(
   title  => 'org.genex.test.widget',
   width  => 400,
   height => 400,
 );
-my $b = GTK::Builder.new( pod => $=pod );
-$a.setBuilder($b);
+my $css = GTK::CSSProvider.new( pod => $=pod );
 
 $a.activate.tap({
   $a.wait-for-init;

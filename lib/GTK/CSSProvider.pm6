@@ -9,29 +9,28 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::CSSProvider;
+use GTK::Roles::Types;
 
 class GTK::CSSProvider {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;
+  also does GTK::Roles::Types;
 
   has GtkCSSProvider $!css;
 
   submethod BUILD(
     :$provider,
-    :$priority,
+    :$priority is copy,
     :$pod,
     :$style-data
   ) {
-    my uint32 $p = do given $priority {
-      when GtkStyleProviderPriority { .Int; }
-      when Int                      { $_;   }
-      when not .defined             { GTK_STYLE_PROVIDER_PRIORITY_APPLICATION.Int; }
-      default {
-        die "Invalid type passed as \$priority: { .^name }. Must be Int or GtkStyleProviderPriority";
-      }
-    } +& 0xffff;
+    $priority //= GTK_STYLE_PROVIDER_PRIORITY_USER.Int;
+    die q:to/D/ unless $priority.^can('Int').elems;
+  Prority must be a GtkStyleProviderPriority or an integer compatible value
+  D
 
     $!css = $provider;
+    my uint32 $p = self.RESOLVE-UINT($priority);
     my $display = gdk_display_get_default();
     my $screen = gdk_display_get_default_screen($display);
     gtk_style_context_add_provider_for_screen($screen, $!css, $p);
@@ -62,7 +61,7 @@ class GTK::CSSProvider {
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
-  # GtkCssProvider, GtkCssSection, GError, gpointer --> void
+  # GtkCssProvider, GtkCssSection, CArray[Pointer[GError]], gpointer --> void
   method parsing-error is also<parsing_error> {
     self.connect-parsing-error($!css);
   }
@@ -93,21 +92,35 @@ class GTK::CSSProvider {
   method load_from_data (
     Str() $data,
     Int() $length = -1,
-    GError $error = GError
-  ) is also<load-from-data> {
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<load-from-data>
+  {
     my gssize $l = $length;
     gtk_css_provider_load_from_data($!css, $data, $l, $error);
   }
 
-  method load_from_file (GFile $file, GError $error) is also<load-from-file> {
+  method load_from_file (
+    GFile $file,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<load-from-file>
+  {
     gtk_css_provider_load_from_file($!css, $file, $error);
   }
 
-  method load_from_path (gchar $path, GError $error) is also<load-from-path> {
+  method load_from_path (
+    Str() $path,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<load-from-path>
+  {
     gtk_css_provider_load_from_path($!css, $path, $error);
   }
 
-  method load_from_resource (gchar $resource_path) is also<load-from-resource> {
+  method load_from_resource (Str() $resource_path)
+    is also<load-from-resource>
+  {
     gtk_css_provider_load_from_resource($!css, $resource_path);
   }
 
@@ -118,4 +131,3 @@ class GTK::CSSProvider {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

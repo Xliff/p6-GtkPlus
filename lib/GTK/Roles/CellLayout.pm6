@@ -8,7 +8,6 @@ use GTK::Raw::Types;
 use GTK::Raw::Utils;
 
 use GTK::Roles::LatchedContents;
-use GTK::Roles::Types;
 
 use GTK::CellRenderer;
 
