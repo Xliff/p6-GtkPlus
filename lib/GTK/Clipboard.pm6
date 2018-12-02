@@ -73,7 +73,7 @@ class GTK::Clipboard {
   method text is rw {
     Proxy.new(
       FETCH => -> $ {
-        warn 'GTK::Clipboard.text does not support retrieval' unless $DEBUG;
+        warn 'GTK::Clipboard.text does not support retrieval' if $DEBUG;
         '';
       },
       STORE => -> $, Str() $text {
@@ -85,7 +85,7 @@ class GTK::Clipboard {
   method image is rw {
     Proxy.new(
       FETCH => -> $ {
-        warn 'GTK::Clipboard.image does not support retrieval' unless $DEBUG;
+        warn 'GTK::Clipboard.image does not support retrieval' if $DEBUG;
         Nil;
       },
       STORE => -> $, GdkPixbuf() $pix {
