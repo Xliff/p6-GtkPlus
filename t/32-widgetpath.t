@@ -60,6 +60,7 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
 
   $cc."get_{ $_ }"($cc.state, %*b{$_}) for %*b.keys;
 
+  # GValues use "int", not "Int".
   my $mw = $cc.get($cc.state,  'min-width').int;
   my $mh = $cc.get($cc.state, 'min-height').int;
 
@@ -76,12 +77,12 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
 }
 sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw) {
   say 'CA: ' ~ ($*cax, $*cay, $*caw, $*cah).map({ $_ // ''}).join(',');
-  $cx += $*cax + %*b<border>.left   + %*b<padding>.left;
-  $cy += $*cay + %*b<border>.top    + %*b<padding>.top;
-  $cw += $*caw - %*b<border>.left   - %*b<padding>.left -
-                 %*b<border>.right  - %*b<padding>.right;
-  $ch += $*cah - %*b<border>.top    - %*b<padding>.top -
-                 %*b<border>.bottom - %*b<padding>.bottom;
+  $cx = $*cax + %*b<border>.left   + %*b<padding>.left;
+  $cy = $*cay + %*b<border>.top    + %*b<padding>.top;
+  $cw = $*caw - %*b<border>.left   - %*b<padding>.left -
+                %*b<border>.right  - %*b<padding>.right;
+  $ch = $*cah - %*b<border>.top    - %*b<padding>.top -
+                %*b<border>.bottom - %*b<padding>.bottom;
   say 'C: ' ~ ($cx, $cy, $cw, $ch).map({ $_ // ''}).join(',');
 }
 
@@ -297,16 +298,10 @@ sub draw_horizontal_scrollbar($w, $p, $s) {
     .state = $s;
     query_size($_, $, $*h);
   }
-
   $sw = $slc.get($slc.state, 'min-width').int;
-
-  say "SW ({ get_flags(GtkStateFlags, $sc.state) }): $sw, $w";
-  say "XYWH: $*x, $*y, $w, $*h";
-
   draw_style_common-ro($_, $w, $) for $sc, $cc;
-  say '→ TC ←';
   draw_style_common-ro($_, $w, $) for $tc;
-  say '→ SLC ←';
+
   my $xp = $*x + $p;
   draw_style_common-ro($slc, $xp, $, $sw, $);
 
@@ -338,7 +333,6 @@ sub _draw_checkradio($s, $t) {
   $*w = $*h = 0;
   query_size($_, $*w, $*h) for $bc, $cc;
   my ($w, $h) = ($*w, $*h);
-  say "CR-W: $w / CR-H: $h";
   draw_style_common-ro($bc, $w, $h);
   draw_style_common($cc, $w, $h);
   GTK::Render.check($cc, $*cr, $*cx, $*cy, $*cw, $*ch);
@@ -378,17 +372,20 @@ sub draw_scale($w, $p) {
   $hc  = get_style($slc, 'highlight.top');
 
   $*h = 0;
-  my $xx = 0;
-  query_size($_, $xx, $) for $sc, $cc, $tc, $slc, $hc;
+  query_size($_, $, $*h) for $sc, $cc, $tc, $slc, $hc;
 
+  say "0 ===== CX: {$*cx} / CY: {$*cy} / CW: {$*cw} / CH: {$*ch}";
   draw_style_common($sc, $w, $);
+  say "1 ===== CX: {$*cx} / CY: {$*cy} / CW: {$*cw} / CH: {$*ch}";
   draw_style_common($cc, $*cx, $*cy, $*cw, $*ch);
+  say "2 ===== CX: {$*cx} / CY: {$*cy} / CW: {$*cw} / CH: {$*ch}";
 
   $th = 0;
   query_size($tc, $, $th);
   $sh = 0;
   query_size($_, $, $sh) for $slc, $hc;
   $th += $sh;
+  # Following coordinates are too large and too wide.
   draw_style_common( $tc,      $*cx, $*cy,     $*cw,  $th);
   draw_style_common( $hc,      $*cw, $*cy, $*cw / 2, $*ch);
   draw_style_common($slc, $*cx + $p, $*cy,     $*ch, $*ch);
@@ -516,11 +513,11 @@ sub do_draw($ct) {
   }
   $*x = 10;
 
-  say 'Progress';
+  say "Progress ({ $*y })";
   $*y += $*h + 10;
   draw_progress($pw - 20, 50);
 
-  say 'Scale';
+  say "Scale ({ $*y }) / $pw";
   $*y += $*h + 10;
   draw_scale($pw - 20, 75);
 
