@@ -67,7 +67,9 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
   $*cay += %*b<margin>.top;
   $*caw -= %*b<margin>.left + %*b<margin>.right;
   $*cah -= %*b<margin>.top  + %*b<margin>.bottom;
-  ($*caw, $*cah) = ( ($*caw, $mw).min, ($*cah, $mh).min );
+  ($*caw, $*cah) = ( ($*caw, $mw).max, ($*cah, $mh).max );
+
+  say "CA-X: {$*cax} / CA-Y: {$*cay} / CA-W: {$*caw} / CA-H {$*cah}";
 
   GTK::Render.background($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
        GTK::Render.frame($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
@@ -132,8 +134,8 @@ multi sub query_size($cc, $w is rw, $h is rw) {
   my $mw = $cc.get($cc.state,  'min-width').int;
   my $mh = $cc.get($cc.state, 'min-height').int;
 
-  for ($mw, $mh) -> $min is rw {
-    for <left right> X <margin border padding> -> ($m, $t) {
+  for ( $mw, <left right>, $mh, <top bottom> ) -> $min is rw, $bnds {
+    for $bnds.flat X <margin border padding> -> ($m, $t) {
       # Warning: dynamic method call.
       $min += %*b{$t}."$m"();
     }
@@ -290,23 +292,12 @@ sub draw_horizontal_scrollbar($w, $p, $s) {
   $tc  = get_style($cc, 'trough');
   $slc = get_style($tc, 'slider');
 
-  say "P: $p";
-
-  for $sc, $cc, $tc, $slc {
-    $_.state = $s;
-    say "SS: { .state } / $s";
-  }
-
   $*h = 0;
   for $sc, $cc, $tc, $slc {
-    for '', 'background', 'border' -> $tt {
-      my $t = $tt.chars ?? "_{ $tt}" !! '';
-      my $c = GTK::Compat::RGBA.new;
-      ."get{$t}_color"($s, $c);
-      say "{ $_.VAR.name }( $s ) get{$t}_color: { $c }";
-    }
+    .state = $s;
     query_size($_, $, $*h);
   }
+
   $sw = $slc.get($slc.state, 'min-width').int;
 
   say "SW ({ get_flags(GtkStateFlags, $sc.state) }): $sw, $w";
@@ -317,7 +308,7 @@ sub draw_horizontal_scrollbar($w, $p, $s) {
   draw_style_common-ro($_, $w, $) for $tc;
   say '→ SLC ←';
   my $xp = $*x + $p;
-  draw_style_common-ro($slc, $xp, $, $sw + 30, $);
+  draw_style_common-ro($slc, $xp, $, $sw, $);
 
   .downref for $sc, $tc, $cc, $slc;
 }
@@ -347,6 +338,7 @@ sub _draw_checkradio($s, $t) {
   $*w = $*h = 0;
   query_size($_, $*w, $*h) for $bc, $cc;
   my ($w, $h) = ($*w, $*h);
+  say "CR-W: $w / CR-H: $h";
   draw_style_common-ro($bc, $w, $h);
   draw_style_common($cc, $w, $h);
   GTK::Render.check($cc, $*cr, $*cx, $*cy, $*cw, $*ch);
