@@ -4,11 +4,15 @@ use File::Find;
 use Dependency::Sort;
 
 my %nodes;
+my $dep_file = '.build-deps'.IO;
 
 my @files = find
   dir => 'lib',
   name => /'.pm6' $/,
   exclude => / 'lib/GTK/Compat/GFile.pm6' /;
+
+@files.sort( *.IO.modified );
+  exit if $dep_file.e && $dep_file.modified >= @files[0].modified;
 
 my @modules = @files
   .map( *.path )
@@ -126,3 +130,7 @@ sub space($a) {
     say $table;
   }
 }
+
+my $fh = $dep_file.open( :w );
+$fh.say;
+$fh.close;

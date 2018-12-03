@@ -6,13 +6,37 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Device;
 
-use GTK::;
+use GTK::Roles::Properties;
+use GTK::Roles::References;
+use GTK::Roles::Types;
+
+my subset Ancestry where GdkDevice | GObject;
 
 class GTK::Compat::Device {
+  also does GTK::Roles::Properties;
+  also does GTK::Roles::References;
+  also does GTK::Roles::Types;
+
   has GdkDevice $!d;
 
   submethod BUILD(:$device) {
-    $!d = $device;
+    $!prop = nativecast(GObject, $!d = $device);
+    $!ref = $!d.p;
+  }
+
+  method new(Ancestry $device) {
+    my $o = self.bless(:$device);
+    $o.upref;
+    $o;
+  }
+
+  # Cannot rename or alias to new due to GdkDevice in both this signature
+  # and Ancestry
+  method get_associated_device(GdkDevice() $dev)
+    is also<get-associated-device>
+  {
+    my $device = gdk_device_get_associated_device($dev);
+    self.bless(:$device);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -20,13 +44,13 @@ class GTK::Compat::Device {
   # Is originally:
   # GdkDevice, gpointer --> void
   method changed {
-    self.connect($!w, 'changed');
+    self.connect($!d, 'changed');
   }
 
   # Is originally:
   # GdkDevice, GdkDeviceTool, gpointer --> void
   method tool-changed is also<tool_changed> {
-    self.connect($!w, 'tool-changed');
+    self.connect($!d, 'tool-changed');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -35,10 +59,11 @@ class GTK::Compat::Device {
   method mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gdk_device_get_mode($!d);
+        GdkInputMode( gdk_device_get_mode($!d) );
       },
-      STORE => sub ($, $mode is copy) {
-        gdk_device_set_mode($!d, $mode);
+      STORE => sub ($, Int() $mode is copy) {
+        my guint $m = self.RESOLVE-UINT($mode);
+        gdk_device_set_mode($!d, $m);
       }
     );
   }
@@ -48,48 +73,48 @@ class GTK::Compat::Device {
 
   # Type: GdkDevice
   method associated-device is rw is also<associated_device> {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('associated-device', $gv)
         );
-        #$gv.TYPE
+        GTK::Compat::Device.new( $gv.object );
       },
       STORE => -> $, $val is copy {
-        warn "associated-device does not allow writing"
+        warn 'associated-device does not allow writing';
       }
     );
   }
 
   # Type: GdkAxisFlags
   method axes is rw {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('axes', $gv)
         );
-        #$gv.TYPE
+        GdkAxisFlags( $gv.uint );
       },
       STORE => -> $, $val is copy {
-        warn "axes does not allow writing"
+        warn 'axes does not allow writing';
       }
     );
   }
 
   # Type: GdkDeviceManager
   method device-manager is rw is also<device_manager> {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('device-manager', $gv)
         );
-        #$gv.TYPE
+        $gv.object;
       },
-      STORE => -> $, $val is copy {
-        #$gv.TYPE = $val;
+      STORE => -> $, GdkDeviceManager() $val is copy {
+        $gv.object = $val;
         self.prop_set('device-manager', $gv);
       }
     );
@@ -97,16 +122,16 @@ class GTK::Compat::Device {
 
   # Type: GdkDisplay
   method display is rw {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('display', $gv)
         );
-        #$gv.TYPE
+        $gv.object;
       },
-      STORE => -> $, $val is copy {
-        #$gv.TYPE = $val;
+      STORE => -> $, GdkDisplay() $val is copy {
+        $gv.object = $val;
         self.prop_set('display', $gv);
       }
     );
@@ -131,16 +156,16 @@ class GTK::Compat::Device {
 
   # Type: GdkInputMode
   method input-mode is rw is also<input_mode> {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('input-mode', $gv)
         );
-        #$gv.TYPE
+        GdkInputMode( $gv.uint );
       },
-      STORE => -> $, $val is copy {
-        #$gv.TYPE = $val;
+      STORE => -> $, Int() $val is copy {
+        $gv.uint = self.RESOLVE-UINT($val);
         self.prop_set('input-mode', $gv);
       }
     );
@@ -148,16 +173,16 @@ class GTK::Compat::Device {
 
   # Type: GdkInputSource
   method input-source is rw is also<input_source> {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('input-source', $gv)
         );
-        #$gv.TYPE
+        GdkInputSource( $gv.uint );
       },
-      STORE => -> $, $val is copy {
-        #$gv.TYPE = $val;
+      STORE => -> $, Int() $val is copy {
+        $gv.uint = self.RESOLVE-UINT($val);
         self.prop_set('input-source', $gv);
       }
     );
@@ -174,7 +199,7 @@ class GTK::Compat::Device {
         $gv.uint;
       },
       STORE => -> $, $val is copy {
-        warn "n-axes does not allow writing"
+        warn 'n-axes does not allow writing'
       }
     );
   }
@@ -232,16 +257,16 @@ class GTK::Compat::Device {
 
   # Type: GdkSeat
   method seat is rw {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('seat', $gv)
         );
-        #$gv.TYPE
+        $gv.object;
       },
-      STORE => -> $, $val is copy {
-        #$gv.TYPE = $val;
+      STORE => -> $, GdkSeat() $val is copy {
+        $gv.object = $val;
         self.prop_set('seat', $gv);
       }
     );
@@ -249,32 +274,32 @@ class GTK::Compat::Device {
 
   # Type: GdkDeviceTool
   method tool is rw {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('tool', $gv)
         );
-        #$gv.TYPE
+        $gv.object
       },
       STORE => -> $, $val is copy {
-        warn "tool does not allow writing"
+        warn 'tool does not allow writing'
       }
     );
   }
 
   # Type: GdkDeviceType
   method type is rw {
-    my GTK::Compat::Value $gv .= new( -type- );
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('type', $gv)
         );
-        #$gv.TYPE
+        GdkDeviceType( $gv.uint );
       },
       STORE => -> $, $val is copy {
-        #$gv.TYPE = $val;
+        $gv.uint = self.RESOLVE-UINT($val);
         self.prop_set('type', $gv);
       }
     );
@@ -300,35 +325,36 @@ class GTK::Compat::Device {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method free_history (gint $n_events) is also<free-history> {
-    gdk_device_free_history($!d, $n_events);
-  }
-
-  method get_associated_device is also<get-associated-device> {
-    gdk_device_get_associated_device($!d);
+    my gint $ne = self.RESOLVE-INT($n_events);
+    gdk_device_free_history($!d, $ne);
   }
 
   method get_axes is also<get-axes> {
     gdk_device_get_axes($!d);
   }
 
-  method get_axis (gdouble $axes, GdkAxisUse $use, gdouble $value)
+  method get_axis (Num() $axes, Int() $use, Num() $value)
     is also<get-axis>
   {
-    gdk_device_get_axis($!d, $axes, $use, $value);
+    my gdouble ($a, $v) = ($axes, $value);
+    my guint $u = self.RESOLVE-UINT($use);
+    gdk_device_get_axis($!d, $a, $u, $v);
   }
 
-  method get_axis_use (guint $index_) is also<get-axis-use> {
-    gdk_device_get_axis_use($!d, $index_);
+  method get_axis_use (Int() $index) is also<get-axis-use> {
+    my guint $i = self.RESOLVE-UINT($index);
+    gdk_device_get_axis_use($!d, $i);
   }
 
   method get_axis_value (
-    gdouble $axes,
+    Num() $axes,
     GdkAtom $axis_label,
-    gdouble $value
+    Num() $value
   )
     is also<get-axis-value>
   {
-    gdk_device_get_axis_value($!d, $axes, $axis_label, $value);
+    my gdouble ($a, $v) = ($axes, $value);
+    gdk_device_get_axis_value($!d, $a, $axis_label, $v);
   }
 
   method get_device_type is also<get-device-type> {
@@ -344,25 +370,30 @@ class GTK::Compat::Device {
   }
 
   method get_history (
-    GdkWindow $window,
-    guint32 $start,
-    guint32 $stop,
-    GdkTimeCoord $events,
-    gint $n_events
+    GdkWindow() $window,
+    Int() $start,
+    Int() $stop,
+    Int() $events,
+    Int() $n_events
   )
     is also<get-history>
   {
-    gdk_device_get_history($!d, $window, $start, $stop, $events, $n_events);
+    my @u = ($start, $stop, $events);
+    my guint ($st, $sp, $e) = self.RESOLVE-UINT(@u);
+    my $ne = self.RESOLVE-INT($n_events);
+    gdk_device_get_history($!d, $window, $st, $sp, $e, $ne);
   }
 
   method get_key (
-    guint $index_,
-    guint $keyval,
-    GdkModifierType $modifiers
+    Int() $index,
+    Int() $keyval,
+    Int() $modifiers
   )
     is also<get-key>
   {
-    gdk_device_get_key($!d, $index_, $keyval, $modifiers);
+    my @u = ($index, $keyval, $modifiers);
+    my guint ($i, $k, $m) = self.RESOLVE-UINT(@u);
+    gdk_device_get_key($!d, $i, $k, $m);
   }
 
   method get_last_event_window is also<get-last-event-window> {
@@ -381,16 +412,19 @@ class GTK::Compat::Device {
     gdk_device_get_name($!d);
   }
 
-  method get_position (GdkScreen $screen, gint $x, gint $y)
+  method get_position (GdkScreen() $screen, Int() $x, Int() $y)
     is also<get-position>
   {
-    gdk_device_get_position($!d, $screen, $x, $y);
+    my @i = ($x, $y);
+    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
+    gdk_device_get_position($!d, $screen, $xx, $yy);
   }
 
-  method get_position_double (GdkScreen $screen, gdouble $x, gdouble $y)
+  method get_position_double (GdkScreen() $screen, Num() $x, Num() $y)
     is also<get-position-double>
   {
-    gdk_device_get_position_double($!d, $screen, $x, $y);
+    my gdouble ($xx, $yy) = ($x, $y);
+    gdk_device_get_position_double($!d, $screen, $xx, $yy);
   }
 
   method get_product_id is also<get-product-id> {
@@ -406,13 +440,15 @@ class GTK::Compat::Device {
   }
 
   method get_state (
-    GdkWindow $window,
-    gdouble $axes,
-    GdkModifierType $mask
+    GdkWindow() $window,
+    Num() $axes,
+    Int() $mask
   )
     is also<get-state>
   {
-    gdk_device_get_state($!d, $window, $axes, $mask);
+    my gdouble $a = $axes;
+    my guint $m = self.RESOLVE-UINT($mask);
+    gdk_device_get_state($!d, $window, $a, $m);
   }
 
   method get_type is also<get-type> {
@@ -423,47 +459,46 @@ class GTK::Compat::Device {
     gdk_device_get_vendor_id($!d);
   }
 
-  method get_window_at_position (gint $win_x, gint $win_y)
+  method get_window_at_position (Int() $win_x, Int() $win_y)
     is also<get-window-at-position>
   {
-    gdk_device_get_window_at_position($!d, $win_x, $win_y);
+    my @i = ($win_x, $win_y);
+    my gint ($wx, $wy) = self.RESOLVE.INT(@i);
+    gdk_device_get_window_at_position($!d, $wx, $wy);
   }
 
-  method get_window_at_position_double (gdouble $win_x, gdouble $win_y)
+  method get_window_at_position_double (Num() $win_x, Num() $win_y)
     is also<get-window-at-position-double>
   {
-    gdk_device_get_window_at_position_double($!d, $win_x, $win_y);
+    my gdouble ($wx, $wy) = ($win_x, $win_y);
+    gdk_device_get_window_at_position_double($!d, $wx, $wy);
   }
 
   method grab (
-    GdkWindow $window,
-    GdkGrabOwnership $grab_ownership,
-    gboolean $owner_events,
-    GdkEventMask $event_mask,
-    GdkCursor $cursor,
-    guint32 $time
+    GdkWindow() $window,
+    Int() $grab_ownership,
+    Int() $owner_events,
+    Int() $event_mask,
+    GdkCursor() $cursor,
+    Int() $time
   ) {
-    gdk_device_grab(
-      $!d,
-      $window,
-      $grab_ownership,
-      $owner_events,
-      $event_mask,
-      $cursor,
-      $time
-    );
+    my gboolean $oe = self.RESOLVE-BOOL($owner_events);
+    my @u = ($grab_ownership, $event_mask, $time);
+    my guint ($go, $em, $t) = self.RESOLVE-UINT(@u);
+
+    gdk_device_grab($!d, $window, $go, $oe, $em, $cursor, $t);
   }
 
   method grab_info_libgtk_only (
-    GdkDevice $device,
-    GdkWindow $grab_window,
+    GdkDisplay() $display,
+    GdkDevice() $device,
+    GdkWindow() $grab_window,
     gboolean $owner_events
   )
     is also<grab-info-libgtk-only>
   {
-    gdk_device_grab_info_libgtk_only(
-      $!d, $device, $grab_window, $owner_events
-    );
+    my gboolean $oe = self.RESOLVE-BOOL($owner_events);
+    gdk_device_grab_info_libgdk_only($display, $device, $grab_window, $oe);
   }
 
   method list_axes is also<list-axes> {
@@ -474,24 +509,29 @@ class GTK::Compat::Device {
     gdk_device_list_slave_devices($!d);
   }
 
-  method set_axis_use (guint $index, GdkAxisUse $use)
+  method set_axis_use (Int() $index, Int() $use)
     is also<set-axis-use>
   {
-    gdk_device_set_axis_use($!d, $index, $use);
+    my @u = ($index, $use);
+    my guint ($i, $u) = self.RESOLVE-UINT(@u);
+    gdk_device_set_axis_use($!d, $i, $u);
   }
 
   method set_key (
-    guint $index,
-    guint $keyval,
-    GdkModifierType $modifiers
+    Int() $index,
+    Int() $keyval,
+    Int() $modifiers
   )
     is also<set-key>
   {
-    gdk_device_set_key($!d, $index, $keyval, $modifiers);
+    my @u = ($index, $keyval, $modifiers);
+    my guint ($i, $k, $m) = self.RESOLVE-UINT(@u);
+    gdk_device_set_key($!d, $i, $k, $m);
   }
 
-  method ungrab (guint32 $time) {
-    gdk_device_ungrab($!d, $time_);
+  method ungrab (Int() $time) {
+    my guint $t = self.RESOLVE-UINT($time);
+    gdk_device_ungrab($!d, $t);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -63,6 +63,8 @@ sub clear_error($error = $ERROR) is export {
   $ERROR = Nil;
 }
 
+constant GDK_MAX_TIMECOORD_AXES is export = 128;
+
 constant cairo_t             is export := Cairo::cairo_t;
 constant cairo_pattern_t     is export := Cairo::cairo_pattern_t;
 constant cairo_region_t      is export := Pointer;
@@ -693,7 +695,6 @@ class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Point
 class GdkFrameClock         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkFrameTimings       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkGLContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkInputSource        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkModifierIntent     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkMonitor            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkPixbuf             is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -967,15 +968,14 @@ class GdkWindowAttr is repr('CStruct')
 }
 
 class GArray is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Str   $.data;
-  has guint $.len;
+  has Str    $.data;
+  has uint32 $.len;
 }
 
 class GdkTimeCoord is repr('CStruct') does GTK::Roles::Pointers is export {
-  has guint           $.time;
-  has CArray[gdouble] @.axes;
+  has uint32        $.time;
+  has CArray[num64] $.axes;
 }
-
 
 our enum GdkWindowWindowClass is export (
   'GDK_INPUT_OUTPUT',             # nick=input-output
@@ -1148,3 +1148,53 @@ our enum GdkDragCancelReason is export <
   GDK_DRAG_CANCEL_USER_CANCELLED
   GDK_DRAG_CANCEL_ERROR
 >;
+
+our enum GdkInputSource is export <
+  GDK_SOURCE_MOUSE
+  GDK_SOURCE_PEN
+  GDK_SOURCE_ERASER
+  GDK_SOURCE_CURSOR
+  GDK_SOURCE_KEYBOARD
+  GDK_SOURCE_TOUCHSCREEN
+  GDK_SOURCE_TOUCHPAD
+  GDK_SOURCE_TRACKPOINT
+  GDK_SOURCE_TABLET_PAD
+>;
+
+our enum GdkInputMode is export <
+  GDK_MODE_DISABLED
+  GDK_MODE_SCREEN
+  GDK_MODE_WINDOW
+>;
+
+our enum GdkDeviceType is export <
+  GDK_DEVICE_TYPE_MASTER
+  GDK_DEVICE_TYPE_SLAVE
+  GDK_DEVICE_TYPE_FLOATING
+>;
+
+our enum GdkAxisUse is export <
+  GDK_AXIS_IGNORE
+  GDK_AXIS_X
+  GDK_AXIS_Y
+  GDK_AXIS_PRESSURE
+  GDK_AXIS_XTILT
+  GDK_AXIS_YTILT
+  GDK_AXIS_WHEEL
+  GDK_AXIS_DISTANCE
+  GDK_AXIS_ROTATION
+  GDK_AXIS_SLIDER
+  GDK_AXIS_LAST
+>;
+
+our enum GdkAxisFlags is export (
+  GDK_AXIS_FLAG_X        => 1 +< GDK_AXIS_X,
+  GDK_AXIS_FLAG_Y        => 1 +< GDK_AXIS_Y,
+  GDK_AXIS_FLAG_PRESSURE => 1 +< GDK_AXIS_PRESSURE,
+  GDK_AXIS_FLAG_XTILT    => 1 +< GDK_AXIS_XTILT,
+  GDK_AXIS_FLAG_YTILT    => 1 +< GDK_AXIS_YTILT,
+  GDK_AXIS_FLAG_WHEEL    => 1 +< GDK_AXIS_WHEEL,
+  GDK_AXIS_FLAG_DISTANCE => 1 +< GDK_AXIS_DISTANCE,
+  GDK_AXIS_FLAG_ROTATION => 1 +< GDK_AXIS_ROTATION,
+  GDK_AXIS_FLAG_SLIDER   => 1 +< GDK_AXIS_SLIDER,
+);

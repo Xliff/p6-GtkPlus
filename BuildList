@@ -29,6 +29,7 @@ GTK::Compat::RGBA
 GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::Array
 GTK::Compat::Raw::Cursor
+GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
 GTK::Compat::Raw::DragContext
 GTK::Compat::Raw::FrameTimings
@@ -323,6 +324,7 @@ GTK::CellRendererSpinner
 GTK::CellRendererText
 GTK::CellRendererToggle
 GTK::Compat::Cursor
+GTK::Compat::Device
 GTK::Compat::MenuModel
 GTK::Compat::Raw::Monitor
 GTK::Compat::Window

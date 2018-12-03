@@ -43,6 +43,7 @@
       "GTK::Compat::Raw::AppInfo"              :  "lib/GTK/Compat/Raw/AppInfo.pm6"              ,
       "GTK::Compat::Raw::Array"                :  "lib/GTK/Compat/Raw/Array.pm6"                ,
       "GTK::Compat::Raw::Cursor"               :  "lib/GTK/Compat/Raw/Cursor.pm6"               ,
+      "GTK::Compat::Raw::Device"               :  "lib/GTK/Compat/Raw/Device.pm6"               ,
       "GTK::Compat::Raw::Display"              :  "lib/GTK/Compat/Raw/Display.pm6"              ,
       "GTK::Compat::Raw::DragContext"          :  "lib/GTK/Compat/Raw/DragContext.pm6"          ,
       "GTK::Compat::Raw::FrameTimings"         :  "lib/GTK/Compat/Raw/FrameTimings.pm6"         ,
@@ -337,6 +338,7 @@
       "GTK::CellRendererText"                  :  "lib/GTK/CellRendererText.pm6"                ,
       "GTK::CellRendererToggle"                :  "lib/GTK/CellRendererToggle.pm6"              ,
       "GTK::Compat::Cursor"                    :  "lib/GTK/Compat/Cursor.pm6"                   ,
+      "GTK::Compat::Device"                    :  "lib/GTK/Compat/Device.pm6"                   ,
       "GTK::Compat::MenuModel"                 :  "lib/GTK/Compat/MenuModel.pm6"                ,
       "GTK::Compat::Raw::Monitor"              :  "lib/GTK/Compat/Raw/Monitor.pm6"              ,
       "GTK::Compat::Window"                    :  "lib/GTK/Compat/Window.pm6"                   ,
@@ -456,7 +458,7 @@
       "GTK::ToggleToolButton"                  :  "lib/GTK/ToggleToolButton.pm6"                ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
       "GTK"                                    :  "lib/GTK.pm6"                                 ,
-      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"
+      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"                         
     },
     "name": "Perl6-GtkPlus",
     "perl": "6.c",
@@ -465,3 +467,4 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
