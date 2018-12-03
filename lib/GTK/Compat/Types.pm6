@@ -971,6 +971,12 @@ class GArray is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint $.len;
 }
 
+class GdkTimeCoord is repr('CStruct') does GTK::Roles::Pointers is export {
+  has guint           $.time;
+  has CArray[gdouble] @.axes;
+}
+
+
 our enum GdkWindowWindowClass is export (
   'GDK_INPUT_OUTPUT',             # nick=input-output
   'GDK_INPUT_ONLY'                # nick=input-only
