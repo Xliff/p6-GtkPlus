@@ -10,9 +10,13 @@ use GTK::Roles::Properties;
 use GTK::Roles::References;
 use GTK::Roles::Types;
 
+use GTK::Compat::Roles::Signals::Device;
+
 my subset Ancestry where GdkDevice | GObject;
 
 class GTK::Compat::Device {
+  also does GTK::Compat::Roles::Signals::Device;
+
   also does GTK::Roles::Properties;
   also does GTK::Roles::References;
   also does GTK::Roles::Types;
@@ -22,6 +26,10 @@ class GTK::Compat::Device {
   submethod BUILD(:$device) {
     $!prop = nativecast(GObject, $!d = $device);
     $!ref = $!d.p;
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals, %!signals-device;
   }
 
   method new(Ancestry $device) {
@@ -50,7 +58,7 @@ class GTK::Compat::Device {
   # Is originally:
   # GdkDevice, GdkDeviceTool, gpointer --> void
   method tool-changed is also<tool_changed> {
-    self.connect($!d, 'tool-changed');
+    self.connect-tool-changed($!d);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

@@ -291,6 +291,7 @@ GTK::Compat::DragContext
 GTK::Compat::FrameClock
 GTK::Compat::Pixbuf
 GTK::Compat::Roles::Signals
+GTK::Compat::Roles::Signals::Device
 GTK::Compat::Screen
 GTK::Compat::Value
 GTK::DragContext

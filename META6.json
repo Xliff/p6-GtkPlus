@@ -305,6 +305,7 @@
       "GTK::Compat::FrameClock"                :  "lib/GTK/Compat/FrameClock.pm6"               ,
       "GTK::Compat::Pixbuf"                    :  "lib/GTK/Compat/Pixbuf.pm6"                   ,
       "GTK::Compat::Roles::Signals"            :  "lib/GTK/Compat/Roles/Signals.pm6"            ,
+      "GTK::Compat::Roles::Signals::Device"    :  "lib/GTK/Compat/Roles/Signals/Device.pm6"     ,
       "GTK::Compat::Screen"                    :  "lib/GTK/Compat/Screen.pm6"                   ,
       "GTK::Compat::Value"                     :  "lib/GTK/Compat/Value.pm6"                    ,
       "GTK::DragContext"                       :  "lib/GTK/DragContext.pm6"                     ,
@@ -467,4 +468,5 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
