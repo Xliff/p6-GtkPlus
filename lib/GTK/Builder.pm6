@@ -115,7 +115,7 @@ class GTK::Builder does Associative {
 
   #  new-from-buf??
 
-  method AT-KEY(Str $key) is also<AT_KEY> {
+  method AT-KEY(Str $key) {
     die "Requested control '$key' does not exist."
       unless  %!widgets{$key}:exists;
     %!widgets{$key};
@@ -187,6 +187,10 @@ class GTK::Builder does Associative {
       # Use type names to dynamically create objects.
       # Use $args to pass along additional arguments.
       %!widgets{$k} = do {
+         # After significant review, I don't think there will be many
+         # uses of this when case, since much of this work is already done
+         # by GtkBuilder. The only situations I see this handling are P6-state
+         # related issues, like container storage situations.
          when $args.defined {
            ::( %!types{$k}[0] ).new($o, $args.pairs);
           }
@@ -257,23 +261,20 @@ class GTK::Builder does Associative {
 
   method add_from_string (
     Str() $buffer,
-    $length,
-    CArray[Pointer[GError]] $error #= gerror
+    $length?,
+    CArray[Pointer[GError]] $error? #= gerror
   )
     is also<add-from-string>
   {
-    with $length {
-      die '$length cannot be negative' unless $length > -2;
-    }
-    with $error {
-      die '$error must be a GError object or pointer'
-        unless $error ~~ CArray;
-    }
+    my $len = $length // -1;
+    die '$length cannot be negative' unless $len > -2;
 
-    my gsize $l = $length // $buffer.chars;
-    my $rc = gtk_builder_add_from_string($!b, $buffer, $l, $error);
+    my $err = $error // gerror;
+    die '$error must be a GError object or pointer' unless $error ~~ CArray;
+
+    my $rc = gtk_builder_add_from_string($!b, $buffer, $len, $err);
     self!postProcess(:ui_def($buffer));
-    #$ERROR = $error if $error[0].defined;
+    $ERROR = $err if $err[0].defined;
     $rc;
   }
 
@@ -388,7 +389,7 @@ class GTK::Builder does Associative {
 
   method get_object (Str() $name) is also<get-object> {
     my $o = gtk_builder_get_object($!b, $name);
-    $o =:= GtkWidget ?? Nil !! $o;
+    $o === GtkWidget ?? Nil !! $o;
   }
 
   method get_objects is also<get-objects> {

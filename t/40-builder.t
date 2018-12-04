@@ -1,6 +1,7 @@
 use v6.c;
 
 use GTK::Application;
+use GTK::Builder;
 use GTK::Statusbar;
 
 use GTK::Compat::Permission;
@@ -10,46 +11,48 @@ use GTK::Compat::RGBA;
 # Use of GTK::Builder requires a whole new paradigm for
 # writing applications.
 my %cids;
-my $a = GTK::Application.new( :pod($=pod) );
+my $a = GTK::Application.new( title => 'org.genex.gtk_builder' );
+my $b = GTK::Builder.new( :pod($=pod) );
 my $numClicks = 0;
-my $link = $a.control('link1');
-my $tog = $a.control('toggle1');
-my $check = $a.control('check1');
-my $switch = $a.control('switch1');
-my $color = $a.control('color1');
-my $spin = $a.control('spin1');
-my $scale = $a.control('scale1');
-# Can't add a statusbar in glade, so have to do it, here!
+# Can't add a statusbar in glade, so have to do it here!
 my $status = GTK::Statusbar.new;
 
 # Set statusbar events.
-for $a.control.keys {
-  # Never a good idea to use loop control variable in a closure?
+for $b.keys {
+  # Never a good idea to use loop control variable in a closure
   my $k = $_;
-  next unless $a.control($k) ~~ GTK::Widget;
+  next unless $b{$k} ~~ GTK::Widget;
 
-  my $text = "Control: { $k } ( { $a.control($k).^name } )";
-  %cids{$k} //= $status.get_context_id($text);
-  $a.control($k).enter-notify-event.tap({ $status.push(%cids{$k}, $text) });
-  $a.control($k).leave-notify-event.tap({ $status.pop(%cids{$k}) });
+  my $txt = "Control: { $k } ( { $b{$k}.^name } )";
+  %cids{$k} //= $status.get_context_id($txt);
+  # Note that if the next two event handlers do NOT return 0, then the
+  # hover coloration will not be performed.
+  $b{$k}.enter-notify-event.tap(-> *@a {
+    $status.push(%cids{$k}, $txt);
+    @a[*-1].r = 0;  # Continue processing events
+  });
+  $b{$k}.leave-notify-event.tap(-> *@a {
+    $status.pop(%cids{$k});
+    @a[*-1].r = 0;  # Continue processing events.
+  });
 }
 
 $status.show;
-$a.control('box1').pack_start($status, True, True);
-$a.control('application').destroy-signal.tap({ $a.exit });
-$a.control('cancelbutton').clicked.tap({ $a.exit });
-$link.clicked.tap({ $numClicks++ });
-$a.control('okbutton').clicked.tap({
+$b<box1>.pack_start($status, True, True);
+$b<application>.destroy-signal.tap({ $a.exit });
+$b<cancelbutton>.clicked.tap({ $a.exit });
+$b<link1>.clicked.tap({ $numClicks++ });
+$b<okbutton>.clicked.tap({
   say '-' x 30;
-  say "Entry control contains: " ~ $a.control('entry1').text;
-  say "Link control was { $link.visited ?? '' !! 'not ' }visited.";
+  say "Entry control contains: " ~ $b<entry1>.text;
+  say "Link control was { $b<link1>.visited ?? '' !! 'not ' }visited.";
   say "Link control clicked: { $numClicks } times";
-  say "Toggle button current status: " ~ $tog.active.Str;
-  say "Check button current status: " ~ $check.active.Str;
-  say "Switch current status: " ~ $switch.active.Str;
-  say "Color button current color: " ~ $color.rgba.Str;
-  say "Spin current value: " ~ $spin.value;
-  say "Scale control current value: " ~ $scale.value;
+  say "Toggle button current status: " ~ $b<toggle1>.active.Str;
+  say "Check button current status: " ~ $b<check1>.active.Str;
+  say "Switch current status: " ~ $b<switch1>.active.Str;
+  say "Color button current color: " ~ $b<color1>.rgba.Str;
+  say "Spin current value: " ~ $b<spin1>.value;
+  say "Scale control current value: " ~ $b<scale1>.value;
 });
 
 $a.run;
