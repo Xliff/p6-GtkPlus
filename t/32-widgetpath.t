@@ -190,7 +190,12 @@ sub draw_menu($w) {
   query_size($hmc, $, @mh[1]);
   query_size($hac, $, @mh[1]);
   $*h += @mh[1];
-  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[2]) for $mc, $mic, $amc, $dac;
+  #query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[2]) for $mc, $mic, $amc, $dac;
+  query_size($mc,  $, @mh[5]);
+  query_size($mic, $, @mh[2]);
+  query_size($amc, $, @mh[2]);
+  query_size($dac, $, @mh[2]);
+
   $*h += @mh[2];
   query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[3]) for $mc, $mic, $cmc, $dcc;
   $*h += @mh[3];
@@ -198,6 +203,8 @@ sub draw_menu($w) {
   $*h += @mh[4];
   query_size($_, $, @mh[5]) for $mc, $mic, $rmc, $drc;
   draw_style_common( $mc, $, $, $, $, $mx, $my, $mw, $mh);
+
+  say "MX: {$mx} / MY: {$my} / MW: {$mw} / MH: {$mh}";
 
   # Hovered with right arrow
   $as = ( $hac.get($hac.state,  'min-width').int,
@@ -386,9 +393,9 @@ sub draw_scale($w, $p) {
   query_size($_, $, $sh) for $slc, $hc;
   $th += $sh;
   # Following coordinates are too large and too wide.
-  draw_style_common( $tc,      $*cx, $*cy,     $*cw,  $th);
-  draw_style_common( $hc,      $*cw, $*cy, $*cw / 2, $*ch);
-  draw_style_common($slc, $*cx + $p, $*cy,     $*ch, $*ch);
+     draw_style_common( $tc,      $*cx, $*cy,     $*cw,  $th);
+  draw_style_common-ro( $hc,      $*cx, $*cy, $*cw / 2, $*ch);
+  draw_style_common-ro($slc, $*cx + $p, $*cy,     $*ch, $*ch);
 
   .downref for $sc, $cc, $tc, $slc,  $hc
 }
@@ -521,14 +528,17 @@ sub do_draw($ct) {
   $*y += $*h + 10;
   draw_scale($pw - 20, 75);
 
+  say "Notebook";
   $*y += $*h + 20;
   draw_notebook($pw - 20, 160);
 
   # Second column
+  say "Menu";
   $*x += $pw;
   $*y = 10;
   draw_menu($pw - 20);
 
+  say "Menubar";
   $*y += $*h + 10;
   draw_menubar($pw - 20);
 
