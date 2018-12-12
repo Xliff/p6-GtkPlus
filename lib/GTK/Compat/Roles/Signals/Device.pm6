@@ -38,7 +38,7 @@ role GTK::Compat::Roles::Signals::Device {
 }
 
 # GdkDevice, GdkDeviceTool, gpointer --> void
-sub g-connect-create-surface(
+sub g-connect-tool-changed(
   Pointer $app,
   Str $name,
   &handler (Pointer, GdkDeviceTool, Pointer),

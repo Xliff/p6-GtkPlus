@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Builder::Base;
 
-class GTK::Builder::Grid is GTK::Builder::Base does GTK::Builder::Role {
+class GTK::Builder::Grid is GTK::Builder::Base {
   my @attributes = <
     baseline-row
     column-homogeneous

@@ -414,7 +414,10 @@ sub gdk_window_get_screen (GdkWindow $window)
   is export
   { * }
 
-sub gdk_window_get_source_events (GdkWindow $window, GdkInputSource $source)
+sub gdk_window_get_source_events (
+  GdkWindow $window,
+  uint32 $source                  # GdkInputSource $source
+)
   returns uint32 # GdkEventMask
   is native(gdk)
   is export
@@ -840,7 +843,7 @@ sub gdk_window_set_skip_taskbar_hint (
 
 sub gdk_window_set_source_events (
   GdkWindow $window,
-  GdkInputSource $source,
+  uint32 $source,                 # GdkInputSource $source,
   uint32 $event_mask              # GdkEventMask $event_mask
 )
   is native(gdk)

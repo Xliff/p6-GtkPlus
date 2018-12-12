@@ -45,29 +45,43 @@ multi sub resolve-ushort($rus) is export {
   $rus +& 0xff;
 }
 
-multi resolve-int(@ri) is export {
-  @ri.map({ samewith($_) });
-}
-multi sub resolve-int($ri) is export {
-  ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
-}
-
-multi resolve-uint(@ru) is export {
-  @ru.map({ samewith($_) });
-}
-multi sub resolve-uint($ru) is export {
-  $ru +& 0xffff;
-}
-
 sub resolve-lint($rl) is export {
-  ($rl.abs +& 0x7fffffff) * ($rl < 0 ?? -1 !! 1);
+  ($rl.abs +& 0x7fffffffffffffff) * ($rl < 0 ?? -1 !! 1);
 }
 
 multi sub resolve-ulint(@rul) {
   @rul.map({ samewith($_) });
 }
 multi sub resolve-ulint($rul) is export {
-  $rul +& 0xffffffff;
+  $rul +& 0xffffffffffffffff;
+}
+
+multi resolve-int(@ri) is export {
+  @ri.map({ samewith($_) });
+}
+multi sub resolve-int($ri) is export {
+  ($ri.abs +& 0x7fffffff) * ($ri < 0 ?? -1 !! 1);
+}
+
+multi resolve-uint(@ru) is export {
+  @ru.map({ samewith($_) });
+}
+multi sub resolve-uint($ru) is export {
+  $ru +& 0xffffffff;
+}
+
+multi resolve-int16(@ri) is export {
+  @ri.map({ samewith($_) });
+}
+multi sub resolve-int16($ri) is export {
+  ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
+}
+
+multi resolve-uint16(@ru) is export {
+  @ru.map({ samewith($_) });
+}
+multi sub resolve-uint16($ru) is export {
+  $ru +& 0xffff;
 }
 
 sub resolve-gtype($gt) is export {

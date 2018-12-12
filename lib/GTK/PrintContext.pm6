@@ -64,7 +64,7 @@ class GTK::PrintContext {
     gtk_print_context_get_hard_margins($!pc, $t, $b, $l, $r);
   }
 
-  method get_height is also<get-height> {
+  method get_height is also<get-height height> {
     gtk_print_context_get_height($!pc);
   }
 
@@ -80,7 +80,7 @@ class GTK::PrintContext {
     gtk_print_context_get_type();
   }
 
-  method get_width is also<get-width> {
+  method get_width is also<get-width width> {
     gtk_print_context_get_width($!pc);
   }
 

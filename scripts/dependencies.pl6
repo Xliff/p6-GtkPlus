@@ -11,8 +11,11 @@ my @files = find
   name => /'.pm6' $/,
   exclude => / 'lib/GTK/Compat/GFile.pm6' /;
 
-@files.sort( *.IO.modified );
-  exit if $dep_file.e && $dep_file.modified >= @files[0].modified;
+@files .= sort( *.IO.modified );
+if $dep_file.e && $dep_file.modified >= @files[*-1].modified {
+  say 'No change in dependencies.';
+  exit;
+}
 
 my @modules = @files
   .map( *.path )

@@ -21,6 +21,7 @@
 - Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 - Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
 - Move GTK::Window title and size initialization to BUILD
+- Add overflow warnings to appropriate RESOLVE routines in GTK::Roles::Types. Said warnings are NOT under $DEBUG check.
 
 
 Applications
