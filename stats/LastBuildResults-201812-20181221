@@ -1,0 +1,4037 @@
+Dependency Generation
+=====================
+real 5.70
+user 6.86
+sys 0.63
+ === GTK::Builder::MRO ===
+Stage start      :   0.000
+Stage parse      :   2.084
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Base ===
+Stage start      :   0.000
+Stage parse      :   3.096
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Box ===
+Stage start      :   0.000
+Stage parse      :   2.666
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Button ===
+Stage start      :   0.000
+Stage parse      :   2.543
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Frame ===
+Stage start      :   0.000
+Stage parse      :   2.610
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Grid ===
+Stage start      :   0.000
+Stage parse      :  15.797
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Image ===
+Stage start      :   0.000
+Stage parse      :   2.490
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.004
+Stage mast       :   0.011
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Label ===
+Stage start      :   0.000
+Stage parse      :   2.506
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::LinkButton ===
+Stage start      :   0.000
+Stage parse      :   2.483
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::ListBoxRow ===
+Stage start      :   0.000
+Stage parse      :   2.517
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Menu ===
+Stage start      :   0.000
+Stage parse      :   2.419
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::MenuButton ===
+Stage start      :   0.000
+Stage parse      :   2.564
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::MenuItem ===
+Stage start      :   0.000
+Stage parse      :   2.538
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::MenuShell ===
+Stage start      :   0.000
+Stage parse      :   2.447
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.017
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Orientable ===
+Stage start      :   0.000
+Stage parse      :   2.563
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.012
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Revealer ===
+Stage start      :   0.000
+Stage parse      :   2.600
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.011
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Builder::ToggleButton ===
+Stage start      :   0.000
+Stage parse      :   2.469
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Widget ===
+Stage start      :   0.000
+Stage parse      :   2.641
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::BuilderWidgets ===
+Stage start      :   0.000
+Stage parse      :   8.239
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.014
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ReturnedValue ===
+Stage start      :   0.000
+Stage parse      :   1.433
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Pointers ===
+Stage start      :   0.000
+Stage parse      :   3.928
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Types ===
+Stage start      :   0.000
+Stage parse      :  20.007
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.010
+Stage mast       :   0.022
+Stage mbc        :   0.013
+Stage moar       :   0.000
+ === GTK::Raw::Utils ===
+Stage start      :   0.000
+Stage parse      :   3.213
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Protection ===
+Stage start      :   0.000
+Stage parse      :   1.587
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::LatchedContents ===
+Stage start      :   0.000
+Stage parse      :   2.903
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Types ===
+Stage start      :   0.000
+Stage parse      :   3.874
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder::Actionable ===
+Stage start      :   0.000
+Stage parse      :   2.492
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::RGBA ===
+Stage start      :   0.000
+Stage parse      :   3.966
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::AppInfo ===
+Stage start      :   0.000
+Stage parse      :   5.530
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Array ===
+Stage start      :   0.000
+Stage parse      :   6.098
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Cursor ===
+Stage start      :   0.000
+Stage parse      :   3.847
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Device ===
+Stage start      :   0.000
+Stage parse      :   5.098
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Display ===
+Stage start      :   0.000
+Stage parse      :   5.821
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::DragContext ===
+Stage start      :   0.000
+Stage parse      :   4.543
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::FrameTimings ===
+Stage start      :   0.000
+Stage parse      :   3.636
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::GList ===
+Stage start      :   0.000
+Stage parse      :   4.852
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::GSList ===
+Stage start      :   0.000
+Stage parse      :   4.658
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Icon ===
+Stage start      :   0.000
+Stage parse      :   3.480
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::KeyFile ===
+Stage start      :   0.000
+Stage parse      :   5.821
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Menu ===
+Stage start      :   0.000
+Stage parse      :   4.805
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::MenuModel ===
+Stage start      :   0.000
+Stage parse      :   4.075
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Permission ===
+Stage start      :   0.000
+Stage parse      :   3.746
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Pixbuf ===
+Stage start      :   0.000
+Stage parse      :   6.384
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Pixbuf::Transforms ===
+Stage start      :   0.000
+Stage parse      :   3.710
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Rectangle ===
+Stage start      :   0.000
+Stage parse      :   3.222
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Screen ===
+Stage start      :   0.000
+Stage parse      :   4.946
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Value ===
+Stage start      :   0.000
+Stage parse      :   5.682
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Visual ===
+Stage start      :   0.000
+Stage parse      :   4.287
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Window ===
+Stage start      :   0.000
+Stage parse      :  13.219
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.004
+Stage mast       :   0.021
+Stage mbc        :   0.004
+Stage moar       :   0.000
+ === GTK::Compat::Rectangle ===
+Stage start      :   0.000
+Stage parse      :   3.904
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Roles::AppInfo ===
+Stage start      :   0.000
+Stage parse      :   3.801
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Roles::Icon ===
+Stage start      :   0.000
+Stage parse      :   3.970
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Roles::Signals::Window ===
+Stage start      :   0.000
+Stage parse      :   4.388
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Visual ===
+Stage start      :   0.000
+Stage parse      :   4.239
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Types ===
+Stage start      :   0.000
+Stage parse      :  12.643
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.013
+Stage mast       :   0.026
+Stage mbc        :   0.017
+Stage moar       :   0.000
+ === GTK::Raw::Viewport ===
+Stage start      :   0.000
+Stage parse      :   4.524
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::VolumeButton ===
+Stage start      :   0.000
+Stage parse      :   3.821
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Widget ===
+Stage start      :   0.000
+Stage parse      :  23.020
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.005
+Stage mast       :   0.013
+Stage mbc        :   0.006
+Stage moar       :   0.000
+ === GTK::Raw::WidgetPath ===
+Stage start      :   0.000
+Stage parse      :   6.715
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.010
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::Window ===
+Stage start      :   0.000
+Stage parse      :  12.967
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.011
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::Raw::WindowGroup ===
+Stage start      :   0.000
+Stage parse      :   4.089
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::EntryBuffer ===
+Stage start      :   0.000
+Stage parse      :   3.747
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Array ===
+Stage start      :   0.000
+Stage parse      :   4.329
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::FrameTimings ===
+Stage start      :   0.000
+Stage parse      :   3.793
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::GList ===
+Stage start      :   0.000
+Stage parse      :   4.324
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::GSList ===
+Stage start      :   0.000
+Stage parse      :   3.718
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.011
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::KeyFile ===
+Stage start      :   0.000
+Stage parse      :   4.055
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::LaunchContext ===
+Stage start      :   0.000
+Stage parse      :   3.941
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::MenuAttributeIter ===
+Stage start      :   0.000
+Stage parse      :   3.035
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::MenuItem ===
+Stage start      :   0.000
+Stage parse      :   3.600
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::MenuLinkIter ===
+Stage start      :   0.000
+Stage parse      :   3.109
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Permission ===
+Stage start      :   0.000
+Stage parse      :   3.940
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Pixbuf::Transforms ===
+Stage start      :   0.000
+Stage parse      :   4.492
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Cairo ===
+Stage start      :   0.000
+Stage parse      :   5.220
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::FrameClock ===
+Stage start      :   0.000
+Stage parse      :   4.425
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::Raw::About ===
+Stage start      :   0.000
+Stage parse      :   6.116
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Dialog::Raw::AppChooser ===
+Stage start      :   0.000
+Stage parse      :   3.953
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::Raw::ColorChooser ===
+Stage start      :   0.000
+Stage parse      :   3.698
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.010
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::Raw::FontChooser ===
+Stage start      :   0.000
+Stage parse      :   3.849
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::Raw::Message ===
+Stage start      :   0.000
+Stage parse      :   4.337
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.017
+Stage moar       :   0.000
+ === GTK::Dialog::Raw::PageSetupUnix ===
+Stage start      :   0.000
+Stage parse      :   4.225
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::Raw::PrintUnix ===
+Stage start      :   0.000
+Stage parse      :   5.858
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.012
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::AccelGroup ===
+Stage start      :   0.000
+Stage parse      :   5.596
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::AccelLabel ===
+Stage start      :   0.000
+Stage parse      :   4.207
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ActionBar ===
+Stage start      :   0.000
+Stage parse      :   4.109
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Actionable ===
+Stage start      :   0.000
+Stage parse      :   4.056
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Adjustment ===
+Stage start      :   0.000
+Stage parse      :   5.008
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::AppButton ===
+Stage start      :   0.000
+Stage parse      :   4.420
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::AppChooser ===
+Stage start      :   0.000
+Stage parse      :   3.781
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Application ===
+Stage start      :   0.000
+Stage parse      :   5.088
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::AspectFrame ===
+Stage start      :   0.000
+Stage parse      :   3.689
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.016
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::Raw::Assistant ===
+Stage start      :   0.000
+Stage parse      :   5.729
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Bin ===
+Stage start      :   0.000
+Stage parse      :   3.635
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Box ===
+Stage start      :   0.000
+Stage parse      :   4.711
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Buildable ===
+Stage start      :   0.000
+Stage parse      :   4.385
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Builder ===
+Stage start      :   0.000
+Stage parse      :   5.590
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Button ===
+Stage start      :   0.000
+Stage parse      :   5.562
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ButtonBox ===
+Stage start      :   0.000
+Stage parse      :   4.028
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CSSProvider ===
+Stage start      :   0.000
+Stage parse      :   4.415
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Calendar ===
+Stage start      :   0.000
+Stage parse      :   4.708
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellArea ===
+Stage start      :   0.000
+Stage parse      :   6.964
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::CellAreaBox ===
+Stage start      :   0.000
+Stage parse      :   3.958
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellAreaContext ===
+Stage start      :   0.000
+Stage parse      :   4.331
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellEditable ===
+Stage start      :   0.000
+Stage parse      :   3.726
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellLayout ===
+Stage start      :   0.000
+Stage parse      :   4.294
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRenderer ===
+Stage start      :   0.000
+Stage parse      :   5.493
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererAccel ===
+Stage start      :   0.000
+Stage parse      :   3.615
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererCombo ===
+Stage start      :   0.000
+Stage parse      :   3.774
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererPixbuf ===
+Stage start      :   0.000
+Stage parse      :   3.675
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererProgress ===
+Stage start      :   0.000
+Stage parse      :   3.590
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererSpin ===
+Stage start      :   0.000
+Stage parse      :   3.603
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererSpinner ===
+Stage start      :   0.000
+Stage parse      :   3.638
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererText ===
+Stage start      :   0.000
+Stage parse      :   3.689
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellRendererToggle ===
+Stage start      :   0.000
+Stage parse      :   4.088
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CellView ===
+Stage start      :   0.000
+Stage parse      :   5.100
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::CheckButton ===
+Stage start      :   0.000
+Stage parse      :   3.745
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::CheckMenuItem ===
+Stage start      :   0.000
+Stage parse      :   4.387
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Clipboard ===
+Stage start      :   0.000
+Stage parse      :   5.935
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ColorButton ===
+Stage start      :   0.000
+Stage parse      :   4.941
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ColorChooser ===
+Stage start      :   0.000
+Stage parse      :   4.356
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ComboBox ===
+Stage start      :   0.000
+Stage parse      :   6.763
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::ComboBoxText ===
+Stage start      :   0.000
+Stage parse      :   4.383
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Container ===
+Stage start      :   0.000
+Stage parse      :   7.162
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::Dialog ===
+Stage start      :   0.000
+Stage parse      :   4.690
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::DnD ===
+Stage start      :   0.000
+Stage parse      :   4.747
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::DragDest ===
+Stage start      :   0.000
+Stage parse      :   4.332
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::DragSource ===
+Stage start      :   0.000
+Stage parse      :   4.266
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Editable ===
+Stage start      :   0.000
+Stage parse      :   4.548
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Entry ===
+Stage start      :   0.000
+Stage parse      :   9.320
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.010
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::EntryBuffer ===
+Stage start      :   0.000
+Stage parse      :   4.423
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::EntryCompletion ===
+Stage start      :   0.000
+Stage parse      :   5.536
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::EventBox ===
+Stage start      :   0.000
+Stage parse      :   3.962
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Expander ===
+Stage start      :   0.000
+Stage parse      :   4.872
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::FileChooser ===
+Stage start      :   0.000
+Stage parse      :   8.481
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.010
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::FileChooserButton ===
+Stage start      :   0.000
+Stage parse      :   4.160
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.010
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::FileFilter ===
+Stage start      :   0.000
+Stage parse      :   4.364
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Fixed ===
+Stage start      :   0.000
+Stage parse      :   3.906
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::FlowBox ===
+Stage start      :   0.000
+Stage parse      :   6.259
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.004
+Stage mast       :   0.011
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::FontButton ===
+Stage start      :   0.000
+Stage parse      :   4.616
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::FontChooser ===
+Stage start      :   0.000
+Stage parse      :   4.604
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Frame ===
+Stage start      :   0.000
+Stage parse      :   4.382
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Grid ===
+Stage start      :   0.000
+Stage parse      :   5.252
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::HeaderBar ===
+Stage start      :   0.000
+Stage parse      :   4.609
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::IconTheme ===
+Stage start      :   0.000
+Stage parse      :   7.692
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::IconView ===
+Stage start      :   0.000
+Stage parse      :   8.650
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.010
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::Image ===
+Stage start      :   0.000
+Stage parse      :   5.841
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::InfoBar ===
+Stage start      :   0.000
+Stage parse      :   4.634
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Label ===
+Stage start      :   0.000
+Stage parse      :   7.482
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.011
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::Layout ===
+Stage start      :   0.000
+Stage parse      :   4.321
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::LevelBar ===
+Stage start      :   0.000
+Stage parse      :   4.695
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.022
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::LinkButton ===
+Stage start      :   0.000
+Stage parse      :   3.993
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ListBox ===
+Stage start      :   0.000
+Stage parse      :   6.529
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.010
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::ListStore ===
+Stage start      :   0.000
+Stage parse      :   4.920
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::LockButton ===
+Stage start      :   0.000
+Stage parse      :   3.745
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Menu ===
+Stage start      :   0.000
+Stage parse      :   5.952
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::MenuBar ===
+Stage start      :   0.000
+Stage parse      :   4.022
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::MenuButton ===
+Stage start      :   0.000
+Stage parse      :   4.495
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::MenuItem ===
+Stage start      :   0.000
+Stage parse      :   5.236
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::MenuShell ===
+Stage start      :   0.000
+Stage parse      :   4.623
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::MenuToolButton ===
+Stage start      :   0.000
+Stage parse      :   4.011
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Notebook ===
+Stage start      :   0.000
+Stage parse      :   7.163
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::Offscreen ===
+Stage start      :   0.000
+Stage parse      :   3.752
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Orientable ===
+Stage start      :   0.000
+Stage parse      :   3.681
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Overlay ===
+Stage start      :   0.000
+Stage parse      :   3.936
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::PageSetup ===
+Stage start      :   0.000
+Stage parse      :   5.679
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Pane ===
+Stage start      :   0.000
+Stage parse      :   4.489
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::PaperSize ===
+Stage start      :   0.000
+Stage parse      :   5.487
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Places ===
+Stage start      :   0.000
+Stage parse      :   5.567
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.012
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::Popover ===
+Stage start      :   0.000
+Stage parse      :   5.031
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::PrintContext ===
+Stage start      :   0.000
+Stage parse      :   4.416
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::PrintJob ===
+Stage start      :   0.000
+Stage parse      :   6.005
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::PrintOperation ===
+Stage start      :   0.000
+Stage parse      :   6.023
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::PrintSettings ===
+Stage start      :   0.000
+Stage parse      :   9.469
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.015
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::Raw::Printer ===
+Stage start      :   0.000
+Stage parse      :   5.300
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ProgressBar ===
+Stage start      :   0.000
+Stage parse      :   4.605
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.004
+Stage mast       :   0.010
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::RadioButton ===
+Stage start      :   0.000
+Stage parse      :   4.232
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::RadioMenuItem ===
+Stage start      :   0.000
+Stage parse      :   4.186
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::RadioToolButton ===
+Stage start      :   0.000
+Stage parse      :   3.946
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Range ===
+Stage start      :   0.000
+Stage parse      :   5.613
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::RecentFilter ===
+Stage start      :   0.000
+Stage parse      :   4.459
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Render ===
+Stage start      :   0.000
+Stage parse      :   5.102
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Revealer ===
+Stage start      :   0.000
+Stage parse      :   4.099
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Scale ===
+Stage start      :   0.000
+Stage parse      :   4.753
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ScaleButton ===
+Stage start      :   0.000
+Stage parse      :   4.223
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Scrollable ===
+Stage start      :   0.000
+Stage parse      :   4.270
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Scrollbar ===
+Stage start      :   0.000
+Stage parse      :   3.641
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ScrolledWindow ===
+Stage start      :   0.000
+Stage parse      :   6.086
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::SearchBar ===
+Stage start      :   0.000
+Stage parse      :   4.104
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::SearchEntry ===
+Stage start      :   0.000
+Stage parse      :   3.698
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Selection ===
+Stage start      :   0.000
+Stage parse      :   5.747
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Separator ===
+Stage start      :   0.000
+Stage parse      :   3.591
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::SeparatorMenuItem ===
+Stage start      :   0.000
+Stage parse      :   3.601
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::SeparatorToolItem ===
+Stage start      :   0.000
+Stage parse      :   3.785
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::SizeGroup ===
+Stage start      :   0.000
+Stage parse      :   4.151
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::SpinButton ===
+Stage start      :   0.000
+Stage parse      :   5.349
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Spinner ===
+Stage start      :   0.000
+Stage parse      :   3.710
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Stack ===
+Stage start      :   0.000
+Stage parse      :   5.475
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::StackSidebar ===
+Stage start      :   0.000
+Stage parse      :   3.742
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Statusbar ===
+Stage start      :   0.000
+Stage parse      :   4.076
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::StyleContext ===
+Stage start      :   0.000
+Stage parse      :   8.334
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.012
+Stage mbc        :   0.004
+Stage moar       :   0.000
+ === GTK::Raw::Subs ===
+Stage start      :   0.000
+Stage parse      :   5.767
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Switch ===
+Stage start      :   0.000
+Stage parse      :   3.893
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TargetEntry ===
+Stage start      :   0.000
+Stage parse      :   3.834
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TargetList ===
+Stage start      :   0.000
+Stage parse      :   4.407
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TextBuffer ===
+Stage start      :   0.000
+Stage parse      :   8.180
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::TextChildAnchor ===
+Stage start      :   0.000
+Stage parse      :   3.774
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TextIter ===
+Stage start      :   0.000
+Stage parse      :  10.657
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.010
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::Raw::TextMark ===
+Stage start      :   0.000
+Stage parse      :   4.132
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TextTag ===
+Stage start      :   0.000
+Stage parse      :   3.894
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.004
+Stage moar       :   0.000
+ === GTK::Raw::TextTagTable ===
+Stage start      :   0.000
+Stage parse      :   4.037
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TextView ===
+Stage start      :   0.000
+Stage parse      :   9.302
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.009
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::Raw::ToggleButton ===
+Stage start      :   0.000
+Stage parse      :   4.270
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ToggleToolButton ===
+Stage start      :   0.000
+Stage parse      :   3.953
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ToolButton ===
+Stage start      :   0.000
+Stage parse      :   4.652
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ToolItem ===
+Stage start      :   0.000
+Stage parse      :   5.741
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::ToolItemGroup ===
+Stage start      :   0.000
+Stage parse      :   4.942
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ToolPalette ===
+Stage start      :   0.000
+Stage parse      :   5.197
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::ToolShell ===
+Stage start      :   0.000
+Stage parse      :   4.250
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Toolbar ===
+Stage start      :   0.000
+Stage parse      :   4.621
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::Tooltip ===
+Stage start      :   0.000
+Stage parse      :   4.254
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TreeDnD ===
+Stage start      :   0.000
+Stage parse      :   4.073
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TreeModel ===
+Stage start      :   0.000
+Stage parse      :   7.895
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Raw::TreeModelFilter ===
+Stage start      :   0.000
+Stage parse      :   4.391
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TreeModelSort ===
+Stage start      :   0.000
+Stage parse      :   4.310
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TreeSelection ===
+Stage start      :   0.000
+Stage parse      :   5.097
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TreeSortable ===
+Stage start      :   0.000
+Stage parse      :   3.973
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TreeStore ===
+Stage start      :   0.000
+Stage parse      :   5.257
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Raw::TreeView ===
+Stage start      :   0.000
+Stage parse      :  11.312
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.010
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::Raw::TreeViewColumn ===
+Stage start      :   0.000
+Stage parse      :   7.410
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Render ===
+Stage start      :   0.000
+Stage parse      :   4.922
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Actionable ===
+Stage start      :   0.000
+Stage parse      :   4.004
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::AppChooser ===
+Stage start      :   0.000
+Stage parse      :   3.912
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Buildable ===
+Stage start      :   0.000
+Stage parse      :   4.055
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Data ===
+Stage start      :   0.000
+Stage parse      :   3.920
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Orientable ===
+Stage start      :   0.000
+Stage parse      :   4.226
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.014
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::References ===
+Stage start      :   0.000
+Stage parse      :   3.059
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Scrollable ===
+Stage start      :   0.000
+Stage parse      :   3.949
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Application ===
+Stage start      :   0.000
+Stage parse      :   4.424
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::CSSProvider ===
+Stage start      :   0.000
+Stage parse      :   4.372
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::CellArea ===
+Stage start      :   0.000
+Stage parse      :   5.239
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::CellRenderer ===
+Stage start      :   0.000
+Stage parse      :   4.451
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::CellRendererAccel ===
+Stage start      :   0.000
+Stage parse      :   4.104
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::ComboBox ===
+Stage start      :   0.000
+Stage parse      :   4.642
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Editable ===
+Stage start      :   0.000
+Stage parse      :   4.727
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Entry ===
+Stage start      :   0.000
+Stage parse      :   4.421
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::EntryCompletion ===
+Stage start      :   0.000
+Stage parse      :   4.524
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::FlowBox ===
+Stage start      :   0.000
+Stage parse      :   4.437
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Generic ===
+Stage start      :   0.000
+Stage parse      :   8.352
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::IconView ===
+Stage start      :   0.000
+Stage parse      :   4.857
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::ListBox ===
+Stage start      :   0.000
+Stage parse      :   4.195
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Menu ===
+Stage start      :   0.000
+Stage parse      :   4.606
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.021
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::MenuShell ===
+Stage start      :   0.000
+Stage parse      :   4.587
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Overlay ===
+Stage start      :   0.000
+Stage parse      :   4.465
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Places ===
+Stage start      :   0.000
+Stage parse      :   5.286
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::PrintOperation ===
+Stage start      :   0.000
+Stage parse      :   5.500
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Range ===
+Stage start      :   0.000
+Stage parse      :   4.174
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Scale ===
+Stage start      :   0.000
+Stage parse      :   4.450
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::ScrolledWindow ===
+Stage start      :   0.000
+Stage parse      :   4.390
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::SpinButton ===
+Stage start      :   0.000
+Stage parse      :   4.638
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Statusbar ===
+Stage start      :   0.000
+Stage parse      :   4.116
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.012
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::TextBuffer ===
+Stage start      :   0.000
+Stage parse      :   5.634
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::TextTag ===
+Stage start      :   0.000
+Stage parse      :   4.433
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::TextView ===
+Stage start      :   0.000
+Stage parse      :   4.462
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Toolbar ===
+Stage start      :   0.000
+Stage parse      :   4.409
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::TreeView ===
+Stage start      :   0.000
+Stage parse      :   4.889
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Signals::Widget ===
+Stage start      :   0.000
+Stage parse      :   7.268
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::TreeDnD ===
+Stage start      :   0.000
+Stage parse      :   4.005
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.009
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::TreeSortable ===
+Stage start      :   0.000
+Stage parse      :   4.281
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Selection ===
+Stage start      :   0.000
+Stage parse      :   5.459
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::SizeGroup ===
+Stage start      :   0.000
+Stage parse      :   4.640
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TargetEntry ===
+Stage start      :   0.000
+Stage parse      :   4.191
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TargetList ===
+Stage start      :   0.000
+Stage parse      :   4.796
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TextChildAnchor ===
+Stage start      :   0.000
+Stage parse      :   4.148
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TextIter ===
+Stage start      :   0.000
+Stage parse      :   5.295
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TextMark ===
+Stage start      :   0.000
+Stage parse      :   4.540
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TextTag ===
+Stage start      :   0.000
+Stage parse      :   4.981
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TextTagTable ===
+Stage start      :   0.000
+Stage parse      :   4.598
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Tooltip ===
+Stage start      :   0.000
+Stage parse      :   4.297
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreeIter ===
+Stage start      :   0.000
+Stage parse      :   3.836
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreePath ===
+Stage start      :   0.000
+Stage parse      :   4.744
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreeRow ===
+Stage start      :   0.000
+Stage parse      :   4.693
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreeSelection ===
+Stage start      :   0.000
+Stage parse      :   5.185
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::WidgetPath ===
+Stage start      :   0.000
+Stage parse      :   5.432
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::WindowGroup ===
+Stage start      :   0.000
+Stage parse      :   4.578
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Adjustment ===
+Stage start      :   0.000
+Stage parse      :   4.369
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CSSProvider ===
+Stage start      :   0.000
+Stage parse      :   5.368
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Clipboard ===
+Stage start      :   0.000
+Stage parse      :   5.304
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Cairo ===
+Stage start      :   0.000
+Stage parse      :   4.510
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Display ===
+Stage start      :   0.000
+Stage parse      :   4.934
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::DragContext ===
+Stage start      :   0.000
+Stage parse      :   4.909
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::FrameClock ===
+Stage start      :   0.000
+Stage parse      :   4.330
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Pixbuf ===
+Stage start      :   0.000
+Stage parse      :   5.853
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Roles::Signals ===
+Stage start      :   0.000
+Stage parse      :   4.459
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Roles::Signals::Device ===
+Stage start      :   0.000
+Stage parse      :   3.715
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Screen ===
+Stage start      :   0.000
+Stage parse      :   4.814
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Value ===
+Stage start      :   0.000
+Stage parse      :   5.148
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::DragContext ===
+Stage start      :   0.000
+Stage parse      :   4.732
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::EntryBuffer ===
+Stage start      :   0.000
+Stage parse      :   5.050
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::FileFilter ===
+Stage start      :   0.000
+Stage parse      :   4.974
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.013
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::IconInfo ===
+Stage start      :   0.000
+Stage parse      :   5.659
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::IconTheme ===
+Stage start      :   0.000
+Stage parse      :   6.980
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::PaperSize ===
+Stage start      :   0.000
+Stage parse      :   4.394
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::PrintContext ===
+Stage start      :   0.000
+Stage parse      :   4.754
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::PrintSettings ===
+Stage start      :   0.000
+Stage parse      :   5.431
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::RecentFilter ===
+Stage start      :   0.000
+Stage parse      :   4.612
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::CellEditable ===
+Stage start      :   0.000
+Stage parse      :   5.449
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::ColorChooser ===
+Stage start      :   0.000
+Stage parse      :   5.060
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Editable ===
+Stage start      :   0.000
+Stage parse      :   5.496
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::FileChooser ===
+Stage start      :   0.000
+Stage parse      :   6.105
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::FontChooser ===
+Stage start      :   0.000
+Stage parse      :   5.050
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::Properties ===
+Stage start      :   0.000
+Stage parse      :   4.305
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::ToolShell ===
+Stage start      :   0.000
+Stage parse      :   5.117
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::TreeModel ===
+Stage start      :   0.000
+Stage parse      :   6.231
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::StyleContext ===
+Stage start      :   0.000
+Stage parse      :   8.489
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TextBuffer ===
+Stage start      :   0.000
+Stage parse      :   6.312
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.015
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::TreeModelFilter ===
+Stage start      :   0.000
+Stage parse      :   5.492
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.016
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreeModelSort ===
+Stage start      :   0.000
+Stage parse      :   5.403
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreeStore ===
+Stage start      :   0.000
+Stage parse      :   6.121
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::AccelGroup ===
+Stage start      :   0.000
+Stage parse      :   5.191
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellAreaContext ===
+Stage start      :   0.000
+Stage parse      :   4.878
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRenderer ===
+Stage start      :   0.000
+Stage parse      :   7.033
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererPixbuf ===
+Stage start      :   0.000
+Stage parse      :   4.878
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererProgress ===
+Stage start      :   0.000
+Stage parse      :   4.798
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererSpinner ===
+Stage start      :   0.000
+Stage parse      :   4.702
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererText ===
+Stage start      :   0.000
+Stage parse      :   6.478
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererToggle ===
+Stage start      :   0.000
+Stage parse      :   5.225
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.013
+Stage mbc        :   0.011
+Stage moar       :   0.000
+ === GTK::Compat::Cursor ===
+Stage start      :   0.000
+Stage parse      :   5.067
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.014
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Device ===
+Stage start      :   0.000
+Stage parse      :   6.162
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::MenuModel ===
+Stage start      :   0.000
+Stage parse      :   5.306
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Raw::Monitor ===
+Stage start      :   0.000
+Stage parse      :   4.179
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Window ===
+Stage start      :   0.000
+Stage parse      :   7.275
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ListStore ===
+Stage start      :   0.000
+Stage parse      :   6.553
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::PageSetup ===
+Stage start      :   0.000
+Stage parse      :   4.752
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::PrintJob ===
+Stage start      :   0.000
+Stage parse      :   5.813
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.015
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::PrintOperation ===
+Stage start      :   0.000
+Stage parse      :   7.488
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Printer ===
+Stage start      :   0.000
+Stage parse      :   5.997
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Roles::CellLayout ===
+Stage start      :   0.000
+Stage parse      :   5.271
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Widget ===
+Stage start      :   0.000
+Stage parse      :  13.942
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Calendar ===
+Stage start      :   0.000
+Stage parse      :   5.579
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellArea ===
+Stage start      :   0.000
+Stage parse      :   5.701
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellAreaBox ===
+Stage start      :   0.000
+Stage parse      :   5.657
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.013
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererAccel ===
+Stage start      :   0.000
+Stage parse      :   5.553
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererSpin ===
+Stage start      :   0.000
+Stage parse      :   5.200
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellView ===
+Stage start      :   0.000
+Stage parse      :   7.063
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.010
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Menu ===
+Stage start      :   0.000
+Stage parse      :   4.300
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Compat::Monitor ===
+Stage start      :   0.000
+Stage parse      :   5.154
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Container ===
+Stage start      :   0.000
+Stage parse      :   6.900
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::DrawingArea ===
+Stage start      :   0.000
+Stage parse      :   5.086
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Entry ===
+Stage start      :   0.000
+Stage parse      :   7.284
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::EntryCompletion ===
+Stage start      :   0.000
+Stage parse      :   5.711
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Fixed ===
+Stage start      :   0.000
+Stage parse      :   5.430
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Grid ===
+Stage start      :   0.000
+Stage parse      :   6.137
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::HeaderBar ===
+Stage start      :   0.000
+Stage parse      :   5.453
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::IconView ===
+Stage start      :   0.000
+Stage parse      :   7.575
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Image ===
+Stage start      :   0.000
+Stage parse      :   5.826
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Label ===
+Stage start      :   0.000
+Stage parse      :   5.971
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Layout ===
+Stage start      :   0.000
+Stage parse      :   6.064
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::LevelBar ===
+Stage start      :   0.000
+Stage parse      :   5.809
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Notebook ===
+Stage start      :   0.000
+Stage parse      :   5.932
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Pane ===
+Stage start      :   0.000
+Stage parse      :   6.308
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ProgressBar ===
+Stage start      :   0.000
+Stage parse      :   6.128
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Range ===
+Stage start      :   0.000
+Stage parse      :   6.455
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Scale ===
+Stage start      :   0.000
+Stage parse      :   5.956
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.011
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Scrollbar ===
+Stage start      :   0.000
+Stage parse      :   5.276
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::SearchEntry ===
+Stage start      :   0.000
+Stage parse      :   5.443
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.011
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === GTK::Separator ===
+Stage start      :   0.000
+Stage parse      :   5.769
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::SpinButton ===
+Stage start      :   0.000
+Stage parse      :   6.524
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Spinner ===
+Stage start      :   0.000
+Stage parse      :   5.306
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Switch ===
+Stage start      :   0.000
+Stage parse      :   5.613
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TextView ===
+Stage start      :   0.000
+Stage parse      :   7.535
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ToolItemGroup ===
+Stage start      :   0.000
+Stage parse      :   5.885
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Toolbar ===
+Stage start      :   0.000
+Stage parse      :   6.333
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreeViewColumn ===
+Stage start      :   0.000
+Stage parse      :   6.830
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::AccelLabel ===
+Stage start      :   0.000
+Stage parse      :   5.482
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Bin ===
+Stage start      :   0.000
+Stage parse      :   4.938
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Box ===
+Stage start      :   0.000
+Stage parse      :   6.143
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Button ===
+Stage start      :   0.000
+Stage parse      :   6.102
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ButtonBox ===
+Stage start      :   0.000
+Stage parse      :   5.526
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ColorButton ===
+Stage start      :   0.000
+Stage parse      :   6.509
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ColorChooser ===
+Stage start      :   0.000
+Stage parse      :   6.496
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ComboBox ===
+Stage start      :   0.000
+Stage parse      :   7.430
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ComboBoxText ===
+Stage start      :   0.000
+Stage parse      :   5.696
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.014
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::EventBox ===
+Stage start      :   0.000
+Stage parse      :   5.714
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Expander ===
+Stage start      :   0.000
+Stage parse      :   5.677
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::FileChooserButton ===
+Stage start      :   0.000
+Stage parse      :   5.955
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::FlowBoxChild ===
+Stage start      :   0.000
+Stage parse      :   5.406
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::FontButton ===
+Stage start      :   0.000
+Stage parse      :   6.034
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Frame ===
+Stage start      :   0.000
+Stage parse      :   5.997
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::InfoBar ===
+Stage start      :   0.000
+Stage parse      :   5.550
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::LinkButton ===
+Stage start      :   0.000
+Stage parse      :   5.597
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ListBoxRow ===
+Stage start      :   0.000
+Stage parse      :   5.953
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::LockButton ===
+Stage start      :   0.000
+Stage parse      :   5.542
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::MenuItem ===
+Stage start      :   0.000
+Stage parse      :   6.070
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::MenuShell ===
+Stage start      :   0.000
+Stage parse      :   6.417
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Overlay ===
+Stage start      :   0.000
+Stage parse      :   6.037
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Popover ===
+Stage start      :   0.000
+Stage parse      :   5.614
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::RadioMenuItem ===
+Stage start      :   0.000
+Stage parse      :   5.894
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Revealer ===
+Stage start      :   0.000
+Stage parse      :   5.534
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ScaleButton ===
+Stage start      :   0.000
+Stage parse      :   5.940
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ScrolledWindow ===
+Stage start      :   0.000
+Stage parse      :   6.480
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::SearchBar ===
+Stage start      :   0.000
+Stage parse      :   5.459
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::SeparatorMenuItem ===
+Stage start      :   0.000
+Stage parse      :   5.558
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ShortcutsGroup ===
+Stage start      :   0.000
+Stage parse      :   5.469
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ShortcutsSection ===
+Stage start      :   0.000
+Stage parse      :   5.153
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.003
+Stage mast       :   0.010
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ShortcutsShortcut ===
+Stage start      :   0.000
+Stage parse      :   5.314
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::StackSidebar ===
+Stage start      :   0.000
+Stage parse      :   5.359
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Statusbar ===
+Stage start      :   0.000
+Stage parse      :   5.839
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.003
+Stage moar       :   0.000
+ === GTK::ToggleButton ===
+Stage start      :   0.000
+Stage parse      :   5.749
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ToolItem ===
+Stage start      :   0.000
+Stage parse      :   6.036
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ToolPalette ===
+Stage start      :   0.000
+Stage parse      :   6.838
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.010
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::TreeView ===
+Stage start      :   0.000
+Stage parse      :  10.204
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.015
+Stage mast       :   0.050
+Stage mbc        :   0.029
+Stage moar       :   0.000
+ === GTK::Viewport ===
+Stage start      :   0.000
+Stage parse      :   5.791
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::VolumeButton ===
+Stage start      :   0.000
+Stage parse      :   5.766
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.018
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Window ===
+Stage start      :   0.000
+Stage parse      :   8.110
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ActionBar ===
+Stage start      :   0.000
+Stage parse      :   5.511
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::AppButton ===
+Stage start      :   0.000
+Stage parse      :   6.037
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Application ===
+Stage start      :   0.000
+Stage parse      :   7.347
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::AspectFrame ===
+Stage start      :   0.000
+Stage parse      :   5.640
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Assistant ===
+Stage start      :   0.000
+Stage parse      :   5.877
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CellRendererCombo ===
+Stage start      :   0.000
+Stage parse      :   6.050
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CheckButton ===
+Stage start      :   0.000
+Stage parse      :   5.568
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.023
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::CheckMenuItem ===
+Stage start      :   0.000
+Stage parse      :   5.636
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog ===
+Stage start      :   0.000
+Stage parse      :   6.644
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::About ===
+Stage start      :   0.000
+Stage parse      :   6.140
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::AppChooser ===
+Stage start      :   0.000
+Stage parse      :   6.101
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::ColorChooser ===
+Stage start      :   0.000
+Stage parse      :   6.023
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::FileChooser ===
+Stage start      :   0.000
+Stage parse      :   6.075
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::FontChooser ===
+Stage start      :   0.000
+Stage parse      :   6.104
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::Message ===
+Stage start      :   0.000
+Stage parse      :   6.549
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::PageSetupUnix ===
+Stage start      :   0.000
+Stage parse      :   6.429
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Dialog::PrintUnix ===
+Stage start      :   0.000
+Stage parse      :   5.871
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::FlowBox ===
+Stage start      :   0.000
+Stage parse      :   6.893
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ListBox ===
+Stage start      :   0.000
+Stage parse      :   6.855
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Menu ===
+Stage start      :   0.000
+Stage parse      :   6.679
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::MenuBar ===
+Stage start      :   0.000
+Stage parse      :   5.536
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::MenuButton ===
+Stage start      :   0.000
+Stage parse      :   7.158
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Offscreen ===
+Stage start      :   0.000
+Stage parse      :   5.576
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.016
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Places ===
+Stage start      :   0.000
+Stage parse      :   6.634
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::RadioButton ===
+Stage start      :   0.000
+Stage parse      :   6.110
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.024
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::SeparatorToolItem ===
+Stage start      :   0.000
+Stage parse      :   5.431
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ShorcutsWindow ===
+Stage start      :   0.000
+Stage parse      :   5.206
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Stack ===
+Stage start      :   0.000
+Stage parse      :   6.088
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ToolButton ===
+Stage start      :   0.000
+Stage parse      :   6.132
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::MenuToolButton ===
+Stage start      :   0.000
+Stage parse      :   5.636
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::ToggleToolButton ===
+Stage start      :   0.000
+Stage parse      :   5.514
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::RadioToolButton ===
+Stage start      :   0.000
+Stage parse      :   6.101
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.014
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK ===
+Stage start      :   0.000
+Stage parse      :  32.911
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GTK::Builder ===
+Stage start      :   0.000
+Stage parse      :  12.385
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.001
+Stage mast       :   0.008
+Stage mbc        :   0.001
+Stage moar       :   0.000
