@@ -292,7 +292,7 @@ sub draw_menubar ($w) {
   query_size($_, $, $*h) for $hc, $bc, $mc, $hc, $mic;
 
   draw_style_common-ro($fc, $w, $);
-  draw_style_common($hc);
+  draw_style_common($bc, $, $, $w, $);
   draw_style_common-ro( $mc, $*cx, $*cy, $*cw, $*ch);
   $iw = $*cw / 3;
   draw_style_common-ro( $hc,           $*cx, $*cy, $iw, $*ch);
