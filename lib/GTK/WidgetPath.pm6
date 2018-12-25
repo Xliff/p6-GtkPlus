@@ -19,7 +19,7 @@ class GTK::WidgetPath {
     $!wp = $path;
   }
 
-  method GTK::Raw::Types::GtkWidgetPath is also<widgetpath> {
+  method GTK::Raw::Types::GtkWidgetPath is also<widgetpath path> {
     $!wp;
   }
 

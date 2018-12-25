@@ -884,7 +884,7 @@ class GTK::StyleContext {
     gtk_style_context_state_is_running($!sc, $s, $p);
   }
 
-  method to_string (Int() $flags) is also<to-string> {
+  method to_string (Int() $flags = self.state) is also<to-string Str> {
     my guint $f = self.RESOLVE-UINT($flags);
     gtk_style_context_to_string($!sc, $f);
   }

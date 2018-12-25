@@ -171,7 +171,11 @@ sub draw_menu($w) {
   my ($*cx, $*cy, $*cw, $*ch, $mx, $my, $mw, $mh) = (0 xx 8);
 
   $tx = $ty = $tw = $tx = 0;
-  $mc  = get_style($da.style_context, 'menu');
+
+  my $msc = $da.style_context;
+  say "Menu Style: { $msc }";
+
+  $mc  = get_style($msc, 'menu');
   $hmc = get_style( $mc, 'menuitem:hover');
   $hac = get_style($hmc, 'arrow.right:dir(ltr)');
   $mic = get_style( $mc, 'menuitem');
@@ -202,7 +206,7 @@ sub draw_menu($w) {
   query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
   $*h += @mh[4];
   query_size($_, $, @mh[5]) for $mc, $mic, $rmc, $drc;
-  draw_style_common( $mc, $, $, $, $, $mx, $my, $mw, $mh);
+  draw_style_common($mc, $, $, $w, $, $mx, $my, $mw, $mh);
 
   say "MX: {$mx} / MY: {$my} / MW: {$mw} / MH: {$mh}";
 
@@ -259,7 +263,7 @@ sub draw_menubar ($w) {
   $*h = 0;
   query_size($_, $, $*h) for $hc, $bc, $mc, $hc, $mic;
 
-  draw_style_common-ro($fc, $, $);
+  draw_style_common-ro($fc, $w, $);
   draw_style_common($hc);
   draw_style_common-ro( $mc, $*cx, $*cy, $*cw, $*ch);
   $iw = $*cw / 3;
@@ -550,12 +554,12 @@ sub do_draw($ct) {
   $*y += $*h + 10;
   draw_combobox(10 + $pw, $pw - 20,  True);
 
-  0;
+  1;
 }
 
 my $a = GTK::Application.new( title => 'org.genex.widgetpath' );
 $a.activate.tap({
-  $a.window.title = 'Foreign Drawing';
+  CATCH { default { .message.say; $a.exit } }
 
   my $b  = GTK::Box.new-hbox(10);
   $da = GTK::DrawingArea.new;
@@ -564,6 +568,7 @@ $a.activate.tap({
   $da.draw.tap(-> *@a { @a[*-1].r = do_draw(@a[1]) });
   $b.add($da);
 
+  $a.window.title = 'Foreign Drawing';
   $a.window.add($b);
   $a.window.show_all;
 });
