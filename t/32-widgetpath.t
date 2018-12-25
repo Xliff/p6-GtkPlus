@@ -37,8 +37,18 @@ sub append_element($p, $s) {
   my ($w,  $r)  = $s.split('#');
   my ($c, $pc)  = ($r // $w).split(':');
   my ($fc, *@c) = ($c // $w).split('.');
-  $p.append_type(G_TYPE_NONE);
-  $p.iter_set_object_name(-1, $fc);
+  if $w ~~ /^ <[A..Z]>/ {
+    # gtype = g_type_from_name (name);
+    # if (gtype == G_TYPE_INVALID) {
+    #   g_critical ("Unknown type name `%s'", name);
+    #   g_free (name);
+    #   return;
+    # }
+    # gtk_widget_path_append_type (path, gtype);
+  } else {
+    $p.append_type(G_TYPE_NONE);
+    $p.iter_set_object_name(-1, $fc);
+  }
   $p.iter_add_class(-1, $_) for @c;
   if %p{$pc // ''}:exists {
     $p.iter_set_state(-1, %p{$pc});
@@ -172,10 +182,7 @@ sub draw_menu($w) {
 
   $tx = $ty = $tw = $tx = 0;
 
-  my $msc = $da.style_context;
-  say "Menu Style: { $msc }";
-
-  $mc  = get_style($msc, 'menu');
+  $mc  = get_style($da.style_context, 'menu');
   $hmc = get_style( $mc, 'menuitem:hover');
   $hac = get_style($hmc, 'arrow.right:dir(ltr)');
   $mic = get_style( $mc, 'menuitem');
@@ -199,13 +206,23 @@ sub draw_menu($w) {
   query_size($mic, $, @mh[2]);
   query_size($amc, $, @mh[2]);
   query_size($dac, $, @mh[2]);
-
   $*h += @mh[2];
-  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[3]) for $mc, $mic, $cmc, $dcc;
+
+  #query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[3]) for $mc, $mic, $cmc, $dcc;
+  query_size($mc,  $, @mh[5]);
+  query_size($mic, $, @mh[3]);
+  query_size($cmc, $, @mh[3]);
+  query_size($dcc, $, @mh[3]);
+
   $*h += @mh[3];
-  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
+  #query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
+  query_size($mc, $, @mh[5]);
+  query_size($smc, $, @mh[4]);
+
   $*h += @mh[4];
   query_size($_, $, @mh[5]) for $mc, $mic, $rmc, $drc;
+  $*h += @mh[5];
+
   draw_style_common($mc, $, $, $w, $, $mx, $my, $mw, $mh);
 
   say "MX: {$mx} / MY: {$my} / MW: {$mw} / MH: {$mh}";
@@ -229,6 +246,20 @@ sub draw_menu($w) {
     $dmc, $*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as
   );
 
+  draw_style_common($mic, $mx, $my + @mh[1..2].sum, $mw, @mh[3]);
+  ($tw, $th) = ( $cmc.get($cmc.state, 'min-width').int,
+                 $cmc.get($cmc.state, 'min-width').int );
+  draw_style_common($cmc, $*cx, $*cy, $tw, $th, $tx, $ty, $tw, $th);
+  GTK::Render.check($cmc, $*cr, $tx, $ty, $tw, $th);
+  ($tw, $th) = ( $dcc.get($dcc.state, 'min-width').int,
+                 $dcc.get($dcc.state, 'min-width').int );
+  draw_style_common($dcc, $*cx + $*cw - $tw, $*cy, $tw, $th,
+                          $tx              ,  $ty, $tw, $th);
+  GTK::Render.check($dcc, $*cr, $tx, $ty, $tw, $th);
+
+  # Separator
+  draw_style_common-ro($smc, $mx, $my + @mh[1..3].sum, $mw, @mh[4]);
+
   # Left check enabled, sensitive, and right check unchecked, insensitive
   draw_style_common($mic, $mx, $my + @mh[1..4].sum, $mw, @mh[5]);
   ($tw, $th) = ( $rmc.get($rmc.state, 'min-width').int,
@@ -241,9 +272,6 @@ sub draw_menu($w) {
   draw_style_common($drc, $*cx + $*cw - $tw, $*cy, $tw, $th,
                     $tx, $ty, $tw, $th);
   GTK::Render.check($drc, $*cr, $tx, $ty, $tw, $th);
-
-  # Separator
-  draw_style_common-ro($smc, $mx, $my + @mh[1..3].sum, $mw, @mh[4]);
 
   .downref for  $mc, $mic, $hmc, $hac, $amc, $cmc, $dac, $dcc, $rmc, $dmc,
                $drc, $smc;
@@ -536,7 +564,7 @@ sub do_draw($ct) {
   $*y += $*h + 20;
   draw_notebook($pw - 20, 160);
 
-  # Second column
+  # Second column -- debugging starts here
   say "Menu";
   $*x += $pw;
   $*y = 10;
