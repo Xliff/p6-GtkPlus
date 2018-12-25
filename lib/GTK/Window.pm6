@@ -39,7 +39,7 @@ class GTK::Window is GTK::Bin {
     }
   }
 
-  method setWindow($window) {
+  method setWindow(Ancestry $window) {
     my $to-parent;
     $!win = do given $window {
       when GtkWindow {
@@ -82,7 +82,7 @@ class GTK::Window is GTK::Bin {
     samewith(:$window);
   }
 
-  method GTK::Raw::Types::GtkWindow {
+  method GTK::Raw::Types::GtkWindow is also<window> {
     $!win;
   }
 

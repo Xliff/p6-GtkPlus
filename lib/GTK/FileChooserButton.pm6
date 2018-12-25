@@ -68,6 +68,9 @@ class GTK::FileChooserButton is GTK::Bin {
     my $chooser = gtk_file_chooser_button_new($title, $a);
     self.bless(:$chooser);
   }
+  multi method new {
+    die "Please use GTK::FileChooserButton.new(<title>, <action>)";
+  }
 
   method new_with_dialog (GtkWidget() $dialog) is also<new-with-dialog> {
     my $chooser = gtk_file_chooser_button_new_with_dialog($dialog);

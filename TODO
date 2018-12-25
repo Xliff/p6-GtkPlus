@@ -22,6 +22,9 @@
 - Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
 - Move GTK::Window title and size initialization to BUILD
 - Add overflow warnings to appropriate RESOLVE routines in GTK::Roles::Types. Said warnings are NOT under $DEBUG check.
+- Inhibit pass-through to Mu constructor in all widget-based objects!
+- Add this to the top of all activate blocks in t/
+    CATCH { default { .message.say; $app.exit } }
 
 
 Applications
