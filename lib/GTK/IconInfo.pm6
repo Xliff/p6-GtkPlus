@@ -160,24 +160,25 @@ class GTK::IconInfo {
 
   method load_symbolic (
     GdkRGBA $fg,
-    GdkRGBA $success_color,
-    GdkRGBA $warning_color,
-    GdkRGBA $error_color,
+    GdkRGBA $s_color,
+    GdkRGBA $w_color,
+    GdkRGBA $e_color,
     gboolean $was_symbolic,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-symbolic>
   {
+    my gboolean $ws;
+    $ws = self.RESOLVE-BOOL($was_symbolic) with $was_symbolic;
     GTK::Compat::Pixbuf.new(
-      gtk_icon_info_load_symbolic(
-        $!ii,
-        $fg,
-        $success_color,
-        $warning_color,
-        $error_color,
-        $was_symbolic,
-        $error
-      )
+      $was_symbolic.defined ??
+        gtk_icon_info_load_symbolic(
+          $!ii, $fg, $s_color, $w_color, $e_color, $was_symbolic, $error
+        )
+        !!
+        gtk_icon_info_load_symbolic_null(
+          $!ii, $fg, $s_color, $w_color, $e_color, Pointer, $error
+        )
     );
   }
 
@@ -224,13 +225,18 @@ class GTK::IconInfo {
   )
     is also<load-symbolic-for-context>
   {
-    die '$was_symbolic will not resolve to a boolean'
+    die '$was_symbolic wrill not resolve to a boolean'
       unless  $was_symbolic.^can('Bool').elems ||
               $was_symbolic.^can('Int').elems;
-    my gboolean $ws = $was_symbolic.defined ??
-      gboolean !! self.RESOLVE-BOOL($was_symbolic) with $was_symbolic;
+    my gboolean $ws;
+    $ws = self.RESOLVE-BOOL($was_symbolic) with $was_symbolic;
     GTK::Compat::Pixbuf.new(
-      gtk_icon_info_load_symbolic_for_context($!ii, $context, $ws, $error)
+      $was_symbolic.defined ??
+        gtk_icon_info_load_symbolic_for_context($!ii, $context, $ws, $error)
+        !!
+        gtk_icon_info_load_symbolic_for_context_null(
+          $!ii, $context, Pointer, $error
+        )
     );
   }
 

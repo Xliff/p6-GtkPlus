@@ -185,6 +185,22 @@ sub gtk_icon_info_load_symbolic (
   is export
   { * }
 
+sub gtk_icon_info_load_symbolic_null (
+  GtkIconInfo $icon_info,
+  GdkRGBA $fg,
+  GdkRGBA $success_color,
+  GdkRGBA $warning_color,
+  GdkRGBA $error_color,
+  Pointer,
+  CArray[Pointer[GError]] $error
+)
+  returns GdkPixbuf
+  is native(gtk)
+  is symbol('gtk_icon_info_load_symbolic_null')
+  is export
+  { * }
+
+
 sub gtk_icon_info_load_symbolic_async (
   GtkIconInfo $icon_info,
   GdkRGBA $fg,
@@ -218,6 +234,18 @@ sub gtk_icon_info_load_symbolic_for_context (
 )
   returns GdkPixbuf
   is native(gtk)
+  is export
+  { * }
+
+sub gtk_icon_info_load_symbolic_for_context_null (
+  GtkIconInfo $icon_info,
+  GtkStyleContext $context,
+  Pointer,
+  CArray[Pointer[GError]] $error
+)
+  returns GdkPixbuf
+  is native(gtk)
+  is symbol('gtk_icon_info_load_symbolic_for_context')
   is export
   { * }
 

@@ -201,24 +201,11 @@ sub draw_menu($w) {
   query_size($hmc, $, @mh[1]);
   query_size($hac, $, @mh[1]);
   $*h += @mh[1];
-  #query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[2]) for $mc, $mic, $amc, $dac;
-  query_size($mc,  $, @mh[5]);
-  query_size($mic, $, @mh[2]);
-  query_size($amc, $, @mh[2]);
-  query_size($dac, $, @mh[2]);
+  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[2]) for $mc, $mic, $amc, $dac;
   $*h += @mh[2];
-
-  #query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[3]) for $mc, $mic, $cmc, $dcc;
-  query_size($mc,  $, @mh[5]);
-  query_size($mic, $, @mh[3]);
-  query_size($cmc, $, @mh[3]);
-  query_size($dcc, $, @mh[3]);
-
+  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[3]) for $mc, $mic, $cmc, $dcc;
   $*h += @mh[3];
-  #query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
-  query_size($mc, $, @mh[5]);
-  query_size($smc, $, @mh[4]);
-
+  query_size($_, $, $_ =:= $mc ?? @mh[5] !! @mh[4]) for $mc, $smc;
   $*h += @mh[4];
   query_size($_, $, @mh[5]) for $mc, $mic, $rmc, $drc;
   $*h += @mh[5];
@@ -453,8 +440,7 @@ sub draw_combobox($xx, $w, $he) {
   $*h = 0;
   my @c = ($cc, $bc, $btc, $bbc, $ac);
   @c.splice(2, 0, $ec) if $he;
-  my $xxx;
-  query_size($_, $xxx, $) for @c;
+  query_size($_, $, $*h) for @c;
 
   my $as = ($ac.get($ac.state,  'min-width').int,
             $ac.get($ac.state, 'min-height').int ).min;
@@ -484,28 +470,30 @@ sub draw_spinbutton($w) {
 
   $sc = get_style(Nil, 'spinbutton.horizontal:focus');
   $ec = get_style($sc, 'entry:focus');
-  $uc = get_style($ec, 'button.up:focus:active');
-  $dc = get_style($uc, 'button.down:focus');
+  $uc = get_style($sc, 'button.up:focus:active');
+  $dc = get_style($sc, 'button.down:focus');
 
   $*h = 0;
-  my $xxx;
-  query_size($_, $xxx, $) for $sc, $ec, $uc, $dc;
+  query_size($_, $, $*h) for $sc, $ec, $uc, $dc;
   $bw = $*h;
 
-  draw_style_common($_) for $sc, $ec;
+  draw_style_common-ro($_, $w, $) for $sc, $ec;
 
   for <add remove> {
+    my $ctx := $_ eq 'add' ?? $uc !! $dc;
+    my $x = $*x + $w - ($_ eq 'add' ?? 1 !! 2) * $bw;
+
     $it = GTK::IconTheme.get_for_screen($da.screen);
-    $is = ( $uc.get($uc.state,  'min-width').int,
-            $uc.get($uc.state, 'min-height').int ).min ;
-    $ii = $it.lookup_icon("list-{$_}-symbolic", $is, 0);
-    $p  = $ii.load_symbolic_for_context($uc, $);
-    {
-      my $ctx = $_ eq 'add' ?? $uc !! $dc;
-      my $x = $*x + $w - ($_ eq 'add' ?? 1 !! 2) * $bw;
-      draw_style_common($ctx, $x, $, $bw, $);
-      GTK::Render.icon($ctx, $*cr, $p, $*cw, $*cy + ($*ch - $is) / 2);
-    }
+    $is = ( $ctx.get($ctx.state,  'min-width').int,
+            $ctx.get($ctx.state, 'min-height').int ).min ;
+
+    say "{$_ } - X: { $x } / IS: { $is }";
+
+    #$ii = $it.lookup_icon("list-{$_}-symbolic", $is, 0);
+    $ii = $it.lookup_icon("list-{$_}-symbolic", 8, 0);
+    $p  = $ii.load_symbolic_for_context($ctx, $);
+    draw_style_common($ctx, $x, $, $bw, $);
+    GTK::Render.icon($ctx, $*cr, $p, $*cx, $*cy + ($*ch - $is) / 2);
   }
 
   .downref for $dc, $uc, $ec, $sc;
@@ -575,7 +563,7 @@ sub do_draw($ct) {
   draw_menubar($pw - 20);
 
   $*y += $*h + 20;
-  draw_spinbutton($pw - 30);
+  draw_spinbutton($pw - 20);
 
   $*y += $*h + 30;
   draw_combobox(       $, $pw - 20, False);
