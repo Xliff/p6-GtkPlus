@@ -420,7 +420,7 @@ sub draw_scale($w, $p) {
 }
 
 sub draw_combobox($xx, $w, $he) {
-  my $x := ($xx // $*cx);
+  my $x := ($xx // $*x);
   my ($ec, $btc, $bbc, $ac, $bw);
   my ($*cx, $*cy, $*cw, $*ch) = (0 xx 4);
   my $cc = get_style(Nil, 'combobox:focus');
@@ -439,25 +439,27 @@ sub draw_combobox($xx, $w, $he) {
 
   $*h = 0;
   my @c = ($cc, $bc, $btc, $bbc, $ac);
-  @c.splice(2, 0, $ec) if $he;
+  @c.splice(2, 0, $ec) if $he;              # Conditional insert of $ec
   query_size($_, $, $*h) for @c;
 
   my $as = ($ac.get($ac.state,  'min-width').int,
             $ac.get($ac.state, 'min-height').int ).min;
-  draw_style_common($_, $x, $*y, $w, $*h) for $cc, $bc;
+  draw_style_common-ro($_, $x, $*y, $w, $*h) for $cc, $bc;
 
   if $he {
     $bw = $*h;
-    draw_style_common($ec,            $x,  $, $w - $bw, $*h);
-    draw_style_common($bc, $x + $w - $bw,  $,      $bw,   $);
+    draw_style_common-ro( $ec,            $x,  $, $w - $bw, $*h);
+    draw_style_common(   $btc, $x + $w - $bw,  $,      $bw,   $);
   } else {
-    $bw = $*w;
-    draw_style_common($bc, $x + $w - $bw, $, $bw, $);
+    $bw = $w;
+    draw_style_common($btc, $, $, $w, $);
   }
 
-  draw_style_common($bbc, $*cx, $*cy, $*cw, $*ch);
-  draw_style_common( $ac, $*cx, $*cy, $*cw, $*ch);
-  $ac.render_arrow($*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as);
+  draw_style_common-ro($bbc, $*cx, $*cy, $*cw, $*ch);
+  draw_style_common-ro( $ac, $*cx, $*cy, $*cw, $*ch);
+  $ac.render_arrow(
+    $*cr, π/2, $*cx + $*cw - $as, $*cy + ($*ch - $as) / 2, $as
+  );
 
   @c = $he ?? ($ac, $ec, $bc, $cc) !! ($ac, $bc, $cc);
   .downref for @c;
@@ -484,6 +486,7 @@ sub draw_spinbutton($w) {
     my $x = $*x + $w - ($_ eq 'add' ?? 1 !! 2) * $bw;
 
     $it = GTK::IconTheme.get_for_screen($da.screen);
+    # XXX - This is 0 for some reason!
     $is = ( $ctx.get($ctx.state,  'min-width').int,
             $ctx.get($ctx.state, 'min-height').int ).min ;
 
@@ -552,7 +555,7 @@ sub do_draw($ct) {
   $*y += $*h + 20;
   draw_notebook($pw - 20, 160);
 
-  # Second column -- debugging starts here
+  # Second column
   say "Menu";
   $*x += $pw;
   $*y = 10;
@@ -570,7 +573,7 @@ sub do_draw($ct) {
   $*y += $*h + 10;
   draw_combobox(10 + $pw, $pw - 20,  True);
 
-  1;
+  0;
 }
 
 my $a = GTK::Application.new( title => 'org.genex.widgetpath' );
