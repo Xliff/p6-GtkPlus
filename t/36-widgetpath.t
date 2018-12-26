@@ -66,8 +66,6 @@ sub create_context_for_path ($p, $pp) {
 }
 
 sub common_draw($cc, $xx, $yy, $ww, $hh) {
-  say 'CD: ' ~ ($xx, $yy, $ww, $hh).map({ $_ // ''}).join(',');
-
   $cc."get_{ $_ }"($cc.state, %*b{$_}) for %*b.keys;
 
   # GValues use "int", not "Int".
@@ -80,20 +78,16 @@ sub common_draw($cc, $xx, $yy, $ww, $hh) {
   $*cah -= %*b<margin>.top  + %*b<margin>.bottom;
   ($*caw, $*cah) = ( ($*caw, $mw).max, ($*cah, $mh).max );
 
-  say "CA-X: {$*cax} / CA-Y: {$*cay} / CA-W: {$*caw} / CA-H {$*cah}";
-
   GTK::Render.background($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
        GTK::Render.frame($cc, $*cr, $*cax, $*cay, $*caw, $*cah);
 }
 sub common_adjust($cx is rw, $cy is rw, $cw is rw, $ch is rw) {
-  say 'CA: ' ~ ($*cax, $*cay, $*caw, $*cah).map({ $_ // ''}).join(',');
   $cx = $*cax + %*b<border>.left   + %*b<padding>.left;
   $cy = $*cay + %*b<border>.top    + %*b<padding>.top;
   $cw = $*caw - %*b<border>.left   - %*b<padding>.left -
                 %*b<border>.right  - %*b<padding>.right;
   $ch = $*cah - %*b<border>.top    - %*b<padding>.top -
                 %*b<border>.bottom - %*b<padding>.bottom;
-  say 'C: ' ~ ($cx, $cy, $cw, $ch).map({ $_ // ''}).join(',');
 }
 
 multi sub draw_style_common-ro ($c, $w, $h) {
@@ -107,8 +101,6 @@ multi sub draw_style_common-ro ($c, $x, $y, $w, $h) {
   my $*cay = $y // $*y;
   my $*caw = $w // $*w;
   my $*cah = $h // $*h;
-  say "X: {$x // ''} / \*X: $*x / CAX: $*cax";
-  say "W: {$x // ''} / \*W: $*w / CAW: $*caw";
   common_draw($c, $*cax, $*cay, $*caw, $*cah);
 }
 multi sub draw_style_common ($c) {
@@ -209,10 +201,7 @@ sub draw_menu($w) {
   $*h += @mh[4];
   query_size($_, $, @mh[5]) for $mc, $mic, $rmc, $drc;
   $*h += @mh[5];
-
   draw_style_common($mc, $, $, $w, $, $mx, $my, $mw, $mh);
-
-  say "MX: {$mx} / MY: {$my} / MW: {$mw} / MH: {$mh}";
 
   # Hovered with right arrow
   $as = ( $hac.get($hac.state,  'min-width').int,
@@ -263,7 +252,6 @@ sub draw_menu($w) {
   .downref for  $mc, $mic, $hmc, $hac, $amc, $cmc, $dac, $dcc, $rmc, $dmc,
                $drc, $smc;
 }
-
 
 sub draw_menubar ($w) {
   my ($fc, $bc, $mc, $hc, $mic, $iw);
@@ -400,11 +388,8 @@ sub draw_scale($w, $p) {
   $*h = 0;
   query_size($_, $, $*h) for $sc, $cc, $tc, $slc, $hc;
 
-  say "0 ===== CX: {$*cx} / CY: {$*cy} / CW: {$*cw} / CH: {$*ch}";
   draw_style_common($sc, $w, $);
-  say "1 ===== CX: {$*cx} / CY: {$*cy} / CW: {$*cw} / CH: {$*ch}";
   draw_style_common($cc, $*cx, $*cy, $*cw, $*ch);
-  say "2 ===== CX: {$*cx} / CY: {$*cy} / CW: {$*cw} / CH: {$*ch}";
 
   $th = 0;
   query_size($tc, $, $th);
@@ -490,8 +475,6 @@ sub draw_spinbutton($w) {
     $is = ( $ctx.get($ctx.state,  'min-width').int,
             $ctx.get($ctx.state, 'min-height').int ).min ;
 
-    say "{$_ } - X: { $x } / IS: { $is }";
-
     #$ii = $it.lookup_icon("list-{$_}-symbolic", $is, 0);
     $ii = $it.lookup_icon("list-{$_}-symbolic", 8, 0);
     $p  = $ii.load_symbolic_for_context($ctx, $);
@@ -513,7 +496,6 @@ sub do_draw($ct) {
   $cr.rgb(0.9, 0.9, 0.9);
   $cr.fill;
 
-  say 'Scrollbar';
   $*x = $*y = 10;
   for (
     GTK_STATE_FLAG_NORMAL,
@@ -524,7 +506,6 @@ sub do_draw($ct) {
     $*y += $*h + 8;
   }
 
-  say 'Text';
   #$*y += $*h + 8;
   for (GTK_STATE_FLAG_NORMAL, GTK_STATE_FLAG_SELECTED) {
     my $l = ($_ == GTK_STATE_FLAG_NORMAL) ?? 'Not selected' !! 'Selected';
@@ -535,7 +516,6 @@ sub do_draw($ct) {
   $*x = 10;
   $*y += 20 + 10;
   for (&draw_check, &draw_radio) -> $func {
-    say $func === &draw_check ?? 'Check' !! 'Radio';
     for <NORMAL CHECKED> {
       $func( ::("GTK_STATE_FLAG_$_") );
       $*x += $*w + 10;
@@ -543,25 +523,20 @@ sub do_draw($ct) {
   }
   $*x = 10;
 
-  say "Progress ({ $*y })";
   $*y += $*h + 10;
   draw_progress($pw - 20, 50);
 
-  say "Scale ({ $*y }) / $pw";
   $*y += $*h + 10;
   draw_scale($pw - 20, 75);
 
-  say "Notebook";
   $*y += $*h + 20;
   draw_notebook($pw - 20, 160);
 
   # Second column
-  say "Menu";
   $*x += $pw;
   $*y = 10;
   draw_menu($pw - 20);
 
-  say "Menubar";
   $*y += $*h + 10;
   draw_menubar($pw - 20);
 
