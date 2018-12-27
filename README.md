@@ -12,6 +12,8 @@ GTK+, or the GIMP Toolkit, is a  multi-platform toolkit for creating graphical u
 
 Unfortunately, this project is still a work in progress, but if you would like to contribute or at least see what all the fuss is about, please feel free to join in.
 
+First, insure you have all of the native dependencies. These are: Pango, Cairo, and GTK+3
+
 It's best if you have a Top-Top-Level directory to keep all of the separate project directories. From that directory, execute the following commands:
 
 ```
