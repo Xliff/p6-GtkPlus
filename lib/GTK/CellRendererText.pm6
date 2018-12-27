@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use Pango::Raw::Types;
+
 use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Raw::CellRendererText;

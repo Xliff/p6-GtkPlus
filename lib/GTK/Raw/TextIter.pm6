@@ -2,6 +2,8 @@ use v6.c;
 
 use NativeCall;
 
+use Pango::Raw::Types;
+
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 

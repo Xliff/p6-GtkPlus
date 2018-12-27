@@ -1,3 +1,8 @@
+Cairo
+Data::Dump::Tree
+Method::Also
+Pango::Raw::Types
+Pluggable
 GTK::Builder::MRO
 GTK::Builder::Base
 GTK::Builder::Box

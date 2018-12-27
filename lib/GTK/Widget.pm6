@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use Pango::Raw::Types;
+
 use GTK::Compat::Display;
 use GTK::Compat::RGBA;
 use GTK::Compat::Screen;
@@ -2202,6 +2204,17 @@ class GTK::Widget {
   {
     my guint $t = self.RESOLVE-UINT($time);
     gtk_drag_get_data($!w, $context, $target, $t);
+  }
+
+  # Convenience function.
+  method get_allocated_wh
+    is also<
+      get-allocated-wh
+      allocated-wh
+      allocated_wh
+    >
+  {
+    (self.get_allocated_width, self.get_allocated_height);
   }
 
 }

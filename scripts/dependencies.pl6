@@ -72,15 +72,17 @@ if !$s.serialise {
   @module-order.push( $_<name> => $++ ) for $s.result;
 }
 my %module-order = @module-order.Hash;
-my $list = @module-order.map({ $_.key }).join("\n");
+@others = @others.unique.sort.grep( * ne <NativeCall nqp>.any );
+my $list = @others.join("\n") ~ "\n";
+$list ~= @module-order.map({ $_.key }).join("\n");
 "BuildList".IO.open(:w).say($list);
 say $list;
 
 # Add module order to modules.
 $_.push( %module-order{$_[1]} ) for @modules;
 
-say "\nOther dependencies are:\n";
-say @others.unique.sort.join("\n");
+# say "\nOther dependencies are:\n";
+# say @others.unique.sort.join("\n");
 
 sub space($a) {
   ' ' x ($a.chars % 8);
