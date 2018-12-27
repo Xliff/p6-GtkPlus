@@ -23,3 +23,5 @@ $ ./build.sh
 ```
 
 Please note that this is a _large_ amount of code, and it will take a while to build. Feel free to contribute system types and compile times!
+
+Once completed, feel free to run the tests/examples in the t/ directory. Please note that _none_ of these tests are automated, so the use of _prove_ is discouraged, at this time.
