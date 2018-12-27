@@ -1,4 +1,6 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="900" height="13870"><text x="20" y="10" font-size="6" style="fill:rgb(203, 183, 247)">stats/LastBuildResults-20181019</text>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="900" height="13870">
+<style>svg { background-color: #333333; }</style>
+<text x="20" y="10" font-size="6" style="fill:rgb(203, 183, 247)">stats/LastBuildResults-20181019</text>
 <text x="20" y="25" font-size="6" style="fill:rgb(232, 116, 53)">stats/LastBuildResults-20181104</text>
 <text x="20" y="40" font-size="6" style="fill:rgb(245, 225, 164)">stats/LastBuildResults-20181106</text>
 <text x="20" y="55" font-size="6" style="fill:rgb(46, 179, 159)">stats/LastBuildResults-20181108</text>
@@ -7467,4 +7469,3 @@
 <circle cx="391" cy="13810" r="4" fill="rgb(159, 161, 224)"><title>stats/20181227-Pango.json - 7.677</title></circle>
 <circle cx="403" cy="13840" r="4" fill="rgb(159, 161, 224)"><title>stats/20181227-Pango.json - 8.148</title></circle>
 </svg>
-

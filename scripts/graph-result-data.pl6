@@ -89,6 +89,7 @@ sub MAIN (*@filenames) {
   my $svg = [
     width => 900,
     height => 25 + @filenames.elems * 15 + @bl.elems * 30,
+    style => [ 'svg { background-color: black; }' ],
     |@legend,
     |%graph-data<text>,
   ];
