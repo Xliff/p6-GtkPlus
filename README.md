@@ -34,4 +34,4 @@ To run any code that uses this project, please use the following command line:
 $ perl6 -I../p6-Pango/lib -I../cairo-p6/lib -Ilib <script-name>
 ```
 
-This assumes that you are running the code from the p6-GtkPlus/ directory. Please adjust the above to suite your system.
+This assumes that you are running the code from the p6-GtkPlus/ directory. Please adjust the above to suit your system.
