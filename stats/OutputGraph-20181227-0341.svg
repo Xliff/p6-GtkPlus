@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:svg="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="900" height="13870">
-<style>svg { background-color: #333333; }</style>
+<style>svg { background-color: #333333; } text { fill: #cccccc; }</style>
 <text x="20" y="10" font-size="6" style="fill:rgb(203, 183, 247)">stats/LastBuildResults-20181019</text>
 <text x="20" y="25" font-size="6" style="fill:rgb(232, 116, 53)">stats/LastBuildResults-20181104</text>
 <text x="20" y="40" font-size="6" style="fill:rgb(245, 225, 164)">stats/LastBuildResults-20181106</text>
