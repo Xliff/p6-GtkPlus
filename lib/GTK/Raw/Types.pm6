@@ -5,6 +5,7 @@ use NativeCall;
 use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Roles::Pointers;
+use Pango::Raw::Types;
 
 unit package GTK::Raw::Types;
 

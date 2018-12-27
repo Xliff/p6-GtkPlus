@@ -4,6 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Raw::Types;
+use Pango::Raw::Types;
 
 unit package GTK::Raw::Scale;
 

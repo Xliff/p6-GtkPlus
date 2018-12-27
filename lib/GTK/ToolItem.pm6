@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use Pango::Raw::Types;
+
 use GTK::Compat::Types;
 use GTK::Raw::ToolItem;
 use GTK::Raw::Types;
@@ -41,7 +43,7 @@ class GTK::ToolItem is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
-      
+
       default {
         $to-parent = $_;
         nativecast(GtkToolItem, $_);

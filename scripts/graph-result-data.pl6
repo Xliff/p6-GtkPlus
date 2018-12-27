@@ -51,13 +51,13 @@ sub MAIN (*@filenames) {
     my $rgbh = @colors[$c].lighten(10).to-string('rgb');
     my $rgb = @colors[$c++].to-string('rgb');
     $idx = 0;
+    (my $sname = $filename) ~~ s/ 'LastBuildResults-' //;
     for @bl -> $bl {
       if %graph-data<text>:!exists {
         my $p = text => [ :x(20), :y($yo + $idx * 30), :font-size(8), $bl ];
         @text-lines.push: $p;
       }
 
-      (my $sname = $filename) ~~ s/ 'LastBuildResults-' //;
       with @points[$idx] {
         my ($px, $py) = ( (200 + @points[$idx]<parse> * 25).Int,
                           $yo + $idx * 30 );
@@ -77,7 +77,10 @@ sub MAIN (*@filenames) {
     my $l-style = "stroke:{ $rgbh };stroke-width:1";
     my $pl-style = "fill:none;stroke:{ $rgb };stroke-width:3";
     %graph-data<series>.push: [
-      line   => [ :x1($x0), :y1(0), :x2($x0), :y2($y1), :style($l-style) ],
+      line   => [
+        :x1($x0), :y1(0), :x2($x0), :y2($y1), :style($l-style),
+        title => [ "{ $sname } - Avg: { $avg-parse }s" ]
+      ],
       polyline => [ :points(@polyline.join(' ')), :style($pl-style) ],
       |@dp
     ];

@@ -65,6 +65,7 @@ class GTK::DrawingArea is GTK::Widget {
   method GTK::Raw::Types::GtkDrawingArea is also<area> {
     $!da;
   }
+  # cw: Is this true?!?
   method GTK::Compat::Types::cairo_t is also<cairo_t> {
     nativecast(cairo_t, $!da);
   }

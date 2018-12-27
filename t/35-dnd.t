@@ -41,7 +41,9 @@ sub canvas_item_new($widget, $b, $x, $y) {
 }
 
 sub canvas_item_draw($i, $cr, $pre) {
+  return unless $i<pixbuf>;
   my ($cx, $cy) = $i<pixbuf>.size;
+  # GDK::Cairo
   GTK::Compat::Cairo.set_source_pixbuf(
     $cr, $i<pixbuf>, $i<x> - $cx * 0.5, $i<y> - $cy * 0.5
   );
@@ -78,6 +80,7 @@ sub palette_drop_item ($pal, $di, $dg, $x, $y) {
       ['homogeneous', $h], ['expand', $e], ['fill', $f], ['new-row', $nr]
     );
     # Need two, since the original object will go out of scope.
+    # Check if this is still an issue after introduction of G:R:References
     $di.upref;
     $drag_group.child_get_bool($di, $_[0], $_[1]) for @p;
     $drag_group.remove($di);
@@ -130,10 +133,11 @@ sub canvas_drag_motion($can, $c, $x, $y, $t, $d, $r) {
     my $tgt = $can.dest_find_target($c);
     without $tgt { $r.r = 0; return }
     $dd_req_drop = False;
+
+    say "{ gdk_atom_name($tgt) } = $tgt";
     # Calling drag-data-received on canvas starts something
     # that is not properly finalized. Therefore, if uncommented,
     # this next method will hang the code.
-    say "{ gdk_atom_name($tgt) } = $tgt";
     #$can.drag_get_data($c, $tgt, $t);
   }
   $r.r = 1;
@@ -394,7 +398,7 @@ $a.activate.tap({
     ::('$contents' ~ $_).draw.tap(-> *@a { canvas_draw(|@a) });
   }
 
-  # Passove Dnd Dest
+  # Passive Dnd Dest
   my $l_scroll1 = GTK::Label.new('Passive DnD Mode');
   $contents1.drag-data-received.tap(-> *@a { canvas_ddr1($palette, |@a) });
   $notebook.append_page($scroll1, $l_scroll1);

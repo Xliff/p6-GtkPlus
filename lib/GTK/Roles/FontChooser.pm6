@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use Pango::Raw::Types;
+
 use GTK::Compat::Types;
 use GTK::Raw::FontChooser;
 use GTK::Raw::Types;
@@ -111,4 +113,3 @@ role GTK::Roles::FontChooser {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
