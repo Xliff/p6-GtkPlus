@@ -54,21 +54,21 @@ sub MAIN (
       }
     }
 
-    my %c;
+    my (%c, $co);
     my $types = @t.map(*.text.trim).join(', ');
     my $gtype = do given $types {
-      when 'gboolean' { 'G_TYPE_BOOLEAN' }
-      when 'gint'     { 'G_TYPE_INT'     }
-      when 'guint'    { 'G_TYPE_UINT'    }
-      when 'gdouble'  { 'G_TYPE_DOUBLE'  }
-      when 'gfloat'   { 'G_TYPE_FLOAT'   }
-      when 'glong'    { 'G_TYPE_LONG'    }
-      when 'gulong'   { 'G_TYPE_ULONG'   }
-      when 'gint64'   { 'G_TYPE_INT64'   }
-      when 'guint64'  { 'G_TYPE_UINT64'  }
+      when 'gboolean' { $co = 'Int()'; 'G_TYPE_BOOLEAN' }
+      when 'gint'     { $co = 'Int()'; 'G_TYPE_INT'     }
+      when 'gint64'   { $co = 'Int()'; 'G_TYPE_INT64'   }
+      when 'guint64'  { $co = 'Int()'; 'G_TYPE_UINT64'  }
+      when 'guint'    { $co = 'Int()'; 'G_TYPE_UINT'    }
+      when 'glong'    { $co = 'Int()'; 'G_TYPE_LONG'    }
+      when 'gulong'   { $co = 'Int()'; 'G_TYPE_ULONG'   }
+      when 'gdouble'  { $co = 'Num()'; 'G_TYPE_DOUBLE'  }
+      when 'gfloat'   { $co = 'Num()'; 'G_TYPE_FLOAT'   }
 
       when 'gchar' | 'char' {
-        'G_TYPE_STRING';
+        $co = 'Str()'; 'G_TYPE_STRING';
       }
       default {
         '-type-'
@@ -117,7 +117,7 @@ sub MAIN (
       FETCH => -> \$ \{
         { %c<read> }
       \},
-      STORE => -> \$, \$val is copy \{
+      STORE => -> \$, { $co // '' } \$val is copy \{
         { %c<write> }
       \}
     );

@@ -52,7 +52,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-alternative-button-order', $gv);
       }
@@ -69,7 +69,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-alternative-sort-arrows', $gv);
       }
@@ -86,7 +86,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-application-prefer-dark-theme', $gv);
       }
@@ -103,7 +103,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-auto-mnemonics', $gv);
       }
@@ -120,7 +120,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-button-images', $gv);
       }
@@ -137,7 +137,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-can-change-accels', $gv);
       }
@@ -154,7 +154,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-color-palette', $gv);
       }
@@ -171,7 +171,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-cursor-blink', $gv);
       }
@@ -188,7 +188,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-cursor-blink-time', $gv);
       }
@@ -205,7 +205,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-cursor-blink-timeout', $gv);
       }
@@ -222,7 +222,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-cursor-theme-name', $gv);
       }
@@ -239,7 +239,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-cursor-theme-size', $gv);
       }
@@ -256,7 +256,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-decoration-layout', $gv);
       }
@@ -273,7 +273,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-dialogs-use-header', $gv);
       }
@@ -290,7 +290,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-dnd-drag-threshold', $gv);
       }
@@ -307,7 +307,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-double-click-distance', $gv);
       }
@@ -324,7 +324,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-double-click-time', $gv);
       }
@@ -341,7 +341,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-enable-accels', $gv);
       }
@@ -358,7 +358,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-enable-animations', $gv);
       }
@@ -375,7 +375,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-enable-event-sounds', $gv);
       }
@@ -392,7 +392,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-enable-input-feedback-sounds', $gv);
       }
@@ -409,7 +409,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-enable-mnemonics', $gv);
       }
@@ -426,7 +426,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-enable-primary-paste', $gv);
       }
@@ -443,7 +443,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-enable-tooltips', $gv);
       }
@@ -460,7 +460,7 @@ class GTK::Settings {
         );
         $gv.uint;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
         self.prop_set('gtk-entry-password-hint-timeout', $gv);
       }
@@ -477,7 +477,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-entry-select-on-focus', $gv);
       }
@@ -494,7 +494,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-error-bell', $gv);
       }
@@ -511,7 +511,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-fallback-icon-theme', $gv);
       }
@@ -528,7 +528,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-file-chooser-backend', $gv);
       }
@@ -545,7 +545,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-font-name', $gv);
       }
@@ -562,7 +562,7 @@ class GTK::Settings {
         );
         $gv.uint;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
         self.prop_set('gtk-fontconfig-timestamp', $gv);
       }
@@ -579,7 +579,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-icon-sizes', $gv);
       }
@@ -596,7 +596,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-icon-theme-name', $gv);
       }
@@ -613,7 +613,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-im-module', $gv);
       }
@@ -664,7 +664,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-key-theme-name', $gv);
       }
@@ -681,7 +681,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-keynav-cursor-only', $gv);
       }
@@ -698,7 +698,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-keynav-use-caret', $gv);
       }
@@ -715,7 +715,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-keynav-wrap-around', $gv);
       }
@@ -732,7 +732,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-label-select-on-focus', $gv);
       }
@@ -749,7 +749,7 @@ class GTK::Settings {
         );
         $gv.uint;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
         self.prop_set('gtk-long-press-time', $gv);
       }
@@ -766,7 +766,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-menu-bar-accel', $gv);
       }
@@ -783,7 +783,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-menu-bar-popup-delay', $gv);
       }
@@ -800,7 +800,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-menu-images', $gv);
       }
@@ -817,7 +817,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-menu-popdown-delay', $gv);
       }
@@ -834,7 +834,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-menu-popup-delay', $gv);
       }
@@ -851,7 +851,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-modules', $gv);
       }
@@ -868,7 +868,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-primary-button-warps-slider', $gv);
       }
@@ -885,7 +885,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-print-backends', $gv);
       }
@@ -902,7 +902,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-print-preview-command', $gv);
       }
@@ -919,7 +919,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-recent-files-enabled', $gv);
       }
@@ -936,7 +936,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-recent-files-limit', $gv);
       }
@@ -953,7 +953,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-recent-files-max-age', $gv);
       }
@@ -987,7 +987,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-shell-shows-app-menu', $gv);
       }
@@ -1004,7 +1004,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-shell-shows-desktop', $gv);
       }
@@ -1021,7 +1021,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-shell-shows-menubar', $gv);
       }
@@ -1038,7 +1038,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-show-input-method-menu', $gv);
       }
@@ -1055,7 +1055,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-show-unicode-menu', $gv);
       }
@@ -1072,7 +1072,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-sound-theme-name', $gv);
       }
@@ -1089,7 +1089,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-split-cursor', $gv);
       }
@@ -1106,7 +1106,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-theme-name', $gv);
       }
@@ -1123,7 +1123,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-timeout-expand', $gv);
       }
@@ -1140,7 +1140,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-timeout-initial', $gv);
       }
@@ -1157,7 +1157,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-timeout-repeat', $gv);
       }
@@ -1174,7 +1174,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-titlebar-double-click', $gv);
       }
@@ -1191,7 +1191,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-titlebar-middle-click', $gv);
       }
@@ -1208,7 +1208,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-titlebar-right-click', $gv);
       }
@@ -1259,7 +1259,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-tooltip-browse-mode-timeout', $gv);
       }
@@ -1276,7 +1276,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-tooltip-browse-timeout', $gv);
       }
@@ -1293,7 +1293,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-tooltip-timeout', $gv);
       }
@@ -1310,7 +1310,7 @@ class GTK::Settings {
         );
         $gv.boolean;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.boolean = $val;
         self.prop_set('gtk-touchscreen-mode', $gv);
       }
@@ -1344,7 +1344,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-xft-antialias', $gv);
       }
@@ -1361,7 +1361,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-xft-dpi', $gv);
       }
@@ -1378,7 +1378,7 @@ class GTK::Settings {
         );
         $gv.int;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Int() $val is copy {
         $gv.int = $val;
         self.prop_set('gtk-xft-hinting', $gv);
       }
@@ -1395,7 +1395,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-xft-hintstyle', $gv);
       }
@@ -1412,7 +1412,7 @@ class GTK::Settings {
         );
         $gv.string;
       },
-      STORE => -> $, $val is copy {
+      STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('gtk-xft-rgba', $gv);
       }
