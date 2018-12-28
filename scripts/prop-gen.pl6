@@ -33,13 +33,24 @@ sub MAIN (
 
   for $found.find('div h3 code').to_array.List -> $e {
     (my $mn = $e.text) ~~ s:g/<[“”]>//;
+
     my $pre = $e.parent.parent.find('pre').last;
     my @t = $pre.find('span.type').to_array.List;
     my @i = $pre.parent.find('p').to_array.List;
-    my $rw;
+    my @w = $pre.parent.find('div.warning').to_array.List;
+    my ($dep, $rw);
     for @i {
       if .text ~~ /'Flags: ' ('Read' | 'Write')+ % ' / '/ {
         $rw = $/[0].Array;
+      }
+    }
+    for @w {
+      $dep = so .all_text ~~ /'deprecated'/;
+      if $dep {
+        .all_text ~~ /'Use' (.+?) 'instead'/;
+        with $/ {
+          $dep = $/[0] with $/[0];
+        }
       }
     }
 
@@ -92,9 +103,15 @@ sub MAIN (
     %c<read>  //= "warn \"{ $mn } does not allow reading\"";
     %c<write> //= "warn \"{ $mn } does not allow writing\"";
 
+    my $deprecated = '';
+    if $dep {
+      $deprecated = ' is DEPRECATED';
+      $deprecated ~= "({$dep})" unless $dep ~~ Bool;
+    };
+
     say qq:to/METH/;
   # Type: { $types }
-  method $mn is rw \{
+  method $mn is rw { $deprecated } \{
     my GTK::Compat::Value \$gv .= new( $gtype );
     Proxy.new(
       FETCH => -> \$ \{

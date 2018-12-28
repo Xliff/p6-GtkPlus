@@ -178,6 +178,11 @@ class GtkPageRange is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint $.end;
 };
 
+class GtkSettingsValue is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str     $.origin;
+  HAS GValue  $.value;
+}
+
 our enum GtkAccelFlags is export <
   GTK_ACCEL_VISIBLE
   GTK_ACCEL_LOCKED
@@ -1091,6 +1096,7 @@ class GtkStatusbar            is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkStyle                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyleContext         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkStyleProvider        is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkStyleProperties      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkSwitch               is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTargetList           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkTextBuffer           is repr('CPointer') does GTK::Roles::Pointers is export { }

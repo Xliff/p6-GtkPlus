@@ -74,6 +74,7 @@
       "GTK::Raw::Window"                       :  "lib/GTK/Raw/Window.pm6"                      ,
       "GTK::Raw::WindowGroup"                  :  "lib/GTK/Raw/WindowGroup.pm6"                 ,
       "GTK::Roles::Signals::EntryBuffer"       :  "lib/GTK/Roles/Signals/EntryBuffer.pm6"       ,
+      "GTK::Roles::StyleProvider"              :  "lib/GTK/Roles/StyleProvider.pm6"             ,
       "GTK::Compat::Array"                     :  "lib/GTK/Compat/Array.pm6"                    ,
       "GTK::Compat::FrameTimings"              :  "lib/GTK/Compat/FrameTimings.pm6"             ,
       "GTK::Compat::GList"                     :  "lib/GTK/Compat/GList.pm6"                    ,
@@ -205,6 +206,7 @@
       "GTK::Raw::Separator"                    :  "lib/GTK/Raw/Separator.pm6"                   ,
       "GTK::Raw::SeparatorMenuItem"            :  "lib/GTK/Raw/SeparatorMenuItem.pm6"           ,
       "GTK::Raw::SeparatorToolItem"            :  "lib/GTK/Raw/SeparatorToolItem.pm6"           ,
+      "GTK::Raw::Settings"                     :  "lib/GTK/Raw/Settings.pm6"                    ,
       "GTK::Raw::SizeGroup"                    :  "lib/GTK/Raw/SizeGroup.pm6"                   ,
       "GTK::Raw::SpinButton"                   :  "lib/GTK/Raw/SpinButton.pm6"                  ,
       "GTK::Raw::Spinner"                      :  "lib/GTK/Raw/Spinner.pm6"                     ,
@@ -281,6 +283,7 @@
       "GTK::Roles::TreeDnD"                    :  "lib/GTK/Roles/TreeDnD.pm6"                   ,
       "GTK::Roles::TreeSortable"               :  "lib/GTK/Roles/TreeSortable.pm6"              ,
       "GTK::Selection"                         :  "lib/GTK/Selection.pm6"                       ,
+      "GTK::Settings"                          :  "lib/GTK/Settings.pm6"                        ,
       "GTK::SizeGroup"                         :  "lib/GTK/SizeGroup.pm6"                       ,
       "GTK::TargetEntry"                       :  "lib/GTK/TargetEntry.pm6"                     ,
       "GTK::TargetList"                        :  "lib/GTK/TargetList.pm6"                      ,
@@ -468,6 +471,9 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
+
+
 
 
 

@@ -65,6 +65,7 @@ GTK::Raw::WidgetPath
 GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
+GTK::Roles::StyleProvider
 GTK::Compat::Array
 GTK::Compat::FrameTimings
 GTK::Compat::GList
@@ -196,6 +197,7 @@ GTK::Raw::Selection
 GTK::Raw::Separator
 GTK::Raw::SeparatorMenuItem
 GTK::Raw::SeparatorToolItem
+GTK::Raw::Settings
 GTK::Raw::SizeGroup
 GTK::Raw::SpinButton
 GTK::Raw::Spinner
@@ -272,6 +274,7 @@ GTK::Roles::Signals::Widget
 GTK::Roles::TreeDnD
 GTK::Roles::TreeSortable
 GTK::Selection
+GTK::Settings
 GTK::SizeGroup
 GTK::TargetEntry
 GTK::TargetList

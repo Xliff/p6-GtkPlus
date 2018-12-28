@@ -2,8 +2,6 @@ use v6.c;
 
 use Cairo;
 
-use GTK::Compat::Raw::DragContext;
-
 use GTK::Compat::Cairo;
 use GTK::Compat::DragContext;
 use GTK::Compat::Value;
@@ -43,8 +41,6 @@ sub canvas_item_new($widget, $b, $x, $y) {
 }
 
 sub canvas_item_draw($i, $cr, $pre) {
-  CATCH { default { .message.say; return; } }
-
   return unless $i<pixbuf>;
   my ($cx, $cy) = $i<pixbuf>.size;
   # GDK::Cairo
@@ -55,8 +51,6 @@ sub canvas_item_draw($i, $cr, $pre) {
 }
 
 sub canvas_draw($w, $cr, $d, $r) {
-  CATCH { default { .message.say; $r.r = 0; return; } }
-
   $cr.set_source_rgb(1.Num, 1.Num, 1.Num);
   $cr.paint;
   canvas_item_draw($_, $cr, False) for @canvas_items;
@@ -125,8 +119,6 @@ sub palette_drag_data_received ($p, $w, $c, $x, $y, $sel, $i, $t, $d) {
 }
 
 sub canvas_drag_motion($can, $c, $x, $y, $t, $d, $r) {
-  CATCH { default { .message.say; $r.r = 0; return; } }
-
   my $dc = GTK::Compat::DragContext.new($c);
   if $drop_item.defined {
     $drop_item<x> = $x;
@@ -152,9 +144,7 @@ sub canvas_ddr1($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
   $can.queue_draw;
 }
 
-sub canvas_ddr2( *@args ($pal, $can, $c, $x, $y, $sel, $i, $t, $d) ) {
-  CATCH { default { .message.say; return } }
-
+sub canvas_ddr2($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
   my $ti = $pal.get_drag_item($sel);
   $ti = GTK::Widget.CreateObject($ti) with $ti;
 

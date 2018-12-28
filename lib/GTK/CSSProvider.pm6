@@ -9,11 +9,13 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::CSSProvider;
+use GTK::Roles::StyleProvider;
 use GTK::Roles::Types;
 
 class GTK::CSSProvider {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;
+  also does GTK::Roles::StyleProvider;
   also does GTK::Roles::Types;
 
   has GtkCSSProvider $!css;
@@ -46,6 +48,7 @@ class GTK::CSSProvider {
       $css ~= %sections<css>;
     }
     self.load_from_data($_) with $css;
+    $!sp = nativecast(GtkStyleProvider, $!css);   # GTK::Roles::StyleProvider
   }
 
   submethod DESTROY {

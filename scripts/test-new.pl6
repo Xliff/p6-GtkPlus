@@ -31,7 +31,7 @@ sub MAIN( $rev = 'HEAD' ) {
 
     say "===== $_[1] =====";
     my $proc = Proc::Async.new(
-      'perl6', '--stagestats', '-Ilib', '-e', 'use '~ $_[1]
+      'perl6', '--stagestats', '-I../cairo-p6/lib', '-I../p6-Pango/lib', '-Ilib', '-e', 'use '~ $_[1]
     );
 
     $proc.stdout.tap(-> $o { $o.say; });

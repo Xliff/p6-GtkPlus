@@ -105,6 +105,7 @@ constant GCopyFunc           is export := Pointer;
 constant GDestroyNotify      is export := Pointer;
 constant GEqualFunc          is export := Pointer;
 constant GQuark              is export := uint32;
+constant GString             is export := Pointer;
 constant GStrv               is export := CArray[Str];
 constant GType               is export := uint64;
 constant GVariant            is export := Pointer;
