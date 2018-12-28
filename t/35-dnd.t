@@ -2,6 +2,8 @@ use v6.c;
 
 use Cairo;
 
+use GTK::Compat::Raw::DragContext;
+
 use GTK::Compat::Cairo;
 use GTK::Compat::DragContext;
 use GTK::Compat::Value;
@@ -37,10 +39,12 @@ sub canvas_item_new($widget, $b, $x, $y) {
   my $theme = GTK::IconTheme.get_for_screen($widget.get_screen);
   my ($w) = GTK::IconInfo.size_lookup(GTK_ICON_SIZE_DIALOG);
   my $p = $theme.load_icon($name, $w // 0);
-  %( pixbuf => $p, x => $x, y => $y );
+  %( pixbuf => $p, x => $x, y => $y, name => $name);
 }
 
 sub canvas_item_draw($i, $cr, $pre) {
+  CATCH { default { .message.say; return; } }
+
   return unless $i<pixbuf>;
   my ($cx, $cy) = $i<pixbuf>.size;
   # GDK::Cairo
@@ -51,6 +55,8 @@ sub canvas_item_draw($i, $cr, $pre) {
 }
 
 sub canvas_draw($w, $cr, $d, $r) {
+  CATCH { default { .message.say; $r.r = 0; return; } }
+
   $cr.set_source_rgb(1.Num, 1.Num, 1.Num);
   $cr.paint;
   canvas_item_draw($_, $cr, False) for @canvas_items;
@@ -84,7 +90,6 @@ sub palette_drop_item ($pal, $di, $dg, $x, $y) {
     $di.upref;
     $drag_group.child_get_bool($di, $_[0], $_[1]) for @p;
     $drag_group.remove($di);
-    say "DI: $di";
     $dg.insert($di, $drop_pos);
     $dg.child_set_bool($di, $_[0], $_[1]) for @p;
     $di.downref;
@@ -114,31 +119,26 @@ sub palette_drag_data_received ($p, $w, $c, $x, $y, $sel, $i, $t, $d) {
     palette_drop_group($p, $drag_item, $drop_group);
   } else {
     my $a = $drop_group.get_allocation;
-    # Getting warnings if this is not the correct type.
-    # Try with CreateObject?
     $drag_item = GTK::Widget.CreateObject($drag_item);
     palette_drop_item($p, $drag_item, $drop_group, $x - $a.x, $y - $a.y);
   }
 }
 
 sub canvas_drag_motion($can, $c, $x, $y, $t, $d, $r) {
-  say "$x, $y";
+  CATCH { default { .message.say; $r.r = 0; return; } }
+
   my $dc = GTK::Compat::DragContext.new($c);
   if $drop_item.defined {
     $drop_item<x> = $x;
     $drop_item<y> = $y;
     $can.queue_draw;
+
     $dc.status(GDK_ACTION_COPY, $t);
   } else {
     my $tgt = $can.dest_find_target($c);
     without $tgt { $r.r = 0; return }
     $dd_req_drop = False;
-
-    say "{ gdk_atom_name($tgt) } = $tgt";
-    # Calling drag-data-received on canvas starts something
-    # that is not properly finalized. Therefore, if uncommented,
-    # this next method will hang the code.
-    #$can.drag_get_data($c, $tgt, $t);
+    $can.drag_get_data($c, $tgt, $t);
   }
   $r.r = 1;
 }
@@ -152,12 +152,12 @@ sub canvas_ddr1($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
   $can.queue_draw;
 }
 
-sub canvas_ddr2($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
+sub canvas_ddr2( *@args ($pal, $can, $c, $x, $y, $sel, $i, $t, $d) ) {
+  CATCH { default { .message.say; return } }
+
   my $ti = $pal.get_drag_item($sel);
-
-  say "DDR2: {$x}, {$y}";
-
   $ti = GTK::Widget.CreateObject($ti) with $ti;
+
   with $drop_item {
     $drop_item = Nil;
   }
@@ -388,11 +388,11 @@ $a.activate.tap({
     ::('$contents' ~ $_).app_paintable = True ;
     $palette.add_drag_dest(
       ::('$contents' ~ $_),
-      GTK_DEST_DEFAULT_ALL,
+      $_ == 1 ?? GTK_DEST_DEFAULT_ALL !! GTK_DEST_DEFAULT_HIGHLIGHT,
       GTK_TOOL_PALETTE_DRAG_ITEMS,
       GDK_ACTION_COPY
     );
-    ::('$scroll' ~ $_).set_policy(GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
+    ::('$scroll' ~ $_).set_policy(GTK_POLICY_AUTOMATIC, GTK_POLICY_ALWAYS);
     ::('$scroll' ~ $_).border_width = 6;
     ::('$scroll' ~ $_).add( ::('$contents' ~ $_) );
     ::('$contents' ~ $_).draw.tap(-> *@a { canvas_draw(|@a) });
@@ -400,16 +400,15 @@ $a.activate.tap({
 
   # Passive Dnd Dest
   my $l_scroll1 = GTK::Label.new('Passive DnD Mode');
-  $contents1.drag-data-received.tap(-> *@a { canvas_ddr1($palette, |@a) });
+  $contents1.drag-data-received.tap(->   *@a { canvas_ddr1($palette, |@a) });
   $notebook.append_page($scroll1, $l_scroll1);
 
   # # Interractive DnD dest
   my $l_scroll2 = GTK::Label.new('Interractive DnD Mode');
-  $contents2.drag-motion.tap(-> *@a { canvas_drag_motion(|@a) });
-  $contents2.drag-leave.tap(->  *@a {  canvas_drag_leave(|@a) });
-  $contents2.drag-drop.tap(->   *@a {   canvas_drag_drop(|@a) });
-
-  $contents2.drag-data-received.tap(-> *@a { canvas_ddr2($palette, |@a) });
+  $contents2.drag-motion.tap(       ->   *@a {    canvas_drag_motion(|@a) });
+  $contents2.drag-leave.tap(        ->   *@a {     canvas_drag_leave(|@a) });
+  $contents2.drag-drop.tap(         ->   *@a {      canvas_drag_drop(|@a) });
+  $contents2.drag-data-received.tap(->   *@a { canvas_ddr2($palette, |@a) });
 
   $notebook.append_page($scroll2, $l_scroll2);
   $a.window.show_all;

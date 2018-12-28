@@ -73,7 +73,7 @@ sub MAIN (*@filenames) {
     %graph-data<text> //= @text-lines;
 
     my $avg-parse = %data.values.map( *<parse> ).sum / %data.keys.elems,
-    my ($x0, $y1) = (200 + 25 * $avg-parse, 10 + @points.elems * 30);
+    my ($x0, $y1) = (200 + 25 * $avg-parse, $yo + @points.elems * 30);
     my $l-style = "stroke:{ $rgbh };stroke-width:1";
     my $pl-style = "fill:none;stroke:{ $rgb };stroke-width:3";
     %graph-data<series>.push: [
