@@ -955,6 +955,44 @@ our enum GtkTreeSortableSortColumnId is export (
   GTK_TREE_SORTABLE_UNSORTED_SORT_COLUMN_ID => -2
 );
 
+our enum GtkPrintSettingEnum is export (
+  GTK_PRINT_SETTINGS_PRINTER            => 'printer',
+  GTK_PRINT_SETTINGS_ORIENTATION        => 'orientation',
+  GTK_PRINT_SETTINGS_PAPER_FORMAT       => 'paper-format',
+  GTK_PRINT_SETTINGS_PAPER_WIDTH        => 'paper-width',
+  GTK_PRINT_SETTINGS_PAPER_HEIGHT       => 'paper-height',
+  GTK_PRINT_SETTINGS_USE_COLOR          => 'use-color',
+  GTK_PRINT_SETTINGS_COLLATE            => 'collate',
+  GTK_PRINT_SETTINGS_REVERSE            => 'reverse',
+  GTK_PRINT_SETTINGS_DUPLEX             => 'duplex',
+  GTK_PRINT_SETTINGS_QUALITY            => 'quality',
+  GTK_PRINT_SETTINGS_N_COPIES           => 'n-copies',
+  GTK_PRINT_SETTINGS_NUMBER_UP          => 'number-up',
+  GTK_PRINT_SETTINGS_NUMBER_UP_LAYOUT   => 'number-up-layout',
+  GTK_PRINT_SETTINGS_RESOLKUTION        => 'resolution',
+  GTK_PRINT_SETTINGS_RESOLUTION_X       => 'resolution-x',
+  GTK_PRINT_SETTINGS_RESOLUTION_Y       => 'resolution-y',
+  GTK_PRINT_SETTINGS_PRINTER_LPI        => 'printer-lpi',
+  GTK_PRINT_SETTINGS_SCALE              => 'scale',
+  GTK_PRINT_SETTINGS_PRINT_PAGES        => 'print-pages',
+  GTK_PRINT_SETTINGS_PAGE_RANGES        => 'page-ranges',
+  GTK_PRINT_SETTINGS_PAGE_SET           => 'page-set',
+  GTK_PRINT_SETTINGS_DEFAULT_SOURCE     => 'default-source',
+  GTK_PRINT_SETTINGS_MEDIA_TYPE         => 'media-type',
+  GTK_PRINT_SETTINGS_DITHER             => 'dither',
+  GTK_PRINT_SETTINGS_FINISHINGS         => 'finishings',
+  GTK_PRINT_SETTINGS_OUTPUT_BIN         => 'output-bin',
+  GTK_PRINT_SETTINGS_OUTPUT_DIR         => 'output-dir',
+  GTK_PRINT_SETTINGS_OUTPUT_BASENAME    => 'output-basename',
+  GTK_PRINT_SETTINGS_OUTPUT_FILE_FORMAT => 'output-file-format',
+  GTK_PRINT_SETTINGS_OUTPUT_URI         => 'output-uri',
+);
+
+our enum GtkPrintSettingWin32DriverEnum is export (
+  GTK_PRINT_SETTINGS_WIN32_DRIVER_EXTRA   => 'win32-driver-extra',
+  GTK_PRINT_SETTINGS_WIN32_DRIVER_VERSION => 'win32-driver-version'
+);
+
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }

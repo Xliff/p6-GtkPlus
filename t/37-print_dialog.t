@@ -1,6 +1,10 @@
 use v6.c;
 
 use Cairo;
+use Pango::Cairo;
+use Pango::FontDescription;
+use Pango::Layout;
+use Pango::Raw::Types;
 
 use GTK::Compat::Types;
 use GTK::Raw::Types;
@@ -19,84 +23,74 @@ constant HEADER_GAP    =  3 * 72 / 25.4;
 
 sub begin_print ($po, $pc, $pd) {
   my $height = $pc.height - HEADER_HEIGHT - HEADER_GAP;
-  my $bytes = g_resource_lookup_data($pd<resourcename);
 
-  $pd<lines_per_page> = ($height / $data<font_size>).floor;
-  $pd<lines> = $bytes.decode.lines;
+  $pd<lines> = $pd<resourcename>.IO.slurp.lines;
+  $pd<lines>.push: Str;
+  $pd<lines_per_page> = ($height / $pd<font_size>).floor;
   $pd<num_lines> = $pd<lines>.elems;
   $pd<num_pages> = ($pd<num_lines> - 1) / $pd<lines_per_page> + 1;
   $po.n_pages = $pd<num_pages>;
 }
 
-sub draw_page ($po, $pc, $pn, $ud) {
-  my $cr = $pc.get_cairo_context;
-  my $w = $pc.width;
-  my $cc = Cairo::Context.new($cr);
-  my $l = $pc.create_pango_layout;
-  my $d = pango_font_description_from_string('sans 14');
-  my gint ($tw, $th) = (0, 0);
+sub draw_page ($po, $c, $pn, $pd) {
+  my ($cr, $w) = ( Cairo::Context.new($c.get_cairo_context), $c.width );
+  $cr.rectangle(0, 0, $w, HEADER_HEIGHT);
+  $cr.rgb(0.8, 0.8, 0.8);
+  $cr.fill(:preserve);
+  $cr.line_width = 1;
+  $cr.stroke;
 
-  $cc.rectangle(0, 0, $w, HEADER_HEIGHT);
-  $cc.rgb(0.8, 0.8, 0.8);
-  $cc.fill_preserve;
-  $cc.rgb(0, 0, 0);
-  $cc.set_line_width(1);
-  $cc.stroke;
+  my $layout = $c.create_pango_layout;
+  my $desc = Pango::FontDescription.new_from_string('sans 14');
+  $layout.font_description = $desc;
+  $layout.text = $pd<resourcename>;
 
-  pango_layout_set_font_description($l, $d);
-  pango_font_description_free($d);
-  pango_layout_set_text($l, $pd<resourcename>, -1);
-  pango_layout_get_pixel_size($l, $tw, $th);
-
+  my ($tw, $th) = $layout.get_pixel_size;
   if $tw > $w {
-    pango_layout_set_width($l, $w);
-    pango_layout_set_ellipsize($l, PANGO_ELLIPSIZE_START);
-    pango_layout_get_pixel_size($l, $tw, $th);
+    $layout.width = $w;
+    $layout.set_ellipsize = PANGO_ELLIPSIZE_START;
+    ($tw, $th) = $layout.get_pixel_size;
   }
-  $cc.move_to( ($w - $tw) / 2, (HEADER_HEIGHT - $th) / 2 );
-  pango_cairo_show_layout($cr, $l);
-  pangpo_layout_set_text($l, "{ page_nr + 1 }/{ %pd<num_pages> }", -1);
-  # g_object_unref($l);
 
-  $l = $pc.create_pango_layout;
-  $d = pango_font_description_from_string('monospace');
-  pango_font_description_set_size($d, $pd<font_size> * PANGO_SCALE);
-  pango_layout_set_font_description($l, $d);
-  pango_font_description_free($d);
+  my $pc = Pango::Cairo.new($cr);
+  $cr.move_to( ($w - $tw) / 2, (HEADER_HEIGHT - $th) / 2 );
+  $pc.show_layout($layout);
 
-  $cc.move_to(0, HEADER_HEIGHT + HEADER_GAP);
-  my $line = $pn * $pd<lines_per_page>;
-  for ^$pd<lines_per_page> -> $cl {
-    last if $line + $cl >= $pd<num_lines>;
+  $layout.text = "{ $pn + 1 }/{ $pd<num_pages> }";
+  $layout.width = -1;
+  ($tw, $th) = $layout.get_pixel_size;
+  $cr.move_to($w - $tw - 4, (HEADER_HEIGHT - $th) / 2);
+  $pc.show_layout($layout);
 
-    pango_layout_set_text($l, $pd<lines>[$line + $cl], -1);
-    pango_cairo_show_layout($cr, $l);
-    $cc.rel_move_to(0, $pd<font_size>);
-  }
-  #g_object_unref($l);
+  $layout = $c.create_pango_layout;
+  $desc = Pango::FontDescription.new_from_string('monospace');
+  $desc.size = $pd<font_size> * PANGO_SCALE;
+  $layout.font_description = $desc;
+  $cr.move_to(0, HEADER_HEIGHT + HEADER_GAP);
+
+  my ($line, $i) = ( $pn * $pd<lines_per_page>, 0 );
+  repeat {
+    $layout.text = $pd<line>[$line];
+    $cr.move_to(0, $pd<font_size>, :relative);
+  } while ++$i < $pd<lines_per_page> && ++$line < $pd<num_lines>;
 }
 
-sub end_print($po, $pc, $pd) {
-  g_free($_) for $pd<resourcename lines>;
-  g_strfreev($pd<lines>);
-}
-
-sub do_print_settings {
+sub do_print_settings ($po, $ps, $w) {
+  my (%pd, $err);
   %pd<resourcename> = $?FILE;
   %pd<font_size> = 12;
 
   $ps.set(GTK_PRINT_SETTINGS_OUTPUT_BASENAME, $?FILE);
   $po.begin-print.tap(-> *@a { begin_print( |@a[1..2], %pd ) });
-  $po.end-print.tap(-> *@a   {   end_print( |@a[1..2], %pd ) });
-  $po.draw-page.tap(-> *@a   {   draw_page( |@a[1..3], %pd ) });
+  $po.draw-page.tap(->   *@a {   draw_page( |@a[1..3], %pd ) });
   $po.use_full_page = False;
   $po.unit = GTK_UNIT_POINTS;
   $po.embed_page_setup = True;
   $po.print_settings = $ps;
 
-  $po.run(GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, $a.window, $err);
+  $po.run(GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG, $w, $err);
   with $err[0] {
-    my $d = GTK::Dialog::Message.new($a.window, $err[0].message);
+    my $d = GTK::Dialog::Message.new($w, $err[0].message);
     $d.response.tap({ $d.hide });
     $d.show;
   }
@@ -110,11 +104,10 @@ sub do_page_settings {
 
 my $a = GTK::Application.new( title => 'org.genex.unix_print' );
 $a.activate.tap({
-  my %pd, $err;
-  my $po = GTK::PrintOperation.new;
-  my $ps = GTK::PrintSettings.new;
-  my $vb = GTK::Box.new-vbox(5);
-  my  @b = GTK::Button.new xx 2;
+  my $po  = GTK::PrintOperation.new;
+  my $ps  = GTK::PrintSettings.new;
+  my $vb  = GTK::Box.new-vbox(5);
+  my @b   = GTK::Button.new xx 2;
   my $err = gerror;
 
   $a.window.add($vb);
@@ -122,7 +115,7 @@ $a.activate.tap({
   @b[0].label = 'Print Settings';
   @b[1].label = 'Page Setup';
 
-  @b[0].clicked.tap({ do_print_settings() });
+  @b[0].clicked.tap({ do_print_settings($po, $ps, $a.window) });
   @b[1].clicked.tap({  do_page_settings() });
 
   $a.window.show_all;

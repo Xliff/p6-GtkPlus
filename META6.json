@@ -283,7 +283,6 @@
       "GTK::Roles::TreeDnD"                    :  "lib/GTK/Roles/TreeDnD.pm6"                   ,
       "GTK::Roles::TreeSortable"               :  "lib/GTK/Roles/TreeSortable.pm6"              ,
       "GTK::Selection"                         :  "lib/GTK/Selection.pm6"                       ,
-      "GTK::Settings"                          :  "lib/GTK/Settings.pm6"                        ,
       "GTK::SizeGroup"                         :  "lib/GTK/SizeGroup.pm6"                       ,
       "GTK::TargetEntry"                       :  "lib/GTK/TargetEntry.pm6"                     ,
       "GTK::TargetList"                        :  "lib/GTK/TargetList.pm6"                      ,
@@ -328,6 +327,7 @@
       "GTK::Roles::Properties"                 :  "lib/GTK/Roles/Properties.pm6"                ,
       "GTK::Roles::ToolShell"                  :  "lib/GTK/Roles/ToolShell.pm6"                 ,
       "GTK::Roles::TreeModel"                  :  "lib/GTK/Roles/TreeModel.pm6"                 ,
+      "GTK::Settings"                          :  "lib/GTK/Settings.pm6"                        ,
       "GTK::StyleContext"                      :  "lib/GTK/StyleContext.pm6"                    ,
       "GTK::TextBuffer"                        :  "lib/GTK/TextBuffer.pm6"                      ,
       "GTK::TreeModelFilter"                   :  "lib/GTK/TreeModelFilter.pm6"                 ,
@@ -471,6 +471,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 

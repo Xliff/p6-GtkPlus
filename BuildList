@@ -274,7 +274,6 @@ GTK::Roles::Signals::Widget
 GTK::Roles::TreeDnD
 GTK::Roles::TreeSortable
 GTK::Selection
-GTK::Settings
 GTK::SizeGroup
 GTK::TargetEntry
 GTK::TargetList
@@ -319,6 +318,7 @@ GTK::Roles::FontChooser
 GTK::Roles::Properties
 GTK::Roles::ToolShell
 GTK::Roles::TreeModel
+GTK::Settings
 GTK::StyleContext
 GTK::TextBuffer
 GTK::TreeModelFilter
