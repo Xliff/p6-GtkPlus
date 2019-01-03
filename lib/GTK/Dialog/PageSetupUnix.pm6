@@ -12,7 +12,7 @@ use GTK::PageSetup;
 use GTK::PrintSettings;
 
 my subset Ancestry
-  where GtkPageSetupUnixDialog | GtkDialog    | GtkWindow | GtkBin | 
+  where GtkPageSetupUnixDialog | GtkDialog    | GtkWindow | GtkBin |
         GtkContainer           | GtkBuildable | GtkWidget;
 
 class GTK::Dialog::PageSetupUnix is GTK::Dialog {
@@ -53,8 +53,8 @@ class GTK::Dialog::PageSetupUnix is GTK::Dialog {
     $o;
   }
   multi method new (Str() $title, GtkWindow() $parent) {
-    gtk_page_setup_unix_dialog_new($title, $parent);
-
+    my $dialog = gtk_page_setup_unix_dialog_new($title, $parent);
+    self.bless(:$dialog);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

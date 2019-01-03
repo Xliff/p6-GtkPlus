@@ -16,11 +16,11 @@ class GTK::PageSetup {
     $!ps = $page;
   }
 
-  method GTK::Raw::Types::PageSetup is also<pagesetup> {
+  method GTK::Raw::Types::GtkPageSetup is also<pagesetup> {
     $!ps;
   }
 
-  multi method new (GtkPageSetup :$page) {
+  multi method new (GtkPageSetup $page) {
     self.bless(:$page);
   }
   multi method new {

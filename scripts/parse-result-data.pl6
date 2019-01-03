@@ -11,16 +11,17 @@ grammar ParseBuildResults {
   }
   regex top_section {
     ^^ 'Dependency Generation' \s+
-    ^^ '=====================' \s+
-    ^^ 'real' \s+ <num> \s+
-    ^^ 'user' \s+ <num> \s+
-    ^^ 'sys'  \s+ <num> \v+
+    ^^ '=====================' \v+
+    <summary>*
   }
   regex section {
     <header> \s+ <stage>*
   }
+  # regex summary {
+  #   <summary_type> \s* $<min>=(\d+) 'm' <sec=num> 's' \s*
+  # }
   regex summary {
-    <summary_type> \s* $<min>=(\d+) 'm' <sec=num> 's' \s*
+    <summary_type> \s+ <num> \s+
   }
   regex header {
     ^^ \s* '=== ' <module> ' ===' $$
@@ -54,9 +55,13 @@ class ResultsBuilder {
   method TOP($/) {
     my %data;
     %data.append: $_.made for $/<section>;
-    for $/<summary> {
-      my $i = .made;
-      %data<SUMMARY>{ $i.key } = $i.value;
+    for $/<top_section><summary>, $/<summary> {
+      my $k = $_ =:= $/<summary> ?? 'SUMMARY' !! 'DEPENDENCIES';
+      for .List {
+        next unless .defined;
+        my $i = .made;
+        %data{$k}{ $i.key } = $i.value;
+      }
     }
     make %data;
   }
@@ -93,8 +98,8 @@ class ResultsBuilder {
   }
 
   method summary($/) {
-    my $m = $/<summary_type>.Str => $/<min>.Int * 60 + $/<sec>.Num;
-    make $m;
+    #my $m = $/<summary_type>.Str => $/<min>.Int * 60 + $/<sec>.Num;
+    make $/<summary_type>.Str => $/<num>.Num;
   }
 }
 

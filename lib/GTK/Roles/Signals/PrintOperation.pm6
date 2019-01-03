@@ -162,6 +162,30 @@ role GTK::Roles::Signals::PrintOperation {
     %!signals-po{$signal}[0];
   }
 
+  # GtkPrintOperation, GtkPrintContext, gint,  gpointer
+  method connect-draw-page (
+    $obj,
+    $signal = 'draw-page',
+    &handler?
+  ) {
+    my $hid;
+    %!signals-po{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-draw-page($obj, $signal,
+        -> $, $pc, $pg, $ud {
+          CATCH {
+            default { note($_) }
+          }
+          $s.emit( [self, $pc, $pg, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals-po{$signal}[0].tap(&handler) with &handler;
+    %!signals-po{$signal}[0];
+  }
+
 }
 
 # GtkPrintOperation, GtkPrintContext, gpointer --> void
@@ -243,6 +267,19 @@ sub g-connect-got-page-size(
   Pointer $app,
   Str $name,
   &handler (Pointer, GtkPrintContext, GtkPageSetup, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+# GtkPrintOperation, GtkPrintContext, gint,  gpointer
+sub g-connect-draw-page(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, GtkPrintContext, gint, Pointer),
   Pointer $data,
   uint32 $flags
 )

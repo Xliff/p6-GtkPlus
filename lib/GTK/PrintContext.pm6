@@ -1,13 +1,19 @@
 use v6.c;
 
+use Cairo;
 use Method::Also;
 use NativeCall;
+
+use Pango::FontMap;
+use Pango::Layout;
 
 use GTK::Compat::Types;
 use GTK::Raw::PrintContext;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
+
+use GTK::PageSetup;
 
 class GTK::PrintContext {
   also does GTK::Roles::Types;
@@ -33,15 +39,15 @@ class GTK::PrintContext {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method create_pango_context is also<create-pango-context> {
-    gtk_print_context_create_pango_context($!pc);
+    Cairo::Context.new( gtk_print_context_create_pango_context($!pc); )
   }
 
   method create_pango_layout is also<create-pango-layout> {
-    gtk_print_context_create_pango_layout($!pc);
+    Pango::Layout.new( gtk_print_context_create_pango_layout($!pc) );
   }
 
   method get_cairo_context is also<get-cairo-context> {
-    gtk_print_context_get_cairo_context($!pc);
+    Cairo::Context.new( gtk_print_context_get_cairo_context($!pc) );
   }
 
   method get_dpi_x is also<get-dpi-x> {
@@ -69,11 +75,11 @@ class GTK::PrintContext {
   }
 
   method get_page_setup is also<get-page-setup> {
-    gtk_print_context_get_page_setup($!pc);
+    GTK::PageSetup.new( gtk_print_context_get_page_setup($!pc) );
   }
 
   method get_pango_fontmap is also<get-pango-fontmap> {
-    gtk_print_context_get_pango_fontmap($!pc);
+    Pango::FontMap.new( gtk_print_context_get_pango_fontmap($!pc) );
   }
 
   method get_type is also<get-type> {

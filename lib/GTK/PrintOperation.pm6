@@ -26,6 +26,7 @@ class GTK::PrintOperation {
 
   submethod BUILD(:$op) {
     $!po = $op;
+    $!prop = nativecast(GObject, $!po);       # GTK::Roles::Properties
   }
 
   submethod DESTROY {
@@ -70,9 +71,9 @@ class GTK::PrintOperation {
   }
 
   # Is originally:
-  # GtkPrintContext, gint, gpointer --> void
+  # GtkPrintOperation, GtkPrintContext, gint, gpointer --> void
   method draw-page is also<draw_page> {
-    self.connect-int($!po, 'draw-page');
+    self.connect-draw-page($!po);
   }
 
   # Is originally:
@@ -203,12 +204,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'allow-async', $gv)
+          self.prop_get('allow-async', $gv)
         );
-        $gv.get_boolean;
+        $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.set_boolean($val);
+        $gv.boolean = $val;
         self.prop_set('allow-async', $gv);
       }
     );
@@ -220,12 +221,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'current-page', $gv)
+          self.prop_get('current-page', $gv)
         );
-        $gv.get_int;
+        $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.set_int($val);
+        $gv.int = $val;
         self.prop_set('current-page', $gv);
       }
     );
@@ -238,12 +239,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'custom-tab-label', $gv)
+          self.prop_get('custom-tab-label', $gv)
         );
-        $gv.get_string;
+        $gv.string;
       },
       STORE => -> $, Str() $val is copy {
-        $gv.set_string($val);
+        $gv.string = $val;
         self.prop_set('custom-tab-label', $gv);
       }
     );
@@ -255,17 +256,16 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'export-filename', $gv)
+          self.prop_get('export-filename', $gv)
         );
-        $gv.get_string;
+        $gv.string;
       },
       STORE => -> $, Str() $val is copy {
-        $gv.set_string($val);
+        $gv.string = $val;
         self.prop_set('export-filename', $gv);
       }
     );
   }
-
 
   # Type: Str()
   method job-name is rw is also<job_name> {
@@ -273,17 +273,16 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'job-name', $gv)
+          self.prop_get('job-name', $gv)
         );
-        $gv.get_string;
+        $gv.string;
       },
       STORE => -> $, Str() $val is copy {
-        $gv.set_string($val);
+        $gv.string = $val;
         self.prop_set('job-name', $gv);
       }
     );
   }
-
 
   # Type: gint
   method n-pages is rw is also<n_pages> {
@@ -291,12 +290,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'n-pages', $gv)
+          self.prop_get('n-pages', $gv)
         );
-        $gv.get_int;
+        $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.set_int($val);
+        $gv.int = $val;
         self.prop_set('n-pages', $gv);
       }
     );
@@ -308,12 +307,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'n-pages-to-print', $gv)
+          self.prop_get('n-pages-to-print', $gv)
         );
-        $gv.get_int;
+        $gv.int;
       },
       STORE => -> $, $val is copy {
-        warn "n-pages-to-print does not allow writing"
+        warn 'GTK::PrintOperation.n-pages-to-print does not allow writing'
       }
     );
   }
@@ -324,12 +323,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'show-progress', $gv)
+          self.prop_get('show-progress', $gv)
         );
-        $gv.get_boolean;
+        $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.set_boolean($val);
+        $gv.boolean = $val;
         self.prop_set('show-progress', $gv);
       }
     );
@@ -343,10 +342,10 @@ class GTK::PrintOperation {
         $gv = GTK::Compat::Value.new(
           self.prop_get('status', $gv)
         );
-        GtkPrintStatus( $gv.get_enum );
+        GtkPrintStatus( $gv.enum );
       },
       STORE => -> $, $val is copy {
-        warn "status does not allow writing"
+        warn 'GTK::PrintOperation.status does not allow writing'
       }
     );
   }
@@ -357,9 +356,9 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'status-string', $gv)
+          self.prop_get('status-string', $gv)
         );
-        $gv.get_string;
+        $gv.string;
       },
       STORE => -> $, $val is copy {
         warn "status-string does not allow writing"
@@ -373,12 +372,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'track-print-status', $gv)
+          self.prop_get('track-print-status', $gv)
         );
-        $gv.get_boolean;
+        $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.set_boolean($val);
+        $gv.boolean = $val;
         self.prop_set('track-print-status', $gv);
       }
     );
@@ -392,10 +391,10 @@ class GTK::PrintOperation {
         $gv = GTK::Compat::Value.new(
           self.prop_get('unit', $gv)
         );
-        GtkUnit( $gv.get_uint );
+        GtkUnit( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.set_uint($val);
+        $gv.uint = $val;
         self.prop_set('unit', $gv);
       }
     );
@@ -407,12 +406,12 @@ class GTK::PrintOperation {
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
-          self.prop_get( $!po, 'use-full-page', $gv)
+          self.prop_get('use-full-page', $gv)
         );
-        $gv.get_boolean;
+        $gv.boolean;
       },
       STORE => -> $, $val is copy {
-        $gv.set_boolean($val);
+        $gv.boolean = $val;
         self.prop_set('use-full-page', $gv);
       }
     );
