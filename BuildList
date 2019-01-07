@@ -1,6 +1,8 @@
 Cairo
 Data::Dump::Tree
 Method::Also
+Pango::FontMap
+Pango::Layout
 Pango::Raw::Types
 Pluggable
 GTK::Builder::MRO
@@ -307,7 +309,6 @@ GTK::FileFilter
 GTK::IconInfo
 GTK::IconTheme
 GTK::PaperSize
-GTK::PrintContext
 GTK::PrintSettings
 GTK::RecentFilter
 GTK::Roles::CellEditable
@@ -339,6 +340,7 @@ GTK::Compat::Raw::Monitor
 GTK::Compat::Window
 GTK::ListStore
 GTK::PageSetup
+GTK::PrintContext
 GTK::PrintJob
 GTK::PrintOperation
 GTK::Printer

@@ -44,7 +44,7 @@ sub MAIN (*@filenames) {
     my %data = from-json($filename.IO.slurp);
 
     for %data.keys {
-      next if $_ eq 'SUMMARY';
+      next if $_ eq <SUMMARY DEPENDENCIES>.any;
       @points[%order{$_}] = %data{$_};
     }
 

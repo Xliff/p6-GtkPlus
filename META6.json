@@ -316,7 +316,6 @@
       "GTK::IconInfo"                          :  "lib/GTK/IconInfo.pm6"                        ,
       "GTK::IconTheme"                         :  "lib/GTK/IconTheme.pm6"                       ,
       "GTK::PaperSize"                         :  "lib/GTK/PaperSize.pm6"                       ,
-      "GTK::PrintContext"                      :  "lib/GTK/PrintContext.pm6"                    ,
       "GTK::PrintSettings"                     :  "lib/GTK/PrintSettings.pm6"                   ,
       "GTK::RecentFilter"                      :  "lib/GTK/RecentFilter.pm6"                    ,
       "GTK::Roles::CellEditable"               :  "lib/GTK/Roles/CellEditable.pm6"              ,
@@ -348,6 +347,7 @@
       "GTK::Compat::Window"                    :  "lib/GTK/Compat/Window.pm6"                   ,
       "GTK::ListStore"                         :  "lib/GTK/ListStore.pm6"                       ,
       "GTK::PageSetup"                         :  "lib/GTK/PageSetup.pm6"                       ,
+      "GTK::PrintContext"                      :  "lib/GTK/PrintContext.pm6"                    ,
       "GTK::PrintJob"                          :  "lib/GTK/PrintJob.pm6"                        ,
       "GTK::PrintOperation"                    :  "lib/GTK/PrintOperation.pm6"                  ,
       "GTK::Printer"                           :  "lib/GTK/Printer.pm6"                         ,
@@ -471,6 +471,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 
