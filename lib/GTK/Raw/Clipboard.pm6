@@ -12,7 +12,13 @@ sub gtk_clipboard_clear (GtkClipboard $clipboard)
   is export
   { * }
 
-sub gtk_clipboard_get (GdkAtom $selection)
+sub gtk_clipboard_get_a (GdkAtom $selection)
+  returns GtkClipboard
+  is native(gtk)
+  is symbol('gtk_clipboard_get')
+  is export
+  { * }
+sub gtk_clipboard_get (int64 $selection)
   returns GtkClipboard
   is native(gtk)
   is export

@@ -970,7 +970,7 @@ our enum GdkDragProtocol is export (
 
 sub gdkMakeAtom($i) is export {
   my gint $ii = $i +& 0x7fff;
-  my $c = CArray[int32].new($ii);
+  my $c = CArray[int64].new($ii);
   nativecast(GdkAtom, $c);
 }
 
