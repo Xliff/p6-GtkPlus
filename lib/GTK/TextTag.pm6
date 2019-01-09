@@ -10,16 +10,18 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
+use GTK::Roles::Properties;
 use GTK::Roles::Signals::TextTag;
 
 class GTK::TextTag  {
+  also does GTK::Roles::Properties;
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::TextTag;
 
   has GtkTextTag $!tt;
 
   submethod BUILD(:$tag) {
-    $!tt = $tag;
+    $!prop = nativecast(GObject, $!tt = $tag);    # GTK::Roles::Properties (+)
   }
 
   submethod DESTROY {
