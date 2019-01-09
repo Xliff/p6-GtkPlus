@@ -14,6 +14,10 @@ class GTK::Adjustment {
     $!adj = $adjustment;
   }
 
+  method GTK::Raw::Types::GtkAdjustment {
+    $!adj;
+  }
+
   multi method new (GtkAdjustment $adjustment) {
     self.bless(:$adjustment);
   }
@@ -29,10 +33,6 @@ class GTK::Adjustment {
     );
     my $adjustment = gtk_adjustment_new($!adj, $l, $u, $si, $pi, $ps);
     self.bless($adjustment);
-  }
-
-  method GTK::Raw::Types::GtkAdjustment {
-    $!adj;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -165,4 +165,3 @@ class GTK::Adjustment {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

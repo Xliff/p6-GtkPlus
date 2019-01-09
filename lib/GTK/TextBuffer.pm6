@@ -4,22 +4,25 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::Value;
 use GTK::Raw::TextBuffer;
 use GTK::Raw::Types;
-use GTK::Roles::Types;
 
 use GTK::TextIter;
 
+use GTK::Roles::Properties;
+use GTK::Roles::Types;
 use GTK::Roles::Signals::TextBuffer;
 
 class GTK::TextBuffer {
+  also does GTK::Roles::Properties;
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::TextBuffer;
 
   has GtkTextBuffer $!tb;
 
   submethod BUILD(:$buffer) {
-    $!tb = $buffer;
+    $!prop = nativecast(GObject, $!tb = $buffer);
   }
 
   submethod DESTROY {
@@ -134,6 +137,108 @@ class GTK::TextBuffer {
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # ↓↓↓↓ PROPERTIES ↓↓↓↓
+
+  # Type: GtkTargetList
+  method copy-target-list is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('copy-target-list', $gv)
+        );
+        nativecast(GtkTargetList, $gv.pointer);
+      },
+      STORE => -> $, $val is copy {
+        warn 'copy-target-list does not allow writing'
+      }
+    );
+  }
+
+  # Type: gint
+  method cursor-position is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('cursor-position', $gv)
+        );
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'cursor-position does not allow writing'
+      }
+    );
+  }
+
+  # Type: gboolean
+  method has-selection is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('has-selection', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'has-selection does not allow writing'
+      }
+    );
+  }
+
+  # Type: GtkTargetList
+  method paste-target-list is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('paste-target-list', $gv)
+        );
+        nativecast(GtkTargetList, $gv.pointer);
+      },
+      STORE => -> $,  $val is copy {
+        warn 'paste-target-list does not allow writing'
+      }
+    );
+  }
+
+  # Type: GtkTextTagTable
+  method tag-table is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('tag-table', $gv)
+        );
+        GTK::TextTagTable.new( $gv.pointer );
+      },
+      STORE => -> $, GtkTextTagTable() $val is copy {
+        $gv.pointer = $val;
+        self.prop_set('tag-table', $gv);
+      }
+    );
+  }
+
+  # Type: gchar
+  method text is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('text', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('text', $gv);
+      }
+    );
+  }
+
+  # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_mark (
@@ -426,7 +531,7 @@ class GTK::TextBuffer {
   multi method insert (
     GtkTextIter() $iter,
     Str() $text,
-    Int() $len                    # gint $len
+    Int() $len = $text.chars      # gint $len
   ) {
     my gint $l = self.RESOLVE-INT($len);
     gtk_text_buffer_insert($!tb, $iter, $text, $l);
@@ -434,7 +539,7 @@ class GTK::TextBuffer {
 
   method insert_at_cursor (
     Str() $text,
-    Int() $len                    # gint $len
+    Int() $len  = $text.chars     # gint $len
   )
     is also<insert-at-cursor>
   {
@@ -454,11 +559,12 @@ class GTK::TextBuffer {
   method insert_interactive (
     GtkTextIter() $iter,
     Str() $text,
-    Int() $len,                   # gint $len,
+    Int() $len is copy,           # gint $len,
     Int() $default_editable       # gboolean $default_editable
   )
     is also<insert-interactive>
   {
+    $len //= $text.chars;
     my gint $l = self.RESOLVE-INT($len);
     my gboolean $de = self.RESOLVE-BOOL($default_editable);
     gtk_text_buffer_insert_interactive($!tb, $iter, $text, $l, $de);
@@ -466,11 +572,12 @@ class GTK::TextBuffer {
 
   method insert_interactive_at_cursor (
     Str() $text,
-    Int() $len,                   # gint $len,
+    Int() $len is copy,           # gint $len,
     Int() $default_editable       # gboolean $default_editable
   )
     is also<insert-interactive-at-cursor>
   {
+    $len //= $text.chars;
     my gint $l = self.RESOLVE-INT($len);
     my gboolean $de = self.RESOLVE-BOOL($default_editable);
     gtk_text_buffer_insert_interactive_at_cursor($!tb, $text, $l, $de);
@@ -479,7 +586,7 @@ class GTK::TextBuffer {
   method insert_markup (
     GtkTextIter() $iter,
     Str() $markup,
-    Int() $len                    # gint $len
+    Int() $len = $markup.chars
   )
     is also<insert-markup>
   {
@@ -590,10 +697,11 @@ class GTK::TextBuffer {
 
   method set_text (
     Str() $text,
-    Int $len?                   # gint $len, can't use Int() since optional.
+    Int $len is copy
   )
     is also<set-text>
   {
+    $len //= $text.chars;
     my gint $l = $len ?? self.RESOLVE-INT($len) !! $text.chars;
     gtk_text_buffer_set_text($!tb, $text, $l);
   }

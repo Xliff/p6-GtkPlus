@@ -8,15 +8,25 @@ use GTK::Raw::TextTagTable;
 use GTK::Raw::Types;
 
 use GTK::Roles::Buildable;
+use GTK::Roles::Signals::TextTagTable;
 
 class GTK::TextTagTable {
   also does GTK::Roles::Buildable;
+  also does GTK::Roles::Signals::TextTagTable;
 
   has GtkTextTagTable $!ttt;
 
   submethod BUILD(:$table) {
     $!ttt = $table;
     $!b = nativecast(GtkBuildable, $!ttt);    # GTK::Roles::Buildable
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-ttt;
+  }
+
+  method GTK::Raw::Types::GtkTextTagTable {
+    $!ttt;
   }
 
   multi method new {
@@ -29,6 +39,25 @@ class GTK::TextTagTable {
 
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
+
+  # Is originally:
+  # GtkTextTagTable, GtkTextTag, gpointer --> void
+  method tag-added {
+    self.connect-tag($!ttt, 'tag-added');
+  }
+
+  # Is originally:
+  # GtkTextTagTable, GtkTextTag, gboolean, gpointer --> void
+  method tag-changed {
+    self.connect-tag-changed($!ttt);
+  }
+
+  # Is originally:
+  # GtkTextTagTable, GtkTextTag, gpointer --> void
+  method tag-removed {
+    self.connect($!ttt, 'tag-removed');
+  }
+
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
@@ -64,4 +93,3 @@ class GTK::TextTagTable {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

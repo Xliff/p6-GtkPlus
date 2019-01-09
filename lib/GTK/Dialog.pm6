@@ -127,7 +127,7 @@ class GTK::Dialog is GTK::Window {
       $fb.key,
       self.RESOLVE-INT($fb.value)
     );
-    $o.add_buttons(@buttons) if +@buttons;
+    $o.add_buttons(@buttons);
     $o;
   }
 
@@ -171,7 +171,7 @@ class GTK::Dialog is GTK::Window {
   multi method add_buttons(*@buttons) {
     die '\@buttons is not an array of pair objects!'
       unless @buttons.all ~~ Pair;
-    self.add_button(.key, .value) for @buttons;
+    self.add_button( .key, self.RESOLVE-INT(.value) ) for @buttons;
   }
 
   method add_button (Str() $button_text, Int() $response_id)

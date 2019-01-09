@@ -15,7 +15,7 @@ my subset Ancestry
         GtkContainer         | GtkWindow      | GtkBin    | GtkContainer |
         GtkWidget;
 
-class GTK::FileChooserDialog is GTK::Dialog {
+class GTK::Dialog::FileChooser is GTK::Dialog {
   also does GTK::Roles::FileChooser;
 
   has GtkFileChooserDialog $!fcd;
@@ -47,7 +47,7 @@ class GTK::FileChooserDialog is GTK::Dialog {
         }
         self.setDialog($to-parent);
       }
-      when GTK::FileChooserDialog {
+      when GTK::Dialog::FileChooser {
       }
       default {
       }
@@ -69,30 +69,42 @@ class GTK::FileChooserDialog is GTK::Dialog {
   ) {
     my uint32 $a = self.RESOLVE-UINT($action);
     my gint $r = self.RESOLVE-INT($response);
-    my $dialog = gtk_file_chooser_dialog_new($title, $parent, $a, $text, $r);
+    my $dialog = gtk_file_chooser_dialog_new(
+      $title, $parent, $a, $text, $r, Str
+    );
     self.bless(:$dialog);
   }
   multi method new (
     Str() $title,
     GtkWindow() $parent,
     Int() $action,              # GtkFileChooserAction  $action,
-    *%buttons
   ) {
-    samewith($title, $parent, $action, %buttons.pairs.Array);
+    samewith($title, $parent, $action, (
+      '_OK'      => GTK_RESPONSE_OK,
+      '_Cancel'  => GTK_RESPONSE_CANCEL
+    ));
   }
   multi method new (
     Str() $title,
     GtkWindow() $parent,
     Int() $action,              # GtkFileChooserAction  $action,
-    @buttons
+    @buttons is copy,
   ) {
     die '@buttons cannot be empty' unless +@buttons;
     die '\@buttons is not an array of Pair objects!'
       unless @buttons.all ~~ Pair;
-    my $f = @buttons.unshift;
-    my $o = samewith($title, $parent, $action, $f.key, $f.value);
+    my $f = @buttons.shift;
+    my uint32 $a = self.RESOLVE-UINT($action);
+    my gint $r = self.RESOLVE-INT($f.value);
+    my $dialog = gtk_file_chooser_dialog_new(
+      $title, $parent, $a, $f.key, $r, Str
+    );
+    my $o = self.bless(:$dialog);
     $o.add_buttons(@buttons);
     $o;
+  }
+  multi method new(|c) {
+    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
   }
 
 

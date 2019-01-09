@@ -5,8 +5,11 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Scrollable;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
-role GTK::Roles::Scrollable {;
+use GTK::Adjustment;
+
+role GTK::Roles::Scrollable {
   has GtkScrollable $!s;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -16,9 +19,9 @@ role GTK::Roles::Scrollable {;
   method hadjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scrollable_get_hadjustment($!s);
+        GTK::Adjustment.new( gtk_scrollable_get_hadjustment($!s) );
       },
-      STORE => sub ($, $hadjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $hadjustment is copy) {
         gtk_scrollable_set_hadjustment($!s, $hadjustment);
       }
     );
@@ -27,10 +30,11 @@ role GTK::Roles::Scrollable {;
   method hscroll_policy is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scrollable_get_hscroll_policy($!s);
+        GtkScrollablePolicy( gtk_scrollable_get_hscroll_policy($!s) );
       },
-      STORE => sub ($, $policy is copy) {
-        gtk_scrollable_set_hscroll_policy($!s, $policy);
+      STORE => sub ($, Int() $policy is copy) {
+        my uint32 $p = resolve-uint($policy);
+        gtk_scrollable_set_hscroll_policy($!s, $p);
       }
     );
   }
@@ -38,9 +42,9 @@ role GTK::Roles::Scrollable {;
   method vadjustment is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scrollable_get_vadjustment($!s);
+        GTK::Adjustment.new( gtk_scrollable_get_vadjustment($!s) );
       },
-      STORE => sub ($, $vadjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $vadjustment is copy) {
         gtk_scrollable_set_vadjustment($!s, $vadjustment);
       }
     );
@@ -49,10 +53,11 @@ role GTK::Roles::Scrollable {;
   method vscroll_policy is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scrollable_get_vscroll_policy($!s);
+        GtkScrollablePolicy( gtk_scrollable_get_vscroll_policy($!s) );
       },
-      STORE => sub ($, $policy is copy) {
-        gtk_scrollable_set_vscroll_policy($!s, $policy);
+      STORE => sub ($, Int() $policy is copy) {
+        my guint32 $p = resolve-uint($policy);
+        gtk_scrollable_set_vscroll_policy($!s, $p);
       }
     );
   }
