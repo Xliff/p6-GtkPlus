@@ -69,6 +69,17 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     };
     self.bless(:$checkmenuitem);
   }
+  multi method new (
+    Str() $label,
+    :$clicked,
+    :$toggled,
+  ) {
+    my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
+    my $o = self.bless(:$checkmenuitem);
+    $o.toggled.tap($clicked) with $clicked;
+    $o.toggled.tap($toggled) with $toggled;
+    $o;
+  }
 
   method new_with_label(Str $label) is also<new-with-label> {
     my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
@@ -84,7 +95,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
 
   # Is originally:
   # GtkCheckMenuItem, gpointer --> void
-  method toggled {
+  method toggled is also<clicked> {
     self.connect($!cmi, 'toggled');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑

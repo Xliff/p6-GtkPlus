@@ -243,7 +243,6 @@ GTK::Roles::Buildable
 GTK::Roles::Data
 GTK::Roles::Orientable
 GTK::Roles::References
-GTK::Roles::Scrollable
 GTK::Roles::Signals::Application
 GTK::Roles::Signals::CSSProvider
 GTK::Roles::Signals::CellArea
@@ -269,6 +268,7 @@ GTK::Roles::Signals::SpinButton
 GTK::Roles::Signals::Statusbar
 GTK::Roles::Signals::TextBuffer
 GTK::Roles::Signals::TextTag
+GTK::Roles::Signals::TextTagTable
 GTK::Roles::Signals::TextView
 GTK::Roles::Signals::Toolbar
 GTK::Roles::Signals::TreeView
@@ -282,7 +282,6 @@ GTK::TargetList
 GTK::TextChildAnchor
 GTK::TextIter
 GTK::TextMark
-GTK::TextTag
 GTK::TextTagTable
 GTK::Tooltip
 GTK::TreeIter
@@ -317,11 +316,13 @@ GTK::Roles::Editable
 GTK::Roles::FileChooser
 GTK::Roles::FontChooser
 GTK::Roles::Properties
+GTK::Roles::Scrollable
 GTK::Roles::ToolShell
 GTK::Roles::TreeModel
 GTK::Settings
 GTK::StyleContext
 GTK::TextBuffer
+GTK::TextTag
 GTK::TreeModelFilter
 GTK::TreeModelSort
 GTK::TreeStore
@@ -451,6 +452,7 @@ GTK::SeparatorToolItem
 GTK::ShorcutsWindow
 GTK::Stack
 GTK::ToolButton
+GTK::Utils::MenuBuilder
 GTK::MenuToolButton
 GTK::ToggleToolButton
 GTK::RadioToolButton

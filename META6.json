@@ -250,7 +250,6 @@
       "GTK::Roles::Data"                       :  "lib/GTK/Roles/Data.pm6"                      ,
       "GTK::Roles::Orientable"                 :  "lib/GTK/Roles/Orientable.pm6"                ,
       "GTK::Roles::References"                 :  "lib/GTK/Roles/References.pm6"                ,
-      "GTK::Roles::Scrollable"                 :  "lib/GTK/Roles/Scrollable.pm6"                ,
       "GTK::Roles::Signals::Application"       :  "lib/GTK/Roles/Signals/Application.pm6"       ,
       "GTK::Roles::Signals::CSSProvider"       :  "lib/GTK/Roles/Signals/CSSProvider.pm6"       ,
       "GTK::Roles::Signals::CellArea"          :  "lib/GTK/Roles/Signals/CellArea.pm6"          ,
@@ -276,6 +275,7 @@
       "GTK::Roles::Signals::Statusbar"         :  "lib/GTK/Roles/Signals/Statusbar.pm6"         ,
       "GTK::Roles::Signals::TextBuffer"        :  "lib/GTK/Roles/Signals/TextBuffer.pm6"        ,
       "GTK::Roles::Signals::TextTag"           :  "lib/GTK/Roles/Signals/TextTag.pm6"           ,
+      "GTK::Roles::Signals::TextTagTable"      :  "lib/GTK/Roles/Signals/TextTagTable.pm6"      ,
       "GTK::Roles::Signals::TextView"          :  "lib/GTK/Roles/Signals/TextView.pm6"          ,
       "GTK::Roles::Signals::Toolbar"           :  "lib/GTK/Roles/Signals/Toolbar.pm6"           ,
       "GTK::Roles::Signals::TreeView"          :  "lib/GTK/Roles/Signals/TreeView.pm6"          ,
@@ -289,7 +289,6 @@
       "GTK::TextChildAnchor"                   :  "lib/GTK/TextChildAnchor.pm6"                 ,
       "GTK::TextIter"                          :  "lib/GTK/TextIter.pm6"                        ,
       "GTK::TextMark"                          :  "lib/GTK/TextMark.pm6"                        ,
-      "GTK::TextTag"                           :  "lib/GTK/TextTag.pm6"                         ,
       "GTK::TextTagTable"                      :  "lib/GTK/TextTagTable.pm6"                    ,
       "GTK::Tooltip"                           :  "lib/GTK/Tooltip.pm6"                         ,
       "GTK::TreeIter"                          :  "lib/GTK/TreeIter.pm6"                        ,
@@ -324,11 +323,13 @@
       "GTK::Roles::FileChooser"                :  "lib/GTK/Roles/FileChooser.pm6"               ,
       "GTK::Roles::FontChooser"                :  "lib/GTK/Roles/FontChooser.pm6"               ,
       "GTK::Roles::Properties"                 :  "lib/GTK/Roles/Properties.pm6"                ,
+      "GTK::Roles::Scrollable"                 :  "lib/GTK/Roles/Scrollable.pm6"                ,
       "GTK::Roles::ToolShell"                  :  "lib/GTK/Roles/ToolShell.pm6"                 ,
       "GTK::Roles::TreeModel"                  :  "lib/GTK/Roles/TreeModel.pm6"                 ,
       "GTK::Settings"                          :  "lib/GTK/Settings.pm6"                        ,
       "GTK::StyleContext"                      :  "lib/GTK/StyleContext.pm6"                    ,
       "GTK::TextBuffer"                        :  "lib/GTK/TextBuffer.pm6"                      ,
+      "GTK::TextTag"                           :  "lib/GTK/TextTag.pm6"                         ,
       "GTK::TreeModelFilter"                   :  "lib/GTK/TreeModelFilter.pm6"                 ,
       "GTK::TreeModelSort"                     :  "lib/GTK/TreeModelSort.pm6"                   ,
       "GTK::TreeStore"                         :  "lib/GTK/TreeStore.pm6"                       ,
@@ -458,6 +459,7 @@
       "GTK::ShorcutsWindow"                    :  "lib/GTK/ShorcutsWindow.pm6"                  ,
       "GTK::Stack"                             :  "lib/GTK/Stack.pm6"                           ,
       "GTK::ToolButton"                        :  "lib/GTK/ToolButton.pm6"                      ,
+      "GTK::Utils::MenuBuilder"                :  "lib/GTK/Utils/MenuBuilder.pm6"               ,
       "GTK::MenuToolButton"                    :  "lib/GTK/MenuToolButton.pm6"                  ,
       "GTK::ToggleToolButton"                  :  "lib/GTK/ToggleToolButton.pm6"                ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
@@ -471,6 +473,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 

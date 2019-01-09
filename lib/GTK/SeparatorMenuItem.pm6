@@ -53,6 +53,13 @@ class GTK::SeparatorMenuItem is GTK::MenuItem {
     my $separator = gtk_separator_menu_item_new();
     self.bless(:$separator);
   }
+  multi method new (
+    Str() $label,
+    *%dummy_opts
+  ) {
+    my $separator = gtk_separator_menu_item_new();
+    self.bless(:$separator);
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑

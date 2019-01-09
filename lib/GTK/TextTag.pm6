@@ -3,6 +3,9 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use Pango::Raw::Types;
+use Pango::Tabs;
+
 use GTK::Compat::Types;
 use GTK::Compat::Value;
 use GTK::Raw::TextTag;
@@ -1145,7 +1148,7 @@ class GTK::TextTag  {
           when PangoTabArray  { $_ }
           when Pointer        { $_ }
           when CArray[int32]  { $_ }
-          when CArray[gint]   $ $_ }
+          when CArray[gint]   { $_ }
         };
         self.prop_set('tabs', $gv);
       }
@@ -1177,7 +1180,7 @@ class GTK::TextTag  {
         $gv = GTK::Compat::Value.new(
           self.prop_get('underline', $gv)
         );
-        PangoTabs( $gv.uint );
+        PangoUnderline( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;

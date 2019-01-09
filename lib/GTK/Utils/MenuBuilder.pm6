@@ -1,8 +1,10 @@
 use v6.c;
 
+use GTK::CheckMenuItem;
 use GTK::Menu;
 use GTK::MenuBar;
 use GTK::MenuItem;
+use GTK::SeparatorMenuItem;
 
 class GTK::Utils::MenuBuilder {
   has $!menu;
@@ -12,25 +14,46 @@ class GTK::Utils::MenuBuilder {
   method items  { $!items }
 
   submethod BUILD(:$bar = False, :$button = False, :$TOP) {
-
     my (%named_items, @m);
     for $TOP.List -> $i {
       given $i.value {
         when Array {
           my @sm;
-          for $i.value -> $ii {
-            # This WILL need recursive processing, but for now...
-            my %opts = do given $ii.value {
-              when Array { (submenu => $ii.value).Hash }
-              when Hash  { $_ }
+          for $i.value.List -> $ii {
+            my $item-type;
+            $item-type = do given $ii {
+              when .key ~~ / ^ '-' /      { 'GTK::SeparatorMenuItem'  }
+
+              # Must use parens since adverbs have extremely low priority.
+              when (.value<toggled>:exists) |
+                   (.value<check>:exists)   |
+                   (.value<toggle>:exists)  { 'GTK::CheckMenuItem'      }
+
+              default                     { 'GTK::MenuItem'           }
             }
-            #%opts.gist.say;
-            @sm.push: GTK::MenuItem.new($ii.key, |%opts);
-            if $ii.value<id>:exists {
-              if %named_items{ $ii.value<id> }:exists {
-                die "Cannod add duplicate ID <{ $ii.value<id> }> to menu tracking!";
+
+            # This WILL need recursive processing, but for now...
+            my %opts;
+            unless $item-type eq 'GTK::SeparatorMenuItem' {
+              %opts = do given $ii.value {
+                when Array { (submenu => $ii.value).Hash }
+                when Hash  { $_ }
+              }
+            }
+
+            # Last chance to modify/validate %opts
+            my $menu_item_id = %opts<id>:delete;
+            %opts<clicked> //= %opts<do>; %opts<do>:delete;
+            %opts<check toggle>:delete;
+
+            say "{ $item-type } - { %opts.gist }";
+            @sm.push: ::($item-type).new($ii.key, |%opts);
+
+            with $menu_item_id {
+              if %named_items{ $menu_item_id }:exists {
+                die "Cannod add duplicate ID <{ $menu_item_id }> to menu tracking!";
               } else {
-                %named_items{ $ii.value<id> } = @sm[*-1];
+                %named_items{ $menu_item_id } = @sm[*-1];
               }
             }
           }
