@@ -22,14 +22,14 @@ class GTK::Utils::MenuBuilder {
           for $i.value.List -> $ii {
             my $item-type;
             $item-type = do given $ii {
-              when .key ~~ / ^ '-' /      { 'GTK::SeparatorMenuItem'  }
+              when .key ~~ / ^ '-' /        { 'GTK::SeparatorMenuItem'  }
 
               # Must use parens since adverbs have extremely low priority.
               when (.value<toggled>:exists) |
                    (.value<check>:exists)   |
                    (.value<toggle>:exists)  { 'GTK::CheckMenuItem'      }
 
-              default                     { 'GTK::MenuItem'           }
+              default                       { 'GTK::MenuItem'           }
             }
 
             # This WILL need recursive processing, but for now...
@@ -46,7 +46,6 @@ class GTK::Utils::MenuBuilder {
             %opts<clicked> //= %opts<do>; %opts<do>:delete;
             %opts<check toggle>:delete;
 
-            say "{ $item-type } - { %opts.gist }";
             @sm.push: ::($item-type).new($ii.key, |%opts);
 
             with $menu_item_id {

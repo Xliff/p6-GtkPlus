@@ -4,6 +4,7 @@ Method::Also
 Pango::FontMap
 Pango::Layout
 Pango::Raw::Types
+Pango::Tabs
 Pluggable
 GTK::Builder::MRO
 GTK::Builder::Base
@@ -80,6 +81,7 @@ GTK::Compat::MenuLinkIter
 GTK::Compat::Permission
 GTK::Compat::Pixbuf::Transforms
 GTK::Compat::Raw::Cairo
+GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
@@ -336,6 +338,7 @@ GTK::CellRendererText
 GTK::CellRendererToggle
 GTK::Compat::Cursor
 GTK::Compat::Device
+GTK::Compat::Event
 GTK::Compat::MenuModel
 GTK::Compat::Raw::Monitor
 GTK::Compat::Window

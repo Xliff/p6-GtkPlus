@@ -15,8 +15,26 @@ class GTK::Compat::RGBA {
   has gdouble $.blue;
   has gdouble $.alpha;
 
+  submethod BUILD (:$!red, :$!green, :$!blue, :$!alpha) { }
+
   method GTK::Compat::Types::GdkRGBA {
     self;
+  }
+
+  multi method new(
+    Num() $red,
+    Num() $green,
+    Num() $blue,
+    Num() $alpha = 1
+  ) {
+    self.bless(:$red, :$green, :$blue, :$alpha);
+  }
+  multi method new-rgb(
+    Int() $red  ,
+    Int() $green,
+    Int() $blue ,
+  ) {
+    GTK::Compat::RGBA.new($red / 255, $green / 255, $blue / 255)
   }
 
   method copy {

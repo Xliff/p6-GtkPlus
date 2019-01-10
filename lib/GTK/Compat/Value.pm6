@@ -65,7 +65,7 @@ class GTK::Compat::Value {
       when G_TYPE_DOUBLE   { self.double      }
       when G_TYPE_STRING   { self.string;     }
       when G_TYPE_POINTER  { self.pointer;    }
-      #when G_TYPE_BOXED   { }
+      when G_TYPE_BOXED    { self.boxed;      }
       #when G_TYPE_PARAM   { }
       when G_TYPE_OBJECT   { self.object;     }
       #when G_TYPE_VARIANT { }
@@ -83,6 +83,17 @@ class GTK::Compat::Value {
       },
       STORE => sub ($, Int() $v_boolean is copy) {
         g_value_set_boolean($!v, self.RESOLVE-BOOL($v_boolean));
+      }
+    );
+  }
+
+  method boxed is rw {
+    Proxy.new(
+      FETCH => -> $ {
+        g_value_get_boxed($!v);
+      },
+      STORE => -> $, $val is copy {
+        g_value_take_boxed($!v, nativecast(Pointer, $val))
       }
     );
   }

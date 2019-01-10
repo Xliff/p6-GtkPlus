@@ -96,6 +96,10 @@ class GTK::TargetList {
     gtk_target_list_find($!tl, $target, $i);
   }
 
+  method get_type {
+    gtk_target_list_get_type();
+  }
+
   method ref {
     gtk_target_list_ref($!tl);
   }

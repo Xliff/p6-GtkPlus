@@ -1,4 +1,3 @@
-
 use v6.c;
 
 use NativeCall;
@@ -377,8 +376,6 @@ our enum GdkEventType is export (
   'GDK_EVENT_LAST'
 );
 
-
-
 our enum GdkWindowEdge is export <
   GDK_WINDOW_EDGE_NORTH_WEST
   GDK_WINDOW_EDGE_NORTH
@@ -579,10 +576,12 @@ class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Point
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkCursor             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDevice             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDeviceTool         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDeviceManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkEventSequence      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkFrameClock         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkFrameTimings       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkGLContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -593,7 +592,6 @@ class GdkPixbufAnimation    is repr('CPointer') is export does GTK::Roles::Point
 class GdkScreen             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkSeat               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkStyleProvider      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDeviceTool         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkVisual             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkWindow             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
@@ -807,6 +805,24 @@ class GdkEventOwnerChange is repr('CStruct')
   has uint32         $.selection_time;
 }
 
+class GdkEventMotion is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
+{
+  has uint32         $.type;            # GdkEventType
+  has GdkWindow      $.window;
+  has int8           $.send_event;
+  has guint32        $.time;
+  has gdouble        $.x;
+  has gdouble        $.y;
+  has gdouble        $.axes;
+  has guint          $.state;
+  has gint16         $.is_hint;
+  has GdkDevice      $.device;
+  has gdouble        $.x_root;
+  has gdouble        $.y_root;
+}
+
 class GdkEventGrabBroken is repr('CStruct')
   does GTK::Roles::Pointers
   is export
@@ -824,6 +840,13 @@ class GdkEventGrabBroken is repr('CStruct')
 # class GdkEventPadButton
 # class GdkEventPadAxis
 # class GdkEventPadGroupMode
+
+our subset GdkEvents is export where
+  GdkEventAny        | GdkEventButton      | GdkEventExpose    |
+  GdkEventDnD        | GdkEventProperty    | GdkEventFocus     |
+  GdkEventSetting    | GdkEventProximity   | GdkEventSelection |
+  GdkEventConfigure  | GdkEventWindowState | GdkEventCrossing  |
+  GdkEventGrabBroken | GdkEventOwnerChange | GdkEventMotion;
 
 class GdkWindowAttr is repr('CStruct')
   does GTK::Roles::Pointers

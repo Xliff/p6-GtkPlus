@@ -8,6 +8,8 @@ use GTK::Compat::Value;
 use GTK::Raw::TextBuffer;
 use GTK::Raw::Types;
 
+use GTK::TargetList;
+use GTK::TextTagTable;
 use GTK::TextIter;
 
 use GTK::Roles::Properties;
@@ -43,13 +45,14 @@ class GTK::TextBuffer {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
+  proto method apply-tag (|)
+    is also<apply_tag>
+    { * }
+
   # Is originally:
   # GtkTextBuffer, GtkTextTag, GtkTextIter, GtkTextIter, gpointer --> void
   multi method apply-tag {
     self.connect-tag($!tb, 'apply-tag');
-  }
-  multi method apply_tag {
-    self.apply-tag;
   }
 
   # Is originally:
@@ -142,13 +145,13 @@ class GTK::TextBuffer {
 
   # Type: GtkTargetList
   method copy-target-list is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('copy-target-list', $gv)
         );
-        nativecast(GtkTargetList, $gv.pointer);
+        GTK::TargetList.new( nativecast(GtkTargetList, $gv.boxed) );
       },
       STORE => -> $, $val is copy {
         warn 'copy-target-list does not allow writing'
@@ -190,13 +193,13 @@ class GTK::TextBuffer {
 
   # Type: GtkTargetList
   method paste-target-list is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('paste-target-list', $gv)
         );
-        nativecast(GtkTargetList, $gv.pointer);
+        GTK::TargetList.new( nativecast(GtkTargetList, $gv.boxed) );
       },
       STORE => -> $,  $val is copy {
         warn 'paste-target-list does not allow writing'
@@ -206,16 +209,16 @@ class GTK::TextBuffer {
 
   # Type: GtkTextTagTable
   method tag-table is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('tag-table', $gv)
         );
-        GTK::TextTagTable.new( $gv.pointer );
+        GTK::TextTagTable.new( nativecast(GtkTextTagTable, $gv.object ) );
       },
       STORE => -> $, GtkTextTagTable() $val is copy {
-        $gv.pointer = $val;
+        $gv.object = $val;
         self.prop_set('tag-table', $gv);
       }
     );
@@ -254,11 +257,11 @@ class GTK::TextBuffer {
     gtk_text_buffer_add_selection_clipboard($!tb, $clipboard);
   }
 
-  multi method emit_apply_tag (
+  multi method apply-tag (
     GtkTextTag() $tag,
     GtkTextIter() $start,
     GtkTextIter() $end
-  ) is also<emit-apply-tag> {
+  ) {
     gtk_text_buffer_apply_tag($!tb, $tag, $start, $end);
   }
 
@@ -362,6 +365,7 @@ class GTK::TextBuffer {
     gtk_text_buffer_end_user_action($!tb);
   }
 
+  # cw: Has a proto been attempted for this, yet?
   multi method get-bounds {
     self.get_bounds;
   }
@@ -385,6 +389,7 @@ class GTK::TextBuffer {
     GtkTextIter() $end is rw
   ) {
     gtk_text_buffer_get_bounds($!tb, $start, $end);
+    ( GTK::TextIter.new($start), GTK::TextIter.new($end) );
   }
 
   method get_char_count is also<get-char-count> {
@@ -392,11 +397,18 @@ class GTK::TextBuffer {
   }
 
   method get_copy_target_list is also<get-copy-target-list> {
-    gtk_text_buffer_get_copy_target_list($!tb);
+    GTK::TargetList.new( gtk_text_buffer_get_copy_target_list($!tb) );
   }
 
-  multi method get_end_iter (GtkTextIter() $iter) is also<get-end-iter> {
+  proto method get_end_iter (|) is also<get-end-iter> { * }
+
+  multi method get_end_iter {
+    my $iter = GtkTextIter.new;
+    samewith($iter);
+  }
+  multi method get_end_iter (GtkTextIter() $iter) {
     gtk_text_buffer_get_end_iter($!tb, $iter);
+    GTK::TextIter.new($iter);
   }
 
   method get_has_selection is also<get-has-selection> {
@@ -407,66 +419,116 @@ class GTK::TextBuffer {
     gtk_text_buffer_get_insert($!tb);
   }
 
-  method get_iter_at_child_anchor (
+  proto method get_iter_at_child_anchor (|)
+    is also<get-iter-at-child-anchor>
+    { * }
+
+  multi method get_iter_at_child_anchor (GtkTextChildAnchor $anchor) {
+    my $iter = GtkTextIter.new;
+    samewith($iter, $anchor);
+  }
+  multi method get_iter_at_child_anchor (
     GtkTextIter() $iter,
     GtkTextChildAnchor $anchor
-  )
-    is also<get-iter-at-child-anchor>
-  {
+  ) {
     gtk_text_buffer_get_iter_at_child_anchor($!tb, $iter, $anchor);
+    GTK::TextIter.new($iter);
   }
 
-  method get_iter_at_line (
+  proto method get_iter_at_line (|)
+    is also<get-iter-at-line>
+    { * }
+
+  multi method get_iter_at_line (Int() $line_number) {
+    my $iter = GtkTextIter.new;
+    samewith($iter, $line_number);
+  }
+  multi method get_iter_at_line (
     GtkTextIter() $iter,
     Int() $line_number            # gint $line_number
-  )
-    is also<get-iter-at-line>
-  {
+  ) {
     my gint $ln = self.RESOLVE-INT($line_number);
     gtk_text_buffer_get_iter_at_line($!tb, $iter, $ln);
+    GTK::TextIter.new($iter);
   }
 
-  method get_iter_at_line_index (
+  proto method get_iter_at_line_index (|)
+    is also<get-iter-at-line-index>
+    { * }
+
+  multi method get_iter_at_line_index (
+    Int() $line_number,           # gint $line_number,
+    Int() $byte_index             # gint $byte_index
+  ) {
+    my $iter = GtkTextIter.new;
+    samewith($iter, $line_number, $byte_index);
+  }
+  multi method get_iter_at_line_index (
     GtkTextIter() $iter,
     Int() $line_number,           # gint $line_number,
     Int() $byte_index             # gint $byte_index
-  )
-    is also<get-iter-at-line-index>
-  {
+  ) {
     my @i = ($line_number, $byte_index);
     my gint ($ln, $bi) = self.RESOLVE-INT(@i);
     gtk_text_buffer_get_iter_at_line_index($!tb, $iter, $ln, $bi);
+    GTK::TextIter.new($iter);
   }
 
-  method get_iter_at_line_offset (
+  proto method get_iter_at_line_offset (|)
+    is also<get-iter-at-line-offset>
+    { * }
+
+  multi method get_iter_at_line_offset (
+    Int() $line_number,           # gint $line_number,
+    Int() $char_offset            # gint $char_offset
+  ) {
+    my $iter = GtkTextIter.new;
+    samewith($iter, $line_number, $char_offset);
+  }
+  multi method get_iter_at_line_offset (
     GtkTextIter() $iter,
     Int() $line_number,           # gint $line_number,
     Int() $char_offset            # gint $char_offset
-  )
-    is also<get-iter-at-line-offset>
-  {
+  ) {
     my @i = ($line_number, $char_offset);
     my gint ($ln, $co) = self.RESOLVE-INT(@i);
     gtk_text_buffer_get_iter_at_line_offset($!tb, $iter, $ln, $co);
+    GTK::TextIter.new($iter);
   }
 
-  method get_iter_at_mark (
+  proto method get_iter_at_mark (|)
+    is also<get-iter-at-mark>
+    { * }
+
+  multi method get_iter_at_mark (GtkTextMark() $mark) {
+    my $iter = GtkTextIter.new;
+    samewith($iter, $mark);
+  }
+  multi method get_iter_at_mark (
     GtkTextIter() $iter,
     GtkTextMark() $mark
-  )
-    is also<get-iter-at-mark>
-  {
+  ) {
     gtk_text_buffer_get_iter_at_mark($!tb, $iter, $mark);
+    GTK::TextIter.new($iter);
   }
 
-  method get_iter_at_offset (
+  proto method get_iter_at_offset (|)
+    is also<get-iter-at-offset>
+    { * }
+
+  multi method get_iter_at_offset (
+    Int() $char_offset            # gint $char_offset
+  ) {
+    my $iter = GtkTextIter.new;
+    samewith($iter, $char_offset);
+  }
+  multi method get_iter_at_offset (
     GtkTextIter() $iter,
     Int() $char_offset            # gint $char_offset
-  )
-    is also<get-iter-at-offset>
-  {
+  ) {
     my gint $co = self.RESOLVE-INT($char_offset);
     gtk_text_buffer_get_iter_at_offset($!tb, $iter, $co);
+    GTK::TextIter.new($iter);
   }
 
   method get_line_count is also<get-line-count> {
@@ -478,20 +540,27 @@ class GTK::TextBuffer {
   }
 
   method get_paste_target_list is also<get-paste-target-list> {
-    gtk_text_buffer_get_paste_target_list($!tb);
+    GTK::TargetList.new( gtk_text_buffer_get_paste_target_list($!tb) );
   }
 
   method get_selection_bound is also<get-selection-bound> {
     gtk_text_buffer_get_selection_bound($!tb);
   }
 
+  proto method get_selection_bounds (|)
+    is also<get-selection-bounds>
+    { * }
+
+  multi method get_selection_bounds {
+    my ($start, $end) = (GtkTextIter.new xx 2);
+    samewith($start, $end);
+  }
   multi method get_selection_bounds (
     GtkTextIter() $start,
     GtkTextIter() $end
-  )
-    is also<get-selection-bounds>
-  {
+  ) {
     gtk_text_buffer_get_selection_bounds($!tb, $start, $end);
+    ( GTK::TextIter.new($start), GTK::TextIter.new($end) );
   }
 
   method get_slice (
@@ -697,12 +766,12 @@ class GTK::TextBuffer {
 
   method set_text (
     Str() $text,
-    Int $len is copy
+    Int $len? is copy
   )
     is also<set-text>
   {
     $len //= $text.chars;
-    my gint $l = $len ?? self.RESOLVE-INT($len) !! $text.chars;
+    my gint $l = self.RESOLVE-INT($len);
     gtk_text_buffer_set_text($!tb, $text, $l);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

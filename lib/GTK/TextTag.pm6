@@ -169,16 +169,16 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method background-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('background-rgba', $gv)
         );
-        nativecast(GTK::Compat::RGBA, $gv.pointer);
+        nativecast(GTK::Compat::RGBA, $gv.boxed);
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
-        $gv.pointer = $val;
+        $gv.boxed = $val;
         self.prop_set('background-rgba', $gv);
       }
     );
@@ -423,16 +423,16 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method foreground-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('foreground-rgba', $gv)
         );
-        nativecast( GTK::Compat::RGBA, $gv.pointer );
+        nativecast( GTK::Compat::RGBA, $gv.boxed );
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
-        $gv.pointer = $val;
+        $gv.boxed = $val;
         self.prop_set('foreground-rgba', $gv);
       }
     );
@@ -709,16 +709,16 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method paragraph-background-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('paragraph-background-rgba', $gv)
         );
-        nativecast(GTK::Compat::RGBA, $gv.pointer);
+        nativecast(GTK::Compat::RGBA, $gv.boxed);
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
-        $gv.pointer = $val;
+        $gv.boxed = $val;
         self.prop_set('paragraph-background-rgba', $gv);
       }
     );
@@ -1049,16 +1049,16 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method strikethrough-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('strikethrough-rgba', $gv)
         );
-        nativecast( GTK::Compat::RGBA, $gv.pointer );
+        nativecast( GTK::Compat::RGBA, $gv.boxed );
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
-        $gv.pointer = $val;
+        $gv.boxed = $val;
         self.prop_set('strikethrough-rgba', $gv);
       }
     );
@@ -1191,16 +1191,16 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method underline-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('underline-rgba', $gv)
         );
-        nativecast( GTK::Compat::RGBA, $gv.pointer );
+        nativecast( GTK::Compat::RGBA, $gv.boxed );
       },
       STORE => -> $, GTK::Compat::RGBA $val is copy {
-        $gv.pointer = $val;
+        $gv.boxed = $val;
         self.prop_set('underline-rgba', $gv);
       }
     );

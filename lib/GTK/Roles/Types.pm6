@@ -41,6 +41,26 @@ role GTK::Roles::Types {
     resolve-short($rus);
   }
 
+  multi method RESOLVE-INT16(@rs) {
+    self.IS-PROTECTED;
+    # This will not work if called before 'self' exists!
+    @rs.map({ samewith($_) });
+  }
+  multi method RESOLVE-INT16($rs) {
+    self.IS-PROTECTED;
+    resolve-int16($rs);
+  }
+
+  multi method RESOLVE-UINT16(@rus) {
+    self.IS-PROTECTED;
+    # This will not work if called before 'self' exists!
+    @rus.map({ samewith($_) });
+  }
+  multi method RESOLVE-UINT16($rus) {
+    self.IS-PROTECTED;
+    resolve-uint16($rus);
+  }
+
   multi method RESOLVE-INT(@ri) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!

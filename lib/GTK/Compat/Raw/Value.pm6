@@ -259,3 +259,19 @@ sub g_value_get_enum (GValue $value)
   is native(gobject)
   is export
   { * }
+
+sub g_value_take_boxed (GValue $value, Pointer $v_boxed)
+  is native(gobject)
+  is export
+  { * }
+
+sub g_value_get_boxed (GValue $value)
+  returns Pointer
+  is native(gobject)
+  is export
+  { * }
+
+sub g_value_set_boxed (GValue $value, Pointer $v_boxed)
+  is native(gobject)
+  is export
+  { * }

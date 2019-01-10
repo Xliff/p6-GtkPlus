@@ -87,6 +87,7 @@
       "GTK::Compat::Permission"                :  "lib/GTK/Compat/Permission.pm6"               ,
       "GTK::Compat::Pixbuf::Transforms"        :  "lib/GTK/Compat/Pixbuf/Transforms.pm6"        ,
       "GTK::Compat::Raw::Cairo"                :  "lib/GTK/Compat/Raw/Cairo.pm6"                ,
+      "GTK::Compat::Raw::Event"                :  "lib/GTK/Compat/Raw/Event.pm6"                ,
       "GTK::Compat::Raw::FrameClock"           :  "lib/GTK/Compat/Raw/FrameClock.pm6"           ,
       "GTK::Dialog::Raw::About"                :  "lib/GTK/Dialog/Raw/About.pm6"                ,
       "GTK::Dialog::Raw::AppChooser"           :  "lib/GTK/Dialog/Raw/AppChooser.pm6"           ,
@@ -343,6 +344,7 @@
       "GTK::CellRendererToggle"                :  "lib/GTK/CellRendererToggle.pm6"              ,
       "GTK::Compat::Cursor"                    :  "lib/GTK/Compat/Cursor.pm6"                   ,
       "GTK::Compat::Device"                    :  "lib/GTK/Compat/Device.pm6"                   ,
+      "GTK::Compat::Event"                     :  "lib/GTK/Compat/Event.pm6"                    ,
       "GTK::Compat::MenuModel"                 :  "lib/GTK/Compat/MenuModel.pm6"                ,
       "GTK::Compat::Raw::Monitor"              :  "lib/GTK/Compat/Raw/Monitor.pm6"              ,
       "GTK::Compat::Window"                    :  "lib/GTK/Compat/Window.pm6"                   ,
@@ -473,6 +475,12 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
+
+
+
+
+
 
 
 
