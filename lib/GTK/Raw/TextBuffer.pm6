@@ -254,7 +254,7 @@ sub gtk_text_buffer_get_selection_bound (GtkTextBuffer $buffer)
   is export
   { * }
 
-sub gtk_text_buffer_get_selection_bounds (\
+sub gtk_text_buffer_get_selection_bounds (
   GtkTextBuffer $buffer,
   GtkTextIter $start,
   GtkTextIter $end
@@ -488,6 +488,30 @@ sub gtk_text_buffer_get_modified (GtkTextBuffer $buffer)
   { * }
 
 sub gtk_text_buffer_set_modified (GtkTextBuffer $buffer, gboolean $setting)
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_text_buffer_insert_with_tags (
+  GtkTextBuffer $buffer,
+  GtkTextIter $iter,
+  Str $text,
+  gint $len,
+  GtkTextTag $tag,
+  GtkTextTag
+)
+  is native(gtk)
+  is export
+  { * }
+
+sub gtk_text_buffer_insert_with_tags_by_name (
+  GtkTextBuffer $buffer,
+  GtkTextIter $iter,
+  Str $text,
+  gint $len,
+  Str $tag_name,
+  Str
+)
   is native(gtk)
   is export
   { * }

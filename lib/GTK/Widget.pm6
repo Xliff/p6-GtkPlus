@@ -18,6 +18,7 @@ use GTK::Raw::DragSource;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
+use GTK::Raw::Utils;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::Data;
@@ -1404,13 +1405,13 @@ class GTK::Widget {
   multi method get_preferred_size is also<preferred_size preferred-size> {
     my ($ms, $ns) = (GtkRequisition.new xx 2);
     samewith($ms, $ns);
-    ($ms, $ns)
   }
   multi method get_preferred_size (
     GtkRequisition $minimum_size,
     GtkRequisition $natural_size
   ) {
     gtk_widget_get_preferred_size($!w, $minimum_size, $natural_size);
+    ($minimum_size, $natural_size);
   }
 
   method device_is_shadowed (GdkDevice $device)
@@ -1446,8 +1447,18 @@ class GTK::Widget {
     gtk_widget_set_device_enabled($!w, $device, $enabled);
   }
 
-  method get_pointer (gint $x, gint $y) is also<get-pointer> {
-    gtk_widget_get_pointer($!w, $x, $y);
+  proto method get_pointer(|)
+    is also<get-pointer>
+    { * }
+
+  multi method get_pointer {
+    my ($x, $y) = (0, 0);
+    samewith($x, $y)
+  }
+  multi method get_pointer (Int() $x is rw, Int() $y is rw)  {
+    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
+    gtk_widget_get_pointer($!w, $xx, $yy);
+    ($x, $y) = ($xx, $yy);
   }
 
   method grab_default  is also<grab-default> {
@@ -1619,23 +1630,31 @@ class GTK::Widget {
     gtk_widget_grab_focus($!w);
   }
 
-  method get_preferred_height_and_baseline_for_width (
-    gint $width,
-    gint $minimum_height,
-    gint $natural_height,
-    gint $minimum_baseline,
-    gint $natural_baseline
-  )
+  proto method get_preferred_height_and_baseline_for_width (|)
     is also<get-preferred-height-and-baseline-for-width>
-  {
-    gtk_widget_get_preferred_height_and_baseline_for_width(
-      $!w,
-      $width,
-      $minimum_height,
-      $natural_height,
-      $minimum_baseline,
-      $natural_baseline
+    { * }
+
+  multi method get_preferred_height_and_baseline_for_width (Int() $width) {
+    my ($mh, $nh, $mb, $nb) = (0 xx 4);
+    samewith($width, $mh, $nh, $mb, $nb);
+  }
+  multi method get_preferred_height_and_baseline_for_width (
+    Int() $width,
+    Int() $minimum_height   is rw,
+    Int() $natural_height   is rw,
+    Int() $minimum_baseline is rw,
+    Int() $natural_baseline is rw
+  ) {
+    my @i = (
+      $width, $minimum_height, $natural_height,
+      $minimum_baseline, $natural_baseline
     );
+    my gint ($ww, $mh, $nh, $mb, $nb) = self.RESOLVE-INT(@i);
+    gtk_widget_get_preferred_height_and_baseline_for_width(
+      $!w, $ww, $mh, $nh, $mb, $nb
+    );
+    ($minimum_height, $natural_height, $minimum_baseline, $natural_baseline) =
+      ($mh, $nh, $mb, $nb);
   }
 
   method activate {
@@ -1664,10 +1683,12 @@ class GTK::Widget {
     gtk_widget_get_requisition($!w, $requisition);
   }
 
-  method queue_draw_area (gint $x, gint $y, gint $width, gint $height)
+  method queue_draw_area (Int() $x, Int() $y, Int() $width, Int() $height)
     is also<queue-draw-area>
   {
-    gtk_widget_queue_draw_area($!w, $x, $y, $width, $height);
+    my @i = ($x, $y, $width, $height);
+    my gint ($xx, $yy, $w, $h) = self.RESOLVE-INT(@i);
+    gtk_widget_queue_draw_area($!w, $xx, $yy, $w, $h);
   }
 
   method compute_expand (GtkOrientation $orientation)
@@ -1688,10 +1709,21 @@ class GTK::Widget {
     gtk_widget_set_redraw_on_allocate($!w, $redraw_on_allocate);
   }
 
-  method get_preferred_height (gint $minimum_height, gint $natural_height)
+  proto method get_preferred_height (|)
     is also<get-preferred-height>
-  {
-    gtk_widget_get_preferred_height($!w, $minimum_height, $natural_height);
+    { * }
+
+  multi method get_preferred_height {
+    my ($mh, $nh) = (0, 0);
+    samewith($mh, $nh);
+  }
+  multi method get_preferred_height (
+    Int() $minimum_height is rw,
+    Int() $natural_height is rw
+  ) {
+    my gint ($mh, $nh) = self.RESOLVE-INT($minimum_height, $natural_height);
+    gtk_widget_get_preferred_height($!w, $mh, $nh);
+    ($minimum_height, $natural_height) = ($mh, $nh);
   }
 
   method unmap (GtkWidget() $!w) {
@@ -1702,25 +1734,62 @@ class GTK::Widget {
     gtk_widget_error_bell($!w);
   }
 
-  method translate_coordinates (
-    GTK::Widget:U:
-    GtkWidget $src_widget,
-    GtkWidget $dest_widget,
-    gint $src_x,
-    gint $src_y,
-    gint $dest_x,
-    gint $dest_y
-  )
+  proto method translate_coordinates(|)
     is also<translate-coordinates>
-  {
-    gtk_widget_translate_coordinates(
-      $src_widget,
-      $dest_widget,
-      $src_x,
-      $src_y,
-      $dest_x,
-      $dest_y
+    { * }
+
+  # Must not use samewith in a situations where the work is done by a
+  # class method!
+  multi method translate_coordinates (
+    GTK::Widget:D:
+    GtkWidget() $dest_widget,
+    Int() $src_x,
+    Int() $src_y
+  ) {
+    my ($dx, $dy) = (0, 0);
+    GTK::Widget.translate_coordinates($!w, $dest_widget, $src_x, $src_y);
+  }
+  multi method translate_coordinates (
+    GTK::Widget:U:
+    GtkWidget() $src_widget,
+    GtkWidget() $dest_widget,
+    Int() $src_x,
+    Int() $src_y
+  ) {
+    my ($dx, $dy) = (0, 0);
+    my $rc = GTK::Widget.translate_coordinates(
+      $src_widget, $dest_widget, $src_x, $src_y, $dx, $dy
     );
+    ($dx, $dy, $rc);
+  }
+  multi method translate_coordinates (
+    GTK::Widget:D:
+    GtkWidget() $dest_widget,
+    Int() $src_x,
+    Int() $src_y,
+    Int() $dest_x is rw,
+    Int() $dest_y is rw
+  ) {
+    GTK::Widget.translate_coordinates(
+      $!w, $dest_widget, $src_x, $src_y, $dest_x, $dest_y
+    );
+  }
+  multi method translate_coordinates (
+    GTK::Widget:U:
+    GtkWidget() $src_widget,
+    GtkWidget() $dest_widget,
+    Int() $src_x,
+    Int() $src_y,
+    Int() $dest_x is rw,
+    Int() $dest_y is rw
+  ) {
+    my @i = ($src_x, $src_y, $dest_x, $dest_y);
+    my ($sx, $sy, $dx, $dy) = resolve-int(@i);
+    my $rc = gtk_widget_translate_coordinates(
+      $src_widget, $dest_widget, $sx, $sy, $dx, $dy
+    );
+    ($dest_x, $dest_y) = ($dx, $dy);
+    $rc
   }
 
   method style_get_property (Str() $property_name, GValue $value)
@@ -1774,19 +1843,23 @@ class GTK::Widget {
     gtk_widget_init_template($!w);
   }
 
-  method get_preferred_width_for_height (
-    gint $height,
-    gint $minimum_width,
-    gint $natural_width
-  )
+  proto method get_preferred_width_for_height (|)
     is also<get-preferred-width-for-height>
-  {
-    gtk_widget_get_preferred_width_for_height(
-      $!w,
-      $height,
-      $minimum_width,
-      $natural_width
-    );
+    { * }
+
+  multi method get_preferred_width_for_height (Int() $height) {
+    my ($mw, $nw) = (0, 0);
+    samewith($height, $mw, $nw);
+  }
+  multi method get_preferred_width_for_height (
+    Int() $height,
+    Int() $minimum_width is rw,
+    Int() $natural_width is rw
+  ) {
+    my @i = ($height, $minimum_width, $natural_width);
+    my gint ($h, $mw, $nw) = self.RESOLVE-INT(@i);
+    gtk_widget_get_preferred_width_for_height($!w, $h, $mw, $nw);
+    ($minimum_width, $natural_width) = ($mw, $nw);
   }
 
   method get_template_child (GType $widget_type, Str() $name)
@@ -1817,11 +1890,12 @@ class GTK::Widget {
 
   method size_allocate_with_baseline (
     GtkAllocation $allocation,
-    gint $baseline
+    Int() $baseline
   )
     is also<size-allocate-with-baseline>
   {
-    gtk_widget_size_allocate_with_baseline($!w, $allocation, $baseline);
+    my gint $b = self.RESOLVE-INT($baseline);
+    gtk_widget_size_allocate_with_baseline($!w, $allocation, $b);
   }
 
   #method class_install_style_property_parser (GtkWidgetClass $klass, GParamSpec $pspec, GtkRcPropertyParser $parser) {
@@ -1938,10 +2012,12 @@ class GTK::Widget {
   #  gtk_widget_class_install_style_property($klass, $pspec);
   #}
 
-  method set_size_request (gint $width, gint $height)
+  method set_size_request (Int() $width, Int() $height)
     is also<set-size-request>
   {
-    gtk_widget_set_size_request($!w, $width, $height);
+    my @i = ($width, $height);
+    my gint ($ww, $hh) = self.RESOLVE-INT(@i);
+    gtk_widget_set_size_request($!w, $ww, $hh);
   }
 
   method thaw_child_notify is also<thaw-child-notify> {
@@ -1992,10 +2068,21 @@ class GTK::Widget {
     gtk_requisition_copy($requisition);
   }
 
-  method get_preferred_width (gint $minimum_width, gint $natural_width)
+  proto method get_preferred_width (|)
     is also<get-preferred-width>
-  {
-    gtk_widget_get_preferred_width($!w, $minimum_width, $natural_width);
+    { * }
+
+  multi method get_preferred_width {
+    my ($mw, $nw) = (0, 0);
+    samewith($mw, $nw);
+  }
+  multi method get_preferred_width (
+    Int() $minimum_width is rw,
+    Int() $natural_width is rw
+  ) {
+    my gint ($mw, $nw) = self.RESOLVE-INT($minimum_width, $natural_width);
+    gtk_widget_get_preferred_width($!w, $mw, $nw);
+    ($minimum_width, $natural_width) = ($mw, $nw);
   }
 
   method get_screen is also<get-screen screen> {
@@ -2010,19 +2097,23 @@ class GTK::Widget {
     gtk_widget_get_accessible($!w);
   }
 
-  method get_preferred_height_for_width (
-    gint $width,
-    gint $minimum_height,
-    gint $natural_height
-  )
+  proto method get_preferred_height_for_width (|)
     is also<get-preferred-height-for-width>
-  {
-    gtk_widget_get_preferred_height_for_width(
-      $!w,
-      $width,
-      $minimum_height,
-      $natural_height
-    );
+    { * }
+
+  multi method get_preferred_height_for_width (Int() $w) {
+    my ($mh, $nh) = (0, 0);
+    samewith($w, $mh, $nh);
+  }
+  multi method get_preferred_height_for_width (
+    Int() $width,
+    Int() $minimum_height is rw,
+    Int() $natural_height is rw
+  ) {
+    my gint $ww = self.RESOLVE-INT($width);
+    my gint ($mh, $nh) = (0, 0);
+    gtk_widget_get_preferred_height_for_width($!w, $ww, $mh, $nh);
+    ($minimum_height, $natural_height) = ($mh, $nh);
   }
 
   method list_mnemonic_labels is also<list-mnemonic-labels> {

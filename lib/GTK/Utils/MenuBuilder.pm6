@@ -52,7 +52,8 @@ class GTK::Utils::MenuBuilder {
               if %named_items{ $menu_item_id }:exists {
                 die "Cannod add duplicate ID <{ $menu_item_id }> to menu tracking!";
               } else {
-                %named_items{ $menu_item_id } = @sm[*-1];
+                @sm[* - 1].name = $menu_item_id;
+                %named_items{ $menu_item_id } = @sm[* - 1];
               }
             }
           }

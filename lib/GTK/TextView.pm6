@@ -69,6 +69,10 @@ class GTK::TextView is GTK::Container {
     $o.upref;
     $o;
   }
+  # Should probably be doing this for ALL objects!
+  multi method new (GtkTextBuffer() $buffer) {
+    GTK::TextView.new_with_buffer($buffer);
+  }
   multi method new {
     my $textview = gtk_text_view_new();
     self.bless(:$textview);

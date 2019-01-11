@@ -290,7 +290,6 @@
       "GTK::TextChildAnchor"                   :  "lib/GTK/TextChildAnchor.pm6"                 ,
       "GTK::TextIter"                          :  "lib/GTK/TextIter.pm6"                        ,
       "GTK::TextMark"                          :  "lib/GTK/TextMark.pm6"                        ,
-      "GTK::TextTagTable"                      :  "lib/GTK/TextTagTable.pm6"                    ,
       "GTK::Tooltip"                           :  "lib/GTK/Tooltip.pm6"                         ,
       "GTK::TreeIter"                          :  "lib/GTK/TreeIter.pm6"                        ,
       "GTK::TreePath"                          :  "lib/GTK/TreePath.pm6"                        ,
@@ -329,8 +328,8 @@
       "GTK::Roles::TreeModel"                  :  "lib/GTK/Roles/TreeModel.pm6"                 ,
       "GTK::Settings"                          :  "lib/GTK/Settings.pm6"                        ,
       "GTK::StyleContext"                      :  "lib/GTK/StyleContext.pm6"                    ,
-      "GTK::TextBuffer"                        :  "lib/GTK/TextBuffer.pm6"                      ,
       "GTK::TextTag"                           :  "lib/GTK/TextTag.pm6"                         ,
+      "GTK::TextTagTable"                      :  "lib/GTK/TextTagTable.pm6"                    ,
       "GTK::TreeModelFilter"                   :  "lib/GTK/TreeModelFilter.pm6"                 ,
       "GTK::TreeModelSort"                     :  "lib/GTK/TreeModelSort.pm6"                   ,
       "GTK::TreeStore"                         :  "lib/GTK/TreeStore.pm6"                       ,
@@ -355,6 +354,7 @@
       "GTK::PrintOperation"                    :  "lib/GTK/PrintOperation.pm6"                  ,
       "GTK::Printer"                           :  "lib/GTK/Printer.pm6"                         ,
       "GTK::Roles::CellLayout"                 :  "lib/GTK/Roles/CellLayout.pm6"                ,
+      "GTK::TextBuffer"                        :  "lib/GTK/TextBuffer.pm6"                      ,
       "GTK::Widget"                            :  "lib/GTK/Widget.pm6"                          ,
       "GTK::Calendar"                          :  "lib/GTK/Calendar.pm6"                        ,
       "GTK::CellArea"                          :  "lib/GTK/CellArea.pm6"                        ,
@@ -475,6 +475,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 

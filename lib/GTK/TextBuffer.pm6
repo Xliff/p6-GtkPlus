@@ -31,13 +31,18 @@ class GTK::TextBuffer {
     self.disconnect-all($_) for %!signals-tb;
   }
 
-  multi method new($text_tag_table = GtkTextTagTable) {
+  multi method new (GtkTextTagTable() $text_tag_table) {
     my $buffer = gtk_text_buffer_new($text_tag_table);
     self.bless(:$buffer);
   }
-  multi method new(GtkTextBuffer $buffer) {
+  multi method new (GtkTextBuffer $buffer) {
     self.bless(:$buffer);
   }
+  multi method new {
+    my $buffer = gtk_text_buffer_new(GtkTextTagTable);
+    self.bless(:$buffer);
+  }
+
 
   method GTK::Raw::Types::GtkTextBuffer {
     $!tb;
@@ -692,6 +697,36 @@ class GTK::TextBuffer {
   {
     my gboolean $de = self.RESOLVE-BOOL($default_editable);
     gtk_text_buffer_insert_range_interactive($!tb, $iter, $start, $end, $de);
+  }
+
+  method insert_with_tags (
+    GtkTextBuffer() $buffer,
+    GtkTextIter() $iter,
+    Str() $text,
+    Int() $len,
+    GtkTextTag() $tag
+  )
+    is also<insert-with-tags>
+  {
+    my gint $l = self.RESOLVE-INT($len);
+    gtk_text_buffer_insert_with_tags(
+      $buffer, $iter, $text, $l, $tag, GtkTextTag
+    );
+  }
+
+  method insert_with_tags_by_name (
+    GtkTextBuffer() $buffer,
+    GtkTextIter() $iter,
+    Str() $text,
+    Int() $len,
+    Str() $tag_name,
+  )
+    is also<insert-with-tags-by-name>
+  {
+    my gint $l = self.RESOLVE-INT($len);
+    gtk_text_buffer_insert_with_tags_by_name (
+      $buffer, $iter, $text, $l, $tag_name, Str
+    );
   }
 
   method move_mark (

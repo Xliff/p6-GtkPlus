@@ -7,11 +7,15 @@ use GTK::Compat::Types;
 use GTK::Raw::TextTagTable;
 use GTK::Raw::Types;
 
+use GTK::TextTag;
+
 use GTK::Roles::Buildable;
+use GTK::Roles::References;
 use GTK::Roles::Signals::TextTagTable;
 
 class GTK::TextTagTable {
   also does GTK::Roles::Buildable;
+  also does GTK::Roles::References;
   also does GTK::Roles::Signals::TextTagTable;
 
   has GtkTextTagTable $!ttt;
@@ -19,10 +23,12 @@ class GTK::TextTagTable {
   submethod BUILD(:$table) {
     $!ttt = $table;
     $!b = nativecast(GtkBuildable, $!ttt);    # GTK::Roles::Buildable
+    $!ref = nativecast(Pointer, $!ttt);       # GTK::Roles::References
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-ttt;
+    self.downref;
   }
 
   method GTK::Raw::Types::GtkTextTagTable {
@@ -34,7 +40,9 @@ class GTK::TextTagTable {
     self.bless(:$table);
   }
   multi method new (GtkTextTagTable $table) {
-    self.bless(:$table);
+    my $o = self.bless(:$table);
+    $o.upref;
+    $o;
   }
 
 
@@ -84,7 +92,8 @@ class GTK::TextTagTable {
   }
 
   method lookup (Str() $name) {
-    gtk_text_tag_table_lookup($!ttt, $name);
+    my $tag = gtk_text_tag_table_lookup($!ttt, $name);
+    GTK::TextTag.new($tag) with $tag;
   }
 
   method remove (GtkTextTag() $tag) {

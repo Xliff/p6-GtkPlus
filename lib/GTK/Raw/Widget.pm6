@@ -288,8 +288,8 @@ sub gtk_widget_get_valign_with_baseline (GtkWidget $widget)
 sub gtk_widget_get_preferred_width_for_height (
   GtkWidget $widget,
   gint $height,
-  gint $minimum_width,
-  gint $natural_width
+  gint $minimum_width is rw,
+  gint $natural_width is rw
 )
   is native(gtk)
   is export
@@ -351,8 +351,8 @@ sub gtk_widget_add_tick_callback (
 
 sub gtk_widget_get_preferred_width (
   GtkWidget $widget,
-  gint $minimum_width,
-  gint $natural_width
+  gint $minimum_width is rw,
+  gint $natural_width is rw
 )
   is native(gtk)
   is export
@@ -384,10 +384,10 @@ sub gtk_widget_remove_tick_callback (GtkWidget $widget, guint $id)
 sub gtk_widget_get_preferred_height_and_baseline_for_width (
   GtkWidget $widget,
   gint $width,
-  gint $minimum_height,
-  gint $natural_height,
-  gint $minimum_baseline,
-  gint $natural_baseline
+  gint $minimum_height   is rw,
+  gint $natural_height   is rw,
+  gint $minimum_baseline is rw,
+  gint $natural_baseline is rw
 )
   is native(gtk)
   is export
@@ -810,8 +810,8 @@ sub gtk_widget_list_mnemonic_labels (GtkWidget $widget)
 sub gtk_widget_get_preferred_height_for_width (
   GtkWidget $widget,
   gint $width,
-  gint $minimum_height,
-  gint $natural_height
+  gint $minimum_height is rw,
+  gint $natural_height is rw
 )
   is native(gtk)
   is export
@@ -852,8 +852,8 @@ sub gtk_widget_create_pango_context (GtkWidget $widget)
 
 sub gtk_widget_get_preferred_height (
   GtkWidget $widget,
-  gint $minimum_height,
-  gint $natural_height
+  gint $minimum_height is rw,
+  gint $natural_height is rw
 )
   is native(gtk)
   is export

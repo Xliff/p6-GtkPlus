@@ -284,7 +284,6 @@ GTK::TargetList
 GTK::TextChildAnchor
 GTK::TextIter
 GTK::TextMark
-GTK::TextTagTable
 GTK::Tooltip
 GTK::TreeIter
 GTK::TreePath
@@ -323,8 +322,8 @@ GTK::Roles::ToolShell
 GTK::Roles::TreeModel
 GTK::Settings
 GTK::StyleContext
-GTK::TextBuffer
 GTK::TextTag
+GTK::TextTagTable
 GTK::TreeModelFilter
 GTK::TreeModelSort
 GTK::TreeStore
@@ -349,6 +348,7 @@ GTK::PrintJob
 GTK::PrintOperation
 GTK::Printer
 GTK::Roles::CellLayout
+GTK::TextBuffer
 GTK::Widget
 GTK::Calendar
 GTK::CellArea
