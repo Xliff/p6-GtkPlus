@@ -3,7 +3,7 @@ use v6.c;
 unit package GTK::Builder::MRO;
 
 # Number of times I've had to force THIS to recompile.
-constant forced = 4;
+constant forced = 5;
 
 our %mro is export = (
 'GTK::Calendar' => ('GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'GTK::Widget', 'Any', 'Mu'),
