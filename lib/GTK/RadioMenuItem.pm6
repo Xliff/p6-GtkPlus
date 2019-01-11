@@ -60,13 +60,32 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     $o.upref;
     $o;
   }
-  multi method new(GSList() $group, Str() :$label, :$mnemonic = False) {
+  multi method new(Str() $label, :$mnemonic = False, :$group) {
+    with $group {
+      die "Invalid group type { $group.^name }"
+        unless $group ~~ (GSList, GtkRadioMenuItem, GTK::RadioMenuItem).any;
+    }
+    samewith($group // GtkRadioMenuItem, $label, :$mnemonic);
+  }
+  multi method new(GSList() $group, Str() $label, :$mnemonic = False) {
     my $radiomenu;
     with $label {
       $radiomenu = $mnemonic ??
         gtk_radio_menu_item_new_with_mnemonic($group, $label)
         !!
         gtk_radio_menu_item_new_with_label($group, $label);
+    } else {
+      $radiomenu = gtk_radio_menu_item_new($group);
+    }
+    self.bless(:$radiomenu);
+  }
+  multi method new(GtkRadioMenuItem() $group, Str() $label, :$mnemonic = False) {
+    my $radiomenu;
+    with $label {
+      $radiomenu = $mnemonic ??
+        gtk_radio_menu_item_new_with_mnemonic_from_widget($group, $label)
+        !!
+        gtk_radio_menu_item_new_with_label_from_widget($group, $label);
     } else {
       $radiomenu = gtk_radio_menu_item_new($group);
     }

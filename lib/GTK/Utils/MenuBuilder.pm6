@@ -14,7 +14,7 @@ class GTK::Utils::MenuBuilder {
   method items  { $!items }
 
   submethod BUILD(:$bar = False, :$button = False, :$TOP) {
-    my (%named_items, @m);
+    my (%named_items, @m, %groups);
     for $TOP.List -> $i {
       given $i.value {
         when Array {
@@ -23,6 +23,8 @@ class GTK::Utils::MenuBuilder {
             my $item-type;
             $item-type = do given $ii {
               when .key ~~ / ^ '-' /        { 'GTK::SeparatorMenuItem'  }
+
+              when (.value<group>:exists)   { 'GTK::RadioMenuItem'      }
 
               # Must use parens since adverbs have extremely low priority.
               when (.value<toggled>:exists) |
@@ -43,10 +45,26 @@ class GTK::Utils::MenuBuilder {
 
             # Last chance to modify/validate %opts
             my $menu_item_id = %opts<id>:delete;
+            my $group_id = '';
+            # RadioMenuItem validation.
+            with %opts<group> {
+              if %opts<group> ~~ Pair {
+                $group_id = %opts<group>.key;
+                %groups{ %opts<group>.key } //= %opts<group>.val;
+                %opts<group> = %groups{ %opts<group>.key };
+              } else {
+                die 'Cannot use a group menu item without a proper value'
+                  if %opts<group> ~~ Bool || ! %opts<group>;
+                %opts<group> = %groups{$group_id = %opts<group>};
+              }
+            }
+            # 'clicked' alias handling.
             %opts<clicked> //= %opts<do>; %opts<do>:delete;
+            # Remove unnecessary items.
             %opts<check toggle>:delete;
 
             @sm.push: ::($item-type).new($ii.key, |%opts);
+            %groups{$group_id} = @sm[* - 1] without %groups{$group_id};
 
             with $menu_item_id {
               if %named_items{ $menu_item_id }:exists {

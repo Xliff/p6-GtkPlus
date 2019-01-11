@@ -31,12 +31,15 @@ class GTK::TextTag  {
     self.disconnect-all($_) for %!signals-tt;
   }
 
-  method new(Str() $name) {
+  multi method new (Str() $name) {
     my $tag = gtk_text_tag_new($name);
     self.bless(:$tag);
   }
+  multi method new (GtkTextTag $tag) {
+    self.bless(:$tag);
+  }
 
-  method GTK::Raw::Types::GtkTextTag {
+  method GTK::Raw::Types::GtkTextTag is also<tag> {
     $!tt;
   }
 
@@ -75,7 +78,7 @@ class GTK::TextTag  {
   multi method event (
     GObject $event_object,
     GdkEvent $event,
-    GtkTextIter $iter
+    GtkTextIter() $iter
   ) {
     gtk_text_tag_event($!tt, $event_object, $event, $iter);
   }
@@ -395,7 +398,7 @@ class GTK::TextTag  {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        warn "foreground does not allow reading"
+        warn 'foreground does not allow reading'
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;

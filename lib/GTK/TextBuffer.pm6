@@ -50,13 +50,13 @@ class GTK::TextBuffer {
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
-  proto method apply-tag (|)
-    is also<apply_tag>
+  proto method apply_tag (|)
+    is also<apply-tag>
     { * }
 
   # Is originally:
   # GtkTextBuffer, GtkTextTag, GtkTextIter, GtkTextIter, gpointer --> void
-  multi method apply-tag {
+  multi method apply_tag {
     self.connect-tag($!tb, 'apply-tag');
   }
 
@@ -262,7 +262,10 @@ class GTK::TextBuffer {
     gtk_text_buffer_add_selection_clipboard($!tb, $clipboard);
   }
 
-  multi method apply-tag (
+  multi method apply_tag (GtkTextTag() $tag) {
+    samewith($tag, |self.get-bounds);
+  }
+  multi method apply_tag (
     GtkTextTag() $tag,
     GtkTextIter() $start,
     GtkTextIter() $end
@@ -270,11 +273,18 @@ class GTK::TextBuffer {
     gtk_text_buffer_apply_tag($!tb, $tag, $start, $end);
   }
 
-  method apply_tag_by_name (
+  proto method apply_tag_by_name (|)
+    is also<apply-tag-by-name>
+    { * }
+
+  multi method apply_tag_by_name (Str() $name) {
+    samewith($name, |self.get-bounds);
+  }
+  multi method apply_tag_by_name (
     Str() $name,
     GtkTextIter() $start,
     GtkTextIter() $end
-  ) is also<apply-tag-by-name> {
+  ) {
     gtk_text_buffer_apply_tag_by_name($!tb, $name, $start, $end);
   }
 
@@ -325,20 +335,28 @@ class GTK::TextBuffer {
     gtk_text_buffer_cut_clipboard($!tb, $clipboard, $de);
   }
 
-  method delete (
+  multi method delete {
+    samewith(|self.get-bounds);
+  }
+  multi method delete (
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
     gtk_text_buffer_delete($!tb, $start, $end);
   }
 
-  method delete_interactive (
+  proto method delete_interactive (|)
+    is also<delete-interactive>
+    { * }
+
+  multi method delete_interactive (Int() $default_editable) {
+    samewith(|self.get-bounds, $default_editable);
+  }
+  multi method delete_interactive (
     GtkTextIter() $start_iter,
     GtkTextIter() $end_iter,
     Int() $default_editable       # gboolean $default_editable
-  )
-    is also<delete-interactive>
-  {
+  ) {
     my gboolean $de = self.RESOLVE-BOOL($default_editable);
     gtk_text_buffer_delete_interactive($!tb, $start_iter, $end_iter, $de);
   }
@@ -349,7 +367,7 @@ class GTK::TextBuffer {
     gtk_text_buffer_delete_mark($!tb, $mark);
   }
 
-  method delete_mark_by_name (gchar $name)
+  method delete_mark_by_name (Str() $name)
     is also<delete-mark-by-name>
   {
     gtk_text_buffer_delete_mark_by_name($!tb, $name);
@@ -396,6 +414,9 @@ class GTK::TextBuffer {
     gtk_text_buffer_get_bounds($!tb, $start, $end);
     ( GTK::TextIter.new($start), GTK::TextIter.new($end) );
   }
+
+  # method get_bounds_p? -- So that we don't have to create objects to get
+  # the pointers, to then dispose of the objects...
 
   method get_char_count is also<get-char-count> {
     gtk_text_buffer_get_char_count($!tb);
@@ -587,13 +608,18 @@ class GTK::TextBuffer {
     gtk_text_buffer_get_tag_table($!tb);
   }
 
+  proto method get_text (|)
+    is also<get-text>
+    { * }
+
+  multi method get_text (Int() $include_hidden_chars) {
+    samewith(|self.get-bounds, $include_hidden_chars);
+  }
   multi method get_text (
     GtkTextIter() $start,
     GtkTextIter() $end,
     Int() $include_hidden_chars   # gboolean $include_hidden_chars
-  )
-    is also<get-text>
-  {
+  ) {
     my gboolean $ih = self.RESOLVE-BOOL($include_hidden_chars);
     gtk_text_buffer_get_text($!tb, $start, $end, $ih);
   }
@@ -676,6 +702,8 @@ class GTK::TextBuffer {
   {
     gtk_text_buffer_insert_pixbuf($!tb, $iter, $pixbuf);
   }
+
+  # Whole-buffer multi's for insert operation don't make much sense.
 
   method insert_range (
     GtkTextIter() $iter,
@@ -761,9 +789,14 @@ class GTK::TextBuffer {
     gtk_text_buffer_place_cursor($!tb, $where);
   }
 
-  method remove_all_tags (GtkTextIter() $start, GtkTextIter() $end)
+  proto method remove_all_tags (|)
     is also<remove-all-tags>
-  {
+    { * }
+
+  multi method remove_all_tags {
+    samewith(|self.get-bounds);
+  }
+  multi method remove_all_tags (GtkTextIter() $start, GtkTextIter() $end) {
     gtk_text_buffer_remove_all_tags($!tb, $start, $end);
   }
 
@@ -773,23 +806,33 @@ class GTK::TextBuffer {
     gtk_text_buffer_remove_selection_clipboard($!tb, $clipboard);
   }
 
-  method emit_remove_tag (
+  proto method emit_remove_tag (|)
+    is also<emit-remove-tag>
+    { * }
+
+  multi method emit_remove_tag (GtkTextTag $tag) {
+    samewith($tag, |self.get-bounds);
+  }
+  multi method emit_remove_tag (
     GtkTextTag() $tag,
     GtkTextIter() $start,
     GtkTextIter() $end
-  )
-    is also<emit-remove-tag>
-  {
+  ) {
     gtk_text_buffer_remove_tag($!tb, $tag, $start, $end);
   }
 
-  method remove_tag_by_name (
+  proto method remove_tag_by_name (|)
+    is also<remove-tag-by-name>
+    { * }
+
+  multi method remove_tag_by_name (Str() $name) {
+    samewith($name, |self.get-bounds);
+  }
+  multi method remove_tag_by_name (
     Str() $name,
     GtkTextIter() $start,
     GtkTextIter() $end
-  )
-    is also<remove-tag-by-name>
-  {
+  ) {
     gtk_text_buffer_remove_tag_by_name($!tb, $name, $start, $end);
   }
 
