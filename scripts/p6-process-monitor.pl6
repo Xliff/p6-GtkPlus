@@ -129,13 +129,13 @@ sub processList {
   displayProcesses if %procs<running>.elems || %procs<started>.elems;
 }
 
-sub MAIN (Int :$interval = 3) {
+sub MAIN ($every is copy = 3, :$interval) {
   my $proc = Proc::Async.new: :r, <forkstat -e exec,exit -l>;
-  $int = $interval;
+  $every = $interval with $interval;
   T.initialize-screen;
   $l = Lock.new;
 
-  $*SCHEDULER.cue(&processList, every => $int);
+  my $task = $*SCHEDULER.cue(&processList, every => $every);
   react {
     # split input on \r\n, \n, and \r
     whenever $proc.stdout.lines {
@@ -146,8 +146,11 @@ sub MAIN (Int :$interval = 3) {
         # gracefully jump from the react block
         done
     }
+    
+    # How about when the user hits 'q' or ESC?
     whenever signal(SIGTERM) | signal(SIGINT) {
       once {
+        $task.cancel;
         T.shutdown-screen;
         # sends SIGHUP, change appropriately
         $proc.kill;

@@ -727,21 +727,36 @@ class GTK::TextBuffer {
     gtk_text_buffer_insert_range_interactive($!tb, $iter, $start, $end, $de);
   }
 
-  method append_with_tag (Str() $text, GtkTextTag() $tag)
-    is also<append-with-$tag>
-  {
+  proto method append_with_tag (|)
+    is also<append-with-tag>
+    { * }
+
+  multi method append_with_tag(Str() $text, Str() $tag_name) {
+    self.insert_with_tag_by_name(
+      self.get_end_iter, $text, $text.chars, $tag_name
+    )
+  }
+  multi method append_with_tag (Str() $text, GtkTextTag() $tag) {
     self.insert_with_tag(self.get_end_iter, $text, $text.chars, $tag);
   }
 
-  method prepend_with_tag (Str() $text, GtkTextTag() $tag)
+  proto method prepend_with_tag (|)
     is also<prepend-with-tag>
-  {
+    { * }
+
+  multi method prepend_with_tag (Str() $text, Str() $tag_name) {
+    self.insert_with_tag_by_name(
+      self.get_start_iter, $text, $text.chars, $tag_name
+    )
+  }
+  multi method prepend_with_tag (Str() $text, GtkTextTag() $tag) {
     self.insert_with_tag(self.get_start_iter, $text, $text.chars, $tag);
   }
 
   proto method insert_with_tag (|)
     is also<insert-with-tag>
     { * }
+
   multi method insert_with_tag (
     GtkTextIter() $iter,
     Str() $text,
@@ -761,16 +776,23 @@ class GTK::TextBuffer {
     );
   }
 
+  proto method insert_with_tag_by_name (|)
+    is also<insert-with-tag-by-name>
+    { * }
 
-  # cw: ADD MORE CONVENIENCE!!! ;d
+  multi method insert_with_tag_by_name (
+    GtkTextIter() $iter,
+    Str() $text,
+    Str() $tag_name
+  ) {
+   samewith($iter, $text, $text.chars, $tag_name);
+  }
   multi method insert_with_tag_by_name (
     GtkTextIter() $iter,
     Str() $text,
     Int() $len,
     Str() $tag_name,
-  )
-    is also<insert-with-tag-by-name>
-  {
+  ) {
     my gint $l = self.RESOLVE-INT($len);
     gtk_text_buffer_insert_with_tags_by_name (
       $!tb, $iter, $text, $l, $tag_name, Str

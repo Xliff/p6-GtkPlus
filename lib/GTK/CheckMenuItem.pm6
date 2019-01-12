@@ -103,10 +103,10 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method active is rw {
     Proxy.new(
-      FETCH => sub ($) {
+      FETCH => -> $ {
         so gtk_check_menu_item_get_active($!cmi);
       },
-      STORE => sub ($, Int() $is_active is copy) {
+      STORE => -> $, Int() $is_active is copy {
         my $ia = self.RESOLVE-BOOL($is_active);
         gtk_check_menu_item_set_active($!cmi, $ia);
       }
