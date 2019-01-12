@@ -8,6 +8,7 @@ use Pango::Raw::Types;
 use GTK::Compat::Types;
 use GTK::Raw::TextView;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::Container;
 use GTK::TextBuffer;
@@ -24,6 +25,7 @@ class GTK::TextView is GTK::Container {
   also does GTK::Roles::Signals::TextView;
 
   has GtkTextView $!tv;
+  has $!autoscroll;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -641,7 +643,7 @@ class GTK::TextView is GTK::Container {
   method scroll_to_iter (
     GtkTextIter() $iter,
     Num()  $within_margin,
-    Bool() $use_align,
+    Int() $use_align,
     Num()  $xalign,
     Num()  $yalign
   )
@@ -652,12 +654,22 @@ class GTK::TextView is GTK::Container {
     gtk_text_view_scroll_to_iter($!tv, $iter, $wm, $ua, $xa, $ya);
   }
 
+  # Convenience.
+  method scroll_to_top is also<scroll-to-top> {
+    self.scroll_to_iter(self.buffer.get_start_iter, 0, True, 0, 0);
+  }
+
+  # Convenience.
+  method scroll_to_bottom is also<scroll-to-bottom> {
+    self.scroll_to_iter(self.buffer.get_end_iter, 0, True, 0, 1);
+  }
+
   method scroll_to_mark (
     GtkTextMark() $mark,
-    Num()  $within_margin,
-    Bool() $use_align,
-    Num()  $xalign,
-    Num()  $yalign
+    Num() $within_margin,
+    Int() $use_align,
+    Num() $xalign,
+    Num() $yalign
   )
     is also<scroll-to-mark>
   {
@@ -699,5 +711,25 @@ class GTK::TextView is GTK::Container {
     gtk_text_view_window_to_buffer_coords($!tv, $w, $wx, $wy, $bx, $by);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
+
+  # Super convenience.
+  # See https://stackoverflow.com/questions/14770018/scroll-to-end-of-scrolledwindow-textview
+  method autoscroll is rw {
+    state $tap;
+    Proxy.new(
+      FETCH => -> $ { $!autoscroll // False },
+      STORE => -> $, Int() $as {
+        $!autoscroll = $as.so;
+        if $!autoscroll {
+          $tap = self.size-allocate.tap({
+            .value = .upper - .page_size given self.vadjustment;
+          });
+        } else {
+          $tap.close;
+          $tap = Nil;
+        }
+      }
+    )
+  }
 
 }

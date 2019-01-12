@@ -314,7 +314,7 @@ role GTK::Roles::Signals::Widget {
   }
 
   # GtkWidget, GdkRectangle, gpointer --> void
-  method connect-size-alocate(
+  method connect-size-allocate(
     $obj,
     $signal = 'size-allocate',
     &handler?
