@@ -76,8 +76,8 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   ) {
     my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
     my $o = self.bless(:$checkmenuitem);
-    $o.toggled.tap($clicked) with $clicked;
-    $o.toggled.tap($toggled) with $toggled;
+    $o.toggled.tap({ $clicked() }) with $clicked;
+    $o.toggled.tap({ $toggled() }) with $toggled;
     $o;
   }
 
