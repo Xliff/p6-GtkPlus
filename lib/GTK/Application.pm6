@@ -25,7 +25,6 @@ class GTK::Application is export {
   has $!title;
   has $!width;
   has $!height;
-  has $!builder;
   has $!init;
 
   has $.window handles <show_all>;
@@ -51,18 +50,13 @@ class GTK::Application is export {
          :$title,
          :$width,
          :$height
-       ) without $!builder;
+       );
        $!init.keep;
     });
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals, %!signals-app;
-  }
-
-  method setBuilder(GtkBuilder() $b) {
-    $!builder = $b;
-    $!window = $b.window;
   }
 
   method GTK::Raw::Types::GtkApplication {
@@ -161,12 +155,8 @@ class GTK::Application is export {
     # Application.activate
     #   -- Window must exist here.
 
-    with $!builder {
-      gtk_main();
-    } else {
-      my gint $z = 0;
-      g_application_run($!app, $z, Pointer);
-    }
+    my gint $z = 0;
+    g_application_run($!app, $z, Pointer);
   }
   # multi method run(GTK::Application:U: ) {
   #   $gapp = gtk_application_new('Application', G_APPLICATION_FLAGS_NONE);
@@ -175,7 +165,7 @@ class GTK::Application is export {
   # }
 
   method exit {
-    $!builder ?? gtk_main_quit() !! g_application_quit($!app);
+    g_application_quit($!app);
   }
 
   method activate {

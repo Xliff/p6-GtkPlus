@@ -4,6 +4,7 @@ use GTK::CheckMenuItem;
 use GTK::Menu;
 use GTK::MenuBar;
 use GTK::MenuItem;
+use GTK::RadioMenuItem;
 use GTK::SeparatorMenuItem;
 
 class GTK::Utils::MenuBuilder {
@@ -35,17 +36,16 @@ class GTK::Utils::MenuBuilder {
             }
 
             # This WILL need recursive processing, but for now...
-            my %opts;
-            unless $item-type eq 'GTK::SeparatorMenuItem' {
-              %opts = do given $ii.value {
-                when Array { (submenu => $ii.value).Hash }
-                when Hash  { $_ }
-              }
+            my %opts = do given $ii.value {
+              when Array { (submenu => $ii.value).Hash }
+              when Hash  { $_  }
+              when Bool  { %() }  # Separator
+              default    { die "Do not know how to handle { .^name }" }
             }
 
             # Last chance to modify/validate %opts
             my $menu_item_id = %opts<id>:delete;
-            my $group_id = '';
+            my $group_id;
             # RadioMenuItem validation.
             with %opts<group> {
               if %opts<group> ~~ Pair {
@@ -59,13 +59,17 @@ class GTK::Utils::MenuBuilder {
               }
             }
             # 'clicked' alias handling.
-            %opts<clicked> //= %opts<do>; %opts<do>:delete;
+            %opts<clicked> //= %opts<do> with %opts<do>;
+            %opts<do>:delete;
+
             # Remove unnecessary items.
             %opts<check toggle>:delete;
 
             @sm.push: ::($item-type).new($ii.key, |%opts);
-            %groups{$group_id} = @sm[* - 1] without %groups{$group_id};
 
+            with $group_id {
+              %groups{$group_id} = @sm[* - 1] without %groups{$group_id};
+            }
             with $menu_item_id {
               if %named_items{ $menu_item_id }:exists {
                 die "Cannod add duplicate ID <{ $menu_item_id }> to menu tracking!";

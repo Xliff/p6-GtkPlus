@@ -33,7 +33,7 @@ class GTK::TextIter {
     self.bless(:$textiter);
   }
 
-  method GTK::Raw::Types::GtkTextIter {
+  method GTK::Raw::Types::GtkTextIter is also<iter> {
     $!ti;
   }
 
@@ -481,4 +481,3 @@ class GTK::TextIter {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

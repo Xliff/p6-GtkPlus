@@ -27,6 +27,7 @@
 - Add this to the top of all activate blocks in t/
     CATCH { default { .message.say; $app.exit } }
 - Rewrite this document in Markdown format.
+- Test case for all features of GTK::Utils::MenuBuilder
 
 
 Applications

@@ -46,6 +46,16 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     }
   }
 
+  my sub postconf($o, %opts) {
+    $o.toggled.tap({ %opts<clicked>() }) with %opts<clicked>;
+    $o.toggled.tap({ %opts<toggled>() }) with %opts<toggled>;
+
+    $o.group-changed.tap({ %opts<changed>() })
+      with %opts<changed>;
+
+    $o;
+  }
+
   # So that GtkRadioMenuItem() works in signatures.
   method GTK::Raw::Types::GtkRadioMenuItem {
     $!rmi;
@@ -60,14 +70,16 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     $o.upref;
     $o;
   }
-  multi method new(Str() $label, :$mnemonic = False, :$group) {
+  multi method new(Str() $label, :$mnemonic = False, :$group, *%opts) {
     with $group {
       die "Invalid group type { $group.^name }"
         unless $group ~~ (GSList, GtkRadioMenuItem, GTK::RadioMenuItem).any;
     }
-    samewith($group // GtkRadioMenuItem, $label, :$mnemonic);
+    samewith($group // GtkRadioMenuItem, $label, :$mnemonic, |%opts);
   }
-  multi method new(GSList() $group, Str() $label, :$mnemonic = False) {
+  # May have to merge these next two with complex type checking logic for
+  # the $group parameter.
+  multi method new(GSList $group, Str() $label, :$mnemonic = False, *%opts) {
     my $radiomenu;
     with $label {
       $radiomenu = $mnemonic ??
@@ -77,9 +89,14 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     } else {
       $radiomenu = gtk_radio_menu_item_new($group);
     }
-    self.bless(:$radiomenu);
+    postconf( self.bless(:$radiomenu), %opts );
   }
-  multi method new(GtkRadioMenuItem() $group, Str() $label, :$mnemonic = False) {
+  multi method new(
+    GtkRadioMenuItem() $group,
+    Str() $label,
+    :$mnemonic = False,
+    *%opts
+  ) {
     my $radiomenu;
     with $label {
       $radiomenu = $mnemonic ??
@@ -89,7 +106,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     } else {
       $radiomenu = gtk_radio_menu_item_new($group);
     }
-    self.bless(:$radiomenu);
+    postconf( self.bless(:$radiomenu), %opts );
   }
 
   method new_from_widget (GtkRadioMenuItem() $group)

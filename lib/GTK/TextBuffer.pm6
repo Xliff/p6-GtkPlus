@@ -315,7 +315,7 @@ class GTK::TextBuffer {
   }
 
   method create_mark (
-    gchar $mark_name,
+    Str() $mark_name,
     GtkTextIter() $where,
     Int() $left_gravity           # gboolean $left_gravity
   )
@@ -548,6 +548,7 @@ class GTK::TextBuffer {
     my $iter = GtkTextIter.new;
     samewith($iter, $char_offset);
   }
+
   multi method get_iter_at_offset (
     GtkTextIter() $iter,
     Int() $char_offset            # gint $char_offset
@@ -626,6 +627,22 @@ class GTK::TextBuffer {
 
   method get_type is also<get-type> {
     gtk_text_buffer_get_type();
+  }
+
+  # Convenience
+  method append (
+    Str() $text,
+    Int() $len = $text.chars
+  ) {
+    self.insert(self.get_end_iter, $text, $len);
+  }
+
+  # Convenience
+  method prepend (
+    Str() $text,
+    Int() $len = $text.chars
+  ) {
+    self.insert(self.get_start_iter, $text, $len);
   }
 
   multi method insert (
@@ -731,7 +748,7 @@ class GTK::TextBuffer {
     is also<append-with-tag>
     { * }
 
-  multi method append_with_tag(Str() $text, Str() $tag_name) {
+  multi method append_with_tag(Str() $text, Str $tag_name) {
     self.insert_with_tag_by_name(
       self.get_end_iter, $text, $text.chars, $tag_name
     )
@@ -744,7 +761,7 @@ class GTK::TextBuffer {
     is also<prepend-with-tag>
     { * }
 
-  multi method prepend_with_tag (Str() $text, Str() $tag_name) {
+  multi method prepend_with_tag (Str() $text, Str $tag_name) {
     self.insert_with_tag_by_name(
       self.get_start_iter, $text, $text.chars, $tag_name
     )
