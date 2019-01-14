@@ -278,4 +278,21 @@ class GTK::Box is GTK::Container {
     gtk_box_set_child_packing($!b, $child, $e, $f, $p, $pt);
   }
 
+  method child-set(*@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'expand'    |
+             'fill'      |
+             'pack-type' |
+             'padding'   { self.child-set-uint($p, $v) }
+
+        when 'position'  { self.child-set-int($p, $v)  }
+
+        default          { take $p; take $v;           }
+      }
+    }
+    nextwith(@notfound) if +@notfound;
+  }
+
 }

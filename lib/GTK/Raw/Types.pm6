@@ -993,6 +993,11 @@ our enum GtkPrintSettingWin32DriverEnum is export (
   GTK_PRINT_SETTINGS_WIN32_DRIVER_VERSION => 'win32-driver-version'
 );
 
+our enum GtkNotebookTab is export <
+  GTK_NOTEBOOK_TAB_FIRST
+  GTK_NOTEBOOK_TAB_LAST
+>;
+
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }

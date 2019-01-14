@@ -72,6 +72,20 @@ class GTK::ScrolledWindow is GTK::Bin {
     self.bless(:$scrolled);
   }
 
+  # Convenience
+  method new_with_policy(
+    Int() $hpolicy,
+    Int() $vpolicy,
+    GtkAdjustment() $hadjustment = GtkAdjustment,
+    GtkAdjustment() $vadjustment = GtkAdjustment
+  )
+    is also<new-with-policy>
+  {
+    my $o = GTK::ScrolledWindow.new($hadjustment, $vadjustment);
+    $o.set_policy($hpolicy, $vpolicy);
+    $o;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:

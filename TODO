@@ -10,27 +10,27 @@
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
 - Convert Perl6 additions to GTK::Container into a role. (done as GTK::Roles::LatchedContainer)
 √ Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
-+ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get (MOSTLY DONE! See scripts/prop-get.pl6)
+√ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get (MOSTLY DONE! See scripts/prop-get.pl6)
 √ Fix lack of icons in GTK::IconView
 - Add-to-project-if-I'm-completely-insane: GVariant
 - Move signals to %Object.signal<name> to fix issue with method name conflicts
-- GTK::ScrolledWindow.new_with_policy is in desperate need of being written
-- GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!
-- Add type specific signal handling to GTK::Notebook
++ GTK::ScrolledWindow.new_with_policy is in desperate need of being written (implemented, but not tested)
++ GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!  (implemented, but not tested)
++ Add type specific signal handling to GTK::Notebook
 - Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher or GtkStackSidebar
 - Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 - Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
-- Move GTK::Window title and size initialization to BUILD
+√ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
 - Add overflow warnings to appropriate RESOLVE routines in GTK::Roles::Types. Said warnings are NOT under $DEBUG check.
 - Adjust constructors for GTK::TextBuffer to accept creation-only properties.
 - Inhibit pass-through to Mu constructor in all widget-based objects!
 - Add this to the top of all activate blocks in t/
     CATCH { default { .message.say; $app.exit } }
 - Rewrite this document in Markdown format.
-- Test case for all features of GTK::Utils::MenuBuilder
+√ Test case for all features of GTK::Utils::MenuBuilder
 
 
 Applications
 ============
-- A text editor in Perl6. Think about using it as a visual Regex tester (in progress, see p6-VisualGrammar.git)
+√ A text editor in Perl6. Think about using it as a visual Regex tester (in progress, see p6-VisualGrammar.git)
 + Glade UI to p6-GtkPerl application (in progress see GTK::Builder:: objects and ui-to-code.pl6)

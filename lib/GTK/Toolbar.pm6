@@ -160,7 +160,7 @@ class GTK::Toolbar is GTK::Container {
     gtk_toolbar_insert($!tb, $item, $p);
   }
 
-  method set_drop_highlight_item (GtkToolItem() $tool_item, Int() $index) 
+  method set_drop_highlight_item (GtkToolItem() $tool_item, Int() $index)
     is also<set-drop-highlight-item>
   {
     my uint32 $i = self.RESOLVE-UINT($index);
@@ -176,4 +176,16 @@ class GTK::Toolbar is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+  method child-set(*@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'expand'     |
+             'homogenous' { self.child-set-bool($p, $v)  }
+
+        default           { take $p; take $v;            }
+      }
+    }
+    nextwith(@notfound) if +@notfound;
+  }
 }

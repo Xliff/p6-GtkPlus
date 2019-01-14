@@ -9,10 +9,14 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
+use GTK::Roles::Signals::Notebook;
+
 my subset Ancestry
   where GtkNotebook | GtkContainer | GtkBuilder | GtkWidget;
 
 class GTK::Notebook is GTK::Container {
+  also does GTK::Roles::Signals::Notebook;
+
   has GtkNotebook $!n;
 
   method bless(*%attrinit) {
@@ -44,6 +48,14 @@ class GTK::Notebook is GTK::Container {
     }
   }
 
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals-n;
+  }
+
+  method GTK::Raw::Types::GtkNotebook is also<notebook> {
+    $!n;
+  }
+
   multi method new (Ancestry $notebook) {
     my $o = self.bless(:$notebook);
     $o.upref;
@@ -65,17 +77,17 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, GtkWidget, gint, gint, gpointer --> GtkNotebook
   method create-window is also<create_window> {
-    self.connect($!n, 'create-window');
+    self.connect-create-window($!n);
   }
 
   # Is originally:
-  # GtkNotebook, GtkNotebookTab, gpointer --> gboolean
+  # GtkNotebook, uint32 (GtkNotebookTab), gpointer --> gboolean
   method focus-tab is also<focus_tab> {
     self.connect-uint-rbool($!n, 'focus-tab');
   }
 
   # Is originally:
-  # GtkNotebook, GtkDirectionType, gpointer --> void
+  # GtkNotebook, uint32 (GtkDirectionType), gpointer --> void
   method move-focus-out is also<move_focus_out> {
     self.connect-uint($!n, 'move-focus-out');
   }
@@ -83,25 +95,25 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
   method page-added is also<page_added> {
-    self.connect($!n, 'page-added');
+    self.connect-notebook-widget($!n, 'page-added');
   }
 
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
   method page-removed is also<page_removed> {
-    self.connect($!n, 'page-removed');
+    self.connect-notebook-widget($!n, 'page-removed');
   }
 
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
   method page-reordered is also<page_reordered> {
-    self.connect($!n, 'page-reordered');
+    self.connect-notebook-widget($!n, 'page-reordered');
   }
 
   # Is originally:
-  # GtkNotebook, GtkDirectionType, gboolean, gpointer --> gboolean
+  # GtkNotebook, uint32 (GtkDirectionType), gboolean, gpointer --> gboolean
   method reorder-tab is also<reorder_tab> {
-    self.connect($!n, 'reorder-tab');
+    self.connect-reorder-tab($!n);
   }
 
   # Is originally:
@@ -113,7 +125,7 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, GtkWidget, guint, gpointer --> void
   method switch-page is also<switch_page> {
-    self.connect($!n, 'switch-page');
+    self.connect-notebook-widget($!n, 'switch-page');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -404,4 +416,23 @@ class GTK::Notebook is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+  method child-set(*@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'detachable'  |
+             'reorderable' |
+             'tab-expand'  |
+             'tab-fill'    { self.child-set-int($p, $v)    }
+
+        when 'menu-label'  |
+             'tab-label'   { self.child-set-string($p, $v) }
+
+        when 'position'    { self.child-set-int($p, $v)    }
+
+        default            { take $p; take $v;             }
+      }
+    }
+    nextwith(@notfound) if +@notfound;
+  }
 }

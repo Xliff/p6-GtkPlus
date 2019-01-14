@@ -270,5 +270,21 @@ class GTK::Stack is GTK::Container {
     $!sb.widget;
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
+  method child-set(*@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'icon-name'        |
+             'name'             |
+             'title'            { self.child-set-string($p, $v) }
 
+        when 'needs-attention'  { self.child-set-bool($p, $v)   }
+
+        when 'position'         { self.child-set-int($p, $v)    }
+
+        default                 { take $p; take $v;             }
+      }
+    }
+    nextwith(@notfound) if +@notfound;
+  }
 }

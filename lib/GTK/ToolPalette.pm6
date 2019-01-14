@@ -198,4 +198,16 @@ class GTK::ToolPalette is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+  method child-set(*@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'expand'     |
+             'exclusive'  { self.child-set-bool($p, $v)  }
+
+        default           { take $p; take $v;            }
+      }
+    }
+    nextwith(@notfound) if +@notfound;
+  }
 }

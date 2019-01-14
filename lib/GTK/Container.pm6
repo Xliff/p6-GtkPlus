@@ -104,7 +104,11 @@ D
         when Bool      {   self.child-get-bool($p, $v) }
 
         when int64 | int32 | int16 | int8 {
-          self.child-get-int($p);
+          self.child-get-int($p, $v);
+        }
+
+        when uint64 | uint32 | uint16 | uint8 {
+          self.child-get-uint($p, $v);
         }
 
         default {
@@ -114,6 +118,13 @@ D
         }
       }
     }
+  }
+
+  method child-set (*@propval) {
+    die qq:to/D/.chomp
+The following properties are not valid for GTK::Container.child-set:
+{ @propval.rotor(1 => 1).map( "\t'*'" ).join("\n") }
+D
   }
 
   # For child attributes.

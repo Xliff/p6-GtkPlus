@@ -27,10 +27,13 @@ class GTK::Window is GTK::Bin {
     $o;
   }
 
-  submethod BUILD(:$window) {
+  submethod BUILD(:$window, :$title, :$width, :$height) {
     given $window {
       when Ancestry {
         self.setWindow($window);
+        gtk_window_set_title($window, $title) with $title;
+        gtk_window_set_default_size($window, $width, $height)
+          with $width && $height;
       }
       when GTK::Window {
       }
@@ -67,9 +70,7 @@ class GTK::Window is GTK::Bin {
   ) {
     my guint $t = self.RESOLVE-UINT($type);
     my $window = gtk_window_new($t);
-    gtk_window_set_title($window, $title);
-    gtk_window_set_default_size($window, $width, $height);
-    samewith(:$window);
+    samewith($window, :$title, :$width, :$height);
   }
   multi method new (
     GtkWindow $window,
@@ -77,9 +78,7 @@ class GTK::Window is GTK::Bin {
     Int :$width  = 200,
     Int :$height = 200
   ) {
-    gtk_window_set_title($window, $title);
-    gtk_window_set_default_size($window, $width, $height);
-    samewith(:$window);
+    self.bless(:$window, :$title, :$width, :$height);
   }
 
   method GTK::Raw::Types::GtkWindow is also<window> {

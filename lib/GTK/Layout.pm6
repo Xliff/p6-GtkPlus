@@ -166,4 +166,15 @@ class GTK::Layout is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+  method child-set(*@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'x' | 'y'   { self.child-set-int($p, $v)  }
+
+        default          { take $p; take $v;           }
+      }
+    }
+    nextwith(@notfound) if +@notfound;
+  }
 }
