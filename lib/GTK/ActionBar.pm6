@@ -111,4 +111,16 @@ class GTK::ActionBar is GTK::Bin {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+  method child-set(GtkWidget $c, *@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'pack-type'  { self.child-set-uint($c, $p, $v)  }
+        when 'position '  { self.child-set-int($c, $p, $v)   }
+
+        default           { take $p; take $v;                }
+      }
+    }
+    nextwith($c, @notfound) if +@notfound;
+  }
 }

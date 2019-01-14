@@ -229,18 +229,18 @@ class GTK::Grid is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
-  method child-set(*@propval) {
+  method child-set(GtkWidget() $c, *@propval) {
     my @notfound;
     @notfound = gather for @propval -> $p, $v {
       given $p {
         when 'height'      |
              'left-attach' |
              'top-attach'  |
-             'width'       { self.child-set-uint($p, $v) }
+             'width'       { self.child-set-uint($c, $p, $v) }
 
-        default            { take $p; take $v;           }
+        default            { take $p; take $v;               }
       }
     }
-    nextwith(@notfound) if +@notfound;
+    nextwith($c, @notfound) if +@notfound;
   }
 }

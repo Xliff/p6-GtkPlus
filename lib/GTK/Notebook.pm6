@@ -416,23 +416,23 @@ class GTK::Notebook is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
-  method child-set(*@propval) {
+  method child-set(GtkWidget() $c, *@propval) {
     my @notfound;
     @notfound = gather for @propval -> $p, $v {
       given $p {
         when 'detachable'  |
              'reorderable' |
              'tab-expand'  |
-             'tab-fill'    { self.child-set-int($p, $v)    }
+             'tab-fill'    { self.child-set-int($c, $p, $v)    }
 
         when 'menu-label'  |
-             'tab-label'   { self.child-set-string($p, $v) }
+             'tab-label'   { self.child-set-string($c, $p, $v) }
 
-        when 'position'    { self.child-set-int($p, $v)    }
+        when 'position'    { self.child-set-int($c, $p, $v)    }
 
-        default            { take $p; take $v;             }
+        default            { take $p; take $v;                 }
       }
     }
-    nextwith(@notfound) if +@notfound;
+    nextwith($c, @notfound) if +@notfound;
   }
 }

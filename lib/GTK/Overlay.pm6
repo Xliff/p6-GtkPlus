@@ -135,4 +135,16 @@ class GTK::Overlay is GTK::Bin {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+  method child-set(GtkWidget() $c, *@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'index'        { self.child-set-int($c, $p, $v)  }
+        when 'pass-through' { self.child-set-bool($c, $p, $v) }
+
+        default             { take $p; take $v;               }
+      }
+    }
+    nextwith($c, @notfound) if +@notfound;
+  }
 }

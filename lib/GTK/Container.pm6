@@ -120,7 +120,7 @@ D
     }
   }
 
-  method child-set (*@propval) {
+  method child-set (GtkWidget(), *@propval) {
     die qq:to/D/.chomp
 The following properties are not valid for GTK::Container.child-set:
 { @propval.rotor(1 => 1).map( "\t'*'" ).join("\n") }
@@ -339,10 +339,10 @@ D
   # A method for working with va_list could be the following:
   #   gchar         $first_property_name
   #   CArray[gchar] $property_names
-  # method child_get_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
+  # method child_get_valist (GtkWidget $child, Str() $first_property_name, va_list $var_args) {
   #   gtk_container_child_get_valist($!c, $child, $first_property_name, $var_args);
   # }
-  # method child_get_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
+  # method child_get_valist (GTK::Widget $child, Str() $first_property_name, va_list $var_args)  {
   #   samewith($child.widget, $first_property_name, $var_args);
   # }
 
@@ -360,8 +360,8 @@ D
 
   method child_set_property (
     GtkWidget() $child,
-    gchar $property_name,
-    GValue $value
+    Str() $property_name,
+    GValue() $value
   )
     is also<child-set-property>
   {
@@ -371,10 +371,10 @@ D
   # va_list:
   #   gchar         $first_property_name
   #   CArray[gchar] $property_names
-  # method child_set_valist (GtkWidget $child, gchar $first_property_name, va_list $var_args) {
+  # method child_set_valist (GtkWidget $child, Str() $first_property_name, va_list $var_args) {
   #   gtk_container_child_set_valist($!c, $child, $first_property_name, $var_args);
   # }
-  # method child_set_valist (GTK::Widget $child, gchar $first_property_name, va_list $var_args)  {
+  # method child_set_valist (GTK::Widget $child, Str() $first_property_name, va_list $var_args)  {
   #   samewith($child.widget, $first_property_name, $var_args);
   # }
 
@@ -383,7 +383,7 @@ D
   }
 
   # All modules take a GtkContainerClass.
-  # method class_find_child_property (gchar $property_name) {
+  # method class_find_child_property (Str() $property_name) {
   #   gtk_container_class_find_child_property($!c, $property_name);
   # }
   #

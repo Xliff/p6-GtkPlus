@@ -176,16 +176,16 @@ class GTK::Toolbar is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
-  method child-set(*@propval) {
+  method child-set(GtkWidget() $c, *@propval) {
     my @notfound;
     @notfound = gather for @propval -> $p, $v {
       given $p {
         when 'expand'     |
-             'homogenous' { self.child-set-bool($p, $v)  }
+             'homogenous' { self.child-set-bool($c, $p, $v)  }
 
-        default           { take $p; take $v;            }
+        default           { take $p; take $v;                }
       }
     }
-    nextwith(@notfound) if +@notfound;
+    nextwith($c, @notfound) if +@notfound;
   }
 }

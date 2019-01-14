@@ -238,4 +238,36 @@ class GTK::Assistant is GTK::Window {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+  method child-set(GtkWidget() $c, *@propval) {
+    my @notfound;
+    @notfound = gather for @propval -> $p, $v {
+      given $p {
+        when 'complete'      |
+             'has-padding'   { self.child-set-bool($c, $p, $v)   }
+
+        when 'page-type'     { self.child-set-uint($c, $p, $v)   }
+
+        when 'title'         { self.child-set-string($c, $p, $v) }
+
+        when 'header-image'  |
+             'sidebar-image' { my $gv = GTK::Compat::Value.new(
+                                 GTK::Compat::Pixbuf.get_type()
+                               );
+                               $gv.object = do given $v {
+                                 when GTK::Compat::Pixbuf { $v.pixbuf }
+                                 when GdkPixbuf           { $_ }
+
+                                 default {
+                                   my $n = .^name;
+                                   die "Invalid type { $n } passed to '$p'";
+                                 }
+                               }
+                               self.child_set_property($c, $p, $gv);
+                             }
+
+        default              { take $p; take $v;            }
+      }
+    }
+    nextwith(@notfound) if +@notfound;
+  }
 }

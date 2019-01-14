@@ -77,15 +77,15 @@ class GTK::Fixed is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
-  method child-set(*@propval) {
+  method child-set(GtkWidget() $c, *@propval) {
     my @notfound;
     @notfound = gather for @propval -> $p, $v {
       given $p {
-        when 'x' | 'y'   { self.child-set-int($p, $v)  }
+        when 'x' | 'y'   { self.child-set-int($c, $p, $v)  }
 
-        default          { take $p; take $v;           }
+        default          { take $p; take $v;               }
       }
     }
-    nextwith(@notfound) if +@notfound;
+    nextwith($c, @notfound) if +@notfound;
   }
 }
