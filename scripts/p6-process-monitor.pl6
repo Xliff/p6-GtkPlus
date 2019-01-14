@@ -131,7 +131,7 @@ sub processList {
 
 sub MAIN ($every is copy = 3, :$interval) {
   my $proc = Proc::Async.new: :r, <forkstat -e exec,exit -l>;
-  $every = $interval with $interval;
+  $int = $interval // $every;
   T.initialize-screen;
   $l = Lock.new;
 
@@ -146,7 +146,7 @@ sub MAIN ($every is copy = 3, :$interval) {
         # gracefully jump from the react block
         done
     }
-    
+
     # How about when the user hits 'q' or ESC?
     whenever signal(SIGTERM) | signal(SIGINT) {
       once {

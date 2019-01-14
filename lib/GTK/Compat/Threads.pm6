@@ -1,0 +1,74 @@
+use v6.c;
+
+use NativeCall;
+
+use GTK::Compat::Types;
+use GTK::Compat::Raw::Threads;
+
+use GTK::Raw::Utils;
+
+class GTK::Compat::Threads {
+
+  method new(|) {
+    die 'GTK::Compat::Threads is not an instantiable object!'
+  }
+
+  method add_idle (
+    &function,
+    gpointer $data = Pointer
+  ) {
+    gdk_threads_add_idle(&function, $data);
+  }
+
+  method add_idle_full (
+    Int() $priority,
+    &function,
+    gpointer $data = Pointer,
+    GDestroyNotify $notify = Pointer
+  ) {
+    my gint $p = resolve-int($priority);
+    gdk_threads_add_idle_full($p, &function, $data, $notify);
+  }
+
+  method add_timeout (
+    Int() $interval,
+    &function,
+    gpointer $data = Pointer
+  ) {
+    my guint $i = resolve-uint($interval);
+    gdk_threads_add_timeout($interval, &function, $data);
+  }
+
+  method add_timeout_full (
+    Int() $priority,
+    Int() $interval,
+    &function, gpointer $data = Pointer,
+    GDestroyNotify $notify = Pointer
+  ) {
+    my gint $p = resolve-int($priority);
+    my guint $i = resolve-uint($interval);
+    gdk_threads_add_timeout_full($p, $i, &function, $data, $notify);
+  }
+
+  method add_timeout_seconds (
+    Int() $interval,
+    &function,
+    gpointer $data = Pointer
+  ) {
+    my guint $i = resolve-uint($interval);
+    gdk_threads_add_timeout_seconds($i, &function, $data);
+  }
+
+  method add_timeout_seconds_full (
+    Int() $priority,
+    Int() $interval,
+    &function,
+    gpointer $data = Pointer,
+    GDestroyNotify $notify = Pointer
+  ) {
+    my gint $p = resolve-int($priority);
+    my guint $i = resolve-uint($interval);
+    gdk_threads_add_timeout_seconds_full($p, $i, &function, $data, $notify);
+  }
+
+}

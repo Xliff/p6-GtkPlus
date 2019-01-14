@@ -75,9 +75,10 @@ constant gconstpointer       is export := Pointer;
 constant gdouble             is export := num64;
 constant gfloat              is export := num32;
 constant gint                is export := int32;
-constant gint16              is export := int16;
-constant gint64              is export := int64;
 constant gint8               is export := int8;
+constant gint16              is export := int16;
+constant gint32              is export := int32;
+constant gint64              is export := int64;
 constant glong               is export := int64;
 constant gpointer            is export := Pointer;
 constant gsize               is export := uint64;
@@ -86,10 +87,10 @@ constant guchar              is export := Str;
 constant gshort              is export := int8;
 constant gushort             is export := uint8;
 constant guint               is export := uint32;
+constant guint8              is export := uint8;
 constant guint16             is export := uint16;
 constant guint32             is export := uint32;
 constant guint64             is export := uint64;
-constant guint8              is export := uint8;
 constant gulong              is export := uint64;
 constant gunichar            is export := uint32;
 constant va_list             is export := Pointer;
@@ -616,20 +617,6 @@ class GdkEventAny is repr('CStruct') does GTK::Roles::Pointers is export {
 
 constant GdkEvent is export := GdkEventAny;
 
-class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
-  has uint32       $.type;              # GdkEventType
-  has GdkWindow    $.window;
-  has int8         $.send_event;
-  has uint32       $.time;
-  has uint32       $.state;
-  has uint32       $.keyval;
-  has int32        $.length;
-  has Str          $.string;
-  has uint16       $.hardware_keycode;
-  has uint8        $.group;
-  has uint32       $.is_modifier;
-}
-
 class GdkGeometry is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint       $.min_width;
   has gint       $.min_height;
@@ -654,6 +641,20 @@ class GdkRectangle is repr('CStruct') does GTK::Roles::Pointers is export {
 class GdkPoint is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint $.x is rw;
   has gint $.y is rw;
+}
+
+class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint32       $.type;              # GdkEventType
+  has GdkWindow    $.window;
+  has int8         $.send_event;
+  has uint32       $.time;
+  has uint32       $.state;
+  has uint32       $.keyval;
+  has int32        $.length;
+  has Str          $.string;
+  has uint16       $.hardware_keycode;
+  has uint8        $.group;
+  has uint32       $.is_modifier;
 }
 
 class GdkEventButton is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -846,7 +847,8 @@ our subset GdkEvents is export where
   GdkEventDnD        | GdkEventProperty    | GdkEventFocus     |
   GdkEventSetting    | GdkEventProximity   | GdkEventSelection |
   GdkEventConfigure  | GdkEventWindowState | GdkEventCrossing  |
-  GdkEventGrabBroken | GdkEventOwnerChange | GdkEventMotion;
+  GdkEventGrabBroken | GdkEventOwnerChange | GdkEventMotion    |
+  GdkEventKey;
 
 class GdkWindowAttr is repr('CStruct')
   does GTK::Roles::Pointers
@@ -891,6 +893,11 @@ class GdkTimeCoord is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.time;
   has CArray[num64] $.axes;
 }
+
+our enum GSourceReturn is export <
+  G_SOURCE_REMOVE
+  G_SOURCE_CONTINUE
+>;
 
 our enum GdkWindowWindowClass is export (
   'GDK_INPUT_OUTPUT',             # nick=input-output
