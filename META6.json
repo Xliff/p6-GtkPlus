@@ -89,6 +89,8 @@
       "GTK::Compat::Raw::Cairo"                :  "lib/GTK/Compat/Raw/Cairo.pm6"                ,
       "GTK::Compat::Raw::Event"                :  "lib/GTK/Compat/Raw/Event.pm6"                ,
       "GTK::Compat::Raw::FrameClock"           :  "lib/GTK/Compat/Raw/FrameClock.pm6"           ,
+      "GTK::Compat::Raw::Threads"              :  "lib/GTK/Compat/Raw/Threads.pm6"              ,
+      "GTK::Compat::Threads"                   :  "lib/GTK/Compat/Threads.pm6"                  ,
       "GTK::Dialog::Raw::About"                :  "lib/GTK/Dialog/Raw/About.pm6"                ,
       "GTK::Dialog::Raw::AppChooser"           :  "lib/GTK/Dialog/Raw/AppChooser.pm6"           ,
       "GTK::Dialog::Raw::ColorChooser"         :  "lib/GTK/Dialog/Raw/ColorChooser.pm6"         ,
@@ -266,6 +268,7 @@
       "GTK::Roles::Signals::ListBox"           :  "lib/GTK/Roles/Signals/ListBox.pm6"           ,
       "GTK::Roles::Signals::Menu"              :  "lib/GTK/Roles/Signals/Menu.pm6"              ,
       "GTK::Roles::Signals::MenuShell"         :  "lib/GTK/Roles/Signals/MenuShell.pm6"         ,
+      "GTK::Roles::Signals::Notebook"          :  "lib/GTK/Roles/Signals/Notebook.pm6"          ,
       "GTK::Roles::Signals::Overlay"           :  "lib/GTK/Roles/Signals/Overlay.pm6"           ,
       "GTK::Roles::Signals::Places"            :  "lib/GTK/Roles/Signals/Places.pm6"            ,
       "GTK::Roles::Signals::PrintOperation"    :  "lib/GTK/Roles/Signals/PrintOperation.pm6"    ,
@@ -475,6 +478,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 

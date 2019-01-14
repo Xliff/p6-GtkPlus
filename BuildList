@@ -83,6 +83,8 @@ GTK::Compat::Pixbuf::Transforms
 GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
+GTK::Compat::Raw::Threads
+GTK::Compat::Threads
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
 GTK::Dialog::Raw::ColorChooser
@@ -260,6 +262,7 @@ GTK::Roles::Signals::IconView
 GTK::Roles::Signals::ListBox
 GTK::Roles::Signals::Menu
 GTK::Roles::Signals::MenuShell
+GTK::Roles::Signals::Notebook
 GTK::Roles::Signals::Overlay
 GTK::Roles::Signals::Places
 GTK::Roles::Signals::PrintOperation
