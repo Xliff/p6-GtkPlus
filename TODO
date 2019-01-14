@@ -28,6 +28,7 @@
     CATCH { default { .message.say; $app.exit } }
 - Rewrite this document in Markdown format.
 √ Test case for all features of GTK::Utils::MenuBuilder
+- Improve GTK::Widget.CreateObject to take best guess at pointer name for widget type, if it exists.
 
 
 Applications

@@ -20,6 +20,10 @@ class GTK::Grid is GTK::Container {
 
   has GtkGrid $!g;
 
+  has @!grid;
+  has %!obj-track;
+  has %!obj-manifest;
+
   # XXX
   # As a container, it is imperative that there be proper storage for widgets.
   # As things are right now, we have only @!start and @!end. We could reuse these,
@@ -75,6 +79,101 @@ class GTK::Grid is GTK::Container {
   multi method new {
     my $grid = gtk_grid_new();
     self.bless(:$grid);
+  }
+
+  my subset WidgetPointer of Mu where GTK::Widget | Pointer;
+  method !add-child-at (
+    WidgetPointer $child,
+    Int $left,
+    Int $top,
+    Int $width,
+    Int $height
+  ) {
+    my $c = do given $child {
+      when GTK::Widget { +.widget.p }
+      when GtkWidget   { +.p        }
+    }
+    %!obj-manifest{$c} = $child;
+    %!obj-track{$c} = {
+      c => $c,
+      l => $left,
+      t => $top,
+      w => $width,
+      h => $height
+    };
+
+    for $top..$top+$height -> $row {
+      for $left..$left+$width -> $col {
+        @!grid[$row] //= [];
+        @!grid[$row][$col] = %!obj-track{$child}
+      }
+    }
+  }
+  method !add-child-at-with-sib (
+    WidgetPointer $child,
+    WidgetPointer $sib,
+    Int $side,
+    Int $width,
+    Int $height
+  ) {
+    my $s = do given $sib {
+      when GTK::Widget { +.widget.p }
+      when GtkWidget   { +.p        }
+    }
+    my ($l, $t, $w, $h) = %!obj-track{$s}<l t w h>;
+    given GtkPositionType($side) {
+      when GTK_POS_LEFT      { --$l             }
+      when GTK_POS_RIGHT     { $l = $l + $w + 1 }
+      when GTK_POS_TOP       { --$t             }
+      when GTK_POS_BOTTOM    { $t = $t + $h + 1 }
+    }
+    samewith($child, $l, $t, $width, $height)
+  }
+
+  method !grid-remove-col($col) {
+    my @to-del = %!obj-track.pairs.grep( *.value<l> == $col );
+    for @to-del {
+      %!obj-track{ .value<c> }:delete;
+      %!obj-manifest{ .value<c> }:delete;
+    }
+    .value<w>-- for %!obj-track.pairs.grep({
+      .value<l> <= $col <= .value<l> + .value<w>
+    });
+    .value<l>-- for %!obj-track.pairs.grep({ .value<l> > $col });
+    for @!grid.kv -> $rk, $rv {
+      next without $rv;
+      for $rv.list.kv -> $ck, $cv {
+        $cv = Nil unless %!obj-manifest{$cv<w>}:exists;
+      }
+      $rv.splice($col, 1);
+    }
+  }
+
+  method !grid-remove-row($row) {
+    my @to-del = %!obj-track.pairs.grep( *.value<t> == $row );
+    for @to-del {
+      %!obj-track{ .value<c> }:delete;
+      %!obj-manifest{ .value<c> }:delete;
+    }
+    .value<h>-- for %!obj-track.pairs.grep({
+      .value<t> <= $row <= .value<t> + .value<h>
+    });
+    .value<t>-- for %!obj-track.pairs.grep({ .value<t> > $row });
+    @!grid.splice($row, 1);
+  }
+
+  method get-children {
+    my %seen;
+    gather for @!grid.kv -> $rk, $rv {
+      next without $rv;
+      for $rv.list.kv -> $ck, $cv {
+        next without $cv;
+        unless %seen{$cv<c>} {
+          take %!obj-manifest{$cv<c>};
+          %seen{$cv<c>} = 1;
+        }
+      }
+    }
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -143,8 +242,20 @@ class GTK::Grid is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method attach (
-    GtkWidget() $child,
+  multi method attach (
+    GTK::Widget $child,
+    Int() $left,
+    Int() $top,
+    Int() $width,
+    Int() $height
+  ) {
+    self.SET-LATCH;
+    my $rc = samewith($child, $left, $top, $width, $height);
+    self!add-child-at($child, $left, $top, $width, $height);
+    $rc;
+  }
+  multi method attach (
+    GtkWidget $child,
     Int() $left,
     Int() $top,
     Int() $width,
@@ -152,22 +263,64 @@ class GTK::Grid is GTK::Container {
   ) {
     my @i = ($left, $top, $width, $height);
     my gint ($l, $t, $w, $h) = self.RESOLVE-INT(@i);
-    gtk_grid_attach($!g, $child, $l, $t, $w, $h);
+    my $rc = gtk_grid_attach($!g, $child, $l, $t, $w, $h);
+    self!add-child-at($child.widget, $left, $top, $width, $height)
+      unless self.IS-LATCHED;
+    self.UNSET-LATCH;
+    $rc;
   }
 
-  method attach_next_to (
+  proto method attach_next_to (|)
+    is also<attach-next-to>
+    { * }
+
+  multi method attach_next_to (
+    GTK::Widget $child,
+    GTK::Widget $sibling,
+    Int() $side,                  # GtkPositionType $side,
+    Int() $width,
+    Int() $height
+  ) {
+    self.SET-LATCH;
+    my $rc = samewith($child.widget, $sibling.widget, $side, $width, $height);
+    self!add-child-at-with-sib(
+      $child.widget, $sibling.widget, $side, $width, $height
+    );
+  }
+  multi method attach_next_to (
     GtkWidget() $child,
     GtkWidget() $sibling,
-    GtkPositionType $side,
-    gint $width,
-    gint $height
-  )
-    is also<attach-next-to>
-  {
+    Int() $side,                  # GtkPositionType $side,
+    Int() $width,
+    Int() $height
+  ) {
     my $s = self.RESOLVE-UINT($side);
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
-    gtk_grid_attach_next_to($!g, $child, $sibling, $s, $w, $h);
+    my $rc = gtk_grid_attach_next_to($!g, $child, $sibling, $s, $w, $h);
+    self!add-child-at-with-sib($child, $sibling, $side, $width, $height)
+      unless self.IS-LATCHED;
+    self.UNSET-LATCH;
+    $rc;
+  }
+
+  method get_widget_at(Int() $left, Int() $top)
+    is also<get-widget-at>
+  {
+    do given %!obj-manifest{ @!grid[$top][$left]<c> } {
+      when GTK::Widget { $_ }
+
+      when GtkWidget {
+        GTK::Widget.new($_).getType.starts-with('GTK::') ??
+          GTK::Widget.CreateObject($_)
+          !!
+          $_;
+      }
+
+      default {
+        die "GTK::Grid.get_widget_at does not know how to handle { .^name }";
+      }
+    }
   }
 
   method get_child_at (Int() $left, Int() $top)
@@ -209,11 +362,13 @@ class GTK::Grid is GTK::Container {
 
   method remove_column (Int() $position) is also<remove-column> {
     my gint $p = self.RESOLVE-INT($position);
+    self!grid-remove-col($position);
     gtk_grid_remove_column($!g, $p);
   }
 
   method remove_row (Int() $position) is also<remove-row> {
     my gint $p = self.RESOLVE-INT($position);
+    self!grid-remove-row($position);
     gtk_grid_remove_row($!g, $p);
   }
 
