@@ -29,6 +29,7 @@
 - Rewrite this document in Markdown format.
 √ Test case for all features of GTK::Utils::MenuBuilder
 - Improve GTK::Widget.CreateObject to take best guess at pointer name for widget type, if it exists.
+- GTK::Grid to provide sanitized version of it's tracking structure to user-code
 
 
 Applications

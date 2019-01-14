@@ -142,10 +142,10 @@ class GTK::Grid is GTK::Container {
     .value<l>-- for %!obj-track.pairs.grep({ .value<l> > $col });
     for @!grid.kv -> $rk, $rv {
       next without $rv;
+      $rv.splice($col, 1);
       for $rv.list.kv -> $ck, $cv {
         $cv = Nil unless %!obj-manifest{$cv<w>}:exists;
       }
-      $rv.splice($col, 1);
     }
   }
 
@@ -160,19 +160,20 @@ class GTK::Grid is GTK::Container {
     });
     .value<t>-- for %!obj-track.pairs.grep({ .value<t> > $row });
     @!grid.splice($row, 1);
+    for @!grid.kv -> $rk, $rv {
+      next without $rv;
+      for $rv.list.kv -> $ck, $cv {
+        $cv = Nil unless %!obj-manifest{$cv<w>}:exists;
+      }
+    }
   }
 
   method get-children {
-    my %seen;
-    gather for @!grid.kv -> $rk, $rv {
-      next without $rv;
-      for $rv.list.kv -> $ck, $cv {
-        next without $cv;
-        unless %seen{$cv<c>} {
-          take %!obj-manifest{$cv<c>};
-          %seen{$cv<c>} = 1;
-        }
-      }
+    %!obj-manifest{
+      %!obj-track.pairs.sort({ [||](
+        $^a.value<t> <=> $^b.value<t>,
+        $^a.value<l> <=> $^b.value<l>
+      )}).map( *.key )
     }
   }
 
@@ -250,7 +251,7 @@ class GTK::Grid is GTK::Container {
     Int() $height
   ) {
     self.SET-LATCH;
-    my $rc = samewith($child, $left, $top, $width, $height);
+    my $rc = samewith($child.widget, $left, $top, $width, $height);
     self!add-child-at($child, $left, $top, $width, $height);
     $rc;
   }

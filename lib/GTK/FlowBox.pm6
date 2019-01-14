@@ -209,7 +209,7 @@ class GTK::FlowBox is GTK::Container {
 
   method get_child_at_pos (gint $x, gint $y) is also<get-child-at-pos> {
     GTK::FlowBoxChild.new(
-      gtk_flow_box_get_child_at_pos($!fb, $x, $y);
+      gtk_flow_box_get_child_at_pos($!fb, $x, $y)
     );
   }
 
