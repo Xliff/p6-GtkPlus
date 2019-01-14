@@ -16,7 +16,7 @@
 - Move signals to %Object.signal<name> to fix issue with method name conflicts
 + GTK::ScrolledWindow.new_with_policy is in desperate need of being written (implemented, but not tested)
 + GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!  (implemented, but not tested)
-+ Add type specific signal handling to GTK::Notebook
++ Add type specific signal handling to GTK::Notebook                        (implemented, but not tested)
 - Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher or GtkStackSidebar
 - Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 - Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
