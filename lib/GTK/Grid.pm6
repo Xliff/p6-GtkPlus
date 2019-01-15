@@ -123,77 +123,77 @@ class GTK::Grid is GTK::Container {
     }
     my ($l, $t, $w, $h) = %!obj-track{$s}<l t w h>;
     given GtkPositionType($side) {
-      when GTK_POS_LEFT      { --$l             }
-      when GTK_POS_RIGHT     { $l += $w + 1     }
-      when GTK_POS_TOP       { --$t             }
-      when GTK_POS_BOTTOM    { $t += $h + 1     }
+      when GTK_POS_LEFT      { --$l     }
+      when GTK_POS_RIGHT     { $l += $w }
+      when GTK_POS_TOP       { --$t     }
+      when GTK_POS_BOTTOM    { $t += $h }
     }
     die "Cannot add child with negative index: top={$t}, left={$l}"
       unless $t >= 0 && $l >= 0;
     self!add-child-at($child, $l, $t, $width, $height)
   }
 
-  method !grid-remove-col($col) {
-    my @to-del = %!obj-track.pairs.grep( *.value<l> == $col );
-    for @to-del {
-      %!obj-track{ .value<c> }:delete;
-      %!obj-manifest{ .value<c> }:delete;
-    }
-    .value<w>-- for %!obj-track.pairs.grep({
-      .value<l> <= $col <= .value<l> + .value<w>
-    });
-    .value<l>-- for %!obj-track.pairs.grep({ .value<l> > $col });
-    for @!grid.kv -> $rk, $rv {
-      next without $rv;
-      $rv.splice($col, 1);
-      for $rv.list.kv -> $ck, $cv {
-        $cv = Nil unless %!obj-manifest{$cv<w>}:exists;
-      }
-    }
-  }
-
-  method !grid-add-col($col is copy, :$push = False) {
-    unless $push {
-      .value<w>++ for %!obj-track.pairs.grep({
-        .value<l> <= $col <= .value<l> + .value<w>
-      })
-    }
-    .value<l>++ for %!obj-track.pairs.grep({
-      $col-- if $push;
-      .value<l> > $col
-    });
-  }
-
-  method !grid-remove-row($row) {
-    my @to-del = %!obj-track.pairs.grep( *.value<t> == $row );
-    for @to-del {
-      %!obj-track{ .value<c> }:delete;
-      %!obj-manifest{ .value<c> }:delete;
-    }
-    .value<h>-- for %!obj-track.pairs.grep({
-      .value<t> <= $row <= .value<t> + .value<h>
-    });
-    .value<t>-- for %!obj-track.pairs.grep({ .value<t> > $row });
-    @!grid.splice($row, 1);
-    for @!grid.kv -> $rk, $rv {
-      next without $rv;
-      for $rv.list.kv -> $ck, $cv {
-        $cv = Nil unless %!obj-manifest{$cv<w>}:exists;
-      }
-    }
-  }
-
-  method !grid-add-row($row is copy, :$push = False) {
-    unless $push {
-      .value<h>++ for %!obj-track.pairs.grep({
-        .value<t> <= $row <= .value<t> + .value<h>
-      })
-    }
-    .value<t>++ for %!obj-track.pairs.grep({
-      $row-- if $push;
-      .value<t> > $row;
-    });
-  }
+  # method !grid-remove-col($col) {
+  #   my @to-del = %!obj-track.pairs.grep( *.value<l> == $col );
+  #   for @to-del {
+  #     %!obj-track{ .value<c> }:delete;
+  #     %!obj-manifest{ .value<c> }:delete;
+  #   }
+  #   .value<w>-- for %!obj-track.pairs.grep({
+  #     .value<l> <= $col <= .value<l> + .value<w>
+  #   });
+  #   .value<l>-- for %!obj-track.pairs.grep({ .value<l> > $col });
+  #   for @!grid.kv -> $rk, $rv {
+  #     next without $rv;
+  #     $rv.splice($col, 1);
+  #     for $rv.list.kv -> $ck, $cv {
+  #       $cv = Nil unless %!obj-manifest{$cv<w>}:exists;
+  #     }
+  #   }
+  # }
+  #
+  # method !grid-add-col($col is copy, :$push = False) {
+  #   unless $push {
+  #     .value<w>++ for %!obj-track.pairs.grep({
+  #       .value<l> <= $col <= .value<l> + .value<w>
+  #     })
+  #   }
+  #   .value<l>++ for %!obj-track.pairs.grep({
+  #     $col-- if $push;
+  #     .value<l> > $col
+  #   });
+  # }
+  #
+  # method !grid-remove-row($row) {
+  #   my @to-del = %!obj-track.pairs.grep( *.value<t> == $row );
+  #   for @to-del {
+  #     %!obj-track{ .value<c> }:delete;
+  #     %!obj-manifest{ .value<c> }:delete;
+  #   }
+  #   .value<h>-- for %!obj-track.pairs.grep({
+  #     .value<t> <= $row <= .value<t> + .value<h>
+  #   });
+  #   .value<t>-- for %!obj-track.pairs.grep({ .value<t> > $row });
+  #   @!grid.splice($row, 1);
+  #   for @!grid.kv -> $rk, $rv {
+  #     next without $rv;
+  #     for $rv.list.kv -> $ck, $cv {
+  #       $cv = Nil unless %!obj-manifest{$cv<w>}:exists;
+  #     }
+  #   }
+  # }
+  #
+  # method !grid-add-row($row is copy, :$push = False) {
+  #   unless $push {
+  #     .value<h>++ for %!obj-track.pairs.grep({
+  #       .value<t> <= $row <= .value<t> + .value<h>
+  #     })
+  #   }
+  #   .value<t>++ for %!obj-track.pairs.grep({
+  #     $row-- if $push;
+  #     .value<t> > $row;
+  #   });
+  # }
 
   method get-children {
     %!obj-manifest{
@@ -204,6 +204,8 @@ class GTK::Grid is GTK::Container {
     }
   }
 
+  # Leave undocumented for now, but caveat-emptor!
+  # This information is NOT ACCURATE!
   method get_child_info(GtkWidget() $w) is also<get-child-info>  {
     my $t = %!obj-track{+$w.p};
     $t<c>:delete;
@@ -328,11 +330,21 @@ class GTK::Grid is GTK::Container {
   ) {
     my $s = self.RESOLVE-UINT($side);
     my @i = ($width, $height);
-    my gint ($w, $h) = self.RESOLVE-INT(@i);
+    my gint ($ww, $hh) = self.RESOLVE-INT(@i);
     self!add-child-at-with-sib($child, $sibling, $side, $width, $height)
       unless self.IS-LATCHED;
     self.UNSET-LATCH;
-    gtk_grid_attach_next_to($!g, $child, $sibling, $s, $w, $h);
+
+    # Is this an implied insert? If so:
+    # my ($l, $t, $w, $h) = %!obj-track{ +$sibling.p }<l t w h>;
+    # given GtkPositionType($side) {
+    #   when GTK_POS_TOP    { self!grid-add-row($t,      :push) }
+    #   when GTK_POS_BOTTOM { self!grid-add-row($t + $h, :push) }
+    #   when GTK_POS_LEFT   { self!grid-add-col($l,      :push) }
+    #   when GTK_POS_RIGHT  { self!grid-add-col($l + $w, :push) }
+    # }
+
+    gtk_grid_attach_next_to($!g, $child, $sibling, $s, $ww, $hh);
   }
 
   method get_widget_at(Int() $left, Int() $top)
@@ -375,7 +387,7 @@ class GTK::Grid is GTK::Container {
 
   method insert_column (Int() $position) is also<insert-column> {
     my gint $p = self.RESOLVE-INT($position);
-    self!grid-add-col($position);
+    #self!grid-add-col($position);
     gtk_grid_insert_column($!g, $p);
   }
 
@@ -386,32 +398,32 @@ class GTK::Grid is GTK::Container {
     my uint32 $s = self.RESOLVE-UINT($side);
     die '$sibling not found in grid!'
       unless %!obj-manifest{+$sibling.p}:exists;
-    my ($l, $t) = %!obj-track{+$sibling.p}<l t>;
-    given GtkPositionType($side) {
-      # Check rules. Do these follow normal insert if they are within the grid?
-      when GTK_POS_LEFT      { $l-- if $l > 0; self!grid-add-col($l, :push) }
-      when GTK_POS_RIGHT     { $l++; self!grid-add-col($l)                  }
-      when GTK_POS_TOP       { $t-- if $t > 0; self!grid-add-row($t, :push) }
-      when GTK_POS_BOTTOM    { $t++; self!grid-add-row($t)                  }
-    }
+    # my ($l, $t) = %!obj-track{+$sibling.p}<l t>;
+    # given GtkPositionType($side) {
+      #Check rules. Do these follow normal insert if they are within the grid?
+      # when GTK_POS_LEFT      { $l-- if $l > 0; self!grid-add-col($l, :push) }
+      # when GTK_POS_RIGHT     { $l++; self!grid-add-col($l)                  }
+      # when GTK_POS_TOP       { $t-- if $t > 0; self!grid-add-row($t, :push) }
+      # when GTK_POS_BOTTOM    { $t++; self!grid-add-row($t)                  }
+    # }
     gtk_grid_insert_next_to($!g, $sibling, $s);
   }
 
   method insert_row (Int() $position) is also<insert-row> {
     my gint $p = self.RESOLVE-INT($position);
-    self!grid-add-row($position);
+    #self!grid-add-row($position);
     gtk_grid_insert_row($!g, $p);
   }
 
   method remove_column (Int() $position) is also<remove-column> {
     my gint $p = self.RESOLVE-INT($position);
-    self!grid-remove-col($position);
+    #self!grid-remove-col($position);
     gtk_grid_remove_column($!g, $p);
   }
 
   method remove_row (Int() $position) is also<remove-row> {
     my gint $p = self.RESOLVE-INT($position);
-    self!grid-remove-row($position);
+    #self!grid-remove-row($position);
     gtk_grid_remove_row($!g, $p);
   }
 
