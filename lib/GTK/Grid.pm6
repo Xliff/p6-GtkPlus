@@ -24,16 +24,6 @@ class GTK::Grid is GTK::Container {
   has %!obj-track;
   has %!obj-manifest;
 
-  # XXX
-  # As a container, it is imperative that there be proper storage for widgets.
-  # As things are right now, we have only @!start and @!end. We could reuse these,
-  # but that will make it problematic for ease of retrieval.
-  #
-  # A method built on hash references is preferrable.
-  #
-  # This NEEDS to be done prior to release, so that widgets created outside of
-  # this scope are preserved.
-
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::Grid');
@@ -81,14 +71,18 @@ class GTK::Grid is GTK::Container {
     self.bless(:$grid);
   }
 
-  my subset WidgetPointer of Mu where GTK::Widget | Pointer;
   method !add-child-at (
-    WidgetPointer $child,
-    Int $left,
-    Int $top,
-    Int $width,
-    Int $height
+    $child,
+    Int() $left,
+    Int() $top,
+    Int() $width,
+    Int() $height
   ) {
+    die "Invalid type for \$child: { .^name }"
+      unless [||](
+        $child ~~ GTK::Widget,
+        ($child.REPR // '') eq 'CPointer'
+      );
     my $c = do given $child {
       when GTK::Widget { +.widget.p }
       when GtkWidget   { +.p        }
@@ -110,12 +104,19 @@ class GTK::Grid is GTK::Container {
     }
   }
   method !add-child-at-with-sib (
-    WidgetPointer $child,
-    WidgetPointer $sib,
-    Int $side,
-    Int $width,
-    Int $height
+    $child,
+    $sib,
+    Int() $side,
+    Int() $width,
+    Int() $height
   ) {
+    for $child, $sib {
+      die "Invalid type for \$child: { .^name }"
+        unless [||](
+          $_ ~~ GTK::Widget,
+          (.REPR // '') eq 'CPointer'
+        );
+    }
     my $s = do given $sib {
       when GTK::Widget { +.widget.p }
       when GtkWidget   { +.p        }
@@ -123,11 +124,13 @@ class GTK::Grid is GTK::Container {
     my ($l, $t, $w, $h) = %!obj-track{$s}<l t w h>;
     given GtkPositionType($side) {
       when GTK_POS_LEFT      { --$l             }
-      when GTK_POS_RIGHT     { $l = $l + $w + 1 }
+      when GTK_POS_RIGHT     { $l += $w + 1     }
       when GTK_POS_TOP       { --$t             }
-      when GTK_POS_BOTTOM    { $t = $t + $h + 1 }
+      when GTK_POS_BOTTOM    { $t += $h + 1     }
     }
-    samewith($child, $l, $t, $width, $height)
+    die "Cannot add child with negative index: top={$t}, left={$l}"
+      unless $t >= 0 && $l >= 0;
+    self!add-child-at($child, $l, $t, $width, $height)
   }
 
   method !grid-remove-col($col) {
@@ -149,6 +152,18 @@ class GTK::Grid is GTK::Container {
     }
   }
 
+  method !grid-add-col($col is copy, :$push = False) {
+    unless $push {
+      .value<w>++ for %!obj-track.pairs.grep({
+        .value<l> <= $col <= .value<l> + .value<w>
+      })
+    }
+    .value<l>++ for %!obj-track.pairs.grep({
+      $col-- if $push;
+      .value<l> > $col
+    });
+  }
+
   method !grid-remove-row($row) {
     my @to-del = %!obj-track.pairs.grep( *.value<t> == $row );
     for @to-del {
@@ -168,6 +183,18 @@ class GTK::Grid is GTK::Container {
     }
   }
 
+  method !grid-add-row($row is copy, :$push = False) {
+    unless $push {
+      .value<h>++ for %!obj-track.pairs.grep({
+        .value<t> <= $row <= .value<t> + .value<h>
+      })
+    }
+    .value<t>++ for %!obj-track.pairs.grep({
+      $row-- if $push;
+      .value<t> > $row;
+    });
+  }
+
   method get-children {
     %!obj-manifest{
       %!obj-track.pairs.sort({ [||](
@@ -175,6 +202,12 @@ class GTK::Grid is GTK::Container {
         $^a.value<l> <=> $^b.value<l>
       )}).map( *.key )
     }
+  }
+
+  method get_child_info(GtkWidget() $w) is also<get-child-info>  {
+    my $t = %!obj-track{+$w.p};
+    $t<c>:delete;
+    $t;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -251,9 +284,8 @@ class GTK::Grid is GTK::Container {
     Int() $height
   ) {
     self.SET-LATCH;
-    my $rc = samewith($child.widget, $left, $top, $width, $height);
     self!add-child-at($child, $left, $top, $width, $height);
-    $rc;
+    samewith($child.widget, $left, $top, $width, $height);
   }
   multi method attach (
     GtkWidget $child,
@@ -264,11 +296,10 @@ class GTK::Grid is GTK::Container {
   ) {
     my @i = ($left, $top, $width, $height);
     my gint ($l, $t, $w, $h) = self.RESOLVE-INT(@i);
-    my $rc = gtk_grid_attach($!g, $child, $l, $t, $w, $h);
     self!add-child-at($child.widget, $left, $top, $width, $height)
       unless self.IS-LATCHED;
     self.UNSET-LATCH;
-    $rc;
+    gtk_grid_attach($!g, $child, $l, $t, $w, $h);
   }
 
   proto method attach_next_to (|)
@@ -283,10 +314,10 @@ class GTK::Grid is GTK::Container {
     Int() $height
   ) {
     self.SET-LATCH;
-    my $rc = samewith($child.widget, $sibling.widget, $side, $width, $height);
     self!add-child-at-with-sib(
-      $child.widget, $sibling.widget, $side, $width, $height
+      $child, $sibling, $side, $width, $height
     );
+    samewith($child.widget, $sibling.widget, $side, $width, $height);
   }
   multi method attach_next_to (
     GtkWidget() $child,
@@ -298,11 +329,10 @@ class GTK::Grid is GTK::Container {
     my $s = self.RESOLVE-UINT($side);
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
-    my $rc = gtk_grid_attach_next_to($!g, $child, $sibling, $s, $w, $h);
     self!add-child-at-with-sib($child, $sibling, $side, $width, $height)
       unless self.IS-LATCHED;
     self.UNSET-LATCH;
-    $rc;
+    gtk_grid_attach_next_to($!g, $child, $sibling, $s, $w, $h);
   }
 
   method get_widget_at(Int() $left, Int() $top)
@@ -345,6 +375,7 @@ class GTK::Grid is GTK::Container {
 
   method insert_column (Int() $position) is also<insert-column> {
     my gint $p = self.RESOLVE-INT($position);
+    self!grid-add-col($position);
     gtk_grid_insert_column($!g, $p);
   }
 
@@ -353,11 +384,22 @@ class GTK::Grid is GTK::Container {
     Int() $side                     # GtkPositionType $side
   ) is also<insert-next-to> {
     my uint32 $s = self.RESOLVE-UINT($side);
+    die '$sibling not found in grid!'
+      unless %!obj-manifest{+$sibling.p}:exists;
+    my ($l, $t) = %!obj-track{+$sibling.p}<l t>;
+    given GtkPositionType($side) {
+      # Check rules. Do these follow normal insert if they are within the grid?
+      when GTK_POS_LEFT      { $l-- if $l > 0; self!grid-add-col($l, :push) }
+      when GTK_POS_RIGHT     { $l++; self!grid-add-col($l)                  }
+      when GTK_POS_TOP       { $t-- if $t > 0; self!grid-add-row($t, :push) }
+      when GTK_POS_BOTTOM    { $t++; self!grid-add-row($t)                  }
+    }
     gtk_grid_insert_next_to($!g, $sibling, $s);
   }
 
   method insert_row (Int() $position) is also<insert-row> {
     my gint $p = self.RESOLVE-INT($position);
+    self!grid-add-row($position);
     gtk_grid_insert_row($!g, $p);
   }
 
