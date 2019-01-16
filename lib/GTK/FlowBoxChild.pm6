@@ -63,7 +63,7 @@ class GTK::FlowBoxChild is GTK::Bin {
   }
 
 
-  method GTK::Raw::Types::GtkFlowBoxChild {
+  method GTK::Raw::Types::GtkFlowBoxChild is also<flowboxchild> {
     $!fbc
   }
 

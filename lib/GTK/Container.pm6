@@ -311,15 +311,15 @@ D
     );
   }
 
-  multi method add (GtkWidget $widget) {
-    @!end.push: $widget unless self.IS-LATCHED;
-    self.UNSET-LATCH;
-    gtk_container_add($!c, $widget);
-  }
   multi method add (GTK::Widget $widget) {
     @!end.push: $widget;
     self.SET-LATCH;
     samewith($widget.widget);
+  }
+  multi method add (GtkWidget $widget) {
+    @!end.push: $widget unless self.IS-LATCHED;
+    self.UNSET-LATCH;
+    gtk_container_add($!c, $widget);
   }
 
   method emit_check_resize is also<emit-check-resize> {

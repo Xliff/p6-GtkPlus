@@ -35,4 +35,16 @@ role GTK::Roles::LatchedContents {
     @!end.unshift: $c;
   }
 
+  method push_end($c) is also<push-end> {
+    @!end.push: $c;
+  }
+
+  method start {
+    @!start.clone;
+  }
+
+  method end {
+    @!end.clone;
+  }
+
 }

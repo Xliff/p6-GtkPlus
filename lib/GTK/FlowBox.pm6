@@ -21,6 +21,8 @@ class GTK::FlowBox is GTK::Container {
 
   has GtkFlowBox $!fb;
 
+  has %!child-manifest;
+
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::FlowBox');
@@ -64,6 +66,15 @@ class GTK::FlowBox is GTK::Container {
   multi method new {
     my $flowbox = gtk_flow_box_new();
     self.bless(:$flowbox);
+  }
+
+  method !resolve-selected-child($child) {
+    do given $child {
+      when GTK::FlowBoxChild { $_.flowboxchild                }
+      when GtkFlowBoxChild   { $_                             }
+      when GTK::Widget       { %!child-manifest{ +.widget.p } }
+      when GtkWidget         { %!child-manifest{ +.p }        }
+    }
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -187,6 +198,49 @@ class GTK::FlowBox is GTK::Container {
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
+  # Override GTK::Container.add and GTK::Container.remove
+  # They SHOULD NOT fall back to superclasses since FlowBox uses
+  # GTK::FlowBoxChildren. GTK::FlowBox.remove should be able to take
+  # a GTK::Widget or GTK::FlowBoxChild and STILL Do The Right Thing.
+  # Same with GTK::FlowBox.add
+
+
+  method get_children(:$wrap is copy, :$unwrap is copy)
+    is also<get-children>
+  {
+    die
+      "Both $wrap and $unwrap cannot be specified in the same call to {
+      } GTK::FlowBox.get_children"
+    with $wrap && $unwrap;
+
+    $wrap //= ($unwrap // False).not;
+    my @end = self.end;
+    @end.map( *.get_child ) unless $wrap;
+    @end;
+  }
+
+  # Override.
+  method add($widget) {
+    my $adding = do given $widget {
+      when GTK::FlowBoxChild { $_ }
+
+      when GTK::Widget       |
+           GtkWidget         { GTK::FlowBoxChild.new.add($_) }
+    }
+    %!child-manifest{ +.get-child.widget.p } = $_ given $adding;
+    nextwith($adding);
+  }
+
+  method remove($widget) {
+    my $removing = do given $widget {
+      when GTK::FlowBoxChild { $_ }
+
+      when GTK::Widget       { %!child-manifest{ +.widget.p }:delete }
+      when GtkWidget         { %!child-manifest{ +.p }:delete        }
+    }
+    nextwith($removing);
+  }
+
   # ↓↓↓↓ METHODS ↓↓↓↓
   multi method bind_model (
     GListModel $model,
@@ -201,18 +255,23 @@ class GTK::FlowBox is GTK::Container {
     );
   }
 
-  method get_child_at_index (gint $idx) is also<get-child-at-index> {
+  method get_child_at_index (Int() $idx) is also<get-child-at-index> {
+    my gint $i = self.RESOLVE-INT($idx);
+    self.end[$idx];
+    # GTK::FlowBoxChild.new(
+    #   gtk_flow_box_get_child_at_index($!fb, $i)
+    # );
+  }
+
+  method get_child_at_pos (Int() $x, Int() $y) is also<get-child-at-pos> {
+    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
     GTK::FlowBoxChild.new(
-      gtk_flow_box_get_child_at_index($!fb, $idx)
+      gtk_flow_box_get_child_at_pos($!fb, $xx, $yy)
     );
   }
 
-  method get_child_at_pos (gint $x, gint $y) is also<get-child-at-pos> {
-    GTK::FlowBoxChild.new(
-      gtk_flow_box_get_child_at_pos($!fb, $x, $y)
-    );
-  }
-
+  # Should be processed into a Perl6 @. All retrieved elements should
+  # be checked for an existing object type in self.end
   method get_selected_children is also<get-selected-children> {
     GList.new( GtkFlowBoxChild, gtk_flow_box_get_selected_children($!fb) );
   }
@@ -221,8 +280,16 @@ class GTK::FlowBox is GTK::Container {
     gtk_flow_box_get_type();
   }
 
-  method insert (GtkWidget() $widget, gint $position) {
-    gtk_flow_box_insert($!fb, $widget, $position);
+  method insert ($widget, Int() $position) {
+    my $inserting = do given $widget {
+      when GTK::FlowBoxChild { $_ }
+
+      when GTK::Widget       |
+           GtkWidget         { GTK::FlowBoxChild.new.add($_) }
+    }
+    %!child-manifest{ +.get-child.widget.p } = $_ given $inserting;
+    my gint $p = self.RESOLVE-INT($position);
+    gtk_flow_box_insert($!fb, $inserting, $p);
   }
 
   method invalidate_filter is also<invalidate-filter> {
@@ -237,8 +304,9 @@ class GTK::FlowBox is GTK::Container {
     gtk_flow_box_select_all($!fb);
   }
 
-  method select_child (GtkFlowBoxChild() $child) is also<select-child> {
-    gtk_flow_box_select_child($!fb, $child);
+  method select_child ($child) is also<select-child> {
+    my $to-be-selected = self!resolve-selected-child;
+    gtk_flow_box_select_child($!fb, $to-be-selected);
   }
 
   method selected_foreach (GtkFlowBoxForeachFunc $func, gpointer $data)
@@ -288,7 +356,8 @@ class GTK::FlowBox is GTK::Container {
   method unselect_child (GtkFlowBoxChild() $child)
     is also<unselect-child>
   {
-    gtk_flow_box_unselect_child($!fb, $child);
+    my $to-be-unselected = self!resolve-selected-child;
+    gtk_flow_box_unselect_child($!fb, $to-be-unselected);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
