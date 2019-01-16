@@ -453,7 +453,6 @@ GTK::MenuBar
 GTK::MenuButton
 GTK::Offscreen
 GTK::Places
-GTK::Plus
 GTK::RadioButton
 GTK::SeparatorToolItem
 GTK::ShorcutsWindow

@@ -56,7 +56,7 @@ class GTK::Bin is GTK::Container {
     $o;
   }
 
-  multi method get_child is also<get-child> {
+  method get_child is also<get-child> {
     self.end[0] ~~ GTK::Widget ??
       self.end[0] !! gtk_bin_get_child($!bin);
   }

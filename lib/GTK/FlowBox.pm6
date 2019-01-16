@@ -217,16 +217,33 @@ class GTK::FlowBox is GTK::Container {
     my $adding = do given $widget {
       when GTK::FlowBoxChild { $_ }
 
-      when GTK::Widget       |
-           GtkWidget         { GTK::FlowBoxChild.new.add($_) }
-    }
+      when GTK::Widget | GtkWidget {
+        my $fbc = GTK::FlowBoxChild.new;
+        $fbc.add($_);
+        $fbc
+      }
+
+      default {
+        die
+          "GTK::FlowBox.add does not know how to handle object type {
+          .^name }";
+      }
+    };
     %!child-manifest{ +.get-child.widget.p } = $_ given $adding;
     nextwith($adding);
   }
 
   method remove($widget) {
     my $removing = do given $widget {
-      when GTK::FlowBoxChild { $_ }
+      when GTK::FlowBoxChild {
+        %!child-manifest{ +.get-child.widget.p }:delete;
+        $_
+      }
+
+      when GtkFlowBoxChild   {
+        %!child-manifest{ +.p }:delete;
+        $_
+      }
 
       when GTK::Widget       { %!child-manifest{ +.widget.p }:delete }
       when GtkWidget         { %!child-manifest{ +.p }:delete        }
@@ -276,9 +293,18 @@ class GTK::FlowBox is GTK::Container {
     my $inserting = do given $widget {
       when GTK::FlowBoxChild { $_ }
 
-      when GTK::Widget       |
-           GtkWidget         { GTK::FlowBoxChild.new.add($_) }
-    }
+      when GTK::Widget | GtkWidget {
+        my $fbc = GTK::FlowBoxChild.new;
+        $fbc.add($_);
+        $fbc
+      }
+
+      default {
+        die
+          "GTK::FlowBox.insert does not know how to handle object type {
+          .^name }";
+      }
+    };
     %!child-manifest{ +.get-child.widget.p } = $_ given $inserting;
     my gint $p = self.RESOLVE-INT($position);
     gtk_flow_box_insert($!fb, $inserting, $p);

@@ -60,9 +60,12 @@ class GTK::Widget {
     self.downref;
     # All widget-dependents may need a variation of this.
     my $w_cheat = nativecast(GObjectStruct, $!w);
-    unless $w_cheat.ref_count {
-      self.disconnect-all($_) for %!signals, %!signals-widget
-    }
+    self.cleanup unless $w_cheat.ref_count;
+  }
+
+  # Used by method destroy and submethod DESTROY
+  method cleanup {
+    self.disconnect-all($_) for %!signals, %!signals-widget
   }
 
   proto new(|) { * }
@@ -1968,6 +1971,7 @@ class GTK::Widget {
   }
 
   method destroy {
+    self.cleanup;
     gtk_widget_destroy($!w);
   }
 

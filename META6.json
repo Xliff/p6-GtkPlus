@@ -459,7 +459,6 @@
       "GTK::MenuButton"                        :  "lib/GTK/MenuButton.pm6"                      ,
       "GTK::Offscreen"                         :  "lib/GTK/Offscreen.pm6"                       ,
       "GTK::Places"                            :  "lib/GTK/Places.pm6"                          ,
-      "GTK::Plus"                              :  "lib/GTK/Plus.pm6"                            ,
       "GTK::RadioButton"                       :  "lib/GTK/RadioButton.pm6"                     ,
       "GTK::SeparatorToolItem"                 :  "lib/GTK/SeparatorToolItem.pm6"               ,
       "GTK::ShorcutsWindow"                    :  "lib/GTK/ShorcutsWindow.pm6"                  ,
@@ -479,3 +478,4 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
