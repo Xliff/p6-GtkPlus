@@ -198,13 +198,6 @@ class GTK::FlowBox is GTK::Container {
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
-  # Override GTK::Container.add and GTK::Container.remove
-  # They SHOULD NOT fall back to superclasses since FlowBox uses
-  # GTK::FlowBoxChildren. GTK::FlowBox.remove should be able to take
-  # a GTK::Widget or GTK::FlowBoxChild and STILL Do The Right Thing.
-  # Same with GTK::FlowBox.add
-
-
   method get_children(:$wrap is copy, :$unwrap is copy)
     is also<get-children>
   {
@@ -270,10 +263,9 @@ class GTK::FlowBox is GTK::Container {
     );
   }
 
-  # Should be processed into a Perl6 @. All retrieved elements should
-  # be checked for an existing object type in self.end
   method get_selected_children is also<get-selected-children> {
-    GList.new( GtkFlowBoxChild, gtk_flow_box_get_selected_children($!fb) );
+    %!child-manifest.values.grep( *.is-selected );
+    #GList.new( GtkFlowBoxChild, gtk_flow_box_get_selected_children($!fb) );
   }
 
   method get_type is also<get-type> {
@@ -347,6 +339,13 @@ class GTK::FlowBox is GTK::Container {
     is also<set-vadjustment>
   {
     gtk_flow_box_set_vadjustment($!fb, $adjustment);
+  }
+
+  method remove_all(:$keep) is also<remove-all> {
+    for %!child-manifest.values {
+      .upref if $keep;
+      self.remove($_);
+    }
   }
 
   method unselect_all is also<unselect-all> {
