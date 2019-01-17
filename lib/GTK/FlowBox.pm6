@@ -10,6 +10,7 @@ use GTK::Raw::Types;
 
 use GTK::FlowBoxChild;
 use GTK::Container;
+use GTK::Widget;
 
 use GTK::Roles::Orientable;
 
@@ -233,6 +234,7 @@ class GTK::FlowBox is GTK::Container {
     nextwith($adding);
   }
 
+  # Override
   method remove($widget) {
     my $removing = do given $widget {
       when GTK::FlowBoxChild {
@@ -245,8 +247,13 @@ class GTK::FlowBox is GTK::Container {
         $_
       }
 
-      when GTK::Widget       { %!child-manifest{ +.widget.p }:delete }
-      when GtkWidget         { %!child-manifest{ +.p }:delete        }
+      when GTK::Widget       {
+        %!child-manifest{ +.widget.p }:delete;
+      }
+
+      when GtkWidget         {
+        %!child-manifest{ +.p }; #:delete;
+      }
     }
     nextwith($removing);
   }
@@ -306,6 +313,7 @@ class GTK::FlowBox is GTK::Container {
       }
     };
     %!child-manifest{ +.get-child.widget.p } = $_ given $inserting;
+    self.insert-end-at($inserting, $position);
     my gint $p = self.RESOLVE-INT($position);
     gtk_flow_box_insert($!fb, $inserting, $p);
   }

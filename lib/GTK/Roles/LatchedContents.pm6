@@ -1,9 +1,16 @@
 use v6.c;
 
+use NativeCall;
+
 use Method::Also;
 use GTK::Roles::Protection;
 
+# With reservations.... but...
+use GTK::Raw::Types;
+use GTK::Widget;
+
 role GTK::Roles::LatchedContents {
+  # This is for GTK:: objects ONLY!
   also does GTK::Roles::Protection;
 
   has $!add-latch;
@@ -27,23 +34,65 @@ role GTK::Roles::LatchedContents {
 
   method push-start($c) is also<push_start> {
     # Write @!start.elems to GtkWidget under key GTKPlus-ContainerStart
+    self.IS-PROTECTED;
     @!start.push: $c;
   }
 
   method unshift-end($c) is also<unshift_end> {
     # Write @!end.elems to GtkWidget under key GTKPlus-ContainerEnd
+    self.IS-PROTECTED;
     @!end.unshift: $c;
   }
 
   method push_end($c) is also<push-end> {
+    self.IS-PROTECTED;
     @!end.push: $c;
   }
 
+  my sub checkp($o) {
+    do given $o {
+      when GTK::Widget { .widget.p }
+      when GtkWidget   { .p        }
+      when Pointer     { $_        }
+
+      default {
+        warn qq:to/W/.chomp;
+GTK::Roles::LatchedContents.checkp detected unexpected type { .^name }
+W
+
+      }
+    }
+  }
+
+  method remove_from_end($c) is also<remove-from-end> {
+    self.IS-PROTECTED;
+    my $cw = +checkp($c);
+    @!end .= grep({ $cw != +checkp($_) });
+  }
+
+  method remove_from_start($c) is also<remove-from-start> {
+    self.IS-PROTECTED;
+    my $cw = +checkp($c);
+    @!start .= grep({ $cw != +checkp($_) });
+  }
+
+  method insert_start_at($c, $p) is also<insert-start-at> {
+    self.IS-PROTECTED;
+    @!start.splice($p, 0, $c);
+  }
+
+  method insert_end_at($c, $p) is also<insert-end-at> {
+    self.IS-PROTECTED;
+    @!end.splice($p, 0, $c);
+  }
+
   method start {
+    self.IS-PROTECTED;
     @!start.clone;
   }
 
   method end {
+    self.IS-PROTECTED;
     @!end.clone;
   }
 

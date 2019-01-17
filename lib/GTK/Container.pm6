@@ -450,8 +450,8 @@ D
     for (@!start, @!end) -> @l {
       @l .= grep({
         do {
-          when GtkWidget   {        +.p !== +$widget.p }
-          when GTK::Widget { +.widget.p !== +$widget.p }
+          when GTK::Widget { +.widget.p != +$widget.p }
+          when GtkWidget   {        +.p != +$widget.p }
         }
       });
     }
