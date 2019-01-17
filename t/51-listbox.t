@@ -49,7 +49,7 @@ sub new_row {
   ## So this has been put off until it can be determined that it is
   ## possible without writing a derivative widget class.
   # ---------------------------------------------------------------
-  # Needs GTK::Builder support, so test will need to be in the post 40s
+  # Needs GTK::Builder support, so test will need to be numbered after that
   # state $b = GTK::Builder.new;
   # my ($ui, $c) = get-new-row-ui();
   # my @rid = (

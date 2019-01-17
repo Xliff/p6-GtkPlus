@@ -18,11 +18,11 @@
 + GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!  (implemented, but not tested)
 + Add type specific signal handling to GTK::Notebook                        (implemented, but not tested)
 - Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher or GtkStackSidebar
-- Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
+√ Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
+- Generate GTK::Widgets and GTK::NonWidgets comprised of need statements (build-mro.pl6 could do this)
 - Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
 √ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
 - Add overflow warnings to appropriate RESOLVE routines in GTK::Roles::Types. Said warnings are NOT under $DEBUG check.
-- Adjust constructors for GTK::TextBuffer to accept creation-only properties.
 - Inhibit pass-through to Mu constructor in all widget-based objects!
 - Add this to the top of all activate blocks in t/
     CATCH { default { .message.say; $app.exit } }

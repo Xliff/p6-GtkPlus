@@ -31,7 +31,6 @@ class GTK::WidgetPath {
     self.bless(:$path);
   }
 
-
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -54,7 +53,7 @@ class GTK::WidgetPath {
 
   method append_with_siblings (
     GtkWidgetPath() $siblings,
-    guint $sibling_index
+    Int() $sibling_index
   )
     is also<append-with-siblings>
   {
@@ -95,7 +94,7 @@ class GTK::WidgetPath {
   method iter_add_region (
     Int() $pos,
     Str() $name,
-    GtkRegionFlags $flags
+    Int() $flags                  # GtkRegionFlags $flags
   )
     is also<iter-add-region>
   {
@@ -104,37 +103,37 @@ class GTK::WidgetPath {
     gtk_widget_path_iter_add_region($!wp, $p, $name, $f);
   }
 
-  method iter_clear_classes (gint $pos) is also<iter-clear-classes> {
+  method iter_clear_classes (Int() $pos) is also<iter-clear-classes> {
     my gint $p = self.RESOLVE-INT($pos);
     gtk_widget_path_iter_clear_classes($!wp, $p);
   }
 
-  method iter_clear_regions (gint $pos) is also<iter-clear-regions> {
+  method iter_clear_regions (Int() $pos) is also<iter-clear-regions> {
     my gint $p = self.RESOLVE-INT($pos);
     gtk_widget_path_iter_clear_regions($!wp, $p);
   }
 
-  method iter_get_name (gint $pos) is also<iter-get-name> {
+  method iter_get_name (Int() $pos) is also<iter-get-name> {
     my gint $p = self.RESOLVE-INT($pos);
     gtk_widget_path_iter_get_name($!wp, $p);
   }
 
-  method iter_get_object_name (gint $pos) is also<iter-get-object-name> {
+  method iter_get_object_name (Int() $pos) is also<iter-get-object-name> {
     my gint $p = self.RESOLVE-INT($pos);
     gtk_widget_path_iter_get_object_name($!wp, $p);
   }
 
-  method iter_get_sibling_index (gint $pos) is also<iter-get-sibling-index> {
+  method iter_get_sibling_index (Int() $pos) is also<iter-get-sibling-index> {
     my gint $p = self.RESOLVE-INT($pos);
     gtk_widget_path_iter_get_sibling_index($!wp, $p);
   }
 
-  method iter_get_siblings (gint $pos) is also<iter-get-siblings> {
+  method iter_get_siblings (Int() $pos) is also<iter-get-siblings> {
     my gint $p = self.RESOLVE-INT($pos);
     GTK::WidgetPath.new( gtk_widget_path_iter_get_siblings($!wp, $p) );
   }
 
-  method iter_get_state (gint $pos) is also<iter-get-state> {
+  method iter_get_state (Int() $pos) is also<iter-get-state> {
     my gint $p = self.RESOLVE-INT($pos);
     GtkStateFlags( gtk_widget_path_iter_get_state($!wp, $p) );
   }
@@ -187,12 +186,12 @@ class GTK::WidgetPath {
     so gtk_widget_path_iter_has_region($!wp, $p, $name, $f);
   }
 
-  method iter_list_classes (gint $pos) is also<iter-list-classes> {
+  method iter_list_classes (Int() $pos) is also<iter-list-classes> {
     my gint $p = self.RESOLVE-INT($pos);
     gtk_widget_path_iter_list_classes($!wp, $p);
   }
 
-  method iter_list_regions (gint $pos) is also<iter-list-regions> {
+  method iter_list_regions (Int() $pos) is also<iter-list-regions> {
     my gint $p = self.RESOLVE-INT($pos);
     GTK::Compat::GSList( gtk_widget_path_iter_list_regions($!wp, $p) );
   }

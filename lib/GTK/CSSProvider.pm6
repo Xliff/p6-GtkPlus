@@ -52,7 +52,7 @@ class GTK::CSSProvider {
   }
 
   submethod DESTROY {
-    self.disconnect-all($_) for %!signals-css;
+    self.disconnect-all($_)  for %!signals-css;
   }
 
   method new(:$priority, :$pod) {

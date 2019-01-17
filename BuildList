@@ -455,7 +455,7 @@ GTK::Offscreen
 GTK::Places
 GTK::RadioButton
 GTK::SeparatorToolItem
-GTK::ShorcutsWindow
+GTK::ShortcutsWindow
 GTK::Stack
 GTK::ToolButton
 GTK::Utils::MenuBuilder
