@@ -358,14 +358,14 @@ class GTK::FlowBox is GTK::Container {
   }
 
   multi method set_sort_func (
-    GtkFlowBoxSortFunc $sort_func,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    &sort_func,
+    gpointer $user_data = Pointer,
+    GDestroyNotify $destroy = Pointer
   )
     is also<set-sort-func>
   {
     gtk_flow_box_set_sort_func(
-      $!fb, $sort_func, $user_data, $destroy
+      $!fb, &sort_func, $user_data, $destroy
     );
   }
 

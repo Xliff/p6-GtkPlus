@@ -123,7 +123,7 @@ sub gtk_flow_box_set_hadjustment (GtkFlowBox $box, uint32 $adjustment)
 
 sub gtk_flow_box_set_sort_func (
   GtkFlowBox $box,
-  GtkFlowBoxSortFunc $sort_func,
+  &sort_func (GtkFlowBox, GtkFlowBox, Pointer --> gint),
   gpointer $user_data,
   GDestroyNotify $destroy
 )
