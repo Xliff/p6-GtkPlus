@@ -48,6 +48,27 @@ class GTK::TextBuffer {
     $!tb;
   }
 
+  method !resolve-text-arg($val is copy) {
+    # First check if object can be coerced, then coerce it to a supported
+    # type
+    if $val.^can('Buf').elems {
+      $val .= Buf;
+    } elsif $val.^can('Str').elems {
+      $val .= Str;
+    }
+    do given $val {
+      when Buf { .decode }
+      when Str { $_      }
+
+      default {
+        die qq:to/D/.chomp;
+GTK::TextBuffer does not know how to handle { .^name }, when setting text
+D
+
+      }
+    }
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   proto method apply_tag (|)
@@ -239,8 +260,8 @@ class GTK::TextBuffer {
         );
         $gv.string;
       },
-      STORE => -> $, Str() $val is copy {
-        $gv.string = $val;
+      STORE => -> $, $val is copy {
+        $gv.string = self!resolve-text-arg($val);
         self.prop_set('text', $gv);
       }
     );
@@ -631,7 +652,7 @@ class GTK::TextBuffer {
 
   # Convenience
   method append (
-    Str() $text,
+    $text,
     Int() $len = $text.chars
   ) {
     self.insert(self.get_end_iter, $text, $len);
@@ -639,7 +660,7 @@ class GTK::TextBuffer {
 
   # Convenience
   method prepend (
-    Str() $text,
+    $text,
     Int() $len = $text.chars
   ) {
     self.insert(self.get_start_iter, $text, $len);
@@ -647,20 +668,22 @@ class GTK::TextBuffer {
 
   multi method insert (
     GtkTextIter() $iter,
-    Str() $text,
+    $text is copy,
     Int() $len = $text.chars      # gint $len
   ) {
     my gint $l = self.RESOLVE-INT($len);
+    $text = self!resolve-text-arg($text);
     gtk_text_buffer_insert($!tb, $iter, $text, $l);
   }
 
   method insert_at_cursor (
-    Str() $text,
+    $text,
     Int() $len  = $text.chars     # gint $len
   )
     is also<insert-at-cursor>
   {
     my gint $l = self.RESOLVE-INT($len);
+    $text = self!resolve-text-arg($text);
     gtk_text_buffer_insert_at_cursor($!tb, $text, $l);
   }
 
@@ -675,12 +698,13 @@ class GTK::TextBuffer {
 
   method insert_interactive (
     GtkTextIter() $iter,
-    Str() $text,
+    $text,
     Int() $len is copy,           # gint $len,
     Int() $default_editable       # gboolean $default_editable
   )
     is also<insert-interactive>
   {
+    $text = self!resolve-text-arg($text);
     $len //= $text.chars;
     my gint $l = self.RESOLVE-INT($len);
     my gboolean $de = self.RESOLVE-BOOL($default_editable);
@@ -688,12 +712,13 @@ class GTK::TextBuffer {
   }
 
   method insert_interactive_at_cursor (
-    Str() $text,
+    $text is copy,
     Int() $len is copy,           # gint $len,
     Int() $default_editable       # gboolean $default_editable
   )
     is also<insert-interactive-at-cursor>
   {
+    $text = self!resolve-text-arg($text);
     $len //= $text.chars;
     my gint $l = self.RESOLVE-INT($len);
     my gboolean $de = self.RESOLVE-BOOL($default_editable);
@@ -702,12 +727,13 @@ class GTK::TextBuffer {
 
   method insert_markup (
     GtkTextIter() $iter,
-    Str() $markup,
+    $markup is copy,
     Int() $len = $markup.chars
   )
     is also<insert-markup>
   {
     my gint $l = self.RESOLVE-INT($len);
+    $markup = self!resolve-text-arg($markup);
     gtk_text_buffer_insert_markup($!tb, $iter, $markup, $l);
   }
 
@@ -748,12 +774,12 @@ class GTK::TextBuffer {
     is also<append-with-tag>
     { * }
 
-  multi method append_with_tag(Str() $text, Str $tag_name) {
+  multi method append_with_tag($text is copy, Str $tag_name) {
     self.insert_with_tag_by_name(
       self.get_end_iter, $text, $text.chars, $tag_name
     )
   }
-  multi method append_with_tag (Str() $text, GtkTextTag() $tag) {
+  multi method append_with_tag ($text, GtkTextTag() $tag) {
     self.insert_with_tag(self.get_end_iter, $text, $text.chars, $tag);
   }
 
@@ -761,12 +787,12 @@ class GTK::TextBuffer {
     is also<prepend-with-tag>
     { * }
 
-  multi method prepend_with_tag (Str() $text, Str $tag_name) {
+  multi method prepend_with_tag ($text, Str $tag_name) {
     self.insert_with_tag_by_name(
       self.get_start_iter, $text, $text.chars, $tag_name
     )
   }
-  multi method prepend_with_tag (Str() $text, GtkTextTag() $tag) {
+  multi method prepend_with_tag ($text, GtkTextTag() $tag) {
     self.insert_with_tag(self.get_start_iter, $text, $text.chars, $tag);
   }
 
@@ -776,17 +802,18 @@ class GTK::TextBuffer {
 
   multi method insert_with_tag (
     GtkTextIter() $iter,
-    Str() $text,
+    $text,
     GtkTextTag() $tag
   ) {
     samewith($iter, $text, $text.chars, $tag);
   }
   multi method insert_with_tag (
     GtkTextIter() $iter,
-    Str() $text,
+    $text is copy,
     Int() $len,
     GtkTextTag() $tag
   ) {
+    $text = self!resolve-text-arg($text);
     my gint $l = self.RESOLVE-INT($len);
     gtk_text_buffer_insert_with_tags(
       $!tb, $iter, $text, $l, $tag, GtkTextTag
@@ -799,17 +826,18 @@ class GTK::TextBuffer {
 
   multi method insert_with_tag_by_name (
     GtkTextIter() $iter,
-    Str() $text,
+    $text,
     Str() $tag_name
   ) {
    samewith($iter, $text, $text.chars, $tag_name);
   }
   multi method insert_with_tag_by_name (
     GtkTextIter() $iter,
-    Str() $text,
+    $text is copy,
     Int() $len,
     Str() $tag_name,
   ) {
+    $text = self!resolve-text-arg($text);
     my gint $l = self.RESOLVE-INT($len);
     gtk_text_buffer_insert_with_tags_by_name (
       $!tb, $iter, $text, $l, $tag_name, Str
@@ -902,11 +930,12 @@ class GTK::TextBuffer {
   }
 
   method set_text (
-    Str() $text,
+    $text is copy,
     Int $len? is copy
   )
     is also<set-text>
   {
+    $text = self!resolve-text-arg($text);
     $len //= $text.chars;
     my gint $l = self.RESOLVE-INT($len);
     gtk_text_buffer_set_text($!tb, $text, $l);
