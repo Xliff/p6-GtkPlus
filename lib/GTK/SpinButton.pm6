@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::SpinButton;
 use GTK::Raw::Types;
 
+use GTK::Adjustment;
 use GTK::Entry;
 
 use GTK::Roles::Orientable;

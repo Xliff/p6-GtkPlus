@@ -71,6 +71,9 @@ class GTK::Button is GTK::Bin {
     my $button = gtk_button_new();
     self.bless(:$button);
   }
+  multi method new(|c) {
+    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
+  }
 
 
   method new_with_mnemonic (GTK::Button:U: Str() $label)

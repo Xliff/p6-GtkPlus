@@ -9,6 +9,8 @@ use GTK::Compat::Raw::Display;
 use GTK::Roles::Types;
 use GTK::Roles::Signals::Generic;
 
+use GTK::Compat::Screen;
+
 class GTK::Compat::Display {
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::Generic;
@@ -124,7 +126,7 @@ class GTK::Compat::Display {
   }
 
   method get_default_screen is also<get-default-screen> {
-    gdk_display_get_default_screen($!d);
+    GTK::Compat::Screen.new( gdk_display_get_default_screen($!d) );
   }
 
   method get_default_seat is also<get-default-seat> {
@@ -189,7 +191,7 @@ class GTK::Compat::Display {
   }
 
   method get_screen (gint $screen_num) is also<get-screen> {
-    gdk_display_get_screen($!d, $screen_num);
+    GTK::Compat::Screen.new( gdk_display_get_screen($!d, $screen_num) );
   }
 
   method get_type is also<get-type> {

@@ -47,7 +47,7 @@ class GTK::Expander is GTK::Bin {
   }
 
   multi method new (Ancestry $expander) {
-    my $o = self.bless($expander);
+    my $o = self.bless(:$expander);
     $o.upref;
     $o;
   }
@@ -62,11 +62,16 @@ class GTK::Expander is GTK::Bin {
     };
     self.bless(:$expander);
   }
+  multi method new(|c) {
+    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
+  }
 
   method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $expander = gtk_expander_new_with_mnemonic($label);
     self.bless(:$expander);
   }
+
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 

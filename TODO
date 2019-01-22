@@ -1,4 +1,5 @@
 + Mechanism for providing PROPER event handlers for all events (in progress...)
+- A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
 - Insure all method-level gchar paramters are converted to Str()
 - COMPLETE a working GSList implementation
 - Add a working GList implementation
@@ -8,9 +9,9 @@
 √ Feature Request: GTK::TextBuffer.buffer to accept from Str or Buf when setting text
 √ METHOD ALIASING! - This has mostly been accomplished, but in the case of container-based classes and others where manual aliasing was done, the best thing to do would be a proto method. See: https://gist.github.com/Xliff/34b9d2e3e27c76696ec60e6791075634
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
-- Convert Perl6 additions to GTK::Container into a role. (done as GTK::Roles::LatchedContainer)
+√ Convert Perl6 additions to GTK::Container into a role. (done as GTK::Roles::LatchedContainer)
 √ Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
-√ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get (MOSTLY DONE! See scripts/prop-get.pl6)
+√ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get 
 √ Fix lack of icons in GTK::IconView
 - Add-to-project-if-I'm-completely-insane: GVariant
 - Move signals to %Object.signal<name> to fix issue with method name conflicts
@@ -30,9 +31,12 @@
 √ Test case for all features of GTK::Utils::MenuBuilder
 - Improve GTK::Widget.CreateObject to take best guess at pointer name for widget type, if it exists.
 - GTK::Grid to provide sanitized version of it's tracking structure to user-code
+- Properly rename GtkCssSection to GtkCSSSection
+- Make option to have text appear inside ProgressBar using an Overlay in t/54-progress-styled.t
 
 
 Applications
 ============
 √ A text editor in Perl6. Think about using it as a visual Regex tester (in progress, see p6-VisualGrammar.git)
 + Glade UI to p6-GtkPerl application (in progress see GTK::Builder:: objects and ui-to-code.pl6)
+√ A Perl6 port of http://gtklipsum.sourceforge.net/ (a better version of t/41-textview-scrolling.t)

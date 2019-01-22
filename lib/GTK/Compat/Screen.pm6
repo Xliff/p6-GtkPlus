@@ -86,11 +86,12 @@ class GTK::Compat::Screen {
   }
 
   method get_default is also<get-default> {
-    gdk_screen_get_default();
+    my $screen = gdk_screen_get_default();
+    self.bless(:$screen);
   }
 
   method get_display is also<get-display> {
-    gdk_screen_get_display($!screen);
+    ::('GTK::Compat::Display').new( gdk_screen_get_display($!screen) );
   }
 
   method get_height is also<get-height> {
@@ -101,9 +102,10 @@ class GTK::Compat::Screen {
     gdk_screen_get_height_mm($!screen);
   }
 
-  method get_monitor_at_point (gint $x, gint $y)
+  method get_monitor_at_point (Int() $x, Int() $y)
     is also<get-monitor-at-point>
   {
+    my ($xx, $yy) = self.RESOLVE-INT($x, $y);
     gdk_screen_get_monitor_at_point($!screen, $x, $y);
   }
 
@@ -143,10 +145,11 @@ class GTK::Compat::Screen {
     gdk_screen_get_monitor_width_mm($!screen, $monitor_num);
   }
 
-  method get_monitor_workarea (gint $monitor_num, GdkRectangle() $dest)
+  method get_monitor_workarea (Int() $monitor_num, GdkRectangle() $dest)
     is also<get-monitor-workarea>
   {
-    gdk_screen_get_monitor_workarea($!screen, $monitor_num, $dest);
+    my $mn = self.RESOLVE-INT($monitor_num);
+    gdk_screen_get_monitor_workarea($!screen, $mn, $dest);
   }
 
   method get_n_monitors is also<get-n-monitors> {

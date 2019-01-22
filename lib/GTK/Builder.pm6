@@ -21,6 +21,8 @@ class GTK::Builder does Associative {
   has GtkWindow $.window;
   has %!types;
 
+  has $!css;
+
   has %!widgets handles <
     EXISTS-KEY
     elems
@@ -47,25 +49,20 @@ class GTK::Builder does Associative {
       for $pod.grep( *.name eq <css ui>.any ).Array {
         # This may not always be true. Keep up with POD spec!
         %sections{ .name } //= $_.contents.map( *.contents[0] ).join("\n");
-        last when %sections<css>.defined && %sections<ui>.defined;
+        last with %sections<ui> && %sections<css>;
       }
-      ($ui-data, $style-data) = %sections<ui css>;
+      $ui-data = %sections<ui>;
+      $style-data = %sections<css>;
     } else {
-         $ui-data = $_ with $ui;
-      $style-data = $_ with $style;
+       $ui-data    = $_ with $ui;
+       $style-data = $_ with $style-data;
     }
+    $!css = GTK::CSSProvider.new(:$style-data) with $style-data;
 
     with $ui-data {
       self.add_from_string($_);
-      # Set $!title, $!width, $!height from application window, but
-      # what would be the best way to get that from the builder?
-      #
-      # The answer: that information is REALLY NOT IMPORTANT in this stage of
-      # GtkBuilder support!
-
-      $!window = GTK::Window.new(
-        :widget( self.get_object($window-name) )
-      ) with $window-name;
+      $!window = GTK::Window.new( self.get_object($window-name) )
+        with $window-name;
 
 # ONLY DO THIS IF BUILDER IS NOT ACTING AS A TEMPLATE!
 #
@@ -76,11 +73,6 @@ class GTK::Builder does Associative {
 #    - Specify the name of the top-level window using the named parameter
 #      :\$window-name in the constructor to GTK::Application
 # ERR
-    }
-
-    with $style-data {
-      my $cp = GTK::CSSProvider.new;
-      $cp.load_from_data($_);
     }
   }
 
@@ -151,11 +143,11 @@ class GTK::Builder does Associative {
               $_;
             }
             when 'GTK::VBox' {
-              $args = ['option', { vertical => 1 } ];
+              #$args = ['option', { vertical => 1 } ];
               'GTK::Box';
             }
             when 'GTK::HBox' {
-              $args = ['option', { horizontal => 1} ];
+              #$args = ['option', { horizontal => 1} ];
               'GTK::Box';
             }
             default { $_; }
@@ -187,13 +179,14 @@ class GTK::Builder does Associative {
       # Use type names to dynamically create objects.
       # Use $args to pass along additional arguments.
       %!widgets{$k} = do {
+         CATCH { .message.say; exit; }
          # After significant review, I don't think there will be many
          # uses of this when case, since much of this work is already done
          # by GtkBuilder. The only situations I see this handling are P6-state
          # related issues, like container storage situations.
          when $args.defined {
            ::( %!types{$k}[0] ).new($o, $args.pairs);
-          }
+         }
          default {
            ::( %!types{$k}[0] ).new($o);
          }

@@ -397,7 +397,7 @@ class GTK::TextView is GTK::Container {
     );
   }
 
-  method wrap_mode is rw is also<wrap-mode> {
+  method wrap_mode is rw is also<wrap-mode wrap> {
     Proxy.new(
       FETCH => sub ($) {
         GtkWrapMode( gtk_text_view_get_wrap_mode($!tv) );

@@ -5,7 +5,7 @@ unit package GTK::Builder::MRO;
 # Number of times I've had to force THIS to recompile.
 constant forced = 5;
 
-our %mro is export =our %mro is export (
+our %mro is export = (
 'GTK::Render' => ('Any', 'Mu'),
 'GTK::Selection' => ('GTK::Roles::Types', 'GTK::Roles::Protection', 'Any', 'Mu'),
 'GTK::SizeGroup' => ('GTK::Roles::Types', 'GTK::Roles::Protection', 'Any', 'Mu'),

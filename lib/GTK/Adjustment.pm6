@@ -22,17 +22,18 @@ class GTK::Adjustment {
     self.bless(:$adjustment);
   }
   multi method new (
+    Num() $value,
     Num() $lower,
     Num() $upper,
     Num() $step_increment,
     Num() $page_increment,
     Num() $page_size
   ) {
-    my gdouble ($l, $u, $si, $pi, $ps) = (
-      $lower, $upper, $step_increment, $page_increment, $page_size
+    my gdouble ($v, $l, $u, $si, $pi, $ps) = (
+      $value, $lower, $upper, $step_increment, $page_increment, $page_size
     );
-    my $adjustment = gtk_adjustment_new($!adj, $l, $u, $si, $pi, $ps);
-    self.bless($adjustment);
+    my $adjustment = gtk_adjustment_new($v, $l, $u, $si, $pi, $ps);
+    self.bless(:$adjustment);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

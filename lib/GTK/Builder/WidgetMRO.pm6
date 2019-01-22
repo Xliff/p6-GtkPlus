@@ -5,7 +5,7 @@ unit package GTK::Builder::WidgetMRO;
 # Number of times I've had to force THIS to recompile.
 constant forced = 0;
 
-our %w-mro is export =our %w-mro is export (
+our %w-mro is export = (
 'GTK::Widget' => ('GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::References', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'Any', 'Mu'),
 'GTK::Calendar' => ('GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::References', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'GTK::Widget', 'Any', 'Mu'),
 'GTK::CellView' => ('GTK::Roles::Orientable', 'GTK::Roles::CellLayout', 'GTK::Roles::LatchedContents', 'GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::References', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'GTK::Widget', 'Any', 'Mu'),
@@ -107,5 +107,3 @@ our %w-mro is export =our %w-mro is export (
 'GTK::RadioToolButton' => ('GTK::ToggleToolButton', 'GTK::Roles::Actionable', 'GTK::ToolButton', 'GTK::ToolItem', 'GTK::Bin', 'GTK::Roles::LatchedContents', 'GTK::Container', 'GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::References', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'GTK::Widget', 'Any', 'Mu'),
 
 );
-
-

@@ -7,28 +7,6 @@ use GTK::Raw::Types;
 
 unit package GTK::Raw::CSSProvider;
 
-sub gdk_display_get_default()
-  returns GdkDisplay
-  is native('gdk-3')
-  is export
-  { * }
-
-sub gdk_display_get_default_screen(GdkDisplay $display)
-  returns GdkScreen
-  is native('gdk-3')
-  is export
-  { * }
-
-sub gtk_style_context_add_provider_for_screen(
-  GdkScreen $screen,
-  GdkStyleProvider $provider,
-  guint $priority
-)
-  is native(gtk)
-  is export
-  { * }
-
-
 sub gtk_css_provider_error_quark ()
   returns GQuark
   is native(gtk)

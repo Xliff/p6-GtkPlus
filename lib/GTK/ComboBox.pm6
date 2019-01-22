@@ -147,6 +147,38 @@ class GTK::ComboBox is GTK::Bin {
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
+  # Type: gboolean
+  method has-frame is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('has-frame', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('has-frame', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+   method popup-shown is rw  {
+     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+     Proxy.new(
+       FETCH => -> $ {
+         $gv = GTK::Compat::Value.new(
+           self.prop_get('popup-shown', $gv)
+         );
+         $gv.boolean;
+       },
+       STORE => -> $, Int() $val is copy {
+         warn "popup-shown does not allow writing"
+       }
+     );
+   }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
 
@@ -280,6 +312,23 @@ class GTK::ComboBox is GTK::Bin {
       },
       STORE => sub ($, Str() $title is copy) {
         gtk_combo_box_set_title($!cb, $title);
+      }
+    );
+  }
+
+  # Type: gchar
+  method tearoff-title is rw  is DEPRECATED {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('tearoff-title', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('tearoff-title', $gv);
       }
     );
   }

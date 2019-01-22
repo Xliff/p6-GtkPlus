@@ -123,4 +123,11 @@ T
   $fh.close;
 
   say "{ $filename } was updated successfully";
+
+  my $f = do {
+    when $w     { 'lib/GTKWidgets.pm6'    }
+    when $w.not { 'lib/GTKNonWidgets.pm6' }
+  }
+  $f.IO.spurt( $mro.keys.map({ "need { $_ };" }).join("\n") )
+  say "{ $f } was updated successfully";
 }

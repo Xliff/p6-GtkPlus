@@ -45,7 +45,7 @@ class GTK::ComboBoxText is GTK::ComboBox {
     }
   }
 
-  multi method new(GtkWidget $combobox) {
+  multi method new(Ancestry $combobox) {
     my $o = self.bless(:$combobox);
     $o.upref;
     $o;
