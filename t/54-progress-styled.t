@@ -9,12 +9,7 @@ my $b = GTK::Builder.new( pod => $=pod );
 
 $a.activate.tap({
   $b<ShowText>.clicked.tap({
-    $b<ProgressBar>.show_text = $b<ShowText>.active;
-    if $b<ShowText>.active {
-      $b<ProgressBar>.text = 'Here is the text...';
-    } else {
-      $b<ProgressBar>.text = Str;
-    }
+    $b<OverlayText>.visible = $b<ShowText>.active;
   });
 
   my $ticks;
@@ -25,7 +20,7 @@ $a.activate.tap({
       when 'Start Count' {
         my $num;
         try {
-           $num = $b<Entry>.text.Num;
+           $num = $b<StepEntry>.text.Num;
            $ticks = $num / 100;
            CATCH { }
         }
@@ -54,20 +49,19 @@ $a.activate.tap({
   $b<ShowText>.active = True;
   $b<MainWindow>.set_size_request(330, 240);
   $b<MainWindow>.destroy-signal.tap({ $a.exit; });
-
   $b<MainWindow>.show_all;
 });
 
 $a.run;
 
 =begin css
-progressbar trough {
+#ProgressBar trough {
   min-height: 20px;
 }
-progressbar trough progress {
+#ProgressBar trough progress {
   min-height: 18px;
 }
-progressbar text {
+#OverlayLabel {
   color: #000;
   font-size: 12px;
 }
@@ -87,9 +81,11 @@ progressbar text {
       <object class="GtkBox" id="VBox">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="margin_left">20</property>
+        <property name="margin_right">20</property>
         <property name="orientation">vertical</property>
         <child>
-          <object class="GtkLabel" id="title">
+          <object class="GtkLabel" id="Title">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
             <property name="margin_left">20</property>
@@ -107,11 +103,11 @@ progressbar text {
           <object class="GtkBox" id="HBox">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">20</property>
+            <property name="margin_left">5</property>
             <property name="margin_top">15</property>
             <property name="spacing">2</property>
             <child>
-              <object class="GtkLabel" id="entry-label">
+              <object class="GtkLabel" id="EntryLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
                 <property name="margin_right">10</property>
@@ -124,7 +120,7 @@ progressbar text {
               </packing>
             </child>
             <child>
-              <object class="GtkEntry" id="Entry">
+              <object class="GtkEntry" id="StepEntry">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="text" translatable="yes">1</property>
@@ -148,8 +144,7 @@ progressbar text {
             <property name="visible">True</property>
             <property name="can_focus">True</property>
             <property name="receives_default">False</property>
-            <property name="margin_left">15</property>
-            <property name="margin_top">10</property>
+            <property name="margin_top">14</property>
             <property name="draw_indicator">True</property>
           </object>
           <packing>
@@ -159,20 +154,32 @@ progressbar text {
           </packing>
         </child>
         <child>
-          <object class="GtkProgressBar" id="ProgressBar">
-            <property name="name">ProgressBar</property>
+          <object class="GtkOverlay" id="Overlay">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">20</property>
-            <property name="margin_right">20</property>
-            <property name="margin_top">20</property>
-            <property name="hexpand">False</property>
-            <property name="vexpand">False</property>
-            <property name="text" translatable="yes">This is the text portion...</property>
-            <property name="show_text">True</property>
+            <property name="margin_top">15</property>
+            <property name="margin_bottom">10</property>
+            <child>
+              <object class="GtkProgressBar" id="ProgressBar">
+                <property name="name">ProgressBar</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+              </object>
+              <packing>
+                <property name="index">-1</property>
+              </packing>
+            </child>
+            <child type="overlay">
+              <object class="GtkLabel" id="OverlayText">
+                <property name="name">OverlayLabel</property>
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="label" translatable="yes">000 paragraphs, 00000 bytes in 00 seconds</property>
+              </object>
+            </child>
           </object>
           <packing>
-            <property name="expand">False</property>
+            <property name="expand">True</property>
             <property name="fill">True</property>
             <property name="position">3</property>
           </packing>
@@ -185,8 +192,8 @@ progressbar text {
             <property name="receives_default">True</property>
             <property name="margin_left">20</property>
             <property name="margin_right">20</property>
-            <property name="margin_top">20</property>
-            <property name="margin_bottom">10</property>
+            <property name="margin_top">17</property>
+            <property name="margin_bottom">20</property>
           </object>
           <packing>
             <property name="expand">False</property>
