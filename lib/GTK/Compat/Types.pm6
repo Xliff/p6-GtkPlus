@@ -113,6 +113,7 @@ constant GVariant            is export := Pointer;
 constant GdkFilterFunc                  is export := Pointer;
 constant GdkPixbufDestroyNotify         is export := Pointer;
 constant GdkPixbufSaveFunc              is export := Pointer;
+constant GdkSeatGrabPrepareFunc         is export := Pointer;
 constant GdkWindowChildFunc             is export := Pointer;
 constant GdkWindowInvalidateHandlerFunc is export := Pointer;
 constant GdkWMFunction                  is export := Pointer;
@@ -580,6 +581,7 @@ class GdkDevice             is repr('CPointer') is export does GTK::Roles::Point
 class GdkDeviceTool         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDeviceManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDisplayManager     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkEventSequence      is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1136,3 +1138,22 @@ our enum GdkModifierIntent is export <
   GDK_MODIFIER_INTENT_SHIFT_GROUP
   GDK_MODIFIER_INTENT_DEFAULT_MOD_MASK
 >;
+
+our enum GdkSeatCapabilities is export (
+ GDK_SEAT_CAPABILITY_NONE          => 0,
+ GDK_SEAT_CAPABILITY_POINTER       => 1,
+ GDK_SEAT_CAPABILITY_TOUCH         => 1 +< 1,
+ GDK_SEAT_CAPABILITY_TABLET_STYLUS => 1 +< 2,
+ GDK_SEAT_CAPABILITY_KEYBOARD      => 1 +< 3,
+ GDK_SEAT_CAPABILITY_ALL_POINTING  => (1 +| 1 +< 1 +| 1 +< 2),
+ GDK_SEAT_CAPABILITY_ALL           => (1 +| 1 +< 1 +| 1 +< 2 +| 1 +< 3)
+);
+
+our enum GdkGrabStatus is export (
+  GDK_GRAB_SUCCESS         => 0,
+  GDK_GRAB_ALREADY_GRABBED => 1,
+  GDK_GRAB_INVALID_TIME    => 2,
+  GDK_GRAB_NOT_VIEWABLE    => 3,
+  GDK_GRAB_FROZEN          => 4,
+  GDK_GRAB_FAILED          => 5
+);
