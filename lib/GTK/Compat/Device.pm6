@@ -58,7 +58,7 @@ class GTK::Compat::Device {
   # Is originally:
   # GdkDevice, GdkDeviceTool, gpointer --> void
   method tool-changed is also<tool_changed> {
-    self.connect-tool-changed($!d);
+    self.connect-device-tool($!d);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑

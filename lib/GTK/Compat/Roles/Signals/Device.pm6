@@ -12,7 +12,7 @@ role GTK::Compat::Roles::Signals::Device {
   has %!signals-device;
 
   # GdkDevice, GdkDeviceTool, gpointer --> void
-  method connect-tool-changed (
+  method connect-device-tool (
     $obj,
     $signal = 'tool-changed',
     &handler?
@@ -20,7 +20,7 @@ role GTK::Compat::Roles::Signals::Device {
     my $hid;
     %!signals-device{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-tool-changed($obj, $signal,
+      $hid = g-connect-device-tool($obj, $signal,
         -> $, $t, $ud {
           CATCH {
             default { $s.quit($_) }
@@ -38,7 +38,7 @@ role GTK::Compat::Roles::Signals::Device {
 }
 
 # GdkDevice, GdkDeviceTool, gpointer --> void
-sub g-connect-tool-changed(
+sub g-connect-device-tool(
   Pointer $app,
   Str $name,
   &handler (Pointer, GdkDeviceTool, Pointer),
