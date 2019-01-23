@@ -586,7 +586,7 @@ class GdkEventSequence      is repr('CPointer') is export does GTK::Roles::Point
 class GdkFrameClock         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkFrameTimings       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkGLContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkModifierIntent     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkKeymap             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkMonitor            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkPixbuf             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkPixbufAnimation    is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -894,6 +894,12 @@ class GdkTimeCoord is repr('CStruct') does GTK::Roles::Pointers is export {
   has CArray[num64] $.axes;
 }
 
+class GdkKeymapKey is repr('CStruct') does GTK::Roles::Pointers is export {
+  has guint $.keycode;
+  has gint  $.group;
+  has gint  $.level;
+}
+
 our enum GSourceReturn is export <
   G_SOURCE_REMOVE
   G_SOURCE_CONTINUE
@@ -1120,3 +1126,13 @@ our enum GdkAxisFlags is export (
   GDK_AXIS_FLAG_ROTATION => 1 +< GDK_AXIS_ROTATION,
   GDK_AXIS_FLAG_SLIDER   => 1 +< GDK_AXIS_SLIDER,
 );
+
+our enum GdkModifierIntent is export <
+  GDK_MODIFIER_INTENT_PRIMARY_ACCELERATOR
+  GDK_MODIFIER_INTENT_CONTEXT_MENU
+  GDK_MODIFIER_INTENT_EXTEND_SELECTION
+  GDK_MODIFIER_INTENT_MODIFY_SELECTION
+  GDK_MODIFIER_INTENT_NO_TEXT_INPUT
+  GDK_MODIFIER_INTENT_SHIFT_GROUP
+  GDK_MODIFIER_INTENT_DEFAULT_MOD_MASK
+>;

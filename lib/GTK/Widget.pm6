@@ -2142,10 +2142,11 @@ class GTK::Widget {
     gtk_widget_get_settings($!w);
   }
 
-  method get_modifier_mask (GdkModifierIntent $intent)
+  method get_modifier_mask (Int() $intent)
     is also<get-modifier-mask>
   {
-    gtk_widget_get_modifier_mask($!w, $intent);
+    my guint $i = self.RESOLVE-UINT($intent);
+    gtk_widget_get_modifier_mask($!w, $i);
   }
 
   method has_grab is also<has-grab> {

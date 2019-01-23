@@ -19,6 +19,10 @@ class GTK::Compat::Event  {
     $!e = $event;
   }
 
+  method GTK::Compat::Types::GtkEvents {
+    $!e;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

@@ -51,6 +51,7 @@
       "GTK::Compat::Raw::GSList"               :  "lib/GTK/Compat/Raw/GSList.pm6"               ,
       "GTK::Compat::Raw::Icon"                 :  "lib/GTK/Compat/Raw/Icon.pm6"                 ,
       "GTK::Compat::Raw::KeyFile"              :  "lib/GTK/Compat/Raw/KeyFile.pm6"              ,
+      "GTK::Compat::Raw::Keymap"               :  "lib/GTK/Compat/Raw/Keymap.pm6"               ,
       "GTK::Compat::Raw::Menu"                 :  "lib/GTK/Compat/Raw/Menu.pm6"                 ,
       "GTK::Compat::Raw::MenuModel"            :  "lib/GTK/Compat/Raw/MenuModel.pm6"            ,
       "GTK::Compat::Raw::Permission"           :  "lib/GTK/Compat/Raw/Permission.pm6"           ,
@@ -80,6 +81,7 @@
       "GTK::Compat::GList"                     :  "lib/GTK/Compat/GList.pm6"                    ,
       "GTK::Compat::GSList"                    :  "lib/GTK/Compat/GSList.pm6"                   ,
       "GTK::Compat::KeyFile"                   :  "lib/GTK/Compat/KeyFile.pm6"                  ,
+      "GTK::Compat::Keymap"                    :  "lib/GTK/Compat/Keymap.pm6"                   ,
       "GTK::Compat::LaunchContext"             :  "lib/GTK/Compat/LaunchContext.pm6"            ,
       "GTK::Compat::MenuAttributeIter"         :  "lib/GTK/Compat/MenuAttributeIter.pm6"        ,
       "GTK::Compat::MenuItem"                  :  "lib/GTK/Compat/MenuItem.pm6"                 ,
@@ -335,6 +337,7 @@
       "GTK::TreeModelSort"                     :  "lib/GTK/TreeModelSort.pm6"                   ,
       "GTK::TreeStore"                         :  "lib/GTK/TreeStore.pm6"                       ,
       "GTK::AccelGroup"                        :  "lib/GTK/AccelGroup.pm6"                      ,
+      "GTK::CSSProvider"                       :  "lib/GTK/CSSProvider.pm6"                     ,
       "GTK::CellAreaContext"                   :  "lib/GTK/CellAreaContext.pm6"                 ,
       "GTK::CellRenderer"                      :  "lib/GTK/CellRenderer.pm6"                    ,
       "GTK::CellRendererPixbuf"                :  "lib/GTK/CellRendererPixbuf.pm6"              ,
@@ -354,7 +357,6 @@
       "GTK::PrintOperation"                    :  "lib/GTK/PrintOperation.pm6"                  ,
       "GTK::Printer"                           :  "lib/GTK/Printer.pm6"                         ,
       "GTK::TextBuffer"                        :  "lib/GTK/TextBuffer.pm6"                      ,
-      "GTK::CSSProvider"                       :  "lib/GTK/CSSProvider.pm6"                     ,
       "GTK::CellRendererAccel"                 :  "lib/GTK/CellRendererAccel.pm6"               ,
       "GTK::CellRendererSpin"                  :  "lib/GTK/CellRendererSpin.pm6"                ,
       "GTK::Compat::Cursor"                    :  "lib/GTK/Compat/Cursor.pm6"                   ,
@@ -479,5 +481,8 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
+
+
 
 

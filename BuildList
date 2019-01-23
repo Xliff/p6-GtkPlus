@@ -44,6 +44,7 @@ GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
 GTK::Compat::Raw::Icon
 GTK::Compat::Raw::KeyFile
+GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Menu
 GTK::Compat::Raw::MenuModel
 GTK::Compat::Raw::Permission
@@ -73,6 +74,7 @@ GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
 GTK::Compat::KeyFile
+GTK::Compat::Keymap
 GTK::Compat::LaunchContext
 GTK::Compat::MenuAttributeIter
 GTK::Compat::MenuItem
@@ -328,6 +330,7 @@ GTK::TreeModelFilter
 GTK::TreeModelSort
 GTK::TreeStore
 GTK::AccelGroup
+GTK::CSSProvider
 GTK::CellAreaContext
 GTK::CellRenderer
 GTK::CellRendererPixbuf
@@ -347,7 +350,6 @@ GTK::PrintJob
 GTK::PrintOperation
 GTK::Printer
 GTK::TextBuffer
-GTK::CSSProvider
 GTK::CellRendererAccel
 GTK::CellRendererSpin
 GTK::Compat::Cursor

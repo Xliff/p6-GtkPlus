@@ -417,7 +417,7 @@ sub gtk_widget_get_ancestor (GtkWidget $widget, GType $widget_type)
 
 sub gtk_widget_get_modifier_mask (
   GtkWidget $widget,
-  GdkModifierIntent $intent
+  uint32 $intent                # GdkModifierIntent $intent
 )
   returns uint32 # GdkModifierType
   is native(gtk)

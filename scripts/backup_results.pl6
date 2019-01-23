@@ -25,7 +25,7 @@ for @files.sort( *[1] ).reverse {
     } else {
       # 'LastBuildResults'.IO.rename('LastBuildResults.0');
     }
-  } else {
+  } elsif 'LastBuildResults'.IO.e {
     'LastBuildResults'.IO.rename('LastBuildResults.0');
   }
 }

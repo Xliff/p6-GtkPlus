@@ -3,7 +3,6 @@ use v6.c;
 use GTK::Application;
 use GTK::Builder;
 
-# Arrange to update the progress bar every second once button is clicked:
 my $a = GTK::Application.new( :title('org.genex.progress_bar') );
 my $b = GTK::Builder.new( pod => $=pod );
 
@@ -12,22 +11,19 @@ $a.activate.tap({
     $b<OverlayText>.visible = $b<ShowText>.active;
   });
 
-  my $ticks;
-  my $count = 0;
-  my $c;
+  my ($ticks, $c, $count);
+  $count = 0;
   $b<StartButton>.clicked.tap({
     given $b<StartButton>.label {
       when 'Start Count' {
-        my $num;
         try {
-           $num = $b<StepEntry>.text.Num;
-           $ticks = $num / 100;
+           $ticks = $b<StepEntry>.text.Num / 100;
            CATCH { }
         }
         with $ticks {
           $c = $*SCHEDULER.cue({
             $b<ProgressBar>.fraction = ($count += $ticks);
-            if $count > 1 {
+            if $count >= 1 {
               $c.cancel;
               $b<StartButton>.label = 'Start Count';
               $count = 0;

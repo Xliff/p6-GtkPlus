@@ -248,8 +248,9 @@ class GTK::Compat::Window {
     gdk_window_add_filter($!window, $function, $data);
   }
 
-  method at_pointer (gint $win_y) is also<at-pointer> {
-    gdk_window_at_pointer($!window, $win_y);
+  method at_pointer (Int() $win_x, Int() $win_y) is also<at-pointer> {
+    my gint ($wx, $wy) = self.RESOLVE-INT($win_x, $win_y);
+    gdk_window_at_pointer($wx, $wy);
   }
 
   method beep {
@@ -261,42 +262,35 @@ class GTK::Compat::Window {
   }
 
   method begin_move_drag (
-    gint $button,
-    gint $root_x,
-    gint $root_y,
-    guint $timestamp
+    Int() $button,
+    Int() $root_x,
+    Int() $root_y,
+    Int() $timestamp
   )
     is also<begin-move-drag>
   {
-    gdk_window_begin_move_drag(
-      $!window,
-      $button,
-      $root_x,
-      $root_y,
-      $timestamp
-    );
+    my gint ($b, $rx, $ry) = self.RESOLVE-INT($button, $root_x, $root_y);
+    my guint $t = self.RESOLVE-UINT($timestamp);
+    gdk_window_begin_move_drag($!window, $b, $rx, $ry, $t);
   }
 
   method begin_move_drag_for_device (
-    GdkDevice $device,
-    gint $button,
-    gint $root_x,
-    gint $root_y,
-    guint $timestamp
+    GdkDevice() $device,
+    Int() $button,
+    Int() $root_x,
+    Int() $root_y,
+    Int() $timestamp
   )
     is also<begin-move-drag-for-device>
   {
+    my gint ($b, $rx, $ry) = self.RESOLVE-INT($button, $root_x, $root_y);
+    my guint $t = self.RESOLVE-UINT($timestamp);
     gdk_window_begin_move_drag_for_device(
-      $!window,
-      $device,
-      $button,
-      $root_x,
-      $root_y,
-      $timestamp
+      $!window, $device, $b, $rx, $ry, $t
     );
   }
 
-  method begin_paint_rect (GdkRectangle $rectangle)
+  method begin_paint_rect (GdkRectangle() $rectangle)
     is also<begin-paint-rect>
   {
     gdk_window_begin_paint_rect($!window, $rectangle);
@@ -309,22 +303,17 @@ class GTK::Compat::Window {
   }
 
   method begin_resize_drag (
-    GdkWindowEdge $edge,
-    gint $button,
-    gint $root_x,
-    gint $root_y,
-    guint $timestamp
+    Int() $edge,                        # GdkWindowEdge $edge,
+    Int() $button,
+    Int() $root_x,
+    Int() $root_y,
+    Int() $timestamp
   )
     is also<begin-resize-drag>
   {
-    gdk_window_begin_resize_drag(
-      $!window,
-      $edge,
-      $button,
-      $root_x,
-      $root_y,
-      $timestamp
-    );
+    my gint ($b, $rx, $ry) = self.RESOLVE-INT($button, $root_x, $root_y);
+    my guint ($e, $t) = self.RESOLVE-UINT($edge, $timestamp);
+    gdk_window_begin_resize_drag($!window, $e, $b, $rx, $ry, $t);
   }
 
   method begin_resize_drag_for_device (
@@ -901,7 +890,7 @@ class GTK::Compat::Window {
     gdk_window_set_icon_list($!window, $pixbufs);
   }
 
-  method set_icon_name (gchar $name) is also<set-icon-name> {
+  method set_icon_name (Str() $name) is also<set-icon-name> {
     gdk_window_set_icon_name($!window, $name);
   }
 
@@ -933,7 +922,7 @@ class GTK::Compat::Window {
     gdk_window_set_override_redirect($!window, $override_redirect);
   }
 
-  method set_role (gchar $role) is also<set-role> {
+  method set_role (Str() $role) is also<set-role> {
     gdk_window_set_role($!window, $role);
   }
 
@@ -969,7 +958,7 @@ class GTK::Compat::Window {
     gdk_window_set_source_events($!window, $source, $event_mask);
   }
 
-  method set_startup_id (gchar $startup_id) is also<set-startup-id> {
+  method set_startup_id (Str() $startup_id) is also<set-startup-id> {
     gdk_window_set_startup_id($!window, $startup_id);
   }
 
@@ -979,7 +968,7 @@ class GTK::Compat::Window {
     gdk_window_set_static_gravities($!window, $use_static);
   }
 
-  method set_title (gchar $title) is also<set-title> {
+  method set_title (Str() $title) is also<set-title> {
     gdk_window_set_title($!window, $title);
   }
 
@@ -1018,8 +1007,8 @@ class GTK::Compat::Window {
     gdk_window_show_unraised($!window);
   }
 
-  method show_window_menu (GdkEvent $event) is also<show-window-menu> {
-    gdk_window_show_window_menu($!window, $event);
+  method show_window_menu (GdkEvents() $event) is also<show-window-menu> {
+    gdk_window_show_window_menu( $!window, nativecast(GdkEvent, $event) );
   }
 
   method stick {
