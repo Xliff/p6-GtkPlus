@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -16,7 +17,9 @@ class GTK::Compat::Threads {
   method add_idle (
     &function,
     gpointer $data = Pointer
-  ) {
+  )
+    is also<add-idle>
+  {
     gdk_threads_add_idle(&function, $data);
   }
 
@@ -25,7 +28,9 @@ class GTK::Compat::Threads {
     &function,
     gpointer $data = Pointer,
     GDestroyNotify $notify = Pointer
-  ) {
+  )
+    is also<add-idle-full>
+  {
     my gint $p = resolve-int($priority);
     gdk_threads_add_idle_full($p, &function, $data, $notify);
   }
@@ -34,7 +39,9 @@ class GTK::Compat::Threads {
     Int() $interval,
     &function,
     gpointer $data = Pointer
-  ) {
+  )
+    is also<add-timeout>
+  {
     my guint $i = resolve-uint($interval);
     gdk_threads_add_timeout($interval, &function, $data);
   }
@@ -44,7 +51,9 @@ class GTK::Compat::Threads {
     Int() $interval,
     &function, gpointer $data = Pointer,
     GDestroyNotify $notify = Pointer
-  ) {
+  )
+    is also<add-timeout-full>
+  {
     my gint $p = resolve-int($priority);
     my guint $i = resolve-uint($interval);
     gdk_threads_add_timeout_full($p, $i, &function, $data, $notify);
@@ -54,7 +63,9 @@ class GTK::Compat::Threads {
     Int() $interval,
     &function,
     gpointer $data = Pointer
-  ) {
+  )
+    is also<add-timeout-seconds>
+  {
     my guint $i = resolve-uint($interval);
     gdk_threads_add_timeout_seconds($i, &function, $data);
   }
@@ -65,7 +76,9 @@ class GTK::Compat::Threads {
     &function,
     gpointer $data = Pointer,
     GDestroyNotify $notify = Pointer
-  ) {
+  )
+    is also<add-timeout-seconds-full>
+  {
     my gint $p = resolve-int($priority);
     my guint $i = resolve-uint($interval);
     gdk_threads_add_timeout_seconds_full($p, $i, &function, $data, $notify);

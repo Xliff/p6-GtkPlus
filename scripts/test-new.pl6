@@ -23,6 +23,8 @@ sub MAIN( $rev = 'HEAD' ) {
       next;
     }
     next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
+    # Temporary cheat.
+    next if $_[0].ends-with('GFile.pm6');
 
     my $rel = $_[0].IO.dirname.split('/')[1..*].join('/');
     mkdir ".touch/{ $rel }";
@@ -31,7 +33,13 @@ sub MAIN( $rev = 'HEAD' ) {
 
     say "===== $_[1] =====";
     my $proc = Proc::Async.new(
-      'perl6', '--stagestats', '-I../cairo-p6/lib', '-I../p6-Pango/lib', '-Ilib', '-e', 'use '~ $_[1]
+      'perl6',
+      '--stagestats',
+      '-I../cairo-p6/lib',
+      '-I../p6-Pango/lib',
+      '-Ilib',
+      '-e',
+      'use '~ $_[1]
     );
 
     $proc.stdout.tap(-> $o { $o.say; });

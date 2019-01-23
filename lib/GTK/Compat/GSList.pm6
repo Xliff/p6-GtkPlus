@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Roles::Types;
 
 use GTK::Compat::Types;
@@ -74,11 +76,11 @@ class GTK::Compat::GSList {
     g_slist_copy($!list);
   }
 
-  method copy_deep (GCopyFunc $func, gpointer $user_data) {
+  method copy_deep (GCopyFunc $func, gpointer $user_data) is also<copy-deep> {
     g_slist_copy_deep($!list, $func, $user_data);
   }
 
-  method delete_link (GSList $link) {
+  method delete_link (GSList $link) is also<delete-link> {
     g_slist_delete_link($!list, $link);
   }
 
@@ -86,7 +88,9 @@ class GTK::Compat::GSList {
     g_slist_find($!list, $data);
   }
 
-  method find_custom (gpointer $data, GCompareFunc $func) {
+  method find_custom (gpointer $data, GCompareFunc $func)
+    is also<find-custom>
+  {
     g_slist_find_custom($!list, $data, $func);
   }
 
@@ -98,11 +102,11 @@ class GTK::Compat::GSList {
     g_slist_free($!list);
   }
 
-  method free_1 {
+  method free_1 is also<free-1> {
     g_slist_free_1($!list);
   }
 
-  method free_full (GDestroyNotify $free_func) {
+  method free_full (GDestroyNotify $free_func) is also<free-full> {
     g_slist_free_full($!list, $free_func);
   }
 
@@ -115,11 +119,15 @@ class GTK::Compat::GSList {
     g_slist_insert($!list, $data, $p);
   }
 
-  method insert_before (GSList $sibling, gpointer $data) {
+  method insert_before (GSList $sibling, gpointer $data)
+    is also<insert-before>
+  {
     g_slist_insert_before($!list, $sibling, $data);
   }
 
-  method insert_sorted (gpointer $data, GCompareFunc $func) {
+  method insert_sorted (gpointer $data, GCompareFunc $func)
+    is also<insert-sorted>
+  {
     g_slist_insert_sorted($!list, $data, $func);
   }
 
@@ -127,7 +135,9 @@ class GTK::Compat::GSList {
     gpointer $data,
     GCompareDataFunc $func,
     gpointer $user_data
-  ) {
+  )
+    is also<insert-sorted-with-data>
+  {
     g_slist_insert_sorted_with_data($!list, $data, $func, $user_data);
   }
 
@@ -144,7 +154,7 @@ class GTK::Compat::GSList {
     g_slist_nth($!list, $nn);
   }
 
-  method nth_data (Int() $n) {
+  method nth_data (Int() $n) is also<nth-data> {
     my guint $nn = self.RESOLVE-UINT($n);
     g_slist_nth_data($!list, $nn);
   }
@@ -161,11 +171,11 @@ class GTK::Compat::GSList {
     g_slist_remove($!list, $data);
   }
 
-  method remove_all (gpointer $data) {
+  method remove_all (gpointer $data) is also<remove-all> {
     g_slist_remove_all($!list, $data);
   }
 
-  method remove_link (GSList $link) {
+  method remove_link (GSList $link) is also<remove-link> {
     g_slist_remove_link($!list, $link);
   }
 
@@ -180,7 +190,9 @@ class GTK::Compat::GSList {
   method sort_with_data (
     GCompareDataFunc $compare_func,
     gpointer $user_data
-  ) {
+  )
+    is also<sort-with-data>
+  {
     g_slist_sort_with_data($!list, $compare_func, $user_data);
   }
 

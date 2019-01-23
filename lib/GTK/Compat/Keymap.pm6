@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -34,25 +35,33 @@ class GTK::Compat::Keymap {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_virtual_modifiers (Int() $state is rw) {
+  method add_virtual_modifiers (Int() $state is rw)
+    is also<add-virtual-modifiers>
+  {
     my guint $s = self.RESOLVE-UINT($state);
     gdk_keymap_add_virtual_modifiers($!km, $s);
     $state = $s;
     Nil;
   }
 
-  method unicode_to_keyval (Int() $unichar) {
+  method unicode_to_keyval (Int() $unichar)
+    is also<unicode-to-keyval>
+  {
     my guint $u = self.RESOLVE-UINT($unichar);
     gdk_unicode_to_keyval($u);
   }
 
-  method get_caps_lock_state {
+  method get_caps_lock_state is also<get-caps-lock-state> {
     gdk_keymap_get_caps_lock_state($!km);
   }
 
-  method get_direction {
+  method get_direction is also<get-direction> {
     gdk_keymap_get_direction($!km);
   }
+
+  proto method get_entries_for_keycode (|c)
+    is also<get-entries-for-keycode>
+    { * }
 
   multi method get_entries_for_keycode (
     Int() $hardware_keycode,
@@ -81,6 +90,10 @@ class GTK::Compat::Keymap {
     $rc;
   }
 
+  proto method get_entries_for_keyval (|)
+    is also<get-entries-for-keyval>
+    { * }
+
   multi method get_entries_for_keyval (
     Int() $keyval,
     Int() $n_keys is rw
@@ -103,81 +116,91 @@ class GTK::Compat::Keymap {
     $rc;
   }
 
-  method get_for_display(GdkDisplay() $display is copy) {
+  method get_for_display(GdkDisplay() $display is copy)
+    is also<get-for-display>
+  {
     $display //= GTK::Compat::Display.get_default;
     my $keymap = gdk_keymap_get_for_display($display);
     self.bless(:$keymap);
   }
 
-  method get_modifier_mask (Int() $intent) {
+  method get_modifier_mask (Int() $intent) is also<get-modifier-mask> {
     my guint $i = self.RESOLVE-INT($intent);
     gdk_keymap_get_modifier_mask($!km, $i);
   }
 
-  method get_modifier_state {
+  method get_modifier_state is also<get-modifier-state> {
     gdk_keymap_get_modifier_state($!km);
   }
 
-  method get_num_lock_state {
+  method get_num_lock_state is also<get-num-lock-state> {
     gdk_keymap_get_num_lock_state($!km);
   }
 
-  method get_scroll_lock_state {
+  method get_scroll_lock_state is also<get-scroll-lock-state> {
     gdk_keymap_get_scroll_lock_state($!km);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gdk_keymap_get_type();
   }
 
-  method have_bidi_layouts {
+  method have_bidi_layouts is also<have-bidi-layouts> {
     gdk_keymap_have_bidi_layouts($!km);
   }
 
-  method keyval_convert_case (Int() $symbol, Int() $lower, Int() $upper) {
+  method keyval_convert_case (Int() $symbol, Int() $lower, Int() $upper)
+    is also<keyval-convert-case>
+  {
     my guint ($s, $l, $u) = self.RESOLVE-UINT($symbol, $lower, $upper);
     gdk_keyval_convert_case($s, $l, $u);
   }
 
-  method keyval_from_name(Str() $keyval_name) {
+  method keyval_from_name(Str() $keyval_name)
+    is also<keyval-from-name>
+  {
     gdk_keyval_from_name($keyval_name);
   }
 
-  method keyval_is_lower(Int() $keyval) {
+  method keyval_is_lower(Int() $keyval)
+    is also<keyval-is-lower>
+  {
     my guint $k = self.RESOLVE-UINT($keyval);
     gdk_keyval_is_lower($k);
   }
 
-  method keyval_is_upper (Int() $keyval) {
+  method keyval_is_upper (Int() $keyval) is also<keyval-is-upper> {
     my guint $k = self.RESOLVE-UINT($keyval);
     gdk_keyval_is_upper($k);
   }
 
-  method keyval_name (Int() $keyval) {
+  method keyval_name (Int() $keyval) is also<keyval-name> {
     my guint $k = self.RESOLVE-UINT($keyval);
     gdk_keyval_name($k);
   }
 
-  method keyval_to_lower (Int() $keyval) {
+  method keyval_to_lower (Int() $keyval) is also<keyval-to-lower> {
     my guint $k = self.RESOLVE-UINT($keyval);
     gdk_keyval_to_lower($k);
   }
 
-  method keyval_to_unicode (Int() $keyval) {
+  method keyval_to_unicode (Int() $keyval) is also<keyval-to-unicode> {
     my guint $k = self.RESOLVE-UINT($keyval);
     gdk_keyval_to_unicode($k);
   }
 
-  method keyval_to_upper (Int() $keyval) {
+  method keyval_to_upper (Int() $keyval) is also<keyval-to-upper> {
     my guint $k = self.RESOLVE-UINT($keyval);
     gdk_keyval_to_upper($k);
   }
 
-  method lookup_key (GdkKeymapKey $key) {
+  method lookup_key (GdkKeymapKey $key) is also<lookup-key> {
     gdk_keymap_lookup_key($!km, $key);
   }
 
-  method map_virtual_modifiers (Int() $state) {
+  method map_virtual_modifiers (Int() $state)
+    is also<map-virtual-modifiers>
+  {
     my gint $s = self.RESOLVE-UINT($state);
     gdk_keymap_map_virtual_modifiers($!km, $s);
   }
@@ -190,7 +213,9 @@ class GTK::Compat::Keymap {
     Int() $effective_group,
     Int() $level,
     Int() $consumed                 # GdkModifierType $consumed_modifiers
-  ) {
+  )
+    is also<translate-keyboard-state>
+  {
     my @i = ($group, $effective_group, $level);
     my gint ($g, $eg, $l) = self.RESOLVE-INT(@i);
     my @u = ($hardware_keycode, $state, $keyval, $consumed);

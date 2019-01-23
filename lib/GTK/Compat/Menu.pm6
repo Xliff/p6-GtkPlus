@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::MenuModel;
@@ -42,15 +43,19 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
     g_menu_append($!menu, $label, $detailed_action);
   }
 
-  method append_item (GMenuItem() $item) {
+  method append_item (GMenuItem() $item) is also<append-item> {
     g_menu_append_item($!menu, $item);
   }
 
-  method append_section (Str() $label, GMenuModel() $section) {
+  method append_section (Str() $label, GMenuModel() $section)
+    is also<append-section>
+  {
     g_menu_append_section($!menu, $label, $section);
   }
 
-  method append_submenu (Str() $label, GMenuModel() $submenu) {
+  method append_submenu (Str() $label, GMenuModel() $submenu)
+    is also<append-submenu>
+  {
     g_menu_append_submenu($!menu, $label, $submenu);
   }
 
@@ -63,7 +68,9 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
     g_menu_insert($!menu, $p, $label, $detailed_action);
   }
 
-  method insert_item (Int() $position, GMenuItem() $item) {
+  method insert_item (Int() $position, GMenuItem() $item)
+    is also<insert-item>
+  {
     my gint $p = self.RESOLVE-INT($position);
     g_menu_insert_item($!menu, $p, $item);
   }
@@ -71,7 +78,9 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
   method insert_section (
     Int() $position,
     Str() $label,
-    GMenuModel() $section)
+    GMenuModel() $section
+  )
+    is also<insert-section>
   {
     my gint $p = self.RESOLVE-INT($position);
     g_menu_insert_section($!menu, $p, $label, $section);
@@ -81,7 +90,9 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
     Int() $position,
     Str() $label,
     GMenuModel() $submenu
-  ) {
+  )
+    is also<insert-submenu>
+  {
     my gint $p = self.RESOLVE-INT($position);
     g_menu_insert_submenu($!menu, $p, $label, $submenu);
   }

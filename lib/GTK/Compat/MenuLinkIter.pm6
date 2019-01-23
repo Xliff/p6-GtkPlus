@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GTK::Compat::Raw::MenuModel;
 
@@ -14,7 +16,7 @@ class GTK::Compat::MenuLinkIter {
     self.bless(:$iter);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     g_menu_link_iter_get_type();
   }
 
