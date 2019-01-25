@@ -35,6 +35,7 @@
 - Improve GTK::Widget.CreateObject to take best guess at pointer name for widget type, if it exists.
 - GTK::Grid to provide sanitized version of it's tracking structure to user-code
 - Properly rename GtkCssSection to GtkCSSSection
+- Add GTK::Compat::Action (GAction)
 
 
 Applications

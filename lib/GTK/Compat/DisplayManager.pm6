@@ -4,14 +4,14 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Campat::Raw::DisplayManager;
+use GTK::Compat::Raw::DisplayManager;
 
-use GTK::Roles::Signals;
+use GTK::Roles::Signals::Generic;
 
 use GTK::Compat::Display;
 
 class GTK::Compat::DisplayManager {
-  also does GTK::Roles::Signals;
+  also does GTK::Roles::Signals::Generic;
 
   has GdkDisplayManager $!dm;
 
@@ -51,7 +51,7 @@ class GTK::Compat::DisplayManager {
   }
   method get {
     my $manager = gdk_display_manager_get();
-    self.bless(:$manager):
+    self.bless(:$manager);
   }
 
   method get_type is also<get-type> {

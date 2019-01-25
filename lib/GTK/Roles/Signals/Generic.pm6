@@ -34,7 +34,8 @@ role GTK::Roles::Signals::Generic {
   }
 
   # Has this supply been created yet? If True, this is a good indication that
-  # that signal $name has been tapped.
+  # that signal $name has been tapped. It IS an indicator that the Supply
+  # has been created.
   #
   # Must be overridden by all consumers that use another Signal-based role.
   method is-connected(Str $name) {

@@ -396,6 +396,18 @@ our enum GAppInfoCreateFlags is export (
   G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  => (1 +< 2)   # nick=supports-startup-notification
 );
 
+our enum GTlsCertificateFlags is export (
+  G_TLS_CERTIFICATE_UNKNOWN_CA    => (1 +< 0),
+  G_TLS_CERTIFICATE_BAD_IDENTITY  => (1 +< 1),
+  G_TLS_CERTIFICATE_NOT_ACTIVATED => (1 +< 2),
+  G_TLS_CERTIFICATE_EXPIRED       => (1 +< 3),
+  G_TLS_CERTIFICATE_REVOKED       => (1 +< 4),
+  G_TLS_CERTIFICATE_INSECURE      => (1 +< 5),
+  G_TLS_CERTIFICATE_GENERIC_ERROR => (1 +< 6),
+  G_TLS_CERTIFICATE_VALIDATE_ALL  => 0x007f
+);
+
+
 our enum GdkCursorType is export (
   GDK_X_CURSOR            => 0,
   GDK_ARROW               => 2,
@@ -546,6 +558,7 @@ class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Point
 
 class AtkObject             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
+class GAction               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GActionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppInfo              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppInfoMonitor       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -572,6 +585,7 @@ class GObject               is repr('CPointer') is export does GTK::Roles::Point
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPtrArray             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }

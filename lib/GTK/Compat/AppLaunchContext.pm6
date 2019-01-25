@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Values;
+use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::AppLaunchContext;
 
@@ -74,11 +74,10 @@ method display is rw  {
     gdk_app_launch_context_set_screen($!alc, $screen);
   }
 
-  method set_timestamp (Int() $t) is also<set-timestamp> {
+  method set_timestamp (Int() $timestamp) is also<set-timestamp> {
     my guint $t = self.RESOLVE-UINT($timestamp);
     gdk_app_launch_context_set_timestamp($!alc, $t);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

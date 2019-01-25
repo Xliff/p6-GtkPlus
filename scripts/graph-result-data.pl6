@@ -10,7 +10,10 @@ sub MAIN (*@filenames) {
   my @bl = "BuildList".IO.slurp.lines;
   my (%order, @points);
   my $idx = 0;
-  %order{$_} = $idx++ for @bl;
+  for @bl {
+    %order{$_} = $idx++ ;
+    #"{$_}: $idx".say;
+  }
 
   # Ascending order. Last results on top. Most of these files have a date
   # serial, although if we convert them to IO paths, we could use generation
@@ -45,7 +48,20 @@ sub MAIN (*@filenames) {
 
     for %data.keys {
       next if $_ eq <SUMMARY DEPENDENCIES>.any;
-      @points[%order{$_}] = %data{$_};
+
+      # Remove outdated stat.
+      next if $_ eq 'GTK::Plus';
+
+      my $n = $_;
+
+      # Fixes long standing bug with renamed file.
+      $n = 'GTK::ShortcutsWindow' if $n eq 'GTK::ShorcutsWindow';
+
+      without %order{$n} {
+        $n.say;
+        exit;
+      }
+      @points[%order{$n}] = %data{$n};
     }
 
     my $rgbh = @colors[$c].lighten(10).to-string('rgb');

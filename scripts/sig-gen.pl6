@@ -6,8 +6,9 @@ use Mojo::DOM:from<Perl5>;
 sub MAIN (
   $control,
   :$var = 'w',
-  :$prefix = "https://developer.gnome.org/gtk3/stable/")
-{
+  :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
+) {
+  $prefix ~= '/' unless $prefix.ends-with('/');
   my $dom = Mojo::DOM.new(
     LWP::Simple.new.get(
       "{ $prefix }{ $control }.html"

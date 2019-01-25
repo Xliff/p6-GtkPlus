@@ -46,7 +46,7 @@ for %nodes.pairs.sort( *.key ) -> $p {
 
   my token useneed { 'use' | 'need' }
   my $f = $p.value<filename>;
-  my $m = $f.IO.open.slurp-rest ~~ m:g/<useneed>  \s+ $<m>=((\w+)+ % '::') \s* ';'/;
+  my $m = $f.IO.open.slurp-rest ~~ m:g/^^<useneed>  \s+ $<m>=((\w+)+ % '::') \s* ';'/;
   for $m.list -> $mm {
     my $mn = $mm;
     $mn ~~ s/<useneed> \s+//;
@@ -56,11 +56,11 @@ for %nodes.pairs.sort( *.key ) -> $p {
       next;
     }
 
-    #%nodes{$p.key}<edges>.push: $mn;
-    #say "P: {$p.key} / { %nodes{$p.key}.gist }";
-
+    %nodes{$p.key}<edges>.push: $mn;
     $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
   }
+  #say "P: {$p.key} / { %nodes{$p.key}.gist }";
+  #exit if $p.key.ends-with('AppLaunchContext');
 }
 
 say "\nA resolution order is:";

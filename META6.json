@@ -40,11 +40,14 @@
       "GTK::Roles::Types"                      :  "lib/GTK/Roles/Types.pm6"                     ,
       "GTK::Builder::Actionable"               :  "lib/GTK/Builder/Actionable.pm6"              ,
       "GTK::Compat::RGBA"                      :  "lib/GTK/Compat/RGBA.pm6"                     ,
+      "GTK::Compat::Raw::Action"               :  "lib/GTK/Compat/Raw/Action.pm6"               ,
       "GTK::Compat::Raw::AppInfo"              :  "lib/GTK/Compat/Raw/AppInfo.pm6"              ,
+      "GTK::Compat::Raw::AppLaunchContext"     :  "lib/GTK/Compat/Raw/AppLaunchContext.pm6"     ,
       "GTK::Compat::Raw::Array"                :  "lib/GTK/Compat/Raw/Array.pm6"                ,
       "GTK::Compat::Raw::Cursor"               :  "lib/GTK/Compat/Raw/Cursor.pm6"               ,
       "GTK::Compat::Raw::Device"               :  "lib/GTK/Compat/Raw/Device.pm6"               ,
       "GTK::Compat::Raw::Display"              :  "lib/GTK/Compat/Raw/Display.pm6"              ,
+      "GTK::Compat::Raw::DisplayManager"       :  "lib/GTK/Compat/Raw/DisplayManager.pm6"       ,
       "GTK::Compat::Raw::DragContext"          :  "lib/GTK/Compat/Raw/DragContext.pm6"          ,
       "GTK::Compat::Raw::FrameTimings"         :  "lib/GTK/Compat/Raw/FrameTimings.pm6"         ,
       "GTK::Compat::Raw::GList"                :  "lib/GTK/Compat/Raw/GList.pm6"                ,
@@ -59,6 +62,8 @@
       "GTK::Compat::Raw::Pixbuf::Transforms"   :  "lib/GTK/Compat/Raw/Pixbuf/Transforms.pm6"    ,
       "GTK::Compat::Raw::Rectangle"            :  "lib/GTK/Compat/Raw/Rectangle.pm6"            ,
       "GTK::Compat::Raw::Screen"               :  "lib/GTK/Compat/Raw/Screen.pm6"               ,
+      "GTK::Compat::Raw::Seat"                 :  "lib/GTK/Compat/Raw/Seat.pm6"                 ,
+      "GTK::Compat::Raw::Selection"            :  "lib/GTK/Compat/Raw/Selection.pm6"            ,
       "GTK::Compat::Raw::Value"                :  "lib/GTK/Compat/Raw/Value.pm6"                ,
       "GTK::Compat::Raw::Visual"               :  "lib/GTK/Compat/Raw/Visual.pm6"               ,
       "GTK::Compat::Raw::Window"               :  "lib/GTK/Compat/Raw/Window.pm6"               ,
@@ -66,6 +71,7 @@
       "GTK::Compat::Roles::AppInfo"            :  "lib/GTK/Compat/Roles/AppInfo.pm6"            ,
       "GTK::Compat::Roles::Icon"               :  "lib/GTK/Compat/Roles/Icon.pm6"               ,
       "GTK::Compat::Roles::Signals::Window"    :  "lib/GTK/Compat/Roles/Signals/Window.pm6"     ,
+      "GTK::Compat::Selection"                 :  "lib/GTK/Compat/Selection.pm6"                ,
       "GTK::Compat::Visual"                    :  "lib/GTK/Compat/Visual.pm6"                   ,
       "GTK::Raw::Types"                        :  "lib/GTK/Raw/Types.pm6"                       ,
       "GTK::Raw::Viewport"                     :  "lib/GTK/Raw/Viewport.pm6"                    ,
@@ -76,6 +82,7 @@
       "GTK::Raw::WindowGroup"                  :  "lib/GTK/Raw/WindowGroup.pm6"                 ,
       "GTK::Roles::Signals::EntryBuffer"       :  "lib/GTK/Roles/Signals/EntryBuffer.pm6"       ,
       "GTK::Roles::StyleProvider"              :  "lib/GTK/Roles/StyleProvider.pm6"             ,
+      "GTK::Compat::Action"                    :  "lib/GTK/Compat/Action.pm6"                   ,
       "GTK::Compat::Array"                     :  "lib/GTK/Compat/Array.pm6"                    ,
       "GTK::Compat::FrameTimings"              :  "lib/GTK/Compat/FrameTimings.pm6"             ,
       "GTK::Compat::GList"                     :  "lib/GTK/Compat/GList.pm6"                    ,
@@ -347,9 +354,11 @@
       "GTK::CellRendererToggle"                :  "lib/GTK/CellRendererToggle.pm6"              ,
       "GTK::Compat::Device"                    :  "lib/GTK/Compat/Device.pm6"                   ,
       "GTK::Compat::Display"                   :  "lib/GTK/Compat/Display.pm6"                  ,
+      "GTK::Compat::DisplayManager"            :  "lib/GTK/Compat/DisplayManager.pm6"           ,
       "GTK::Compat::Event"                     :  "lib/GTK/Compat/Event.pm6"                    ,
       "GTK::Compat::MenuModel"                 :  "lib/GTK/Compat/MenuModel.pm6"                ,
       "GTK::Compat::Raw::Monitor"              :  "lib/GTK/Compat/Raw/Monitor.pm6"              ,
+      "GTK::Compat::Seat"                      :  "lib/GTK/Compat/Seat.pm6"                     ,
       "GTK::ListStore"                         :  "lib/GTK/ListStore.pm6"                       ,
       "GTK::PageSetup"                         :  "lib/GTK/PageSetup.pm6"                       ,
       "GTK::PrintContext"                      :  "lib/GTK/PrintContext.pm6"                    ,
@@ -359,6 +368,7 @@
       "GTK::TextBuffer"                        :  "lib/GTK/TextBuffer.pm6"                      ,
       "GTK::CellRendererAccel"                 :  "lib/GTK/CellRendererAccel.pm6"               ,
       "GTK::CellRendererSpin"                  :  "lib/GTK/CellRendererSpin.pm6"                ,
+      "GTK::Compat::AppLaunchContext"          :  "lib/GTK/Compat/AppLaunchContext.pm6"         ,
       "GTK::Compat::Cursor"                    :  "lib/GTK/Compat/Cursor.pm6"                   ,
       "GTK::Compat::Menu"                      :  "lib/GTK/Compat/Menu.pm6"                     ,
       "GTK::Compat::Monitor"                   :  "lib/GTK/Compat/Monitor.pm6"                  ,
@@ -481,6 +491,8 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
+
 
 
 

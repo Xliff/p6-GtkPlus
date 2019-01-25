@@ -33,11 +33,14 @@ GTK::Roles::Protection
 GTK::Roles::Types
 GTK::Builder::Actionable
 GTK::Compat::RGBA
+GTK::Compat::Raw::Action
 GTK::Compat::Raw::AppInfo
+GTK::Compat::Raw::AppLaunchContext
 GTK::Compat::Raw::Array
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
+GTK::Compat::Raw::DisplayManager
 GTK::Compat::Raw::DragContext
 GTK::Compat::Raw::FrameTimings
 GTK::Compat::Raw::GList
@@ -52,6 +55,8 @@ GTK::Compat::Raw::Pixbuf
 GTK::Compat::Raw::Pixbuf::Transforms
 GTK::Compat::Raw::Rectangle
 GTK::Compat::Raw::Screen
+GTK::Compat::Raw::Seat
+GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
@@ -59,6 +64,7 @@ GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::Signals::Window
+GTK::Compat::Selection
 GTK::Compat::Visual
 GTK::Raw::Types
 GTK::Raw::Viewport
@@ -69,6 +75,7 @@ GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
 GTK::Roles::StyleProvider
+GTK::Compat::Action
 GTK::Compat::Array
 GTK::Compat::FrameTimings
 GTK::Compat::GList
@@ -340,9 +347,11 @@ GTK::CellRendererText
 GTK::CellRendererToggle
 GTK::Compat::Device
 GTK::Compat::Display
+GTK::Compat::DisplayManager
 GTK::Compat::Event
 GTK::Compat::MenuModel
 GTK::Compat::Raw::Monitor
+GTK::Compat::Seat
 GTK::ListStore
 GTK::PageSetup
 GTK::PrintContext
@@ -352,6 +361,7 @@ GTK::Printer
 GTK::TextBuffer
 GTK::CellRendererAccel
 GTK::CellRendererSpin
+GTK::Compat::AppLaunchContext
 GTK::Compat::Cursor
 GTK::Compat::Menu
 GTK::Compat::Monitor
