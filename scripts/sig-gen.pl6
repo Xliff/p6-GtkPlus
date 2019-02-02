@@ -4,16 +4,20 @@ use LWP::Simple;
 use Mojo::DOM:from<Perl5>;
 
 sub MAIN (
-  $control,
+  $control is copy,
   :$var = 'w',
   :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
 ) {
+  my $url;
   $prefix ~= '/' unless $prefix.ends-with('/');
-  my $dom = Mojo::DOM.new(
-    LWP::Simple.new.get(
-      "{ $prefix }{ $control }.html"
-    )
-  );
+  if $control ~~ / ^ 'http' 's'? '://' .+ '.html' $/ {
+    $url = $control;
+    $control ~~ / ( <[A..Za..z]>+ ) '.html' $/;
+    $control = $/[0];
+  } else {
+    $url = "{ $prefix }{ $control }.html"
+  }
+  my $dom = Mojo::DOM.new( LWP::Simple.new.get($url) );
 
   my $v = "\$\!$var";
 
@@ -32,20 +36,88 @@ sub MAIN (
 
   die "Could not find signals section for { $control }" unless $found;
 
+  my @signals;
   for $found.find('div h3 code').to_array.List -> $e {
     (my $mn = $e.text) ~~ s:g/<[“”]>//;
     my $pre = $e.parent.parent.find('pre').last;
     my $rts = $pre.find('span.returnvalue').last;
     my $rt = $rts.defined ?? "--> { $rts.text }" !! '';
     my @t = $pre.find('span.type').to_array.List;
+    my $next-sig = [ $mn, @t.map( *.text.trim ) ];
+    $next-sig.push: $rts.defined ?? $rts.text !! 'void';
+    my $udm = @t.elems == 2 && $next-sig[* - 1] eq 'void';
+    @signals.push: $next-sig unless $udm;
 
     say qq:to/METH/;
   # Is originally:
   # { @t.map(*.text.trim).join(', ') } $rt
   method $mn \{
-    self.connect($v, '$mn');
+    self.{ $udm ?? "connect($v, '$mn')" !! "connect-{ $mn }({ $v })" };
   \}
 METH
+
+  }
+
+  # Emit non-default methods.
+  # Handle return type!!
+  for @signals {
+    my @p = .[1][1 .. * - 2];
+    my $pp = @p.map({
+      / (<[A..Za..z]>)+ %% [ <[a..z]>+ ] /;
+      '$' ~ $/[0].map( *.Str.lc ).join('')
+    }).join(', ');
+    my $rt = .[* - 1] ne 'void' ?? " --> { .[* - 1] }" !! '';
+
+    say qq:to/METH/;
+  # { .[1].join(', ') }{ $rt }
+  method connect-{ .[0] } (
+    \$obj,
+    \$signal = '{ .[0] }',
+    \&handler?
+  ) \{
+    my \$hid;
+    \%!signals-{ $v } //= do \{
+      my \$s = Supplier.new;
+      \$hid = g-connect-{ .[0] }(\$obj, \$signal,
+        -> \$, { $pp }, \$ud{ $rt } \{
+          CATCH \{
+            default \{ \$s.quit(\$_) \}
+          \}
+
+          my \$r = ReturnedValue.new;
+          \$s.emit( [self, { $pp }, \$ud, \$r] );
+          \$r.r;
+        \},
+        Pointer, 0
+      );
+      [ \$s.Supply, \$obj, \$hid];
+    \};
+    \%!signals-{$v}\{\$signal\}[0].tap(\&handler) with \&handler;
+    \%!signals-{$v}\{\$signal\}[0];
+  \}
+METH
+
+  }
+
+
+  # Emit non-default nativecall defs
+  for @signals {
+    my $rt = .[* - 1] ne 'void' ?? " --> { .[* - 1] }" !! '';
+
+  say qq:to/NC/;
+# { .[1].join(', ') }{ $rt }
+sub g-connect-{ .[0] }(
+  Pointer \$app,
+  Str \$name,
+  \&handler (Pointer, { .[1][1 .. * - 2].join(', ') }, Pointer{ $rt }),
+  Pointer \$data,
+  uint32 \$flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  \{ \* \}
+NC
 
   }
 
