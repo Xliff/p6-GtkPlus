@@ -22,7 +22,7 @@ class GTK::Compat::GList {
       if $type.defined;
 
     $!cur = $!list = $list;
-    $!type = $type;
+    $!type := $type;
     while $!cur.defined {
       @!nat.push: self.data;
       $!cur .= next;
@@ -31,7 +31,7 @@ class GTK::Compat::GList {
   }
 
   submethod DESTROY {
-    self.free;
+    #self.free;
   }
 
   multi method new($type) {
@@ -53,20 +53,24 @@ class GTK::Compat::GList {
   }
 
   method data {
+    self!_data($!cur);
+  }
+
+  method !_data(GTK::Compat::Types::GList $n) {
     given $!type {
       when  uint64 | uint32 | uint16 | uint8 |
              int64 |  int32 |  int16 |  int8 |
              num64 |  num32
       {
-        $!cur.data.deref;
+        $n.data.deref;
       }
 
       when Str {
-        nativecast($_, $!cur.data);
+        nativecast($_, $n.data);
       }
 
       when .REPR eq <CPointer CStruct>.any {
-        nativecast($_, $!cur.data);
+        nativecast($_, $n.data);
       }
 
       default {
@@ -85,11 +89,11 @@ class GTK::Compat::GList {
   }
 
   method !rebuild {
-    my GList $l;
+    my GTK::Compat::Types::GList $l;
 
     @!nat = ();
     loop ($l = self.first; $l != GList; $l = $l.next) {
-      @!nat.push: $l;
+      @!nat.push: self.data($l);
     }
     @!nat;
   }
@@ -106,10 +110,14 @@ class GTK::Compat::GList {
     $!list = $list;
   }
 
-  multi method concat (GTK::Compat::GList:U: GList $list1, GList $list2) {
+  multi method concat (
+    GTK::Compat::GList:U:
+    GTK::Compat::Types::GList $list1,
+    GTK::Compat::Types::GList $list2
+  ) {
     g_list_concat($list1, $list2);
   }
-  multi method concat (GList $list2) {
+  multi method concat (GTK::Compat::Types::GList $list2) {
     my $list = g_list_concat($!list, $list2);
     $!dirty = True;
     $!list = $list;
@@ -123,7 +131,7 @@ class GTK::Compat::GList {
     g_list_copy_deep($!list, $func, $user_data);
   }
 
-  method delete_link (GList $link) {
+  method delete_link (GTK::Compat::Types::GList $link) {
     my $list = g_list_delete_link($!list, $link);
     $!dirty = True;
     $!list = $list;
@@ -169,7 +177,7 @@ class GTK::Compat::GList {
     $!list = $list;
   }
 
-  method insert_before (GList $sibling, gpointer $data) {
+  method insert_before (GTK::Compat::Types::GList $sibling, gpointer $data) {
     my $list = g_list_insert_before($!list, $sibling, $data);
     $!dirty = True;
     $!list = $list;
@@ -181,8 +189,14 @@ class GTK::Compat::GList {
     $!list = $list;
   }
 
-  method insert_sorted_with_data (gpointer $data, GCompareDataFunc $func, gpointer $user_data) {
-    my $list = g_list_insert_sorted_with_data($!list, $data, $func, $user_data);
+  method insert_sorted_with_data (
+    gpointer $data,
+    GCompareDataFunc $func,
+    gpointer $user_data
+  ) {
+    my $list = g_list_insert_sorted_with_data(
+      $!list, $data, $func, $user_data
+    );
     $!dirty = True;
     $!list = $list;
   }
@@ -207,7 +221,7 @@ class GTK::Compat::GList {
     g_list_nth_prev($!list, $n);
   }
 
-  method position (GList $llink) {
+  method position (GTK::Compat::Types::GList $llink) {
     g_list_position($!list, $llink);
   }
 
@@ -228,7 +242,7 @@ class GTK::Compat::GList {
     @!nat = ();
   }
 
-  method remove_link (GList $llink) {
+  method remove_link (GTK::Compat::Types::GList $llink) {
     my $list = g_list_remove_link($!list, $llink);
     $!dirty = True;
     $!list = $list;

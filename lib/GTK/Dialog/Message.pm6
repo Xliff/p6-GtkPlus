@@ -56,7 +56,7 @@ class GTK::Dialog::Message is GTK::Dialog {
     GtkWindow() $parent,
     Str $message_format,
     Int() $flags = GTK_DIALOG_DESTROY_WITH_PARENT,
-    Int() $type = GTK_MESSAGE_ERROR,
+    Int() $type = GTK_MESSAGE_INFO,
     Int() $buttons = GTK_BUTTONS_CLOSE
   ) {
     samewith($parent, $flags, $type, $buttons, $message_format);

@@ -211,9 +211,9 @@ class GTK::Dialog is GTK::Window {
   }
 
   # Class method.. but deprecated
-  method gtk_alternative_dialog_button_order (GdkScreen $screen)
+  method alternative_dialog_button_order (GdkScreen $screen)
     is DEPRECATED
-    is also<gtk-alternative-dialog-button-order>
+    is also<alternative-dialog-button-order>
   {
     gtk_alternative_dialog_button_order($screen);
   }

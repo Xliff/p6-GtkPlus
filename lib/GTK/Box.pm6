@@ -80,10 +80,6 @@ class GTK::Box is GTK::Container {
     my $box = gtk_box_new($o, $s);
     self.bless(:$box);
   }
-  # Will never get here due to the multi, above
-  multi method new(|c) {
-    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
-  }
 
   method new-hbox(Int $spacing = 0) is also<new_hbox> {
     my gint $s = $spacing;

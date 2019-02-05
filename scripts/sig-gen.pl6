@@ -67,6 +67,7 @@ METH
       '$' ~ $/[0].map( *.Str.lc ).join('')
     }).join(', ');
     my $rt = .[* - 1] ne 'void' ?? " --> { .[* - 1] }" !! '';
+    my $name = $v.substr(2);
 
     say qq:to/METH/;
   # { .[1].join(', ') }{ $rt }
@@ -76,7 +77,7 @@ METH
     \&handler?
   ) \{
     my \$hid;
-    \%!signals-{ $v } //= do \{
+    \%!signals-{ $name } //= do \{
       my \$s = Supplier.new;
       \$hid = g-connect-{ .[0] }(\$obj, \$signal,
         -> \$, { $pp }, \$ud{ $rt } \{
@@ -92,8 +93,8 @@ METH
       );
       [ \$s.Supply, \$obj, \$hid];
     \};
-    \%!signals-{$v}\{\$signal\}[0].tap(\&handler) with \&handler;
-    \%!signals-{$v}\{\$signal\}[0];
+    \%!signals-{ $name }\{\$signal\}[0].tap(\&handler) with \&handler;
+    \%!signals-{ $name }\{\$signal\}[0];
   \}
 METH
 
@@ -104,7 +105,7 @@ METH
   for @signals {
     my $rt = .[* - 1] ne 'void' ?? " --> { .[* - 1] }" !! '';
 
-  say qq:to/NC/;
+    say qq:to/NC/;
 # { .[1].join(', ') }{ $rt }
 sub g-connect-{ .[0] }(
   Pointer \$app,

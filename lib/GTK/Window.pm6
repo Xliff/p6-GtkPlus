@@ -63,8 +63,19 @@ class GTK::Window is GTK::Bin {
     $o;
   }
   multi method new (
-    Int() $type,                    # GtkWindowType $type,
-    Str :$title = 'Window',
+    Str $title   = 'Window',
+    Int :$type   = GTK_WINDOW_TOPLEVEL,           # GtkWindowType $type,
+    Int :$width  = 200,
+    Int :$height = 200
+  ) {
+    my guint $t = self.RESOLVE-UINT($type);
+    my $window = gtk_window_new($t);
+    samewith($window, :$title, :$width, :$height);
+  }
+  # This multi could be deprecated.
+  multi method new (
+    Int $type    = GTK_WINDOW_TOPLEVEL,           # GtkWindowType $type,
+    Str :$title  = 'Window',
     Int :$width  = 200,
     Int :$height = 200
   ) {

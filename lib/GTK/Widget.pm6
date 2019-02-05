@@ -68,9 +68,11 @@ class GTK::Widget {
     self.disconnect-all($_) for %!signals, %!signals-widget
   }
 
-  proto new(|) { * }
-
-  method new(Ancestry $widget) {
+  # proto new(|) { * }
+  multi method new(|c) {
+    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
+  }
+  multi method new(Ancestry $widget) {
     my $o = self.bless(:$widget);
     $o.upref;
     $o;
