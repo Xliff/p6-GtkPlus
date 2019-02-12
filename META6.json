@@ -482,20 +482,18 @@
       "GTK::ToggleToolButton"                  :  "lib/GTK/ToggleToolButton.pm6"                ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
       "GTK"                                    :  "lib/GTK.pm6"                                 ,
-      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"                         
+      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"
     },
     "name": "Perl6-GtkPlus",
     "perl": "6.c",
     "test-depends": ["Test::META"],
-    "build-depends": [ "Text::Table::Simple", "Dependency::Sort", "Color", "RandomColor" ],
+    "build-depends": [
+      "Text::Table::Simple",
+      "Dependency::Sort",
+      "Color",
+      "RandomColor",
+      "File::Find"
+    ],
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
-
-
-
-
-
-
-
-
