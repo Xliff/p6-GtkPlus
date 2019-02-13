@@ -165,6 +165,15 @@ class GTK::Compat::PtrArray {
     g_ptr_array_unref($!pa);
   }
 
+  method elems {
+    $!pa.len;
+  }
+
+  method index (Int() $index) is also<AT-POS> {
+    my guint $i = resolve-uint($index);
+    $!pa.data[$i];
+  }
+
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
