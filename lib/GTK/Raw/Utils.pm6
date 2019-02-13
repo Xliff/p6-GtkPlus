@@ -13,7 +13,7 @@ sub get_flags($t, $s) is export {
     .join(', ');
 }
 
-multi sub resolve-bool(@rb) is export {
+multi sub resolve-bool(*@rb) is export {
   @rb.map({ samewith($_) });
 }
 multi sub resolve-bool($rb) is export {
@@ -31,14 +31,14 @@ multi sub resolve-bool($rb) is export {
   }
 }
 
-multi resolve-short(@rs) is export {
+multi resolve-short(*@rs) is export {
   @rs.map({ samewith($_) });
 }
 multi sub resolve-short($rs) is export {
   ($rs.abs +& 0x7f) * ($rs < 0 ?? -1 !! 1);
 }
 
-multi resolve-ushort(@rus) is export {
+multi resolve-ushort(*@rus) is export {
   @rus.map({ samewith($_) });
 }
 multi sub resolve-ushort($rus) is export {
@@ -56,28 +56,28 @@ multi sub resolve-ulint($rul) is export {
   $rul +& 0xffffffffffffffff;
 }
 
-multi resolve-int(@ri) is export {
+multi resolve-int(*@ri) is export {
   @ri.map({ samewith($_) });
 }
 multi sub resolve-int($ri) is export {
   ($ri.abs +& 0x7fffffff) * ($ri < 0 ?? -1 !! 1);
 }
 
-multi resolve-uint(@ru) is export {
+multi resolve-uint(*@ru) is export {
   @ru.map({ samewith($_) });
 }
 multi sub resolve-uint($ru) is export {
   $ru +& 0xffffffff;
 }
 
-multi resolve-int16(@ri) is export {
+multi resolve-int16(*@ri) is export {
   @ri.map({ samewith($_) });
 }
 multi sub resolve-int16($ri) is export {
   ($ri.abs +& 0x7fff) * ($ri < 0 ?? -1 !! 1);
 }
 
-multi resolve-uint16(@ru) is export {
+multi resolve-uint16(*@ru) is export {
   @ru.map({ samewith($_) });
 }
 multi sub resolve-uint16($ru) is export {
@@ -90,7 +90,7 @@ sub resolve-gtype($gt) is export {
   $gt;
 }
 
-sub resolve-gstrv(@rg) is export {
+sub resolve-gstrv(*@rg) is export {
   my $gs = CArray[Str].new;
   my $c = 0;
   for @rg {
@@ -102,17 +102,17 @@ sub resolve-gstrv(@rg) is export {
   $gs;
 }
 
+sub gtk_main_iteration_do (Int() $blocking) is export {
+  my gint $b = resolve-uint($blocking);
+  gtk_main_iteration_do_raw($b);
+}
+
 sub gtk_main_iteration_do_raw (gboolean $blocking)
   returns uint32
   is native(gtk)
   is symbol('gtk_main_iteration_do')
   is export
   { * }
-
-sub gtk_main_iteration_do (Int() $blocking) is export {
-  my gint $b = resolve-uint($blocking);
-  gtk_main_iteration_do($b);
-}
 
 sub gtk_events_pending
   returns uint32

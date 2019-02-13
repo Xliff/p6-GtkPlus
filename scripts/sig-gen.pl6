@@ -34,6 +34,11 @@ sub MAIN (
     }
   }
 
+  my @defined-sigs = (
+    [ 'gpointer',        'void', 'connect'       ],
+    [ 'guint, gpointer', 'void', 'connect-uint'  ],
+  );
+
   die "Could not find signals section for { $control }" unless $found;
 
   my @signals;
@@ -45,12 +50,17 @@ sub MAIN (
     my @t = $pre.find('span.type').to_array.List;
     my $next-sig = [ $mn, @t.map( *.text.trim ) ];
     $next-sig.push: $rts.defined ?? $rts.text !! 'void';
+
+    # Existing check to go here.
     my $udm = @t.elems == 2 && $next-sig[* - 1] eq 'void';
+    my $s_sig = @t.map(*.text.trim).join(', ');
+    # my $emn = check_defined($s_sig, $rt);
+
     @signals.push: $next-sig unless $udm;
 
     say qq:to/METH/;
   # Is originally:
-  # { @t.map(*.text.trim).join(', ') } $rt
+  # { $s_sig } $rt
   method $mn \{
     self.{ $udm ?? "connect($v, '$mn')" !! "connect-{ $mn }({ $v })" };
   \}
@@ -99,7 +109,6 @@ METH
 METH
 
   }
-
 
   # Emit non-default nativecall defs
   for @signals {

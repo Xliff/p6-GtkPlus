@@ -8,21 +8,31 @@ use GTK::Raw::FileFilter;
 use GTK::Raw::Types;
 
 use GTK::Roles::Buildable;
+use GTK::Roles::References;
 use GTK::Roles::Types;
 
+my subset Ancestry where GtkFileFilter | GtkBuilder;
+
 class GTK::FileFilter does GTK::Roles::Types {
+  also does GTK::Roles::References;
   also does GTK::Roles::Buildable;
-  
+
   has GtkFileFilter $!ff;
 
   submethod BUILD(:$filter) {
-    $!ff = $filter;
-    $!b = nativecast(GtkBuildable, $!ff);   # GTK::Roles::Buildable
+    $!ref = nativecast(GObject, $!ff = $filter);  # GTK::Roles::References;
+    $!b = nativecast(GtkBuildable, $!ff);         # GTK::Roles::Buildable
   }
 
-  method new () {
+  method new {
     my $filter = gtk_file_filter_new();
     self.bless(:$filter);
+  }
+
+  method new (Ancestry $filter, :$ref = True) {
+    my $o = self.bless(:$filter);
+    $o.upref if $ref;
+    $o;
   }
 
   method new_from_gvariant (
@@ -67,8 +77,8 @@ class GTK::FileFilter does GTK::Roles::Types {
     gtk_file_filter_add_pattern($!ff, $pattern);
   }
 
-  method add_pixbuf_formats (GtkFileFilter() $f) is also<add-pixbuf-formats> {
-    gtk_file_filter_add_pixbuf_formats($f);
+  method add_pixbuf_formats is also<add-pixbuf-formats> {
+    gtk_file_filter_add_pixbuf_formats($!ff);
   }
 
   method filter (GtkFileFilterInfo $filter_info) {
@@ -90,4 +100,3 @@ class GTK::FileFilter does GTK::Roles::Types {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

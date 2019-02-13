@@ -155,6 +155,11 @@ class GValue is repr('CStruct') does GTK::Roles::Pointers is export {
   HAS GTypeValueList  $.data2  is rw;
 }
 
+class GPtrArray is repr('CStruct') does GTK::Roles::Pointers is export {
+  has CArray[Pointer] $.pdata;
+  has guint           $.len;
+}
+
 our enum GTypeEnum is export (
   G_TYPE_INVALID   => 0,
   G_TYPE_NONE      => (1  +< 2),
@@ -585,7 +590,6 @@ class GMountOperation       is repr('CPointer') is export does GTK::Roles::Point
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GPtrArray             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
 

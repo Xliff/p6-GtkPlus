@@ -1,2 +1,8 @@
 .precomp/
 dead/
+.touch/
+.idea/
+LastBuildResults.*
+*.bak
+*~
+examples/

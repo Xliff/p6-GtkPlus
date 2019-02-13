@@ -250,6 +250,31 @@ role GTK::Roles::Signals::Generic {
     %!signals{$signal}[0];
   }
 
+  # WebKitDownload, guint64, gpointer
+  method connect-long (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-long($obj, $signal,
+        -> $, $l, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $l, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
+  }
+
   method connect-movement-step (
     $obj,
     $signal,
@@ -736,6 +761,19 @@ sub g-connect-gparam(
   Pointer $app,
   Str $name,
   &handler (Pointer, GParamSpec, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+# Pointer, guint64, gpointer
+sub g-connect-long(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, guint64, Pointer),
   Pointer $data,
   uint32 $flags
 )

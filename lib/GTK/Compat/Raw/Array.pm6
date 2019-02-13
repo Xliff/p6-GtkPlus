@@ -94,14 +94,17 @@ sub g_byte_array_sized_new (guint $reserved_size)
   is export
   { * }
 
-sub g_byte_array_sort (GByteArray $array, GCompareFunc $compare_func)
+sub g_byte_array_sort (
+  GByteArray $array,
+  &compare_func (Pointer, Pointer --> gint)
+)
   is native(glib)
   is export
   { * }
 
 sub g_byte_array_sort_with_data (
   GByteArray $array,
-  GCompareDataFunc $compare_func,
+  &compare_func (Pointer, Pointer, Pointer --> gint),
   gpointer $user_data
 )
   is native(glib)
@@ -131,7 +134,7 @@ sub g_ptr_array_find (
 sub g_ptr_array_find_with_equal_func (
   GPtrArray $haystack,
   Pointer $needle,
-  GEqualFunc $equal_func,
+  &equal_func (Pointer, Pointer --> guint),
   guint $index
 )
   returns uint32
@@ -139,7 +142,11 @@ sub g_ptr_array_find_with_equal_func (
   is export
   { * }
 
-sub g_ptr_array_foreach (GPtrArray $array, GFunc $func, gpointer $user_data)
+sub g_ptr_array_foreach (
+  GPtrArray $array,
+  &func (Pointer, Pointer),
+  gpointer $user_data
+)
   is native(glib)
   is export
   { * }
@@ -226,14 +233,17 @@ sub g_ptr_array_sized_new (guint $reserved_size)
   is export
   { * }
 
-sub g_ptr_array_sort (GPtrArray $array, GCompareFunc $compare_func)
+sub g_ptr_array_sort (
+  GPtrArray $array,
+  &compare_func (Pointer, Pointer --> gint)
+)
   is native(glib)
   is export
   { * }
 
 sub g_ptr_array_sort_with_data (
   GPtrArray $array,
-  GCompareDataFunc $compare_func,
+  &compare_func (Pointer, Pointer, Pointer --> gint),
   gpointer $user_data
 )
   is native(glib)
@@ -329,14 +339,17 @@ sub g_array_sized_new (
   is export
   { * }
 
-sub g_array_sort (GArray $array, GCompareFunc $compare_func)
+sub g_array_sort (
+  GArray $array,
+  &compare_func (Pointer, Pointer --> gint)
+)
   is native(glib)
   is export
   { * }
 
 sub g_array_sort_with_data (
   GArray $array,
-  GCompareDataFunc $compare_func,
+  &compare_func (Pointer, Pointer, Pointer --> gint),
   gpointer $user_data
 )
   is native(glib)
