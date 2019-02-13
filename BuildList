@@ -88,6 +88,7 @@ GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter
 GTK::Compat::Permission
 GTK::Compat::Pixbuf::Transforms
+GTK::Compat::PtrArray
 GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock

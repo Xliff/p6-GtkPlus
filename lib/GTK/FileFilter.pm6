@@ -24,12 +24,11 @@ class GTK::FileFilter does GTK::Roles::Types {
     $!b = nativecast(GtkBuildable, $!ff);         # GTK::Roles::Buildable
   }
 
-  method new {
+  multi method new {
     my $filter = gtk_file_filter_new();
     self.bless(:$filter);
   }
-
-  method new (Ancestry $filter, :$ref = True) {
+  multi method new (Ancestry $filter, :$ref = True) {
     my $o = self.bless(:$filter);
     $o.upref if $ref;
     $o;

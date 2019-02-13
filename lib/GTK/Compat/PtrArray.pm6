@@ -31,18 +31,32 @@ class GTK::Compat::PtrArray {
     self.bless( array => g_ptr_array_new() );
   }
 
-  method new_full is also<new-full> (
+  method new_full (
     Int() $reserved_size,
     GDestroyNotify $element_free_func
-  ) {
-    my guint $rs = resolve-guint($reserved_size);
+  )
+    is also<new-full>
+  {
+    my guint $rs = resolve-uint($reserved_size);
     self.bless(
-      array => g_ptr_array_new_full($!ga, $element_free_func)
+      array => g_ptr_array_new_full($!pa, $rs, $element_free_func)
     );
   }
 
-  method new_with_free_func is also<new-with-free-func> {
-    g_ptr_array_new_with_free_func($!ga);
+  method new_with_free_func (&free_func) is also<new-with-free-func> {
+    self.bless(
+      array => g_ptr_array_new_with_free_func(&free_func)
+    );
+  }
+
+  method sized_new (Int() $reserved_size) is also<sized-new> {
+    my guint $rs = resolve-uint($reserved_size);
+    self.bless( array => g_ptr_array_sized_new($rs) );
+  }
+
+  method remove_range (Int() $index, Int() $length) is also<remove-range> {
+    my guint ($i, $l) = resolve-uint($index, $length);
+    self.bless( array => g_ptr_array_remove_range($!pa, $i, $length) );
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -56,7 +70,7 @@ class GTK::Compat::PtrArray {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add (gpointer $data) {
-    g_ptr_array_add($!ga, $data);
+    g_ptr_array_add($!pa, $data);
   }
 
   method find ($needle is copy, Int() $index) {
@@ -64,7 +78,7 @@ class GTK::Compat::PtrArray {
       unless $needle.REPR eq <CStruct CPointer>.any;
     $needle = nativecast(Pointer, $needle) unless $needle.REPR eq 'CPointer';
     my guint $i = resolve-uint($index);
-    g_ptr_array_find($!ga, $needle, $i);
+    g_ptr_array_find($!pa, $needle, $i);
   }
 
   method find_with_equal_func (
@@ -78,62 +92,54 @@ class GTK::Compat::PtrArray {
       unless $needle.REPR eq <CStruct CPointer>.any;
     $needle = nativecast(Pointer, $needle) unless $needle.REPR eq 'CPointer';
     my guint $i = resolve-uint($index);
-    g_ptr_array_find_with_equal_func($!ga, $needle, &equal_func, $i);
+    g_ptr_array_find_with_equal_func($!pa, $needle, &equal_func, $i);
   }
 
   method foreach (&func, gpointer $user_data = Pointer) {
-    g_ptr_array_foreach($!ga, &func, $user_data);
+    g_ptr_array_foreach($!pa, &func, $user_data);
   }
 
   method free (Int() $free_seg) {
     my gboolean $fs = resolve-bool($free_seg);
-    g_ptr_array_free($!ga, $fs);
+    g_ptr_array_free($!pa, $fs);
   }
 
   method insert (Int() $index, gpointer $data = Pointer) {
     my guint $i = resolve-uint($index);
-    g_ptr_array_insert($!ga, $i, $data);
+    g_ptr_array_insert($!pa, $i, $data);
   }
 
   method ref is also<upref> {
-    g_ptr_array_ref($!ga);
+    g_ptr_array_ref($!pa);
+    self;
   }
 
   method remove (gpointer $data) {
-    g_ptr_array_remove($!ga, $data);
+    g_ptr_array_remove($!pa, $data);
   }
 
   method remove_fast (gpointer $data) is also<remove-fast> {
-    g_ptr_array_remove_fast($!ga, $data);
+    g_ptr_array_remove_fast($!pa, $data);
   }
 
   method remove_index (Int() $index) is also<remove-index> {
     my guint $i = resolve-uint($index);
-    g_ptr_array_remove_index($!ga, $i);
+    g_ptr_array_remove_index($!pa, $i);
   }
 
   method remove_index_fast (Int() $index) is also<remove-index-fast> {
     my guint $i = resolve-uint($index);
-    g_ptr_array_remove_index_fast($!ga, $i);
-  }
-
-  method remove_range (Int() $index, Int() $length) is also<remove-range> {
-    my guint ($i, $l) = resolve-uint($index, $length);
-    g_ptr_array_remove_range($!ga, $index_, $length);
+    g_ptr_array_remove_index_fast($!pa, $i);
   }
 
   method set_free_func (GDestroyNotify $element_free_func)
     is also<set-free-func>
   {
-    g_ptr_array_set_free_func($!ga, $element_free_func);
-  }
-
-  method sized_new is also<sized-new> {
-    g_ptr_array_sized_new();
+    g_ptr_array_set_free_func($!pa, $element_free_func);
   }
 
   method sort (&compare_func) {
-    g_ptr_array_sort($!ga, &compare_func);
+    g_ptr_array_sort($!pa, &compare_func);
   }
 
   method sort_with_data (
@@ -142,21 +148,21 @@ class GTK::Compat::PtrArray {
   )
     is also<sort-with-data>
   {
-    g_ptr_array_sort_with_data($!ga, &compare_func, $user_data);
+    g_ptr_array_sort_with_data($!pa, &compare_func, $user_data);
   }
 
   method steal_index (Int() $index) is also<steal-index> {
     my guint $i = resolve-uint($index);
-    g_ptr_array_steal_index($!ga, $i);
+    g_ptr_array_steal_index($!pa, $i);
   }
 
   method steal_index_fast (Int() $index) is also<steal-index-fast> {
     my guint $i = resolve-uint($index);
-    g_ptr_array_steal_index_fast($!ga, $i);
+    g_ptr_array_steal_index_fast($!pa, $i);
   }
 
   method unref is also<downref> {
-    g_ptr_array_unref($!ga);
+    g_ptr_array_unref($!pa);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑

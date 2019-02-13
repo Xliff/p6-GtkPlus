@@ -95,6 +95,7 @@
       "GTK::Compat::MenuLinkIter"              :  "lib/GTK/Compat/MenuLinkIter.pm6"             ,
       "GTK::Compat::Permission"                :  "lib/GTK/Compat/Permission.pm6"               ,
       "GTK::Compat::Pixbuf::Transforms"        :  "lib/GTK/Compat/Pixbuf/Transforms.pm6"        ,
+      "GTK::Compat::PtrArray"                  :  "lib/GTK/Compat/PtrArray.pm6"                 ,
       "GTK::Compat::Raw::Cairo"                :  "lib/GTK/Compat/Raw/Cairo.pm6"                ,
       "GTK::Compat::Raw::Event"                :  "lib/GTK/Compat/Raw/Event.pm6"                ,
       "GTK::Compat::Raw::FrameClock"           :  "lib/GTK/Compat/Raw/FrameClock.pm6"           ,
@@ -482,7 +483,7 @@
       "GTK::ToggleToolButton"                  :  "lib/GTK/ToggleToolButton.pm6"                ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
       "GTK"                                    :  "lib/GTK.pm6"                                 ,
-      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"
+      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"                         
     },
     "name": "Perl6-GtkPlus",
     "perl": "6.c",
@@ -497,3 +498,4 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
