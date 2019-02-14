@@ -45,11 +45,27 @@ multi sub resolve-ushort($rus) is export {
   $rus +& 0xff;
 }
 
-sub resolve-lint($rl) is export {
+
+multi sub resolve-long(*@rl) is export {
+  resolve-lint(@rl);
+}
+multi sub resolve-long($rl) is export {
+  resolve-lint($rl);
+}
+multi sub resolve-lint(*@rl) is export {
+  @rl.map({ samewith($_) });
+}
+multi sub resolve-lint($rl) is export {
   ($rl.abs +& 0x7fffffffffffffff) * ($rl < 0 ?? -1 !! 1);
 }
 
-multi sub resolve-ulint(@rul) {
+multi sub resolve-ulong(*@rul) is export {
+  resolve-ulint(@rul);
+}
+multi sub resolve-ulong($rul) is export {
+  resolve-ulint($rul);
+}
+multi sub resolve-ulint(*@rul) is export {
   @rul.map({ samewith($_) });
 }
 multi sub resolve-ulint($rul) is export {

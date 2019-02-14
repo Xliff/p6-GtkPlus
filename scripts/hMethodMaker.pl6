@@ -308,8 +308,8 @@ sub MAIN (
 
   if %do_output<all> || %do_output<subs> {
     outputSub( %methods{$_} )     for %methods.keys.sort;
-    outputSub( %getset{$_}<get> ) for %getset.keys;
-    outputSub( %getset{$_}<set> ) for %getset.keys;
+    outputSub( %getset{$_}<get> ) for  %getset.keys.sort;
+    outputSub( %getset{$_}<set> ) for  %getset.keys.sort;
   }
 
   for %collider.pairs.grep( *.value > 1 ) -> $d {
