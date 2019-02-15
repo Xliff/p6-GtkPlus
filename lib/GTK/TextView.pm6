@@ -17,8 +17,9 @@ use GTK::Roles::Scrollable;
 
 use GTK::Roles::Signals::TextView;
 
-my subset Ancestry where GtkTextView  | GtkScrollable | GtkContainer |
-                         GtkBuildable | GtkWidget;
+our subset TextViewAncestry
+  where GtkTextView  | GtkScrollable | GtkContainer |
+        GtkBuildable | GtkWidget;
 
 class GTK::TextView is GTK::Container {
   also does GTK::Roles::Scrollable;
@@ -36,7 +37,7 @@ class GTK::TextView is GTK::Container {
   submethod BUILD(:$textview) {
     my $to-parent;
     given $textview {
-      when Ancestry {
+      when TextViewAncestry {
         $!tv = do {
           when GtkTextView {
             $to-parent = nativecast(GtkContainer, $_);
@@ -66,7 +67,7 @@ class GTK::TextView is GTK::Container {
     self.disconnect-all($_) for %!signals-tv;
   }
 
-  multi method new (Ancestry $textview) {
+  multi method new (TextViewAncestry $textview) {
     my $o = self.bless(:$textview);
     $o.upref;
     $o;

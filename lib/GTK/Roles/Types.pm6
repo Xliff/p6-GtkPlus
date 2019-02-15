@@ -10,7 +10,7 @@ use GTK::Roles::Protection;
 role GTK::Roles::Types {
   also does GTK::Roles::Protection;
 
-  multi method RESOLVE-BOOL(@rb) {
+  multi method RESOLVE-BOOL(*@rb) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @rb.map({ samewith($_) });
@@ -21,7 +21,7 @@ role GTK::Roles::Types {
     resolve-bool($rb);
   }
 
-  multi method RESOLVE-SHORT(@rs) {
+  multi method RESOLVE-SHORT(*@rs) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @rs.map({ samewith($_) });
@@ -31,7 +31,7 @@ role GTK::Roles::Types {
     resolve-short($rs);
   }
 
-  multi method RESOLVE-USHORT(@rus) {
+  multi method RESOLVE-USHORT(*@rus) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @rus.map({ samewith($_) });
@@ -41,7 +41,7 @@ role GTK::Roles::Types {
     resolve-short($rus);
   }
 
-  multi method RESOLVE-INT16(@rs) {
+  multi method RESOLVE-INT16(*@rs) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @rs.map({ samewith($_) });
@@ -51,7 +51,7 @@ role GTK::Roles::Types {
     resolve-int16($rs);
   }
 
-  multi method RESOLVE-UINT16(@rus) {
+  multi method RESOLVE-UINT16(*@rus) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @rus.map({ samewith($_) });
@@ -61,7 +61,7 @@ role GTK::Roles::Types {
     resolve-uint16($rus);
   }
 
-  multi method RESOLVE-INT(@ri) {
+  multi method RESOLVE-INT(*@ri) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @ri.map({ samewith($_) });
@@ -71,7 +71,7 @@ role GTK::Roles::Types {
     resolve-int($ri);
   }
 
-  multi method RESOLVE-UINT(@ru) {
+  multi method RESOLVE-UINT(*@ru) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @ru.map({ samewith($_) });
@@ -82,7 +82,7 @@ role GTK::Roles::Types {
   }
 
   # Alias to RESOLVE-LONG
-  multi method RESOLVE-LINT(@ri) {
+  multi method RESOLVE-LINT(*@ri) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @ri.map({ samewith($_) });
@@ -93,7 +93,7 @@ role GTK::Roles::Types {
   }
 
   # Alias to RESOLVE-ULONG
-  multi method RESOLVE-ULINT(@ru) {
+  multi method RESOLVE-ULINT(*@ru) {
     self.IS-PROTECTED;
     # This will not work if called before 'self' exists!
     @ru.map({ samewith($_) });
@@ -103,14 +103,14 @@ role GTK::Roles::Types {
     resolve-ulint($rul);
   }
 
-  multi method RESOLVE-GTYPE(@gt) {
+  multi method RESOLVE-GTYPE(*@gt) {
     @gt.map({ samewith($_.Int) });
   }
   multi method RESOLVE-GTYPE(Int() $gt) {
     resolve-gtype($gt);
   }
 
-  multi method RESOLVE-GSTRV(@rg) {
+  multi method RESOLVE-GSTRV(*@rg) {
     self.IS-PROTECTED;
     resolve-gstrv(@rg)
   }
