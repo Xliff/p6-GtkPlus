@@ -29,12 +29,19 @@ class GTK::Compat::RGBA {
   ) {
     self.bless(:$red, :$green, :$blue, :$alpha);
   }
-  multi method new-rgb(
+  multi method new-rgba(
     Int() $red  ,
     Int() $green,
     Int() $blue ,
+    Num() $alpha
   ) {
-    GTK::Compat::RGBA.new($red / 255, $green / 255, $blue / 255)
+    die '$alpha must be between 0 and 1'  unless $alpha ~~ 0..1;
+    GTK::Compat::RGBA.new(
+      red   =>   $red / 255,
+      green => $green / 255,
+      blue  =>  $blue / 255,
+      :$alpha
+    )
   }
 
   method copy {
