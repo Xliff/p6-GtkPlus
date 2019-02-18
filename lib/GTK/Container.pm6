@@ -14,7 +14,8 @@ use GTK::Widget;
 
 use GTK::Roles::LatchedContents;
 
-my subset Ancestry where GtkContainer | GtkBuildable | GtkWidget;
+our subset ContainerAncestry is export
+  where GtkContainer | GtkBuildable | GtkWidget;
 
 class GTK::Container is GTK::Widget {
   also does GTK::Roles::LatchedContents;

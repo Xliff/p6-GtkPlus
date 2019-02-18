@@ -118,4 +118,5 @@ role GTK::Roles::Types {
     self.IS-PROTECTED;
     samewith($rg.Array);
   }
+
 }

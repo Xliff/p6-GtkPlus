@@ -119,6 +119,17 @@ constant GdkWindowChildFunc             is export := Pointer;
 constant GdkWindowInvalidateHandlerFunc is export := Pointer;
 constant GdkWMFunction                  is export := Pointer;
 
+class GTypeClass is repr('CStruct') is export {
+  has GType      $.g_type;
+}
+class GTypeInstance is repr('CStruct') is export {
+  has GTypeClass $.g_class;
+
+  method checkType($compare_type) {
+    $compare_type == $,gclass.g_type;
+  }
+}
+
 class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $.data;
   has GList   $.next;

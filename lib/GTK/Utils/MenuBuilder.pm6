@@ -22,6 +22,7 @@ class GTK::Utils::MenuBuilder {
           my @sm;
           for $i.value.List -> $ii {
             my $item-type;
+            my $late-opts;
             $item-type = do given $ii {
               when .key ~~ / ^ '-' /        { 'GTK::SeparatorMenuItem'  }
 
@@ -46,6 +47,9 @@ class GTK::Utils::MenuBuilder {
             # Last chance to modify/validate %opts
             my $menu_item_id = %opts<id>:delete;
             my $group_id;
+            $late-opts<sensitive> = %opts<sensitive>:delete;
+            $late-opts<can-focus> = %opts<can-focus>:delete;
+            $late-opts<can-focus> //= %opts<focus>:delete;
             # RadioMenuItem validation.
             with %opts<group> {
               if %opts<group> ~~ Pair {
@@ -77,6 +81,11 @@ class GTK::Utils::MenuBuilder {
                 @sm[* - 1].name = $menu_item_id;
                 %named_items{ $menu_item_id } = @sm[* - 1];
               }
+            }
+            # Handle late options. More can be added, but the logic will
+            # become more complex
+            for <sensitive can-focus> {
+              @sm[* - 1]."$_"() = $late-opts{$_} with $late-opts{$_}
             }
           }
           @m.push: GTK::MenuItem.new($i.key, :submenu(GTK::Menu.new(@sm)));

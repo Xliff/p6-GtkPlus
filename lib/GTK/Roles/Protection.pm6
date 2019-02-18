@@ -1,6 +1,8 @@
 use v6.c;
 
 role GTK::Roles::Protection {
+  my @!prefixes = ('GTK::');
+
   # cw: This is a HACK, but it should work with careful use.
   method CALLING-METHOD($nf = 2) {
     my $c = callframe($nf).code;
@@ -10,13 +12,17 @@ role GTK::Roles::Protection {
       die "Frame not a method or code!";
   }
 
+  method ADD-PREFIX($p) {
+    @!prefixes.push: $p;
+  }
+
   # Should never be called ouside of the GTK::Widget hierarchy, but
   # how can the watcher watch itself?
   method IS-PROTECTED {
     # Really kinda violates someone's idea of "object-oriented" somewhere,
     # but I am more results-oriened.
     my $c = self.CALLING-METHOD;
-    $c ~~ /^ 'GTK::'/ ??
+    $c ~~ /^ @prefixes/ ??
       True
       !!
       die "Cannot call method from outside of a GTK:: object";

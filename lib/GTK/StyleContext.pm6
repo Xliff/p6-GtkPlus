@@ -4,6 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use Pango::Raw::Types;
+use Pango::FontDescription;
 
 use GTK::Compat::RGBA;
 use GTK::Compat::Screen;
@@ -723,9 +724,9 @@ class GTK::StyleContext {
     gtk_style_context_get_color($!sc, $s, $color);
   }
 
-  method get_font (GtkStateFlags $state) is also<get-font> {
+  method get_font (Int() $state) is also<get-font> {
     my guint $s = self.RESOLVE-UINT($state);
-    gtk_style_context_get_font($!sc, $s);
+    Pango::FontDescription.new( gtk_style_context_get_font($!sc, $s) );
   }
 
   method get_margin (Int() $state, GtkBorder $margin)

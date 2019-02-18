@@ -295,7 +295,15 @@ class GTK::Compat::Pixbuf  {
     self.bless(:$pixbuf);
   }
 
-  method new_from_xpm_data(CArray[Str] $data) is also<new-from-xpm-data> {
+  proto method new_from_xpm_data(|c)
+    is also<new-from-xpm-data>
+    { * }
+
+  multi method new_from_xpm_data(Str $data) {
+    my $ca = CArray[Str].new($data.lines);
+    samewith($ca);
+  }
+  multi method new_from_xpm_data(CArray[Str] $data) {
     my $pixbuf = gdk_pixbuf_new_from_xpm_data($data);
     self.bless(:$pixbuf);
   }
@@ -459,8 +467,9 @@ class GTK::Compat::Pixbuf  {
     gdk_pixbuf_read_pixels($!p);
   }
 
-  method ref {
+  method ref is also<upref> {
     gdk_pixbuf_ref($!p);
+    self;
   }
 
   method remove_option (Str() $key) is also<remove-option> {
@@ -614,7 +623,7 @@ class GTK::Compat::Pixbuf  {
     (self.get_width, self.get_height);
   }
 
-  method unref {
+  method unref is also<downref> {
     gdk_pixbuf_unref($!p);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

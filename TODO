@@ -36,6 +36,7 @@
 - GTK::Grid to provide sanitized version of it's tracking structure to user-code
 - Properly rename GtkCssSection to GtkCSSSection
 - Add GTK::Compat::Action (GAction)
+- Refine GTK::Compat::Window
 
 
 Applications

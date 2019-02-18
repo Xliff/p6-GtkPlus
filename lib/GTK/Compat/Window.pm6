@@ -290,7 +290,7 @@ class GTK::Compat::Window {
     );
   }
 
-  method begin_paint_rect (GdkRectangle() $rectangle)
+  method begin_paint_rect (GdkRectangle $rectangle)
     is also<begin-paint-rect>
   {
     gdk_window_begin_paint_rect($!window, $rectangle);
@@ -318,7 +318,7 @@ class GTK::Compat::Window {
 
   method begin_resize_drag_for_device (
     GdkWindowEdge $edge,
-    GdkDevice $device,
+    GdkDevice() $device,
     gint $button,
     gint $root_x,
     gint $root_y,
@@ -510,41 +510,62 @@ class GTK::Compat::Window {
     gdk_window_get_decorations($!window, $decorations);
   }
 
-  method get_device_cursor (GdkDevice $device) is also<get-device-cursor> {
+  method get_device_cursor (GdkDevice() $device) is also<get-device-cursor> {
     gdk_window_get_device_cursor($!window, $device);
   }
 
-  method get_device_events (GdkDevice $device) is also<get-device-events> {
+  method get_device_events (GdkDevice() $device) is also<get-device-events> {
     gdk_window_get_device_events($!window, $device);
   }
 
-  method get_device_position (
-    GdkDevice $device,
-    gint $x,
-    gint $y,
-    GdkModifierType $mask
-  )
+  proto method get_device_position(|c)
     is also<get-device-position>
-  {
-    gdk_window_get_device_position($!window, $device, $x, $y, $mask);
+    { * }
+
+  multi method get_device_position($device) {
+    my ($x, $y, $m) = (0, 0, 0);
+    samewith($device, $x, $y, $m);
+    ($x, $y, $m);
+  }
+  multi method get_device_position (
+    GdkDevice() $device,
+    Int() $x is rw,
+    Int() $y is rw,
+    Int() $mask is rw             # GdkModifierType $mask
+  ) {
+    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
+    my guint $m = self.RESOLVE-UINT($mask);
+    gdk_window_get_device_position($!window, $device, $xx, $yy, $m);
+    ($x, $y, $mask) = ($xx, $yy, $m);
   }
 
-  method get_device_position_double (
-    GdkDevice $device,
-    gdouble $x,
-    gdouble $y,
-    GdkModifierType $mask
-  )
+  proto method get_device_position_double (|c)
     is also<get-device-position-double>
-  {
-    gdk_window_get_device_position_double($!window, $device, $x, $y, $mask);
+    { * }
+
+  multi method get_device_position_double (
+    GdkDevice() $device
+  ) {
+    my ($x, $y, $m) = (0, 0, 0);
+    samewith($device, $x, $y, $m);
+  }
+
+  multi method get_device_position_double (
+    GdkDevice() $device,
+    Num() $x is rw,
+    Num() $y is rw,
+    Int() $mask is rw             # GdkModifierType $mask
+  ) {
+    my guint $m = self.RESOLVE-UINT($mask);
+    gdk_window_get_device_position_double($!window, $device, $x, $y, $m);
+    ($x, $y, $mask = $m);
   }
 
   method get_display is also<get-display> {
     gdk_window_get_display($!window);
   }
 
-  method get_drag_protocol (GdkWindow $target) is also<get-drag-protocol> {
+  method get_drag_protocol (GdkWindow() $target) is also<get-drag-protocol> {
     GdkDragProtocol( gdk_window_get_drag_protocol($!window, $target) );
   }
 
@@ -861,13 +882,13 @@ class GTK::Compat::Window {
     gdk_window_set_decorations($!window, $decorations);
   }
 
-  method set_device_cursor (GdkDevice $device, GdkCursor $cursor)
+  method set_device_cursor (GdkDevice() $device, GdkCursor $cursor)
     is also<set-device-cursor>
   {
     gdk_window_set_device_cursor($!window, $device, $cursor);
   }
 
-  method set_device_events (GdkDevice $device, GdkEventMask $event_mask)
+  method set_device_events (GdkDevice() $device, GdkEventMask $event_mask)
     is also<set-device-events>
   {
     gdk_window_set_device_events($!window, $device, $event_mask);

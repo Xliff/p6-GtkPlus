@@ -4,6 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use Pango::Raw::Types;
+use Pango::Context;
 
 use GTK::Compat::Display;
 use GTK::Compat::RGBA;
@@ -43,6 +44,10 @@ class GTK::Widget {
 
   has GtkWidget $!w;
 
+  # For all widget-based *_get_type functions.
+  has $!t;
+  has $!n;
+
   submethod BUILD (:$widget) {
     given $widget {
       when Ancestry {
@@ -76,6 +81,23 @@ class GTK::Widget {
     my $o = self.bless(:$widget);
     $o.upref;
     $o;
+  }
+
+  method get_type {
+    self.unstable_get_type();
+  }
+  method unstable_get_type(&sub = gtk_widget_get_type) is also<get-type> {
+    #state $t;
+    #state $n = 0;
+
+    self.IS-PROTECTED
+    return $!t if $!n > 0;
+    repeat {
+      $!t = gdk_pixbuf_get_type();
+      die "{ ::?CLASS.^name }.get_type could not get stable result"
+        if $!n++ > 20;
+    } until $!t == gdk_pixbuf_get_type();
+    $!t;
   }
 
   method GTK::Raw::Types::GtkWidget is also<widget> {
@@ -1812,7 +1834,7 @@ class GTK::Widget {
   }
 
   method get_pango_context is also<get-pango-context> {
-    gtk_widget_get_pango_context($!w);
+    Pango::Context.new( gtk_widget_get_pango_context($!w) );
   }
 
   #method class_set_template (GtkWidgetClass $widget_class, GBytes $template_bytes) {

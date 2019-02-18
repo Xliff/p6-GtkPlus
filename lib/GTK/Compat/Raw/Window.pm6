@@ -285,9 +285,9 @@ sub gdk_window_get_device_events (GdkWindow $window, GdkDevice $device)
 sub gdk_window_get_device_position (
   GdkWindow $window,
   GdkDevice $device,
-  gint $x,
-  gint $y,
-  uint32 $mask                    # GdkModifierType $mask
+  gint $x is rw,
+  gint $y is rw,
+  uint32 $mask is rw              # GdkModifierType $mask
 )
   returns GdkWindow
   is native(gdk)
@@ -297,9 +297,9 @@ sub gdk_window_get_device_position (
 sub gdk_window_get_device_position_double (
   GdkWindow $window,
   GdkDevice $device,
-  gdouble $x,
-  gdouble $y,
-  uint32 $mask                    # GdkModifierType $mask
+  gdouble $x is rw,
+  gdouble $y is rw,
+  uint32 $mask is rw              # GdkModifierType $mask
 )
   returns GdkWindow
   is native(gdk)

@@ -17,9 +17,8 @@ use GTK::Roles::Scrollable;
 
 use GTK::Roles::Signals::TextView;
 
-our subset TextViewAncestry
-  where GtkTextView  | GtkScrollable | GtkContainer |
-        GtkBuildable | GtkWidget;
+our subset TextViewAncestry is export
+  where GtkTextView  | GtkScrollable | ContainerAncestry;
 
 class GTK::TextView is GTK::Container {
   also does GTK::Roles::Scrollable;

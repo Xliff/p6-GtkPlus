@@ -527,7 +527,7 @@ class GTK::Entry is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    gtk_entry_get_type();
+    self.unstable_get_type( gtk_entry_get_type );
   }
 
   method grab_focus_without_selecting
