@@ -27,7 +27,7 @@ class GTK::Container is GTK::Widget {
   # a lowest common denominator amongst descendants.
   submethod BUILD(:$container) {
     given $container {
-      when Ancestry {
+      when ContainerAncestry {
         self.setContainer($container);
       }
       default {
@@ -57,7 +57,7 @@ class GTK::Container is GTK::Widget {
     self.setWidget($to-parent);
   }
 
-  method new (Ancestry $container) {
+  method new (ContainerAncestry $container) {
     my $o = self.bless(:$container);
     $o.upref;
     $o;

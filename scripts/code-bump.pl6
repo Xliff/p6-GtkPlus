@@ -1,3 +1,4 @@
+#!/usr/bin/env perl6
 use v6.c;
 
 my @cmd = <find . -name *.pm6 -exec grep -l -->;

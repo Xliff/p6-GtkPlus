@@ -1,7 +1,7 @@
 use v6.c;
 
 role GTK::Roles::Protection {
-  my @!prefixes = ('GTK::');
+  has @!prefixes = ('GTK::');
 
   # cw: This is a HACK, but it should work with careful use.
   method CALLING-METHOD($nf = 2) {
@@ -22,7 +22,9 @@ role GTK::Roles::Protection {
     # Really kinda violates someone's idea of "object-oriented" somewhere,
     # but I am more results-oriened.
     my $c = self.CALLING-METHOD;
-    $c ~~ /^ @prefixes/ ??
+    # Must be done, otherwise error. Note: Regexes do not like attributes.
+    my @p = @!prefixes;
+    $c ~~ /^ @p/ ??
       True
       !!
       die "Cannot call method from outside of a GTK:: object";

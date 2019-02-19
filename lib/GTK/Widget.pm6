@@ -83,20 +83,16 @@ class GTK::Widget {
     $o;
   }
 
-  method get_type {
-    self.unstable_get_type();
-  }
-  method unstable_get_type(&sub = gtk_widget_get_type) is also<get-type> {
+  method unstable_get_type(&sub) is also<get-type> {
     #state $t;
     #state $n = 0;
-
-    self.IS-PROTECTED
+    self.IS-PROTECTED;
     return $!t if $!n > 0;
     repeat {
-      $!t = gdk_pixbuf_get_type();
+      $!t = &sub();
       die "{ ::?CLASS.^name }.get_type could not get stable result"
         if $!n++ > 20;
-    } until $!t == gdk_pixbuf_get_type();
+    } until $!t == &sub();
     $!t;
   }
 

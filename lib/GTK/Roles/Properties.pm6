@@ -112,6 +112,24 @@ role GTK::Roles::Properties {
     });
   }
 
+  proto method prop_get_int (|c)
+    is also<prop-get-int>
+    { * }
+
+  multi method prop_get_int(Str() $name) {
+    my $v = 0;
+    samewith($name, $v);
+  }
+  method prop_get_int (Str() $name, Int() $value is rw) {
+    my gint $v = $value;
+    g_object_get_int($!prop, $name, $v, Str);
+    $value = $v;
+  }
+
+  method prop_set_int (Str() $name, Int() $value) is also <prop-set-int> {
+    g_object_set_int($!prop, $name, $value, Str);
+  }
+
 }
 
 # sub g_object_setv (
@@ -152,5 +170,27 @@ sub g_object_getv (
   Pointer $v
 )
   is native(gobject)
+  is export
+  { * }
+
+sub g_object_get_int (
+  GObject $object,
+  Str $name,
+  gint $value,
+  Str
+)
+  is native(gobject)
+  is symbol('g_object_get')
+  is export
+  { * }
+
+sub g_object_set_int (
+  GOjbect $object,
+  Str $name,
+  gint $value.
+  Str
+)
+  is native(gobject)
+  is symbol('g_object_set');
   is export
   { * }

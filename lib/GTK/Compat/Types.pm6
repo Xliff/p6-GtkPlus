@@ -6,7 +6,7 @@ use Cairo;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
-constant forced = 13;
+constant forced = 14;
 
 our $DEBUG is export = 0;
 
@@ -126,7 +126,7 @@ class GTypeInstance is repr('CStruct') is export {
   has GTypeClass $.g_class;
 
   method checkType($compare_type) {
-    $compare_type == $,gclass.g_type;
+    $compare_type == $.g_class.g_type;
   }
 }
 

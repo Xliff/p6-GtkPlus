@@ -1,6 +1,8 @@
 Cairo
 Data::Dump::Tree
 Method::Also
+Pango::Context
+Pango::FontDescription
 Pango::FontMap
 Pango::Layout
 Pango::Raw::Types
