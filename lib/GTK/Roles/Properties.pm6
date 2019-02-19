@@ -6,6 +6,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Value;
 
+use GTK::Raw::Subs;
+
 role GTK::Roles::Properties {
   has GObject $!prop;
 
@@ -120,77 +122,14 @@ role GTK::Roles::Properties {
     my $v = 0;
     samewith($name, $v);
   }
-  method prop_get_int (Str() $name, Int() $value is rw) {
+  multi method prop_get_int (Str() $name, Int() $value is rw) {
     my gint $v = $value;
     g_object_get_int($!prop, $name, $v, Str);
     $value = $v;
   }
 
-  method prop_set_int (Str() $name, Int() $value) is also <prop-set-int> {
+  method prop_set_int (Str() $name, Int() $value) is also<prop-set-int> {
     g_object_set_int($!prop, $name, $value, Str);
   }
 
 }
-
-# sub g_object_setv (
-#   GObject $object,
-#   guint $n_properties,
-#   CArray[Str] $names,
-#   CArray[GValue] $values
-# )
-#   is native(gobject)
-#   { * }
-#
-# sub g_object_getv (
-#   GObject $object,
-#   guint $n_properties,
-#   CArray[Str] $names,
-#   CArray[GValue] $values
-# )
-#   is native(gobject)
-#   { * }
-
-sub g_object_setv (
-  GObject $object,
-  uint32 $n_properties,
-  CArray[Str] $names,
-  # Note... not an array.
-  #CArray[GValue] $values
-  Pointer $v
-)
-  is native(gobject)
-  is export
-  { * }
-
-sub g_object_getv (
-  GObject $object,
-  uint32 $n_properties,
-  CArray[Str] $names,
-  #CArray[GValue] $values
-  Pointer $v
-)
-  is native(gobject)
-  is export
-  { * }
-
-sub g_object_get_int (
-  GObject $object,
-  Str $name,
-  gint $value,
-  Str
-)
-  is native(gobject)
-  is symbol('g_object_get')
-  is export
-  { * }
-
-sub g_object_set_int (
-  GOjbect $object,
-  Str $name,
-  gint $value.
-  Str
-)
-  is native(gobject)
-  is symbol('g_object_set');
-  is export
-  { * }

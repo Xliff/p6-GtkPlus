@@ -70,11 +70,13 @@ sub g_object_set_uint(Pointer $o, Str $key, uint32 $data is rw)
   is export
   { * }
 
-sub g_object_set_int(Pointer $o, Str $key, int32 $data is rw)
-  is native(gobject)
-  is symbol('g_object_set_data')
-  is export
-  { * }
+# Now in GTK::Roles::Properties!!
+#
+# sub g_object_set_int(Pointer $o, Str $key, int32 $data is rw)
+#   is native(gobject)
+#   is symbol('g_object_set_data')
+#   is export
+#   { * }
 
 sub g_object_get_ptr(Pointer $o, Str $key)
   returns Pointer
@@ -109,6 +111,50 @@ sub g_signal_connect_handler(
   is export
   { * }
 
+sub g_object_setv (
+  GObject $object,
+  uint32 $n_properties,
+  CArray[Str] $names,
+  # Note... not an array.
+  #CArray[GValue] $values
+  Pointer $v
+)
+  is native(gobject)
+  is export
+  { * }
+
+sub g_object_getv (
+  GObject $object,
+  uint32 $n_properties,
+  CArray[Str] $names,
+  #CArray[GValue] $values
+  Pointer $v
+)
+  is native(gobject)
+  is export
+  { * }
+
+sub g_object_get_int (
+  GObject $object,
+  Str $name,
+  gint $value,
+  Str
+)
+  is native(gobject)
+  is symbol('g_object_get_data')
+  is export
+  { * }
+
+sub g_object_set_int (
+  GObject $object,
+  Str $name,
+  gint $value,
+  Str
+)
+  is native(gobject)
+  is symbol('g_object_set_data')
+  is export
+  { * }
 
 sub g_signal_handler_disconnect(Pointer $app, uint64 $handler)
   is native(gobject)
