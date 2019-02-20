@@ -299,8 +299,11 @@ class GTK::Compat::Pixbuf  {
     is also<new-from-xpm-data>
     { * }
 
-  multi method new_from_xpm_data(Str $data) {
-    my $ca = CArray[Str].new($data.lines);
+  multi method new_from_xpm_data(Str $data is copy) {
+    #my $ca = CArray[Str].new( $data.lines );
+    my $ca = CArray[Str].new( $data.lines.map({
+      "{ $_ }\0" unless .ends-with("\0");
+    }) );
     samewith($ca);
   }
   multi method new_from_xpm_data(CArray[Str] $data) {

@@ -4,6 +4,7 @@ dead/
 .idea/
 LastBuildResults.*
 *.bak
+*.bump
 *~
 examples/
 test-new

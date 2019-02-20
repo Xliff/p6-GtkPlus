@@ -998,6 +998,13 @@ our enum GtkNotebookTab is export <
   GTK_NOTEBOOK_TAB_LAST
 >;
 
+# Deprecated with GtkTextTagTableenum
+our enum GtkAttachOptions is export (
+  GTK_EXPAND => 1,
+  GTK_SHRINK => 2,
+  GTK_FILL   => 4
+);
+
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }

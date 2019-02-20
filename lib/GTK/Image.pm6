@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Pixbuf;
 use GTK::Compat::Types;
 use GTK::Raw::Image;
 use GTK::Raw::Types;
@@ -107,7 +108,7 @@ class GTK::Image is GTK::Widget {
     self.bless(:$image);
   }
 
-  method new_from_pixbuf (GdkPixbuf $pixbuf) is also<new-from-pixbuf> {
+  method new_from_pixbuf (GdkPixbuf() $pixbuf) is also<new-from-pixbuf> {
     my $image = gtk_image_new_from_pixbuf($pixbuf);
     self.bless(:$image);
   }
@@ -226,7 +227,7 @@ class GTK::Image is GTK::Widget {
         $gv = GTK::Compat::Value.new(
           self.prop_get('pixbuf', $gv)
         );
-        nativecast(GdkPixbuf, $gv.object);
+        GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
@@ -378,7 +379,7 @@ class GTK::Image is GTK::Widget {
   }
 
   proto method get_icon_name (|) is also<get-icon-name> { * }
-  
+
   multi method get_icon_name {
     my Str $name = '';
     my Int $size = 0;

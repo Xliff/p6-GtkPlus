@@ -14,7 +14,7 @@
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
 √ Convert Perl6 additions to GTK::Container into a role. (done as GTK::Roles::LatchedContainer)
 √ Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
-√ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get 
+√ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get
 √ Fix lack of icons in GTK::IconView
 - Add-to-project-if-I'm-completely-insane: GVariant
 - Move signals to %Object.signal<name> to fix issue with method name conflicts
@@ -37,6 +37,7 @@
 - Properly rename GtkCssSection to GtkCSSSection
 - Add GTK::Compat::Action (GAction)
 - Refine GTK::Compat::Window
+- GTK::Roles::Data should be deprecated in favor of GTK::Roles::Properties
 
 
 Applications
