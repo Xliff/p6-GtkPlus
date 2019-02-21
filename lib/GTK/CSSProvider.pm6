@@ -26,7 +26,7 @@ class GTK::CSSProvider {
     :$provider,
     :$priority is copy,
     :$pod,
-    :$style-data
+    :$style
   ) {
     $priority //= GTK_STYLE_PROVIDER_PRIORITY_USER.Int;
     die q:to/D/ unless $priority.^can('Int').elems;
@@ -41,7 +41,7 @@ class GTK::CSSProvider {
     gtk_style_context_add_provider_for_screen($screen, $!sp, $p);
 
     my %sections;
-    my $css = $style-data;
+    my $css = $style;
     with $pod {
       for $pod.grep( *.name eq 'css' ).Array {
         # This may not always be true. Keep up with POD spec!
@@ -57,9 +57,9 @@ class GTK::CSSProvider {
     self.disconnect-all($_)  for %!signals-css;
   }
 
-  method new(:$style-data, :$priority, :$pod) {
+  method new(:$style, :$priority, :$pod) {
     my $provider = gtk_css_provider_new();
-    self.bless(:$provider, :$priority, :$pod, :$style-data);
+    self.bless(:$provider, :$priority, :$pod, :$style);
   }
 
 

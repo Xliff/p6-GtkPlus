@@ -23,7 +23,7 @@ class GTK::Calendar is GTK::Widget {
   submethod BUILD(:$calendar) {
     my $to-parent;
     given $calendar {
-      when Ancestry {
+      when CalendarAncestry {
         $!cal = do {
           when GtkCalendar {
             $to-parent = nativecast(GtkWidget, $calendar);

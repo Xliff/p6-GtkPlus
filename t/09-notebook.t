@@ -87,10 +87,10 @@ $a.activate.tap({
 
   $b = GTK::Button.new_with_label("remove page");
   $b.clicked.tap({
-      my $p = $n.current_page;
-      say "Removing page $p";
-      $n.remove_page($p);
-      $n.queue_draw;
+    my $p = $n.current_page;
+    say "Removing page $p";
+    $n.remove_page($p);
+    $n.queue_draw;
   });
   $g.attach($b, 6, 2, 1, 1);
 
