@@ -9,9 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::ComboBox;
 
-my subset Ancestry where GtkComboBoxText | GtkComboBox  | GtkCellEditable |
-                         GtkCellLayout   | GtkBin       | GtkContainer    |
-                         GtkBuildable    | GtkWidget;
+our subset ComboBoxTextAncestry is export 
+  where GtkComboBoxText | ComboBoxAncestry;
 
 class GTK::ComboBoxText is GTK::ComboBox {
   has GtkComboBoxText $!cbt;
@@ -31,7 +30,7 @@ class GTK::ComboBoxText is GTK::ComboBox {
             $to-parent = nativecast(GtkComboBox, $_);
             $_;
           }
-          default {
+          when ComboBoxAncestry {
             $to-parent = $_;
             nativecast(GtkComboBoxText, $_);
           }
@@ -45,7 +44,7 @@ class GTK::ComboBoxText is GTK::ComboBox {
     }
   }
 
-  multi method new(Ancestry $combobox) {
+  multi method new(ComboBoxTextAncestry $combobox) {
     my $o = self.bless(:$combobox);
     $o.upref;
     $o;
@@ -86,7 +85,8 @@ class GTK::ComboBoxText is GTK::ComboBox {
   }
 
   method get_type is also<get-type> {
-    gtk_combo_box_text_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type(  &gtk_combo_box_text_get_type, $n, $t );
   }
 
   method insert (Int() $position, Str() $id, Str() $text) {

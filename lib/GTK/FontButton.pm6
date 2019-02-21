@@ -11,9 +11,8 @@ use GTK::Button;
 
 use GTK::Roles::FontChooser;
 
-my subset Ancestry where GtkFontButton | GtkFontChooser | GtkButton |
-                         GtkActionable | GtkButton      | GtkBin    |
-                         GtkBuildable  | GtkWidget;
+my subset FontButtonAncestry is export 
+  where GtkFontButton | GtkFontChooser | ButtonAncestry;
 
 class GTK::FontButton is GTK::Button {
   also does GTK::Roles::FontChooser;
@@ -29,7 +28,7 @@ class GTK::FontButton is GTK::Button {
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
-      when Ancestry {
+      when FontButtonAncestry {
         $!fb = do {
           when GtkFontButton {
             $to-parent = nativecast(GtkButton, $_);
@@ -40,7 +39,7 @@ class GTK::FontButton is GTK::Button {
             $to-parent = nativecast(GtkButton, $_);
             nativecast(GtkFontButton, $_);
           }
-          when GtkWidget {
+          when ButtonAncestry {
             $to-parent = $_;
             nativecast(GtkFontButton, $_);
           }
@@ -55,7 +54,7 @@ class GTK::FontButton is GTK::Button {
     $!fc //= nativecast(GtkFontChooser, $!fb);    # GTK::Roles::FontChooser
   }
 
-  multi method new (Ancestry $button) {
+  multi method new (FontButtonAncestry $button) {
     my $o = self.bless(:$button);
     $o.upref;
     $o;
@@ -155,7 +154,8 @@ class GTK::FontButton is GTK::Button {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_font_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_font_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

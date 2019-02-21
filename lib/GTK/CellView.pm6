@@ -14,10 +14,9 @@ use GTK::Widget;
 use GTK::Roles::CellLayout;
 use GTK::Roles::Orientable;
 
-my subset Ancestry
-  where GtkCellView | GtkCellLayout | GtkOrientable | GtkBuildable |
-        GtkWidget;
-
+our subset CellViewAncestry is export 
+  where GtkCellView | GtkCellLayout | GtkOrientable | WidgetAncestry;
+  
 class GTK::CellView is GTK::Widget {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Orientable;
@@ -49,7 +48,7 @@ class GTK::CellView is GTK::Widget {
             $to-parent = nativecast(GtkWidget, $_);
             nativecast(GtkCellView, $_);
           }
-          default {
+          when WidgetAncestry {
             $to-parent = $_;
             nativecast(GtkCellView, $_);
           }
@@ -70,7 +69,7 @@ class GTK::CellView is GTK::Widget {
     $!cv;
   }
 
-  multi method new (Ancestry :$cellview) {
+  multi method new (CellViewAncestry :$cellview) {
     my $o = self.bless(:$cellview);
     $o.upref;
     $o;
@@ -267,7 +266,8 @@ class GTK::CellView is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    gtk_cell_view_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_cell_view_get_type, $n, $t );
   }
 
   method set_background_color (GdkColor $color)

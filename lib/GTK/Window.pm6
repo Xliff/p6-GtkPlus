@@ -13,8 +13,7 @@ use GTK::Compat::Screen;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
-my subset Ancestry
-  where GtkWindow | GtkBin | GtkContainer | GtkBuildable | GtkWidget;
+our subset WindowAncestry is export where GtkWindow | BinAncestry;
 
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
@@ -29,7 +28,7 @@ class GTK::Window is GTK::Bin {
 
   submethod BUILD(:$window, :$title, :$width, :$height) {
     given $window {
-      when Ancestry {
+      when WindowAncestry {
         self.setWindow($window);
         gtk_window_set_title($window, $title) with $title;
         gtk_window_set_default_size($window, $width, $height)
@@ -42,14 +41,14 @@ class GTK::Window is GTK::Bin {
     }
   }
 
-  method setWindow(Ancestry $window) {
+  method setWindow(WindowAncestry $window) {
     my $to-parent;
     $!win = do given $window {
       when GtkWindow {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
-      default {
+      when BinAncestry {
         $to-parent = $_;
         nativecast(GtkWindow, $_);
       }
@@ -57,7 +56,7 @@ class GTK::Window is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (Ancestry $window) {
+  multi method new (WindowAncestry $window) {
     my $o = self.bless(:$window);
     $o.upref;
     $o;
@@ -659,7 +658,8 @@ class GTK::Window is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_window_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_window_get_type, $n, $t );
   }
 
   method get_window_type is also<get-window-type> {

@@ -9,9 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::MenuItem;
 
-my subset Ancestry
-  where GtkCheckMenuItem | GtkMenuItem | GtkActionable | GtkBin |
-        GtkContainer     | GtkWidget;
+our subset CheckMenuItemAncestry is export 
+  where GtkCheckMenuItem | MenuItemAncestry;
 
 class GTK::CheckMenuItem is GTK::MenuItem {
   has GtkCheckMenuItem $!cmi;
@@ -25,7 +24,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   submethod BUILD(:$checkmenuitem) {
     my $to-parent;
     given $checkmenuitem {
-      when Ancestry {
+      when CheckMenuItemAncestry {
         self.setCheckMenuItem($checkmenuitem);
       }
       when GTK::CheckMenuItem {
@@ -42,7 +41,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
         $to-parent = nativecast(GtkMenuItem, $_);
         $_;
       }
-      default {
+      when MenuItemAncestry {
         $to-parent = $_;
         nativecast(GtkCheckMenuItem, $_);
       }
@@ -50,7 +49,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     self.setMenuItem($to-parent);
   }
 
-  multi method new (Ancestry $checkmenuitem) {
+  multi method new (CheckMenuItemAncestry $checkmenuitem) {
     my $o = self.bless(:$checkmenuitem);
     $o.upref;
     $o;
@@ -140,7 +139,8 @@ class GTK::CheckMenuItem is GTK::MenuItem {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_check_menu_item_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_check_menu_item_get_type, $n, $t );
   }
 
   # Alias to emit_toggled for C-ppl

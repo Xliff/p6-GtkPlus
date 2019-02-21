@@ -9,8 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Frame;
 
-subset Ancestry where GtkAspectFrame | GtkFrame | GtkBin | GtkContainer |
-                      GtkBuilder     | GtkWidget;
+our subset AspectFrameAncestry is export where GtkAspectFrame | FrameAncestry;
 
 class GTK::AspectFrame is GTK::Frame {
   has GtkAspectFrame $!af;
@@ -24,13 +23,13 @@ class GTK::AspectFrame is GTK::Frame {
   submethod BUILD(:$frame) {
     my $to-parent;
     given $frame {
-      when Ancestry {
+      when AspectFrameAncestry {
         $!af = do {
           when GtkAspectFrame {
             $to-parent = nativecast(GtkFrame, $_);
             $_;
           }
-          default {
+          when FrameAncestry {
             $to-parent = $_;
             nativecast(GtkAspectFrame, $_);
           }
@@ -44,7 +43,7 @@ class GTK::AspectFrame is GTK::Frame {
     }
   }
 
-  multi method new (Ancestry $frame) {
+  multi method new (AspectFrameAncestry $frame) {
     my $o = self.bless(:$frame);
     $o.upref;
     $o;
@@ -134,7 +133,8 @@ class GTK::AspectFrame is GTK::Frame {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_aspect_frame_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_aspect_frame_get_type, $n, $t );
   }
 
   method set (

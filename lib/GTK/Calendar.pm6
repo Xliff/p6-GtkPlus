@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-my subset Ancestry where GtkCalendar | GtkBuildable | GtkWidget;
+our subset CalendarAncestry is export where GtkCalendar | WidgetAncestry;
 
 class GTK::Calendar is GTK::Widget {
   has GtkCalendar $!cal;
@@ -29,7 +29,7 @@ class GTK::Calendar is GTK::Widget {
             $to-parent = nativecast(GtkWidget, $calendar);
             $_;
           }
-          default {
+          when WidgetAncestry {
             $to-parent = $_;
             nativecast(GtkCalendar, $calendar);
           }
@@ -43,7 +43,7 @@ class GTK::Calendar is GTK::Widget {
     }
   }
 
-  multi method new (Ancestry $calendar) {
+  multi method new (CalendarAncestry $calendar) {
     my $o = self.bless(:$calendar);
     $o.upref;
     $o;
@@ -177,7 +177,8 @@ class GTK::Calendar is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    gtk_calendar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_calendar_get_type, $n, $t );
   }
 
   method mark_day (Int() $day) is also<mark-day> {

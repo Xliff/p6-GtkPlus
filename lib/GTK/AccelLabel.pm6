@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Label;
 
-my subset Ancestry where GtkAccelLabel | GtkLabel | GtkBuildable | GtkWidget;
+our subset AccelLabelAncestry is export where GtkAccelLabel | LabelAncestry;
 
 class GTK::AccelLabel is GTK::Label {
   has GtkAccelLabel $!al;
@@ -23,13 +23,13 @@ class GTK::AccelLabel is GTK::Label {
   submethod BUILD(:$alabel) {
     my $to-parent;
     given $alabel {
-      when Ancestry {
+      when AccelLabelAncestry {
         $!al = do {
           when GtkAccelLabel {
             $to-parent = nativecast(GtkLabel, $_);
             $_;
           }
-          default {
+          when LabelAncestry {
             $to-parent = $_;
             nativecast(GtkAccelLabel, $_);
           }
@@ -43,7 +43,7 @@ class GTK::AccelLabel is GTK::Label {
     }
   }
 
-  multi method new (Ancestry $alabel) {
+  multi method new (AccelLabelAncestry $alabel) {
     my $o = self.bless(:$alabel);
     $o.upref;
     $o;
@@ -93,7 +93,8 @@ class GTK::AccelLabel is GTK::Label {
   }
 
   method get_type is also<get-type> {
-    gtk_accel_label_get_type();
+    state ($n, $t)
+    GTK::Widget.unstable_get_type( &gtk_accel_label_get_type, $n, $t );
   }
 
   method refetch {

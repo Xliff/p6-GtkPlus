@@ -14,8 +14,7 @@ use GTK::Widget;
 
 use GTK::Roles::LatchedContents;
 
-our subset ContainerAncestry is export
-  where GtkContainer | GtkBuildable | GtkWidget;
+our subset ContainerAncestry is export where GtkContainer | WidgetAncestry;
 
 class GTK::Container is GTK::Widget {
   also does GTK::Roles::LatchedContents;
@@ -30,7 +29,7 @@ class GTK::Container is GTK::Widget {
       when ContainerAncestry {
         self.setContainer($container);
       }
-      default {
+      when WidgetAncestry {
         # Can't die here since descendants depend on this getting through
         # the custom bless. This only applies for abstract classes.
       }
@@ -438,7 +437,8 @@ D
   }
 
   method get_type is also<get-type> {
-    gtk_container_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_container_get_type, $n, $t);
   }
 
   method propagate_draw (GtkWidget() $child, cairo_t $cr)

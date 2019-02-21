@@ -6,12 +6,9 @@ use NativeCall;
 use GTK::Compat::Raw::Value;
 use GTK::Compat::Types;
 use GTK::Raw::Subs;
-
-use GTK::Roles::Types;
+use GTK::Raw::Utils;
 
 class GTK::Compat::Value {
-  also does GTK::Roles::Types;
-
   has GValue $!v;
 
   submethod BUILD(:$type, GValue :$value) {
@@ -26,7 +23,7 @@ class GTK::Compat::Value {
   multi method new(Int $t = G_TYPE_NONE) {
     die "Invalid type passed to GTK::Compat::Value.new - { $t.^name }"
       unless $t ~~ Int || $t.^can('Int').elems;
-    my $type = self.RESOLVE-ULINT($t.Int);
+    my $type = resolve-ulint($t.Int);
     self.bless(:$type);
   }
   multi method new (GValue $value) {
@@ -82,7 +79,7 @@ class GTK::Compat::Value {
         so g_value_get_boolean($!v);
       },
       STORE => sub ($, Int() $v_boolean is copy) {
-        g_value_set_boolean($!v, self.RESOLVE-BOOL($v_boolean));
+        g_value_set_boolean($!v, resolve-bool($v_boolean));
       }
     );
   }
@@ -154,7 +151,7 @@ class GTK::Compat::Value {
         g_value_get_enum($!v);
       },
       STORE => sub ($, Int() $v_int is copy) {
-        g_value_set_enum($!v, self.RESOLVE-INT($v_int));
+        g_value_set_enum($!v, resolve-int($v_int));
       }
     );
   }
@@ -165,7 +162,7 @@ class GTK::Compat::Value {
         g_value_get_int($!v);
       },
       STORE => sub ($, Int() $v_int is copy) {
-        g_value_set_int($!v, self.RESOLVE-INT($v_int));
+        g_value_set_int($!v, resolve-int($v_int));
       }
     );
   }
@@ -176,7 +173,7 @@ class GTK::Compat::Value {
         g_value_get_int64($!v);
       },
       STORE => sub ($, Int() $v_int64 is copy) {
-        g_value_set_int64($!v, self.RESOLVE-LINT($v_int64));
+        g_value_set_int64($!v, resolve-lint($v_int64));
       }
     );
   }
@@ -187,7 +184,7 @@ class GTK::Compat::Value {
         g_value_get_long($!v);
       },
       STORE => sub ($, $v_long is copy) {
-        g_value_set_long($!v, self.RESOLVE-LINT($v_long));
+        g_value_set_long($!v, resolve-lint($v_long));
       }
     );
   }
@@ -253,7 +250,7 @@ class GTK::Compat::Value {
         g_value_get_uint($!v);
       },
       STORE => sub ($, Int() $v_uint is copy) {
-        g_value_set_uint($!v, self.RESOLVE-UINT($v_uint));
+        g_value_set_uint($!v, resolve-uint($v_uint));
       }
     );
   }
@@ -264,7 +261,7 @@ class GTK::Compat::Value {
         g_value_get_uint64($!v);
       },
       STORE => sub ($, $v_uint64 is copy) {
-        g_value_set_uint64($!v, self.RESOLVE-ULINT($v_uint64));
+        g_value_set_uint64($!v, resolve-ulint($v_uint64));
       }
     );
   }
@@ -275,7 +272,7 @@ class GTK::Compat::Value {
         g_value_get_ulong($!v);
       },
       STORE => sub ($, $v_ulong is copy) {
-        g_value_set_ulong($!v, self.RESOLVE-ULINT($v_ulong));
+        g_value_set_ulong($!v, resolve-ulint($v_ulong));
       }
     );
   }

@@ -11,9 +11,8 @@ use GTK::ComboBox;
 
 use GTK::Roles::AppChooser;
 
-my subset Ancestry
-  where GtkAppChooserButton | GtkAppChooser | GtkComboBox | GtkBin |
-        GtkContainer        | GtkBuilder    | GtkWidget;
+our  subset AppButtonAncestry is export 
+  where GtkAppChooserButton | GtkAppChooser | ComboBoxAncestry;
 
 class GTK::AppButton is GTK::ComboBox {
   also does GTK::Roles::AppChooser;
@@ -29,7 +28,7 @@ class GTK::AppButton is GTK::ComboBox {
   submethod BUILD(:$appbutton) {
     my $to-parent;
     given $appbutton {
-      when Ancestry {
+      when $appbuttonAncestry {
         $!acb = {
           when GtkAppChooserButton {
             $to-parent = nativecast(GtkComboBox, $_);
@@ -40,7 +39,7 @@ class GTK::AppButton is GTK::ComboBox {
             $to-parent = nativecast(GtkComboBox, $_);
             nativecast(GtkAppChooserButton, $_);
           }
-          default {
+          when ComboBoxAncestry {
             $to-parent = $_;
             nativecast(GtkAppChooserButton, $_);
           }
@@ -56,7 +55,7 @@ class GTK::AppButton is GTK::ComboBox {
     $!ac //= nativecast(GtkAppChooser, $!acb);
   }
 
-  multi method new (Ancestry $appbutton) {
+  multi method new (AppButtonAncestry $appbutton) {
     my $o = self.bless(:$appbutton);
     $o.upref;
     $o;
@@ -127,7 +126,7 @@ class GTK::AppButton is GTK::ComboBox {
   }
 
   method get_type is also<get-type> {
-    gtk_app_chooser_button_get_type();
+    GTK::Widget.unstable_get_type( &gtk_app_chooser_button_get_type, $n, $t )
   }
 
   method set_active_custom_item (Str() $name)

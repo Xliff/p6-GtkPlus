@@ -16,4 +16,10 @@ role GTK::Roles::References {
     my $o = nativecast(GTypeInstance, $!ref);
     $o.checkType($compare_type);
   }
+  
+  method get_gobject_type {
+    my $o = nativecast(GTypeInstance, $!ref);
+    $o.getType;
+  }
+    
 }

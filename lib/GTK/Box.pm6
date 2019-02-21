@@ -12,8 +12,8 @@ use GTK::Container;
 
 use GTK::Roles::Orientable;
 
-my subset Ancestry
-  where GtkBox| GtkContainer | GtkOrientable | GtkBuildable | GtkWidget;
+our subset BoxAncestry is export 
+  where GtkBox | GtkOrientable | ContainerAncestry;
 
 class GTK::Box is GTK::Container {
   also does GTK::Roles::Orientable;
@@ -31,7 +31,7 @@ class GTK::Box is GTK::Container {
 
   submethod BUILD(:$box) {
     given $box {
-      when Ancestry {
+      when BoxAncestry {
         self.setBox($box);
       }
       when GTK::Box {
@@ -55,7 +55,7 @@ class GTK::Box is GTK::Container {
         $to-parent = nativecast(GtkContainer, $_);
         nativecast(GtkBox, $_);
       }
-      default {
+      when ContainerAncestry {
         $to-parent = $_;
         nativecast(GtkBox, $_);
       }
@@ -64,7 +64,7 @@ class GTK::Box is GTK::Container {
     $!or //= nativecast(GtkOrientable, $!b);    # For GTK::Roles::Orientable
   }
 
-  multi method new (Ancestry $box) {
+  multi method new (BoxAncestry $box) {
     my $o = self.bless(:$box);
     $o.upref;
     $o;
@@ -141,7 +141,8 @@ class GTK::Box is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_box_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_box_get_type, $n, $t );
   }
 
   multi method pack-end (

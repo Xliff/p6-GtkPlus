@@ -14,8 +14,8 @@ use GTK::Box;
 
 use GTK::Roles::ColorChooser;
 
-my subset Ancestry
-  where GtkColorChooser | GtkBox | GtkContainer | GtkBuildable | GtkWidget;
+our subset ColorChooserAncestry is export 
+  where GtkColorChooser | BoxAncestry;
 
 class GTK::ColorChooser is GTK::Box {
   also does GTK::Roles::ColorChooser;
@@ -32,13 +32,13 @@ class GTK::ColorChooser is GTK::Box {
   submethod BUILD(:$chooser) {
     my $to-parent;
     given $chooser {
-      when Ancestry {
+      when ColorChooserAncestry {
         $!cc = do {
           when GtkColorChooser {
             $to-parent = nativecast(GtkBox, $_);
             $_;
           }
-          default {
+          when BoxAncestry {
             $to-parent = $_;
             nativecast(GtkColorChooser, $_);
           }
@@ -53,7 +53,7 @@ class GTK::ColorChooser is GTK::Box {
     }
   }
 
-  multi method new (Ancestry $chooser) {
+  multi method new (ColorChooserAncestry $chooser) {
     my $o = self.bless(:$chooser);
     $o.upref;
     $o;
@@ -113,7 +113,8 @@ class GTK::ColorChooser is GTK::Box {
   }
 
   method get_type is also<get-type> {
-    gtk_color_chooser_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_color_chooser_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

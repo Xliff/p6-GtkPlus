@@ -9,9 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Window;
 
-my subset Ancestry
-  where GtkAssistant | GtkWindow | GtkBin | GtkContainer | GtkBuildable |
-        GtkWidget;
+our subset AssistantAncestry is export where GtkAssistant | WindowAncestry;
 
 class GTK::Assistant is GTK::Window {
   has GtkAssistant $!asst;
@@ -25,13 +23,13 @@ class GTK::Assistant is GTK::Window {
   submethod BUILD(:$assistant) {
     my $to-parent;
     given $assistant {
-      when Ancestry {
+      when AssistantAncestry {
         $!asst = do {
           when GtkAssistant  {
             $to-parent = nativecast(GtkWindow, $_);
             $_;
           }
-          default {
+          when WindowAncestry {
             $to-parent = $_;
             nativecast(GtkAssistant, $_);
           }
@@ -45,7 +43,7 @@ class GTK::Assistant is GTK::Window {
     }
   }
 
-  multi method new (Ancestry $assistant) {
+  multi method new (AssistantAncestry $assistant) {
     my $o = self.bless(:$assistant);
     $o.upref;
     $o;
@@ -157,7 +155,8 @@ class GTK::Assistant is GTK::Window {
   }
 
   method get_type is also<get-type> {
-    gtk_assistant_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_assistant_get_type, $n, $t );
   }
 
   method insert_page (GtkWidget() $page, Int() $position)

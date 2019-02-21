@@ -10,7 +10,7 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
-class GTK::AccelGroup          {
+class GTK::AccelGroup {
   has GtkAccelGroup $!ag;
 
   submethod BUILD(:$group) {

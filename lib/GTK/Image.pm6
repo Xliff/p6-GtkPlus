@@ -10,7 +10,7 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-my subset Ancestry where GtkImage | GtkBuildable | GtkWidget;
+our subset ImageAncestry is export where GtkImage | WidgetAncestry;
 
 class GTK::Image is GTK::Widget {
   has GtkImage $!i;
@@ -24,13 +24,13 @@ class GTK::Image is GTK::Widget {
   submethod BUILD(:$image) {
     my $to-parent;
     given $image {
-      when Ancestry {
+      when ImageAncestry {
         $!i = do {
           when GtkImage {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
           }
-          default {
+          when WidgetAncestry {
             $to-parent = $_;
             nativecast(GtkImage, $_);
           }
@@ -51,7 +51,7 @@ class GTK::Image is GTK::Widget {
     $!i;
   }
 
-  multi method new (Ancestry $image) {
+  multi method new (ImageAncestry $image) {
     my $o = self.bless(:$image);
     $o.upref;
     $o;
@@ -425,7 +425,8 @@ class GTK::Image is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    gtk_image_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_image_get_type, $n, $t );
   }
 
   method set_from_animation (GdkPixbufAnimation $animation)

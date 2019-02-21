@@ -11,8 +11,8 @@ use GTK::Container;
 
 use GTK::Roles::Signals::Notebook;
 
-my subset Ancestry
-  where GtkNotebook | GtkContainer | GtkBuilder | GtkWidget;
+our subset NotebookAncestry is export 
+  where GtkNotebook | ContainerAncestry;
 
 class GTK::Notebook is GTK::Container {
   also does GTK::Roles::Signals::Notebook;
@@ -28,13 +28,13 @@ class GTK::Notebook is GTK::Container {
   submethod BUILD(:$notebook) {
     my $to-parent;
     given $notebook {
-      when Ancestry {
+      when NotebookAncestry {
         $!n = do {
           when GtkNotebook {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
           }
-          when GtkContainer | GtkWidget | GtkBuilder {
+          when ContainerAncestry {
             $to-parent = $_;
             nativecast(GtkNotebook, $_);
           }
@@ -56,7 +56,7 @@ class GTK::Notebook is GTK::Container {
     $!n;
   }
 
-  multi method new (Ancestry $notebook) {
+  multi method new (NotebookAncestry $notebook) {
     my $o = self.bless(:$notebook);
     $o.upref;
     $o;
@@ -282,7 +282,8 @@ class GTK::Notebook is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_notebook_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_notebook_get_type, $n, $t );
   }
 
   method insert_page (

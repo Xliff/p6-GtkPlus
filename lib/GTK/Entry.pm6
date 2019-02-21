@@ -13,7 +13,8 @@ use GTK::EntryBuffer;
 use GTK::Roles::Editable;
 use GTK::Roles::Signals::Entry;
 
-my subset Ancestry where GtkEntry | GtkEditable | GtkBuildable | GtkWidget;
+our subset EntryAncestry is export 
+  where GtkEntry | GtkEditable | WidgetAncestry;
 
 class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Editable;
@@ -29,7 +30,7 @@ class GTK::Entry is GTK::Widget {
 
   submethod BUILD(:$entry) {
     given $entry {
-      when Ancestry {
+      when EntryAncestry {
         self.setEntry($entry);
       }
       when GTK::Entry {
@@ -51,7 +52,7 @@ class GTK::Entry is GTK::Widget {
         $to-parent = nativecast(GtkWidget, $_);
         nativecast(GtkEntry, $_);
       }
-      when GtkWidget {
+      when WidgetAncestry {
         $to-parent = $_;
         nativecast(GtkEntry, $_);
       }
@@ -64,7 +65,7 @@ class GTK::Entry is GTK::Widget {
     self.disconnect-all($_) for %!signals-e;
   }
 
-  multi method new (Ancestry $entry) {
+  multi method new (EntryAncestry $entry) {
     my $o = self.bless(:$entry);
     $o.upref;
     $o;
@@ -527,7 +528,8 @@ class GTK::Entry is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    self.unstable_get_type( gtk_entry_get_type );
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_entry_get_type, $n, $t );
   }
 
   method grab_focus_without_selecting

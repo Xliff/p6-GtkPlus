@@ -128,6 +128,10 @@ class GTypeInstance is repr('CStruct') is export {
   method checkType($compare_type) {
     $compare_type == $.g_class.g_type;
   }
+  
+  method getType {
+    $.g_class.g_type;
+  }
 }
 
 class GList is repr('CStruct') does GTK::Roles::Pointers is export {

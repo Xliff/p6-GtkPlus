@@ -13,9 +13,8 @@ use GTK::Button;
 
 use GTK::Roles::ColorChooser;
 
-my subset Ancestry where GtkColorButton | GtkColorChooser | GtkButton    |
-                         GtkBin         | GtkContainer    | GtkBuildable |
-                         GtkWidget;
+our subset ColorButtonAncestry is export 
+  where GtkColorButton | GtkColorChooser | ButtonAncestry;
 
 class GTK::ColorButton is GTK::Button {
   also does GTK::Roles::ColorChooser;
@@ -31,13 +30,18 @@ class GTK::ColorButton is GTK::Button {
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
-      when Ancestry {
+      when ColorButtonAncestry {
         $!cb = do {
           when GtkColorButton {
             $to-parent = nativecast(GtkButton, $_);
             $_;
           }
-          default {
+          when GtkColorChooser {
+            $!cc = $_;
+            $to-parent = nativecast(GtkButton, $_);
+            nativecast(GtkColorButton, $_);
+          }
+          when ButtonAncestry {
             $to-parent = $_;
             nativecast(GtkColorButton, $_);
           }
@@ -49,10 +53,10 @@ class GTK::ColorButton is GTK::Button {
       default {
       }
     }
-    $!cc = nativecast(GtkColorChooser, $!cb);
+    $!cc //= nativecast(GtkColorChooser, $!cb);
   }
 
-  multi method new (Ancestry $button) {
+  multi method new (ColorButtonAncestry $button) {
     my $o = self.bless(:$button);
     $o.upref;
     $o;
@@ -60,7 +64,6 @@ class GTK::ColorButton is GTK::Button {
   multi method new {
     my $button = gtk_color_button_new();
     self.bless(:$button);
-
   }
 
   method new_with_color (GdkColor $color)
@@ -125,7 +128,8 @@ class GTK::ColorButton is GTK::Button {
   }
 
   method get_type is also<get-type> {
-    gtk_color_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_color_button_get_type, $n, $t );
   }
 
   method set_color (GdkColor $color) is DEPRECATED is also<set-color> {

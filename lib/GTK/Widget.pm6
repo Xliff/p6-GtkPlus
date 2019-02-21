@@ -31,7 +31,7 @@ use GTK::Roles::Types;
 
 use GTK::StyleContext;
 
-my subset Ancestry where GtkBuildable | GtkWidget;
+our subset WidgetAncestry is export where GtkBuildable | GtkWidget;
 
 class GTK::Widget {
   also does GTK::Roles::Buildable;
@@ -50,7 +50,7 @@ class GTK::Widget {
 
   submethod BUILD (:$widget) {
     given $widget {
-      when Ancestry {
+      when WidgetAncestry {
         self.setWidget($widget);
       }
       default {
@@ -77,23 +77,20 @@ class GTK::Widget {
   multi method new(|c) {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
   }
-  multi method new(Ancestry $widget) {
+  multi method new(WidgetAncestry $widget) {
     my $o = self.bless(:$widget);
     $o.upref;
     $o;
   }
 
-  method unstable_get_type(&sub) is also<get-type> {
-    #state $t;
-    #state $n = 0;
-    self.IS-PROTECTED;
-    return $!t if $!n > 0;
+  method unstable_get_type(&sub, $n is rw, $t is rw) is also<get-type> {
+    return $t if ($n // 0) > 0;
     repeat {
-      $!t = &sub();
+      $t = &sub();
       die "{ ::?CLASS.^name }.get_type could not get stable result"
-        if $!n++ > 20;
-    } until $!t == &sub();
-    $!t;
+        if $n++ > 20;
+    } until $t == &sub();
+    $t;
   }
 
   method GTK::Raw::Types::GtkWidget is also<widget> {

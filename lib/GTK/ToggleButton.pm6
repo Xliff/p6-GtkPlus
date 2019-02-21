@@ -9,9 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Button;
 
-my subset Ancestry
-  where GtkToggleButton | GtkButton | GtkActionable | GtkBin | GtkContainer |
-        GtkBuildable    | GtkWidget;
+our subset ToggleButtonAncestry is export 
+  where GtkToggleButton | ButtonAncestry;
 
 class GTK::ToggleButton is GTK::Button {
   has GtkToggleButton $!tb;
@@ -25,13 +24,13 @@ class GTK::ToggleButton is GTK::Button {
   submethod BUILD(:$togglebutton) {
     my $to-parent;
     given $togglebutton {
-      when Ancestry {
+      when ToggleButtonAncestry {
         $!tb = do {
           when GtkToggleButton {
             $to-parent = nativecast(GtkButton, $_);
             $_;
           }
-          default {
+          when ButtonAncestry {
             $to-parent = $_;
             nativecast(GtkToggleButton, $_);
           }
@@ -45,7 +44,7 @@ class GTK::ToggleButton is GTK::Button {
     }
   }
 
-  multi method new (Ancestry $togglebutton) {
+  multi method new (ToggleButtonAncestry $togglebutton) {
     my $o = self.bless(:$togglebutton);
     $o.upref;
     $o;
@@ -118,7 +117,8 @@ class GTK::ToggleButton is GTK::Button {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_toggle_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_toggle_button_get_type, $n, $t );
   }
 
   method emit-toggled is also<emit_toggled> {

@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-my subset Ancestry where GtkBin | GtkContainer | GtkBuildable | GtkWidget;
+our subset BinAncestry is export where GtkBin | ContainerAncestry;
 
 class GTK::Bin is GTK::Container {
   has GtkBin $!bin;
@@ -21,7 +21,7 @@ class GTK::Bin is GTK::Container {
 
   submethod BUILD(:$bin) {
     given $bin {
-      when Ancestry {
+      when BinAncestry {
         self.setBin($bin);
       }
       when GTK::Bin {
@@ -42,7 +42,7 @@ class GTK::Bin is GTK::Container {
         $to-parent = nativecast(GtkContainer, $_);
         $_;
       }
-      default {
+      when ContainerAncestry {
         $to-parent = $_;
         nativecast(GtkBin, $_);
       }
@@ -50,7 +50,7 @@ class GTK::Bin is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  method new(Ancestry $bin) {
+  method new(BinAncestry $bin) {
     my $o = self.bless(:$bin);
     $o.upref;
     $o;
@@ -62,7 +62,8 @@ class GTK::Bin is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_bin_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_bin_get_type, $n, $t );
   }
 
   # XXX - Override add to take only one child?

@@ -14,9 +14,8 @@ use GTK::Roles::CellEditable;
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::ComboBox;
 
-my subset Ancestry
-  where GtkComboBox  | GtkCellEditable | GtkCellLayout | GtkBin |
-        GtkContainer | GtkBuildable    | GtkWidget;
+our subset ComboBoxAncestry is export 
+  where GtkComboBox  | GtkCellEditable | GtkCellLayout | BinAncestry;
 
 class GTK::ComboBox is GTK::Bin {
   also does GTK::Roles::CellEditable;
@@ -26,14 +25,14 @@ class GTK::ComboBox is GTK::Bin {
   has GtkComboBox $!cb;
 
   method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);s
     $o.setType('GTK::ComboBox');
     $o;
   }
 
   submethod BUILD(:$combobox) {
     given $combobox {
-      when Ancestry {
+      when ComboBoxAncestry {
         self.setComboBox($combobox);
       }
       when GTK::ComboBox {
@@ -64,7 +63,7 @@ class GTK::ComboBox is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkComboBox, $_);
       }
-      default {
+      when BinAncestry {
         $to-parent = $_;
         nativecast(GtkComboBox, $_);
       }
@@ -74,7 +73,7 @@ class GTK::ComboBox is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (Ancestry $combobox) {
+  multi method new (ComboBoxAncestry $combobox) {
     my $o = self.bless(:$combobox);
     $o.upref;
     $o;

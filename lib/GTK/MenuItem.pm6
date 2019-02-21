@@ -11,8 +11,8 @@ use GTK::Bin;
 
 use GTK::Roles::Actionable;
 
-my subset Ancestry where GtkMenuItem | GtkActionable | GtkContainer |
-                         GtkWidget;
+our subset MenuItemAncestry is export 
+  where GtkMenuItem | GtkActionable | BinAncestry;
 
 class GTK::MenuItem is GTK::Bin {
   also does GTK::Roles::Actionable;
@@ -33,7 +33,7 @@ class GTK::MenuItem is GTK::Bin {
     :$right
   ) {
     given $menuitem {
-      when Ancestry {
+      when MenuItemAncestry {
         self.setMenuItem($menuitem);
       }
       when GTK::MenuItem {
@@ -69,7 +69,7 @@ class GTK::MenuItem is GTK::Bin {
         nativecast(GtkMenuItem, $_);
       }
 
-      default {
+      when BinAncestry {
         $to-parent = $_;
         nativecast(GtkMenuItem, $_);
       }
@@ -79,7 +79,7 @@ class GTK::MenuItem is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (Ancestry $menuitem) {
+  multi method new (MenuItemAncestry $menuitem) {
     my $o = self.bless(:$menuitem);
     $o.upref;
     $o;
@@ -262,7 +262,8 @@ class GTK::MenuItem is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_menu_item_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_menu_item_get_type, $n, $t );
   }
 
   method emit_toggle_size_allocate (Int() $allocation)

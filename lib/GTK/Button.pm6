@@ -11,9 +11,7 @@ use GTK::Bin;
 
 use GTK::Roles::Actionable;
 
-my subset Ancestry
-  where GtkButton | GtkBin | GtkContainer | GtkActionable | GtkBuildable |
-        GtkWidget;
+our subset ButtonAncestry is export where GtkButton | BinAncestry;
 
 class GTK::Button is GTK::Bin {
   also does GTK::Roles::Actionable;
@@ -28,7 +26,7 @@ class GTK::Button is GTK::Bin {
 
   submethod BUILD(:$button) {
     given $button {
-      when Ancestry {
+      when ButtonAncestry {
         self.setButton($button);
       }
       when GTK::Button {
@@ -53,7 +51,7 @@ class GTK::Button is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkButton, $_);
       }
-      default {
+      when BinAncestry {
         $to-parent = $_;
         nativecast(GtkButton, $_);
       }
@@ -62,7 +60,7 @@ class GTK::Button is GTK::Bin {
     $!action //= nativecast(GtkActionable, $!b);        # GTK::Roles::Actionable
   }
 
-  multi method new(Ancestry $button) {
+  multi method new(ButtonAncestry $button) {
     my $o = self.bless(:$button);
     $o.upref;
     $o;
@@ -143,10 +141,10 @@ class GTK::Button is GTK::Bin {
   }
 
   # Used for type checking at the C level.
-  #method get_type () {
-  #  gtk_button_get_type();
-  #}
-
+  method get_type {
+    state ($n, $t);
+    self.unstable_get_type( &gtk_button_get_type, $n, $t )
+  }
 
   method set_alignment (Num() $xalign, Num() $yalign)
     is also<set-alignment>

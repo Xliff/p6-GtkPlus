@@ -9,9 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-my subset Ancestry
-  where GtkButtonBox | GtkBox | GtkOrientable | GtkContainer | GtkBuildable |
-        GtkWidget;
+our subset ButtonBoxAncestry is export where GtkButtonBox | BoxAncestry;
 
 class GTK::ButtonBox is GTK::Box {
   has GtkButtonBox $!bb;
@@ -25,13 +23,13 @@ class GTK::ButtonBox is GTK::Box {
   submethod BUILD(:$buttonbox) {
     my $to-parent;
     given $buttonbox {
-      when Ancestry {
+      when ButtonBoxAncestry {
         $!bb = do {
           when GtkButtonBox {
             $to-parent = nativecast(GtkBox, $_);
             $_;
           }
-          default {
+          when BoxAncestry {
             $to-parent = $_;
             nativecast(GtkButtonBox, $_);
           }
@@ -45,7 +43,7 @@ class GTK::ButtonBox is GTK::Box {
     }
   }
 
-  multi method new (Ancestry $buttonbox) {
+  multi method new (ButtonBoxAncestry $buttonbox) {
     my $o = self.bless(:$buttonbox);
     $o.upref;
     $o;
@@ -106,7 +104,8 @@ class GTK::ButtonBox is GTK::Box {
   }
 
   method get_type is also<get-type> {
-    gtk_button_box_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_button_box_get_type, $n, $t );
   }
 
   multi method set_child_non_homogeneous (

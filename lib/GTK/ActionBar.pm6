@@ -9,9 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-my subset Ancestry
-  where GtkActionBar | GtkBin | GtkContainer | GtkBuilder |
-        GtkWidget;
+our subset ActionBarAncestry is export where GtkActionBar | BinAncestry;
 
 class GTK::ActionBar is GTK::Bin {
   has GtkActionBar $!ab;
@@ -25,13 +23,13 @@ class GTK::ActionBar is GTK::Bin {
   submethod BUILD(:$actionbar) {
     my $to-parent;
     given $actionbar {
-      when Ancestry {
+      when ActionBarAncestry {
         $!ab = do {
           when GtkActionBar  {
             $to-parent = nativecast(GtkBin, $_);
             $_;
           }
-          default {
+          when BinAncestry {
             $to-parent = $_;
             nativecast(GtkActionBar, $_);
           }
@@ -45,7 +43,7 @@ class GTK::ActionBar is GTK::Bin {
     }
   }
 
-  multi method new (GtkWidget $actionbar) {
+  multi method new (ActionBarAncestry $actionbar) {
     my $o = self.bless(:$actionbar);
     $o.upref;
     $o;
@@ -73,7 +71,8 @@ class GTK::ActionBar is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_action_bar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_action_bar_get_type, $n, $t );
   }
 
   multi method pack-end (GtkWidget $child) {

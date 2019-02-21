@@ -11,9 +11,7 @@ use GTK::Box;
 use GTK::HeaderBar;
 use GTK::Window;
 
-my subset Ancestry
-  where GtkDialog | GtkWindow | GtkBin | GtkContainer | GtkBuilder |
-        GtkWidget;
+our subset DialogAncestry is export where GtkDialog | WindowAncestry
 
 class GTK::Dialog is GTK::Window {
   has GtkDialog $!d;
@@ -26,7 +24,7 @@ class GTK::Dialog is GTK::Window {
 
   submethod BUILD(:$dialog) {
     given $dialog {
-      when Ancestry {
+      when DialogAncestry {
         self.setDialog($dialog);
       }
       when GTK::Dialog {
@@ -43,7 +41,7 @@ class GTK::Dialog is GTK::Window {
         $to-parent = nativecast(GtkWindow, $_);
         $_;
       }
-      default {
+      when WindowAncestry {
         $to-parent = $_;
         nativecast(GtkDialog, $_);
       }
@@ -51,7 +49,7 @@ class GTK::Dialog is GTK::Window {
     self.setWindow($to-parent);
   }
 
-  multi method new (Ancestry $dialog) {
+  multi method new (DialogAncestry $dialog) {
     my $o = self.bless(:$dialog);
     $o.upref;
     $o;
@@ -200,7 +198,8 @@ class GTK::Dialog is GTK::Window {
   }
 
   method get_type is also<get-type> {
-    gtk_dialog_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_dialog_get_type, $n, $t );
   }
 
   method get_widget_for_response (Int() $response_id)
