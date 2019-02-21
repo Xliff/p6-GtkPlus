@@ -7,7 +7,11 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::ReturnedValue;
 
+use GTK::Roles::Signals::Generic;
+
 role GTK::Roles::Signals::Notebook {
+  also does GTK::Roles::Signals::Generic;
+  
   has %!signals-n;
 
   # GtkNotebook, GtkWidget, guint, gpointer --> void
@@ -44,7 +48,7 @@ role GTK::Roles::Signals::Notebook {
     my $hid;
     %!signals-n{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-notebook-widget($obj, $signal,
+      $hid = g-connect-create-window($obj, $signal,
         -> $, $w, $i1, $i2, $ud --> GtkNotebook {
           CATCH {
             default { $s.quit($_) }
@@ -71,7 +75,7 @@ role GTK::Roles::Signals::Notebook {
     my $hid;
     %!signals-n{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g-connect-notebook-widget($obj, $signal,
+      $hid = g-connect-reorder-tab($obj, $signal,
         -> $, $ui1, $ui2, $ud --> uint32 {
           CATCH {
             default { $s.quit($_) }

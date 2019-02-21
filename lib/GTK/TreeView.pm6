@@ -155,7 +155,7 @@ class GTK::TreeView is GTK::Container {
   # Is originally:
   # GtkTreeView, gboolean, gpointer --> gboolean
   method select-cursor-row is also<select_cursor_row> {
-    self.connect-uint-rbool($!tv, 'select-cursor-row');
+    self.connect-uint-ruint($!tv, 'select-cursor-row');
   }
 
   # Is originally:

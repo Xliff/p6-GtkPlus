@@ -71,7 +71,7 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, gint, gpointer --> gboolean
   method change-current-page is also<change_current_page> {
-    self.connect-int-rbool($!n, 'change-current-page');
+    self.connect-int-ruint($!n, 'change-current-page');
   }
 
   # Is originally:
@@ -83,7 +83,7 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, uint32 (GtkNotebookTab), gpointer --> gboolean
   method focus-tab is also<focus_tab> {
-    self.connect-uint-rbool($!n, 'focus-tab');
+    self.connect-uint-ruint($!n, 'focus-tab');
   }
 
   # Is originally:
@@ -119,7 +119,7 @@ class GTK::Notebook is GTK::Container {
   # Is originally:
   # GtkNotebook, gboolean, gpointer --> gboolean
   method select-page is also<select_page> {
-    self.connect-uint-rbool($!n, 'select-page');
+    self.connect-uint-ruint($!n, 'select-page');
   }
 
   # Is originally:

@@ -78,7 +78,7 @@ class GTK::Toolbar is GTK::Container {
   # Is originally:
   # GtkToolbar, gboolean, gpointer --> gboolean
   method focus-home-or-end is also<focus_home_or_end> {
-    self.connect-uint-rbool($!tb, 'focus-home-or-end');
+    self.connect-uint-ruint($!tb, 'focus-home-or-end');
   }
 
   # Is originally:
