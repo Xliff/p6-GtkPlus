@@ -55,6 +55,22 @@ class GTK::Bin is GTK::Container {
     $o.upref;
     $o;
   }
+  
+  multi method add (GTK::Widget $widget) {
+    self.set_end($widget);
+    self.SET-LATCH;
+    samewith($widget.widget);
+  }
+  multi method add (GtkWidget $widget) {
+    self.set_end($widget) unless self.IS-LATCHED;
+    self.SET-LATCH;
+    nextwith($widget);
+  }
+  
+  multi method remove(GtkWidget() $widget) {
+    self.clear_end if self.end[0].p != +$widget.p;
+    nextwith($widget);
+  } 
 
   method get_child is also<get-child> {
     self.end[0] ~~ GTK::Widget ??

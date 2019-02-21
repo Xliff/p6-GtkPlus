@@ -48,6 +48,15 @@ role GTK::Roles::LatchedContents {
     self.IS-PROTECTED;
     @!end.push: $c;
   }
+  
+  method set_end($c) is also<set-end> {
+    self.IS-PROTECTED;
+    @!end = ($c);
+  }
+  
+  method clear_end is also<clear-end> {
+    @!end = ();
+  }
 
   my sub checkp($o) {
     do given $o {
