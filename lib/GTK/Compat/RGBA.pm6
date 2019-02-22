@@ -22,9 +22,9 @@ class GTK::Compat::RGBA {
   }
 
   multi method new(
-    Num() $red,
-    Num() $green,
-    Num() $blue,
+    Num() $red   = 0,
+    Num() $green = 0,
+    Num() $blue  = 0,
     Num() $alpha = 1
   ) {
     self.bless(:$red, :$green, :$blue, :$alpha);

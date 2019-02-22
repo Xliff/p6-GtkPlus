@@ -4,12 +4,27 @@ role GTK::Roles::Protection {
   has @!prefixes;
 
   # cw: This is a HACK, but it should work with careful use.
-  method CALLING-METHOD($nf = 3) {
+  method CALLING-METHOD($nf is copy = 3) {
     my $c = callframe($nf).code;
-    $c ~~ Routine ??
-      "{ $c.package.^name }.{ $c.name }"
-      !!
-      die "Frame not a method or code!";
+    while $c !~~ Routine {
+      my $cf = callframe(++$nf);
+      die 'Exceeded backtrace when searching for calling routine' 
+        if $cf ~~ Failure;
+      $c = $cf.code;
+      next if $c.^name eq 'Block';
+      # Special casing is hell! -- Allow for shortcircuit
+      unless  
+        $c.package.^name ne <
+          GLOBAL Any::IterateOneWithoutPhasers List
+        >.any
+        ##||
+        #'is-hidden-from-backtrace' ∈ $c.^roles.map( .^name )
+      { 
+        $c = False;
+        next;
+      }
+    }
+    "{ $c.package.^name }.{ $c.name }";
   }
 
   # Do NOT use this method unless you are adding a widget. If adding widgets,
