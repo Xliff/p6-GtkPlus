@@ -212,7 +212,7 @@ class GTK::SpinButton is GTK::Entry {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method configure (
     GtkAdjustment() $adjustment,
-    Int() $climb_rate,
+    Num() $climb_rate,
     Int() $digits
   ) {
     my guint $d = self.RESOLVE-UINT($digits);
@@ -231,7 +231,8 @@ class GTK::SpinButton is GTK::Entry {
   }
 
   method get_type is also<get-type> {
-    gtk_spin_button_get_type();
+    state ($n, $t);
+    self.unstable_get_type( &gtk_spin_button_get_type, $n, $t );
   }
 
   method get_value_as_int is also<get-value-as-int> {
