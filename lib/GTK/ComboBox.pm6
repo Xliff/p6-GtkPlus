@@ -25,7 +25,7 @@ class GTK::ComboBox is GTK::Bin {
   has GtkComboBox $!cb;
 
   method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);s
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType('GTK::ComboBox');
     $o;
   }
@@ -372,7 +372,8 @@ class GTK::ComboBox is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_combo_box_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_combo_box_get_type, $n, $t );
   }
 
   method emit-popdown is also<emit_popdown> {

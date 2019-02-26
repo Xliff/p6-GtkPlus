@@ -28,7 +28,7 @@ class GTK::AppButton is GTK::ComboBox {
   submethod BUILD(:$appbutton) {
     my $to-parent;
     given $appbutton {
-      when $appbuttonAncestry {
+      when AppButtonAncestry {
         $!acb = {
           when GtkAppChooserButton {
             $to-parent = nativecast(GtkComboBox, $_);
@@ -126,6 +126,7 @@ class GTK::AppButton is GTK::ComboBox {
   }
 
   method get_type is also<get-type> {
+    state ($n, $t);
     GTK::Widget.unstable_get_type( &gtk_app_chooser_button_get_type, $n, $t )
   }
 

@@ -11,7 +11,7 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-my subset Ancestry where GtkLabel | GtkBuildable | GtkWidget;
+our subset LabelAncestry where GtkLabel | WidgetAncestry;
 
 class GTK::Label is GTK::Widget {
   has GtkLabel $!l;
@@ -25,13 +25,13 @@ class GTK::Label is GTK::Widget {
   submethod BUILD(:$label) {
     my $to-parent;
     given $label {
-      when Ancestry {
+      when LabelAncestry {
         $!l = do {
           when GtkLabel  {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
           }
-          default {
+          when WidgetAncestry {
             $to-parent = $_;
             nativecast(GtkLabel, $label);
           }
@@ -45,7 +45,7 @@ class GTK::Label is GTK::Widget {
     }
   }
 
-  multi method new (Ancestry $label) {
+  multi method new (LabelAncestry $label) {
     my $o = self.bless(:$label);
     $o.upref;
     $o;
@@ -363,7 +363,8 @@ class GTK::Label is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    gtk_label_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_label_get_type, $n, $t);
   }
 
   method select_region (Int() $start_offset, Int() $end_offset)

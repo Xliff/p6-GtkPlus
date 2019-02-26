@@ -11,7 +11,7 @@ use GTK::Box;
 use GTK::HeaderBar;
 use GTK::Window;
 
-our subset DialogAncestry is export where GtkDialog | WindowAncestry
+our subset DialogAncestry is export where GtkDialog | WindowAncestry;
 
 class GTK::Dialog is GTK::Window {
   has GtkDialog $!d;

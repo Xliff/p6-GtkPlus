@@ -22,26 +22,31 @@ class GTK::ComboBoxText is GTK::ComboBox {
   }
 
   submethod BUILD(:$combobox) {
-    my $to-parent;
     given $combobox {
-      when Ancestry {
-        $!cbt = do {
-          when GtkComboBoxText {
-            $to-parent = nativecast(GtkComboBox, $_);
-            $_;
-          }
-          when ComboBoxAncestry {
-            $to-parent = $_;
-            nativecast(GtkComboBoxText, $_);
-          }
-        }
-        self.setComboBox($to-parent);
+      when ComboBoxTextAncestry {
+        self.setComboBoxText($combobox);
       }
       when GTK::ComboBoxText {
       }
       default {
       }
     }
+  }
+  
+  method setComboBoxText(ComboBoxTextAncestry $combobox) {
+    my $to-parent;
+    #self.IS-PROTECTED;
+    $!cbt = do {
+      when GtkComboBoxText {
+        $to-parent = nativecast(GtkComboBox, $_);
+        $_;
+      }
+      when ComboBoxAncestry {
+        $to-parent = $_;
+        nativecast(GtkComboBoxText, $_);
+      }
+    }
+    self.setComboBox($to-parent);
   }
 
   multi method new(ComboBoxTextAncestry $combobox) {

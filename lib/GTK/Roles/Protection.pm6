@@ -5,24 +5,30 @@ role GTK::Roles::Protection {
 
   # cw: This is a HACK, but it should work with careful use.
   method CALLING-METHOD($nf is copy = 3) {
-    my $c = callframe($nf).code;
-    while $c !~~ Routine {
-      my $cf = callframe(++$nf);
-      die 'Exceeded backtrace when searching for calling routine' 
-        if $cf ~~ Failure;
-      $c = $cf.code;
-      next if $c.^name eq 'Block';
-      # Special casing is hell! -- Allow for shortcircuit
-      unless  
-        $c.package.^name ne <
-          GLOBAL Any::IterateOneWithoutPhasers List
-        >.any
-        ##||
-        #'is-hidden-from-backtrace' ∈ $c.^roles.map( .^name )
-      { 
-        $c = False;
-        next;
-      }
+    # my $cf = callframe(++$nf);
+    # my $c = $cf.code;
+    my $bt = Backtrace.new;
+    my $c = $bt[++$nf].code;
+    while $c !~~ Routine && $nf < $bt.elems {
+      $nf = $bt.next-interesting-index($nf, :noproto);
+      # die 'Exceeded backtrace when searching for calling routine' 
+      #   if $cf ~~ Failure;
+      
+      $c = $bt[$nf].code;
+      # # Special casing is hell! -- Allow for shortcircuit
+      # # Really want to detect is-hidden-from-backtrace
+      # if [||](
+      #   $c.HOW.^name     eq 'KnowHOW',
+      #   $c.^name         eq 'Mu',
+      #   # $c.package.^name eq 'GLOBAL',
+      #   $c ~~ Block,
+      #   $c ~~ List,
+      #   $c.package.^name eq 'Any::IterateOneWithoutPhasers',
+      #   #'is-hidden-from-backtrace' ∈ $c.^roles.map( .^name )
+      # ) {
+      #   $c = False;
+      #   next;
+      # }
     }
     "{ $c.package.^name }.{ $c.name }";
   }

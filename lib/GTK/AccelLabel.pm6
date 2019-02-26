@@ -93,7 +93,7 @@ class GTK::AccelLabel is GTK::Label {
   }
 
   method get_type is also<get-type> {
-    state ($n, $t)
+    state ($n, $t);
     GTK::Widget.unstable_get_type( &gtk_accel_label_get_type, $n, $t );
   }
 
