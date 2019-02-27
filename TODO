@@ -40,6 +40,7 @@
 - GTK::Roles::Data should be deprecated in favor of GTK::Roles::Properties
 - Is there any further need for GTK::Roles::Types.RESOLVE-* now that those routines have been moved to GTK::Raw::Utils.
   If the answer is NO, then it is an EXTREMELY LOW PRIORITY refactor. Don't rock the boat unless it's leaking.
+- Consider abstracting GTK::Roles::Protection into it's own project. Method::Protect, maybe?
 
 
 Applications
