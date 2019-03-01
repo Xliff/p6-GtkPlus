@@ -9,7 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Frame;
 
-our subset AspectFrameAncestry is export where GtkAspectFrame | FrameAncestry;
+our subset AspectFrameAncestry is export 
+  where GtkAspectFrame | FrameAncestry;
 
 class GTK::AspectFrame is GTK::Frame {
   has GtkAspectFrame $!af;

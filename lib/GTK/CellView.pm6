@@ -32,7 +32,7 @@ class GTK::CellView is GTK::Widget {
   submethod BUILD(:$cellview) {
     my $to-parent;
     given $cellview {
-      when Ancestry {
+      when CellViewAncestry {
         $!cv = do {
           when GtkCellView {
             $to-parent = nativecast(GtkWidget, $_);

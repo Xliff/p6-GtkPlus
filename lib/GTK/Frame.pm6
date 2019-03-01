@@ -10,8 +10,7 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-my subset Ancestry where GtkFrame  | GtkBin | GtkContainer | GtkBuildable |
-                         GtkWidget;
+our subset FrameAncestry is export where GtkFrame | BinAncestry;
 
 class GTK::Frame is GTK::Bin {
   has GtkFrame $!f;
@@ -25,13 +24,13 @@ class GTK::Frame is GTK::Bin {
   submethod BUILD(:$frame) {
     my $to-parent;
     given $frame {
-      when Ancestry {
+      when FrameAncestry {
         $!f = do {
           when GtkFrame {
             $to-parent = nativecast(GtkBin, $_);
             $_;
           }
-          default {
+          when BinAncestry {
             $to-parent = $_;
             nativecast(GtkFrame, $_);
           }
@@ -45,7 +44,7 @@ class GTK::Frame is GTK::Bin {
     }
   }
 
-  multi method new (Ancestry $frame) {
+  multi method new (FrameAncestry $frame) {
     my $o = self.bless(:$frame);
     $o.upref;
     $o;
