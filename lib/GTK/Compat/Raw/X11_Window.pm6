@@ -3,20 +3,10 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::X11_Types;
 use GTK::Roles::Pointers;
 
-our class X11Window is repr<CPointer> does GTK::Roles::Pointers is export {}
-
 package GTK::Compat::Raw::X11_Window {
-
-  sub gdk_x11_window_foreign_new_for_display (
-    GdkDisplay $display, 
-    X11Window $X11Window
-  )
-    returns GdkWindow
-    is native(gdk)
-    is export
-    { * }
 
   sub gdk_x11_window_get_desktop (GdkWindow $window)
     returns guint32

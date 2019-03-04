@@ -27,9 +27,10 @@ GTK::Builder::Revealer
 GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
-GTK::Raw::ReturnedValue
 GTK::Roles::Pointers
+GTK::Raw::ReturnedValue
 GTK::Compat::Types
+GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
@@ -62,6 +63,7 @@ GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
+GTK::Compat::Raw::X11_Display
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo

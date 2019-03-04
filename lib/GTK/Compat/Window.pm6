@@ -10,6 +10,7 @@ use GTK::Compat::Types;
 use GTK::Compat::RGBA;
 use GTK::Compat::Raw::Window;
 use GTK::Compat::Raw::X11_Window;
+use GTK::Compat::X11_Types;
 
 use GTK::Raw::Subs;
 
@@ -594,7 +595,8 @@ class GTK::Compat::Window {
   }
 
   method get_display is also<get-display> {
-    gdk_window_get_display($!window);
+    # Late binding to prevent circular reference.
+    ::('GTK::Compat::Display').new( gdk_window_get_display($!window) );
   }
 
   method get_drag_protocol (GdkWindow() $target) is also<get-drag-protocol> {
@@ -648,8 +650,8 @@ class GTK::Compat::Window {
     $rc;
   }
 
-  method get_parent is also<get-parent> {
-    gdk_window_get_parent($!window);
+  method get_parent is also<get-parent parent> {
+    self.bless(window => gdk_window_get_parent($!window) );
   }
 
   method get_pointer (Int() $x is rw, Int() $y is rw, Int() $mask is rw)
@@ -1156,71 +1158,61 @@ class GTK::Compat::Window {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
-  method x11_get_server_time {
+  method x11_get_server_time is also<x11-get-server-time> {
     gdk_x11_get_server_time($!window);
   }
 
-  # Move to GTK::Compat::Display
-  method x11_window_foreign_new_for_display (
-    GdkDisplay() $display, 
-    X11Window $window
-  ) {
-    GTK::Compat::Window.new( 
-      gdk_x11_window_foreign_new_for_display($display, $window)
-    );
-  }
-
-  method x11_window_get_desktop {
+  method x11_get_desktop is also<x11-get-desktop> {
     gdk_x11_window_get_desktop($!window);
   }
 
-  method x11_window_get_type {
+  method x11_get_type is also<x11-get-type> {
     gdk_x11_window_get_type();
   }
 
-  method x11_window_get_xid {
+  method x11_get_xid is also<x11-get-xid> {
     gdk_x11_window_get_xid($!window);
   }
 
-  # Should be moved to GTK::Compat::Display
-  method x11_window_lookup_for_display (
-    GdkDisplay() $display, 
-    X11Window $win
-  ) {
-    gdk_x11_window_lookup_for_display($display, $win);
-  }
-
-  method x11_window_move_to_current_desktop {
+  method x11_move_to_current_desktop is also<x11-move-to-current-desktop> {
     gdk_x11_window_move_to_current_desktop($!window);
   }
 
-  method x11_window_move_to_desktop (Int() $desktop) {
+  method x11_move_to_desktop (Int() $desktop) is also<x11-move-to-desktop> {
     my guint $d = self.RESOLVE-UINT($desktop);
     gdk_x11_window_move_to_desktop($!window, $d);
   }
 
-  method x11_window_set_frame_sync_enabled (Int() $frame_sync_enabled) {
+  method x11_set_frame_sync_enabled (Int() $frame_sync_enabled) 
+    is also<x11-set-frame-sync-enabled>
+  {
     my gboolean $fse = self.RESOLVE-BOOL($frame_sync_enabled);
     gdk_x11_window_set_frame_sync_enabled($!window, $fse);
   }
 
-  method x11_window_set_hide_titlebar_when_maximized (
+  method x11_set_hide_titlebar_when_maximized (
     Int() $hide_titlebar_when_maximized
-  ) {
+  ) 
+    is also<x11-set-hide-titlebar-when-maximized>
+  {
     my gboolean $htwm = self.RESOLVE-BOOL($hide_titlebar_when_maximized);
     gdk_x11_window_set_hide_titlebar_when_maximized($!window, $htwm);
   }
 
-  method x11_window_set_theme_variant (Str() $variant) {
+  method x11_set_theme_variant (Str() $variant) 
+    is also<x11-set-theme-variant>
+  {
     gdk_x11_window_set_theme_variant($!window, $variant);
   }
 
-  method x11_window_set_user_time (Int() $timestamp) {
+  method x11_set_user_time (Int() $timestamp) is also<x11-set-user-time> {
     my guint32 $t = self.RESOLVE-UINT($timestamp);
     gdk_x11_window_set_user_time($!window, $timestamp);
   }
 
-  method x11_window_set_utf8_property (Str() $name, Str() $value) {
+  method x11_set_utf8_property (Str() $name, Str() $value) 
+    is also<x11-set-utf8-property>
+  {
     gdk_x11_window_set_utf8_property($!window, $name, $value);
   }
 

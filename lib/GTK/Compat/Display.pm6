@@ -5,6 +5,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Display;
+use GTK::Compat::Raw::X11_Display;
+use GTK::Compat::X11_Types;
 
 use GTK::Roles::Types;
 use GTK::Roles::Signals::Generic;
@@ -322,5 +324,80 @@ class GTK::Compat::Display {
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
+  
+  method x11_error_trap_pop_ignored is also<x11-error-trap-pop-ignored> {
+    gdk_x11_display_error_trap_pop_ignored($!d);
+  }
+
+  method x11_error_trap_push is also<x11-error-trap-push> {
+    gdk_x11_display_error_trap_push($!d);
+  }
+
+  # Static. Returns GTK::Compat::Display
+  method x11_lookup_xdisplay (GTK::Compat::Display:U: X11Display $display) 
+    is also<x11-lookup-display>
+  {
+    self.bless( display => gdk_x11_lookup_xdisplay($display) );
+  }
+  
+  # From x11/gdkx11window.h
+  method x11_foreign_new_for_display (
+    X11Window $window
+  ) {
+    ::('GTK::Compat::Window').new( 
+      gdk_x11_window_foreign_new_for_display($!d, $window)
+    );
+  }
+
+  method x11_register_standard_event_type (
+    Int() $event_base, 
+    Int() $n_events
+  ) 
+    is also<x11-register-standard-event-type>
+  {
+    my gint ($eb, $ne) = self.RESOLVE-INT($event_base, $n_events);
+    gdk_x11_register_standard_event_type($!d, $eb, $ne);
+  }
+
+  # Not display specific. Find it a new home.
+  method x11_set_sm_client_id (Str() $client_id) 
+    is also<x11-set-sm-client-id>
+  {
+    gdk_x11_set_sm_client_id($client_id);
+  }
+
+  method x11_get_type is also<x11-get-type> {
+    gdk_x11_display_get_type();
+  }
+
+  method x11_get_user_time is also<x11-get-user-time> {
+    gdk_x11_display_get_user_time($!d);
+  }
+
+  method x11_get_xdisplay is also<x11-get-xdisplay> {
+    gdk_x11_display_get_xdisplay($!d);
+  }
+
+  method x11_grab is also<x11-grab> {
+    gdk_x11_display_grab($!d);
+  }
+
+  method x11_set_cursor_theme (Str() $theme, Int() $size) 
+    is also<x11-set-cursor-theme>
+  {
+    my gint $s = self.RESOLVE-INT($size);
+    gdk_x11_display_set_cursor_theme($!d, $theme, $size);
+  }
+
+  method x11_set_window_scale (Int() $scale) 
+    is also<x11-set-window-scale>
+  {
+    my gint $s = self.RESOLVE-INT($scale);
+    gdk_x11_display_set_window_scale($!d, $s);
+  }
+
+  method x11_ungrab is also<x11-ungrab> {
+    gdk_x11_display_ungrab($!d);
+  }
 
 }
