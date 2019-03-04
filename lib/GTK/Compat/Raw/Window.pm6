@@ -153,7 +153,7 @@ sub gdk_window_create_similar_image_surface (
 
 sub gdk_window_create_similar_surface (
   GdkWindow $window,
-  cairo_content_t $content,
+  uint32 $content,
   gint $width,
   gint $height
 )

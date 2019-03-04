@@ -187,7 +187,7 @@ class GTK::Compat::Window {
   method fullscreen_mode is rw is also<fullscreen-mode> {
     Proxy.new(
       FETCH => sub ($) {
-        GdkFullScreenMode( gdk_window_get_fullscreen_mode($!window) );
+        GdkFullscreenMode( gdk_window_get_fullscreen_mode($!window) );
       },
       STORE => sub ($, Int() $mode is copy) {
         my guint $m = self.RESOLVE-UINT($mode);
@@ -395,7 +395,7 @@ class GTK::Compat::Window {
   )
     is also<coords-from-parent>
   {
-    my gdouble ($px, $py, $x, $y) = ($parent_x, $parent_y, $xx, $yy)
+    my gdouble ($px, $py, $xx, $yy) = ($parent_x, $parent_y, $x, $y);
     my $rc = gdk_window_coords_from_parent($!window, $px, $py, $xx, $yy);
     ($x, $y) = ($xx, $yy);
     $rc;
@@ -409,7 +409,7 @@ class GTK::Compat::Window {
   )
     is also<coords-to-parent>
   {
-    my gdouble ($px, $py, $x, $y) = ($parent_x, $parent_y, $xx, $yy)
+    my gdouble ($px, $py, $xx, $yy) = ($parent_x, $parent_y, $x, $y);
     my $rc = gdk_window_coords_to_parent($!window, $xx, $yy, $px, $py);
     ($parent_x, $parent_y) = ($px, $py);
     $rc;
@@ -642,7 +642,7 @@ class GTK::Compat::Window {
     ($x, $y);
   }
   multi method get_origin (Int() $x is rw, Int() $y is rw) {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y)
+    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
     my $rc = gdk_window_get_origin($!window, $xx, $yy);
     ($x, $y) = ($xx, $yy);
     $rc;
@@ -687,7 +687,7 @@ class GTK::Compat::Window {
     is also<get-root-origin> 
   {
     my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
-    $rc = gdk_window_get_root_origin($!window, $x, $y);
+    my $rc = gdk_window_get_root_origin($!window, $x, $y);
     ($x, $y) = ($xx, $yy);
     $rc;
   }
@@ -865,7 +865,7 @@ class GTK::Compat::Window {
     is also<move-resize>
   {
     my gint ($xx, $yy, $w, $h) = self.RESOLVE-INT($x, $y, $width, $height);
-    gdk_window_move_resize($!window, $xw, $yy, $w, $h);
+    gdk_window_move_resize($!window, $xx, $yy, $w, $h);
   }
 
   method move_to_rect (
@@ -1012,12 +1012,12 @@ class GTK::Compat::Window {
   }
 
   method set_keep_above (Int() $setting) is also<set-keep-above> {
-    my gboolean $s = self.RESOLVE-BOOL($s);
+    my gboolean $s = self.RESOLVE-BOOL($setting);
     gdk_window_set_keep_above($!window, $s);
   }
 
   method set_keep_below (Int() $setting) is also<set-keep-below> {
-    my gboolean $s = self.RESOLVE-BOOL($s);
+    my gboolean $s = self.RESOLVE-BOOL($setting);
     gdk_window_set_keep_below($!window, $s);
   }
 
@@ -1081,7 +1081,7 @@ class GTK::Compat::Window {
   method set_static_gravities (Int() $use_static)
     is also<set-static-gravities>
   {
-    my gboolean $us = self.RESOLVE-BOOL($use_static)
+    my gboolean $us = self.RESOLVE-BOOL($use_static);
     gdk_window_set_static_gravities($!window, $use_static);
   }
 
@@ -1157,15 +1157,21 @@ class GTK::Compat::Window {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
   method x11_get_server_time {
-    gdk_x11_get_server_time($!win);
+    gdk_x11_get_server_time($!window);
   }
 
-  method x11_window_foreign_new_for_display (X11Window $window) {
-    gdk_x11_window_foreign_new_for_display($!win, $window);
+  # Move to GTK::Compat::Display
+  method x11_window_foreign_new_for_display (
+    GdkDisplay() $display, 
+    X11Window $window
+  ) {
+    GTK::Compat::Window.new( 
+      gdk_x11_window_foreign_new_for_display($display, $window)
+    );
   }
 
   method x11_window_get_desktop {
-    gdk_x11_window_get_desktop($!win);
+    gdk_x11_window_get_desktop($!window);
   }
 
   method x11_window_get_type {
@@ -1173,45 +1179,49 @@ class GTK::Compat::Window {
   }
 
   method x11_window_get_xid {
-    gdk_x11_window_get_xid($!win);
+    gdk_x11_window_get_xid($!window);
   }
 
-  method x11_window_lookup_for_display (X11Window $window) {
-    gdk_x11_window_lookup_for_display($!win, $window);
+  # Should be moved to GTK::Compat::Display
+  method x11_window_lookup_for_display (
+    GdkDisplay() $display, 
+    X11Window $win
+  ) {
+    gdk_x11_window_lookup_for_display($display, $win);
   }
 
   method x11_window_move_to_current_desktop {
-    gdk_x11_window_move_to_current_desktop($!win);
+    gdk_x11_window_move_to_current_desktop($!window);
   }
 
   method x11_window_move_to_desktop (Int() $desktop) {
     my guint $d = self.RESOLVE-UINT($desktop);
-    gdk_x11_window_move_to_desktop($!win, $d);
+    gdk_x11_window_move_to_desktop($!window, $d);
   }
 
-  method x11_window_set_frame_sync_enabled (Int) $frame_sync_enabled) {
+  method x11_window_set_frame_sync_enabled (Int() $frame_sync_enabled) {
     my gboolean $fse = self.RESOLVE-BOOL($frame_sync_enabled);
-    gdk_x11_window_set_frame_sync_enabled($!win, $fse);
+    gdk_x11_window_set_frame_sync_enabled($!window, $fse);
   }
 
   method x11_window_set_hide_titlebar_when_maximized (
     Int() $hide_titlebar_when_maximized
   ) {
-    my gboolean $htwb = self.RESOLVE-BOOL($hide_titlebar_when_maximized);
-    gdk_x11_window_set_hide_titlebar_when_maximized($!win, $htwm);
+    my gboolean $htwm = self.RESOLVE-BOOL($hide_titlebar_when_maximized);
+    gdk_x11_window_set_hide_titlebar_when_maximized($!window, $htwm);
   }
 
   method x11_window_set_theme_variant (Str() $variant) {
-    gdk_x11_window_set_theme_variant($!win, $variant);
+    gdk_x11_window_set_theme_variant($!window, $variant);
   }
 
   method x11_window_set_user_time (Int() $timestamp) {
-    my guint32 $t = self.RESOLVE-UINT($timestamp)
-    gdk_x11_window_set_user_time($!win, $timestamp);
+    my guint32 $t = self.RESOLVE-UINT($timestamp);
+    gdk_x11_window_set_user_time($!window, $timestamp);
   }
 
   method x11_window_set_utf8_property (Str() $name, Str() $value) {
-    gdk_x11_window_set_utf8_property($!win, $name, $value);
+    gdk_x11_window_set_utf8_property($!window, $name, $value);
   }
 
 }
