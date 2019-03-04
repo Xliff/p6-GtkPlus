@@ -1104,8 +1104,8 @@ class GTK::Compat::Window {
 
   method shape_combine_region (
     cairo_region_t $shape_region,
-    gint $offset_x,
-    gint $offset_y
+    Int() $offset_x,
+    Int() $offset_y
   )
     is also<shape-combine-region>
   {
