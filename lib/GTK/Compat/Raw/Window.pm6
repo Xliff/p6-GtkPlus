@@ -101,8 +101,8 @@ sub gdk_window_constrain_size (
   uint32 $flags,                  #GdkWindowHints
   gint $width,
   gint $height,
-  gint $new_width,
-  gint $new_height
+  gint $new_width  is rw,
+  gint $new_height is rw
 )
   is native(gdk)
   is export
@@ -112,8 +112,8 @@ sub gdk_window_coords_from_parent (
   GdkWindow $window,
   gdouble $parent_x,
   gdouble $parent_y,
-  gdouble $x,
-  gdouble $y
+  gdouble $x is rw,
+  gdouble $y is rw
 )
   is native(gdk)
   is export
@@ -123,8 +123,8 @@ sub gdk_window_coords_to_parent (
   GdkWindow $window,
   gdouble $x,
   gdouble $y,
-  gdouble $parent_x,
-  gdouble $parent_y
+  gdouble $parent_x is rw,
+  gdouble $parent_y is rw
 )
   is native(gdk)
   is export
@@ -358,7 +358,7 @@ sub gdk_window_get_height (GdkWindow $window)
   is export
   { * }
 
-sub gdk_window_get_origin (GdkWindow $window, gint $x, gint $y)
+sub gdk_window_get_origin (GdkWindow $window, gint $x is rw, gint $y is rw)
   returns gint
   is native(gdk)
   is export
@@ -372,16 +372,16 @@ sub gdk_window_get_parent (GdkWindow $window)
 
 sub gdk_window_get_pointer (
   GdkWindow $window,
-  gint $x,
-  gint $y,
-  uint32 $mask                    # GdkModifierType $mask
+  gint $x      is rw,
+  gint $y      is rw,
+  uint32 $mask is rw              # GdkModifierType $mask
 )
   returns GdkWindow
   is native(gdk)
   is export
   { * }
 
-sub gdk_window_get_position (GdkWindow $window, gint $x, gint $y)
+sub gdk_window_get_position (GdkWindow $window, gint $x is rw, gint $y is rw)
   is native(gdk)
   is export
   { * }
@@ -390,14 +390,18 @@ sub gdk_window_get_root_coords (
   GdkWindow $window,
   gint $x,
   gint $y,
-  gint $root_x,
-  gint $root_y
+  gint $root_x is rw,
+  gint $root_y is rw
 )
   is native(gdk)
   is export
   { * }
 
-sub gdk_window_get_root_origin (GdkWindow $window, gint $x, gint $y)
+sub gdk_window_get_root_origin (
+  GdkWindow $window, 
+  gint $x is rw, 
+  gint $y is rw
+)
   is native(gdk)
   is export
   { * }
