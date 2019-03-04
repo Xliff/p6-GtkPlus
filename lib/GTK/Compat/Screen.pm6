@@ -4,6 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Raw::Screen;
+use GTK::Compat::Raw::X11_Screen;
 use GTK::Compat::Types;
 
 use GTK::Roles::Types;
@@ -210,5 +211,42 @@ class GTK::Compat::Screen {
     gdk_screen_make_display_name($!screen);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
+  
+  method x11_get_default_screen {
+    gdk_x11_get_default_screen();
+  }
+
+  method x11_get_current_desktop {
+    gdk_x11_screen_get_current_desktop($!screen);
+  }
+
+  method x11_get_monitor_output (Int() $monitor_num) {
+    my gint $mn = self.RESOLVE-INT($monitor_num);
+    gdk_x11_screen_get_monitor_output($!screen, $mn);
+  }
+
+  method x11_get_number_of_desktops {
+    gdk_x11_screen_get_number_of_desktops($!screen);
+  }
+
+  method x11_get_screen_number {
+    gdk_x11_screen_get_screen_number($!screen);
+  }
+
+  method x11_get_type {
+    gdk_x11_screen_get_type();
+  }
+
+  method x11_get_window_manager_name {
+    gdk_x11_screen_get_window_manager_name($!screen);
+  }
+
+  method x11_get_xscreen {
+    gdk_x11_screen_get_xscreen($!screen);
+  }
+
+  method x11_supports_net_wm_hint (GdkAtom $property) {
+    gdk_x11_screen_supports_net_wm_hint($!screen, $property);
+  }
 
 }

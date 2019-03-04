@@ -70,6 +70,7 @@
       "GTK::Compat::Raw::Visual"               :  "lib/GTK/Compat/Raw/Visual.pm6"               ,
       "GTK::Compat::Raw::Window"               :  "lib/GTK/Compat/Raw/Window.pm6"               ,
       "GTK::Compat::Raw::X11_Display"          :  "lib/GTK/Compat/Raw/X11_Display.pm6"          ,
+      "GTK::Compat::Raw::X11_Screen"           :  "lib/GTK/Compat/Raw/X11_Screen.pm6"           ,
       "GTK::Compat::Raw::X11_Window"           :  "lib/GTK/Compat/Raw/X11_Window.pm6"           ,
       "GTK::Compat::Rectangle"                 :  "lib/GTK/Compat/Rectangle.pm6"                ,
       "GTK::Compat::Roles::AppInfo"            :  "lib/GTK/Compat/Roles/AppInfo.pm6"            ,
@@ -502,6 +503,9 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
+
+
 
 
 
