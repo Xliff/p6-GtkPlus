@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use Cairo;
+
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
@@ -572,8 +573,6 @@ our enum GFileCreateFlags is export (
   G_FILE_CREATE_REPLACE_DESTINATION => 2
 );
 
-
-class cairo_content_t       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_font_options_t  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Pointers { }
 

@@ -15,10 +15,10 @@ void main(int argc, char **argv) {
   g_value_init(&v, G_TYPE_STRING);
   g_object_getv((GObject *)i, 1, props, &v);
   printf(
-    "%s, %ld, %ld\n",
+    "%s, %ld, %ld, %ld\n",
     g_value_get_string(&v),
     G_TYPE_STRING,
-    sizeof(v)
+    sizeof(v), sizeof(GtkEntry)
   );
 
 }

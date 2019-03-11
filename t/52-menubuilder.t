@@ -11,6 +11,7 @@ my $a = GTK::Application.new(
 $a.activate.tap({
   my $menu = GTK::Utils::MenuBuilder.new(:bar, TOP => [
     File => [
+      #{ id => 'file_menu' },
       'Open'   => { 'do' => -> { say 'Open'   } },
       'Save'   => { 'do' => -> { say 'Close'  } },
       '-'      => False,
