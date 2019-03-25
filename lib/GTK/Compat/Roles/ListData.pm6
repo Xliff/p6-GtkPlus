@@ -1,5 +1,7 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 
 role GTK::Compat::ListData[::T] {
@@ -12,7 +14,8 @@ role GTK::Compat::ListData[::T] {
                    int64 |  int32 |  int16 |  int8 |
                    num64 |  num32
             {
-              nativecast(Pointer[T], $n.data).deref;
+              # Run time, or will this break then?
+              nativecast(Pointer[::(T)], $n.data).deref;
             }
 
             when Str {
@@ -32,7 +35,7 @@ role GTK::Compat::ListData[::T] {
           }
         },
         STORE => -> $, T $nd {
-          $!cur.data = $nd;
+          self.cur = $nd;
         };
     }
   

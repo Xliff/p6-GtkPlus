@@ -159,6 +159,7 @@ class GTK::WidgetPath {
   }
 
   method iter_has_qname (Int() $pos, GQuark $qname) is also<iter-has-qname> {
+    my gint $p = self.RESOLVE-INT($pos);
     so gtk_widget_path_iter_has_qname($!wp, $p, $qname);
   }
 

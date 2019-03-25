@@ -882,9 +882,9 @@ class GTK::StyleContext {
   method state_is_running (Int() $state, Num() $progress)
     is also<state-is-running>
   {
-    my gdouble $pp = $p;
+    my gdouble $pp = $progress;
     my guint $s = self.RESOLVE-UINT($state);
-    gtk_style_context_state_is_running($!sc, $s, $p);
+    gtk_style_context_state_is_running($!sc, $s, $pp);
   }
 
   method to_string (Int() $flags = self.state) is also<to-string Str> {

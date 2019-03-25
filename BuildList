@@ -69,6 +69,7 @@ GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
 GTK::Compat::Roles::Icon
+GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Selection
 GTK::Compat::Visual

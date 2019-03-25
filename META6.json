@@ -75,6 +75,7 @@
       "GTK::Compat::Rectangle"                 :  "lib/GTK/Compat/Rectangle.pm6"                ,
       "GTK::Compat::Roles::AppInfo"            :  "lib/GTK/Compat/Roles/AppInfo.pm6"            ,
       "GTK::Compat::Roles::Icon"               :  "lib/GTK/Compat/Roles/Icon.pm6"               ,
+      "GTK::Compat::Roles::ListData"           :  "lib/GTK/Compat/Roles/ListData.pm6"           ,
       "GTK::Compat::Roles::Signals::Window"    :  "lib/GTK/Compat/Roles/Signals/Window.pm6"     ,
       "GTK::Compat::Selection"                 :  "lib/GTK/Compat/Selection.pm6"                ,
       "GTK::Compat::Visual"                    :  "lib/GTK/Compat/Visual.pm6"                   ,
@@ -503,6 +504,10 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
+
+
+
 
 
 
