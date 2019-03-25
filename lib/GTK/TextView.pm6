@@ -34,32 +34,36 @@ class GTK::TextView is GTK::Container {
   }
 
   submethod BUILD(:$textview) {
-    my $to-parent;
     given $textview {
       when TextViewAncestry {
-        $!tv = do {
-          when GtkTextView {
-            $to-parent = nativecast(GtkContainer, $_);
-            $_;
-          }
-          when GtkScrollable {
-            $!s = $_;                                   # GTK::Roles::Scrollable
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkTextView, $_);
-          }
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkTextView, $_);
-          }
-        }
-        self.setContainer($to-parent);
+        self.setTextView($textview);
       }
       when GTK::TextView {
       }
       default {
       }
     }
-    $!s //= nativecast(GtkScrollable, $textview);       # GTK::Roles::Scrollable
+  }
+  
+  method setTextView($view) {
+    my $to-parent;
+    $!tv = do given $view {
+      when GtkTextView {
+        $to-parent = nativecast(GtkContainer, $_);
+        $_;
+      }
+      when GtkScrollable {
+        $!s = $_;                                   # GTK::Roles::Scrollable
+        $to-parent = nativecast(GtkContainer, $_);
+        nativecast(GtkTextView, $_);
+      }
+      when GtkWidget {
+        $to-parent = $_;
+        nativecast(GtkTextView, $_);
+      }
+    }
+    $!s //= nativecast(GtkScrollable, $view);   # GTK::Roles::Scrollable
+    self.setContainer($to-parent);
   }
 
   submethod DESTROY {

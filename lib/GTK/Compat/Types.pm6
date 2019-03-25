@@ -139,6 +139,26 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $.data;
   has GList   $.next;
   has GList   $.prev;
+  
+  method data is rw {
+    use nqp; 
+    
+    Proxy.new: 
+      FETCH => -> $      { $.data },
+      STORE => -> $, $nv {
+        die qq:to/DIE/.chomp unless $nv.REPR eq <CStruct CPointer>.any;
+          Cannot store { $nv.^name } values in a GList as they must be of{
+          } CStruct or CPointer representation.
+          DIE
+          
+        nqp::bindattr(
+          nqp::decont(self), 
+          Pointer, 
+          '$!data', 
+          nqp::decont( nativecast(Pointer, $nv) )
+        )
+      };
+  }
 }
 
 class GPermission is repr('CStruct') does GTK::Roles::Pointers is export {

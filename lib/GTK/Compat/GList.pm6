@@ -6,28 +6,37 @@ use NativeCall;
 use GTK::Compat::Raw::GList;
 use GTK::Compat::Types;
 
+# See if this will work properly:
+# - Move ALL data related routines to a ListData parameterized role.
+# - Have raw_data method implemented in client classes that return the pointer 
+#   attribute.
+
 class GTK::Compat::GList {
-  also does Positional;
-  also does Iterator;
+  #also does Positional;
+  #also does Iterator;
 
   has GTK::Compat::Types::GList $!list;
   has GTK::Compat::Types::GList $!cur;
-  has @!nat handles
-    «pull-one iterator elems AT-POS EXISTS-POS join :p6sort('sort')»;
+  
+  # Left active, but see NOTE.
   has $!dirty = False;
-  has $!type;
 
-  submethod BUILD(:$type, :$list) {
-    die 'Must use a type object for $type when creating a GTK::Compat::GSList'
-      if $type.defined;
+  submethod BUILD(:$list) {
+    # die 'Must use a type object for $type when creating a GTK::Compat::GSList'
+    #   if $type.defined;
 
     $!cur = $!list = $list;
-    $!type := $type;
-    while $!cur.defined {
-      @!nat.push: self.data;
-      $!cur .= next;
-    }
-    $!cur = $!list;
+    
+    # No longer necessary due to GTK::Compat::Roles::ListData
+    #$!type := $type;
+    
+    # See NOTE.
+    #
+    # while $!cur.defined {
+    #   @!nat.push: self.data;
+    #   $!cur .= next;
+    # }
+    # $!cur = $!list;
   }
 
   submethod DESTROY {
@@ -48,37 +57,18 @@ class GTK::Compat::GList {
     $!list;
   }
 
-  method List {
-    @!nat.clone;
+  # method List {
+  #   @!nat.clone;
+  # }
+  
+  method !_data {
+    $!cur.data;
   }
 
   method data {
-    self!_data($!cur);
+    self!_data;
   }
-
-  method !_data(GTK::Compat::Types::GList $n) {
-    given $!type {
-      when  uint64 | uint32 | uint16 | uint8 |
-             int64 |  int32 |  int16 |  int8 |
-             num64 |  num32
-      {
-        $n.data.deref;
-      }
-
-      when Str {
-        nativecast($_, $n.data);
-      }
-
-      when .REPR eq <CPointer CStruct>.any {
-        nativecast($_, $n.data);
-      }
-
-      default {
-        die "Unknown type '{ .^name }' passed to GTK::Compat::List.new()";
-      }
-    }
-  }
-
+  
   # Need a current pointer.
   method next {
     $!cur .= next;
@@ -88,21 +78,30 @@ class GTK::Compat::GList {
     $!cur .= prev;
   }
 
-  method !rebuild {
-    my GTK::Compat::Types::GList $l;
-
-    @!nat = ();
-    loop ($l = self.first; $l != GList; $l = $l.next) {
-      @!nat.push: self.data($l);
-    }
-    @!nat;
-  }
-
-  method Array {
-    self!rebuild if $!dirty;
-    $!dirty = False;
-    @!nat;
-  }
+  # NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE
+  # Probably better to finish work on GTK::Compat::ListData role and move 
+  # the Array backing to it. Until that decision has been made, this code
+  # has been deactivated.
+  #
+  # has @!nat 
+  #   handles
+  #   «pull-one iterator elems AT-POS EXISTS-POS join :p6sort('sort')»;
+  # 
+  # method !rebuild {
+  #   my GTK::Compat::Types::GList $l;
+  # 
+  #   @!nat = ();
+  #   loop ($l = self.first; $l != GList; $l = $l.next) {
+  #     @!nat.push: self.data($l);
+  #   }
+  #   @!nat;
+  # }
+  #
+  # method Array {
+  #   self!rebuild if $!dirty;
+  #   $!dirty = False;
+  #   @!nat;
+  # }
 
   method append (gpointer $data) {
     my $list = g_list_append($!list, $data);
@@ -117,21 +116,27 @@ class GTK::Compat::GList {
   ) {
     g_list_concat($list1, $list2);
   }
-  multi method concat (GTK::Compat::Types::GList $list2) {
+  multi method concat (GTK::Compat::Types::GList() $list2) {
     my $list = g_list_concat($!list, $list2);
     $!dirty = True;
     $!list = $list;
   }
 
   method copy {
-    g_list_copy($!list);
+    self.bless( 
+      #type => $!type, 
+      list => g_list_copy($!list) 
+    );
   }
 
   method copy_deep (GCopyFunc $func, gpointer $user_data) {
-    g_list_copy_deep($!list, $func, $user_data);
+    self.bless( 
+      #type => $!type, 
+      list => g_list_copy_deep($!list, $func, $user_data)
+    );
   }
 
-  method delete_link (GTK::Compat::Types::GList $link) {
+  method delete_link (GTK::Compat::Types::GList() $link) {
     my $list = g_list_delete_link($!list, $link);
     $!dirty = True;
     $!list = $list;
@@ -177,7 +182,7 @@ class GTK::Compat::GList {
     $!list = $list;
   }
 
-  method insert_before (GTK::Compat::Types::GList $sibling, gpointer $data) {
+  method insert_before (GTK::Compat::Types::GList() $sibling, gpointer $data) {
     my $list = g_list_insert_before($!list, $sibling, $data);
     $!dirty = True;
     $!list = $list;
@@ -221,7 +226,7 @@ class GTK::Compat::GList {
     g_list_nth_prev($!list, $n);
   }
 
-  method position (GTK::Compat::Types::GList $llink) {
+  method position (GTK::Compat::Types::GList() $llink) {
     g_list_position($!list, $llink);
   }
 
@@ -239,10 +244,10 @@ class GTK::Compat::GList {
 
   method remove_all (gconstpointer $data) {
     g_list_remove_all($!list, $data);
-    @!nat = ();
+    #!nat = ();
   }
 
-  method remove_link (GTK::Compat::Types::GList $llink) {
+  method remove_link (GTK::Compat::Types::GList() $llink) {
     my $list = g_list_remove_link($!list, $llink);
     $!dirty = True;
     $!list = $list;
@@ -250,8 +255,8 @@ class GTK::Compat::GList {
 
   method reverse {
     my $list = g_list_reverse($!list);
-    self!rebuild if $!dirty;
-    @!nat = @!nat.reverse;
+    #self!rebuild if $!dirty;
+    #@!nat = @!nat.reverse;
     $!list = $list;
   }
 

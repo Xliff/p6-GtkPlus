@@ -24,6 +24,10 @@ class GTK::TextBuffer {
   has GtkTextBuffer $!tb;
 
   submethod BUILD(:$buffer) {
+    self.setTextBuffer($buffer);
+  }
+  
+  method setTextBuffer($buffer) {
     $!prop = nativecast(GObject, $!tb = $buffer);
   }
 
