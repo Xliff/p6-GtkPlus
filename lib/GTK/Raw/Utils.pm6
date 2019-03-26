@@ -34,48 +34,84 @@ multi sub resolve-bool(*@rb) is export {
   @rb.map({ samewith($_) });
 }
 
-multi sub  resolve-short(@rs) is export {
-  samewith(|@rs);
+multi sub resolve-short(@rs) is export {
+  resolve-int8(|@rs);
 }
 multi sub resolve-short($rs) is export {
+  resolve-int8($rs);
+}
+multi sub resolve-short(*@rs) is export {
+  resolve-int8(@rs);
+}
+multi sub  resolve-int8(@rs) is export {
+  samewith(|@rs);
+}
+multi sub resolve-int8($rs) is export {
   ($rs.abs +& 0x7f) * ($rs < 0 ?? -1 !! 1);
 }
-multi resolve-short(*@rs) is export {
+multi resolve-int8(*@rs) is export {
   @rs.map({ samewith($_) });
 }
 
-multi sub resolve-ushort(@rus) is export {
+multi sub resolve-ushort(@rs) is export {
+  resolve-uint8(|@rs);
+}
+multi sub resolve-ushort($rs) is export {
+  resolve-uint8($rs);
+}
+multi sub resolve-ushort(*@rs) is export {
+  resolve-uint8(@rs);
+}
+multi sub resolve-uint8(@rus) is export {
   samewith(|@rus);
 }
-multi sub resolve-ushort($rus) is export {
+multi sub resolve-uint8($rus) is export {
   $rus +& 0xff;
 }
-multi resolve-ushort(*@rus) is export {
+multi resolve-uint8(*@rus) is export {
   @rus.map({ samewith($_) });
 }
 
 multi sub resolve-long(@rl) is export {
-  samewith(|@rl);
+  resolve-int64(|@rl);
 }
 multi sub resolve-long($rl) is export {
-  resolve-lint($rl);
+  resolve-int64($rl);
 }
 multi sub resolve-long(*@rl) is export {
-  resolve-lint(@rl);
+  resolve-int64(@rl);
 }
-
 multi sub resolve-lint(@rl) is export {
-  samewith(|@rl);
+  resolve-int64(|@rl);
 }
 multi sub resolve-lint($rl) is export {
-  ($rl.abs +& 0x7fffffffffffffff) * ($rl < 0 ?? -1 !! 1);
+  resolve-int64($rl);
 }
 multi sub resolve-lint(*@rl) is export {
+  resolve-int64(@rl);
+}
+  
+multi sub resolve-int64(@rl) is export {
+  samewith(|@rl);
+}
+multi sub resolve-int64($rl) is export {
+  ($rl.abs +& 0x7fffffffffffffff) * ($rl < 0 ?? -1 !! 1);
+}
+multi sub resolve-int64(*@rl) is export {
   @rl.map({ samewith($_) });
 }
 
+multi sub resolve-ulint(@rul) is export {
+  resolve-uint64(|@rul);
+}
+multi sub resolve-ulint($rul) is export {
+  resolve-uint64($rul);
+}
+multi sub resolve-ulint(*@rul) is export {
+  resolve-uint64(@rul);
+}
 multi sub resolve-ulong(@rul) is export {
-  samewith(|@rul);
+  resolve-uint64(|@rul);
 }
 multi sub resolve-ulong($rul) is export {
   resolve-ulint($rul);
@@ -84,23 +120,32 @@ multi sub resolve-ulong(*@rul) is export {
   resolve-ulint(@rul);
 }
 
-multi sub resolve-ulint(@rul) is export {
+multi sub resolve-uint64(@rul) is export {
   samewith(|@rul);
 }
-multi sub resolve-ulint($rul) is export {
+multi sub resolve-uint64($rul) is export {
   $rul +& 0xffffffffffffffff;
 }
-multi sub resolve-ulint(*@rul) is export {
+multi sub resolve-uint64(*@rul) is export {
   @rul.map({ samewith($_) });
 }
 
 multi sub resolve-int(@ri) is export {
-  samewith(|@ri);
+  resolve-int32(|@ri);
 }
 multi sub resolve-int($ri) is export {
+  resolve-int32($ri);
+}
+multi sub resolve-int(*@ri) is export {
+  resolve-int32(@ri);
+}
+multi sub resolve-int32(@ri) is export {
+  samewith(|@ri);
+}
+multi sub resolve-int32($ri) is export {
   ($ri.abs +& 0x7fffffff) * ($ri < 0 ?? -1 !! 1);
 }
-multi resolve-int(*@ri) is export {
+multi resolve-int32(*@ri) is export {
   @ri.map({ samewith($_) });
 }
 

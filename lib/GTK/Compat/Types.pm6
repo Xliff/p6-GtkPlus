@@ -108,11 +108,9 @@ constant GEqualFunc              is export := Pointer;
 constant GQuark                  is export := uint32;
 constant GSettingsBindGetMapping is export := Pointer;
 constant GSettingsBindSetMapping is export := Pointer;
-constant GString                 is export := Pointer;
 constant GStrv                   is export := CArray[Str];
 constant GTimeSpan               is export := int64;
 constant GType                   is export := uint64;
-constant GVariant                is export := Pointer;
 
 constant GdkFilterFunc                  is export := Pointer;
 constant GdkPixbufDestroyNotify         is export := Pointer;
@@ -175,6 +173,12 @@ class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
   has GSList  $.next;
 }
 
+class GString is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str     $.str;
+  has uint64  $.len;              # NOTE: Should be processor wordsize, so using 64 bit.
+  has uint64  $.allocated_len;    # NOTE: Should be processor wordsize, so using 64 bit.
+}
+
 class GTypeValueList is repr('CUnion') is export {
   has int32	          $.v_int     is rw;
   has uint32          $.v_uint    is rw;
@@ -229,7 +233,8 @@ our enum GTypeEnum is export (
   G_TYPE_RESERVED_USER_FIRST => 49
 );
 
-our enum GVariantType is export <
+# Careful not to get confused with the non-plural pointer-backed type.
+our enum GVariantTypes is export <
   G_VARIANT_CLASS_BOOLEAN
   G_VARIANT_CLASS_BYTE
   G_VARIANT_CLASS_INT16
@@ -638,6 +643,11 @@ class GParamSpec            is repr('CPointer') is export does GTK::Roles::Point
 class GSettings             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsBackend      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVariantDict          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVariantIter          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVariantType          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }

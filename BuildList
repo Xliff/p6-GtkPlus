@@ -60,7 +60,9 @@ GTK::Compat::Raw::Rectangle
 GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
+GTK::Compat::Raw::Settings
 GTK::Compat::Raw::Value
+GTK::Compat::Raw::Variant
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
 GTK::Compat::Raw::X11_Display
@@ -72,6 +74,10 @@ GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Selection
+GTK::Compat::Settings
+GTK::Compat::Variant
+GTK::Compat::VariantDict
+GTK::Compat::VariantIter
 GTK::Compat::Visual
 GTK::Raw::Types
 GTK::Raw::Viewport
