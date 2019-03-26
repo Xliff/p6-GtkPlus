@@ -43,6 +43,7 @@
 - Consider abstracting GTK::Roles::Protection into it's own project. Method::Protect, maybe?
 - Properly rework GTK::Utils::MenuBuilder. It is faulty
 - Test latest inplementation of GTK::Compat::GList and GTK::Roles::ListData
+
 - For ALL type coercer methods, insure they are aliased to a proper object-specific nickname
 
 Applications
