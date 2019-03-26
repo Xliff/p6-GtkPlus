@@ -15,7 +15,7 @@ role GTK::Compat::ListData[::T] {
                    num64 |  num32
             {
               # Run time, or will this break then?
-              nativecast(Pointer[::(T)], $n.data).deref;
+              nativecast(Pointer.^parameterize(T), $n.data).deref;
             }
 
             when Str {

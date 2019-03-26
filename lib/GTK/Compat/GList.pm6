@@ -43,14 +43,21 @@ class GTK::Compat::GList {
     #self.free;
   }
 
-  multi method new($type) {
+  multi method new (@list) {
+    my $l = GTK::Compat::Types::GList.new;
+    for @list {
+      # What about prototype numeric data (ints, nums) and Str?
+      $l.append( nativecast(Pointer, $_) );
+    }
+  }
+  multi method new {
     my $list = g_list_alloc();
     die "Cannot allocate GList" unless $list;
 
-    self.bless(:$type, :$list);
+    self.bless(:$list);
   }
-  multi method new($type, GTK::Compat::Types::GList $list) {
-    self.bless(:$type, :$list);
+  multi method new ($type, GTK::Compat::Types::GList $list) {
+    self.bless(:$list);
   }
 
   method GTK::Compat::Types::GList is also<glist> {
