@@ -16,7 +16,7 @@
 √ Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
 √ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get
 √ Fix lack of icons in GTK::IconView
-- Add-to-project-if-I'm-completely-insane: GVariant
+* Add-to-project-if-I'm-completely-insane: GVariant
 - Move signals to %Object.signal<name> to fix issue with method name conflicts
 + GTK::ScrolledWindow.new_with_policy is in desperate need of being written (implemented, but not tested)
 + GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!  (implemented, but not tested)
