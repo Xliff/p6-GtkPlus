@@ -7,9 +7,10 @@ use GTK::Compat::MenuAttributeIter;
 use GTK::Compat::MenuLinkIter;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::MenuModel;
-use GTK::Compat::Roles::Signals;
 
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
+use GTK::Compat::Roles::Signals;
 
 sub EXPORT {
   %(
@@ -20,12 +21,13 @@ sub EXPORT {
 
 class GTK::Compat::MenuModel {
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
   also does GTK::Compat::Roles::Signals;
 
   has GMenuModel $!m;
 
   submethod BUILD(:$model) {
-    $!m = $model;
+    self!setObject($!m = $model);
   }
 
   method setMenuModel($model) {
@@ -39,7 +41,6 @@ class GTK::Compat::MenuModel {
   method GTK::Compat::Types::GMenuModel is also<menumodel> {
     $!m;
   }
-
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -64,7 +65,10 @@ class GTK::Compat::MenuModel {
   {
     my gint $ii = self.RESOLVE-INT($item_index);
     g_menu_model_get_item_attribute_value(
-      $!m, $ii, $attribute, $expected_type
+      $!m, 
+      $ii, 
+      $attribute, 
+      $expected_type
     );
   }
 

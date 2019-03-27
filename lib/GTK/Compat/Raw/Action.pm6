@@ -29,7 +29,7 @@ sub g_action_get_name (GAction $action)
   { * }
 
 sub g_action_get_parameter_type (GAction $action)
-  returns guint # GVariantType
+  returns GVariantType
   is native(gio)
   is export
   { * }
@@ -47,7 +47,7 @@ sub g_action_get_state_hint (GAction $action)
   { * }
 
 sub g_action_get_state_type (GAction $action)
-  returns guint # GVariantType
+  returns GVariantType
   is native(gio)
   is export
   { * }

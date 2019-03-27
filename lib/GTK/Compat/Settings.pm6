@@ -1,15 +1,23 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw:Settings;
+use GTK::Compat::Raw::Settings;
+
+use GTK::Compat::Roles::Object;
+use GTK::Compat::Roles::Signals::Settings;
 
 class GTK::Compat::Settings {
+  also does GTK::Compat::Roles::Object;
+  also does GTK::Compat::Roles::Signals::Settings;
+  
   has GSettings $!s;
   
   submethod BUILD (:$settings) {
-    $!s = $settings;
+    self!setObject($!s = $settings);
   }
   
   method GTK::Compat::Types::GSettings 
@@ -35,15 +43,15 @@ class GTK::Compat::Settings {
     self.bless( settings => g_settings_new($schema_id) );
   }
   multi new(:$path, :$schema) {
-    with $path andwith $schema {
+    with ($path, $schema).all {
       die qq:to/DIE/.chomp 
         Please do not specify both \$path and \$schema when calling{
         } GTK::Compat::Settings.new()
         DIE
     }
     do {  
-      when $schema.defined { self.new($schema) }
-      when $path.defined   { self.new_with_path($path) }
+      when $schema.defined { GTK::Compat::Settings.new($schema) }
+      when $path.defined   { GTK::Compat::Settings.new_with_path($path) }
     }
   }
       
@@ -56,15 +64,42 @@ class GTK::Compat::Settings {
   }
 
   method new_with_backend (GSettingsBackend() $backend) {
-    g_settings_new_with_backend($!s, $backend);
+    g_settings_new_with_backend($backend);
   }
 
-  method new_with_backend_and_path (GSettingsBackend() $backend, Str() $path) {
-    g_settings_new_with_backend_and_path($!s, $backend, $path);
+  method new_with_backend_and_path (
+    GSettingsBackend() $backend, 
+    Str() $path
+  ) {
+    g_settings_new_with_backend_and_path($backend, $path);
   }
 
   method new_with_path (Str() $path) {
-    g_settings_new_with_path($!s, $path);
+    g_settings_new_with_path($path);
+  }
+  
+  # Is originally:
+  # GSettings, gpointer, gint, gpointer --> gboolean
+  method change-event {
+    self.connect-change-event($!s);
+  }
+
+  # Is originally:
+  # GSettings, gchar, gpointer --> void
+  method changed {
+    self.connect-string($!s, 'changed');
+  }
+
+  # Is originally:
+  # GSettings, guint, gpointer --> gboolean
+  method writable-change-event {
+    self.connect-uint-rbool($!s);
+  }
+
+  # Is originally:
+  # GSettings, gchar, gpointer --> void
+  method writable-changed {
+    self.connect-string($!s);
   }
 
   method apply {
@@ -73,7 +108,7 @@ class GTK::Compat::Settings {
 
   method bind (
     Str() $key, 
-    gpointer $object, 
+    GObject() $object, 
     Str() $property, 
     Int() $flags
   ) {
@@ -83,7 +118,7 @@ class GTK::Compat::Settings {
 
   method bind_with_mapping (
     Str() $key, 
-    gpointer $object, 
+    GObject() $object, 
     Str() $property, 
     Int() $flags, 
     GSettingsBindGetMapping $get_mapping = Pointer, 
@@ -107,7 +142,7 @@ class GTK::Compat::Settings {
 
   method bind_writable (
     Str() $key, 
-    gpointer $object, 
+    GObject() $object, 
     Str() $property, 
     Int() $inverted
   ) {
@@ -246,7 +281,7 @@ class GTK::Compat::Settings {
   }
   multi method set_strv (Str $key, CArray[Str] $value) {
     g_settings_set_strv($!, $key, $value);
-  )
+  }
 
   method set_string (Str() $key, Str() $value) {
     g_settings_set_string($!s, $key, $value);
@@ -265,11 +300,17 @@ class GTK::Compat::Settings {
   }
 
   method sync {
-    g_settings_sync($!s);
+    g_settings_sync();
   }
 
-  method unbind (Str() $property) {
-    g_settings_unbind($!s, $property);
+  method unbind ($object, Str() $property) {
+    die '$object parameter must be a CPointer or CStruct REPR!'
+      unless $object.REPR eq <CString CPointer>.any;
+      
+    g_settings_unbind( 
+      nativecast(Pointer, $object), 
+      $property 
+    );
   }
 
 }

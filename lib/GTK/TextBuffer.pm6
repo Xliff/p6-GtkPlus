@@ -28,12 +28,16 @@ class GTK::TextBuffer {
   }
   
   method setTextBuffer($buffer) {
-    $!prop = nativecast(GObject, $!tb = $buffer);
+    self!setObject($!tb = $buffer);             # GTK::Roles::Properties
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-tb;
   }
+  
+  method GTK::Raw::Types::GtkTextBuffer 
+    is also<TextBuffer>
+    { $!tb }
 
   multi method new (GtkTextTagTable() $text_tag_table) {
     my $buffer = gtk_text_buffer_new($text_tag_table);
@@ -45,11 +49,6 @@ class GTK::TextBuffer {
   multi method new {
     my $buffer = gtk_text_buffer_new(GtkTextTagTable);
     self.bless(:$buffer);
-  }
-
-
-  method GTK::Raw::Types::GtkTextBuffer {
-    $!tb;
   }
 
   method !resolve-text-arg($val is copy) {
@@ -174,7 +173,10 @@ D
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GtkTargetList
-  method copy-target-list is rw  {
+  method copy-target-list 
+    is rw  
+    is also<copy_target_list>
+  {
     my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
       FETCH => -> $ {
@@ -190,7 +192,10 @@ D
   }
 
   # Type: gint
-  method cursor-position is rw  {
+  method cursor-position 
+    is rw  
+    is also<cursor_position>
+  {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -206,7 +211,10 @@ D
   }
 
   # Type: gboolean
-  method has-selection is rw  {
+  method has-selection 
+    is rw  
+    is also<has_selection>
+  {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -222,7 +230,10 @@ D
   }
 
   # Type: GtkTargetList
-  method paste-target-list is rw  {
+  method paste-target-list 
+    is rw  
+    is also<paste_target_list>
+  {
     my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
       FETCH => -> $ {
@@ -238,7 +249,10 @@ D
   }
 
   # Type: GtkTextTagTable
-  method tag-table is rw  {
+  method tag-table 
+    is rw  
+    is also<tag_table>
+  {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
@@ -451,7 +465,13 @@ D
     GTK::TargetList.new( gtk_text_buffer_get_copy_target_list($!tb) );
   }
 
-  proto method get_end_iter (|) is also<get-end-iter> { * }
+  proto method get_end_iter (|) 
+    is also<
+      get-end-iter
+      end_iter
+      end-iter
+    > 
+    { * }
 
   multi method get_end_iter {
     my $iter = GtkTextIter.new;
@@ -626,12 +646,26 @@ D
     gtk_text_buffer_get_slice($!tb, $start, $end, $ih);
   }
 
-  method get_start_iter (GtkTextIter $iter) is also<get-start-iter> {
+  proto method get_start_iter (|) 
+    is also<
+      get-start-iter
+      start_iter
+      start-iter
+    >
+    { * }
+    
+  multi method get_start_iter {
+    my $iter = GtkTextIter.new;
+    samewith($iter);
+  }
+  multi method get_start_iter (GtkTextIter $iter) {
     gtk_text_buffer_get_start_iter($!tb, $iter);
+    GTK::TextIter.new($iter);
   }
 
-  method get_tag_table is also<get-tag-table> {
-    gtk_text_buffer_get_tag_table($!tb);
+  method get_tag_table 
+    is also<get-tag-table> {
+    GTK::TextTagTable.new( gtk_text_buffer_get_tag_table($!tb) );
   }
 
   proto method get_text (|)
@@ -751,8 +785,7 @@ D
     my $t = $text.encode;
     samewith($t, $t.chars, $default_editable);
   }
-
-  method insert_interactive_at_cursor (
+  multi method insert_interactive_at_cursor (
     Str() $text,
     Int() $len is copy,           # gint $len,
     Int() $default_editable       # gboolean $default_editable

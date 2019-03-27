@@ -10,8 +10,8 @@ unit package GTK::Compat::Raw::MenuModel;
 sub g_menu_model_get_item_attribute (
   GMenuModel $model,
   gint $item_index,
-  gchar $attribute,
-  gchar $format_string,
+  Str $attribute,
+  Str $format_string,
   CArray[Pointer]
 )
   returns gboolean
@@ -45,7 +45,7 @@ sub g_menu_link_iter_get_name (GMenuLinkIter $iter)
 
 sub g_menu_link_iter_get_next (
   GMenuLinkIter $iter,
-  gchar $out_link,
+  Str $out_link,
   GMenuModel $value
 )
   returns uint32
@@ -74,8 +74,8 @@ sub g_menu_link_iter_next (GMenuLinkIter $iter)
 sub g_menu_model_get_item_attribute_value (
   GMenuModel $model,
   gint $item_index,
-  gchar $attribute,
-  uint32 $expected_type         # GVariantType $expected_type
+  Str $attribute,
+  GVariantType $expected_type
 )
   returns GVariant
   is native(gio)
@@ -85,7 +85,7 @@ sub g_menu_model_get_item_attribute_value (
 sub g_menu_model_get_item_link (
   GMenuModel $model,
   gint $item_index,
-  gchar $link
+  Str $link
 )
   returns GMenuModel
   is native(gio)

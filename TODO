@@ -1,50 +1,50 @@
-+ Mechanism for providing PROPER event handlers for all events (in progress...)
-- A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
-- Insure all method-level gchar paramters are converted to Str()
-- COMPLETE a working GSList implementation
-- Add a working GList implementation
 √ META6.json
 √ New dependency: https://github.com/timo/cairo-p6
-- GDK
-  - Refinements to all GTK::Compat::Objects
-	- Finish refinements on GTK::Compat::Window
-  - Rename all GDK objects from GTK::Compat::
 √ Feature Request: GTK::TextBuffer.buffer to accept from Str or Buf when setting text
 √ METHOD ALIASING! - This has mostly been accomplished, but in the case of container-based classes and others where manual aliasing was done, the best thing to do would be a proto method. See: https://gist.github.com/Xliff/34b9d2e3e27c76696ec60e6791075634
-- Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
 √ Convert Perl6 additions to GTK::Container into a role. (done as GTK::Roles::LatchedContainer)
 √ Convert Perl6 additions to GTK::Box into a role. (GTK::Roles::Boxable)
 √ Investivate the use of g_object_getv and g_object_setv to access previously non-accessible GObject properties. See https://developer.gnome.org/gobject/stable/gobject-The-Base-Object-Type.html#g-object-get
 √ Fix lack of icons in GTK::IconView
-* Add-to-project-if-I'm-completely-insane: GVariant
-- Move signals to %Object.signal<name> to fix issue with method name conflicts
+√ Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
+√ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
++ Mechanism for providing PROPER event handlers for all events (in progress...)
++ Add-to-project-if-I'm-completely-insane: GVariant
 + GTK::ScrolledWindow.new_with_policy is in desperate need of being written (implemented, but not tested)
 + GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!  (implemented, but not tested)
++ Add GTK::Compat::Action (GAction)
 + Add type specific signal handling to GTK::Notebook                        (implemented, but not tested)
+- A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
+- Insure all method-level gchar paramters are converted to Str()
+- COMPLETE a working GSList implementation
+- Add a working GList implementation
+- GDK
+  - Refinements to all GTK::Compat::Objects
+	- Finish refinements on GTK::Compat::Window
+  - Rename all GDK objects from GTK::Compat::
+- Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
+- Move signals to %Object.signal<name> to fix issue with method name conflicts
 - Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher or GtkStackSidebar
-√ Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 - Generate GTK::Widgets and GTK::NonWidgets comprised of need statements (build-mro.pl6 could do this)
 - Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
-√ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
 - Add overflow warnings to appropriate RESOLVE routines in GTK::Roles::Types. Said warnings are NOT under $DEBUG check.
 - Inhibit pass-through to Mu constructor in all widget-based objects!
 - Add this to the top of all activate blocks in t/
     CATCH { default { .message.say; $app.exit } }
 - Rewrite this document in Markdown format.
-√ Test case for all features of GTK::Utils::MenuBuilder
 - Improve GTK::Widget.CreateObject to take best guess at pointer name for widget type, if it exists.
 - GTK::Grid to provide sanitized version of it's tracking structure to user-code
 - Properly rename GtkCssSection to GtkCSSSection
-- Add GTK::Compat::Action (GAction)
 - Refine GTK::Compat::Window
 - GTK::Roles::Data should be deprecated in favor of GTK::Roles::Properties
 - Is there any further need for GTK::Roles::Types.RESOLVE-* now that those routines have been moved to GTK::Raw::Utils.
   If the answer is NO, then it is an EXTREMELY LOW PRIORITY refactor. Don't rock the boat unless it's leaking.
 - Consider abstracting GTK::Roles::Protection into it's own project. Method::Protect, maybe?
 - Properly rework GTK::Utils::MenuBuilder. It is faulty
+  + Test case for all features of GTK::Utils::MenuBuilder
 - Test latest inplementation of GTK::Compat::GList and GTK::Roles::ListData
-
 - For ALL type coercer methods, insure they are aliased to a proper object-specific nickname
+- Add an implementation for GTK::Compat::Closure (GClosure)
 
 Applications
 ============

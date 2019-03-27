@@ -96,21 +96,25 @@ constant gulong              is export := uint64;
 constant gunichar            is export := uint32;
 constant va_list             is export := Pointer;
 
+# Function Pointers
 constant GAsyncReadyCallback     is export := Pointer;
+constant GBindingTransformFunc   is export := Pointer;
 constant GCallback               is export := Pointer;
 constant GCancellable            is export := Pointer;
-constant GClosure                is export := Pointer;
 constant GCompareDataFunc        is export := Pointer;
 constant GCompareFunc            is export := Pointer;
 constant GCopyFunc               is export := Pointer;
 constant GDestroyNotify          is export := Pointer;
 constant GEqualFunc              is export := Pointer;
-constant GQuark                  is export := uint32;
 constant GSettingsBindGetMapping is export := Pointer;
 constant GSettingsBindSetMapping is export := Pointer;
+constant GSettingsGetMapping     is export := Pointer;
+
+constant GQuark                  is export := uint32;
 constant GStrv                   is export := CArray[Str];
 constant GTimeSpan               is export := int64;
 constant GType                   is export := uint64;
+
 
 constant GdkFilterFunc                  is export := Pointer;
 constant GdkPixbufDestroyNotify         is export := Pointer;
@@ -233,8 +237,8 @@ our enum GTypeEnum is export (
   G_TYPE_RESERVED_USER_FIRST => 49
 );
 
-# Careful not to get confused with the non-plural pointer-backed type.
-our enum GVariantTypes is export <
+# Uint32. Be careful not to conflate this with GVariantType which is a pointer!
+our enum GVariantTypeEnum is export <
   G_VARIANT_CLASS_BOOLEAN
   G_VARIANT_CLASS_BYTE
   G_VARIANT_CLASS_INT16
@@ -273,6 +277,13 @@ our enum GSettingsBindFlags is export (
   G_SETTINGS_BIND_NO_SENSITIVITY => 1 +< 2,
   G_SETTINGS_BIND_GET_NO_CHANGES => 1 +< 3,
   G_SETTINGS_BIND_INVERT_BOOLEAN => 1 +< 4
+);
+
+our enum GBindingFlags is export (
+  G_BINDING_DEFAULT        => 0,
+  G_BINDING_BIDIRECTIONAL  => 1,
+  G_BINDING_SYNC_CREATE    => 1 +< 1,
+  G_BINDING_INVERT_BOOLEAN => 1 +< 2
 );
 
 our enum GdkDragAction is export (
@@ -621,8 +632,10 @@ class GAppInfoMonitor       is repr('CPointer') is export does GTK::Roles::Point
 class GAppLaunchContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GApplication          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAsyncResult          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GBinding              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GByteArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFunc                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTable            is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -642,6 +655,9 @@ class GOutputStream         is repr('CPointer') is export does GTK::Roles::Point
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettings             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsBackend      is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSettingsSchema       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSettingsSchemaKey    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSettingsSchemaSource is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }

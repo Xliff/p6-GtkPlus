@@ -74,7 +74,6 @@ GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Selection
-GTK::Compat::Settings
 GTK::Compat::Variant
 GTK::Compat::VariantDict
 GTK::Compat::VariantIter
@@ -324,7 +323,9 @@ GTK::Compat::FrameClock
 GTK::Compat::Pixbuf
 GTK::Compat::Roles::Signals
 GTK::Compat::Roles::Signals::Device
+GTK::Compat::Roles::Signals::Settings
 GTK::Compat::Screen
+GTK::Compat::Settings
 GTK::Compat::Value
 GTK::DragContext
 GTK::EntryBuffer

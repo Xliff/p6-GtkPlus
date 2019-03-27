@@ -1,3 +1,4 @@
+#!/usr/bin/env perl6
 use v6.c;
 
 die 'Cannot find BuildList file in current directory.'

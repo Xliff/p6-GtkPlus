@@ -11,7 +11,7 @@ use GTK::Container;
 
 use GTK::Roles::Orientable;
 
-my subset Ancestry
+our subset GridAncestry
   where GtkGrid | GtkOrientable | GtkContainer | GtkBuildable | GtkWidget;
 
 
@@ -33,7 +33,7 @@ class GTK::Grid is GTK::Container {
   submethod BUILD(:$grid) {
     my $to-parent;
     given $grid {
-      when Ancestry {
+      when GridAncestry {
         $!g = do {
           when GtkWidget {
             $to-parent = $_;
@@ -60,8 +60,12 @@ class GTK::Grid is GTK::Container {
     # For GTK::Roles::GtkOrientable
     $!or = nativecast(GtkOrientable, $!g);
   }
+  
+  method GTK::Raw::Types::GtkGrid
+    is also<Grid>
+    { $!g }
 
-  multi method new (Ancestry $grid) {
+  multi method new (GridAncestry $grid) {
     my $o = self.bless(:$grid);
     $o.upref;
     $o;

@@ -24,7 +24,12 @@ class GTK::TextTag  {
   has GtkTextTag $!tt;
 
   submethod BUILD(:$tag) {
-    $!prop = nativecast(GObject, $!tt = $tag);    # GTK::Roles::Properties (+)
+    self.setTextTag(:$tag);
+  }
+  
+  # PROTECTED
+  method setTextTag (GtkTextTag $tag) {
+    self!setObject($!tt = $tag);              # GTK::Roles::Properties (+)
   }
 
   submethod DESTROY {
@@ -39,9 +44,9 @@ class GTK::TextTag  {
     self.bless(:$tag);
   }
 
-  method GTK::Raw::Types::GtkTextTag is also<tag> {
-    $!tt;
-  }
+  method GTK::Raw::Types::GtkTextTag 
+    is also<TextTag> 
+    { $!tt }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 

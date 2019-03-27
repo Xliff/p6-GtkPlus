@@ -1,16 +1,26 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Variant;
 
+use GTK::Compat::Roles::Object;
+
 class GTK::Compat::VariantDict {
+  also does GTK::Compat::Roles::Object;
+  
   has GVariantDict $!vd;
   
   submethod BUILD (:$dict) {
-    $!vd = $dict;
+    self!setObject($!vd = $dict);
   }
+  
+  method GTK::Compat::Types::GVariantDict 
+    is also<VariantDict>
+    { $!vd }
   
   method new (GVariant() $value) {
     self.bless( dict => g_variant_dict_new($value) );
@@ -32,11 +42,13 @@ class GTK::Compat::VariantDict {
     g_variant_dict_init($!vd, $from_asv);
   }
 
-  method insert_value (Str() $key, GVariant $value) {
+  method insert_value (Str() $key, GVariant $value) is also<insert-value> {
     g_variant_dict_insert_value($!vd, $key, $value);
   }
 
-  method lookup_value (Str() $key, GVariantType $expected_type) {
+  method lookup_value (Str() $key, GVariantType $expected_type) 
+    is also<lookup-value> 
+  {
     g_variant_dict_lookup_value($!vd, $key, $expected_type);
   }
 

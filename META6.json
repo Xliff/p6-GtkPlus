@@ -80,7 +80,6 @@
       "GTK::Compat::Roles::ListData"           :  "lib/GTK/Compat/Roles/ListData.pm6"           ,
       "GTK::Compat::Roles::Signals::Window"    :  "lib/GTK/Compat/Roles/Signals/Window.pm6"     ,
       "GTK::Compat::Selection"                 :  "lib/GTK/Compat/Selection.pm6"                ,
-      "GTK::Compat::Settings"                  :  "lib/GTK/Compat/Settings.pm6"                 ,
       "GTK::Compat::Variant"                   :  "lib/GTK/Compat/Variant.pm6"                  ,
       "GTK::Compat::VariantDict"               :  "lib/GTK/Compat/VariantDict.pm6"              ,
       "GTK::Compat::VariantIter"               :  "lib/GTK/Compat/VariantIter.pm6"              ,
@@ -330,7 +329,9 @@
       "GTK::Compat::Pixbuf"                    :  "lib/GTK/Compat/Pixbuf.pm6"                   ,
       "GTK::Compat::Roles::Signals"            :  "lib/GTK/Compat/Roles/Signals.pm6"            ,
       "GTK::Compat::Roles::Signals::Device"    :  "lib/GTK/Compat/Roles/Signals/Device.pm6"     ,
+      "GTK::Compat::Roles::Signals::Settings"  :  "lib/GTK/Compat/Roles/Signals/Settings.pm6"   ,
       "GTK::Compat::Screen"                    :  "lib/GTK/Compat/Screen.pm6"                   ,
+      "GTK::Compat::Settings"                  :  "lib/GTK/Compat/Settings.pm6"                 ,
       "GTK::Compat::Value"                     :  "lib/GTK/Compat/Value.pm6"                    ,
       "GTK::DragContext"                       :  "lib/GTK/DragContext.pm6"                     ,
       "GTK::EntryBuffer"                       :  "lib/GTK/EntryBuffer.pm6"                     ,
@@ -510,6 +511,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 

@@ -87,7 +87,7 @@ METH
     \&handler?
   ) \{
     my \$hid;
-    \%!signals-{ $name } //= do \{
+    \%!signals-{ $name }\{\$signal\} //= do \{
       my \$s = Supplier.new;
       \$hid = g-connect-{ .[0] }(\$obj, \$signal,
         -> \$, { $pp }, \$ud{ $rt } \{
