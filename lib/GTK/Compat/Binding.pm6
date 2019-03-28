@@ -20,16 +20,14 @@ class GTK::Compat::Binding {
     self!setObject($!b = $binding);
   }
 
-  method g_object_bind_property (
+  method bind (
     GTK::Compat::Binding:U: 
-    GObject $source, 
+    GObject() $source, 
     Str() $source_property, 
-    GObject $target, 
+    GObject() $target, 
     Str() $target_property, 
-    Int() $flags
-  ) 
-    is also<g-object-bind-property> 
-  {
+    Int() $flags = G_BINDING_BIDIRECTIONAL +| G_BINDING_SYNC_CREATE
+  ) {
     my $f = resolve-uint($flags);
     self.bless( 
       binding => g_object_bind_property(
@@ -42,11 +40,11 @@ class GTK::Compat::Binding {
     )
   }
 
-  method g_object_bind_property_full (
+  method bind_full (
     GTK::Compat::Binding:U: 
-    GObject $source, 
+    GObject() $source, 
     Str() $source_property, 
-    GObject $target, 
+    GObject() $target, 
     Str() $target_property, 
     Int() $flags, 
     GBindingTransformFunc $transform_to   = Pointer,
@@ -54,7 +52,7 @@ class GTK::Compat::Binding {
     gpointer $user_data                   = Pointer,
     GDestroyNotify $notify                = Pointer
   ) 
-    is also<g-object-bind-property-full> 
+    is also<bind-full> 
   {
     my $f = resolve-uint($flags);
     self.bless( 
@@ -72,17 +70,17 @@ class GTK::Compat::Binding {
     );
   }
 
-  method g_object_bind_property_with_closures (
+  method bind_with_closures (
     GTK::Compat::Binding:U: 
-    GObject $source, 
+    GObject() $source, 
     Str() $source_property, 
-    GObject $target, 
+    GObject() $target, 
     Str() $target_property, 
     Int() $flags, 
     GClosure $transform_to, 
     GClosure $transform_from
   ) 
-    is also<g-object-bind-property-with-closures> 
+    is also<bind-with-closures> 
   {
     my $f = resolve-uint($flags);
     self.bless( 

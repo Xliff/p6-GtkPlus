@@ -45,6 +45,7 @@
 - Test latest inplementation of GTK::Compat::GList and GTK::Roles::ListData
 - For ALL type coercer methods, insure they are aliased to a proper object-specific nickname
 - Add an implementation for GTK::Compat::Closure (GClosure)
+! Check all signal handlers to insure signal key is used in assignment!
 
 Applications
 ============
