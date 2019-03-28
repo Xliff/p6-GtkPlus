@@ -8,17 +8,25 @@ use GTK::Raw::DnD;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
+
+# TO BE USED WITH GTK::Compat::DragContext.
 
 class GTK::DragContext {
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
 
   has GdkDragContext $!dc;
 
   submethod BUILD(:$context) {
-    $!dc = $context;
+    self!setObject($!dc = $context);
   }
+  
+  method GTK::Compat::Types::GdkDragContext
+    is also<DragContext>
+    { $!dc }
 
-  method new (GdkDragContext $context) {
+  method new (GdkDragContext() $context) {
     self.bless(:$context);
   }
 

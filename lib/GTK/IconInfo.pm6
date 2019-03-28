@@ -12,6 +12,8 @@ use GTK::Compat::Pixbuf;
 
 use GTK::Roles::Types;
 
+# Opaque struct
+
 class GTK::IconInfo {
   also does GTK::Roles::Types;
 
@@ -20,6 +22,10 @@ class GTK::IconInfo {
   submethod BUILD(:$info) {
     $!ii = $info;
   }
+  
+  method GTK::Raw::Types::GtkIconInfo
+    is also<IconInfo>
+    { $!ii }
 
   method new (GtkIconInfo $info) {
     self.bless(:$info);
@@ -144,9 +150,11 @@ class GTK::IconInfo {
   )
     is also<load-icon-finish>
   {
-    GTK::Compat::Pixbuf.new(
-      gtk_icon_info_load_icon_finish($!ii, $res, $error)
-    );
+    $ERROR = Nil;
+    my $o = gtk_icon_info_load_icon_finish($!ii, $res, $error);
+    $ERROR = $error[0] with $error[0];
+    # Throw exception if error.
+    GTK::Compat::Pixbuf.new($o) without $ERROR;
   }
 
   method load_surface (
@@ -155,7 +163,11 @@ class GTK::IconInfo {
   )
     is also<load-surface>
   {
-    gtk_icon_info_load_surface($!ii, $for_window, $error);
+    $ERROR = Nil;
+    my $s = gtk_icon_info_load_surface($!ii, $for_window, $error);
+    $ERROR = $error[0] with $error[0];
+    # Throw exception if $ERROR
+    $s without $ERROR;
   }
 
   method load_symbolic (
@@ -163,23 +175,22 @@ class GTK::IconInfo {
     GdkRGBA $s_color,
     GdkRGBA $w_color,
     GdkRGBA $e_color,
-    gboolean $was_symbolic,
-    CArray[Pointer[GError]] $error = gerror
+    Int() $was_symbolic = False,
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<load-symbolic>
   {
-    my gboolean $ws;
+    my $ws = CArray[uint32].new;
+    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
     $ws = self.RESOLVE-BOOL($was_symbolic) with $was_symbolic;
-    GTK::Compat::Pixbuf.new(
-      $was_symbolic.defined ??
-        gtk_icon_info_load_symbolic(
-          $!ii, $fg, $s_color, $w_color, $e_color, $was_symbolic, $error
-        )
-        !!
-        gtk_icon_info_load_symbolic_null(
-          $!ii, $fg, $s_color, $w_color, $e_color, Pointer, $error
-        )
+    $ERROR = Nil;
+    # Note use of CArray to provide initializable pointer to an uint32.
+    my $s = gtk_icon_info_load_symbolic(
+      $!ii, $fg, $s_color, $w_color, $e_color, $ws, $error
     );
+    $ERROR = $error[0] with $error[0];
+    # Throw exception if $ERROR
+    GTK::Compat::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_async (
@@ -207,37 +218,37 @@ class GTK::IconInfo {
 
   method load_symbolic_finish (
     GAsyncResult $res,
-    Int() $was_symbolic,
-    CArray[Pointer[GError]] $error = gerror
+    Int() $was_symbolic = False,
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<load-symbolic-finish>
   {
-    my gboolean $ws = self.RESOLVE-BOOL($was_symbolic);
-    GTK::Compat::Pixbuf.new(
-      gtk_icon_info_load_symbolic_finish($!ii, $res, $ws, $error)
-    );
+    my $ws = CArray[uint32].new;
+    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
+    $ERROR = Nil;
+    # Note use of CArray to provide initializable pointer to an uint32.
+    my $s = gtk_icon_info_load_symbolic_finish($!ii, $res, $ws, $error);
+    $ERROR = $error[0] with $error[0];
+    # Throw exception if $ERROR
+    GTK::Compat::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_for_context (
     GtkStyleContext() $context,
-    $was_symbolic is rw,
+    Int() $was_symbolic = False,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-symbolic-for-context>
   {
-    die '$was_symbolic wrill not resolve to a boolean'
-      unless  $was_symbolic.^can('Bool').elems ||
-              $was_symbolic.^can('Int').elems;
-    my gboolean $ws;
-    $ws = self.RESOLVE-BOOL($was_symbolic) with $was_symbolic;
-    GTK::Compat::Pixbuf.new(
-      $was_symbolic.defined ??
-        gtk_icon_info_load_symbolic_for_context($!ii, $context, $ws, $error)
-        !!
-        gtk_icon_info_load_symbolic_for_context_null(
-          $!ii, $context, Pointer, $error
-        )
+    my $ws = CArray[uint32].new;
+    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
+    $ERROR = Nil;
+    my $s = gtk_icon_info_load_symbolic_for_context(
+      $!ii, $context, $ws, $error
     );
+    $ERROR = $error[0] with $error[0];
+    # Throw exception if $ERROR
+    GTK::Compat::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_for_context_async (
@@ -259,30 +270,40 @@ class GTK::IconInfo {
 
   method load_symbolic_for_context_finish (
     GAsyncResult $res,
-    Int() $was_symbolic,
-    CArray[Pointer[GError]] $error = gerror
+    Int() $was_symbolic = False,
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<load-symbolic-for-context-finish>
   {
-    my gboolean $ws = self.RESOLVE-BOOL($was_symbolic);
-    GTK::Compat::Pixbuf.new(
-      gtk_icon_info_load_symbolic_for_context_finish($!ii, $res, $ws, $error)
+    my $ws = CArray[uint32].new;
+    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
+    $ERROR = Nil;
+    my $s = gtk_icon_info_load_symbolic_for_context_finish(
+      $!ii, $res, $ws, $error
     );
+    $ERROR = $error[0] with $error[0];
+    # Throw exception if $ERROR
+    GTK::Compat::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_for_style (
     GtkStyle() $style,
     Int() $state,               # GtkStateType $state,
     Int() $was_symbolic,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<load-symbolic-for-style>
   {
-    my gboolean $ws = self.RESOLVE-BOOL($was_symbolic);
+    my $ws = CArray[uint32].new;
+    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
     my guint $s = self.RESOLVE-UINT($state);
-    GTK::Compat::Pixbuf.new(
-      gtk_icon_info_load_symbolic_for_style($!ii, $style, $s, $ws, $error)
+    $ERROR = Nil;
+    my $o = gtk_icon_info_load_symbolic_for_style(
+      $!ii, $style, $s, $ws, $error
     );
+    $ERROR = $error[0] with $error[0];
+    # Throw exception if $ERROR
+    GTK::Compat::Pixbuf.new($o) without $ERROR;
   }
 
   method set_raw_coordinates (Int() $raw_coordinates)

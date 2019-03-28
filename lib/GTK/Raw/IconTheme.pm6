@@ -177,7 +177,7 @@ sub gtk_icon_info_load_symbolic (
   GdkRGBA $success_color,
   GdkRGBA $warning_color,
   GdkRGBA $error_color,
-  gboolean $was_symbolic is rw,
+  CArray[uint32] $was_symbolic,
   CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
@@ -218,7 +218,7 @@ sub gtk_icon_info_load_symbolic_async (
 sub gtk_icon_info_load_symbolic_finish (
   GtkIconInfo $icon_info,
   GAsyncResult $res,
-  gboolean $was_symbolic,
+  CArray[uint32] $was_symbolic,
   CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
@@ -229,7 +229,7 @@ sub gtk_icon_info_load_symbolic_finish (
 sub gtk_icon_info_load_symbolic_for_context (
   GtkIconInfo $icon_info,
   GtkStyleContext $context,
-  gboolean $was_symbolic,
+  CArray[uint32] $was_symbolic,
   CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
@@ -263,7 +263,7 @@ sub gtk_icon_info_load_symbolic_for_context_async (
 sub gtk_icon_info_load_symbolic_for_context_finish (
   GtkIconInfo $icon_info,
   GAsyncResult $res,
-  gboolean $was_symbolic,
+  CArray[uint32] $was_symbolic,
   CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf
@@ -275,7 +275,7 @@ sub gtk_icon_info_load_symbolic_for_style (
   GtkIconInfo $icon_info,
   GtkStyle $style,
   uint32 $state,                # GtkStateType $state,
-  gboolean $was_symbolic,
+  CArray[uint32] $was_symbolic,
   CArray[Pointer[GError]] $error
 )
   returns GdkPixbuf

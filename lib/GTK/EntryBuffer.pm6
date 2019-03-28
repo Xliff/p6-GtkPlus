@@ -7,17 +7,19 @@ use GTK::Compat::Types;
 use GTK::Raw::EntryBuffer;
 use GTK::Raw::Types;
 
+use GTK::Roles::Properties;
 use GTK::Roles::Signals::EntryBuffer;
 use GTK::Roles::Signals::Generic;
 
 class GTK::EntryBuffer {
+  also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::EntryBuffer;
   also does GTK::Roles::Signals::Generic;
 
   has GtkEntryBuffer $!b;
 
   submethod BUILD (:$buffer) {
-    $!b = $buffer;
+    self!setObject($!b = $buffer);
   }
 
   submethod DESTROY {
@@ -31,9 +33,9 @@ class GTK::EntryBuffer {
     self.bless(:$buffer);
   }
 
-  method GTK::Raw::Types::GtkEntryBuffer is also<buffer> {
-    $!b;
-  }
+  method GTK::Raw::Types::GtkEntryBuffer 
+    is also<EntryBuffer>
+    { $!b }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method deleted-text is also<deleted_text> {

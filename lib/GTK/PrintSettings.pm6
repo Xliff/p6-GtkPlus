@@ -8,19 +8,21 @@ use GTK::Raw::PrintSettings;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
 
 class GTK::PrintSettings {
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
 
   has GtkPrintSettings $!prnset;
 
   submethod BUILD(:$settings) {
-    $!prnset = $settings;
+    self!setObject($!prnset = $settings);
   }
 
-  method GTK::Raw::Types::GtkPrintSettings is also<printsettings> {
-    $!prnset;
-  }
+  method GTK::Raw::Types::GtkPrintSettings 
+    is also<PrintSettings> 
+    { $!prnset }
 
   multi method new (GtkPrintSettings $settings) {
     self.bless(:$settings);
@@ -32,12 +34,17 @@ class GTK::PrintSettings {
 
   method new_from_file (
     Str() $filename,
-    GError $error = GError
-  ) is also<new-from-file> {
-    gtk_print_settings_new_from_file($filename, $error);
+    CArray[Pointer[GError]] $error = gerror()
+  ) 
+    is also<new-from-file> 
+  {
+    $ERROR = Nil;
+    my $rc = gtk_print_settings_new_from_file($filename, $error);
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
-  method new_from_gvariant(GVariant $v)  is also<new-from-gvariant> {
+  method new_from_gvariant(GVariant $v) is also<new-from-gvariant> {
     my $settings = gtk_print_settings_new_from_gvariant($v);
     self.bless(:$settings);
   }
@@ -45,13 +52,18 @@ class GTK::PrintSettings {
   method new_from_key_file (
     Str() $keyfile,
     Str() $group_name,
-    GError $error = GError
-  ) is also<new-from-key-file> {
+    CArray[Pointer[GError]] $error = gerror()
+  ) 
+    is also<new-from-key-file> 
+  {
+    $ERROR = Nil;
     my $settings = gtk_print_settings_new_from_key_file(
       $keyfile,
       $group_name,
       $error
     );
+    $ERROR = $error[0] with $error[0];
+    # Should throw exception if $ERROR
     self.bless(:$settings);
   }
 
@@ -399,26 +411,32 @@ class GTK::PrintSettings {
 
   method load_file (
     Str() $file_name,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<load-file>
   {
-    gtk_print_settings_load_file($!prnset, $file_name, $error);
+    $ERROR = Nil;
+    my $rc = gtk_print_settings_load_file($!prnset, $file_name, $error);
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method load_key_file (
     GKeyFile() $key_file,
     Str() $group_name,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<load-key-file>
   {
-    gtk_print_settings_load_key_file(
+    $ERROR = Nil;
+    my $rc = gtk_print_settings_load_key_file(
       $!prnset,
       $key_file,
       $group_name,
       $error
     );
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method set (Str() $key, Str() $value) {
@@ -452,7 +470,13 @@ class GTK::PrintSettings {
     gtk_print_settings_set_length($!prnset, $key, $v, $u);
   }
 
-  method set_page_ranges (GtkPageRange $page_ranges, Int() $num_ranges)
+  # NOTE - Can only provide ONE ELEMENT since NativeCall
+  #        does not yet support arrays of structs.
+  # TODO - NEED ARRAY OF CSTRUCTS
+  method set_page_ranges (
+    GtkPageRange $page_ranges, 
+    Int() $num_ranges
+  )
     is also<set-page-ranges>
   {
     my gint $nr = self.RESOLVE-INT($num_ranges);
@@ -460,23 +484,25 @@ class GTK::PrintSettings {
   }
 
   method set_paper_height (
-    gdouble $height,
+    Num() $height,
     Int() $unit                # GtkUnit $unit
   )
     is also<set-paper-height>
   {
     my guint $u = self.RESOLVE-UINT($unit);
-    gtk_print_settings_set_paper_height($!prnset, $height, $u);
+    my gdouble $h = $height;
+    gtk_print_settings_set_paper_height($!prnset, $h, $u);
   }
 
   method set_paper_width (
-    gdouble $width,
+    Num() $width,
     Int() $unit                # GtkUnit $unit
   )
     is also<set-paper-width>
   {
     my guint $u = self.RESOLVE-UINT($unit);
-    gtk_print_settings_set_paper_width($!prnset, $width, $u);
+    my gdouble $w = $width;
+    gtk_print_settings_set_paper_width($!prnset, $w, $u);
   }
 
   method set_resolution_xy (Int() $resolution_x, Int() $resolution_y)
@@ -484,16 +510,23 @@ class GTK::PrintSettings {
   {
     my @i = ($resolution_x, $resolution_y);
     my gint ($rx, $ry) = self.RESOLVE-INT(@i);
-    gtk_print_settings_set_resolution_xy($!prnset, $resolution_x, $resolution_y);
+    gtk_print_settings_set_resolution_xy(
+      $!prnset, 
+      $resolution_x, 
+      $resolution_y
+    );
   }
 
   method to_file (
     Str() $file_name,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<to-file>
   {
-    gtk_print_settings_to_file($!prnset, $file_name, $error);
+    $ERROR = Nil;
+    my $rc = gtk_print_settings_to_file($!prnset, $file_name, $error);
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method to_gvariant is also<to-gvariant> {

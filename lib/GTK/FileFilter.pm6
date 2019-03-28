@@ -6,23 +6,31 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::FileFilter;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::References;
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
 
 my subset Ancestry where GtkFileFilter | GtkBuilder;
 
 class GTK::FileFilter does GTK::Roles::Types {
-  also does GTK::Roles::References;
   also does GTK::Roles::Buildable;
+  also does GTK::Roles::References;
+  also does GTK::Compat::Roles::Object;
 
   has GtkFileFilter $!ff;
 
   submethod BUILD(:$filter) {
     $!ref = nativecast(GObject, $!ff = $filter);  # GTK::Roles::References;
     $!b = nativecast(GtkBuildable, $!ff);         # GTK::Roles::Buildable
+    self!setObject($filter);                      # GTK::Compat::Roles::Object
   }
+  
+  method GTK::Raw::Types::GtkFileFilter 
+    is also<FileFilter>
+    { $!ff }
 
   multi method new {
     my $filter = gtk_file_filter_new();
@@ -36,7 +44,9 @@ class GTK::FileFilter does GTK::Roles::Types {
 
   method new_from_gvariant (
     Pointer $v                  # GVariant $v
-  ) is also<new-from-gvariant> {
+  ) 
+    is also<new-from-gvariant> 
+  {
     my $filter = gtk_file_filter_new_from_gvariant($v);
     self.bless(:$filter);
   }
@@ -63,8 +73,10 @@ class GTK::FileFilter does GTK::Roles::Types {
     GtkFileFilterFunc $func,
     gpointer $data,
     GDestroyNotify $notify
-  ) is also<add-custom> {
-    my guint $n = self.RESOLVE-UINT($needed);
+  ) 
+    is also<add-custom> 
+  {
+    my guint $n = resolve-uint($needed);
     gtk_file_filter_add_custom($!ff, $n, $func, $data, $notify);
   }
 

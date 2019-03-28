@@ -15,21 +15,27 @@ use GTK::IconInfo;
 use GTK::Roles::References;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
 
 class GTK::IconTheme {
   also does GTK::Roles::References;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
 
   has GtkIconTheme $!it;
 
   submethod BUILD(:$theme) {
-    $!ref = ($!it = $theme).p;
+    self!setObject($!ref = ($!it = $theme).p);
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
+  
+  method GTK::Raw::GtkIconTheme
+    is also<IconTheme>
+    { $!it }
 
   multi method new (GtkIconTheme $theme) {
     my $o = self.bless(:$theme);
@@ -40,12 +46,16 @@ class GTK::IconTheme {
     my $theme = gtk_icon_theme_new();
     self.bless(:$theme);
   }
-
+  
   method get_for_screen(GdkScreen() $screen) is also<get-for-screen> {
     my $theme = gtk_icon_theme_get_for_screen($screen);
     self.bless(:$theme);
   }
 
+  method get_default (GTK::IconTheme:U: ) is also<get-default> {
+    self.bless( theme => gtk_icon_theme_get_default() );
+  }
+  
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
@@ -63,10 +73,11 @@ class GTK::IconTheme {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_builtin_icon (Str $name, gint $size, GdkPixbuf $pixbuf)
+  method add_builtin_icon (Str $name, Int() $size, GdkPixbuf() $pixbuf)
     is also<add-builtin-icon>
   {
-    gtk_icon_theme_add_builtin_icon($name, $size, $pixbuf);
+    my gint $s = self.RESOLVE-INT($size);
+    gtk_icon_theme_add_builtin_icon($name, $s, $pixbuf);
   }
 
   method add_resource_path (Str() $path) is also<add-resource-path> {
@@ -79,10 +90,6 @@ class GTK::IconTheme {
 
   method error_quark is also<error-quark> {
     gtk_icon_theme_error_quark();
-  }
-
-  method get_default is also<get-default> {
-    gtk_icon_theme_get_default();
   }
 
   method get_example_icon_name is also<get-example-icon-name> {
@@ -149,7 +156,12 @@ class GTK::IconTheme {
     my @i = ($size, $scale);
     my gint ($si, $sc) = self.RESOLVE-INT(@i);
     my guint $f = self.RESOLVE-UINT($flags);
-    gtk_icon_theme_load_surface($!it, $name, $si, $sc, $fw, $f, $error);
+    $ERROR = Nil;
+    my $rc = gtk_icon_theme_load_surface(
+      $!it, $name, $si, $sc, $fw, $f, $error
+    );
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method lookup_by_gicon (

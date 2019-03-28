@@ -8,16 +8,22 @@ use GTK::Raw::RecentFilter;
 use GTK::Raw::Types;
 
 use GTK::Roles::Buildable;
+use GTK::Compat::Roles::Object;
 
 class GTK::RecentFilter {
+  also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Buildable;
 
   has GtkRecentFilter $!rf;
 
   submethod BUILD(:$filter) {
-    $!rf = $filter;
+    self!setObject($!rf = $filter);
     $!b  = nativecast(GtkBuildable, $!rf); # GTK::Roles::Buildable
   }
+  
+  method GTK::Raw::Types::GtkRecentFilter
+    is also<RecentFilter>
+    { $!rf }
 
   method new {
     my $filter = gtk_recent_filter_new();
@@ -44,12 +50,15 @@ class GTK::RecentFilter {
   }
 
   method add_custom (
-    GtkRecentFilterFlags $needed,
+    Int() $needed,
     GtkRecentFilterFunc $func,
     gpointer $data = gpointer,
     GDestroyNotify $data_destroy = GDestroyNotify
-  ) is also<add-custom> {
-    gtk_recent_filter_add_custom($!rf, $needed, $func, $data, $data_destroy);
+  ) 
+    is also<add-custom> 
+  {
+    my guint $n = self.RESOLVE-UINT($needed);
+    gtk_recent_filter_add_custom($!rf, $n, $func, $data, $data_destroy);
   }
 
   method add_group (Str() $group) is also<add-group> {
@@ -82,4 +91,3 @@ class GTK::RecentFilter {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

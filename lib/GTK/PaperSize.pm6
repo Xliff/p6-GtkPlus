@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::PaperSize;
 use GTK::Raw::Types;
 
+# BOXED TYPE
+
 class GTK::PaperSize {
   has GtkPaperSize $!ps;
 
@@ -14,9 +16,9 @@ class GTK::PaperSize {
     $!ps = $size;
   }
 
-  method GTK::Raw::Types::GtkPaperSize {
-    $!ps;
-  }
+  method GTK::Raw::Types::GtkPaperSize 
+    is also<PaperSize> 
+    { $!ps }
 
   method new(Str() $name) {
     my $size = gtk_paper_size_new($name);
@@ -29,7 +31,9 @@ class GTK::PaperSize {
     Num() $width,
     Num() $height,
     Int() $unit
-  ) is also<new-custom> {
+  ) 
+    is also<new-custom> 
+  {
     my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
     my $size = gtk_paper_size_new_custom(
       $name,
@@ -46,16 +50,27 @@ class GTK::PaperSize {
     self.bless(:$size);
   }
 
-  method new_from_ipp (Str() $name, Num() $width, Num() $height) is also<new-from-ipp> {
+  method new_from_ipp (Str() $name, Num() $width, Num() $height) 
+    is also<new-from-ipp> 
+  {
     gtk_paper_size_new_from_ipp($name, $width, $height);
   }
 
   method new_from_key_file (
     GKeyFile() $key_file,
     Str() $group_name,
-    GError $error = GError
-  ) is also<new-from-key-file> {
-    gtk_paper_size_new_from_key_file($key_file, $group_name, $error);
+    CArray[Pointer[GError]] $error = gerror()
+  ) 
+    is also<new-from-key-file> 
+  {
+    $ERROR = Nil;
+    my $rc = gtk_paper_size_new_from_key_file(
+      $key_file, 
+      $group_name, 
+      $error
+    );
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method new_from_ppd (
@@ -63,12 +78,16 @@ class GTK::PaperSize {
     Str() $ppd_display_name,
     Num() $width,
     Num() $height
-  ) is also<new-from-ppd> {
+  ) 
+    is also<new-from-ppd> 
+  {
     gtk_paper_size_new_from_ppd($name, $ppd_display_name, $width, $height);
   }
 
-  method set_size (Num() $width, Num() $height, Int() $unit) is also<set-size> {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+  method set_size (Num() $width, Num() $height, Int() $unit) 
+    is also<set-size> 
+  {
+    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
     gtk_paper_size_set_size($!ps, $width, $height, $u);
   }
 
@@ -94,23 +113,31 @@ class GTK::PaperSize {
     gtk_paper_size_get_default();
   }
 
-  method get_default_bottom_margin (Int() $unit) is also<get-default-bottom-margin> {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+  method get_default_bottom_margin (Int() $unit) 
+    is also<get-default-bottom-margin> 
+  {
+    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
     gtk_paper_size_get_default_bottom_margin($!ps, $u);
   }
 
-  method get_default_left_margin (Int() $unit) is also<get-default-left-margin> {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+  method get_default_left_margin (Int() $unit) 
+    is also<get-default-left-margin> 
+  {
+    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
     gtk_paper_size_get_default_left_margin($!ps, $u);
   }
 
-  method get_default_right_margin (Int() $unit) is also<get-default-right-margin> {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+  method get_default_right_margin (Int() $unit) 
+    is also<get-default-right-margin> 
+  {
+    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
     gtk_paper_size_get_default_right_margin($!ps, $u);
   }
 
-  method get_default_top_margin (Int() $unit) is also<get-default-top-margin> {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+  method get_default_top_margin (Int() $unit) 
+    is also<get-default-top-margin> 
+  {
+    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
     gtk_paper_size_get_default_top_margin($!ps, $u);
   }
 
@@ -119,7 +146,7 @@ class GTK::PaperSize {
   }
 
   method get_height (Int() $unit) is also<get-height> {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+    my guint $u = self.RESOLVE-UINT($unit);		           	# GtkUnit
     gtk_paper_size_get_height($!ps, $u);
   }
 
@@ -140,7 +167,7 @@ class GTK::PaperSize {
   }
 
   method get_width (Int() $unit) is also<get-width> {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
     gtk_paper_size_get_width($!ps, $u);
   }
 
@@ -160,11 +187,12 @@ class GTK::PaperSize {
     gtk_paper_size_to_gvariant($!ps);
   }
 
-  method to_key_file (GKeyFile() $key_file, Str() $group_name) is also<to-key-file> {
+  method to_key_file (GKeyFile() $key_file, Str() $group_name) 
+    is also<to-key-file> 
+  {
     gtk_paper_size_to_key_file($!ps, $key_file, $group_name);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
