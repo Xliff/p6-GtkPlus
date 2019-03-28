@@ -10,6 +10,8 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
+# Opaque struct.
+
 class GTK::WidgetPath {
   also does GTK::Roles::Types;
 

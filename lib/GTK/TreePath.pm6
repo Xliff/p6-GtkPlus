@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
+# BOXED TYPE
+
 class GTK::TreePath {
   also does GTK::Roles::Types;
 

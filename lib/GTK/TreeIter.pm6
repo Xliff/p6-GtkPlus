@@ -6,6 +6,8 @@ use NativeCall;
 use GTK::Raw::Types;
 use GTK::Raw::TreeModel;
 
+# BOXED TYPE
+
 class GTK::TreeIter is export {
   has GtkTreeIter $!ti;
 
@@ -17,9 +19,9 @@ class GTK::TreeIter is export {
     self.bless(:$iter);
   }
 
-  method GTK::Raw::Types::GtkTreeIter {
-    $!ti;
-  }
+  method GTK::Raw::Types::GtkTreeIter 
+    is also<TreeIter>
+    { $!ti }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -40,4 +42,3 @@ class GTK::TreeIter is export {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

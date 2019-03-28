@@ -9,7 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 
-class GTK::TreeRow {
+# BOXED TYPE
+
+class GTK::TreeRowReference {
   also does GTK::Roles::Types;
 
   has GtkTreeRowReference $!tr;
@@ -17,6 +19,10 @@ class GTK::TreeRow {
   submethod BUILD(:$row) {
     $!tr = $row
   }
+  
+  method GTK::Raw::Types::GtkTreeRowReference 
+    is also<TreeRowReference>
+    { $!tr }
 
   multi method new (GtkTreeModel() $model, GtkTreePath() $path) {
     my $row = gtk_tree_row_reference_new($model, $path);
@@ -30,10 +36,6 @@ class GTK::TreeRow {
   ) is also<new-proxy> {
     my $row = gtk_tree_row_reference_new_proxy($proxy, $model, $path);
     self.bless(:$row)
-  }
-
-  method GTK::Raw::Types::GtkTreeRowReference {
-    $!tr;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -81,4 +83,3 @@ class GTK::TreeRow {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

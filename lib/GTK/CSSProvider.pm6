@@ -9,12 +9,16 @@ use GTK::Raw::CSSProvider;
 use GTK::Raw::StyleContext;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
+
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::CSSProvider;
 use GTK::Roles::StyleProvider;
 use GTK::Roles::Types;
 
 class GTK::CSSProvider {
+  also does GTK::Compat::Roles::Object;
+  
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;
   also does GTK::Roles::StyleProvider;
@@ -35,6 +39,8 @@ class GTK::CSSProvider {
 
     # GTK::Roles::StyleProvider
     $!sp = nativecast(GtkStyleProvider, $!css = $provider);
+    # GTK::Compat::Roles::Object
+    self!setObject($provider);
 
     my uint32 $p = self.RESOLVE-UINT($priority);
     my $screen = GTK::Compat::Screen.get_default.screen;
@@ -61,6 +67,10 @@ class GTK::CSSProvider {
     my $provider = gtk_css_provider_new();
     self.bless(:$provider, :$priority, :$pod, :$style);
   }
+  
+  method get_named (Str() $name, Str() $variant) is also<get-named> {
+    GTK::CSSProvider.new( gtk_css_provider_get_named($name, $variant) );
+  }
 
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -85,10 +95,6 @@ class GTK::CSSProvider {
   # method get_default {
   #   gtk_css_provider_get_default();
   # }
-
-  method get_named (Str() $name, Str() $variant) is also<get-named> {
-    gtk_css_provider_get_named($name, $variant);
-  }
 
   method get_type is also<get-type> {
     gtk_css_provider_get_type();
@@ -145,3 +151,5 @@ class GTK::CSSProvider {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+  
+  

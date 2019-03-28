@@ -46,6 +46,7 @@
       "GTK::Compat::Raw::AppInfo"              :  "lib/GTK/Compat/Raw/AppInfo.pm6"              ,
       "GTK::Compat::Raw::AppLaunchContext"     :  "lib/GTK/Compat/Raw/AppLaunchContext.pm6"     ,
       "GTK::Compat::Raw::Array"                :  "lib/GTK/Compat/Raw/Array.pm6"                ,
+      "GTK::Compat::Raw::Binding"              :  "lib/GTK/Compat/Raw/Binding.pm6"              ,
       "GTK::Compat::Raw::Cursor"               :  "lib/GTK/Compat/Raw/Cursor.pm6"               ,
       "GTK::Compat::Raw::Device"               :  "lib/GTK/Compat/Raw/Device.pm6"               ,
       "GTK::Compat::Raw::Display"              :  "lib/GTK/Compat/Raw/Display.pm6"              ,
@@ -78,6 +79,7 @@
       "GTK::Compat::Roles::AppInfo"            :  "lib/GTK/Compat/Roles/AppInfo.pm6"            ,
       "GTK::Compat::Roles::Icon"               :  "lib/GTK/Compat/Roles/Icon.pm6"               ,
       "GTK::Compat::Roles::ListData"           :  "lib/GTK/Compat/Roles/ListData.pm6"           ,
+      "GTK::Compat::Roles::Object"             :  "lib/GTK/Compat/Roles/Object.pm6"             ,
       "GTK::Compat::Roles::Signals::Window"    :  "lib/GTK/Compat/Roles/Signals/Window.pm6"     ,
       "GTK::Compat::Selection"                 :  "lib/GTK/Compat/Selection.pm6"                ,
       "GTK::Compat::Variant"                   :  "lib/GTK/Compat/Variant.pm6"                  ,
@@ -95,6 +97,7 @@
       "GTK::Roles::StyleProvider"              :  "lib/GTK/Roles/StyleProvider.pm6"             ,
       "GTK::Compat::Action"                    :  "lib/GTK/Compat/Action.pm6"                   ,
       "GTK::Compat::Array"                     :  "lib/GTK/Compat/Array.pm6"                    ,
+      "GTK::Compat::Binding"                   :  "lib/GTK/Compat/Binding.pm6"                  ,
       "GTK::Compat::FrameTimings"              :  "lib/GTK/Compat/FrameTimings.pm6"             ,
       "GTK::Compat::GList"                     :  "lib/GTK/Compat/GList.pm6"                    ,
       "GTK::Compat::GSList"                    :  "lib/GTK/Compat/GSList.pm6"                   ,
@@ -136,6 +139,7 @@
       "GTK::Raw::Button"                       :  "lib/GTK/Raw/Button.pm6"                      ,
       "GTK::Raw::ButtonBox"                    :  "lib/GTK/Raw/ButtonBox.pm6"                   ,
       "GTK::Raw::CSSProvider"                  :  "lib/GTK/Raw/CSSProvider.pm6"                 ,
+      "GTK::Raw::CSS_Section"                  :  "lib/GTK/Raw/CSS_Section.pm6"                 ,
       "GTK::Raw::Calendar"                     :  "lib/GTK/Raw/Calendar.pm6"                    ,
       "GTK::Raw::CellArea"                     :  "lib/GTK/Raw/CellArea.pm6"                    ,
       "GTK::Raw::CellAreaBox"                  :  "lib/GTK/Raw/CellAreaBox.pm6"                 ,
@@ -317,7 +321,7 @@
       "GTK::Tooltip"                           :  "lib/GTK/Tooltip.pm6"                         ,
       "GTK::TreeIter"                          :  "lib/GTK/TreeIter.pm6"                        ,
       "GTK::TreePath"                          :  "lib/GTK/TreePath.pm6"                        ,
-      "GTK::TreeRow"                           :  "lib/GTK/TreeRow.pm6"                         ,
+      "GTK::TreeRowReference"                  :  "lib/GTK/TreeRowReference.pm6"                ,
       "GTK::TreeSelection"                     :  "lib/GTK/TreeSelection.pm6"                   ,
       "GTK::WidgetPath"                        :  "lib/GTK/WidgetPath.pm6"                      ,
       "GTK::WindowGroup"                       :  "lib/GTK/WindowGroup.pm6"                     ,
@@ -359,6 +363,7 @@
       "GTK::TreeStore"                         :  "lib/GTK/TreeStore.pm6"                       ,
       "GTK::AccelGroup"                        :  "lib/GTK/AccelGroup.pm6"                      ,
       "GTK::CSSProvider"                       :  "lib/GTK/CSSProvider.pm6"                     ,
+      "GTK::CSS_Section"                       :  "lib/GTK/CSS_Section.pm6"                     ,
       "GTK::CellAreaContext"                   :  "lib/GTK/CellAreaContext.pm6"                 ,
       "GTK::CellRenderer"                      :  "lib/GTK/CellRenderer.pm6"                    ,
       "GTK::CellRendererPixbuf"                :  "lib/GTK/CellRendererPixbuf.pm6"              ,
@@ -511,6 +516,7 @@
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]
 }
+
 
 
 

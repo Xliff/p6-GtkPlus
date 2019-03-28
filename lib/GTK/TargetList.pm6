@@ -51,11 +51,7 @@ class GTK::TargetList {
     my $targetlist = gtk_target_list_new($te_list, $nt);
     self.bless(:$targetlist);
   }
-
-  method GTK::Raw::Types::GtkTargetList 
-    is also<TargetList>
-    { $!tl }
-
+  
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

@@ -40,6 +40,7 @@ GTK::Compat::Raw::Action
 GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::AppLaunchContext
 GTK::Compat::Raw::Array
+GTK::Compat::Raw::Binding
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
@@ -72,6 +73,7 @@ GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
+GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Selection
 GTK::Compat::Variant
@@ -89,6 +91,7 @@ GTK::Roles::Signals::EntryBuffer
 GTK::Roles::StyleProvider
 GTK::Compat::Action
 GTK::Compat::Array
+GTK::Compat::Binding
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
@@ -130,6 +133,7 @@ GTK::Raw::Builder
 GTK::Raw::Button
 GTK::Raw::ButtonBox
 GTK::Raw::CSSProvider
+GTK::Raw::CSS_Section
 GTK::Raw::Calendar
 GTK::Raw::CellArea
 GTK::Raw::CellAreaBox
@@ -311,7 +315,7 @@ GTK::TextMark
 GTK::Tooltip
 GTK::TreeIter
 GTK::TreePath
-GTK::TreeRow
+GTK::TreeRowReference
 GTK::TreeSelection
 GTK::WidgetPath
 GTK::WindowGroup
@@ -353,6 +357,7 @@ GTK::TreeModelSort
 GTK::TreeStore
 GTK::AccelGroup
 GTK::CSSProvider
+GTK::CSS_Section
 GTK::CellAreaContext
 GTK::CellRenderer
 GTK::CellRendererPixbuf

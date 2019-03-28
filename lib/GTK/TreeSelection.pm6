@@ -9,20 +9,28 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
+
+# BOXED TYPE
 
 class GTK::TreeSelection {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
 
   has GtkTreeSelection $!ts;
 
   submethod BUILD(:$selection) {
-    $!ts = $selection;
+    self!setObject($!ts = $selection);
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
+  
+  method GTK::Raw::Types::GtkTreeSelection
+    is also<TreeSelection>
+    { $!ts }
 
   method new (GtkTreeSelection $selection) {
     self.bless(:$selection);

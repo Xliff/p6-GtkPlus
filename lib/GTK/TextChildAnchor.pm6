@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::TextChildAnchor;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::GObject;
+use GTK::Compat::Roles::Object;
 
 class GTK::TextChildAnchor {
   also does GTK::Compat::Roles::Object;

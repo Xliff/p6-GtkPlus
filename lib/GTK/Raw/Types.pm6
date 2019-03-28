@@ -1005,6 +1005,18 @@ our enum GtkAttachOptions is export (
   GTK_FILL   => 4
 );
 
+our enum GtkCssSectionType is export <
+  GTK_CSS_SECTION_DOCUMENT
+  GTK_CSS_SECTION_IMPORT
+  GTK_CSS_SECTION_COLOR_DEFINITION
+  GTK_CSS_SECTION_BINDING_SET
+  GTK_CSS_SECTION_RULESET
+  GTK_CSS_SECTION_SELECTOR
+  GTK_CSS_SECTION_DECLARATION
+  GTK_CSS_SECTION_VALUE
+  GTK_CSS_SECTION_KEYFRAMES
+>;
+
 class GtkAboutDialog          is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkActionable           is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkAccelGroupEntry      is repr('CPointer') does GTK::Roles::Pointers is export { }

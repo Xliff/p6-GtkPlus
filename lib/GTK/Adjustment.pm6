@@ -7,16 +7,20 @@ use GTK::Compat::Types;
 use GTK::Raw::Adjustment;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
+
 class GTK::Adjustment {
+  also does GTK::Compat::Roles::Object;
+  
   has GtkAdjustment $!adj;
 
   submethod BUILD(GtkAdjustment :$adjustment) {
-    $!adj = $adjustment;
+    self!setObject($!adj = $adjustment);
   }
 
-  method GTK::Raw::Types::GtkAdjustment {
-    $!adj;
-  }
+  method GTK::Raw::Types::GtkAdjustment 
+    is also<Adjustment>
+    { $!adj }
 
   multi method new (GtkAdjustment $adjustment) {
     self.bless(:$adjustment);

@@ -9,16 +9,16 @@ use GTK::Raw::TextIter;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
-use GTK::Compat::Roles::Object;
+
+# BOXED TYPE
 
 class GTK::TextIter {
   also does GTK::Roles::Types;
-  also does GTK::Compat::Roles::Object;
 
   has GtkTextIter $!ti;
 
   submethod BUILD(:$textiter) {
-    self!setObj($!ti = $textiter);
+    $!ti = $textiter;
   }
   
   method GTK::Raw::Types::GtkTextIter 
@@ -119,50 +119,54 @@ class GTK::TextIter {
     so gtk_text_iter_backward_char($!ti);
   }
 
-  method backward_chars (gint $count) is also<backward-chars> {
-    so gtk_text_iter_backward_chars($!ti, $count);
+  method backward_chars (Int() $count) is also<backward-chars> {
+    my $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_backward_chars($!ti, $c);
   }
 
   method backward_cursor_position is also<backward-cursor-position> {
     so gtk_text_iter_backward_cursor_position($!ti);
   }
 
-  method backward_cursor_positions (gint $count) is also<backward-cursor-positions> {
+  method backward_cursor_positions (gint $count) 
+    is also<backward-cursor-positions> 
+  {
     so gtk_text_iter_backward_cursor_positions($!ti, $count);
   }
-
-  method backward_find_char (
-    GtkTextCharPredicate $pred,
-    gpointer $user_data,
-    GtkTextIter() $limit
-  ) is also<backward-find-char> {
-    so gtk_text_iter_backward_find_char(
-      $!ti,
-      $pred,
-      $user_data,
-      $limit
-    );
+ 
+  multi method backward_find_char (
+    GtkTextCharPredicate $pred,                 # Function Pointer
+    gpointer $user_data  = Pointer,
+    GtkTextIter $limit = GtkTextIter
+  ) 
+    is also<backward-find-char>
+  {
+    so gtk_text_iter_backward_find_char($!ti, $pred, $user_data, $limit);
   }
 
   method backward_line is also<backward-line> {
     so gtk_text_iter_backward_line($!ti);
   }
 
-  method backward_lines (gint $count) is also<backward-lines> {
-    so gtk_text_iter_backward_lines($!ti, $count);
+  method backward_lines (Int() $count) is also<backward-lines> {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_backward_lines($!ti, $c);
   }
 
   method backward_search (
-    gchar $str,
-    GtkTextSearchFlags $flags,
+    Str() $str,
+    Int() $flags,
     GtkTextIter() $match_start,
     GtkTextIter() $match_end,
     GtkTextIter() $limit
-  ) is also<backward-search> {
+  ) 
+    is also<backward-search> 
+  {
+    my guint $f = self.RESOLVE-UINT($flags);
     so gtk_text_iter_backward_search(
       $!ti,
       $str,
-      $flags,
+      $f,
       $match_start,
       $match_end,
       $limit
@@ -173,52 +177,70 @@ class GTK::TextIter {
     so gtk_text_iter_backward_sentence_start($!ti);
   }
 
-  method backward_sentence_starts (gint $count) is also<backward-sentence-starts> {
-    so gtk_text_iter_backward_sentence_starts($!ti, $count);
+  method backward_sentence_starts (Int() $count) 
+    is also<backward-sentence-starts> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_backward_sentence_starts($!ti, $c);
   }
 
-  method backward_to_tag_toggle (GtkTextTag() $tag) is also<backward-to-tag-toggle> {
+  method backward_to_tag_toggle (GtkTextTag() $tag) 
+    is also<backward-to-tag-toggle> 
+  {
     so gtk_text_iter_backward_to_tag_toggle($!ti, $tag);
   }
 
-  method backward_visible_cursor_position () is also<backward-visible-cursor-position> {
+  method backward_visible_cursor_position
+    is also<backward-visible-cursor-position> 
+  {
     so gtk_text_iter_backward_visible_cursor_position($!ti);
   }
 
-  method backward_visible_cursor_positions (gint $count) is also<backward-visible-cursor-positions> {
-    so gtk_text_iter_backward_visible_cursor_positions($!ti, $count);
+  method backward_visible_cursor_positions (Int() $count) 
+    is also<backward-visible-cursor-positions> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_backward_visible_cursor_positions($!ti, $c);
   }
 
   method backward_visible_line is also<backward-visible-line> {
     so gtk_text_iter_backward_visible_line($!ti);
   }
 
-  method backward_visible_lines (gint $count) is also<backward-visible-lines> {
-    so gtk_text_iter_backward_visible_lines($!ti, $count);
+  method backward_visible_lines (Int() $count) 
+    is also<backward-visible-lines> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_backward_visible_lines($!ti, $c);
   }
 
   method backward_visible_word_start is also<backward-visible-word-start> {
     so gtk_text_iter_backward_visible_word_start($!ti);
   }
 
-  method backward_visible_word_starts (gint $count) is also<backward-visible-word-starts> {
-    so gtk_text_iter_backward_visible_word_starts($!ti, $count);
+  method backward_visible_word_starts (Int() $count) 
+    is also<backward-visible-word-starts> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_backward_visible_word_starts($!ti, $c);
   }
 
   method backward_word_start is also<backward-word-start> {
     so gtk_text_iter_backward_word_start($!ti);
   }
 
-  method backward_word_starts (gint $count) is also<backward-word-starts> {
-    so gtk_text_iter_backward_word_starts($!ti, $count);
+  method backward_word_starts (Int() $count) is also<backward-word-starts> {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_backward_word_starts($!ti, $c);
   }
 
   method begins_tag (GtkTextTag() $tag) is also<begins-tag> {
     so gtk_text_iter_begins_tag($!ti, $tag);
   }
 
-  method can_insert (gboolean $default_editability) is also<can-insert> {
-    so gtk_text_iter_can_insert($!ti, $default_editability);
+  method can_insert (Int() $default_editability) is also<can-insert> {
+    my gboolean $de = self.RESOLVE-BOOL($default_editability);
+    so gtk_text_iter_can_insert($!ti, $de);
   }
 
   method compare (GtkTextIter() $rhs) {
@@ -229,8 +251,9 @@ class GTK::TextIter {
     GTK::TextIter.new( gtk_text_iter_copy($!ti) );
   }
 
-  method editable (gboolean $default_setting) {
-    so gtk_text_iter_editable($!ti, $default_setting);
+  method editable (Int() $default_setting) {
+    my gboolean $ds = self.RESOLVE-BOOL($default_setting);
+    so gtk_text_iter_editable($!ti, $ds);
   }
 
   method ends_line is also<ends-line> {
@@ -257,23 +280,27 @@ class GTK::TextIter {
     so gtk_text_iter_forward_char($!ti);
   }
 
-  method forward_chars (gint $count) is also<forward-chars> {
-    so gtk_text_iter_forward_chars($!ti, $count);
+  method forward_chars (Int() $count) is also<forward-chars> {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_forward_chars($!ti, $c);
   }
 
   method forward_cursor_position is also<forward-cursor-position> {
     so gtk_text_iter_forward_cursor_position($!ti);
   }
 
-  method forward_cursor_positions (gint $count) is also<forward-cursor-positions> {
-    so gtk_text_iter_forward_cursor_positions($!ti, $count);
+  method forward_cursor_positions (Int() $count) 
+    is also<forward-cursor-positions> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_forward_cursor_positions($!ti, $c);
   }
-
-  method forward_find_char (
-    GtkTextCharPredicate $pred,
-    gpointer $user_data,
-    GtkTextIter() $limit
-  ) is also<forward-find-char> {
+  
+  multi method forward_find_char (
+    GtkTextCharPredicate $pred,               # Function Pointer
+    gpointer $user_data = Pointer,
+    GtkTextIter $limit = GtkTextIter
+  ) {
     so gtk_text_iter_forward_find_char($!ti, $pred, $user_data, $limit);
   }
 
@@ -281,21 +308,25 @@ class GTK::TextIter {
     so gtk_text_iter_forward_line($!ti);
   }
 
-  method forward_lines (gint $count) is also<forward-lines> {
-    so gtk_text_iter_forward_lines($!ti, $count);
+  method forward_lines (Int() $count) is also<forward-lines> {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_forward_lines($!ti, $c);
   }
 
   method forward_search (
-    gchar $str,
-    GtkTextSearchFlags $flags,
+    Str() $str,
+    Int() $flags,
     GtkTextIter() $match_start,
     GtkTextIter() $match_end,
     GtkTextIter() $limit
-  ) is also<forward-search> {
+  ) 
+    is also<forward-search> 
+  {
+    my $f = self.RESOLVE-UINT($flags);
     so gtk_text_iter_forward_search(
       $!ti,
       $str,
-      $flags,
+      $f,
       $match_start,
       $match_end,
       $limit
@@ -306,8 +337,11 @@ class GTK::TextIter {
     so gtk_text_iter_forward_sentence_end($!ti);
   }
 
-  method forward_sentence_ends (gint $count) is also<forward-sentence-ends> {
-    so gtk_text_iter_forward_sentence_ends($!ti, $count);
+  method forward_sentence_ends (Int() $count) 
+    is also<forward-sentence-ends> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_forward_sentence_ends($!ti, $c);
   }
 
   method forward_to_end () is also<forward-to-end> {
@@ -318,15 +352,21 @@ class GTK::TextIter {
     so gtk_text_iter_forward_to_line_end($!ti);
   }
 
-  method forward_to_tag_toggle (GtkTextTag() $tag) is also<forward-to-tag-toggle> {
+  method forward_to_tag_toggle (GtkTextTag() $tag) 
+    is also<forward-to-tag-toggle> 
+  {
     so gtk_text_iter_forward_to_tag_toggle($!ti, $tag);
   }
 
-  method forward_visible_cursor_position is also<forward-visible-cursor-position> {
+  method forward_visible_cursor_position 
+    is also<forward-visible-cursor-position> 
+  {
     so gtk_text_iter_forward_visible_cursor_position($!ti);
   }
 
-  method forward_visible_cursor_positions (gint $count) is also<forward-visible-cursor-positions> {
+  method forward_visible_cursor_positions (gint $count) 
+    is also<forward-visible-cursor-positions> 
+  {
     so gtk_text_iter_forward_visible_cursor_positions($!ti, $count);
   }
 
@@ -334,16 +374,22 @@ class GTK::TextIter {
     so gtk_text_iter_forward_visible_line($!ti);
   }
 
-  method forward_visible_lines (gint $count) is also<forward-visible-lines> {
-    so gtk_text_iter_forward_visible_lines($!ti, $count);
+  method forward_visible_lines (Int() $count) 
+    is also<forward-visible-lines> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_forward_visible_lines($!ti, $c);
   }
 
   method forward_visible_word_end is also<forward-visible-word-end> {
     so gtk_text_iter_forward_visible_word_end($!ti);
   }
 
-  method forward_visible_word_ends (gint $count) is also<forward-visible-word-ends> {
-    so gtk_text_iter_forward_visible_word_ends($!ti, $count);
+  method forward_visible_word_ends (Int() $count) 
+    is also<forward-visible-word-ends> 
+  {
+    my gint $c = self.RESOLVE-INT($count);
+    so gtk_text_iter_forward_visible_word_ends($!ti, $c);
   }
 
   method forward_word_end is also<forward-word-end> {
@@ -358,7 +404,16 @@ class GTK::TextIter {
     gtk_text_iter_free($!ti);
   }
 
-  method get_attributes (GtkTextAttributes $values) is also<get-attributes> {
+  proto method get_attributes (|)
+    is also<get-attributes>
+    { * }
+  
+  multi method get_attributes {
+    my $v = GtkTextAttributes.new;
+    samewith($v);
+    $v;
+  }
+  multi method get_attributes (GtkTextAttributes $values) {
     so gtk_text_iter_get_attributes($!ti, $values);
   }
 
@@ -367,7 +422,7 @@ class GTK::TextIter {
     ::('GTK::TextBuffer').new( gtk_text_iter_get_buffer($!ti) );
   }
 
-  method get_bytes_in_line () is also<get-bytes-in-line> {
+  method get_bytes_in_line is also<get-bytes-in-line> {
     gtk_text_iter_get_bytes_in_line($!ti);
   }
 
@@ -407,8 +462,11 @@ class GTK::TextIter {
     gtk_text_iter_get_text($!ti, $end);
   }
 
-  method get_toggled_tags (gboolean $toggled_on) is also<get-toggled-tags> {
-    gtk_text_iter_get_toggled_tags($!ti, $toggled_on);
+  method get_toggled_tags (Int() $toggled_on) 
+    is also<get-toggled-tags> 
+  {
+    my gboolean $t = self.RESOLVE-BOOL($toggled_on);
+    gtk_text_iter_get_toggled_tags($!ti, $t);
   }
 
   method get_type is also<get-type> {
@@ -427,7 +485,9 @@ class GTK::TextIter {
     so gtk_text_iter_has_tag($!ti, $tag);
   }
 
-  method in_range (GtkTextIter() $start, GtkTextIter() $end) is also<in-range> {
+  method in_range (GtkTextIter() $start, GtkTextIter() $end) 
+    is also<in-range> 
+  {
     so gtk_text_iter_in_range($!ti, $start, $end);
   }
 
@@ -451,7 +511,7 @@ class GTK::TextIter {
     so gtk_text_iter_is_start($!ti);
   }
 
-  method order (GtkTextIter $second) {
+  method order (GtkTextIter() $second) {
     gtk_text_iter_order($!ti, $second);
   }
 

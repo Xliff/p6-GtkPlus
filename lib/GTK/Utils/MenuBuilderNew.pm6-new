@@ -1,0 +1,154 @@
+use v6.c;
+
+use GTK::CheckMenuItem;
+use GTK::Menu;
+use GTK::MenuBar;
+use GTK::MenuItem;
+use GTK::RadioMenuItem;
+use GTK::SeparatorMenuItem;
+
+class GTK::Utils::MenuBuilder {
+  has $!menu;
+  has $!items;
+
+  method menu   { $!menu  }
+  method items  { $!items }
+  
+  has @!m;
+  has %!opts;
+  has %!late_opts;
+  has %!groups
+  
+  method !processOpts(%o) {
+    # Last chance to modify/validate %opts
+    my $menu_item_id = %o<id>:delete;
+    my $group_id;
+    %!late-opts<sensitive> = %o<sensitive>:delete;
+    %!late-opts<can-focus> = %o<can-focus>:delete;
+    %!late-opts<can-focus> //= %o<focus>:delete;
+    # RadioMenuItem validation.
+    with %o<group> {
+      if %o<group> ~~ Pair {
+        $group_id = %o<group>.key;
+        %groups{ %o<group>.key } //= %o<group>.val;
+      } else {
+        die 'Cannot use a group menu item without a proper value'
+          if %o<group> ~~ Bool || ! %o<group>;
+      }
+    }
+    # 'clicked' alias handling.
+    %o<clicked> //= %o<do> with %o<do>;
+    %o<do>:delete;
+
+    # Remove unnecessary items.
+    %o<check toggle>:delete;
+  
+  method !makeMenuItem($p, %opts) {
+    @!m.push: GTK::MenuItem.new($i.key, |$i.value);
+    self!do_lateOpts(%opts);
+  }
+  
+  method !processPair($i) {
+    given $i.value {
+      # Submenu
+      when Array {
+        self!processItem($i);
+      }
+
+      when Hash {
+        self!processOpts($_);
+        self!makeMenuItem($i, $_);
+      }
+    }
+  }
+  
+  method !getItemType($i) {
+    do given $ii {
+      when .key ~~ / ^ '-' /          { 'GTK::SeparatorMenuItem'  }
+      
+      when .value ~~ Array {
+        # ???
+      }
+      
+      when .value ~~ Hash {
+
+        when (.value<group>:exists)   { 'GTK::RadioMenuItem'      }
+
+        # Must use parens since adverbs have extremely low priority.
+        when (.value<toggled>:exists) |
+             (.value<check>:exists)   |
+             (.value<toggle>:exists)  { 'GTK::CheckMenuItem'      }
+             
+     }
+
+      default                         { 'GTK::MenuItem'           }
+    }
+  }
+  
+  method !processItem($i, %opts) {
+    my @sm;
+    for $i.value.List -> $ii {
+      my ($item-type, %late-opts, @submenu);
+      my $cleanup = False;
+      $item-type = self!getItemType($ii, %opts);
+
+      # This WILL need recursive processing, but for now...
+      my %opts = do given $ii.value {
+        when Array { @submenu = $ii.value; 
+                     @submenu .= grep( Pair ); 
+                     (submenu => @submenu).Hash }
+        when Hash  { $_  }
+        when Bool  { %() }  # Separator
+        default    { die "Do not know how to handle { .^name }" }
+      }
+
+      
+
+      @sm.push: ::($item-type).new($ii.key, |%opts);
+
+      with $group_id {
+        %!groups{$group_id} = @sm[* - 1] without %groups{$group_id};
+      }
+      with $menu_item_id {
+        if %!named_items{ $menu_item_id }:exists {
+          die "Cannod add duplicate ID <{ $menu_item_id }> to menu tracking!";
+        } else {
+          @sm[* - 1].name = $menu_item_id;
+          %!named_items{ $menu_item_id } = @sm[* - 1];
+        }
+      }
+      # Handle late options. More can be added, but the logic will
+      # become more complex
+      for <sensitive can-focus> {
+        @sm[* - 1]."$_"() = %!late-opts{$_} with %late-opts{$_}
+      }
+    }
+    @m.push: GTK::MenuItem.new($i.key, :submenu(GTK::Menu.new(@sm)));
+  }
+
+  submethod BUILD(:$bar = False, :$button = False, :$TOP) {
+    sub process_opts(%o, $m) {
+      $o{$_} //= $m{$_} for $m.keys;
+    }
+    
+    my (%named_items, @m);
+    die 'TOP parameter must be a list of Pair objects' unless $TOP ~~ Pair;
+    for $TOP.List -> $i {
+      self!processPair($i);
+    }
+
+    # All UI Menu-based items must now accept the following constructor:
+    #         MenuType.new(@MenuItems)
+    my $widget = do {
+      when $bar    { GTK::MenuBar.new(@!m)          }
+
+      when $button { my $w = GTK::MenuButton.new;
+                     $w.popup = GTK::Menu.new(@!m);
+                     $w                            }
+
+      default      { GTK::Menu.new(@!m)             }
+    };
+    ($!menu, $!items) = ($widget, %named_items);
+  }
+
+}

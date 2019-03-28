@@ -7,15 +7,11 @@ use GTK::Compat::Types;
 use GTK::Raw::TargetEntry;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
-
 class GTK::TargetEntry {
-  also does GTK::Compat::Roles::Object;
-  
   has GtkTargetEntry $!te;
 
   submethod BUILD(:$entry) {
-    self!setObject($!te = $entry);
+    $!te = $entry;
   }
   
   method GTK::Raw::Types::GtkTargetEntry 
