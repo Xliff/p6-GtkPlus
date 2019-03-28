@@ -9,12 +9,20 @@ use GTK::Raw::Types;
 
 use GTK::TargetEntry;
 
+use GTK::Compat::Roles::Object;
+
 class GTK::TargetList {
+  also does GTK::Compat::Roles::Object;
+  
   has GtkTargetList $!tl;
 
   submethod BUILD(:$targetlist) {
-    $!tl = $targetlist
+    self!setObject($!tl = $targetlist)
   }
+  
+  method GTK::Raw::Types::GtkTargetList
+    is also<TargetList>
+    { $!tl }
 
   method new (@target_entries) {
     my CArray[GtkTargetEntry] $te_list = CArray[GtkTargetEntry].new;
@@ -31,7 +39,10 @@ class GTK::TargetList {
           $te_list[$c++] = $_;
         }
         default {
-          warn "Ignored element #{ $i } of the target entries due to invalid type: { .^name }";
+          warn qq:to/WARN/;
+            Ignored element #{ $i } of the target entries due to invalid{
+            } type: { .^name }
+            WARN
         }
       }
     }
@@ -41,9 +52,9 @@ class GTK::TargetList {
     self.bless(:$targetlist);
   }
 
-  method GTK::Raw::Types::GtkTargetList {
-    $!tl;
-  }
+  method GTK::Raw::Types::GtkTargetList 
+    is also<TargetList>
+    { $!tl }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -58,7 +69,9 @@ class GTK::TargetList {
     gtk_target_list_add($!tl, $target, $f, $i);
   }
 
-  method add_image_targets (Int() $info, Int() $writeable) is also<add-image-targets> {
+  method add_image_targets (Int() $info, Int() $writeable) 
+    is also<add-image-targets> 
+  {
     my @u = ($info, $writeable);
     my guint ($i, $w) = self.RESOLVE-UINT(@u);
     gtk_target_list_add_image_targets($!tl, $i, $w);
@@ -68,7 +81,9 @@ class GTK::TargetList {
     Int() $info,
     Int() $deserializable,
     GtkTextBuffer() $buffer
-  ) is also<add-rich-text-targets> {
+  ) 
+    is also<add-rich-text-targets> 
+  {
     my guint $i = self.RESOLVE-UINT($info);
     my gboolean $d = self.RESOLVE-BOOL($deserializable);
     gtk_target_list_add_rich_text_targets($!tl, $i, $d, $buffer);
@@ -96,11 +111,11 @@ class GTK::TargetList {
     gtk_target_list_find($!tl, $target, $i);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     gtk_target_list_get_type();
   }
 
-  method ref {
+  method ref is also<upref> {
     gtk_target_list_ref($!tl);
   }
 
@@ -108,7 +123,7 @@ class GTK::TargetList {
     gtk_target_list_remove($!tl, $target);
   }
 
-  method unref {
+  method unref is also<downref> {
     gtk_target_list_unref($!tl);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

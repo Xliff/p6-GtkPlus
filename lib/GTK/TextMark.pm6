@@ -7,16 +7,22 @@ use GTK::Compat::Types;
 use GTK::Raw::TextMark;
 use GTK::Raw::Types;
 
-use GTK::Roles::Types;
+use GTK::Roles::Types
+use GTK::Compat::Roles::Object;
 
 class GTK::TextMark {
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
 
   has GtkTextMark $!tm;
 
   submethod BUILD(:$textmark) {
-    $!tm = $textmark;
+    self!setObject($!tm = $textmark);
   }
+  
+  method GTK::Raw::Types::GtkTextMark
+    is also<TextMark>
+    { $!tm; }
 
   method new (
     Str() $name,
@@ -25,10 +31,6 @@ class GTK::TextMark {
     my uint32 $lg = self.RESOLVE-BOOL($left_gravity);
     my $textmark = gtk_text_mark_new($name, $lg);
     self.bless(:$textmark);
-  }
-
-  method GTK::Raw::Types::GtkTextMark {
-    $!tm;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -71,4 +73,3 @@ class GTK::TextMark {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

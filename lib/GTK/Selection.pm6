@@ -8,23 +8,25 @@ use GTK::Raw::Selection;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
 
 class GTK::Selection {
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
 
   has GtkSelectionData $!s;
 
   submethod BUILD(:$selection) {
-    $!s = $selection
+    self!setObject($!s = $selection);
   }
 
   submethod DESTROY {
     self.free;
   }
-
-  method GtkSelectionData {
-    $!s;
-  }
+  
+  method GTK::Raw::Types::GtkSelectionData 
+    is also<SelectionData>
+    { $!s }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -145,7 +147,12 @@ class GTK::Selection {
     gtk_selection_data_free($!s);
   }
 
-  method get_data is also<get-data data> {
+  method get_data 
+    is also<
+      get-data 
+      data
+    > 
+  {
     gtk_selection_data_get_data($!s);
   }
 
@@ -156,32 +163,66 @@ class GTK::Selection {
     gtk_selection_data_get_data_with_length($!s, $l);
   }
 
-  method get_data_type is also<get-data-type data-type data_type> {
+  method get_data_type 
+    is also<
+      get-data-type 
+      data-type 
+      data_type
+    > 
+  {
     gtk_selection_data_get_data_type($!s);
   }
 
-  method get_display is also<get-display display> {
+  method get_display 
+    is also<
+      get-display 
+      display
+    > 
+  {
     gtk_selection_data_get_display($!s);
   }
 
-  method get_format is also<get-format format> {
+  method get_format 
+    is also<
+      get-format 
+      format
+    > 
+  {
     gtk_selection_data_get_format($!s);
   }
 
-  method get_length is also<get-length length> {
+  method get_length 
+    is also<
+      get-length 
+      length
+    > 
+  {
     gtk_selection_data_get_length($!s);
   }
 
-  method get_selection is also<get-selection selections> {
+  method get_selection 
+    is also<
+      get-selection 
+      selections
+    > 
+  {
     gtk_selection_data_get_selection($!s);
   }
 
-  method get_target is also<get-target target> {
+  method get_target 
+    is also<
+      get-target 
+      target
+    > 
+  {
     gtk_selection_data_get_target($!s);
   }
 
   method get_targets (GdkAtom $targets, Int() $n_atoms)
-    is also<get-targets targets>
+    is also<
+      get-targets 
+      targets
+    >
   {
     my gint $na = self.RESOLVE-INT($n_atoms);
     gtk_selection_data_get_targets($!s, $targets, $na);

@@ -7,20 +7,24 @@ use GTK::Compat::Types;
 use GTK::Raw::TextChildAnchor;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::GObject;
+
 class GTK::TextChildAnchor {
+  also does GTK::Compat::Roles::Object;
+  
   has GtkTextChildAnchor $!ta;
 
   submethod BUILD(:$anchor) {
-    $!ta = $anchor;
+    self!setObject($!ta = $anchor);
   }
+  
+  method GTK::Raw::Types::GtkTextChildAnchor 
+    is also<TextChildAnchor>
+    { $!ta }
 
   method new {
     my $anchor = gtk_text_child_anchor_new();
     self.bless(:$anchor);
-  }
-
-  method GTK::Raw::Types::GtkTextChildAnchor {
-    $!ta;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -48,4 +52,3 @@ class GTK::TextChildAnchor {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

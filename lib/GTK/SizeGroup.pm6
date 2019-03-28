@@ -8,15 +8,21 @@ use GTK::Raw::SizeGroup;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
 
 class GTK::SizeGroup {
+  also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Types;
 
   has GtkSizeGroup $!sg;
 
   submethod BUILD(:$sizegroup) {
-    $!sg = $sizegroup
+    self!setObject($!sg = $sizegroup);
   }
+  
+  method GTK::Raw::Types::GtkSizeGroup 
+    is also<SizeGroup>
+    { $!sg }
 
   multi method new (Int() $sizegroupmode) {
     my uint32 $s = self.RESOLVE-UINT($sizegroupmode);
@@ -35,10 +41,6 @@ class GTK::SizeGroup {
     };
     my $sizegroup = gtk_size_group_new($m);
     self.bless(:$sizegroup);
-  }
-
-  method GTK::Raw::Types::GtkSizeGroup {
-    $!sg;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -89,4 +91,3 @@ class GTK::SizeGroup {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

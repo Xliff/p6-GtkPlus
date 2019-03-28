@@ -8,16 +8,17 @@
 √ Fix lack of icons in GTK::IconView
 √ Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 √ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
+√ A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
 + Mechanism for providing PROPER event handlers for all events (in progress...)
 + Add-to-project-if-I'm-completely-insane: GVariant
 + GTK::ScrolledWindow.new_with_policy is in desperate need of being written (implemented, but not tested)
 + GTK::Container.set/get-child-properties using var args. Hint: *@slurpys!  (implemented, but not tested)
 + Add GTK::Compat::Action (GAction)
 + Add type specific signal handling to GTK::Notebook                        (implemented, but not tested)
-- A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
++ Add a working GList implementation
+  - Test latest inplementation of GTK::Compat::GList and GTK::Roles::ListData
 - Insure all method-level gchar paramters are converted to Str()
 - COMPLETE a working GSList implementation
-- Add a working GList implementation
 - GDK
   - Refinements to all GTK::Compat::Objects
 	- Finish refinements on GTK::Compat::Window
@@ -42,10 +43,8 @@
 - Consider abstracting GTK::Roles::Protection into it's own project. Method::Protect, maybe?
 - Properly rework GTK::Utils::MenuBuilder. It is faulty
   + Test case for all features of GTK::Utils::MenuBuilder
-- Test latest inplementation of GTK::Compat::GList and GTK::Roles::ListData
 - For ALL type coercer methods, insure they are aliased to a proper object-specific nickname
 - Add an implementation for GTK::Compat::Closure (GClosure)
-! Check all signal handlers to insure signal key is used in assignment!
 
 Applications
 ============

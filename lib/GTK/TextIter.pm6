@@ -8,22 +8,22 @@ use GTK::Compat::Types;
 use GTK::Raw::TextIter;
 use GTK::Raw::Types;
 
+use GTK::Roles::Types;
+use GTK::Compat::Roles::Object;
+
 class GTK::TextIter {
   also does GTK::Roles::Types;
+  also does GTK::Compat::Roles::Object;
 
   has GtkTextIter $!ti;
 
-  method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    # Non-widget descendent does not have setType.
-    #$o.setType('GTK::TextIter');
-    $o;
-  }
-
   submethod BUILD(:$textiter) {
-   $!ti = $textiter
+    self!setObj($!ti = $textiter);
   }
+  
+  method GTK::Raw::Types::GtkTextIter 
+    is also<TextIter> 
+    { $!ti }
 
   multi method new {
     my $textiter = GtkTextIter.new;
@@ -31,10 +31,6 @@ class GTK::TextIter {
   }
   multi method new(GtkTextIter $textiter) {
     self.bless(:$textiter);
-  }
-
-  method GTK::Raw::Types::GtkTextIter is also<iter> {
-    $!ti;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

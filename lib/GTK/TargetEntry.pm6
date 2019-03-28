@@ -7,12 +7,20 @@ use GTK::Compat::Types;
 use GTK::Raw::TargetEntry;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
+
 class GTK::TargetEntry {
+  also does GTK::Compat::Roles::Object;
+  
   has GtkTargetEntry $!te;
 
   submethod BUILD(:$entry) {
-    $!te = $entry;
+    self!setObject($!te = $entry);
   }
+  
+  method GTK::Raw::Types::GtkTargetEntry 
+    is also<TargetEntry>
+    { $!te }
 
   multi method new {
     my $entry = GtkTargetEntry.new;
@@ -26,10 +34,6 @@ class GTK::TargetEntry {
     my guint ($f, $i) = self.RESOLVE-UINT(@u);
     my $entry = gtk_target_entry_new($target, $f, $i);
     self.bless(:$entry);
-  }
-
-  method GTK::Raw::Types::GtkTargetEntry {
-    $!te;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -53,4 +57,3 @@ class GTK::TargetEntry {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-
