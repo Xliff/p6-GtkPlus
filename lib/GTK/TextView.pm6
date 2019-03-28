@@ -45,6 +45,10 @@ class GTK::TextView is GTK::Container {
     }
   }
   
+  method GTK::Raw::Types::GtkTextView
+    is also<TextView>
+    { $!tv }
+  
   method setTextView($view) {
     my $to-parent;
     $!tv = do given $view {

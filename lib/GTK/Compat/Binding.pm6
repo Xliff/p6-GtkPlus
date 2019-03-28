@@ -26,7 +26,7 @@ class GTK::Compat::Binding {
     Str() $source_property, 
     GObject() $target, 
     Str() $target_property, 
-    Int() $flags = G_BINDING_BIDIRECTIONAL +| G_BINDING_SYNC_CREATE
+    Int() $flags = 3    # G_BINDING_BIDIRECTIONAL +| G_BINDING_SYNC_CREATE
   ) {
     my $f = resolve-uint($flags);
     self.bless( 
@@ -36,8 +36,8 @@ class GTK::Compat::Binding {
         $target, 
         $target_property, 
         $f
-      );
-    )
+      )
+    );
   }
 
   method bind_full (
@@ -47,8 +47,8 @@ class GTK::Compat::Binding {
     GObject() $target, 
     Str() $target_property, 
     Int() $flags, 
-    GBindingTransformFunc $transform_to   = Pointer,
-    GBindingTransformFunc $transform_from = Pointer,
+    GBindingTransformFunc $transform_to,
+    GBindingTransformFunc $transform_from,
     gpointer $user_data                   = Pointer,
     GDestroyNotify $notify                = Pointer
   ) 

@@ -24,7 +24,7 @@ class GTK::TextTag  {
   has GtkTextTag $!tt;
 
   submethod BUILD(:$tag) {
-    self.setTextTag(:$tag);
+    self.setTextTag($tag) with $tag;
   }
   
   # PROTECTED
