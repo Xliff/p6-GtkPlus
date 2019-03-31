@@ -332,7 +332,6 @@ GTK::Compat::Screen
 GTK::Compat::Settings
 GTK::Compat::Value
 GTK::DragContext
-GTK::EntryBuffer
 GTK::FileFilter
 GTK::IconInfo
 GTK::IconTheme
@@ -372,6 +371,7 @@ GTK::Compat::Event
 GTK::Compat::MenuModel
 GTK::Compat::Raw::Monitor
 GTK::Compat::Seat
+GTK::EntryBuffer
 GTK::ListStore
 GTK::PageSetup
 GTK::PrintContext
