@@ -12,6 +12,8 @@ use GTK::MenuItem;
 
 use GTK::Roles::Signals::MenuShell;
 
+our subset MenuShellAncestry is export where GtkMenuShell | ContainerAncestry;
+
 class GTK::MenuShell is GTK::Container {
   also does GTK::Roles::Signals::MenuShell;
 
@@ -20,12 +22,14 @@ class GTK::MenuShell is GTK::Container {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-ms;
   }
+  
+  method GTK::Raw::Types::GtkMenuShell is also<MenuShell> { $!ms }
 
   method new {
     die "Cannot instantiate a GTK::MenuShell object.";
   }
 
-  method setMenuShell($menushell) {
+  method setMenuShell(MenuShellAncestry $menushell) {
     self.IS-PROTECTED;
 
     my $to-parent;
@@ -112,7 +116,9 @@ class GTK::MenuShell is GTK::Container {
   method activate_item (
     GtkWidget() $menu_item,
     Int() $force_deactivate
-  ) is also<activate-item> {
+  ) 
+    is also<activate-item> 
+  {
     my gboolean $fd = self.RESOLVE-BOOL($force_deactivate);
     gtk_menu_shell_activate_item($!ms, $menu_item, $fd);
   }
@@ -128,7 +134,7 @@ class GTK::MenuShell is GTK::Container {
   multi method append (GTK::Widget $child) {
     self.push-start($child);
     self.SET-LATCH;
-    samewith($child.widget);
+    samewith($child.Widget);
   }
   multi method append (GtkWidget $child) {
     self.push-start($child) unless self.IS-LATCHED;
@@ -137,8 +143,8 @@ class GTK::MenuShell is GTK::Container {
   }
 
   method bind_model (
-    GMenuModel $model,
-    gchar $action_namespace,
+    GMenuModel() $model,
+    Str() $action_namespace,
     Int() $with_separators
   )
     is also<bind-model>
@@ -191,7 +197,7 @@ class GTK::MenuShell is GTK::Container {
   multi method prepend (GTK::MenuItem $child) {
     self.unshift-end($child);
     self.SET-LATCH;
-    samewith($child.widget);
+    samewith($child.Widget);
   }
 
   method select_first (Int() $search_sensitive) is also<select-first> {

@@ -12,8 +12,7 @@ use GTK::MenuShell;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Menu;
 
-my subset Ancestry
-  where GtkMenu | GtkMenuShell | GtkContainer | GtkBuildable | GtkWidget;
+our subset MenuAncestry is export where GtkMenu | MenuShellAncestry;
 
 class GTK::Menu is GTK::MenuShell {
   also does GTK::Roles::Signals::Menu;
@@ -29,7 +28,7 @@ class GTK::Menu is GTK::MenuShell {
   submethod BUILD(:$menu, :@items) {
     my $to-parent;
     given $menu {
-      when Ancestry {
+      when MenuAncestry {
         $!m = do {
           when GtkMenu {
             $to-parent = nativecast(GtkMenuShell, $_);
@@ -60,8 +59,10 @@ D
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-menu;
   }
+  
+  method GTK::Raw::Types::GtkMenu is also<Menu> { $!m }
 
-  multi method new (Ancestry $menu) {
+  multi method new (MenuAncestry $menu) {
     my $o = self.bless(:$menu);
     $o.upref;
     $o;
@@ -73,10 +74,6 @@ D
   multi method new (*@items) {
     my $menu = gtk_menu_new();
     self.bless(:$menu, :@items);
-  }
-
-  method GTK::Raw::Types::GtkMenu is also<menu> {
-    $!m;
   }
 
   method new_from_model (GMenuModel() $model) is also<new-from-model> {
@@ -214,7 +211,7 @@ D
   }
 
   method get_for_attach_widget is also<get-for-attach-widget> {
-    gtk_menu_get_for_attach_widget($!m.widget);
+    gtk_menu_get_for_attach_widget($!m.Widget);
   }
 
   method get_type is also<get-type> {

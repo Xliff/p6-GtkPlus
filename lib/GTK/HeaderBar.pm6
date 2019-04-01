@@ -9,8 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-my subset Ancestry
-  where GtkHeaderBar | GtkContainer | GtkBuildable | GtkWidget;
+our subset HeaderBarAncestry is export
+  where GtkHeaderBar | ContainerAncestry;
 
 class GTK::HeaderBar is GTK::Container {
   has GtkHeaderBar $!hb;
@@ -24,7 +24,7 @@ class GTK::HeaderBar is GTK::Container {
   submethod BUILD(:$headerbar) {
     my $to-parent;
     given $headerbar {
-      when Ancestry {
+      when HeaderBarAncestry {
         $!hb = do {
           when GtkHeaderBar {
             $to-parent = nativecast(GtkContainer, $_);
@@ -43,8 +43,10 @@ class GTK::HeaderBar is GTK::Container {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkHeaderBar is also<HeaderBar> { $!hb }
 
-  multi method new (Ancestry $headerbar) {
+  multi method new (HeaderBarAncestry $headerbar) {
     self.bless(:$headerbar);
   }
   multi method new {
@@ -144,7 +146,7 @@ class GTK::HeaderBar is GTK::Container {
   multi method pack_end (GTK::Widget $child) {
     self.unshift-end($child);
     self.SET-LATCH;
-    samewith($child.widget);
+    samewith($child.Widget);
   }
 
   multi method pack_start (GtkWidget $child) {
@@ -161,7 +163,7 @@ class GTK::HeaderBar is GTK::Container {
   multi method pack_start (GTK::Widget $child) {
     self.push-start($child);
     self.SET-LATCH;
-    samewith($child.widget);
+    samewith($child.Widget);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

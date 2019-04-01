@@ -16,8 +16,7 @@ use GTK::Bin;
 # One could almost think this could just be a GTK::Bin. The jury is hung, at
 # the moment.
 
-my subset Ancestry where GtkFlowBoxChild | GtkBin    | GtkContainer |
-                         GtkBuildable    | GtkWidget;
+our subset FlowBoxChildAncestry is export where GtkFlowBoxChild | BinAncestry;
 
 class GTK::FlowBoxChild is GTK::Bin {
   has GtkFlowBoxChild $!fbc;
@@ -31,7 +30,7 @@ class GTK::FlowBoxChild is GTK::Bin {
   submethod BUILD(:$flowboxchild) {
     my $to-parent;
     given $flowboxchild {
-      when GtkFlowBoxChild | GtkWidget {
+      when FlowBoxChildAncestry {
         $!fbc = do {
           when GtkFlowBoxChild {
             $to-parent = nativecast(GtkBin, $_);
@@ -52,7 +51,7 @@ class GTK::FlowBoxChild is GTK::Bin {
     }
   }
 
-  multi method new (Ancestry $flowboxchild) {
+  multi method new (FlowBoxChildAncestry $flowboxchild) {
     my $o = self.bless(:$flowboxchild);
     $o.upref;
     $o;
@@ -63,9 +62,7 @@ class GTK::FlowBoxChild is GTK::Bin {
   }
 
 
-  method GTK::Raw::Types::GtkFlowBoxChild is also<flowboxchild> {
-    $!fbc
-  }
+  method GTK::Raw::Types::GtkFlowBoxChild is also<FlowBoxChild> { $!fbc }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method activate {

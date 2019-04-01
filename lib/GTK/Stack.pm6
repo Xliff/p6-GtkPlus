@@ -10,8 +10,7 @@ use GTK::Raw::Types;
 use GTK::Container;
 use GTK::StackSidebar;
 
-my subset Ancestry
-  where GtkStack | GtkContainer | GtkBuildable | GtkWidget;
+our subset StackAncestry is export where GtkStack | ContainerAncestry;
 
 class GTK::Stack is GTK::Container {
   has GtkStack $!s;
@@ -29,7 +28,7 @@ class GTK::Stack is GTK::Container {
   submethod BUILD(:$stack, :$switcher, :$sidebar) {
     my $to-parent;
     given $stack {
-      when Ancestry {
+      when StackAncestry {
         $!s = do {
           when GtkStack  {
             $to-parent = nativecast(GtkContainer, $_);
@@ -57,8 +56,10 @@ class GTK::Stack is GTK::Container {
       $!sb.stack = $!s;
     }
   }
+  
+  method GTK::Raw::Types::GtkStack is also<Stack> { $!s }
 
-  multi method new (Ancestry $stack) {
+  multi method new (StackAncestry $stack) {
     my $o = self.bless(:$stack);
     $o.upref;
     $o;
@@ -200,7 +201,7 @@ class GTK::Stack is GTK::Container {
     self.SET-LATCH;
     %!by-name{$name} = $child;
     self.push-start($child);
-    samewith($child.widget, $name);
+    samewith($child.Widget, $name);
   }
 
   multi method add-titled (GtkWidget $child, Str() $name, Str() $title) {
@@ -221,7 +222,7 @@ class GTK::Stack is GTK::Container {
     self.SET-LATCH;
     %!by-title{$name} = $child;
     self.push-start($child);
-    samewith($child.widget, $name, $title);
+    samewith($child.Widget, $name, $title);
   }
 
   method get_child_by_name (Str() $name) is also<get-child-by-name> {
@@ -267,7 +268,7 @@ class GTK::Stack is GTK::Container {
   }
   # Expose the StackSidebar GtkWidget
   method sidebar-widget is also<sidebar_widget> {
-    $!sb.widget;
+    $!sb.Widget;
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
   method child-set(GtkWidget() $c, *@propval) {

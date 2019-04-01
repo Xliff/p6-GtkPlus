@@ -42,6 +42,8 @@ class GTK::ActionBar is GTK::Bin {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkActionBar is also<ActionBar> { $!ab }
 
   multi method new (ActionBarAncestry $actionbar) {
     my $o = self.bless(:$actionbar);
@@ -89,7 +91,7 @@ class GTK::ActionBar is GTK::Bin {
   multi method pack_end (GTK::Widget $child) {
     self.SET-LATCH;
     self.unshift-end($child);
-    samewith($child.widget);
+    samewith($child.Widget);
   }
 
   multi method pack-start (GtkWidget $child) {
@@ -105,8 +107,8 @@ class GTK::ActionBar is GTK::Bin {
   }
   multi method pack_start (GTK::Widget $child) {
     self.SET-LATCH;
-    self.push-start($child.widget);
-    samewith($child.widget);
+    self.push-start($child.Widget);
+    samewith($child.Widget);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -38,7 +38,7 @@ class GTK::Container is GTK::Widget {
 
   #submethod DESTROY {
   #  g_object_unref($_.data) for self.get_children.Array;
-  #  g_object_unref(self.widget);
+  #  g_object_unref(self.Widget);
   #}
 
   method setContainer($container) {
@@ -62,9 +62,7 @@ class GTK::Container is GTK::Widget {
     $o;
   }
 
-  method GTK::Raw::Types::GtkContainer {
-    $!c;
-  }
+  method GTK::Raw::Types::GtkContainer is also<Container> { $!c }
 
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
@@ -314,7 +312,7 @@ D
   multi method add (GTK::Widget $widget) {
     @!end.push: $widget;
     self.SET-LATCH;
-    samewith($widget.widget);
+    samewith($widget.Widget);
   }
   multi method add (GtkWidget $widget) {
     @!end.push: $widget unless self.IS-LATCHED;
@@ -343,7 +341,7 @@ D
   #   gtk_container_child_get_valist($!c, $child, $first_property_name, $var_args);
   # }
   # method child_get_valist (GTK::Widget $child, Str() $first_property_name, va_list $var_args)  {
-  #   samewith($child.widget, $first_property_name, $var_args);
+  #   samewith($child.Widget, $first_property_name, $var_args);
   # }
 
   method child_notify (GtkWidget() $child, Str() $child_property)
@@ -375,7 +373,7 @@ D
   #   gtk_container_child_set_valist($!c, $child, $first_property_name, $var_args);
   # }
   # method child_set_valist (GTK::Widget $child, Str() $first_property_name, va_list $var_args)  {
-  #   samewith($child.widget, $first_property_name, $var_args);
+  #   samewith($child.Widget, $first_property_name, $var_args);
   # }
 
   method child_type is also<child-type> {
@@ -451,7 +449,7 @@ D
     for (@!start, @!end) -> @l {
       @l .= grep({
         do {
-          when GTK::Widget { +.widget.p != +$widget.p }
+          when GTK::Widget { +.Widget.p != +$widget.p }
           when GtkWidget   {        +.p != +$widget.p }
         }
       });

@@ -60,7 +60,7 @@ role GTK::Roles::LatchedContents {
 
   my sub checkp($o) {
     do given $o {
-      when GTK::Widget { .widget.p }
+      when GTK::Widget { .Widget.p }
       when GtkWidget   { .p        }
       when Pointer     { $_        }
 

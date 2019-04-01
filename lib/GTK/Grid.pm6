@@ -88,7 +88,7 @@ class GTK::Grid is GTK::Container {
         ($child.REPR // '') eq 'CPointer'
       );
     my $c = do given $child {
-      when GTK::Widget { +.widget.p }
+      when GTK::Widget { +.Widget.p }
       when GtkWidget   { +.p        }
     }
     %!obj-manifest{$c} = $child;
@@ -122,7 +122,7 @@ class GTK::Grid is GTK::Container {
         );
     }
     my $s = do given $sib {
-      when GTK::Widget { +.widget.p }
+      when GTK::Widget { +.Widget.p }
       when GtkWidget   { +.p        }
     }
     my ($l, $t, $w, $h) = %!obj-track{$s}<l t w h>;
@@ -291,7 +291,7 @@ class GTK::Grid is GTK::Container {
   ) {
     self.SET-LATCH;
     self!add-child-at($child, $left, $top, $width, $height);
-    samewith($child.widget, $left, $top, $width, $height);
+    samewith($child.Widget, $left, $top, $width, $height);
   }
   multi method attach (
     GtkWidget $child,
@@ -302,7 +302,7 @@ class GTK::Grid is GTK::Container {
   ) {
     my @i = ($left, $top, $width, $height);
     my gint ($l, $t, $w, $h) = self.RESOLVE-INT(@i);
-    self!add-child-at($child.widget, $left, $top, $width, $height)
+    self!add-child-at($child.Widget, $left, $top, $width, $height)
       unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_grid_attach($!g, $child, $l, $t, $w, $h);
@@ -323,7 +323,7 @@ class GTK::Grid is GTK::Container {
     self!add-child-at-with-sib(
       $child, $sibling, $side, $width, $height
     );
-    samewith($child.widget, $sibling.widget, $side, $width, $height);
+    samewith($child.Widget, $sibling.Widget, $side, $width, $height);
   }
   multi method attach_next_to (
     GtkWidget() $child,

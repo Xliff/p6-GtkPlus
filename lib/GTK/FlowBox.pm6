@@ -14,8 +14,8 @@ use GTK::Widget;
 
 use GTK::Roles::Orientable;
 
-my subset Ancestry
-  where GtkFlowBox | GtkOrientable | GtkContainer | GtkWidget;
+our subset FlowBoxAncestry is export
+  where GtkFlowBox | GtkOrientable | ContainerAncestry;
 
 class GTK::FlowBox is GTK::Container {
   also does GTK::Roles::Orientable;
@@ -33,7 +33,7 @@ class GTK::FlowBox is GTK::Container {
   submethod BUILD(:$flowbox) {
     my $to-parent;
     given $flowbox {
-      when Ancestry {
+      when FlowBoxAncestry {
         $!fb = do {
           when GtkFlowBox {
             $to-parent = nativecast(GtkContainer, $_);
@@ -58,8 +58,10 @@ class GTK::FlowBox is GTK::Container {
     }
     $!or //= nativecast(GtkOrientable, $flowbox);
   }
+  
+  method GTK::Raw::Types::GtkFlowBox is also<FlowBox> { $!fb }
 
-  multi method new (Ancestry $flowbox) {
+  multi method new (FlowBoxAncestry $flowbox) {
     my $o = self.bless(:$flowbox);
     $o.upref;
     $o;
@@ -71,9 +73,9 @@ class GTK::FlowBox is GTK::Container {
 
   method !resolve-selected-child($child) {
     do given $child {
-      when GTK::FlowBoxChild { $_.flowboxchild                }
+      when GTK::FlowBoxChild { $_.FlowBoxChild                }
       when GtkFlowBoxChild   { $_                             }
-      when GTK::Widget       { %!child-manifest{ +.widget.p } }
+      when GTK::Widget       { %!child-manifest{ +.Widget.p } }
       when GtkWidget         { %!child-manifest{ +.p }        }
     }
   }
@@ -230,7 +232,7 @@ class GTK::FlowBox is GTK::Container {
           .^name }";
       }
     };
-    %!child-manifest{ +.get-child.widget.p } = $_ given $adding;
+    %!child-manifest{ +.get-child.Widget.p } = $_ given $adding;
     nextwith($adding);
   }
 
@@ -238,7 +240,7 @@ class GTK::FlowBox is GTK::Container {
   method remove($widget) {
     my $removing = do given $widget {
       when GTK::FlowBoxChild {
-        %!child-manifest{ +.get-child.widget.p }:delete;
+        %!child-manifest{ +.get-child.Widget.p }:delete;
         $_
       }
 
@@ -248,7 +250,7 @@ class GTK::FlowBox is GTK::Container {
       }
 
       when GTK::Widget       {
-        %!child-manifest{ +.widget.p }:delete;
+        %!child-manifest{ +.Widget.p }:delete;
       }
 
       when GtkWidget         {
@@ -312,7 +314,7 @@ class GTK::FlowBox is GTK::Container {
           .^name }";
       }
     };
-    %!child-manifest{ +.get-child.widget.p } = $_ given $inserting;
+    %!child-manifest{ +.get-child.Widget.p } = $_ given $inserting;
     self.insert-end-at($inserting, $position);
     my gint $p = self.RESOLVE-INT($position);
     gtk_flow_box_insert($!fb, $inserting, $p);

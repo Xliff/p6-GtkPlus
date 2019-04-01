@@ -34,6 +34,8 @@ class GTK::Bin is GTK::Container {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkBin is also<Bin> { $!bin }
 
   method setBin($bin) {
     my $to-parent;
@@ -59,7 +61,7 @@ class GTK::Bin is GTK::Container {
   multi method add (GTK::Widget $widget) {
     self.set_end($widget);
     self.SET-LATCH;
-    samewith($widget.widget);
+    samewith($widget.Widget);
   }
   multi method add (GtkWidget $widget) {
     self.set_end($widget) unless self.IS-LATCHED;

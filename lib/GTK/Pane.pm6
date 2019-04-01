@@ -11,8 +11,8 @@ use GTK::Container;
 
 use GTK::Roles::Orientable;
 
-my subset Ancestry where GtkPaned     | GtkOrientable | GtkContainer |
-                         GtkBuildable | GtkWidget;
+our subset PaneAncestry is export
+  where GtkPaned | GtkOrientable | ContainerAncestry;
 
 class GTK::Pane is GTK::Container {
   also does GTK::Roles::Orientable;
@@ -31,14 +31,14 @@ class GTK::Pane is GTK::Container {
   submethod BUILD(:$pane) {
     my $to-parent;
     given $pane {
-      when Ancestry {
+      when PaneAncestry {
         $!p = do {
           when GtkPaned {
             $to-parent = nativecast(GtkContainer, $_);
             $pane;
           }
           when GtkOrientable {
-            $!or = $_;                            # GTK::Roles::GtkOrientable
+            $!or = $_;                              # GTK::Roles::GtkOrientable
             $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkPaned, $pane);
           }
@@ -46,7 +46,8 @@ class GTK::Pane is GTK::Container {
             $to-parent = $_;
             nativecast(GtkPaned, $pane);
           }
-        };
+        }
+        $!or //= nativecast(GtkOrientable, $pane);  # GTK::Roles::Orientable
         self.setContainer($to-parent);
       }
       when GTK::Pane {
@@ -54,10 +55,11 @@ class GTK::Pane is GTK::Container {
       default {
       }
     }
-    $!or //= nativecast(GtkOrientable, $!p);      # GTK::Roles::GtkOrientable
   }
 
-  multi method new (Ancestry $pane) {
+  method GTK::Raw::Types::GtkPaned is also<Pane> { $!p }
+
+  multi method new (PaneAncestry $pane) {
     my $o = self.bless(:$pane);
     $o.upref;
     $o;
@@ -164,7 +166,7 @@ class GTK::Pane is GTK::Container {
   multi method add1 (GTK::Widget $child)  {
     @!child1.push: $child;
     self.SET-LATCH;
-    samewith($child.widget);
+    samewith($child.Widget);
   }
 
   multi method add2 (GtkWidget $child) {
@@ -175,7 +177,7 @@ class GTK::Pane is GTK::Container {
   multi method add2 (GTK::Widget $child)  {
     @!child2.push: $child;
     self.SET-LATCH;
-    samewith($child.widget);
+    samewith($child.Widget);
   }
 
   # Use the attribute only if it's a GtkPlus object.
@@ -218,7 +220,7 @@ class GTK::Pane is GTK::Container {
   )  {
     @!child1.push($child);
     self.SET-LATCH;
-    samewith($child.widget, $resize, $shrink);
+    samewith($child.Widget, $resize, $shrink);
   }
 
   multi method pack2 (
@@ -239,7 +241,7 @@ class GTK::Pane is GTK::Container {
   )  {
     @!child2.push($child);
     self.SET-LATCH;
-    samewith($child.widget, $resize, $shrink);
+    samewith($child.Widget, $resize, $shrink);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

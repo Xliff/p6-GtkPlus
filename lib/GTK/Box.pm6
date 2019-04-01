@@ -42,6 +42,8 @@ class GTK::Box is GTK::Container {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkBox is also<Box> { $!b }
 
   method setBox($box) {
     my $to-parent;
@@ -181,7 +183,7 @@ class GTK::Box is GTK::Container {
   ) {
     self.unshift-end($child);
     self.SET-LATCH;
-    samewith($child.widget, $expand, $fill, $padding);
+    samewith($child.Widget, $expand, $fill, $padding);
   }
 
   multi method pack-start (
@@ -220,7 +222,7 @@ class GTK::Box is GTK::Container {
   ) {
     self.push-start($child);
     self.SET-LATCH;
-    samewith($child.widget, $expand, $fill, $padding);
+    samewith($child.Widget, $expand, $fill, $padding);
   }
 
   multi method query-child-packing (GtkWidget() $child) {
