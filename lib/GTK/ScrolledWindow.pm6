@@ -12,9 +12,10 @@ use GTK::Bin;
 
 use GTK::Roles::Signals::ScrolledWindow;
 
-my subset Ancestry
-  where GtkScrolledWindow | GtkScrollable | GtkBin | GtkContainer |
-        GtkBuilder        | GtkWidget;
+use GTK::Scrollbar;
+
+our subset ScrolledWindowAncestry is export
+  where GtkScrolledWindow | BinAncestry;
 
 class GTK::ScrolledWindow is GTK::Bin {
   also does GTK::Roles::Signals::ScrolledWindow;
@@ -30,7 +31,7 @@ class GTK::ScrolledWindow is GTK::Bin {
 
   submethod BUILD(:$scrolled) {
     given $scrolled {
-      when Ancestry {
+      when ScrolledWindowAncestry {
         self.setScrolledWindow($scrolled);
       }
       when GTK::ScrolledWindow {
@@ -43,6 +44,8 @@ class GTK::ScrolledWindow is GTK::Bin {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-sw;
   }
+  
+  method GTK::Raw::Types::GtkScrolledWindow is also<ScrolledWindow> { $!sw }
 
   method setScrolledWindow($scrolled) {
     my $to-parent;
@@ -59,7 +62,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (Ancestry $scrolled) {
+  multi method new (ScrolledWindowAncestry $scrolled) {
     my $o = self.bless(:$scrolled);
     $o.upref;
     $o;
@@ -118,7 +121,7 @@ class GTK::ScrolledWindow is GTK::Bin {
   method capture_button_press is rw is also<capture-button-press> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_scrolled_window_get_capture_button_press($!sw);
+        so gtk_scrolled_window_get_capture_button_press($!sw);
       },
       STORE => sub ($, Int() $capture_button_press is copy) {
         my gboolean  $cbp = self.RESOLVE-BOOL($capture_button_press);
@@ -274,6 +277,9 @@ D
       }
     );
   }
+  
+  # method policy is rw to call set_policy and get_policy?
+  
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -283,19 +289,36 @@ D
     gtk_scrolled_window_add_with_viewport($!sw, $child);
   }
 
-  method get_hscrollbar is also<get-hscrollbar> {
-    gtk_scrolled_window_get_hscrollbar($!sw);
+  # Mechanism to return plain GtkWidget?
+  method get_hscrollbar 
+    is also<
+      get-hscrollbar
+      hscrollbar
+    > 
+  {
+    GTK::Scrollbar.new( gtk_scrolled_window_get_hscrollbar($!sw) );
   }
 
-  method get_placement is also<get-placement> {
+  method get_placement 
+    is also<
+      get-placement
+      placement
+    > 
+  {
     GtkCornerType( gtk_scrolled_window_get_placement($!sw) );
   }
-
-  multi method get-policy (
-    Int() $hscrollbar_policy is rw,     # GtkPolicyType
-    Int() $vscrollbar_policy is rw      # GtkPolicyType
-  ) {
-    self.get_policy($hscrollbar_policy, $vscrollbar_policy);
+  
+  proto method get_policy (|)
+    is also<
+      get-policy
+      policy
+    >
+  { * }
+  
+  multi method get_policy {
+    my ($hp, $vp);
+    samewith($hp, $vp);
+    ($hp, $vp);
   }
   multi method get_policy (
     Int() $hscrollbar_policy is rw,     # GtkPolicyType
@@ -307,21 +330,19 @@ D
     ($hscrollbar_policy, $vscrollbar_policy) = ($hp, $vp);
     $rc;
   }
-  multi method get-policy {
-    self.get_policy;
-  }
-  multi method get_policy {
-    my ($hp, $vp);
-    samewith($hp, $vp);
-    ($hp, $vp);
-  }
 
   method get_type is also<get-type> {
     gtk_scrolled_window_get_type();
   }
 
-  method get_vscrollbar is also<get-vscrollbar> {
-    gtk_scrolled_window_get_vscrollbar($!sw);
+  # Mechanism to return plain GtkWidget?
+  method get_vscrollbar 
+    is also<
+      get-vscrollbar
+      vscrollbar
+    > 
+  {
+    GTK::Scrollbar.new( gtk_scrolled_window_get_vscrollbar($!sw) );
   }
 
   method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy)

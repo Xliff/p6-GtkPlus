@@ -9,9 +9,12 @@ use GTK::Compat::Types;
 use GTK::Raw::Label;
 use GTK::Raw::Types;
 
+use Pango::AttrList;
+use Pango::Layout;
+
 use GTK::Widget;
 
-our subset LabelAncestry where GtkLabel | WidgetAncestry;
+our subset LabelAncestry is export where GtkLabel | WidgetAncestry;
 
 class GTK::Label is GTK::Widget {
   has GtkLabel $!l;
@@ -23,20 +26,9 @@ class GTK::Label is GTK::Widget {
   }
 
   submethod BUILD(:$label) {
-    my $to-parent;
     given $label {
       when LabelAncestry {
-        $!l = do {
-          when GtkLabel  {
-            $to-parent = nativecast(GtkWidget, $_);
-            $_;
-          }
-          when WidgetAncestry {
-            $to-parent = $_;
-            nativecast(GtkLabel, $label);
-          }
-        };
-        self.setWidget($to-parent);
+        self.setLabel($label);
       }
       when GTK::Label {
       }
@@ -44,6 +36,8 @@ class GTK::Label is GTK::Widget {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkLabel is also<Label> { $!l }
 
   multi method new (LabelAncestry $label) {
     my $o = self.bless(:$label);
@@ -55,8 +49,19 @@ class GTK::Label is GTK::Widget {
     self.bless(:$label);
   }
 
-  method setLabel($label) {
-    self.setWidget( $!l = nativecast(GtkLabel, $label) );
+  method setLabel(LabelAncestry $label) {
+    my $to-parent;
+    $!l = do given $label {
+      when GtkLabel  {
+        $to-parent = nativecast(GtkWidget, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkLabel, $label);
+      }
+    };
+    self.setWidget($to-parent);
   }
 
   method new_with_mnemonic ($text) is also<new-with-mnemonic> {
@@ -109,13 +114,14 @@ class GTK::Label is GTK::Widget {
       }
     );
   }
-
+  
+  # PangoAttrList
   method attributes is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_label_get_attributes($!l);
+        Pango::AttrList.new( gtk_label_get_attributes($!l) );
       },
-      STORE => sub ($, PangoAttrList $attrs is copy) {
+      STORE => sub ($, PangoAttrList() $attrs is copy) {
         gtk_label_set_attributes($!l, $attrs);
       }
     );
@@ -338,8 +344,13 @@ class GTK::Label is GTK::Widget {
     gtk_label_get_current_uri($!l);
   }
 
-  method get_layout is also<get-layout> {
-    gtk_label_get_layout($!l);
+  method get_layout 
+    is also<
+      get-layout
+      layout
+    > 
+  {
+    Pango::Layout.new( gtk_label_get_layout($!l) );
   }
 
   method get_layout_offsets (Int() $x, Int() $y)

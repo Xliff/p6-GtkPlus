@@ -42,6 +42,8 @@ class GTK::Calendar is GTK::Widget {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkCalendar is also<Calendar> { $!cal }
 
   multi method new (CalendarAncestry $calendar) {
     my $o = self.bless(:$calendar);
@@ -143,13 +145,17 @@ class GTK::Calendar is GTK::Widget {
   method clear_marks is also<clear-marks> {
     gtk_calendar_clear_marks($!cal);
   }
-
-  multi method get-date (
-    Int() $year is rw,
-    Int() $month is rw,
-    Int() $day is rw
-  ) {
-    self.get_date($year, $month, $day);
+  
+  proto method get_date (|)
+    is also<
+      get-date
+      date
+    >
+  { * }
+  
+  multi method get_date {
+    my ($y, $m, $d) = (0 xx 3);
+    samewith($y, $m, $d);
   }
   multi method get_date (
     Int() $year is rw,
@@ -162,14 +168,6 @@ class GTK::Calendar is GTK::Widget {
     $m++;
     ($year, $month, $day) = ($y, $m, $d);
   }
-  multi method get-date {
-    self.get_date;
-  }
-  multi method get_date {
-    my ($y, $m, $d) = (0 xx 3);
-    samewith($y, $m, $d);
-  }
-
 
   method get_day_is_marked (Int() $day) is also<get-day-is-marked> {
     my guint $d = self.RESOLVE-UINT($day);

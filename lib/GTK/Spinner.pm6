@@ -9,7 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-my subset Ancestry where GtkSpinner | GtkBuildable | GtkWidget;
+our subset SpinnerAncestry is export
+  where GtkSpinner | WidgetAncestry;
 
 class GTK::Spinner is GTK::Widget {
   has GtkSpinner $!spin;
@@ -23,7 +24,7 @@ class GTK::Spinner is GTK::Widget {
   submethod BUILD(:$spin) {
     my $to-parent;
     given $spin {
-      when Ancestry {
+      when SpinnerAncestry {
         $!spin = do {
           when GtkSpinner {
             $to-parent = nativecast(GtkWidget, $_);
@@ -42,8 +43,10 @@ class GTK::Spinner is GTK::Widget {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkSpinner is also<Spinner> { $!spin }
 
-  multi method new (Ancestry $spin) {
+  multi method new (SpinnerAncestry $spin) {
     my $o = self.bless(:$spin);
     $o.upref;
     $o;

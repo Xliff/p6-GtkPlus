@@ -30,7 +30,7 @@ class GTK::Image is GTK::Widget {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
           }
-          when WidgetAncestry {
+          default {
             $to-parent = $_;
             nativecast(GtkImage, $_);
           }
@@ -44,12 +44,8 @@ class GTK::Image is GTK::Widget {
     }
   }
 
-  method GTK::Compat::Types::GdkPixbuf {
-    self.get_pixbuf;
-  }
-  method GTK::Raw::Types::GtkImage is also<image> {
-    $!i;
-  }
+  method GTK::Compat::Types::GdkPixbuf is also<Pixbuf> { self.get_pixbuf }
+  method GTK::Raw::Types::GtkImage     is also<Image>  { $!i }
 
   multi method new (ImageAncestry $image) {
     my $o = self.bless(:$image);
@@ -100,7 +96,7 @@ class GTK::Image is GTK::Widget {
     Int() $size                  # GtkIconSize $size
 
   )
-    is DEPRECATED
+    is DEPRECATED('new_from_icon_name')
     is also<new-from-icon-set>
   {
     my guint32 $s = self.RESOLVE-UINT($size);
@@ -113,7 +109,7 @@ class GTK::Image is GTK::Widget {
     self.bless(:$image);
   }
 
-  method new_from_resource (Str $resource) is also<new-from-resource> {
+  method new_from_resource (Str() $resource) is also<new-from-resource> {
     my $image = gtk_image_new_from_resource($resource);
     self.bless(:$image);
   }
@@ -185,8 +181,11 @@ class GTK::Image is GTK::Widget {
     );
   }
 
-  # Type: GtkIconTheme (was GtkIconSet)
-  method icon-set is rw is also<icon_set> {
+  # Type: GtkIconSet
+  method icon-set is rw 
+    is DEPRECATED('GTK::Image.icon-name')
+    is also<icon_set> 
+  {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {

@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::Range;
 
+our subset ScrollbarAncestry is export
+  where GtkScrollbar | RangeAncestry;
+
 class GTK::Scrollbar is GTK::Range {
   has GtkScrollbar $!sb;
 
@@ -21,15 +24,15 @@ class GTK::Scrollbar is GTK::Range {
   submethod BUILD(:$scroll) {
     my $to-parent;
     given $scroll {
-      when GtkScrollbar | GtkWidget {
+      when ScrollbarAncestry {
         $!sb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkScrollbar, $_);
-          }
           when GtkScrollbar {
             $to-parent = nativecast(GtkRange, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkScrollbar, $_);
           }
         };
         self.setRange($to-parent);
@@ -40,9 +43,13 @@ class GTK::Scrollbar is GTK::Range {
       }
     }
   }
+  
+  multi method GTK::Raw::Types::Scrollbar is also<Scrollbar> { $!sb }
 
-  multi method new (GtkWidget $scroll) {
-    self.bless(:$scroll);
+  multi method new (ScrollbarAncestry $scroll) {
+    my $o = self.bless(:$scroll);
+    $o.upref;
+    $o;
   }
   multi method new (Int() $orientation, GtkAdjustment() $adjustment) {
     my uint32 $or = self.RESOLVE-UINT($orientation);
@@ -65,4 +72,3 @@ class GTK::Scrollbar is GTK::Range {
   }
 
 }
-

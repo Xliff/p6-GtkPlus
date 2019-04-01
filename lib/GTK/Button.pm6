@@ -7,9 +7,12 @@ use GTK::Compat::Types;
 use GTK::Raw::Button;
 use GTK::Raw::Types;
 
-use GTK::Bin;
-
 use GTK::Roles::Actionable;
+
+use GTK::Compat::Window;
+
+use GTK::Bin;
+use GTK::Image;
 
 our subset ButtonAncestry is export where GtkButton | BinAncestry;
 
@@ -38,6 +41,8 @@ class GTK::Button is GTK::Bin {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkButton is also<Button> { $!b }
 
   method setButton($button) {
     my $to-parent;
@@ -51,7 +56,7 @@ class GTK::Button is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkButton, $_);
       }
-      when BinAncestry {
+      default {
         $to-parent = $_;
         nativecast(GtkButton, $_);
       }
@@ -109,50 +114,6 @@ class GTK::Button is GTK::Bin {
     self.bless(:$button);
   }
 
-  # Renamed from "clicked" due to conflict with the signal.
-  method emit-clicked is also<emit_clicked> {
-    gtk_button_clicked($!b);
-  }
-
-  multi method get-alignment (Num() $xalign is rw, Num() $yalign is rw)
-    is DEPRECATED
-  {
-    self.get_alignment($xalign, $yalign);
-  }
-  multi method get_alignment (Num() $xalign is rw, Num() $yalign is rw)
-    is DEPRECATED
-  {
-    my gfloat ($xa, $ya) = ($xalign, $yalign);
-    my $rc = gtk_button_get_alignment($!b, $xa, $ya);
-    ($xalign, $yalign) = ($xa, $ya);
-    $rc;
-  }
-  multi method get-alignment is DEPRECATED {
-    self.get_alignment;
-  }
-  multi method get_alignment is DEPRECATED {
-    my ($x, $y);
-    samewith($x, $y);
-    ($x, $y);
-  }
-
-  method get_event_window is also<get-event-window> {
-    gtk_button_get_event_window($!b);
-  }
-
-  # Used for type checking at the C level.
-  method get_type {
-    state ($n, $t);
-    self.unstable_get_type( &gtk_button_get_type, $n, $t )
-  }
-
-  method set_alignment (Num() $xalign, Num() $yalign)
-    is also<set-alignment>
-  {
-    my gfloat ($xa, $ya) = ($xalign, $yalign);
-    gtk_button_set_alignment($!b, $xalign, $yalign);
-  }
-
   method always_show_image is rw is also<always-show-image> {
     Proxy.new(
       FETCH => sub ($) {
@@ -180,7 +141,8 @@ class GTK::Button is GTK::Bin {
   method image is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_button_get_image($!b);
+        # Assumption, but... let's be honest.
+        GTK::Image.new( gtk_button_get_image($!b) );
       },
       STORE => sub ($, GtkWidget() $image is copy) {
         gtk_button_set_image($!b, $image);
@@ -226,7 +188,7 @@ class GTK::Button is GTK::Bin {
   method use_stock is rw is also<use-stock> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_button_get_use_stock($!b) );
+        so gtk_button_get_use_stock($!b);
       },
       STORE => sub ($, Int() $use_stock is copy) {
         my gboolean $us = self.RESOLVE-BOOL($use_stock);
@@ -238,7 +200,7 @@ class GTK::Button is GTK::Bin {
   method use_underline is rw is also<use-underline> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_button_get_use_underline($!b) );
+        so gtk_button_get_use_underline($!b);
       },
       STORE => sub ($, $use_underline is copy) {
         my gboolean $uu = self.RESOLVE-BOOL($use_underline);
@@ -281,6 +243,50 @@ class GTK::Button is GTK::Bin {
   # GtkButton, gpointer --> void
   method released {
     self.connect($!b, 'released');
+  }
+  
+  # Renamed from "clicked" due to conflict with the signal.
+  method emit-clicked is also<emit_clicked> {
+    gtk_button_clicked($!b);
+  }
+
+  multi method get-alignment (Num() $xalign is rw, Num() $yalign is rw)
+    is DEPRECATED
+  {
+    self.get_alignment($xalign, $yalign);
+  }
+  multi method get_alignment (Num() $xalign is rw, Num() $yalign is rw)
+    is DEPRECATED
+  {
+    my gfloat ($xa, $ya) = ($xalign, $yalign);
+    my $rc = gtk_button_get_alignment($!b, $xa, $ya);
+    ($xalign, $yalign) = ($xa, $ya);
+    $rc;
+  }
+  multi method get-alignment is DEPRECATED {
+    self.get_alignment;
+  }
+  multi method get_alignment is DEPRECATED {
+    my ($x, $y);
+    samewith($x, $y);
+    ($x, $y);
+  }
+
+  method get_event_window is also<get-event-window> {
+    GTK::Compat::Window.new( gtk_button_get_event_window($!b) );
+  }
+
+  # Used for type checking at the C level.
+  method get_type {
+    state ($n, $t);
+    self.unstable_get_type( &gtk_button_get_type, $n, $t )
+  }
+
+  method set_alignment (Num() $xalign, Num() $yalign)
+    is also<set-alignment>
+  {
+    my gfloat ($xa, $ya) = ($xalign, $yalign);
+    gtk_button_set_alignment($!b, $xalign, $yalign);
   }
 
 }

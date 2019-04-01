@@ -12,7 +12,8 @@ use GTK::Widget;
 use GTK::Roles::Orientable;
 use GTK::Roles::Signals::Range;
 
-my subset Ancestry where GtkRange | GtkOrientable | GtkBuildable | GtkWidget;
+our subset RangeAncestry is export 
+  where GtkRange | GtkOrientable | WidgetAncestry;
 
 class GTK::Range is GTK::Widget {
   also does GTK::Roles::Orientable;
@@ -22,7 +23,7 @@ class GTK::Range is GTK::Widget {
 
   submethod BUILD(:$range) {
     given $range {
-      when Ancestry {
+      when RangeAncestry {
         self.setRange($range);
       }
       default {
@@ -33,8 +34,10 @@ class GTK::Range is GTK::Widget {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-r;
   }
+  
+  method GTK::Raw::Types::GtkRange is also<Range> { $!r }
 
-  method setRange($range) {
+  method setRange(RangeAncestry $range) {
     my $to-parent;
     $!r = do given $range {
       when GtkRange {
@@ -56,7 +59,7 @@ class GTK::Range is GTK::Widget {
   }
 
   # This is an abstract class, but can have instances of it's descendants
-  method new (Ancestry $range) {
+  method new (RangeAncestry $range) {
     my $o = self.bless(:$range);
     $o.upref;
     $o;

@@ -7,12 +7,14 @@ use GTK::Compat::Types;
 use GTK::Raw::Viewport;
 use GTK::Raw::Types;
 
-use GTK::Bin;
-
 use GTK::Roles::Scrollable;
 
-my subset Ancestry
-  where GtkViewport | GtkScrollable | GtkContainer | GtkBuilder | GtkWidget;
+use GTK::Compat::Window;
+
+use GTK::Bin;
+
+our subset ViewPortAncestry is export
+  where GtkViewport | GtkScrollable | BinAncestry;
 
 class GTK::Viewport is GTK::Bin {
   also does GTK::Roles::Scrollable;
@@ -28,7 +30,7 @@ class GTK::Viewport is GTK::Bin {
   submethod BUILD(:$viewport) {
     my $to-parent;
     given $viewport {
-      when Ancestry {
+      when ViewPortAncestry {
         $!v = do {
           when GtkViewport {
             $to-parent = nativecast(GtkBin, $_);
@@ -39,7 +41,7 @@ class GTK::Viewport is GTK::Bin {
             $to-parent = nativecast(GtkBin, $_);
             nativecast(GtkViewport, $_);
           }
-          when GtkWidget {
+          default {
             $to-parent = $_;
             nativecast(GtkViewport, $_);
           }
@@ -53,8 +55,10 @@ class GTK::Viewport is GTK::Bin {
     }
     $!s //= nativecast(GtkScrollable, $!v)    # GTK::Roles::Scrollable
   }
+  
+  method GTK::Raw::Types::GtkViewPort is also<ViewPort> { $!v }
 
-  multi method new (Ancestry $viewport) {
+  multi method new (ViewPortAncestry $viewport) {
     my $o = self.bless(:$viewport);
     $o.upref;
     $o;
@@ -90,16 +94,28 @@ class GTK::Viewport is GTK::Bin {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_bin_window is also<get-bin-window> {
-    gtk_viewport_get_bin_window($!v);
+  method get_bin_window 
+    is also<
+      get-bin-window
+      bin_window
+      bin-window
+    > 
+  {
+    GDK::Compat::Window.new( gtk_viewport_get_bin_window($!v) );
   }
 
   method get_type is also<get-type> {
     gtk_viewport_get_type();
   }
 
-  method get_view_window is also<get-view-window> {
-    gtk_viewport_get_view_window($!v);
+  method get_view_window 
+    is also<
+      get-view-window
+      view_window
+      view-window
+    > 
+  {
+    GDK::Compat::Window.new( gtk_viewport_get_view_window($!v) );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
