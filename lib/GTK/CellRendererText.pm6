@@ -14,6 +14,9 @@ use GTK::CellRenderer;
 
 use GTK::Roles::Signals::Generic;
 
+our subset CellRendererTextAncestry is export 
+  where GtkCellRendererText | GtkCellRenderer;
+
 class GTK::CellRendererText is GTK::CellRenderer {
   also does GTK::Roles::Signals::Generic;
 
@@ -27,7 +30,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   submethod BUILD(:$celltext) {
     given $celltext {
-      when GtkCellRendererText | GtkCellRenderer {
+      when CellRendererTextAncestry {
         self.setCellRendererText($celltext);
       }
       when GTK::CellRendererText {
@@ -40,13 +43,13 @@ class GTK::CellRendererText is GTK::CellRenderer {
   method setCellRendererText($celltext) {
     my $to-parent;
     $!crt = do given $celltext {
-      when GtkCellRenderer {
-        $to-parent = $_;
-        nativecast(GtkCellRendererText, $_);
-      }
       when GtkCellRendererText  {
         $to-parent = nativecast(GtkCellRenderer, $_);
         $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkCellRendererText, $_);
       }
     }
     self.setCellRenderer($to-parent);
@@ -56,15 +59,15 @@ class GTK::CellRendererText is GTK::CellRenderer {
     self.disconnect-cellrenderer-signals;
   }
 
-  method GTK::Raw::Types::CellRendererText {
-    $!crt;
-  }
+  method GTK::Raw::Types::GtkCellRendererText 
+    is also<CellRendererText> 
+  { $!crt }
 
   multi method new {
     my $celltext = gtk_cell_renderer_text_new();
     self.bless(:$celltext);
   }
-  multi method new (GtkCellRenderer $celltext) {
+  multi method new (CellRendererTextAncestry $celltext) {
     self.bless(:$celltext);
   }
 
@@ -807,7 +810,9 @@ class GTK::CellRendererText is GTK::CellRenderer {
     gtk_cell_renderer_text_get_type();
   }
 
-  method set_fixed_height_from_font (Int() $number_of_rows) is also<set-fixed-height-from-font> {
+  method set_fixed_height_from_font (Int() $number_of_rows) 
+    is also<set-fixed-height-from-font> 
+  {
     my gint $nr = self.RESOLVE-INT($number_of_rows);
     gtk_cell_renderer_text_set_fixed_height_from_font($!crt, $nr);
   }

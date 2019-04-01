@@ -19,7 +19,7 @@ class GTK::PrintJob {
   has GtkPrintJob $!prnjob;
 
   submethod BUILD(:$job) {
-    $!prnjob = $job;
+    self!setObject($!prnjob = $job);
   }
 
   submethod DESTROY {

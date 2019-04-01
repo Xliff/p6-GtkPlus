@@ -10,6 +10,9 @@ use GTK::Raw::Types;
 use GTK::Adjustment;
 use GTK::CellRendererText;
 
+our subset CellRendererSpinAncestry is export
+  where GtkCellRendererSpin | CellRendererTextAncestry;
+
 class GTK::CellRendererSpin is GTK::CellRendererText {
   has GtkCellRendererSpin $!crs;
 
@@ -22,15 +25,15 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   submethod BUILD(:$cellspin) {
     my $to-parent;
     given $cellspin {
-      when GtkCellRendererSpin | GtkCellRenderer {
+      when CellRendererSpinAncestry {
         $!crs = do {
-          when GtkCellRenderer {
-            $to-parent = $_;
-            nativecast(GtkCellRendererSpin, $_);
-          }
           when GtkCellRendererSpin {
             $to-parent = nativecast(GtkCellRenderer, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkCellRendererSpin, $_);
           }
         }
         self.setCellRendererText($to-parent);
@@ -42,21 +45,18 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     }
   }
 
-  method GTK::Raw::Types::GtkCellRendererSpin {
-    $!crs;
-  }
+  method GTK::Raw::Types::GtkCellRendererSpin 
+    is also<CellRendererSpin> 
+  { $!crs }
 
   multi method new {
     my $cellspin = gtk_cell_renderer_spin_new();
     self.bless(:$cellspin);
   }
-  multi method new (GtkCellRendererCombo $cellspin) {
+  multi method new (CellRendererSpinAncestry $cellspin) {
     self.bless(:$cellspin);
   }
-  multi method new (GtkCellRenderer $cellspin) {
-    self.bless(:$cellspin);
-  }
-
+  
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 

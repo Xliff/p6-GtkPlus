@@ -7,10 +7,19 @@ use GTK::Compat::Types;
 use GTK::Raw::CellArea;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
+
+use GTK::Roles::Buildable;
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::CellArea;
 
+our subset CellAreaAncestry is export
+  where GtkCellArea | GtkOrientable | GtkCellLayout | GtkBuildable;
+
 class GTK::CellArea {
+  also does GTK::Compat::Roles::Object;
+  
+  also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::CellArea;
 
@@ -18,17 +27,34 @@ class GTK::CellArea {
 
   # Abstract classs GTK::CellArea
 
-  method setCellArea(GtkCellArea $cellarea) {
-    $!ca = $cellarea;
-    $!cl = nativecast(GtkCellLayout, $!ca);
+  method setCellArea(CellAreaAncestry $cellarea) {
+    self!setObject(
+      $!ca = do given $cellarea {
+        when GtkCellLayout {
+          $!cl = $_;                          # GTK::Roles::CellLayout
+          nativecast(GtkCellArea, $_);
+        }
+        when GtkBuildable {
+          $!b = $_;                           # GTK::Roles::Buildable
+          nativecast(GtkCellArea, $_);
+        }
+        when GtkCellArea {
+          $_
+        }
+        default {
+          nativecast(GtkCellArea, $_);
+        }
+      } 
+    );
+    $!cl //= nativecast(GtkCellLayout, $!ca);        # GTK::Roles::CellLayout
+    $!b  //= nativecast(GtkBuildable,   $!ca);       # GTK::Roles::Buildable
   }
 
-  method GTK::Raw::Types::GtkCellArea {
-    $!ca;
-  }
+  method GTK::Raw::Types::GtkCellArea is also<CellArea> { $!ca } 
 
-  method disconnect-cellarea-signals is also<disconnect_cellarea_signals> {
-    self.disconnect-all(%!signals-ca);
+  submethod DESTROY {
+    # Almost certainly a mistake! This should be done at the pointer level!!
+    #self.disconnect-all for %!signals-ca, $!signals;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -76,9 +102,9 @@ class GTK::CellArea {
   method activate (
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
-    GdkRectangle() $cell_area,
+    GdkRectangle $cell_area,
     Int() $flags,               # GtkCellRendererState $flags,
-    gboolean $edit_only
+    Int() $edit_only
   ) {
     my guint $f = self.RESOLVE-UINT($flags);
     my gboolean $e = self.RESOLVE-BOOL($edit_only);
@@ -89,9 +115,11 @@ class GTK::CellArea {
     GtkWidget() $widget,
     GtkCellRenderer() $r,
     GdkEvent $e,
-    GdkRectangle() $ca,
+    GdkRectangle $ca,
     Int() $flags                # GtkCellRendererState $flags
-  ) is also<activate-cell> {
+  ) 
+    is also<activate-cell> 
+  {
     my guint $f = self.RESOLVE-UINT($flags);
     gtk_cell_area_activate_cell($!ca, $widget, $r, $e, $ca, $f);
   }
@@ -239,7 +267,7 @@ class GTK::CellArea {
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
     GdkEvent $event,
-    GdkRectangle() $cell_area,
+    GdkRectangle $cell_area,
     Int() $flags                # GtkCellRendererState $flags
   ) {
     my guint $f = self.RESOLVE-UINT($flags);
@@ -260,8 +288,8 @@ class GTK::CellArea {
   method foreach_alloc (
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
-    GdkRectangle() $cell_area,
-    GdkRectangle() $background_area,
+    GdkRectangle $cell_area,
+    GdkRectangle $background_area,
     GtkCellAllocCallback $callback,
     gpointer $callback_data
   )
@@ -282,8 +310,8 @@ class GTK::CellArea {
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
     GtkCellRenderer() $renderer,
-    GdkRectangle() $cell_area,
-    GdkRectangle() $allocation
+    GdkRectangle $cell_area,
+    GdkRectangle $allocation
   )
     is also<get-cell-allocation>
   {
@@ -300,7 +328,7 @@ class GTK::CellArea {
   method get_cell_at_position (
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
-    GdkRectangle() $cell_area,
+    GdkRectangle $cell_area,
     Int() $x,
     Int() $y,
     GdkRectangle $alloc_area
@@ -428,8 +456,8 @@ class GTK::CellArea {
 
   method inner_cell_area (
     GtkWidget() $widget,
-    GdkRectangle() $cell_area,
-    GdkRectangle() $inner_area
+    GdkRectangle $cell_area,
+    GdkRectangle $inner_area
   )
     is also<inner-cell-area>
   {
@@ -466,10 +494,10 @@ class GTK::CellArea {
     GtkCellAreaContext() $context,
     GtkWidget() $widget,
     cairo_t $cr,
-    GdkRectangle() $background_area,
-    GdkRectangle() $cell_area,
+    GdkRectangle $background_area,
+    GdkRectangle $cell_area,
     Int() $flags,              # GtkCellRendererState $flags,
-    gboolean $paint_focus
+    Int() $paint_focus
   ) {
     my gboolean $pf = self.RESOLVE-BOOL($paint_focus);
     my guint $f = self.RESOLVE-UINT($flags);

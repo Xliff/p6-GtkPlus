@@ -19,16 +19,18 @@ use GTK::Render;
 use GTK::WidgetPath;
 
 use GTK::Roles::Signals::Generic;
+use GTK::Roles::Properties;
 use GTK::Roles::Types;
 
 class GTK::StyleContext {
+  also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkStyleContext $!sc;
 
   submethod BUILD(:$context) {
-    $!sc = $context;
+    self!setObject($!sc = $context);
   }
 
   submethod DESTROY {
@@ -43,9 +45,7 @@ class GTK::StyleContext {
     g_object_unref($!sc.p);
   }
 
-  method GTK::Raw::Types::GtkStyleContext is also<stylecontext> {
-    $!sc;
-  }
+  method GTK::Raw::Types::GtkStyleContext is also<StyleContext> { $!sc }
 
   multi method new(GtkStyleContext $context) {
     self.bless(:$context);

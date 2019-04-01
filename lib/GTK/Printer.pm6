@@ -20,7 +20,7 @@ class GTK::Printer {
   has GtkPrinter $!prn;
 
   submethod BUILD(:$printer) {
-    $!prn = $printer
+    self!setObject($!prn = $printer);
   }
 
   submethod DESTROY {

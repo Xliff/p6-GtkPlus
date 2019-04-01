@@ -10,17 +10,19 @@ use GTK::Raw::Types;
 
 use GTK::Compat::Pixbuf;
 
+use GTK::Compat::Roles::Object;
 use GTK::Roles::Types;
 
 # Opaque struct
 
 class GTK::IconInfo {
+  also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Types;
 
   has GtkIconInfo $!ii;
 
   submethod BUILD(:$info) {
-    $!ii = $info;
+    self!setObject($!ii = $info);             # GTK::Compat::Roles::Object
   }
   
   method GTK::Raw::Types::GtkIconInfo
@@ -103,7 +105,7 @@ class GTK::IconInfo {
     gtk_icon_info_get_display_name($!ii);
   }
 
-  method get_embedded_rect (GdkRectangle() $rectangle)
+  method get_embedded_rect (GdkRectangle $rectangle)
     is also<get-embedded-rect>
   {
     gtk_icon_info_get_embedded_rect($!ii, $rectangle);

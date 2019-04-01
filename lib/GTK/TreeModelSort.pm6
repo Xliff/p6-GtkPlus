@@ -7,11 +7,15 @@ use GTK::Compat::Types;
 use GTK::Raw::TreeModelSort;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
+
 use GTK::Roles::TreeDnD;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
 
 class GTK::TreeModelSort {
+  also does GTK::Compat::Roles::Object;
+  
   also does GTK::Roles::TreeDragSource;
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeSortable;
@@ -19,11 +23,14 @@ class GTK::TreeModelSort {
   has GtkTreeModelSort $!tms;
 
   submethod BUILD(:$treesort) {
-    $!tms = $treesort;
-    $!ds = nativecast(GtkTreeDragSource, $!tms);   # GTK::Roles::TreeDragSource
+    self!setObject($!tms = $treesort);              # GTK::Compat::Roles::Object
+    
+    $!ds = nativecast(GtkTreeDragSource, $!tms);    # GTK::Roles::TreeDragSource
     $!ts = nativecast(GtkTreeSortable, $!tms);      # GTK::Roles::GtkTreeSortable
     $!tm = nativecast(GtkTreeModel, $!tms);         # GTK::Roles::TreeModel
   }
+  
+  method GTK::Raw::Types::GtkTreeModelSort is also<TreeModelSort> { $!tms }
 
   method new (GtkTreeModel() $model) {
     my $treesort = gtk_tree_model_sort_new_with_model($model);
@@ -47,7 +54,9 @@ class GTK::TreeModelSort {
   method convert_child_iter_to_iter (
     GtkTreeIter() $sort_iter,
     GtkTreeIter() $child_iter
-  ) is also<convert-child-iter-to-iter> {
+  ) 
+    is also<convert-child-iter-to-iter> 
+  {
     gtk_tree_model_sort_convert_child_iter_to_iter(
       $!tms,
       $sort_iter,
@@ -55,14 +64,18 @@ class GTK::TreeModelSort {
     );
   }
 
-  method convert_child_path_to_path (GtkTreePath() $child_path) is also<convert-child-path-to-path> {
+  method convert_child_path_to_path (GtkTreePath() $child_path) 
+    is also<convert-child-path-to-path> 
+  {
     gtk_tree_model_sort_convert_child_path_to_path($!tms, $child_path);
   }
 
   method convert_iter_to_child_iter (
     GtkTreeIter() $child_iter,
     GtkTreeIter() $sorted_iter
-  ) is also<convert-iter-to-child-iter> {
+  ) 
+    is also<convert-iter-to-child-iter> 
+  {
     gtk_tree_model_sort_convert_iter_to_child_iter(
       $!tms,
       $child_iter,
@@ -70,7 +83,9 @@ class GTK::TreeModelSort {
     );
   }
 
-  method convert_path_to_child_path (GtkTreePath() $sorted_path) is also<convert-path-to-child-path> {
+  method convert_path_to_child_path (GtkTreePath() $sorted_path) 
+    is also<convert-path-to-child-path> 
+  {
     gtk_tree_model_sort_convert_path_to_child_path($!tms, $sorted_path);
   }
 
@@ -92,4 +107,3 @@ class GTK::TreeModelSort {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

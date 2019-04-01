@@ -9,6 +9,8 @@ class GTK::Compat::RGBA is repr('CStruct') is export { ... }
 
 our constant GdkRGBA is export := GTK::Compat::RGBA;
 
+# STRUCT. No Object representation
+
 class GTK::Compat::RGBA {
   has gdouble $.red;
   has gdouble $.green;

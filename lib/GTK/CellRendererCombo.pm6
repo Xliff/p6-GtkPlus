@@ -10,6 +10,9 @@ use GTK::Raw::Types;
 use GTK::CellRendererText;
 use GTK::ComboBox;
 
+our subset CellRendererComboAncestry is export 
+  where GtkCellRendererCombo | CellRendererTextAncestry;
+
 class GTK::CellRendererCombo is GTK::CellRendererText {
   has GtkCellRendererCombo $!crc;
 
@@ -42,18 +45,15 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
     }
   }
 
-  method GTK::Raw::Types::GtkCellRendererCombo {
-    $!crc;
-  }
+  method GTK::Raw::Types::GtkCellRendererCombo 
+    is also<CellRendererCombo> 
+  { $!crc }
 
   multi method new {
     my $cellcombo = gtk_cell_renderer_combo_new();
     self.bless(:$cellcombo);
   }
-  multi method new (GtkCellRendererCombo $cellcombo) {
-    self.bless(:$cellcombo);
-  }
-  multi method new (GtkCellRenderer $cellcombo) {
+  multi method new (CellRendererComboAncestry $cellcombo) {
     self.bless(:$cellcombo);
   }
 

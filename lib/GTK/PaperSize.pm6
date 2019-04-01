@@ -4,16 +4,19 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::Roles::Object;
 use GTK::Raw::PaperSize;
 use GTK::Raw::Types;
 
 # BOXED TYPE
 
 class GTK::PaperSize {
+  also does GTK::Compat::Roles::Object;
+  
   has GtkPaperSize $!ps;
 
   submethod BUILD(:$size) {
-    $!ps = $size;
+    self!setObject($!ps = $size);
   }
 
   method GTK::Raw::Types::GtkPaperSize 

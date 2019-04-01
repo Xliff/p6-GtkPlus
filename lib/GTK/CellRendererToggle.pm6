@@ -11,7 +11,8 @@ use GTK::CellRenderer;
 
 use GTK::Roles::Signals::Generic;
 
-my subset Ancestry where GtkCellRendererToggle | GtkCellRenderer | GtkWidget;
+our subset CellRendererToggleAncestry is export 
+  where GtkCellRendererToggle | GtkCellRenderer;
 
 class GTK::CellRendererToggle is GTK::CellRenderer {
   also does GTK::Roles::Signals::Generic;
@@ -27,15 +28,15 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   submethod BUILD(:$celltoggle) {
     my $to-parent;
     given $celltoggle {
-      when Ancestry {
+      when CellRendererToggleAncestry {
         $!crt = do {
-          when GtkCellRenderer | GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkCellRendererToggle, $_);
-          }
           when GtkCellRendererToggle {
             $to-parent = nativecast(GtkCellRenderer, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkCellRendererToggle, $_);
           }
         }
         self.setCellRenderer($to-parent);
@@ -51,15 +52,15 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     self.disconnect-all(%!signals);
   }
 
-  method GTK::Raw::Types::GtkCellRendererToggle {
-    $!crt;
-  }
+  method GTK::Raw::Types::GtkCellRendererToggle 
+    is also<CellRendererToggle> 
+    { $!crt }
 
   multi method new {
     my $celltoggle = gtk_cell_renderer_toggle_new();
     self.bless(:$celltoggle);
   }
-  multi method new (Ancestry $celltoggle) {
+  multi method new (CellRendererToggleAncestry $celltoggle) {
     self.bless(:$celltoggle);
   }
 

@@ -7,26 +7,26 @@ use GTK::Compat::Types;
 use GTK::Raw::Clipboard;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 class GTK::Clipboard {
+  also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkClipboard $!cb;
 
   submethod BUILD(:$clipboard) {
-    $!cb = $clipboard
+    self!setObject($!cb = $clipboard);        # GTK::Compat::Roles::Object
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
 
-  method GTK::Raw::Types::GtkClipboard {
-    $!cb;
-  }
+  method GTK::Raw::Types::GtkClipboard is also<Clipboard> { $!cb }
 
   multi method new (Int $sel) {
     GTK::Clipboard.get($sel);
@@ -187,7 +187,7 @@ class GTK::Clipboard {
     gtk_clipboard_set_can_store($!cb, $targets, $nt);
   }
 
-  method set_image (GdkPixbuf $pixbuf) is also<set-image> {
+  method set_image (GdkPixbuf() $pixbuf) is also<set-image> {
     gtk_clipboard_set_image($!cb, $pixbuf);
   }
 
@@ -221,7 +221,7 @@ class GTK::Clipboard {
     Int() $n_targets,
     &get_func,
     &clear_func,
-    GObject $owner
+    GObject() $owner
   )
     is also<set-with-owner>
   {
@@ -244,7 +244,7 @@ class GTK::Clipboard {
     gtk_clipboard_wait_for_contents($!cb, $target);
   }
 
-  method wait_for_image () is also<wait-for-image> {
+  method wait_for_image is also<wait-for-image> {
     gtk_clipboard_wait_for_image($!cb);
   }
 

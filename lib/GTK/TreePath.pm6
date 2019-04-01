@@ -19,6 +19,8 @@ class GTK::TreePath {
   submethod BUILD(:$path) {
     $!tp = $path;
   }
+  
+  method GTK::Raw::Types::GtkTreePath is also<TreePath> { $!tp }
 
   multi method new {
     my $path = gtk_tree_path_new();
@@ -44,10 +46,6 @@ class GTK::TreePath {
   method new_from_string (Str() $newpath) is also<new-from-string> {
     my $path = gtk_tree_path_new_from_string($newpath);
     self.bless(:$path);
-  }
-
-  method GTK::Raw::Types::GtkTreePath {
-    $!tp;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

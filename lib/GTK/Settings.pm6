@@ -7,17 +7,20 @@ use GTK::Compat::Value;
 use GTK::Raw::Settings;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
 use GTK::Roles::Types;
 use GTK::Roles::StyleProvider;
 
 class GTK::Settings {
+  also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Types;
   also does GTK::Roles::StyleProvider;
 
   has GtkSettings $!s;
 
   submethod BUILD(:$settings) {
-    $!sp = nativecast(GtkSettings, $!s = $settings);
+    self!setObject($!s = $settings);              # GTK::Compat::Roles::Object
+    $!sp = nativecast(GtkSettings, $settings);    # GTK::Roles::StyleProvider
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

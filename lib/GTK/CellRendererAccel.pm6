@@ -12,6 +12,9 @@ use GTK::CellRendererText;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::CellRendererAccel;
 
+our subset CellRendererAccelAncestry is export
+  where GtkCellRendererAccel | CellRendererTextAncestry;
+
 class GTK::CellRendererAccel is GTK::CellRendererText {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CellRendererAccel;
@@ -27,15 +30,15 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   submethod BUILD(:$cellaccel) {
     my $to-parent;
     given $cellaccel {
-      when GtkCellRendererAccel | GtkCellRenderer {
+      when CellRendererAccelAncestry {
         $!cra = do {
-          when GtkCellRenderer {
-            $to-parent = $_;
-            nativecast(GtkCellRendererAccel, $_);
-          }
           when GtkCellRendererAccel  {
             $to-parent = nativecast(GtkCellRendererText, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkCellRendererAccel, $_);
           }
         }
         self.setCellRendererText($to-parent);
@@ -51,8 +54,11 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     self.disconnect-all(%!signals-cra);
   }
 
-  method new {
+  multi method new {
     my $cellaccel = gtk_cell_renderer_accel_new();
+    self.bless(:$cellaccel);
+  }
+  multi method new (CellRendererAccelAncestry $cellaccel) {
     self.bless(:$cellaccel);
   }
 

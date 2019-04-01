@@ -7,12 +7,16 @@ use GTK::Compat::Types;
 use GTK::Raw::TreeStore;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
+
 use GTK::Roles::Buildable;
 use GTK::Roles::TreeDnD;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
 
 class GTK::TreeStore  {
+  also does GTK::Compat::Roles::Object;
+  
   also does GTK::Roles::Buildable;
   also does GTK::Roles::TreeDragDest;
   also does GTK::Roles::TreeDragSource;
@@ -22,7 +26,8 @@ class GTK::TreeStore  {
   has GtkTreeStore $!tree;
 
   submethod BUILD(:$treestore) {
-    $!tree = $treestore;
+    self!setObject($!tree = $treestore);           # GTK::Compat::Roles::Object
+    
     $!b  = nativecast(GtkBuildable,      $!tree);  # GTK::Roles::Buildable
     $!tm = nativecast(GtkTreeModel,      $!tree);  # GTK::Roles::TreeModel
     $!ts = nativecast(GtkTreeSortable,   $!tree);  # GTK::Roles::TreeSortable

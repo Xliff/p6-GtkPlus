@@ -22,14 +22,12 @@ class GTK::CellRenderer {
 
   has GtkCellRenderer $!cr;
 
-  method setCellRenderer($renderer) {
-    $!prop = nativecast(GObject, $!cr = $renderer);
+  method setCellRenderer(GtkCellRenderer $renderer) {
+    self!setObject($!cr = $renderer);       # GTK::Roles::Properties
     $!data = $!cr;                          # GTK::Roles::Data
   }
 
-  method GTK::Raw::Types::GtkCellRenderer is also<cellrenderer> {
-    $!cr;
-  }
+  method GTK::Raw::Types::GtkCellRenderer is also<CellRenderer> { $!cr }
 
   method disconnect-cellrenderer-signals
     is also<disconnect_cellrenderer_signals>
@@ -83,7 +81,7 @@ class GTK::CellRenderer {
 
   # Type: gchar
   method cell-background is rw is also<cell_background> {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         warn "cell-background does not allow reading"
@@ -96,30 +94,34 @@ class GTK::CellRenderer {
   }
 
   # Type: GdkColor
-  method cell-background-gdk is rw is also<cell_background_gdk> {
-    my GTK::Compat::Value $gv .= new;
-    Proxy.new(
-      FETCH => -> $ {
-        self.prop_get('cell-background-gdk', $gv);
-        nativecast(GdkColor, $gv.pointer);
-      },
-      STORE => -> $, GdkColor $val is copy {
-        $gv.pointer = $val;
-        self.prop_set('cell-background-gdk', $gv);
-      }
-    );
-  }
+  # method cell-background-gdk is rw  is DEPRECATED( “cell-background-rgba” ) {
+  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   Proxy.new(
+  #     FETCH => -> $ {
+  #       $gv = GTK::Compat::Value.new(
+  #         self.prop_get('cell-background-gdk', $gv)
+  #       );
+  #       #$gv.TYPE
+  #     },
+  #     STORE => -> $,  $val is copy {
+  #       #$gv.TYPE = $val;
+  #       self.prop_set('cell-background-gdk', $gv);
+  #     }
+  #   );
+  # }
 
   # Type: GdkRGBA
   method cell-background-rgba is rw is also<cell_background_rgba> {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('cell-background-rgba', $gv);
-        nativecast(GTK::Compat::RGBA, $gv.pointer);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('cell-background-rgba', $gv)
+        );
+        nativecast(GdkRGBA, $gv.pointer);
       },
-      STORE => -> $, GTK::Compat::RGBA() $val is copy {
-        $gv.pointer = nativecast(Pointer, $val);
+      STORE => -> $, $val is copy {
+        $gv.pointer = $val;
         self.prop_set('cell-background-rgba', $gv);
       }
     );
@@ -127,25 +129,29 @@ class GTK::CellRenderer {
 
   # Type: gboolean
   method cell-background-set is rw is also<cell_background_set> {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('cell-background-set', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('cell-background-set', $gv)
+        );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('cell-background-set', $gv);
       }
     );
   }
 
   # Type: gboolean
-  method editing is rw {
-    my GTK::Compat::Value $gv .= new;
+  method editing is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('editing', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('editing', $gv)
+        );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -155,15 +161,17 @@ class GTK::CellRenderer {
   }
 
   # Type: gint
-  method height is rw {
-    my GTK::Compat::Value $gv .= new;
+  method height is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('height', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('height', $gv)
+        );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('height', $gv);
       }
     );
@@ -171,14 +179,16 @@ class GTK::CellRenderer {
 
   # Type: gboolean
   method is-expanded is rw is also<is_expanded> {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('is-expanded', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('is-expanded', $gv)
+        );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('is-expanded', $gv);
       }
     );
@@ -186,85 +196,97 @@ class GTK::CellRenderer {
 
   # Type: gboolean
   method is-expander is rw is also<is_expander> {
-    my GTK::Compat::Value $gv .= new;
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('is-expander', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('is-expander', $gv)
+        );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('is-expander', $gv);
       }
     );
   }
 
   # Type: GtkCellRendererMode
-  method mode is rw {
-    my GTK::Compat::Value $gv .= new;
+  method mode is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('mode', $gv);
-        GtkCellRendererMode($gv.enum);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('mode', $gv)
+        );
+        GtkCellRendererMode( $gv.uint )
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = self.RESOLVE-UINT($val);
+        $gv.uint = $val;
         self.prop_set('mode', $gv);
       }
     );
   }
 
-  # Type: gboolean
-  # method sensitive is rw {
-  #   my GValue $gv .= new;
+  # # Type: gboolean
+  # method sensitive is rw  {
+  #   my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       self.prop_get('sensitive', $gv);
-  # #        $gv.get_TYPE;
+  #       $gv = GTK::Compat::Value.new(
+  #         self.prop_get('sensitive', $gv)
+  #       );
+  #       $gv.boolean;
   #     },
-  #     STORE => -> $, $val is copy {
-  # #        $gv.set_TYPE($val);
+  #     STORE => -> $, Int() $val is copy {
+  #       $gv.boolean = $val;
   #       self.prop_set('sensitive', $gv);
   #     }
   #   );
   # }
-
-  # Type: gboolean
-  # method visible is rw {
-  #   my GValue $gv .= new;
+  # 
+  # # Type: gboolean
+  # method visible is rw  {
+  #   my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       self.prop_get('visible', $gv);
-  # #        $gv.get_TYPE;
+  #       $gv = GTK::Compat::Value.new(
+  #         self.prop_get('visible', $gv)
+  #       );
+  #       $gv.boolean;
   #     },
-  #     STORE => -> $, $val is copy {
-  # #        $gv.set_TYPE($val);
+  #     STORE => -> $, Int() $val is copy {
+  #       $gv.boolean = $val;
   #       self.prop_set('visible', $gv);
   #     }
   #   );
   # }
 
   # Type: gint
-  method width is rw {
-    my GTK::Compat::Value $gv .= new;
+  method width is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('width', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('width', $gv)
+        );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('width', $gv);
       }
     );
   }
 
   # Type: gfloat
-  method xalign is rw {
-    my GTK::Compat::Value $gv .= new;
+  method xalign is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('xalign', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('xalign', $gv)
+        );
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
@@ -275,26 +297,30 @@ class GTK::CellRenderer {
   }
 
   # Type: guint
-  method xpad is rw {
-    my GTK::Compat::Value $gv .= new;
+  method xpad is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('xpad', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('xpad', $gv)
+        );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.uint = self.RESOLVE-UINT($val);
+        $gv.uint = $val;
         self.prop_set('xpad', $gv);
       }
     );
   }
 
   # Type: gfloat
-  method yalign is rw {
-    my GTK::Compat::Value $gv .= new;
+  method yalign is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('yalign', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('yalign', $gv)
+        );
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
@@ -305,15 +331,17 @@ class GTK::CellRenderer {
   }
 
   # Type: guint
-  method ypad is rw {
-    my GValue $gv .= new;
+  method ypad is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        self.prop_get('ypad', $gv);
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('ypad', $gv)
+        );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.uint = self.RESOLVE-UINT($val);
+        $gv.uint = $val;
         self.prop_set('ypad', $gv);
       }
     );
@@ -323,11 +351,11 @@ class GTK::CellRenderer {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method activate (
-    GdkEvent() $event,
+    GdkEvent $event,
     GtkWidget() $widget,
     Str() $path,
-    GdkRectangle() $background_area,
-    GdkRectangle() $cell_area,
+    GdkRectangle $background_area,
+    GdkRectangle $cell_area,
     Int() $flags                # GtkCellRendererState $flags
   ) {
     my uint32 $f = self.RESOLVE-UINT($flags);
@@ -349,8 +377,8 @@ class GTK::CellRenderer {
   method get_aligned_area (
     GtkWidget() $widget,
     Int() $flags,               # GtkCellRendererState $flags,
-    GdkRectangle() $cell_area,
-    GdkRectangle() $aligned_area
+    GdkRectangle $cell_area,
+    GdkRectangle $aligned_area
   )
     is also<get-aligned-area>
   {
@@ -403,7 +431,7 @@ class GTK::CellRenderer {
   }
 
   method get_preferred_height_for_width (
-    GtkWidget $widget,
+    GtkWidget() $widget,
     Int() $width,
     Int() $minimum_height,
     Int() $natural_height
@@ -426,6 +454,7 @@ class GTK::CellRenderer {
     GtkRequisition $minimum_size,
     GtkRequisition $natural_size
   )
+    
     is also<get-preferred-size>
   {
     gtk_cell_renderer_get_preferred_size(
@@ -473,7 +502,7 @@ class GTK::CellRenderer {
 
   method get_size (
     GtkWidget() $widget,
-    GdkRectangle() $cell_area,
+    GdkRectangle $cell_area,
     Int() $x_offset,
     Int() $y_offset,
     Int() $width,
@@ -507,8 +536,8 @@ class GTK::CellRenderer {
   method render (
     cairo_t $cr,
     GtkWidget() $widget,
-    GdkRectangle() $background_area,
-    GdkRectangle() $cell_area,
+    GdkRectangle $background_area,
+    GdkRectangle $cell_area,
     Int() $flags                # GtkCellRendererState $flags
   ) {
     my uint32 $f = self.RESOLVE-UINT($flags);
@@ -547,9 +576,9 @@ class GTK::CellRenderer {
     GdkEvent $event,
     GtkWidget() $widget,
     Str() $path,
-    GdkRectangle() $background_area,
-    GdkRectangle() $cell_area,
-    guint $flags                # GtkCellRendererState $flags
+    GdkRectangle $background_area,
+    GdkRectangle $cell_area,
+    Int() $flags                # GtkCellRendererState $flags
   )
     is also<start-editing>
   {

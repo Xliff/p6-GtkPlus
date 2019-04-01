@@ -25,8 +25,7 @@ class GTK::PrintOperation {
   has GtkPrintOperation $!po;
 
   submethod BUILD(:$op) {
-    $!po = $op;
-    $!prop = nativecast(GObject, $!po);       # GTK::Roles::Properties
+    self!setObject($!po = $op);               # GTK::Roles::Properties
   }
 
   submethod DESTROY {
@@ -493,12 +492,13 @@ class GTK::PrintOperation {
   }
 
   method run (
-    GtkPrintOperationAction $action,
+    Int() $action,
     GtkWindow() $parent,
     CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
-    my $rc = gtk_print_operation_run($!po, $action, $parent, $error);
+    my guint $a = self.RESOLVE-UINT($action);
+    my $rc = gtk_print_operation_run($!po, $a, $parent, $error);
     $ERROR = $error with $error[0];
     $rc;
   }

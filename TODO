@@ -45,6 +45,8 @@
   + Test case for all features of GTK::Utils::MenuBuilder
 - For ALL type coercer methods, insure they are aliased to a proper object-specific nickname
 - Add an implementation for GTK::Compat::Closure (GClosure)
+- Roll GTK::Roles::References into GTK::Roles::Object
+- Consider having GTK::Roles::Properties do GTK::Roles::Object (could rolling properties into objects be a thing?)
 
 Applications
 ============

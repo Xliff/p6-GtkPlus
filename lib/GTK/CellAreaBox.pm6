@@ -10,13 +10,11 @@ use GTK::Raw::Types;
 use GTK::CellArea;
 
 use GTK::Roles::Orientable;
-use GTK::Roles::CellLayout;
 
-my subset Ancestry
-  where GtkCellAreaBox | GtkCellArea | GtkOrientable | GtkCellLayout | GtkWidget;
+our subset CellAreaBoxAncestry
+  where GtkCellAreaBox | GtkOrientable | CellAreaAncestry;
 
 class GTK::CellAreaBox is GTK::CellArea {
-  also does GTK::Roles::CellLayout;
   also does GTK::Roles::Orientable;
 
   has GtkCellAreaBox $!cab;
@@ -30,25 +28,19 @@ class GTK::CellAreaBox is GTK::CellArea {
   submethod BUILD(:$cellbox) {
     my $to-parent;
     given $cellbox {
-      when Ancestry {
+      when CellAreaBoxAncestry {
         $!cab = do {
-          when GtkWidget | GtkCellArea {
-            $to-parent = $_;
-            nativecast(GtkCellAreaBox, $_);
+          when GtkCellAreaBox {
+            $to-parent = nativecast(GtkCellArea, $_);
+            $_;
           }
           when GtkOrientable {
             $!or = $_;                          # GTK::Roles::Orientable
             $to-parent = nativecast(GtkCellArea, $_);
             nativecast(GtkCellAreaBox, $_);
           }
-          when GtkCellLayout {
-            $!cl = $_;                          # GTK::Roles::CellLayout
-            $to-parent = nativecast(GtkCellArea, $_);
-            nativecast(GtkCellAreaBox, $_);
-          }
-          when GtkCellAreaBox {
-            $to-parent = nativecast(GtkCellArea, $_);
-            $_;
+          default {
+            nativecast(GtkCellAreaBox, $to-parent = $_);
           }
         }
         self.setCellArea($to-parent);
@@ -58,25 +50,23 @@ class GTK::CellAreaBox is GTK::CellArea {
       default {
       }
     }
-    $!cl //= nativecast(GtkCellLayout, $!cab);  # GTK::Roles::CellLayout
     $!or //= nativecast(GtkOrientable, $!cab);  # GTK::Roles::Orientable
   }
 
   submethod DESTROY {
     self.disconnect-cellarea-signals;
   }
+  
+  method GTK::Raw::Types::GtkCellAreaBox is also<CellAreaBox> { $!cab }
 
   multi method new {
     my $cellbox = gtk_cell_area_box_new();
     self.bless(:$cellbox);
   }
-  multi method new (Ancestry $cellbox) {
+  multi method new (CellAreaBoxAncestry $cellbox) {
     self.bless(:$cellbox);
   }
 
-  method GTK::Raw::Types::GtkCellArea {
-    $!cab;
-  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -105,7 +95,9 @@ class GTK::CellAreaBox is GTK::CellArea {
     Int() $expand,
     Int() $align,
     Int() $fixed
-  ) is also<pack-end> {
+  ) 
+    is also<pack-end> 
+  {
     my @b = ($expand, $align, $fixed);
     my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
     gtk_cell_area_box_pack_end($!cab, $renderer, $e, $a, $f);
@@ -116,7 +108,9 @@ class GTK::CellAreaBox is GTK::CellArea {
     Int() $expand,
     Int() $align,
     Int() $fixed
-  ) is also<pack-start> {
+  ) 
+    is also<pack-start> 
+  {
     my @b = ($expand, $align, $fixed);
     my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
     gtk_cell_area_box_pack_start($!cab, $renderer, $e, $a, $f);
@@ -125,4 +119,3 @@ class GTK::CellAreaBox is GTK::CellArea {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

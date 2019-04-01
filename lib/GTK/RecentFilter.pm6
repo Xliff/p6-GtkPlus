@@ -17,8 +17,8 @@ class GTK::RecentFilter {
   has GtkRecentFilter $!rf;
 
   submethod BUILD(:$filter) {
-    self!setObject($!rf = $filter);
-    $!b  = nativecast(GtkBuildable, $!rf); # GTK::Roles::Buildable
+    self!setObject($!rf = $filter);           # GTK::Compat::Roles::Object
+    $!b  = nativecast(GtkBuildable, $!rf);    # GTK::Roles::Buildable
   }
   
   method GTK::Raw::Types::GtkRecentFilter

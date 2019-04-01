@@ -9,6 +9,9 @@ use GTK::Raw::Types;
 
 use GTK::CellRenderer;
 
+our subset CellRendererProgressAncestry is export 
+  where GtkCellRendererProgress | GtkCellRenderer;
+
 class GTK::CellRendererProgress is GTK::CellRenderer {
   has GtkCellRendererProgress $!crp;
 
@@ -19,20 +22,9 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   }
 
   submethod BUILD(:$cellprogress) {
-    my $to-parent;
     given $cellprogress {
-      when GtkCellRendererProgress | GtkCellRenderer {
-        $!crp = do {
-          when GtkCellRenderer {
-            $to-parent = $_;
-            nativecast(GtkCellRendererProgress, $_);
-          }
-          when GtkCellRendererProgress  {
-            $to-parent = nativecast(GtkCellRenderer, $_);
-            $_;
-          }
-        }
-        self.setCellRenderer($to-parent);
+      when CellRendererProgressAncestry {
+        self.setCellRendererProgress($cellprogress);
       }
       when GTK::CellRendererProgress {
       }
@@ -40,19 +32,31 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
       }
     }
   }
-
-  method GTK::Raw::Types::CellRendererProgress {
-    $!crp;
+  
+  method setCellRendererProgress(CellRendererProgressAncestry $progress) {
+    my $to-parent;
+    $!crp = do given $progress {
+      when GtkCellRendererProgress  {
+        $to-parent = nativecast(GtkCellRenderer, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkCellRendererProgress, $_);
+      }
+    }
+    self.setCellRenderer($to-parent);
   }
+
+  method GTK::Raw::Types::CellRendererProgress 
+    is also<CellRendererProgress> 
+  { $!crp }
 
   multi method new {
     my $cellprogress = gtk_cell_renderer_progress_new();
     self.bless(:$cellprogress);
   }
-  multi method new (GtkCellRenderer $cellprogress) {
-    self.bless(:$cellprogress);
-  }
-  multi method new (GtkCellRendererProgress $cellprogress) {
+  multi method new (CellRendererProgressAncestry $cellprogress) {
     self.bless(:$cellprogress);
   }
 
