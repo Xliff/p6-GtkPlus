@@ -31,6 +31,8 @@ class GTK::PrintOperation {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals, %!signals-po;
   }
+  
+  method GTK::Raw::Types::GtkPrintOperation is also<PrintOperation> { $!po }
 
   multi method new (GtkPrintOperation $op) {
     self.bless(:$op);
@@ -38,10 +40,6 @@ class GTK::PrintOperation {
   multi method new {
     my $op = gtk_print_operation_new();
     self.bless(:$op);
-  }
-
-  method GTK::Raw::Types::GtkPrintOperation {
-    $!po;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

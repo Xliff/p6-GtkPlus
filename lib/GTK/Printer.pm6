@@ -26,8 +26,10 @@ class GTK::Printer {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
+  
+  method GTK::Raw::Types::GtkPrinter is also<Printer> { $!prn }
 
-  multi method new (GtkPrinter() $printer) {
+  multi method new (GtkPrinter $printer) {
     self.bless(:$printer);
   }
   multi method new (

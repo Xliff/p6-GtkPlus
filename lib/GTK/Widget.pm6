@@ -93,9 +93,7 @@ class GTK::Widget {
     $t;
   }
 
-  method GTK::Raw::Types::GtkWidget is also<widget> {
-    $!w;
-  }
+  method GTK::Raw::Types::GtkWidget is also<Widget> { $!w }
 
   method setWidget($widget) {
 #    "setWidget".say;

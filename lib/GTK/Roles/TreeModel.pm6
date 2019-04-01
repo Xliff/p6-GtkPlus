@@ -22,9 +22,7 @@ role GTK::Roles::TreeModel {
     $!tm = $tree;
   }
 
-  method GTK::Raw::Types::GtkTreeModel {
-    $!tm;
-  }
+  method GTK::Raw::Types::GtkTreeModel is also<TreeModel> { $!tm }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 

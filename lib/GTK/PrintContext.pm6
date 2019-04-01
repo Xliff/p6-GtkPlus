@@ -25,8 +25,10 @@ class GTK::PrintContext {
   submethod BUILD(:$context) {
     self!setObject($!pc = $context);
   }
+  
+  method GTK::Raw::Types::GtkPrintContext is also<PrintContext> { $!pc }
 
-  method new (GtkPrintContext() $context) {
+  method new (GtkPrintContext $context) {
     self.bless(:$context);
   }
 

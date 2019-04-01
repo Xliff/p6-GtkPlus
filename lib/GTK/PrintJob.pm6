@@ -25,6 +25,8 @@ class GTK::PrintJob {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
+  
+  method GTK::Raw::Types::GtkPrintJob is also<PrintJob> { $!prnjob }
 
   multi method new(GtkPrintJob() $job) {
     self.bless(:$job);

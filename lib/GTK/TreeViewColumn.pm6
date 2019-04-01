@@ -12,11 +12,13 @@ use GTK::CellArea;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::CellLayout;
+use GTK::Roles::Properties;
 use GTK::Roles::Types;
 
 class GTK::TreeViewColumn {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;
+  also does GTK::Roles::Properties;
 
   # Using GTK::Raw::Utils to prevent circular role dependency between
   # CellLayout and Types
@@ -24,14 +26,13 @@ class GTK::TreeViewColumn {
   has GtkTreeViewColumn $!tvc;
 
   submethod BUILD(:$treeview) {
-    $!tvc = $treeview;
-    $!b   = nativecast(GtkBuildable, $!tvc);    # GTK::Roles::Buildable
-    $!cl  = nativecast(GtkCellLayout, $!tvc);  # GTK::Roles::CellLayout
+    self!setObject($!tvc = $treeview);
+    
+    $!b   = nativecast(GtkBuildable,  $!tvc);   # GTK::Roles::Buildable
+    $!cl  = nativecast(GtkCellLayout, $!tvc);   # GTK::Roles::CellLayout
   }
 
-  method GTK::Raw::Types::GtkTreeViewColumn {
-    $!tvc;
-  }
+  method GTK::Raw::Types::GtkTreeViewColumn is also<TreeViewColumn> { $!tvc }
 
   multi method new (GtkTreeViewColumn $treeview) {
     self.bless(:$treeview);
@@ -237,7 +238,7 @@ class GTK::TreeViewColumn {
     );
   }
 
-  # Must be resolved by caller.
+  # Not to be confused with GTK::Widget.Widget, hence the case difference.
   method widget is rw {
     Proxy.new(
       FETCH => sub ($) {
@@ -302,7 +303,9 @@ class GTK::TreeViewColumn {
     GtkCellRenderer() $cell_renderer,
     Str() $attribute,
     Int() $column
-  ) is also<add-attribute> {
+  ) 
+    is also<add-attribute> 
+  {
     my gint $c = resolve-int($column);
     gtk_tree_view_column_add_attribute($!tvc, $cell_renderer, $attribute, $c);
   }
@@ -318,12 +321,14 @@ class GTK::TreeViewColumn {
   }
 
   method cell_get_size (
-    GdkRectangle() $cell_area,
+    GdkRectangle $cell_area,
     Int() $x_offset,
     Int() $y_offset,
     Int() $width,
     Int() $height
-  ) is also<cell-get-size> {
+  ) 
+    is also<cell-get-size> 
+  {
     my @i = ($x_offset, $y_offset, $width, $height);
     my gint ($xo, $yo, $w, $h) = resolve-int(@i);
     gtk_tree_view_column_cell_get_size($!tvc, $cell_area, $xo, $yo, $w, $h);
@@ -338,7 +343,9 @@ class GTK::TreeViewColumn {
     GtkTreeIter() $iter,
     Int() $is_expander,
     Int() $is_expanded
-  ) is also<cell-set-cell-data> {
+  ) 
+    is also<cell-set-cell-data> 
+  {
     my @b = ($is_expander, $is_expanded);
     my ($er, $ed) = resolve-bool(@b);
     gtk_tree_view_column_cell_set_cell_data(
@@ -354,7 +361,9 @@ class GTK::TreeViewColumn {
     gtk_tree_view_column_clear($!tvc);
   }
 
-  method clear_attributes (GtkCellRenderer() $cell_renderer) is also<clear-attributes> {
+  method clear_attributes (GtkCellRenderer() $cell_renderer) 
+    is also<clear-attributes> 
+  {
     gtk_tree_view_column_clear_attributes($!tvc, $cell_renderer);
   }
 
@@ -386,12 +395,16 @@ class GTK::TreeViewColumn {
     gtk_tree_view_column_get_x_offset($!tvc);
   }
 
-  method pack_end (GtkCellRenderer() $cell, Int() $expand) is also<pack-end> {
+  method pack_end (GtkCellRenderer() $cell, Int() $expand) 
+    is also<pack-end> 
+  {
     my gboolean $e = resolve-bool($expand);
     gtk_tree_view_column_pack_end($!tvc, $cell, $e);
   }
 
-  method pack_start (GtkCellRenderer() $cell, Int() $expand) is also<pack-start> {
+  method pack_start (GtkCellRenderer() $cell, Int() $expand) 
+    is also<pack-start> 
+  {
     my gboolean $e = resolve-bool($expand);
     gtk_tree_view_column_pack_start($!tvc, $cell, $e);
   }
@@ -405,7 +418,9 @@ class GTK::TreeViewColumn {
     GtkTreeCellDataFunc $func,
     gpointer $func_data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
-  ) is also<set-cell-data-func> {
+  ) 
+    is also<set-cell-data-func> 
+  {
     gtk_tree_view_column_set_cell_data_func(
       $!tvc,
       $cell_renderer,

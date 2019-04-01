@@ -16,7 +16,11 @@ use GTK::Adjustment;
 use GTK::CSSProvider;
 use GTK::Widget;
 
+use GTK::Compat::Roles::Object;
+
 class GTK::Builder does Associative {
+  also does GTK::Compat::Roles::Object;
+  
   has GtkBuilder $!b;
   has GtkWindow $.window;
   has %!types;
@@ -41,7 +45,7 @@ class GTK::Builder does Associative {
     :$window-name,
     :$style
   ) {
-    $!b = $builder;
+    self!setObject($!b = $builder);             # GTK::Roles::Compat::Object
 
     my %sections;
     my ($ui-data, $style-data);
@@ -75,6 +79,8 @@ class GTK::Builder does Associative {
 # ERR
     }
   }
+  
+  method GTK::Raw::Types::GtkBuilder is also<Builder> { $!b }
 
   method new (
     :$pod,
@@ -200,7 +206,7 @@ class GTK::Builder does Associative {
   method application is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_builder_get_application($!b);
+        GTK::Application.new( gtk_builder_get_application($!b) );
       },
       STORE => sub ($, GtkApplication() $application is copy) {
         gtk_builder_set_application($!b, $application);
@@ -230,28 +236,33 @@ class GTK::Builder does Associative {
     gtk_builder_add_callback_symbol($!b, $callback_name, $callback_symbol);
   }
 
+  # YYY - Return type?
   method add_from_file (
     Str() $filename,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<add-from-file>
   {
+    clear_error;
     gtk_builder_add_from_file($!b, $filename, $error);
     $ERROR = $error if $error[0].defined;
     self!postProcess(:file($filename));
   }
 
+  # YYY - Return type?
   method add_from_resource (
     Str() $resource_path,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<add-from-resource>
   {
+    clear_error;
     gtk_builder_add_from_resource($!b, $resource_path, $error);
     $ERROR = $error if $error[0].defined;
     self!postProcess(:resource($resource_path));
   }
 
+  # YYY - Return type?
   method add_from_string (
     Str() $buffer,
     $length?,
@@ -265,12 +276,14 @@ class GTK::Builder does Associative {
     my $err = $error // gerror;
     die '$error must be a GError object or pointer' unless $error ~~ CArray;
 
+    clear_error;
     my $rc = gtk_builder_add_from_string($!b, $buffer, $len, $err);
     self!postProcess(:ui_def($buffer));
     $ERROR = $err if $err[0].defined;
     $rc;
   }
 
+  # YYY - Return type?
   method add_objects_from_file (
     Str() $filename,
     @object_ids,
@@ -282,11 +295,13 @@ class GTK::Builder does Associative {
     my $oi = CArray[Str].new;
     my $i = 0;
     $oi[$i++] = $_ for @object_ids;
+    clear_error;
     gtk_builder_add_objects_from_file($!b, $filename, $oi, $error);
     $ERROR = $error if $error[0].defined;
     #self!postHandle;
   }
 
+  # YYY - Return type?
   method add_objects_from_resource (
     Str() $resource_path,
     @object_ids,
@@ -298,6 +313,7 @@ class GTK::Builder does Associative {
     my $oi = CArray[Str].new;
     my $i = 0;
     $oi[$i++] = $_ for @object_ids;
+    clear_error;
     gtk_builder_add_objects_from_resource($!b, $resource_path, $oi, $error);
     $ERROR = $error if $error[0].defined;
     #self!postProcess;
@@ -307,6 +323,7 @@ class GTK::Builder does Associative {
     is also<add-objects-from-string>
     { * }
 
+  # YYY - Return type?
   multi method add_objects_from_string (
     Str() $buffer,
     @object_ids = ()
@@ -327,6 +344,7 @@ class GTK::Builder does Associative {
     my $oi = CArray[Str].new;
     my $i = 0;
     $oi[$i++] = $_ for @object_ids;
+    clear_error;
     my $rc = gtk_builder_add_objects_from_string(
       $!b,
       $buffer,
@@ -362,7 +380,8 @@ class GTK::Builder does Associative {
     gtk_builder_expose_object($!b, $name, $object);
   }
 
-  multi method extend_with_template (
+  # YYY - Return type?
+  method extend_with_template (
     GtkWidget() $widget,
     GType $template_type,
     Str() $buffer,
@@ -373,6 +392,7 @@ class GTK::Builder does Associative {
   {
     die '$length cannot be negative' unless $length > -2;
     my gsize $l = $length;
+    clear_error;
     gtk_builder_extend_with_template(
       $!b, $widget, $template_type, $buffer, $l, $error
     );
@@ -405,6 +425,7 @@ class GTK::Builder does Associative {
     gtk_builder_lookup_callback_symbol($!b, $callback_name);
   }
 
+  # YYY - Return type?
   method value_from_string (
     GParamSpec $pspec,
     Str() $string,
@@ -413,10 +434,12 @@ class GTK::Builder does Associative {
   )
     is also<value-from-string>
   {
+    clear_error;
     gtk_builder_value_from_string($!b, $pspec, $string, $value, $error);
     $ERROR = $error if $error[0].defined;
   }
 
+  # YYY - Return type?
   method value_from_string_type (
     GType $type,
     Str() $string,
@@ -425,6 +448,7 @@ class GTK::Builder does Associative {
   )
     is also<value-from-string-type>
   {
+    clear_error;
     gtk_builder_value_from_string_type($!b, $type, $string, $value, $error);
     $ERROR = $error if $error[0].defined;
   }

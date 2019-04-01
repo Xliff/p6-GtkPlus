@@ -9,6 +9,8 @@ use GTK::Raw::Types;
 
 use GTK::PaperSize;
 
+# BOXED TYPE
+
 class GTK::PageSetup {
   has GtkPageSetup $!ps;
 
@@ -16,9 +18,7 @@ class GTK::PageSetup {
     $!ps = $page;
   }
 
-  method GTK::Raw::Types::GtkPageSetup is also<pagesetup> {
-    $!ps;
-  }
+  method GTK::Raw::Types::GtkPageSetup is also<PageSetup> { $!ps }
 
   multi method new (GtkPageSetup $page) {
     self.bless(:$page);
@@ -102,21 +102,32 @@ class GTK::PageSetup {
 
   method load_file (
     Str() $file_name,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<load-file>
   {
-    gtk_page_setup_load_file($!ps, $file_name, $error);
+    clear_error;
+    my $rc = gtk_page_setup_load_file($!ps, $file_name, $error);
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method load_key_file (
     GKeyFile $key_file,
     Str() $group_name,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror();
   )
     is also<load-key-file>
   {
-    gtk_page_setup_load_key_file($!ps, $key_file, $group_name, $error);
+    clear_error;
+    my $rc = gtk_page_setup_load_key_file(
+      $!ps, 
+      $key_file, 
+      $group_name, 
+      $error
+    );
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method new_from_file (Str() $filename, GError $error = GError)
@@ -132,11 +143,18 @@ class GTK::PageSetup {
   method new_from_key_file (
     Str() $filename,
     Str() $group_name,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-key-file>
   {
-    gtk_page_setup_new_from_key_file($filename, $group_name, $error);
+    clear_error;
+    my $rc = gtk_page_setup_new_from_key_file(
+      $filename, 
+      $group_name, 
+      $error
+    );
+    $ERROR = $error[0] with $error[0];
+    $rc;
   }
 
   method set_bottom_margin (Num() $margin, Int() $unit)

@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::EntryCompletion;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::Object;
+
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::EntryCompletion;
@@ -42,13 +44,17 @@ class GTK::EntryCompletion {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals, %!signals-ec;
   }
+  
+  method GTK::Raw::Types::GtkEntryCompletion
+    is also<EntryCompletion>
+  { $!ec }
 
   method new {
     my $entrycompletion = gtk_entry_completion_new();
     self.bless( :$entrycompletion );
   }
 
-  method new_with_area (GtkCellArea $ca) is also<new-with-area> {
+  method new_with_area (GtkCellArea() $ca) is also<new-with-area> {
     my $entrycompletion = gtk_entry_completion_new_with_area($ca);
     self.bless( :$entrycompletion );
   }
@@ -88,15 +94,15 @@ class GTK::EntryCompletion {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
+  
   method inline_completion is rw is also<inline-completion> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_completion_get_inline_completion($!ec);
+        so gtk_entry_completion_get_inline_completion($!ec);
       },
-      STORE => sub ($, $inline_completion is copy) {
-        gtk_entry_completion_set_inline_completion(
-          $!ec, $inline_completion
-        );
+      STORE => sub ($, Int() $inline_completion is copy) {
+        my guint $i = self.RESOLVE-BOOL($inline_completion);
+        gtk_entry_completion_set_inline_completion($!ec, $i);
       }
     );
   }
@@ -104,12 +110,11 @@ class GTK::EntryCompletion {
   method inline_selection is rw is also<inline-selection> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_completion_get_inline_selection($!ec);
+        so gtk_entry_completion_get_inline_selection($!ec);
       },
-      STORE => sub ($, $inline_selection is copy) {
-        gtk_entry_completion_set_inline_selection(
-          $!ec, $inline_selection
-        );
+      STORE => sub ($, Int() $inline_selection is copy) {
+        my guint $i = self.RESOLVE-BOOL($inline_selection);
+        gtk_entry_completion_set_inline_selection($!ec, $i);
       }
     );
   }
@@ -119,18 +124,20 @@ class GTK::EntryCompletion {
       FETCH => sub ($) {
         gtk_entry_completion_get_minimum_key_length($!ec);
       },
-      STORE => sub ($, $length is copy) {
-        gtk_entry_completion_set_minimum_key_length($!ec, $length);
+      STORE => sub ($, Int() $length is copy) {
+        my gint $l = self.RESOLVE-INT($length);
+        gtk_entry_completion_set_minimum_key_length($!ec, $l);
       }
     );
   }
 
+  # GtkTreeModel
   method model is rw {
     Proxy.new(
       FETCH => sub ($) {
         gtk_entry_completion_get_model($!ec);
       },
-      STORE => sub ($, $model is copy) {
+      STORE => sub ($, GtkTreeModel() $model is copy) {
         gtk_entry_completion_set_model($!ec, $model);
       }
     );
@@ -139,10 +146,11 @@ class GTK::EntryCompletion {
   method popup_completion is rw is also<popup-completion> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_completion_get_popup_completion($!ec);
+        so gtk_entry_completion_get_popup_completion($!ec);
       },
-      STORE => sub ($, $popup_completion is copy) {
-        gtk_entry_completion_set_popup_completion($!ec, $popup_completion);
+      STORE => sub ($, Int() $popup_completion is copy) {
+        my guint $p = self.RESOLVE-BOOL($popup_completion);
+        gtk_entry_completion_set_popup_completion($!ec, $p);
       }
     );
   }
@@ -150,10 +158,11 @@ class GTK::EntryCompletion {
   method popup_set_width is rw is also<popup-set-width> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_completion_get_popup_set_width($!ec);
+        so gtk_entry_completion_get_popup_set_width($!ec);
       },
-      STORE => sub ($, $popup_set_width is copy) {
-        gtk_entry_completion_set_popup_set_width($!ec, $popup_set_width);
+      STORE => sub ($, Int() $popup_set_width is copy) {
+        my guint $p = self.RESOLVE-BOOL($popup_set_width);
+        gtk_entry_completion_set_popup_set_width($!ec, $p);
       }
     );
   }
@@ -161,12 +170,11 @@ class GTK::EntryCompletion {
   method popup_single_match is rw is also<popup-single-match> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_completion_get_popup_single_match($!ec);
+        so gtk_entry_completion_get_popup_single_match($!ec);
       },
-      STORE => sub ($, $popup_single_match is copy) {
-        gtk_entry_completion_set_popup_single_match(
-          $!ec, $popup_single_match
-        );
+      STORE => sub ($, Int() $popup_single_match is copy) {
+        my guint $p = self.RESOLVE-BOOL($popup_single_match);
+        gtk_entry_completion_set_popup_single_match($!ec, $p);
       }
     );
   }
@@ -176,23 +184,32 @@ class GTK::EntryCompletion {
       FETCH => sub ($) {
         gtk_entry_completion_get_text_column($!ec);
       },
-      STORE => sub ($, $column is copy) {
-        gtk_entry_completion_set_text_column($!ec, $column);
+      STORE => sub ($, Int() $column is copy) {
+        my gint $c = self.RESOLVE-INT($column);
+        gtk_entry_completion_set_text_column($!ec, $c);
       }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+  
+  # ↓↓↓↓ PROPERTIES ↓↓↓↓
+  
+  # YYY - Investigate the need for cell-area, since it is Construct-Only.
+  #       I can see use cases where a read-only method would be most useful.
+  
+  # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   method complete {
     gtk_entry_completion_complete($!ec);
   }
 
-  method compute_prefix (Str $key) is also<compute-prefix> {
+  method compute_prefix (Str() $key) is also<compute-prefix> {
     gtk_entry_completion_compute_prefix($!ec, $key);
   }
 
-  method delete_action (gint $index) is also<delete-action> {
-    gtk_entry_completion_delete_action($!ec, $index);
+  method delete_action (Int() $index) is also<delete-action> {
+    my gint $i = self.RESOLVE-INT($index);
+    gtk_entry_completion_delete_action($!ec, $i);
   }
 
   method get_completion_prefix is also<get-completion-prefix> {
@@ -207,12 +224,18 @@ class GTK::EntryCompletion {
     gtk_entry_completion_get_type();
   }
 
-  method insert_action_markup (gint $index_, gchar $markup) is also<insert-action-markup> {
-    gtk_entry_completion_insert_action_markup($!ec, $index_, $markup);
+  method insert_action_markup (Int() $index, Str() $markup) 
+    is also<insert-action-markup> 
+  {
+    my gint $i = self.RESOLVE-INT($index);
+    gtk_entry_completion_insert_action_markup($!ec, $index, $markup);
   }
 
-  method insert_action_text (gint $index_, gchar $text) is also<insert-action-text> {
-    gtk_entry_completion_insert_action_text($!ec, $index_, $text);
+  method insert_action_text (Int() $index, Str() $text) 
+    is also<insert-action-text> 
+  {
+    my gint $i = self.RESOLVE-INT($index);
+    gtk_entry_completion_insert_action_text($!ec, $i, $text);
   }
 
   method emit_insert_prefix is also<emit-insert-prefix> {
@@ -220,12 +243,17 @@ class GTK::EntryCompletion {
   }
 
   method set_match_func (
-    OpaquePointer $func,
+    Pointer $func,
     gpointer $func_data,
     GDestroyNotify $func_notify
-  ) is also<set-match-func> {
+  ) 
+    is also<set-match-func> 
+  {
     gtk_entry_completion_set_match_func(
-      $!ec, $func, $func_data, $func_notify
+      $!ec, 
+      $func, 
+      $func_data, 
+      $func_notify
     );
   }
 

@@ -8,15 +8,19 @@ use GTK::Compat::Value;
 use GTK::Raw::ListStore;
 use GTK::Raw::Types;
 
-use GTK::TreeIter;
+use GTK::Compat::Roles::Object;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
 
+use GTK::TreeIter;
+
 my subset GValues where GTK::Compat::Value | GValue;
 
 class GTK::ListStore {
+  also does GTK::Compat::Roles::Object; 
+  
   also does GTK::Roles::Buildable;
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeSortable;
@@ -25,14 +29,17 @@ class GTK::ListStore {
   has $!accessed = False;
   has $!columns;
 
-  submethod BUILD(:$liststore, :$columns) {
+  submethod BUILD(:$liststore, :$columns) {  
+    self!setObject($!ls = $liststore);          # GTK::Compat::Roles::Object
+    
     $!columns = $columns;
-         $!ls = $liststore;
 
-     $!b = nativecast(GtkBuildable, $!ls);      # GTK::Roles::Buildable
+    $!b  = nativecast(GtkBuildable, $!ls);      # GTK::Roles::Buildable
     $!ts = nativecast(GtkTreeSortable, $!ls);   # GTK::Roles::TreeSortable
     $!tm = nativecast(GtkTreeModel, $!ls);      # GTK::Roles::TreeSortable
   }
+  
+  method GTK::Raw::Types::GtkListStore is also<ListStore> { $!ls }
 
   method new (*@types) {
     for @types {

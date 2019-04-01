@@ -9,12 +9,16 @@ use GTK::Raw::Types;
 use GTK::Raw::Application;
 use GTK::Raw::Window;
 
-use GTK::Window;
+use GTK::Compat::Roles::Object;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Application;
 
+use GTK::Window;
+
 class GTK::Application is export {
+  also does GTK::Compat::Roles::Object;
+  
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;
   also does GTK::Roles::Types;
@@ -37,7 +41,8 @@ class GTK::Application is export {
     uint32 :$height,
 
   ) {
-    $!app = $app;
+    self!setObject($!app = $app);
+    
     $!title = $title;
     $!width = $width;
     $!height = $height;
@@ -59,9 +64,9 @@ class GTK::Application is export {
     self.disconnect-all($_) for %!signals, %!signals-app;
   }
 
-  method GTK::Raw::Types::GtkApplication {
-    $!app;
-  }
+  method GTK::Raw::Types::GtkApplication 
+    is also<Application> 
+  { $!app }
 
   method init (GTK::Application:U: ) {
     my $argc = CArray[uint32].new;
@@ -75,8 +80,13 @@ class GTK::Application is export {
   method wait-for-init is also<wait_for_init> {
     await $!init;
   }
-
-  method new(
+  
+  multi method new (GtkApplication $app) {
+    my $o = self.bless(:$app);
+    $o.upref;
+    $o;
+  }  
+  multi method new(
     Str :$title = 'org.genex.application',
     Int :$flags = 0,
     Int :$width = 200,
@@ -196,9 +206,16 @@ class GTK::Application is export {
   method add_accelerator (
     Str() $accelerator,
     Str() $action_name,
-    GVariant $parameter
-  ) is also<add-accelerator> {
-    gtk_application_add_accelerator($!app, $accelerator, $action_name, $parameter);
+    GVariant() $parameter
+  ) 
+    is also<add-accelerator> 
+  {
+    gtk_application_add_accelerator(
+      $!app, 
+      $accelerator, 
+      $action_name, 
+      $parameter
+    );
   }
 
   method add_window (GtkWindow() $window) is also<add-window> {
@@ -265,7 +282,7 @@ class GTK::Application is export {
     gtk_application_prefers_app_menu($!app);
   }
 
-  method remove_accelerator (Str() $action_name, GVariant $parameter)
+  method remove_accelerator (Str() $action_name, GVariant() $parameter)
     is also<remove-accelerator>
   {
     gtk_application_remove_accelerator($!app, $action_name, $parameter);
