@@ -9,23 +9,22 @@ use GTK::Raw::Types;
 
 use GTK::ToolItem;
 
-my subset Ancestry
-  where GtkSeparatorToolItem | GtkToolItem | GtkBin | GtkContainer |
-        GtkBuilder           | GtkWidget;
+our subset SeparatorToolItemAncestry is export
+  where GtkSeparatorToolItem | ToolItemAncestry;
 
 class GTK::SeparatorToolItem is GTK::ToolItem {
   has GtkSeparatorToolItem $!sti;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::SeparatorToolItem');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$separator) {
     my $to-parent;
     given $separator {
-      when Ancestry {
+      when SeparatorToolItemAncestry {
         $!sti = do {
           when GtkSeparatorToolItem {
             $to-parent = nativecast(GtkToolItem, $_);
@@ -45,7 +44,7 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
     }
   }
 
-  multi method new (Ancestry $separator) {
+  multi method new (SeparatorToolItemAncestry $separator) {
     self.bless(:$separator);
   }
   multi method new {
@@ -72,7 +71,8 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_separator_tool_item_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_separator_tool_item_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

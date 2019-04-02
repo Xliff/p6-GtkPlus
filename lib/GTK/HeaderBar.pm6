@@ -17,7 +17,7 @@ class GTK::HeaderBar is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::HeaderBar');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -129,7 +129,8 @@ class GTK::HeaderBar is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_header_bar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_header_bar_get_type, $n, $t );
   }
 
   multi method pack-end (GtkWidget $child) {

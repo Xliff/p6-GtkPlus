@@ -17,7 +17,7 @@ class GTK::Frame is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Frame');
+    $o.setType(self.^name);
     $o;
   }
 

@@ -21,7 +21,7 @@ class GTK::Switch is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Switch');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -53,6 +53,8 @@ class GTK::Switch is GTK::Widget {
     }
     $!action //= nativecast(GtkActionable, $!s);      # GTK::Roles::Actionable
   }
+  
+  method GTK::Raw::Types::GtkSwitch is also<Switch> { $!s }
 
   multi method new(SwitchAncestry $switch) {
     my $o = self.bless(:$switch);
@@ -98,7 +100,7 @@ class GTK::Switch is GTK::Widget {
       FETCH => sub ($) {
         so gtk_switch_get_state($!s);
       },
-      STORE => sub ($, $state is copy) {
+      STORE => sub ($, Int() $state is copy) {
         my gboolean $s = self.RESOLVE-BOOL($state);
         gtk_switch_set_state($!s, $s);
       }
@@ -108,7 +110,8 @@ class GTK::Switch is GTK::Widget {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_switch_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_switch_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

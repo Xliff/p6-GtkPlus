@@ -9,23 +9,22 @@ use GTK::Raw::Types;
 
 use GTK::ToolButton;
 
-my subset Ancestry
-  where GtkMenuToolButton | GtkToolButton | GtkActionable | GtkToolItem |
-        GtkBin            | GtkContainer  | GtkBuilder    | GtkWidget;
+our subset MenuToolButtonAncestry is export 
+  where GtkMenuToolButton | ToolButtonAncestry;
 
 class GTK::MenuToolButton is GTK::ToolButton {
   has GtkMenuToolButton $!mtb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::MenuToolButton');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$menutoolbutton) {
     my $to-parent;
     given $menutoolbutton {
-      when Ancestry {
+      when MenuToolButtonAncestry {
         $!mtb = do {
           when GtkMenuToolButton {
             $to-parent = nativecast(GtkToolButton, $_);
@@ -45,7 +44,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
     }
   }
 
-  multi method new (Ancestry $menutoolbutton) {
+  multi method new (MenuToolButtonAncestry $menutoolbutton) {
     my $o = self.bless(:$menutoolbutton);
     $o.upref;
     $o;
@@ -69,7 +68,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
   method menu is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_menu_tool_button_get_menu($!mtb);
+        GTK::Widget.new( gtk_menu_tool_button_get_menu($!mtb) );
       },
       STORE => sub ($, GtkWidget() $menu is copy) {
         gtk_menu_tool_button_set_menu($!mtb, $menu);
@@ -80,7 +79,8 @@ class GTK::MenuToolButton is GTK::ToolButton {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_menu_tool_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_menu_tool_button_get_type, $n, $t );
   }
 
   method set_arrow_tooltip_markup (Str() $markup)

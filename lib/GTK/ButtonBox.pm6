@@ -3,20 +3,23 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Types;
 use GTK::Raw::ButtonBox;
 use GTK::Raw::Types;
 
 use GTK::Box;
 
-our subset ButtonBoxAncestry is export where GtkButtonBox | BoxAncestry;
+our subset ButtonBoxAncestry is export 
+  where GtkButtonBox | BoxAncestry;
 
 class GTK::ButtonBox is GTK::Box {
   has GtkButtonBox $!bb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ButtonBox');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -29,7 +32,7 @@ class GTK::ButtonBox is GTK::Box {
             $to-parent = nativecast(GtkBox, $_);
             $_;
           }
-          when BoxAncestry {
+          default {
             $to-parent = $_;
             nativecast(GtkButtonBox, $_);
           }
@@ -49,7 +52,7 @@ class GTK::ButtonBox is GTK::Box {
     $o;
   }
   multi method new (Int() $orientation) {
-    my guint $o = self.RESOLVE-UINT($orientation.Int);
+    my guint $o = resolve-uint($orientation);
     my $buttonbox = gtk_button_box_new($o);
     self.bless(:$buttonbox);
   }

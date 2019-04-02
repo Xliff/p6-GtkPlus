@@ -9,22 +9,22 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-my subset Ancestry
-  where GtkRevealer | GtkBin | GtkContainer | GtkBuilder | GtkWidget;
+our subset RevealerAncestry is export 
+  where GtkRevealer | BinAncestry;
 
 class GTK::Revealer is GTK::Bin {
   has GtkRevealer $!r;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Revealer');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$revealer) {
     my $to-parent;
     given $revealer {
-      when GtkRevealer | GtkWidget {
+      when RevealerAncestry {
         $!r = do {
           when GtkRevealer {
             $to-parent = nativecast(GtkBin, $_);
@@ -44,7 +44,7 @@ class GTK::Revealer is GTK::Bin {
     }
   }
 
-  multi method new (GtkWidget $revealer) {
+  multi method new (RevealerAncestry $revealer) {
     my $o = self.bless(:$revealer);
     $o.upref;
     $o;
@@ -118,7 +118,8 @@ class GTK::Revealer is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_revealer_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_revealer_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

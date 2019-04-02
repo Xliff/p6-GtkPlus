@@ -58,8 +58,8 @@ sub gtk_icon_view_get_cell_rect (
 
 sub gtk_icon_view_get_cursor (
   GtkIconView $icon_view,
-  GtkTreePath $path,
-  GtkCellRenderer $cell
+  CArray[Pointer[GtkTreePath]] $path,
+  CArray[Pointer[GtkCellRenderer]] $cell
 )
   returns uint32
   is native(gtk)
@@ -91,8 +91,8 @@ sub gtk_icon_view_get_item_at_pos (
   GtkIconView $icon_view,
   gint $x,
   gint $y,
-  GtkTreePath $path,
-  GtkCellRenderer $cell
+  CArray[Pointer[GtkTreePath]] $path,
+  CArray[Pointer[GtkCellRenderer]] $cell
 )
   returns uint32
   is native(gtk)
@@ -128,9 +128,9 @@ sub gtk_icon_view_get_tooltip_context (
   gint $x,
   gint $y,
   gboolean $keyboard_tip,
-  GtkTreeModel $model,
-  GtkTreePath $path,
-  GtkTreeIter $iter
+  CArray[Pointer[GtkTreeModel]] $model,
+  CArray[Pointer[GtkTreePath]] $path,
+  CArray[Pointer[GtkTreeIter]] $iter
 )
   returns uint32
   is native(gtk)
@@ -145,8 +145,8 @@ sub gtk_icon_view_get_type ()
 
 sub gtk_icon_view_get_visible_range (
   GtkIconView $icon_view,
-  GtkTreePath $start_path,
-  GtkTreePath $end_path
+  CArray[Pointer[GtkTreePath]] $start_path,
+  CArray[Pointer[GtkTreePath]] $end_path
 )
   returns uint32
   is native(gtk)

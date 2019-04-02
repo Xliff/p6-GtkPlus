@@ -25,7 +25,7 @@ class GTK::Grid is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Grid');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -224,7 +224,7 @@ class GTK::Grid is GTK::Container {
       FETCH => sub ($) {
         gtk_grid_get_baseline_row($!g);
       },
-      STORE => sub ($, $row is copy) {
+      STORE => sub ($, Int() $row is copy) {
         my gint $r = self.RESOLVE-INT($row);
         gtk_grid_set_baseline_row($!g, $r);
       }
@@ -385,7 +385,8 @@ class GTK::Grid is GTK::Container {
   }
 
   method get_type () is also<get-type> {
-    gtk_grid_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_grid_get_type, $n, $t );
   }
 
   method insert_column (Int() $position) is also<insert-column> {

@@ -7,15 +7,17 @@ use GTK::Compat::Types;
 use GTK::Raw::IconView;
 use GTK::Raw::Types;
 
-use GTK::CellArea;
-use GTK::Container;
-
 use GTK::Roles::CellLayout;
 use GTK::Roles::Scrollable;
 use GTK::Roles::Signals::IconView;
 
-my subset Ancestry where GtkIconView | GtkCellLayout | GtkScrollable |
-                         GtkBuilder  | GtkWidget;
+use GTK::CellArea;
+use GTK::CellRenderer;
+use GTK::Container;
+use GTK::TreePath;
+
+our subset IconViewAncestry 
+  where GtkIconView | GtkCellLayout | GtkScrollable | ContainerAncestry;                       
 
 class GTK::IconView is GTK::Container {
   also does GTK::Roles::CellLayout;
@@ -26,7 +28,7 @@ class GTK::IconView is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::IconView');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -37,27 +39,29 @@ class GTK::IconView is GTK::Container {
   submethod BUILD(:$iconview) {
     my $to-parent;
     given $iconview {
-      when Ancestry {
+      when IconViewAncestry {
         $!iv = do {
           when GtkIconView  {
             $to-parent = nativecast(GtkContainer, $_);
             $_;
           }
           when GtkCellLayout {
-            $!cl = $_;                      # GTK::Roles::CellLayout
+            $!cl = $_;                          # GTK::Roles::CellLayout
             $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkIconView, $_);
           }
           when GtkScrollable {
-            $!s = $_;                       # GTK::Roles::CellLayout
+            $!s = $_;                           # GTK::Roles::CellLayout
             $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkIconView, $_);
           }
-          when GtkWidget {
+          default {
             $to-parent = $_;
             nativecast(GtkIconView, $_);
           }
         }
+        $!cl = nativecast(GtkCellLayout, $!iv); # GTK::Roles::CellLayout
+        $!s = nativecast(GtkScrollable, $!iv);  # GTK::Roles::Scrollable
         self.setContainer($to-parent);
       }
       when GTK::IconView {
@@ -65,11 +69,9 @@ class GTK::IconView is GTK::Container {
       default {
       }
     }
-    $!cl = nativecast(GtkCellLayout, $!iv); # GTK::Roles::CellLayout
-    $!s = nativecast(GtkScrollable, $!iv);  # GTK::Roles::Scrollable
   }
 
-  multi method new (Ancestry $iconview) {
+  multi method new (IconViewAncestry $iconview) {
     self.bless(:$iconview);
   }
   multi method new {
@@ -151,14 +153,32 @@ class GTK::IconView is GTK::Container {
       }
     );
   }
+  
+  # Type: GtkCellArea
+  method cell-area is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('cell-area', $gv)
+        );
+        GTK::CellArea.new( nativecast(GtkCellArea, $gv.object) );
+      },
+      STORE => -> $, GtkCellArea() $val is copy {
+        $gv.object = $val;
+        self.prop_set('cell-area', $gv);
+      }
+    );
+  }
 
   method column_spacing is rw is also<column-spacing> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::CellArea.new( gtk_icon_view_get_column_spacing($!iv) );
+        gtk_icon_view_get_column_spacing($!iv);
       },
-      STORE => sub ($, GtkCellArea() $column_spacing is copy) {
-        gtk_icon_view_set_column_spacing($!iv, $column_spacing);
+      STORE => sub ($, Int() $column_spacing is copy) {
+        my gint $c = self.RESOLVE-INT($column_spacing);
+        gtk_icon_view_set_column_spacing($!iv, $c);
       }
     );
   }
@@ -180,7 +200,7 @@ class GTK::IconView is GTK::Container {
       FETCH => sub ($) {
         GtkOrientation( gtk_icon_view_get_item_orientation($!iv) );
       },
-      STORE => sub ($, $orientation is copy) {
+      STORE => sub ($, Int() $orientation is copy) {
         my guint $o = self.RESOLVE-UINT($orientation);
         gtk_icon_view_set_item_orientation($!iv, $o);
       }
@@ -263,7 +283,7 @@ class GTK::IconView is GTK::Container {
       FETCH => sub ($) {
         so gtk_icon_view_get_reorderable($!iv);
       },
-      STORE => sub ($, $reorderable is copy) {
+      STORE => sub ($, Int() $reorderable is copy) {
         my gint $r = self.RESOLVE-INT($reorderable);
         gtk_icon_view_set_reorderable($!iv, $r);
       }
@@ -299,7 +319,7 @@ class GTK::IconView is GTK::Container {
       FETCH => sub ($) {
         gtk_icon_view_get_spacing($!iv);
       },
-      STORE => sub ($, $spacing is copy) {
+      STORE => sub ($, Int() $spacing is copy) {
         my gboolean $s = self.RESOLVE-BOOL($spacing);
         gtk_icon_view_set_spacing($!iv, $spacing);
       }
@@ -396,10 +416,26 @@ class GTK::IconView is GTK::Container {
     gtk_icon_view_get_cell_rect($!iv, $path, $cell, $rect);
   }
 
-  method get_cursor (GtkTreePath() $path, GtkCellRenderer() $cell)
+  # Needs better interface that considers object reuse (or at least recycling)
+  method get_cursor (
+    GtkTreePath     $path is rw, 
+    GtkCellRenderer $cell is rw
+  )
     is also<get-cursor>
   {
-    gtk_icon_view_get_cursor($!iv, $path, $cell);
+    my $cpath = CArray[Pointer[GtkTreePath]].new;
+    my $ccell = CArray[Pointer[GtkCellRenderer]].new;
+    $cpath[0] = nativecast(Pointer[GtkTreePath], $path);
+    $ccell[0] = nativecast(Pointer[GtkCellRenderer], $cell);
+    my $rc = gtk_icon_view_get_cursor($!iv, $cpath, $ccell);
+    
+    if $rc {
+      $path = $cpath[0].defined ?? 
+        nativecast(GtkTreePath, $cpath[0])     !! GtkTreePath;
+      $cell = $ccell[0].defined ?? 
+        nativecast(GtkCellRenderer, $ccell[0]) !! GtkCellRenderer;
+    }
+    $rc;
   }
 
   method get_dest_item_at_pos (
@@ -429,14 +465,25 @@ class GTK::IconView is GTK::Container {
   method get_item_at_pos (
     Int() $x,
     Int() $y,
-    GtkTreePath() $path,
-    GtkCellRenderer() $cell
+    GtkTreePath $path     is rw,
+    GtkCellRenderer $cell is rw
   )
     is also<get-item-at-pos>
   {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
-    gtk_icon_view_get_item_at_pos($!iv, $xx, $yy, $path, $cell);
+    my $cpath = CArray[Pointer[GtkTreePath]].new;
+    my $ccell = CArray[Pointer[GtkCellRenderer]].new;
+    $cpath[0] = nativecast(Pointer[GtkTreePath], $path);
+    $ccell[0] = nativecast(Pointer[GtkCellRenderer], $cell);
+    my $rc = gtk_icon_view_get_item_at_pos($!iv, $xx, $yy, $cpath, $ccell);
+    if $rc {
+      $path = $cpath[0].defined ?? 
+        nativecast(GtkTreePath, $cpath[0]) !! GtkTreePath;
+      $cell = $ccell[0].defined ??
+        nativecast(GtkCellRenderer, $ccell[0]) !! GtkCellRenderer;
+    }
+    $rc;
   }
 
   method get_item_column (GtkTreePath() $path)
@@ -467,37 +514,64 @@ class GTK::IconView is GTK::Container {
     Int() $x,
     Int() $y,
     Int() $keyboard_tip,
-    GtkTreeModel() $model,
-    GtkTreePath() $path,
-    GtkTreeIter() $iter
+    GtkTreeModel $model is rw,
+    GtkTreePath $path   is rw,
+    GtkTreeIter $iter   is rw
   )
     is also<get-tooltip-context>
   {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     my gboolean $kt = self.RESOLVE-BOOL($keyboard_tip);
-    gtk_icon_view_get_tooltip_context(
+    my $cmodel = CArray[Pointer[GtkTreeModel]].new;
+    my $cpath = CArray[Pointer[GtkTreePath]].new;
+    my $citer = CArray[Pointer[GtkTreeIter]].new;
+    $cmodel[0] = nativecast(Pointer[GtkTreeModel], $model);
+    $cpath[0] = nativecast(Pointer[GtkTreePath], $path);
+    $citer[0] = nativecast(Pointer[GtkTreeIter], $iter);
+    my $rc = gtk_icon_view_get_tooltip_context(
       $!iv,
       $x,
       $y,
       $keyboard_tip,
-      $model,
-      $path,
-      $iter
+      $cmodel,
+      $cpath,
+      $citer
     );
+    if $rc {
+      $model = $cmodel[0].defined ?? 
+        nativecast(GtkTreeModel, $cmodel[0]) !! GtkTreeModel;
+      $path  = $cpath[0].defined ??
+        nativecast(GtkTreePath, $cpath[0])   !! GtkTreePath;
+      $iter  = $citer[0].defined ??
+        nativecast(GtkTreeIter, $citer[0])   !! GtkTreeIter;
+    }
+    $rc;
   }
 
   method get_type is also<get-type> {
-    gtk_icon_view_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_icon_view_get_type, $n, $t );
   }
 
   method get_visible_range (
-    GtkTreePath() $start_path,
-    GtkTreePath() $end_path
+    GtkTreePath $start_path is rw ,
+    GtkTreePath $end_path   is rw 
   )
     is also<get-visible-range>
   {
-    gtk_icon_view_get_visible_range($!iv, $start_path, $end_path);
+    my $cstart = CArray[Pointer[GtkTreePath]].new;
+    my $cend   = CArray[Pointer[GtkTreePath]].new;
+    $cstart[0] = nativecast(Pointer[GtkTreePath], $start_path);
+    $cend[0]   = nativecast(Pointer[GtkTreePath], $end_path);
+    my $rc = gtk_icon_view_get_visible_range($!iv, $cstart, $cend);
+    if $rc {
+      $start_path = $cstart[0].defined ??
+        nativecast(GtkTreePath, $cstart[0]) !! GtkTreePath;
+      $end_path = $cend[0].defined ??
+        nativecast(GtkTreePath, $cend[0]) !! GtkTreePath;
+    }
+    $rc;
   }
 
   method emit_item_activated (GtkTreePath() $path)

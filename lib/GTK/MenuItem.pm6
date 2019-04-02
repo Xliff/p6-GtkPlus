@@ -7,9 +7,10 @@ use GTK::Compat::Types;
 use GTK::Raw::MenuItem;
 use GTK::Raw::Types;
 
-use GTK::Bin;
-
 use GTK::Roles::Actionable;
+
+use GTK::Bin;
+use GTK::Widget;
 
 our subset MenuItemAncestry is export 
   where GtkMenuItem | GtkActionable | BinAncestry;
@@ -21,7 +22,7 @@ class GTK::MenuItem is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::MenuItem');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -69,7 +70,7 @@ class GTK::MenuItem is GTK::Bin {
         nativecast(GtkMenuItem, $_);
       }
 
-      when BinAncestry {
+      default {
         $to-parent = $_;
         nativecast(GtkMenuItem, $_);
       }
@@ -134,9 +135,7 @@ class GTK::MenuItem is GTK::Bin {
     self.bless(:$menuitem);
   }
 
-  method GTK::Raw::Types::GtkMenuItem {
-    $!mi;
-  }
+  method GTK::Raw::Types::GtkMenuItem is also<MenuItem> { $!mi }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -227,7 +226,7 @@ class GTK::MenuItem is GTK::Bin {
   method submenu is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_menu_item_get_submenu($!mi);
+        GTK::Widget.new( gtk_menu_item_get_submenu($!mi) );
       },
       STORE => sub ($, GtkWidget() $submenu is copy) {
         gtk_menu_item_set_submenu($!mi, $submenu);

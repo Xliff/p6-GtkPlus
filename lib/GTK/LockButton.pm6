@@ -7,13 +7,16 @@ use GTK::Compat::Types;
 use GTK::Raw::LockButton;
 use GTK::Raw::Types;
 
+use GTK::Roles::Actionable;
+
 use GTK::Button;
 
-my subset Ancestry
-  when GtkLockButton | GtkActionable  | GtkButton | GtkBin | GtkContainer |
-       GtkBuildable  | GtkWidget;
+my subset LockButtonAncestry is export
+  when GtkLockButton | GtkActionable  | ButtonAncestry;
 
 class GTK::LockButton is GTK::Button {
+  also does GTK::Roles::Actionable;
+  
   has GtkLockButton $!lb;
 
   method bless(*%attrinit) {
@@ -25,17 +28,23 @@ class GTK::LockButton is GTK::Button {
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
-      when Ancestry {
+      when LockButtonAncestry {
         $!lb = do {
           when GtkLockButton {
             $to-parent = nativecast(GtkButton, $_);
             $_;
+          }
+          when GtkActionable {
+            $!action = $_;
+            $to-parent = nativecast(GtkButton, $_);
+            nativecast(GtkLockButton, $button);
           }
           default {
             $to-parent = $_;
             nativecast(GtkLockButton, $button);
           }
         };
+        $!action //= nativecast(GtkActionable, $button);
         self.setButton($to-parent);
       }
       when GTK::Button {
@@ -45,12 +54,12 @@ class GTK::LockButton is GTK::Button {
     }
   }
 
-  multi method new (Ancestry $button) {
+  multi method new (LockButtonAncestry $button) {
     my $o = self.bless(:$button);
     $o.upref;
     $o;
   }
-  multi method new (GPermission $p) {
+  multi method new (GPermission() $p) {
     my $button = gtk_lock_button_new($p);
     self.bless(:$button);
   }
@@ -77,7 +86,8 @@ class GTK::LockButton is GTK::Button {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_lock_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_lock_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

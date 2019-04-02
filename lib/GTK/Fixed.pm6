@@ -9,21 +9,22 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-my subset Ancestry where GtkFixed | GtkContainer | GtkBuildable | GtkWidget;
+our subset FixedAncestry is export 
+  where GtkFixed | ContainerAncestry;
 
 class GTK::Fixed is GTK::Container {
   has GtkFixed $!f;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Fixed');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$fixed) {
     my $to-parent;
     given $fixed {
-      when Ancestry {
+      when FixedAncestry {
         $!f = do {
           when GtkFixed {
             $to-parent = nativecast(GtkContainer, $_);
@@ -42,8 +43,10 @@ class GTK::Fixed is GTK::Container {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkFixed is also<Fixed> { $!f }
 
-  multi method new (Ancestry $fixed) {
+  multi method new (FixedAncestry $fixed) {
     my $o = self.bless(:$fixed);
     $o.upref;
     $o;
@@ -61,7 +64,8 @@ class GTK::Fixed is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_fixed_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_fixed_get_type, $n, $t );
   }
 
   multi method move (GtkWidget() $widget, Int() $x, Int() $y) {
@@ -70,7 +74,7 @@ class GTK::Fixed is GTK::Container {
     gtk_fixed_move($!f, $widget, $xx, $yy);
   }
 
-  multi method put (GtkWidget $widget, Int() $x, Int() $y) {
+  multi method put (GtkWidget() $widget, Int() $x, Int() $y) {
     my @i = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-INT(@i);
     gtk_fixed_put($!f, $widget, $xx, $yy);

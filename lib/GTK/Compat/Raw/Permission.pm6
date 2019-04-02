@@ -9,7 +9,7 @@ unit package GTK::Compat::Raw::Permission;
 sub g_permission_acquire (
   GPermission $permission,
   GCancellable $cancellable,
-  GError $error is rw
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gio)
@@ -29,7 +29,7 @@ sub g_permission_acquire_async (
 sub g_permission_acquire_finish (
   GPermission $permission,
   GAsyncResult $result,
-  GError $error is rw
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gio)
@@ -73,7 +73,7 @@ sub g_permission_impl_update (
 sub g_permission_release (
   GPermission $permission,
   GCancellable $cancellable,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gio)
@@ -93,7 +93,7 @@ sub g_permission_release_async (
 sub g_permission_release_finish (
   GPermission $permission,
   GAsyncResult $result,
-  GError $error
+  CArray[Pointer[GError]] $error
 )
   returns uint32
   is native(gio)

@@ -18,7 +18,7 @@ class GTK::Dialog is GTK::Window {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Dialog');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -34,14 +34,14 @@ class GTK::Dialog is GTK::Window {
     }
   }
 
-  method setDialog($dialog) {
+  method setDialog(DialogAncestry $dialog) {
     my $to-parent;
     $!d = do given $dialog {
       when GtkDialog {
         $to-parent = nativecast(GtkWindow, $_);
         $_;
       }
-      when WindowAncestry {
+      default {
         $to-parent = $_;
         nativecast(GtkDialog, $_);
       }

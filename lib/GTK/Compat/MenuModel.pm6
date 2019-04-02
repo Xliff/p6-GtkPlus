@@ -29,18 +29,20 @@ class GTK::Compat::MenuModel {
   submethod BUILD(:$model) {
     self!setObject($!m = $model);
   }
-
-  method setMenuModel($model) {
-    $!m = nativecast(GMenuModel, $model);
-  }
-
+  
   submethod DESTROY {
     self.disconnect-all(%_) for %!signals-compat;
   }
 
-  method GTK::Compat::Types::GMenuModel is also<menumodel> {
-    $!m;
+  method setMenuModel($model) {
+    $!m = nativecast(GMenuModel, $model);
   }
+  
+  method new (GMenuModel $model) {
+    self.bless(:$model);
+  }
+
+  method GTK::Compat::Types::GMenuModel is also<MenuModel> { $!m }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 

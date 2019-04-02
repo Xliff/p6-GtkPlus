@@ -26,7 +26,7 @@ class GTK::FlowBox is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::FlowBox');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -49,6 +49,7 @@ class GTK::FlowBox is GTK::Container {
             nativecast(GtkFlowBox, $_);
           }
         };
+        $!or //= nativecast(GtkOrientable, $flowbox);
         self.setContainer($flowbox);
       }
       when GTK::FlowBox {
@@ -56,7 +57,6 @@ class GTK::FlowBox is GTK::Container {
       default {
       }
     }
-    $!or //= nativecast(GtkOrientable, $flowbox);
   }
   
   method GTK::Raw::Types::GtkFlowBox is also<FlowBox> { $!fb }
@@ -169,7 +169,7 @@ class GTK::FlowBox is GTK::Container {
       FETCH => sub ($) {
         gtk_flow_box_get_min_children_per_line($!fb);
       },
-      STORE => sub ($, $n_children is copy) {
+      STORE => sub ($, Int() $n_children is copy) {
         my gint $n = self.RESOLVE-INT($n_children);
         gtk_flow_box_set_min_children_per_line($!fb, $n);
       }
@@ -181,7 +181,7 @@ class GTK::FlowBox is GTK::Container {
       FETCH => sub ($) {
         gtk_flow_box_get_row_spacing($!fb);
       },
-      STORE => sub ($, $spacing is copy) {
+      STORE => sub ($, Int() $spacing is copy) {
         my gint $s = self.RESOLVE-INT($spacing);
         gtk_flow_box_set_row_spacing($!fb, $s);
       }
@@ -295,7 +295,8 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_flow_box_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_flow_box_get_type, $n, $t );
   }
 
   method insert ($widget, Int() $position) {

@@ -7,15 +7,14 @@ use GTK::Compat::Types;
 use GTK::Raw::ToolPalette;
 use GTK::Raw::Types;
 
+use GTK::Roles::Orientable;
+
 use GTK::Container;
 use GTK::ToolItemGroup;
 use GTK::ToolItem;
 
-use GTK::Roles::Orientable;
-
-my subset Ancestry where
-  GtkToolPalette | GtkOrientable | GtkContainer | GtkBuildable |
-  GtkWidget;
+our subset ToolPaletteAncestry is export 
+  where GtkToolPalette | GtkOrientable | ContainerAncestry;
 
 class GTK::ToolPalette is GTK::Container {
   also does GTK::Roles::Orientable;
@@ -24,14 +23,14 @@ class GTK::ToolPalette is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ToolItem');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$palette) {
     my $to-parent;
     given $palette {
-      when Ancestry {
+      when ToolPaletteAncestry {
         $!tp = do {
           when GtkToolPalette  {
             $to-parent = nativecast(GtkContainer, $palette);
@@ -57,7 +56,7 @@ class GTK::ToolPalette is GTK::Container {
     $!or //= nativecast(GtkOrientable, $palette); # GTK::Roles::Orientable
   }
 
-  multi method new (Ancestry $palette) {
+  multi method new (ToolPaletteAncestry $palette) {
     my $o = self.bless(:$palette);
     $o.upref;
     $o;
@@ -143,19 +142,36 @@ class GTK::ToolPalette is GTK::Container {
     gtk_tool_palette_get_group_position($!tp, $group);
   }
 
-  method get_hadjustment is also<get-hadjustment> {
+  method get_hadjustment 
+    is also<
+      get-hadjustment
+      hadjustment
+    > 
+  {
     GTK::Adjustment.new( gtk_tool_palette_get_hadjustment($!tp) );
   }
 
-  method get_icon_size is also<get-icon-size> {
+  method get_icon_size 
+    is also<
+      get-icon-size
+      icon_size
+      icon-size
+    > 
+  {
     GtkIconSize( gtk_tool_palette_get_icon_size($!tp) );
   }
 
   method get_type is also<get-type> {
-    gtk_tool_palette_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_tool_palette_get_type, $n, $t );
   }
 
-  method get_vadjustment is also<get-vadjustment> {
+  method get_vadjustment 
+    is also<
+      get-vadjustment
+      vadjustment
+    > 
+  {
     GTK::Adjustment.new( gtk_tool_palette_get_vadjustment($!tp) );
   }
 

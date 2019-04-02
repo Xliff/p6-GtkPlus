@@ -8,29 +8,29 @@ use GTK::Raw::Types;
 
 use GTK::Window;
 
-subset ParentChild when GtkShortcutsWindow | GtkWidget;
+our subset ShortcutsWindowAncestry when GtkShortcutsWindow | WindowAncestry;
 
 class GTK::ShortcutsWindow is GTK::Window {
   has GtkShortcutsWindow $!sw;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ShortcutsWindow');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$shortcuts) {
     my $to-parent;
     given $shortcuts {
-      when ParentChild {
+      when ShortcutsWindowAncestry {
         $!sw = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkShortcutsWindow, $_);
-          }
           when GtkShortcutsWindow {
             $to-parent = nativecast(GtkWindow, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkShortcutsWindow, $_);
           }
         }
         self.setWindow($to-parent);
@@ -42,7 +42,7 @@ class GTK::ShortcutsWindow is GTK::Window {
     }
   }
 
-  method new (ParentChild $shortcuts) {
+  method new (ShortcutsWindowAncestry $shortcuts) {
     self.bless(:$shortcuts);
   }
 
@@ -103,4 +103,3 @@ class GTK::ShortcutsWindow is GTK::Window {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

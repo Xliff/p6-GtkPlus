@@ -83,14 +83,10 @@ class GTK::Widget {
     $o;
   }
 
-  method unstable_get_type(&sub, $n is rw, $t is rw) is also<get-type> {
-    return $t if ($n // 0) > 0;
-    repeat {
-      $t = &sub();
-      die "{ ::?CLASS.^name }.get_type could not get stable result"
-        if $n++ > 20;
-    } until $t == &sub();
-    $t;
+  method unstable_get_type(&sub, $n is rw, $t is rw) 
+    is also<unstable-get-type> 
+  {
+    unstable_get_type(::?CLASS.^name, &sub, $n, $t);
   }
 
   method GTK::Raw::Types::GtkWidget is also<Widget> { $!w }

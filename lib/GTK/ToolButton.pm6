@@ -21,7 +21,7 @@ class GTK::ToolButton is GTK::ToolItem {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ToolButton');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -108,7 +108,7 @@ class GTK::ToolButton is GTK::ToolItem {
   method icon_widget is rw is also<icon-widget> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_tool_button_get_icon_widget($!tb);
+        GTK::Widget.new( gtk_tool_button_get_icon_widget($!tb) );
       },
       STORE => sub ($, GtkWidget() $icon_widget is copy) {
         gtk_tool_button_set_icon_widget($!tb, $icon_widget);
@@ -164,7 +164,8 @@ class GTK::ToolButton is GTK::ToolItem {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_tool_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_tool_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

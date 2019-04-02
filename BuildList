@@ -1,6 +1,7 @@
 Cairo
 Data::Dump::Tree
 Method::Also
+Pango::AttrList
 Pango::Context
 Pango::FontDescription
 Pango::FontMap
@@ -234,6 +235,7 @@ GTK::Raw::SpinButton
 GTK::Raw::Spinner
 GTK::Raw::Stack
 GTK::Raw::StackSidebar
+GTK::Raw::StackSwitcher
 GTK::Raw::Statusbar
 GTK::Raw::StyleContext
 GTK::Raw::Subs
@@ -452,6 +454,7 @@ GTK::ShortcutsGroup
 GTK::ShortcutsSection
 GTK::ShortcutsShortcut
 GTK::StackSidebar
+GTK::StackSwitcher
 GTK::Statusbar
 GTK::ToggleButton
 GTK::ToolItem

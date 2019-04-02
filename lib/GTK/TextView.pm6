@@ -17,6 +17,8 @@ use GTK::Roles::Scrollable;
 
 use GTK::Roles::Signals::TextView;
 
+use Pango::Tabs;
+
 our subset TextViewAncestry is export
   where GtkTextView  | GtkScrollable | ContainerAncestry;
 
@@ -29,7 +31,7 @@ class GTK::TextView is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::TextView');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -194,9 +196,9 @@ class GTK::TextView is GTK::Container {
   method accepts_tab is rw is also<accepts-tab> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_text_view_get_accepts_tab($!tv) );
+        so gtk_text_view_get_accepts_tab($!tv);
       },
-      STORE => sub ($, $accepts_tab is copy) {
+      STORE => sub ($, Int() $accepts_tab is copy) {
         my gboolean $at = self.RESOLVE-BOOL($accepts_tab);
         gtk_text_view_set_accepts_tab($!tv, $at);
       }
@@ -229,7 +231,7 @@ class GTK::TextView is GTK::Container {
   method cursor_visible is rw is also<cursor-visible> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_text_view_get_cursor_visible($!tv) );
+        so gtk_text_view_get_cursor_visible($!tv);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -241,7 +243,7 @@ class GTK::TextView is GTK::Container {
   method editable is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_text_view_get_editable($!tv) );
+        so gtk_text_view_get_editable($!tv);
       },
       STORE => sub ($, $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
@@ -313,9 +315,9 @@ class GTK::TextView is GTK::Container {
   method monospace is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_text_view_get_monospace($!tv) );
+        so gtk_text_view_get_monospace($!tv);
       },
-      STORE => sub ($, $monospace is copy) {
+      STORE => sub ($, Int() $monospace is copy) {
         my gboolean $m = self.RESOLVE-BOOL($monospace);
         gtk_text_view_set_monospace($!tv, $m);
       }
@@ -339,7 +341,7 @@ class GTK::TextView is GTK::Container {
       FETCH => sub ($) {
         gtk_text_view_get_pixels_above_lines($!tv);
       },
-      STORE => sub ($, $pixels_above_lines is copy) {
+      STORE => sub ($, Int() $pixels_above_lines is copy) {
         my gint $pal = self.RESOLVE-INT($pixels_above_lines);
         gtk_text_view_set_pixels_above_lines($!tv, $pal);
       }
@@ -385,9 +387,9 @@ class GTK::TextView is GTK::Container {
   method tabs is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_text_view_get_tabs($!tv);
+        Pango::Tabs.new( gtk_text_view_get_tabs($!tv) );
       },
-      STORE => sub ($, PangoTabArray $tabs is copy) {
+      STORE => sub ($, PangoTabArray() $tabs is copy) {
         gtk_text_view_set_tabs($!tv, $tabs);
       }
     );
@@ -431,6 +433,27 @@ class GTK::TextView is GTK::Container {
       }
     );
   }
+  
+  # Super convenience.
+  # See https://stackoverflow.com/questions/14770018/scroll-to-end-of-scrolledwindow-textview
+  method autoscroll is rw {
+    state $tap;
+    Proxy.new(
+      FETCH => -> $ { $!autoscroll // False },
+      STORE => -> $, Int() $as {
+        $!autoscroll = $as.so;
+        if $!autoscroll {
+          $tap = self.size-allocate.tap({
+            .value = .upper - .page_size given self.vadjustment;
+          });
+        } else {
+          $tap.close;
+          $tap = Nil;
+        }
+      }
+    )
+  }
+  
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -585,7 +608,8 @@ class GTK::TextView is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_text_view_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_text_view_get_type, $n, $t );
   }
 
   method get_vadjustment is also<get-vadjustment> {
@@ -719,25 +743,5 @@ class GTK::TextView is GTK::Container {
     gtk_text_view_window_to_buffer_coords($!tv, $w, $wx, $wy, $bx, $by);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
-
-  # Super convenience.
-  # See https://stackoverflow.com/questions/14770018/scroll-to-end-of-scrolledwindow-textview
-  method autoscroll is rw {
-    state $tap;
-    Proxy.new(
-      FETCH => -> $ { $!autoscroll // False },
-      STORE => -> $, Int() $as {
-        $!autoscroll = $as.so;
-        if $!autoscroll {
-          $tap = self.size-allocate.tap({
-            .value = .upper - .page_size given self.vadjustment;
-          });
-        } else {
-          $tap.close;
-          $tap = Nil;
-        }
-      }
-    )
-  }
 
 }

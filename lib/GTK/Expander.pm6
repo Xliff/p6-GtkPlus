@@ -73,7 +73,6 @@ class GTK::Expander is GTK::Bin {
   }
 
 
-
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
@@ -126,7 +125,7 @@ class GTK::Expander is GTK::Bin {
   method label_widget is rw is also<label-widget> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_expander_get_label_widget($!e);
+        GTK::Widget.new( gtk_expander_get_label_widget($!e) );
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_expander_set_label_widget($!e, $label_widget);
@@ -186,7 +185,8 @@ class GTK::Expander is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_expander_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_expander_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

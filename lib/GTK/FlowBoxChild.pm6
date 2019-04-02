@@ -23,7 +23,7 @@ class GTK::FlowBoxChild is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::FlowBoxChild');
+    $o.setType($o.^name);
     $o;
   }
 

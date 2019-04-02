@@ -7,10 +7,11 @@ use GTK::Compat::Types;
 use GTK::Raw::Menu;
 use GTK::Raw::Types;
 
-use GTK::MenuShell;
-
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Menu;
+
+use GTK::AccelGroup;
+use GTK::MenuShell;
 
 our subset MenuAncestry is export where GtkMenu | MenuShellAncestry;
 
@@ -21,7 +22,7 @@ class GTK::Menu is GTK::MenuShell {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::MenuShell');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -100,10 +101,9 @@ D
   method accel_group is rw is also<accel-group> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_menu_get_accel_group($!m);
+        GTK::AccelGroup.new( gtk_menu_get_accel_group($!m) );
       },
-      STORE => sub ($, GtkAccelGroup $accel_group is copy) {
-        # GTK::AccelGroup NYI
+      STORE => sub ($, GtkAccelGroup() $accel_group is copy) {
         gtk_menu_set_accel_group($!m, $accel_group);
       }
     );
@@ -206,8 +206,14 @@ D
     gtk_menu_detach($!m);
   }
 
-  method get_attach_widget is also<get-attach-widget> {
-    gtk_menu_get_attach_widget($!m);
+  method get_attach_widget 
+    is also<
+      get-attach-widget
+      attach_widget
+      attach-widget
+    > 
+  {
+    GTK::Widget.new( gtk_menu_get_attach_widget($!m) );
   }
 
   method get_for_attach_widget is also<get-for-attach-widget> {
@@ -215,7 +221,8 @@ D
   }
 
   method get_type is also<get-type> {
-    gtk_menu_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_menu_get_type, $n, $t );
   }
 
   method place_on_monitor (GdkMonitor $monitor)
@@ -252,30 +259,35 @@ D
   }
 
   method popup_at_rect (
-    GdkWindow $rect_window,
-    GdkRectangle() $rect,
-    GdkGravity $rect_anchor,
-    GdkGravity $menu_anchor,
+    GdkWindow() $rect_window,
+    GdkRectangle $rect,
+    Int() $rect_anchor,
+    Int() $menu_anchor,
     GdkEvent $trigger_event
   )
     is also<popup-at-rect>
   {
+    my guint ($ra, $ma) = self.RESOLVE-UINT($rect_anchor, $menu_anchor);
     gtk_menu_popup_at_rect(
-      $!m, $rect_window, $rect, $rect_anchor, $menu_anchor, $trigger_event
+      $!m, 
+      $rect_window, 
+      $rect, 
+      $ra, 
+      $ma, 
+      $trigger_event
     );
   }
 
   method popup_at_widget (
     GtkWidget() $widget,
-    GdkGravity $widget_anchor,
-    GdkGravity $menu_anchor,
+    Int() $widget_anchor,
+    Int() $menu_anchor,
     GdkEvent $trigger_event
   )
     is also<popup-at-widget>
   {
-    gtk_menu_popup_at_widget(
-      $!m, $widget, $widget_anchor, $menu_anchor, $trigger_event
-    );
+    my guint ($wa, $ma) = self.RESOLVE-UINT($widget_anchor, $menu_anchor);
+    gtk_menu_popup_at_widget($!m, $widget, $wa, $ma, $trigger_event);
   }
 
   method popup_for_device (

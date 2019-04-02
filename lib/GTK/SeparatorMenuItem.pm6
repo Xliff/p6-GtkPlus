@@ -9,22 +9,22 @@ use GTK::Raw::SeparatorMenuItem;
 
 use GTK::MenuItem;
 
-my subset Ancestry where GtkSeparatorMenuItem | GtkMenuItem  | GtkActionable |
-                         GtkContainer         | GtkBuildable | GtkWidget;
+our subset SeparatorMenuItemAncestry 
+  where GtkSeparatorMenuItem | MenuItemAncestry;
 
 class GTK::SeparatorMenuItem is GTK::MenuItem {
   has GtkSeparatorMenuItem $!smi;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::SeparatorMenuItem');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$separator) {
     my $to-parent;
     given $separator {
-      when Ancestry {
+      when SeparatorMenuItemAncestry {
         $!smi = do {
           when GtkSeparatorMenuItem {
             $to-parent = nativecast(GtkMenuItem, $_);
@@ -44,7 +44,7 @@ class GTK::SeparatorMenuItem is GTK::MenuItem {
     }
   }
 
-  multi method new (Ancestry $separator) {
+  multi method new (SeparatorMenuItemAncestry $separator) {
     my $o = self.bless(:$separator);
     $o.upref;
     $o;
@@ -69,7 +69,8 @@ class GTK::SeparatorMenuItem is GTK::MenuItem {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_separator_menu_item_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_separator_menu_item_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

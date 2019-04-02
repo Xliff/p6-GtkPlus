@@ -9,23 +9,21 @@ use GTK::Raw::Types;
 
 use GTK::Button;
 
-my subset Ancestry where GtkLinkButton | GtkButton    | GtkActionable |
-                         GtkBin        | GtkContainer | GtkBuildable  |
-                         GtkWidget;
+our subset LinkButtonAncestry where GtkLinkButton | ButtonAncestry;
 
 class GTK::LinkButton is GTK::Button {
   has GtkLinkButton $!lb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::LinkButton');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$button) {
     my $to-parent;
     given $button {
-      when Ancestry {
+      when LinkButtonAncestry {
         $!lb = do {
           when GtkLinkButton {
             $to-parent = nativecast(GtkButton, $_);
@@ -44,13 +42,15 @@ class GTK::LinkButton is GTK::Button {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkLinkButton is also<LinkButton> { $!lb }
 
-  multi method new (Ancestry $button) {
+  multi method new (LinkButtonAncestry $button) {
     my $o = self.bless(:$button);
     $o.upref;
     $o;
   }
-  multi method new ($uri) {
+  multi method new (Str() $uri) {
     my $button = gtk_link_button_new($uri);
     self.bless(:$button);
   }
@@ -95,7 +95,8 @@ class GTK::LinkButton is GTK::Button {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_link_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_link_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

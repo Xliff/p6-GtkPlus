@@ -25,7 +25,7 @@ class GTK::ScrolledWindow is GTK::Bin {
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ScrolledWindow');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -258,7 +258,7 @@ D
       FETCH => sub ($) {
         GtkShadowType( gtk_scrolled_window_get_shadow_type($!sw) );
       },
-      STORE => sub ($, $type is copy) {
+      STORE => sub ($, Int() $type is copy) {
         my uint32 $t = self.RESOLVE-UINT($type);
         gtk_scrolled_window_set_shadow_type($!sw, $t);
       }
@@ -332,7 +332,8 @@ D
   }
 
   method get_type is also<get-type> {
-    gtk_scrolled_window_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_scrolled_window_get_type, $n, $t );
   }
 
   # Mechanism to return plain GtkWidget?

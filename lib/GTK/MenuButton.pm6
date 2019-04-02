@@ -13,23 +13,24 @@ use GTK::Menu;
 use GTK::Popover;
 use GTK::ToggleButton;
 
-my subset Ancestry
-  where GtkMenuButton | GtkToggleButton | GtkButton | GtkBin | GtkContainer |
-        GtkBuildable  | GtkWidget;
+use GTK::Compat::MenuModel;
+
+our subset MenuButtonAncestry is export 
+  where GtkMenuButton | ToggleButtonAncestry;
 
 class GTK::MenuButton is GTK::ToggleButton {
   has GtkMenuButton $!mb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::MenuButton');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$menubutton) {
     my $to-parent;
     given $menubutton {
-      when Ancestry {
+      when MenuButtonAncestry {
         $!mb = do {
           when GtkMenuButton {
             $to-parent = nativecast(GtkToggleButton, $_);
@@ -49,7 +50,7 @@ class GTK::MenuButton is GTK::ToggleButton {
     }
   }
 
-  multi method new (GtkWidget $menubutton) {
+  multi method new (MenuButtonAncestry $menubutton) {
     my $o = self.bless(:$menubutton);
     $o.upref;
     $o;
@@ -91,9 +92,9 @@ class GTK::MenuButton is GTK::ToggleButton {
     # GtkMenuModel (really is GMenuModel)
     Proxy.new(
       FETCH => sub ($) {
-        gtk_menu_button_get_menu_model($!mb);
+        GTK::Compat::MenuModel.new( gtk_menu_button_get_menu_model($!mb) );
       },
-      STORE => sub ($, $menu_model is copy) {
+      STORE => sub ($, GMenuModel() $menu_model is copy) {
         gtk_menu_button_set_menu_model($!mb, $menu_model);
       }
     );
@@ -137,7 +138,8 @@ class GTK::MenuButton is GTK::ToggleButton {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_menu_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_menu_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

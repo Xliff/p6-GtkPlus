@@ -25,7 +25,7 @@ class GTK::Scale is GTK::Range {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Scale');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -55,6 +55,8 @@ class GTK::Scale is GTK::Range {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-scale;
   }
+  
+  method GTK::Raw::Types::GtkScale is also<Scale> { $!s }
 
   multi method new (ScaleAncestry $scale) {
     my $o = self.bless(:$scale);
@@ -204,7 +206,8 @@ class GTK::Scale is GTK::Range {
   }
 
   method get_type is also<get-type> {
-    gtk_scale_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_scale_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

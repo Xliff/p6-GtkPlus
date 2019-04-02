@@ -102,7 +102,7 @@ class GTK::MenuShell is GTK::Container {
   method take_focus is rw is also<take-focus> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_menu_shell_get_take_focus($!ms) );
+        so gtk_menu_shell_get_take_focus($!ms);
       },
       STORE => sub ($, Int() $take_focus is copy) {
         my $tf = self.RESOLVE-BOOL($take_focus);
@@ -174,7 +174,8 @@ class GTK::MenuShell is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_menu_shell_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_menu_shell_get_type, $n, $t );
   }
 
   multi method insert (GtkWidget $child, Int() $position) {

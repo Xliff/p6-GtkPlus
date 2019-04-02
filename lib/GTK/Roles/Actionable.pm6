@@ -39,7 +39,8 @@ role GTK::Roles::Actionable {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_actionable_type {
-    gtk_actionable_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_actionable_get_type, $n, $t );
   }
 
   method set_detailed_action_name (Str() $detailed_action_name) {

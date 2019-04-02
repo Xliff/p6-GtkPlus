@@ -9,22 +9,22 @@ use GTK::Raw::Types;
 use GTK::Box;
 use GTK::SizeGroup;
 
-my subset Ancestry where GtkShortcutsGroup | GtkBox       | GtkOrientable |
-                         GtkContainer      | GtkBuildable | GtkWidget;
+our subset ShortcutsGroupAncestry is export 
+  where GtkShortcutsGroup | BoxAncestry;
 
 class GTK::ShortcutsGroup is GTK::Box {
   has GtkShortcutsGroup $!sg;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ShortcutsGroup');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$group) {
     my $to-parent;
     given $group {
-      when Ancestry {
+      when ShortcutsGroupAncestry {
         $!sg = do {
           when GtkShortcutsGroup {
             $to-parent = nativecast(GtkBox, $_);
@@ -43,8 +43,10 @@ class GTK::ShortcutsGroup is GTK::Box {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkShortcutsGroup is also<ShortcutsGroup> { $!sg }
 
-  method new (Ancestry $group) {
+  method new (ShortcutsGroupAncestry $group) {
     my $o = self.bless(:$group);
     $o.upref;
     $o;

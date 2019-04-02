@@ -17,7 +17,7 @@ class GTK::Scrollbar is GTK::Range {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Scrollbar');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -68,7 +68,8 @@ class GTK::Scrollbar is GTK::Range {
 
 
   method get_type is also<get-type> {
-    gtk_scrollbar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_scrollbar_get_type, $n, $t);
   }
 
 }

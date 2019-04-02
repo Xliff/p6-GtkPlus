@@ -11,8 +11,7 @@ use GTK::Bin;
 
 use GTK::Roles::Signals::Overlay;
 
-my subset Ancestry where GtkOverlay | GtkBin | GtkContainer | GtkBuildable |
-                         GtkWidget;
+our subset OverlayAncestry where GtkOverlay | BinAncestry;
 
 class GTK::Overlay is GTK::Bin {
   also does GTK::Roles::Signals::Overlay;
@@ -21,14 +20,14 @@ class GTK::Overlay is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Overlay');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$overlay) {
     my $to-parent;
     given $overlay {
-      when Ancestry {
+      when OverlayAncestry {
         $!o = do {
           when GtkOverlay  {
             $to-parent = nativecast(GtkBin, $_);
@@ -51,8 +50,10 @@ class GTK::Overlay is GTK::Bin {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-o;
   }
+  
+  method GTK::Raw::Types::GtkOverlay is also<Overlay> { $!o }
 
-  multi method new (Ancestry $overlay) {
+  multi method new (OverlayAncestry $overlay) {
     my $o = self.bless(:$overlay);
     $o.upref;
     $o;
@@ -110,7 +111,8 @@ class GTK::Overlay is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_overlay_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_overlay_get_type, $n, $t );
   }
 
   method reorder_overlay (GtkWidget() $child, Int() $position)
@@ -147,4 +149,5 @@ class GTK::Overlay is GTK::Bin {
     }
     nextwith($c, @notfound) if +@notfound;
   }
+  
 }

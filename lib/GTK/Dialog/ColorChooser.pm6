@@ -11,9 +11,8 @@ use GTK::Dialog;
 
 use GTK::Roles::ColorChooser;
 
-my subset Ancestry
-  where GtkColorChooserDialog | GtkColorChooser | GtkDialog | GtkWindow |
-        GtkBin                | GtkContainer    | GtkWidget;
+our subset ColorChooserDialogAncestry
+  where GtkColorChooserDialog | GtkColorChooser | DialogAncestry;
 
 class GTK::Dialog::ColorChooser is GTK::Dialog {
   also does GTK::Roles::ColorChooser;
@@ -22,14 +21,14 @@ class GTK::Dialog::ColorChooser is GTK::Dialog {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Dialog::ColorChooser');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$dialog) {
     my $to-parent;
     given $dialog {
-      when Ancestry {
+      when ColorChooserDialogAncestry {
         $!ccd = do {
           when GtkColorChooserDialog {
             $to-parent = nativecast(GtkDialog, $_);
@@ -55,7 +54,7 @@ class GTK::Dialog::ColorChooser is GTK::Dialog {
     $!cc //= nativecast(GtkColorChooser, $!ccd);    # GTK::Role::ColorChooser
   }
 
-  multi method new (Ancestry $dialog)  {
+  multi method new (ColorChooserDialogAncestry $dialog)  {
     my $o = self.bless(:$dialog);
     $o.upref;
     $o;
@@ -73,7 +72,8 @@ class GTK::Dialog::ColorChooser is GTK::Dialog {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_color_chooser_dialog_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_color_chooser_dialog_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

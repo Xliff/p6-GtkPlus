@@ -11,9 +11,8 @@ use GTK::Dialog;
 
 use GTK::Roles::FontChooser;
 
-my subset Ancestry
-  where GtkFontChooserDialog | GtkFontChooser | GtkDialog  | GtkWindow |
-        GtkBin               | GtkContainer   | GtkBuilder | GtkWidget;
+our subset FontChooserDialogAncestry
+  where GtkFontChooserDialog | GtkFontChooser | DialogAncestry;
 
 class GTK::Dialog::FontChooser is GTK::Dialog {
   also does GTK::Roles::FontChooser;
@@ -22,14 +21,14 @@ class GTK::Dialog::FontChooser is GTK::Dialog {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Dialog::FontChoser');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$dialog) {
     my $to-parent;
     given $dialog {
-      when Ancestry {
+      when FontChooserDialogAncestry {
         $!fcd = do {
           when GtkFontChooserDialog {
             $to-parent = nativecast(GtkDialog, $_);
@@ -63,10 +62,11 @@ class GTK::Dialog::FontChooser is GTK::Dialog {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_font_chooser_dialog_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_font_chooser_dialog_get_type, $n, $t );
   }
 
-  multi method new(Ancestry $dialog) {
+  multi method new(FontChooserDialogAncestry $dialog) {
     my $o = self.bless(:$dialog);
     $o.upref;
     $o;

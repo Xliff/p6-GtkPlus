@@ -161,8 +161,7 @@ class GTK::Stack is GTK::Container {
   method visible_child is rw is also<visible-child> {
     Proxy.new(
       FETCH => sub ($) {
-        # Resolve widget to object based on stored children.
-        gtk_stack_get_visible_child($!s);
+        GTK::Widget.new( gtk_stack_get_visible_child($!s) );
       },
       STORE => sub ($, GtkWidget() $child is copy) {
         gtk_stack_set_visible_child($!s, $child);
@@ -249,7 +248,8 @@ class GTK::Stack is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_stack_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_stack_get_type, $n, $t );
   }
 
   method set_visible_child_full (

@@ -7,29 +7,28 @@ use GTK::Compat::Types;
 use GTK::Raw::FileChooserButton;
 use GTK::Raw::Types;
 
-use GTK::Bin;
+use GTK::Box;
 
 use GTK::Roles::FileChooser;
 
-my subset Ancestry
-  where GtkFileChooserButton | GtkFileChooser | GtkBox     | GtkOrientable |
-        GtkContainer         | GtkBuildable   | GtkWidget;
+our subset FileChooserButtonAncestry
+  where GtkFileChooserButton | GtkFileChooser | BoxAncestry;
 
-class GTK::FileChooserButton is GTK::Bin {
+class GTK::FileChooserButton is GTK::Box {
   also does GTK::Roles::FileChooser;
 
   has GtkFileChooserButton $!fcb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::FileChooserButton');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$chooser) {
     my $to-parent;
     given $chooser {
-      when Ancestry {
+      when FileChooserButtonAncestry {
         $!fcb = do {
           when GtkFileChooserButton {
             $to-parent = nativecast(GtkBin, $_);
@@ -40,12 +39,12 @@ class GTK::FileChooserButton is GTK::Bin {
             $to-parent = nativecast(GtkBin, $_);
             nativecast(GtkFileChooserButton, $_);
           }
-          when GtkWidget {
+          default {
             $to-parent = $_;
             nativecast(GtkFileChooserButton, $_);
           }
         }
-        self.setBin($to-parent);
+        self.setBox($to-parent);
       }
       when GTK::FileChooserButton {
       }
@@ -55,7 +54,7 @@ class GTK::FileChooserButton is GTK::Bin {
     $!fc //= nativecast(GtkFileChooser, $!fcb);   # GTK::Roles::FileChooser
   }
 
-  multi method new (Ancestry $chooser) {
+  multi method new (FileChooserButtonAncestry $chooser) {
     my $o = self.bless(:$chooser);
     $o.upref;
     $o;
@@ -86,7 +85,7 @@ class GTK::FileChooserButton is GTK::Bin {
       FETCH => sub ($) {
         gtk_file_chooser_button_get_title($!fcb);
       },
-      STORE => sub ($, Str $title is copy) {
+      STORE => sub ($, Str() $title is copy) {
         gtk_file_chooser_button_set_title($!fcb, $title);
       }
     );
@@ -115,7 +114,7 @@ class GTK::FileChooserButton is GTK::Bin {
         Nil;
       },
       STORE => -> $, GtkFileChooser() $val is copy {
-        $gv.objecet = $val;
+        $gv.object = $val;
         self.prop_set('dialog', $gv);
       }
     );
@@ -123,7 +122,8 @@ class GTK::FileChooserButton is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_file_chooser_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_file_chooser_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

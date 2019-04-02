@@ -4,10 +4,22 @@ use LWP::Simple;
 use Mojo::DOM:from<Perl5>;
 
 sub MAIN (
-  $control,
-  :$var = 'w',
-  :$prefix = "https://developer.gnome.org/gtk3/stable/"
+  $control is copy,
+  :$var    is copy = 'w',
+  :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
 ) {
+  # If it's a URL, then try to pick it apart 
+  if $control ~~ / ^ 'https://' / {
+    $control ~~ / 'http' s? '://' <-[\#]>+ /;
+    my $new_prefix = $/.Str;
+    my $new_control = $new_prefix.split('/')[* - 1];
+    $new_control ~~ s/ '.' .+? $//;
+    $new_prefix ~~ s| '/' <-[/]>+? $|/|;
+    ($prefix, $control) = ($new_prefix.trim, $new_control.trim);
+    
+    say "Attempting with prefix = { $prefix } control = { $control }";
+  }
+  
   my $dom = Mojo::DOM.new(
     LWP::Simple.new.get(
       "{ $prefix }{ $control }.html"

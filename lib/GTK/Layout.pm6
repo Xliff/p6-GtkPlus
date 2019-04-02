@@ -7,11 +7,13 @@ use GTK::Compat::Types;
 use GTK::Raw::Layout;
 use GTK::Raw::Types;
 
+use GTK::Compat::Window;
+
 use GTK::Container;
 
 use GTK::Roles::Scrollable;
 
-my subset Ancestry where GtkLayout | GtkScrollable | GtkBuilder | GtkWidget;
+our subset LayoutAncestry where GtkLayout | GtkScrollable | ContainerAncestry;
 
 class GTK::Layout is GTK::Container {
   also does GTK::Roles::Scrollable;
@@ -20,13 +22,13 @@ class GTK::Layout is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Layout');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$layout) {
     given $layout {
-      when Ancestry {
+      when LayoutAncestry {
         self.setLayout($layout);
       }
       when GTK::Layout {
@@ -35,8 +37,10 @@ class GTK::Layout is GTK::Container {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkLayout is also<Layout> { $!l }
 
-  method setLayout($layout) {
+  method setLayout(LayoutAncestry $layout) {
     my $to-parent;
     $!l = do {
       given $layout {
@@ -45,7 +49,7 @@ class GTK::Layout is GTK::Container {
           $_;
         }
         when GtkScrollable {
-          $!s = $_ ;                            # GTK::Roles::Scrollable
+          $!s = $_ ;                              # GTK::Roles::Scrollable
           $to-parent = nativecast(GtkContainer, $_);
           nativecast(GtkLayout, $_);
         }
@@ -54,12 +58,12 @@ class GTK::Layout is GTK::Container {
           nativecast(GtkLayout, $_);
         }
       }
+      $!s //= nativecast(GtkScrollable, $!l);     # GTK::Roles::Scrollable
+      self.setContainer($to-parent);
     }
-    self.setContainer($to-parent);
-    $!s //= nativecast(GtkScrollable, $!l);     # GTK::Roles::Scrollable
   }
 
-  multi method new (Ancestry $layout) {
+  multi method new (LayoutAncestry $layout) {
     my $o = self.bless(:$layout);
     $o.upref;
     $o;
@@ -114,23 +118,17 @@ class GTK::Layout is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_bin_window is also<get-bin-window> {
-    gtk_layout_get_bin_window($!l);
+    GDK::Compat::Window.new( gtk_layout_get_bin_window($!l) );
   }
 
-  multi method get-size {
-    self.get_size;
-  }
+  proto method get_size (|) 
+    is also<get-size>
+  { * }
+  
   multi method get_size {
     my ($w, $h);
     samewith($w, $h);
     ($w, $h);
-  }
-
-  multi method get-size (
-    Int() $width is rw,
-    Int() $height is rw
-  ) {
-    self.get_size($width, $height);
   }
   multi method get_size (
     Int() $width is rw,
@@ -140,11 +138,11 @@ class GTK::Layout is GTK::Container {
     my guint ($w, $h) = self.RESOLVE-INT(@i);
     gtk_layout_get_size($!l, $w, $h);
     ($width, $height) = ($w, $h);
-    Nil;
   }
 
   method get_type is also<get-type> {
-    gtk_layout_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_layout_get_type, $n, $t );
   }
 
   method move (GtkWidget() $child_widget, Int() $x, Int() $y) {

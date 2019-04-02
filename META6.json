@@ -241,6 +241,7 @@
       "GTK::Raw::Spinner"                      :  "lib/GTK/Raw/Spinner.pm6"                     ,
       "GTK::Raw::Stack"                        :  "lib/GTK/Raw/Stack.pm6"                       ,
       "GTK::Raw::StackSidebar"                 :  "lib/GTK/Raw/StackSidebar.pm6"                ,
+      "GTK::Raw::StackSwitcher"                :  "lib/GTK/Raw/StackSwitcher.pm6"               ,
       "GTK::Raw::Statusbar"                    :  "lib/GTK/Raw/Statusbar.pm6"                   ,
       "GTK::Raw::StyleContext"                 :  "lib/GTK/Raw/StyleContext.pm6"                ,
       "GTK::Raw::Subs"                         :  "lib/GTK/Raw/Subs.pm6"                        ,
@@ -459,6 +460,7 @@
       "GTK::ShortcutsSection"                  :  "lib/GTK/ShortcutsSection.pm6"                ,
       "GTK::ShortcutsShortcut"                 :  "lib/GTK/ShortcutsShortcut.pm6"               ,
       "GTK::StackSidebar"                      :  "lib/GTK/StackSidebar.pm6"                    ,
+      "GTK::StackSwitcher"                     :  "lib/GTK/StackSwitcher.pm6"                   ,
       "GTK::Statusbar"                         :  "lib/GTK/Statusbar.pm6"                       ,
       "GTK::ToggleButton"                      :  "lib/GTK/ToggleButton.pm6"                    ,
       "GTK::ToolItem"                          :  "lib/GTK/ToolItem.pm6"                        ,
@@ -517,6 +519,8 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
+
 
 
 

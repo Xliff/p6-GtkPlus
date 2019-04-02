@@ -78,7 +78,7 @@ $a.activate.tap({
     if $rc == GTK_RESPONSE_OK {
       my $c = $ccd.rgba.to_string;
       my $css = GTK::CSSProvider.new;
-      my $css-s = "#tview text \{ background-color: { $c }; \}";
+      my $css-s = "#tview text \{ color: { $c }; \}";
 
       say "Selected color: " ~ $c;
       $css.load_from_data($css-s);
