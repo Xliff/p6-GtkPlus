@@ -11,9 +11,8 @@ use GTK::ToolItem;
 
 use GTK::Roles::Actionable;
 
-my subset Ancestry
-  where GtkToolButton | GtkToolItem | GtkActionable | GtkBuildable |
-        GtkWidget;
+our subset ToolButtonAncestry
+  where GtkToolButton | ToolItemAncestry;
 
 class GTK::ToolButton is GTK::ToolItem {
   also does GTK::Roles::Actionable;
@@ -28,7 +27,7 @@ class GTK::ToolButton is GTK::ToolItem {
 
   submethod BUILD(:$toolbutton) {
     given $toolbutton {
-      when Ancestry {
+      when ToolButtonAncestry {
         self.setToolButton($toolbutton);
       }
       when GTK::ToolButton {
@@ -37,31 +36,34 @@ class GTK::ToolButton is GTK::ToolItem {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkToolButton is also<ToolButton> { $!tb }
 
-  method setToolButton($toolbutton) {
+  method setToolButton(ToolButtonAncestry $toolbutton) {
     self.IS-PROTECTED;
 
     my $to-parent;
     $!tb = do given $toolbutton {
-      when GtkToolItem | GtkBuildable | GtkWidget {
-        $to-parent = $toolbutton;
-        nativecast(GtkToolButton, $toolbutton);
+      when GtkToolButton {
+        $to-parent = nativecast(GtkToolItem, $toolbutton);
+        $toolbutton;
       }
       when GtkActionable {
         $!action = $_;
         $to-parent = nativecast(GtkToolItem, $toolbutton);
         nativecast(GtkToolButton, $toolbutton);
       }
-      when GtkToolButton {
-        $to-parent = nativecast(GtkToolItem, $toolbutton);
-        $toolbutton;
+      default {
+        $to-parent = $toolbutton;
+        nativecast(GtkToolButton, $toolbutton);
       }
+      
     }
-    self.setToolItem($to-parent);
     $!action //= nativecast(GtkActionable, $!tb);   # GTK::Roles::Actionable
+    self.setToolItem($to-parent);
   }
 
-  multi method new (Ancestry $toolbutton) {
+  multi method new (ToolButtonAncestry $toolbutton) {
     my $o = self.bless(:$toolbutton);
     $o.upref;
     $o;
@@ -75,7 +77,7 @@ class GTK::ToolButton is GTK::ToolItem {
     self.bless(:$toolbutton);
   }
 
-  method new_from_stock (gchar $stock_id)
+  method new_from_stock (Str() $stock_id)
     is DEPRECATED('GTK::ToolButton.new( GTK::Image.new_from_icon_name() )')
   is also<new-from-stock> {
     my $toolbutton = gtk_tool_button_new_from_stock($stock_id);
@@ -141,7 +143,7 @@ class GTK::ToolButton is GTK::ToolItem {
       FETCH => sub ($) {
         gtk_tool_button_get_stock_id($!tb);
       },
-      STORE => sub ($, $stock_id is copy) {
+      STORE => sub ($, Str() $stock_id is copy) {
         gtk_tool_button_set_stock_id($!tb, $stock_id);
       }
     );
@@ -150,7 +152,7 @@ class GTK::ToolButton is GTK::ToolItem {
   method use_underline is rw is also<use-underline> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_tool_button_get_use_underline($!tb);
+        so gtk_tool_button_get_use_underline($!tb);
       },
       STORE => sub ($, Int() $use_underline is copy) {
         my $uu = self.RESOLVE-BOOL($use_underline);

@@ -12,9 +12,8 @@ use GTK::Roles::ToolShell;
 
 use GTK::Container;
 
-my subset Ancestry
-  where GtkToolbar | GtkToolShell | GtkContainer | GtkOrientable |
-        GtkBuilder | GtkWidget;
+our subset ToolbarAncestry is export 
+  where GtkToolbar | GtkToolShell | GtkOrientable | ContainerAncestry;
 
 class GTK::Toolbar is GTK::Container {
   also does GTK::Roles::Orientable;
@@ -29,32 +28,9 @@ class GTK::Toolbar is GTK::Container {
   }
 
   submethod BUILD(:$toolbar) {
-    my $to-parent;
     given $toolbar {
-      when Ancestry {
-        $!tb = do {
-          when GtkToolbar {
-            $to-parent = nativecast(GtkContainer, $_);
-            $_;
-          }
-          when GtkOrientable {
-            $!or = $_;
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkToolbar, $_);
-          }
-          when GtkToolShell {
-            $!shell = $_;
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkToolbar, $_);
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkToolbar, $_);
-          }
-        }
-        $!or //= nativecast(GtkOrientable, $toolbar);   # GTK::Roles::Orientable
-        $!shell //= nativecast(GtkToolShell, $toolbar); # GTK::Roles::ToolShell
-        self.setContainer($to-parent);
+      when ToolbarAncestry {
+        self.setToolbar($toolbar);
       }
       when GTK::Toolbar {
       }
@@ -62,8 +38,37 @@ class GTK::Toolbar is GTK::Container {
       }
     }
   }
+  
+  method GTK::Raw::Types::Toolbar is also<Toolbar> { $!tb }
+  
+  method setToolbar(ToolbarAncestry $toolbar) {
+    my $to-parent;
+    $!tb = do given $toolbar {
+      when GtkToolbar {
+        $to-parent = nativecast(GtkContainer, $_);
+        $_;
+      }
+      when GtkOrientable {
+        $!or = $_;
+        $to-parent = nativecast(GtkContainer, $_);
+        nativecast(GtkToolbar, $_);
+      }
+      when GtkToolShell {
+        $!shell = $_;
+        $to-parent = nativecast(GtkContainer, $_);
+        nativecast(GtkToolbar, $_);
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkToolbar, $_);
+      }
+    }
+    $!or    //= nativecast(GtkOrientable, $toolbar);  # GTK::Roles::Orientable
+    $!shell //= nativecast(GtkToolShell, $toolbar);   # GTK::Roles::ToolShell
+    self.setContainer($to-parent);
+  }
 
-  multi method new (Ancestry $toolbar) {
+  multi method new (ToolbarAncestry $toolbar) {
     my $o = self.bless(:$toolbar);
     $o.upref;
     $o;
@@ -116,7 +121,11 @@ class GTK::Toolbar is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_drop_index (Int() $x is rw, Int() $y is rw)
-    is also<get-drop-index>
+    is also<
+      get-drop-index
+      drop_index
+      drop-index
+    >
   {
     my @u = ($x, $y);
     my gint ($xx, $yy) = self.RESOLVE-UINT(@u);
@@ -126,28 +135,64 @@ class GTK::Toolbar is GTK::Container {
   }
   # Add a no-arg multi
 
-  method get_icon_size is also<get-icon-size> {
+  method get_icon_size 
+    is also<
+      get-icon-size
+      icon_size
+      icon-size
+    > 
+  {
     GtkIconSize( gtk_toolbar_get_icon_size($!tb) );
   }
 
-  multi method get_item_index (GtkToolItem() $item) is also<get-item-index> {
+  multi method get_item_index (GtkToolItem() $item) 
+    is also<
+      get-item-index
+      item_index
+      item-index
+    > 
+  {
     gtk_toolbar_get_item_index($!tb, $item);
   }
 
-  method get_n_items is also<get-n-items> {
+  method get_n_items 
+    is also<
+      get-n-items
+      n_items
+      n-items
+      elems
+    > 
+  {
     gtk_toolbar_get_n_items($!tb);
   }
 
-  method get_nth_item (Int $n) is also<get-nth-item> {
+  method get_nth_item (Int $n) 
+    is also<
+      get-nth-item
+      nth_item
+      nth-item
+    > 
+  {
     my gint $nn = self.RESOLVE-INT($n);
     gtk_toolbar_get_nth_item($!tb, $nn);
   }
 
-  method get_relief_style is also<get-relief-style> {
+  method get_relief_style 
+    is also<
+      get-relief-style
+      relief_style
+      relief-style
+    > 
+  {
     GtkReliefStyle( gtk_toolbar_get_relief_style($!tb) );
   }
 
-  method get_style is also<get-style> {
+  method get_style 
+    is also<
+      get-style
+      style
+    > 
+  {
     GtkToolbarStyle( gtk_toolbar_get_style($!tb) );
   }
 

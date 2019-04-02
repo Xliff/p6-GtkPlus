@@ -11,9 +11,8 @@ use GTK::Container;
 
 use GTK::Roles::Orientable;
 
-our subset GridAncestry
-  where GtkGrid | GtkOrientable | GtkContainer | GtkBuildable | GtkWidget;
-
+our subset GridAncestry is export
+  where GtkGrid | GtkOrientable | ContainerAncestry;
 
 class GTK::Grid is GTK::Container {
   also does GTK::Roles::Orientable;
@@ -35,22 +34,22 @@ class GTK::Grid is GTK::Container {
     given $grid {
       when GridAncestry {
         $!g = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkGrid, $_);
+          when GtkGrid  {
+            $to-parent = nativecast(GtkContainer, $_);
+            $_;
           }
           when GtkOrientable {
             $!or = $_;                                # GTK::Roles::Orientable
             $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkGrid, $_);
           }
-          when GtkGrid  {
-            $to-parent = nativecast(GtkContainer, $_);
-            $_;
+          default {
+            $to-parent = $_;
+            nativecast(GtkGrid, $_);
           }
         }
-        self.setContainer($to-parent);
         $!or //= nativecast(GtkOrientable, $grid);    # GTK::Roles::Orientable
+        self.setContainer($to-parent);
       }
       when GTK::Grid {
       }
@@ -398,7 +397,9 @@ class GTK::Grid is GTK::Container {
   method insert_next_to (
     GtkWidget() $sibling,
     Int() $side                     # GtkPositionType $side
-  ) is also<insert-next-to> {
+  ) 
+    is also<insert-next-to> 
+  {
     my uint32 $s = self.RESOLVE-UINT($side);
     die '$sibling not found in grid!'
       unless %!obj-manifest{+$sibling.p}:exists;

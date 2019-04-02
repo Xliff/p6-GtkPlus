@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Pixbuf;
 use GTK::Compat::Types;
 use GTK::Raw::Image;
@@ -75,7 +77,7 @@ class GTK::Image is GTK::Widget {
   )
     is also<new-from-gicon>
   {
-    my guint32 $s = self.RESOLVE-UINT($size);
+    my guint32 $s = resolve-uint($size);
     my $image = gtk_image_new_from_gicon($icon, $s);
     self.bless(:$image);
   }
@@ -86,7 +88,7 @@ class GTK::Image is GTK::Widget {
   )
     is also<new-from-icon-name>
   {
-    my guint32 $s = self.RESOLVE-UINT($size);
+    my guint32 $s = resolve-uint($size);
     my $image = gtk_image_new_from_icon_name($name, $s);
     self.bless(:$image);
   }
@@ -99,7 +101,7 @@ class GTK::Image is GTK::Widget {
     is DEPRECATED('new_from_icon_name')
     is also<new-from-icon-set>
   {
-    my guint32 $s = self.RESOLVE-UINT($size);
+    my guint32 $s = resolve-uint($size);
     my $image = gtk_image_new_from_icon_set($set, $s);
     self.bless(:$image);
   }

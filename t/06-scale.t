@@ -17,9 +17,9 @@ $a.activate.tap({
   my $hscale = GTK::Scale.new_with_range(GTK_ORIENTATION_HORIZONTAL, 0, 100, 1);
   my $vscale = GTK::Scale.new_with_range(GTK_ORIENTATION_VERTICAL, 0, 1, 0.05);
 
-   (my $mark = qq:to/MARK/) ~~ s:g/\n//;
- <span font="Chilanka 24" weight="bold" color="#993300">Scale Example</span>
- MARK
+  (my $mark = qq:to/MARK/) ~~ s:g/\n//;
+<span font="Chilanka 24" weight="bold" color="#993300">Scale Example</span>
+MARK
 
   $title.set_markup($mark);
   ($title.margin_top, $title.margin_bottom) = (20, 20);

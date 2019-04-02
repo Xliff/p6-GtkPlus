@@ -52,9 +52,7 @@ class GTK::Notebook is GTK::Container {
     self.disconnect-all($_) for %!signals-n;
   }
 
-  method GTK::Raw::Types::GtkNotebook is also<notebook> {
-    $!n;
-  }
+  method GTK::Raw::Types::GtkNotebook is also<Notebook> { $!n }
 
   multi method new (NotebookAncestry $notebook) {
     my $o = self.bless(:$notebook);

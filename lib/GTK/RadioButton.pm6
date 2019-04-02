@@ -10,10 +10,8 @@ use GTK::Raw::Types;
 
 use GTK::CheckButton;
 
-my subset Ancestry
-  where GtkRadioButton | GtkCheckButton | GtkToggleButton | GtkActionable |
-        GtkButton      | GtkBin         | GtkContainer    | GtkWidget;
-
+our subset RadioButtonAncestry is export 
+  where GtkRadioButton | CheckButtonAncestry;
 
 class GTK::RadioButton is GTK::CheckButton {
   has GtkRadioButton $!rb;
@@ -25,20 +23,9 @@ class GTK::RadioButton is GTK::CheckButton {
   }
 
   submethod BUILD(:$radiobutton) {
-    my $to-parent;
     given $radiobutton {
-      when Ancestry {
-        $!rb = do {
-          when GtkRadioButton {
-            $to-parent = nativecast(GtkCheckButton, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkRadioButton, $_);
-          }
-        };
-        self.setCheckButton($radiobutton);
+      when RadioButtonAncestry {
+        self.setRadioButton($radiobutton);
       }
       when GTK::RadioButton {
       }
@@ -46,8 +33,27 @@ class GTK::RadioButton is GTK::CheckButton {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkRadioButton is also<RadioButton> { $!rb }
+  
+  method setRadioButton(RadioButtonAncestry $radiobutton) {
+    self.IS-PROTECTED; 
+    
+    my $to-parent;
+    $!rb = do given $radiobutton {
+      when GtkRadioButton {
+        $to-parent = nativecast(GtkCheckButton, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkRadioButton, $_);
+      }
+    }
+    self.setCheckButton($to-parent);
+  }
 
-  multi method new (Ancestry $radiobutton) {
+  multi method new (RadioButtonAncestry $radiobutton) {
     my $o = self.bless(:$radiobutton);
     $o.upref;
     $o;
@@ -64,21 +70,14 @@ class GTK::RadioButton is GTK::CheckButton {
     for @m {
       @radiobuttons.push(
         GTK::RadioButton.new_with_label_from_widget(
-          @radiobuttons[0].radiobutton,
+          @radiobuttons[0].RadioButton,
           $_
         )
       );
     }
     @radiobuttons;
   }
-
-  method GTK::Raw::Types::GtkRadioButton {
-    $!rb;
-  }
-  method radiobutton {
-    $!rb;
-  }
-
+  
   method new_from_widget (GtkRadioButton() $member)
     is also<new-from-widget>
   {

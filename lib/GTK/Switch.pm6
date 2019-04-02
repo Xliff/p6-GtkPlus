@@ -11,7 +11,8 @@ use GTK::Widget;
 
 use GTK::Roles::Actionable;
 
-my subset Ancestry where GtkSwitch | GtkActionable | GtkBuildable | GtkWidget;
+our subset SwitchAncestry is export 
+  where GtkSwitch | GtkActionable | WidgetAncestry;
 
 class GTK::Switch is GTK::Widget {
   also does GTK::Roles::Actionable;
@@ -27,7 +28,7 @@ class GTK::Switch is GTK::Widget {
   submethod BUILD(:$switch) {
     my $to-parent;
     given $switch {
-      when Ancestry {
+      when SwitchAncestry {
         $!s = do {
           when GtkSwitch {
             $to-parent = nativecast(GtkWidget, $_);
@@ -53,7 +54,7 @@ class GTK::Switch is GTK::Widget {
     $!action //= nativecast(GtkActionable, $!s);      # GTK::Roles::Actionable
   }
 
-  multi method new(Ancestry $switch) {
+  multi method new(SwitchAncestry $switch) {
     my $o = self.bless(:$switch);
     $o.upref;
     $o;
@@ -83,7 +84,7 @@ class GTK::Switch is GTK::Widget {
   method active is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_switch_get_active($!s) );
+        so gtk_switch_get_active($!s);
       },
       STORE => sub ($, Int() $is_active is copy) {
         my gboolean $ia = self.RESOLVE-BOOL($is_active);

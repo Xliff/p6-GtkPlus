@@ -12,8 +12,8 @@ use GTK::Raw::Types;
 use GTK::Bin;
 use GTK::SizeGroup;
 
-my subset Ancestry
-  where GtkToolItem | GtkBin | GtkContainer | GtkBuilder | GtkWidget;
+our subset ToolItemAncestry is export
+  where GtkToolItem | BinAncestry;
 
 class GTK::ToolItem is GTK::Bin {
   has GtkToolItem $!ti;
@@ -26,7 +26,7 @@ class GTK::ToolItem is GTK::Bin {
 
   submethod BUILD(:$toolitem) {
     given $toolitem {
-      when Ancestry {
+      when ToolItemAncestry {
         self.setToolItem($toolitem);
       }
       when GTK::ToolItem {
@@ -36,7 +36,7 @@ class GTK::ToolItem is GTK::Bin {
     }
   }
 
-  method setToolItem($toolitem) {
+  method setToolItem(ToolItemAncestry $toolitem) {
     my $to-parent;
     $!ti = do given $toolitem {
       when GtkToolItem {
@@ -52,7 +52,7 @@ class GTK::ToolItem is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (Ancestry $toolitem) {
+  multi method new (ToolItemAncestry $toolitem) {
     my $o = self.bless(:$toolitem);
     $o.upref;
     $o;
@@ -62,9 +62,7 @@ class GTK::ToolItem is GTK::Bin {
     self.bless(:$toolitem);
   }
 
-  method GTK::Raw::Types::GtkToolItem {
-    $!ti;
-  }
+  method GTK::Raw::Types::GtkToolItem is also<ToolItem> { $!ti }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -156,41 +154,97 @@ class GTK::ToolItem is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_ellipsize_mode is also<get-ellipsize-mode> {
+  method get_ellipsize_mode 
+    is also<
+      get-ellipsize-mode
+      ellipsize_mode
+      ellipsize-mode
+    > 
+  {
     PangoEllipsizeMode( gtk_tool_item_get_ellipsize_mode($!ti) );
   }
 
-  method get_icon_size is also<get-icon-size> {
+  method get_icon_size 
+    is also<
+      get-icon-size
+      icon_size
+      icon-size
+    > 
+  {
     GtkIconSize( gtk_tool_item_get_icon_size($!ti) );
   }
 
-  method get_orientation is also<get-orientation> {
+  method get_orientation 
+    is also<
+      get-orientation
+      orientation
+    > 
+  {
     GtkOrientation( gtk_tool_item_get_orientation($!ti) );
   }
 
-  method get_proxy_menu_item (gchar $menu_item_id)
-    is also<get-proxy-menu-item>
+  # EXample mechanism to return widget pointer for MenuItem subclases
+  method get_proxy_menu_item (Str() $menu_item_id, :$object = True)
+    is also<
+      get-proxy-menu-item
+      proxy_menu_item
+      proxy-menu-item
+    >
   {
-    gtk_tool_item_get_proxy_menu_item($!ti, $menu_item_id);
+    my $widget = gtk_tool_item_get_proxy_menu_item($!ti, $menu_item_id);
+    return $widget unless $object;
+    GTK::MenuItem.new($widget);
   }
 
-  method get_relief_style is also<get-relief-style> {
+  method get_relief_style 
+    is also<
+      get-relief-style
+      relief_style
+      relief-style
+    > 
+  {
     GtkReliefStyle( gtk_tool_item_get_relief_style($!ti) );
   }
 
-  method get_text_alignment is also<get-text-alignment> {
+  method get_text_alignment 
+    is also<
+      get-text-alignment
+      text_alignment
+      text-alignment
+    > 
+  {
     gtk_tool_item_get_text_alignment($!ti);
   }
 
-  method get_text_orientation is also<get-text-orientation> {
+  method get_text_orientation 
+    is also<
+      get-text-orientation
+      text_orientation
+      text-orientation
+    > 
+  {
     GtkOrientation( gtk_tool_item_get_text_orientation($!ti) );
   }
 
-  method get_text_size_group is also<get-text-size-group> {
+  method get_text_size_group 
+    is also<
+      get-text-size-group
+      text_size_group
+      text-size-group
+      text_sizegroup
+      text-sizegroup
+    > 
+  {
     GTK::SizeGroup.new( gtk_tool_item_get_text_size_group($!ti) );
   }
 
-  method get_toolbar_style is also<get-toolbar-style> {
+  method get_toolbar_style 
+    is also<
+      get-toolbar-style
+      toolbar_style
+      toolbar-style
+    > 
+  {
     GtkToolbarStyle( gtk_tool_item_get_toolbar_style($!ti) );
   }
 
@@ -203,11 +257,11 @@ class GTK::ToolItem is GTK::Bin {
   }
 
   method retrieve_proxy_menu_item is also<retrieve-proxy-menu-item> {
-    gtk_tool_item_retrieve_proxy_menu_item($!ti);
+    GTK::MenuItem.new( gtk_tool_item_retrieve_proxy_menu_item($!ti) );
   }
 
   method set_proxy_menu_item (
-    gchar $menu_item_id,
+    Str() $menu_item_id,
     GtkWidget() $menu_item
   )
     is also<set-proxy-menu-item>
@@ -215,11 +269,11 @@ class GTK::ToolItem is GTK::Bin {
     gtk_tool_item_set_proxy_menu_item($!ti, $menu_item_id, $menu_item);
   }
 
-  method set_tooltip_markup (gchar $markup) is also<set-tooltip-markup> {
+  method set_tooltip_markup (Str() $markup) is also<set-tooltip-markup> {
     gtk_tool_item_set_tooltip_markup($!ti, $markup);
   }
 
-  method set_tooltip_text (gchar $text) is also<set-tooltip-text> {
+  method set_tooltip_text (Str() $text) is also<set-tooltip-text> {
     gtk_tool_item_set_tooltip_text($!ti, $text);
   }
 

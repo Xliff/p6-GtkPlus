@@ -3,16 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Types;
 use GTK::Raw::Scale;
 use GTK::Raw::Types;
 
-use GTK::Range;
-
 use GTK::Roles::Signals::Scale;
 
-my subset Ancestry
-  where GtkScale | GtkRange | GtkOrientable | GtkBuildable | GtkWidget;
+use Pango::Layout;
+
+use GTK::Range;
+
+our subset ScaleAncestry is export
+  where GtkScale | RangeAncestry;
 
 class GTK::Scale is GTK::Range {
   also does GTK::Roles::Signals::Scale;
@@ -28,7 +32,7 @@ class GTK::Scale is GTK::Range {
   submethod BUILD(:$scale) {
     my $to-parent;
     given $scale {
-      when Ancestry {
+      when ScaleAncestry {
         $!s = do {
           when GtkScale {
             $to-parent = nativecast(GtkRange, $_);
@@ -52,7 +56,7 @@ class GTK::Scale is GTK::Range {
     self.disconnect-all($_) for %!signals-scale;
   }
 
-  multi method new (Ancestry $scale) {
+  multi method new (ScaleAncestry $scale) {
     my $o = self.bless(:$scale);
     $o.upref;
     $o;
@@ -76,7 +80,7 @@ class GTK::Scale is GTK::Range {
     Int() $orientation,           # GtkOrientation $orientation,
     GtkAdjustment() $adjustment
   ) {
-    my uint32 $o = self.RESOLVE-UINT($orientation);
+    my uint32 $o = resolve-uint($orientation);
     my $scale = gtk_scale_new($o, $adjustment);
     self.bless(:$scale);
   }
@@ -99,7 +103,7 @@ class GTK::Scale is GTK::Range {
   )
     is also<new-with-range>
   {
-    my uint32 $o = self.RESOLVE-UINT($orientation);
+    my uint32 $o = resolve-uint($orientation);
     my num64 ($mn, $mx, $st) = ($min, $max, $step);
     my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
     self.bless(:$scale);
@@ -182,8 +186,13 @@ class GTK::Scale is GTK::Range {
     gtk_scale_clear_marks($!s);
   }
 
-  method get_layout is also<get-layout> {
-    gtk_scale_get_layout($!s);
+  method get_layout 
+    is also<
+      get-layout
+      layout
+    > 
+  {
+    Pango::Layout.new( gtk_scale_get_layout($!s) );
   }
 
   method get_layout_offsets (Int() $x, Int() $y)

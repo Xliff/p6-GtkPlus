@@ -32,15 +32,19 @@ class GTK::CheckButton is GTK::ToggleButton {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkCheckButton is also<CheckButton> { $!cb }
 
-  method setCheckButton($checkbutton) {
+  method setCheckButton(CheckButtonAncestry $checkbutton) {
+    self.IS-PROTECTED;
+    
     my $to-parent;
     $!cb = do given $checkbutton {
       when GtkCheckButton {
         $to-parent = nativecast(GtkToggleButton, $_);
         $_;
       }
-      when ToggleButtonAncestry {
+      default {
         $to-parent = $_;
         nativecast(GtkCheckButton, $checkbutton);
       }
@@ -58,12 +62,12 @@ class GTK::CheckButton is GTK::ToggleButton {
     self.bless(:$checkbutton);
   }
 
-  method new_with_label (Str $label) is also<new-with-label> {
+  method new_with_label (Str() $label) is also<new-with-label> {
     my $checkbutton = gtk_check_button_new_with_label($label);
     self.bless(:$checkbutton);
   }
 
-  method new_with_mnemonic (Str $label) is also<new-with-mnemonic> {
+  method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $checkbutton = gtk_check_button_new_with_mnemonic($label);
     self.bless(:$checkbutton);
   }
