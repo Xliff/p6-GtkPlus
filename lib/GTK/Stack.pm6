@@ -8,24 +8,25 @@ use GTK::Raw::Stack;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::StackSwitcher;
 use GTK::StackSidebar;
 
 our subset StackAncestry is export where GtkStack | ContainerAncestry;
 
 class GTK::Stack is GTK::Container {
   has GtkStack $!s;
-  has GtkStackSwitcher $!ss;
+  has GTK::StackSwitcher $!ss;
   has GTK::StackSidebar $!sb;
   has %!by-name;
   has %!by-title;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Stack');
+    $o.setType(self.^name);
     $o;
   }
 
-  submethod BUILD(:$stack, :$switcher, :$sidebar) {
+  submethod BUILD(:$stack, :$switcher) {
     my $to-parent;
     given $stack {
       when StackAncestry {
@@ -47,13 +48,10 @@ class GTK::Stack is GTK::Container {
       }
     }
 
-    if $switcher {
-      # Note: Builder support may require StackSwitcher become an object!
-      $!ss = gtk_stack_switcher_new();
-      gtk_stack_switcher_set_stack($!ss, $!s);
-    } elsif $sidebar {
-      $!sb = GTK::StackSidebar.new;
-      $!sb.stack = $!s;
+    with $switcher {
+      my $s = $switcher ?? 
+        ($!ss = GTK::StackSwitcher.new) !! ($!sb = GTK::StackSidebar.new);
+      $s.stack = $!s;
     }
   }
   
@@ -64,18 +62,24 @@ class GTK::Stack is GTK::Container {
     $o.upref;
     $o;
   }
-  multi method new (GtkStack $stack) {
-    my $switcher = True;
-    self.bless(:$stack, :$switcher);
-  }
-  multi method new(:$switcher is copy, :$sidebar is copy) {
-    die 'Please use $switcher OR $sidebar when creating a GTK::Stack'
-      if $switcher.defined && $sidebar.defined;
-
-    $switcher = True unless $switcher.defined || $sidebar.defined;
+  #
+  # Until we can get types directly from the pointer without something like 
+  # GTK::Widget.setType, then we cannot reliably determine what control to 
+  # use when pulling a GtkStack from its pointer form.
+  #
+  # multi method new (GtkStack $stack) {
+  #   my $switcher = True;
+  #   self.bless(:$stack, :$switcher);
+  # }
+  #
+  multi method new(:$switcher is copy = True, :$sidebar is copy = False) {
+    die 'GTK::Stack.new can have only one of $switcher or $sidebar set to True'
+      if $switcher && $sidebar;
+      
+    $switcher = $sidebar.not with $sidebar;
 
     my $stack = gtk_stack_new();
-    self.bless(:$stack, :$switcher, :$sidebar);
+    self.bless(:$stack, :$switcher);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -177,8 +181,13 @@ class GTK::Stack is GTK::Container {
     );
   }
 
-  # XXX - Add attribute for 'control' to add either GtkStackSwitcher or
+  # YYY - Add attribute for 'control' to add either GtkStackSwitcher or
   #       GtkStackSidebar
+  #       For now...control will return either the sidebar or the stack 
+  #       switcher object.
+  method control {
+    $!sb // $!ss
+  }
 
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
@@ -253,23 +262,17 @@ class GTK::Stack is GTK::Container {
     gtk_stack_set_visible_child_full($!s, $name, $t);
   }
 
+  # The window on these methods is closing.
+  #
   # Expose the Stack Switcher widget as GtkStackSwitcher
   method switcher {
     $!ss;
   }
-  # Expose the Stack Switcher widget as GtkWidget
-  method switcher-widget is also<switcher_widget> {
-    nativecast(GtkWidget, $!ss);
-  }
-
   # Expose the StackSidebar object
   method sidebar {
     $!sb;
   }
-  # Expose the StackSidebar GtkWidget
-  method sidebar-widget is also<sidebar_widget> {
-    $!sb.Widget;
-  }
+  
   # ↑↑↑↑ METHODS ↑↑↑↑
   method child-set(GtkWidget() $c, *@propval) {
     my @notfound;
@@ -288,4 +291,5 @@ class GTK::Stack is GTK::Container {
     }
     nextwith($c, @notfound) if +@notfound;
   }
+  
 }

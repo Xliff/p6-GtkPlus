@@ -17,7 +17,7 @@ class GTK::ComboBoxText is GTK::ComboBox {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ComboBoxText');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -34,9 +34,10 @@ class GTK::ComboBoxText is GTK::ComboBox {
   }
   
   method setComboBoxText(ComboBoxTextAncestry $combobox) {
+    self.IS-PROTECTED;
+    
     my $to-parent;
-    #self.IS-PROTECTED;
-    $!cbt = do {
+    $!cbt = do given $combobox {
       when GtkComboBoxText {
         $to-parent = nativecast(GtkComboBox, $_);
         $_;

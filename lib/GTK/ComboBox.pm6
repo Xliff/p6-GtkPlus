@@ -26,7 +26,7 @@ class GTK::ComboBox is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ComboBox');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -47,6 +47,8 @@ class GTK::ComboBox is GTK::Bin {
   }
 
   method setComboBox($combobox) {
+    self.IS-PROTECTED; 
+    
     my $to-parent;
     $!cb = do given $combobox {
       when GtkComboBox  {
@@ -63,7 +65,7 @@ class GTK::ComboBox is GTK::Bin {
         $to-parent = nativecast(GtkBin, $_);
         nativecast(GtkComboBox, $_);
       }
-      when BinAncestry {
+      default {
         $to-parent = $_;
         nativecast(GtkComboBox, $_);
       }
@@ -188,8 +190,9 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_active($!cb);
       },
-      STORE => sub ($, $index is copy) {
-        gtk_combo_box_set_active($!cb, $index);
+      STORE => sub ($, Int() $index is copy) {
+        my gint $i = self.RESOLVE-INT($index);
+        gtk_combo_box_set_active($!cb, $i);
       }
     );
   }
@@ -199,7 +202,7 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_active_id($!cb);
       },
-      STORE => sub ($, $active_id is copy) {
+      STORE => sub ($, Str() $active_id is copy) {
         gtk_combo_box_set_active_id($!cb, $active_id);
       }
     );
@@ -208,10 +211,11 @@ class GTK::ComboBox is GTK::Bin {
   method add_tearoffs is rw is also<add-tearoffs> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_combo_box_get_add_tearoffs($!cb);
+        so gtk_combo_box_get_add_tearoffs($!cb);
       },
-      STORE => sub ($, $add_tearoffs is copy) {
-        gtk_combo_box_set_add_tearoffs($!cb, $add_tearoffs);
+      STORE => sub ($, Int() $add_tearoffs is copy) {
+        my gboolean $a = self.RESOLVE-BOOL($add_tearoffs);
+        gtk_combo_box_set_add_tearoffs($!cb, $a);
       }
     );
   }
@@ -219,10 +223,11 @@ class GTK::ComboBox is GTK::Bin {
   method button_sensitivity is rw is also<button-sensitivity> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_combo_box_get_button_sensitivity($!cb);
+        GtkSensitivityType( gtk_combo_box_get_button_sensitivity($!cb) );
       },
-      STORE => sub ($, $sensitivity is copy) {
-        gtk_combo_box_set_button_sensitivity($!cb, $sensitivity);
+      STORE => sub ($, Int() $sensitivity is copy) {
+        my guint $s = self.RESOLVE-UINT($sensitivity);
+        gtk_combo_box_set_button_sensitivity($!cb, $s);
       }
     );
   }
@@ -232,8 +237,9 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_column_span_column($!cb);
       },
-      STORE => sub ($, $column_span is copy) {
-        gtk_combo_box_set_column_span_column($!cb, $column_span);
+      STORE => sub ($, Int() $column_span is copy) {
+        my gint $c = self.RESOLVE-INT($column_span);
+        gtk_combo_box_set_column_span_column($!cb, $c);
       }
     );
   }
@@ -243,8 +249,9 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_entry_text_column($!cb);
       },
-      STORE => sub ($, $text_column is copy) {
-        gtk_combo_box_set_entry_text_column($!cb, $text_column);
+      STORE => sub ($, Int() $text_column is copy) {
+        my gint $t = self.RESOLVE-INT($text_column);
+        gtk_combo_box_set_entry_text_column($!cb, $t);
       }
     );
   }
@@ -252,10 +259,11 @@ class GTK::ComboBox is GTK::Bin {
   method focus_on_click is rw is also<focus-on-click> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_combo_box_get_focus_on_click($!cb);
+        so gtk_combo_box_get_focus_on_click($!cb);
       },
-      STORE => sub ($, $focus_on_click is copy) {
-        gtk_combo_box_set_focus_on_click($!cb, $focus_on_click);
+      STORE => sub ($, Int() $focus_on_click is copy) {
+        my gboolean $f = self.RESOLVE-BOOL($focus_on_click);
+        gtk_combo_box_set_focus_on_click($!cb, $f);
       }
     );
   }
@@ -265,8 +273,9 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_id_column($!cb);
       },
-      STORE => sub ($, $id_column is copy) {
-        gtk_combo_box_set_id_column($!cb, $id_column);
+      STORE => sub ($, Int() $id_column is copy) {
+        my gint $i = self.RESOLVE-INT($id_column);
+        gtk_combo_box_set_id_column($!cb, $i);
       }
     );
   }
@@ -274,9 +283,11 @@ class GTK::ComboBox is GTK::Bin {
   method model is rw {
     Proxy.new(
       FETCH => sub ($) {
+        # This needs a placeholder object so that pointers can be properly
+        # set. Until that has been designed, leave it as a pointer.
         gtk_combo_box_get_model($!cb);
       },
-      STORE => sub ($, $model is copy) {
+      STORE => sub ($, GtkTreeModel() $model is copy) {
         gtk_combo_box_set_model($!cb, $model);
       }
     );
@@ -285,10 +296,11 @@ class GTK::ComboBox is GTK::Bin {
   method popup_fixed_width is rw is also<popup-fixed-width> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_combo_box_get_popup_fixed_width($!cb);
+        so gtk_combo_box_get_popup_fixed_width($!cb);
       },
-      STORE => sub ($, $fixed is copy) {
-        gtk_combo_box_set_popup_fixed_width($!cb, $fixed);
+      STORE => sub ($, Int() $fixed is copy) {
+        my gboolean $f = self.RESOLVE-BOOL($fixed);
+        gtk_combo_box_set_popup_fixed_width($!cb, $f);
       }
     );
   }
@@ -298,8 +310,9 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_row_span_column($!cb);
       },
-      STORE => sub ($, $row_span is copy) {
-        gtk_combo_box_set_row_span_column($!cb, $row_span);
+      STORE => sub ($, Int() $row_span is copy) {
+        my gint $r = self.RESOLVE-INT($row_span);
+        gtk_combo_box_set_row_span_column($!cb, $r);
       }
     );
   }
@@ -337,8 +350,9 @@ class GTK::ComboBox is GTK::Bin {
       FETCH => sub ($) {
         gtk_combo_box_get_wrap_width($!cb);
       },
-      STORE => sub ($, $width is copy) {
-        gtk_combo_box_set_wrap_width($!cb, $width);
+      STORE => sub ($, Int() $width is copy) {
+        my gint $w = self.RESOLVE-INT($width);
+        gtk_combo_box_set_wrap_width($!cb, $w);
       }
     );
   }
@@ -349,25 +363,47 @@ class GTK::ComboBox is GTK::Bin {
     is also<get-active-iter>
     { * }
 
-  multi method get_active_iter is also<active_iter active-iter> {
+  multi method get_active_iter 
+    is also<
+      active_iter 
+      active-iter
+    > 
+  {
     my GtkTreeIter $iter = GtkTreeIter.new;
     samewith($iter);
     GTK::TreeIter.new($iter);
   }
-
   multi method get_active_iter (GtkTreeIter() $iter) {
     gtk_combo_box_get_active_iter($!cb, $iter);
   }
 
-  method get_has_entry is also<get-has-entry> {
+  method get_has_entry 
+    is also<
+      get-has-entry
+      has_entry
+      has-entry
+    > 
+  {
     gtk_combo_box_get_has_entry($!cb);
   }
 
-  method get_popup_accessible is also<get-popup-accessible> {
+  method get_popup_accessible 
+    is also<
+      get-popup-accessible
+      popup_accessible
+      popup-accessible
+    > 
+  {
     gtk_combo_box_get_popup_accessible($!cb);
   }
 
-  method get_row_separator_func is also<get-row-separator-func> {
+  method get_row_separator_func 
+    is also<
+      get-row-separator-func
+      row_separator_func
+      row-separator-func
+    > 
+  {
     gtk_combo_box_get_row_separator_func($!cb);
   }
 
@@ -384,7 +420,7 @@ class GTK::ComboBox is GTK::Bin {
     gtk_combo_box_popup($!cb);
   }
 
-  method popup_for_device (GdkDevice $device) is also<popup-for-device> {
+  method popup_for_device (GdkDevice() $device) is also<popup-for-device> {
     gtk_combo_box_popup_for_device($!cb, $device);
   }
 

@@ -9,8 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-my subset Ancestry where GtkExpander | GtkBin | GtkContainer | GtkBuildable |
-                         GtkWidget;
+our subset ExpanderAncestry is export where GtkExpander | BinAncestry;
 
 class GTK::Expander is GTK::Bin {
   has GtkExpander $!e;
@@ -18,14 +17,14 @@ class GTK::Expander is GTK::Bin {
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Expander');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$expander) {
     my $to-parent;
     given $expander {
-      when Ancestry {
+      when ExpanderAncestry {
         $!e = do {
           when GtkExpander {
             $to-parent = nativecast(GtkBin, $_);
@@ -45,8 +44,10 @@ class GTK::Expander is GTK::Bin {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkExpander is also<Expander> { $!e }
 
-  multi method new (Ancestry $expander) {
+  multi method new (ExpanderAncestry $expander) {
     my $o = self.bless(:$expander);
     $o.upref;
     $o;
@@ -92,7 +93,7 @@ class GTK::Expander is GTK::Bin {
       FETCH => sub ($) {
         so gtk_expander_get_expanded($!e);
       },
-      STORE => sub ($, $expanded is copy) {
+      STORE => sub ($, Int() $expanded is copy) {
         my gboolean $e = self.RESOLVE-BOOL($expanded);
         gtk_expander_set_expanded($!e, $e);
       }

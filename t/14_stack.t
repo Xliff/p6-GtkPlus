@@ -17,6 +17,8 @@ my $a = GTK::Application.new(
 );
 
 $a.activate.tap({
+  CATCH { default { .message.say; $a.exit } }
+  
   sub newBoxText($string) {
     my $box = GTK::Box.new-vbox;
     my $tv = GTK::TextView.new;
@@ -59,7 +61,7 @@ $a.activate.tap({
   $stack.add_titled( newBoxText('third page'), 'key3', 'Third Page' );
 
   # Now the controls.
-  $box.pack_start($stack.switcher-widget, False, False, 0);
+  $box.pack_start($stack.control, False, False, 0);
   $box.pack_start($stack, True, True, 0);
   $a.window.add($box);
   $a.window.show_all;
