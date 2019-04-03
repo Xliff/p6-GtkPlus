@@ -11,9 +11,8 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-my subset Ancestry
-  where GtkToolItemGroup | GtkContainer | GtkBuildable | GtkToolShell |
-        GtkWidget;
+our subset ToolItemGroupAncestry is export 
+  where GtkToolItemGroup | GtkToolShell | ContainerAncestry;
 
 use GTK::Roles::ToolShell;
 
@@ -24,24 +23,26 @@ class GTK::ToolItemGroup is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ToolItemGroup');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$toolgroup) {
     my $to-parent;
     given $toolgroup {
-      when Ancestry {
+      when ToolItemGroupAncestry {
         $!tig = do {
+          when GtkToolItemGroup  {
+            $to-parent = nativecast(GtkContainer, $_);
+            $_;
+          }
+          
           when GtkToolShell {
             $!shell = $_;
             $to-parent = nativecast(GtkContainer, $_);
             nativecast(GtkToolItemGroup, $_);
           }
-          when GtkToolItemGroup  {
-            $to-parent = nativecast(GtkContainer, $_);
-            $_;
-          }
+          
           default {
             $to-parent = $_;
             nativecast(GtkToolItemGroup, $_);
@@ -56,8 +57,10 @@ class GTK::ToolItemGroup is GTK::Container {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkToolItemGroup is also<ToolItemGroup> { $!tig }
 
-  multi method new (Ancestry $toolgroup) {
+  multi method new (ToolItemGroupAncestry $toolgroup) {
     my $o = self.bless(:$toolgroup);
     $o.upref;
     $o;
@@ -65,10 +68,6 @@ class GTK::ToolItemGroup is GTK::Container {
   multi method new(Str() $label = '') {
     my $toolgroup = gtk_tool_item_group_new($label);
     self.bless(:$toolgroup);
-  }
-
-  method GTK::Raw::Types::GtkToolItemGroup {
-    $!tig;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -129,7 +128,7 @@ class GTK::ToolItemGroup is GTK::Container {
   method label_widget is rw is also<label-widget> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_tool_item_group_get_label_widget($!tig);
+        GTK::Widget.new( gtk_tool_item_group_get_label_widget($!tig) );
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_tool_item_group_set_label_widget($!tig, $label_widget);
@@ -149,17 +148,31 @@ class GTK::ToolItemGroup is GTK::Container {
     gtk_tool_item_group_get_item_position($!tig, $item);
   }
 
-  method get_n_items is also<get-n-items> {
+  method get_n_items 
+    is also<
+      get-n-items
+      n_items
+      n-items
+      elems
+    > 
+  {
     gtk_tool_item_group_get_n_items($!tig);
   }
 
-  method get_nth_item (Int() $index) is also<get-nth-item> {
+  method get_nth_item (Int() $index) 
+    is also<
+      get-nth-item
+      nth_item
+      nth-item
+    > 
+  {
     my guint $i = self.RESOLVE-UINT($index);
-    gtk_tool_item_group_get_nth_item($!tig, $i);
+    GTK::ToolItem.new( gtk_tool_item_group_get_nth_item($!tig, $i) );
   }
 
   method get_type is also<get-type> {
-    gtk_tool_item_group_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_tool_item_group_get_type, $n, $t );
   }
 
   multi method insert (GtkToolItem() $item, Int() $position) {

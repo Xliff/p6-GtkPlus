@@ -14,8 +14,8 @@ use GTK::Widget;
 
 use GTK::Roles::Orientable;
 
-my subset Ancestry
-  where GtkProgressBar | GtkOrientable | GtkBuilder | GtkWidget;
+our subset ProgressBarAncestry is export
+  where GtkProgressBar | GtkOrientable | WidgetAncestry;
 
 class GTK::ProgressBar is GTK::Widget {
   also does GTK::Roles::Orientable;
@@ -24,14 +24,14 @@ class GTK::ProgressBar is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ProgressBar');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$bar) {
     my $to-parent;
     given $bar {
-      when Ancestry {
+      when ProgressBarAncestry {
         $!bar = do {
           when GtkProgressBar {
             $to-parent = nativecast(GtkProgressBar, $_);
@@ -47,6 +47,7 @@ class GTK::ProgressBar is GTK::Widget {
             nativecast(GtkProgressBar, $_);
           }
         };
+        $!or //= nativecast(GtkOrientable, $!bar);    # GTK::Roles::Orientable
         self.setWidget($to-parent);
       }
       when GTK::ProgressBar {
@@ -54,10 +55,9 @@ class GTK::ProgressBar is GTK::Widget {
       default {
       }
     }
-    $!or = nativecast(GtkOrientable, $!bar);          # GTK::Roles::Orientable
   }
 
-  multi method new (GtkWidget $bar) {
+  multi method new (ProgressBarAncestry $bar) {
     my $o = self.bless(:$bar);
     $o.upref;
     $o;
@@ -145,7 +145,8 @@ class GTK::ProgressBar is GTK::Widget {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_progress_bar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_progress_bar_get_type, $n, $t );
   }
 
   method pulse {

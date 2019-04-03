@@ -23,7 +23,7 @@ class GTK::Viewport is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Viewport');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -37,7 +37,7 @@ class GTK::Viewport is GTK::Bin {
             $_;
           }
           when GtkScrollable {
-            $!s = $_;                         # GTK::Roles::Scrollable
+            $!s = $_;                             # GTK::Roles::Scrollable
             $to-parent = nativecast(GtkBin, $_);
             nativecast(GtkViewport, $_);
           }
@@ -46,6 +46,7 @@ class GTK::Viewport is GTK::Bin {
             nativecast(GtkViewport, $_);
           }
         }
+        $!s //= nativecast(GtkScrollable, $!v);   # GTK::Roles::Scrollable
         self.setBin($to-parent);
       }
       when GTK::Viewport {
@@ -53,7 +54,6 @@ class GTK::Viewport is GTK::Bin {
       default {
       }
     }
-    $!s //= nativecast(GtkScrollable, $!v)    # GTK::Roles::Scrollable
   }
   
   method GTK::Raw::Types::GtkViewPort is also<ViewPort> { $!v }
@@ -105,7 +105,8 @@ class GTK::Viewport is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_viewport_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_viewport_get_type, $n, $t );
   }
 
   method get_view_window 

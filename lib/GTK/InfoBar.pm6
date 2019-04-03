@@ -9,22 +9,21 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-my subset Ancestry where GtkInfoBar   | GtkBox       | GtkOrientable |
-                         GtkContainer | GtkBuildable | GtkWidget;
+our subset InfoBarAncestry is export where GtkInfoBar | BoxAncestry;
 
 class GTK::InfoBar is GTK::Box {
   has GtkInfoBar $!ib;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::InfoBar');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$infobar) {
     my $to-parent;
     given $infobar {
-      when Ancestry {
+      when InfoBarAncestry {
         $!ib = do {
           when GtkInfoBar {
             $to-parent = nativecast(GtkBox, $_);
@@ -44,7 +43,9 @@ class GTK::InfoBar is GTK::Box {
     }
   }
 
-  multi method new (Ancestry $infobar) {
+  method GTK::Raw::Types::GtkInfoBar is also<InfoBar> { $!ib }
+
+  multi method new (InfoBarAncestry $infobar) {
     my $o = self.bless(:$infobar);
     $o.upref;
     $o;
@@ -76,7 +77,7 @@ class GTK::InfoBar is GTK::Box {
       FETCH => sub ($) {
         GtkMessageType( gtk_info_bar_get_message_type($!ib) );
       },
-      STORE => sub ($, $message_type is copy) {
+      STORE => sub ($, Int() $message_type is copy) {
         my uint32 $mt = self.RESOLVE-UINT($message_type);
         gtk_info_bar_set_message_type($!ib, $mt);
       }
@@ -100,7 +101,7 @@ class GTK::InfoBar is GTK::Box {
       FETCH => sub ($) {
         so gtk_info_bar_get_show_close_button($!ib);
       },
-      STORE => sub ($, $setting is copy) {
+      STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
         gtk_info_bar_set_show_close_button($!ib, $s);
       }
@@ -134,7 +135,8 @@ class GTK::InfoBar is GTK::Box {
   }
 
   method get_type is also<get-type> {
-    gtk_info_bar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_info_bar_get_type, $n, $t );
   }
 
   multi method response (Int() $response_id) {

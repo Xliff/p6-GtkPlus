@@ -9,23 +9,21 @@ use GTK::Raw::Types;
 
 use GTK::ToolButton;
 
-my subset Ancestry
-  where GtkToggleToolButton | GtkToolButton | GtkActionable |
-        GtkToolItem         | GtkBin        | GtkContainer  |
-        GtkWidget;
+our subset ToggleToolButtonAncestry
+  where GtkToggleToolButton | ToolButtonAncestry;
 
 class GTK::ToggleToolButton is GTK::ToolButton {
   has GtkToggleToolButton $!ttb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ToggleToolButton');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$toggletoolbutton) {
     given $toggletoolbutton {
-      when Ancestry {
+      when ToggleToolButtonAncestry {
         self.setToggleToolButton($toggletoolbutton);
       }
       when GTK::ToggleToolButton {
@@ -35,7 +33,7 @@ class GTK::ToggleToolButton is GTK::ToolButton {
     }
   }
 
-  method setToggleToolButton($toggletoolbutton) {
+  method setToggleToolButton(ToggleToolButtonAncestry $toggletoolbutton) {
     self.IS-PROTECTED;
 
     my $to-parent;
@@ -52,7 +50,7 @@ class GTK::ToggleToolButton is GTK::ToolButton {
     self.setToolButton($to-parent);
   }
 
-  multi method new (Ancestry $toggletoolbutton) {
+  multi method new (ToggleToolButtonAncestry $toggletoolbutton) {
     my $o = self.bless(:$toggletoolbutton);
     $o.upref;
     $o;
@@ -62,9 +60,9 @@ class GTK::ToggleToolButton is GTK::ToolButton {
     self.bless(:$toggletoolbutton);
   }
 
-  method GTK::Raw::Types::GtkToggleToolButton {
-    $!ttb;
-  }
+  method GTK::Raw::Types::GtkToggleToolButton 
+    is also<ToggleToolButton> 
+  { $!ttb }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # Is originally:
@@ -90,7 +88,8 @@ class GTK::ToggleToolButton is GTK::ToolButton {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_toggle_tool_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_toggle_tool_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

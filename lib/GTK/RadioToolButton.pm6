@@ -10,11 +10,9 @@ use GTK::Raw::Types;
 
 use GTK::ToggleToolButton;
 
-my subset Ancestry
-  where GtkRadioToolButton | GtkActionable | GtkToggleToolButton |
-        GtkToolButton      | GtkToolItem   | GtkBin              |
-        GtkContainer       | GtkBuilder    | GtkWidget;
-
+our subset RadioToolButtonAncestry is export
+  where GtkRadioToolButton | GtkActionable | ToggleToolButtonAncestry;
+  
 class GTK::RadioToolButton is GTK::ToggleToolButton {
   has GtkRadioToolButton $!rtb;
 
@@ -26,7 +24,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
 
   submethod BUILD(:$radiotoolbutton) {
     given $radiotoolbutton {
-      when Ancestry {
+      when RadioToolButtonAncestry {
         my $to-parent;
         $!rtb = do {
           when GtkRadioToolButton {
@@ -46,8 +44,12 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkRadioToolButton 
+    is also<RadioToolButton> 
+  { $!rtb }
 
-  multi method new (Ancestry $radiotoolbutton) {
+  multi method new (RadioToolButtonAncestry $radiotoolbutton) {
     my $o = self.bless(:$radiotoolbutton);
     $o.upref;
     $o;
@@ -57,7 +59,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     self.bless(:$radiotoolbutton);
   }
 
-  method new_from_stock (GSList() $group, gchar $stock_id)
+  method new_from_stock (GSList() $group, Str() $stock_id)
     is DEPRECATED( 'GTK::RadioToolButton.new()' )
   is also<new-from-stock> {
     my $radiotoolbutton = gtk_radio_tool_button_new_from_stock(
@@ -75,7 +77,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
 
   method new_with_stock_from_widget (
     GtkRadioToolButton() $group,
-    gchar $stock_id
+    Str() $stock_id
   )
     is DEPRECATED( 'GTK::RadioToolButton.new_from_widget()' )
     is also<new-with-stock-from-widget>
@@ -105,7 +107,8 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_radio_tool_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_radio_tool_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -8,13 +8,12 @@ use GTK::Compat::Types;
 use GTK::Raw::Places;
 use GTK::Raw::Types;
 
-use GTK::ScrolledWindow;
-
 use GTK::Roles::Signals::Places;
 
-my subset Ancestry
-  where GtkPlacesSidebar | GtkScrolledWindow | GtkBin | GtkContainer |
-        GtkBuilder       | GtkWidget;
+use GTK::ScrolledWindow;
+
+our subset PlacesAncestry is export
+  where GtkPlacesSidebar | ScrolledWindowAncestry;
 
 class GTK::Places is GTK::ScrolledWindow {
   also does GTK::Roles::Signals::Places;
@@ -30,7 +29,7 @@ class GTK::Places is GTK::ScrolledWindow {
   submethod BUILD(:$places) {
     my $to-parent;
     given $places {
-      when Ancestry {
+      when PlacesAncestry {
         $!ps = do {
           when GtkPlacesSidebar {
             $to-parent = nativecast(GtkScrolledWindow, $_);
@@ -53,8 +52,10 @@ class GTK::Places is GTK::ScrolledWindow {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-p;
   }
+  
+  method GTK::Raw::Types::GtkPlacesSidebar is also<Places> { $!ps }
 
-  multi method new (Ancestry $places) {
+  multi method new (PlacesAncestry $places) {
     my $o = self.bless(:$places);
     $o.upref;
     $o;
@@ -166,11 +167,9 @@ class GTK::Places is GTK::ScrolledWindow {
       FETCH => sub ($) {
         gtk_places_sidebar_get_location($!ps);
       },
-      STORE => sub ($, $location is copy) {
+      STORE => sub ($, GFile() $location is copy) {
         die "GFile NYI";
-        GFile.new(
-          gtk_places_sidebar_set_location($!ps, $location)
-        );
+        gtk_places_sidebar_set_location($!ps, $location)
       }
     );
   }
@@ -273,7 +272,7 @@ class GTK::Places is GTK::ScrolledWindow {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_shortcut (GFile $location) is also<add-shortcut> {
+  method add_shortcut (GFile() $location) is also<add-shortcut> {
     gtk_places_sidebar_add_shortcut($!ps, $location);
   }
 
@@ -284,20 +283,21 @@ class GTK::Places is GTK::ScrolledWindow {
   }
 
   method get_type is also<get-type> {
-    gtk_places_sidebar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_places_sidebar_get_type, $n, $t );
   }
 
   method list_shortcuts is also<list-shortcuts> {
     GTK::Compat::GSList.new( gtk_places_sidebar_list_shortcuts($!ps) );
   }
 
-  method remove_shortcut (GFile $location) is also<remove-shortcut> {
+  method remove_shortcut (GFile() $location) is also<remove-shortcut> {
     gtk_places_sidebar_remove_shortcut($!ps, $location);
   }
 
   method set_drop_targets_visible (
     Int() $visible,
-    GdkDragContext $context = GdkDragContext
+    GdkDragContext() $context = GdkDragContext
   )
     is also<set-drop-targets-visible>
   {

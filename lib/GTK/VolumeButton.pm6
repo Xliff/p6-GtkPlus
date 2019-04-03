@@ -11,9 +11,8 @@ use GTK::ScaleButton;
 
 use GTK::Roles::Orientable;
 
-my subset Ancestry
-  where GtkVolumeButton | GtkScaleButton | GtkOrientable | GtkButton |
-        GtkBin          | GtkContainer   | GtkBuilder    | GtkWidget;
+our subset VolumeButtonAncestry is export
+  where GtkVolumeButton | ScaleButtonAncestry;
 
 class GTK::VolumeButton is GTK::ScaleButton {
   also does GTK::Roles::Orientable;
@@ -22,20 +21,20 @@ class GTK::VolumeButton is GTK::ScaleButton {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::VolumeButton');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$button) {
     given $button {
       my $to-parent;
-      when Ancestry {
+      when VolumeButtonAncestry {
         $!vb = do {
           when GtkVolumeButton {
             $to-parent = nativecast(GtkScaleButton, $_);
             $_;
           }
-          when GtkWidget {
+          default {
             $to-parent = $_;
             nativecast(GtkVolumeButton, $_);
           }
@@ -49,7 +48,7 @@ class GTK::VolumeButton is GTK::ScaleButton {
     }
   }
 
-  multi method new (Ancestry $button) {
+  multi method new (VolumeButtonAncestry $button) {
     my $o = self.bless(:$button);
     $o.upref;
     $o;
@@ -67,7 +66,8 @@ class GTK::VolumeButton is GTK::ScaleButton {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_volume_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_volume_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

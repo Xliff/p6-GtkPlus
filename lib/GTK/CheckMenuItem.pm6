@@ -17,7 +17,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CheckMenuItem');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -33,8 +33,10 @@ class GTK::CheckMenuItem is GTK::MenuItem {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkCheckMenuItem is also<CheckMenuItem> { $!cmi }
 
-  method setCheckMenuItem($checkmenuitem) {
+  method setCheckMenuItem(CheckMenuItemAncestry $checkmenuitem) {
     my $to-parent;
     $!cmi = do given $checkmenuitem {
       when GtkCheckMenuItem {

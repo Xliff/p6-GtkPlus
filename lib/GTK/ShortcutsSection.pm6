@@ -8,22 +8,22 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-my subset Ancestry where GtkShortcutsSection | GtkBox       | GtkOrientable |
-                         GtkContainer        | GtkBuildable | GtkWidget;
+our subset ShortcutsSectionAncestry is export 
+  where GtkShortcutsSection | BoxAncestry;
 
 class GTK::ShortcutsSection is GTK::Box {
   has GtkShortcutsSection $!ss;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ShortcutsSection');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$section) {
     my $to-parent;
     given $section {
-      when Ancestry {
+      when ShortcutsSectionAncestry {
         $!ss = do {
           when GtkShortcutsSection  {
             $to-parent = nativecast(GtkBox, $_);
@@ -43,7 +43,7 @@ class GTK::ShortcutsSection is GTK::Box {
     }
   }
 
-  method new (Ancestry $section) {
+  method new (ShortcutsSectionAncestry $section) {
     my $o = self.bless(:$section);
     $o.upref;
     $o;

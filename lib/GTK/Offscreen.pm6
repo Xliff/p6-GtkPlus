@@ -7,25 +7,26 @@ use GTK::Compat::Types;
 use GTK::Raw::Offscreen;
 use GTK::Raw::Types;
 
+use GTK::Compat::Pixbuf;
+
 use GTK::Window;
 
-my subset Ancestry
-  where GtkOffscreen | GtkWindow | GtkBin | GtkContainer | GtkBuildable |
-        GtkWidget;
+our subset OffscreenAncestry is export
+  where GtkOffscreen | WindowAncestry;
 
 class GTK::Offscreen is GTK::Window {
   has GtkOffscreen $!ow;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Offscreen');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$offscreen) {
     my $to-parent;
     given $offscreen {
-      when Ancestry {
+      when OffscreenAncestry {
         $!ow = do {
           when GtkOffscreen  {
             $to-parent = nativecast(GtkWindow, $_);
@@ -36,7 +37,7 @@ class GTK::Offscreen is GTK::Window {
             nativecast(GtkOffscreen, $_);
           }
         }
-        self.setParent($to-parent);
+        self.setWindow($to-parent);
       }
       when GTK::Offscreen {
       }
@@ -44,8 +45,10 @@ class GTK::Offscreen is GTK::Window {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkOffscreen is also<Offscreen> { $!ow }
 
-  multi method new (Ancestry $offscreen) {
+  multi method new (OffscreenAncestry $offscreen) {
     self.bless(:$offscreen);
   }
   multi method new {
@@ -60,16 +63,27 @@ class GTK::Offscreen is GTK::Window {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_pixbuf is also<get-pixbuf> {
-    gtk_offscreen_window_get_pixbuf($!ow);
+  method get_pixbuf 
+    is also<
+      get-pixbuf
+      pixbuf
+    >
+ {
+    GTK::Compat::Pixbuf.new( gtk_offscreen_window_get_pixbuf($!ow) );
   }
 
-  method get_surface is also<get-surface> {
+  method get_surface 
+    is also<
+      get-surface
+      surface
+    > 
+  {
     gtk_offscreen_window_get_surface($!ow);
   }
 
   method get_type is also<get-type> {
-    gtk_offscreen_window_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_offscreen_window_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

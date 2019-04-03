@@ -138,7 +138,8 @@ class GTK::Frame is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_frame_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_frame_get_type, $n, $t );
   }
 
   method set_label_align (Num() $xalign, Num() $yalign)

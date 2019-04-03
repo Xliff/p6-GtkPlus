@@ -1,4 +1,4 @@
-use v6.c;
+  use v6.c;
 
 use Method::Also;
 use NativeCall;
@@ -197,7 +197,8 @@ class GTK::Toolbar is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_toolbar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_toolbar_get_type, $n, $t );
   }
 
   method insert (GtkToolItem() $item, Int $pos = -1) {

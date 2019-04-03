@@ -11,7 +11,8 @@ use GTK::Bin;
 
 use GTK::Roles::Types;
 
-my subset Ancestry where GtkEventBox | GtkBuildable | GtkWidget;
+our subset EventBoxAncestry is export 
+  where GtkEventBox | BinAncestry;
 
 class GTK::EventBox is GTK::Bin {
   also does GTK::Roles::Types;
@@ -20,22 +21,22 @@ class GTK::EventBox is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::EventBox');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$box) {
     my $to-parent;
     given $box {
-      when Ancestry {
+      when EventBoxAncestry {
         $!eb = do {
-          when GtkWidget {
-            $to-parent = $_;
-            nativecast(GtkEventBox, $_);
-          }
           when GtkEventBox  {
             $to-parent = nativecast(GtkBin, $_);
             $_;
+          }
+          default {
+            $to-parent = $_;
+            nativecast(GtkEventBox, $_);
           }
         }
         self.setBin($to-parent);
@@ -46,8 +47,10 @@ class GTK::EventBox is GTK::Bin {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkEventBox is also<EventBox> { $!eb }
 
-  multi method new (Ancestry $box) {
+  multi method new (EventBoxAncestry $box) {
     self.bless(:$box);
   }
   multi method new {
@@ -90,7 +93,8 @@ class GTK::EventBox is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_event_box_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_event_box_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

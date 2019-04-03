@@ -11,9 +11,8 @@ use GTK::Box;
 
 use GTK::Roles::Signals::Statusbar;
 
-my subset Ancestry
-  where GtkStatusbar | GtkBox | GtkOrientable | GtkContainer | GtkBuilder |
-        GtkWidget;
+our subset StatusbarAncestry is export
+  where GtkStatusbar | BoxAncestry;
 
 class GTK::Statusbar is GTK::Box {
   also does GTK::Roles::Signals::Statusbar;
@@ -22,14 +21,14 @@ class GTK::Statusbar is GTK::Box {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Statusbar');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$statusbar) {
     my $to-parent;
     given $statusbar {
-      when Ancestry {
+      when StatusbarAncestry {
         $!sb = do {
           when GtkStatusbar {
             $to-parent = nativecast(GtkBin, $_);
@@ -48,12 +47,14 @@ class GTK::Statusbar is GTK::Box {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkStatusbar is also<Statusbar> { $!sb }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-sb;
   }
 
-  multi method new (GtkWidget $statusbar) {
+  multi method new (StatusbarAncestry $statusbar) {
     my $o = self.bless(:$statusbar);
     $o.upref;
     $o;
@@ -94,7 +95,8 @@ class GTK::Statusbar is GTK::Box {
   }
 
   method get_type is also<get-type> {
-    gtk_statusbar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_statusbar_get_type, $n, $t );
   }
 
   method pop (Int() $context_id) {

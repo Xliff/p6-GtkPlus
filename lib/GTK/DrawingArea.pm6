@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-my subset Ancestry where GtkDrawingArea | GtkBuildable | GtkWidget;
+my subset DrawingAreaAncestry where GtkDrawingArea | WidgetAncestry;
 
 sub gtk_drawing_area_get_type ()
   returns GType
@@ -25,14 +25,14 @@ class GTK::DrawingArea is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::DrawingArea');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$draw) {
     my $to-parent;
     given $draw {
-      when Ancestry {
+      when DrawingAreaAncestry {
         $!da = do {
           when GtkDrawingArea {
             $to-parent = nativecast(GtkWidget, $_);
@@ -52,7 +52,7 @@ class GTK::DrawingArea is GTK::Widget {
     }
   }
 
-  multi method new (Ancestry $draw) {
+  multi method new (DrawingAreaAncestry $draw) {
     my $o = self.bless(:$draw);
     $o.upref;
     $o;
@@ -62,9 +62,8 @@ class GTK::DrawingArea is GTK::Widget {
     self.bless(:$draw);
   }
 
-  method GTK::Raw::Types::GtkDrawingArea is also<area> {
-    $!da;
-  }
+  method GTK::Raw::Types::GtkDrawingArea is also<DrawingArea> { $!da }
+  
   # cw: Is this true?!?
   method GTK::Compat::Types::cairo_t is also<cairo_t> {
     nativecast(cairo_t, $!da);
@@ -78,7 +77,8 @@ class GTK::DrawingArea is GTK::Widget {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_drawing_area_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_drawing_area_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

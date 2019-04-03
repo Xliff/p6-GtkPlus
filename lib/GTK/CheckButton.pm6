@@ -17,7 +17,7 @@ class GTK::CheckButton is GTK::ToggleButton {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CheckButton`');
+    $o.setType($o.^name);
     $o;
   }
 

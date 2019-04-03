@@ -135,7 +135,7 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         so gtk_range_get_inverted($!r);
       },
-      STORE => sub ($, $setting is copy) {
+      STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = self.RESOLVE-BOOL($setting);
         gtk_range_set_inverted($!r, $s);
       }
@@ -202,7 +202,7 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         so gtk_range_get_show_fill_level($!r);
       },
-      STORE => sub ($, $show_fill_level is copy) {
+      STORE => sub ($, Int() $show_fill_level is copy) {
         my gboolean $sfl = self.RESOLVE-BOOL($show_fill_level);
         gtk_range_set_show_fill_level($!r, $sfl);
       }
@@ -214,7 +214,7 @@ class GTK::Range is GTK::Widget {
       FETCH => sub ($) {
         so gtk_range_get_slider_size_fixed($!r);
       },
-      STORE => sub ($, $size_fixed is copy) {
+      STORE => sub ($, Int() $size_fixed is copy) {
         my gboolean $sf = self.RESOLVE-BOOL($size_fixed);
         gtk_range_set_slider_size_fixed($!r, $sf);
       }
@@ -247,7 +247,7 @@ class GTK::Range is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_range_rect (GdkRectangle() $range_rect)
+  method get_range_rect (GdkRectangle $range_rect)
     is also<get-range-rect>
   {
     gtk_range_get_range_rect($!r, $range_rect);
@@ -262,7 +262,8 @@ class GTK::Range is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    gtk_range_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_range_get_type, $n, $t );
   }
 
   method set_increments (Num() $step, Num() $page)

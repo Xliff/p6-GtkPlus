@@ -18,7 +18,7 @@ class GTK::RadioButton is GTK::CheckButton {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::RadioButton');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -146,7 +146,8 @@ class GTK::RadioButton is GTK::CheckButton {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_radio_button_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_radio_button_get_type, $n, $t );
   }
 
   method join_group (GtkRadioButton() $group_source) is also<join-group> {

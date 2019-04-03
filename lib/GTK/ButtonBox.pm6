@@ -45,6 +45,8 @@ class GTK::ButtonBox is GTK::Box {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkButtonBox is also<ButtonBox> { $!bb }
 
   multi method new (ButtonBoxAncestry $buttonbox) {
     my $o = self.bless(:$buttonbox);

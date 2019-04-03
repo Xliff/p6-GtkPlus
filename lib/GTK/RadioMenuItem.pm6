@@ -8,13 +8,12 @@ use GTK::Compat::Types;
 use GTK::Raw::RadioMenuItem;
 use GTK::Raw::Types;
 
-use GTK::MenuItem;
+use GTK::CheckMenuItem;
 
-my subset Ancestry
-  where GtkRadioMenuItem | GtkCheckMenuItem | GtkMenuItem | GtkActionable |
-        GtkBin           | GtkContainer     | GtkBuilder  | GtkWidget;
+our subset RadioMenuItemAncestry
+  where GtkRadioMenuItem | CheckMenuItemAncestry;
 
-class GTK::RadioMenuItem is GTK::MenuItem {
+class GTK::RadioMenuItem is GTK::CheckMenuItem {
   has GtkRadioMenuItem $!rmi;
 
   method bless(*%attrinit) {
@@ -26,7 +25,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   submethod BUILD(:$radiomenu) {
     my $to-parent;
     given $radiomenu {
-      when Ancestry {
+      when RadioMenuItemAncestry {
         $!rmi = do {
           when GtkRadioMenuItem {
             $to-parent = nativecast(GtkMenuItem, $_);
@@ -56,16 +55,7 @@ class GTK::RadioMenuItem is GTK::MenuItem {
     $o;
   }
 
-  # So that GtkRadioMenuItem() works in signatures.
-  method GTK::Raw::Types::GtkRadioMenuItem {
-    $!rmi;
-  }
-  # Aliasing FTW -- next code review!
-  method radiomenuitem {
-    $!rmi;
-  }
-
-  multi method new (Ancestry $radiomenu) {
+  multi method new (RadioMenuItemAncestry $radiomenu) {
     my $o = self.bless(:$radiomenu);
     $o.upref;
     $o;
@@ -79,7 +69,12 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   }
   # May have to merge these next two with complex type checking logic for
   # the $group parameter.
-  multi method new(GSList $group, Str() $label, :$mnemonic = False, *%opts) {
+  multi method new(
+    GSList() $group, 
+    Str() $label, 
+    :$mnemonic = False, 
+    *%opts
+  ) {
     my $radiomenu;
     with $label {
       $radiomenu = $mnemonic ??
@@ -185,7 +180,8 @@ class GTK::RadioMenuItem is GTK::MenuItem {
   }
 
   method get_type is also<get-type> {
-    gtk_radio_menu_item_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_radio_menu_item_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

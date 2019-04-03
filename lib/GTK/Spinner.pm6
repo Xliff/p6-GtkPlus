@@ -17,7 +17,7 @@ class GTK::Spinner is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Spinner');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -65,7 +65,8 @@ class GTK::Spinner is GTK::Widget {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_spinner_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_spinner_get_type, $n, $t );
   }
 
   method start {
