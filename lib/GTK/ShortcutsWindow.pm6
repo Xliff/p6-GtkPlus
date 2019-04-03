@@ -15,7 +15,7 @@ class GTK::ShortcutsWindow is GTK::Window {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 

@@ -9,24 +9,22 @@ use GTK::Raw::Types;
 
 use GTK::Entry;
 
-my subset Ancestry
-  where GtkSearchEntry | GtkEntry  | GtkCellEditable | GtkEditable |
-        GtkBuildable   | GtkWidget;
-
+our subset SearchEntryAncestry is export 
+  where GtkSearchEntry | EntryAncestry;
 
 class GTK::SearchEntry is GTK::Entry {
   has GtkSearchEntry $!se;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::SearchEntry');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$searchentry) {
     my $to-parent;
     given $searchentry {
-      when Ancestry {
+      when SearchEntryAncestry {
         $!se = do {
           when GtkSearchEntry {
             $to-parent = nativecast(GtkEntry, $_);
@@ -46,8 +44,10 @@ class GTK::SearchEntry is GTK::Entry {
       }
     }
   }
+  
+  method GTK::Raw::Types::GtkSearchEntry is also<SearchEntry> { $!se }
 
-  multi method new (Ancestry $searchentry) {
+  multi method new (SearchEntryAncestry $searchentry) {
     my $o = self.bless(:$searchentry);
     $o.upref;
     $o;
@@ -90,7 +90,8 @@ class GTK::SearchEntry is GTK::Entry {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_search_entry_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_search_entry_get_type, $n, $t );
   }
 
   method handle_event (GdkEvent $event) is also<handle-event> {

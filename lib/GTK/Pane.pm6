@@ -199,7 +199,8 @@ class GTK::Pane is GTK::Container {
   }
 
   method get_type is also<get-type> {
-    gtk_paned_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_paned_get_type, $n, $t );
   }
 
   multi method pack1 (

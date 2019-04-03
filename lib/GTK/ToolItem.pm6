@@ -20,7 +20,7 @@ class GTK::ToolItem is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ToolItem');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -52,6 +52,8 @@ class GTK::ToolItem is GTK::Bin {
     self.setBin($to-parent);
   }
 
+  method GTK::Raw::Types::GtkToolItem is also<ToolItem> { $!ti }
+  
   multi method new (ToolItemAncestry $toolitem) {
     my $o = self.bless(:$toolitem);
     $o.upref;
@@ -61,8 +63,6 @@ class GTK::ToolItem is GTK::Bin {
     my $toolitem = gtk_tool_item_new();
     self.bless(:$toolitem);
   }
-
-  method GTK::Raw::Types::GtkToolItem is also<ToolItem> { $!ti }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -249,7 +249,8 @@ class GTK::ToolItem is GTK::Bin {
   }
 
   method get_type is also<get-type> {
-    gtk_tool_item_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_tool_item_get_type, $n, $t );
   }
 
   method rebuild_menu is also<rebuild-menu> {

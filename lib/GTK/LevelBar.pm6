@@ -11,8 +11,8 @@ use GTK::Widget;
 
 use GTK::Roles::Orientable;
 
-my subset Ancestry
-  where GtkLevelBar | GtkOrientable | GtkBuildable | GtkWidget;
+our subset LevelBarAncestry is export 
+  where GtkLevelBar | GtkOrientable | WidgetAncestry;
 
 class GTK::LevelBar is GTK::Widget {
   also does GTK::Roles::Orientable;
@@ -21,21 +21,21 @@ class GTK::LevelBar is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::LevelBar');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$level) {
     my $to-parent;
     given $level {
-      when Ancestry {
+      when LevelBarAncestry {
         $!lb = do {
           when GtkLevelBar {
             $to-parent = nativecast(GtkWidget, $_);
             $_;
           }
           when GtkOrientable {
-            $!or = $_;
+            $!or = $_;                              # GTK::Roles::Orientable
             $to-parent = nativecast(GtkWidget, $_);
             nativecast(GtkLevelBar, $_);
           }
@@ -44,6 +44,7 @@ class GTK::LevelBar is GTK::Widget {
             nativecast(GtkLevelBar, $_);
           }
         };
+        $!or //= nativecast(GtkOrientable, $!lb);   # GTK::Roles::Orientable
         self.setWidget($to-parent);
       }
       when GTK::LevelBar {
@@ -51,11 +52,11 @@ class GTK::LevelBar is GTK::Widget {
       default {
       }
     }
-    # For GTK::Roles::Orientable
-    $!or //= nativecast(GtkOrientable, $!lb);
   }
+  
+  method GTK::Raw::Types::GtkLevelBar is also<LevelBar> { $!lb }
 
-  multi method new (Ancestry $level) {
+  multi method new (LevelBarAncestry $level) {
     my $o = self.bless(:$level);
     $o.upref;
     $o;
@@ -144,7 +145,7 @@ class GTK::LevelBar is GTK::Widget {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_offset_value (gchar $name, Num() $value)
+  method get_offset_value (Str $name, Num() $value)
     is also<get-offset-value>
   {
     my gdouble $v = $value;
@@ -152,7 +153,8 @@ class GTK::LevelBar is GTK::Widget {
   }
 
   method get_type is also<get-type> {
-    gtk_level_bar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_level_bar_get_type, $n, $t );
   }
 
   method add_offset_value(Str() $name, Num() $value)

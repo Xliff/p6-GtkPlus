@@ -205,8 +205,8 @@ sub gtk_tree_view_get_dest_row_at_pos (
   GtkTreeView $tree_view,
   gint $drag_x,
   gint $drag_y,
-  GtkTreePath $path,
-  uint32 $pos                   # GtkTreeViewDropPosition $pos
+  CArray[Pointer[GtkTreePath]] $path,
+  uint32 $pos is rw                   # GtkTreeViewDropPosition $pos
 )
   returns uint32
   is native(gtk)
@@ -215,8 +215,8 @@ sub gtk_tree_view_get_dest_row_at_pos (
 
 sub gtk_tree_view_get_drag_dest_row (
   GtkTreeView $tree_view,
-  GtkTreePath $path,
-  uint32                        # GtkTreeViewDropPosition $pos
+  CArray[Pointer[GtkTreePath]] $path,
+  uint32 $pos is rw                   # GtkTreeViewDropPosition $pos
 )
   is native(gtk)
   is export
@@ -232,10 +232,10 @@ sub gtk_tree_view_get_path_at_pos (
   GtkTreeView $tree_view,
   gint $x,
   gint $y,
-  GtkTreePath $path,
-  GtkTreeViewColumn $column,
-  gint $cell_x,
-  gint $cell_y
+  CArray[Pointer[GtkTreePath]] $path,
+  CArray[Pointer[GtkTreeViewColumn]] $column,
+  gint $cell_x is rw,
+  gint $cell_y is rw
 )
   returns uint32
   is native(gtk)
@@ -268,11 +268,11 @@ sub gtk_tree_view_get_selection (GtkTreeView $tree_view)
 
 sub gtk_tree_view_get_tooltip_context (
   GtkTreeView $tree_view,
-  gint $x,
-  gint $y,
+  gint $x is rw,
+  gint $y is rw,
   gboolean $keyboard_tip,
-  GtkTreeModel $model,
-  GtkTreePath $path,
+  CArray[Pointer[GtkTreeModel]] $model,
+  CArray[Pointer[GtkTreePath]] $path,
   GtkTreeIter $iter
 )
   returns uint32
@@ -288,8 +288,8 @@ sub gtk_tree_view_get_type ()
 
 sub gtk_tree_view_get_visible_range (
   GtkTreeView $tree_view,
-  GtkTreePath $start_path,
-  GtkTreePath $end_path
+  CArray[Pointer[GtkTreePath]] $start_path,
+  CArray[Pointer[GtkTreePath]] $end_path
 )
   returns uint32
   is native(gtk)
@@ -332,10 +332,10 @@ sub gtk_tree_view_is_blank_at_pos (
   GtkTreeView $tree_view,
   gint $x,
   gint $y,
-  GtkTreePath $path,
-  GtkTreeViewColumn $column,
-  gint $cell_x,
-  gint $cell_y
+  CArray[Pointer[GtkTreePath]] $path,
+  CArray[Pointer[GtkTreeViewColumn]] $column,
+  gint $cell_x is rw,
+  gint $cell_y is rw
 )
   returns uint32
   is native(gtk)

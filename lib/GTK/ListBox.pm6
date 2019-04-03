@@ -13,8 +13,8 @@ use GTK::ListBoxRow;
 use GTK::Roles::Actionable;
 use GTK::Roles::Signals::ListBox;
 
-my subset Ancestry where GtkListBox | GtkActionable | GtkBuildable |
-                         GtkWidget;
+our subset ListBoxAncestry is export
+  where GtkListBox | GtkActionable | ContainerAncestry;
 
 class GTK::ListBox is GTK::Container {
   also does GTK::Roles::Actionable;
@@ -24,14 +24,14 @@ class GTK::ListBox is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ListBox');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$listbox) {
     my $to-parent;
     given $listbox {
-      when Ancestry {
+      when ListBoxAncestry {
         $!lb = do {
           when GtkListBox {
             $to-parent = nativecast(GtkContainer, $_);
@@ -47,6 +47,7 @@ class GTK::ListBox is GTK::Container {
             nativecast(GtkListBox, $_);
           }
         }
+        $!action //= nativecast(GtkActionable, $listbox);
         self.setContainer($to-parent);
       }
       when GTK::ListBox {
@@ -54,14 +55,15 @@ class GTK::ListBox is GTK::Container {
       default {
       }
     }
-    $!action //= nativecast(GtkActionable, $listbox);
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-lb;
   }
+  
+  method GTK::Raw::Types::GtkListBox is also<ListBox> { $!lb }
 
-  multi method new (Ancestry $listbox) {
+  multi method new (ListBoxAncestry $listbox) {
     my $o = self.bless(:$listbox);
     $o.upref;
     $o;
@@ -204,16 +206,29 @@ class GTK::ListBox is GTK::Container {
     GTK::ListBoxRow( gtk_list_box_get_row_at_y($!lb, $yy) );
   }
 
-  method get_selected_row is also<get-selected-row> {
+  method get_selected_row 
+    is also<
+      get-selected-row
+      selected_row
+      selected-row
+    > 
+  {
     GTK::ListBoxRow.new( gtk_list_box_get_selected_row($!lb) );
   }
 
-  method get_selected_rows is also<get-selected-rows> {
+  method get_selected_rows 
+    is also<
+      get-selected-rows
+      selected_rows
+      selected-rows
+    > 
+  {
     gtk_list_box_get_selected_rows($!lb);
   }
 
   method get_type is also<get-type> {
-    gtk_list_box_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_list_box_get_type, $n, $t );
   }
 
   method insert (GtkWidget() $child, Int() $position) {

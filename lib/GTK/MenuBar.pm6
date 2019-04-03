@@ -9,22 +9,22 @@ use GTK::Raw::Types;
 
 use GTK::MenuShell;
 
-my subset Ancestry
-  where GtkMenuBar | GtkMenuShell | GtkContainer | GtkBuilder | GtkWidget;
+our subset MenuBarAncestry is export
+  where GtkMenuBar | MenuShellAncestry;
 
 class GTK::MenuBar is GTK::MenuShell {
   has GtkMenuBar $!mb;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::MenuBar');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$menubar, :@items) {
     given $menubar {
       my $to-parent;
-      when Ancestry {
+      when MenuBarAncestry {
         $!mb = do {
           when GtkMenuBar {
             $to-parent = nativecast(GtkMenuShell, $_);
@@ -50,8 +50,10 @@ class GTK::MenuBar is GTK::MenuShell {
       self.append-widgets($_) for @items;
     }
   }
+  
+  method GTK::Raw::Types::GtkMenuBar is also<MenuBar> { $!mb }
 
-  multi method new (Ancestry $menubar) {
+  multi method new (MenuBarAncestry $menubar) {
     my $o = self.bless(:$menubar);
     $o.upref;
     $o;
@@ -65,7 +67,7 @@ class GTK::MenuBar is GTK::MenuShell {
     self.bless(:$menubar, :@items);
   }
 
-  method new_from_model (GMenuModel $model) is also<new-from-model> {
+  method new_from_model (GMenuModel() $model) is also<new-from-model> {
     my $menubar = gtk_menu_bar_new_from_model($model);
     self.bless(:$menubar);
   }
@@ -101,7 +103,8 @@ class GTK::MenuBar is GTK::MenuShell {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_menu_bar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_menu_bar_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

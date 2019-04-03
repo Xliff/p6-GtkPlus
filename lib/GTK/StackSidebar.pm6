@@ -9,22 +9,22 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-my subset Ancestry
-  where GtkStackSidebar | GtkBin | GtkContainer | GtkBuilder | GtkWidget;
+our subset StackSidebarAncestry is export
+  where GtkStackSidebar | BinAncestry;
 
 class GTK::StackSidebar is GTK::Bin {
   has GtkStackSidebar $!ss;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::StackSidebar');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$sidebar) {
     my $to-parent;
     given $sidebar {
-      when Ancestry {
+      when StackSidebarAncestry {
         $!ss = do {
           when GtkStackSidebar {
             $to-parent = nativecast(GtkBin, $_);
@@ -44,7 +44,9 @@ class GTK::StackSidebar is GTK::Bin {
     }
   }
 
-  multi method new (Ancestry $sidebar) {
+  method GTK::Raw::Types::GtkStackSidebar is also<StackSidebar> { $!ss }
+
+  multi method new (StackSidebarAncestry $sidebar) {
     my $o = self.bless(:$sidebar);
     $o.upref;
     $o;
@@ -75,7 +77,8 @@ class GTK::StackSidebar is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_stack_sidebar_get_type();
+    state ($n, $t);
+    GTK::Widget.unstable_get_type( &gtk_stack_sidebar_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -149,10 +149,11 @@ class GTK::ScrolledWindow is GTK::Bin {
         (self.hadjustment, self.vadjustment);
       },
       STORE => -> $, *@a {
-        die qq:to/D/.chomp unless @a.elems == 2;
-Invalid number of arguments passed to GTK::ScrolledWindow.adjustment
+        die q:to/D/.chomp unless @a.grep({ $_.^can('Int').elems }).elems == 2;
+Argument to .adjustment must be a list of 2 integer-resolvable values
 D
-        (self.hadjustment, self.vadjustment) = @a;
+
+        (self.hadjustment, self.vadjustment) = @a.map( *.Int );
       }
     );
   }
@@ -309,13 +310,11 @@ D
   }
   
   proto method get_policy (|)
-    is also<
-      get-policy
-      policy
-    >
+    is also<get-policy>
   { * }
   
-  multi method get_policy {
+  # Only no-arg methods get to have an alias without the get[-_] prefix.
+  multi method get_policy is also<policy> {
     my ($hp, $vp);
     samewith($hp, $vp);
     ($hp, $vp);
