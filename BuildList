@@ -444,7 +444,6 @@ GTK::MenuItem
 GTK::MenuShell
 GTK::Overlay
 GTK::Popover
-GTK::RadioMenuItem
 GTK::Revealer
 GTK::ScaleButton
 GTK::ScrolledWindow
@@ -488,6 +487,7 @@ GTK::MenuButton
 GTK::Offscreen
 GTK::Places
 GTK::RadioButton
+GTK::RadioMenuItem
 GTK::SeparatorToolItem
 GTK::ShortcutsWindow
 GTK::Stack
