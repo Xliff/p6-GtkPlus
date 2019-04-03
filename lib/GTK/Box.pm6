@@ -7,10 +7,11 @@ use GTK::Compat::Types;
 
 use GTK::Raw::Box;
 use GTK::Raw::Types;
-
-use GTK::Container;
+use GTK::Raw::Utils;
 
 use GTK::Roles::Orientable;
+
+use GTK::Container;
 
 our subset BoxAncestry is export 
   where GtkBox | GtkOrientable | ContainerAncestry;
@@ -46,6 +47,8 @@ class GTK::Box is GTK::Container {
   method GTK::Raw::Types::GtkBox is also<Box> { $!b }
 
   method setBox($box) {
+    self.IS-PROTECTED;
+    
     my $to-parent;
     $!b = do given $box {
       when GtkBox {
@@ -77,21 +80,21 @@ class GTK::Box is GTK::Container {
     Int() $spacing = 0
   ) {
     # This works because it is NOT the array version.
-    my guint $o = self.RESOLVE-UINT($orientation);
-    my gint $s = self.RESOLVE-INT($spacing);
+    my guint $o = resolve-uint($orientation);
+    my gint $s = resolve-int($spacing);
     my $box = gtk_box_new($o, $s);
     self.bless(:$box);
   }
 
   method new-hbox(Int $spacing = 0) is also<new_hbox> {
     my gint $s = $spacing;
-    my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL.Int, $s);
+    my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $s);
     self.bless(:$box);
   }
 
   method new-vbox(Int $spacing = 0) is also<new_vbox> {
     my gint $s = $spacing;
-    my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL.Int, $s);
+    my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $s);
     self.bless(:$box);
   }
 

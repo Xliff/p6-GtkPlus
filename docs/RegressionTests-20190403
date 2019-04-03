@@ -1,0 +1,72 @@
+GTK+ Regression Testing 4/3/2019
+================================
+
+  1: Passed
+  2: Passed
+  3: Passed
+  4: Passed
+  5: Passed
+  6: Passed
+  7: Passed
+  8: Passed
+  9: Marginal. Eventually passed after several run thrus, but there looks 
+     to be a flapping issue with reference counts dropping below 0. Once this
+     happens, cascade failures appear everywhere, eventually leading to a 
+     SEGV. This is probably due to faulty GC. May not be fixed until 
+     allocation is handled at the POINTER, not object, level. Could also be
+     a container issue.
+ 10: Passed
+ 11: Passed
+ 12: Passed
+ 14: Passed
+ 15: Passed
+ 16: Passed
+ 17: Passed
+ 18: Passed
+ 19: Passed (after fixing minor issue in GTK::Stack). Ends with GTK warning 
+     about floating object reference.
+ 20: Passed
+ 21: Passed. Opening the Interactive Dialog button more than once will cause 
+     GTK messages to be emitted, but this does not seem to affect 
+     functionality. Messages only seem to be emitted when text boxes change.
+ 22: Marginal. No errors occur, but behavior does NOT match that of the GTK
+     demo.
+ 23: Passed
+ 24: Marginal. Wave is drawn and can switch between SIN and COS, but drawing
+     will eventually stop and app will hang.
+ 25: Passed (After applying a minor fix to GTK::Roles::Protection)
+ 26: Passed
+ 27: Passed (After a few fixes to both test file and GTK::Box)
+ 28: Passed 
+ 29: Passed
+ 30: Passed
+ 31: Passed (Although a number of GTK warnings about floating objects do appear
+     at startup)
+ 32: Passed
+ 33: Passed (After fixes to GTK::IconInfo)
+ 34: Passed (For some reason, the 8th image is not showing up)
+ 35: Broken (GList used to implement p6sort, that has been removed. Will
+     have to circle back once GList is in a working state)
+ 36: Passed (After fixing $was_symbolic parameters in GTK::IconInfo)
+ 37: Passed
+ 38: Passed
+ 39: Passed
+39b: Passed
+ 40: Unknown - (GTK::Grid child tracking has not yet been completed to my 
+     satisfaction. This test will need to be examined more closely)
+ 41: Unknown - (When setting horizontal scrolling to never, must establish 
+     maximum window size. Either that or limit the example to NOT allow window 
+     to grow larger than the screen size with acceptable margins. Also, must
+     make it so window can shrink once this occurs.)
+ 50: Passed
+ 52: Broken - (GTK::Utils::MenuBuilder in the process of being refactored)
+ 54: Broken - SegFaults when progress bar reaches end.
+ 62: Incomplete
+ 72: Incomplete (testing GTK Builder templates)
+   
+
+
+ 
+
+
+    

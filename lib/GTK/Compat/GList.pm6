@@ -60,9 +60,7 @@ class GTK::Compat::GList {
     self.bless(:$list);
   }
 
-  method GTK::Compat::Types::GList is also<glist> {
-    $!list;
-  }
+  method GTK::Compat::Types::GList is also<GList> { $!list }
 
   # method List {
   #   @!nat.clone;

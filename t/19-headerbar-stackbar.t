@@ -33,6 +33,8 @@ my $a = GTK::Application.new(
 );
 
 $a.activate.tap({
+  CATCH { default { .message.say; $a.exit } }
+  
   my ($h, $sb, $s, $b, $sp) = (
     GTK::HeaderBar.new,
     GTK::StackSidebar.new,

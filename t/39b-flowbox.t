@@ -54,7 +54,7 @@ $app.activate.tap({
   sub reset-order {
     my $c = 0;
     for @fbc {
-      %sort-order{ +.flowboxchild.p } = $c++;
+      %sort-order{ +.FlowBoxChild.p } = $c++;
       .changed;
     }
   }

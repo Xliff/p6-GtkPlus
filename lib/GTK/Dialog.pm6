@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Types;
 use GTK::Raw::Dialog;
 use GTK::Raw::Types;
@@ -72,7 +74,7 @@ class GTK::Dialog is GTK::Window {
   )
     is also<new-with-button>
   {
-    my gint $br = self.RESOLVE-INT($button_response_id);
+    my gint $br = resolve-int($button_response_id);
     my $dialog = gtk_dialog_new_with_buttons(
       $title,
       $parent,
@@ -90,7 +92,7 @@ class GTK::Dialog is GTK::Window {
     uint32      $flags,          # GtkDialogFlags $flags
     *%buttons
   ) {
-   self.new_with_buttons($title, $parent, $flags, %buttons);
+    self.new_with_buttons($title, $parent, $flags, %buttons);
   }
   multi method new_with_buttons(
     Str()       $title,

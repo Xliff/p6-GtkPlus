@@ -76,7 +76,7 @@ role GTK::Roles::CellLayout {
   ) {
     self.push-start: $cell;
     self.SET-LATCH;
-    samewith($cell.cellrenderer, $expand);
+    samewith($cell.CellRenderer, $expand);
   }
   multi method layout_pack_start (
     GtkCellRenderer $cell,

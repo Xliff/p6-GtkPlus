@@ -73,11 +73,8 @@ class GTK::Stack is GTK::Container {
   # }
   #
   multi method new(:$switcher is copy = True, :$sidebar is copy = False) {
-    die 'GTK::Stack.new can have only one of $switcher or $sidebar set to True'
-      if $switcher && $sidebar;
-      
     $switcher = $sidebar.not with $sidebar;
-
+    
     my $stack = gtk_stack_new();
     self.bless(:$stack, :$switcher);
   }

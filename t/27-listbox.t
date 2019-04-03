@@ -64,12 +64,12 @@ sub new_row {
   my %b = buildListRow;
   %b<row> := %b<template0>;
   %b<reshare-button>.clicked.tap({
-    %messages{+%b<row>.listboxrow.p}<data><n_reshares>++;
+    %messages{+%b<row>.ListBoxRow.p}<data><n_reshares>++;
     row_update(%b<row>);
   });
   %b<expand_button>.clicked.tap({ row-expand(%b<row>) });
   %b<favorite-button>.clicked.tap({
-    %messages{+%b<row>.listboxrow.p}<data><n_favorites>++;
+    %messages{+%b<row>.ListBoxRow.p}<data><n_favorites>++;
     row_update(%b<row>);
   });
   %b<row>.state-flags-changed.tap(-> *@a {
@@ -179,8 +179,8 @@ $a.activate.tap({
   for $msg_file.IO.open.slurp.lines {
     my $m = new_message($_);
     my $w = new_row;
-    %messages{+$w<row>.listboxrow.p}<widgets> = $w;
-    %messages{+$w<row>.listboxrow.p}<data> = $m;
+    %messages{+$w<row>.ListBoxRow.p}<widgets> = $w;
+    %messages{+$w<row>.ListBoxRow.p}<data> = $m;
     row_update($w<row>);
     $listbox.add($w<row>);
     $w<row>.show;
