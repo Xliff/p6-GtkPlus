@@ -154,7 +154,7 @@ class GTypeInstance is repr('CStruct') is export {
 }
 
 class GList is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Pointer $.data;
+  has Pointer $!data;
   has GList   $.next;
   has GList   $.prev;
   
@@ -162,12 +162,14 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
     use nqp; 
     
     Proxy.new: 
-      FETCH => -> $      { $.data },
+      FETCH => -> $      { $!data },
       STORE => -> $, $nv {
-        die qq:to/DIE/.chomp unless $nv.REPR eq <CStruct CPointer>.any;
+        my $err = qq:to/DIE/.chomp;
           Cannot store { $nv.^name } values in a GList as they must be of{
           } CStruct or CPointer representation.
           DIE
+          
+        die $err unless $nv ~~ Pointer || $nv.REPR eq <CStruct CPointer>.any;
           
         nqp::bindattr(
           nqp::decont(self), 

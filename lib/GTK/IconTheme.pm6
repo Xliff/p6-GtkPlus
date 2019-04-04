@@ -15,6 +15,7 @@ use GTK::IconInfo;
 use GTK::Roles::References;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
+use GTK::Compat::Roles::ListData;   # Not to be composed in GTK::IconTheme
 use GTK::Compat::Roles::Object;
 
 class GTK::IconTheme {
@@ -105,11 +106,13 @@ class GTK::IconTheme {
   }
 
   method list_contexts is also<list-contexts> {
-    GTK::Compat::GList.new( Str, gtk_icon_theme_list_contexts($!it) );
+    GTK::Compat::GList.new( Str, gtk_icon_theme_list_contexts($!it) )
+      but GTK::Compat::Roles::ListData[Str];
   }
 
   method list_icons (Str() $context) is also<list-icons> {
-    GTK::Compat::GList.new( Str, gtk_icon_theme_list_icons($!it, $context) );
+    GTK::Compat::GList.new( Str, gtk_icon_theme_list_icons($!it, $context) )
+      but GTK::Compat::Roles::ListData[Str];
   }
 
   method load_icon (

@@ -29,6 +29,8 @@ use GTK::ToolItem;
 use GTK::ToolItemGroup;
 use GTK::ToolPalette;
 
+use GTK::Compat::Roles::ListData;
+
 my (@canvas_items, @special_items, $drop_item);
 my $dd_req_drop = False;
 
@@ -200,6 +202,8 @@ sub load_icon_items ($p) {
   my ($it, $c, $l) = ( GTK::IconTheme.get_for_screen($p.screen) );
 
   $c = $it.list_contexts;
+  say $c.^name;
+  say $c.Array.gist;
   for $c.Array -> $ctx {
     my ($in, $ll, $ic);
     my $g = GTK::ToolItemGroup.new($ctx);

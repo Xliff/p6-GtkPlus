@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Raw::GList;
 use GTK::Compat::Types;
 
@@ -19,12 +21,13 @@ class GTK::Compat::GList {
   has GTK::Compat::Types::GList $!cur;
   
   # Left active, but see NOTE.
-  has $!dirty = False;
+  has $.dirty;
 
   submethod BUILD(:$list) {
     # die 'Must use a type object for $type when creating a GTK::Compat::GSList'
     #   if $type.defined;
 
+    $!dirty = True;
     $!cur = $!list = $list;
     
     # No longer necessary due to GTK::Compat::Roles::ListData
@@ -61,16 +64,25 @@ class GTK::Compat::GList {
   }
 
   method GTK::Compat::Types::GList is also<GList> { $!list }
-
-  # method List {
-  #   @!nat.clone;
-  # }
   
-  method !_data {
+  method current_node
+    is also<
+      current-node
+      cur
+      current
+      node
+    >
+  { $!cur }
+
+  method cleaned {
+    $!dirty = False;
+  }
+  
+  method !_data is rw {
     $!cur.data;
   }
 
-  method data {
+  method data is rw {
     self!_data;
   }
   
@@ -101,14 +113,8 @@ class GTK::Compat::GList {
   #   }
   #   @!nat;
   # }
-  #
-  # method Array {
-  #   self!rebuild if $!dirty;
-  #   $!dirty = False;
-  #   @!nat;
-  # }
 
-  method append (gpointer $data) {
+  method append (Pointer $data) {
     my $list = g_list_append($!list, $data);
     $!dirty = True;
     $!list = $list;
@@ -134,25 +140,34 @@ class GTK::Compat::GList {
     );
   }
 
-  method copy_deep (GCopyFunc $func, gpointer $user_data) {
+  method copy_deep (
+    &func, 
+    Pointer $user_data = Pointer
+  ) 
+    is also<copy-deep>
+  {
     self.bless( 
       #type => $!type, 
-      list => g_list_copy_deep($!list, $func, $user_data)
+      list => g_list_copy_deep($!list, &func, $user_data)
     );
   }
 
-  method delete_link (GTK::Compat::Types::GList() $link) {
+  method delete_link (GTK::Compat::Types::GList() $link) 
+    is also<delete-link>
+  {
     my $list = g_list_delete_link($!list, $link);
     $!dirty = True;
     $!list = $list;
   }
 
-  method find (gconstpointer $data) {
+  method find (Pointer $data) {
     g_list_find($!list, $data);
   }
 
-  method find_custom (gconstpointer $data, GCompareFunc $func) {
-    g_list_find_custom($!list, $data, $func);
+  method find_custom (Pointer $data, &func) 
+    is also<find-custom>
+  {
+    g_list_find_custom($!list, $data, &func);
   }
 
   method first {
@@ -160,52 +175,67 @@ class GTK::Compat::GList {
     $!cur = $!list;
   }
 
-  method foreach (GFunc $func, gpointer $user_data) {
-    g_list_foreach($!list, $func, $user_data);
+  method foreach (
+    &func, 
+    Pointer $user_data = Pointer
+  ) {
+    g_list_foreach($!list, &func, $user_data);
   }
 
   method free {
     g_list_free($!list);
   }
 
+  # Aliases with numbers after the dash are still a Bad Idea
   method free_1 {
     g_list_free_1($!list);
   }
 
-  method free_full(&free_func?) {
+  method free_full ( 
+    &free_func = -> { } 
+  ) 
+    is also<free-full> 
+  {
     my &func := &free_func // &g_destroy_none;
     g_list_free_full($!list, &func);
   }
 
-  method index (gconstpointer $data) {
+  method index (Pointer $data) {
     g_list_index($!list, $data);
   }
 
-  method insert (gpointer $data, gint $position) {
+  method insert (Pointer $data, Int() $position) {
+    my gint $p = resolve-int($position);
     my $list = g_list_insert($!list, $data, $position);
     $!dirty = True;
     $!list = $list;
   }
 
-  method insert_before (GTK::Compat::Types::GList() $sibling, gpointer $data) {
+  method insert_before (GTK::Compat::Types::GList() $sibling, Pointer $data) 
+    is also<insert-before>
+  {
     my $list = g_list_insert_before($!list, $sibling, $data);
     $!dirty = True;
     $!list = $list;
   }
 
-  method insert_sorted (gpointer $data, GCompareFunc $func) {
-    my $list = g_list_insert_sorted($!list, $data, $func);
+  method insert_sorted (Pointer $data, &func) 
+    is also<insert-sorted>
+  {
+    my $list = g_list_insert_sorted($!list, $data, &func);
     $!dirty = True;
     $!list = $list;
   }
 
   method insert_sorted_with_data (
-    gpointer $data,
-    GCompareDataFunc $func,
-    gpointer $user_data
-  ) {
+    Pointer $data,
+    &func,
+    Pointer $user_data = Pointer
+  ) 
+    is also<insert-sorted-with-data>
+  {
     my $list = g_list_insert_sorted_with_data(
-      $!list, $data, $func, $user_data
+      $!list, $data, &func, $user_data
     );
     $!dirty = True;
     $!list = $list;
@@ -219,36 +249,42 @@ class GTK::Compat::GList {
     g_list_length($!list);
   }
 
-  method nth (guint $n) {
+  method nth (Int() $n) {
+    my guint $nn = resolve-uint($n);
     g_list_nth($!list, $n);
   }
 
-  method nth_data (guint $n) {
-    g_list_nth_data($!list, $n);
+  method nth_data (Int() $n) 
+    is also<nth-data>
+  {
+    my guint $nn = resolve-uint($n);
+    g_list_nth_data($!list, $nn);
   }
 
-  method nth_prev (guint $n) {
-    g_list_nth_prev($!list, $n);
+  method nth_prev (Int() $n) {
+    my guint $nn = resolve-uint($n);
+    g_list_nth_prev($!list, $nn);
   }
 
   method position (GTK::Compat::Types::GList() $llink) {
     g_list_position($!list, $llink);
   }
 
-  method prepend (gpointer $data) {
+  method prepend (Pointer $data) {
     my $list = g_list_prepend($!list, $data);
     $!dirty = True;
     $!list = $list;
   }
 
-  method remove (gconstpointer $data) {
+  method remove (Pointer $data) {
     my $list = g_list_remove($!list, $data);
     $!dirty = True;
     $!list = $list;
   }
 
-  method remove_all (gconstpointer $data) {
+  method remove_all (Pointer $data) {
     g_list_remove_all($!list, $data);
+    $!dirty = True;
     #!nat = ();
   }
 
@@ -260,17 +296,18 @@ class GTK::Compat::GList {
 
   method reverse {
     my $list = g_list_reverse($!list);
-    #self!rebuild if $!dirty;
-    #@!nat = @!nat.reverse;
+    $!dirty = True;
     $!list = $list;
   }
 
-  method sort (GCompareFunc $compare_func) {
-    $!list = g_list_sort($!list, $compare_func);
+  method sort (&compare_func) {
+    $!list = g_list_sort($!list, &compare_func);
+    $!dirty = True;
   }
 
-  method sort_with_data (GCompareDataFunc $compare_func, gpointer $user_data) {
-    $!list = g_list_sort_with_data($!list, $compare_func, $user_data);
+  method sort_with_data (&compare_func, Pointer $user_data = Pointer) {
+    $!list = g_list_sort_with_data($!list, &compare_func, $user_data);
+    $!dirty = True;
   }
 
 }

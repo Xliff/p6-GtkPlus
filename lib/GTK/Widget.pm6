@@ -117,17 +117,13 @@ class GTK::Widget {
   # REALLY EXPERIMENTAL attempt to create a global object creation
   # factory.
   method CreateObject(GtkWidget $o) {
-    self.IS-PROTECTED;
-
-    my $type = self.getType($o);
-    # In this situation, GTK::Widget CANNOT validate what will happen
-    # if there is no type. The caller has to INSURE that if this call is
-    # made, they are aware of this possibility.
-    #
-    # Therefore this should be made into a PROPER exception with
-    # the die() message as the payload.
-    die "Invalid type name { $type } passed to GTK::Widget.CreateObject():"
-      unless $type ~~ /^ 'GTK::' /;
+    my $type = GTK::Widget.getType($o);
+    
+    # If no type, then we fall back to GTK::Widget.
+    if ($type //= 'GTK::Widget') eq 'GTK::Widget' {
+      warn 'Creating GTK::Widget as fallback...' if $DEBUG;      
+    }
+    
     ::($type).new($o);
   }
 
