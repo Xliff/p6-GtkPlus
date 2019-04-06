@@ -3,6 +3,9 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use Pango::Raw::Types;
+use Pango::AttrList;
+
 use GTK::Compat::Types;
 use GTK::Raw::Entry;
 use GTK::Raw::Types;
@@ -24,7 +27,7 @@ class GTK::Entry is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Entry');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -181,10 +184,11 @@ class GTK::Entry is GTK::Widget {
   method activates_default is rw is also<activates-default> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_activates_default($!e);
+        so gtk_entry_get_activates_default($!e);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_entry_set_activates_default($!e, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_entry_set_activates_default($!e, $s);
       }
     );
   }
@@ -194,8 +198,9 @@ class GTK::Entry is GTK::Widget {
       FETCH => sub ($) {
         gtk_entry_get_alignment($!e);
       },
-      STORE => sub ($, $xalign is copy) {
-        gtk_entry_set_alignment($!e, $xalign);
+      STORE => sub ($, Num() $align is copy) {
+        my gfloat $a = $align;
+        gtk_entry_set_alignment($!e, $a);
       }
     );
   }
@@ -203,9 +208,9 @@ class GTK::Entry is GTK::Widget {
   method attributes is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_attributes($!e);
+        Pango::AttrList.new( gtk_entry_get_attributes($!e) );
       },
-      STORE => sub ($, $attrs is copy) {
+      STORE => sub ($, PangoAttrList() $attrs is copy) {
         gtk_entry_set_attributes($!e, $attrs);
       }
     );
@@ -214,9 +219,9 @@ class GTK::Entry is GTK::Widget {
   method buffer is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_buffer($!e);
+        GTK::EntryBuffer.new( gtk_entry_get_buffer($!e) );
       },
-      STORE => sub ($, $buffer is copy) {
+      STORE => sub ($, GtkEntryBuffer() $buffer is copy) {
         gtk_entry_set_buffer($!e, $buffer);
       }
     );
@@ -225,9 +230,9 @@ class GTK::Entry is GTK::Widget {
   method completion is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_completion($!e);
+        GTK::EntryCompletion.new( gtk_entry_get_completion($!e) );
       },
-      STORE => sub ($, $completion is copy) {
+      STORE => sub ($, GtkEntryCompletion() $completion is copy) {
         gtk_entry_set_completion($!e, $completion);
       }
     );
@@ -236,9 +241,9 @@ class GTK::Entry is GTK::Widget {
   method cursor_hadjustment is rw is also<cursor-hadjustment> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_cursor_hadjustment($!e);
+        GTK::Adjustment.new( gtk_entry_get_cursor_hadjustment($!e) );
       },
-      STORE => sub ($, $adjustment is copy) {
+      STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_entry_set_cursor_hadjustment($!e, $adjustment);
       }
     );
@@ -247,10 +252,11 @@ class GTK::Entry is GTK::Widget {
   method has_frame is rw is also<has-frame> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_has_frame($!e);
+        so gtk_entry_get_has_frame($!e);
       },
-      STORE => sub ($, $setting is copy) {
-        gtk_entry_set_has_frame($!e, $setting);
+      STORE => sub ($, Int() $setting is copy) {
+        my gboolean $s = self.RESOLVE-BOOL($setting);
+        gtk_entry_set_has_frame($!e, $s);
       }
     );
   }
@@ -260,7 +266,7 @@ class GTK::Entry is GTK::Widget {
       FETCH => sub ($) {
         gtk_entry_get_inner_border($!e);
       },
-      STORE => sub ($, $border is copy) {
+      STORE => sub ($, GtkBorder $border is copy) {
         gtk_entry_set_inner_border($!e, $border);
       }
     );
@@ -269,10 +275,11 @@ class GTK::Entry is GTK::Widget {
   method input_hints is rw is also<input-hints> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_input_hints($!e);
+        GtkInputHints( gtk_entry_get_input_hints($!e) );
       },
-      STORE => sub ($, $hints is copy) {
-        gtk_entry_set_input_hints($!e, $hints);
+      STORE => sub ($, Int() $hints is copy) {
+        my guint $h = self.RESOLVE-UINT($hints);
+        gtk_entry_set_input_hints($!e, $h);
       }
     );
   }
@@ -282,8 +289,8 @@ class GTK::Entry is GTK::Widget {
       FETCH => sub ($) {
         GtkInputPurpose( gtk_entry_get_input_purpose($!e) );
       },
-      STORE => sub ($, Int $purpose is copy) {
-        my uint32 $p = $purpose;
+      STORE => sub ($, Int() $purpose is copy) {
+        my uint32 $p = self.RESOLVE-UINT($purpose);
         gtk_entry_set_input_purpose($!e, $p);
       }
     );
@@ -314,10 +321,11 @@ class GTK::Entry is GTK::Widget {
   method overwrite_mode is rw is also<overwrite-mode> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_overwrite_mode($!e);
+        so gtk_entry_get_overwrite_mode($!e);
       },
-      STORE => sub ($, $overwrite is copy) {
-        gtk_entry_set_overwrite_mode($!e, $overwrite);
+      STORE => sub ($, Int() $overwrite is copy) {
+        my guint $o = self.RESOLVE-UINT($overwrite);
+        gtk_entry_set_overwrite_mode($!e, $o);
       }
     );
   }
@@ -327,7 +335,7 @@ class GTK::Entry is GTK::Widget {
       FETCH => sub ($) {
         gtk_entry_get_placeholder_text($!e);
       },
-      STORE => sub ($, $text is copy) {
+      STORE => sub ($, Str() $text is copy) {
         gtk_entry_set_placeholder_text($!e, $text);
       }
     );
@@ -338,8 +346,9 @@ class GTK::Entry is GTK::Widget {
       FETCH => sub ($) {
         gtk_entry_get_progress_fraction($!e);
       },
-      STORE => sub ($, $fraction is copy) {
-        gtk_entry_set_progress_fraction($!e, $fraction);
+      STORE => sub ($, Num() $fraction is copy) {
+        my gdouble $f = $fraction;
+        gtk_entry_set_progress_fraction($!e, $f);
       }
     );
   }
@@ -349,8 +358,9 @@ class GTK::Entry is GTK::Widget {
       FETCH => sub ($) {
         gtk_entry_get_progress_pulse_step($!e);
       },
-      STORE => sub ($, $fraction is copy) {
-        gtk_entry_set_progress_pulse_step($!e, $fraction);
+      STORE => sub ($, Num() $fraction is copy) {
+        my gdouble $f = $fraction;
+        gtk_entry_set_progress_pulse_step($!e, $f);
       }
     );
   }
@@ -358,9 +368,9 @@ class GTK::Entry is GTK::Widget {
   method tabs is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_tabs($!e);
+        Pango::Tabs.new( gtk_entry_get_tabs($!e) );
       },
-      STORE => sub ($, $tabs is copy) {
+      STORE => sub ($, PangoTabArray() $tabs is copy) {
         gtk_entry_set_tabs($!e, $tabs);
       }
     );
@@ -380,10 +390,11 @@ class GTK::Entry is GTK::Widget {
   method visibility is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_entry_get_visibility($!e);
+        so gtk_entry_get_visibility($!e);
       },
-      STORE => sub ($, $visible is copy) {
-        gtk_entry_set_visibility($!e, $visible);
+      STORE => sub ($, Int() $visible is copy) {
+        my gboolean $v = self.RESOLVE-BOOL($visible);
+        gtk_entry_set_visibility($!e, $v);
       }
     );
   }
@@ -399,6 +410,533 @@ class GTK::Entry is GTK::Widget {
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  # Type: gint
+  method cursor-position is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('cursor-position', $gv)
+        );
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn "cursor-position does not allow writing"
+      }
+    );
+  }
+
+  # Type: gboolean
+  method editable is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('editable', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('editable', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method enable-emoji-completion is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('enable-emoji-completion', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('enable-emoji-completion', $gv);
+      }
+    );
+  }
+
+  # Type: gchar
+  method im-module is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('im-module', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('im-module', $gv);
+      }
+    );
+  }
+  
+  # Type: guint
+  method invisible-char is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('invisible-char', $gv)
+        );
+        $gv.uint;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.uint = $val;
+        self.prop_set('invisible-char', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method invisible-char-set is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('invisible-char-set', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('invisible-char-set', $gv);
+      }
+    );
+  }
+  
+  # Type: gboolean
+  method populate-all is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('populate-all', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('populate-all', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method primary-icon-activatable is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-activatable', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('primary-icon-activatable', $gv);
+      }
+    );
+  }
+  
+  # GIcon us supposedly 
+  # # Type: GIcon
+  # method primary-icon-gicon is rw  {
+  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   Proxy.new(
+  #     FETCH => -> $ {
+  #       $gv = GTK::Compat::Value.new(
+  #         self.prop_get('primary-icon-gicon', $gv)
+  #       );
+  #       #$gv.TYPE
+  #     },
+  #     STORE => -> $,  $val is copy {
+  #       #$gv.TYPE = $val;
+  #       self.prop_set('primary-icon-gicon', $gv);
+  #     }
+  #   );
+  # }
+
+  # Type: gchar
+  method primary-icon-name is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-name', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('primary-icon-name', $gv);
+      }
+    );
+  }
+  
+  # Type: GdkPixbuf
+  method primary-icon-pixbuf is rw  {
+    my GTK::Compat::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-pixbuf', $gv)
+        );
+        GTK::Compat::Pixbuf.new(
+          nativecast(GdkPixbuf, $gv.object)
+        );
+      },
+      STORE => -> $, GdkPixbuf() $val is copy {
+        $gv.object = $val;
+        self.prop_set('primary-icon-pixbuf', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method primary-icon-sensitive is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-sensitive', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('primary-icon-sensitive', $gv);
+      }
+    );
+  }
+
+  # Type: gchar
+  method primary-icon-stock is rw  is DEPRECATED( “primary-icon-name” ) {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-stock', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('primary-icon-stock', $gv);
+      }
+    );
+  }
+  
+  # Type: GtkImageType (uint32)
+  method primary-icon-storage-type is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-storage-type', $gv)
+        );
+        GtkImageType( $gv.uint);
+      },
+      STORE => -> $,  $val is copy {
+        warn "primary-icon-storage-type does not allow writing"
+      }
+    );
+  }
+  
+  # Type: gchar
+  method primary-icon-tooltip-markup is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-tooltip-markup', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('primary-icon-tooltip-markup', $gv);
+      }
+    );
+  }
+  
+  # Type: gchar
+  method primary-icon-tooltip-text is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('primary-icon-tooltip-text', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('primary-icon-tooltip-text', $gv);
+      }
+    );
+  }
+
+  # Type: gint
+  method scroll-offset is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('scroll-offset', $gv)
+        );
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn "scroll-offset does not allow writing"
+      }
+    );
+  }
+  
+  # Type: gboolean
+  method secondary-icon-activatable is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-activatable', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('secondary-icon-activatable', $gv);
+      }
+    );
+  }
+  
+  # GIcon is supposedly deprecated.
+  # # Type: GIcon
+  # method secondary-icon-gicon is rw  {
+  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   Proxy.new(
+  #     FETCH => -> $ {
+  #       $gv = GTK::Compat::Value.new(
+  #         self.prop_get('secondary-icon-gicon', $gv)
+  #       );
+  #       #$gv.TYPE
+  #     },
+  #     STORE => -> $,  $val is copy {
+  #       #$gv.TYPE = $val;
+  #       self.prop_set('secondary-icon-gicon', $gv);
+  #     }
+  #   );
+  # }
+  
+  # Type: gchar
+  method secondary-icon-name is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-name', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('secondary-icon-name', $gv);
+      }
+    );
+  }
+  
+  # Type: GdkPixbuf
+  method secondary-icon-pixbuf is rw  {
+    my GTK::Compat::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-pixbuf', $gv)
+        );
+        GTK::Compat::Pixbuf.new( 
+          nativecast(GdkPixbuf, $gv.objecty)
+        );
+      },
+      STORE => -> $, GdkPixbuf() $val is copy {
+        $gv.object = $val;
+        self.prop_set('secondary-icon-pixbuf', $gv);
+      }
+    );
+  }
+  
+  # Type: gboolean
+  method secondary-icon-sensitive is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-sensitive', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('secondary-icon-sensitive', $gv);
+      }
+    );
+  }
+
+  # Type: gchar
+  method secondary-icon-stock is rw  is DEPRECATED( “secondary-icon-name” ) {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-stock', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('secondary-icon-stock', $gv);
+      }
+    );
+  }
+
+  # Type: GtkImageType (uint32)
+  method secondary-icon-storage-type is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-storage-type', $gv)
+        );
+        GtkImageType( $gv.uint );
+      },
+      STORE => -> $,  $val is copy {
+        warn "secondary-icon-storage-type does not allow writing"
+      }
+    );
+  }
+ 
+  # Type: gchar
+  method secondary-icon-tooltip-markup is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-tooltip-markup', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('secondary-icon-tooltip-markup', $gv);
+      }
+    );
+  }
+  
+  # Type: gchar
+  method secondary-icon-tooltip-text is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('secondary-icon-tooltip-text', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('secondary-icon-tooltip-text', $gv);
+      }
+    );
+  }
+  
+  # Type: gint
+  method selection-bound is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('selection-bound', $gv)
+        );
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn "selection-bound does not allow writing"
+      }
+    );
+  }
+
+  # Type: gboolean
+  method show-emoji-icon is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('show-emoji-icon', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('show-emoji-icon', $gv);
+      }
+    );
+  }
+
+  # Type: guint
+  method text-length is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('text-length', $gv)
+        );
+        $gv.uint;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn "text-length does not allow writing"
+      }
+    );
+  }
+  
+  # Type: gboolean
+  method truncate-multiline is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('truncate-multiline', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('truncate-multiline', $gv);
+      }
+    );
+  }
+
+  # Type: gfloat
+  method xalign is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('xalign', $gv)
+        );
+        $gv.float;
+      },
+      STORE => -> $, Num() $val is copy {
+        $gv.float = $val;
+        self.prop_set('xalign', $gv);
+      }
+    );
+  }
 
   method get_current_icon_drag_source
     is also<get-current-icon-drag-source>
@@ -417,7 +955,7 @@ class GTK::Entry is GTK::Widget {
 
   method get_icon_area (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-    GdkRectangle() $icon_area
+    GdkRectangle $icon_area
   )
     is also<get-icon-area>
   {
@@ -614,7 +1152,7 @@ class GTK::Entry is GTK::Widget {
 
   method set_icon_from_stock (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-    gchar $stock_id
+    Str() $stock_id
   )
     is also<set-icon-from-stock>
   {
@@ -624,12 +1162,13 @@ class GTK::Entry is GTK::Widget {
 
   method set_icon_sensitive (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-    gboolean $sensitive
+    Int() $sensitive
   )
     is also<set-icon-sensitive>
   {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
-    gtk_entry_set_icon_sensitive($!e, $ip, $sensitive);
+    my gboolean $s = self.RESOLVE-BOOL($sensitive);
+    gtk_entry_set_icon_sensitive($!e, $ip, $s);
   }
 
   method set_icon_tooltip_markup (

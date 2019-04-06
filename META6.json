@@ -69,6 +69,7 @@
       "GTK::Compat::Raw::Seat"                 :  "lib/GTK/Compat/Raw/Seat.pm6"                 ,
       "GTK::Compat::Raw::Selection"            :  "lib/GTK/Compat/Raw/Selection.pm6"            ,
       "GTK::Compat::Raw::Settings"             :  "lib/GTK/Compat/Raw/Settings.pm6"             ,
+      "GTK::Compat::Raw::Signal"               :  "lib/GTK/Compat/Raw/Signal.pm6"               ,
       "GTK::Compat::Raw::Value"                :  "lib/GTK/Compat/Raw/Value.pm6"                ,
       "GTK::Compat::Raw::Variant"              :  "lib/GTK/Compat/Raw/Variant.pm6"              ,
       "GTK::Compat::Raw::Visual"               :  "lib/GTK/Compat/Raw/Visual.pm6"               ,
@@ -83,6 +84,7 @@
       "GTK::Compat::Roles::Object"             :  "lib/GTK/Compat/Roles/Object.pm6"             ,
       "GTK::Compat::Roles::Signals::Window"    :  "lib/GTK/Compat/Roles/Signals/Window.pm6"     ,
       "GTK::Compat::Selection"                 :  "lib/GTK/Compat/Selection.pm6"                ,
+      "GTK::Compat::Signal"                    :  "lib/GTK/Compat/Signal.pm6"                   ,
       "GTK::Compat::Variant"                   :  "lib/GTK/Compat/Variant.pm6"                  ,
       "GTK::Compat::VariantDict"               :  "lib/GTK/Compat/VariantDict.pm6"              ,
       "GTK::Compat::VariantIter"               :  "lib/GTK/Compat/VariantIter.pm6"              ,
@@ -519,6 +521,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

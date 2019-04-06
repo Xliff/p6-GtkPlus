@@ -63,6 +63,7 @@ GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Settings
+GTK::Compat::Raw::Signal
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Variant
 GTK::Compat::Raw::Visual
@@ -77,6 +78,7 @@ GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Selection
+GTK::Compat::Signal
 GTK::Compat::Variant
 GTK::Compat::VariantDict
 GTK::Compat::VariantIter

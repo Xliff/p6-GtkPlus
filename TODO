@@ -49,6 +49,10 @@
 - Roll GTK::Roles::References into GTK::Roles::Object
 - Consider having GTK::Roles::Properties do GTK::Roles::Object (could rolling properties into objects be a thing?)
 - For all widgets: Replace all static strings in self.setType() with self.^name.
+- Investigate all async *_finish routines to see if a multi with a simpler interface is possible.
+- Add registration system to GTK::Builder, since type names will mostly start with Gtk..., must have a way to convert those
+  names to the proper object name. Propose <Project>::Builder::Registry, with static .register method that provides
+  pair mapping detected_name => proper_name.
 
 Applications
 ============

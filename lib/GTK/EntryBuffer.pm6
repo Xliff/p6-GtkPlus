@@ -25,17 +25,21 @@ class GTK::EntryBuffer {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals, %!signals-eb;
   }
+  
+  method GTK::Raw::Types::GtkEntryBuffer 
+    is also<EntryBuffer>
+  { $!b }
 
-  method new (Str $text, Int() $text_len) {
+  multi method new (GtkEntryBuffer $buffer) {
+    self.bless(:$buffer);
+  }
+  multi method new (Str $text, Int() $text_len) {
     # Move resolve functions to utilities package.
     my gint $tl = ($text_len.abs +& 0x7fff) * ($text_len < 0 ?? -1 !! 1);
     my $buffer = gtk_entry_buffer_new($text, $tl);
     self.bless(:$buffer);
   }
 
-  method GTK::Raw::Types::GtkEntryBuffer 
-    is also<EntryBuffer>
-    { $!b }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method deleted-text is also<deleted_text> {

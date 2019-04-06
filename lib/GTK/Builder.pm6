@@ -26,6 +26,8 @@ class GTK::Builder does Associative {
   has %!types;
 
   has $!css;
+  
+  has %!aliases;
 
   has %!widgets handles <
     EXISTS-KEY
@@ -94,21 +96,33 @@ class GTK::Builder does Associative {
 
   method new_from_file (Str() $filename) is also<new-from-file> {
     my $builder = gtk_builder_new_from_file($filename);
-    self.bless(:$builder);
+    my $ui = $filename.IO.slurp;
+    self.bless(:$builder, :$ui);
   }
 
   method new_from_resource (Str() $resource) is also<new-from-resource> {
     my $builder = gtk_builder_new_from_resource($resource);
+    # XXX - Get resource data and place into $ui
     self.bless(:$builder);
   }
 
-  method new_from_string (Str() $string, Int() $length = -1)
+  method new_from_string (Str() $ui, Int() $length = -1)
     is also<new-from-string>
   {
     die '$length must not be negative' unless $length > -2;
     my gssize $l = $length;
-    my $builder = gtk_builder_new_from_string($string, $l);
-    self.bless(:$builder);
+    my $builder = gtk_builder_new_from_string($ui, $l);
+    self.bless(:$builder, :$ui);
+  }
+  
+  method register (GTK::Builder:U: *@t) {
+    for @t {
+      if .^can('register').elems > 0 {
+        %!aliases.append(.register);
+      } else {
+        say "Cannot register for { .^name }, skipping...";
+      }
+    }
   }
 
   #  new-from-buf??
@@ -185,16 +199,24 @@ class GTK::Builder does Associative {
       # Use type names to dynamically create objects.
       # Use $args to pass along additional arguments.
       %!widgets{$k} = do {
-         CATCH { .message.say; exit; }
+         CATCH { 
+           say qq:to/D/.chomp;
+           Error encountered when processing { $k } ({ %!types{$k}[0] }):
+           D
+           
+           .message.say; 
+           exit; 
+         }
          # After significant review, I don't think there will be many
          # uses of this when case, since much of this work is already done
          # by GtkBuilder. The only situations I see this handling are P6-state
          # related issues, like container storage situations.
+         my $wt = %!types{$k}[0];
          when $args.defined {
-           ::( %!types{$k}[0] ).new($o, $args.pairs);
+           ::( %!aliases{$wt} // $wt ).new($o, $args.pairs);
          }
          default {
-           ::( %!types{$k}[0] ).new($o);
+           ::( %!aliases{$wt} // $wt] ).new($o);
          }
       }
     }

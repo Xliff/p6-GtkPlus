@@ -118,11 +118,16 @@ constant GCancellable            is export := Pointer;
 constant GCompareDataFunc        is export := Pointer;
 constant GCompareFunc            is export := Pointer;
 constant GCopyFunc               is export := Pointer;
+constant GClosureNotify          is export := Pointer;
 constant GDestroyNotify          is export := Pointer;
 constant GEqualFunc              is export := Pointer;
 constant GSettingsBindGetMapping is export := Pointer;
 constant GSettingsBindSetMapping is export := Pointer;
 constant GSettingsGetMapping     is export := Pointer;
+constant GSignalAccumulator      is export := Pointer;
+constant GSignalEmissionHook     is export := Pointer;
+constant GSignalCMarshaller      is export := Pointer;
+constant GSignalCVaMarshaller    is export := Pointer;
 
 constant GQuark                  is export := uint32;
 constant GStrv                   is export := CArray[Str];
@@ -220,6 +225,25 @@ class GValue is repr('CStruct') does GTK::Roles::Pointers is export {
 class GPtrArray is repr('CStruct') does GTK::Roles::Pointers is export {
   has CArray[Pointer] $.pdata;
   has guint           $.len;
+}
+
+class GSignalInvocationHint is repr('CStruct') 
+  does GTK::Roles::Pointers 
+  is export 
+{
+  has guint   $.signal_id;
+  has GQuark  $.detail;
+  has guint32 $.run_type;             # GSignalFlags
+}
+
+class GSignalQuery is repr('CStruct') does GTK::Roles::Pointers is export {
+  has guint          $.signal_id;
+  has Str            $.signal_name;
+  has GType          $.itype;
+  has guint32        $.signal_flags;  # GSignalFlags
+  has GType          $.return_type;
+  has guint          $.n_params;
+  has CArray[uint64] $.param_types;
 }
 
 our enum GTypeEnum is export (
@@ -635,6 +659,34 @@ our enum GFileCreateFlags is export (
   G_FILE_CREATE_PRIVATE             => 1,
   G_FILE_CREATE_REPLACE_DESTINATION => 2
 );
+
+our enum GSignalFlags is export (
+  G_SIGNAL_RUN_FIRST    => 1,
+  G_SIGNAL_RUN_LAST     => 1 +< 1,
+  G_SIGNAL_RUN_CLEANUP  => 1 +< 2,
+  G_SIGNAL_NO_RECURSE   => 1 +< 3,
+  G_SIGNAL_DETAILED     => 1 +< 4,
+  G_SIGNAL_ACTION       => 1 +< 5,
+  G_SIGNAL_NO_HOOKS     => 1 +< 6,
+  G_SIGNAL_MUST_COLLECT => 1 +< 7,
+  G_SIGNAL_DEPRECATED   => 1 +< 8
+);
+
+our enum GConnectFlags is export (
+  G_CONNECT_AFTER       => 1,
+  G_CONNECT_SWAPPED     => 2
+);
+
+our enum GSignalMatchType is export (
+  G_SIGNAL_MATCH_ID        => 1,
+  G_SIGNAL_MATCH_DETAIL    => 1 +< 1,
+  G_SIGNAL_MATCH_CLOSURE   => 1 +< 2,
+  G_SIGNAL_MATCH_FUNC      => 1 +< 3,
+  G_SIGNAL_MATCH_DATA      => 1 +< 4,
+  G_SIGNAL_MATCH_UNBLOCKED => 1 +< 5
+);
+
+our constant G_SIGNAL_MATCH_MASK is export = 0x3f;
 
 class cairo_font_options_t  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Pointers { }

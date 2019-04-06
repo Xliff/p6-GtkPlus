@@ -51,24 +51,46 @@ class GTK::TextMark {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_buffer is also<get-buffer> {
+  method get_buffer 
+    is also<
+      get-buffer
+      buffer
+    > 
+  {
     GTK::TextBuffer( gtk_text_mark_get_buffer($!tm) );
   }
 
-  method get_deleted is also<get-deleted> {
+  method get_deleted 
+    is also<
+      get-deleted
+      deleted
+    > 
+  {
     so gtk_text_mark_get_deleted($!tm);
   }
 
-  method get_left_gravity is also<get-left-gravity> {
+  method get_left_gravity 
+    is also<
+      get-left-gravity
+      left_gravity
+      left-gravity
+    > 
+  {
     so gtk_text_mark_get_left_gravity($!tm);
   }
 
-  method get_name is also<get-name> {
+  method get_name 
+    is also<
+      get-name
+      name
+    > 
+  {
     gtk_text_mark_get_name($!tm);
   }
 
   method get_type is also<get-type> {
-    gtk_text_mark_get_type();
+    state ($n, $t);
+    unstable_get_type( self.^name, &gtk_text_mark_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
