@@ -17,7 +17,6 @@ First, insure you have all of the native dependencies. These are: Pango, Cairo, 
 It's best if you have a Top-Top-Level directory to keep all of the separate project directories. From that directory, execute the following commands:
 
 ```
-$ git clone https://github.com/Xliff/cairo-p6.git
 $ git clone https://github.com/Xliff/p6-Pango.git
 $ git clone https://github.com/Xliff/p6-GtkPlus.git
 $ cd p6-GtkPlus
