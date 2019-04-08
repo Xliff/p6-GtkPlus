@@ -28,6 +28,7 @@ class GTK::Builder does Associative {
   has $!css;
   
   has %!aliases;
+  has @!prefixes;
 
   has %!widgets handles <
     EXISTS-KEY
@@ -80,6 +81,8 @@ class GTK::Builder does Associative {
 #      :\$window-name in the constructor to GTK::Application
 # ERR
     }
+    
+    @!prefixes = ('Gtk');
   }
   
   method GTK::Raw::Types::GtkBuilder is also<Builder> { $!b }
@@ -115,17 +118,31 @@ class GTK::Builder does Associative {
     self.bless(:$builder, :$ui);
   }
   
+  #  new-from-buf??
+  
   method register (GTK::Builder:U: *@t) {
-    for @t {
-      if .^can('register').elems > 0 {
-        %!aliases.append(.register);
+    for @t -> $t {
+      if $t.^can('register').elems > 0 {
+        my %r = $t.register;
+        for %r.pairs -> {
+          if .key eq 'PREFIX' {
+            @!prefixes.push: .value;
+            next;
+          }
+          if %!aliases{ .key }:exists {
+            say qq:to/M/.chomp;
+              { .key } already registered for { %!aliases{ .key } 
+              }, skipping...
+              M
+          } else {
+            %!aliases{ .key } = .value;
+          }
+        }
       } else {
-        say "Cannot register for { .^name }, skipping...";
+        say "Cannot register for { $t.^name }, skipping...";
       }
     }
   }
-
-  #  new-from-buf??
 
   method AT-KEY(Str $key) {
     die "Requested control '$key' does not exist."
@@ -152,8 +169,11 @@ class GTK::Builder does Associative {
       my $m = m:g/<tag>/;
 
       if $m.defined {
+        # For use in regex.
+        my @p = @!prefixes;
         for $m.Array -> $o {
-          (my $type = $o<tag><t>.Str) ~~ s/'Gtk' ( <[A..Za..z]>+ )/GTK::$0/;
+          (my $type = $o<tag><t>.Str) ~~ 
+            s/ ( @p ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
           my $args;
           # Last-chance special case resolution -- should probably be broken
           # out into its own package.
@@ -216,7 +236,7 @@ class GTK::Builder does Associative {
            ::( %!aliases{$wt} // $wt ).new($o, $args.pairs);
          }
          default {
-           ::( %!aliases{$wt} // $wt] ).new($o);
+           ::( %!aliases{$wt} // $wt ).new($o);
          }
       }
     }
