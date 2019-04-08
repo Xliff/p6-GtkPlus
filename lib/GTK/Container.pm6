@@ -29,9 +29,9 @@ class GTK::Container is GTK::Widget {
       when ContainerAncestry {
         self.setContainer($container);
       }
-      when WidgetAncestry {
-        # Can't die here since descendants depend on this getting through
-        # the custom bless. This only applies for abstract classes.
+      when GTK::Container {
+      }
+      default {
       }
     }
   }

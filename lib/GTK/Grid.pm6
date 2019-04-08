@@ -63,6 +63,9 @@ class GTK::Grid is GTK::Container {
   method GTK::Raw::Types::GtkGrid
     is also<Grid>
     { $!g }
+    
+  proto method new(|) 
+    { * }
 
   multi method new (GridAncestry $grid) {
     my $o = self.bless(:$grid);
