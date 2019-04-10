@@ -1,6 +1,7 @@
 .precomp/
 dead/
 .touch/
+.test/
 .idea/
 LastBuildResults.*
 LastBuildResults
