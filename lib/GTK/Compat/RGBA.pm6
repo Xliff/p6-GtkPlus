@@ -52,7 +52,6 @@ class GTK::Compat::RGBA {
     Int() $green,
     Int() $blue
   ) is also<new_rgb> {
-    ($red, $green, $blue).say;
     GTK::Compat::RGBA.new(
       $red   / 255,
       $green / 255,
