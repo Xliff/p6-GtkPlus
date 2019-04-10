@@ -17,6 +17,7 @@ class GTK::Utils::MenuBuilder {
   submethod BUILD(:$bar = False, :$button = False, :$TOP) {
     my (%named_items, @m, %groups);
     for $TOP.List -> $i {
+      # List of pairs
       given $i.value {
         when Array {
           my @sm;

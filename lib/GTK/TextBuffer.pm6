@@ -9,17 +9,20 @@ use GTK::Raw::TextBuffer;
 use GTK::Raw::Types;
 
 use GTK::TargetList;
-use GTK::TextTagTable;
 use GTK::TextIter;
+use GTK::TextMark;
+use GTK::TextTagTable;
 
 use GTK::Roles::Properties;
-use GTK::Roles::Types;
+use GTK::Roles::References;
 use GTK::Roles::Signals::TextBuffer;
+use GTK::Roles::Types;
 
 class GTK::TextBuffer {
   also does GTK::Roles::Properties;
-  also does GTK::Roles::Types;
+  also does GTK::Roles::References;
   also does GTK::Roles::Signals::TextBuffer;
+  also does GTK::Roles::Types;
 
   has GtkTextBuffer $!tb;
 
@@ -29,6 +32,7 @@ class GTK::TextBuffer {
   
   method setTextBuffer($buffer) {
     self!setObject($!tb = $buffer);             # GTK::Roles::Properties
+    $!ref = nativecast(Pointer, $!tb);          # GTK::Roles::References
   }
 
   submethod DESTROY {
@@ -361,8 +365,12 @@ D
     is also<create-mark>
   {
     my gboolean $lg = self.RESOLE-BOOL($left_gravity);
-    gtk_text_buffer_create_mark($!tb, $mark_name, $where, $lg);
+    GTK::TextMark.new( 
+      gtk_text_buffer_create_mark($!tb, $mark_name, $where, $lg)
+    );
   }
+  
+  # method create_tag omitted due to '...' parameter.
 
   method cut_clipboard (
     GtkClipboard() $clipboard,
@@ -487,7 +495,7 @@ D
   }
 
   method get_insert is also<get-insert> {
-    gtk_text_buffer_get_insert($!tb);
+    GTK::TextMark.new( gtk_text_buffer_get_insert($!tb) );
   }
 
   proto method get_iter_at_child_anchor (|)
@@ -608,7 +616,7 @@ D
   }
 
   method get_mark (Str() $name) is also<get-mark> {
-    gtk_text_buffer_get_mark($!tb, $name);
+    GTK::TextMark.new( gtk_text_buffer_get_mark($!tb, $name) );
   }
 
   method get_paste_target_list is also<get-paste-target-list> {
@@ -616,7 +624,7 @@ D
   }
 
   method get_selection_bound is also<get-selection-bound> {
-    gtk_text_buffer_get_selection_bound($!tb);
+    GTK::TextMark.new( gtk_text_buffer_get_selection_bound($!tb) );
   }
 
   proto method get_selection_bounds (|)
@@ -631,8 +639,16 @@ D
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
-    gtk_text_buffer_get_selection_bounds($!tb, $start, $end);
-    ( GTK::TextIter.new($start), GTK::TextIter.new($end) );
+    my $rc = so gtk_text_buffer_get_selection_bounds($!tb, $start, $end);
+    say "GSB RC: $rc";
+    $rc ??
+      # Returning Nil will still work with typed assignment!
+      ( 
+        $start.defined ?? GTK::TextIter.new($start) !! Nil, 
+        $end.defined   ?? GTK::TextIter.new($end)   !! Nil 
+      )
+      !!
+      Nil;
   }
 
   method get_slice (

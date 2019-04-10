@@ -123,7 +123,7 @@ class GTK::Compat::Signal {
   method connect_data (
     GObject() $instance, 
     Str() $detailed_signal, 
-    GCallback $c_handler, 
+    &c_handler, 
     gpointer $data, 
     GClosureNotify $destroy_data = Pointer, 
     Int() $connect_flags = 0
@@ -132,7 +132,7 @@ class GTK::Compat::Signal {
     g_signal_connect_data(
       $instance, 
       $detailed_signal, 
-      $c_handler, 
+      &c_handler, 
       $data, 
       $destroy_data, 
       $cf
@@ -142,13 +142,13 @@ class GTK::Compat::Signal {
   method connect_after (
     GObject() $instance, 
     Str() $detailed_signal, 
-    GCallback $c_handler, 
+    &c_handler, 
     gpointer $data = Pointer
   ) {
     self.connect_data(
       $instance, 
       $detailed_signal, 
-      $c_handler, 
+      &c_handler, 
       $data,
       Pointer,
       G_CONNECT_AFTER
@@ -158,13 +158,13 @@ class GTK::Compat::Signal {
   method connect_swapped (
     GObject() $instance, 
     Str() $detailed_signal, 
-    GCallback $c_handler, 
+    &c_handler, 
     gpointer $data = Pointer
   ) {
     self.connect_data(
       $instance, 
       $detailed_signal, 
-      $c_handler, 
+      &c_handler, 
       $data,
       Pointer,
       G_CONNECT_SWAPPED

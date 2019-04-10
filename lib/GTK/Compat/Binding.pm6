@@ -117,7 +117,8 @@ class GTK::Compat::Binding {
   }
 
   method get_type is also<get-type> {
-    g_binding_get_type();
+    state ($n, $t);
+    unstable_get_type( self.^name, g_binding_get_type(), $n, $t );
   }
 
   method unbind {

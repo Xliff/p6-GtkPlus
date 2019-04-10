@@ -74,15 +74,28 @@ sub g_signal_connect_closure_by_id (
 sub g_signal_connect_data (
   GObject $instance, 
   Str $detailed_signal, 
-  GCallback $c_handler, 
+  &c_handler (Pointer), 
   gpointer $data, 
-  GClosureNotify $destroy_data, 
+  GClosureNotify $destroy_data,
   uint32 $connect_flags             # GConnectFlags
 )
   returns gulong
   is native(gobject)
   is export
   { * }
+
+# multi sub g_signal_connect_data (
+#   GObject $instance, 
+#   Str $detailed_signal, 
+#   &c_handler (Pointer, Pointer), 
+#   gpointer $data, 
+#   GClosureNotify $destroy_data, 
+#   uint32 $connect_flags             # GConnectFlags
+# )
+#   returns gulong
+#   is native(gobject)
+#   is export
+#   { * }
 
 # sub g_signal_emit_valist (GObject $instance guint $signal_id, GQuark $detail, va_list $var_args)
 #   is native(gobject)

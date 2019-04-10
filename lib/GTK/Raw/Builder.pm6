@@ -9,8 +9,8 @@ unit package GTK::Raw::Builder;
 
 sub gtk_builder_add_callback_symbol (
   GtkBuilder $builder,
-  gchar $callback_name,
-  GCallback $callback_symbol
+  Str $callback_name,
+  &callback_symbol (Pointer, Pointer)
 )
   is native(gtk)
   is export

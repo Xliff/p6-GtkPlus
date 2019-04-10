@@ -21,14 +21,12 @@ use GTK::Compat::Roles::Object;
 class GTK::Builder does Associative {
   also does GTK::Compat::Roles::Object;
   
+  my (@prefixes, %aliases);
+  
   has GtkBuilder $!b;
   has GtkWindow $.window;
   has %!types;
-
   has $!css;
-  
-  has %!aliases;
-  has @!prefixes;
 
   has %!widgets handles <
     EXISTS-KEY
@@ -49,6 +47,8 @@ class GTK::Builder does Associative {
     :$style
   ) {
     self!setObject($!b = $builder);             # GTK::Roles::Compat::Object
+
+    @prefixes = ('Gtk');
 
     my %sections;
     my ($ui-data, $style-data);
@@ -81,8 +81,7 @@ class GTK::Builder does Associative {
 #      :\$window-name in the constructor to GTK::Application
 # ERR
     }
-    
-    @!prefixes = ('Gtk');
+
   }
   
   method GTK::Raw::Types::GtkBuilder is also<Builder> { $!b }
@@ -124,18 +123,18 @@ class GTK::Builder does Associative {
     for @t -> $t {
       if $t.^can('register').elems > 0 {
         my %r = $t.register;
-        for %r.pairs -> {
+        for %r.pairs {
           if .key eq 'PREFIX' {
-            @!prefixes.push: .value;
+            @prefixes.push: .value;
             next;
           }
-          if %!aliases{ .key }:exists {
+          if %aliases{ .key }:exists {
             say qq:to/M/.chomp;
-              { .key } already registered for { %!aliases{ .key } 
+              { .key } already registered for { %aliases{ .key } 
               }, skipping...
               M
           } else {
-            %!aliases{ .key } = .value;
+            %aliases{ .key } = .value;
           }
         }
       } else {
@@ -170,7 +169,7 @@ class GTK::Builder does Associative {
 
       if $m.defined {
         # For use in regex.
-        my @p = @!prefixes;
+        my @p = @prefixes;
         for $m.Array -> $o {
           (my $type = $o<tag><t>.Str) ~~ 
             s/ ( @p ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
@@ -219,25 +218,30 @@ class GTK::Builder does Associative {
       # Use type names to dynamically create objects.
       # Use $args to pass along additional arguments.
       %!widgets{$k} = do {
-         CATCH { 
-           say qq:to/D/.chomp;
-           Error encountered when processing { $k } ({ %!types{$k}[0] }):
-           D
-           
-           .message.say; 
-           exit; 
-         }
-         # After significant review, I don't think there will be many
-         # uses of this when case, since much of this work is already done
-         # by GtkBuilder. The only situations I see this handling are P6-state
-         # related issues, like container storage situations.
-         my $wt = %!types{$k}[0];
-         when $args.defined {
-           ::( %!aliases{$wt} // $wt ).new($o, $args.pairs);
-         }
-         default {
-           ::( %!aliases{$wt} // $wt ).new($o);
-         }
+        my $wt = %!types{$k}[0];
+        my $at = %aliases{$wt} // $wt;
+        
+        CATCH { 
+          say qq:to/D/.chomp;
+          Error encountered when processing { $k } ({ $at }):
+          D
+          
+          .message.say; 
+          exit; 
+        }
+        
+        when $args.defined {
+           # After significant review, I don't think there will be many
+           # uses of this when case, since much of this work is already done
+           # by GtkBuilder. The only situations I see this handling are P6-state
+           # related issues, like container storage situations.
+          ::( $at ).new($o, $args.pairs);
+        }
+        default {
+          say "Requiring { $at }..." if ::( $at ) ~~ Failure;
+          require ::($ = $at);
+          ::($ = $at).new($o);
+        }
       }
     }
 
@@ -271,11 +275,11 @@ class GTK::Builder does Associative {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_callback_symbol (
     Str() $callback_name,
-    GCallback $callback_symbol = GCallback
+    &callback_symbol
   )
     is also<add-callback-symbol>
   {
-    gtk_builder_add_callback_symbol($!b, $callback_name, $callback_symbol);
+    gtk_builder_add_callback_symbol($!b, $callback_name, &callback_symbol);
   }
 
   # YYY - Return type?

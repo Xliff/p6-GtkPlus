@@ -11,7 +11,7 @@ use GTK::Raw::Subs;
 role GTK::Roles::Properties {
   has GObject $!prop;
   
-  method GTK::Compat::Types::GObject { $!prop }
+  method GTK::Compat::Types::GObject is also<GObject>{ $!prop }
   
   method !setObject($obj) {
     $!prop = nativecast(GObject, $obj);

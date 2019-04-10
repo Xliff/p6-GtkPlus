@@ -7,24 +7,32 @@ use GTK::Compat::Types;
 use GTK::Raw::TextMark;
 use GTK::Raw::Types;
 
-use GTK::Roles::Types;
 use GTK::Compat::Roles::Object;
+use GTK::Roles::References;
+use GTK::Roles::Types;
 
 class GTK::TextMark {
-  also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Object;
+  also does GTK::Roles::References;
+  also does GTK::Roles::Types;
 
   has GtkTextMark $!tm;
 
   submethod BUILD(:$textmark) {
     self!setObject($!tm = $textmark);
+    $!ref = nativecast(Pointer, $!tm);
   }
   
   method GTK::Raw::Types::GtkTextMark
     is also<TextMark>
-    { $!tm; }
+  { $!tm; }
 
-  method new (
+  multi method new (GtkTextMark $textmark) {
+    my $o = self.bless(:$textmark);
+    $o.upref;
+    $o;
+  }
+  multi method new (
     Str() $name,
     Int() $left_gravity         # gboolean $left_gravity
   ) {
