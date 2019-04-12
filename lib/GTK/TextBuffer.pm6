@@ -634,23 +634,17 @@ D
   multi method get_selection_bounds {
     my ($start, $end) = GtkTextIter.new xx 2;
     samewith($start, $end);
+    ( 
+      $start.defined ?? GTK::TextIter.new($start) !! Nil, 
+      $end.defined   ?? GTK::TextIter.new($end)   !! Nil,
+      $rc
+    )
   }
   multi method get_selection_bounds (
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
-    say "0: { $start } / { $end }";
-    my $rc = so gtk_text_buffer_get_selection_bounds($!tb, $start, $end);
-    say "GSB RC: $rc";
-    say "1: { $start } / { $end }";
-#    $rc ??
-      # Returning Nil will still work with typed assignment!
-      ( 
-        $start.defined ?? GTK::TextIter.new($start) !! Nil, 
-        $end.defined   ?? GTK::TextIter.new($end)   !! Nil 
-      )
-      # !!
-      # Nil;
+    so gtk_text_buffer_get_selection_bounds($!tb, $start, $end);
   }
 
   method get_slice (
