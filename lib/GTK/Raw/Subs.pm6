@@ -164,6 +164,15 @@ sub g_signal_handler_disconnect(Pointer $app, uint64 $handler)
 
 # IDLE
 
+sub g_idle_add_rint (
+  &handler (--> gint),
+  Pointer
+)
+  is native(glib)
+  is symbol('g_idle_add')
+  is export 
+  { * }
+
 sub g_idle_add (
   &handler (Pointer --> gboolean),
   Pointer
