@@ -723,7 +723,14 @@ our enum GLogWriterOutput is export (
   G_LOG_WRITER_HANDLED   => 1,
 );
 
-
+our enum GPriority is export (
+  G_PRIORITY_HIGH         => -100,
+  G_PRIORITY_DEFAULT      => 0,
+  G_PRIORITY_HIGH_IDLE    => 100,
+  G_PRIORITY_DEFAULT_IDLE => 200,
+  G_PRIORITY_LOW          => 300
+);
+  
 class cairo_font_options_t  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Pointers { }
 
