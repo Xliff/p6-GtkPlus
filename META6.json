@@ -48,6 +48,7 @@
       "GTK::Compat::Raw::AppLaunchContext"     :  "lib/GTK/Compat/Raw/AppLaunchContext.pm6"     ,
       "GTK::Compat::Raw::Array"                :  "lib/GTK/Compat/Raw/Array.pm6"                ,
       "GTK::Compat::Raw::Binding"              :  "lib/GTK/Compat/Raw/Binding.pm6"              ,
+      "GTK::Compat::Raw::ContentType"          :  "lib/GTK/Compat/Raw/ContentType.pm6"          ,
       "GTK::Compat::Raw::Cursor"               :  "lib/GTK/Compat/Raw/Cursor.pm6"               ,
       "GTK::Compat::Raw::Device"               :  "lib/GTK/Compat/Raw/Device.pm6"               ,
       "GTK::Compat::Raw::Display"              :  "lib/GTK/Compat/Raw/Display.pm6"              ,
@@ -59,6 +60,7 @@
       "GTK::Compat::Raw::Icon"                 :  "lib/GTK/Compat/Raw/Icon.pm6"                 ,
       "GTK::Compat::Raw::KeyFile"              :  "lib/GTK/Compat/Raw/KeyFile.pm6"              ,
       "GTK::Compat::Raw::Keymap"               :  "lib/GTK/Compat/Raw/Keymap.pm6"               ,
+      "GTK::Compat::Raw::Log"                  :  "lib/GTK/Compat/Raw/Log.pm6"                  ,
       "GTK::Compat::Raw::Menu"                 :  "lib/GTK/Compat/Raw/Menu.pm6"                 ,
       "GTK::Compat::Raw::MenuModel"            :  "lib/GTK/Compat/Raw/MenuModel.pm6"            ,
       "GTK::Compat::Raw::Permission"           :  "lib/GTK/Compat/Raw/Permission.pm6"           ,
@@ -101,12 +103,14 @@
       "GTK::Compat::Action"                    :  "lib/GTK/Compat/Action.pm6"                   ,
       "GTK::Compat::Array"                     :  "lib/GTK/Compat/Array.pm6"                    ,
       "GTK::Compat::Binding"                   :  "lib/GTK/Compat/Binding.pm6"                  ,
+      "GTK::Compat::ContentType"               :  "lib/GTK/Compat/ContentType.pm6"              ,
       "GTK::Compat::FrameTimings"              :  "lib/GTK/Compat/FrameTimings.pm6"             ,
       "GTK::Compat::GList"                     :  "lib/GTK/Compat/GList.pm6"                    ,
       "GTK::Compat::GSList"                    :  "lib/GTK/Compat/GSList.pm6"                   ,
       "GTK::Compat::KeyFile"                   :  "lib/GTK/Compat/KeyFile.pm6"                  ,
       "GTK::Compat::Keymap"                    :  "lib/GTK/Compat/Keymap.pm6"                   ,
       "GTK::Compat::LaunchContext"             :  "lib/GTK/Compat/LaunchContext.pm6"            ,
+      "GTK::Compat::Log"                       :  "lib/GTK/Compat/Log.pm6"                      ,
       "GTK::Compat::MenuAttributeIter"         :  "lib/GTK/Compat/MenuAttributeIter.pm6"        ,
       "GTK::Compat::MenuItem"                  :  "lib/GTK/Compat/MenuItem.pm6"                 ,
       "GTK::Compat::MenuLinkIter"              :  "lib/GTK/Compat/MenuLinkIter.pm6"             ,
@@ -521,6 +525,10 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
+
+
+
 
 
 

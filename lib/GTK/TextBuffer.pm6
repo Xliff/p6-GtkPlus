@@ -29,7 +29,7 @@ class GTK::TextBuffer {
   submethod BUILD(:$buffer) {
     self.setTextBuffer($buffer);
   }
-  
+
   method setTextBuffer($buffer) {
     self!setObject($!tb = $buffer);             # GTK::Roles::Properties
     $!ref = nativecast(Pointer, $!tb);          # GTK::Roles::References
@@ -38,8 +38,8 @@ class GTK::TextBuffer {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-tb;
   }
-  
-  method GTK::Raw::Types::GtkTextBuffer 
+
+  method GTK::Raw::Types::GtkTextBuffer
     is also<TextBuffer>
     { $!tb }
 
@@ -177,8 +177,8 @@ D
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GtkTargetList
-  method copy-target-list 
-    is rw  
+  method copy-target-list
+    is rw
     is also<copy_target_list>
   {
     my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
@@ -196,8 +196,8 @@ D
   }
 
   # Type: gint
-  method cursor-position 
-    is rw  
+  method cursor-position
+    is rw
     is also<cursor_position>
   {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
@@ -215,8 +215,8 @@ D
   }
 
   # Type: gboolean
-  method has-selection 
-    is rw  
+  method has-selection
+    is rw
     is also<has_selection>
   {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
@@ -234,8 +234,8 @@ D
   }
 
   # Type: GtkTargetList
-  method paste-target-list 
-    is rw  
+  method paste-target-list
+    is rw
     is also<paste_target_list>
   {
     my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
@@ -253,8 +253,8 @@ D
   }
 
   # Type: GtkTextTagTable
-  method tag-table 
-    is rw  
+  method tag-table
+    is rw
     is also<tag_table>
   {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
@@ -365,11 +365,11 @@ D
     is also<create-mark>
   {
     my gboolean $lg = self.RESOLE-BOOL($left_gravity);
-    GTK::TextMark.new( 
+    GTK::TextMark.new(
       gtk_text_buffer_create_mark($!tb, $mark_name, $where, $lg)
     );
   }
-  
+
   # method create_tag omitted due to '...' parameter.
 
   method cut_clipboard (
@@ -473,12 +473,12 @@ D
     GTK::TargetList.new( gtk_text_buffer_get_copy_target_list($!tb) );
   }
 
-  proto method get_end_iter (|) 
+  proto method get_end_iter (|)
     is also<
       get-end-iter
       end_iter
       end-iter
-    > 
+    >
     { * }
 
   multi method get_end_iter {
@@ -633,9 +633,9 @@ D
 
   multi method get_selection_bounds {
     my ($start, $end) = GtkTextIter.new xx 2;
-    samewith($start, $end);
-    ( 
-      $start.defined ?? GTK::TextIter.new($start) !! Nil, 
+    my $rc = samewith($start, $end);
+    (
+      $start.defined ?? GTK::TextIter.new($start) !! Nil,
       $end.defined   ?? GTK::TextIter.new($end)   !! Nil,
       $rc
     )
@@ -658,14 +658,14 @@ D
     gtk_text_buffer_get_slice($!tb, $start, $end, $ih);
   }
 
-  proto method get_start_iter (|) 
+  proto method get_start_iter (|)
     is also<
       get-start-iter
       start_iter
       start-iter
     >
     { * }
-    
+
   multi method get_start_iter {
     my $iter = GtkTextIter.new;
     samewith($iter);
@@ -675,7 +675,7 @@ D
     GTK::TextIter.new($iter);
   }
 
-  method get_tag_table 
+  method get_tag_table
     is also<get-tag-table> {
     GTK::TextTagTable.new( gtk_text_buffer_get_tag_table($!tb) );
   }

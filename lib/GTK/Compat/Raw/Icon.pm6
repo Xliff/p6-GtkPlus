@@ -24,13 +24,13 @@ sub g_icon_get_type ()
   is export
   { * }
 
-sub g_icon_hash (gconstpointer $icon)
+sub g_icon_hash (GIcon $icon)
   returns guint
   is native(gio)
   is export
   { * }
 
-sub g_icon_new_for_string (gchar $str, CArray[Pointer[GError]] $error)
+sub g_icon_new_for_string (Str $str, CArray[Pointer[GError]] $error)
   returns GIcon
   is native(gio)
   is export

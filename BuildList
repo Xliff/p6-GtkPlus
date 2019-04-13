@@ -42,6 +42,7 @@ GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::AppLaunchContext
 GTK::Compat::Raw::Array
 GTK::Compat::Raw::Binding
+GTK::Compat::Raw::ContentType
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
@@ -53,6 +54,7 @@ GTK::Compat::Raw::GSList
 GTK::Compat::Raw::Icon
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
+GTK::Compat::Raw::Log
 GTK::Compat::Raw::Menu
 GTK::Compat::Raw::MenuModel
 GTK::Compat::Raw::Permission
@@ -95,12 +97,14 @@ GTK::Roles::StyleProvider
 GTK::Compat::Action
 GTK::Compat::Array
 GTK::Compat::Binding
+GTK::Compat::ContentType
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
 GTK::Compat::KeyFile
 GTK::Compat::Keymap
 GTK::Compat::LaunchContext
+GTK::Compat::Log
 GTK::Compat::MenuAttributeIter
 GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter

@@ -121,6 +121,9 @@ constant GCopyFunc               is export := Pointer;
 constant GClosureNotify          is export := Pointer;
 constant GDestroyNotify          is export := Pointer;
 constant GEqualFunc              is export := Pointer;
+constant GLogFunc                is export := Pointer;
+constant GLogWriterFunc          is export := Pointer;
+constant GPrintFunc              is export := Pointer;
 constant GSettingsBindGetMapping is export := Pointer;
 constant GSettingsBindSetMapping is export := Pointer;
 constant GSettingsGetMapping     is export := Pointer;
@@ -152,7 +155,7 @@ class GTypeInstance is repr('CStruct') is export {
   method checkType($compare_type) {
     $compare_type == $.g_class.g_type;
   }
-  
+
   method getType {
     $.g_class.g_type;
   }
@@ -162,24 +165,24 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $!data;
   has GList   $.next;
   has GList   $.prev;
-  
+
   method data is rw {
-    use nqp; 
-    
-    Proxy.new: 
+    use nqp;
+
+    Proxy.new:
       FETCH => -> $      { $!data },
       STORE => -> $, $nv {
         my $err = qq:to/DIE/.chomp;
           Cannot store { $nv.^name } values in a GList as they must be of{
           } CStruct or CPointer representation.
           DIE
-          
+
         die $err unless $nv ~~ Pointer || $nv.REPR eq <CStruct CPointer>.any;
-          
+
         nqp::bindattr(
-          nqp::decont(self), 
-          Pointer, 
-          '$!data', 
+          nqp::decont(self),
+          Pointer,
+          '$!data',
           nqp::decont( nativecast(Pointer, $nv) )
         )
       };
@@ -227,9 +230,9 @@ class GPtrArray is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint           $.len;
 }
 
-class GSignalInvocationHint is repr('CStruct') 
-  does GTK::Roles::Pointers 
-  is export 
+class GSignalInvocationHint is repr('CStruct')
+  does GTK::Roles::Pointers
+  is export
 {
   has guint   $.signal_id;
   has GQuark  $.detail;
@@ -244,6 +247,12 @@ class GSignalQuery is repr('CStruct') does GTK::Roles::Pointers is export {
   has GType          $.return_type;
   has guint          $.n_params;
   has CArray[uint64] $.param_types;
+}
+
+class GLogField is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str     $.key;
+  has Pointer $.value;
+  has int64   $.length;
 }
 
 our enum GTypeEnum is export (
@@ -688,6 +697,33 @@ our enum GSignalMatchType is export (
 
 our constant G_SIGNAL_MATCH_MASK is export = 0x3f;
 
+our enum GSourceReturn is export <
+  G_SOURCE_REMOVE
+  G_SOURCE_CONTINUE
+>;
+
+our enum GLogLevelFlags is export (
+  # log flags
+  G_LOG_FLAG_RECURSION          => 1,
+  G_LOG_FLAG_FATAL              => 1 +< 1,
+
+  # GLib log levels */>
+  G_LOG_LEVEL_ERROR             => 1 +< 2,       # always fatal
+  G_LOG_LEVEL_CRITICAL          => 1 +< 3,
+  G_LOG_LEVEL_WARNING           => 1 +< 4,
+  G_LOG_LEVEL_MESSAGE           => 1 +< 5,
+  G_LOG_LEVEL_INFO              => 1 +< 6,
+  G_LOG_LEVEL_DEBUG             => 1 +< 7,
+
+  G_LOG_LEVEL_MASK              => 0xfffffffc   # ~(G_LOG_FLAG_RECURSION | G_LOG_FLAG_FATAL)
+);
+
+our enum GLogWriterOutput is export (
+  G_LOG_WRITER_UNHANDLED => 0,
+  G_LOG_WRITER_HANDLED   => 1,
+);
+
+
 class cairo_font_options_t  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Pointers { }
 
@@ -1061,11 +1097,6 @@ class GdkKeymapKey is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint  $.group;
   has gint  $.level;
 }
-
-our enum GSourceReturn is export <
-  G_SOURCE_REMOVE
-  G_SOURCE_CONTINUE
->;
 
 our enum GdkWindowWindowClass is export (
   'GDK_INPUT_OUTPUT',             # nick=input-output
