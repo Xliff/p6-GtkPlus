@@ -48,7 +48,13 @@ sub g_set_printerr_handler (GPrintFunc $func)
   is export
   { * }
 
-sub g_warn_message (Str $domain, Str $file, int $line, Str $func, Str $warnexpr)
+sub g_warn_message (
+  Str $domain, 
+  Str $file, 
+  gint $line, 
+  Str $func, 
+  Str $warnexpr
+)
   is native(glib)
   is export
   { * }

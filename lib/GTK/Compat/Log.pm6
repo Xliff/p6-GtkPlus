@@ -2,10 +2,10 @@ use v6.c;
 
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Log;
-
-my subset DescriptorOrHandle where Int
 
 class GTK::Compat::Log {
 

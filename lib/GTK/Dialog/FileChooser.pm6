@@ -118,7 +118,7 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
   # ↓↓↓↓ METHODS ↓↓↓↓
 
   method get_type is also<get-type> {
-    state ($n, $t)
+    state ($n, $t);
     
     unstable_get_type( self.^name, &gtk_file_chooser_dialog_get_type, $n, $t );
   }

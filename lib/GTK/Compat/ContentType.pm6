@@ -1,6 +1,9 @@
 use v6.c;
 
+use GTK::Raw::Utils;
+
 use Method::Also;
+use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Compat::Raw::ContentType;
@@ -30,7 +33,7 @@ class GTK::Compat::ContentType {
     >
   {
     my $list = g_content_types_get_registered();
-    @list = (
+    my @list = (
       GTK::Compat::GList.new($list) but GTK::Compat::Roles::ListData[Str]
     ).Array;
     #g_list_free_full ($list, &g_free);
@@ -75,7 +78,7 @@ class GTK::Compat::ContentType {
     my CArray[Str] $guesses = g_content_type_guess_for_tree($root);
     my ($gc, @guess_list) = (0);
 
-    @guess_list.push $guesses[$gc++] while $guesses[$gc].defined;
+    @guess_list.push( $guesses[$gc++] ) while $guesses[$gc].defined;
     @guess_list;
   }
 

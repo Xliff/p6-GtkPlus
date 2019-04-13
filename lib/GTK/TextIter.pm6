@@ -462,7 +462,7 @@ class GTK::TextIter {
   ) {
     gtk_text_iter_get_slice($start, $end);
   }
-  method get_slice (GtkTextIter() $end)  {
+  multi method get_slice (GtkTextIter() $end)  {
     gtk_text_iter_get_slice($!ti, $end);
   }
 
@@ -504,7 +504,7 @@ class GTK::TextIter {
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
-    get_text_iter_get_visible_slice($start, $end);
+    gtk_text_iter_get_visible_slice($start, $end);
   }
   multi method get_visible_slice (GtkTextIter() $end)  {
     gtk_text_iter_get_visible_slice($!ti, $end);
@@ -518,9 +518,9 @@ class GTK::TextIter {
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
-    get_text_iter_get_visible_text($start, $end);
+    gtk_text_iter_get_visible_text($start, $end);
   }
-  method get_visible_text (GtkTextIter() $end) {
+  multi method get_visible_text (GtkTextIter() $end) {
     gtk_text_iter_get_visible_text($!ti, $end);
   }
 

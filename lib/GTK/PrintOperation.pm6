@@ -461,7 +461,7 @@ class GTK::PrintOperation {
   {
     clear_error;
     my $rc = gtk_print_operation_get_error($!po, $error);
-    $ERROR = $error with $error[0];
+    set_error($error);
     $rc;
   }
 
@@ -489,7 +489,10 @@ class GTK::PrintOperation {
     so gtk_print_operation_is_finished($!po);
   }
 
-  method run (
+  multi method run (Int() $action) {
+    samewith($action, GtkWindow);
+  }
+  multi method run (
     Int() $action,
     GtkWindow() $parent,
     CArray[Pointer[GError]] $error = gerror
@@ -497,7 +500,7 @@ class GTK::PrintOperation {
     clear_error;
     my guint $a = self.RESOLVE-UINT($action);
     my $rc = gtk_print_operation_run($!po, $a, $parent, $error);
-    $ERROR = $error with $error[0];
+    set_error($error);
     $rc;
   }
 
