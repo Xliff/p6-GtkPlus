@@ -54,6 +54,8 @@
   names to the proper object name. Propose <Project>::Builder::Registry, with static .register method that provides
   pair mapping detected_name => proper_name.
 - Finish GTK::Utils::LockedHash
+- Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
+  * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
 
 Applications
 ============

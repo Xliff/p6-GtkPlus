@@ -41,6 +41,7 @@
       "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
       "GTK::Roles::Protection"                 :  "lib/GTK/Roles/Protection.pm6"                ,
       "GTK::Roles::Types"                      :  "lib/GTK/Roles/Types.pm6"                     ,
+      "GTK::Utils::LockedHash"                 :  "lib/GTK/Utils/LockedHash.pm6"                ,
       "GTK::Builder::Actionable"               :  "lib/GTK/Builder/Actionable.pm6"              ,
       "GTK::Compat::RGBA"                      :  "lib/GTK/Compat/RGBA.pm6"                     ,
       "GTK::Compat::Raw::Action"               :  "lib/GTK/Compat/Raw/Action.pm6"               ,
@@ -324,7 +325,6 @@
       "GTK::TargetEntry"                       :  "lib/GTK/TargetEntry.pm6"                     ,
       "GTK::TargetList"                        :  "lib/GTK/TargetList.pm6"                      ,
       "GTK::TextChildAnchor"                   :  "lib/GTK/TextChildAnchor.pm6"                 ,
-      "GTK::TextIter"                          :  "lib/GTK/TextIter.pm6"                        ,
       "GTK::TextMark"                          :  "lib/GTK/TextMark.pm6"                        ,
       "GTK::Tooltip"                           :  "lib/GTK/Tooltip.pm6"                         ,
       "GTK::TreeIter"                          :  "lib/GTK/TreeIter.pm6"                        ,
@@ -363,6 +363,7 @@
       "GTK::Roles::TreeModel"                  :  "lib/GTK/Roles/TreeModel.pm6"                 ,
       "GTK::Settings"                          :  "lib/GTK/Settings.pm6"                        ,
       "GTK::StyleContext"                      :  "lib/GTK/StyleContext.pm6"                    ,
+      "GTK::TextIter"                          :  "lib/GTK/TextIter.pm6"                        ,
       "GTK::TextTag"                           :  "lib/GTK/TextTag.pm6"                         ,
       "GTK::TextTagTable"                      :  "lib/GTK/TextTagTable.pm6"                    ,
       "GTK::TreeModelFilter"                   :  "lib/GTK/TreeModelFilter.pm6"                 ,
@@ -525,6 +526,8 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
+
 
 
 

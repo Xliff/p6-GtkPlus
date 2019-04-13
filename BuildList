@@ -5,6 +5,7 @@ Pango::AttrList
 Pango::Context
 Pango::FontDescription
 Pango::FontMap
+Pango::Language
 Pango::Layout
 Pango::Raw::Types
 Pango::Tabs
@@ -35,6 +36,7 @@ GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
+GTK::Utils::LockedHash
 GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action
@@ -318,7 +320,6 @@ GTK::SizeGroup
 GTK::TargetEntry
 GTK::TargetList
 GTK::TextChildAnchor
-GTK::TextIter
 GTK::TextMark
 GTK::Tooltip
 GTK::TreeIter
@@ -357,6 +358,7 @@ GTK::Roles::ToolShell
 GTK::Roles::TreeModel
 GTK::Settings
 GTK::StyleContext
+GTK::TextIter
 GTK::TextTag
 GTK::TextTagTable
 GTK::TreeModelFilter

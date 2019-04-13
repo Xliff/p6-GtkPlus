@@ -8,6 +8,7 @@ use GTK::Raw::TextChildAnchor;
 use GTK::Raw::Types;
 
 use GTK::Compat::Roles::Object;
+use GTK::Compat::Roles::ListData;
 
 class GTK::TextChildAnchor {
   also does GTK::Compat::Roles::Object;
@@ -22,7 +23,12 @@ class GTK::TextChildAnchor {
     is also<TextChildAnchor>
     { $!ta }
 
-  method new {
+  multi method new (GtkTextChildAnchor $anchor) {
+    my $o = self.bless(:$anchor);
+    #o.upref;
+    $o;
+  }
+  multi method new {
     my $anchor = gtk_text_child_anchor_new();
     self.bless(:$anchor);
   }
@@ -42,12 +48,15 @@ class GTK::TextChildAnchor {
   }
 
   method get_type is also<get-type> {
-    gtk_text_child_anchor_get_type();
+    state ($n, $t);
+    unstable_get_type( self.^name, &gtk_text_child_anchor_get_type, $n, $t );
   }
 
   # Create a new GTK::Compat::GList when working.
   method get_widgets is also<get-widgets> {
-    gtk_text_child_anchor_get_widgets($!ta);
+    my $l = GTK::Compat::GList.new( gtk_text_child_anchor_get_widgets($!ta) )
+      but GTK::Compat::Roles::ListData[GtkWidget];
+    $l.Array.map({ GTK::Widget.new($_) with $_ });
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

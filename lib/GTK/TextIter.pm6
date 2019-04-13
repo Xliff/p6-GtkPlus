@@ -3,12 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::GSList;
-use GTK::Compat::Types;
 use GTK::Raw::TextIter;
 use GTK::Raw::Types;
 
+use GTK::Compat::Roles::ListData;
+
 use GTK::Roles::Types;
+
+use Pango::Language;
+
+use GTK::Compat::GSList;
+use GTK::Compat::Pixbuf;
+use GTK::Compat::Types;
+
+use GTK::TextMark;
 
 # BOXED TYPE
 
@@ -25,11 +33,11 @@ class GTK::TextIter {
     is also<TextIter>
     { $!ti }
 
-  multi method new {
-    my $textiter = GtkTextIter.new;
+  multi method new (GtkTextIter $textiter) {
     self.bless(:$textiter);
   }
-  multi method new(GtkTextIter $textiter) {
+  multi method new {
+    my $textiter = GtkTextIter.new;
     self.bless(:$textiter);
   }
 
@@ -419,37 +427,82 @@ class GTK::TextIter {
     so gtk_text_iter_get_attributes($!ti, $values);
   }
 
-  method get_buffer is also<get-buffer> {
+  method get_buffer 
+    is also<
+      get-buffer
+      buffer
+    > 
+  {
     # Late binding to prevent circular dependency.
     ::('GTK::TextBuffer').new( gtk_text_iter_get_buffer($!ti) );
   }
 
-  method get_bytes_in_line is also<get-bytes-in-line> {
+  method get_bytes_in_line 
+    is also<
+      get-bytes-in-line
+      bytes_in_line
+      bytes-in-line
+    > 
+  {
     gtk_text_iter_get_bytes_in_line($!ti);
   }
 
-  method get_char is also<get-char> {
+  method get_char 
+    is also<
+      get-char
+      char
+    > 
+  {
     gtk_text_iter_get_char($!ti);
   }
 
-  method get_chars_in_line is also<get-chars-in-line> {
+  method get_chars_in_line 
+    is also<
+      get-chars-in-line
+      chars_in_line
+      chars-in-line
+    > 
+  {
     gtk_text_iter_get_chars_in_line($!ti);
   }
 
-  method get_child_anchor is also<get-child-anchor> {
-    gtk_text_iter_get_child_anchor($!ti);
+  method get_child_anchor 
+    is also<
+      get-child-anchor
+      child_anchor
+      child-anchor
+    > 
+  {
+    GTK::TextChildAnchor.new( gtk_text_iter_get_child_anchor($!ti) );
   }
 
-  method get_language is also<get-language> {
-    gtk_text_iter_get_language($!ti);
+  method get_language 
+    is also<
+      get-language
+      language
+    > 
+  {
+    Pango::Language.new( gtk_text_iter_get_language($!ti) );
   }
 
-  method get_marks is also<get-marks> {
-    gtk_text_iter_get_marks($!ti);
+  method get_marks 
+    is also<
+      get-marks
+      marks
+    >
+  {
+    my $l = GTK::Compat::GSList.new( gtk_text_iter_get_marks($!ti) ) 
+      but GTK::Compat::Roles::ListData[GtkTextMark];
+    $l.Array.map({ GTK::TextMark.new($_) with $_ });
   }
 
-  method get_pixbuf is also<get-pixbuf> {
-    gtk_text_iter_get_pixbuf($!ti);
+  method get_pixbuf 
+    is also<
+      get-pixbuf
+      pixbuf
+    > 
+  {
+    GTK::Compat::Pixbuf.new( gtk_text_iter_get_pixbuf($!ti) );
   }
 
   proto method get_slice(|)
