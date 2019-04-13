@@ -1,3 +1,4 @@
+#!/usr/bin/env perl6
 use v6.c;
 
 #use Data::Dump::Tree;
@@ -36,13 +37,24 @@ sub MAIN (
 
   my $contents = $fn.IO.open.slurp-rest;
 
+  my token availability {
+    [
+      ( <[A..Z]>+'_' )+?
+      $<ad>=[ 'AVAILABLE' | 'DEPRECATED' ] '_'
+      ( <[A..Z 0..9]>+ )+ %% '_'
+      |
+      <[A..Z]>+'_API'
+    ]
+  };
+
   my $la;
   my $fd = '';
   my $i = 1;
   my @detected;
   for $contents.lines -> $l {
-    if $l ~~ /^ [ 'GDK_' 'PIXBUF_'? | 'GLIB_' ] [ 'AVAILABLE' | 'DEPRECATED' ] '_'.+ / {
+    if $l ~~ /^ <availability> / {
       $la = True;
+      $fd ~= $l.chomp;
       next;
     }
     if $la {
@@ -56,9 +68,10 @@ sub MAIN (
       my token      t { <[\w _]>+ }
       my rule    type { 'const'? $<n>=\w+ <p>? }
       my rule     var { <t> }
-      my rule returns { :!s <t> \s* <p>? }
+      my rule returns { :!s 'const '? <t> \s* <p>? }
 
       my rule func_def {
+        <availability>
         <returns>
         $<sub>=[ \w+ ]
         [
@@ -66,12 +79,13 @@ sub MAIN (
           |
           '(' [ <type> <var> ]+ % [ \s* ',' \s* ] ')'
         ]
-        #[ <[ A..Z _ ]>+ ]?';'
+        (\s* (<[A..Z]>+)+ %% '_')?';'
       }
+
 
       my @tv;
       if $fd ~~ /<func_def>/ {
-
+        my $avail = ($/<func_def><availability><ad> // '') ne 'DEPRECATED';
         my @p;
         my $orig = $/<func_def><sub>.Str.trim;
         my $mo = $/;
@@ -119,6 +133,7 @@ sub MAIN (
         }
 
         my $h = {
+               avail => $avail,
             original => $orig.trim,
              returns => $mo<func_def><returns>,
                'sub' => $sub,
@@ -135,15 +150,14 @@ sub MAIN (
         # This will eventually go into a separate CompUnit
         my $p6r = do given $h<returns><t>.Str.trim {
           when 'gpointer' {
-            'OpaquePointer';
+            'Pointer';
           }
           when 'va_list' {
-            'OpaquePointer';
           }
           when 'gboolean' {
             'uint32';
           }
-          when 'gchar' {
+          when 'gchar' | 'guchar' {
             # This logic may no longer be necessary.
             #$p++;
             'Str';
@@ -174,7 +188,7 @@ sub MAIN (
     # Convert signatures to perl6.
     #
     #$d<sub> = substr($d<sub>, $prechop);
-    if $d<sub> ~~ / ( [ 'get' || 'set' ] ) '_' ( .+ ) / {
+    if $d<sub> ~~ /^^ ( [ 'get' || 'set' ] ) '_' ( .+ ) / {
       %getset{$/[1]}{$/[0]} = $d;
     } else {
       %methods{$d<sub>} = $d;
@@ -191,10 +205,12 @@ sub MAIN (
     ) {
       say "Removing non-conforming get:set {$gs}...";
       if %getset{$gs}<get>.defined {
+        say "G: { %getset{$gs}<get><sub> }";
         %methods{%getset{$gs}<get><sub>} = %getset{$gs}<get>;
         %collider{ %getset{$gs}<get><sub> }++;
       }
       if %getset{$gs}<set>.defined {
+        say "S: { %getset{$gs}<get><sub> }";
         %methods{%getset{$gs}<set><sub>} = %getset{$gs}<set>;
         %collider{ %getset{$gs}<set><sub> }++;
       }
@@ -273,8 +289,9 @@ sub MAIN (
       #       GtkTreeIter
       #     >.none;
 
+      my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
       say qq:to/METHOD/.chomp;
-        { $mult }method { %methods{$m}<sub> } ({ $sig }) \{
+        { $mult }method { %methods{$m}<sub> } ({ $sig }) { $dep }\{
           { %methods{$m}<original> }({ $call });
         \}
       METHOD

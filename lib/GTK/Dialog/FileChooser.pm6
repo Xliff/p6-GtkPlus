@@ -10,10 +10,8 @@ use GTK::Dialog;
 
 use GTK::Roles::FileChooser;
 
-my subset Ancestry
-  where GtkFileChooserDialog | GtkFileChooser | GtkDialog | GtkWindow    |
-        GtkContainer         | GtkWindow      | GtkBin    | GtkContainer |
-        GtkWidget;
+our subset FileChooserDialogAncestry is export
+  where GtkFileChooserDialog | GtkFileChooser | DialogAncestry;
 
 class GTK::Dialog::FileChooser is GTK::Dialog {
   also does GTK::Roles::FileChooser;
@@ -22,14 +20,14 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Dialog::FileChooser');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$dialog) {
     my $to-parent;
     given $dialog {
-      when Ancestry {
+      when FileChooserDialogAncestry {
         $!fcd = do {
           when GtkFileChooserDialog  {
             $to-parent = nativecast(GtkDialog, $_);
@@ -55,7 +53,7 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
     $!fc //= nativecast(GtkFileChooser, $!fcd);   # GTK::Roles::FileChooser
   }
 
-  multi method new (Ancestry $dialog) {
+  multi method new (FileChooserDialogAncestry $dialog) {
     my $o = self.bless(:$dialog);
     $o.upref;
     $o;
@@ -120,7 +118,9 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
   # ↓↓↓↓ METHODS ↓↓↓↓
 
   method get_type is also<get-type> {
-    gtk_file_chooser_dialog_get_type();
+    state ($n, $t)
+    
+    unstable_get_type( self.^name, &gtk_file_chooser_dialog_get_type, $n, $t );
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
