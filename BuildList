@@ -30,13 +30,13 @@ GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
 GTK::Roles::Pointers
+GTK::Compat::FileTypes
 GTK::Raw::ReturnedValue
 GTK::Compat::Types
 GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
-GTK::Utils::LockedHash
 GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action
@@ -51,6 +51,7 @@ GTK::Compat::Raw::Display
 GTK::Compat::Raw::DisplayManager
 GTK::Compat::Raw::DragContext
 GTK::Compat::Raw::FrameTimings
+GTK::Compat::Raw::GFile
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
 GTK::Compat::Raw::Icon
@@ -77,6 +78,7 @@ GTK::Compat::Raw::X11_Screen
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
+GTK::Compat::Roles::GFile
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Object
