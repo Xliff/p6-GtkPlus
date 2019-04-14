@@ -35,13 +35,13 @@
       "GTK::Builder::Widget"                   :  "lib/GTK/Builder/Widget.pm6"                  ,
       "GTK::BuilderWidgets"                    :  "lib/GTK/BuilderWidgets.pm6"                  ,
       "GTK::Roles::Pointers"                   :  "lib/GTK/Roles/Pointers.pm6"                  ,
+      "GTK::Compat::FileTypes"                 :  "lib/GTK/Compat/FileTypes.pm6"                ,
       "GTK::Raw::ReturnedValue"                :  "lib/GTK/Raw/ReturnedValue.pm6"               ,
       "GTK::Compat::Types"                     :  "lib/GTK/Compat/Types.pm6"                    ,
       "GTK::Compat::X11_Types"                 :  "lib/GTK/Compat/X11_Types.pm6"                ,
       "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
       "GTK::Roles::Protection"                 :  "lib/GTK/Roles/Protection.pm6"                ,
       "GTK::Roles::Types"                      :  "lib/GTK/Roles/Types.pm6"                     ,
-      "GTK::Utils::LockedHash"                 :  "lib/GTK/Utils/LockedHash.pm6"                ,
       "GTK::Builder::Actionable"               :  "lib/GTK/Builder/Actionable.pm6"              ,
       "GTK::Compat::RGBA"                      :  "lib/GTK/Compat/RGBA.pm6"                     ,
       "GTK::Compat::Raw::Action"               :  "lib/GTK/Compat/Raw/Action.pm6"               ,
@@ -56,6 +56,7 @@
       "GTK::Compat::Raw::DisplayManager"       :  "lib/GTK/Compat/Raw/DisplayManager.pm6"       ,
       "GTK::Compat::Raw::DragContext"          :  "lib/GTK/Compat/Raw/DragContext.pm6"          ,
       "GTK::Compat::Raw::FrameTimings"         :  "lib/GTK/Compat/Raw/FrameTimings.pm6"         ,
+      "GTK::Compat::Raw::GFile"                :  "lib/GTK/Compat/Raw/GFile.pm6"                ,
       "GTK::Compat::Raw::GList"                :  "lib/GTK/Compat/Raw/GList.pm6"                ,
       "GTK::Compat::Raw::GSList"               :  "lib/GTK/Compat/Raw/GSList.pm6"               ,
       "GTK::Compat::Raw::Icon"                 :  "lib/GTK/Compat/Raw/Icon.pm6"                 ,
@@ -82,6 +83,7 @@
       "GTK::Compat::Raw::X11_Window"           :  "lib/GTK/Compat/Raw/X11_Window.pm6"           ,
       "GTK::Compat::Rectangle"                 :  "lib/GTK/Compat/Rectangle.pm6"                ,
       "GTK::Compat::Roles::AppInfo"            :  "lib/GTK/Compat/Roles/AppInfo.pm6"            ,
+      "GTK::Compat::Roles::GFile"              :  "lib/GTK/Compat/Roles/GFile.pm6"              ,
       "GTK::Compat::Roles::Icon"               :  "lib/GTK/Compat/Roles/Icon.pm6"               ,
       "GTK::Compat::Roles::ListData"           :  "lib/GTK/Compat/Roles/ListData.pm6"           ,
       "GTK::Compat::Roles::Object"             :  "lib/GTK/Compat/Roles/Object.pm6"             ,
@@ -526,6 +528,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

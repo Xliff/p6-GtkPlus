@@ -10,7 +10,9 @@ use GTK::Compat::Raw::GFile;
 use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
-role GTK::Compat::Roles::File {
+use GTK::Compat::Roles::Object;
+
+role GTK::Compat::Roles::GFile {
   has GFile $!file;
 
   method GTK::Compat::Raw::Types::GFile is also<GFile> { $!file }
@@ -43,7 +45,7 @@ role GTK::Compat::Roles::File {
     my $ios = CArray[Pointer[GFileIOStream]].new;
     samewith($ios);
   }
-  multi method new_tmp(
+  multi method new_tmp (
     CArray[Pointer[GFileIOStream]] $iostream,
     CArray[Pointer[GError]] $error = gerror()
   ) {
