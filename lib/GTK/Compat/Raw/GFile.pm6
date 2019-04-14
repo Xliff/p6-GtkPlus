@@ -8,7 +8,7 @@ unit package GTK::Compat::Raw::GFile;
 
 sub g_file_append_to (
   GFile $file,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -19,10 +19,10 @@ sub g_file_append_to (
 
 sub g_file_append_to_async (
   GFile $file,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -42,9 +42,9 @@ sub g_file_append_to_finish (
 sub g_file_copy (
   GFile $source,
   GFile $destination,
-  GFileCopyFlags $flags,
+  guint $flags,										# GFileCopyFlags
   GCancellable $cancellable,
-  GFileProgressCallback $progress_callback,
+  &progress_callback (goffset, goffset, Pointer),		# GFileProgressCallback,
   gpointer $progress_callback_data,
   CArray[Pointer[GError]] $error
 )
@@ -56,12 +56,12 @@ sub g_file_copy (
 sub g_file_copy_async (
   GFile $source,
   GFile $destination,
-  GFileCopyFlags $flags,
+  guint $flags,										# GFileCopyFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GFileProgressCallback $progress_callback,
+  &progress_callback (goffset, goffset, Pointer),		# GFileProgressCallback,
   gpointer $progress_callback_data,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -71,7 +71,7 @@ sub g_file_copy_async (
 sub g_file_copy_attributes (
   GFile $source,
   GFile $destination,
-  GFileCopyFlags $flags,
+  guint $flags,										# GFileCopyFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -92,7 +92,7 @@ sub g_file_copy_finish (
 
 sub g_file_create (
   GFile $file,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -103,10 +103,10 @@ sub g_file_create (
 
 sub g_file_create_async (
   GFile $file,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -125,7 +125,7 @@ sub g_file_create_finish (
 
 sub g_file_create_readwrite (
   GFile $file,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -136,10 +136,10 @@ sub g_file_create_readwrite (
 
 sub g_file_create_readwrite_async (
   GFile $file,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -170,7 +170,7 @@ sub g_file_delete_async (
   GFile $file,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -195,10 +195,10 @@ sub g_file_dup (GFile $file)
 
 sub g_file_eject_mountable_with_operation (
   GFile $file,
-  GMountUnmountFlags $flags,
+  guint $flags,										# GMountUnmountFlags
   GMountOperation $mount_operation,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -218,7 +218,7 @@ sub g_file_eject_mountable_with_operation_finish (
 sub g_file_enumerate_children (
   GFile $file,
   Str $attributes,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -230,10 +230,10 @@ sub g_file_enumerate_children (
 sub g_file_enumerate_children_async (
   GFile $file,
   Str $attributes,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -270,7 +270,7 @@ sub g_file_find_enclosing_mount_async (
   GFile $file,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -384,7 +384,7 @@ sub g_file_is_native (GFile $file)
 sub g_file_load_bytes (
   GFile $file,
   GCancellable $cancellable,
-  Str $etag_out,
+  CArray[Str] $etag_out,
   CArray[Pointer[GError]] $error
 )
   returns GBytes
@@ -395,7 +395,7 @@ sub g_file_load_bytes (
 sub g_file_load_bytes_async (
   GFile $file,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -405,7 +405,7 @@ sub g_file_load_bytes_async (
 sub g_file_load_bytes_finish (
   GFile $file,
   GAsyncResult $result,
-  Str $etag_out,
+  CArray[Str] $etag_out,
   CArray[Pointer[GError]] $error
 )
   returns GBytes
@@ -416,9 +416,9 @@ sub g_file_load_bytes_finish (
 sub g_file_load_contents (
   GFile $file,
   GCancellable $cancellable,
-  Str $contents,
-  gsize $length,
-  Str $etag_out,
+  CArray[Str] $contents,
+  gsize $lengthis rw,
+  CArray[Str] $etag_out,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -429,7 +429,7 @@ sub g_file_load_contents (
 sub g_file_load_contents_async (
   GFile $file,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -439,9 +439,9 @@ sub g_file_load_contents_async (
 sub g_file_load_contents_finish (
   GFile $file,
   GAsyncResult $res,
-  Str $contents,
-  gsize $length,
-  Str $etag_out,
+  CArray[Str] $contents,
+  gsize $length is rw,
+  CArray[Str] $etag_out,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -452,8 +452,8 @@ sub g_file_load_contents_finish (
 sub g_file_load_partial_contents_async (
   GFile $file,
   GCancellable $cancellable,
-  GFileReadMoreCallback $read_more_callback,
-  GAsyncReadyCallback $callback,
+  &read_more_callback (Str, goffset, Pointer),	# GFileReadMoreCallback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -463,9 +463,9 @@ sub g_file_load_partial_contents_async (
 sub g_file_load_partial_contents_finish (
   GFile $file,
   GAsyncResult $res,
-  Str $contents,
-  gsize $length,
-  Str $etag_out,
+  CArray[Str] $contents,
+  gsize $length is rw,
+  CArray[Str] $etag_out,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -487,7 +487,7 @@ sub g_file_make_directory_async (
   GFile $file,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -527,13 +527,13 @@ sub g_file_make_symbolic_link (
 
 sub g_file_measure_disk_usage (
   GFile $file,
-  GFileMeasureFlags $flags,
+  guint $flags,										# GFileMeasureFlags
   GCancellable $cancellable,
-  GFileMeasureProgressCallback $progress_callback,
+  &progress (gboolean, guint64, guint64, guint64, Pointer),	# GFileMeasureProgressCallback,
   gpointer $progress_data,
-  guint64 $disk_usage,
-  guint64 $num_dirs,
-  guint64 $num_files,
+  guint64 $disk_usage is rw,
+  guint64 $num_dirs   is rw,
+  guint64 $num_files  is rw,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -543,12 +543,12 @@ sub g_file_measure_disk_usage (
 
 sub g_file_measure_disk_usage_async (
   GFile $file,
-  GFileMeasureFlags $flags,
+  guint $flags,										# GFileMeasureFlags
   ggint $io_priority,
   GCancellable $cancellable,
-  GFileMeasureProgressCallback $progress_callback,
+  &progress (gboolean, guint64, guint64, guint64, Pointer),	# GFileMeasureProgressCallback,
   gpointer $progress_data,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -558,9 +558,9 @@ sub g_file_measure_disk_usage_async (
 sub g_file_measure_disk_usage_finish (
   GFile $file,
   GAsyncResult $result,
-  guint64 $disk_usage,
-  guint64 $num_dirs,
-  guint64 $num_files,
+  guint64 $disk_usage is rw,
+  guint64 $num_dirs   is rw,
+  guint64 $num_files  is rw,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -570,7 +570,7 @@ sub g_file_measure_disk_usage_finish (
 
 sub g_file_monitor (
   GFile $file,
-  GFileMonitorFlags $flags,
+  guint $flags,										# GFileMonitorFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -581,7 +581,7 @@ sub g_file_monitor (
 
 sub g_file_monitor_directory (
   GFile $file,
-  GFileMonitorFlags $flags,
+  guint $flags,										# GFileMonitorFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -592,7 +592,7 @@ sub g_file_monitor_directory (
 
 sub g_file_monitor_file (
   GFile $file,
-  GFileMonitorFlags $flags,
+  guint $flags,										# GFileMonitorFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -603,10 +603,10 @@ sub g_file_monitor_file (
 
 sub g_file_mount_enclosing_volume (
   GFile $location,
-  GMountMountFlags $flags,
+  guint $flags,										# GMountMountFlags
   GMountOperation $mount_operation,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -625,10 +625,10 @@ sub g_file_mount_enclosing_volume_finish (
 
 sub g_file_mount_mountable (
   GFile $file,
-  GMountMountFlags $flags,
+  guint $flags,										# GMountMountFlags
   GMountOperation $mount_operation,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -648,9 +648,9 @@ sub g_file_mount_mountable_finish (
 sub g_file_move (
   GFile $source,
   GFile $destination,
-  GFileCopyFlags $flags,
+  guint $flags,										# GFileCopyFlags
   GCancellable $cancellable,
-  GFileProgressCallback $progress_callback,
+  &progress_callback (goffset, goffset, Pointer),		# GFileProgressCallback,
   gpointer $progress_callback_data,
   CArray[Pointer[GError]] $error
 )
@@ -707,7 +707,7 @@ sub g_file_open_readwrite_async (
   GFile $file,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -739,7 +739,7 @@ sub g_file_peek_path (GFile $file)
 sub g_file_poll_mountable (
   GFile $file,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -770,7 +770,7 @@ sub g_file_query_default_handler_async (
   GFile $file,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -795,7 +795,7 @@ sub g_file_query_exists (GFile $file, GCancellable $cancellable)
 
 sub g_file_query_file_type (
   GFile $file,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable
 )
   returns GFileType
@@ -819,7 +819,7 @@ sub g_file_query_filesystem_info_async (
   Str $attributes,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -839,7 +839,7 @@ sub g_file_query_filesystem_info_finish (
 sub g_file_query_info (
   GFile $file,
   Str $attributes,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -851,10 +851,10 @@ sub g_file_query_info (
 sub g_file_query_info_async (
   GFile $file,
   Str $attributes,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -905,7 +905,7 @@ sub g_file_read_async (
   GFile $file,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -926,7 +926,7 @@ sub g_file_replace (
   GFile $file,
   Str $etag,
   gboolean $make_backup,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -939,10 +939,10 @@ sub g_file_replace_async (
   GFile $file,
   Str $etag,
   gboolean $make_backup,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -955,8 +955,8 @@ sub g_file_replace_contents (
   gsize $length,
   Str $etag,
   gboolean $make_backup,
-  GFileCreateFlags $flags,
-  Str $new_etag,
+  guint $flags,										# GFileCreateFlags
+  CArray[Str] $new_etag,
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -971,9 +971,9 @@ sub g_file_replace_contents_async (
   gsize $length,
   Str $etag,
   gboolean $make_backup,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -985,9 +985,9 @@ sub g_file_replace_contents_bytes_async (
   GBytes $contents,
   Str $etag,
   gboolean $make_backup,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -997,7 +997,7 @@ sub g_file_replace_contents_bytes_async (
 sub g_file_replace_contents_finish (
   GFile $file,
   GAsyncResult $res,
-  Str $new_etag,
+  CArray[Str] $new_etag,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -1019,7 +1019,7 @@ sub g_file_replace_readwrite (
   GFile $file,
   Str $etag,
   gboolean $make_backup,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1032,10 +1032,10 @@ sub g_file_replace_readwrite_async (
   GFile $file,
   Str $etag,
   gboolean $make_backup,
-  GFileCreateFlags $flags,
+  guint $flags,										# GFileCreateFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -1063,7 +1063,7 @@ sub g_file_set_attribute (
   Str $attribute,
   GFileAttributeType $type,
   gpointer $value_p,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1076,7 +1076,7 @@ sub g_file_set_attribute_byte_string (
   GFile $file,
   Str $attribute,
   Str $value,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1089,7 +1089,7 @@ sub g_file_set_attribute_int32 (
   GFile $file,
   Str $attribute,
   gint32 $value,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1102,7 +1102,7 @@ sub g_file_set_attribute_int64 (
   GFile $file,
   Str $attribute,
   gint64 $value,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1115,7 +1115,7 @@ sub g_file_set_attribute_string (
   GFile $file,
   Str $attribute,
   Str $value,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1128,7 +1128,7 @@ sub g_file_set_attribute_uint32 (
   GFile $file,
   Str $attribute,
   guint32 $value,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1141,7 +1141,7 @@ sub g_file_set_attribute_uint64 (
   GFile $file,
   Str $attribute,
   guint64 $value,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1153,10 +1153,10 @@ sub g_file_set_attribute_uint64 (
 sub g_file_set_attributes_async (
   GFile $file,
   GFileInfo $info,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -1166,7 +1166,7 @@ sub g_file_set_attributes_async (
 sub g_file_set_attributes_finish (
   GFile $file,
   GAsyncResult $result,
-  GFileInfo $info,
+  CArray[Pointer[GFileInfo]] $info,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -1177,7 +1177,7 @@ sub g_file_set_attributes_finish (
 sub g_file_set_attributes_from_info (
   GFile $file,
   GFileInfo $info,
-  GFileQueryInfoFlags $flags,
+  guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -1202,7 +1202,7 @@ sub g_file_set_display_name_async (
   Str $display_name,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -1221,10 +1221,10 @@ sub g_file_set_display_name_finish (
 
 sub g_file_start_mountable (
   GFile $file,
-  GDriveStartFlags $flags,
+  guint $flags,										# GDriveStartFlags
   GMountOperation $start_operation,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -1243,10 +1243,10 @@ sub g_file_start_mountable_finish (
 
 sub g_file_stop_mountable (
   GFile $file,
-  GMountUnmountFlags $flags,
+  guint $flags,										# GMountUnmountFlags
   GMountOperation $mount_operation,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -1283,7 +1283,7 @@ sub g_file_trash_async (
   GFile $file,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
@@ -1302,10 +1302,10 @@ sub g_file_trash_finish (
 
 sub g_file_unmount_mountable_with_operation (
   GFile $file,
-  GMountUnmountFlags $flags,
+  guint $flags,										# GMountUnmountFlags
   GMountOperation $mount_operation,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (Pointer, GAsyncResult, Pointer),		# GAsyncReadyCallback,
   gpointer $user_data
 )
   is native(gio)
