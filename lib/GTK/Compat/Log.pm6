@@ -11,31 +11,31 @@ class GTK::Compat::Log {
 
   method log (Str() $log_domain, Int() $log_level, Str() $format) {
     my guint $ll = resolve-uint($log_level);
-    g_log ($log_domain, $ll, $format);
+    g_log($log_domain, $ll, $format);
   }
 
   method message (Str() $format) {
-    self.log('GTK::Compat', G_LOG_LEVEL_MESSAGE, $format);
+    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_MESSAGE,  $format);
   }
 
   method critical (Str() $format) {
-    self.log('GTK::Compat', G_LOG_LEVEL_CRITICAL, $format);
+    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_CRITICAL, $format);
   }
 
   method error (Str() $format) {
-    self.log('GTK::Compat', G_LOG_LEVEL_ERROR, $format);
+    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_ERROR,    $format);
   }
 
   method warn (Str() $format) {
-    self.log('GTK::Compat', G_LOG_LEVEL_WARNING, $format);
+    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_WARNING,  $format);
   }
 
   method info (Str() $format) {
-    self.log('GTK::Compat', G_LOG_LEVEL_INFO, $format);
+    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_INFO,     $format);
   }
 
   method debug (Str() $format) {
-    self.log('GTK::Compat', G_LOG_LEVEL_DEBUG, $format);
+    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_DEBUG,    $format);
   }
 
   method default_handler (
@@ -78,7 +78,7 @@ class GTK::Compat::Log {
     Str() $func,
     Str() $warnexpr
   ) {
-    my gint $l = self.resolve-int($line);
+    my gint $l = GTK::Compat::Log.resolve-int($line);
     g_warn_message($domain, $file, $l, $func, $warnexpr);
   }
 
