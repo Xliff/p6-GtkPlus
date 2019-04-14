@@ -369,7 +369,7 @@ sub g_file_has_uri_scheme (GFile $file, Str $uri_scheme)
   is export
   { * }
 
-sub g_file_hash (gconstpointer $file)
+sub g_file_hash (GFile $file)
   returns guint
   is native(gio)
   is export

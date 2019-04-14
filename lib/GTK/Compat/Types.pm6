@@ -649,17 +649,10 @@ our enum GdkWindowState is export (
   GDK_WINDOW_STATE_LEFT_RESIZABLE   => 1 +< 16
 );
 
-
 our enum GKeyFileFlags is export (
   G_KEY_FILE_NONE              => 0,
   G_KEY_FILE_KEEP_COMMENTS     => 1,
   G_KEY_FILE_KEEP_TRANSLATIONS => 2
-);
-
-our enum GFileCreateFlags is export (
-  G_FILE_CREATE_NONE                => 0,
-  G_FILE_CREATE_PRIVATE             => 1,
-  G_FILE_CREATE_REPLACE_DESTINATION => 2
 );
 
 our enum GSignalFlags is export (

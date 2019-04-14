@@ -71,14 +71,18 @@ our enum GFileCreateFlags is export (
   G_FILE_CREATE_REPLACE_DESTINATION => 2
 );
 
-constant G_MOUNT_MOUNT_NONE is export = 0;
+our enum GMountMountFlags is export (
+  G_MOUNT_MOUNT_NONE  => 0
+);
 
 our enum GMountUnmountFlags is export (
   G_MOUNT_UNMOUNT_NONE  => 0,
   G_MOUNT_UNMOUNT_FORCE => 1
 );
 
-constant G_DRIVE_START_NONE is export = 0;
+our enum GDriveStartFlags is export (
+  G_DRIVE_START_NONE => 0
+);
 
 our enum GDriveStartStopType is export <
   G_DRIVE_START_STOP_TYPE_UNKNOWN
@@ -89,10 +93,10 @@ our enum GDriveStartStopType is export <
 >;
 
 our enum GFileMeasureFlags is export (
-  G_FILE_MEASURE_NONE                 = 0,
-  G_FILE_MEASURE_REPORT_ANY_ERROR     = (1 +< 1),
-  G_FILE_MEASURE_APPARENT_SIZE        = (1 +< 2),
-  G_FILE_MEASURE_NO_XDEV              = (1 +< 3)
+  G_FILE_MEASURE_NONE                 => 0,
+  G_FILE_MEASURE_REPORT_ANY_ERROR     => (1 +< 1),
+  G_FILE_MEASURE_APPARENT_SIZE        => (1 +< 2),
+  G_FILE_MEASURE_NO_XDEV              => (1 +< 3)
 );
 
 our enum GFileCopyFlags is export (
@@ -106,11 +110,11 @@ our enum GFileCopyFlags is export (
 );
 
 our enum GFileMonitorFlags is export (
-  G_FILE_MONITOR_NONE             = 0,
-  G_FILE_MONITOR_WATCH_MOUNTS     = 1,
-  G_FILE_MONITOR_SEND_MOVED       = (1 +< 1),
-  G_FILE_MONITOR_WATCH_HARD_LINKS = (1 +< 2),
-  G_FILE_MONITOR_WATCH_MOVES      = (1 +< 3)
+  G_FILE_MONITOR_NONE             => 0,
+  G_FILE_MONITOR_WATCH_MOUNTS     => 1,
+  G_FILE_MONITOR_SEND_MOVED       => (1 +< 1),
+  G_FILE_MONITOR_WATCH_HARD_LINKS => (1 +< 2),
+  G_FILE_MONITOR_WATCH_MOVES      => (1 +< 3)
 );
 
 our enum GFileType is export (
