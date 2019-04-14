@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::FileChooserButton;
 use GTK::Raw::Types;
 
+use GTK::Raw::Utils;
+
 use GTK::Box;
 
 use GTK::Roles::FileChooser;
@@ -63,7 +65,7 @@ class GTK::FileChooserButton is GTK::Box {
     Str() $title,
     Int() $action                 # GtkFileChooserAction $action
   ) {
-    my uint32 $a = self.RESOLVE-UINT($action);
+    my uint32 $a = resolve-uint($action);
     my $chooser = gtk_file_chooser_button_new($title, $a);
     self.bless(:$chooser);
   }
@@ -97,7 +99,7 @@ class GTK::FileChooserButton is GTK::Box {
         gtk_file_chooser_button_get_width_chars($!fcb);
       },
       STORE => sub ($, Int() $n_chars is copy) {
-        my int32 $nc = self.RESOLVE-INT($n_chars);
+        my int32 $nc = resolve-int($n_chars);
         gtk_file_chooser_button_set_width_chars($!fcb, $nc);
       }
     );

@@ -6,6 +6,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GTK::Raw::Utils;
+
 use GTK::Dialog;
 
 use GTK::Roles::FileChooser;
@@ -53,6 +55,8 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
     $!fc //= nativecast(GtkFileChooser, $!fcd);   # GTK::Roles::FileChooser
   }
 
+  proto method new (|) { * }
+
   multi method new (FileChooserDialogAncestry $dialog) {
     my $o = self.bless(:$dialog);
     $o.upref;
@@ -65,8 +69,8 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
     Str() $text,
     Int() $response
   ) {
-    my uint32 $a = self.RESOLVE-UINT($action);
-    my gint $r = self.RESOLVE-INT($response);
+    my uint32 $a = resolve-uint($action);
+    my gint $r = resolve-int($response);
     my $dialog = gtk_file_chooser_dialog_new(
       $title, $parent, $a, $text, $r, Str
     );
@@ -75,7 +79,7 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
   multi method new (
     Str() $title,
     GtkWindow() $parent,
-    Int() $action,              # GtkFileChooserAction  $action,
+    Int() $action               # GtkFileChooserAction  $action,
   ) {
     samewith($title, $parent, $action, (
       '_OK'      => GTK_RESPONSE_OK,
@@ -92,8 +96,8 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
     die '\@buttons is not an array of Pair objects!'
       unless @buttons.all ~~ Pair;
     my $f = @buttons.shift;
-    my uint32 $a = self.RESOLVE-UINT($action);
-    my gint $r = self.RESOLVE-INT($f.value);
+    my uint32 $a = resolve-uint($action);
+    my gint $r = resolve-int($f.value);
     my $dialog = gtk_file_chooser_dialog_new(
       $title, $parent, $a, $f.key, $r, Str
     );
@@ -101,9 +105,14 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
     $o.add_buttons(@buttons);
     $o;
   }
-  multi method new(|c) {
-    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
-  }
+
+  # Causes error:
+  #      Circularity detected in multi sub types for &new
+  # So replaced with proto method, above to prevent fallback to Mu.
+  #   
+  # multi method new(|c) {
+  #   die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
+  # }
 
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -119,7 +128,7 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
 
   method get_type is also<get-type> {
     state ($n, $t);
-    
+
     unstable_get_type( self.^name, &gtk_file_chooser_dialog_get_type, $n, $t );
   }
 

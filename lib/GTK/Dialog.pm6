@@ -86,14 +86,10 @@ class GTK::Dialog is GTK::Window {
     self.bless(:$dialog);
   }
 
-  multi method new-with-buttons(
-    Str()       $title,
-    GtkWindow() $parent,
-    uint32      $flags,          # GtkDialogFlags $flags
-    *%buttons
-  ) {
-    self.new_with_buttons($title, $parent, $flags, %buttons);
-  }
+  proto method new_with_buttons (|)
+    is also<new-with-buttons>
+  { * }
+
   multi method new_with_buttons(
     Str()       $title,
     GtkWindow() $parent,
@@ -102,15 +98,8 @@ class GTK::Dialog is GTK::Window {
   ) {
     samewith($title, $parent, $flags, %buttons.pairs.Array);
   }
-  multi method new-with-buttons(
-    Str()       $title,
-    GtkWindow() $parent,
-    uint32      $flags,          # GtkDialogFlags $flags
-    @buttons
-  ) {
-    self.new_with_buttons($title, $parent, $flags, @buttons);
-  }
-  multi method new_with_buttons(
+
+  multi method new_with_buttons (
     Str()       $title,
     GtkWindow() $parent,
     uint32      $flags,          # GtkDialogFlags $flags
