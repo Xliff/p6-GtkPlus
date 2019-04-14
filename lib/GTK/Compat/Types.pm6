@@ -95,6 +95,7 @@ constant gint16              is export := int16;
 constant gint32              is export := int32;
 constant gint64              is export := int64;
 constant glong               is export := int64;
+constant goffset             is export := uint64;
 constant gpointer            is export := Pointer;
 constant gsize               is export := uint64;
 constant gssize              is export := int64;
@@ -507,13 +508,6 @@ our enum GdkWindowEdge is export <
   GDK_WINDOW_EDGE_SOUTH_EAST
 >;
 
-our enum GAppInfoCreateFlags is export (
-  G_APP_INFO_CREATE_NONE                           => 0,         # nick=none
-  G_APP_INFO_CREATE_NEEDS_TERMINAL                 => 1,         # nick=needs-terminal
-  G_APP_INFO_CREATE_SUPPORTS_URIS                  => (1 +< 1),  # nick=supports-uris
-  G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  => (1 +< 2)   # nick=supports-startup-notification
-);
-
 our enum GTlsCertificateFlags is export (
   G_TLS_CERTIFICATE_UNKNOWN_CA    => (1 +< 0),
   G_TLS_CERTIFICATE_BAD_IDENTITY  => (1 +< 1),
@@ -524,7 +518,6 @@ our enum GTlsCertificateFlags is export (
   G_TLS_CERTIFICATE_GENERIC_ERROR => (1 +< 6),
   G_TLS_CERTIFICATE_VALIDATE_ALL  => 0x007f
 );
-
 
 our enum GdkCursorType is export (
   GDK_X_CURSOR            => 0,
@@ -730,7 +723,7 @@ our enum GPriority is export (
   G_PRIORITY_DEFAULT_IDLE => 200,
   G_PRIORITY_LOW          => 300
 );
-  
+
 class cairo_font_options_t  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Pointers { }
 
@@ -748,6 +741,13 @@ class GByteArray            is repr('CPointer') is export does GTK::Roles::Point
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileAttributeInfo    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileInfo             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileEnumerator       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileInputStream      is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileIOStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileOutputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFunc                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTable            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -760,6 +760,7 @@ class GMenuItem             is repr('CPointer') is export does GTK::Roles::Point
 class GMenuAttributeIter    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuLinkIter         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMount                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMountOperation       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -776,6 +777,11 @@ class GVariantDict          is repr('CPointer') is export does GTK::Roles::Point
 class GVariantIter          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantType          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume               is repr('CPointer') is export does GTK::Roles::Pointers { }
+
+class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is export {
+  has GFileAttributeInfo $.infos;
+  has gint               $.n_infos;
+};
 
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }

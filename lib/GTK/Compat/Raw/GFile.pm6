@@ -288,7 +288,7 @@ sub g_file_find_enclosing_mount_finish (
   { * }
 
 sub g_file_get_basename (GFile $file)
-  returns char
+  returns Str
   is native(gio)
   is export
   { * }
@@ -316,19 +316,19 @@ sub g_file_get_parent (GFile $file)
   { * }
 
 sub g_file_get_parse_name (GFile $file)
-  returns char
+  returns Str
   is native(gio)
   is export
   { * }
 
 sub g_file_get_path (GFile $file)
-  returns char
+  returns Str
   is native(gio)
   is export
   { * }
 
 sub g_file_get_relative_path (GFile $parent, GFile $descendant)
-  returns char
+  returns Str
   is native(gio)
   is export
   { * }
@@ -340,13 +340,13 @@ sub g_file_get_type ()
   { * }
 
 sub g_file_get_uri (GFile $file)
-  returns char
+  returns Str
   is native(gio)
   is export
   { * }
 
 sub g_file_get_uri_scheme (GFile $file)
-  returns char
+  returns Str
   is native(gio)
   is export
   { * }
@@ -417,7 +417,7 @@ sub g_file_load_contents (
   GFile $file,
   GCancellable $cancellable,
   CArray[Str] $contents,
-  gsize $lengthis rw,
+  gsize $length is rw,
   CArray[Str] $etag_out,
   CArray[Pointer[GError]] $error
 )
@@ -544,7 +544,7 @@ sub g_file_measure_disk_usage (
 sub g_file_measure_disk_usage_async (
   GFile $file,
   guint $flags,										# GFileMeasureFlags
-  ggint $io_priority,
+  gint $io_priority,
   GCancellable $cancellable,
   &progress (gboolean, guint64, guint64, guint64, Pointer),	# GFileMeasureProgressCallback,
   gpointer $progress_data,
@@ -731,7 +731,7 @@ sub g_file_parse_name (Str $parse_name)
   { * }
 
 sub g_file_peek_path (GFile $file)
-  returns char
+  returns Str
   is native(gio)
   is export
   { * }
@@ -798,7 +798,7 @@ sub g_file_query_file_type (
   guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable
 )
-  returns GFileType
+  returns uint32 # GFileType
   is native(gio)
   is export
   { * }
@@ -1061,7 +1061,7 @@ sub g_file_resolve_relative_path (GFile $file, Str $relative_path)
 sub g_file_set_attribute (
   GFile $file,
   Str $attribute,
-  GFileAttributeType $type,
+  uint32 $type,
   gpointer $value_p,
   guint $flags,										# GFileQueryInfoFlags
   GCancellable $cancellable,
