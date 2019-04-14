@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::ComboBox;
 
-our subset ComboBoxTextAncestry is export 
+our subset ComboBoxTextAncestry is export
   where GtkComboBoxText | ComboBoxAncestry;
 
 class GTK::ComboBoxText is GTK::ComboBox {
@@ -32,10 +32,10 @@ class GTK::ComboBoxText is GTK::ComboBox {
       }
     }
   }
-  
+
   method setComboBoxText(ComboBoxTextAncestry $combobox) {
     self.IS-PROTECTED;
-    
+
     my $to-parent;
     $!cbt = do given $combobox {
       when GtkComboBoxText {
@@ -86,7 +86,13 @@ class GTK::ComboBoxText is GTK::ComboBox {
     gtk_combo_box_text_append_text($!cbt, $text);
   }
 
-  method get_active_text is also<get-active-text> {
+  method get_active_text
+    is also<
+      get-active-text
+      active_text
+      active-text
+    >
+  {
     gtk_combo_box_text_get_active_text($!cbt);
   }
 
