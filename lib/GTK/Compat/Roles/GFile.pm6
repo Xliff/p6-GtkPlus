@@ -1,4 +1,4 @@
-use v6.c;
+&callback,use v6.c;
 
 use Method::Also;
 use NativeCall;
@@ -6,6 +6,11 @@ use NativeCall;
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
+
+sub EXPORT {
+  %( GTK::Compat::FileTypes:: )
+}
 
 role GTK::Compat::Roles::File {
   has GFile() $!file;
@@ -91,7 +96,7 @@ role GTK::Compat::Roles::File {
     Int() $io_priority,
     GCancellable $cancellable,
     &callback,
-    gpointer $user_data
+    gpointer $user_data = Pointer
   )
     is also<append-to-async>
   {
@@ -136,7 +141,7 @@ role GTK::Compat::Roles::File {
     Int() $flags,                       # GFileCreateFlags $flags,
     GCancellable $cancellable,
     &progress_callback,
-    gpointer $progress_callback_data,
+    gpointer $progress_callback_data = Pointer,
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error;
@@ -187,7 +192,7 @@ role GTK::Compat::Roles::File {
     &progress_callback,
     gpointer $progress_callback_data,
     &callback,
-    gpointer $user_data
+    gpointer $user_data = Pointer
   )  {
     my guint $f = resolve-uint($flags);
     my gint $io = resolve-int($io_priority);
@@ -239,18 +244,30 @@ role GTK::Compat::Roles::File {
     g_file_create($!file, $f, $cancellable, $error);
   }
 
+  proto method create_async (|)
+    is also<create-async>
+  { * }
+
+  multi method create_async (
+    GFileCreateFlags $flags,
+    Int() $io_priority,
+    &callback,
+    gpointer $user_data       = Pointer,
+    GCancellable $cancellable = Pointer
+  ) {
+    samewith($flags, $io_priority, $cancellable, &callback, $user_data);
+  }
   method create_async (
     GFileCreateFlags $flags,
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
-    is also<create-async>
-  {
+    &callback,
+    gpointer $user_data = Pointer
+  ) {
     my guint $f = resolve-uint($flags);
+    my gint $io = resolve-uint($io_priority);
     g_file_create_async(
-      $!file, $f, $io_priority, $cancellable, $callback, $user_data
+      $!file, $f, $io, $cancellable, &callback, $user_data
     );
   }
 
@@ -268,7 +285,7 @@ role GTK::Compat::Roles::File {
 
   method create_readwrite (
     GFileCreateFlags $flags,
-    GCancellable $cancellable,
+    GCancellable $cancellable      = Pointer,
     CArray[Pointer[GError]] $error = gerror()
   )
     is also<create-readwrite>
@@ -280,18 +297,30 @@ role GTK::Compat::Roles::File {
     $rc;
   }
 
+  proto method create_readwrite_async (|)
+    is also<create-readwrite-async>
+  { * }
+
+  multi method create_readwrite_async (
+    GFileCreateFlags $flags,
+    Int() $io_priority,
+    &callback,
+    gpointer $user_data       = Pointer,
+    GCancellable $cancellable = Pointer
+  ) {
+    samewith($flags, $io_priority, $cancellable, &callback, $user_data);
+  }
   method create_readwrite_async (
     GFileCreateFlags $flags,
-    int $io_priority,
+    Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
-    is also<create-readwrite-async>
-  {
+    &callback,
+    gpointer $user_data = Pointer
+  ) {
     my guint $f = resolve-uint($flags);
+    my gint $io = resolve-uint($io_priority);
     g_file_create_readwrite_async(
-      $!file, $f, $io_priority, $cancellable, $callback, $user_data
+      $!file, $f, $io, $cancellable, &callback, $user_data
     );
   }
 
@@ -317,16 +346,26 @@ role GTK::Compat::Roles::File {
     $rc;
   }
 
+  proto method delete_async (|)
+    is also<delete-async>
+  { * }
+
+  multi method delete_async (
+    Int() $io_priority,
+    &callback,
+    gpointer $user_data       = Pointer,
+    GCancellable $cancellable = Pointer
+  ) {
+    samewith($io_priority, $cancellable, &callback, $user_data);
+  }
   method delete_async (
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
-    is also<delete-async>
-  {
+    &callback,
+    gpointer $user_data = Pointer
+  ) {
     g_file_delete_async(
-      $!file, $io_priority, $cancellable, $callback, $user_data
+      $!file, $io_priority, $cancellable, &callback, $user_data
     );
   }
 
@@ -344,17 +383,27 @@ role GTK::Compat::Roles::File {
     g_file_dup($!f);
   }
 
-  method eject_mountable (
+  proto method eject_mountable (|)
+    is also<eject-mountable>
+  { * }
+
+  multi method eject_mountable (
+    GMountUnmountFlags $flags,
+    &callback,
+    gpointer $user_data       = Pointer,
+    GCancellable $cancellable = Pointer
+  ) {
+    samewith($flags, $cancellable, &callback, $user_data);
+  }
+  multi method eject_mountable (
     GMountUnmountFlags $flags,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
-    is also<eject-mountable>
-  {
+    &callback,
+    gpointer $user_data = Pointer
+  ) {
     my guint $f = resolve-uint($flags);
     g_file_eject_mountable(
-      $!file, $f, $cancellable, $callback, $user_data
+      $!file, $f, $cancellable, &callback, $user_data
     );
   }
 
@@ -370,24 +419,35 @@ role GTK::Compat::Roles::File {
     $rc;
   }
 
-  method eject_mountable_with_operation (
+  proto method eject_mountable_with_operation (|)
+    is also<eject-mountable-with-operation>
+  { * }
+
+  multi method eject_mountable_with_operation (
+    GMountUnmountFlags $flags,
+    GMountOperation $mount_operation,
+    &callback,
+    gpointer $user_data       = Pointer,
+    GCancellable $cancellable = Pointer
+  ) {
+    samewith($flags, $mount_operation, $cancellable, &callback, $user_data);
+  }
+  multi method eject_mountable_with_operation (
     GMountUnmountFlags $flags,
     GMountOperation $mount_operation,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
-    is also<eject-mountable-with-operation>
-  {
+    &callback,
+    gpointer $user_data = Pointer
+  ) {
     my guint $f = resolve-uint($flags);
     g_file_eject_mountable_with_operation(
-      $!file, $f, $mount_operation, $cancellable, $callback, $user_data
+      $!file, $f, $mount_operation, $cancellable, &callback, $user_data
     );
   }
 
   method eject_mountable_with_operation_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<eject-mountable-with-operation-finish>
   {
@@ -422,24 +482,45 @@ role GTK::Compat::Roles::File {
     $rc;
   }
 
+
+  proto method enumerate_children_async (|)
+    is also<enumerate-children-async>
+  { * }
+
+  multi method enumerate_children_async (
+    Str() $attributes,
+    GFileQueryInfoFlags $flags,
+    Int() $io_priority,
+    &callback,
+    gpointer $user_data       = Pointer,
+    GCancellable $cancellable = Pointer
+  ) {
+    samewith(
+      $attributes,
+      $flags,
+      $io_priority,
+      $cancellable,
+      &callback,
+      $user_data
+    )
+  }
   method enumerate_children_async (
     Str() $attributes,
     GFileQueryInfoFlags $flags,
-    int $io_priority,
+    Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
-    is also<enumerate-children-async>
-  {
+    &callback,
+    gpointer $user_data = Pointer
+  ) {
     my guint $f = resolve-uint($flags);
+    my gint $io = resolve-uint($io_priority);
     g_file_enumerate_children_async(
       $!file,
       $attributes,
       $f,
-      $io_priority,
+      $io,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -472,19 +553,29 @@ role GTK::Compat::Roles::File {
     $rc;
   }
 
-  method find_enclosing_mount_async (
+  proto method find_enclosing_mount_async (|)
+    is also<find-enclosing-mount-async>
+  { * }
+
+  multi method find_enclosing_mount_async (
+    Int() $io_priority,
+    &callback,
+    gpointer $user_data       = Pointer,
+    GCancellable $cancellable = Pointer
+  ) {
+    samewith($io_priority, $cancellable, &callback, $user_data);
+  }
+  multi method find_enclosing_mount_async (
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
-    is also<find-enclosing-mount-async>
-  {
+    &callback,
+    gpointer $user_data = Pointer
+  ) {
     g_file_find_enclosing_mount_async(
       $!file,
       $io_priority,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -621,12 +712,12 @@ role GTK::Compat::Roles::File {
 
   method load_bytes_async (
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<load-bytes-async>
   {
-    g_file_load_bytes_async($!file, $cancellable, $callback, $user_data);
+    g_file_load_bytes_async($!file, $cancellable, &callback, $user_data);
   }
 
   method load_bytes_finish (
@@ -666,12 +757,12 @@ role GTK::Compat::Roles::File {
 
   method load_contents_async (
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<load-contents-async>
   {
-    g_file_load_contents_async($!file, $cancellable, $callback, $user_data);
+    g_file_load_contents_async($!file, $cancellable, &callback, $user_data);
   }
 
   method load_contents_finish (
@@ -698,17 +789,17 @@ role GTK::Compat::Roles::File {
 
   method load_partial_contents_async (
     GCancellable $cancellable,
-    GFileReadMoreCallback $read_more_callback,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &read_more_callback,
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<load-partial-contents-async>
   {
     g_file_load_partial_contents_async(
       $!file,
       $cancellable,
-      $read_more_callback,
-      $callback,
+      &read_more_callback,
+      &callback,
       $user_data
     );
   }
@@ -750,8 +841,8 @@ role GTK::Compat::Roles::File {
   method make_directory_async (
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<make-directory-async>
   {
@@ -760,7 +851,7 @@ role GTK::Compat::Roles::File {
       $!file,
       $io,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -844,8 +935,8 @@ role GTK::Compat::Roles::File {
     GCancellable $cancellable,
     GFileMeasureProgressCallback $progress_callback,
     gpointer $progress_data,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<measure-disk-usage-async>
   {
@@ -858,7 +949,7 @@ role GTK::Compat::Roles::File {
       $cancellable,
       $progress_callback,
       $progress_data,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -931,8 +1022,8 @@ role GTK::Compat::Roles::File {
     GMountMountFlags $flags,
     GMountOperation $mount_operation,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<mount-enclosing-volume>
   {
@@ -942,7 +1033,7 @@ role GTK::Compat::Roles::File {
       $f,
       $mount_operation,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -963,8 +1054,8 @@ role GTK::Compat::Roles::File {
     GMountMountFlags $flags,
     GMountOperation $mount_operation,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<mount-mountable>
   {
@@ -975,7 +1066,7 @@ role GTK::Compat::Roles::File {
       $f,
       $mount_operation,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
     set_error($error);
@@ -994,13 +1085,30 @@ role GTK::Compat::Roles::File {
     $rc;
   }
 
-  method move (
+  multi method move (
     GFile() $destination,
-    GFileCopyFlags $flags,
-    GCancellable $cancellable,
-    GFileProgressCallback $progress_callback,
-    gpointer $progress_callback_data,
-    CArray[Pointer[GError]] $error = gerror()
+    Int() $flags,
+    &progress_callback               = -> $, $, $ { },
+    gpointer $progress_callback_data = Pointer,
+    GCancellable $cancellable        = Pointer,
+    CArray[Pointer[GError]] $error   = gerror()
+  ) {
+    samewith(
+      $destination,
+      $flags,
+      $cancellable,
+      &progress_callback,
+      $progress_callback_data,
+      $error
+    );
+  }
+  multi method move (
+    GFile() $destination,
+    Int() $flags,
+    GCancellable $cancellable        = Pointer,
+    &progress_callback               = -> $, $, $ { },
+    gpointer $progress_callback_data = Pointer,
+    CArray[Pointer[GError]] $error   = gerror()
   ) {
     my guint $f = resolve-uint($flags);
     clear_error;
@@ -1018,7 +1126,7 @@ role GTK::Compat::Roles::File {
   }
 
   method open_readwrite (
-    GCancellable $cancellable,
+    GCancellable $cancellable      = Pointer,
     CArray[Pointer[GError]] $error = gerror()
   )
     is also<open-readwrite>
@@ -1032,15 +1140,17 @@ role GTK::Compat::Roles::File {
   method open_readwrite_async (
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  ) is also<open-readwrite-async> {
+    &callback,
+    gpointer $user_data  = Pointer
+  )
+    is also<open-readwrite-async>
+  {
     my gint $io = resolve-uint($io_priority);
     g_file_open_readwrite_async(
       $!file,
       $io,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -1067,12 +1177,12 @@ role GTK::Compat::Roles::File {
 
   method poll_mountable (
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<poll-mountable>
   {
-    g_file_poll_mountable($!file, $cancellable, $callback, $user_data);
+    g_file_poll_mountable($!file, $cancellable, &callback, $user_data);
   }
 
   method poll_mountable_finish (
@@ -1127,8 +1237,8 @@ role GTK::Compat::Roles::File {
     Str() $attributes,
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<query-filesystem-info-async>
   {
@@ -1138,30 +1248,36 @@ role GTK::Compat::Roles::File {
       $attributes,
       $io,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
 
   method query_filesystem_info_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<query-filesystem-info-finish>
   {
-    g_file_query_filesystem_info_finish($!file, $res, $error);
+    clear_error;
+    my $rc = g_file_query_filesystem_info_finish($!file, $res, $error);
+    set_error($error);
+    $rc;
   }
 
   method query_info (
     Str() $attributes,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<query-info>
   {
     my guint $f = resolve-uint($flags);
-    g_file_query_info($!file, $attributes, $f, $cancellable, $error);
+    clear_error;
+    my $rc = g_file_query_info($!file, $attributes, $f, $cancellable, $error);
+    set_error($error);
+    $rc;
   }
 
   method query_info_async (
@@ -1169,8 +1285,8 @@ role GTK::Compat::Roles::File {
     GFileQueryInfoFlags $flags,
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<query-info-async>
   {
@@ -1182,71 +1298,88 @@ role GTK::Compat::Roles::File {
       $f,
       $i,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
 
   method query_info_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<query-info-finish>
   {
-    g_file_query_info_finish($!file, $res, $error);
+    clear_error;
+    my $rc = g_file_query_info_finish($!file, $res, $error);
+    set_error($error);
+    $rc;
   }
 
   method query_settable_attributes (
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
-  ) is also<query-settable-attributes> {
-    g_file_query_settable_attributes($!file, $cancellable, $error);
+    CArray[Pointer[GError]] $error = gerror()
+  )
+    is also<query-settable-attributes>
+  {
+    clear_error;
+    my $rc = g_file_query_settable_attributes($!file, $cancellable, $error);
+    set_error($error);
+    $rc;
   }
 
   method query_writable_namespaces (
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<query-writable-namespaces>
   {
-    g_file_query_writable_namespaces($!file, $cancellable, $error);
+    clear_error;
+    my $rc = g_file_query_writable_namespaces($!file, $cancellable, $error);
+    set_error($error);
+    $rc;
   }
 
   method read (
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    GCancellable $cancellable      = Pointer,
+    CArray[Pointer[GError]] $error = gerror()
   ) {
-    g_file_read($!file, $cancellable, $error);
+    clear_error;
+    my $rc = g_file_read($!file, $cancellable, $error);
+    set_error($error);
+    $rc;
   }
 
   method read_async (
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
+    &callback,
     gpointer $user_data
   )
     is also<read-async>
   {
     g_file_read_async(
-      $!file, $io_priority, $cancellable, $callback, $user_data
+      $!file, $io_priority, $cancellable, &callback, $user_data
     );
   }
 
   method read_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<read-finish>
   {
-    g_file_read_finish($!file, $res, $error);
+    clear_error;
+    my $rc = g_file_read_finish($!file, $res, $error);
+    set_error($error);
+    $rc;
   }
 
   method replace (
     Str() $etag,
     gboolean $make_backup,
     GFileCreateFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    GCancellable $cancellable      = Pointer,
+    CArray[Pointer[GError]] $error = gerror()
   ) {
     g_file_replace($!file, $etag, $make_backup, $flags, $cancellable, $error);
   }
@@ -1257,8 +1390,8 @@ role GTK::Compat::Roles::File {
     GFileCreateFlags $flags,
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<replace-async>
   {
@@ -1271,7 +1404,7 @@ role GTK::Compat::Roles::File {
       $flags,
       $io_priority,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -1284,21 +1417,25 @@ role GTK::Compat::Roles::File {
     GFileCreateFlags $flags,
     Str() $new_etag,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<replace-contents>
   {
-    g_file_replace_contents(
+    my guint $f = resolve-uint($flags);
+    clear_error;
+    my $rc = g_file_replace_contents(
       $!file,
       $contents,
       $length,
       $etag,
       $make_backup,
-      $flags,
+      $f,
       $new_etag,
       $cancellable,
       $error
     );
+    set_error($error);
+    $rc;
   }
 
   method replace_contents_async (
@@ -1308,20 +1445,21 @@ role GTK::Compat::Roles::File {
     gboolean $make_backup,
     GFileCreateFlags $flags,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<replace-contents-async>
   {
+    my guint $f = resolve-uint($flags);
     g_file_replace_contents_async(
       $!file,
       $contents,
       $length,
       $etag,
       $make_backup,
-      $flags,
+      $f,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -1332,19 +1470,20 @@ role GTK::Compat::Roles::File {
     gboolean $make_backup,
     GFileCreateFlags $flags,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<replace-contents-bytes-async>
   {
+    my guint $f = resolve-uint($flags);
     g_file_replace_contents_bytes_async(
       $!file,
       $contents,
       $etag,
       $make_backup,
-      $flags,
+      $f,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
@@ -1352,20 +1491,26 @@ role GTK::Compat::Roles::File {
   method replace_contents_finish (
     GAsyncResult $res,
     Str() $new_etag,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<replace-contents-finish>
   {
-    g_file_replace_contents_finish($!file, $res, $new_etag, $error);
+    clear_error;
+    my $rc = g_file_replace_contents_finish($!file, $res, $new_etag, $error);
+    set_error($error);
+    $rc;
   }
 
   method replace_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<replace-finish>
   {
-    g_file_replace_finish($!file, $res, $error);
+    clear_error;
+    my $rc = g_file_replace_finish($!file, $res, $error);
+    set_error($error);
+    $rc;
   }
 
   method replace_readwrite (
@@ -1373,11 +1518,22 @@ role GTK::Compat::Roles::File {
     gboolean $make_backup,
     GFileCreateFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<replace-readwrite>
   {
-    g_file_replace_readwrite($!file, $etag, $make_backup, $flags, $cancellable, $error);
+    my guint $f = resolve-uint($flags);
+    clear_error;
+    my $rc = g_file_replace_readwrite(
+      $!file,
+      $etag,
+      $make_backup,
+      $f,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method replace_readwrite_async (
@@ -1386,8 +1542,8 @@ role GTK::Compat::Roles::File {
     GFileCreateFlags $flags,
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<replace-readwrite-async>
   {
@@ -1400,18 +1556,21 @@ role GTK::Compat::Roles::File {
       $f,
       $io,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
 
   method replace_readwrite_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<replace-readwrite-finish>
   {
-    g_file_replace_readwrite_finish($!file, $res, $error);
+    clear_error;
+    my $rc = g_file_replace_readwrite_finish($!file, $res, $error);
+    set_error($error);
+    $rc;
   }
 
   method resolve_relative_path (Str() $relative_path)
@@ -1426,11 +1585,23 @@ role GTK::Compat::Roles::File {
     gpointer $value_p,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-attribute>
   {
-    g_file_set_attribute($!file, $attribute, $type, $value_p, $flags, $cancellable, $error);
+    my guint $f = resolve-uint($flags);
+    clear_error;
+    my $rc = g_file_set_attribute(
+      $!file,
+      $attribute,
+      $type,
+      $value_p,
+      $flags,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method set_attribute_byte_string (
@@ -1442,13 +1613,18 @@ role GTK::Compat::Roles::File {
   )
     is also<set-attribute-byte-string>
   {
-    g_file_set_attribute_byte_string(
+    my guint $f = resolve-uint($flags);
+    clear_error;
+    my $rc = g_file_set_attribute_byte_string(
       $!file,
       $attribute,
-      $value, $flags,
+      $value,
+      $f,
       $cancellable,
       $error
     );
+    set_error($error);
+    $rc;
   }
 
   method set_attribute_int32 (
@@ -1456,13 +1632,22 @@ role GTK::Compat::Roles::File {
     gint32 $value,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-attribute-int32>
   {
+    my guint $f = resolve-uint($flags);
+    clear_error;
     g_file_set_attribute_int32(
-      $!file, $attribute, $value, $flags, $cancellable, $error
+      $!file,
+      $attribute,
+      $value,
+      $f,
+      $cancellable,
+      $error
     );
+    set_error($error);
+    $rc;
   }
 
   method set_attribute_int64 (
@@ -1470,13 +1655,22 @@ role GTK::Compat::Roles::File {
     gint64 $value,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-attribute-int64>
   {
-    g_file_set_attribute_int64(
-      $!file, $attribute, $value, $flags, $cancellable, $error
+    my guint $f = resolve-uint($flags);
+    my gint64 $v = resolve-int64($value);
+    my $rc = g_file_set_attribute_int64(
+      $!file,
+      $attribute,
+      $v,
+      $f,
+      $cancellable,
+      $error
     );
+    set_error($error);
+    $rc;
   }
 
   method set_attribute_string (
@@ -1484,13 +1678,22 @@ role GTK::Compat::Roles::File {
     Str() $value,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-attribute-string>
   {
-    g_file_set_attribute_string(
-      $!file, $attribute, $value, $flags, $cancellable, $error
+    my guint $f = resolve-uint($flags);
+    clear_error;
+    my $rc = g_file_set_attribute_string(
+      $!file,
+      $attribute,
+      $value,
+      $f,
+      $cancellable,
+      $error
     );
+    set_error($error);
+    $rc;
   }
 
   method set_attribute_uint32 (
@@ -1498,11 +1701,22 @@ role GTK::Compat::Roles::File {
     guint32 $value,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-attribute-uint32>
   {
-    g_file_set_attribute_uint32($!file, $attribute, $value, $flags, $cancellable, $error);
+    my guint $f = resolve-uint($flags);
+    clear_error;
+    my $rc = g_file_set_attribute_uint32(
+      $!file,
+      $attribute,
+      $value,
+      $f,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method set_attribute_uint64 (
@@ -1510,11 +1724,23 @@ role GTK::Compat::Roles::File {
     guint64 $value,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-attribute-uint64>
   {
-    g_file_set_attribute_uint64($!file, $attribute, $value, $flags, $cancellable, $error);
+    my guint $f = resolve-uint($flags);
+    my guint64 $v = resolve-uint64($value);
+    clear_error;
+    my $rc = g_file_set_attribute_uint64(
+      $!file,
+      $attribute,
+      $v,
+      $f,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method set_attributes_async (
@@ -1522,173 +1748,275 @@ role GTK::Compat::Roles::File {
     GFileQueryInfoFlags $flags,
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<set-attributes-async>
   {
-    g_file_set_attributes_async($!file, $info, $flags, $io_priority, $cancellable, $callback, $user_data);
+    my guint $f = resolve-uint($flags);
+    my gint $io = resolve-int($io_priority);
+    g_file_set_attributes_async(
+      $!file,
+      $info,
+      $f,
+      $io,
+      $cancellable,
+      &callback,
+      $user_data
+    );
   }
 
   method set_attributes_finish (
     GAsyncResult $result,
     GFileInfo $info,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-attributes-finish>
   {
-    g_file_set_attributes_finish($!file, $result, $info, $error);
+    clear_error;
+    my $rc = g_file_set_attributes_finish($!file, $result, $info, $error);
+    set_error($error);
+    $rc;
   }
 
   method set_attributes_from_info (
     GFileInfo $info,
     GFileQueryInfoFlags $flags,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
-  ) is also<set-attributes-from-info> {
-    g_file_set_attributes_from_info($!file, $info, $flags, $cancellable, $error);
+    CArray[Pointer[GError]] $error = gerror()
+  )
+    is also<set-attributes-from-info>
+  {
+    my guint $f = resolve-uint($flags);
+    clear_error;
+    my $rc = g_file_set_attributes_from_info(
+      $!file,
+      $info,
+      $flags,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method set_display_name (
     Str() $display_name,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-display-name>
   {
-    g_file_set_display_name($!file, $display_name, $cancellable, $error);
+    clear_error;
+    my $rc = g_file_set_display_name(
+      $!file,
+      $display_name,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method set_display_name_async (
     Str() $display_name,
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<set-display-name-async>
   {
-    g_file_set_display_name_async($!file, $display_name, $io_priority, $cancellable, $callback, $user_data);
+    my gint $io = resolve-int($io_priority);
+    g_file_set_display_name_async(
+      $!file,
+      $display_name,
+      $io,
+      $cancellable,
+      &callback,
+      $user_data
+    );
   }
+
 
   method set_display_name_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-display-name-finish>
   {
-    g_file_set_display_name_finish($!file, $res, $error);
+    clear_error;
+    my $rc = g_file_set_display_name_finish($!file, $res, $error);
+    set_error($error);
+    $rc;
   }
 
   method start_mountable (
     GDriveStartFlags $flags,
     GMountOperation $start_operation,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<start-mountable>
   {
-    g_file_start_mountable($!file, $flags, $start_operation, $cancellable, $callback, $user_data);
+    my guint $f = resolve-uint($flags);
+    g_file_start_mountable(
+      $!file,
+      $f,
+      $start_operation,
+      $cancellable,
+      &callback,
+      $user_data
+    );
   }
 
   method start_mountable_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<start-mountable-finish>
   {
-    g_file_start_mountable_finish($!file, $result, $error);
+    clear_error;
+    my $rc = g_file_start_mountable_finish($!file, $result, $error);
+    set_error($error);
+    $rc;
   }
 
   method stop_mountable (
     GMountUnmountFlags $flags,
     GMountOperation $mount_operation,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<stop-mountable>
   {
-    g_file_stop_mountable($!file, $flags, $mount_operation, $cancellable, $callback, $user_data);
+    my guint $f = resolve-uint($flags);
+    g_file_stop_mountable(
+      $!file,
+      $f,
+      $mount_operation,
+      $cancellable,
+      &callback,
+      $user_data
+    );
   }
 
   method stop_mountable_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<stop-mountable-finish>
   {
-    g_file_stop_mountable_finish($!file, $result, $error);
+    clear_error;
+    my $rc = g_file_stop_mountable_finish($!file, $result, $error);
+    set_error($error);
+    $rc;
   }
 
   method supports_thread_contexts is also<supports-thread-contexts> {
-    g_file_supports_thread_contexts($!f);
+    so g_file_supports_thread_contexts($!f);
   }
 
   method trash (
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   ) {
-    g_file_trash($!file, $cancellable, $error);
+    clear_error;
+    my $rc = g_file_trash($!file, $cancellable, $error);
+    set_error($error);
+    $rc;
   }
 
   method trash_async (
     Int() $io_priority,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<trash-async>
   {
-    g_file_trash_async($!file, $io_priority, $cancellable, $callback, $user_data);
+    my gint $io = resolve-int($io_priority);
+    g_file_trash_async(
+      $!file,
+      $io,
+      $cancellable,
+      &callback,
+      $user_data
+    );
   }
 
   method trash_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror
-  ) is also<trash-finish> {
-    g_file_trash_finish($!file, $result, $error);
+    CArray[Pointer[GError]] $error = gerror()
+  )
+    is also<trash-finish>
+  {
+    clear_error;
+    my $rc = g_file_trash_finish($!file, $result, $error);
+    set_error($error);
+    $rc;
   }
 
   method unmount_mountable (
     GMountUnmountFlags $flags,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    &callback,
+    gpointer $user_data = Pointer
   )
     is also<unmount-mountable>
   {
-    g_file_unmount_mountable($!file, $flags, $cancellable, $callback, $user_data);
+    my gint $f = resolve-int($flags);
+    g_file_unmount_mountable($!file, $f, $cancellable, &callback, $user_data);
   }
 
   method unmount_mountable_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<unmount-mountable-finish>
   {
-    g_file_unmount_mountable_finish($!file, $result, $error);
+    clear_error;
+    my $rc = g_file_unmount_mountable_finish($!file, $result, $error);
+    set_error($error);
+    $rc;
   }
 
   method unmount_mountable_with_operation (
     GMountUnmountFlags $flags,
     GMountOperation $mount_operation,
     GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
+    GAsyncReadyCallback &callback,
+    gpointer $user_data = Pointer
   )
     is also<unmount-mountable-with-operation>
   {
-    g_file_unmount_mountable_with_operation($!file, $flags, $mount_operation, $cancellable, $callback, $user_data);
+    my guint $f = resolve-uint($flags);
+    g_file_unmount_mountable_with_operation(
+      $!file,
+      $f,
+      $mount_operation,
+      $cancellable,
+      &callback,
+      $user_data
+    );
   }
 
   method unmount_mountable_with_operation_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<unmount-mountable-with-operation-finish>
   {
-    g_file_unmount_mountable_with_operation_finish($!file, $result, $error);
+    clear_error;
+    my $rc = g_file_unmount_mountable_with_operation_finish(
+      $!file,
+      $result,
+      $error
+    );
+    set_error($error);
+    $rc;
   }
+
 }
