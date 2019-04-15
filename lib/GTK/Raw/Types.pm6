@@ -745,6 +745,13 @@ our enum GtkTextWindowType is export <
   GTK_TEXT_WINDOW_BOTTOM
 >;
 
+our enum GtkTextViewLayer is export <
+  GTK_TEXT_VIEW_LAYER_BELOW
+  GTK_TEXT_VIEW_LAYER_ABOVE
+  GTK_TEXT_VIEW_LAYER_BELOW_TEXT
+  GTK_TEXT_VIEW_LAYER_ABOVE_TEXT
+>;
+
 our enum GtkTextSearchFlags is export (
   GTK_TEXT_SEARCH_VISIBLE_ONLY     => 1,
   GTK_TEXT_SEARCH_TEXT_ONLY        => (1 +< 1),
