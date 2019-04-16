@@ -56,7 +56,6 @@
 - Complete implementation of GTK::Compat::Roles::GFile, as well as it's companion wrapper GTK::Compat::File and also GTK::Compat::Raw::FileTypes
 - Finish GTK::Utils::LockedHash
 - Implement GTK::ApplicationWindow
-- Implement GTK::ActionGroup
 - Implement GTK::Roles::RecentChooser...
   ...and 
     ...GTK::RecentChooserMenu, 

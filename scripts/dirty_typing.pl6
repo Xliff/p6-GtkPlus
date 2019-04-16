@@ -13,15 +13,17 @@ sub MAIN ($pattern is copy, :$prefix!) {
     exclude => /'Types.pm6'$/,
     exclude => /'.precomp'/;
 
+ my @blacklist = "{ $?FILE.IO.dirname }/.blacklisted_types".IO.slurp.lines;
 
   my %seen;
   my %seen-enum;
   for @files -> $filename {
     say "Checking { $filename }...";
     my $f = $filename.IO.slurp;
-    for $f ~~ m:g/({ $prefix }<[A..Za..z]>+)/ {
+    for $f ~~ m:g/<!after '#' \s*> ({ $prefix }<[A..Za..z]>+)/ {
       next unless $_.Str.starts-with($prefix);
       my $prospect = $_[0].Str;
+      next if $prospect eq @blacklist.any;
       next if %seen{$prospect};
       if / 'Mode' | 'Result' | 'Flags' | 'Reason' / {
         %seen-enum{$prospect} = True;
@@ -40,7 +42,7 @@ sub MAIN ($pattern is copy, :$prefix!) {
       CATCH { default { 1; } }
     }
     say
-      "class $_ is repr(\"CPointer\") is export does GTK::Roles::Pointers \{ \}"
+      "class $_ is repr(\"CPointer\") does GTK::Roles::Pointers is export \{ \}"
     unless $is-there;
   }
 
