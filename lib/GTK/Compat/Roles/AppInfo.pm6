@@ -31,8 +31,11 @@ class GTK::Compat::Roles::AppInfo {
     );
   }
 
-  method get_all_for_type(Str() $content-type) {
-    g_app_info_get_all_for_type($content-type);
+  method get_all_for_type(Str() $content-type, :$raw) {
+    my $at = GTK::Compat::List.new(
+      g_app_info_get_all_for_type($content-type)
+    ) but GTK::Compat::Roles::ListData[GAppInfo];
+    $raw ?? $at.Array !! $at.Array.map({ self.new($_) });
   }
 
   method get_default_for_type (
@@ -40,25 +43,35 @@ class GTK::Compat::Roles::AppInfo {
     Int() $must_support_uris
   ) {
     my gboolean $m = self.RESOLVE-BOOL($must_support_uris);
-    g_app_info_get_default_for_type($content-type, $must_support_uris);
+    self.new(
+      g_app_info_get_default_for_type($content-type, $must_support_uris)
+    );
   }
 
   method get_default_for_uri_scheme(Str() $uri-scheme) {
-    g_app_info_get_default_for_uri_scheme($uri-scheme);
+    self.new(
+      g_app_info_get_default_for_uri_scheme($uri-scheme)
+    );
   }
 
-  method get_fallback_for_type(Str() $content-type) {
-    g_app_info_get_fallback_for_type($content-type);
+  method get_fallback_for_type(Str() $content-type, :$raw) {
+    my $f = GTK::Compat::List.new(
+      g_app_info_get_fallback_for_type($content-type)
+    ) but GTK::Compat::Roles::ListData[GAppInfo];
+    $raw ?? $f.Array !! $f.Array.map({ self.new($_) });
   }
 
-  method get_recommended_for_type(Str() $content-type) {
-    g_app_info_get_recommended_for_type($content-type);
+  method get_recommended_for_type(Str() $content-type, :$raw) {
+    my $r = GTK::Compat::List.new(
+      g_app_info_get_recommended_for_type($content-type)
+    ) but GTK::Compat::Roles::ListData[GAppInfo];
+    $raw ?? $r.Array !! $r.Array.map({ self.new($_) });
   }
 
   method launch_default_for_uri (
     Str $uri,
     GAppLaunchContext $context,
-    GError $error is rw
+    CArray[Pointer[GError]] $error = gerror()
   ) {
     g_app_info_launch_default_for_uri($uri, $context, $error);
   }
@@ -81,9 +94,12 @@ class GTK::Compat::Roles::AppInfo {
 
   method launch_default_for_uri_finish (
     GAsyncResult $result,
-    GError $error
+    CArray[Pointer[GError]] $error = gerror();
   ) {
-    g_app_info_launch_default_for_uri_finish($result, $error);
+    clear_error;
+    my $rc = g_app_info_launch_default_for_uri_finish($result, $error);
+    set_error($error);
+    $rc;
   }
 
   method monitor_get {
@@ -101,32 +117,40 @@ class GTK::Compat::Roles::AppInfo {
   # Static methods
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_supports_type (Str() $content_type, GError $error) {
-    g_app_info_add_supports_type($!ai, $content_type, $error);
+  method add_supports_type (
+    Str() $content_type, 
+    CArray[Pointer[GError]] $error = gerror()
+  ) {
+    clear_error;
+    my $rc = g_app_info_add_supports_type($!ai, $content_type, $error);
+    set_error($error);
+    $rc;
   }
 
   method can_delete {
-    g_app_info_can_delete($!ai);
+    so g_app_info_can_delete($!ai);
   }
 
   method can_remove_supports_type {
-    g_app_info_can_remove_supports_type($!ai);
+    so g_app_info_can_remove_supports_type($!ai);
   }
 
   method delete {
-    g_app_info_delete($!ai);
+    so g_app_info_delete($!ai);
   }
 
   method dup {
-    g_app_info_dup($!ai);
+    self.new( g_app_info_dup($!ai) );
   }
 
   method equal (GAppInfo() $appinfo2) {
     so g_app_info_equal($!ai, $appinfo2);
   }
 
-  method get_all {
-    g_app_info_get_all();
+  method get_all (:$raw) {
+    my $a = GTK::Compat::List.new( g_app_info_get_all() ) 
+      but GTK::Compat::Roles::ListData[GAppInfo];
+    $raw ?? $a.Array !! $a.Array.map({ self.new($_) });
   }
 
   method get_commandline {
@@ -158,63 +182,93 @@ class GTK::Compat::Roles::AppInfo {
   }
 
   method get_supported_types {
-    g_app_info_get_supported_types($!ai);
+    my CArray[Str] $t = g_app_info_get_supported_types($!ai);
+    my ($i, @t);
+    @t[$i] = $t[$i++] while $t[$i].defined;
+    @t;
   }
 
   method launch (
     GList() $files,
-    GAppLaunchContext $context,
-    GError $error is rw
+    GAppLaunchContext() $context,
+    CArray[Pointer[GError]] $error = gerror()
   ) {
-    g_app_info_launch($!ai, $files, $context, $error);
+    clear_error;
+    my $rc = so g_app_info_launch($!ai, $files, $context, $error);
+    set_error($error);
+    $rc;
   }
 
   method launch_uris (
     GList() $uris,
-    GAppLaunchContext $context,
+    GAppLaunchContext() $context,
     CArray[Pointer[GError]] $error is rw
   ) {
-    g_app_info_launch_uris($!ai, $uris, $context, $error);
+    clear_error;
+    my $rc = so g_app_info_launch_uris($!ai, $uris, $context, $error);
+    set_error($error);
+    $rc;
   }
 
   method remove_supports_type (
     Str() $content_type,
-    GError $error is rw
+    CArray[Pointer[GError]] $error = gerror()
   ) {
     g_app_info_remove_supports_type($!ai, $content_type, $error);
   }
 
   method set_as_default_for_extension (
     Str() $extension,
-    GError $error is rw
+    CArray[Pointer[GError]] $error = gerror()
   ) {
-    g_app_info_set_as_default_for_extension($!ai, $extension, $error);
+    clear_error;
+    my $rc = so g_app_info_set_as_default_for_extension(
+      $!ai, 
+      $extension, 
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method set_as_default_for_type (
     Str() $content_type,
-    GError $error is rw
+    CArray[Pointer[GError]] $error = gerror()
   ) {
-    g_app_info_set_as_default_for_type($!ai, $content_type, $error);
+    clear_error;
+    my $rc = so g_app_info_set_as_default_for_type(
+      $!ai, 
+      $content_type, 
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method set_as_last_used_for_type (
     Str() $content_type,
-    GError $error is rw
+    CArray[Pointer[GError]] $error = gerror()
   ) {
-    g_app_info_set_as_last_used_for_type($!ai, $content_type, $error);
+    clear_error;
+    my $rc = g_app_info_set_as_last_used_for_type(
+      $!ai, 
+      $content_type, 
+      $error
+    );
+    set_error($error);
+    $rc;
   }
 
   method should_show {
-    g_app_info_should_show($!ai);
+    so g_app_info_should_show($!ai);
   }
 
   method supports_files {
-    g_app_info_supports_files($!ai);
+    so g_app_info_supports_files($!ai);
   }
 
   method supports_uris {
-    g_app_info_supports_uris($!ai);
+    so g_app_info_supports_uris($!ai);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

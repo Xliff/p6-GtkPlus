@@ -29,7 +29,7 @@ class GTK::RecentInfo {
     clear_error;
     my $rc = gtk_recent_info_create_app_info($!ri, $app_name, $error);
     set_error($error);
-    GTK::Compat::AppInfo.new($rc);
+    $rc;
   }
 
   method exists {

@@ -40,15 +40,22 @@ class GTK::Compat::LaunchContext {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method get_display (GAppInfo() $info, GList() $files) is also<get-display> {
+  method get_display (GAppInfo() $info, GList() $files) 
+    is also<get-display> 
+  {
     g_app_launch_context_get_display($!lc, $info, $files);
   }
 
   method get_environment is also<get-environment> {
-    g_app_launch_context_get_environment($!lc);
+    my CArray[Str] $e = g_app_launch_context_get_environment($!lc);
+    my ($i, @e) = (0);
+    @e[$i] = $e[$i++] while $e[$i].defined;
+    @e;
   }
 
-  method get_startup_notify_id (GAppInfo() $info, GList() $files) is also<get-startup-notify-id> {
+  method get_startup_notify_id (GAppInfo() $info, GList() $files) 
+    is also<get-startup-notify-id> 
+  {
     g_app_launch_context_get_startup_notify_id($!lc, $info, $files);
   }
 
