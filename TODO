@@ -59,13 +59,14 @@
 - Implement GTK::Roles::RecentChooser...
   ...and 
     ...GTK::RecentChooserMenu, 
-    ...GTK::RecentAction, 
     ...GTK::Dialog::RecentChooser, 
     ...GTK::RecentChooserMenu, 
     ...GTK::RecentChooserWidget!
-    
+- Consider altering scripts/dirty_typing.pl6 to only go through files later the latest date amongst the stubs in in .dirty_typing
+- Considfer altering scripts/dependencies.pl6 to exit if a module name is listed as a dependency but has no node. If this does occur, report discrepancy and the module(s) where it appeared.
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
+  
 
 * PERFORMANCE NOTE 
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT need to topicalize $a. 

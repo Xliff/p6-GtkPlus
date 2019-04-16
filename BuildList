@@ -29,14 +29,15 @@ GTK::Builder::Revealer
 GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
-GTK::Roles::Pointers
 GTK::Compat::FileTypes
+GTK::Roles::Pointers
 GTK::Raw::ReturnedValue
 GTK::Compat::Types
 GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
+GTK::Utils::LockedHash
 GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action
@@ -78,7 +79,6 @@ GTK::Compat::Raw::X11_Screen
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
-GTK::Compat::Roles::GFile
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Object
@@ -119,6 +119,7 @@ GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
 GTK::Compat::Raw::Threads
+GTK::Compat::Roles::GFile
 GTK::Compat::Threads
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
@@ -135,6 +136,7 @@ GTK::Raw::Adjustment
 GTK::Raw::AppButton
 GTK::Raw::AppChooser
 GTK::Raw::Application
+GTK::Raw::ApplicationWindow
 GTK::Raw::AspectFrame
 GTK::Raw::Assistant
 GTK::Raw::Bin
@@ -226,6 +228,7 @@ GTK::Raw::RadioMenuItem
 GTK::Raw::RadioToolButton
 GTK::Raw::Range
 GTK::Raw::RecentFilter
+GTK::Raw::RecentInfo
 GTK::Raw::Render
 GTK::Raw::Revealer
 GTK::Raw::Scale
@@ -277,6 +280,7 @@ GTK::Raw::TreeSortable
 GTK::Raw::TreeStore
 GTK::Raw::TreeView
 GTK::Raw::TreeViewColumn
+GTK::RecentInfo
 GTK::Render
 GTK::Roles::Actionable
 GTK::Roles::AppChooser
@@ -334,6 +338,7 @@ GTK::Adjustment
 GTK::Clipboard
 GTK::Compat::Cairo
 GTK::Compat::DragContext
+GTK::Compat::File
 GTK::Compat::FrameClock
 GTK::Compat::Pixbuf
 GTK::Compat::Roles::Signals
@@ -390,6 +395,7 @@ GTK::PrintContext
 GTK::PrintJob
 GTK::PrintOperation
 GTK::Printer
+GTK::RecentManager
 GTK::TextBuffer
 GTK::CellRendererAccel
 GTK::CellRendererSpin
@@ -475,6 +481,7 @@ GTK::Window
 GTK::ActionBar
 GTK::AppButton
 GTK::Application
+GTK::ApplicationWindow
 GTK::AspectFrame
 GTK::Assistant
 GTK::CellRendererCombo

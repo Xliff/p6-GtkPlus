@@ -183,6 +183,16 @@ class GtkSettingsValue is repr('CStruct') does GTK::Roles::Pointers is export {
   HAS GValue  $.value;
 }
 
+class GtkRecentData is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str      $.display_name;
+  has Str      $.description;
+  has Str      $.mime_type;
+  has Str      $.app_name;
+  has Str      $.app_exec;
+  has Str      $.groups;
+  has gboolean $.is_private;
+}
+
 our enum GtkAccelFlags is export <
   GTK_ACCEL_VISIBLE
   GTK_ACCEL_LOCKED
@@ -1139,6 +1149,8 @@ class GtkRadioMenuItem        is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkRadioToolButton      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRange                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentFilter         is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkRecentInfo           is repr("CPointer") does GTK::Roles::Pointers is export { }
+class GtkRecentManager        is repr("CPointer") does GTK::Roles::Pointers is export { }
 class GtkRevealer             is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScale                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkScaleButton          is repr('CPointer') does GTK::Roles::Pointers is export { }
