@@ -57,9 +57,10 @@
 - Finish GTK::Utils::LockedHash
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
+- NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
 
-* PERFORMANCE NOTE 
-	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT need to topicalize $a. 
+* PERFORMANCE NOTE
+	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT need to topicalize $a.
 	- If trying to test for definedness of two or more variables, nesting with statements is faster than using a junction or 'andthen'
 
 Applications

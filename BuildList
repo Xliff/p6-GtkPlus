@@ -29,8 +29,8 @@ GTK::Builder::Revealer
 GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
-GTK::Roles::Pointers
 GTK::Compat::FileTypes
+GTK::Roles::Pointers
 GTK::Raw::ReturnedValue
 GTK::Compat::Types
 GTK::Compat::X11_Types
@@ -78,7 +78,6 @@ GTK::Compat::Raw::X11_Screen
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
 GTK::Compat::Roles::AppInfo
-GTK::Compat::Roles::GFile
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Object
@@ -119,6 +118,7 @@ GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
 GTK::Compat::Raw::Threads
+GTK::Compat::Roles::GFile
 GTK::Compat::Threads
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
@@ -334,6 +334,7 @@ GTK::Adjustment
 GTK::Clipboard
 GTK::Compat::Cairo
 GTK::Compat::DragContext
+GTK::Compat::File
 GTK::Compat::FrameClock
 GTK::Compat::Pixbuf
 GTK::Compat::Roles::Signals

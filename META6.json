@@ -34,8 +34,8 @@
       "GTK::Builder::ToggleButton"             :  "lib/GTK/Builder/ToggleButton.pm6"            ,
       "GTK::Builder::Widget"                   :  "lib/GTK/Builder/Widget.pm6"                  ,
       "GTK::BuilderWidgets"                    :  "lib/GTK/BuilderWidgets.pm6"                  ,
-      "GTK::Roles::Pointers"                   :  "lib/GTK/Roles/Pointers.pm6"                  ,
       "GTK::Compat::FileTypes"                 :  "lib/GTK/Compat/FileTypes.pm6"                ,
+      "GTK::Roles::Pointers"                   :  "lib/GTK/Roles/Pointers.pm6"                  ,
       "GTK::Raw::ReturnedValue"                :  "lib/GTK/Raw/ReturnedValue.pm6"               ,
       "GTK::Compat::Types"                     :  "lib/GTK/Compat/Types.pm6"                    ,
       "GTK::Compat::X11_Types"                 :  "lib/GTK/Compat/X11_Types.pm6"                ,
@@ -83,7 +83,6 @@
       "GTK::Compat::Raw::X11_Window"           :  "lib/GTK/Compat/Raw/X11_Window.pm6"           ,
       "GTK::Compat::Rectangle"                 :  "lib/GTK/Compat/Rectangle.pm6"                ,
       "GTK::Compat::Roles::AppInfo"            :  "lib/GTK/Compat/Roles/AppInfo.pm6"            ,
-      "GTK::Compat::Roles::GFile"              :  "lib/GTK/Compat/Roles/GFile.pm6"              ,
       "GTK::Compat::Roles::Icon"               :  "lib/GTK/Compat/Roles/Icon.pm6"               ,
       "GTK::Compat::Roles::ListData"           :  "lib/GTK/Compat/Roles/ListData.pm6"           ,
       "GTK::Compat::Roles::Object"             :  "lib/GTK/Compat/Roles/Object.pm6"             ,
@@ -124,6 +123,7 @@
       "GTK::Compat::Raw::Event"                :  "lib/GTK/Compat/Raw/Event.pm6"                ,
       "GTK::Compat::Raw::FrameClock"           :  "lib/GTK/Compat/Raw/FrameClock.pm6"           ,
       "GTK::Compat::Raw::Threads"              :  "lib/GTK/Compat/Raw/Threads.pm6"              ,
+      "GTK::Compat::Roles::GFile"              :  "lib/GTK/Compat/Roles/GFile.pm6"              ,
       "GTK::Compat::Threads"                   :  "lib/GTK/Compat/Threads.pm6"                  ,
       "GTK::Dialog::Raw::About"                :  "lib/GTK/Dialog/Raw/About.pm6"                ,
       "GTK::Dialog::Raw::AppChooser"           :  "lib/GTK/Dialog/Raw/AppChooser.pm6"           ,
@@ -339,6 +339,7 @@
       "GTK::Clipboard"                         :  "lib/GTK/Clipboard.pm6"                       ,
       "GTK::Compat::Cairo"                     :  "lib/GTK/Compat/Cairo.pm6"                    ,
       "GTK::Compat::DragContext"               :  "lib/GTK/Compat/DragContext.pm6"              ,
+      "GTK::Compat::File"                      :  "lib/GTK/Compat/File.pm6"                     ,
       "GTK::Compat::FrameClock"                :  "lib/GTK/Compat/FrameClock.pm6"               ,
       "GTK::Compat::Pixbuf"                    :  "lib/GTK/Compat/Pixbuf.pm6"                   ,
       "GTK::Compat::Roles::Signals"            :  "lib/GTK/Compat/Roles/Signals.pm6"            ,
@@ -528,6 +529,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

@@ -12,21 +12,29 @@ sub MAIN (
   :$output = 'all',
   :$lib = 'gtk',
   :$args = 1,
-  :$static = 0
+  :$static = 0,
+  :$internal = 0
 ) {
   my $fn = $filename;
 
-  $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn ~~ /^ '/usr/include/' /;
+
+  $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn.starts-with('/');
   die "Cannot find '$fn'\n" unless $fn.IO.e;
 
-  if $output ne 'all' {
-    for $output.split(',') -> $o {
-      die "Output can only be one of 'attributes', 'methods', 'subs' or 'all'"
-        unless $o eq <all attributes methods subs>.any;
-      %do_output{$o} = 1;
+  if $internal.not {
+    if $output ne 'all' {
+      for $output.split(',') -> $o {
+        die qq:to/DIE/ unless $o eq <all attributes methods subs>.any;
+        Output can only be one of 'attributes', 'methods', 'subs' or 'all'"
+        DIE
+
+        %do_output{$o} = 1;
+      }
+    } else {
+      %do_output<all> = 1;
     }
   } else {
-    %do_output<all> = 1;
+    %do_output<subs> = 1;
   }
 
   my $attr;
@@ -37,11 +45,15 @@ sub MAIN (
 
   my $contents = $fn.IO.open.slurp-rest;
 
+  my @ad = <AVAILABLE DEPRECATED>;
+  @ad = ('INTERNAL') if $internal;
   my token availability {
     [
       ( <[A..Z]>+'_' )+?
-      $<ad>=[ 'AVAILABLE' | 'DEPRECATED' ] '_'
-      ( <[A..Z 0..9]>+ )+ %% '_'
+      $<ad>=@ad [
+        '_'
+        ( <[A..Z 0..9]>+ )+ %% '_'
+      ]?
       |
       <[A..Z]>+'_API'
     ]

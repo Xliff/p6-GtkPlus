@@ -11,7 +11,7 @@ use GTK::Container;
 
 use GTK::Roles::Signals::Notebook;
 
-our subset NotebookAncestry is export 
+our subset NotebookAncestry is export
   where GtkNotebook | ContainerAncestry;
 
 class GTK::Notebook is GTK::Container {
@@ -21,7 +21,7 @@ class GTK::Notebook is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::NoteBook');
+    $o.setType(self.^name);
     $o;
   }
 
