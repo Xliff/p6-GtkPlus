@@ -6,7 +6,9 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Menu;
 
-class GTK::MenuItem {
+use GTK::Compat::Variant;
+
+class GTK::Compat::MenuItem {
   has GMenuItem $!mitem;
 
   submethod BUILD(:$item) {
@@ -28,6 +30,18 @@ class GTK::MenuItem {
     my $item = g_menu_item_new_from_model($model, $ii);
     self.bless(:$item);
   }
+  
+  method new_section (Str() $label, GMenuModel() $section)
+    is also<new-section>
+  {
+    self.bless( item => g_menu_item_new_section($label, $section) );
+  }
+
+  method new_submenu (Str() $label, GMenuModel() $submenu)
+    is also<new-submenu>
+  {
+    self.bless( item => g_menu_item_new_submenu($label, $submenu) );
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -38,18 +52,6 @@ class GTK::MenuItem {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
-  method new_section (Str() $label, GMenuModel() $section)
-    is also<new-section>
-  {
-    g_menu_item_new_section($label, $section);
-  }
-
-  method new_submenu (Str() $label, GMenuModel() $submenu)
-    is also<new-submenu>
-  {
-    g_menu_item_new_submenu($label, $submenu);
-  }
-
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_attribute_value (
     Str() $attribute,
@@ -57,27 +59,32 @@ class GTK::MenuItem {
   )
     is also<get-attribute-value>
   {
-    g_menu_item_get_attribute_value($!mitem, $attribute, $expected_type);
+    GTK::Compat::Variant.new( 
+      g_menu_item_get_attribute_value($!mitem, $attribute, $expected_type)
+    );
   }
 
   method get_link (Str() $link) is also<get-link> {
-    g_menu_item_get_link($!mitem, $link);
+    GTK::Compat::MenuModel.new(
+      g_menu_item_get_link($!mitem, $link)
+    );
   }
 
   method get_type is also<get-type> {
-    g_menu_item_get_type();
+    state ($n, $t);
+    unstable_get_type( self.^name, &g_menu_item_get_type, $n, $t );
   }
 
   method set_action_and_target_value (
     Str() $action,
-    GVariant $target_value
+    GVariant() $target_value
   )
     is also<set-action-and-target-value>
   {
     g_menu_item_set_action_and_target_value($!mitem, $action, $target_value);
   }
 
-  method set_attribute_value (Str() $attribute, GVariant $value)
+  method set_attribute_value (Str() $attribute, GVariant() $value)
     is also<set-attribute-value>
   {
     g_menu_item_set_attribute_value($!mitem, $attribute, $value);

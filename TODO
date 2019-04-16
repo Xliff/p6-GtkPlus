@@ -55,6 +55,16 @@
   pair mapping detected_name => proper_name.
 - Complete implementation of GTK::Compat::Roles::GFile, as well as it's companion wrapper GTK::Compat::File and also GTK::Compat::Raw::FileTypes
 - Finish GTK::Utils::LockedHash
+- Implement GTK::ApplicationWindow
+- Implement GTK::ActionGroup
+- Implement GTK::Roles::RecentChooser...
+  ...and 
+    ...GTK::RecentChooserMenu, 
+    ...GTK::RecentAction, 
+    ...GTK::Dialog::RecentChooser, 
+    ...GTK::RecentChooserMenu, 
+    ...GTK::RecentChooserWidget!
+    
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
 
