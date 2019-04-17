@@ -65,7 +65,9 @@
       √ GTK::Roles::RecentChooser...
     ... GTK::RecentChooserMenu,
     ... GTK::Dialog::RecentChooser,
-    ... GTK::RecentChooserWidget!
+      √ GTK::RecentChooserWidget!
+- Consider separating enums from GTK::Raw::Types into GTK::Raw::Enums
+  - If that goes well, then do the same for GTK::Compat::Raw::Types
 - Consider altering scripts/dirty_typing.pl6 to only go through files later the latest date amongst the stubs in in .dirty_typing
 - Consider altering scripts/dependencies.pl6 to exit if a module name is listed as a dependency but has no node. If this does occur, report discrepancy and the module(s) where it appeared.
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
