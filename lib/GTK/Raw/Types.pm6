@@ -45,6 +45,7 @@ our constant GtkPageSetupDoneFunc             is export := Pointer;
 our constant GtkPrinterFunc                   is export := Pointer;
 our constant GtkPrintJobCompleteFunc          is export := Pointer;
 our constant GtkPrintSettingsFunc             is export := Pointer;
+our constant GtkRecentSortFunc                is export := Pointer;
 our constant GtkTextCharPredicate             is export := Pointer;
 our constant GtkTextTagTableForeach           is export := Pointer;
 our constant GtkTreeCellDataFunc              is export := Pointer;
@@ -884,6 +885,18 @@ our enum GtkRecentFilterFlags is export (
   GTK_RECENT_FILTER_AGE          => (1 +< 5)
 );
 
+our enum GtkRecentChooserError is export <
+  GTK_RECENT_CHOOSER_ERROR_NOT_FOUND
+  GTK_RECENT_CHOOSER_ERROR_INVALID_URI
+>;
+
+our enum GtkRecentSortType is export (
+  GTK_RECENT_SORT_NONE       =>  0,
+  'GTK_RECENT_SORT_MRU',
+  'GTK_RECENT_SORT_LRU',
+  'GTK_RECENT_SORT_CUSTOM'
+);
+
 our enum GtkTreeViewDropPosition is export (
   # drop before/after this row
   'GTK_TREE_VIEW_DROP_BEFORE',
@@ -1148,6 +1161,7 @@ class GtkRadioButton          is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkRadioMenuItem        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRadioToolButton      is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRange                is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkRecentChooser        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentFilter         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentInfo           is repr("CPointer") does GTK::Roles::Pointers is export { }
 class GtkRecentManager        is repr("CPointer") does GTK::Roles::Pointers is export { }

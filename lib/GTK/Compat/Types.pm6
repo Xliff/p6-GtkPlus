@@ -723,7 +723,9 @@ class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Point
 class AtkObject             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GAction               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GActionEntry          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GActionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GActionMap            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppInfo              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppInfoMonitor       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppLaunchContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
