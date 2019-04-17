@@ -14,7 +14,7 @@ role GTK::Compat::Roles::ActionMap {
   }
 
   method add_action_entries (
-    GActionEntry $entries,              # BLOCK of GActionEntry structs
+    Pointer $entries,              # BLOCK of GActionEntry structs
     Int() $n_entries,
     gpointer $user_data = Pointer
   ) {
@@ -47,7 +47,7 @@ sub g_action_map_add_action (
 
 sub g_action_map_add_action_entries (
   GActionMap $action_map,
-  GActionEntry $entries,
+  Pointer $entries,                   # BLOCK of GActionEntry
   gint $n_entries,
   gpointer $user_data
 )

@@ -16,7 +16,7 @@ class GTK::AccelLabel is GTK::Label {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::AccelLabel');
+    $o.setType(self.^name);
     $o;
   }
 

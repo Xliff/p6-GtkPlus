@@ -256,6 +256,14 @@ class GLogField is repr('CStruct') does GTK::Roles::Pointers is export {
   has int64   $.length;
 }
 
+class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str     $.name;
+  has Pointer $.activate;
+  has Str     $.parameter_type;
+  has Str     $.state;
+  has Pointer $.change_state;
+}
+
 our enum GTypeEnum is export (
   G_TYPE_INVALID   => 0,
   G_TYPE_NONE      => (1  +< 2),
@@ -723,7 +731,6 @@ class cairo_surface_t       is repr('CPointer') is export does GTK::Roles::Point
 class AtkObject             is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GAction               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GActionEntry          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GActionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GActionMap            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppInfo              is repr('CPointer') is export does GTK::Roles::Pointers { }

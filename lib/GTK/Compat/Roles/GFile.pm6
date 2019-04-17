@@ -15,7 +15,20 @@ use GTK::Compat::Roles::Object;
 role GTK::Compat::Roles::GFile {
   has GFile $!file;
 
+  submethod BUILD (:$file) {
+    self!GFileRoleInit($file);
+  }
+
+  method !GFileRoleInit (GFile $file) {
+    $!file = $file;
+  }
+
   method GTK::Compat::Raw::Types::GFile is also<GFile> { $!file }
+
+  method new (GFile $file) {
+    die 'Role constructor called.' unless ::?CLASS.^name eq ::?ROLE.^name;
+    self.bless(:$file);
+  }
 
   method new_for_commandline_arg (Str() $cmd)
     is also<new-for-commandline-arg>

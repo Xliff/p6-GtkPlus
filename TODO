@@ -53,18 +53,21 @@
 - Add registration system to GTK::Builder, since type names will mostly start with Gtk..., must have a way to convert those
   names to the proper object name. Propose <Project>::Builder::Registry, with static .register method that provides
   pair mapping detected_name => proper_name.
-- Complete implementation of GTK::Compat::Roles::GFile, as well as it's companion wrapper GTK::Compat::File and also GTK::Compat::Raw::FileTypes
+- Complete implementation of GTK::Compat::Roles::GFile
+   - (Wrapper class is unnecessary as long as a method new is provided)
+   - Role can have submethod BUILD, but will be overrided by any implementing class
+   - Initialization should be done in private method that is called by BUILD and all implementing classes
+   - Insure all implementing classes override for safety reasons.
 - Finish GTK::Utils::LockedHash
-- Implement GTK::Compat::ActionEntry
-* Implement GTK::ApplicationWindow
-- Implement GTK::Roles::RecentChooser...
-  ...and
-    ...GTK::RecentChooserMenu,
-    ...GTK::Dialog::RecentChooser,
-    ...GTK::RecentChooserMenu,
-    ...GTK::RecentChooserWidget!
+√ Implement GTK::Compat::ActionEntry (done as CStruct)
+√ Implement GTK::ApplicationWindow
+- Implement
+      √ GTK::Roles::RecentChooser...
+    ... GTK::RecentChooserMenu,
+    ... GTK::Dialog::RecentChooser,
+    ... GTK::RecentChooserWidget!
 - Consider altering scripts/dirty_typing.pl6 to only go through files later the latest date amongst the stubs in in .dirty_typing
-- Considfer altering scripts/dependencies.pl6 to exit if a module name is listed as a dependency but has no node. If this does occur, report discrepancy and the module(s) where it appeared.
+- Consider altering scripts/dependencies.pl6 to exit if a module name is listed as a dependency but has no node. If this does occur, report discrepancy and the module(s) where it appeared.
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
 - NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
