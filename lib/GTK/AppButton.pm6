@@ -21,7 +21,7 @@ class GTK::AppButton is GTK::ComboBox {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::AppButton');
+    $o.setType(self.^name);
     $o;
   }
 

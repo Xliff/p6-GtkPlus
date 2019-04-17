@@ -55,6 +55,15 @@
   pair mapping detected_name => proper_name.
 - Complete implementation of GTK::Compat::Roles::GFile, as well as it's companion wrapper GTK::Compat::File and also GTK::Compat::Raw::FileTypes
 - Finish GTK::Utils::LockedHash
+- Implement GTK::ApplicationWindow
+- Implement GTK::Roles::RecentChooser...
+  ...and
+    ...GTK::RecentChooserMenu,
+    ...GTK::Dialog::RecentChooser,
+    ...GTK::RecentChooserMenu,
+    ...GTK::RecentChooserWidget!
+- Consider altering scripts/dirty_typing.pl6 to only go through files later the latest date amongst the stubs in in .dirty_typing
+- Considfer altering scripts/dependencies.pl6 to exit if a module name is listed as a dependency but has no node. If this does occur, report discrepancy and the module(s) where it appeared.
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
 - NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
