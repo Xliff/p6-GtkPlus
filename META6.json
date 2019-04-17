@@ -42,7 +42,6 @@
       "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
       "GTK::Roles::Protection"                 :  "lib/GTK/Roles/Protection.pm6"                ,
       "GTK::Roles::Types"                      :  "lib/GTK/Roles/Types.pm6"                     ,
-      "GTK::Utils::LockedHash"                 :  "lib/GTK/Utils/LockedHash.pm6"                ,
       "GTK::Builder::Actionable"               :  "lib/GTK/Builder/Actionable.pm6"              ,
       "GTK::Compat::RGBA"                      :  "lib/GTK/Compat/RGBA.pm6"                     ,
       "GTK::Compat::Raw::Action"               :  "lib/GTK/Compat/Raw/Action.pm6"               ,
@@ -485,7 +484,6 @@
       "GTK::Window"                            :  "lib/GTK/Window.pm6"                          ,
       "GTK::ActionBar"                         :  "lib/GTK/ActionBar.pm6"                       ,
       "GTK::AppButton"                         :  "lib/GTK/AppButton.pm6"                       ,
-      "GTK::Application"                       :  "lib/GTK/Application.pm6"                     ,
       "GTK::ApplicationWindow"                 :  "lib/GTK/ApplicationWindow.pm6"               ,
       "GTK::AspectFrame"                       :  "lib/GTK/AspectFrame.pm6"                     ,
       "GTK::Assistant"                         :  "lib/GTK/Assistant.pm6"                       ,
@@ -516,6 +514,7 @@
       "GTK::ToolButton"                        :  "lib/GTK/ToolButton.pm6"                      ,
       "GTK::TreeView"                          :  "lib/GTK/TreeView.pm6"                        ,
       "GTK::Utils::MenuBuilder"                :  "lib/GTK/Utils/MenuBuilder.pm6"               ,
+      "GTK::Application"                       :  "lib/GTK/Application.pm6"                     ,
       "GTK::MenuToolButton"                    :  "lib/GTK/MenuToolButton.pm6"                  ,
       "GTK::ToggleToolButton"                  :  "lib/GTK/ToggleToolButton.pm6"                ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
@@ -535,6 +534,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

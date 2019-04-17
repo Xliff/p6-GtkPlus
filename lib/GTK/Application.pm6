@@ -14,19 +14,20 @@ use GTK::Compat::Roles::Object;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Application;
 
+use GTK::ApplicationWindow;
 use GTK::Window;
 
 class GTK::Application is export {
   also does GTK::Compat::Roles::Object;
-  
+
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;
   also does GTK::Roles::Types;
 
   my $gapp;
 
-  has $!app;    # GtkApplication
-  has $!title;
+  has $!app;      # GtkApplication
+  has $!title;    # GtkWindow OR GtkApplicationWindow;
   has $!width;
   has $!height;
   has $!init;
@@ -34,23 +35,30 @@ class GTK::Application is export {
   has $.window handles <show_all>;
 
   submethod BUILD(
-    :$app,
+           :$app,
     Str    :$title,
     uint32 :$flags = 0,
     uint32 :$width,
     uint32 :$height,
-
+           :$window
   ) {
     self!setObject($!app = $app);
-    
-    $!title = $title;
-    $!width = $width;
+
+    $!title  = $title;
+    $!width  = $width;
     $!height = $height;
-    $!init = Promise.new;
+    $!init   = Promise.new;
+
+    die qq:to/DIE/ unless $window eq <application window>.any;
+    Invalid window type '{ $window }'. Must be either 'window' or{
+    } 'application'
+    DIE
 
     $DEBUG = so %*ENV<P6_GTKPLUS_DEBUG>;
+    my $windowType = $window eq 'application' ??
+      GTK::ApplicationWindow !! GTK::Window;
     self.activate.tap({
-       $!window //= GTK::Window.new(
+       $!window //= $windowType.new(
          gtk_application_window_new($!app),
          :$title,
          :$width,
@@ -64,8 +72,8 @@ class GTK::Application is export {
     self.disconnect-all($_) for %!signals, %!signals-app;
   }
 
-  method GTK::Raw::Types::GtkApplication 
-    is also<Application> 
+  method GTK::Raw::Types::GtkApplication
+    is also<Application>
   { $!app }
 
   method init (GTK::Application:U: ) {
@@ -80,19 +88,20 @@ class GTK::Application is export {
   method wait-for-init is also<wait_for_init> {
     await $!init;
   }
-  
+
   multi method new (GtkApplication $app) {
     my $o = self.bless(:$app);
     $o.upref;
     $o;
-  }  
+  }
   multi method new(
-    Str :$title = 'org.genex.application',
-    Int :$flags = 0,
-    Int :$width = 200,
-    Int :$height = 200,
+    Str :$title   = 'org.genex.application',
+    Int :$flags   = 0,
+    Int :$width   = 200,
+    Int :$height  = 200,
     :$pod,
     :$ui,
+    :$window      = 'application',
     :$window-name = 'application',
     :$style
   ) {
@@ -113,6 +122,7 @@ class GTK::Application is export {
       :height($h)
       :$pod,
       :$ui,
+      :$window,
       :$window-name,
       :$style
     );
@@ -207,13 +217,13 @@ class GTK::Application is export {
     Str() $accelerator,
     Str() $action_name,
     GVariant() $parameter
-  ) 
-    is also<add-accelerator> 
+  )
+    is also<add-accelerator>
   {
     gtk_application_add_accelerator(
-      $!app, 
-      $accelerator, 
-      $action_name, 
+      $!app,
+      $accelerator,
+      $action_name,
       $parameter
     );
   }

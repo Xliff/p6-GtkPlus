@@ -37,7 +37,6 @@ GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
-GTK::Utils::LockedHash
 GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action
@@ -480,7 +479,6 @@ GTK::VolumeButton
 GTK::Window
 GTK::ActionBar
 GTK::AppButton
-GTK::Application
 GTK::ApplicationWindow
 GTK::AspectFrame
 GTK::Assistant
@@ -511,6 +509,7 @@ GTK::Stack
 GTK::ToolButton
 GTK::TreeView
 GTK::Utils::MenuBuilder
+GTK::Application
 GTK::MenuToolButton
 GTK::ToggleToolButton
 GTK::RadioToolButton

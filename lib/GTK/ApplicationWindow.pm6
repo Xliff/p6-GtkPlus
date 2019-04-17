@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
@@ -7,15 +9,18 @@ use GTK::Raw::ApplicationWindow;
 
 use GTK::Window;
 
+our subset ApplicationWindowAncestry is export
+  where GtkApplicationWindow | WindowAncestry;
+
 class GTK::ApplicationWindow is GTK::Window {
   has GtkApplicationWindow $!aw;
-  
+
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType(self.^name);
     $o;
   }
-  
+
   submethod BUILD (:$appwindow) {
     given $appwindow {
       when ApplicationWindowAncestry {
@@ -27,41 +32,40 @@ class GTK::ApplicationWindow is GTK::Window {
       }
     }
   }
-  
+
   method setApplicationWindow(ApplicationWindowAncestry $appwindow) {
     self.IS-PROTECTED;
-    
+
     my $to-parent;
     $!aw = do given $appwindow {
       when GtkApplicationWindow {
-        $to-parent = nativecast(GtkWindow, $_);
+        $to-parent = cast(GtkWindow, $_);
         $_;
       }
       default {
-        $to_parent = $_;
+        $to-parent = $_;
         cast(GtkApplication, $_);
       }
     }
     self.setWindow($to-parent);
   }
-      
+
   method GTK::Raw::Types::GtkApplicationWindow
     is also<ApplicationWindow>
   { * }
-  
+
   multi method new (GtkApplicationWindow $appwindow) {
     my $o = self.bless(:$appwindow);
     $o.upref;
   }
-  
-  method new {
-    self.bless( appwindow => gtk_application_window_new() );
+  multi method new (GtkApplication() $app) {
+    self.bless( appwindow => gtk_application_window_new($app) );
   }
-  
+
   method help_overlay is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::ShortcutsWindow.new( 
+        GTK::ShortcutsWindow.new(
           gtk_application_window_get_help_overlay($!aw)
         );
       },
@@ -94,4 +98,3 @@ class GTK::ApplicationWindow is GTK::Window {
   }
 
 }
-  

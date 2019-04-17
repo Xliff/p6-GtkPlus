@@ -12,10 +12,12 @@ echo -e "Dependency Generation\n=====================" >> LastBuildResults
     (
     	echo " === $a ==="
 	perl6 --stagestats \
-		-I/home/cbwood/Projects/p6-Pango/lib \
-		-I/home/cbwood/Projects/p6-GtkPlus/lib \
-		-I/home/cbwood/Projects/p6-WebkitGTK/lib \
-		-I/home/cbwood/Projects/p6-SourceViewGTK/lib \
+		-I${P6_GTK_HOME}/p6-Pango/lib \
+		-I${P6_GTK_HOME}/p6-GtkPlus/lib \
+		-I${P6_GTK_HOME}/p6-WebkitGTK/lib \
+		-I${P6_GTK_HOME}/p6-SourceViewGTK/lib \
+    -I${P6_GTK_HOME}/p6-AMTK/lib \
+    -I${P6_GTK_HOME}/p6-TEPL/lib \
 		-e "use $a" 2>&1
     )
   done;
