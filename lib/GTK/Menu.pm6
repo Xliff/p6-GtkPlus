@@ -27,20 +27,9 @@ class GTK::Menu is GTK::MenuShell {
   }
 
   submethod BUILD(:$menu, :@items) {
-    my $to-parent;
     given $menu {
       when MenuAncestry {
-        $!m = do {
-          when GtkMenu {
-            $to-parent = nativecast(GtkMenuShell, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkMenu, $_);
-          }
-        };
-        self.setMenuShell($to-parent);
+        self.setMenu($_);
       }
       when GTK::Menu {
       }
@@ -57,10 +46,25 @@ D
     }
   }
 
+  method setMenu (MenuAncestry $menu) {
+    my $to-parent;
+    $!m = do given $menu {
+      when GtkMenu {
+        $to-parent = nativecast(GtkMenuShell, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkMenu, $_);
+      }
+    };
+    self.setMenuShell($to-parent);
+  }
+
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-menu;
   }
-  
+
   method GTK::Raw::Types::GtkMenu is also<Menu> { $!m }
 
   multi method new (MenuAncestry $menu) {
@@ -206,12 +210,12 @@ D
     gtk_menu_detach($!m);
   }
 
-  method get_attach_widget 
+  method get_attach_widget
     is also<
       get-attach-widget
       attach_widget
       attach-widget
-    > 
+    >
   {
     GTK::Widget.new( gtk_menu_get_attach_widget($!m) );
   }
@@ -269,11 +273,11 @@ D
   {
     my guint ($ra, $ma) = self.RESOLVE-UINT($rect_anchor, $menu_anchor);
     gtk_menu_popup_at_rect(
-      $!m, 
-      $rect_window, 
-      $rect, 
-      $ra, 
-      $ma, 
+      $!m,
+      $rect_window,
+      $rect,
+      $ra,
+      $ma,
       $trigger_event
     );
   }

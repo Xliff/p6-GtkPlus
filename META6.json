@@ -82,6 +82,7 @@
       "GTK::Compat::Raw::X11_Screen"           :  "lib/GTK/Compat/Raw/X11_Screen.pm6"           ,
       "GTK::Compat::Raw::X11_Window"           :  "lib/GTK/Compat/Raw/X11_Window.pm6"           ,
       "GTK::Compat::Rectangle"                 :  "lib/GTK/Compat/Rectangle.pm6"                ,
+      "GTK::Compat::Roles::ActionMap"          :  "lib/GTK/Compat/Roles/ActionMap.pm6"          ,
       "GTK::Compat::Roles::AppInfo"            :  "lib/GTK/Compat/Roles/AppInfo.pm6"            ,
       "GTK::Compat::Roles::Icon"               :  "lib/GTK/Compat/Roles/Icon.pm6"               ,
       "GTK::Compat::Roles::ListData"           :  "lib/GTK/Compat/Roles/ListData.pm6"           ,
@@ -123,6 +124,7 @@
       "GTK::Compat::Raw::Event"                :  "lib/GTK/Compat/Raw/Event.pm6"                ,
       "GTK::Compat::Raw::FrameClock"           :  "lib/GTK/Compat/Raw/FrameClock.pm6"           ,
       "GTK::Compat::Raw::Threads"              :  "lib/GTK/Compat/Raw/Threads.pm6"              ,
+      "GTK::Compat::Roles::Action"             :  "lib/GTK/Compat/Roles/Action.pm6"             ,
       "GTK::Compat::Roles::GFile"              :  "lib/GTK/Compat/Roles/GFile.pm6"              ,
       "GTK::Compat::Threads"                   :  "lib/GTK/Compat/Threads.pm6"                  ,
       "GTK::Dialog::Raw::About"                :  "lib/GTK/Dialog/Raw/About.pm6"                ,
@@ -231,6 +233,8 @@
       "GTK::Raw::RadioMenuItem"                :  "lib/GTK/Raw/RadioMenuItem.pm6"               ,
       "GTK::Raw::RadioToolButton"              :  "lib/GTK/Raw/RadioToolButton.pm6"             ,
       "GTK::Raw::Range"                        :  "lib/GTK/Raw/Range.pm6"                       ,
+      "GTK::Raw::RecentChooser"                :  "lib/GTK/Raw/RecentChooser.pm6"               ,
+      "GTK::Raw::RecentChooserMenu"            :  "lib/GTK/Raw/RecentChooserMenu.pm6"           ,
       "GTK::Raw::RecentFilter"                 :  "lib/GTK/Raw/RecentFilter.pm6"                ,
       "GTK::Raw::RecentInfo"                   :  "lib/GTK/Raw/RecentInfo.pm6"                  ,
       "GTK::Raw::Render"                       :  "lib/GTK/Raw/Render.pm6"                      ,
@@ -364,6 +368,7 @@
       "GTK::Roles::FileChooser"                :  "lib/GTK/Roles/FileChooser.pm6"               ,
       "GTK::Roles::FontChooser"                :  "lib/GTK/Roles/FontChooser.pm6"               ,
       "GTK::Roles::Properties"                 :  "lib/GTK/Roles/Properties.pm6"                ,
+      "GTK::Roles::RecentChooser"              :  "lib/GTK/Roles/RecentChooser.pm6"             ,
       "GTK::Roles::Scrollable"                 :  "lib/GTK/Roles/Scrollable.pm6"                ,
       "GTK::Roles::ToolShell"                  :  "lib/GTK/Roles/ToolShell.pm6"                 ,
       "GTK::Roles::TreeModel"                  :  "lib/GTK/Roles/TreeModel.pm6"                 ,
@@ -464,6 +469,7 @@
       "GTK::MenuShell"                         :  "lib/GTK/MenuShell.pm6"                       ,
       "GTK::Overlay"                           :  "lib/GTK/Overlay.pm6"                         ,
       "GTK::Popover"                           :  "lib/GTK/Popover.pm6"                         ,
+      "GTK::RecentChooserWidget"               :  "lib/GTK/RecentChooserWidget.pm6"             ,
       "GTK::Revealer"                          :  "lib/GTK/Revealer.pm6"                        ,
       "GTK::ScaleButton"                       :  "lib/GTK/ScaleButton.pm6"                     ,
       "GTK::ScrolledWindow"                    :  "lib/GTK/ScrolledWindow.pm6"                  ,
@@ -499,6 +505,7 @@
       "GTK::Dialog::Message"                   :  "lib/GTK/Dialog/Message.pm6"                  ,
       "GTK::Dialog::PageSetupUnix"             :  "lib/GTK/Dialog/PageSetupUnix.pm6"            ,
       "GTK::Dialog::PrintUnix"                 :  "lib/GTK/Dialog/PrintUnix.pm6"                ,
+      "GTK::Dialog::RecentChooser"             :  "lib/GTK/Dialog/RecentChooser.pm6"            ,
       "GTK::FlowBox"                           :  "lib/GTK/FlowBox.pm6"                         ,
       "GTK::ListBox"                           :  "lib/GTK/ListBox.pm6"                         ,
       "GTK::Menu"                              :  "lib/GTK/Menu.pm6"                            ,
@@ -508,6 +515,7 @@
       "GTK::Places"                            :  "lib/GTK/Places.pm6"                          ,
       "GTK::RadioButton"                       :  "lib/GTK/RadioButton.pm6"                     ,
       "GTK::RadioMenuItem"                     :  "lib/GTK/RadioMenuItem.pm6"                   ,
+      "GTK::RecentChooserMenu"                 :  "lib/GTK/RecentChooserMenu.pm6"               ,
       "GTK::SeparatorToolItem"                 :  "lib/GTK/SeparatorToolItem.pm6"               ,
       "GTK::ShortcutsWindow"                   :  "lib/GTK/ShortcutsWindow.pm6"                 ,
       "GTK::Stack"                             :  "lib/GTK/Stack.pm6"                           ,
@@ -534,6 +542,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

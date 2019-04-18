@@ -13,6 +13,8 @@ our subset RecentChooserWidgetAncestry is export
   where GtkRecentChooserWidget | GtkRecentChooser | BoxAncestry;
 
 class GTK::RecentChooserWidget is GTK::Box {
+  also does GTK::Roles::RecentChooser;
+
   has GtkRecentChooserWidget $!rcw;
 
   method bless(*%attrinit) {
@@ -31,7 +33,7 @@ class GTK::RecentChooserWidget is GTK::Box {
             $_;
           }
           when GtkRecentChooser {
-            $!rcw = $_;                                   # GTK::Roles::RecentChooser
+            $!rc = $_;                                    # GTK::Roles::RecentChooser
             $to-parent = cast(GtkBox, $_);
             cast(GtkRecentChooserWidget, $_);
           }
@@ -40,12 +42,13 @@ class GTK::RecentChooserWidget is GTK::Box {
             cast(GtkRecentChooserWidget, $_);
           }
         }
-        $!rcw //= cast(GtkRecentChooser, $recentwidget);  # GTK::Roles::RecentChooser
+        self.setBox($to-parent);
+        $!rc //= cast(GtkRecentChooser, $recentwidget);   # GTK::Roles::RecentChooser
       }
-    }
-    when GTK::RecentChooserWidget {
-    }
-    default {
+      when GTK::RecentChooserWidget {
+      }
+      default {
+      }
     }
   }
 

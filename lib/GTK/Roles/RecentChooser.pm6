@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -42,7 +43,7 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method local_only is rw {
+  method local_only is rw is also<local-only> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_recent_chooser_get_local_only($!rc);
@@ -54,7 +55,7 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method select_multiple is rw {
+  method select_multiple is rw is also<select-multiple> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_recent_chooser_get_select_multiple($!rc);
@@ -66,7 +67,7 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method show_icons is rw {
+  method show_icons is rw is also<show-icons> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_recent_chooser_get_show_icons($!rc);
@@ -78,7 +79,7 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method show_not_found is rw {
+  method show_not_found is rw is also<show-not-found> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_recent_chooser_get_show_not_found($!rc);
@@ -90,7 +91,7 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method show_private is rw {
+  method show_private is rw is also<show-private> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_recent_chooser_get_show_private($!rc);
@@ -102,7 +103,7 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method show_tips is rw {
+  method show_tips is rw is also<show-tips> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_recent_chooser_get_show_tips($!rc);
@@ -114,7 +115,7 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method sort_type is rw {
+  method sort_type is rw is also<sort-type> {
     Proxy.new(
       FETCH => sub ($) {
         GtkRecentSortType( gtk_recent_chooser_get_sort_type($!rc) );
@@ -128,68 +129,88 @@ role GTK::Roles::RecentChooser {
 
   # Is originally:
   # GtkRecentChooser, gpointer --> void
-  method item-activated {
+  method item-activated is also<item_activated> {
     self.connect($!rc, 'item-activated');
   }
 
   # Is originally:
   # GtkRecentChooser, gpointer --> void
-  method selection-changed {
+  method selection-changed is also<selection_changed> {
     self.connect($!rc, 'selection-changed');
   }
 
-  method add_filter (GtkRecentFilter $filter) {
+  method add_filter (GtkRecentFilter $filter) is also<add-filter> {
     gtk_recent_chooser_add_filter($!rc, $filter);
   }
 
-  method error_quark {
+  method error_quark is also<error-quark> {
     gtk_recent_chooser_error_quark();
   }
 
-  method get_current_item {
+  method get_current_item
+    is also<
+      get-current-item
+      current_item
+      current-item
+    >
+  {
     GTK::RecentInfo.new( gtk_recent_chooser_get_current_item($!rc) );
   }
 
-  method get_current_uri {
+  method get_current_uri
+    is also<
+      get-current-uri
+      current_uri
+      current-uri
+    >
+  {
     gtk_recent_chooser_get_current_uri($!rc);
   }
 
-  method get_items (:$raw) {
+  method get_items (:$raw)
+    is also<
+      get-items
+      items
+    >
+  {
     my $i = GTK::Compat::List.new( gtk_recent_chooser_get_items($!rc) )
       but GTK::Compat::Roles::ListData[GtkRecentInfo];
     $raw ?? $i.Array !! $i.Array.map({ GTK::RecentInfo.new($_) });
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
     unstable_get_type( self.^name, &gtk_recent_chooser_get_type, $n, $t);
   }
 
-  method get_uris (gsize $length) {
+  method get_uris (Int() $length) is also<get-uris> {
     my ($i, @u) = (0);
-    my CArray[Str] $u = gtk_recent_chooser_get_uris($!rc, $length);
+    my gint $l = resolve-int($length);
+    my CArray[Str] $u = gtk_recent_chooser_get_uris($!rc, $l);
     @u[$i] = $u[$i++] while $u[$i].defined;
     @u;
   }
 
-  method list_filters (:$raw) {
+  method list_filters (:$raw) is also<list-filters> {
     my $f = GTK::Compat::SList.new( gtk_recent_chooser_list_filters($!rc) )
       but GTK::Compat::Roles::ListData[GtkRecentFilter];
     $raw ?? $f.Array !! $f.Array.map({ GTK::RecentFilter.new($_) });
   }
 
-  method remove_filter (GtkRecentFilter $filter) {
+  method remove_filter (GtkRecentFilter() $filter) is also<remove-filter> {
     gtk_recent_chooser_remove_filter($!rc, $filter);
   }
 
-  method select_all {
+  method select_all is also<select-all> {
     gtk_recent_chooser_select_all($!rc);
   }
 
   method select_uri (
     Str() $uri,
     CArray[Pointer[GError]] $error = gerror()
-  ) {
+  )
+    is also<select-uri>
+  {
     clear_error;
     my $rc = gtk_recent_chooser_select_uri($!rc, $uri, $error);
     set_error($error);
@@ -199,7 +220,9 @@ role GTK::Roles::RecentChooser {
   method set_current_uri (
     Str() $uri,
     CArray[Pointer[GError]] $error = gerror()
-  ) {
+  )
+    is also<set-current-uri>
+  {
     clear_error;
     my $rc = gtk_recent_chooser_set_current_uri($!rc, $uri, $error);
     set_error($error);
@@ -210,7 +233,9 @@ role GTK::Roles::RecentChooser {
     GtkRecentSortFunc $sort_func,
     gpointer $sort_data          = Pointer,
     GDestroyNotify $data_destroy = Pointer
-  ) {
+  )
+    is also<set-sort-func>
+  {
     gtk_recent_chooser_set_sort_func(
       $!rc,
       $sort_func,
@@ -219,11 +244,11 @@ role GTK::Roles::RecentChooser {
     );
   }
 
-  method unselect_all {
+  method unselect_all is also<unselect-all> {
     gtk_recent_chooser_unselect_all($!rc);
   }
 
-  method unselect_uri (Str() $uri) {
+  method unselect_uri (Str() $uri) is also<unselect-uri> {
     gtk_recent_chooser_unselect_uri($!rc, $uri);
   }
 
