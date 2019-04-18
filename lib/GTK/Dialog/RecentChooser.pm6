@@ -26,9 +26,9 @@ class GTK::Dialog::RecentChooser is GTK::Dialog {
     $o;
   }
 
-  submethod BUILD(:$dialog) {
+  submethod BUILD(:$recentdialog) {
     my $to-parent;
-    given $dialog {
+    given $recentdialog {
       when RecentChooserDialogAncestry {
         $!rcd = do {
           when GtkRecentChooserDialog  {
@@ -57,8 +57,8 @@ class GTK::Dialog::RecentChooser is GTK::Dialog {
 
   proto method new (|) { * }
 
-  multi method new (RecentChooserDialogAncestry $dialog) {
-    my $o = self.bless(:$dialog);
+  multi method new (RecentChooserDialogAncestry $recentdialog) {
+    my $o = self.bless(:$recentdialog);
     $o.upref;
     $o;
   }
@@ -81,14 +81,18 @@ class GTK::Dialog::RecentChooser is GTK::Dialog {
       unless @buttons.all ~~ Pair;
     my $f = @buttons.shift;
     my gint $r = resolve-int($f.value);
-    my $dialog = gtk_recent_chooser_dialog_new(
+    my $recentdialog = gtk_recent_chooser_dialog_new(
       $title, $parent, $f.key, $r, Str
     );
-    my $o = self.bless(:$dialog);
+    my $o = self.bless(:$recentdialog);
     $o.add_buttons(@buttons);
     $o;
   }
 
+  proto method new_for_manager (|)
+    is also<new-for-manager>
+  { * }
+  
   multi method new_for_manager (
     Str() $title,
     GtkWindow() $parent,
@@ -110,10 +114,10 @@ class GTK::Dialog::RecentChooser is GTK::Dialog {
       unless @buttons.all ~~ Pair;
     my $f = @buttons.shift;
     my gint $r = resolve-int($f.value);
-    my $dialog = gtk_recent_chooser_dialog_new_for_manager(
+    my $recentdialog = gtk_recent_chooser_dialog_new_for_manager(
       $title, $parent, $manager, $f.key, $r, Str
     );
-    my $o = self.bless(:$dialog);
+    my $o = self.bless(:$recentdialog);
     $o.add_buttons(@buttons);
     $o;
   }
@@ -159,7 +163,7 @@ sub gtk_recent_chooser_dialog_new (
   gint $button_response_id,
   Str
 )
-  returns GtkFileChooserDialog
+  returns GtkRecentChooserDialog
   is native(gtk)
   { * }
 
@@ -171,7 +175,7 @@ sub gtk_recent_chooser_dialog_new_for_manager (
   gint $button_response_id,
   Str
 )
-  returns GtkFileChooserDialog
+  returns GtkRecentChooserDialog
   is native(gtk)
   { * }
 

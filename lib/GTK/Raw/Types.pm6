@@ -1163,6 +1163,7 @@ class GtkRadioToolButton      is repr('CPointer') does GTK::Roles::Pointers is e
 class GtkRange                is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentChooser        is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentChooserDialog  is repr('CPointer') does GTK::Roles::Pointers is export { }
+class GtkRecentChooserMenu    is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentChooserWidget  is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentFilter         is repr('CPointer') does GTK::Roles::Pointers is export { }
 class GtkRecentInfo           is repr("CPointer") does GTK::Roles::Pointers is export { }

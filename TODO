@@ -61,10 +61,10 @@
 - Finish GTK::Utils::LockedHash
 √ Implement GTK::Compat::ActionEntry (done as CStruct)
 √ Implement GTK::ApplicationWindow
-- Implement
-      √ GTK::Roles::RecentChooser...
-    ... GTK::RecentChooserMenu,
-    ... GTK::Dialog::RecentChooser,
+√ Implement
+      √ GTK::Roles::RecentChooser,
+      √ GTK::RecentChooserMenu,
+      √ GTK::Dialog::RecentChooser,
       √ GTK::RecentChooserWidget!
 - Consider separating enums from GTK::Raw::Types into GTK::Raw::Enums
   - If that goes well, then do the same for GTK::Compat::Raw::Types
@@ -73,10 +73,16 @@
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
 - NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
+- Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
 
-* PERFORMANCE NOTE
-	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT need to topicalize $a.
-	- If trying to test for definedness of two or more variables, nesting with statements is faster than using a junction or 'andthen'
+* PERL6 NOTES
+	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
+    need to topicalize $a.
+	- If trying to test for defined-ness of two or more variables, nesting with
+    statements is faster than using a junction or 'andthen'
+  - It is possible, but not recommended to use a role to implement the custom
+    bless method, since that bless will be run for ALL ANCESTORS as well as
+    the current class.
 
 Applications
 ============

@@ -77,6 +77,7 @@ GTK::Compat::Raw::X11_Display
 GTK::Compat::Raw::X11_Screen
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
+GTK::Compat::Roles::ActionMap
 GTK::Compat::Roles::AppInfo
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
@@ -118,6 +119,7 @@ GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
 GTK::Compat::Raw::Threads
+GTK::Compat::Roles::Action
 GTK::Compat::Roles::GFile
 GTK::Compat::Threads
 GTK::Dialog::Raw::About
@@ -226,6 +228,8 @@ GTK::Raw::RadioButton
 GTK::Raw::RadioMenuItem
 GTK::Raw::RadioToolButton
 GTK::Raw::Range
+GTK::Raw::RecentChooser
+GTK::Raw::RecentChooserMenu
 GTK::Raw::RecentFilter
 GTK::Raw::RecentInfo
 GTK::Raw::Render
@@ -359,6 +363,7 @@ GTK::Roles::Editable
 GTK::Roles::FileChooser
 GTK::Roles::FontChooser
 GTK::Roles::Properties
+GTK::Roles::RecentChooser
 GTK::Roles::Scrollable
 GTK::Roles::ToolShell
 GTK::Roles::TreeModel
@@ -459,6 +464,7 @@ GTK::MenuItem
 GTK::MenuShell
 GTK::Overlay
 GTK::Popover
+GTK::RecentChooserWidget
 GTK::Revealer
 GTK::ScaleButton
 GTK::ScrolledWindow
@@ -494,6 +500,7 @@ GTK::Dialog::FontChooser
 GTK::Dialog::Message
 GTK::Dialog::PageSetupUnix
 GTK::Dialog::PrintUnix
+GTK::Dialog::RecentChooser
 GTK::FlowBox
 GTK::ListBox
 GTK::Menu
@@ -503,6 +510,7 @@ GTK::Offscreen
 GTK::Places
 GTK::RadioButton
 GTK::RadioMenuItem
+GTK::RecentChooserMenu
 GTK::SeparatorToolItem
 GTK::ShortcutsWindow
 GTK::Stack
