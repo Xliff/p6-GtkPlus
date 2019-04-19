@@ -52,7 +52,15 @@ class GTK::ApplicationWindow is GTK::Window {
 
   method GTK::Raw::Types::GtkApplicationWindow
     is also<ApplicationWindow>
-  { * }
+  { $!aw }
+
+  method GTK::Compat::Types::GActionMap
+    is also<ActionMap>
+  {
+    state $am;
+    $am //= cast(GActionMap, $!aw);
+    $am;
+  }
 
   multi method new (GtkApplicationWindow $appwindow) {
     my $o = self.bless(:$appwindow);

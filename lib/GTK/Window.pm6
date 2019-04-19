@@ -479,7 +479,13 @@ class GTK::Window is GTK::Bin {
   method titlebar is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_titlebar($!win);
+        # Would use CreateObject, but there are questions regarding the
+        # lexical nature of 'use'. If an attempt is made to dynamically
+        # require the right object here, a circular dependency may be
+        # induced. It's safer to create the Widget, and let the caller
+        # make the call to CreateObject via:
+        #     GTK::Widget.CreateObject($returned.Widget)
+        GTK::Widget.new( gtk_window_get_titlebar($!win) );
       },
       STORE => sub ($, GtkWidget() $titlebar is copy) {
         gtk_window_set_titlebar($!win, $titlebar);
