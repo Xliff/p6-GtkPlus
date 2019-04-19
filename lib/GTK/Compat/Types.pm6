@@ -797,16 +797,16 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
     sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
         is native is symbol('sprintf') {}
 
-    sub set_func_pointer(&func) {
-      sprintf-a($buf, '%lld', &func);
+    sub set_func_pointer(\func) {
+      sprintf-a($buf, '%lld', func);
     }
 
     self.name           = $name;
     self.parameter_type = $parameter_type;
     self.state          = $state;
 
-    $!activate     := set_func_pointer(&activate);
-    $!change_state := set_func_pointer(&change_state);
+    $!activate     := Pointer.new( set_func_pointer(&activate)     );
+    $!change_state := Pointer.new( set_func_pointer(&change_state) );
   }
 
   method name is rw {

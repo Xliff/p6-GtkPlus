@@ -15,6 +15,13 @@ class GTK::Compat::MenuItem {
     $!mitem = $item
   }
 
+  method GTK::Compat::Types::GMenuItem
+    is also<
+      GMenuItem
+      MenuItem
+    >
+  { $!mitem }
+
   multi method new (GMenuItem $item) {
     self.bless(:$item);
   }
@@ -30,7 +37,7 @@ class GTK::Compat::MenuItem {
     my $item = g_menu_item_new_from_model($model, $ii);
     self.bless(:$item);
   }
-  
+
   method new_section (Str() $label, GMenuModel() $section)
     is also<new-section>
   {
@@ -59,7 +66,7 @@ class GTK::Compat::MenuItem {
   )
     is also<get-attribute-value>
   {
-    GTK::Compat::Variant.new( 
+    GTK::Compat::Variant.new(
       g_menu_item_get_attribute_value($!mitem, $attribute, $expected_type)
     );
   }

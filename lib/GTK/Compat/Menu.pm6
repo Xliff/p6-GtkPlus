@@ -21,16 +21,14 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
   { $!menu }
 
   submethod BUILD(:$menu) {
-    $!menu = $menu;
-    self.setMenuModel($menu);
+    self.setMenuModel( nativecast(GMenuModel, $!menu = $menu) );
   }
 
   multi method new {
-    my $menu = g_menu_new();
-    self.bless(:$menu);
+    self.bless( menu => g_menu_new() );
   }
   multi method new (GMenuModel() $menu) {
-    self.build(:$menu);
+    self.bless(:$menu);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
