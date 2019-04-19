@@ -1,5 +1,6 @@
 use v6.c;
 
+use nqp;
 use NativeCall;
 
 use Cairo;
@@ -168,8 +169,6 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has GList   $.prev;
 
   method data is rw {
-    use nqp;
-
     Proxy.new:
       FETCH => -> $      { $!data },
       STORE => -> $, $nv {
@@ -787,10 +786,10 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $.change_state;
 
   submethod BUILD (
-    :$!name,
+    :$name,
     :&activate,
     :$parameter_type,
-    :$!state,
+    :$state,
     :&change_state
   ) {
     my $buf = buf8.allocate(20);
@@ -802,8 +801,51 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
       sprintf-a($buf, '%lld', &func);
     }
 
+    self.name           = $name;
+    self.parameter_type = $parameter_type;
+    self.state          = $state;
+
     $!activate     := set_func_pointer(&activate);
     $!change_state := set_func_pointer(&change_state);
+  }
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $ { $.name },
+      STORE => -> $, Str() $val {
+        nqp::bindattr(
+          nqp::decont(self),
+          Str,
+          '$!name',
+          nqp::decont( $val )
+        );
+      }
+  }
+
+  method parameter_type is rw {
+    Proxy.new:
+      FETCH => -> $ { $.parameter_type },
+      STORE => -> $, Str() $val {
+        nqp::bindattr(
+          nqp::decont(self),
+          Str,
+          '$!parameter_type',
+          nqp::decont( $val )
+        );
+      }
+  }
+
+  method state is rw {
+    Proxy.new:
+      FETCH => -> $ { $.state },
+      STORE => -> $, Str() $val {
+        nqp::bindattr(
+          nqp::decont(self),
+          Str,
+          '$!state',
+          nqp::decont( $val )
+        );
+      }
   }
 
   method new (
@@ -1109,24 +1151,63 @@ class GdkWindowAttr is repr('CStruct')
   has GdkVisual $!visual                 ;
   has uint32    $.window_type       is rw;    # GdkWindowType
   has GdkCursor $.cursor            is rw;
-  has Str       $.wmclass_name      is rw;
-  has Str       $.wmclass_class     is rw;
+  has Str       $.wmclass_name;
+  has Str       $.wmclass_class;
   has gboolean  $.override_redirect is rw;
   has uint32    $.type_hint         is rw;    # GdkWindowTypeHint
 
-  method visual is rw {
-    Proxy.new(
-      FETCH => -> $ {
-        $!visual
-      },
-      STORE => -> $, $new {
-        use nqp;
-        nqp::bindattr(
-          nqp::decont(self), GdkWindowAttr, '$!visual', nqp::decont($new)
-        )
+  method cursor is rw {
+		Proxy.new:
+			FETCH => -> $ { $.cursor },
+			STORE => -> $, GdkCursor() $val {
+				nqp::bindattr(
+				nqp::decont(self),
+  				GdkCursor,
+  				'$!cursor',
+  				nqp::decont( $val )
+  			);
       }
-    )
+	}
+
+  method wmclass_name is rw {
+		Proxy.new:
+			FETCH => -> $ { $.wmclass_name },
+			STORE => -> $, Str() $val {
+				nqp::bindattr(
+  				nqp::decont(self),
+  				Str,
+  				'$!wmclass_name',
+  				nqp::decont( $val )
+  			);
+      }
+	}
+
+  method wmclass_class is rw {
+    Proxy.new:
+      FETCH => -> $ { $.label_name },
+      STORE => -> $, Str() $val {
+        nqp::bindattr(
+          nqp::decont(self),
+          Str,
+          '$!wmclass_class',
+          nqp::decont( $val )
+        );
+      }
   }
+
+  method visual is rw {
+    Proxy.new:
+      FETCH => -> $ { $!visual },
+      STORE => -> $, Str() $new {
+        nqp::bindattr(
+          nqp::decont(self),
+          GdkWindowAttr,
+          '$!visual',
+          nqp::decont($new)
+        );
+      }
+  }
+
 }
 
 class GArray is repr('CStruct') does GTK::Roles::Pointers is export {
