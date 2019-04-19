@@ -14,8 +14,29 @@ our $DEBUG is export = 0;
 
 unit package GTK::Compat::Types;
 
+# Cribbed from https://github.com/CurtTilmes/perl6-dbmysql/blob/master/lib/DB/MySQL/Native.pm6
+sub malloc  (size_t --> Pointer)                is export is native {}
+sub realloc (Pointer, size_t --> Pointer)       is export is native {}
+sub calloc  (size_t, size_t --> Pointer)        is export is native {}
+sub free    (Pointer)                           is export is native {}
+sub memcpy  (Pointer, Blob ,size_t --> Pointer) is export is native {}
+
+# Implement memcpy_pattern. Take pattern and write pattern.^elem bytes to successive areas in dest.
+
 sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
+}
+
+sub sprintf-vv(Blob, Str, & () )
+    is native is symbol('sprintf') {}
+
+sub set_func_pointer(
+  \func,
+  &sprint = &sprintf-vv
+) is export {
+  my $buf = buf8.allocate(20);
+  my $len = &sprint($buf, '%lld', func);
+  Pointer.new( $buf.subbuf(^$len).decode.Int );
 }
 
 constant gtk      is export = 'gtk-3',v0;
@@ -792,21 +813,15 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
     :$state,
     :&change_state
   ) {
-    my $buf = buf8.allocate(20);
-
     sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
         is native is symbol('sprintf') {}
-
-    sub set_func_pointer(\func) {
-      sprintf-a($buf, '%lld', func);
-    }
 
     self.name           = $name;
     self.parameter_type = $parameter_type;
     self.state          = $state;
 
-    $!activate     := Pointer.new( set_func_pointer(&activate)     );
-    $!change_state := Pointer.new( set_func_pointer(&change_state) );
+    $!activate     := set_func_pointer(&activate,     &sprintf-a);
+    $!change_state := set_func_pointer(&change_state, &sprintf-a);
   }
 
   method name is rw {
