@@ -181,7 +181,7 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
 
         nqp::bindattr(
           nqp::decont(self),
-          Pointer,
+          GList,
           '$!data',
           nqp::decont( nativecast(Pointer, $nv) )
         )
@@ -815,7 +815,7 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
       STORE => -> $, Str() $val {
         nqp::bindattr(
           nqp::decont(self),
-          Str,
+          GActionEntry,
           '$!name',
           nqp::decont( $val )
         );
@@ -828,7 +828,7 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
       STORE => -> $, Str() $val {
         nqp::bindattr(
           nqp::decont(self),
-          Str,
+          GActionEntry,
           '$!parameter_type',
           nqp::decont( $val )
         );
@@ -841,7 +841,7 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
       STORE => -> $, Str() $val {
         nqp::bindattr(
           nqp::decont(self),
-          Str,
+          GActionEntry,
           '$!state',
           nqp::decont( $val )
         );
@@ -1162,7 +1162,7 @@ class GdkWindowAttr is repr('CStruct')
 			STORE => -> $, GdkCursor() $val {
 				nqp::bindattr(
 				nqp::decont(self),
-  				GdkCursor,
+  				GdkWindowAttr,
   				'$!cursor',
   				nqp::decont( $val )
   			);
@@ -1175,7 +1175,7 @@ class GdkWindowAttr is repr('CStruct')
 			STORE => -> $, Str() $val {
 				nqp::bindattr(
   				nqp::decont(self),
-  				Str,
+  				GdkWindowAttr,
   				'$!wmclass_name',
   				nqp::decont( $val )
   			);
@@ -1188,7 +1188,7 @@ class GdkWindowAttr is repr('CStruct')
       STORE => -> $, Str() $val {
         nqp::bindattr(
           nqp::decont(self),
-          Str,
+          GdkWindowAttr,
           '$!wmclass_class',
           nqp::decont( $val )
         );
