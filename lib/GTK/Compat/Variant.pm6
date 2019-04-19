@@ -9,13 +9,15 @@ use GTK::Compat::Raw::Variant;
 
 class GTK::Compat::Variant {
   has GVariant $!v;
-  
+
   submethod BUILD (:$variant) {
     $!v = $variant;
   }
-  
-  method GTK::Compat::Types::GVariant { $!v }
-  
+
+  method GTK::Compat::Types::GVariant
+  #  is also<Variant> 
+  { $!v }
+
   method new_boolean(
     GTK::Compat::Variant:U:
     Int() $bool
@@ -41,7 +43,7 @@ class GTK::Compat::Variant {
 
   method new_dict_entry (
     GTK::Compat::Variant:U:
-    GVariant() $key, 
+    GVariant() $key,
     GVariant() $value
   ) {
     self.bless( variant => g_variant_new_dict_entry($key, $value) );
@@ -57,17 +59,17 @@ class GTK::Compat::Variant {
 
   method new_fixed_array (
     GTK::Compat::Variant:U:
-    GVariantType $element_type, 
+    GVariantType $element_type,
     Pointer $elements,
-    Int() $n_elements, 
+    Int() $n_elements,
     Int() $element_size
   ) {
     my uint64 ($ne, $es) = resolve-uint64($n_elements, $element_size);
-    self.bless( 
+    self.bless(
       variant => g_variant_new_fixed_array(
-        $element_type, 
-        $elements, 
-        $ne, 
+        $element_type,
+        $elements,
+        $ne,
         $es
       )
     );
@@ -75,8 +77,8 @@ class GTK::Compat::Variant {
 
   method new_from_bytes (
     GTK::Compat::Variant:U:
-    GVariantType $type, 
-    GBytes $bytes, 
+    GVariantType $type,
+    GBytes $bytes,
     Int() $trusted
   ) {
     my gboolean $t = resolve-bool($trusted);
@@ -86,21 +88,21 @@ class GTK::Compat::Variant {
   method new_from_data (
     GTK::Compat::Variant:U:
     GVariantType $type,
-    gconstpointer $data, 
-    Int() $size, 
-    Int() $trusted, 
-    GDestroyNotify $notify = Pointer, 
+    gconstpointer $data,
+    Int() $size,
+    Int() $trusted,
+    GDestroyNotify $notify = Pointer,
     gpointer $user_data    = Pointer
   ) {
     my uint64 $s = resolve-uint64($size);
     my gboolean $t = resolve-bool($trusted);
-    self.bless( 
+    self.bless(
       variant => g_variant_new_from_data(
-        $type, 
-        $data, 
-        $s, 
-        $t, 
-        $notify, 
+        $type,
+        $data,
+        $s,
+        $t,
+        $notify,
         $user_data
       )
     );
@@ -140,7 +142,7 @@ class GTK::Compat::Variant {
 
   method new_maybe (
     GTK::Compat::Variant:U:
-    GVariantType $type, 
+    GVariantType $type,
     GVariant() $child
   ) {
     self.bless( variant => g_variant_new_maybe($type, $child) );
@@ -217,9 +219,9 @@ class GTK::Compat::Variant {
   method parse (
     GTK::Compat::Variant:U:
     GVariantType $type,
-    Str() $text, 
-    Str() $limit, 
-    Str() $endptr, 
+    Str() $text,
+    Str() $limit,
+    Str() $endptr,
     CArray[Pointer[GError]] $error = gerror()
   ) {
     $ERROR = Nil;
@@ -227,16 +229,16 @@ class GTK::Compat::Variant {
     $ERROR = $error with $error[0];
     $ERROR.defined ?? Nil !! self.bless( variant => $rc );
   }
-  
+
   method byteswap {
     g_variant_byteswap($!v);
   }
-  
+
   method check_format_string (Str() $format_string, Int() $copy_only) {
     my gboolean $co = resolve-bool($copy_only);
     g_variant_check_format_string($!v, $format_string, $co);
   }
-  
+
   # Uses GVariantClass, so not in-scope.
   # method classify {
   #   g_variant_classify($!v);
@@ -427,7 +429,7 @@ class GTK::Compat::Variant {
 
   method parse_error_print_context (
     GTK::Compat::Variant:U:
-    GError $error, 
+    GError $error,
     Str() $source_str
   ) {
     g_variant_parse_error_print_context($error, $source_str);
@@ -446,7 +448,7 @@ class GTK::Compat::Variant {
     g_variant_print_string($!v, $string, $type_annotate);
   }
 
-  method ref 
+  method ref
     #is also<upref>
   {
     g_variant_ref($!v);
@@ -464,11 +466,10 @@ class GTK::Compat::Variant {
     g_variant_take_ref($!v);
   }
 
-  method unref 
+  method unref
     #is also<downref>
   {
     g_variant_unref($!v);
   }
-  
+
 }
-  

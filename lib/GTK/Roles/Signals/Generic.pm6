@@ -525,6 +525,32 @@ role GTK::Roles::Signals::Generic {
     %!signals{$signal}[0].tap(&handler) with &handler;
     %!signals{$signal}[0];
   }
+
+  # GSimpleAction, GVariant, gpointer
+  method connect-variant (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-variant($obj, $signal,
+        -> $, $v, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $v, $ud ] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
+  }
+
 }
 
 sub g_connect(
@@ -774,6 +800,19 @@ sub g-connect-long(
   Pointer $app,
   Str $name,
   &handler (Pointer, guint64, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+# Pointer, GVariant, Pointer
+sub g-connect-variant(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, GVariant, Pointer),
   Pointer $data,
   uint32 $flags
 )

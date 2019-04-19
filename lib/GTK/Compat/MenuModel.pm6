@@ -29,7 +29,7 @@ class GTK::Compat::MenuModel {
   submethod BUILD(:$model) {
     self!setObject($!m = $model);
   }
-  
+
   submethod DESTROY {
     self.disconnect-all(%_) for %!signals-compat;
   }
@@ -37,12 +37,14 @@ class GTK::Compat::MenuModel {
   method setMenuModel($model) {
     $!m = nativecast(GMenuModel, $model);
   }
-  
+
   method new (GMenuModel $model) {
     self.bless(:$model);
   }
 
-  method GTK::Compat::Types::GMenuModel is also<MenuModel> { $!m }
+  method GTK::Compat::Types::GMenuModel
+    is also<GMenuModel> 
+  { $!m }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -67,9 +69,9 @@ class GTK::Compat::MenuModel {
   {
     my gint $ii = self.RESOLVE-INT($item_index);
     g_menu_model_get_item_attribute_value(
-      $!m, 
-      $ii, 
-      $attribute, 
+      $!m,
+      $ii,
+      $attribute,
       $expected_type
     );
   }

@@ -16,6 +16,10 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
 
   has GMenu $!menu;
 
+  method GTK::Compat::Types::GMenu
+    is also<GMenu>
+  { $!menu }
+
   submethod BUILD(:$menu) {
     $!menu = $menu;
     self.setMenuModel($menu);

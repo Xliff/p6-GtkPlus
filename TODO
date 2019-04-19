@@ -74,6 +74,7 @@
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
 - NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
 - Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
+- Reminder for when GHashTable is implemented: Include a coercion method for GVariantType.
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT

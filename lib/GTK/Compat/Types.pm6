@@ -256,14 +256,6 @@ class GLogField is repr('CStruct') does GTK::Roles::Pointers is export {
   has int64   $.length;
 }
 
-class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Str     $.name;
-  has Pointer $.activate;
-  has Str     $.parameter_type;
-  has Str     $.state;
-  has Pointer $.change_state;
-}
-
 our enum GTypeEnum is export (
   G_TYPE_INVALID   => 0,
   G_TYPE_NONE      => (1  +< 2),
@@ -767,11 +759,13 @@ class GMountOperation       is repr('CPointer') is export does GTK::Roles::Point
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettings             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsBackend      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsSchema       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsSchemaKey    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsSchemaSource is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSimpleAction         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -783,7 +777,45 @@ class GVolume               is repr('CPointer') is export does GTK::Roles::Point
 class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is export {
   has GFileAttributeInfo $.infos;
   has gint               $.n_infos;
-};
+}
+
+class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str     $.name;
+  has Pointer $.activate;
+  has Str     $.parameter_type;
+  has Str     $.state;
+  has Pointer $.change_state;
+
+  submethod BUILD (
+    :$!name,
+    :&activate,
+    :$parameter_type,
+    :$!state,
+    :&change_state
+  ) {
+    my $buf = buf8.allocate(20);
+
+    sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
+        is native is symbol('sprintf') {}
+
+    sub set_func_pointer(&func) {
+      sprintf-a($buf, '%lld', &func);
+    }
+
+    $!activate     := set_func_pointer(&activate);
+    $!change_state := set_func_pointer(&change_state);
+  }
+
+  method new (
+    $name,
+    $activate       = -> GSimpleAction, GVariant, Pointer { },
+    $state          = Str,
+    $parameter_type = Str,
+    $change_state   = -> GSimpleAction, GVariant, Pointer { }
+  ) {
+    self.bless(:$name, :$activate, :$parameter_type, :$state, :$change_state);
+  }
+}
 
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
