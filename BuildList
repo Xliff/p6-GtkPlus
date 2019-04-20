@@ -54,6 +54,7 @@ GTK::Compat::Raw::FrameTimings
 GTK::Compat::Raw::GFile
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
+GTK::Compat::Raw::HashTable
 GTK::Compat::Raw::Icon
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
@@ -69,8 +70,10 @@ GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Settings
 GTK::Compat::Raw::Signal
+GTK::Compat::Raw::SimpleAction
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Variant
+GTK::Compat::Raw::VariantType
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
 GTK::Compat::Raw::X11_Display
@@ -88,6 +91,7 @@ GTK::Compat::Signal
 GTK::Compat::Variant
 GTK::Compat::VariantDict
 GTK::Compat::VariantIter
+GTK::Compat::VariantType
 GTK::Compat::Visual
 GTK::Raw::Types
 GTK::Raw::Viewport
@@ -98,13 +102,13 @@ GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
 GTK::Roles::StyleProvider
-GTK::Compat::Action
 GTK::Compat::Array
 GTK::Compat::Binding
 GTK::Compat::ContentType
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
+GTK::Compat::HashTable
 GTK::Compat::KeyFile
 GTK::Compat::Keymap
 GTK::Compat::LaunchContext
@@ -119,7 +123,6 @@ GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
 GTK::Compat::Raw::Threads
-GTK::Compat::Roles::Action
 GTK::Compat::Roles::GFile
 GTK::Compat::Threads
 GTK::Dialog::Raw::About
@@ -391,7 +394,9 @@ GTK::Compat::DisplayManager
 GTK::Compat::Event
 GTK::Compat::MenuModel
 GTK::Compat::Raw::Monitor
+GTK::Compat::Roles::Action
 GTK::Compat::Seat
+GTK::Compat::SimpleAction
 GTK::EntryBuffer
 GTK::ListStore
 GTK::PageSetup
@@ -407,6 +412,7 @@ GTK::Compat::AppLaunchContext
 GTK::Compat::Cursor
 GTK::Compat::Menu
 GTK::Compat::Monitor
+GTK::Compat::PropertyAction
 GTK::Compat::Window
 GTK::Widget
 GTK::Calendar

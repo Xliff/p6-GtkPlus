@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -7,10 +8,10 @@ use GTK::Compat::Raw::SimpleAction;
 
 use GTK::Raw::Utils;
 
-use GTK::Roles::Properties;
+use GTK::Compat::Roles::Action;
 
 class GTK::Compat::SimpleAction {
-  also does GTK::Roles::Properties;
+  also does GTK::Compat::Roles::Action;
 
   has GSimpleAction $!sa;
 
@@ -26,7 +27,9 @@ class GTK::Compat::SimpleAction {
     self.bless( action => g_simple_action_new($$parameter_type) );
   }
 
-  method new_stateful (GVariantType() $parameter_type, GVariant() $state) {
+  method new_stateful (GVariantType() $parameter_type, GVariant() $state)
+    is also<new-stateful>
+  {
     self.bless(
       action => g_simple_action_new_stateful($parameter_type, $state)
     );
@@ -105,7 +108,7 @@ class GTK::Compat::SimpleAction {
   }
 
   # Type: GVariantType
-  method state-type is rw  {
+  method state-type is rw  is also<state_type> {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
@@ -130,25 +133,25 @@ class GTK::Compat::SimpleAction {
 
   # Is originally:
   # GSimpleAction, GVariant, Pointer
-  method change-state {
+  method change-state is also<change_state> {
     self.connect-variant($!sa, 'change-state');
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
     unstable_get_type( self.^name, &g_simple_action_get_type, $n, $t );
   }
 
-  method set_enabled (Int() $enabled) {
+  method set_enabled (Int() $enabled) is also<set-enabled> {
     my gboolean $e = resolve-bool($enabled);
     g_simple_action_set_enabled($!sa, $e);
   }
 
-  method set_state (GVariant() $value) {
+  method set_state (GVariant() $value) is also<set-state> {
     g_simple_action_set_state($!sa, $value);
   }
 
-  method set_state_hint (GVariant() $state_hint) {
+  method set_state_hint (GVariant() $state_hint) is also<set-state-hint> {
     g_simple_action_set_state_hint($!sa, $state_hint);
   }
 

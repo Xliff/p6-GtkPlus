@@ -357,6 +357,13 @@ our enum GBindingFlags is export (
   G_BINDING_INVERT_BOOLEAN => 1 +< 2
 );
 
+our enum GNotificationPriority is export <
+  G_NOTIFICATION_PRIORITY_NORMAL
+  G_NOTIFICATION_PRIORITY_LOW
+  G_NOTIFICATION_PRIORITY_HIGH
+  G_NOTIFICATION_PRIORITY_URGENT
+>;
+
 our enum GdkDragAction is export (
   GDK_ACTION_DEFAULT => 1,
   GDK_ACTION_COPY    => 2,
@@ -777,6 +784,7 @@ class GMenuLinkIter         is repr('CPointer') is export does GTK::Roles::Point
 class GMenuModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMount                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMountOperation       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GNotification         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -787,6 +795,7 @@ class GSettingsSchema       is repr('CPointer') is export does GTK::Roles::Point
 class GSettingsSchemaKey    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsSchemaSource is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleAction         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSimpleActionGroup    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }

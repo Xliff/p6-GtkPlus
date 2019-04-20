@@ -88,7 +88,7 @@ sub MAIN ($dir?, :$file) {
                 say "      { $eel[0] } => { $eel[1] },";
               } else {
                 say "      '{ $eel[0] }{ ($eel eqv $el.Array[*-1]).not ??
-                  ',' !! '' }";
+                  ',' !! '' }'";
               }
             }
           }
