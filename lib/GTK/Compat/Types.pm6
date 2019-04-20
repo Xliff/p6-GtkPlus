@@ -807,12 +807,17 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str     $.state;
   has Pointer $.change_state;
 
+  # Padding  - Not accessible
+  has uint64  $!pad1;
+  has uint64  $!pad2;
+  has uint64  $!pad3;
+
   submethod BUILD (
     :$name,
-    :&activate,
+    :$activate,
     :$parameter_type,
     :$state,
-    :&change_state
+    :$change_state
   ) {
     sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
         is native is symbol('sprintf') {}
@@ -821,8 +826,10 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
     self.parameter_type = $parameter_type;
     self.state          = $state;
 
-    $!activate     := set_func_pointer(&activate,     &sprintf-a);
-    $!change_state := set_func_pointer(&change_state, &sprintf-a);
+    $!activate     := set_func_pointer( &($activate),     &sprintf-a)
+      if $activate.defined;
+    $!change_state := set_func_pointer( &($change_state), &sprintf-a)
+      if $change_state.defined;
   }
 
   method name is rw {
@@ -866,10 +873,10 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
 
   method new (
     $name,
-    $activate       = -> GSimpleAction, GVariant, Pointer { },
+    $activate       = Pointer,
     $state          = Str,
     $parameter_type = Str,
-    $change_state   = -> GSimpleAction, GVariant, Pointer { }
+    $change_state   = Pointer
   ) {
     self.bless(:$name, :$activate, :$parameter_type, :$state, :$change_state);
   }

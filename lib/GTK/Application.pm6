@@ -57,13 +57,20 @@ class GTK::Application is export {
     $DEBUG = so %*ENV<P6_GTKPLUS_DEBUG>;
     my $windowType = $window eq 'application' ??
       GTK::ApplicationWindow !! GTK::Window;
+
     self.activate.tap({
-       $!window //= $windowType.new(
-         gtk_application_window_new($!app),
-         :$title,
-         :$width,
-         :$height
-       );
+       $!window //= do given $windowType {
+         when GTK::ApplicationWindow {
+           GTK::ApplicationWindow.new($!app);
+         }
+         when GTK::Window {
+           GTK::Window.new(
+             :$title,
+             :$width,
+             :$height
+           );
+         }
+       };
        $!init.keep;
     });
   }

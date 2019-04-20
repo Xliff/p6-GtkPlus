@@ -4,15 +4,16 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Roles::Properties;
+use GTK::Compat::Roles::Action;
 
 class GTK::Compat::PropertyAction {
-  also does GTK::Roles::Properties;
+  also does GTK::Compat::Roles::Action;
 
   has GPropertyAction $!pa;
 
   submethod BUILD (:$action) {
     self!setObject($!pa = $action);
+    $!a = cast(GAction, $!pa);            # GTK::Compat::Roles::Action
   }
 
   method GTK::Compat::Types::GPropertyAction
@@ -27,10 +28,12 @@ class GTK::Compat::PropertyAction {
     Str() $property_name,
     GObject() $object = GObject
   ) {
-    g_property_action_new($name, $object, $property_name);
+    self.bless(
+      action => g_property_action_new($name, $object, $property_name)
+    );
   }
 
-    # Type: gboolean
+  # Type: gboolean
   method enabled is rw  {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(

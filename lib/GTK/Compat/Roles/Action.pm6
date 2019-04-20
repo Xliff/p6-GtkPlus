@@ -6,10 +6,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Action;
 
-use GTK::Compat::Roles::Object;
+use GTK::Roles::Properties;
 
 role GTK::Compat::Roles::Action {
-  also does GTK::Compat::Roles::Object;
+  also does GTK::Roles::Properties;
 
   has GAction $!a;
 
@@ -21,9 +21,11 @@ role GTK::Compat::Roles::Action {
     is also<Action>
   { $!a }
 
-  method new (GAction $action) {
-    self.bless(:$action);
-  }
+  # Specifics MUST be done by object
+  #
+  # method new (GAction $action) {
+  #   self.bless(:$action);
+  # }
 
   method activate (GVariant() $parameter) {
     g_action_activate($!a, $parameter);

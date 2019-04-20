@@ -7,12 +7,16 @@ use GTK::Raw::Types;
 
 use GTK::Raw::ApplicationWindow;
 
+use GTK::Compat::Roles::ActionMap;
+
 use GTK::Window;
 
 our subset ApplicationWindowAncestry is export
-  where GtkApplicationWindow | WindowAncestry;
+  where GtkApplicationWindow | GActionMap | WindowAncestry;
 
 class GTK::ApplicationWindow is GTK::Window {
+  also does GTK::Compat::Roles::ActionMap;
+
   has GtkApplicationWindow $!aw;
 
   method bless(*%attrinit) {
@@ -42,25 +46,23 @@ class GTK::ApplicationWindow is GTK::Window {
         $to-parent = cast(GtkWindow, $_);
         $_;
       }
+      when GActionMap {
+        $!actmap = $_;                          # GTK::Compat::Roles::ActionMap
+        $to-parent = cast(GtkWindow, $_);
+        cast(GtkApplication, $_);
+      }
       default {
         $to-parent = $_;
         cast(GtkApplication, $_);
       }
-    }
+    };
+    $!actmap //= cast(GActionMap, $appwindow);  # GTK::Compat::Roles::ActionMap
     self.setWindow($to-parent);
   }
 
   method GTK::Raw::Types::GtkApplicationWindow
     is also<ApplicationWindow>
   { $!aw }
-
-  method GTK::Compat::Types::GActionMap
-    is also<ActionMap>
-  {
-    state $am;
-    $am //= cast(GActionMap, $!aw);
-    $am;
-  }
 
   multi method new (GtkApplicationWindow $appwindow) {
     my $o = self.bless(:$appwindow);
