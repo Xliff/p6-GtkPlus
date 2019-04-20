@@ -144,6 +144,7 @@ constant GCopyFunc               is export := Pointer;
 constant GClosureNotify          is export := Pointer;
 constant GDestroyNotify          is export := Pointer;
 constant GEqualFunc              is export := Pointer;
+constant GFunc                   is export := Pointer;
 constant GLogFunc                is export := Pointer;
 constant GLogWriterFunc          is export := Pointer;
 constant GPrintFunc              is export := Pointer;
@@ -762,8 +763,8 @@ class GFileInputStream      is repr('CPointer') is export does GTK::Roles::Point
 class GFileIOStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileOutputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFunc                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTable            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GHashTableIter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GInputStream          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GKeyFile              is repr('CPointer') is export does GTK::Roles::Pointers { }
