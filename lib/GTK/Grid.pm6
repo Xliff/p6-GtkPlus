@@ -59,12 +59,12 @@ class GTK::Grid is GTK::Container {
     # For GTK::Roles::GtkOrientable
     $!or = nativecast(GtkOrientable, $!g);
   }
-  
+
   method GTK::Raw::Types::GtkGrid
     is also<Grid>
     { $!g }
-    
-  proto method new(|) 
+
+  proto method new(|)
     { * }
 
   multi method new (GridAncestry $grid) {
@@ -75,6 +75,18 @@ class GTK::Grid is GTK::Container {
   multi method new {
     my $grid = gtk_grid_new();
     self.bless(:$grid);
+  }
+
+  method new-vgrid {
+    my $o = GTK::Grid.new;
+    $o.orientation = GTK_ORIENTATION_VERTICAL;
+    $o;
+  }
+
+  method new-hgrid {
+    my $o = GTK::Grid.new;
+    $o.orientation = GTK_ORIENTATION_HORIZONTAL;
+    $o;
   }
 
   method !add-child-at (
@@ -401,8 +413,8 @@ class GTK::Grid is GTK::Container {
   method insert_next_to (
     GtkWidget() $sibling,
     Int() $side                     # GtkPositionType $side
-  ) 
-    is also<insert-next-to> 
+  )
+    is also<insert-next-to>
   {
     my uint32 $s = self.RESOLVE-UINT($side);
     die '$sibling not found in grid!'

@@ -20,12 +20,14 @@ class GTK::Compat::PropertyAction {
     # is also<PropertyAction>
   { $!pa }
 
-  multi method new (Str $name, GObject() $object, Str $property_name) {
+  proto method new (|) { * }
+
+  multi method new (Str() $name, GObject() $object, Str $property_name) {
     samewith($name, $property_name, $object);
   }
   multi method new (
     Str() $name,
-    Str() $property_name,
+    Str $property_name,
     GObject() $object = GObject
   ) {
     self.bless(
