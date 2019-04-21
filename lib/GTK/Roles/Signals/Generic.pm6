@@ -202,6 +202,31 @@ role GTK::Roles::Signals::Generic {
     %!signals{$signal}[0];
   }
 
+  # Pointer, gint, gint, gpointer
+  method connect-intint (
+    $obj,
+    $signal,
+    &handler?
+  ) {
+    my $hid;
+    %!signals{$signal} //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-intint($obj, $signal,
+        -> $, $i1, $i2, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $i1, $i2, $ud ] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
+  }
+
   method connect-uint (
     $obj,
     $signal,
@@ -618,6 +643,18 @@ sub g_connect_strstr(
   Pointer $app,
   Str $name,
   &handler (Pointer, Str, Str, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+  { * }
+
+sub g-connect-intint(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, gint, gint, Pointer),
   Pointer $data,
   uint32 $flags
 )
