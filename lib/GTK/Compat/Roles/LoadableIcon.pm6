@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 
 use GTK::Raw::Utils;
 
+use GTK::Compat::InputStream;
+
 role GTK::Compat::Roles::LoadableIcon {
   has GLoadableIcon $!li;
 
@@ -33,9 +35,9 @@ role GTK::Compat::Roles::LoadableIcon {
     clear_error;
     my $rc = g_loadable_icon_load($!li, $s, $type, $cancellable, $error);
     set_error($error);
-    #GTK::Compat::InputStream.new(
+    GTK::Compat::InputStream.new(
       $rc
-    #);
+    );
   }
 
   proto method load_async (|)
@@ -75,9 +77,9 @@ role GTK::Compat::Roles::LoadableIcon {
     clear_error;
     my $rc = g_loadable_icon_load_finish($!li, $res, $type, $error);
     set_error($error);
-    # GTK::Compat::InputStream.new(
+    GTK::Compat::InputStream.new(
       $rc
-    # )
+    )
   }
 }
 
