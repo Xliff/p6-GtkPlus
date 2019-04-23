@@ -11,9 +11,9 @@ role GTK::Roles::Protection {
     my $c = $bt[++$nf].code;
     while $c !~~ Routine && $nf < $bt.elems {
       $nf = $bt.next-interesting-index($nf, :noproto);
-      # die 'Exceeded backtrace when searching for calling routine' 
+      # die 'Exceeded backtrace when searching for calling routine'
       #   if $cf ~~ Failure;
-      
+
       $c = $bt[$nf].code;
       # # Special casing is hell! -- Allow for shortcircuit
       # # Really want to detect is-hidden-from-backtrace
@@ -39,8 +39,8 @@ role GTK::Roles::Protection {
   # For example:
   #   - It is not sufficient to self.ADD-PREFIX('YourProject') if
   #     the YourProject:: code has non-GTK derivative code. In that case, it
-  #     would be appreciated if you would put all widgets into the
-  #     YourProject::Widgets namespace and then you can do:
+  #     would be appreciated if you would put all widgets/GObjects into a
+  #     separate namespace and then you can do:
   #         self.ADD-PREFIX('YourProject::Widgets::')
   #     in submethod BUILD.
   #

@@ -42,6 +42,7 @@ class GTK::Application is export {
     uint32 :$flags = 0,
     uint32 :$width,
     uint32 :$height,
+           :$window-type,
            :$window
   ) {
     self!setObject($!app = $app);
@@ -52,29 +53,34 @@ class GTK::Application is export {
     $!height = $height;
     $!init   = Promise.new;
 
-    die qq:to/DIE/ unless $window eq <application window>.any;
-    Invalid window type '{ $window }'. Must be either 'window' or{
-    } 'application'
+    die qq:to/DIE/ unless $window-type eq <application window custom>.any;
+    Invalid window type '{ $window }'. Must be either 'window', 'custom',{
+    } or 'application'
     DIE
 
     $DEBUG = so %*ENV<P6_GTKPLUS_DEBUG>;
-    my $windowType = $window eq 'application' ??
-      GTK::ApplicationWindow !! GTK::Window;
 
     self.activate.tap({
-       $!window //= do given $windowType {
-         when GTK::ApplicationWindow {
-           GTK::ApplicationWindow.new($!app);
-         }
-         when GTK::Window {
-           GTK::Window.new(
-             :$title,
-             :$width,
-             :$height
-           );
-         }
-       };
-       $!init.keep;
+      $!window = do given $window-type {
+        when 'application' {
+          GTK::ApplicationWindow.new($!app);
+        }
+        when 'window' {
+          GTK::Window.new(
+            :$title,
+            :$width,
+            :$height
+          );
+        }
+        when 'custom' {
+          die "Invalid $window of type '{ $window.^name }' specified!"
+            unless $window.^can('GTK::Raw::Types::GtkWindow').elems;
+          $window
+        }
+      };
+      $!window.destroy-signal.tap({ self.exit })
+        unless $window-type eq 'custom';
+      $!init.keep;
     });
   }
 
@@ -111,8 +117,8 @@ class GTK::Application is export {
     Int :$height  = 200,
     :$pod,
     :$ui,
-    :$window      = 'application',
-    :$window-name = 'application',
+    :$window-type = 'application',
+    :$window,
     :$style
   ) {
     my uint32 $f = $flags;
@@ -133,7 +139,7 @@ class GTK::Application is export {
       :$pod,
       :$ui,
       :$window,
-      :$window-name,
+      :$window-type,
       :$style
     );
   }

@@ -66,7 +66,7 @@ sub g_notification_set_icon (GNotification $notification, GIcon $icon)
 
 sub g_notification_set_priority (
   GNotification $notification,
-  GNotificationPriority $priority
+  uint32 $proiroty                    # GNotificationPriority $priority
 )
   is native(gio)
   is export

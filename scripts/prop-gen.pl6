@@ -8,7 +8,7 @@ sub MAIN (
   :$var    is copy = 'w',
   :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
 ) {
-  # If it's a URL, then try to pick it apart 
+  # If it's a URL, then try to pick it apart
   if $control ~~ / ^ 'https://' / {
     $control ~~ / 'http' s? '://' <-[\#]>+ /;
     my $new_prefix = $/.Str;
@@ -16,10 +16,10 @@ sub MAIN (
     $new_control ~~ s/ '.' .+? $//;
     $new_prefix ~~ s| '/' <-[/]>+? $|/|;
     ($prefix, $control) = ($new_prefix.trim, $new_control.trim);
-    
+
     say "Attempting with prefix = { $prefix } control = { $control }";
   }
-  
+
   my $dom = Mojo::DOM.new(
     LWP::Simple.new.get(
       "{ $prefix }{ $control }.html"
@@ -112,8 +112,15 @@ sub MAIN (
         "        self.prop_set(\'{ $mn }\', \$gv);"
       if $rw.any eq 'Write';
     }
-    %c<read>  //= "warn \"{ $mn } does not allow reading\"";
+
     %c<write> //= "warn \"{ $mn } does not allow writing\"";
+
+    # Remember to emit a returned value, or the STORE will not work.
+    # Read warnings should appear behind a DEBUG sentinel.
+    %c<read>  //= qq:to/READ/;
+warn "{ $mn } does not allow reading" if \$DEBUG;
+{ $gtype eq 'G_TYPE_STRING' ?? "''" !! '0' };
+READ
 
     my $deprecated = '';
     if $dep {

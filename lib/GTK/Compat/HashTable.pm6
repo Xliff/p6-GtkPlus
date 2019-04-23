@@ -9,14 +9,17 @@ use GTK::Compat::Raw::HashTable;
 
 use GTK::Compat::Roles::Object;
 
-BEGIN { 
+INIT {
   say qq:to/S/;
-  Please note that the objects in { $?FILE } are classed as use-at-your-own-risk!
-  S
+»»»»»»
+» Please note that the objects in { $?FILE } are classed as use-at-your-own-risk!
+»»»»»»
+S
+
 }
 
 # Oy-ya-mama! The issues with this class. Let me start on the fact that it's
-# all POINTER BASED. This is easy for C, but not so easy for Perl6 givene 
+# all POINTER BASED. This is easy for C, but not so easy for Perl6 givene
 # the differences in typing system.. So let's try and determine scope.
 #  - This object is to handle keys of all primative types. (Str, Num, Int)
 #    - Int and Num types will be converted to the native equivalent and passed
@@ -32,16 +35,16 @@ BEGIN {
 
 class GTK::Compat::HashTable {
   also does GTK::Compat::Roles::Object;
-  
+
   has GHashTable $!h;
-  
+
   submethod BUILD (:$table) {
     self!setObject($!h = $table);
   }
-  
-  method GTK::Compat::Types::Raw::GHashTable 
+
+  method GTK::Compat::Types::Raw::GHashTable
   { $!h }
-  
+
   multi method new (GHashTable $table) {
     self.bless(:$table);
   }
@@ -51,15 +54,15 @@ class GTK::Compat::HashTable {
   #
   # Hash values returned by hash_func are used to determine where keys are stored
   # within the GHashTable data structure. The g_direct_hash(), g_int_hash(),
-  # g_int64_hash(), g_double_hash() and g_str_hash() functions are provided for 
+  # g_int64_hash(), g_double_hash() and g_str_hash() functions are provided for
   # some common types of keys. If hash_func is NULL, g_direct_hash() is used.
-  # 
+  #
   # key_equal_func is used when looking up keys in the GHashTable. The
   # g_direct_equal(), g_int_equal(), g_int64_equal(), g_double_equal() and
   # g_str_equal() functions are provided for the most common types of keys. If
   # key_equal_func is NULL, keys are compared directly in a similar fashion to
-  # g_direct_equal(), but without the overhead of a function call. 
-  # key_equal_func is called with the key from the hash table as its first 
+  # g_direct_equal(), but without the overhead of a function call.
+  # key_equal_func is called with the key from the hash table as its first
   # parameter, and the user-provided key to check against as its second.
   multi method new (
     # These parameters WILL NOT WORK
@@ -68,22 +71,22 @@ class GTK::Compat::HashTable {
   ) {
     g_hash_table_new(&hash_func, &key_equal_func);
   }
-  
+
   method new_full (
     # THESE PARAMETERS WILL NOT WORK. See above.
     &hash_func,
-    &key_equal_func, 
-    GDestroyNotify $key_destroy_func   = Pointer, 
+    &key_equal_func,
+    GDestroyNotify $key_destroy_func   = Pointer,
     GDestroyNotify $value_destroy_func = Pointer
   ) {
     g_hash_table_new_full(
       &hash_func,
-      &key_equal_func, 
-      $key_destroy_func, 
+      &key_equal_func,
+      $key_destroy_func,
       $value_destroy_func
     );
   }
-  
+
   method add ($key) {
     g_hash_table_add($!h, $key);
   }
@@ -170,16 +173,16 @@ class GTK::Compat::HashTable {
       } one of the following:
         Str uint8/16/32/64 num32/64, CStruct-based or CPointer-based.
       D
-      
-    die $die_msg unless 
+
+    die $die_msg unless
       $type ~~ (
-        Str, 
+        Str,
         uint8, int8, uint16, int16, uint32, int32, uint64, int64,
         num32, num64
       ).any
-      || 
+      ||
       $type.REPR eq <CStruct CArray>.any;
-    
+
     my $l = GTK::Compat::List.new( g_hash_table_get_values($!h) );
     $type.defined ??
       $l !! $l but GTK::Compat::ListData[$type];
@@ -196,7 +199,7 @@ class GTK::Compat::HashTable {
   method lookup_extended ($lookup_key, $orig_key, $value) {
     g_hash_table_lookup_extended($!h, $lookup_key, $orig_key, $value);
   }
-  
+
   method ref {
     g_hash_table_ref($!h);
   }
@@ -234,18 +237,18 @@ class GTK::Compat::HashTable {
   }
 
 }
-  
 
-# OPAQUE STRUCT 
-  
+
+# OPAQUE STRUCT
+
 class GTK::Compat::HashTableIter {
     has GHashTableIter $!hi;
-    
+
     method GTK::Compat::Raw::Types::GHashTableIter
     { $!hi }
-    
+
     method get_hash_table {
-      GTK::Compat::HashTable.new( 
+      GTK::Compat::HashTable.new(
         g_hash_table_iter_get_hash_table($!hi)
       );
     }
@@ -270,6 +273,5 @@ class GTK::Compat::HashTableIter {
     method steal {
       g_hash_table_iter_steal($!hi);
     }
-    
+
   }
-  

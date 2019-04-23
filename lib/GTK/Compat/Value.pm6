@@ -333,49 +333,49 @@ class GTK::Compat::Value {
 
 # Helper functions
 
-sub g_str(Str() $s) is export {
+sub gv_str(Str() $s) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_STRING );
   $gv.string = $s;
   $gv;
 }
 
-sub g_bool(Int() $b) is export {
+sub gv_bool(Int() $b) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_BOOLEAN );
   $gv.boolean = $b;
   $gv;
 }
 
-sub g_int(Int() $i) is export {
+sub gv_int(Int() $i) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_INT );
   $gv.int = $i;
   $gv;
 }
 
-sub g_uint(Int() $i) is export {
+sub gv_uint(Int() $i) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_UINT );
   $gv.uint = $i;
   $gv;
 }
 
-sub g_flt(Num() $f) is export {
+sub gv_flt(Num() $f) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_FLOAT );
   $gv.float = $f;
   $gv;
 }
 
-sub g_dbl(Num() $d) is export {
+sub gv_dbl(Num() $d) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_DOUBLE );
   $gv.double = $d;
   $gv;
 }
 
-sub g_obj($o) is export {
+sub gv_obj($o) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_OBJECT );
   $gv.object = $o;
   $gv;
 }
 
-sub g_ptr($p) is export {
+sub gv_ptr($p) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_POINTER );
   $gv.pointer = $p;
   $gv;

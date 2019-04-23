@@ -29,8 +29,8 @@ GTK::Builder::Revealer
 GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
-GTK::Compat::FileTypes
 GTK::Roles::Pointers
+GTK::Compat::FileTypes
 GTK::Raw::ReturnedValue
 GTK::Compat::Types
 GTK::Compat::X11_Types
@@ -56,11 +56,13 @@ GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
 GTK::Compat::Raw::HashTable
 GTK::Compat::Raw::Icon
+GTK::Compat::Raw::InputStream
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Log
 GTK::Compat::Raw::Menu
 GTK::Compat::Raw::MenuModel
+GTK::Compat::Raw::Notification
 GTK::Compat::Raw::Permission
 GTK::Compat::Raw::Pixbuf
 GTK::Compat::Raw::Pixbuf::Transforms
@@ -88,6 +90,7 @@ GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Selection
 GTK::Compat::Signal
+GTK::Compat::SimpleActionGroup
 GTK::Compat::Variant
 GTK::Compat::VariantDict
 GTK::Compat::VariantIter
@@ -109,6 +112,7 @@ GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
 GTK::Compat::HashTable
+GTK::Compat::InputStream
 GTK::Compat::KeyFile
 GTK::Compat::Keymap
 GTK::Compat::LaunchContext
@@ -116,6 +120,7 @@ GTK::Compat::Log
 GTK::Compat::MenuAttributeIter
 GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter
+GTK::Compat::Notification
 GTK::Compat::Permission
 GTK::Compat::Pixbuf::Transforms
 GTK::Compat::PtrArray
@@ -124,6 +129,7 @@ GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
 GTK::Compat::Raw::Threads
 GTK::Compat::Roles::GFile
+GTK::Compat::Roles::LoadableIcon
 GTK::Compat::Threads
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
@@ -344,7 +350,6 @@ GTK::Adjustment
 GTK::Clipboard
 GTK::Compat::Cairo
 GTK::Compat::DragContext
-GTK::Compat::File
 GTK::Compat::FrameClock
 GTK::Compat::Pixbuf
 GTK::Compat::Roles::Signals
