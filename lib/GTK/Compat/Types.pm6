@@ -8,7 +8,7 @@ use Cairo;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
-constant forced = 21;
+constant forced = 22;
 
 our $DEBUG is export = 0;
 

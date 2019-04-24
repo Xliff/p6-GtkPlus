@@ -75,6 +75,7 @@
 - NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
 - Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
 - Reminder for when GHashTable is implemented: Include a coercion method for GVariantType.
+- Add a way to mark summary compile time results as inaccurate without having to remove them.
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
