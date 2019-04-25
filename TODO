@@ -76,6 +76,7 @@
 - Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
 - Reminder for when GHashTable is implemented: Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
+- PULL GTK::Roles::Types in favor of GTK::Raw::Utils
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT

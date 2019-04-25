@@ -8,11 +8,9 @@ use GTK::Compat::Pixbuf;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Cursor;
 
-use GTK::Roles::Types;
+use GTK::Raw::Utils;
 
 class GTK::Compat::Cursor {
-  also does GTK::Roles::Types;
-
   has GdkCursor $!c;
 
   submethod BUILD(:$cursor) {
@@ -23,7 +21,7 @@ class GTK::Compat::Cursor {
     self.bless(:$cursor);
   }
   multi method new (Int() $cursor_type) {
-    my uint32 $ct = self.RESOLVE-UINT($cursor_type);
+    my uint32 $ct = resolve-uint($cursor_type);
     my $cursor = gdk_cursor_new($ct);
     self.bless(:$cursor);
   }
@@ -38,7 +36,7 @@ class GTK::Compat::Cursor {
   )
     is also<new-for-display>
   {
-    my uint32 $ct = self.RESOLVE-UINT($cursor_type);
+    my uint32 $ct = resolve-uint($cursor_type);
     my $cursor = gdk_cursor_new_for_display($display, $ct);
     self.bless(:$cursor);
   }
@@ -59,7 +57,7 @@ class GTK::Compat::Cursor {
     is also<new-from-pixbuf>
   {
     my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy) = resolve-int(@i);
     my $cursor = gdk_cursor_new_from_pixbuf($display, $pixbuf, $xx, $yy);
     self.bless(:$cursor);
   }
@@ -105,7 +103,8 @@ class GTK::Compat::Cursor {
   }
 
   method get_type is also<get-type> {
-    gdk_cursor_get_type();
+    state ($n, $t)
+    unstable_get_type( self.^name, &gdk_cursor_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
