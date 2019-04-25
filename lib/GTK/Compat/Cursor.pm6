@@ -103,7 +103,7 @@ class GTK::Compat::Cursor {
   }
 
   method get_type is also<get-type> {
-    state ($n, $t)
+    state ($n, $t);
     unstable_get_type( self.^name, &gdk_cursor_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
