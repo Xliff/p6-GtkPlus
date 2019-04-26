@@ -10,7 +10,7 @@ use GTK::Compat::Types;
 
 # See if this will work properly:
 # - Move ALL data related routines to a ListData parameterized role.
-# - Have raw_data method implemented in client classes that return the pointer 
+# - Have raw_data method implemented in client classes that return the pointer
 #   attribute.
 
 class GTK::Compat::GList {
@@ -19,7 +19,7 @@ class GTK::Compat::GList {
 
   has GTK::Compat::Types::GList $!list;
   has GTK::Compat::Types::GList $!cur;
-  
+
   # Left active, but see NOTE.
   has $.dirty;
 
@@ -29,10 +29,10 @@ class GTK::Compat::GList {
 
     $!dirty = True;
     $!cur = $!list = $list;
-    
+
     # No longer necessary due to GTK::Compat::Roles::ListData
     #$!type := $type;
-    
+
     # See NOTE.
     #
     # while $!cur.defined {
@@ -59,12 +59,12 @@ class GTK::Compat::GList {
 
     self.bless(:$list);
   }
-  multi method new ($type, GTK::Compat::Types::GList $list) {
+  multi method new (GTK::Compat::Types::GList $list) {
     self.bless(:$list);
   }
 
   method GTK::Compat::Types::GList is also<GList> { $!list }
-  
+
   method current_node
     is also<
       current-node
@@ -77,7 +77,7 @@ class GTK::Compat::GList {
   method cleaned {
     $!dirty = False;
   }
-  
+
   method !_data is rw {
     $!cur.data;
   }
@@ -85,7 +85,7 @@ class GTK::Compat::GList {
   method data is rw {
     self!_data;
   }
-  
+
   # Need a current pointer.
   method next {
     $!cur .= next;
@@ -96,17 +96,17 @@ class GTK::Compat::GList {
   }
 
   # NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE -- NOTE
-  # Probably better to finish work on GTK::Compat::ListData role and move 
+  # Probably better to finish work on GTK::Compat::ListData role and move
   # the Array backing to it. Until that decision has been made, this code
   # has been deactivated.
   #
-  # has @!nat 
+  # has @!nat
   #   handles
   #   «pull-one iterator elems AT-POS EXISTS-POS join :p6sort('sort')»;
-  # 
+  #
   # method !rebuild {
   #   my GTK::Compat::Types::GList $l;
-  # 
+  #
   #   @!nat = ();
   #   loop ($l = self.first; $l != GList; $l = $l.next) {
   #     @!nat.push: self.data($l);
@@ -134,25 +134,25 @@ class GTK::Compat::GList {
   }
 
   method copy {
-    self.bless( 
-      #type => $!type, 
-      list => g_list_copy($!list) 
+    self.bless(
+      #type => $!type,
+      list => g_list_copy($!list)
     );
   }
 
   method copy_deep (
-    &func, 
+    &func,
     Pointer $user_data = Pointer
-  ) 
+  )
     is also<copy-deep>
   {
-    self.bless( 
-      #type => $!type, 
+    self.bless(
+      #type => $!type,
       list => g_list_copy_deep($!list, &func, $user_data)
     );
   }
 
-  method delete_link (GTK::Compat::Types::GList() $link) 
+  method delete_link (GTK::Compat::Types::GList() $link)
     is also<delete-link>
   {
     my $list = g_list_delete_link($!list, $link);
@@ -164,7 +164,7 @@ class GTK::Compat::GList {
     g_list_find($!list, $data);
   }
 
-  method find_custom (Pointer $data, &func) 
+  method find_custom (Pointer $data, &func)
     is also<find-custom>
   {
     g_list_find_custom($!list, $data, &func);
@@ -176,7 +176,7 @@ class GTK::Compat::GList {
   }
 
   method foreach (
-    &func, 
+    &func,
     Pointer $user_data = Pointer
   ) {
     g_list_foreach($!list, &func, $user_data);
@@ -191,10 +191,10 @@ class GTK::Compat::GList {
     g_list_free_1($!list);
   }
 
-  method free_full ( 
-    &free_func = -> { } 
-  ) 
-    is also<free-full> 
+  method free_full (
+    &free_func = -> { }
+  )
+    is also<free-full>
   {
     my &func := &free_func // &g_destroy_none;
     g_list_free_full($!list, &func);
@@ -211,7 +211,7 @@ class GTK::Compat::GList {
     $!list = $list;
   }
 
-  method insert_before (GTK::Compat::Types::GList() $sibling, Pointer $data) 
+  method insert_before (GTK::Compat::Types::GList() $sibling, Pointer $data)
     is also<insert-before>
   {
     my $list = g_list_insert_before($!list, $sibling, $data);
@@ -219,7 +219,7 @@ class GTK::Compat::GList {
     $!list = $list;
   }
 
-  method insert_sorted (Pointer $data, &func) 
+  method insert_sorted (Pointer $data, &func)
     is also<insert-sorted>
   {
     my $list = g_list_insert_sorted($!list, $data, &func);
@@ -231,7 +231,7 @@ class GTK::Compat::GList {
     Pointer $data,
     &func,
     Pointer $user_data = Pointer
-  ) 
+  )
     is also<insert-sorted-with-data>
   {
     my $list = g_list_insert_sorted_with_data(
@@ -254,7 +254,7 @@ class GTK::Compat::GList {
     g_list_nth($!list, $n);
   }
 
-  method nth_data (Int() $n) 
+  method nth_data (Int() $n)
     is also<nth-data>
   {
     my guint $nn = resolve-uint($n);

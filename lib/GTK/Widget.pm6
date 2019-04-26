@@ -671,7 +671,7 @@ class GTK::Widget {
       FETCH => sub ($) {
         gtk_widget_get_name($!w);
       },
-      STORE => sub ($, $name is copy) {
+      STORE => sub ($, Str() $name is copy) {
         gtk_widget_set_name($!w, $name);
       }
     );
@@ -768,7 +768,7 @@ class GTK::Widget {
   method hexpand is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_hexpand($!w);
+        so gtk_widget_get_hexpand($!w);
       },
       STORE => sub ($, $expand is copy) {
         gtk_widget_set_hexpand($!w, $expand);
@@ -834,7 +834,7 @@ class GTK::Widget {
   method visible is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_visible($!w);
+        so gtk_widget_get_visible($!w);
       },
       STORE => sub ($, $visible is copy) {
         gtk_widget_set_visible($!w, $visible);
@@ -945,10 +945,11 @@ class GTK::Widget {
   method vexpand is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_vexpand($!w);
+        so gtk_widget_get_vexpand($!w);
       },
-      STORE => sub ($, $expand is copy) {
-        gtk_widget_set_vexpand($!w, $expand);
+      STORE => sub ($, Int() $expand is copy) {
+        my gboolean $e = self.RESOLVE-BOOL($expand);
+        gtk_widget_set_vexpand($!w, $e);
       }
     );
   }
@@ -1067,10 +1068,11 @@ class GTK::Widget {
   method can_default is rw is also<can-default> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_can_default($!w);
+        so gtk_widget_get_can_default($!w);
       },
-      STORE => sub ($, $can_default is copy) {
-        gtk_widget_set_can_default($!w, $can_default);
+      STORE => sub ($, Int() $can_default is copy) {
+        my gboolean $c = self.RESOLVE-BOOL($can_default);
+        gtk_widget_set_can_default($!w, $c);
       }
     );
   }
@@ -1078,7 +1080,7 @@ class GTK::Widget {
   method vexpand_set is rw is also<vexpand-set> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_vexpand_set($!w);
+        so gtk_widget_get_vexpand_set($!w);
       },
       STORE => sub ($, $set is copy) {
         gtk_widget_set_vexpand_set($!w, $set);
@@ -1089,7 +1091,7 @@ class GTK::Widget {
   method hexpand_set is rw is also<hexpand-set> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_hexpand_set($!w);
+        so gtk_widget_get_hexpand_set($!w);
       },
       STORE => sub ($, $set is copy) {
         gtk_widget_set_hexpand_set($!w, $set);
@@ -1122,7 +1124,7 @@ class GTK::Widget {
   method can_focus is rw is also<can-focus> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_can_focus($!w);
+        so gtk_widget_get_can_focus($!w);
       },
       STORE => sub ($, $can_focus is copy) {
         gtk_widget_set_can_focus($!w, $can_focus);
@@ -2135,7 +2137,7 @@ class GTK::Widget {
     gtk_widget_add_mnemonic_label($!w, $label);
   }
 
-  #method class_set_connect_func 
+  #method class_set_connect_func
 
   method set_accel_path (Str() $accel_path, GtkAccelGroup $accel_group)
     is also<set-accel-path>

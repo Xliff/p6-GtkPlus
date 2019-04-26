@@ -7,13 +7,13 @@ use GTK::Compat::Types;
 role GTK::Compat::Roles::ListData[::T] {
   also does Positional;
   also does Iterable;
-  
+
   has @!nat; #handles
     #«iterator elems AT-POS EXISTS-POS join :p6sort('sort')»;
-    
+
   method !rebuild {
     return unless self.dirty;
-    
+
     my GTK::Compat::Types::GList $l;
     @!nat = ();
     loop ($l = self.first; $l.defined; $l = $l.next) {
@@ -22,50 +22,49 @@ role GTK::Compat::Roles::ListData[::T] {
     self.cleaned;
     @!nat;
   }
-  
+
   method DataType { T }
-  
+
   method Array {
-    say self.dirty;
     self!rebuild;
     @!nat;
   }
-  
+
   method List {
     self.Array.clone.List;
   }
-  
+
   # Not sure about this, but just writing this out to solidify my thoughts.
   method iterator {
     self!rebuild;
     @!nat.iterator;
   }
-  
+
   method elems {
     self!rebuild;
     @!nat.elems;
   }
-  
+
   method AT-POS (|c) {
     self!rebuild;
     @!nat.AT-POS(|c);
   }
-  
+
   method join (|c) {
     self!rebuild;
     @!nat.join(|c);
   }
-  
+
   method EXISTS-POS (|c) {
     self!rebuild;
     @!nat.EXISTS-POS(|c);
   }
-  
+
   method p6sort (|c) {
     self!rebuild;
     @!nat.sort(|c);
   }
-  
+
   multi method data (GTK::Compat::Types::GList $n) is rw {
     self!_data($n);
   }
@@ -83,7 +82,7 @@ role GTK::Compat::Roles::ListData[::T] {
           {
             # Run time, or will this break then?
             nativecast(
-              Pointer.^parameterize(T), 
+              Pointer.^parameterize(T),
               $n.data
             ).deref;
           }
@@ -108,12 +107,12 @@ role GTK::Compat::Roles::ListData[::T] {
       },
       STORE => -> $, T $nd {
         # This WILL need some work!
-        
+
         # Int/Num -> CArray[T] -> Pointer[T] -> Pointer
         # Str -Pointer
         # CPointer/CStruct -> Pointer
         $n.data = $nd;
       };
   }
-  
+
 }
