@@ -77,6 +77,10 @@
 - Reminder for when GHashTable is implemented: Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
 - PULL GTK::Roles::Types in favor of GTK::Raw::Utils
+- Normal result graphing script is no longer working as of late April, 2019. It should be fixed.
+- Add a script (or two) that:
+  1) Prepares a legend file mapping perl version to LOCAL PROJECT commit date.
+  2) Creates a horizontal graph of date (x) vs total compile time (y)
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
