@@ -42,6 +42,7 @@
       "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
       "GTK::Roles::Protection"                 :  "lib/GTK/Roles/Protection.pm6"                ,
       "GTK::Roles::Types"                      :  "lib/GTK/Roles/Types.pm6"                     ,
+      "GTK::Utils::LockedHash"                 :  "lib/GTK/Utils/LockedHash.pm6"                ,
       "GTK::Builder::Actionable"               :  "lib/GTK/Builder/Actionable.pm6"              ,
       "GTK::Compat::RGBA"                      :  "lib/GTK/Compat/RGBA.pm6"                     ,
       "GTK::Compat::Raw::Action"               :  "lib/GTK/Compat/Raw/Action.pm6"               ,
@@ -553,6 +554,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

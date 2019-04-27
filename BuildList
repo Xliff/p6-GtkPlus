@@ -37,6 +37,7 @@ GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
+GTK::Utils::LockedHash
 GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action

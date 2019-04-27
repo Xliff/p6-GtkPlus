@@ -9,7 +9,7 @@ grammar ParseBuildResults {
     <top_section>?
     <section>*
     \v+
-    <summary>?
+    <summary>*
   }
   regex top_section {
     ^^ 'Dependency Generation' \s+

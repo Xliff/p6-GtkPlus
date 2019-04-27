@@ -10,7 +10,7 @@ use GTK::Compat::Raw::HashTable;
 use GTK::Compat::Roles::Object;
 
 INIT {
-  say qq:to/S/;
+  say qq:to/S/ unless %*ENV<P6_BUILDING_GTK>.so;
 »»»»»»
 » Please note that the objects in { $?FILE } are classed as use-at-your-own-risk!
 »»»»»»
