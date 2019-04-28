@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::SpinButton;
 use GTK::Raw::Types;
 
+use GTK::Raw::Utils;
+
 use GTK::Adjustment;
 use GTK::Entry;
 
@@ -74,7 +76,7 @@ class GTK::SpinButton is GTK::Entry {
     Int() $digits
   ) {
     my gdouble $cr = $climb_rate;
-    my guint $d = self.RESOLVE-UINT($digits);
+    my guint $d = resolve-uint($digits);
     my $spinbutton = gtk_spin_button_new($adjustment, $cr, $d);
     self.bless(:$spinbutton);
   }

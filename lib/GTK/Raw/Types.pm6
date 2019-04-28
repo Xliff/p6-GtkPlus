@@ -494,12 +494,13 @@ our enum GtkPrintDuplex is export <
   GTK_PRINT_DUPLEX_VERTICAL
 >;
 
-our enum GtkUnit is export <
-  GTK_UNIT_NONE
-  GTK_UNIT_POINTS
-  GTK_UNIT_INCH
-  GTK_UNIT_MM
->;
+our enum GtkUnit is export (
+  GTK_UNIT_NONE      => 0,
+  GTK_UNIT_PIXELS    => 0,
+  'GTK_UNIT_POINTS',
+  'GTK_UNIT_INCH',
+  'GTK_UNIT_MM'
+);
 
 our enum GtkTreeViewGridLines is export <
   GTK_TREE_VIEW_GRID_LINES_NONE

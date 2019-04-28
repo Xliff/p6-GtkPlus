@@ -398,39 +398,81 @@ class GTK::Compat::Pixbuf  {
     gdk_pixbuf_fill($!p, $p);
   }
 
-  method get_bits_per_sample is also<get-bits-per-sample> {
+  method get_bits_per_sample
+    is also<
+      get-bits-per-sample
+      bits_per_sample
+      bits-per-sample
+    >
+  {
     gdk_pixbuf_get_bits_per_sample($!p);
   }
 
-  method get_byte_length is also<get-byte-length> {
+  method get_byte_length
+    is also<
+      get-byte-length
+      byte_length
+      byte-length
+    >
+  {
     gdk_pixbuf_get_byte_length($!p);
   }
 
-  method get_colorspace is also<get-colorspace> {
+  method get_colorspace
+    is also<
+      get-colorspace
+      colorspace
+    >
+  {
     gdk_pixbuf_get_colorspace($!p);
   }
 
-  method get_has_alpha is also<get-has-alpha> {
+  method get_has_alpha
+    is also<
+      get-has-alpha
+    >
+  {
     gdk_pixbuf_get_has_alpha($!p);
   }
 
-  method get_height is also<get-height> {
+  method get_height
+    is also<
+      get-height
+      height
+    >
+  {
     gdk_pixbuf_get_height($!p);
   }
 
-  method get_n_channels is also<get-n-channels> {
+  method get_n_channels
+    is also<
+      get-n-channels
+      n_channels
+      n-channels
+    >
+  {
     gdk_pixbuf_get_n_channels($!p);
   }
 
-  method get_option (gchar $key) is also<get-option> {
+  method get_option (Str() $key) is also<get-option> {
     gdk_pixbuf_get_option($!p, $key);
   }
 
-  method get_options is also<get-options> {
+  method get_options
+    is also<
+      get-options
+      options
+    >
+  {
     gdk_pixbuf_get_options($!p);
   }
 
-  method get_pixels is also<get-pixels> {
+  method get_pixels
+    is also<
+      get-pixels
+      pixels
+    >
+  {
     gdk_pixbuf_get_pixels($!p);
   }
 
@@ -441,24 +483,26 @@ class GTK::Compat::Pixbuf  {
     gdk_pixbuf_get_pixels_with_length($!p, $l);
   }
 
-  method get_rowstride is also<get-rowstride> {
+  method get_rowstride
+    is also<
+      get-rowstride
+      rowstride
+    >
+  {
     gdk_pixbuf_get_rowstride($!p);
   }
 
   method get_type is also<get-type> {
-    state $t;
-    state $n = 0;
-
-    return $t if $n > 0;
-    repeat {
-      $t = gdk_pixbuf_get_type();
-      die "{ ::?CLASS.^name }.get_type could not get stable result"
-        if $n++ > 20;
-    } until $t == gdk_pixbuf_get_type();
-    $t;
+    state ($t, $n);
+    unstable_get_type( self.^name, &gdk_pixbuf_get_type, $n, $t );
   }
 
-  method get_width is also<get-width> {
+  method get_width
+    is also<
+      get-width
+      width
+    >
+  {
     gdk_pixbuf_get_width($!p);
   }
 

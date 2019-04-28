@@ -77,6 +77,8 @@
 - Reminder for when GHashTable is implemented: Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
 - PULL GTK::Roles::Types in favor of GTK::Raw::Utils
+- Insure that all instances where we create an enum in an property, we are using
+  $gv.enum, as opposed to $gv.int or $gv.uint
 - Normal result graphing script is no longer working as of late April, 2019. It should be fixed.
 - Add a script (or two) that:
   1) Prepares a legend file mapping perl version to LOCAL PROJECT commit date.
