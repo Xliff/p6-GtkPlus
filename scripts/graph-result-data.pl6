@@ -56,14 +56,18 @@ sub MAIN (*@filenames) {
 
       # Fixes long standing bug with renamed file.
       $n = 'GTK::ShortcutsWindow'       if $n eq 'GTK::ShorcutsWindow';
-      
+
       # Adjustment from 580d13887aaf1e4504ee719eca91f0786806c276 where
-      # ::TreeRow was made ::TreeRowReference
+      # ::TreeRow was renamed to ::TreeRowReference
       $n = 'GTK::TreeRowReference'      if $n eq 'GTK::TreeRow';
-      
+
       # Adjustment from e8c4c74070c5f00924e8e35949e8c52dfd3c9a34 where
       # ::Compat::Action was made into ::Compat::Roles::Action
-      $n = 'GTK::Compat::Roles::Action' if $n = 'GTK::Compat::Action';
+      $n = 'GTK::Compat::Roles::Action' if $n eq 'GTK::Compat::Action';
+
+      # Adjustment from ab3d879ddb303371fb1ca00d8d7d6446414420e7 where
+      # ::Compat::File was replaced with ::Compat::Roles::GFile
+      $n = 'GTK::Compat::Roles::GFile'  if $n eq 'GTK::Compat::File';
 
       without %order{$n} {
         $n.say;
