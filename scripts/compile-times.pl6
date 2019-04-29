@@ -3,6 +3,7 @@ use v6.c;
 #use Grammar::Tracer;
 #use Data::Dump::Tree;
 use DateTime::Parse;
+use JSON::Fast;
 
 grammar GitLog {
   regex TOP { <fullcommit>* }
@@ -29,7 +30,6 @@ grammar GitLog {
   regex msg {
     ^^ $<msg>=(.+?) \n
   }
-
 
   token hash {
     <[0..9a..f]> ** 40
@@ -74,5 +74,30 @@ class GitLogActions {
 
 my $m = GitLog.parse( qqx{git log}, actions => GitLogActions );
 
-say "{ $_ }: { DateTime.new(+$_) } -- { %p6-versions{$_} }"
-  for %p6-versions.keys.Array.sort;
+my %times;
+VERSION: for %p6-versions.keys.Array.sort {
+  my $dt = DateTime.new( .Int );
+
+  # Find right file.
+  my $filename;
+  my $ldt = $dt;
+  repeat {
+    my ($y, $m, $d) =
+      ( $ldt.year, $ldt.month.fmt('%02d'), $ldt.day.fmt('%02d') );
+    $filename = "stats/LastBuildResults-{ $y }{ $m }{ $d }.json";
+    $ldt .= later(:1day);
+    if $ldt > $dt.later(:30day) {
+      say "Cannot find result file for commit date { $dt }. Skipping...";
+      next VERSION;
+    }
+  } until $filename.IO.e;
+
+  my $c = $filename.IO.slurp;
+  my $o = from-json($c);
+  my $k = %p6-versions{$_};
+  %times{ $k } = $o.pairs
+    .grep({ .key.starts-with('GTK') })
+    .map( *.value<parse> )
+    .sum;
+  say "{ $k }: { %times{$k} }";
+}
