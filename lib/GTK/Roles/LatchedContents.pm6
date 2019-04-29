@@ -38,6 +38,11 @@ role GTK::Roles::LatchedContents {
     @!start.push: $c;
   }
 
+  method unshift-start($c) is also<unshift_start> {
+    self.IS-PROTECTED;
+    @!start.unshift: $c;
+  }
+
   method unshift-end($c) is also<unshift_end> {
     # Write @!end.elems to GtkWidget under key GTKPlus-ContainerEnd
     self.IS-PROTECTED;
@@ -48,12 +53,12 @@ role GTK::Roles::LatchedContents {
     self.IS-PROTECTED;
     @!end.push: $c;
   }
-  
+
   method set_end($c) is also<set-end> {
     self.IS-PROTECTED;
     @!end = ($c);
   }
-  
+
   method clear_end is also<clear-end> {
     @!end = ();
   }

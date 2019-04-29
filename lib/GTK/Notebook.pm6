@@ -18,6 +18,7 @@ class GTK::Notebook is GTK::Container {
   also does GTK::Roles::Signals::Notebook;
 
   has GtkNotebook $!n;
+  has @!labels;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -201,9 +202,18 @@ class GTK::Notebook is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_page (GtkWidget() $child, GtkWidget() $tab_label)
+  method append_page (
+    $child     is copy,
+    $tab_label is copy
+  )
     is also<append-page>
   {
+    die '$child and $tab_label MUST be GTK::Widget compatible objects!'
+      unless ($child, $tab_label).all ~~ (GTK::Widget, GtkWidget).any;
+    self.push-start($child);
+    @!labels.push($tab_label);
+    $child     .= Widget if $child     ~~ GTK::Widget;
+    $tab_label .= Widget if $tab_label ~~ GTK::Widget;
     gtk_notebook_append_page($!n, $child, $tab_label);
   }
 
@@ -221,13 +231,26 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_detach_tab($!n, $child);
   }
 
-  method get_action_widget (Int() $pack_type) is also<get-action-widget> {
+  method get_action_widget (
+    Int() $pack_type,
+    :$raw = False
+  )
+    is also<get-action-widget>
+  {
     my uint32 $pt = self.RESOLVE-UINT($pack_type);
-    gtk_notebook_get_action_widget($!n, $pt);
+    if ( my $w = gtk_notebook_get_action_widget($!n, $pt) ) {
+      $w = GTK::Widget.new($w) unless $raw;
+    }
+    $w;
   }
 
-  method get_menu_label (GtkWidget() $child) is also<get-menu-label> {
-    gtk_notebook_get_menu_label($!n, $child);
+  method get_menu_label (GtkWidget() $child, :$raw = False)
+    is also<get-menu-label>
+  {
+    if ( my $w = gtk_notebook_get_menu_label($!n, $child) ) {
+      $w = GTK::Widget.new($w) unless $raw;
+    }
+    $w;
   }
 
   method get_menu_label_text (GtkWidget() $child)
@@ -236,31 +259,43 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_get_menu_label_text($!n, $child);
   }
 
-  method get_n_pages is also<get-n-pages> {
+  method get_n_pages
+    is also<
+      get-n-pages
+      n_pages
+      n-pages
+    >
+  {
     gtk_notebook_get_n_pages($!n);
   }
 
-  method get_nth_page (
-    Int() $page_num               # gint $page_num
-  )
+  method get_nth_page (Int() $page_num, :$raw = False)
     is also<get-nth-page>
   {
     my gint $pn = self.RESOLVE-INT($page_num);
-    gtk_notebook_get_nth_page($!n, $pn);
+    if ( my $w = gtk_notebook_get_nth_page($!n, $pn) ) {
+      $w = GTK::Widget.new($w) unless $raw;
+    }
+    $w;
   }
 
   method get_tab_detachable (GtkWidget() $child)
     is also<get-tab-detachable>
   {
-    gtk_notebook_get_tab_detachable($!n, $child);
+    so gtk_notebook_get_tab_detachable($!n, $child);
   }
 
   method get_tab_hborder is also<get-tab-hborder> {
     gtk_notebook_get_tab_hborder($!n);
   }
 
-  method get_tab_label (GtkWidget() $child) is also<get-tab-label> {
-    gtk_notebook_get_tab_label($!n, $child);
+  method get_tab_label (GtkWidget() $child, :$raw = False)
+    is also<get-tab-label>
+  {
+    if ( my $w = gtk_notebook_get_tab_label($!n, $child) ) {
+      $w = GTK::Widget.new($w) unless $raw;
+    }
+    $w;
   }
 
   method get_tab_label_text (GtkWidget() $child)
@@ -272,7 +307,7 @@ class GTK::Notebook is GTK::Container {
   multi method get_tab_reorderable (GtkWidget() $child)
     is also<get-tab-reorderable>
   {
-    gtk_notebook_get_tab_reorderable($!n, $child);
+    so gtk_notebook_get_tab_reorderable($!n, $child);
   }
 
   method get_tab_vborder is also<get-tab-vborder> {
@@ -285,13 +320,21 @@ class GTK::Notebook is GTK::Container {
   }
 
   method insert_page (
-    GtkWidget() $child,
-    GtkWidget() $tab_label,
+    $child,
+    $tab_label,
     Int() $position
   )
     is also<insert-page>
   {
+    die '$child and $tab_label MUST be GTK::Widget compatible objects!'
+      unless ($child, $tab_label).all ~~ (GTK::Widget, GtkWidget).any;
+
     my uint32 $p = self.RESOLVE-UINT($position);
+
+    self.insert-start-at($child, $p);
+    @!labels.splice($p, 0, $tab_label);
+    $child     .= Widget if $child     ~~ GTK::Widget;
+    $tab_label .= Widget if $tab_label ~~ GTK::Widget;
     gtk_notebook_insert_page($!n, $child, $tab_label, $p);
   }
 
@@ -324,11 +367,17 @@ class GTK::Notebook is GTK::Container {
   }
 
   method prepend_page (
-    GtkWidget() $child,
-    GtkWidget() $tab_label
+    $child,
+    $tab_label
   )
     is also<prepend-page>
   {
+    die '$child and $tab_label MUST be GTK::Widget compatible objects!'
+      unless ($child, $tab_label).all ~~ (GTK::Widget, GtkWidget).any;
+    self.unshift-start($child);
+    @!labels.unshift($tab_label);
+    $child     .= Widget if $child     ~~ GTK::Widget;
+    $tab_label .= Widget if $tab_label ~~ GTK::Widget;
     gtk_notebook_prepend_page($!n, $child, $tab_label);
   }
 
@@ -351,10 +400,11 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_remove_page($!n, $pn);
   }
 
-  method reorder_child (GtkWidget $child, Int() $position)
+  method reorder_child (GtkWidget() $child, Int() $position)
     is also<reorder-child>
   {
     my gint $p = self.RESOLVE-INT($position);
+    # YYY - Find child in @!start and move to new position?
     gtk_notebook_reorder_child($!n, $child, $p);
   }
 
@@ -422,7 +472,7 @@ class GTK::Notebook is GTK::Container {
         when 'detachable'  |
              'reorderable' |
              'tab-expand'  |
-             'tab-fill'    { self.child-set-int($c, $p, $v)    }
+             'tab-fill'    { self.child-set-bool($c, $p, $v)   }
 
         when 'menu-label'  |
              'tab-label'   { self.child-set-string($c, $p, $v) }
