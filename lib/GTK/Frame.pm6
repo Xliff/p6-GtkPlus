@@ -49,7 +49,7 @@ class GTK::Frame is GTK::Bin {
     $o.upref;
     $o;
   }
-  multi method new(Str() $label) {
+  multi method new(Str() $label = '') {
     my $frame = gtk_frame_new($label);
     self.bless(:$frame);
   }
