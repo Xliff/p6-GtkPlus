@@ -275,3 +275,14 @@ sub g_value_set_boxed (GValue $value, Pointer $v_boxed)
   is native(gobject)
   is export
   { * }
+
+sub g_value_get_flags (GValue $value)
+  returns guint
+  is native(gobject)
+  is export
+  { * }
+
+sub g_value_set_flags (GValue $value, guint $flags)
+  is native(gobject)
+  is export
+  { * }

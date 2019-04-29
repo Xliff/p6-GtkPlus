@@ -90,7 +90,7 @@ class GTK::Compat::Value {
         g_value_get_boxed($!v);
       },
       STORE => -> $, $val is copy {
-        g_value_take_boxed($!v, nativecast(Pointer, $val))
+        g_value_set_boxed($!v, nativecast(Pointer, $val))
       }
     );
   }
@@ -152,6 +152,17 @@ class GTK::Compat::Value {
       },
       STORE => sub ($, Int() $v_int is copy) {
         g_value_set_enum($!v, resolve-int($v_int));
+      }
+    );
+  }
+
+  method flags is rw {
+    Proxy.new(
+      FETCH => sub ($) {
+        g_value_get_enum($!v);
+      },
+      STORE => sub ($, Int() $v_uint is copy) {
+        g_value_set_enum($!v, resolve-uint($v_uint));
       }
     );
   }
@@ -366,6 +377,12 @@ sub gv_flt(Num() $f) is export {
 sub gv_dbl(Num() $d) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_DOUBLE );
   $gv.double = $d;
+  $gv;
+}
+
+sub gv_flg(Int() $f) is export {
+  my $gv = GTK::Compat::Value.new( G_TYPE_FLAGS );
+  $gv.flags = $f;
   $gv;
 }
 
