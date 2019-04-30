@@ -42,7 +42,6 @@
       "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
       "GTK::Roles::Protection"                 :  "lib/GTK/Roles/Protection.pm6"                ,
       "GTK::Roles::Types"                      :  "lib/GTK/Roles/Types.pm6"                     ,
-      "GTK::Utils::LockedHash"                 :  "lib/GTK/Utils/LockedHash.pm6"                ,
       "GTK::Builder::Actionable"               :  "lib/GTK/Builder/Actionable.pm6"              ,
       "GTK::Compat::RGBA"                      :  "lib/GTK/Compat/RGBA.pm6"                     ,
       "GTK::Compat::Raw::Action"               :  "lib/GTK/Compat/Raw/Action.pm6"               ,
@@ -94,6 +93,7 @@
       "GTK::Compat::Roles::ListData"           :  "lib/GTK/Compat/Roles/ListData.pm6"           ,
       "GTK::Compat::Roles::Object"             :  "lib/GTK/Compat/Roles/Object.pm6"             ,
       "GTK::Compat::Roles::Signals::Window"    :  "lib/GTK/Compat/Roles/Signals/Window.pm6"     ,
+      "GTK::Compat::Roles::TypedBuffer"        :  "lib/GTK/Compat/Roles/TypedBuffer.pm6"        ,
       "GTK::Compat::Selection"                 :  "lib/GTK/Compat/Selection.pm6"                ,
       "GTK::Compat::Signal"                    :  "lib/GTK/Compat/Signal.pm6"                   ,
       "GTK::Compat::SimpleActionGroup"         :  "lib/GTK/Compat/SimpleActionGroup.pm6"        ,
@@ -554,6 +554,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

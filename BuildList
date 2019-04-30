@@ -37,7 +37,6 @@ GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
-GTK::Utils::LockedHash
 GTK::Builder::Actionable
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action
@@ -89,6 +88,7 @@ GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals::Window
+GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::SimpleActionGroup

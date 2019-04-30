@@ -21,6 +21,9 @@ sub calloc  (size_t, size_t --> Pointer)           is export is native {}
 sub free    (Pointer)                              is export is native {}
 sub memcpy  (Pointer, Pointer ,size_t --> Pointer) is export is native {}
 
+# Cribbed from https://stackoverflow.com/questions/1281686/determine-size-of-dynamically-allocated-memory-in-c
+sub malloc_usable_size (Pointer --> size_t)        is export is native {}
+
 # Implement memcpy_pattern. Take pattern and write pattern.^elem bytes to successive areas in dest.
 
 sub cast($cast-to, $obj) is export {
