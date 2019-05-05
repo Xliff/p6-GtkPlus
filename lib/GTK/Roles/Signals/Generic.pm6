@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -38,13 +39,13 @@ role GTK::Roles::Signals::Generic {
   # has been created.
   #
   # Must be overridden by all consumers that use another Signal-based role.
-  method is-connected(Str $name) {
+  method is-connected(Str $name) is also<is_connected> {
     %!signals{$name}:exists;
   }
 
   # If I cannot share attributes between roles, then each one will have
   # to have its own signature, or clean-up routine.
-  method disconnect-all (%sigs) {
+  method disconnect-all (%sigs) is also<disconnect_all> {
     self.disconnect($_, %sigs) for %sigs.keys;
   }
 
@@ -58,7 +59,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_event>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -78,11 +81,17 @@ role GTK::Roles::Signals::Generic {
     %!signals{$signal}[0];
   }
 
-  method connect-rbool (
+  method connect-ruint (
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<
+      connect_ruint
+      connect_rbool
+      connect-rbool
+    >
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -110,7 +119,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_widget>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -134,7 +145,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_string>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -158,7 +171,13 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<
+      connect_strstr
+      connect_2str
+      connect-2str
+    >
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -182,7 +201,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_int>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -207,7 +228,13 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<
+      connect_intint
+      connect-2int
+      connect_2int
+    >
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -231,7 +258,13 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<
+      connect_uint
+      connect-bool
+      connect_bool
+    >
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -255,7 +288,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_double>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -280,7 +315,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_long>
+  {
     my $hid;
     %!signals //= do {
       my $s = Supplier.new;
@@ -304,7 +341,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_movement_step>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -328,7 +367,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_move_cursor1>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -352,7 +393,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_move_cursor2>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -376,7 +419,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal = 'activate_link',
     &handler?
-  ) {
+  )
+    is also<connect_activate_link>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -404,7 +449,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_menu>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -428,7 +475,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_int_rint>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -455,7 +504,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_int_ruint>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -482,7 +533,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_uint_ruint>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -509,7 +562,9 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<connect_delete>
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -533,7 +588,13 @@ role GTK::Roles::Signals::Generic {
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<
+      connect_gparam
+      connect-param
+      connect_param
+    >
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
@@ -552,11 +613,17 @@ role GTK::Roles::Signals::Generic {
   }
 
   # GSimpleAction, GVariant, gpointer
-  method connect-variant (
+  method connect-gvariant (
     $obj,
     $signal,
     &handler?
-  ) {
+  )
+    is also<
+      connect_gvariant
+      connect_variant
+      connect-variant
+    >
+  {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
