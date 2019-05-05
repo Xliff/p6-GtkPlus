@@ -73,7 +73,7 @@ class GTK::Application is export {
           );
         }
         when 'custom' {
-          die "Invalid $window of type '{ $window.^name }' specified!"
+          die "Invalid \$window of type '{ $window.^name }' specified!"
             unless $window.^can('GTK::Raw::Types::GtkWindow').elems;
           $window
         }
@@ -93,12 +93,19 @@ class GTK::Application is export {
   { $!app }
 
   method init (GTK::Application:U: ) {
+    state $init-called = False;
+
+    return if $init-called;
+
     my $argc = CArray[uint32].new;
     $argc[0] = 0;
     my $args = CArray[Str].new;
     $args[0] = $*PROGRAM.Str;
 
     gtk_init($argc, $args);
+    $init-called = True;
+
+    Nil;
   }
 
   method wait-for-init is also<wait_for_init> {
