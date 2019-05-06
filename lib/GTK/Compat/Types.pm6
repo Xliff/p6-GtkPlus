@@ -64,12 +64,6 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str           $.message;
 }
 
-# Used ONLY in those situations where cheating is just plain REQUIRED.
-class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
-  has uint64  $.g_type_instance;
-  has uint32   $.ref_count;
-}
-
 our $ERROR is export;
 
 sub gerror is export {
@@ -164,7 +158,6 @@ constant GStrv                   is export := CArray[Str];
 constant GTimeSpan               is export := int64;
 constant GType                   is export := uint64;
 
-
 constant GdkFilterFunc                  is export := Pointer;
 constant GdkPixbufDestroyNotify         is export := Pointer;
 constant GdkPixbufSaveFunc              is export := Pointer;
@@ -173,18 +166,50 @@ constant GdkWindowChildFunc             is export := Pointer;
 constant GdkWindowInvalidateHandlerFunc is export := Pointer;
 constant GdkWMFunction                  is export := Pointer;
 
-class GTypeClass is repr('CStruct') is export {
+class GTypeInstance is repr('CStruct') does GTK::Roles::Pointers is export { ... }
+
+sub g_type_check_instance_is_a (
+  GTypeInstance  $instance,
+  GType          $iface_type
+)
+  returns uint32
+  is native(gobject)
+{ * }
+
+sub real-resolve-uint64($v) is export {
+  $v +& 0xffffffffffffffff;
+}
+
+
+class GTypeClass is repr('CStruct') does GTK::Roles::Pointers is export {
   has GType      $.g_type;
 }
-class GTypeInstance is repr('CStruct') is export {
+class GTypeInstance {
   has GTypeClass $.g_class;
 
   method checkType($compare_type) {
-    $compare_type == $.g_class.g_type;
+    my GType $ct = real-resolve-uint64($compare_type);
+    self.g_class.defined ??
+      $ct == self.g_class.g_type               !!
+      g_type_check_instance_is_a(self, $ct) ;
   }
 
   method getType {
-    $.g_class.g_type;
+    self.g_class.g_type;
+  }
+}
+
+# Used ONLY in those situations where cheating is just plain REQUIRED.
+class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
+  HAS GTypeInstance  $.g_type_instance;
+  has uint32         $.ref_count;
+
+  method checkType ($compare_type) {
+    self.g_type_instance.checkType($compare_type)
+  }
+
+  method getType {
+    self.g_type_instance.getType
   }
 }
 
@@ -232,7 +257,7 @@ class GString is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint64  $.allocated_len;    # NOTE: Should be processor wordsize, so using 64 bit.
 }
 
-class GTypeValueList is repr('CUnion') is export {
+class GTypeValueList is repr('CUnion') does GTK::Roles::Pointers is export {
   has int32	          $.v_int     is rw;
   has uint32          $.v_uint    is rw;
   has long            $.v_long    is rw;

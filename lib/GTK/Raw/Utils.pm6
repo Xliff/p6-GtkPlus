@@ -90,7 +90,7 @@ multi sub resolve-lint($rl) is export {
 multi sub resolve-lint(*@rl) is export {
   resolve-int64(@rl);
 }
-  
+
 multi sub resolve-int64(@rl) is export {
   samewith(|@rl);
 }
@@ -124,7 +124,7 @@ multi sub resolve-uint64(@rul) is export {
   samewith(|@rul);
 }
 multi sub resolve-uint64($rul) is export {
-  $rul +& 0xffffffffffffffff;
+  real-resolve-uint64($rul);
 }
 multi sub resolve-uint64(*@rul) is export {
   @rul.map({ samewith($_) });

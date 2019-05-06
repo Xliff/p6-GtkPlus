@@ -9,6 +9,7 @@
 √ Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 √ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
 √ A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
++ Find work-around for GObject's type checking system
 + Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
 + Mechanism for providing PROPER event handlers for all events (in progress...)
 + Add-to-project-if-I'm-completely-insane: GVariant

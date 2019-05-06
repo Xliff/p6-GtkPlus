@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Raw::IsType;
+
 use GTK::Compat::Types;
 use GTK::Compat::Value;
 
@@ -41,6 +43,10 @@ role GTK::Roles::Properties {
         .gvalue();
       }
     });
+  }
+
+  method is_type(GObjectOrPointer $t) {
+    is_type($t, self);
   }
 
   #proto method set_prop(|) is also<prop_set> { * }
