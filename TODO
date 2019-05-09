@@ -104,3 +104,4 @@ Applications
 - A Perl6 port of WNCK (https://developer.gnome.org/libwnck/)
 - A Perl6 port of Devil's Pie 2 (http://git.savannah.nongnu.org/cgit/devilspie2.git) that uses WNCK
 - A Perl6 port of Clutter (https://wiki.gnome.org/Projects/Clutter)
+- A Perl6 port of Slope (https://github.com/bytebrew/slope)
