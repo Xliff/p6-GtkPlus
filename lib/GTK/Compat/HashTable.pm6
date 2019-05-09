@@ -19,7 +19,7 @@ S
 }
 
 # Oy-ya-mama! The issues with this class. Let me start on the fact that it's
-# all POINTER BASED. This is easy for C, but not so easy for Perl6 givene
+# all POINTER BASED. This is easy for C, but not so easy for Perl6 given
 # the differences in typing system.. So let's try and determine scope.
 #  - This object is to handle keys of all primative types. (Str, Num, Int)
 #    - Int and Num types will be converted to the native equivalent and passed

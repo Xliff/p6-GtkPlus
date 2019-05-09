@@ -75,7 +75,7 @@
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
 - NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
 - Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
-- Reminder for when GHashTable is implemented: I
+- Reminder for when GHashTable is implemented: Write subclasses that properly use the right hash functions. Or maybe parameterized roles?
 
 nclude a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.

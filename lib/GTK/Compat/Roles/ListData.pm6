@@ -65,6 +65,8 @@ role GTK::Compat::Roles::ListData[::T] {
     @!nat.sort(|c);
   }
 
+  #method cur { ... }
+
   multi method data (GTK::Compat::Types::GList $n) is rw {
     self!_data($n);
   }
