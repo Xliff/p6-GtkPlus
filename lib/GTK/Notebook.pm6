@@ -129,7 +129,10 @@ class GTK::Notebook is GTK::Container {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method current_page is rw is also<current-page> {
+  method current_page is rw is also<
+    current-page
+    page
+  > {
     Proxy.new(
       FETCH => sub ($) {
         gtk_notebook_get_current_page($!n);
@@ -264,6 +267,7 @@ class GTK::Notebook is GTK::Container {
       get-n-pages
       n_pages
       n-pages
+      elems
     >
   {
     gtk_notebook_get_n_pages($!n);
@@ -308,10 +312,6 @@ class GTK::Notebook is GTK::Container {
     is also<get-tab-reorderable>
   {
     so gtk_notebook_get_tab_reorderable($!n, $child);
-  }
-
-  method get_tab_vborder is also<get-tab-vborder> {
-    gtk_notebook_get_tab_vborder($!n);
   }
 
   method get_type is also<get-type> {

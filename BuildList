@@ -57,6 +57,7 @@ GTK::Compat::Raw::GSList
 GTK::Compat::Raw::HashTable
 GTK::Compat::Raw::Icon
 GTK::Compat::Raw::InputStream
+GTK::Compat::Raw::IsType
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Log

@@ -62,6 +62,7 @@
       "GTK::Compat::Raw::HashTable"            :  "lib/GTK/Compat/Raw/HashTable.pm6"            ,
       "GTK::Compat::Raw::Icon"                 :  "lib/GTK/Compat/Raw/Icon.pm6"                 ,
       "GTK::Compat::Raw::InputStream"          :  "lib/GTK/Compat/Raw/InputStream.pm6"          ,
+      "GTK::Compat::Raw::IsType"               :  "lib/GTK/Compat/Raw/IsType.pm6"               ,
       "GTK::Compat::Raw::KeyFile"              :  "lib/GTK/Compat/Raw/KeyFile.pm6"              ,
       "GTK::Compat::Raw::Keymap"               :  "lib/GTK/Compat/Raw/Keymap.pm6"               ,
       "GTK::Compat::Raw::Log"                  :  "lib/GTK/Compat/Raw/Log.pm6"                  ,
@@ -554,6 +555,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 
