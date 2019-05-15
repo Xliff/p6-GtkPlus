@@ -8,7 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-my subset DrawingAreaAncestry where GtkDrawingArea | WidgetAncestry;
+our subset DrawingAreaAncestry is export of Mu
+  where GtkDrawingArea | WidgetAncestry;
 
 sub gtk_drawing_area_get_type ()
   returns GType
@@ -30,8 +31,21 @@ class GTK::DrawingArea is GTK::Widget {
   }
 
   submethod BUILD(:$draw) {
-    my $to-parent;
     given $draw {
+      when DrawingAreaAncestry {
+        self.setDrawingArea($draw);
+      }
+      when GTK::DrawingArea {
+      }
+      default {
+      }
+    }
+  }
+
+  method setDrawingArea (DrawingAreaAncestry $draw) {
+    self.IS-PROTECTED;
+    my $to-parent;
+    $!da = do {
       when DrawingAreaAncestry {
         $!da = do {
           when GtkDrawingArea {
@@ -44,10 +58,6 @@ class GTK::DrawingArea is GTK::Widget {
           }
         }
         self.setWidget($to-parent);
-      }
-      when GTK::DrawingArea {
-      }
-      default {
       }
     }
   }
@@ -63,7 +73,7 @@ class GTK::DrawingArea is GTK::Widget {
   }
 
   method GTK::Raw::Types::GtkDrawingArea is also<DrawingArea> { $!da }
-  
+
   # cw: Is this true?!?
   method GTK::Compat::Types::cairo_t is also<cairo_t> {
     nativecast(cairo_t, $!da);

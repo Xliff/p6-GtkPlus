@@ -22,7 +22,7 @@ class GTK::Window is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Window');
+    $o.setType($o.^name);
     $o;
   }
 

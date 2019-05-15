@@ -33,6 +33,7 @@ class GTK::Application is export {
   has $!width;
   has $!height;
   has $!init;
+  has $!wtype;
 
   has $.window handles <show_all>;
 
@@ -43,6 +44,7 @@ class GTK::Application is export {
     uint32 :$width,
     uint32 :$height,
            :$window-type,
+           :$window_type,
            :$window
   ) {
     self!setObject($!app = $app);
@@ -52,8 +54,9 @@ class GTK::Application is export {
     $!width  = $width;
     $!height = $height;
     $!init   = Promise.new;
+    $!wtype  = $window-type // $window_type // 'application';
 
-    die qq:to/DIE/ unless $window-type eq <application window custom>.any;
+    die qq:to/DIE/ unless $!wtype eq <application window custom>.any;
     Invalid window type '{ $window }'. Must be either 'window', 'custom',{
     } or 'application'
     DIE
@@ -61,7 +64,7 @@ class GTK::Application is export {
     $DEBUG = so %*ENV<P6_GTKPLUS_DEBUG>;
 
     self.activate.tap({
-      $!window = do given $window-type {
+      $!window = do given $!wtype {
         when 'application' {
           GTK::ApplicationWindow.new($!app);
         }
@@ -78,8 +81,9 @@ class GTK::Application is export {
           $window
         }
       };
+      say "WindowType is { $!wtype }: { $!window }" if $DEBUG;
       $!window.destroy-signal.tap({ self.exit })
-        unless $window-type eq 'custom';
+        unless $!wtype eq 'custom';
       $!init.keep;
     });
   }
@@ -124,7 +128,8 @@ class GTK::Application is export {
     Int :$height  = 200,
     :$pod,
     :$ui,
-    :$window-type = 'application',
+    :$window-type,
+    :$window_type,
     :$window,
     :$style
   ) {
@@ -147,6 +152,7 @@ class GTK::Application is export {
       :$ui,
       :$window,
       :$window-type,
+      :$window_type,
       :$style
     );
   }

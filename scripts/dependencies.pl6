@@ -52,7 +52,7 @@ sub MAIN (:$prefix = 'GTK') {
       my $mn = $mm;
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
-      unless $mn ~~ /^ $prefix/ {
+      unless $mn.trim ~~ /^ $prefix/ {
         @others.push: $mn;
         next;
       }
@@ -62,6 +62,20 @@ sub MAIN (:$prefix = 'GTK') {
     }
     #say "P: {$p.key} / { %nodes{$p.key}.gist }";
     #exit if $p.key.ends-with('AppLaunchContext');
+  }
+
+  if %*ENV<P6_GTK_DEBUG> {
+    for %nodes.keys.sort -> $k {
+      for %nodes{$k}<edges> -> $e {
+        say "{$k}:";
+        for $e.list {
+          my $p = $_;
+          s:g/'::'/\//;
+          $_ = "lib/{$_}.pm6";
+          say "\t{$_} -- { .IO.e } -- { %nodes{$p}:exists }";
+        }
+      }
+    }
   }
 
   say "\nA resolution order is:";
