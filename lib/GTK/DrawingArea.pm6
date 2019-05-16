@@ -44,22 +44,19 @@ class GTK::DrawingArea is GTK::Widget {
 
   method setDrawingArea (DrawingAreaAncestry $draw) {
     self.IS-PROTECTED;
+    
     my $to-parent;
-    $!da = do {
-      when DrawingAreaAncestry {
-        $!da = do {
-          when GtkDrawingArea {
-            $to-parent = nativecast(GtkWidget, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkDrawingArea, $_);
-          }
-        }
-        self.setWidget($to-parent);
+    $!da = do given $draw {
+      when GtkDrawingArea {
+        $to-parent = nativecast(GtkWidget, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkDrawingArea, $_);
       }
     }
+    self.setWidget($to-parent);
   }
 
   multi method new (DrawingAreaAncestry $draw) {
