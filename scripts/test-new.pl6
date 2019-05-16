@@ -7,7 +7,7 @@ die 'Cannot find BuildList file in current directory.'
 my @buildlist = 'BuildList'.IO.open.slurp-rest.split(/\r?\n/).map( *.chomp );
 
 sub MAIN( $rev = 'HEAD' ) {
-  chdir '/home/cbwood/Projects/p6-GtkPlus';
+  #chdir '/home/cbwood/Projects/p6-GtkPlus';
   mkdir '.touch' unless '.touch'.IO.d;
   my @files = qqx{git diff --name-only $rev}.chomp;
   @files = @files.split("\n").map({
@@ -34,11 +34,7 @@ sub MAIN( $rev = 'HEAD' ) {
 
     say "===== $_[1] =====";
     my $proc = Proc::Async.new(
-      'perl6',
-      '--stagestats',
-      '-I../cairo-p6/lib',
-      '-I../p6-Pango/lib',
-      '-Ilib',
+      './p6gtkexec',
       '-e',
       'use '~ $_[1]
     );

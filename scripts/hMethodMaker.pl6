@@ -13,7 +13,8 @@ sub MAIN (
   :$lib = 'gtk',
   :$args = 1,
   :$static = 0,
-  :$internal = 0
+  :$internal = 0,
+  :$bland = 0
 ) {
   my $fn = $filename;
 
@@ -59,12 +60,18 @@ sub MAIN (
     ]
   };
 
+  # Post process for bland
+  if $bland {
+    $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
+    $contents ~~ s:g/^^ '#' .+? \n//;      # Preprocessor
+  }
+
   my $la;
   my $fd = '';
   my $i = 1;
   my @detected;
   for $contents.lines -> $l {
-    if $l ~~ /^ <availability> / {
+    if ($la.not && $bland) || $l ~~ /^ <availability> / {
       $la = True;
       $fd ~= $l.chomp;
       next;
@@ -83,7 +90,6 @@ sub MAIN (
       my rule returns { :!s 'const '? <t> \s* <p>? }
 
       my rule func_def {
-        <availability>
         <returns>
         $<sub>=[ \w+ ]
         [
@@ -93,15 +99,27 @@ sub MAIN (
         ]
         (\s* (<[A..Z]>+)+ %% '_')?';'
       }
+      my rule func_def_noav {
+        <func_def>
+      }
+      my rule func_def_av {
+        <availability> <func_def>
+      }
 
-
-      my @tv;
-      if $fd ~~ /<func_def>/ {
-        my $avail = ($/<func_def><availability><ad> // '') ne 'DEPRECATED';
+      my (@tv, $av);
+      my $m = $bland ??
+        $fd ~~ /<func_def_noav>/
+        !!
+        $fd ~~ /<func_def_av>/;
+      if $m.defined {
+        $m  = $bland ?? $m<func_def_noav> !! $m<func_def_av>;
+        $av = $bland ?? {} !! $m<func_dev_av><availability>;
+      }
+      if $m {
+        my $avail = ($av<ad> // '') ne 'DEPRECATED';
         my @p;
-        my $orig = $/<func_def><sub>.Str.trim;
-        my $mo = $/;
-        my @tv = ($mo<func_def><type> [Z] $mo<func_def><var>);
+        my $orig = $m<func_def><sub>.Str.trim;
+        my @tv = ($m<func_def><type> [Z] $m<func_def><var>);
 
         @p.push: [ $_[0], $_[1] ] for @tv;
 
@@ -122,7 +140,7 @@ sub MAIN (
 
         my $sig = (@t [Z] @v).join(', ');
         my $call = @v.map( *.trim ).join(', ');
-        my $sub = $mo<func_def><sub>.Str.trim;
+        my $sub = $m<func_def><sub>.Str.trim;
 
         if $attr {
           if $call.chars {
@@ -147,7 +165,7 @@ sub MAIN (
         my $h = {
                avail => $avail,
             original => $orig.trim,
-             returns => $mo<func_def><returns>,
+             returns => $m<func_def><returns>,
                'sub' => $sub,
               params => @p,
               o_call => $o_call,
@@ -207,7 +225,7 @@ sub MAIN (
       %collider{$d<sub>}++;
     }
   }
-
+  
   for %getset.keys.sort -> $gs {
     if !(
       %getset{$gs}<get>                     &&
@@ -217,12 +235,10 @@ sub MAIN (
     ) {
       say "Removing non-conforming get:set {$gs}...";
       if %getset{$gs}<get>.defined {
-        say "G: { %getset{$gs}<get><sub> }";
         %methods{%getset{$gs}<get><sub>} = %getset{$gs}<get>;
         %collider{ %getset{$gs}<get><sub> }++;
       }
       if %getset{$gs}<set>.defined {
-        say "S: { %getset{$gs}<get><sub> }";
         %methods{%getset{$gs}<set><sub>} = %getset{$gs}<set>;
         %collider{ %getset{$gs}<set><sub> }++;
       }

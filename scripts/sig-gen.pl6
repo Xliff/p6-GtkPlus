@@ -5,19 +5,24 @@ use Mojo::DOM:from<Perl5>;
 
 sub MAIN (
   $control is copy,
-  :$var = 'w',
+  :$var    is copy = 'w',
   :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
 ) {
-  my $url;
-  $prefix ~= '/' unless $prefix.ends-with('/');
-  if $control ~~ / ^ 'http' 's'? '://' .+ '.html' $/ {
-    $url = $control;
-    $control ~~ / ( <[A..Za..z]>+ ) '.html' $/;
-    $control = $/[0];
-  } else {
-    $url = "{ $prefix }{ $control }.html"
+  # If it's a URL, then try to pick it apart
+  if $control ~~ / ^ 'https://' / {
+    $control ~~ / 'http' s? '://' <-[\#]>+ /;
+    my $new_prefix = $/.Str;
+    my $new_control = $new_prefix.split('/')[* - 1];
+    $new_control ~~ s/ '.' .+? $//;
+    $new_prefix ~~ s| '/' <-[/]>+? $|/|;
+    ($prefix, $control) = ($new_prefix.trim, $new_control.trim);
+
+    say "Attempting with prefix = { $prefix } control = { $control }";
   }
-  my $dom = Mojo::DOM.new( LWP::Simple.new.get($url) );
+
+  my $dom = Mojo::DOM.new(
+    LWP::Simple.new.get("{ $prefix }{ $control }.html")
+  );
 
   my $v = "\$\!$var";
 
@@ -79,6 +84,19 @@ METH
     my $rt = .[* - 1] ne 'void' ?? " --> { .[* - 1] }" !! '';
     my $name = $v.substr(2);
 
+    my $emission;
+    if $rt.defined && $rt.trim && $rt.trim ne 'void' {
+      $emission = qq:to/NONVOID/.chomp;
+                my \$r = ReturnedValue.new;
+                \$s.emit( [self, { $pp }, \$ud, \$r] );
+                \$r.r;
+      NONVOID
+    } else {
+      $emission = qq:to/VOID/.chomp;
+                \$s.emit( [self, { $pp }, \$ud ] );
+      VOID
+    }
+
     say qq:to/METH/;
   # { .[1].join(', ') }{ $rt }
   method connect-{ .[0] } (
@@ -95,13 +113,11 @@ METH
             default \{ \$s.quit(\$_) \}
           \}
 
-          my \$r = ReturnedValue.new;
-          \$s.emit( [self, { $pp }, \$ud, \$r] );
-          \$r.r;
+{ $emission }
         \},
         Pointer, 0
       );
-      [ \$s.Supply, \$obj, \$hid];
+      [ \$s.Supply, \$obj, \$hid ];
     \};
     \%!signals-{ $name }\{\$signal\}[0].tap(\&handler) with \&handler;
     \%!signals-{ $name }\{\$signal\}[0];
