@@ -320,8 +320,8 @@ class GTK::Notebook is GTK::Container {
   }
 
   method insert_page (
-    $child,
-    $tab_label,
+    $child          is copy,
+    $tab_label      is copy,
     Int() $position
   )
     is also<insert-page>
@@ -367,8 +367,8 @@ class GTK::Notebook is GTK::Container {
   }
 
   method prepend_page (
-    $child,
-    $tab_label
+    $child     is copy,
+    $tab_label is copy
   )
     is also<prepend-page>
   {

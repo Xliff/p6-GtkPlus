@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Frame;
 
-our subset AspectFrameAncestry is export 
+our subset AspectFrameAncestry is export
   where GtkAspectFrame | FrameAncestry;
 
 class GTK::AspectFrame is GTK::Frame {
@@ -17,7 +17,7 @@ class GTK::AspectFrame is GTK::Frame {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::AspectFrame');
+    $o.setType($o.^name);
     $o;
   }
 

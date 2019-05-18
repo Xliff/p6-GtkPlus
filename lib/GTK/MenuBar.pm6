@@ -23,34 +23,42 @@ class GTK::MenuBar is GTK::MenuShell {
 
   submethod BUILD(:$menubar, :@items) {
     given $menubar {
-      my $to-parent;
       when MenuBarAncestry {
-        $!mb = do {
-          when GtkMenuBar {
-            $to-parent = nativecast(GtkMenuShell, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkMenuBar, $_);
-          }
-        }
-        self.setMenuShell($to-parent);
+        self.setMenuBar($menubar, :@items);
       }
       when GTK::MenuBar {
       }
       default {
       }
     }
+  }
+
+  method setMenuBar($menubar, :@items) {
+    self.IS-PROTECTED;
+
+    my $to-parent;
+    when MenuBarAncestry {
+      $!mb = do {
+        when GtkMenuBar {
+          $to-parent = nativecast(GtkMenuShell, $_);
+          $_;
+        }
+        default {
+          $to-parent = $_;
+          nativecast(GtkMenuBar, $_);
+        }
+      }
+      self.setMenuShell($to-parent);
+    }
 
     # Cannot be done until after self.setMenuShell()
-    with @items {
+    if @items.defined && +@items {
       die 'All items in @append must be GTK::MenuItems or GtkMenuItem references.'
         unless @items.all ~~ (GTK::MenuItem, GtkMenuItem).any;
       self.append-widgets($_) for @items;
     }
   }
-  
+
   method GTK::Raw::Types::GtkMenuBar is also<MenuBar> { $!mb }
 
   multi method new (MenuBarAncestry $menubar) {

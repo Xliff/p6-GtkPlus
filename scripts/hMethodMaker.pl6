@@ -225,7 +225,7 @@ sub MAIN (
       %collider{$d<sub>}++;
     }
   }
-  
+
   for %getset.keys.sort -> $gs {
     if !(
       %getset{$gs}<get>                     &&
@@ -282,7 +282,7 @@ sub MAIN (
          returns $m<p6_return>
          is native({ $lib })
          is export
-         \{ * \}
+       \{ * \}
        SUB
 
     }  else {
@@ -291,7 +291,7 @@ sub MAIN (
       $subcall
         is native({ $lib })
         is export
-        \{ * \}
+      \{ * \}
       SUB
 
     }

@@ -238,7 +238,7 @@ role GTK::Roles::Signals::Generic {
     my $hid;
     %!signals{$signal} //= do {
       my $s = Supplier.new;
-      $hid = g_connect_uintuint($obj, $signal,
+      $hid = g-connect-uintuint($obj, $signal,
         -> $, $ui1, $ui2, $ud {
           CATCH {
             default { note($_) }

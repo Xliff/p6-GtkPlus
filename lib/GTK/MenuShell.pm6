@@ -22,11 +22,11 @@ class GTK::MenuShell is GTK::Container {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-ms;
   }
-  
+
   method GTK::Raw::Types::GtkMenuShell is also<MenuShell> { $!ms }
 
   method new {
-    die "Cannot instantiate a GTK::MenuShell object.";
+    die 'Cannot instantiate a GTK::MenuShell object.';
   }
 
   method setMenuShell(MenuShellAncestry $menushell) {
@@ -116,8 +116,8 @@ class GTK::MenuShell is GTK::Container {
   method activate_item (
     GtkWidget() $menu_item,
     Int() $force_deactivate
-  ) 
-    is also<activate-item> 
+  )
+    is also<activate-item>
   {
     my gboolean $fd = self.RESOLVE-BOOL($force_deactivate);
     gtk_menu_shell_activate_item($!ms, $menu_item, $fd);
