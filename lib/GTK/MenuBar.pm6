@@ -37,19 +37,17 @@ class GTK::MenuBar is GTK::MenuShell {
     self.IS-PROTECTED;
 
     my $to-parent;
-    when MenuBarAncestry {
-      $!mb = do {
-        when GtkMenuBar {
-          $to-parent = nativecast(GtkMenuShell, $_);
-          $_;
-        }
-        default {
-          $to-parent = $_;
-          nativecast(GtkMenuBar, $_);
-        }
+    $!mb = do given $menubar {
+      when GtkMenuBar {
+        $to-parent = nativecast(GtkMenuShell, $_);
+        $_;
       }
-      self.setMenuShell($to-parent);
+      default {
+        $to-parent = $_;
+        nativecast(GtkMenuBar, $_);
+      }
     }
+    self.setMenuShell($to-parent);
 
     # Cannot be done until after self.setMenuShell()
     if @items.defined && +@items {

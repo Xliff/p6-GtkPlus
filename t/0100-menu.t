@@ -9,6 +9,8 @@ use GTK::MenuItem;
 my $a = GTK::Application.new( title => 'org.genex.menus' );
 
 $a.activate.tap({
+  CATCH { default { .message.say } }
+  
   sub open-menu  { ... }
   sub close-menu { ... }
   sub help       { ... }

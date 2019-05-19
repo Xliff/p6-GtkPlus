@@ -31,7 +31,10 @@ sub cast($cast-to, $obj) is export {
 }
 
 sub sprintf-vv(Blob, Str, & () )
-    is native is symbol('sprintf') {}
+  is native is symbol('sprintf') {}
+
+sub sprintf-vp(Blob, Str, & (Pointer) )
+  is native is symbol('sprintf') {}
 
 sub set_func_pointer(
   \func,
@@ -153,6 +156,7 @@ constant GSignalEmissionHook     is export := Pointer;
 constant GSignalCMarshaller      is export := Pointer;
 constant GSignalCVaMarshaller    is export := Pointer;
 
+constant GPid                    is export := gint;
 constant GQuark                  is export := uint32;
 constant GStrv                   is export := CArray[Str];
 constant GTimeSpan               is export := int64;
@@ -304,6 +308,23 @@ class GLogField is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $.value;
   has int64   $.length;
 }
+
+class GPollFDNonWin is repr('CStruct') does GTK::Roles::Pointers is export {
+  has gint	    $.fd;
+  has gushort 	$.events;
+  has gushort 	$.revents;
+}
+class GPollFDWin is repr('CStruct') does GTK::Roles::Pointers is export {
+  has gushort 	$.events;
+  has gushort 	$.revents;
+}
+
+constant GPollFD is export := GPollFDNonWin;
+
+class GTimeVal is repr('CStruct') does GTK::Roles::Pointers is export {
+  has glong $.tv_sec;
+  has glong $.tv_usec;
+};
 
 our enum GTypeEnum is export (
   G_TYPE_INVALID   => 0,
@@ -805,6 +826,8 @@ class GInputStream          is repr('CPointer') is export does GTK::Roles::Point
 class GKeyFile              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GListModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GLoadableIcon         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMainContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMainLoop             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMarkupParser         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenu                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuItem             is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -825,6 +848,7 @@ class GSettingsSchemaKey    is repr('CPointer') is export does GTK::Roles::Point
 class GSettingsSchemaSource is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleAction         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleActionGroup    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSource               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -837,6 +861,9 @@ class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is exp
   has GFileAttributeInfo $.infos;
   has gint               $.n_infos;
 }
+
+sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
+    is native is symbol('sprintf') {}
 
 class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str     $.name;
@@ -857,17 +884,19 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
     :$state,
     :$change_state
   ) {
-    sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
-        is native is symbol('sprintf') {}
-
     self.name           = $name;
     self.parameter_type = $parameter_type;
     self.state          = $state;
+    self.activate       = $activate     if $activate.defined;
+    self.change_state   = $change_state if $change_state.defined
+  }
 
-    $!activate     := set_func_pointer( &($activate),     &sprintf-a)
-      if $activate.defined;
-    $!change_state := set_func_pointer( &($change_state), &sprintf-a)
-      if $change_state.defined;
+  method change_state is rw {
+    Proxy.new:
+      FETCH => -> $        { $!activate },
+      STORE => -> $, \func {
+        $!change_state := set_func_pointer( &(func), &sprintf-a )
+      };
   }
 
   method name is rw {
@@ -918,7 +947,133 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
   ) {
     self.bless(:$name, :$activate, :$parameter_type, :$state, :$change_state);
   }
+
 }
+
+sub sprintf-b(
+  Blob,
+  Str,
+  & (gpointer, GSource, & (gpointer --> guint32),
+  gpointer
+) --> int64)
+    is native is symbol('sprintf') {}
+
+class GSourceCallbackFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer $!ref,   # (gpointer     cb_data);
+  has Pointer $!unref, # (gpointer     cb_data);
+  has Pointer $!get,   # (gpointer     cb_data,
+                       #  GSource     *source,
+                       #  GSourceFunc *func,
+                       #  gpointer    *data);
+
+   submethod BUILD (:$ref, :$unref, :$get) {
+     self.ref   = $ref   if $ref.defined;
+     self.unref = $unref if $unref.defined;
+     self.get   = $get   if $get.defined;
+   }
+
+  method ref is rw {
+    Proxy.new:
+      FETCH => -> $        { $!ref },
+      STORE => -> $, \func {
+        $!ref := set_func_pointer( &(func), &sprintf-vp )
+      };
+  }
+
+  method unref is rw {
+    Proxy.new:
+      FETCH => -> $        { $!unref },
+      STORE => -> $, \func {
+        $!unref := set_func_pointer( &(func), &sprintf-vp )
+      };
+  }
+
+  method get is rw {
+    Proxy.new:
+      FETCH => -> $        { $!get },
+      STORE => -> $, \func {
+        $!get := set_func_pointer( &(func), &sprintf-b )
+      };
+  }
+};
+
+sub sprintf-bp (
+  Blob,
+  Str,
+  & (gpointer --> gboolean),
+  gpointer
+  --> int64
+)
+    is native is symbol('sprintf') { * }
+
+sub sprintf-c (
+  Blob,
+  Str,
+  & (GSource, gint --> gboolean),
+  gpointer
+ --> int64
+)
+    is native is symbol('sprintf') { * }
+
+
+sub sprintf-d (
+  Blob,
+  Str,
+  & (GSource, & (gpointer --> gboolean), gint --> gboolean),
+  gpointer
+  --> int64
+)
+    is native is symbol('sprintf') { * }
+
+class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer $!prepare;     # (GSource    *source,
+                             #  gint       *timeout);
+  has Pointer $!check;       # (GSource    *source);
+  has Pointer $!dispatch;    # (GSource    *source,
+                             #  GSourceFunc callback,
+                             #  gpointer    user_data);
+  has Pointer $!finalize;    # (GSource    *source); /* Can be NULL */
+
+  submethod BUILD (:$prepare, :$check, :$dispatch, :$finalize) {
+    self.prepare  = $prepare  if $prepare.defined;
+    self.check    = $check    if $check.defined;
+    self.dispatch = $dispatch if $dispatch.defined;
+    self.finalize = $finalize if $finalize.defined;
+  }
+
+  method prepare is rw {
+    Proxy.new:
+      FETCH => -> $ { $!prepare },
+      STORE => -> $, \func {
+        $!prepare := set_func_pointer( &(func), &sprintf-c);
+      };
+  }
+
+  method check is rw {
+    Proxy.new:
+      FETCH => -> $ { $!check },
+      STORE => -> $, \func {
+        $!check := set_func_pointer( &(func), &sprintf-bp);
+      }
+  }
+
+  method dispatch is rw {
+    Proxy.new:
+      FETCH => -> $ { $!dispatch },
+      STORE => -> $, \func {
+        $!dispatch := set_func_pointer( &(func), &sprintf-d);
+      }
+  }
+
+  method finalize is rw {
+    Proxy.new:
+      FETCH => -> $ { $!finalize },
+      STORE => -> $, \func {
+        $!finalize := set_func_pointer( &(func), &sprintf-vp);
+      }
+  }
+
+};
 
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }

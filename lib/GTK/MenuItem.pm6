@@ -12,7 +12,7 @@ use GTK::Roles::Actionable;
 use GTK::Bin;
 use GTK::Widget;
 
-our subset MenuItemAncestry is export 
+our subset MenuItemAncestry is export
   where GtkMenuItem | GtkActionable | BinAncestry;
 
 class GTK::MenuItem is GTK::Bin {
@@ -22,7 +22,7 @@ class GTK::MenuItem is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -43,10 +43,10 @@ class GTK::MenuItem is GTK::Bin {
       }
     }
 
-    with $submenu {
+    if $submenu.defined {
       # Error checking for a GTK::Menu without a circular dependency?
       # Otherwise, GtkWidget is the best we can do.
-      self.submenu = $_ if $_ ~~ (GtkWidget, GTK::Widget).any;
+      self.submenu = $submenu if $submenu ~~ (GtkWidget, GTK::Widget).any;
     }
 
     # $clicked and $activate do the same thing.

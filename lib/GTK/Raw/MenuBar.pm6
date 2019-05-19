@@ -14,13 +14,13 @@ sub gtk_menu_bar_get_type ()
   { * }
 
 sub gtk_menu_bar_new ()
-  returns GtkWidget
+  returns GtkMenuBar
   is native(gtk)
   is export
   { * }
 
 sub gtk_menu_bar_new_from_model (GMenuModel $model)
-  returns GtkWidget
+  returns GtkMenuBar
   is native(gtk)
   is export
   { * }
