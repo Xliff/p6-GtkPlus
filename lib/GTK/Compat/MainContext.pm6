@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -16,64 +17,75 @@ class GTK::Compat::MainContext {
     $!mc = $maincontext;
   }
 
+  method GTK::Compat::Types::GMainContext
+    is also<
+      GMainContext
+      MainContext
+    >
+  { $!mc }
+
   method new {
     self.bless( maincontext => g_main_context_new() );
   }
 
   method acquire {
-     g_main_context_acquire($!mc);
-   }
+    g_main_context_acquire($!mc);
+  }
 
-   method add_poll (GPollFD $fd, Int() $priority) {
-     my gint $p = resolve-int($priority);
-     g_main_context_add_poll($!mc, $fd, $p);
-   }
+  method add_poll (GPollFD $fd, Int() $priority) is also<add-poll> {
+    my gint $p = resolve-int($priority);
+    g_main_context_add_poll($!mc, $fd, $p);
+  }
 
-   multi method check (
-     Int() $max_priority,
-     Int() $n_fds
-   ) {
-     my gpointer $fds = calloc(nativesizeof(GPollFD), $n_fds);
-     samewith($max_priority, $fds, $n_fds);
-   }
-   multi method check (
+  multi method check (
     Int() $max_priority,
-    gpointer $fds,           # Block of GPollFD
     Int() $n_fds
   ) {
-     my gint ($mp, $nf) = resolve-int($max_priority, $n_fds);
-     g_main_context_check($!mc, $mp, $fds, $nf);
-     my $fdb = $fds but GTK::Compat::Roles::TypedBuffer[GPollFD];
-     my @pd;
-     @pd[$_] = $fdb[$_] for ^$n_fds;
-     @pd;
-   }
+    my gpointer $fds = calloc(nativesizeof(GPollFD), $n_fds);
+    samewith($max_priority, $fds, $n_fds);
+  }
+  multi method check (
+   Int() $max_priority,
+   gpointer $fds,           # Block of GPollFD
+   Int() $n_fds
+ ) {
+    my gint ($mp, $nf) = resolve-int($max_priority, $n_fds);
+    g_main_context_check($!mc, $mp, $fds, $nf);
+    my $fdb = $fds but GTK::Compat::Roles::TypedBuffer[GPollFD];
+    my @pd;
+    @pd[$_] = $fdb[$_] for ^$n_fds;
+    @pd;
+  }
 
-   method default {
-     g_main_context_default();
-   }
+  method default {
+    g_main_context_default();
+  }
 
-   method dispatch {
-     g_main_context_dispatch($!mc);
-   }
+  method dispatch {
+    g_main_context_dispatch($!mc);
+  }
 
-   method find_source_by_funcs_user_data (
+  method find_source_by_funcs_user_data (
     GSourceFuncs $funcs,
     gpointer $user_data = gpointer
-  ) {
-     g_main_context_find_source_by_funcs_user_data($!mc, $funcs, $user_data);
-   }
+  )
+    is also<find-source-by-funcs-user-data>
+  {
+    g_main_context_find_source_by_funcs_user_data($!mc, $funcs, $user_data);
+  }
 
-   method find_source_by_id (Int() $source_id) {
+   method find_source_by_id (Int() $source_id) is also<find-source-by-id> {
      my guint $sid = resolve-uint($source_id);
      g_main_context_find_source_by_id($!mc, $sid);
    }
 
-   method find_source_by_user_data (gpointer $user_data = gpointer) {
+   method find_source_by_user_data (gpointer $user_data = gpointer)
+     is also<find-source-by-user-data>
+   {
      g_main_context_find_source_by_user_data($!mc, $user_data);
    }
 
-   method get_thread_default {
+   method get_thread_default is also<get-thread-default> {
     g_main_context_get_thread_default();
   }
 
@@ -85,13 +97,15 @@ class GTK::Compat::MainContext {
     Int() $priority,
     &function,
     gpointer $data         = gpointer,
-    GDestroyNotify $notify = gpointer)
+    GDestroyNotify $notify = gpointer
+  )
+    is also<invoke-full>
   {
     my gint $p = resolve-int($priority);
     g_main_context_invoke_full($!mc, $p, &function, $data, $notify);
   }
 
-  method is_owner {
+  method is_owner is also<is-owner> {
     g_main_context_is_owner($!mc);
   }
 
@@ -104,7 +118,7 @@ class GTK::Compat::MainContext {
     g_main_context_pending($!mc);
   }
 
-  method pop_thread_default {
+  method pop_thread_default is also<pop-thread-default> {
     g_main_context_pop_thread_default($!mc);
   }
 
@@ -113,7 +127,7 @@ class GTK::Compat::MainContext {
     g_main_context_prepare($!mc, $priority);
   }
 
-  method push_thread_default {
+  method push_thread_default is also<push-thread-default> {
     g_main_context_push_thread_default($!mc);
   }
 
@@ -143,7 +157,7 @@ class GTK::Compat::MainContext {
     g_main_context_ref($!mc);
   }
 
-  method ref_thread_default {
+  method ref_thread_default is also<ref-thread-default> {
     g_main_context_ref_thread_default();
   }
 
@@ -151,7 +165,7 @@ class GTK::Compat::MainContext {
     g_main_context_release($!mc);
   }
 
-  method remove_poll (GPollFD $fd) {
+  method remove_poll (GPollFD $fd) is also<remove-poll> {
     g_main_context_remove_poll($!mc, $fd);
   }
 

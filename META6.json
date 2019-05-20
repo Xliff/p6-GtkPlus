@@ -66,6 +66,7 @@
       "GTK::Compat::Raw::KeyFile"              :  "lib/GTK/Compat/Raw/KeyFile.pm6"              ,
       "GTK::Compat::Raw::Keymap"               :  "lib/GTK/Compat/Raw/Keymap.pm6"               ,
       "GTK::Compat::Raw::Log"                  :  "lib/GTK/Compat/Raw/Log.pm6"                  ,
+      "GTK::Compat::Raw::Main"                 :  "lib/GTK/Compat/Raw/Main.pm6"                 ,
       "GTK::Compat::Raw::Menu"                 :  "lib/GTK/Compat/Raw/Menu.pm6"                 ,
       "GTK::Compat::Raw::MenuModel"            :  "lib/GTK/Compat/Raw/MenuModel.pm6"            ,
       "GTK::Compat::Raw::Notification"         :  "lib/GTK/Compat/Raw/Notification.pm6"         ,
@@ -124,6 +125,8 @@
       "GTK::Compat::Keymap"                    :  "lib/GTK/Compat/Keymap.pm6"                   ,
       "GTK::Compat::LaunchContext"             :  "lib/GTK/Compat/LaunchContext.pm6"            ,
       "GTK::Compat::Log"                       :  "lib/GTK/Compat/Log.pm6"                      ,
+      "GTK::Compat::MainContext"               :  "lib/GTK/Compat/MainContext.pm6"              ,
+      "GTK::Compat::MainLoop"                  :  "lib/GTK/Compat/MainLoop.pm6"                 ,
       "GTK::Compat::MenuAttributeIter"         :  "lib/GTK/Compat/MenuAttributeIter.pm6"        ,
       "GTK::Compat::MenuItem"                  :  "lib/GTK/Compat/MenuItem.pm6"                 ,
       "GTK::Compat::MenuLinkIter"              :  "lib/GTK/Compat/MenuLinkIter.pm6"             ,
@@ -555,6 +558,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

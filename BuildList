@@ -61,6 +61,7 @@ GTK::Compat::Raw::IsType
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Log
+GTK::Compat::Raw::Main
 GTK::Compat::Raw::Menu
 GTK::Compat::Raw::MenuModel
 GTK::Compat::Raw::Notification
@@ -119,6 +120,8 @@ GTK::Compat::KeyFile
 GTK::Compat::Keymap
 GTK::Compat::LaunchContext
 GTK::Compat::Log
+GTK::Compat::MainContext
+GTK::Compat::MainLoop
 GTK::Compat::MenuAttributeIter
 GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter
