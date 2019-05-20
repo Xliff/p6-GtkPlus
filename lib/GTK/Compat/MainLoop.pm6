@@ -31,7 +31,7 @@ class GTK::Compat::MainLoop {
 
   method new (GMainContext() $context, Int() $is_running) {
     my gboolean $ir = resolve-bool($is_running);
-    g_main_loop_new($context, $ir);
+    self.bless( mainloop => g_main_loop_new($context, $ir) );
   }
 
   method quit {
