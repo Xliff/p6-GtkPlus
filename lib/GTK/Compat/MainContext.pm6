@@ -24,7 +24,10 @@ class GTK::Compat::MainContext {
     >
   { $!mc }
 
-  method new {
+  multi method new (GMainContext $maincontext) {
+    self.bless( :$maincontext );
+  }
+  multi method new {
     self.bless( maincontext => g_main_context_new() );
   }
 
