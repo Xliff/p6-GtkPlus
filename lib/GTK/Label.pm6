@@ -36,15 +36,18 @@ class GTK::Label is GTK::Widget {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkLabel is also<Label> { $!l }
 
+  multi method new (GTK::Widget $label) {
+    samewith($label.Widget);
+  }
   multi method new (LabelAncestry $label) {
     my $o = self.bless(:$label);
     $o.upref;
     $o;
   }
-  multi method new ($text = Str) {
+  multi method new (Str $text = Str) {
     my $label = gtk_label_new($text);
     self.bless(:$label);
   }
@@ -114,7 +117,7 @@ class GTK::Label is GTK::Widget {
       }
     );
   }
-  
+
   # PangoAttrList
   method attributes is rw {
     Proxy.new(
@@ -344,11 +347,11 @@ class GTK::Label is GTK::Widget {
     gtk_label_get_current_uri($!l);
   }
 
-  method get_layout 
+  method get_layout
     is also<
       get-layout
       layout
-    > 
+    >
   {
     Pango::Layout.new( gtk_label_get_layout($!l) );
   }

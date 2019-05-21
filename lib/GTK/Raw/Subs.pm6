@@ -29,16 +29,16 @@ sub g_object_new (uint64 $object_type, Str)
   returns gpointer
   is native(gobject)
   is export
-  { * }
+{ * }
 
 sub g_object_ref(Pointer $p)
   is native(gobject)
   is export
-  { * }
+{ * }
 sub g_object_unref(Pointer $p)
   is native(gobject)
   is export
-  { * }
+{ * }
 
 sub g_signal_connect_data(
   Pointer $p,
@@ -49,26 +49,33 @@ sub g_signal_connect_data(
   returns uint64
   is native(gobject)
   is export
-  { * }
+{ * }
 
 sub g_object_set_string(Pointer $o, Str $key, Str $data)
   is native(gobject)
   is symbol('g_object_set_data')
   is export
-  { * }
+{ * }
 
 sub g_object_get_string(Pointer $o, Str $key)
   returns Str
   is native(gobject)
   is symbol('g_object_get_data')
   is export
-  { * }
+{ * }
 
-sub g_object_set_uint(Pointer $o, Str $key, uint32 $data is rw)
+sub g_object_set_uint(Pointer $o, Str $key, CArray[guint] $data)
   is native(gobject)
   is symbol('g_object_set_data')
   is export
-  { * }
+{ * }
+
+sub g_object_get_uint(Pointer $o, Str $key)
+  returns CArray[guint]
+  is native(gobject)
+  is symbol('g_object_set_data')
+  is export
+{ * }
 
 # Now in GTK::Roles::Properties!!
 #
@@ -83,7 +90,13 @@ sub g_object_get_ptr(Pointer $o, Str $key)
   is native(gobject)
   is symbol('g_object_get_data')
   is export
-  { * }
+{ * }
+
+sub g_object_set_ptr(Pointer $o, Str $key, Pointer $data is rw)
+  is native(gobject)
+  is symbol('g_object_set_data')
+  is export
+{ * }
 
 sub g_signal_connect_wd(
   Pointer $app,
@@ -96,7 +109,7 @@ sub g_signal_connect_wd(
   is native(gobject)
   is symbol('g_signal_connect_object')
   is export
-  { * }
+{ * }
 
 sub g_signal_connect_handler(
   Pointer $app,
@@ -109,7 +122,7 @@ sub g_signal_connect_handler(
   is native(gobject)
   is symbol('g_signal_connect_object')
   is export
-  { * }
+{ * }
 
 sub g_object_setv (
   GObject $object,
@@ -121,7 +134,7 @@ sub g_object_setv (
 )
   is native(gobject)
   is export
-  { * }
+{ * }
 
 sub g_object_getv (
   GObject $object,
@@ -132,23 +145,22 @@ sub g_object_getv (
 )
   is native(gobject)
   is export
-  { * }
+{ * }
 
 sub g_object_get_int (
   GObject $object,
   Str $name,
-  gint $value,
-  Str
 )
+  returns CArray[gint]
   is native(gobject)
   is symbol('g_object_get_data')
   is export
-  { * }
+{ * }
 
 sub g_object_set_int (
   GObject $object,
   Str $name,
-  gint $value,
+  CArray[gint] $value,
   Str
 )
   is native(gobject)
@@ -159,7 +171,7 @@ sub g_object_set_int (
 sub g_signal_handler_disconnect(Pointer $app, uint64 $handler)
   is native(gobject)
   is export
-  { * }
+{ * }
 
 
 # IDLE
@@ -170,16 +182,16 @@ sub g_idle_add_rint (
 )
   is native(glib)
   is symbol('g_idle_add')
-  is export 
-  { * }
+  is export
+{ * }
 
 sub g_idle_add (
   &handler (Pointer --> gboolean),
   Pointer
 )
   is native(glib)
-  is export 
-  { * }
+  is export
+{ * }
 
 #
 # CLASS
@@ -197,17 +209,17 @@ sub gtk_application_window_new (GtkApplication $app)
   returns GtkWindow
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_window_set_title (GtkWindow $win, Str $title)
   is native(gtk)
   is export(:window)
-  { * }
+{ * }
 
 sub gtk_window_set_default_size (GtkWindow $win, int32 $w, int32 $h)
   is native(gtk)
   is export(:window)
-  { * }
+{ * }
 
 #
 # APPLICATION
@@ -220,26 +232,26 @@ sub g_application_run(Pointer, int32, CArray[Str])
 sub g_application_quit(Pointer)
   is native('gio-2.0')
   is export
-  { * }
+{ * }
 
 # cw:This signature is wrong, so go with something that works and circle back.
 #sub gtk_init(uint32 is rw, CArray[Str])
 sub gtk_init(CArray[uint32], CArray[Str])
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_init_check()
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_main()
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_main_quit()
   is native(gtk)
   is export
-  { * }
+{ * }

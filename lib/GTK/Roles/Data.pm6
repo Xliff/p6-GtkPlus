@@ -17,14 +17,28 @@ role GTK::Roles::Data {
   }
 
   method get_data_uint(Str() $key) {
-    my Pointer[uint32] $pi =
-      nativecast( Pointer[uint32], g_object_get_ptr($!data, $key) );
-    $pi.defined ?? $pi.deref !! Nil;
+    my CArray[guint] $pi = g_object_get_uint($!data, $key);
+    $pi.defined ?? $pi[0] !! Nil;
   }
   method set_data_uint(Str() $key, Int() $val) {
-    my uint32 $v = resolve-int($val);
+    my $v = CArray[guint].new;
+    $v[0] = resolve-int($val);
     g_object_set_uint($!data, $key, $v);
   }
+
+  method get_data_int(Str() $key) {
+    my CArray[gint] $pi = g_object_get_int($!data, $key);
+    $pi.defined ?? $pi[0] !! Nil;
+  }
+
+  method set_data_ptr(Str() $key, Pointer $val) {
+    g_object_set_ptr($!data, $key, $val);
+  }
+
+  method clear_data(Str() $key) {
+    g_object_set_ptr($!data, $key, Pointer);
+  }
+
 
   method setType($typeName) {
     my $oldType = self.getType;
