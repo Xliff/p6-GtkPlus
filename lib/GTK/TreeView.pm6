@@ -25,8 +25,6 @@ our subset TreeViewAncestry is export
 # "use GTK".
 sub EXPORT {
   %(
-    GTK::Compat::Types::EXPORT::DEFAULT::,
-    GTK::Raw::Types::EXPORT::DEFAULT::,
     GTK::Adjustment::,
     GTK::Container::,
     GTK::Entry::,
@@ -81,7 +79,7 @@ class GTK::TreeView is GTK::Container {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-tv;
   }
-  
+
   method GTK::Raw::Types::GtkTreeView is also<TreeView> { $!tv }
 
   multi method new (TreeViewAncestry $treeview) {
@@ -466,7 +464,7 @@ class GTK::TreeView is GTK::Container {
   method columns_autosize is also<columns-autosize> {
     gtk_tree_view_columns_autosize($!tv);
   }
-  
+
   proto method convert_bin_window_to_tree_coords (|)
     is also<convert-bin-window-to-tree-coords>
   { * }
@@ -496,7 +494,7 @@ class GTK::TreeView is GTK::Container {
   proto method convert_bin_window_to_widget_coords (|)
     is also<convert-bin-window-to-widget-coords>
   { * }
-  
+
   multi method convert_bin_window_to_widget_coords (Int() $bx, Int() $by) {
     my gint ($bxx, $byy, $wxx, $wyy) = ($bx, $by);
     samewith($bxx, $byy, $wxx, $wyy);
@@ -538,8 +536,8 @@ class GTK::TreeView is GTK::Container {
     my gint ($txx, $tyy) =  self.RESOLVE-INT(@i);
     gtk_tree_view_convert_tree_to_bin_window_coords($!tv, $tx, $ty, $bx, $by);
   }
-  
-  proto method convert_widget_to_bin_window_coords (|) 
+
+  proto method convert_widget_to_bin_window_coords (|)
     is also<convert-widget-to-bin-window-coords>
   { * }
 
@@ -571,7 +569,7 @@ class GTK::TreeView is GTK::Container {
   proto method convert_widget_to_tree_coords (|)
     is also<convert-widget-to-tree-coords>
   { * }
-  
+
   multi method convert_widget_to_tree_coords (
     Int() $wx,
     Int() $wy
@@ -667,11 +665,11 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_get_column($!tv, $nn);
   }
 
-  method get_columns 
+  method get_columns
     is also<
       get-columns
       columns
-    > 
+    >
   {
     gtk_tree_view_get_columns($!tv);
   }
@@ -695,10 +693,10 @@ class GTK::TreeView is GTK::Container {
       unless $path ~~ (GTK::TreePath, GtkTreePath).any;
     die '$focus_column must be GTK::TreeViewColumn or GtkTreeViewColumn'
       unless $focus_column ~~ (GTK::TreeViewColumn, GtkTreeViewColumn).any;
-      
+
     $path         .= TreePath       if $path         ~~ GTK::TreePath;
     $focus_column .= TreeViewColumn if $focus_column ~~ GTK::TreeViewColumn;
-    
+
     my $pc = CArray[Pointer[GtkTreePath]].new;
     my $fc = CArray[Pointer[GtkTreeViewColumn]].new;
     $pc[0] = $$path.defined ??
@@ -708,24 +706,24 @@ class GTK::TreeView is GTK::Container {
       cast(Pointer[GtkTreeViewColumn], $focus_column) !!
       Pointer[GtkTreeViewColumn];
     my $rc = gtk_tree_view_get_cursor($!tv, $pc, $fc);
-    
+
     my $rv;
     if $rc {
       # Returned list. Will always return objects.
       $rv = (
-        $path = $pc[0].defined ?? 
-          GTK::TreePath.new( cast(GtkTreePath, $pc[0]) ) 
-          !! 
+        $path = $pc[0].defined ??
+          GTK::TreePath.new( cast(GtkTreePath, $pc[0]) )
+          !!
           GtkTreePath,
-        $focus_column = $fc[0].defined ?? 
-          GTK::TreeViewColumn.new( cast(GtkTreeViewColumn, $fc[0]) ) 
-          !! 
+        $focus_column = $fc[0].defined ??
+          GTK::TreeViewColumn.new( cast(GtkTreeViewColumn, $fc[0]) )
+          !!
           GtkTreeViewColumn
       );
     } else {
       ($path, $focus_column) = (GtkTreePath, GtkTreeViewColumn);
     }
-    
+
     $rv;
   }
 
@@ -752,29 +750,29 @@ class GTK::TreeView is GTK::Container {
     die '$path must be a GTK::TreePath or GtkTreePath'
       unless $path ~~ (GTK::TreePath, GtkTreePath).any;
     $path .= TreePath if $path ~~ GTK::TreePath;
-    
+
     my guint $p = self.RESOLVE-UINT($pos);
     my $cpath = CArray[Pointer[GtkTreePath]].new;
     $cpath[0] = cast(Pointer[GtkTreePath], $path);
-    
+
     my ($rc, $rv) = ( gtk_tree_view_get_drag_dest_row($!tv, $cpath, $p) );
     if $rc {
-      $rv = $path = $cpath[0].defined ?? 
+      $rv = $path = $cpath[0].defined ??
         cast(GtkTreePath, $cpath[0]) !! GtkTreePath;
     } else {
       $path = GtkTreePath;
     }
-    
+
     $rv;
   }
 
-  method get_n_columns 
+  method get_n_columns
     is also<
       get-n-columns
       n_columns
       n-columns
       elems
-    > 
+    >
   {
     gtk_tree_view_get_n_columns($!tv);
   }
@@ -795,28 +793,28 @@ class GTK::TreeView is GTK::Container {
       unless $column ~~ (GTK::TreeViewColumn, GtkTreeViewColumn);
     $path   .= TreePath       if $path   ~~ GTK::TreePath;
     $column .= TreeViewColumn if $column ~~ GTK::TreeViewColumn;
-    
+
     my @i = ($x, $y, $cell_x, $cell_y);
     my gint ($xx, $yy, $cx, $cy) = self.RESOLVE-INT(@i);
-    
+
     my $rv;
     my $cpath = CArray[Pointer[GtkTreePath]].new;
     my $ccol  = CArray[Pointer[GtkTreeViewColumn]].new;
     my $rc = gtk_tree_view_get_path_at_pos(
-      $!tv, 
-      $xx, 
-      $yy, 
-      $cpath, 
-      $ccol, 
-      $cx, 
+      $!tv,
+      $xx,
+      $yy,
+      $cpath,
+      $ccol,
+      $cx,
       $cy
     );
-    
+
     if $rc {
       $rv = (
-        $path = $cpath[0].defined ?? 
-          GTK::TreePath.new( cast(GtkTreePath, $cpath[0]) ) 
-          !! 
+        $path = $cpath[0].defined ??
+          GTK::TreePath.new( cast(GtkTreePath, $cpath[0]) )
+          !!
           GtkTreePath,
         $column = $ccol[0].defined ??
           GTK::TreeViewColumn.new( cast(GtkTreeViewColumn, $ccol[0]) )
@@ -826,8 +824,8 @@ class GTK::TreeView is GTK::Container {
     } else {
       ($path, $column) = (GtkTreePath, GtkTreeViewColumn);
     }
-    
-    $rv;      
+
+    $rv;
   }
 
   method get_row_separator_func is also<get-row-separator-func> {
@@ -842,11 +840,11 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_get_search_position_func($!tv);
   }
 
-  method get_selection 
+  method get_selection
     is also<
-      get-selection 
+      get-selection
       selection
-    > 
+    >
   {
     GTK::TreeSelection.new( gtk_tree_view_get_selection($!tv) );
   }
@@ -865,13 +863,13 @@ class GTK::TreeView is GTK::Container {
       unless $model ~~ (GTK::TreeModel, GtkTreeModel).any;
     die '$path must be GTK::TreePath or GtkTreePath'
       unless $path ~~ (GTK::TreePath, GtkTreePath).any;
-      
+
     $model .= TreeModel if $model ~~ GTK::TreeModel;
     $path  .= TreePath  if $path  ~~ GTK::TreePath;
-    
+
     my $rv;
     my $cmodel = CArray[Pointer[GtkTreeModel]].new;
-    my $cpath  = CArray[Pointer[GtkTreePath]].new; 
+    my $cpath  = CArray[Pointer[GtkTreePath]].new;
     my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
     my gboolean $kt = self.RESOLVE-BOOL($keyboard_tip);
     my $rc = gtk_tree_view_get_tooltip_context(
@@ -883,7 +881,7 @@ class GTK::TreeView is GTK::Container {
       $cpath,
       $iter
     );
-    
+
     ($x, $y) = ($xx, $yy);
     if $rc {
       $rv = (
@@ -891,13 +889,13 @@ class GTK::TreeView is GTK::Container {
           nativecast(GtkTreeModel, $cmodel[0]) !! GtkTreeModel,
         $path = $cpath[0].defined ??
           GTK::TreePath.new( nativecast(GtkTreePath, $cpath[0]) )
-          !! 
+          !!
           GtkTreePath
       );
     } else {
       ($model, $path) = (GtkTreeModel, GtkTreePath);
     }
-    
+
     $rv;
   }
 
@@ -917,7 +915,7 @@ class GTK::TreeView is GTK::Container {
     $cstart[0] = cast(Pointer[GtkTreePath], $start_path);
     $cend[0]   = cast(Pointer[GtkTreePath], $end_path);
     my $rc = gtk_tree_view_get_visible_range($!tv, $cstart, $cend);
-    
+
     my $rv;
     if $rc {
       $rv = (
@@ -931,7 +929,7 @@ class GTK::TreeView is GTK::Container {
           GtkTreePath
       );
     }
-    
+
     $rv;
   }
 
@@ -1000,28 +998,28 @@ class GTK::TreeView is GTK::Container {
       unless $column ~~ (GTK::TreeViewColumn, GtkTreeViewColumn);
     $path   .= TreePath       if $path   ~~ GTK::TreePath;
     $column .= TreeViewColumn if $column ~~ GTK::TreeViewColumn;
-    
+
     my $rv;
     my @i = ($x, $y, $cell_x, $cell_y);
     my gint ($xx, $yy, $cx, $cy) = self.RESOLVE-INT(@i);
     my $cpath = CArray[Pointer[GtkTreePath]].new;
     my $ccol  = CArray[Pointer[GtkTreeViewColumn]].new;
     my $rc = gtk_tree_view_is_blank_at_pos(
-      $!tv, 
-      $xx, 
-      $yy, 
-      $cpath, 
-      $ccol, 
-      $cx, 
+      $!tv,
+      $xx,
+      $yy,
+      $cpath,
+      $ccol,
+      $cx,
       $cy
     );
-    
+
     ($cell_x, $cell_y) = ($cx, $cy);
     if $rc {
       $rv = (
-        $path = $cpath[0].defined ?? 
-          GTK::TreePath.new( cast(GtkTreePath, $cpath[0]) ) 
-          !! 
+        $path = $cpath[0].defined ??
+          GTK::TreePath.new( cast(GtkTreePath, $cpath[0]) )
+          !!
           GtkTreePath,
         $column = $ccol[0].defined ??
           GTK::TreeViewColumn.new( cast(GtkTreeViewColumn, $ccol[0]) )
@@ -1031,7 +1029,7 @@ class GTK::TreeView is GTK::Container {
     } else {
       ($path, $column) = (GtkTreePath, GtkTreeViewColumn);
     }
-    
+
     $rv;
   }
 
@@ -1061,7 +1059,7 @@ class GTK::TreeView is GTK::Container {
   }
 
   method emit_row_activated (
-    GtkTreePath() $path, 
+    GtkTreePath() $path,
     GtkTreeViewColumn() $column
   )
     is also<emit-row-activated>

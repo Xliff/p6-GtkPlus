@@ -27,7 +27,7 @@ class GTK::TreeViewColumn {
 
   submethod BUILD(:$treeview) {
     self!setObject($!tvc = $treeview);
-    
+
     $!b   = nativecast(GtkBuildable,  $!tvc);   # GTK::Roles::Buildable
     $!cl  = nativecast(GtkCellLayout, $!tvc);   # GTK::Roles::CellLayout
   }
@@ -303,8 +303,8 @@ class GTK::TreeViewColumn {
     GtkCellRenderer() $cell_renderer,
     Str() $attribute,
     Int() $column
-  ) 
-    is also<add-attribute> 
+  )
+    is also<add-attribute>
   {
     my gint $c = resolve-int($column);
     gtk_tree_view_column_add_attribute($!tvc, $cell_renderer, $attribute, $c);
@@ -326,8 +326,8 @@ class GTK::TreeViewColumn {
     Int() $y_offset,
     Int() $width,
     Int() $height
-  ) 
-    is also<cell-get-size> 
+  )
+    is also<cell-get-size>
   {
     my @i = ($x_offset, $y_offset, $width, $height);
     my gint ($xo, $yo, $w, $h) = resolve-int(@i);
@@ -343,8 +343,8 @@ class GTK::TreeViewColumn {
     GtkTreeIter() $iter,
     Int() $is_expander,
     Int() $is_expanded
-  ) 
-    is also<cell-set-cell-data> 
+  )
+    is also<cell-set-cell-data>
   {
     my @b = ($is_expander, $is_expanded);
     my ($er, $ed) = resolve-bool(@b);
@@ -361,8 +361,8 @@ class GTK::TreeViewColumn {
     gtk_tree_view_column_clear($!tvc);
   }
 
-  method clear_attributes (GtkCellRenderer() $cell_renderer) 
-    is also<clear-attributes> 
+  method clear_attributes (GtkCellRenderer() $cell_renderer)
+    is also<clear-attributes>
   {
     gtk_tree_view_column_clear_attributes($!tvc, $cell_renderer);
   }
@@ -395,15 +395,15 @@ class GTK::TreeViewColumn {
     gtk_tree_view_column_get_x_offset($!tvc);
   }
 
-  method pack_end (GtkCellRenderer() $cell, Int() $expand) 
-    is also<pack-end> 
+  method pack_end (GtkCellRenderer() $cell, Int() $expand)
+    is also<pack-end>
   {
     my gboolean $e = resolve-bool($expand);
     gtk_tree_view_column_pack_end($!tvc, $cell, $e);
   }
 
-  method pack_start (GtkCellRenderer() $cell, Int() $expand) 
-    is also<pack-start> 
+  method pack_start (GtkCellRenderer() $cell, Int() $expand)
+    is also<pack-start>
   {
     my gboolean $e = resolve-bool($expand);
     gtk_tree_view_column_pack_start($!tvc, $cell, $e);
@@ -415,16 +415,16 @@ class GTK::TreeViewColumn {
 
   method set_cell_data_func (
     GtkCellRenderer() $cell_renderer,
-    GtkTreeCellDataFunc $func,
+    &func,
     gpointer $func_data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
-  ) 
-    is also<set-cell-data-func> 
+  )
+    is also<set-cell-data-func>
   {
     gtk_tree_view_column_set_cell_data_func(
       $!tvc,
       $cell_renderer,
-      $func,
+      &func,
       $func_data,
       $destroy
     );
