@@ -99,6 +99,7 @@
       "GTK::Compat::Selection"                 :  "lib/GTK/Compat/Selection.pm6"                ,
       "GTK::Compat::Signal"                    :  "lib/GTK/Compat/Signal.pm6"                   ,
       "GTK::Compat::SimpleActionGroup"         :  "lib/GTK/Compat/SimpleActionGroup.pm6"        ,
+      "GTK::Compat::Timeout"                   :  "lib/GTK/Compat/Timeout.pm6"                  ,
       "GTK::Compat::Variant"                   :  "lib/GTK/Compat/Variant.pm6"                  ,
       "GTK::Compat::VariantDict"               :  "lib/GTK/Compat/VariantDict.pm6"              ,
       "GTK::Compat::VariantIter"               :  "lib/GTK/Compat/VariantIter.pm6"              ,
@@ -140,6 +141,7 @@
       "GTK::Compat::Raw::Threads"              :  "lib/GTK/Compat/Raw/Threads.pm6"              ,
       "GTK::Compat::Roles::GFile"              :  "lib/GTK/Compat/Roles/GFile.pm6"              ,
       "GTK::Compat::Roles::LoadableIcon"       :  "lib/GTK/Compat/Roles/LoadableIcon.pm6"       ,
+      "GTK::Compat::Source"                    :  "lib/GTK/Compat/Source.pm6"                   ,
       "GTK::Compat::Threads"                   :  "lib/GTK/Compat/Threads.pm6"                  ,
       "GTK::Dialog::Raw::About"                :  "lib/GTK/Dialog/Raw/About.pm6"                ,
       "GTK::Dialog::Raw::AppChooser"           :  "lib/GTK/Dialog/Raw/AppChooser.pm6"           ,
@@ -558,6 +560,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

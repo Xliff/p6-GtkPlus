@@ -94,6 +94,7 @@ GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::SimpleActionGroup
+GTK::Compat::Timeout
 GTK::Compat::Variant
 GTK::Compat::VariantDict
 GTK::Compat::VariantIter
@@ -135,6 +136,7 @@ GTK::Compat::Raw::FrameClock
 GTK::Compat::Raw::Threads
 GTK::Compat::Roles::GFile
 GTK::Compat::Roles::LoadableIcon
+GTK::Compat::Source
 GTK::Compat::Threads
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
