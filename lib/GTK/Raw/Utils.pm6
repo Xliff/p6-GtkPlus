@@ -197,20 +197,9 @@ sub resolve-gstrv(*@rg) is export {
   $gs;
 }
 
-sub gtk_main_iteration_do (Int() $blocking) is export {
-  my gint $b = resolve-uint($blocking);
-  gtk_main_iteration_do_raw($b);
-}
-
 sub gtk_main_iteration_do_raw (gboolean $blocking)
   returns uint32
   is native(gtk)
   is symbol('gtk_main_iteration_do')
-  is export
-  { * }
-
-sub gtk_events_pending
-  returns uint32
-  is native(gtk)
   is export
   { * }

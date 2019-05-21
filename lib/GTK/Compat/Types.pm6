@@ -838,6 +838,8 @@ class GMount                is repr('CPointer') is export does GTK::Roles::Point
 class GMountOperation       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GNotification         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GOptionEntry          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GOptionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }
