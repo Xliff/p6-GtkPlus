@@ -22,8 +22,8 @@ role GTK::Roles::Signals::Generic {
       #"O: $obj".say;
       #"S: $signal".say;
       $hid = g_connect($obj, $signal,
-        -> $, $ {
-            $s.emit(self);
+        -> $, $ud {
+            $s.emit( [self, $ud] );
             CATCH { default { note($_) } }
         },
         Pointer, 0

@@ -960,12 +960,24 @@ class GTK::TreeView is GTK::Container {
     );
   }
 
+  method append_column_with_data_func (
+    Str() $title,
+    GtkCellRenderer() $cell,
+    &func,
+    gpointer $data          = gpointer,
+    GDestroyNotify $dnotify = GDestroyNotify
+  ) {
+    self.insert_column_with_data_func(
+      -1, $title, $cell, &func, $data, $dnotify
+    );
+  }
+
   method insert_column_with_data_func (
     Int() $position,
     Str() $title,
     GtkCellRenderer() $cell,
-    GtkTreeCellDataFunc $func,
-    gpointer $data = gpointer,
+    &func,
+    gpointer $data          = gpointer,
     GDestroyNotify $dnotify = GDestroyNotify
   )
     is also<insert-column-with-data-func>
@@ -976,7 +988,7 @@ class GTK::TreeView is GTK::Container {
       $p,
       $title,
       $cell,
-      $func,
+      &func,
       $data,
       $dnotify
     );

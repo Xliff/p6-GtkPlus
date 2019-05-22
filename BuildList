@@ -219,6 +219,7 @@ GTK::Raw::LinkButton
 GTK::Raw::ListBox
 GTK::Raw::ListStore
 GTK::Raw::LockButton
+GTK::Raw::Main
 GTK::Raw::Menu
 GTK::Raw::MenuBar
 GTK::Raw::MenuButton
@@ -367,6 +368,7 @@ GTK::Compat::Settings
 GTK::Compat::Value
 GTK::DragContext
 GTK::FileFilter
+GTK::Get
 GTK::IconInfo
 GTK::IconTheme
 GTK::PaperSize

@@ -151,7 +151,7 @@ sub gtk_tree_view_column_queue_resize (GtkTreeViewColumn $tree_column)
 sub gtk_tree_view_column_set_cell_data_func (
   GtkTreeViewColumn $tree_column,
   GtkCellRenderer $cell_renderer,
-  &func (GtkTreeViewColunn, GtkCellRenderer, GtkTreeModel, GtkTreeIter, Pointer),
+  &func (GtkTreeViewColumn, GtkCellRenderer, GtkTreeModel, GtkTreeIter, Pointer),
   gpointer $func_data,
   GDestroyNotify $destroy
 )

@@ -224,6 +224,7 @@
       "GTK::Raw::ListBox"                      :  "lib/GTK/Raw/ListBox.pm6"                     ,
       "GTK::Raw::ListStore"                    :  "lib/GTK/Raw/ListStore.pm6"                   ,
       "GTK::Raw::LockButton"                   :  "lib/GTK/Raw/LockButton.pm6"                  ,
+      "GTK::Raw::Main"                         :  "lib/GTK/Raw/Main.pm6"                        ,
       "GTK::Raw::Menu"                         :  "lib/GTK/Raw/Menu.pm6"                        ,
       "GTK::Raw::MenuBar"                      :  "lib/GTK/Raw/MenuBar.pm6"                     ,
       "GTK::Raw::MenuButton"                   :  "lib/GTK/Raw/MenuButton.pm6"                  ,
@@ -372,6 +373,7 @@
       "GTK::Compat::Value"                     :  "lib/GTK/Compat/Value.pm6"                    ,
       "GTK::DragContext"                       :  "lib/GTK/DragContext.pm6"                     ,
       "GTK::FileFilter"                        :  "lib/GTK/FileFilter.pm6"                      ,
+      "GTK::Get"                               :  "lib/GTK/Get.pm6"                             ,
       "GTK::IconInfo"                          :  "lib/GTK/IconInfo.pm6"                        ,
       "GTK::IconTheme"                         :  "lib/GTK/IconTheme.pm6"                       ,
       "GTK::PaperSize"                         :  "lib/GTK/PaperSize.pm6"                       ,
@@ -560,6 +562,7 @@
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
 }
+
 
 
 

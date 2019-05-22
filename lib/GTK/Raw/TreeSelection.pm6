@@ -106,7 +106,7 @@ sub gtk_tree_selection_select_range (
 
 sub gtk_tree_selection_selected_foreach (
   GtkTreeSelection $selection,
-  GtkTreeSelectionForeachFunc $func,
+  &func (GtkTreeModel, GtkTreePath, GtkTreeIter, gpointer),
   gpointer $data
 )
   is native(gtk)
@@ -115,7 +115,7 @@ sub gtk_tree_selection_selected_foreach (
 
 sub gtk_tree_selection_set_select_function (
   GtkTreeSelection $selection,
-  GtkTreeSelectionFunc $func,
+  &func (GtkTreeSelection, GtkTreeModel, GtkTreePath, gboolean, gpointer --> gboolean),
   gpointer $data,
   GDestroyNotify $destroy
 )

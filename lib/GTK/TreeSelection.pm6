@@ -27,7 +27,7 @@ class GTK::TreeSelection {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
-  
+
   method GTK::Raw::Types::GtkTreeSelection
     is also<TreeSelection>
     { $!ts }
@@ -134,22 +134,22 @@ class GTK::TreeSelection {
   }
 
   method selected_foreach (
-    GtkTreeSelectionForeachFunc $func,
+    &func,
     gpointer $data
   )
     is also<selected-foreach>
   {
-    gtk_tree_selection_selected_foreach($!ts, $func, $data);
+    gtk_tree_selection_selected_foreach($!ts, &func, $data);
   }
 
   method set_select_function (
-    GtkTreeSelectionFunc $func,
-    gpointer $data = gpointer,
+    &func,
+    gpointer $data          = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-select-function>
   {
-    gtk_tree_selection_set_select_function($!ts, $func, $data, $destroy);
+    gtk_tree_selection_set_select_function($!ts, &func, $data, $destroy);
   }
 
   method unselect_all is also<unselect-all> {

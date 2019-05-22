@@ -319,7 +319,7 @@ sub gtk_tree_view_insert_column_with_data_func (
   gint $position,
   gchar $title,
   GtkCellRenderer $cell,
-  GtkTreeCellDataFunc $func,
+  &func (GtkTreeViewColumn, GtkCellRenderer, GtkTreeModel, GtkTreeIter, Pointer),
   gpointer $data,
   GDestroyNotify $dnotify
 )
