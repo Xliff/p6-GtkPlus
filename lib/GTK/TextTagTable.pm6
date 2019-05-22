@@ -11,13 +11,11 @@ use GTK::TextTag;
 
 use GTK::Compat::Roles::Object;
 use GTK::Roles::Buildable;
-use GTK::Roles::References;
 use GTK::Roles::Signals::TextTagTable;
 
 class GTK::TextTagTable {
   also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Buildable;
-  also does GTK::Roles::References;
   also does GTK::Roles::Signals::TextTagTable;
 
   has GtkTextTagTable $!ttt;
@@ -25,7 +23,6 @@ class GTK::TextTagTable {
   submethod BUILD(:$table) {
     self!setObject($!ttt = $table);           # GTK::Compat::Roles::Object
     $!b = nativecast(GtkBuildable, $!ttt);    # GTK::Roles::Buildable
-    $!ref = nativecast(Pointer, $!ttt);       # GTK::Roles::References
   }
 
   submethod DESTROY {

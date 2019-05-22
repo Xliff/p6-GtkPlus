@@ -47,11 +47,12 @@ class GTK::Compat::GList {
   }
 
   multi method new (@list) {
-    my $l = GTK::Compat::Types::GList.new;
+    my $l = GTK::Compat::GList.new;
     for @list {
       # What about prototype numeric data (ints, nums) and Str?
       $l.append( nativecast(Pointer, $_) );
     }
+    $l;
   }
   multi method new {
     my $list = g_list_alloc();

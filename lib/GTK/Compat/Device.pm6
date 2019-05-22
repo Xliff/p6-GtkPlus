@@ -7,7 +7,6 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Device;
 
 use GTK::Roles::Properties;
-use GTK::Roles::References;
 use GTK::Roles::Types;
 
 use GTK::Compat::Roles::Signals::Device;
@@ -16,16 +15,13 @@ my subset Ancestry where GdkDevice | GObject;
 
 class GTK::Compat::Device {
   also does GTK::Compat::Roles::Signals::Device;
-
   also does GTK::Roles::Properties;
-  also does GTK::Roles::References;
   also does GTK::Roles::Types;
 
   has GdkDevice $!d;
 
   submethod BUILD(:$device) {
     $!prop = nativecast(GObject, $!d = $device);
-    $!ref = $!d.p;
   }
 
   submethod DESTROY {

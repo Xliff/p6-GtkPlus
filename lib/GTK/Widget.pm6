@@ -24,7 +24,6 @@ use GTK::Raw::Utils;
 use GTK::Roles::Buildable;
 use GTK::Roles::Data;
 use GTK::Roles::Properties;
-use GTK::Roles::References;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
@@ -37,7 +36,6 @@ class GTK::Widget {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Data;
   also does GTK::Roles::Properties;
-  also does GTK::Roles::References;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
@@ -110,8 +108,7 @@ class GTK::Widget {
     };
     $!prop = nativecast(GObject, $!w);    # GTK::Roles::Properties
     $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
-    $!ref = $!data = $!w.p;               # GTK::Roles::Data
-                                          # GTK::Roles::Reference
+    $!data = $!w.p;                       # GTK::Roles::Data
   }
 
   # REALLY EXPERIMENTAL attempt to create a global object creation

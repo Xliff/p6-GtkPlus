@@ -8,24 +8,21 @@ use GTK::Compat::Types;
 use GTK::Raw::WindowGroup;
 use GTK::Raw::Types;
 
-use GTK::Roles::References;
 use GTK::Compat::Roles::Object;
 
 class GTK::WindowGroup {
-  also does GTK::Roles::References;
   also does GTK::Compat::Roles::Object;
 
   has GtkWindowGroup $!wg;
 
   submethod BUILD(:$group) {
-    $!ref = ($!wg = $group).p;
     self!setObject($group);
   }
-    
+
   submethod DESTROY {
     self.downref;
   }
-  
+
   method GTK::Raw::Types::GtkWindowGroup
     is also<WindowGroup>
     { $!wg }
@@ -54,8 +51,8 @@ class GTK::WindowGroup {
     gtk_window_group_add_window($!wg, $window);
   }
 
-  method get_current_device_grab (GdkDevice() $device) 
-    is also<get-current-device-grab> 
+  method get_current_device_grab (GdkDevice() $device)
+    is also<get-current-device-grab>
   {
     gtk_window_group_get_current_device_grab($!wg, $device);
   }

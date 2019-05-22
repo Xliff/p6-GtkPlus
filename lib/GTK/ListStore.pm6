@@ -8,6 +8,8 @@ use GTK::Compat::Value;
 use GTK::Raw::ListStore;
 use GTK::Raw::Types;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Roles::Object;
 
 use GTK::Roles::Buildable;
@@ -75,7 +77,7 @@ class GTK::ListStore {
 
   method insert (GtkTreeIter() $iter, Int() $position) {
     $!accessed = True;
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = resolve-int($position);
     gtk_list_store_insert($!ls, $iter, $position);
   }
 
@@ -218,7 +220,7 @@ class GTK::ListStore {
   )
     is also<set-value>
   {
-    my gint $c = self.RESOLVE-INT($column);
+    my gint $c = resolve-int($column);
     gtk_list_store_set_value($!ls, $iter, $c, $value);
   }
 

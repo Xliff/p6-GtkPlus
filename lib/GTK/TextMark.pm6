@@ -8,21 +8,18 @@ use GTK::Raw::TextMark;
 use GTK::Raw::Types;
 
 use GTK::Compat::Roles::Object;
-use GTK::Roles::References;
 use GTK::Roles::Types;
 
 class GTK::TextMark {
   also does GTK::Compat::Roles::Object;
-  also does GTK::Roles::References;
   also does GTK::Roles::Types;
 
   has GtkTextMark $!tm;
 
   submethod BUILD(:$textmark) {
     self!setObject($!tm = $textmark);
-    $!ref = nativecast(Pointer, $!tm);
   }
-  
+
   method GTK::Raw::Types::GtkTextMark
     is also<TextMark>
   { $!tm; }
@@ -59,39 +56,39 @@ class GTK::TextMark {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_buffer 
+  method get_buffer
     is also<
       get-buffer
       buffer
-    > 
+    >
   {
     GTK::TextBuffer( gtk_text_mark_get_buffer($!tm) );
   }
 
-  method get_deleted 
+  method get_deleted
     is also<
       get-deleted
       deleted
-    > 
+    >
   {
     so gtk_text_mark_get_deleted($!tm);
   }
 
-  method get_left_gravity 
+  method get_left_gravity
     is also<
       get-left-gravity
       left_gravity
       left-gravity
-    > 
+    >
   {
     so gtk_text_mark_get_left_gravity($!tm);
   }
 
-  method get_name 
+  method get_name
     is also<
       get-name
       name
-    > 
+    >
   {
     gtk_text_mark_get_name($!tm);
   }

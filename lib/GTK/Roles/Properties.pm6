@@ -144,4 +144,9 @@ role GTK::Roles::Properties {
     g_object_set_int($!prop, $name, $value, Str);
   }
 
+  # Should be in its own role that is common to both ::Compat::Roles::Object
+  # and this one.
+  method ref   is also<upref>   {   g_object_ref($!prop); self; }
+  method unref is also<downref> { g_object_unref($!prop); self; }
+
 }

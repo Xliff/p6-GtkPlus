@@ -380,14 +380,14 @@ sub gv_dbl(Num() $d) is export {
   $gv;
 }
 
-sub gv_flg(Int() $f) is export {
+sub gv_flag(Int() $f) is export {
   my $gv = GTK::Compat::Value.new( G_TYPE_FLAGS );
   $gv.flags = $f;
   $gv;
 }
 
-sub gv_obj($o) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_OBJECT );
+sub gv_obj($o, :$type) is export {
+  my $gv = GTK::Compat::Value.new( $type // G_TYPE_OBJECT );
   $gv.object = $o;
   $gv;
 }

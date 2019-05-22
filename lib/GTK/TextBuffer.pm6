@@ -14,13 +14,11 @@ use GTK::TextMark;
 use GTK::TextTagTable;
 
 use GTK::Roles::Properties;
-use GTK::Roles::References;
 use GTK::Roles::Signals::TextBuffer;
 use GTK::Roles::Types;
 
 class GTK::TextBuffer {
   also does GTK::Roles::Properties;
-  also does GTK::Roles::References;
   also does GTK::Roles::Signals::TextBuffer;
   also does GTK::Roles::Types;
 
@@ -32,7 +30,6 @@ class GTK::TextBuffer {
 
   method setTextBuffer($buffer) {
     self!setObject($!tb = $buffer);             # GTK::Roles::Properties
-    $!ref = nativecast(Pointer, $!tb);          # GTK::Roles::References
   }
 
   submethod DESTROY {

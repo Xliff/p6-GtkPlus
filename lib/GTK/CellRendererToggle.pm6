@@ -7,11 +7,13 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRendererToggle;
 use GTK::Raw::Types;
 
+use GTK::Raw::Utils;
+
 use GTK::CellRenderer;
 
 use GTK::Roles::Signals::Generic;
 
-our subset CellRendererToggleAncestry is export 
+our subset CellRendererToggleAncestry is export
   where GtkCellRendererToggle | GtkCellRenderer;
 
 class GTK::CellRendererToggle is GTK::CellRenderer {
@@ -52,8 +54,8 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     self.disconnect-all(%!signals);
   }
 
-  method GTK::Raw::Types::GtkCellRendererToggle 
-    is also<CellRendererToggle> 
+  method GTK::Raw::Types::GtkCellRendererToggle
+    is also<CellRendererToggle>
     { $!crt }
 
   multi method new {
@@ -82,7 +84,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         so gtk_cell_renderer_toggle_get_activatable($!crt);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = resolve-bool($setting);
         gtk_cell_renderer_toggle_set_activatable($!crt, $s);
       }
     );
@@ -94,7 +96,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         gtk_cell_renderer_toggle_get_active($!crt);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = resolve-bool($setting);
         gtk_cell_renderer_toggle_set_active($!crt, $s);
       }
     );
@@ -106,7 +108,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         so gtk_cell_renderer_toggle_get_radio($!crt);
       },
       STORE => sub ($, Int() $radio is copy) {
-        my gboolean $r = self.RESOLVE-BOOL($radio);
+        my gboolean $r = resolve-bool($radio);
         gtk_cell_renderer_toggle_set_radio($!crt, $r);
       }
     );
@@ -124,7 +126,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = resolve-bool($val);
         self.prop_set('inconsistent', $gv);
       }
     );
@@ -139,7 +141,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = resolve-int($val);
         self.prop_set('indicator-size', $gv);
       }
     );

@@ -12,14 +12,12 @@ use GTK::Raw::Types;
 
 use GTK::IconInfo;
 
-use GTK::Roles::References;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 use GTK::Compat::Roles::ListData;   # Not to be composed in GTK::IconTheme
 use GTK::Compat::Roles::Object;
 
 class GTK::IconTheme {
-  also does GTK::Roles::References;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Object;
@@ -27,13 +25,13 @@ class GTK::IconTheme {
   has GtkIconTheme $!it;
 
   submethod BUILD(:$theme) {
-    self!setObject($!ref = ($!it = $theme).p);
+    self!setObject($!it = $theme);
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
-  
+
   method GTK::Raw::GtkIconTheme
     is also<IconTheme>
     { $!it }
@@ -47,7 +45,7 @@ class GTK::IconTheme {
     my $theme = gtk_icon_theme_new();
     self.bless(:$theme);
   }
-  
+
   method get_for_screen(GdkScreen() $screen) is also<get-for-screen> {
     my $theme = gtk_icon_theme_get_for_screen($screen);
     self.bless(:$theme);
@@ -56,7 +54,7 @@ class GTK::IconTheme {
   method get_default (GTK::IconTheme:U: ) is also<get-default> {
     self.bless( theme => gtk_icon_theme_get_default() );
   }
-  
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:

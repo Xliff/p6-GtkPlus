@@ -8,13 +8,12 @@ use GTK::Compat::Value;
 use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
 
+use GTK::Raw::Utils;
+
 use GTK::TreeIter;
 use GTK::TreePath;
 
-use GTK::Roles::Types;
-
 role GTK::Roles::TreeModel {
-  also does GTK::Roles::Types;
 
   has GtkTreeModel $!tm;
 
@@ -22,7 +21,12 @@ role GTK::Roles::TreeModel {
     $!tm = $tree;
   }
 
-  method GTK::Raw::Types::GtkTreeModel is also<TreeModel> { $!tm }
+  method GTK::Raw::Types::GtkTreeModel
+    is also<
+      GtkTreeModel
+      TreeModel
+    >
+  { $!tm }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -83,7 +87,7 @@ role GTK::Roles::TreeModel {
   }
 
   method get_column_type (Int() $index) is also<get-column-type> {
-    my gint $i = self.RESOLVE-INT($index);
+    my gint $i = resolve-int($index);
     gtk_tree_model_get_column_type($!tm, $i);
   }
 
@@ -146,7 +150,7 @@ role GTK::Roles::TreeModel {
   proto method get_value(|) is also<get-value> { * }
 
   multi method get_value(GtkTreeIter() $iter, Int() $column) {
-    my gint $c = self.RESOLVE-INT($column);
+    my gint $c = resolve-int($column);
     my $value = GValue.new;
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
     GTK::Compat::Value.new($value);
@@ -156,7 +160,7 @@ role GTK::Roles::TreeModel {
     GValue() $value
   )  {
     # TODO: Check iter for path.
-    my gint $c = self.RESOLVE-INT($column);
+    my gint $c = resolve-int($column);
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
   }
 
@@ -185,7 +189,7 @@ role GTK::Roles::TreeModel {
   )
     is also<iter-nth-child>
   {
-    my gint $nn = self.RESOLVE-INT($n);
+    my gint $nn = resolve-int($n);
     so gtk_tree_model_iter_nth_child($!tm, $iter, $parent, $nn);
   }
 
@@ -232,7 +236,7 @@ role GTK::Roles::TreeModel {
   )
     is also<emit-rows-reordered>
   {
-    my gint $no = self.RESOLVE-INT($new_order);
+    my gint $no = resolve-int($new_order);
     gtk_tree_model_rows_reordered($!tm, $path, $iter, $no);
   }
 
@@ -245,7 +249,7 @@ role GTK::Roles::TreeModel {
     is also<emit-rows-reordered-with-length>
   {
     my @i = ($new_order, $length);
-    my gint ($no, $l) = self.RESOLVE-INT(@i);
+    my gint ($no, $l) = resolve-int(@i);
     gtk_tree_model_rows_reordered_with_length($!tm, $path, $iter, $no, $l);
   }
 

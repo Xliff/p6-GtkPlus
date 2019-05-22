@@ -109,14 +109,14 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: GdkPixbuf
   method pixbuf is rw {
-    my GTK::Compat::Value $gv .= new(G_TYPE_POINTER);
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new( self.prop_get('pixbuf', $gv); );
-        GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
+        GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
-        $gv.pointer = $val;
+        $gv.object = $val;
         self.prop_set('pixbuf', $gv);
       }
     );

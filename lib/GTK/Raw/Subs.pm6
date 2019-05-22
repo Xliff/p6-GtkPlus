@@ -31,11 +31,11 @@ sub g_object_new (uint64 $object_type, Str)
   is export
 { * }
 
-sub g_object_ref(Pointer $p)
+sub g_object_ref(GObject $p)
   is native(gobject)
   is export
 { * }
-sub g_object_unref(Pointer $p)
+sub g_object_unref(GObject $p)
   is native(gobject)
   is export
 { * }
