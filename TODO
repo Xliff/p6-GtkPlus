@@ -9,6 +9,13 @@
 √ Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 √ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
 √ A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
+√ Implement GTK::Compat::ActionEntry (done as CStruct)
+√ Implement GTK::ApplicationWindow
+√ Implement
+      √ GTK::Roles::RecentChooser,
+      √ GTK::RecentChooserMenu,
+      √ GTK::Dialog::RecentChooser,
+      √ GTK::RecentChooserWidget!
 + Find work-around for GObject's type checking system
 + Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
 + Mechanism for providing PROPER event handlers for all events (in progress...)
@@ -40,8 +47,6 @@
 - Properly rename GtkCssSection to GtkCSSSection
 - Refine GTK::Compat::Window
 - GTK::Roles::Data should be deprecated in favor of GTK::Roles::Properties
-- Is there any further need for GTK::Roles::Types.RESOLVE-* now that those routines have been moved to GTK::Raw::Utils.
-  If the answer is NO, then it is an EXTREMELY LOW PRIORITY refactor. Don't rock the boat unless it's leaking.
 - Consider abstracting GTK::Roles::Protection into it's own project. Method::Protect, maybe?
 - Properly rework GTK::Utils::MenuBuilder. It is faulty
   + Test case for all features of GTK::Utils::MenuBuilder
@@ -60,13 +65,7 @@
    - Initialization should be done in private method that is called by BUILD and all implementing classes
    - Insure all implementing classes override for safety reasons.
 - Finish GTK::Utils::LockedHash
-√ Implement GTK::Compat::ActionEntry (done as CStruct)
-√ Implement GTK::ApplicationWindow
-√ Implement
-      √ GTK::Roles::RecentChooser,
-      √ GTK::RecentChooserMenu,
-      √ GTK::Dialog::RecentChooser,
-      √ GTK::RecentChooserWidget!
+
 - Consider separating enums from GTK::Raw::Types into GTK::Raw::Enums
   - If that goes well, then do the same for GTK::Compat::Raw::Types
 - Consider altering scripts/dirty_typing.pl6 to only go through files later the latest date amongst the stubs in in .dirty_typing
@@ -77,9 +76,9 @@
 - Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
 - Reminder for when GHashTable is implemented: Write subclasses that properly use the right hash functions. Or maybe parameterized roles?
 
-nclude a coercion method for GVariantType.
+- Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
-- PULL GTK::Roles::Types in favor of GTK::Raw::Utils
+- PULL GTK::Roles::Types in favor of GTK::Raw::Utils (!!). Now an open initiative.
 - Insure that all instances where we create an enum in an property, we are using
   $gv.enum, as opposed to $gv.int or $gv.uint
 - Normal result graphing script is no longer working as of late April, 2019. It should be fixed.
@@ -94,7 +93,9 @@ nclude a coercion method for GVariantType.
     statements is faster than using a junction or 'andthen'
   - It is possible, but not recommended to use a role to implement the custom
     bless method, since that bless will be run for ALL ANCESTORS as well as
-    the current class.
+    the current class. -- Also note, that the custom bless IS inherited. Must
+    check that the right object name is used in the call to setType (rather than
+    the ancestor where bless is implemented!)
 
 Applications
 ============
