@@ -341,7 +341,6 @@ role GTK::Roles::Signals::Generic {
     %!signals{$signal}[0];
   }
 
-  # WebKitDownload, guint64, gpointer
   method connect-long (
     $obj,
     $signal,
@@ -359,6 +358,32 @@ role GTK::Roles::Signals::Generic {
           }
 
           $s.emit( [self, $l, $ud] );
+        },
+        Pointer, 0
+      );
+      [ $s.Supply, $obj, $hid];
+    };
+    %!signals{$signal}[0].tap(&handler) with &handler;
+    %!signals{$signal}[0];
+  }
+  
+  method connect-strint (
+    $obj,
+    $signal,
+    &handler?
+  )
+    is also<connect_strint>
+  {
+    my $hid;
+    %!signals //= do {
+      my $s = Supplier.new;
+      $hid = g-connect-strint($obj, $signal,
+        -> $, $s, $i, $ud {
+          CATCH {
+            default { $s.quit($_) }
+          }
+
+          $s.emit( [self, $s, $i, $ud] );
         },
         Pointer, 0
       );
@@ -686,7 +711,7 @@ sub g_connect(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # Define for each signal
 sub g_connect_event(
@@ -699,7 +724,7 @@ sub g_connect_event(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_rbool(
   Pointer $app,
@@ -711,7 +736,7 @@ sub g_connect_rbool(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_widget(
   Pointer $app,
@@ -723,7 +748,7 @@ sub g_connect_widget(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_string(
   Pointer $app,
@@ -735,7 +760,7 @@ sub g_connect_string(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_strstr(
   Pointer $app,
@@ -747,7 +772,7 @@ sub g_connect_strstr(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g-connect-intint(
   Pointer $app,
@@ -759,7 +784,7 @@ sub g-connect-intint(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g-connect-uintuint(
   Pointer $app,
@@ -771,7 +796,7 @@ sub g-connect-uintuint(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_int(
   Pointer $app,
@@ -783,7 +808,7 @@ sub g_connect_int(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # Define for each signal
 sub g_connect_uint(
@@ -796,7 +821,7 @@ sub g_connect_uint(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_double(
   Pointer $app,
@@ -808,7 +833,7 @@ sub g_connect_double(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_pointer(
   Pointer $app,
@@ -820,7 +845,7 @@ sub g_connect_pointer(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_menu(
   Pointer $app,
@@ -832,7 +857,7 @@ sub g_connect_menu(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_movement_step(
   Pointer $app,
@@ -844,7 +869,7 @@ sub g_connect_movement_step(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_move_cursor1(
   Pointer $app,
@@ -856,7 +881,7 @@ sub g_connect_move_cursor1(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_move_cursor2(
   Pointer $app,
@@ -868,7 +893,7 @@ sub g_connect_move_cursor2(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_activate_link(
   Pointer $app,
@@ -880,7 +905,7 @@ sub g_connect_activate_link(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_int_ruint(
   Pointer $app,
@@ -892,7 +917,7 @@ sub g_connect_int_ruint(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_int_rint(
   Pointer $app,
@@ -904,7 +929,7 @@ sub g_connect_int_rint(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g_connect_uint_ruint(
   Pointer $app,
@@ -916,7 +941,7 @@ sub g_connect_uint_ruint(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g-connect-delete(
   Pointer $app,
@@ -928,7 +953,7 @@ sub g-connect-delete(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g-connect-gparam(
   Pointer $app,
@@ -940,7 +965,7 @@ sub g-connect-gparam(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # Pointer, guint64, gpointer
 sub g-connect-long(
@@ -953,7 +978,20 @@ sub g-connect-long(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
+  
+# Pointer, Str, gint, gpointer
+sub g-connect-strint(
+  Pointer $app,
+  Str $name,
+  &handler (Pointer, Str, gint, Pointer),
+  Pointer $data,
+  uint32 $flags
+)
+  returns uint64
+  is native('gobject-2.0')
+  is symbol('g_signal_connect_object')
+{ * }
 
 # Pointer, GVariant, Pointer
 sub g-connect-variant(
@@ -966,4 +1004,4 @@ sub g-connect-variant(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
