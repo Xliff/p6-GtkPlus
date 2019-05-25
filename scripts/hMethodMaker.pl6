@@ -6,15 +6,15 @@ use v6.c;
 my %do_output;
 
 sub MAIN (
-  $filename,
-  :$remove,
-  :$var,
-  :$output = 'all',
-  :$lib = 'gtk',
-  :$args = 1,
-  :$static = 0,
-  :$internal = 0,
-  :$bland = 0
+  $filename,          #= Filename to process
+  :$remove,           #= Prefix to remove from method names
+  :$var,              #= Class variable name [defaults to '$!w'
+  :$output = 'all',   #= Type of output: 'method', 'attributes', 'subs' or 'all'
+  :$lib = 'gtk',      #= Library name to use
+  :$static = 0,       #= Class is static. Do not remove first parameter.
+  :$internal = 0,     #= Add checking for INTERNAL methods
+  :$bland = 0,        #= Do NOT attempt to process preprocessor prefixes to subroutines
+  :$output-only       #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
 ) {
   my $fn = $filename;
 
@@ -129,6 +129,12 @@ sub MAIN (
           if $_[1]<p> {
             $t = "CArray[{ $t }]" for ^($_[1]<p>.Str.trim.chars - 1);
           }
+          # cw: FINALLY got around to doing something that should have been 
+          #     done from the start.
+          $t ~~ s/^g?char/Str/;
+          $t ~~ s/^int/gint/;
+          $t ~~ s/^float/gfloat/;
+          $t ~~ s/^double/gdouble/;
           $t;
         });
         my $o_call = (@t [Z] @v).join(', ');
@@ -252,6 +258,9 @@ sub MAIN (
   if %do_output<all> || %do_output<attributes> {
     say "\nGETSET\n------";
     for %getset.keys.sort -> $gs {
+      if $output-only.defined {
+        next unless $gs ~~ /<{ $output-only }>/;
+      }
 
       my $sp = %getset{$gs}<set><call>.split(', ')[*-1];
 
@@ -302,6 +311,10 @@ sub MAIN (
   say "\nMETHODS\n-------";
   if %do_output<all> || %do_output<methods> {
     for %methods.keys.sort -> $m {
+      if $output-only.defined {
+        next unless $m ~~ /<{ $output-only }>/;
+      }
+      
       my @sig_list = %methods{$m}<sig>.split(/\, /);
 
       my rule replacer { «[ 'Gtk'<[A..Z]>\w+ | 'GtkWindow' ]» };
