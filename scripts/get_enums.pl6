@@ -78,7 +78,7 @@ sub MAIN ($dir?, :$file) {
     }
   }
 
-  for %enums.keys -> $k {
+  for %enums.keys.sort -> $k {
     #say %enums{$k}.gist;
     my $m = %enums{$k}.map( *.map( *.elems ) ).max;
     say "  our enum {$k} is export { $m == 2 ?? '(' !! '<' }";
