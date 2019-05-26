@@ -18,8 +18,14 @@ my rule enum_entry {
   \s* ( <[_ A..Z]>+ ) ( [ '=' <d>+ [ '<<' <d>+ ]? ]? ) ','? \v*
 }
 
+my rule comment {
+  '/*' .+? '*/'
+}
+
 my rule enum {
-  'typedef enum' <n=name>? \v* '{' \v* <enum_entry>+ \v* '}' <rn=name>?
+  'typedef enum' <n=name>? \v* '{' 
+  <comment>? \v* [ <comment> | <enum_entry> ]+ \v* 
+  '}' <rn=name>?
 }
 
 sub MAIN ($dir?, :$file) {
@@ -88,7 +94,7 @@ sub MAIN ($dir?, :$file) {
                 say "      { $eel[0] } => { $eel[1] },";
               } else {
                 say "      '{ $eel[0] }{ ($eel eqv $el.Array[*-1]).not ??
-                  ',' !! '' }'";
+                  "'," !! "'" }";
               }
             }
           }
