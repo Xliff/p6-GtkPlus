@@ -32,11 +32,11 @@ sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
 
-sub sprintf-vv(Blob, Str, & () )
-  is native is symbol('sprintf') {}
+sub sprintf-vv(Blob, Str, & () --> int64)
+  is native is symbol('sprintf') { * }
 
-sub sprintf-vp(Blob, Str, & (Pointer) )
-  is native is symbol('sprintf') {}
+sub sprintf-vp(Blob, Str, & (Pointer) --> int64 )
+  is native is symbol('sprintf') { * }
 
 sub set_func_pointer(
   \func,
