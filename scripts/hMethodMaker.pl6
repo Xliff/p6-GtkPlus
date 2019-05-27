@@ -131,10 +131,11 @@ sub MAIN (
           }
           # cw: FINALLY got around to doing something that should have been 
           #     done from the start.
-          $t ~~ s/^g?char/Str/;
+          $t ~~ s/^g?[ 'char' | 'Str' ]/Str/;
           $t ~~ s/^int/gint/;
           $t ~~ s/^float/gfloat/;
           $t ~~ s/^double/gdouble/;
+          $t ~~ s/GError/CArray[Pointer[GError]]/;
           $t;
         });
         my $o_call = (@t [Z] @v).join(', ');

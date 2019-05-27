@@ -18,9 +18,11 @@ unit package GTK::Compat::Types;
 sub malloc  (size_t --> Pointer)                   is export is native {}
 sub realloc (Pointer, size_t --> Pointer)          is export is native {}
 sub calloc  (size_t, size_t --> Pointer)           is export is native {}
-sub free    (Pointer)                              is export is native {}
 sub memcpy  (Pointer, Pointer ,size_t --> Pointer) is export is native {}
 
+our proto sub free (|) is export { * }
+multi sub free (Pointer)                           is export is native {}
+  
 # Cribbed from https://stackoverflow.com/questions/1281686/determine-size-of-dynamically-allocated-memory-in-c
 sub malloc_usable_size (Pointer --> size_t)        is export is native {}
 
