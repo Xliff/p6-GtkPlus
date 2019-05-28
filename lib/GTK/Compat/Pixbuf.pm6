@@ -90,11 +90,13 @@ class GTK::Compat::Pixbuf  {
 
   method new_from_file (
     Str() $filename,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-file>
   {
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file($filename, $error);
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -103,16 +105,18 @@ class GTK::Compat::Pixbuf  {
     Int() $width,
     Int() $height,
     Int() $preserve_aspect_ratio,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-file-at-scale>
   {
     my @i = ($width, $height);
     my ($w, $h) = resolve-int(@i);
     my $prs = resolve-bool($preserve_aspect_ratio);
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_scale(
       $filename, $w, $h, $prs, $error
     );
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -121,16 +125,18 @@ class GTK::Compat::Pixbuf  {
     Int() $width,
     Int() $height,
     Int() $preserve_aspect_ratio,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-file-at-scale-utf8>
   {
     my @i = ($width, $height);
     my ($w, $h) = resolve-int(@i);
     my $prs = resolve-bool($preserve_aspect_ratio);
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_scale_utf8(
       $filename, $w, $h, $prs, $error
     );
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -138,13 +144,15 @@ class GTK::Compat::Pixbuf  {
     Str() $filename,
     Int() $width,
     Int() $height,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-file-at-size>
   {
     my @i = ($width, $height);
     my ($w, $h) = resolve-int(@i);
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_size($filename, $w, $h, $error);
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -152,25 +160,29 @@ class GTK::Compat::Pixbuf  {
     Str() $filename,
     Int() $width,
     Int() $height,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-file-at-size-utf8>
   {
     my @i = ($width, $height);
     my ($w, $h) = resolve-int(@i);
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_size_utf8(
       $filename, $w, $h, $error
     );
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
   method new_from_file_utf8 (
     Str() $filename,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-file-utf8>
   {
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_utf8($filename, $error);
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -178,7 +190,7 @@ class GTK::Compat::Pixbuf  {
     Int() $length,
     Int() $data,
     Int() $copy_pixels,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is DEPRECATED
     is also<new-from-inline>
@@ -186,17 +198,21 @@ class GTK::Compat::Pixbuf  {
     my $l = resolve-int($length);
     my $d = resolve-int($data);
     my $cp = resolve-bool($copy_pixels);
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_inline($l, $d, $cp, $error);
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
   method new_from_resource (
     Str() $resource_path,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-resource>
   {
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_resource($resource_path, $error);
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -205,27 +221,31 @@ class GTK::Compat::Pixbuf  {
     Int() $width,
     Int() $height,
     Int() $preserve_aspect_ratio,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-resource-at-scale>
   {
     my @i = ($width, $height);
     my ($w, $h) = resolve-int(@i);
     my $prs = resolve-bool($preserve_aspect_ratio);
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_resource_at_scale(
       $resource_path, $w, $h, $prs, $error
     );
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
   method new_from_stream (
     GInputStream $stream,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-stream>
   {
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_stream($stream, $cancellable, $error);
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -252,16 +272,18 @@ class GTK::Compat::Pixbuf  {
     Int() $height,
     Int() $preserve_aspect_ratio,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-stream-at-scale>
   {
     my @i = ($width, $height);
     my ($w, $h) = resolve-int(@i);
     my $prs = resolve-bool($preserve_aspect_ratio);
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_stream_at_scale(
       $stream, $w, $h, $prs, $cancellable, $error
     );
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -287,11 +309,13 @@ class GTK::Compat::Pixbuf  {
 
   method new_from_stream_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-stream-finish>
   {
+    clear_error;
     my $pixbuf = gdk_pixbuf_new_from_stream_finish($result, $error);
+    set_error($error);
     self.bless(:$pixbuf);
   }
 
@@ -430,9 +454,11 @@ class GTK::Compat::Pixbuf  {
   method get_has_alpha
     is also<
       get-has-alpha
+      has_alpha
+      has-alpha
     >
   {
-    gdk_pixbuf_get_has_alpha($!p);
+    so gdk_pixbuf_get_has_alpha($!p);
   }
 
   method get_height
@@ -551,7 +577,7 @@ class GTK::Compat::Pixbuf  {
     Str() $type,
     @option_keys,
     @option_values,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<save-to-bufferv>
   {
@@ -564,10 +590,13 @@ class GTK::Compat::Pixbuf  {
       unless $type eq <jpeg tiff png ico bmp>.any;
     my $cb = CArray[uint8].new($b);
     my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-
-    gdk_pixbuf_save_to_bufferv(
+    
+    clear_error;
+    my $rc = gdk_pixbuf_save_to_bufferv(
       $!p, $cb, $buffer_size, $type, $ok, $ov, $error
     );
+    set_error($error);
+    $rc;
   }
 
   method save_to_callbackv (
@@ -576,25 +605,32 @@ class GTK::Compat::Pixbuf  {
     Str() $type,
     @option_keys,
     @option_values,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<save-to-callbackv>
   {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
     my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    gdk_pixbuf_save_to_callbackv(
+    
+    clear_error;
+    my $rc = gdk_pixbuf_save_to_callbackv(
       $!p, $save_func, $user_data, $type, $ok, $ov, $error
     );
+    set_error($error);
+    $rc;
   }
 
   method save_to_stream_finish (
     GAsyncResult, $result = GAsyncResult,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<save-to-stream-finish>
   {
-    gdk_pixbuf_save_to_stream_finish($result, $error);
+    clear_error;
+    my $rc = gdk_pixbuf_save_to_stream_finish($result, $error);
+    set_error($error);
+    $rc;
   }
 
   method save_to_streamv (
@@ -603,16 +639,20 @@ class GTK::Compat::Pixbuf  {
     @option_keys,
     @option_values,
     GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<save-to-streamv>
   {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
     my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    gdk_pixbuf_save_to_streamv(
+    
+    clear_error;
+    my $rc = gdk_pixbuf_save_to_streamv(
       $!p, $stream, $type, $ok, $ov, $cancellable, $error
     );
+    set_error($error);
+    $rc;
   }
 
   method save_to_streamv_async (
@@ -639,12 +679,16 @@ class GTK::Compat::Pixbuf  {
     Str() $type,
     @option_keys,
     @option_values,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   ) {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
     my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    gdk_pixbuf_savev($!p, $filename, $type, $ok, $ov, $error);
+    
+    clear_error;
+    my $rc = gdk_pixbuf_savev($!p, $filename, $type, $ok, $ov, $error);
+    set_error($error);
+    $rc;
   }
 
   method savev_utf8 (
@@ -652,14 +696,18 @@ class GTK::Compat::Pixbuf  {
     Str() $type,
     @option_keys,
     @option_values,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror()
   )
     is also<savev-utf8>
   {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
     my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    gdk_pixbuf_savev_utf8($!p, $filename, $type, $ok, $ov, $error);
+    
+    clear_error;
+    my $rc = gdk_pixbuf_savev_utf8($!p, $filename, $type, $ok, $ov, $error);
+    set_error($error);
+    $rc;
   }
 
   method set_option (Str() $key, Str() $value) is also<set-option> {
