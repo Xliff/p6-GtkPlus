@@ -134,7 +134,7 @@ sub gdk_pixbuf_get_options (GdkPixbuf $pixbuf)
   { * }
 
 sub gdk_pixbuf_get_pixels (GdkPixbuf $pixbuf)
-  returns guchar
+  returns Pointer
   is native(gtk)
   is export
   { * }
