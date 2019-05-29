@@ -80,7 +80,7 @@ METH
     my @p = .[1][1 .. * - 2];
     my $pp = @p.map({
       / (<[A..Za..z]>)+ %% [ <[a..z]>+ ] /;
-      '$' ~ $/[0].map( *.Str.lc ).join('')
+      '$' ~ $/[0].map( *.Str.lc )[^(* - 1)].join('')
     }).join(', ');
     my $rt = .[* - 1] ne 'void' ?? " --> { .[* - 1] }" !! '';
     my $name = $v.substr(2);
