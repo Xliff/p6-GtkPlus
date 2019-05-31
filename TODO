@@ -77,6 +77,7 @@
 - Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
 - Reminder for when GHashTable is implemented: Write subclasses that properly use the right hash functions. Or maybe parameterized roles?
 - FOR CONSIDERATION: Add a closed sub called "event-return" to abstract out the whole @a[* - 1].r thing.
+- For all signals that use a 'detail', those handlers must be changed to add that to the signal name. This will prevent the need for specific handling through GTK::Compat::Signals. This particularly applies to 'notify'. This is another initiative.
 
 nclude a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
