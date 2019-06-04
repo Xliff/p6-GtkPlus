@@ -560,7 +560,8 @@
       "File::Find",
       "LWP::Simple",
       "Inline::Perl5",
-      "IO::Socket::SSL"
+      "IO::Socket::SSL",
+      "Config::INI"
     ],
     "support": { "source": null },
     "authors": [ "clifton.wood@gmail.com" ]
