@@ -2,6 +2,7 @@ use v6.c;
 
 #use Grammar::Tracer;
 use Data::Dump::Tree;
+use DateTime::Parse;
 
 grammar GitLog {
   regex TOP { <fullcommit>* }
@@ -57,8 +58,9 @@ class GitLogActions {
     $old-msg ~~ s:g/\s+/ /;
 
     #say "{ $old-match<date>.Str }: { $old-msg }";
+    (my $dateStr = $old-match<date>[0].Str.trim) ~~ s/\s <[+\-]> \d ** 4 $$//;
 
-    %p6-versions{$old-match<date>.Str} = $/<perl6-version>.Str
+    %p6-versions{ DateTime::Parse.new($dateStr).posix } = $/<perl6-version>.Str
       if $old-msg ~~ /<perl6-version>/;
   }
 
@@ -70,4 +72,4 @@ class GitLogActions {
 
 my $m = GitLog.parse( qqx{git log}, actions => GitLogActions );
 
-say "{ $_ }: { %p6-versions{$_} }" for %p6-versions.keys.Array;
+say "{ DateTime.new($_.Int) }: { %p6-versions{$_} }" for %p6-versions.keys.sort.Array;
