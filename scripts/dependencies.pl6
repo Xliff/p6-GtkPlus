@@ -1,12 +1,20 @@
 #!/usr/bin/env perl6
 use v6.c;
 
+use lib 'scripts';
+
+use GTKScripts;
 use File::Find;
 use Dependency::Sort;
 
-sub MAIN (:$prefix = 'GTK') {
+sub MAIN (:$prefix is copy = 'GTK') {
   my %nodes;
   my $dep_file = '.build-deps'.IO;
+
+  if CONFIG-NAME.IO.e {
+    parse-file(CONFIG-NAME);
+    $prefix = %config<prefix>;
+  }
 
   my @files = find
     dir => 'lib',
