@@ -136,12 +136,12 @@ role GTK::Roles::Properties {
   }
   multi method prop_get_int (Str() $name, Int() $value is rw) {
     my gint $v = $value;
-    g_object_get_int($!prop, $name, $v, Str);
+    g_object_get_int($!prop.p, $name, $v, Str);
     $value = $v;
   }
 
   method prop_set_int (Str() $name, Int() $value) is also<prop-set-int> {
-    g_object_set_int($!prop, $name, $value, Str);
+    g_object_set_int($!prop.p, $name, $value, Str);
   }
 
   # Should be in its own role that is common to both ::Compat::Roles::Object

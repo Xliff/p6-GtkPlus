@@ -22,13 +22,18 @@ role GTK::Roles::Data {
   }
   method set_data_uint(Str() $key, Int() $val) {
     my $v = CArray[guint].new;
-    $v[0] = resolve-int($val);
+    $v[0] = resolve-uint($val);
     g_object_set_uint($!data, $key, $v);
   }
 
   method get_data_int(Str() $key) {
     my CArray[gint] $pi = g_object_get_int($!data, $key);
     $pi.defined ?? $pi[0] !! Nil;
+  }
+  method set_data_int(Str() $key, Int() $val) {
+    my $v = CArray[gint].new;
+    $v[0] = resolve-int($val);
+    g_object_set_int($!data, $key, $v);
   }
 
   method set_data_ptr(Str() $key, Pointer $val) {

@@ -148,7 +148,7 @@ sub g_object_getv (
 { * }
 
 sub g_object_get_int (
-  GObject $object,
+  Pointer $object,
   Str $name,
 )
   returns CArray[gint]
@@ -158,7 +158,7 @@ sub g_object_get_int (
 { * }
 
 sub g_object_set_int (
-  GObject $object,
+  Pointer $object,
   Str $name,
   CArray[gint] $value,
   Str

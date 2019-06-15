@@ -8,6 +8,6 @@ my @a = gather for $m.Array {
 ;}
 for @a.sort {
   my $alias = "";
-  $alias = S:g/\-/_/ if .contains("-");
+  $alias = S:g/_/-/ if .contains("_");
   say "$_\t\t$alias"
 }

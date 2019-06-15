@@ -79,8 +79,9 @@
 - Reminder for when GHashTable is implemented: Write subclasses that properly use the right hash functions. Or maybe parameterized roles?
 - FOR CONSIDERATION: Add a closed sub called "event-return" to abstract out the whole @a[* - 1].r thing.
 - For all signals that use a 'detail', those handlers must be changed to add that to the signal name. This will prevent the need for specific handling through GTK::Compat::Signals. This particularly applies to 'notify'. This is another initiative.
+- Move relevant methods from GTK::Roles::Data to GTK::Compat::Roles::Data. The only GTK-Specific methods in that compunit are getType and setType and there's even argument that those aren't either.
 
-nclude a coercion method for GVariantType.
+Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
 - PULL GTK::Roles::Types in favor of GTK::Raw::Utils
 - Insure that all instances where we create an enum in an property, we are using

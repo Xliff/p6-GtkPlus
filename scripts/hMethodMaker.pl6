@@ -18,7 +18,6 @@ sub MAIN (
 ) {
   my $fn = $filename;
 
-
   $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn.starts-with('/');
   die "Cannot find '$fn'\n" unless $fn.IO.e;
 
@@ -129,7 +128,7 @@ sub MAIN (
           if $_[1]<p> {
             $t = "CArray[{ $t }]" for ^($_[1]<p>.Str.trim.chars - 1);
           }
-          # cw: FINALLY got around to doing something that should have been 
+          # cw: FINALLY got around to doing something that should have been
           #     done from the start.
           $t ~~ s/^g?[ 'char' | 'Str' ]/Str/;
           $t ~~ s/^int/gint/;
@@ -315,7 +314,7 @@ sub MAIN (
       if $output-only.defined {
         next unless $m ~~ /<{ $output-only }>/;
       }
-      
+
       my @sig_list = %methods{$m}<sig>.split(/\, /);
 
       my rule replacer { «[ 'Gtk'<[A..Z]>\w+ | 'GtkWindow' ]» };
