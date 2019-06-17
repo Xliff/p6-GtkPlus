@@ -11,10 +11,10 @@ our %config is export;
 sub parse-file ($filename) is export {
   %config = Config::INI::parse_file($filename)<_>;
   # Handle comma separated
-  for <backups modules> {
-    next unless %config{$_};
-    %config{$_} = %config{$_}.split(',');
-  }
+  %config{$_} = (%config{$_} // '').split(',') for <
+    backups
+    modules
+  >;
 
   %config;
 }
