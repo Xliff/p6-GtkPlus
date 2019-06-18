@@ -7,13 +7,16 @@ use GTKScripts;
 use File::Find;
 use Dependency::Sort;
 
-sub MAIN (:$prefix is copy = 'GTK') {
+sub MAIN (
+  :$force,           #= Force dependency generation
+  :$prefix is copy   #= Module prefix
+) {
   my %nodes;
   my $dep_file = '.build-deps'.IO;
 
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);
-    $prefix = %config<prefix>;
+    $prefix //= %config<prefix>;
   }
 
   my @files = find
@@ -21,9 +24,11 @@ sub MAIN (:$prefix is copy = 'GTK') {
     name => /'.pm6' $/;
 
   @files .= sort( *.IO.modified );
-  if $dep_file.e && $dep_file.modified >= @files[*-1].modified {
-    say 'No change in dependencies.';
-    exit;
+  unless $force {
+    if $dep_file.e && $dep_file.modified >= @files[*-1].modified {
+      say 'No change in dependencies.';
+      exit;
+    }
   }
 
   my @modules = @files
@@ -32,8 +37,10 @@ sub MAIN (:$prefix is copy = 'GTK') {
       my $mn = $_;
       my $a = [ $mn, S/ '.pm6' // ];
       $a[1] = do given $a[1] {
-        when 'lib/GTK.pm6' { 'GTK' }
-        default            { .split('/').Array[1..*].join('::') }
+        # Find a better way to specify file to module mapping.
+        #when 'lib/GTK.pm6'       { 'GTK' }
+        when "lib/{$prefix}.pm6" { $prefix }
+        default                  { .split('/').Array[1..*].join('::') }
       }
       $a;
     })
@@ -41,10 +48,10 @@ sub MAIN (:$prefix is copy = 'GTK') {
 
   for @modules {
     %nodes{$_[1]} = (
-      itemid => $++,
+      itemid   => $++,
       filename => $_[0],
-      edges => [],
-      name => $_[1]
+      edges    => [],
+      name     => $_[1]
     ).Hash;
   }
 
@@ -60,7 +67,8 @@ sub MAIN (:$prefix is copy = 'GTK') {
       my $mn = $mm;
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
-      unless $mn.trim ~~ /^ $prefix/ {
+      $mn .= trim;
+      unless $mn.starts-with($prefix) {
         @others.push: $mn;
         next;
       }
@@ -104,8 +112,8 @@ sub MAIN (:$prefix is copy = 'GTK') {
   # Add module order to modules.
   $_.push( %module-order{$_[1]} ) for @modules;
 
-  # say "\nOther dependencies are:\n";
-  # say @others.unique.sort.join("\n");
+  say "\nOther dependencies are:\n";
+  say @others.unique.sort.join("\n");
 
   sub space($a) {
     ' ' x ($a.chars % 8);
