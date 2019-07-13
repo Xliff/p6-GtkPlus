@@ -1,0 +1,3 @@
+prefix=GTK
+modules=GTK::Raw::Types,GTK::Compat::Types
+backups=backup,bitbucket
