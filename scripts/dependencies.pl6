@@ -168,6 +168,6 @@ sub MAIN (
   }
 
   my $fh = $dep_file.open( :w );
-  $fh.say;
+  $fh.put;
   $fh.close;
 }
