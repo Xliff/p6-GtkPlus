@@ -158,7 +158,7 @@ sub MAIN (
       $meta ~~ s/ '"provides": ' '{' ~ '}' <-[\}]>+ /"provides": \{\n{$table}\n    }/;
       $extra.IO.rename("{ $extra }.bak");
       my $fh = $extra.IO.open(:w);
-      $fh.say: $meta;
+      $fh.printf: $meta;
       $fh.close;
 
       say 'New provides section written to META6.json.';
@@ -167,7 +167,7 @@ sub MAIN (
     }
   }
 
-  my $fh = $dep_file.open( :w );
-  $fh.put;
-  $fh.close;
+  # my $fh = $dep_file.open( :w );
+  # $fh.put;
+  # $fh.close;
 }
