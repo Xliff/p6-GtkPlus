@@ -81,6 +81,7 @@
 - For all signals that use a 'detail', those handlers must be changed to add that to the signal name. This will prevent the need for specific handling through GTK::Compat::Signals. This particularly applies to 'notify'. This is another initiative.
 - Move relevant methods from GTK::Roles::Data to GTK::Compat::Roles::Data. The only GTK-Specific methods in that compunit are getType and setType and there's even argument that those aren't either.
 - WINDOWS SUPPORT!
+- Check to see if GTK::Builder loading issue is related to the lexical nature of `require`.
 
 Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.

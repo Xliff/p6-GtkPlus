@@ -6,7 +6,11 @@ use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
+use GTK::Roles::Signals::Generic;
+
 role GTK::Roles::Signals::TextBuffer {
+  also does GTK::Roles::Signals::Generic;
+  
   has %!signals-tb;
 
   # GtkTextBuffer, GtkTextTag, GtkTextIter, GtkTextIter, gpointer --> void
