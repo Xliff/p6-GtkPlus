@@ -124,12 +124,10 @@ class GTK::MenuShell is GTK::Container {
   }
 
   multi method append-widgets (*@children) is also<append_widgets> {
-    die 'All children must be GTK::MenuItem or a GtkMenuItem reference.'
+    die 'All menu children must be of type GTK::MenuItem or GtkMenuItem.'
       unless @children.all ~~ (GTK::MenuItem, GtkMenuItem).any;
 
-    for @children {
-      self.append($_);
-    }
+    self.append($_) for @children;
   }
   multi method append (GTK::Widget $child) {
     self.push-start($child);

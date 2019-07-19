@@ -98,7 +98,7 @@ class GTK::MenuItem is GTK::Bin {
     :$mnemonic,
     :$submenu
   ) {
-    my $menuitem = (so $mnemonic) ??
+    my $menuitem = $mnemonic.so ??
       gtk_menu_item_new_with_mnemonic($label)
       !!
       gtk_menu_item_new_with_label($label);
@@ -224,11 +224,19 @@ class GTK::MenuItem is GTK::Bin {
   }
 
   method submenu is rw {
+    # We can't bring in MenuShellAncestry without causing all kinds of bad, 
+    # so we reproduce it here. In a set of bad options, it's the one that's 
+    # the least bad.
+    my subset WidgetOrObject of Mu 
+      where GTK::Widget | GtkWidget;
+      
     Proxy.new(
       FETCH => sub ($) {
         GTK::Widget.new( gtk_menu_item_get_submenu($!mi) );
       },
-      STORE => sub ($, GtkWidget() $submenu is copy) {
+      STORE => sub ($, WidgetOrObject $submenu is copy) {
+        self.set-end($submenu);
+        $submenu .= Widget if $submenu ~~ GTK::Widget;
         gtk_menu_item_set_submenu($!mi, $submenu);
       }
     );

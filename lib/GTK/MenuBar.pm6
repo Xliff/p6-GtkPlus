@@ -31,9 +31,12 @@ class GTK::MenuBar is GTK::MenuShell {
       default {
       }
     }
+    
+    # Cannot be done until after self.setMenuShell()
+    self.append-widgets(|@items) if @items;
   }
 
-  method setMenuBar($menubar, :@items) {
+  method setMenuBar($menubar) {
     self.IS-PROTECTED;
 
     my $to-parent;
@@ -48,13 +51,6 @@ class GTK::MenuBar is GTK::MenuShell {
       }
     }
     self.setMenuShell($to-parent);
-
-    # Cannot be done until after self.setMenuShell()
-    if @items.defined && +@items {
-      die 'All items in @append must be GTK::MenuItems or GtkMenuItem references.'
-        unless @items.all ~~ (GTK::MenuItem, GtkMenuItem).any;
-      self.append-widgets($_) for @items;
-    }
   }
 
   method GTK::Raw::Types::GtkMenuBar is also<MenuBar> { $!mb }

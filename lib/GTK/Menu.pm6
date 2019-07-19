@@ -37,13 +37,8 @@ class GTK::Menu is GTK::MenuShell {
       }
     }
 
-    with @items {
-      die qq:to/D/.chomp unless @items.all ~~ (GTK::MenuItem, GtkMenuItem).any;
-All items in @append must be GTK::MenuItems or GtkMenuItem references.
-D
-
-      self.append-widgets($_) for @items;
-    }
+    # Type check is done inside.
+    self.append-widgets(|@items) if @items;
   }
 
   method setMenu (MenuAncestry $menu) {
