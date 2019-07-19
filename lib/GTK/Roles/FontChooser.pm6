@@ -104,11 +104,13 @@ role GTK::Roles::FontChooser {
   }
 
   multi method set_filter_func (
-    GtkFontFilterFunc $filter,
-    gpointer $user_data,
-    GDestroyNotify $destroy
-  ) is also<set-filter-func> {
-    gtk_font_chooser_set_filter_func($!fc, $filter, $user_data, $destroy);
+    &filter,
+    gpointer $user_data     = Pointer,
+    GDestroyNotify $destroy = Pointer
+  ) 
+    is also<set-filter-func> 
+  {
+    gtk_font_chooser_set_filter_func($!fc, &filter, $user_data, $destroy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

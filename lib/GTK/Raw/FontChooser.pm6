@@ -34,7 +34,7 @@ sub gtk_font_chooser_get_type ()
 
 sub gtk_font_chooser_set_filter_func (
   GtkFontChooser $fontchooser,
-  GtkFontFilterFunc $filter,
+  &filter (PangoFontFamily, PangoFontFace, Pointer --> gboolean),
   gpointer $user_data,
   GDestroyNotify $destroy
 )
