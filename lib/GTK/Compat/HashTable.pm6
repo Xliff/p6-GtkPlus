@@ -42,11 +42,16 @@ class GTK::Compat::HashTable {
     self!setObject($!h = $table);
   }
 
+  submethod DESTROY {
+    self.downref
+  }
+
   method GTK::Compat::Types::Raw::GHashTable
   { $!h }
 
   multi method new (GHashTable $table) {
-    self.bless(:$table);
+    my $o = self.bless(:$table);
+    $o.upref;
   }
   # COPIED FROM THE DOC PAGES IN FULL, FOR PROPER REFERENCE.
   #
@@ -204,7 +209,7 @@ class GTK::Compat::HashTable {
     g_hash_table_ref($!h);
   }
 
-  method remove ( $key) {
+  method remove ($key) {
     g_hash_table_remove($!h, $key);
   }
 
@@ -238,6 +243,29 @@ class GTK::Compat::HashTable {
 
 }
 
+class GTK::Compat::HashTable::String is GTK::Compat::HashTable {
+  method new {
+    self.new(&g_str_hash, &g_str_equal);
+  }
+}
+
+class GTK::Compat::HashTable::Int is GTK::Compat::HashTable {
+  method new {
+    self.new(&g_int_hash, &g_int_equal);
+  }
+}
+
+class GTK::Compat::HashTable::Int64 is GTK::Compat::HashTable {
+  method new {
+    self.new(&g_int64_hash, &g_int64_equal);
+  }
+}
+
+class GTK::Compat::HashTable::Double is GTK::Compat::HashTable {
+  method new {
+    self.new(&g_double_hash, &g_double_equal);
+  }
+}
 
 # OPAQUE STRUCT
 
