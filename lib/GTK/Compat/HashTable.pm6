@@ -49,6 +49,14 @@ class GTK::Compat::HashTable {
   method GTK::Compat::Types::Raw::GHashTable
   { $!h }
 
+  # Really, the only thing that's needed.
+  # Look into the diff between %table and *%table.
+  multi method new(%table) {
+    my $o = GTK::Compat::HashTable.new(&g_str_hash, &g_str_equal);
+    $o.insert($_, %table{$_}) for %table.keys;
+    $o;
+  }
+
   multi method new (GHashTable $table) {
     my $o = self.bless(:$table);
     $o.upref;
@@ -121,43 +129,43 @@ class GTK::Compat::HashTable {
   }
 
   # STATIC METHODS -- start
-  method g_direct_equal ($v1, $v2) {
+  method g_direct_equal (GTK::Compat::HashTable:U: $v1, $v2) {
     g_direct_equal($v1, $v2);
   }
 
-  method g_direct_hash (Pointer $dh) {
+  method g_direct_hash (GTK::Compat::HashTable:U: Pointer $dh) {
     g_direct_hash($dh);
   }
 
-  method g_double_equal ($v1, $v2) {
+  method g_double_equal (GTK::Compat::HashTable:U: $v1, $v2) {
     g_double_equal($v1, $v2);
   }
 
-  method g_double_hash (CArray[num64] $d) {
+  method g_double_hash (GTK::Compat::HashTable:U: CArray[num64] $d) {
     g_double_hash($d);
   }
 
-  method g_int64_equal ($v1, $v2) {
+  method g_int64_equal (GTK::Compat::HashTable:U: $v1, $v2) {
     g_int64_equal($v1, $v2);
   }
 
-  method g_int64_hash (CArray[int64] $i) {
+  method g_int64_hash (GTK::Compat::HashTable:U: CArray[int64] $i) {
     g_int64_hash($i);
   }
 
-  method g_int_equal ($i1, $i2) {
+  method g_int_equal (GTK::Compat::HashTable:U: $i1, $i2) {
     g_int_equal($i1, $i2);
   }
 
-  method g_int_hash (CArray[int32] $i) {
+  method g_int_hash (GTK::Compat::HashTable:U: CArray[int32] $i) {
     g_int_hash($i);
   }
 
-  method g_str_equal (Str $s1, Str $s2) {
+  method g_str_equal (GTK::Compat::HashTable:U: Str $s1, Str $s2) {
     g_str_equal($s1, $s2);
   }
 
-  method g_str_hash (Str $s) {
+  method g_str_hash (GTK::Compat::HashTable:U: Str $s) {
     g_str_hash($s);
   }
   # STATIC METHODS -- end
@@ -166,9 +174,12 @@ class GTK::Compat::HashTable {
     g_hash_table_get_keys($!h);
   }
 
-  method get_keys_as_array (Int() $length) {
+  # Keys can be of various types, so no easy way to do this. Will have to
+  # consider the various options: Str, int32, int64, double, Pointer
+  method get_keys_as_array (Int() $length is rw) {
     my guint $l = resolve-uint($length);
-    g_hash_table_get_keys_as_array($!h, $l);
+    $length = $l;
+
   }
 
   # Will return a list of POINTERS!
@@ -193,8 +204,32 @@ class GTK::Compat::HashTable {
       $l !! $l but GTK::Compat::ListData[$type];
   }
 
-  method insert ($key,  $value) {
-    g_hash_table_insert($!h, $key, $value);
+  # Will have to be multi-typed
+  multi method insert (Str $key, Str $value) {
+    g_hash_table_insert_str($!h, $key, $value);
+  }
+  multi method insert (Str $key, Num $value) {
+    my $v = CArray[num64].new;
+    $v[0] = $value;
+    g_hash_table_insert_double($!h, $key, $v);
+  }
+  multi method insert (Str $key, Int $value) {
+    my ($v, &sub);
+    if $value.abs.log(2).floor >= 32 {
+      $v = CArray[uint64].new;
+      &sub = &g_hash_table_insert_int64;
+    } else {
+      $v = CArray[uint32].new;
+      &sub = &g_hash_table_insert_int;
+    }
+    $v[0] = $value;
+    &sub($!h, $key, $v);
+  }
+  multi method insert (Str $key, $value is copy) {
+    die "Do not know how to handle { $value.^name } for GTK::Compat::HashTable!"
+      unless $value.REPR eq <CPointer CStruct>.any;
+    my Pointer $v = $value.REPR eq 'CStruct' ?? cast(Pointer, $value) !! $value;
+    g_hash_table_insert_pointer($!h, $key, $v);
   }
 
   method lookup ($key) {
