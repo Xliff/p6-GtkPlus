@@ -43,12 +43,12 @@ class GTK::CellAreaContext {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('area', $gv); );
+        self.prop_get('area', $gv);
         GTK::CellArea.new( nativecast(GtkCellArea, $gv.pointer) );
       },
       STORE => -> $, GtkCellArea() $val is copy {
         $gv.pointer = $val;
-        self.prop_set('area', $gv);
+        self.prop_set('area', $gv)
       }
     );
   }
@@ -58,7 +58,7 @@ class GTK::CellAreaContext {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('minimum-height', $gv); );
+        self.prop_get('minimum-height', $gv);
         $gv.int;
       },
       STORE => -> $, $val is copy {
@@ -72,7 +72,7 @@ class GTK::CellAreaContext {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('minimum-width', $gv); );
+        self.prop_get('minimum-width', $gv);
         $gv.int;
       },
       STORE => -> $, $val is copy {
@@ -86,7 +86,7 @@ class GTK::CellAreaContext {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('natural-height', $gv); );
+        self.prop_get('natural-height', $gv);
         $gv.int;
       },
       STORE => -> $, $val is copy {
@@ -100,7 +100,7 @@ class GTK::CellAreaContext {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('natural-width', $gv); );
+        self.prop_get('natural-width', $gv);
         $gv.int;
       },
       STORE => -> $, $val is copy {

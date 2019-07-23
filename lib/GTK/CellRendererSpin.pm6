@@ -70,12 +70,12 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('adjustment', $gv); );
+        self.prop_get('adjustment', $gv);
         GTK::Adjustment.new( nativecast(GtkAdjustment, $gv.pointer ) );
       },
       STORE => -> $, GtkAdjustment() $val is copy {
         $gv.pointer = $val;
-        self.prop_set('adjustment', $gv);
+        self.prop_set('adjustment', $gv)
       }
     );
   }
@@ -85,12 +85,12 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('climb-rate', $gv); );
+        self.prop_get('climb-rate', $gv);
         $gv.double;
       },
       STORE => -> $, Num() $val is copy {
         $gv.double = $val;
-        self.prop_set('climb-rate', $gv);
+        self.prop_set('climb-rate', $gv)
       }
     );
   }
@@ -100,12 +100,12 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('digits', $gv); );
+        self.prop_get('digits', $gv);
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = self.RESOLVE-UINT($val);
-        self.prop_set('digits', $gv);
+        self.prop_set('digits', $gv)
       }
     );
   }

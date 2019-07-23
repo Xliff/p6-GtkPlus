@@ -1,4 +1,5 @@
-LastBuildResults
+*.pm6bak
+LnastBuildResults
 LastBuildResults.*
 *.bak
 *.iml

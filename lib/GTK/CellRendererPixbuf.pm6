@@ -67,12 +67,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('follow-state', $gv); );
+        self.prop_get('follow-state', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set('follow-state', $gv);
+        self.prop_set('follow-state', $gv)
       }
     );
   }
@@ -82,12 +82,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('gicon', $gv); );
+        self.prop_get('gicon', $gv);
         nativecast(GIcon, $gv.pointer);
       },
       STORE => -> $, GIcon() $val is copy {
         $gv.pointer = $val;
-        self.prop_set('gicon', $gv);
+        self.prop_set('gicon', $gv)
       }
     );
   }
@@ -97,12 +97,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('icon-name', $gv); );
+        self.prop_get('icon-name', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set('icon-name', $gv);
+        self.prop_set('icon-name', $gv)
       }
     );
   }
@@ -112,12 +112,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('pixbuf', $gv); );
+        self.prop_get('pixbuf', $gv);
         GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
-        self.prop_set('pixbuf', $gv);
+        self.prop_set('pixbuf', $gv)
       }
     );
   }
@@ -127,12 +127,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('pixbuf-expander-closed', $gv); );
+        self.prop_get('pixbuf-expander-closed', $gv);
         GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.pointer = $val;
-        self.prop_set('pixbuf-expander-closed', $gv);
+        self.prop_set('pixbuf-expander-closed', $gv)
       }
     );
   }
@@ -142,12 +142,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('pixbuf-expander-open', $gv); );
+        self.prop_get('pixbuf-expander-open', $gv);
         GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.pointer = $val;
-        self.prop_set('pixbuf-expander-open', $gv);
+        self.prop_set('pixbuf-expander-open', $gv)
       }
     );
   }
@@ -157,12 +157,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('stock-detail', $gv); );
+        self.prop_get('stock-detail', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set('stock-detail', $gv);
+        self.prop_set('stock-detail', $gv)
       }
     );
   }
@@ -172,12 +172,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('stock-id', $gv); );
+        self.prop_get('stock-id', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set('stock-id', $gv);
+        self.prop_set('stock-id', $gv)
       }
     );
   }
@@ -187,12 +187,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('stock-size', $gv); );
+        self.prop_get('stock-size', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set('stock-size', $gv);
+        self.prop_set('stock-size', $gv)
       }
     );
   }
@@ -202,12 +202,12 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('surface', $gv); );
+        self.prop_get('surface', $gv);
         nativecast(cairo_surface_t, $gv.pointer);
       },
       STORE => -> $, cairo_surface_t $val is copy {
         $gv.pointer = $val;
-        self.prop_set('surface', $gv);
+        self.prop_set('surface', $gv)
       }
     );
   }

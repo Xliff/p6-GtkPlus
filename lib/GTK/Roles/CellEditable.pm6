@@ -39,12 +39,12 @@ role GTK::Roles::CellEditable {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('editing-canceled', $gv); );
+        $gv = GTK::Compat::Value.new( self.prop_get('editing-canceled', $gv) );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = resolve-bool($val);
-        self.prop_set('editing-canceled', $gv);
+        self.prop_set('editing-canceled', $gv)
       }
     );
   }

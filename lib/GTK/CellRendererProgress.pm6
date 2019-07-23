@@ -70,12 +70,12 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('inverted', $gv); );
+        self.prop_get('inverted', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set('inverted', $gv);
+        self.prop_set('inverted', $gv)
       }
     );
   }
@@ -85,12 +85,12 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('pulse', $gv); );
+        self.prop_get('pulse', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set('pulse', $gv);
+        self.prop_set('pulse', $gv)
       }
     );
   }
@@ -100,12 +100,12 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('text', $gv); );
+        self.prop_get('text', $gv);
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
-        self.prop_set('text', $gv);
+        self.prop_set('text', $gv)
       }
     );
   }
@@ -115,12 +115,12 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('text-xalign', $gv); );
+        self.prop_get('text-xalign', $gv);
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set('text-xalign', $gv);
+        self.prop_set('text-xalign', $gv)
       }
     );
   }
@@ -130,12 +130,12 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('text-yalign', $gv); );
+        self.prop_get('text-yalign', $gv);
         $gv.float;
       },
       STORE => -> $, Num() $val is copy {
         $gv.float = $val;
-        self.prop_set('text-yalign', $gv);
+        self.prop_set('text-yalign', $gv)
       }
     );
   }
@@ -145,12 +145,12 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('value', $gv); );
+        self.prop_get('value', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = self.RESOLVE-INT($val);
-        self.prop_set('value', $gv);
+        self.prop_set('value', $gv)
       }
     );
   }

@@ -120,7 +120,7 @@ role GTK::Roles::Properties {
     # @values = ();
     # @values.push( GTK::Compat::Value.new($v[$_]) ) for (^$v.elems);
 
-    # Be perlish with the return.
+    # Be perlish with the return. -- Maybe do @values[$_].value
     %(do for (^@names.elems) {
       @names[$_] => @values[$_];
     });

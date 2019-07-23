@@ -122,12 +122,12 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('inconsistent', $gv); );
+        self.prop_get('inconsistent', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = resolve-bool($val);
-        self.prop_set('inconsistent', $gv);
+        self.prop_set('inconsistent', $gv)
       }
     );
   }
@@ -137,12 +137,12 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('indicator-size', $gv); );
+        self.prop_get('indicator-size', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
         $gv.int = resolve-int($val);
-        self.prop_set('indicator-size', $gv);
+        self.prop_set('indicator-size', $gv)
       }
     );
   }

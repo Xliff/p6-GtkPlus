@@ -70,12 +70,12 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('active', $gv); );
+        self.prop_get('active', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
         $gv.boolean = self.RESOLVE-BOOL($val);
-        self.prop_set('active', $gv);
+        self.prop_set('active', $gv)
       }
     );
   }
@@ -85,12 +85,12 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('pulse', $gv); );
+        self.prop_get('pulse', $gv);
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = self.RESOLVE.UINT($val);
-        self.prop_set('pulse', $gv);
+        self.prop_set('pulse', $gv)
       }
     );
   }
@@ -100,12 +100,12 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
     my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('size', $gv); );
+        self.prop_get('size', $gv);
         GtkIconSize( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
-        self.prop_set('size', $gv);
+        self.prop_set('size', $gv)
       }
     );
   }
