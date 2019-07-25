@@ -102,6 +102,11 @@ Include a coercion method for GVariantType.
     bless method, since that bless will be run for ALL ANCESTORS as well as
     the current class.
 
+- SUBCLASSING
+  - ALL GtkPlus derivative projects will need to distribute it's own separate
+   ::Klass package to add subclassing ability. These will include the hacks 
+   required to set function pointers.
+
 Applications
 ============
 √ A text editor in Perl6. Think about using it as a visual Regex tester (in progress, see p6-VisualGrammar.git)
