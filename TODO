@@ -82,6 +82,17 @@
 - Move relevant methods from GTK::Roles::Data to GTK::Compat::Roles::Data. The only GTK-Specific methods in that compunit are getType and setType and there's even argument that those aren't either.
 - WINDOWS SUPPORT!
 - Check to see if GTK::Builder loading issue is related to the lexical nature of `require`.
+- Add the ability for relevant GTK Objects to .ACCEPT a GObject. This will mean that Ancestries will be used.
+  All .ACCEPT methods will use these hierarchies. This can EASILY just be done for GTK::Widget.
+  Other base objects across all GTK project will need to be evaluated.
+- GTK::Compat::Value needs to make values a proper read/write container. For that to occur, we need a mechanism
+  to extract submitted type values and use the correct method to use to place that value in the ::Value.
+  - This item depends on the item above!
+  - Int/Num/Str should be converted to:
+    - if Str then Str
+    - If Int then Int64, unless $short is specified then Int32
+    - If Num then Num64, unless $short is specified then Num32
+    - If GObject, then G_TYPE_OBJECT
 
 Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
@@ -104,7 +115,7 @@ Include a coercion method for GVariantType.
 
 - SUBCLASSING
   - ALL GtkPlus derivative projects will need to distribute it's own separate
-   ::Klass package to add subclassing ability. These will include the hacks 
+   ::Klass package to add subclassing ability. These will include the hacks
    required to set function pointers.
 
 Applications

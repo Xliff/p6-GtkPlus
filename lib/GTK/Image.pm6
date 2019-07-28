@@ -184,9 +184,9 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: GtkIconSet
-  method icon-set is rw 
+  method icon-set is rw
     is DEPRECATED('GTK::Image.icon-name')
-    is also<icon_set> 
+    is also<icon_set>
   {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
@@ -221,14 +221,16 @@ class GTK::Image is GTK::Widget {
   }
 
   # Type: GdkPixbuf
-  method pixbuf is rw {
+  method pixbuf (:$raw) is rw {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
-          self.prop_get('pixbuf', $gv)
-        );
-        GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
+        # $gv = GTK::Compat::Value.new(
+        #   self.prop_get('pixbuf', $gv)
+        # );
+        # GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
+        my $p = self.get_pixbuf;
+        $raw ?? $p !! GTK::Compat::Pixbuf.new($p);
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
@@ -414,6 +416,8 @@ class GTK::Image is GTK::Widget {
   }
 
   method get_pixbuf is also<get-pixbuf> {
+    warn '*** Pixbuf data is only valid if image type is GTK_IMAGE_EMPTY or GTK_IMAGE_PIXBUF'
+      unless self.get-storage-type == (GTK_IMAGE_EMPTY, GTK_IMAGE_PIXBUF).any;
     gtk_image_get_pixbuf($!i);
   }
 

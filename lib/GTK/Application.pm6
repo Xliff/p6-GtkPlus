@@ -191,6 +191,16 @@ class GTK::Application is export {
     );
   }
 
+  # Static methods for main loop invocation and termination
+  method main (GTK::Application:U:) {
+    gtk_main();
+  }
+
+  method quit (GTK::Application:U:) {
+    gtk_main_quit();
+  }
+
+  # Non static main loop start.
   method run {
     # Check to see if the destroy signal has already been tapped. If not, then
     # add the default.
@@ -213,6 +223,7 @@ class GTK::Application is export {
   #   g_application_run($gapp, OpaquePointer, OpaquePointer);
   # }
 
+  # Non static main loop terminate.
   method exit {
     g_application_quit($!app);
   }
