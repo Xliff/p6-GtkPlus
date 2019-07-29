@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Types;
 use GTK::Raw::TreeSortable;
 use GTK::Raw::Types;
@@ -33,8 +35,8 @@ role GTK::Roles::TreeSortable {
   )
     is also<get-sort-column-id>
   {
-    my gint $s = self.RESOLVE-INT($sort_column_id);
-    my uint32 $o = self.RESOLVE-UINT($order);
+    my gint $s = resolve-int($sort_column_id);
+    my uint32 $o = resolve-uint($order);
     so gtk_tree_sortable_get_sort_column_id($!ts, $s, $o);
   }
 
@@ -62,8 +64,8 @@ role GTK::Roles::TreeSortable {
   )
     is also<set-sort-column-id>
   {
-    my gint $s = self.RESOLVE-INT($sort_column_id);
-    my uint32 $o = self.RESOLVE-UINT($order);
+    my gint $s = resolve-int($sort_column_id);
+    my uint32 $o = resolve-uint($order);
     gtk_tree_sortable_set_sort_column_id($!ts, $s, $o);
   }
 
@@ -75,7 +77,7 @@ role GTK::Roles::TreeSortable {
   )
     is also<set-sort-func>
   {
-    my gint $s = self.RESOLVE-INT($sort_column_id);
+    my gint $s = resolve-int($sort_column_id);
     gtk_tree_sortable_set_sort_func(
       $!ts,
       $s,

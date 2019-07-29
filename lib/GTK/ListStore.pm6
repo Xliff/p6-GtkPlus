@@ -49,7 +49,8 @@ class GTK::ListStore {
       die '@types must consist of Integers or objects that will convert to Integer';
     }
 
-    my $t = CArray[uint64].new(@types);
+    my $t = CArray[uint64].new;
+    $t[$_] = @types[$_] for @types.keys;
     my gint $columns = @types.elems;
     my $liststore = gtk_list_store_newv($columns, $t);
     die 'GtkListStore not created!' unless $liststore.defined;
@@ -116,10 +117,11 @@ class GTK::ListStore {
 
     $!accessed = True;
     # Throw exception if columns mismatch?
-    my $c_columns = CArray[gint].new(@columns);
+    my $c_columns = CArray[gint].new;
+    $c_columns[$_] = @columns[$_] for @columns.keys;
     my $c_values = CArray[GValue].new;
-    $c_columns[$_] = @columns[$_] for (^$n_values);
-    for (^$n_values) {
+    $c_columns[$_] = @columns[$_] for ^$n_values;
+    for ^$n_values {
       $c_values[$_] = do given @values[$_] {
         # NOTE! $_ is now the current element of @value
         when GValue { $_ }
@@ -204,7 +206,8 @@ class GTK::ListStore {
       if $!accessed;
     die 'Elements of @types must be integers, and must not exceeed column size'
       unless @types.all ~~ (Int, IntStr).any;
-    my $c_types = CArray[uint64].new(@types);
+    my $c_types = CArray[uint64].new;
+    $c_types[$_] = @types[$_] for @types.keys;
     $!columns = @types.elems;
     gtk_list_store_set_column_types($!ls, @types.elems, $c_types);
   }

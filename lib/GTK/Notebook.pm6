@@ -8,11 +8,36 @@ use GTK::Raw::Notebook;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::Label;
 
 use GTK::Roles::Signals::Notebook;
 
 our subset NotebookAncestry is export
   where GtkNotebook | ContainerAncestry;
+
+class X::GTK::Notebook::InvalidPageParams is Exception {
+  has $.child;
+  has $.tab-label;
+
+  submethod BUILD (:$child, :$tab-label) {
+    $!child = $child;
+    $!tab-label = $tab-label;
+    say "X-GTK-Notebook-InvalidPageParams { $child }/{ $tab-label }";
+  }
+
+  method message {
+    # ??! WTF !??
+    # $.child and $.tab-label are Any after the constructor?
+    #
+    # qq:to/DIE/.chomp;
+    #   \$child ({ $!child.^name }) and \$tab-label ({ $!tab-label.^name
+    #   }) MUST be GTK::Widget compatible objects!
+    #   DIE
+    qq:to/DIE/.chomp;
+      \$child and \$tab-label MUST be GTK::Widget compatible objects!
+      DIE
+  }
+}
 
 class GTK::Notebook is GTK::Container {
   also does GTK::Roles::Signals::Notebook;
@@ -205,29 +230,35 @@ class GTK::Notebook is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append_page (
-    $child     is copy,
-    $tab_label is copy
-  )
+  proto method append_page (|)
     is also<append-page>
-  {
-    die '$child and $tab_label MUST be GTK::Widget compatible objects!'
-      unless ($child, $tab_label).all ~~ (GTK::Widget, GtkWidget).any;
+  { * }
+
+  multi method append_page ($child, Str $tab-label) {
+    samewith($child, GTK::Label.new($tab-label) );
+  }
+  multi method append_page (
+    $child     is copy,
+    $tab-label is copy
+  ) {
+    X::GTK::Notebook::InvalidPageParams.new(:$child, :$tab-label).new.throw
+      unless ($child, $tab-label).all ~~ (GTK::Widget, GtkWidget).any;
+
     self.push-start($child);
-    @!labels.push($tab_label);
+    @!labels.push($tab-label);
     $child     .= Widget if $child     ~~ GTK::Widget;
-    $tab_label .= Widget if $tab_label ~~ GTK::Widget;
-    gtk_notebook_append_page($!n, $child, $tab_label);
+    $tab-label .= Widget if $tab-label ~~ GTK::Widget;
+    gtk_notebook_append_page($!n, $child, $tab-label);
   }
 
   method append_page_menu (
     GtkWidget() $child,
-    GtkWidget() $tab_label,
+    GtkWidget() $tab-label,
     GtkWidget() $menu_label
   )
     is also<append-page-menu>
   {
-    gtk_notebook_append_page_menu($!n, $child, $tab_label, $menu_label);
+    gtk_notebook_append_page_menu($!n, $child, $tab-label, $menu_label);
   }
 
   method detach_tab (GtkWidget() $child) is also<detach-tab> {
@@ -319,35 +350,40 @@ class GTK::Notebook is GTK::Container {
     GTK::Widget.unstable_get_type( &gtk_notebook_get_type, $n, $t );
   }
 
-  method insert_page (
-    $child          is copy,
-    $tab_label      is copy,
-    Int() $position
-  )
+  proto method insert_page (|)
     is also<insert-page>
-  {
-    die '$child and $tab_label MUST be GTK::Widget compatible objects!'
-      unless ($child, $tab_label).all ~~ (GTK::Widget, GtkWidget).any;
+  { * }
+
+  multi method insert_page ($child, Str $tab-label, $position) {
+    samewith($child, GTK::Label.new($tab-label), $position);
+  }
+  multi method insert_page (
+    $child          is copy,
+    $tab-label      is copy,
+    Int() $position
+  ) {
+    X::GTK::Notebook::InvalidPageParams.new(:$child, :$tab-label).new.throw
+      unless ($child, $tab-label).all ~~ (GTK::Widget, GtkWidget).any;
 
     my uint32 $p = self.RESOLVE-UINT($position);
 
     self.insert-start-at($child, $p);
-    @!labels.splice($p, 0, $tab_label);
+    @!labels.splice($p, 0, $tab-label);
     $child     .= Widget if $child     ~~ GTK::Widget;
-    $tab_label .= Widget if $tab_label ~~ GTK::Widget;
-    gtk_notebook_insert_page($!n, $child, $tab_label, $p);
+    $tab-label .= Widget if $tab-label ~~ GTK::Widget;
+    gtk_notebook_insert_page($!n, $child, $tab-label, $p);
   }
 
   method insert_page_menu (
     GtkWidget() $child,
-    GtkWidget() $tab_label,
+    GtkWidget() $tab-label,
     GtkWidget() $menu_label,
     Int() $position               # gint $position
   )
     is also<insert-page-menu>
   {
     my uint32 $p = self.RESOLVE-UINT($position);
-    gtk_notebook_insert_page_menu($!n, $child, $tab_label, $menu_label, $p);
+    gtk_notebook_insert_page_menu($!n, $child, $tab-label, $menu_label, $p);
   }
 
   method next_page is also<next-page> {
@@ -366,29 +402,35 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_popup_enable($!n);
   }
 
-  method prepend_page (
-    $child     is copy,
-    $tab_label is copy
-  )
+  proto method prepend_page (|)
     is also<prepend-page>
-  {
-    die '$child and $tab_label MUST be GTK::Widget compatible objects!'
-      unless ($child, $tab_label).all ~~ (GTK::Widget, GtkWidget).any;
+  { * }
+
+  multi method prepend_page ($child, Str $tab-label) {
+    samewith( $child, GTK::Label.new($tab-label) );
+  }
+  multi method prepend_page (
+    $child     is copy,
+    $tab-label is copy
+  ) {
+    X::GTK::Notebook::InvalidPageParams.new(:$child, :$tab-label).new.throw
+      unless ($child, $tab-label).all ~~ (GTK::Widget, GtkWidget).any;
+
     self.unshift-start($child);
-    @!labels.unshift($tab_label);
+    @!labels.unshift($tab-label);
     $child     .= Widget if $child     ~~ GTK::Widget;
-    $tab_label .= Widget if $tab_label ~~ GTK::Widget;
-    gtk_notebook_prepend_page($!n, $child, $tab_label);
+    $tab-label .= Widget if $tab-label ~~ GTK::Widget;
+    gtk_notebook_prepend_page($!n, $child, $tab-label);
   }
 
   method prepend_page_menu (
     GtkWidget() $child,
-    GtkWidget() $tab_label,
+    GtkWidget() $tab-label,
     GtkWidget() $menu_label
   )
     is also<prepend-page-menu>
   {
-    gtk_notebook_prepend_page_menu($!n, $child, $tab_label, $menu_label);
+    gtk_notebook_prepend_page_menu($!n, $child, $tab-label, $menu_label);
   }
 
   method prev_page is also<prev-page> {
@@ -442,10 +484,10 @@ class GTK::Notebook is GTK::Container {
     gtk_notebook_set_tab_detachable($!n, $child, $d);
   }
 
-  method set_tab_label (GtkWidget() $child, GtkWidget() $tab_label)
+  method set_tab_label (GtkWidget() $child, GtkWidget() $tab-label)
     is also<set-tab-label>
   {
-    gtk_notebook_set_tab_label($!n, $child, $tab_label);
+    gtk_notebook_set_tab_label($!n, $child, $tab-label);
   }
 
   method set_tab_label_text (GtkWidget() $child, Str() $tab_text)

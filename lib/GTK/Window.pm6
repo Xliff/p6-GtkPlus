@@ -32,6 +32,7 @@ class GTK::Window is GTK::Bin {
     given $window {
       when WindowAncestry {
         self.setWindow($window);
+        # This still isn't working!
         self.title = $title if $title;
         self.set-default-size($width, $height) if $width && $height;
       }
@@ -68,7 +69,6 @@ class GTK::Window is GTK::Bin {
     Int :$width  = 200,
     Int :$height = 200
   ) {
-    say "Window String init $title $width $height";
     my guint $t = resolve-uint($type);
     my $window = gtk_window_new($t);
     samewith($window, :$title, :$width, :$height);
