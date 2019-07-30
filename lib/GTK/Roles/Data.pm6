@@ -11,24 +11,24 @@ use GTK::Raw::Utils;
 role GTK::Roles::Data {
   has $!data;
 
-  method get_data_string(Str() $key) 
-    is also<get-data-string> 
+  method get_data_string(Str() $key)
+    is also<get-data-string>
   {
     g_object_get_string($!data, $key);
   }
-  method set_data_string(Str() $key, Str() $val) 
-    is also<set-data-string> 
+  method set_data_string(Str() $key, Str() $val)
+    is also<set-data-string>
   {
     g_object_set_string($!data, $key, $val);
   }
 
-  method get_data_uint(Str() $key) 
+  method get_data_uint(Str() $key)
     is also<get-data-uint>
   {
     my CArray[guint] $pi = g_object_get_uint($!data, $key);
     $pi.defined ?? $pi[0] !! Nil;
   }
-  method set_data_uint(Str() $key, Int() $val) 
+  method set_data_uint(Str() $key, Int() $val)
     is also<set-data-uint>
   {
     my $v = CArray[guint].new;
@@ -36,13 +36,13 @@ role GTK::Roles::Data {
     g_object_set_uint($!data, $key, $v);
   }
 
-  method get_data_int(Str() $key) 
+  method get_data_int(Str() $key)
     is also<get-data-int>
   {
     my CArray[gint] $pi = g_object_get_int($!data, $key);
     $pi.defined ?? $pi[0] !! Nil;
   }
-  method set_data_int(Str() $key, Int() $val) 
+  method set_data_int(Str() $key, Int() $val)
     is also<set-data-int>
   {
     my $v = CArray[gint].new;
@@ -50,7 +50,7 @@ role GTK::Roles::Data {
     g_object_set_int($!data, $key, $v);
   }
 
-  method set_data_ptr(Str() $key, Pointer $val) 
+  method set_data_ptr(Str() $key, Pointer $val)
     is also<set-data-ptr>
   {
     g_object_set_ptr($!data, $key, $val);
@@ -61,7 +61,7 @@ role GTK::Roles::Data {
     g_object_get_ptr($!data, $key);
   }
 
-  method clear_data(Str() $key) 
+  method clear_data(Str() $key)
     is also<clear-data>
   {
     g_object_set_ptr($!data, $key, Pointer);

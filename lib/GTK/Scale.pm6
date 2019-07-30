@@ -55,7 +55,7 @@ class GTK::Scale is GTK::Range {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-scale;
   }
-  
+
   method GTK::Raw::Types::GtkScale is also<Scale> { $!s }
 
   multi method new (ScaleAncestry $scale) {
@@ -97,15 +97,41 @@ class GTK::Scale is GTK::Range {
     self.bless(:$scale);
   }
 
-  method new_with_range (
+  proto method new_with_range (|)
+    is also<new-with-range>
+  { * }
+
+  multi method new_with_range (
     Int() $orientation,           # GtkOrientation $orientation,
     Num() $min,
     Num() $max,
     Num() $step
-  )
-    is also<new-with-range>
-  {
+  ) {
     my uint32 $o = resolve-uint($orientation);
+    my num64 ($mn, $mx, $st) = ($min, $max, $step);
+    my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
+    self.bless(:$scale);
+  }
+  multi method new_with_range (
+    Num() $min,
+    Num() $max,
+    Num() $step,
+    :h(:$horizontal),
+    :v(:$vertical)
+  ) {
+    die 'Must give either :horizontal or :vertical!'
+      unless $horizontal || $vertical;
+    die 'Cannot use new_with_range, with both $horizontal and $verical defined!'
+      if $horizontal.defined && $vertical.defined;
+    my uint32 $o = do {
+      if $horizontal.defined {
+        $horizontal ?? GTK_ORIENTATION_HORIZONTAL.Int !!
+                       GTK_ORIENTATION_VERTICAL.Int;
+      } elsif $vertical.defined {
+        $vertical ?? GTK_ORIENTATION_VERTICAL.Int !!
+                     GTK_ORIENTATION_HORIZONTAL.Int;
+      }
+    };
     my num64 ($mn, $mx, $st) = ($min, $max, $step);
     my $scale = gtk_scale_new_with_range($o, $mn, $mx, $st);
     self.bless(:$scale);
@@ -188,11 +214,11 @@ class GTK::Scale is GTK::Range {
     gtk_scale_clear_marks($!s);
   }
 
-  method get_layout 
+  method get_layout
     is also<
       get-layout
       layout
-    > 
+    >
   {
     Pango::Layout.new( gtk_scale_get_layout($!s) );
   }
