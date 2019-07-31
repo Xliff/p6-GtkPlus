@@ -7,25 +7,28 @@ use GTK::Compat::Types;
 use GTK::Raw::SizeGroup;
 use GTK::Raw::Types;
 
-use GTK::Roles::Types;
+use GTK::Raw::Utils;
+
 use GTK::Compat::Roles::Object;
 
 class GTK::SizeGroup {
   also does GTK::Compat::Roles::Object;
-  also does GTK::Roles::Types;
 
   has GtkSizeGroup $!sg;
 
   submethod BUILD(:$sizegroup) {
     self!setObject($!sg = $sizegroup);
   }
-  
-  method GTK::Raw::Types::GtkSizeGroup 
-    is also<SizeGroup>
-    { $!sg }
+
+  method GTK::Raw::Types::GtkSizeGroup
+    is also<
+      GtkSizeGroup
+      SizeGroup
+    >
+  { $!sg }
 
   multi method new (Int() $sizegroupmode) {
-    my uint32 $s = self.RESOLVE-UINT($sizegroupmode);
+    my uint32 $s = resolve-uint($sizegroupmode);
     my $sizegroup = gtk_size_group_new($s);
     self.bless(:$sizegroup);
   }
@@ -53,7 +56,7 @@ class GTK::SizeGroup {
         Bool( gtk_size_group_get_ignore_hidden($!sg) );
       },
       STORE => sub ($, Int() $ignore_hidden is copy) {
-        my gboolean $i = self.RESOLVE-BOOL($ignore_hidden);
+        my gboolean $i = resolve-bool($ignore_hidden);
         gtk_size_group_set_ignore_hidden($!sg, $ignore_hidden);
       }
     );
@@ -65,7 +68,7 @@ class GTK::SizeGroup {
         GtkSizeGroupMode( gtk_size_group_get_mode($!sg) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = self.RESOLVE-UINT($mode);
+        my uint32 $m = resolve-uint($mode);
         gtk_size_group_set_mode($!sg, $m);
       }
     );
