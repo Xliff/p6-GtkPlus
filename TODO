@@ -95,6 +95,24 @@
     - If Num then Num64, unless $short is specified then Num32
     - If GObject, then G_TYPE_OBJECT
 
+INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
+  - A parsing routine at the GLib/GTK level will handle interpreting the
+    contents:
+    * If the environment variable is set to the empty string, then all debugging
+      is DISABLED.
+    * If the environment variable is set to a comma separated list of
+      "<module>:<value>", then:
+    * <module> represents the name of the overall module. For example GtkPlus
+      would be GTK, GtkClutter would be GTK::Clutter. Put simply, this expression
+      in any object is more than likely to return <module>:
+        `self.^name.split('::')[*-1].join('::')`
+    * <value> is the debug level. If it is omitted, it is assumed to be 1. A
+      <value> of - turns OFF debugging for a specific module.
+    * If the environment variable is defined with just a number, that number
+      would be the equivalent <value> for ALL modules.
+    * If the environment variable does not match any of the above situations,
+      it would be the equivalent as if all <modules> have a <value> of 1.
+
 Include a coercion method for GVariantType.
 - Add a way to mark summary compile time results as inaccurate without having to remove them.
 - PULL GTK::Roles::Types in favor of GTK::Raw::Utils

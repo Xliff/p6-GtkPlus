@@ -70,9 +70,13 @@ role GTK::Roles::Data {
 
   method setType($typeName) {
     my $oldType = self.getType;
-    self.set_data_string('GTKPLUS-Type', $typeName) without $oldType;
+    self.set_data_string('GTKPLUS-Type', $typeName) unless $oldType.defined;
     warn "WARNING -- Using a $oldType as a $typeName"
-      unless $oldType.defined.not || $oldType eq $typeName;
+      unless [||](
+        %*ENV<P6_GTK_DEBUG>.defined.not,
+        $oldType.defined.not,
+        $oldType eq $typeName
+      );
   }
 
   multi method getType {
