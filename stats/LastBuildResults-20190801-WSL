@@ -1430,7 +1430,7 @@ Stage start      :   0.000
 Stage parse      :   4.578
 Stage syntaxcheck:   0.000
 Stage ast        :   0.000
-Stage optimize   :  -0.009
+Stage optimize   :   0.000
 Stage mast       :   0.004
 Stage mbc        :   0.001
 Stage moar       :   0.000
