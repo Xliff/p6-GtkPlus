@@ -86,6 +86,8 @@
   All .ACCEPT methods will use these hierarchies. This can EASILY just be done for GTK::Widget.
   Other base objects across all GTK project will need to be evaluated.
 - Should GTK::Widget.CreateObject accept an override type as an optional parameter?
+- All objects should have a proper gist method. Using DDT is a work-around, but not a proper implementation.
+  This is a LARGE body of work, so probably done under many commits. LOW-PRIORITY INITIATIVE!
 - GTK::Compat::Value needs to make values a proper read/write container. For that to occur, we need a mechanism
   to extract submitted type values and use the correct method to use to place that value in the ::Value.
   - This item depends on the item above!
