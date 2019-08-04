@@ -1,0 +1,22 @@
+[core]
+	repositoryformatversion = 0
+	filemode = true
+	bare = false
+	logallrefupdates = true
+[remote "origin"]
+	url = git@github.com:Xliff/p6-GtkPlus.git
+	fetch = +refs/heads/*:refs/remotes/origin/*
+[branch "master"]
+	remote = origin
+	merge = refs/heads/master
+[remote "backup"]
+	url = ubuntu@backup:/srv/git/p6-gtkplus.git
+	fetch = +refs/heads/*:refs/remotes/backup/*
+[branch "aliasing"]
+	remote = origin
+	merge = refs/heads/aliasing
+[atomGithub]
+	historySha = 80bf2d7bf7fa5399ab93eb35883ffce52af1d290
+[remote "bitbucket"]
+	url = git@bitbucket.org:clifton-wood/p6-gtkplus.git
+	fetch = +refs/heads/*:refs/remotes/bitbucket/*
