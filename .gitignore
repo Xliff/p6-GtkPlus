@@ -15,3 +15,4 @@ t/004-large-items.t
 .idea/
 .precomp/
 dead/
+examples/

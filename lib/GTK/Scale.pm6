@@ -87,12 +87,16 @@ class GTK::Scale is GTK::Range {
     self.bless(:$scale);
   }
 
-  method new-hscale(GtkAdjustment() $adj) is also<new_hscale> {
+  method new-hscale(GtkAdjustment() $adj = GtkAdjustment) 
+    is also<new_hscale> 
+  {
     my $scale = gtk_scale_new(GTK_ORIENTATION_HORIZONTAL, $adj);
     self.bless(:$scale);
   }
 
-  method new-vscale(GtkAdjustment() $adj) is also<new_vscale> {
+  method new-vscale(GtkAdjustment() $adj = GtkAdjustment) 
+    is also<new_vscale> 
+  {
     my $scale = gtk_scale_new(GTK_ORIENTATION_VERTICAL, $adj);
     self.bless(:$scale);
   }
@@ -154,7 +158,7 @@ class GTK::Scale is GTK::Range {
         gtk_scale_get_digits($!s);
       },
       STORE => sub ($, Int() $digits is copy) {
-        my gint $d = self.RESOLVE-INT($digits);
+        my gint $d = resolve-int($digits);
         gtk_scale_set_digits($!s, $d);
       }
     );
@@ -166,7 +170,7 @@ class GTK::Scale is GTK::Range {
         so gtk_scale_get_draw_value($!s);
       },
       STORE => sub ($, Int() $draw_value is copy) {
-        my gboolean $dv = self.RESOLVE-BOOL($draw_value);
+        my gboolean $dv = resolve-bool($draw_value);
         gtk_scale_set_draw_value($!s, $draw_value);
       }
     );
@@ -178,7 +182,7 @@ class GTK::Scale is GTK::Range {
         so gtk_scale_get_has_origin($!s);
       },
       STORE => sub ($, Int() $has_origin is copy) {
-        my gboolean $ho = self.RESOLVE-BOOL($has_origin);
+        my gboolean $ho = resolve-bool($has_origin);
         gtk_scale_set_has_origin($!s, $ho);
       }
     );
@@ -190,7 +194,7 @@ class GTK::Scale is GTK::Range {
         GtkPositionType( gtk_scale_get_value_pos($!s) );
       },
       STORE => sub ($, Int() $pos is copy) {
-        my uint32 $p = self.RESOVLE-UINT($pos);
+        my uint32 $p = resolve-uint($pos);
         gtk_scale_set_value_pos($!s, $p);
       }
     );
@@ -205,7 +209,7 @@ class GTK::Scale is GTK::Range {
   )
     is also<add-mark>
   {
-    my uint32 $p = self.RESOLVE-UINT($position);
+    my uint32 $p = resolve-uint($position);
     my num64 $v = $value;
     gtk_scale_add_mark($!s, $v, $p, $markup);
   }

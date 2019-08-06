@@ -9,6 +9,11 @@ use GTK::Raw::Utils;
 use GTK::Raw::Main;
 
 class GTK::Get {
+  
+  method new (|) {
+    warn 'GTK::Get is a static class and does not need to be instantiated!';
+    GTK::Get;
+  }
 
   method binary_age is also<binary-age> {
     gtk_get_binary_age();

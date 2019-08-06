@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Range;
 use GTK::Raw::Types;
 
+use GTK::Adjustment;
 use GTK::Widget;
 
 use GTK::Roles::Orientable;
@@ -95,10 +96,14 @@ class GTK::Range is GTK::Widget {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method adjustment is rw {
+  method adjustment (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Gtk::Adjustment.new( gtk_range_get_adjustment($!r) );
+        my $a = gtk_range_get_adjustment($!r);
+        $a.defined ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_range_set_adjustment($!r, $adjustment);
