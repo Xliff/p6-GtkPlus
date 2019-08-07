@@ -854,6 +854,7 @@ class GSimpleAction         is repr('CPointer') is export does GTK::Roles::Point
 class GSimpleActionGroup    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTimer                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantDict          is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1078,7 +1079,7 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 
 };
-
+  
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkCursor             is repr('CPointer') is export does GTK::Roles::Pointers { }
