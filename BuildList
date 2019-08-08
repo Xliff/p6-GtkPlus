@@ -55,6 +55,7 @@ GTK::Compat::Raw::GFile
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
 GTK::Compat::Raw::HashTable
+GTK::Compat::Raw::IOChannel
 GTK::Compat::Raw::Icon
 GTK::Compat::Raw::InputStream
 GTK::Compat::Raw::IsType
@@ -75,6 +76,7 @@ GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Settings
 GTK::Compat::Raw::Signal
 GTK::Compat::Raw::SimpleAction
+GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Variant
 GTK::Compat::Raw::VariantType
@@ -93,6 +95,7 @@ GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::Timeout
+GTK::Compat::Timer
 GTK::Compat::Variant
 GTK::Compat::VariantIter
 GTK::Compat::VariantType
@@ -111,6 +114,7 @@ GTK::Compat::ContentType
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
+GTK::Compat::IOChannel
 GTK::Compat::KeyFile
 GTK::Compat::Keymap
 GTK::Compat::LaunchContext

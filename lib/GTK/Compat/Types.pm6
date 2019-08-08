@@ -928,6 +928,7 @@ class GSettingsSchemaKey    is repr('CPointer') is export does GTK::Roles::Point
 class GSettingsSchemaSource is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleAction         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleActionGroup    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSliceConfig          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                is repr('CPointer') is export does GTK::Roles::Pointers { }
