@@ -47,7 +47,6 @@ class GTK::Compat::Timer {
       timeval-add-microseconds
       timeval_add_μs
       timeval-add-μs
-    >
   {
     my gulong $us = resolve-long($microseconds);
     g_time_val_add($tv, $us);
@@ -79,8 +78,15 @@ class GTK::Compat::Timer {
     g_time_val_to_iso8601($tv);
   }
 
-  method g_usleep is also<g-usleep> {
-    g_usleep($!t);
+  method g_usleep(Int() $interval) 
+    is also<
+      g-usleep
+      usleep
+      μsleep
+    > 
+  {
+    my gulong $i = resolve-ulong($interval);
+    g_usleep($i);
   }
 
   method reset {
