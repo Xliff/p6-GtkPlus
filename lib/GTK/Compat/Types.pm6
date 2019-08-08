@@ -147,6 +147,7 @@ constant GClosureNotify          is export := Pointer;
 constant GDestroyNotify          is export := Pointer;
 constant GEqualFunc              is export := Pointer;
 constant GFunc                   is export := Pointer;
+constant GIOFunc                 is export := Pointer;
 constant GLogFunc                is export := Pointer;
 constant GLogWriterFunc          is export := Pointer;
 constant GPrintFunc              is export := Pointer;
@@ -414,6 +415,80 @@ our enum GNotificationPriority is export <
   G_NOTIFICATION_PRIORITY_HIGH
   G_NOTIFICATION_PRIORITY_URGENT
 >;
+
+our enum GIOChannelError is export <
+  G_IO_CHANNEL_ERROR_FBIG
+  G_IO_CHANNEL_ERROR_INVAL
+  G_IO_CHANNEL_ERROR_IO
+  G_IO_CHANNEL_ERROR_ISDIR
+  G_IO_CHANNEL_ERROR_NOSPC
+  G_IO_CHANNEL_ERROR_NXIO
+  G_IO_CHANNEL_ERROR_OVERFLOW
+  G_IO_CHANNEL_ERROR_PIPE
+  G_IO_CHANNEL_ERROR_FAILED
+>;
+
+our enum GIOError is export <
+  G_IO_ERROR_NONE
+  G_IO_ERROR_AGAIN
+  G_IO_ERROR_INVAL
+  G_IO_ERROR_UNKNOWN
+>;
+
+our enum GIOStatus is export <
+  G_IO_STATUS_ERROR
+  G_IO_STATUS_NORMAL
+  G_IO_STATUS_EOF
+  G_IO_STATUS_AGAIN
+>;
+
+our enum GSeekType is export <
+  G_SEEK_CUR
+  G_SEEK_SET
+  G_SEEK_END
+>;
+
+our enum GIOFlags is export (
+  G_IO_FLAG_APPEND       => 1,
+  G_IO_FLAG_NONBLOCK     => 2,
+  G_IO_FLAG_IS_READABLE  => 1 +< 2,      # Read only flag
+  G_IO_FLAG_IS_WRITABLE  => 1 +< 3,      # Read only flag
+  G_IO_FLAG_IS_WRITEABLE => 1 +< 3,      # Misspelling in 2.29.10 and earlier
+  G_IO_FLAG_IS_SEEKABLE  => 1 +< 4,      # Read only flag
+  G_IO_FLAG_MASK         => (1 +< 5) - 1,
+  G_IO_FLAG_GET_MASK     => (1 +< 5) - 1,
+  G_IO_FLAG_SET_MASK     => 1 +| 2
+);
+
+# cw: These values are for LINUX!
+our enum GIOCondition is export (
+  G_IO_IN     => 1,
+  G_IO_OUT    => 4,
+  G_IO_PRI    => 2,
+  G_IO_ERR    => 8,
+  G_IO_HUP    => 16,
+  G_IO_NVAL   => 32,
+);
+
+# In the future, this mechanism may need to be used via BEGIN block for all 
+# enums that vary by OS -- Kaiepi++!
+#
+# my constant TheseChangeByOS = Metamodel::EnumHOW.new_type: :name<TheseChangeByOS>, :base_type(Int);
+# TheseChangeByOS.^add_role: NumericEnumeration;
+# TheseChangeByOS.^set_package: OUR
+# TheseChangeByOS.^compose;
+# if $*DISTRO.is-win {
+#     TheseChangeByOS.^add_enum_value: 'a' => ...;
+#     TheseChangeByOS.^add_enum_value: 'b' => ...;
+#     TheseChangeByOS.^add_enum_value: 'c' => ...;
+#     TheseChangeByOS.^add_enum_value: 'd' => ...;
+# } else {
+#     TheseChangeByOS.^add_enum_value: 'a' => ...;
+#     TheseChangeByOS.^add_enum_value: 'b' => ...;
+#     TheseChangeByOS.^add_enum_value: 'c' => ...;
+#     TheseChangeByOS.^add_enum_value: 'd' => ...;
+# }
+# TheseChangeByOS.^compose_values;
 
 our enum GdkDragAction is export (
   GDK_ACTION_DEFAULT => 1,
@@ -825,6 +900,7 @@ class GHashTable            is repr('CPointer') is export does GTK::Roles::Point
 class GHashTableIter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GInputStream          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GIOChannel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GKeyFile              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GListModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GLoadableIcon         is repr('CPointer') is export does GTK::Roles::Pointers { }
