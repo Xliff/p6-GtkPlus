@@ -931,6 +931,7 @@ class GSimpleActionGroup    is repr('CPointer') is export does GTK::Roles::Point
 class GSliceConfig          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GThreadPool           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }

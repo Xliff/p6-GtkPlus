@@ -76,6 +76,8 @@ GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Settings
 GTK::Compat::Raw::Signal
 GTK::Compat::Raw::SimpleAction
+GTK::Compat::Raw::Slice
+GTK::Compat::Raw::ThreadPool
 GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Variant
@@ -94,6 +96,8 @@ GTK::Compat::Roles::Signals::Window
 GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
 GTK::Compat::Signal
+GTK::Compat::Slice
+GTK::Compat::ThreadPool
 GTK::Compat::Timeout
 GTK::Compat::Timer
 GTK::Compat::Variant
