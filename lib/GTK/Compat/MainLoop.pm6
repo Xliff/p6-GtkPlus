@@ -20,6 +20,14 @@ class GTK::Compat::MainLoop {
       MainLoop
     >
   { $!ml }
+  
+  multi method new (Int() $is_running) {
+    samewith(GMainContext, $is_running);
+  }
+  multi method new (GMainContext() $context, Int() $is_running) {
+    my gboolean $ir = resolve-bool($is_running);
+    self.bless( mainloop => g_main_loop_new($context, $ir) );
+  }
 
   method get_context is also<get-context> {
     g_main_loop_get_context($!ml);
@@ -27,11 +35,6 @@ class GTK::Compat::MainLoop {
 
   method is_running is also<is-running> {
     g_main_loop_is_running($!ml);
-  }
-
-  method new (GMainContext() $context, Int() $is_running) {
-    my gboolean $ir = resolve-bool($is_running);
-    self.bless( mainloop => g_main_loop_new($context, $ir) );
   }
 
   method quit {
