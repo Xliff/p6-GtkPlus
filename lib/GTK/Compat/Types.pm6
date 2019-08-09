@@ -134,6 +134,7 @@ constant guint64             is export := uint64;
 constant gulong              is export := uint64;
 constant gunichar            is export := uint32;
 constant va_list             is export := Pointer;
+constant time_t              is export := uint64;
 
 # Function Pointers
 constant GAsyncReadyCallback     is export := Pointer;
@@ -885,6 +886,7 @@ class GAppLaunchContext     is repr('CPointer') is export does GTK::Roles::Point
 class GApplication          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAsyncResult          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBinding              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GBookmarkFile         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GByteArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }

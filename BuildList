@@ -44,6 +44,7 @@ GTK::Compat::Raw::AppInfo
 GTK::Compat::Raw::AppLaunchContext
 GTK::Compat::Raw::Array
 GTK::Compat::Raw::Binding
+GTK::Compat::Raw::BookmarkFile
 GTK::Compat::Raw::ContentType
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Device
@@ -114,6 +115,7 @@ GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
 GTK::Roles::StyleProvider
 GTK::Compat::Array
+GTK::Compat::BookmarkFile
 GTK::Compat::ContentType
 GTK::Compat::FrameTimings
 GTK::Compat::GList
