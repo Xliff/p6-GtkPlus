@@ -17,8 +17,10 @@ First, insure you have all of the native dependencies. These are: Pango, Cairo, 
 It's best if you have a Top-Top-Level directory to keep all of the separate project directories. From that directory, execute the following commands:
 
 ```
+$ cd <top_level_dir>
 $ git clone https://github.com/Xliff/p6-Pango.git
 $ git clone https://github.com/Xliff/p6-GtkPlus.git
+$ export P6_GTK_HOME=<top_level_dir>
 $ cd p6-GtkPlus
 $ ./build.sh
 ```
@@ -30,7 +32,6 @@ Once completed, feel free to run the tests/examples in the t/ directory. Please 
 To run any code that uses this project, please use the following command line:
 
 ```
-$ perl6 -I../p6-Pango/lib -I../cairo-p6/lib -Ilib <script-name>
+$ export P6_GTK_HOME=<top_level_dir>
+$ $P6_GTK_HOME/p6-GtkPlus/p6gtkexec <script-name>
 ```
-
-This assumes that you are running the code from the p6-GtkPlus/ directory. Please adjust the above to suit your system.
