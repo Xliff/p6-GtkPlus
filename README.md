@@ -22,6 +22,7 @@ $ git clone https://github.com/Xliff/p6-Pango.git
 $ git clone https://github.com/Xliff/p6-GtkPlus.git
 $ export P6_GTK_HOME=<top_level_dir>
 $ cd p6-GtkPlus
+$ zef install --deps-only
 $ ./build.sh
 ```
 
