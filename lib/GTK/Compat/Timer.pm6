@@ -9,19 +9,19 @@ use GTK::Compat::Raw::Timer;
 
 class GTK::Compat::Timer {
   has GTimer $!t;
-  
+
   submethod BUILD (:$timer) {
     $!t = $timer;
   }
-  
-  method GTK::Compat::Raw::Types::GTimer 
+
+  method GTK::Compat::Raw::Types::GTimer
     is also<GTimer>
   { $!t }
-  
+
   method new {
     self.bless( timer => g_timer_new() );
   }
-  
+
   method continue {
     g_timer_continue($!t);
   }
@@ -36,9 +36,9 @@ class GTK::Compat::Timer {
   }
 
   method g_time_val_add (
-    GTK::Compat::Timer:U: 
+    GTK::Compat::Timer:U:
     GTimeVal $tv, Int() $microseconds
-  ) 
+  )
     is also<
       g-time-val-add
       timeval_add_microsec
@@ -47,6 +47,7 @@ class GTK::Compat::Timer {
       timeval-add-microseconds
       timeval_add_μs
       timeval-add-μs
+    >
   {
     my gulong $us = resolve-long($microseconds);
     g_time_val_add($tv, $us);
@@ -55,7 +56,7 @@ class GTK::Compat::Timer {
   method g_time_val_from_iso8601 (
     GTK::Compat::Timer:U:
     Str() $t, GTimeVal $time
-  ) 
+  )
     is also<
       g-time-val-from-iso8601
       str_to_timeval
@@ -68,7 +69,7 @@ class GTK::Compat::Timer {
   method g_time_val_to_iso8601 (
     GTK::Compat::Timer:U:
     GTimeVal $tv
-  ) 
+  )
     is also<
       g-time-val-to-iso8601
       timeval_to-str
@@ -78,12 +79,12 @@ class GTK::Compat::Timer {
     g_time_val_to_iso8601($tv);
   }
 
-  method g_usleep(Int() $interval) 
+  method g_usleep(Int() $interval)
     is also<
       g-usleep
       usleep
       μsleep
-    > 
+    >
   {
     my gulong $i = resolve-ulong($interval);
     g_usleep($i);

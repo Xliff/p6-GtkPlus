@@ -9,4 +9,5 @@ perl6 --stagestats \
 		-I${P6_GTK_HOME}/p6-Slope/lib \
 		-I${P6_GTK_HOME}/p6-WNCK/lib \
 		-I${P6_GTK_HOME}/p6-Clutter/lib \
-		-I${P6_GTK_HOME}/p6-GtkClutter/lib "$@"
+		-I${P6_GTK_HOME}/p6-GtkClutter/lib \
+		-I${P6_GTK_HOME}/p6-COGL/lib "$@"

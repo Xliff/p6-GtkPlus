@@ -28,6 +28,10 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
     }
   }
 
+  method bufferSize {
+    malloc_usable_size($!b);
+  }
+
   submethod DESTROY {
     # Free individual elements, as well!
     #if $!size.defined {
@@ -83,7 +87,7 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
   }
   multi method new (@entries) {
     die 'TypedBuffer type must be a CStruct!' unless T.REPR eq 'CStruct';
-    
+
     die qq:to/D/.chomp unless @entries.all ~~ T;
     { ::?CLASS.^name } can only be initialized if all entries are an { T.^name }
     D

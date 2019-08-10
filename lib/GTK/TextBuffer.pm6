@@ -476,7 +476,7 @@ D
       end_iter
       end-iter
     >
-    { * }
+  { * }
 
   multi method get_end_iter {
     my $iter = GtkTextIter.new;
