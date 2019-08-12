@@ -13,6 +13,10 @@ class GTK::Compat::Source {
   has GSource $!gs;
 
   submethod BUILD (:$source) {
+    $!gs = $source if $source;
+  }
+  
+  method setSource(GSource $source) {
     $!gs = $source;
   }
 
@@ -42,7 +46,7 @@ class GTK::Compat::Source {
     g_source_add_unix_fd($!gs, $fd, $e);
   }
 
-  method attach (GMainContext() $context) {
+  method attach (GMainContext() $context = GMainContext) {
     g_source_attach($!gs, $context);
   }
 

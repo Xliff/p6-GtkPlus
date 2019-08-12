@@ -14,11 +14,14 @@ class GTK::Compat::Timer {
     $!t = $timer;
   }
 
-  method GTK::Compat::Raw::Types::GTimer
+  method GTK::Compat::Types::GTimer
     is also<GTimer>
   { $!t }
 
-  method new {
+  multi method new(GTimer $timer) {
+    self.bless( :$timer );
+  }
+  multi method new {
     self.bless( timer => g_timer_new() );
   }
 
@@ -30,12 +33,13 @@ class GTK::Compat::Timer {
     g_timer_destroy($!t);
   }
 
-  method elapsed (Int() $microseconds) {
+  method elapsed (Int() $microseconds = 0) {
     my gulong $us = resolve-ulong($microseconds);
+    
     g_timer_elapsed($!t, $us);
   }
 
-  method g_time_val_add (
+  method val_add (
     GTK::Compat::Timer:U:
     GTimeVal $tv, Int() $microseconds
   )
@@ -53,7 +57,7 @@ class GTK::Compat::Timer {
     g_time_val_add($tv, $us);
   }
 
-  method g_time_val_from_iso8601 (
+  method val_from_iso8601 (
     GTK::Compat::Timer:U:
     Str() $t, GTimeVal $time
   )
@@ -66,7 +70,7 @@ class GTK::Compat::Timer {
     g_time_val_from_iso8601($t, $time);
   }
 
-  method g_time_val_to_iso8601 (
+  method val_to_iso8601 (
     GTK::Compat::Timer:U:
     GTimeVal $tv
   )
