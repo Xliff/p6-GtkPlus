@@ -1,13 +1,24 @@
 #!/bin/bash
-perl6 --stagestats \
-                -I${P6_GTK_HOME}/p6-Pango/lib \
-                -I${P6_GTK_HOME}/p6-GtkPlus/lib \
-                -I${P6_GTK_HOME}/p6-WebkitGTK/lib \
-                -I${P6_GTK_HOME}/p6-SourceViewGTK/lib \
-                -I${P6_GTK_HOME}/p6-AMTK/lib \
-                -I${P6_GTK_HOME}/p6-TEPL/lib \
-		-I${P6_GTK_HOME}/p6-Slope/lib \
-		-I${P6_GTK_HOME}/p6-WNCK/lib \
-		-I${P6_GTK_HOME}/p6-Clutter/lib \
-		-I${P6_GTK_HOME}/p6-GtkClutter/lib \
-		-I${P6_GTK_HOME}/p6-COGL/lib "$@"
+
+if [ "$1" = "--debug" ]; then
+  echo "Running perl6 script in debug mode..."
+  EXEC=perl6-gdb-m
+  X="${@:2}"
+else
+  echo "Running perl6 script..."
+  EXEC=perl6
+  X="$@"
+fi
+
+${EXEC} --stagestats \
+    -I${P6_GTK_HOME}/p6-Pango/lib         \
+    -I${P6_GTK_HOME}/p6-GtkPlus/lib       \
+    -I${P6_GTK_HOME}/p6-WebkitGTK/lib     \
+    -I${P6_GTK_HOME}/p6-SourceViewGTK/lib \
+    -I${P6_GTK_HOME}/p6-AMTK/lib          \
+    -I${P6_GTK_HOME}/p6-TEPL/lib          \
+		-I${P6_GTK_HOME}/p6-Slope/lib         \
+		-I${P6_GTK_HOME}/p6-WNCK/lib          \
+		-I${P6_GTK_HOME}/p6-Clutter/lib       \
+		-I${P6_GTK_HOME}/p6-GtkClutter/lib    \
+		-I${P6_GTK_HOME}/p6-COGL/lib          ${X}
