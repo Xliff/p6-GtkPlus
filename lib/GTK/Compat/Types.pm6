@@ -185,7 +185,7 @@ sub g_type_check_instance_is_a (
 { * }
 
 sub real-resolve-uint64($v) is export {
-  $v +& 0xffffffffffffffff;
+  $v +& 0xffffffff;
 }
 
 
