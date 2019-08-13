@@ -19,6 +19,7 @@ sub malloc  (size_t --> Pointer)                   is export is native {}
 sub realloc (Pointer, size_t --> Pointer)          is export is native {}
 sub calloc  (size_t, size_t --> Pointer)           is export is native {}
 sub memcpy  (Pointer, Pointer ,size_t --> Pointer) is export is native {}
+sub memset  (Pointer, int32, size_t)               is export is native {}
 
 our proto sub free (|) is export { * }
 multi sub free (Pointer)                           is export is native {}

@@ -78,28 +78,11 @@ class GTK::Compat::Source {
   }
 
   method query_unix_fd (gpointer $tag) is also<query-unix-fd> {
-    g_source_query_unix_fd($!gs, $tag);
+    GIOCondition( g_source_query_unix_fd($!gs, $tag) );
   }
 
   method ref {
     g_source_ref($!gs);
-  }
-
-  method remove (Int() $tag) {
-    my guint $t = resolve-uint($tag);
-    g_source_remove($t);
-  }
-
-  method remove_by_funcs_user_data (GSourceFuncs $funcs, gpointer $user_data)
-    is also<remove-by-funcs-user-data>
-  {
-    g_source_remove_by_funcs_user_data($funcs, $user_data);
-  }
-
-  method remove_by_user_data (gpointer $user_data)
-    is also<remove-by-user-data>
-  {
-    g_source_remove_by_user_data($user_data);
   }
 
   method remove_child_source (&child_source) is also<remove-child-source> {
@@ -143,6 +126,60 @@ class GTK::Compat::Source {
 
   method unref {
     g_source_unref($!gs);
+  }
+  
+  method remove (GTK::Compat::Source:U: Int() $tag) {
+    my guint $t = resolve-uint($tag);
+    g_source_remove($t);
+  }
+
+  method remove_by_funcs_user_data (
+    GTK::Compat::Source:U:
+    GSourceFuncs $funcs, gpointer $user_data
+  )
+    is also<remove-by-funcs-user-data>
+  {
+    g_source_remove_by_funcs_user_data($funcs, $user_data);
+  }
+
+  method remove_by_user_data (
+    GTK::Compat::Source:U:
+    gpointer $user_data
+  )
+    is also<remove-by-user-data>
+  {
+    g_source_remove_by_user_data($user_data);
+  }
+  
+  method idle_add (
+    GTK::Compat::Source:U:
+    &function, 
+    gpointer $data = gpointer
+  ) 
+    is also<idle-add>
+  {
+    g_idle_add(&function, $data);
+  }
+
+  method idle_add_full (
+    GTK::Compat::Source:U:
+    Int() $priority,
+    &function,
+    gpointer $data         = gpointer,
+    GDestroyNotify $notify = gpointer
+  ) 
+    is also<idle-add-full>
+  {
+    g_idle_add_full($priority, &function, $data, $notify);
+  }
+
+  method idle_remove_by_data (
+    GTK::Compat::Source:U:
+    gpointer $data
+  ) 
+    is also<idle-remove-by-data> 
+  {
+    g_idle_remove_by_data($data);
   }
 
 }

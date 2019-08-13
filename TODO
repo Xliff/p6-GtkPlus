@@ -96,6 +96,7 @@
     - If Int then Int64, unless $short is specified then Int32
     - If Num then Num64, unless $short is specified then Num32
     - If GObject, then G_TYPE_OBJECT
+- Add as another scripts for t/, gtk/examples/sunny.c
 
 INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   - A parsing routine at the GLib/GTK level will handle interpreting the
