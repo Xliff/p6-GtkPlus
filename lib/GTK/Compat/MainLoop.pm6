@@ -56,5 +56,12 @@ class GTK::Compat::MainLoop {
   method unref {
     g_main_loop_unref($!ml);
   }
+  
+  method poll (gpointer $fds, Int() $nfds, Int() $timeout) {
+    my guint $nf = resolve-uint($nfds);
+    my gint $t = resolve-int($timeout);
+    
+    g_poll($fds, $nf, $t);
+  }
 
 }
