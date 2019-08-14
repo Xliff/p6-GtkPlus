@@ -5,9 +5,9 @@ if [ "$1" = "--debug" ]; then
   EXEC=perl6-gdb-m
   X="${@:2}"
 else
-  echo "Running perl6 script..."
+  #echo "Running perl6 script..."
   EXEC=perl6
-  X="$@"
+  X="${@}"
 fi
 
 ${EXEC} --stagestats \
@@ -21,4 +21,4 @@ ${EXEC} --stagestats \
 		-I${P6_GTK_HOME}/p6-WNCK/lib          \
 		-I${P6_GTK_HOME}/p6-Clutter/lib       \
 		-I${P6_GTK_HOME}/p6-GtkClutter/lib    \
-		-I${P6_GTK_HOME}/p6-COGL/lib          ${X}
+		-I${P6_GTK_HOME}/p6-COGL/lib          "${X}"
