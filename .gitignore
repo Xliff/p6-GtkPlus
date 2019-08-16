@@ -1,5 +1,5 @@
 *.pm6bak
-LnastBuildResults
+LastBuildResults
 LastBuildResults.*
 *.bak
 *.iml
@@ -16,3 +16,4 @@ t/004-large-items.t
 .precomp/
 dead/
 examples/
+
