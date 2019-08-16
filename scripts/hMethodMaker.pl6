@@ -134,6 +134,7 @@ sub MAIN (
           $t ~~ s/^int/gint/;
           $t ~~ s/^float/gfloat/;
           $t ~~ s/^double/gdouble/;
+          $t ~~ s/void/Pointer/;
           $t ~~ s/GError/CArray[Pointer[GError]]/;
           $t;
         });
@@ -187,6 +188,12 @@ sub MAIN (
         my $p6r = do given $h<returns><t>.Str.trim {
           when 'gpointer' {
             'Pointer';
+          }
+          when 'float' {
+            'gfloat'
+          }
+          when 'int' {
+            'gint';
           }
           when 'va_list' {
           }
