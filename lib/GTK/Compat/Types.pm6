@@ -23,7 +23,7 @@ sub memset  (Pointer, int32, size_t)               is export is native {}
 
 our proto sub free (|) is export { * }
 multi sub free (Pointer)                           is export is native {}
-  
+
 # Cribbed from https://stackoverflow.com/questions/1281686/determine-size-of-dynamically-allocated-memory-in-c
 sub malloc_usable_size (Pointer --> size_t)        is export is native {}
 
@@ -84,12 +84,12 @@ sub g_error_free(GError $err)
   { *  }
 
 sub clear_error($error = $ERROR) is export {
-  g_error_free($error[0]) with $error[0];
+  g_error_free($error) with $error;
   $ERROR = Nil;
 }
 
 sub set_error(CArray $e) is export {
-  $ERROR = $e[0] with $e[0];
+  $ERROR = $e[0].deref with $e[0];
 }
 
 sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
@@ -472,7 +472,7 @@ our enum GIOCondition is export (
   G_IO_NVAL   => 32,
 );
 
-# In the future, this mechanism may need to be used via BEGIN block for all 
+# In the future, this mechanism may need to be used via BEGIN block for all
 # enums that vary by OS -- Kaiepi++!
 #
 # my constant TheseChangeByOS = Metamodel::EnumHOW.new_type: :name<TheseChangeByOS>, :base_type(Int);
@@ -1160,7 +1160,7 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 
 };
-  
+
 class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkCursor             is repr('CPointer') is export does GTK::Roles::Pointers { }
