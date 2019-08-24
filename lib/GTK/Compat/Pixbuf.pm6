@@ -6,20 +6,22 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Pixbuf;
 use GTK::Compat::Pixbuf::Transforms;
+
 use GTK::Raw::Utils;
 
-use GTK::Roles::Types;
-
 class GTK::Compat::Pixbuf  {
-  also does GTK::Roles::Types;
-
   has GdkPixbuf $!p;
 
   submethod BUILD(:$pixbuf) {
     $!p = $pixbuf;
   }
 
-  method GTK::Compat::Types::GdkPixbuf is also<pixbuf> {
+  method GTK::Compat::Types::GdkPixbuf
+    is also<
+      GdkPixbuf
+      pixbuf
+    >
+  {
     $!p;
   }
 
@@ -34,11 +36,11 @@ class GTK::Compat::Pixbuf  {
     Int() $width,
     Int() $height
   ) {
-    my @i = ($bits_per_sample, $width, $height);
     my $ha = resolve-bool($has_alpha);
-    my ($bps, $w, $h) = resolve-int(@i);
+    my ($bps, $w, $h) = resolve-int($bits_per_sample, $width, $height);
     my guint $cs = resolve-uint($colorspace);
     my $pixbuf = gdk_pixbuf_new($cs, $ha, $bps, $w, $h);
+
     self.bless(:$pixbuf);
   }
 
@@ -53,18 +55,19 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-bytes>
   {
-    my @i = ($bits_per_sample, $width, $height, $rowstride);
     my $ha = resolve-bool($has_alpha);
-    my ($bps, $w, $h, $rs) = resolve-int(@i);
+    my ($bps, $w, $h, $rs) =
+      resolve-int($bits_per_sample, $width, $height, $rowstride);
     my guint $cs = resolve-uint($colorspace);
     my $pixbuf = gdk_pixbuf_new_from_bytes(
       $data, $cs, $ha, $bps, $w, $h, $rs
     );
+
     self.bless(:$pixbuf);
   }
 
   method new_from_data (
-    guchar $data,
+    Str() $data,
     Int() $colorspace,
     Int() $has_alpha,
     Int() $bits_per_sample,
@@ -76,15 +79,16 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-data>
   {
-    my @i = ($bits_per_sample, $width, $height, $rowstride);
     my $ha = resolve-bool($has_alpha);
-    my ($bps, $w, $h, $rs) = resolve-int(@i);
+    my ($bps, $w, $h, $rs) =
+      resolve-int($bits_per_sample, $width, $height, $rowstride);
     my guint $cs = resolve-uint($colorspace);
     my $pixbuf = gdk_pixbuf_new_from_data(
       $data, $cs, $ha, $bps, $w, $h, $rs,
       $destroy_fn,
       $destroy_fn_data
     );
+
     self.bless(:$pixbuf);
   }
 
@@ -97,6 +101,7 @@ class GTK::Compat::Pixbuf  {
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file($filename, $error);
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -109,14 +114,14 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-file-at-scale>
   {
-    my @i = ($width, $height);
-    my ($w, $h) = resolve-int(@i);
+    my ($w, $h) = resolve-int($width, $height);
     my $prs = resolve-bool($preserve_aspect_ratio);
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_scale(
       $filename, $w, $h, $prs, $error
     );
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -129,14 +134,14 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-file-at-scale-utf8>
   {
-    my @i = ($width, $height);
-    my ($w, $h) = resolve-int(@i);
+    my ($w, $h) = resolve-int($width, $height);
     my $prs = resolve-bool($preserve_aspect_ratio);
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_scale_utf8(
       $filename, $w, $h, $prs, $error
     );
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -148,11 +153,11 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-file-at-size>
   {
-    my @i = ($width, $height);
-    my ($w, $h) = resolve-int(@i);
+    my ($w, $h) = resolve-int($width, $height);
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_size($filename, $w, $h, $error);
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -164,13 +169,13 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-file-at-size-utf8>
   {
-    my @i = ($width, $height);
-    my ($w, $h) = resolve-int(@i);
+    my ($w, $h) = resolve-int($width, $height);
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_at_size_utf8(
       $filename, $w, $h, $error
     );
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -183,6 +188,7 @@ class GTK::Compat::Pixbuf  {
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_file_utf8($filename, $error);
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -201,6 +207,7 @@ class GTK::Compat::Pixbuf  {
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_inline($l, $d, $cp, $error);
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -213,6 +220,7 @@ class GTK::Compat::Pixbuf  {
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_resource($resource_path, $error);
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -225,14 +233,14 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-resource-at-scale>
   {
-    my @i = ($width, $height);
-    my ($w, $h) = resolve-int(@i);
+    my ($w, $h) = resolve-int($width, $height);
     my $prs = resolve-bool($preserve_aspect_ratio);
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_resource_at_scale(
       $resource_path, $w, $h, $prs, $error
     );
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
@@ -246,14 +254,15 @@ class GTK::Compat::Pixbuf  {
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_stream($stream, $cancellable, $error);
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
   method new_from_stream_async (
-    GInputStream $stream,
+    GInputStream() $stream,
     GCancellable $cancellable,
     GAsyncReadyCallback $callback,
-    gpointer $user_data
+    gpointer $user_data = gpointer
   )
     is also<new-from-stream-async>
   {
@@ -267,7 +276,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method new_from_stream_at_scale (
-    GInputStream $stream,
+    GInputStream() $stream,
     Int() $width,
     Int() $height,
     Int() $preserve_aspect_ratio,
@@ -276,19 +285,19 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-stream-at-scale>
   {
-    my @i = ($width, $height);
-    my ($w, $h) = resolve-int(@i);
+    my ($w, $h) = resolve-int($width, $height);
     my $prs = resolve-bool($preserve_aspect_ratio);
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_stream_at_scale(
       $stream, $w, $h, $prs, $cancellable, $error
     );
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
   method new_from_stream_at_scale_async (
-    GInputStream $stream,
+    GInputStream() $stream,
     Int() $width,
     Int() $height,
     Int() $preserve_aspect_ratio,
@@ -298,12 +307,12 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-from-stream-at-scale-async>
   {
-    my @i = ($width, $height);
-    my ($w, $h) = resolve-int(@i);
+    my ($w, $h) = resolve-int($width, $height);
     my $prs = resolve-bool($preserve_aspect_ratio);
     my $pixbuf = gdk_pixbuf_new_from_stream_at_scale_async(
       $stream, $w, $h, $prs, $cancellable, $callback, $user_data
     );
+
     self.bless(:$pixbuf);
   }
 
@@ -316,12 +325,13 @@ class GTK::Compat::Pixbuf  {
     clear_error;
     my $pixbuf = gdk_pixbuf_new_from_stream_finish($result, $error);
     set_error($error);
+
     self.bless(:$pixbuf);
   }
 
   proto method new_from_xpm_data(|c)
     is also<new-from-xpm-data>
-    { * }
+  { * }
 
   multi method new_from_xpm_data(Str $data is copy) {
     #my $ca = CArray[Str].new( $data.lines );
@@ -344,9 +354,9 @@ class GTK::Compat::Pixbuf  {
   )
     is also<new-subpixbuf>
   {
-    my @i = ($src_x, $src_y, $width, $height);
-    my ($sx, $sy, $w, $h) = resolve-int(@i);
+    my ($sx, $sy, $w, $h) = resolve-int($src_x, $src_y, $width, $height);
     my $pixbuf = gdk_pixbuf_new_subpixbuf($src, $sx, $sy, $w, $h);
+
     self.bless(:$pixbuf);
   }
   # ↑↑↑↑ OBJECT CREATION ↑↑↑↑
@@ -363,9 +373,8 @@ class GTK::Compat::Pixbuf  {
   )
     is also<add-alpha>
   {
-    my @i = ($r, $g, $b);
-    my ($rr, $gg, $bb) = self.RESOLVE-USHORT(@i);
-    my $sc = self.RESOLVE-BOOL($substitute_color);
+    my ($rr, $gg, $bb) = resolve-ushort($r, $g, $b);
+    my $sc = resolve-bool($substitute_color);
     gdk_pixbuf_add_alpha($!p, $sc, $rr, $gg, $bb);
   }
 
@@ -382,10 +391,10 @@ class GTK::Compat::Pixbuf  {
   )
     is also<calculate-rowstride>
   {
-    my @i = ($bits_per_sample, $width, $height);
-    my $ha = self.RESOLVE-BOOL($has_alpha);
-    my ($bps, $w, $h) = self.RESOLVE-INT(@i);
-    my guint $cs = self.RESOLVE-UINT($colorspace);
+    my $ha = resolve-bool($has_alpha);
+    my ($bps, $w, $h) = resolve-int($bits_per_sample, $width, $height);
+    my guint $cs = resolve-uint($colorspace);
+
     gdk_pixbuf_calculate_rowstride($cs, $ha, $bps, $w, $h);
   }
 
@@ -404,8 +413,10 @@ class GTK::Compat::Pixbuf  {
   )
     is also<copy-area>
   {
-    my @i = ($src_x, $src_y, $width, $height, $dest_x, $dest_y);
-    my ($sx, $sy, $w, $h, $dx, $dy) = self.RESOLVE-INT(@i);
+    my @i = ();
+    my ($sx, $sy, $w, $h, $dx, $dy) =
+      resolve-int($src_x, $src_y, $width, $height, $dest_x, $dest_y);
+
     gdk_pixbuf_copy_area($!p, $sx, $sy, $w, $h, $dest_pixbuf, $dx, $dy);
   }
 
@@ -418,7 +429,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method fill (Int() $pixel) {
-    my guint $p = self.RESOLVE-INT($pixel);
+    my guint $p = resolve-int($pixel);
     gdk_pixbuf_fill($!p, $p);
   }
 
@@ -505,7 +516,7 @@ class GTK::Compat::Pixbuf  {
   method get_pixels_with_length (Int() $length)
     is also<get-pixels-with-length>
   {
-    my guint $l = self.RESOLVE-UINT($length);
+    my guint $l = resolve-uint($length);
     gdk_pixbuf_get_pixels_with_length($!p, $l);
   }
 
@@ -557,17 +568,19 @@ class GTK::Compat::Pixbuf  {
     is also<saturate-and-pixelate>
   {
     my gfloat $s = $saturation;
-    my gboolean $p = self.RESOLVE-BOOL($pixelate);
+    my gboolean $p = resolve-bool($pixelate);
     gdk_pixbuf_saturate_and_pixelate($!p, $dest, $s, $p);
   }
 
-  method PREP_OPTIONS(@option_keys, @option_values) {
+  method !PREP_OPTIONS(@option_keys, @option_values) {
     my ($ok, $ov) = (CArray[Str].new xx 2);
+
     for ( [$ok, @option_keys], [$ov, @option_values] ) -> $d {
       my $idx = 0;
       $d[0][$idx++] = $_ for $d[1];
       $d[0][$idx] = Str;
     }
+
     ($ok, $ov);
   }
 
@@ -589,8 +602,8 @@ class GTK::Compat::Pixbuf  {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
     my $cb = CArray[uint8].new($b);
-    my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    
+    my ($ok, $ov) = self!PREP_OPTIONS(@option_keys, @option_values);
+
     clear_error;
     my $rc = gdk_pixbuf_save_to_bufferv(
       $!p, $cb, $buffer_size, $type, $ok, $ov, $error
@@ -611,8 +624,8 @@ class GTK::Compat::Pixbuf  {
   {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
-    my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    
+    my ($ok, $ov) = self!PREP_OPTIONS(@option_keys, @option_values);
+
     clear_error;
     my $rc = gdk_pixbuf_save_to_callbackv(
       $!p, $save_func, $user_data, $type, $ok, $ov, $error
@@ -634,7 +647,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method save_to_streamv (
-    GOutputStream $stream,
+    GOutputStream() $stream,
     Str() $type,
     @option_keys,
     @option_values,
@@ -645,8 +658,8 @@ class GTK::Compat::Pixbuf  {
   {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
-    my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    
+    my ($ok, $ov) = self!PREP_OPTIONS(@option_keys, @option_values);
+
     clear_error;
     my $rc = gdk_pixbuf_save_to_streamv(
       $!p, $stream, $type, $ok, $ov, $cancellable, $error
@@ -656,7 +669,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method save_to_streamv_async (
-    GOutputStream $stream,
+    GOutputStream() $stream,
     Str() $type,
     @option_keys,
     @option_values,
@@ -668,7 +681,8 @@ class GTK::Compat::Pixbuf  {
   {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
-    my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
+    my ($ok, $ov) = self!PREP_OPTIONS(@option_keys, @option_values);
+
     gdk_pixbuf_save_to_streamv_async(
       $!p, $stream, $type, $ok, $ov, $cancellable, $callback, $user_data
     );
@@ -683,8 +697,8 @@ class GTK::Compat::Pixbuf  {
   ) {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
-    my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    
+    my ($ok, $ov) = self!PREP_OPTIONS(@option_keys, @option_values);
+
     clear_error;
     my $rc = gdk_pixbuf_savev($!p, $filename, $type, $ok, $ov, $error);
     set_error($error);
@@ -702,8 +716,8 @@ class GTK::Compat::Pixbuf  {
   {
     warn "Format '$type' may not be supported"
       unless $type eq <jpeg tiff png ico bmp>.any;
-    my ($ok, $ov) = self.PREP_OPTIONS(@option_keys, @option_values);
-    
+    my ($ok, $ov) = self!PREP_OPTIONS(@option_keys, @option_values);
+
     clear_error;
     my $rc = gdk_pixbuf_savev_utf8($!p, $filename, $type, $ok, $ov, $error);
     set_error($error);
