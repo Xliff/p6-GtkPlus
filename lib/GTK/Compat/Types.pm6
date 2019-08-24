@@ -1120,11 +1120,19 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
                              #  gpointer    user_data);
   has Pointer $!finalize;    # (GSource    *source); /* Can be NULL */
 
-  submethod BUILD (:$prepare, :$check, :$dispatch, :$finalize) {
-    self.prepare  = $prepare  if $prepare.defined;
-    self.check    = $check    if $check.defined;
-    self.dispatch = $dispatch if $dispatch.defined;
-    self.finalize = $finalize if $finalize.defined;
+  sub cd-default (GSource --> gboolean) { 1 };
+
+  submethod BUILD (
+    :$prepare   = -> GSource, gint $t is rw             --> gboolean { $t = 0;
+                                                                       1 },
+    :$check     = &cd-default,
+    :$dispatch,
+    :$finalize  = &cd-default
+  ) {
+    self.prepare  = $prepare;
+    self.check    = $check;
+    self.dispatch = $dispatch;
+    self.finalize = $finalize;
   }
 
   method prepare is rw {
@@ -1158,6 +1166,8 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
         $!finalize := set_func_pointer( &(func), &sprintf-vp);
       }
   }
+
+  method size-of (GSourceFuncs:U:) { return nativesizeof(GSourceFuncs) }
 
 };
 

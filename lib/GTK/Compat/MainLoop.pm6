@@ -20,17 +20,18 @@ class GTK::Compat::MainLoop {
       MainLoop
     >
   { $!ml }
-  
+
   multi method new (Int() $is_running) {
     samewith(GMainContext, $is_running);
   }
-  multi method new (GMainContext() $context, Int() $is_running) {
+  multi method new (
+    GMainContext() $context, Int() $is_running) {
     my gboolean $ir = resolve-bool($is_running);
-    
+
     self.bless( mainloop => g_main_loop_new($context, $ir) );
   }
-  multi method new(|) {
-    die 'No valid candidates found.';
+  multi method new {
+    samewith(GMainContext, False);
   }
 
   method get_context is also<get-context> {
@@ -56,11 +57,11 @@ class GTK::Compat::MainLoop {
   method unref {
     g_main_loop_unref($!ml);
   }
-  
+
   method poll (gpointer $fds, Int() $nfds, Int() $timeout) {
     my guint $nf = resolve-uint($nfds);
     my gint $t = resolve-int($timeout);
-    
+
     g_poll($fds, $nf, $t);
   }
 

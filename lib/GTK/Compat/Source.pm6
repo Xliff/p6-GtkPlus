@@ -12,11 +12,11 @@ use GTK::Compat::MainContext;
 class GTK::Compat::Source {
   has GSource $!gs;
 
-  submethod BUILD (:$source) {
-    $!gs = $source if $source;
+  submethod BUILD (GSource :$source, Int() :$attach = False) {
+    self.setSource($source, :$attach) if $source;
   }
-  
-  method setSource(GSource $source) {
+
+  method setSource(GSource $source, :$attach = False) {
     $!gs = $source;
   }
 
@@ -25,7 +25,10 @@ class GTK::Compat::Source {
   { $!gs }
 
 
-  method new (GSourceFuncs $source_funcs, Int() $struct_size) {
+  method new (
+    GSourceFuncs $source_funcs,
+    Int() $struct_size = GSourceFuncs.size-of
+  ) {
     my guint $ss = resolve-uint($struct_size);
     self.bless( source => g_source_new($source_funcs, $ss) );
   }
@@ -127,7 +130,7 @@ class GTK::Compat::Source {
   method unref {
     g_source_unref($!gs);
   }
-  
+
   method remove (GTK::Compat::Source:U: Int() $tag) {
     my guint $t = resolve-uint($tag);
     g_source_remove($t);
@@ -150,12 +153,12 @@ class GTK::Compat::Source {
   {
     g_source_remove_by_user_data($user_data);
   }
-  
+
   method idle_add (
     GTK::Compat::Source:U:
-    &function, 
+    &function,
     gpointer $data = gpointer
-  ) 
+  )
     is also<idle-add>
   {
     g_idle_add(&function, $data);
@@ -167,7 +170,7 @@ class GTK::Compat::Source {
     &function,
     gpointer $data         = gpointer,
     GDestroyNotify $notify = gpointer
-  ) 
+  )
     is also<idle-add-full>
   {
     g_idle_add_full($priority, &function, $data, $notify);
@@ -176,8 +179,8 @@ class GTK::Compat::Source {
   method idle_remove_by_data (
     GTK::Compat::Source:U:
     gpointer $data
-  ) 
-    is also<idle-remove-by-data> 
+  )
+    is also<idle-remove-by-data>
   {
     g_idle_remove_by_data($data);
   }
