@@ -2,6 +2,7 @@ use v6.c;
 
 use Method::Also;
 
+use GTK::Compat::Source;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Main;
 
@@ -20,6 +21,7 @@ class GTK::Compat::Timeout {
     gpointer $data = gpointer;
   ) {
     my guint $i = resolve-uint($interval);
+
     g_timeout_add($i, &function, $data);
   }
 
@@ -34,6 +36,7 @@ class GTK::Compat::Timeout {
   {
     my gint $p = resolve-int($priority);
     my guint $i = resolve-uint($interval);
+
     g_timeout_add_full($p, $i, &function, $data, $notify);
   }
 
@@ -45,6 +48,7 @@ class GTK::Compat::Timeout {
     is also<add-seconds>
   {
     my guint $i = resolve-uint($interval);
+
     g_timeout_add_seconds($i, &function, $data);
   }
 
@@ -59,6 +63,7 @@ class GTK::Compat::Timeout {
   {
     my gint $p = resolve-int($priority);
     my guint $i = resolve-uint($interval);
+
     g_timeout_add_seconds_full($p, $i, &function, $data, $notify);
   }
 
@@ -70,6 +75,7 @@ class GTK::Compat::Timeout {
     my $s = Supplier.new;
     my $starttime = nqp::time_n();
     my $lasttime  = nqp::time_n();
+
     g_timeout_add(
         $msecs.Int,
         sub (*@) {
@@ -88,6 +94,10 @@ class GTK::Compat::Timeout {
     is also<simple-timeout-in-seconds>
   {
     GTK::Compat::Timeout.simple-timeout($sec * 1000);
+  }
+
+  method cancel (Int() $tag) {
+    GTK::Compat::Source.remove($tag);
   }
 
 }

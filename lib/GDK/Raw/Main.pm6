@@ -28,12 +28,12 @@ sub gdk_get_program_class ()
   is export
 { * }
 
-sub gdk_init (gint $argc, Str $argv)
+sub gdk_init (gint $argc, CArray[Str] $argv)
   is native(gdk)
   is export
 { * }
 
-sub gdk_init_check (gint $argc, Str $argv)
+sub gdk_init_check (gint $argc, CArray[Str] $argv)
   returns uint32
   is native(gdk)
   is export

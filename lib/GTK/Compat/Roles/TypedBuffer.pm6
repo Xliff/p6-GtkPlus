@@ -63,6 +63,12 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
     )
   }
 
+  method Array {
+    my @a;
+    @a[$_] = self[$_] for $!size;
+    @a;
+  }
+
   # For use on externally retrieved data.
   method setSize(Int() $s) {
     warn 'Cannot reset size!' if $!size.defined;

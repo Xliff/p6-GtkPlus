@@ -133,6 +133,7 @@ class GTK::Compat::Source {
 
   method remove (GTK::Compat::Source:U: Int() $tag) {
     my guint $t = resolve-uint($tag);
+    
     g_source_remove($t);
   }
 
