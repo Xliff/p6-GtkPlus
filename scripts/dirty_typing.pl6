@@ -20,7 +20,7 @@ sub MAIN (
 
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);
-    $prefix = %config<prefix>;
+    $prefix = %config<typePrefix> // %config<prefix>;
     @module = %config<modules>.Array;
     @module.gist.say;
   }
@@ -38,7 +38,7 @@ sub MAIN (
     say "Checking { $filename }...";
     my $f = $filename.IO.slurp;
     for $f ~~ m:g/<!after '#' \s*> ({ $prefix }<[A..Za..z]>+)/ {
-      next unless $_.Str.starts-with($prefix);
+      next unless .Str.starts-with($prefix);
       my $prospect = $_[0].Str;
       next if [||] (
         $prospect eq @blacklist.any,
@@ -54,9 +54,9 @@ sub MAIN (
   for %seen.keys.sort -> $t {
 
     my $is-there = False;
-    try {
-      for @modules -> $m {
-        CATCH { default { 1; } }
+    for @modules -> $m {
+      try {
+        CATCH { default { 1 } }
         require ::($m);
         my $a := ::("{$m}::{$t}");
         $is-there = True;
