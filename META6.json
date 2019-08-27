@@ -572,7 +572,10 @@
       "Dependency::Sort",
       "Color",
       "RandomColor",
-      "File::Find"
+      "File::Find",
+      "LWP::Simple",
+      "Inline::Perl5",
+      "IO::Socket::SSL"
     ],
     "support": {"source": null},
     "authors": ["clifton.wood@gmail.com"]

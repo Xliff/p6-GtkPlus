@@ -97,6 +97,13 @@
     - If Num then Num64, unless $short is specified then Num32
     - If GObject, then G_TYPE_OBJECT
 - Add as another scripts for t/, gtk/examples/sunny.c
+- Revisit the interface for GTK::Roles::Properties, there are potential conflicts
+  that can be removed/resolved, and it's clunky. Think about looking into a
+  set method design that hides the type complexity behind a single method. The
+  get method may not be so easy to simplify.
+  + Could this be the issue with vexpand, hexpand and its ilk? I'm using the
+    wrong routine to set those properties??
+
 
 INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   - A parsing routine at the GLib/GTK level will handle interpreting the
