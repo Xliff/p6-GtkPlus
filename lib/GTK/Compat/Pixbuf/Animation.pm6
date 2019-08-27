@@ -1,7 +1,11 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 use GTK::Compat::Pixbuf::Raw::Animation;
+
+use GTK::Compat::Pixbuf::Animation::Iter;
 
 class GTK::Compat::Pixbuf::Animation {
   has GdkPixbufAnimation $!pa;
@@ -10,7 +14,7 @@ class GTK::Compat::Pixbuf::Animation {
     $!pa = $pixbuf-anim;
   }
 
-  method GTK:::Compat::Raw::Types::GdkPixbufAnimation
+  method GTK::Compat::Raw::Types::GdkPixbufAnimation
   { $!pa }
 
   method new (GdkPixbufAnimation $pixbuf-anim) {
@@ -84,13 +88,13 @@ class GTK::Compat::Pixbuf::Animation {
     set_error($error);
   }
 
-  method gdk_pixbuf_non_anim_get_type {
-    gdk_pixbuf_non_anim_get_type();
-  }
-
-  method gdk_pixbuf_non_anim_new {
-    gdk_pixbuf_non_anim_new();
-  }
+  # method gdk_pixbuf_non_anim_get_type {
+  #   gdk_pixbuf_non_anim_get_type();
+  # }
+  #
+  # method gdk_pixbuf_non_anim_new {
+  #   gdk_pixbuf_non_anim_new();
+  # }
 
   method get_height {
     gdk_pixbuf_animation_get_height($!pa);
@@ -100,7 +104,7 @@ class GTK::Compat::Pixbuf::Animation {
     my $pai = gdk_pixbuf_animation_get_iter($!pa, $start_time);
 
     $pai ??
-      ( $raw ?? GTK::Compat::Pixbuf::Animation::Iter.new($pai) )
+      ( $raw ?? $pai !! GTK::Compat::Pixbuf::Animation::Iter.new($pai) )
       !!
       Nil
   }
@@ -126,49 +130,6 @@ class GTK::Compat::Pixbuf::Animation {
 
   method is_static_image {
     so gdk_pixbuf_animation_is_static_image($!pa);
-  }
-
-}
-
-class GTK::Compat::Pixbuf::Animation::Iter {
-  has GdkPixbufAnimationIter $!pai;
-
-  submethod BUILD (:$iter) {
-    $!pai = $iter;
-  }
-
-  method GTK:::Compat::Raw::Types::GdkPixbufAnimation
-  { $!pai }
-
-  method new (GdkPixbufAnimationIter $iter) {
-    self.bless( :$iter );
-  }
-
-  method advance (GTimeVal $current_time) {
-    so gdk_pixbuf_animation_iter_advance($!pa, $current_time);
-  }
-
-  method get_delay_time {
-    gdk_pixbuf_animation_iter_get_delay_time($!pa);
-  }
-
-  method get_pixbuf (:$raw = False) {
-    my $p = gdk_pixbuf_animation_iter_get_pixbuf($!pa);
-
-    $p ??
-      ( $raw ?? $p !! GTK::Compat::Pixbuf.new($p) )
-      !!
-      Nil;
-  }
-
-  method get_type {
-    state ($n, $t);
-
-    unstable_get_type( self.^name, &gdk_pixbuf_animation_iter_get_type, $n, $t);
-  }
-
-  method on_currently_loading_frame {
-    so gdk_pixbuf_animation_iter_on_currently_loading_frame($!pa);
   }
 
 }

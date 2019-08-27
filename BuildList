@@ -1,6 +1,7 @@
 Cairo
 Data::Dump::Tree
 GDK::Raw::Main
+GDK::Raw::Threads
 Method::Also
 Pango::AttrList
 Pango::Context
@@ -40,6 +41,7 @@ GTK::Roles::Protection
 GTK::Roles::Types
 GDK::Main
 GDK::Raw::Main
+GDK::Threads
 GTK::Builder::Actionable
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
@@ -82,6 +84,7 @@ GTK::Compat::Raw::Settings
 GTK::Compat::Raw::Signal
 GTK::Compat::Raw::SimpleAction
 GTK::Compat::Raw::Slice
+GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
 GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
@@ -117,6 +120,7 @@ GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Signals::EntryBuffer
 GTK::Roles::StyleProvider
+GDK::Raw::Threads
 GTK::Compat::Array
 GTK::Compat::BookmarkFile
 GTK::Compat::ContentType
@@ -133,6 +137,7 @@ GTK::Compat::MainLoop
 GTK::Compat::MenuAttributeIter
 GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter
+GTK::Compat::Mutex
 GTK::Compat::Permission
 GTK::Compat::Pixbuf::Animation
 GTK::Compat::Pixbuf::Transforms
@@ -140,9 +145,7 @@ GTK::Compat::PtrArray
 GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
-GTK::Compat::Raw::Threads
 GTK::Compat::Source
-GTK::Compat::Threads
 GTK::Compat::Timeout
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
