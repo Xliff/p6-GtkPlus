@@ -48,12 +48,13 @@ sub set_func_pointer(
   Pointer.new( $buf.subbuf(^$len).decode.Int );
 }
 
-constant gtk      is export = 'gtk-3',v0;
-constant gdk      is export = 'gdk-3',v0;
-constant glib     is export = 'glib-2.0',v0;
-constant gio      is export = 'gio-2.0',v0;
-constant gobject  is export = 'gobject-2.0',v0;
-constant cairo    is export = 'cairo',v2;
+constant glib       is export = 'glib-2.0',v0;
+constant gio        is export = 'gio-2.0',v0;
+constant gobject    is export = 'gobject-2.0',v0;
+constant cairo      is export = 'cairo',v2;
+constant gdk        is export = 'gdk-3',v0;
+constant gdk-pixbuf is export = 'gdk_pixbuf-2.0',v0;
+constant gtk        is export = 'gtk-3',v0;
 
 sub g_destroy_none(Pointer)
   is export

@@ -1,5 +1,6 @@
 Cairo
 Data::Dump::Tree
+GDK::Raw::Main
 Method::Also
 Pango::AttrList
 Pango::Context
@@ -37,7 +38,10 @@ GTK::Compat::X11_Types
 GTK::Raw::Utils
 GTK::Roles::Protection
 GTK::Roles::Types
+GDK::Main
+GDK::Raw::Main
 GTK::Builder::Actionable
+GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action
 GTK::Compat::Raw::AppInfo
@@ -99,7 +103,6 @@ GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::Slice
 GTK::Compat::ThreadPool
-GTK::Compat::Timeout
 GTK::Compat::Timer
 GTK::Compat::Variant
 GTK::Compat::VariantIter
@@ -131,6 +134,7 @@ GTK::Compat::MenuAttributeIter
 GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter
 GTK::Compat::Permission
+GTK::Compat::Pixbuf::Animation
 GTK::Compat::Pixbuf::Transforms
 GTK::Compat::PtrArray
 GTK::Compat::Raw::Cairo
@@ -139,6 +143,7 @@ GTK::Compat::Raw::FrameClock
 GTK::Compat::Raw::Threads
 GTK::Compat::Source
 GTK::Compat::Threads
+GTK::Compat::Timeout
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
 GTK::Dialog::Raw::ColorChooser
