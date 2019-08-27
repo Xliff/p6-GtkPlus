@@ -214,6 +214,7 @@ class GTypeInstance {
 class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
   HAS GTypeInstance  $.g_type_instance;
   has uint32         $.ref_count;
+  has gpointer       $!qdata;
 
   method checkType ($compare_type) {
     self.g_type_instance.checkType($compare_type)
@@ -898,7 +899,6 @@ class GBinding              is repr('CPointer') is export does GTK::Roles::Point
 class GBookmarkFile         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GByteArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GCond                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeInfo    is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -935,7 +935,6 @@ class GOutputStream         is repr('CPointer') is export does GTK::Roles::Point
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GRecMutex             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRWLock               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettings             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsBackend      is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1054,6 +1053,19 @@ class GOnce                is repr('CStruct') does GTK::Roles::Pointers is expor
   has guint    $.status;    # GOnceStatus
   has gpointer $.retval;
 };
+
+class GRecMutex            is repr('CStruct') does GTK::Roles::Pointers is export {
+  # Private
+  has gpointer $!p;
+  has uint64   $!i    # guint i[2];
+}
+
+class GCond                is repr('CStruct') does GTK::Roles::Pointers is export {
+  # Private
+  has gpointer $!p;
+  has uint64   $!i    # guint i[2];
+}
+
 
 sub sprintf-b(
   Blob,
