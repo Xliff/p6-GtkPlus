@@ -8,7 +8,7 @@ use Cairo;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
-constant forced = 22;
+constant forced = 24;
 
 our $DEBUG is export = 0;
 
@@ -161,6 +161,7 @@ constant GSignalAccumulator      is export := Pointer;
 constant GSignalEmissionHook     is export := Pointer;
 constant GSignalCMarshaller      is export := Pointer;
 constant GSignalCVaMarshaller    is export := Pointer;
+constant GThreadFunc             is export := Pointer;
 
 constant GPid                    is export := gint;
 constant GQuark                  is export := uint32;
@@ -866,6 +867,12 @@ our enum GLogWriterOutput is export (
   G_LOG_WRITER_HANDLED   => 1,
 );
 
+our enum GOnceStatus is export <
+  G_ONCE_STATUS_NOTCALLED
+  G_ONCE_STATUS_PROGRESS
+  G_ONCE_STATUS_READY
+>;
+
 our enum GPriority is export (
   G_PRIORITY_HIGH         => -100,
   G_PRIORITY_DEFAULT      => 0,
@@ -891,6 +898,7 @@ class GBinding              is repr('CPointer') is export does GTK::Roles::Point
 class GBookmarkFile         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GByteArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GCond                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeInfo    is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -918,13 +926,17 @@ class GMenuLinkIter         is repr('CPointer') is export does GTK::Roles::Point
 class GMenuModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMount                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMountOperation       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMutex                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GNotification         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GObject               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOptionEntry          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOptionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GPrivate              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GRecMutex             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GRWLock               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettings             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsBackend      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsSchema       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -935,6 +947,7 @@ class GSimpleActionGroup    is repr('CPointer') is export does GTK::Roles::Point
 class GSliceConfig          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GThread               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThreadPool           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1036,6 +1049,11 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 
 }
+
+class GOnce                is repr('CStruct') does GTK::Roles::Pointers is export {
+  has guint    $.status;    # GOnceStatus
+  has gpointer $.retval;
+};
 
 sub sprintf-b(
   Blob,
@@ -1172,29 +1190,30 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
 
 };
 
-class GdkAppLaunchContext   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkAtom               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkCursor             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDevice             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDeviceTool         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDeviceManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDisplay            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDisplayManager     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDragContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDrawingContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkEventSequence      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkFrameClock         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkFrameTimings       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkGLContext          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkKeymap             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkMonitor            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkPixbuf             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkPixbufAnimation    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkScreen             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkSeat               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkStyleProvider      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkVisual             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkWindow             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkAppLaunchContext    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkAtom                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkCursor              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDevice              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDeviceManager       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDeviceTool          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDisplay             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDisplayManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDragContext         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkDrawingContext      is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkEventSequence       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkFrameClock          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkFrameTimings        is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkGLContext           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkKeymap              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkMonitor             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkPixbuf              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkPixbufAnimation     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkPixbufAnimationIter is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkScreen              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkSeat                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkStyleProvider       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkVisual              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkWindow              is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 sub gdk_atom_name(GdkAtom)
   returns Str

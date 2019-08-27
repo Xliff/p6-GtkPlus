@@ -4,11 +4,11 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Threads;
+use GDK::Raw::Threads;
 
 use GTK::Raw::Utils;
 
-class GTK::Compat::Threads {
+class GDK::Threads {
 
   method new(|) {
     die 'GTK::Compat::Threads is not an instantiable object!'
