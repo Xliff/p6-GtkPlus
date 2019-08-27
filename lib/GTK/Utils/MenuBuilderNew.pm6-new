@@ -13,12 +13,12 @@ class GTK::Utils::MenuBuilder {
 
   method menu   { $!menu  }
   method items  { $!items }
-  
+
   has @!m;
   has %!opts;
   has %!late_opts;
   has %!groups
-  
+
   method !processOpts(%o) {
     # Last chance to modify/validate %opts
     my $menu_item_id = %o<id>:delete;
@@ -42,34 +42,33 @@ class GTK::Utils::MenuBuilder {
 
     # Remove unnecessary items.
     %o<check toggle>:delete;
-  
+
+    # ... ???
+  }
+
   method !makeMenuItem($p, %opts) {
     @!m.push: GTK::MenuItem.new($i.key, |$i.value);
     self!do_lateOpts(%opts);
   }
-  
-  method !processPair($i) {
+
+  method !processTop($i) {
     given $i.value {
-      # Submenu
       when Array {
         self!processItem($i);
       }
 
-      when Hash {
-        self!processOpts($_);
-        self!makeMenuItem($i, $_);
+      default {
+        die "Invalid value passed at item: { $i.key }";
       }
     }
   }
-  
+
   method !getItemType($i) {
     do given $ii {
       when .key ~~ / ^ '-' /          { 'GTK::SeparatorMenuItem'  }
-      
-      when .value ~~ Array {
-        # ???
-      }
-      
+
+      when .value ~~ Array            { 'GTK::Menu'               }
+
       when .value ~~ Hash {
 
         when (.value<group>:exists)   { 'GTK::RadioMenuItem'      }
@@ -78,13 +77,13 @@ class GTK::Utils::MenuBuilder {
         when (.value<toggled>:exists) |
              (.value<check>:exists)   |
              (.value<toggle>:exists)  { 'GTK::CheckMenuItem'      }
-             
+
      }
 
       default                         { 'GTK::MenuItem'           }
     }
   }
-  
+
   method !processItem($i, %opts) {
     my @sm;
     for $i.value.List -> $ii {
@@ -94,15 +93,19 @@ class GTK::Utils::MenuBuilder {
 
       # This WILL need recursive processing, but for now...
       my %opts = do given $ii.value {
-        when Array { @submenu = $ii.value; 
-                     @submenu .= grep( Pair ); 
+
+        when Array { # This is not sufficient! Must descend and create the
+                     # menu!
+                     @submenu = $ii.value;
+                     @submenu .= grep( Pair );
+                     # Must recurse here and bubble up with the created
+                     # menu!
                      (submenu => @submenu).Hash }
+
         when Hash  { $_  }
         when Bool  { %() }  # Separator
         default    { die "Do not know how to handle { .^name }" }
       }
-
-      
 
       @sm.push: ::($item-type).new($ii.key, |%opts);
 
@@ -130,11 +133,14 @@ class GTK::Utils::MenuBuilder {
     sub process_opts(%o, $m) {
       $o{$_} //= $m{$_} for $m.keys;
     }
-    
+
     my (%named_items, @m);
     die 'TOP parameter must be a list of Pair objects' unless $TOP ~~ Pair;
+
     for $TOP.List -> $i {
-      self!processPair($i);
+      # $TOP contains only Pairs that have array values. This is not
+      # guaranteed for other levels.
+      self!processTop($i);
     }
 
     # All UI Menu-based items must now accept the following constructor:

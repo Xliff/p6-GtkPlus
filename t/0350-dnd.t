@@ -307,8 +307,8 @@ $a.activate.tap({
   my $orient_m = GTK::ListStore.new(G_TYPE_STRING, G_TYPE_INT);
   for <Horizontal Vertical> {
     $iter = $orient_m.append;
-    $orient_m.set_value( $iter, 0, g_str($_) );
-    $orient_m.set_value( $iter, 1, g_uint( ::("GTK_ORIENTATION_{ $_.uc }")) );
+    $orient_m.set_value( $iter, 0, gv_str($_) );
+    $orient_m.set_value( $iter, 1, gv_uint( ::("GTK_ORIENTATION_{ $_.uc }")) );
   }
 
   my $combo_o = GTK::ComboBox.new_with_model($orient_m);
@@ -321,8 +321,8 @@ $a.activate.tap({
   my $style_m = GTK::ListStore.new(G_TYPE_STRING, G_TYPE_INT);
   for ('Text', 'Both', 'Both: Horizontal', 'Icons', 'Default') {
     $iter = $style_m.append;
-    $style_m.set_value( $iter, 0, g_str($_) );
-    $style_m.set_value( $iter, 1, g_int(do {
+    $style_m.set_value( $iter, 0, gv_str($_) );
+    $style_m.set_value( $iter, 1, gv_int(do {
       when 'Text'             { GTK_TOOLBAR_TEXT       }
       when 'Both'             { GTK_TOOLBAR_BOTH       }
       when 'Both: Horizontal' { GTK_TOOLBAR_BOTH_HORIZ }

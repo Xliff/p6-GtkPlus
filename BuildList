@@ -139,7 +139,7 @@ GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter
 GTK::Compat::Mutex
 GTK::Compat::Permission
-GTK::Compat::Pixbuf::Animation
+GTK::Compat::Pixbuf::Animation::Iter
 GTK::Compat::Pixbuf::Transforms
 GTK::Compat::PtrArray
 GTK::Compat::Raw::Cairo
@@ -358,6 +358,7 @@ GTK::Compat::Cairo
 GTK::Compat::DragContext
 GTK::Compat::FrameClock
 GTK::Compat::Pixbuf
+GTK::Compat::Pixbuf::Animation
 GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals
 GTK::Compat::Roles::Signals::Device

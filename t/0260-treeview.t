@@ -1,5 +1,8 @@
 use v6.c;
 
+use GTK::Compat::Types;
+use GTK::Raw::Types;
+
 use GTK::Compat::Value;
 
 use GTK::Application;
@@ -24,17 +27,17 @@ sub create_and_fill {
 
   $ts = GTK::TreeStore.new(G_TYPE_STRING);
   $ts.append($toplevel);
-  $ts.set_value( $toplevel, 0, g_str('Scripting Languages') );
+  $ts.set_value( $toplevel, 0, gv_str('Scripting Languages') );
   for <Python Perl PHP> {
     $ts.append($child, $toplevel);
-    $ts.set_value( $child, 0,  g_str($_) );
+    $ts.set_value( $child, 0,  gv_str($_) );
   }
 
   $ts.append($toplevel);
-  $ts.set_value( $toplevel, 0, g_str('Compiled Languages') );
+  $ts.set_value( $toplevel, 0, gv_str('Compiled Languages') );
   for <C C++ Java Perl6> {
     $ts.append($child, $toplevel);
-    $ts.set_value( $child, 0,  g_str($_) );
+    $ts.set_value( $child, 0,  gv_str($_) );
   }
 }
 
