@@ -93,7 +93,7 @@ sub MAIN ($dir?, :$file) {
     my $m = %enums{$k}.map( *.map( *.elems ) ).max;
     my $etype = %etype{$k};
 
-    say "  constant {$k} is export := g{ $etype > 1 ?? 'u' !! '' }int{$etype.abs}";
+    say "  constant {$k} is export := g{ $etype > 1 ?? 'u' !! '' }int{$etype.abs};";
     say "  our enum {$k}Enum is export { $m == 2 ?? '(' !! '<' }";
     for %enums{$k} -> $ek {
       for $ek -> $el {
