@@ -111,7 +111,7 @@ METH
       \$hid = g-connect-{ .[0] }(\$obj, \$signal,
         -> \$, { $pp }, \$ud{ $rt } \{
           CATCH \{
-            default \{ \$s.quit(\$_) \}
+            default \{ \$s.note(\$_) \}
           \}
 
 { $emission }

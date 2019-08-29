@@ -51,11 +51,14 @@ role GTK::Roles::Properties {
     is_type($t, self);
   }
 
-  #proto method set_prop(|) is also<prop_set> { * }
-
-  method prop_set(Str() $name, GValue() $value) {
+  method prop_set(Str() $name, GValue() $value) is also<prop-set> {
     self.set_prop($name, $value);
   }
+
+  proto method set_prop (|)
+    is also<set-prop>
+  { * }
+
   multi method set_prop(Str() $name, GValue() $value) {
     samewith( [$name], [$value] );
   }
@@ -87,11 +90,14 @@ role GTK::Roles::Properties {
     g_object_setv($!prop, $n.elems, $n, nativecast(Pointer, @v[0]));
   }
 
-  #proto method get_prop(|) is also<prop_get> { * }
-
-  method prop_get(Str() $name, GValue() $value) {
+  method prop_get(Str() $name, GValue() $value) is also<prop-get> {
     self.get_prop($name, $value.g_type);
   }
+
+  proto method get_prop (|)
+    is also<get-prop>
+  { * }
+
   multi method get_prop(Str() $name, Int() $type) {
     my @v = ( GTK::Compat::Value.new($type).gvalue );
     samewith( [$name], @v );

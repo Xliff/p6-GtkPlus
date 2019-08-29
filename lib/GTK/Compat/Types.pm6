@@ -163,6 +163,7 @@ constant GSignalCMarshaller      is export := Pointer;
 constant GSignalCVaMarshaller    is export := Pointer;
 constant GThreadFunc             is export := Pointer;
 
+constant GDate                   is export := uint64;
 constant GPid                    is export := gint;
 constant GQuark                  is export := uint32;
 constant GStrv                   is export := CArray[Str];
@@ -332,6 +333,11 @@ constant GPollFD is export := GPollFDNonWin;
 class GTimeVal is repr('CStruct') does GTK::Roles::Pointers is export {
   has glong $.tv_sec;
   has glong $.tv_usec;
+};
+
+class GValueArray is repr('CStruct') does GTK::Roles::Pointers is export {
+  has guint    $.n_values;
+  has gpointer $.values; # GValue *
 };
 
 our enum GTypeEnum is export (

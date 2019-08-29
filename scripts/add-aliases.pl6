@@ -64,22 +64,30 @@ sub MAIN($filename) {
         proceed;
       }
       when $proto {
-        my $mn = $/<method_proto><method_name>;
+        my $fm = $/;
+        my $mn = $/<method_name>;
         # Better version of this logic would put delimeter checking
         # in get-alias instead of passing it as a parameter.
         if $mn ~~ /(<[\-_]>)/ {
           my $al = get-alias($mn, $/[0]);
-          my $tbr = $/.Str;
-          $full_line ~~ s/$tbr/{$tbr}\n      is also<{$al}>\n/;
-          %proto{$al} = True;
+          my $tbr = $fm.Str;
+
+          $full_line ~~ s/$tbr/{$tbr}\n      is also<{$al}>/;
+          %proto{$mn} = True;
         }
         ($add, $proto) = (True, False);
       }
       when $method && $full_line ~~ &method_def {
         my $fm = $/[0];
-        if $fm<method_start><method_name> ~~ /(<[\-_>]>)/ {
-          my $al = get-alias($fm<method_start><method_name>, $/[0]);
+        my $mn = $fm<method_start><method_name>;
+        if $mn ~~ /(<[\-_>]>)/ {
+          if %proto{$mn}:exists {
+            $method = False;
+            proceed;
+          }
+          my $al = get-alias($mn, $/[0]);
           my $tbr = $fm.Str;
+          $full_line .= chomp;
           $full_line ~~ s/$tbr/{$tbr}is also<{$al}> /;
         }
         ($add, $method) = (True, False);
