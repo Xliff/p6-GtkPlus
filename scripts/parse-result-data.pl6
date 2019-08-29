@@ -35,6 +35,14 @@ grammar ParseBuildResults {
       \s* <err_msg> \s*
     ]
   }
+  # regex stage {
+  #   ^^ \s* 'Stage ' <stage_type> \s* ':' [
+  #     \s* <num> \s*
+  #     |
+  #     \s* <err_msg> \s*
+  #   ]
+  #   [ \s* 'precomp' \s* .+? \s* <stage>* ]?
+  # }
   regex err_msg {
     '===SORRY!===' .+? <?before \v '==='> $$
   }
