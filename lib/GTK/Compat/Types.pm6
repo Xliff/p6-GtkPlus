@@ -906,6 +906,7 @@ class GBookmarkFile         is repr('CPointer') is export does GTK::Roles::Point
 class GByteArray            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDateTime             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeInfo    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileInfo             is repr('CPointer') is export does GTK::Roles::Pointers { }
