@@ -10,12 +10,12 @@ my regex name {
 #   <[A..Z]>+ [ '=' [ \d+ | \d+ '<<' \d+ ] ]? ','
 # }
 
-my token d {
-  <[0..9 x]>
-}
+my token d { <[0..9 x]> }
+my token m { '-' }
+my token L { 'L' }
 
 my rule enum_entry {
-  \s* ( <[_ A..Z]>+ ) ( [ '=' <d>+ [ '<<' <d>+ ]? ]? ) ','? \v*
+  \s* ( <[_ A..Z]>+ ) ( [ '=' <m>?<d>+<L>? [ '<<' <d>+ ]? ]? ) ','? \v*
 }
 
 my rule comment {
@@ -23,8 +23,8 @@ my rule comment {
 }
 
 my rule enum {
-  'typedef enum' <n=name>? \v* '{' 
-  <comment>? \v* [ <comment> | <enum_entry> ]+ \v* 
+  'typedef enum' <n=name>? \v* '{'
+  <comment>? \v* [ <comment> | <enum_entry> ]+ \v*
   '}' <rn=name>?
 }
 
@@ -57,6 +57,7 @@ sub MAIN ($dir?, :$file) {
       name => /'.h' $/;
   }
 
+  my %etype;
   for @files -> $file {
     say "Checking { $file } ...";
     my $contents = $file.IO.slurp;
@@ -64,8 +65,14 @@ sub MAIN ($dir?, :$file) {
     my $m = $contents ~~ m:g/<enum>/;
     for $m.Array -> $l {
       my @e;
+      my ($etype, $neg, $long) = (32, False, False);
       for $l<enum><enum_entry> -> $el {
         for $el -> $e {
+          # Handle 32 vs 64 bit by literal.
+          $long = True if $e[1]<L>;
+          # Handle signed vs unsigned.
+          $neg  = True if $e[1]<m>;
+
           ((my $n = $e[1].Str.trim) ~~ s/'='//);
           $n ~~ s/'<<'/+</;
           my $ee;
@@ -75,13 +82,19 @@ sub MAIN ($dir?, :$file) {
         }
         %enums{$l<enum><rn>} = @e;
       }
+      $etype = 64      if $long;
+      $etype = -$etype if $neg;
+      %etype{$l<enum><rn>} = $etype;
     }
   }
 
   for %enums.keys.sort -> $k {
     #say %enums{$k}.gist;
     my $m = %enums{$k}.map( *.map( *.elems ) ).max;
-    say "  our enum {$k} is export { $m == 2 ?? '(' !! '<' }";
+    my $etype = %etype{$k};
+
+    say "  constant {$k} is export := g{ $etype > 1 ?? 'u' !! '' }int{$etype.abs}";
+    say "  our enum {$k}Enum is export { $m == 2 ?? '(' !! '<' }";
     for %enums{$k} -> $ek {
       for $ek -> $el {
         for $el.List -> $eel {
