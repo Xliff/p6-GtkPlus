@@ -39,13 +39,13 @@ sub MAIN (
       $a[1] = do {
         my $ret;
         for $prefix -> $p {
-          if $_ eq "lib/{ $p }.pm6" {
+          if $a[0] eq "lib/{ $p }.pm6" {
             $ret = $p;
             last;
           }
         }
         unless $ret {
-          $ret = .split('/').Array[1..*].join('::')
+          $ret = $a[1].split('/').Array[1..*].join('::');
         }
         $ret;
       }
