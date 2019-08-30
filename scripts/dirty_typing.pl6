@@ -22,7 +22,6 @@ sub MAIN (
     parse-file(CONFIG-NAME);
     $prefix = %config<typePrefix> // %config<prefix>;
     @module = %config<modules>.Array;
-    @module.gist.say;
   }
 
   die "Missing prefix!\n\n{ &*USAGE }" unless $prefix.defined;
