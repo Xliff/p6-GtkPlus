@@ -12,16 +12,15 @@ our constant GdkRGBA is export := GTK::Compat::RGBA;
 # STRUCT. No Object representation
 
 class GTK::Compat::RGBA {
-  has gdouble $.red;
-  has gdouble $.green;
-  has gdouble $.blue;
-  has gdouble $.alpha;
+  has gdouble $.red   is rw;
+  has gdouble $.green is rw;
+  has gdouble $.blue  is rw;
+  has gdouble $.alpha is rw;
 
   submethod BUILD (:$!red, :$!green, :$!blue, :$!alpha) { }
 
-  method GTK::Compat::Types::GdkRGBA {
-    self;
-  }
+  method GTK::Compat::Types::GdkRGBA
+  { self }
 
   multi method new (
     Num() $red   = 0,
@@ -31,13 +30,15 @@ class GTK::Compat::RGBA {
   ) {
     self.bless(:$red, :$green, :$blue, :$alpha);
   }
-  
+
   method new-rgba (
     Int() $red  ,
     Int() $green,
     Int() $blue ,
-    Num() $alpha
-  ) is also<new_rgba> {
+    Num() $alpha = 1e0
+  )
+    is also<new_rgba>
+  {
     die '$alpha must be between 0 and 1'  unless $alpha ~~ 0..1;
     GTK::Compat::RGBA.new(
       $red   / 255,
@@ -46,12 +47,14 @@ class GTK::Compat::RGBA {
       :$alpha
     )
   }
-  
+
   method new-rgb (
     Int() $red  ,
     Int() $green,
     Int() $blue
-  ) is also<new_rgb> {
+  )
+    is also<new_rgb>
+  {
     GTK::Compat::RGBA.new(
       $red   / 255,
       $green / 255,
@@ -59,7 +62,7 @@ class GTK::Compat::RGBA {
     );
   }
 
-  method copy {
+  method copy (:$raw = False) {
     gdk_rgba_copy(self);
   }
 
@@ -72,7 +75,9 @@ class GTK::Compat::RGBA {
   }
 
   method get_type is also<get-type> {
-    gdk_rgba_get_type();
+    self ($n, $t);
+
+    unstable_get_type( self.^name, gdk_rgba_get_type, $n, $t )
   }
 
   method hash {
@@ -83,7 +88,20 @@ class GTK::Compat::RGBA {
     so gdk_rgba_parse(self, $spec);
   }
 
-  method to_string is also<to-string Str> {
+  method rgb {
+    (self.red, self.green, self.blue);
+  }
+
+  method rgba is also<Array> {
+    (self.red, self.green, self.blue, self.alpha);
+  }
+
+  method to_string
+    is also<
+      to-string
+      Str
+    >
+  {
     gdk_rgba_to_string(self);
   }
 

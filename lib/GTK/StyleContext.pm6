@@ -45,9 +45,14 @@ class GTK::StyleContext {
     g_object_unref($!sc.p);
   }
 
-  method GTK::Raw::Types::GtkStyleContext is also<StyleContext> { $!sc }
+  method GTK::Raw::Types::GtkStyleContext
+    is also<
+      GtkStyleContext
+      StyleContext
+    >
+  { $!sc }
 
-  multi method new(GtkStyleContext $context) {
+  multi method new (GtkStyleContext $context) {
     self.bless(:$context);
   }
   multi method new {
@@ -750,15 +755,35 @@ class GTK::StyleContext {
     GTK::Compat::Value.new($v);
   }
 
+  proto method get_property (|)
+    is also<get-property>
+  { * }
+
+  proto method get_property (
+    Str() $property,
+    Int() $state,
+    :$raw = False
+  ) {
+    samewith($property, $state, $, :$raw);
+  }
   method get_property (
     Str() $property,
     Int() $state,
-    GValue() $value
-  )
-    is also<get-property>
-  {
+    $value is rw,
+    :$raw = False
+  ) {
     my gint $s = self.RESOLVE-UINT($state);
-    gtk_style_context_get_property($!sc, $property, $s, $value);
+    my $gv = $value // GValue.new;
+    $gv = GValue if $gv ~~ GTK::Compat::Value;
+    die 'Cannot obtain proper value object!' unless $gv ~~ GValue;
+
+    gtk_style_context_get_property($!sc, $property, $s, $gv);
+
+    # Only assign to value if not already an object.
+    $value.defined ??
+      $value
+      !!
+      $value = ( $raw ?? $gv !! GTK::Compat::Value.new($gv) )
   }
 
   method get_section (Str() $property) is also<get-section> {
@@ -772,7 +797,9 @@ class GTK::StyleContext {
   }
 
   method get_type is also<get-type> {
-    gtk_style_context_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_style_context_get_type, $n, $t );
   }
 
   method has_class (Str() $class_name) is also<has-class> {

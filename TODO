@@ -103,7 +103,10 @@
   get method may not be so easy to simplify.
   + Could this be the issue with vexpand, hexpand and its ilk? I'm using the
     wrong routine to set those properties??
-
+- Remove type coercion from "is rw" parameters. It is better to handle them in-method. This is an initiative that
+  goes across ALL Gtk-based projects. New code is being written (starting with p6-GStreamer) that uses a better way
+  of "is rw" prep and handling. Most notably, these will almost ALWAYS involve having a multi with the "is rw"
+  parameters removed from the signature.
 
 INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   - A parsing routine at the GLib/GTK level will handle interpreting the
