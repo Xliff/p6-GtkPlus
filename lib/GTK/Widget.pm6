@@ -1442,7 +1442,9 @@ class GTK::Widget {
   method override_cursor (
     GTK::Compat::RGBA $cursor,
     GTK::Compat::RGBA $secondary_cursor
-  ) is also<override-cursor> {
+  )
+    is also<override-cursor>
+  {
     gtk_widget_override_cursor($!w, $cursor, $secondary_cursor);
   }
 
@@ -1706,7 +1708,7 @@ class GTK::Widget {
     gtk_widget_compute_expand($!w, $orientation);
   }
 
-  method override_font (PangoFontDescription $font_desc)
+  method override_font (PangoFontDescription() $font_desc)
     is also<override-font>
   {
     gtk_widget_override_font($!w, $font_desc);
