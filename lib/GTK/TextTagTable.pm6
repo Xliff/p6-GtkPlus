@@ -30,9 +30,12 @@ class GTK::TextTagTable {
     self.downref;
   }
 
-  method GTK::Raw::Types::GtkTextTagTable {
-    $!ttt;
-  }
+  method GTK::Raw::Types::GtkTextTagTable
+    is also<
+      GtkTextTagTable
+      TextTagTable
+    >
+  { $!ttt }
 
   multi method new {
     my $table = gtk_text_tag_table_new();
@@ -78,7 +81,10 @@ class GTK::TextTagTable {
     gtk_text_tag_table_add($!ttt, $tag);
   }
 
-  method foreach (GtkTextTagTableForeach $func, gpointer $data) {
+  method foreach (
+    GtkTextTagTableForeach $func,
+    gpointer $data = gpointer
+  ) {
     gtk_text_tag_table_foreach($!ttt, $func, $data);
   }
 
@@ -87,12 +93,18 @@ class GTK::TextTagTable {
   }
 
   method get_type is also<get-type> {
-    gtk_text_tag_table_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_text_tag_table_get_type, $n, $t );
   }
 
-  method lookup (Str() $name) {
+  method lookup (Str() $name, :$raw = False) {
     my $tag = gtk_text_tag_table_lookup($!ttt, $name);
-    GTK::TextTag.new($tag) with $tag;
+
+    $tag ??
+      ( $raw ?? $tag !! GTK::TextTag.new($tag) )
+      !!
+      Nil;
   }
 
   method remove (GtkTextTag() $tag) {
