@@ -52,7 +52,7 @@ role GTK::Roles::FontChooser {
         my $d = gtk_font_chooser_get_font_desc($!fc);
 
         $d ??
-          ( $raw ?? Pango::FontDescription.new($d) )
+          ( $raw ?? $d !! Pango::FontDescription.new($d) )
           !!
           Nil;
       },
