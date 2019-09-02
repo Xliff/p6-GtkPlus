@@ -75,9 +75,9 @@ class GTK::Compat::RGBA {
   }
 
   method get_type is also<get-type> {
-    self ($n, $t);
+    my ($n, $t);
 
-    unstable_get_type( self.^name, gdk_rgba_get_type, $n, $t )
+    unstable_get_type( self.^name, &gdk_rgba_get_type, $n, $t )
   }
 
   method hash {

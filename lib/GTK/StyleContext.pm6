@@ -759,14 +759,14 @@ class GTK::StyleContext {
     is also<get-property>
   { * }
 
-  proto method get_property (
+  multi method get_property (
     Str() $property,
     Int() $state,
     :$raw = False
   ) {
     samewith($property, $state, $, :$raw);
   }
-  method get_property (
+  multi method get_property (
     Str() $property,
     Int() $state,
     $value is rw,
@@ -774,7 +774,7 @@ class GTK::StyleContext {
   ) {
     my gint $s = self.RESOLVE-UINT($state);
     my $gv = $value // GValue.new;
-    $gv = GValue if $gv ~~ GTK::Compat::Value;
+    $gv .= GValue if $gv ~~ GTK::Compat::Value;
     die 'Cannot obtain proper value object!' unless $gv ~~ GValue;
 
     gtk_style_context_get_property($!sc, $property, $s, $gv);

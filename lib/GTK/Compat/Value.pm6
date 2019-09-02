@@ -30,9 +30,12 @@ class GTK::Compat::Value {
     self.bless(:$value);
   }
 
-  method GTK::Compat::Types::GValue is also<gvalue> {
-    $!v;
-  }
+  method GTK::Compat::Types::GValue
+    is also<
+      GValue
+      gvalue
+    >
+  { $!v }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
