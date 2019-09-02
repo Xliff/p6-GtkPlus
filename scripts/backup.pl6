@@ -5,9 +5,18 @@ use lib 'scripts';
 
 use GTKScripts;
 
-parse-file(CONFIG-NAME) if CONFIG-NAME.IO.e;
-for %config<backups>.Array {
-  my $proc = Proc::Async.new( |<git push>, $_ );
+if CONFIG-NAME.IO.e {
+  parse-file(CONFIG-NAME);
+  if %config<backups> {
+    for %config<backups>.Array {
+      my $proc = Proc::Async.new( |<git push>, $_ );
+      $proc.stdout.tap(-> $o { $o.say; });
+      await $proc.start;
+    }
+  }
+}
+unless %config<backups> {
+  my $proc = Proc::Async.new( |<git push backup> );
   $proc.stdout.tap(-> $o { $o.say; });
   await $proc.start;
 }
