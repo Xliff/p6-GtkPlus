@@ -143,7 +143,7 @@ sub g-connect-{ .[0] }(
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  \{ \* \}
+\{ \* \}
 NC
 
   }
