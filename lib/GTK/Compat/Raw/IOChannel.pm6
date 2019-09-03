@@ -19,7 +19,7 @@ sub g_io_channel_error_quark ()
 { * }
 
 sub g_io_channel_flush (
-  GIOChannel $channel, 
+  GIOChannel $channel,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -28,9 +28,9 @@ sub g_io_channel_flush (
 { * }
 
 sub g_io_add_watch (
-  GIOChannel $channel, 
-  guint $condition, # GIOCondition $condition, 
-  GIOFunc $func, 
+  GIOChannel $channel,
+  guint $condition, # GIOCondition $condition,
+  &func (GIOChannel, guint, gpointer --> gboolean),
   gpointer $user_data
 )
   returns guint
@@ -39,11 +39,11 @@ sub g_io_add_watch (
 { * }
 
 sub g_io_add_watch_full (
-  GIOChannel $channel, 
-  gint $priority, 
-  guint $condition, # GIOCondition $condition, 
-  GIOFunc $func, 
-  gpointer $user_data, 
+  GIOChannel $channel,
+  gint $priority,
+  guint $condition, # GIOCondition $condition,
+  &func (GIOChannel, guint, gpointer --> gboolean),
+  gpointer $user_data,
   GDestroyNotify $notify
 )
   returns guint
@@ -52,7 +52,7 @@ sub g_io_add_watch_full (
 { * }
 
 sub g_io_create_watch (
-  GIOChannel $channel, 
+  GIOChannel $channel,
   guint $condition # GIOCondition $condition
 )
   returns GSource
@@ -90,8 +90,8 @@ sub g_io_channel_init (GIOChannel $channel)
 { * }
 
 sub g_io_channel_new_file (
-  Str $filename, 
-  Str $mode, 
+  Str $filename,
+  Str $mode,
   CArray[Pointer[GError]] $error
 )
   returns GIOChannel
@@ -100,10 +100,10 @@ sub g_io_channel_new_file (
 { * }
 
 sub g_io_channel_read_chars (
-  GIOChannel $channel, 
-  Str $buf, 
-  gsize $count, 
-  gsize $bytes_read, 
+  GIOChannel $channel,
+  Str $buf,
+  gsize $count,
+  gsize $bytes_read,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -112,10 +112,10 @@ sub g_io_channel_read_chars (
 { * }
 
 sub g_io_channel_read_line (
-  GIOChannel $channel, 
-  Str $str_return, 
-  gsize $length, 
-  gsize $terminator_pos, 
+  GIOChannel $channel,
+  CArray[Str] $str_return,
+  gsize $length,
+  gsize $terminator_pos,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -124,9 +124,9 @@ sub g_io_channel_read_line (
 { * }
 
 sub g_io_channel_read_line_string (
-  GIOChannel $channel, 
-  GString $buffer, 
-  gsize $terminator_pos, 
+  GIOChannel $channel,
+  GString $buffer,
+  gsize $terminator_pos,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -135,9 +135,9 @@ sub g_io_channel_read_line_string (
 { * }
 
 sub g_io_channel_read_to_end (
-  GIOChannel $channel, 
-  Str $str_return, 
-  gsize $length, 
+  GIOChannel $channel,
+  Str $str_return,
+  gsize $length,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -146,8 +146,8 @@ sub g_io_channel_read_to_end (
 { * }
 
 sub g_io_channel_read_unichar (
-  GIOChannel $channel, 
-  gunichar $thechar, 
+  GIOChannel $channel,
+  gunichar $thechar,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -162,9 +162,9 @@ sub g_io_channel_ref (GIOChannel $channel)
 { * }
 
 sub g_io_channel_seek_position (
-  GIOChannel $channel, 
-  gint64 $offset, 
-  guint $type, # GSeekType $type, 
+  GIOChannel $channel,
+  gint64 $offset,
+  guint $type, # GSeekType $type,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -173,8 +173,8 @@ sub g_io_channel_seek_position (
 { * }
 
 sub g_io_channel_set_encoding (
-  GIOChannel $channel, 
-  Str $encoding, 
+  GIOChannel $channel,
+  Str $encoding,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -183,8 +183,8 @@ sub g_io_channel_set_encoding (
 { * }
 
 sub g_io_channel_set_flags (
-  GIOChannel $channel, 
-  guint $flags,  # GIOFlags $flags, 
+  GIOChannel $channel,
+  guint $flags,  # GIOFlags $flags,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -193,8 +193,8 @@ sub g_io_channel_set_flags (
 { * }
 
 sub g_io_channel_set_line_term (
-  GIOChannel $channel, 
-  Str $line_term, 
+  GIOChannel $channel,
+  Str $line_term,
   gint $length
 )
   is native(glib)
@@ -202,8 +202,8 @@ sub g_io_channel_set_line_term (
 { * }
 
 sub g_io_channel_shutdown (
-  GIOChannel $channel, 
-  gboolean $flush, 
+  GIOChannel $channel,
+  gboolean $flush,
   CArray[Pointer[GError]] $err
 )
   returns guint # GIOStatus
@@ -235,8 +235,8 @@ sub g_io_channel_win32_get_fd (GIOChannel $channel)
 { * }
 
 sub g_io_channel_win32_make_pollfd (
-  GIOChannel $channel, 
-  guint $condition, # GIOCondition $condition, 
+  GIOChannel $channel,
+  guint $condition, # GIOCondition $condition,
   GPollFD $fd
 )
   is native(glib)
@@ -273,10 +273,10 @@ sub g_io_channel_win32_set_debug (GIOChannel $channel, gboolean $flag)
 { * }
 
 sub g_io_channel_write_chars (
-  GIOChannel $channel, 
-  Str $buf, 
-  gssize $count, 
-  gsize $bytes_written, 
+  GIOChannel $channel,
+  Str $buf,
+  gssize $count,
+  gsize $bytes_written,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -285,8 +285,8 @@ sub g_io_channel_write_chars (
 { * }
 
 sub g_io_channel_write_unichar (
-  GIOChannel $channel, 
-  gunichar $thechar, 
+  GIOChannel $channel,
+  gunichar $thechar,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus

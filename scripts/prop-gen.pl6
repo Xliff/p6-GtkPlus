@@ -32,6 +32,7 @@ sub MAIN (
   #my $sig-div = $dom.find('div.refsect1 a').to_array.List.grep(
   #  *.attr('name') eq "{ $control }.signal-details"
   #)[0].parent;
+  my %methods;
   for '.property-details', '.style-properties' -> $pd {
     my $found = False;
     quietly {
@@ -53,18 +54,26 @@ sub MAIN (
     }
 
     for $found.find('div h3 code').to_array.List -> $e {
-      (my $mn = $e.text) ~~ s:g/<[“”]>//;
+      (my $mn = $e.text) ~~ s:g/<[“”"]>//;
 
       my $pre = $e.parent.parent.find('pre').last;
       my @t = $pre.find('span.type').to_array.List;
       my @i = $pre.parent.find('p').to_array.List;
       my @w = $pre.parent.find('div.warning').to_array.List;
       my ($dep, $rw);
+
       for @i {
-        if .text ~~ /'Flags: ' ('Read' | 'Write')+ % ' / '/ {
+        if .text ~~ /'Flags'? ': ' ('Read' | 'Write')+ % ' / '/ {
           $rw = $/[0].Array;
         }
       }
+      # Due to the variety of types, this isn't the only place to look...
+      unless $rw.defined {
+        if $pre.text ~~ /'Flags'? ': ' ('Read' | 'Write')+ % ' / '/ {
+          $rw = $/[0].Array;
+        }
+      }
+
       for @w {
         $dep = so .all_text ~~ /'deprecated'/;
         if $dep {
@@ -122,12 +131,12 @@ sub MAIN (
         if $rw.any eq 'Write';
       }
 
-      %c<write> //= "warn \"{ $mn } does not allow writing\"";
+      %c<write> //= "warn '{ $mn } does not allow writing'";
 
       # Remember to emit a returned value, or the STORE will not work.
       # Read warnings should appear behind a DEBUG sentinel.
       %c<read>  //= qq:to/READ/;
-  warn "{ $mn } does not allow reading" if \$DEBUG;
+  warn '{ $mn } does not allow reading' if \$DEBUG;
   { $gtype eq 'G_TYPE_STRING' ?? "''" !! '0' };
   READ
 
@@ -137,7 +146,7 @@ sub MAIN (
         $deprecated ~= "({$dep})" unless $dep ~~ Bool;
       };
 
-      say qq:to/METH/;
+      %methods{$mn} = qq:to/METH/;
     # Type: { $types }
     method $mn is rw { $deprecated } \{
       my GTK::Compat::Value \$gv .= new( $gtype );
@@ -155,4 +164,5 @@ sub MAIN (
     }
   }
 
+  .value.say for %methods.pairs.sort( *.key );
 }

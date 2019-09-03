@@ -87,7 +87,9 @@ role GTK::Roles::Properties {
     # say "N{$i}: { $n[$i++] }" for $n;
 
     # -XXX- NOT a general purpose fix, but will work for now.
-    g_object_setv($!prop, $n.elems, $n, nativecast(Pointer, @v[0]));
+    my guint $ne = $n.elems;
+    die "Cannot set properties with #elems == { $ne }" unless $ne > 0;
+    g_object_setv($!prop, $ne, $n, nativecast(Pointer, @v[0]));
   }
 
   method prop_get(Str() $name, GValue() $value) is also<prop-get> {

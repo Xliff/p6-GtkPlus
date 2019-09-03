@@ -49,7 +49,7 @@ sub MAIN (
 
   my @signals;
   for $found.find('div h3 code').to_array.List -> $e {
-    (my $mn = $e.text) ~~ s:g/<[“”]>//;
+    (my $mn = $e.text) ~~ s:g/<[“”"]>//;
     my $pre = $e.parent.parent.find('pre').last;
     my $rts = $pre.find('span.returnvalue').last;
     my $rt = $rts.defined ?? "--> { $rts.text }" !! '';
