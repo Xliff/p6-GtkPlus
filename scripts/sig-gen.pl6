@@ -7,6 +7,7 @@ use Mojo::DOM:from<Perl5>;
 sub MAIN (
   $control is copy,
   :$var    is copy = 'w',
+  :$lib    is copy = 'gobject',
   :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
 ) {
   # If it's a URL, then try to pick it apart
@@ -141,7 +142,7 @@ sub g-connect-{ .[0] }(
   uint32 \$flags
 )
   returns uint64
-  is native('gobject-2.0')
+  is native({ $lib })
   is symbol('g_signal_connect_object')
 \{ \* \}
 NC
