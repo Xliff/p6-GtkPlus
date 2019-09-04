@@ -15,7 +15,7 @@ my token m { '-' }
 my token L { 'L' }
 
 my rule enum_entry {
-  \s* ( <[_ A..Z]>+ ) ( [ '=' <m>?<d>+<L>? [ '<<' <d>+ ]? ]? ) ','? \v*
+  \s* ( <[_ A..Z]>+ ) ( [ '=' <m>?<d>+<L>? [ '<<' (<d>+) ]? ]? ) ','? \v*
 }
 
 my rule comment {
@@ -69,7 +69,7 @@ sub MAIN ($dir?, :$file) {
       for $l<enum><enum_entry> -> $el {
         for $el -> $e {
           # Handle 32 vs 64 bit by literal.
-          $long = True if $e[1]<L>;
+          $long = True if $e[1]<L> || $e[1][0].Int > 31;
           # Handle signed vs unsigned.
           $neg  = True if $e[1]<m>;
 
