@@ -21,4 +21,4 @@ ${EXEC} --stagestats \
 		-I${P6_GTK_HOME}/p6-Clutter/lib       \
 		-I${P6_GTK_HOME}/p6-GtkClutter/lib    \
 		-I${P6_GTK_HOME}/p6-COGL/lib          \
-    -I${P6_GTK_HOME}/p6-GStreamer/lib     "${@}"
+    -I${P6_GTK_HOME}/p6-GStreamer/lib     "${X}"
