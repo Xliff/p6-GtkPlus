@@ -9,7 +9,7 @@ export P6_BUILDING_GTK=1
 echo -e "Dependency Generation\n=====================" >> LastBuildResults
 /usr/bin/time -p -o LastBuildResults -a perl6 scripts/dependencies.pl6
 /usr/bin/time -p /bin/bash -c '(
-  for a in `tac BuildList`; do
+  for a in `cat BuildList`; do
     (
     	echo " === $a ==="
 	     ./p6gtkexec -e "use $a" 2>&1

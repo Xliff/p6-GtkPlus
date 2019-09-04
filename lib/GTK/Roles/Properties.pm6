@@ -72,9 +72,9 @@ role GTK::Roles::Properties {
     my CArray[Str] $n = CArray[Str].new;
     my $i = 0;
     $n[$i++] = $_ for @n;
-    my CArray[GValue] $v = CArray[GValue].new;
-    $i = 0;
-    $v[$i++] = $_ for @v;
+    # my CArray[GValue] $v = CArray[GValue].new;
+    # $i = 0;
+    # $v[$i++] = $_ for @v;
 
     # $i = 0;
     # for ^$v.elems {
@@ -89,7 +89,7 @@ role GTK::Roles::Properties {
     # -XXX- NOT a general purpose fix, but will work for now.
     my guint $ne = $n.elems;
     die "Cannot set properties with #elems == { $ne }" unless $ne > 0;
-    g_object_setv($!prop, $ne, $n, nativecast(Pointer, @v[0]));
+    g_object_setv( $!prop, $ne, $n, @v[0].p );
   }
 
   method prop_get(Str() $name, GValue() $value) is also<prop-get> {
@@ -120,12 +120,14 @@ role GTK::Roles::Properties {
     my CArray[Str] $n = CArray[Str].new;
     my $i = 0;
     $n[$i++] = $_ for @n;
-    my CArray[GValue] $v = CArray[GValue].new;
-    $i++;
-    $v[$i++] = $_ for @v;
+    # my CArray[GValue] $v = CArray[GValue].new;
+    # $i = 0;
+    # $v[$i++] = $_ for @v;
 
     # -XXX- NOT a general purpose fix, but will work for now.
-    g_object_getv($!prop, $n.elems, $n, nativecast(Pointer, @v[0]));
+    my $ne = $n.elems;
+    die "Cannot get properties with #elems == { $ne }" unless $ne > 0;
+    g_object_getv( $!prop, $ne, $n, @v[0].p );
 
     # @values = ();
     # @values.push( GTK::Compat::Value.new($v[$_]) ) for (^$v.elems);
@@ -136,22 +138,22 @@ role GTK::Roles::Properties {
     });
   }
 
-  proto method prop_get_int (|c)
-    is also<prop-get-int>
-    { * }
-
-  multi method prop_get_int(Str() $name) {
-    my $v = 0;
-    samewith($name, $v);
-  }
-  multi method prop_get_int (Str() $name, Int() $value is rw) {
-    my gint $v = $value;
-    g_object_get_int($!prop.p, $name, $v, Str);
-    $value = $v;
+  method prop_get_int(Str() $name) {
+    my $a = g_object_get_int($!prop.p, $name);
+    $a[0];
   }
 
   method prop_set_int (Str() $name, Int() $value) is also<prop-set-int> {
     g_object_set_int($!prop.p, $name, $value, Str);
+  }
+
+  method prop_get_uint(Str() $name) {
+    my $a = g_object_get_uint($!prop.p, $name);
+    $a[0];
+  }
+
+  method prop_set_uint (Str() $name, Int() $value) is also<prop-set-uint> {
+    g_object_set_uint($!prop.p, $name, $value, Str);
   }
 
   # Should be in its own role that is common to both ::Compat::Roles::Object

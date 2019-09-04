@@ -20,7 +20,7 @@ class GTK::Compat::Value {
     #self.unref
   }
 
-  multi method new(Int $t = G_TYPE_NONE) {
+  multi method new (Int $t = G_TYPE_NONE) {
     die "Invalid type passed to GTK::Compat::Value.new - { $t.^name }"
       unless $t ~~ Int || $t.^can('Int').elems;
     my $type = resolve-ulint($t.Int);

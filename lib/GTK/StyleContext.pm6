@@ -14,18 +14,17 @@ use GTK::Compat::Value;
 use GTK::Raw::StyleContext;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::Render;
 use GTK::WidgetPath;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Properties;
-use GTK::Roles::Types;
 
 class GTK::StyleContext {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Types;
 
   has GtkStyleContext $!sc;
 
@@ -77,7 +76,7 @@ class GTK::StyleContext {
         GtkTextDirection( gtk_style_context_get_direction($!sc) );
       },
       STORE => sub ($, Int() $direction is copy) {
-        my guint $d = self.RESOLVE-UINT($direction);
+        my guint $d = resolve-uint($direction);
         gtk_style_context_set_direction($!sc, $d);
       }
     );
@@ -100,7 +99,7 @@ class GTK::StyleContext {
         GtkJunctionSides( gtk_style_context_get_junction_sides($!sc) );
       },
       STORE => sub ($, Int() $sides is copy) {
-        my guint $s = self.RESOLVE-UINT($sides);
+        my guint $s = resolve-uint($sides);
         gtk_style_context_set_junction_sides($!sc, $s);
       }
     );
@@ -134,7 +133,7 @@ class GTK::StyleContext {
         gtk_style_context_get_scale($!sc);
       },
       STORE => sub ($, Int() $scale is copy) {
-        my gint $s = self.RESOLVE-UINT($scale);
+        my gint $s = resolve-uint($scale);
         gtk_style_context_set_scale($!sc, $s);
       }
     );
@@ -158,7 +157,7 @@ class GTK::StyleContext {
         gtk_style_context_get_state($!sc);
       },
       STORE => sub ($, Int() $flags is copy) {
-        my guint $f = self.RESOLVE-UINT($flags);
+        my guint $f = resolve-uint($flags);
         gtk_style_context_set_state($!sc, $f);
       }
     );
@@ -357,7 +356,7 @@ class GTK::StyleContext {
     Int() $gap_side
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
-    my guint $gs = self.RESOLVE-UINT($gap_side);
+    my guint $gs = resolve-uint($gap_side);
     GTK::Render.extension($context, $cr, $xx, $yy, $w, $h, $gs);
   }
 
@@ -444,7 +443,7 @@ class GTK::StyleContext {
   ) {
     my num64 ($xx, $yy, $w, $h, $g0, $g1)
       = ($x, $y, $width, $height, $xy0_gap, $xy1_gap);
-    my guint $gs = self.RESOLVE-UINT($gap_side);
+    my guint $gs = resolve-uint($gap_side);
     GTK::Render.frame_gap($context, $cr, $xx, $yy, $w, $h, $gs, $g0, $g1);
   }
 
@@ -510,7 +509,7 @@ class GTK::StyleContext {
   )
     is also<render_icon-pixbuf>
   {
-    my guint $s = self.RESOLVE-UINT($size);
+    my guint $s = resolve-uint($size);
     GTK::Render.icon_pixbuf($context, $source, $s);
   }
 
@@ -559,9 +558,9 @@ class GTK::StyleContext {
     Int() $d                  # PangoDirection $d
   ) {
     my @u = ($l, $d);
-    my guint ($ll, $dd) = self.RESOLVE-UINT(@u);
+    my guint ($ll, $dd) = resolve-uint(@u);
     my gdouble ($xx, $yy) = ($x, $y);
-    my gint $ii = self.RESOLVE-INT($i);
+    my gint $ii = resolve-int($i);
     GTK::Render.insertion_cursor($context, $cr, $xx, $yy, $ll, $ii, $dd);
   }
 
@@ -584,7 +583,7 @@ class GTK::StyleContext {
     Int() $l                  # PangoLayout $l
   ) {
     my gdouble ($xx, $yy) = ($x, $y);
-    my guint $ll = self.RESOLVE-UINT($l);
+    my guint $ll = resolve-uint($l);
     GTK::Render.layout($context, $cr, $xx, $yy, $ll);
   }
 
@@ -659,7 +658,7 @@ class GTK::StyleContext {
     Int() $orientation
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
-    my guint $o = self.RESOLVE-UINT($orientation);
+    my guint $o = resolve-uint($orientation);
     GTK::Render.slider($context, $cr, $xx, $yy, $w, $h, $o);
   }
 
@@ -672,7 +671,7 @@ class GTK::StyleContext {
   method add_provider (GtkStyleProvider $provider, Int() $priority)
     is also<add-provider>
   {
-    my guint $p = self.RESOLVE-UINT($priority);
+    my guint $p = resolve-uint($priority);
     gtk_style_context_add_provider($!sc, $provider, $p);
   }
 
@@ -683,7 +682,7 @@ class GTK::StyleContext {
   )
     is also<add-provider-for-screen>
   {
-    my guint $p = self.RESOLVE-UINT($priority);
+    my guint $p = resolve-uint($priority);
     gtk_style_context_add_provider_for_screen($screen, $provider, $p);
   }
 
@@ -706,53 +705,51 @@ class GTK::StyleContext {
   )
     is also<get-background-color>
   {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     gtk_style_context_get_background_color($!sc, $s, $color);
   }
 
   method get_border (Int() $state, GtkBorder $border)
     is also<get-border>
   {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     gtk_style_context_get_border($!sc, $s, $border);
   }
 
   method get_border_color (Int() $state, GdkRGBA $color)
     is also<get-border-color>
   {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     gtk_style_context_get_border_color($!sc, $s, $color);
   }
 
   method get_color (Int() $state, GdkRGBA $color) is also<get-color> {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     gtk_style_context_get_color($!sc, $s, $color);
   }
 
   method get_font (Int() $state) is also<get-font> {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     Pango::FontDescription.new( gtk_style_context_get_font($!sc, $s) );
   }
 
   method get_margin (Int() $state, GtkBorder $margin)
     is also<get-margin>
   {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     gtk_style_context_get_margin($!sc, $s, $margin);
   }
 
   method get_padding (Int() $state, GtkBorder $padding)
     is also<get-padding>
   {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     gtk_style_context_get_padding($!sc, $s, $padding);
   }
 
   # Replaces valist version, but returns GValue
-  method get (Int() $state, Str() $property) {
-    my $v = GValue.new;
-    self.get_property($property, $state, $v);
-    GTK::Compat::Value.new($v);
+  method get (Int() $state, Str() $property, :$raw = False) {
+    self.get_property($property, $state, :$raw);
   }
 
   proto method get_property (|)
@@ -772,7 +769,7 @@ class GTK::StyleContext {
     $value is rw,
     :$raw = False
   ) {
-    my gint $s = self.RESOLVE-UINT($state);
+    my gint $s = resolve-uint($state);
     my $gv = $value // GValue.new;
     $gv .= GValue if $gv ~~ GTK::Compat::Value;
     die 'Cannot obtain proper value object!' unless $gv ~~ GValue;
@@ -780,7 +777,7 @@ class GTK::StyleContext {
     gtk_style_context_get_property($!sc, $property, $s, $gv);
 
     # Only assign to value if not already an object.
-    $value.defined ??
+    $value ??
       $value
       !!
       $value = ( $raw ?? $gv !! GTK::Compat::Value.new($gv) )
@@ -809,7 +806,7 @@ class GTK::StyleContext {
   method has_region (Str() $region_name, Int() $flags_return)
     is also<has-region>
   {
-    my guint $fr = self.RESOLVE-UINT($flags_return);
+    my guint $fr = resolve-uint($flags_return);
     gtk_style_context_has_region($!sc, $region_name, $fr);
   }
 
@@ -845,7 +842,7 @@ class GTK::StyleContext {
     is also<notify-state-change>
   {
     my @u = ($state, $state_value);
-    my guint ($s, $sv) = self.RESOLVE-UINT(@u);
+    my guint ($s, $sv) = resolve-uint(@u);
     gtk_style_context_notify_state_change($!sc, $window, $region_id, $s, $sv);
   }
 
@@ -898,7 +895,7 @@ class GTK::StyleContext {
     is also<scroll-animations>
   {
     my @i = ($dx, $dy);
-    my gint ($ddx, $ddy) = self.RESOLVE-INT(@i);
+    my gint ($ddx, $ddy) = resolve-int(@i);
     gtk_style_context_scroll_animations($!sc, $window, $ddx, $ddy);
   }
 
@@ -910,12 +907,12 @@ class GTK::StyleContext {
     is also<state-is-running>
   {
     my gdouble $pp = $progress;
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = resolve-uint($state);
     gtk_style_context_state_is_running($!sc, $s, $pp);
   }
 
   method to_string (Int() $flags = self.state) is also<to-string Str> {
-    my guint $f = self.RESOLVE-UINT($flags);
+    my guint $f = resolve-uint($flags);
     gtk_style_context_to_string($!sc, $f);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

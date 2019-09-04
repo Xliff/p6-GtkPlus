@@ -6,6 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::TreeStore;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::Compat::Roles::Object;
 
@@ -16,7 +17,7 @@ use GTK::Roles::TreeSortable;
 
 class GTK::TreeStore  {
   also does GTK::Compat::Roles::Object;
-  
+
   also does GTK::Roles::Buildable;
   also does GTK::Roles::TreeDragDest;
   also does GTK::Roles::TreeDragSource;
@@ -27,7 +28,7 @@ class GTK::TreeStore  {
 
   submethod BUILD(:$treestore) {
     self!setObject($!tree = $treestore);           # GTK::Compat::Roles::Object
-    
+
     $!b  = nativecast(GtkBuildable,      $!tree);  # GTK::Roles::Buildable
     $!tm = nativecast(GtkTreeModel,      $!tree);  # GTK::Roles::TreeModel
     $!ts = nativecast(GtkTreeSortable,   $!tree);  # GTK::Roles::TreeSortable
@@ -102,7 +103,7 @@ class GTK::TreeStore  {
     GtkTreeIter() $parent,
     Int() $position
   ) {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = resolve-int($position);
     gtk_tree_store_insert($!tree, $iter, $parent, $p);
   }
 
@@ -142,7 +143,7 @@ class GTK::TreeStore  {
     @values,
   ) is also<insert-with-valuesv> {
     my ($c, $v) = self!checkCV(@columns, @values);
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = resolve-int($position);
     gtk_tree_store_insert_with_valuesv($!tree, $iter, $pt, $p, $c, $v, $c.elems);
   }
 
@@ -205,7 +206,7 @@ class GTK::TreeStore  {
   # }
 
   method set_value (GtkTreeIter() $iter, Int() $column, GValue() $value) is also<set-value> {
-    my gint $c = self.RESOLVE-INT($column);
+    my gint $c = resolve-int($column);
     gtk_tree_store_set_value($!tree, $iter, $c, $value);
   }
 

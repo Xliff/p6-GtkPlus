@@ -23,7 +23,7 @@ sub add_row ($g, $r, $sg, $lt, @options) {
   my $l = GTK::Label.new_with_mnemonic($lt);
 
   $l.halign = GTK_ALIGN_START;
-  $l.valign = GTK_ALIGN_END;
+  $l.valign = GTK_ALIGN_BASELINE;
   $l.hexpand = True;
   $g.attach($l, 0, $r, 1, 1);
   $l.mnemonic_widget = $cb;
@@ -39,7 +39,7 @@ my $a = GTK::Application.new(
   title  => 'org.genex.sizegroup',
   width  => 235,
   height => 250,
-  pod    => $=pod
+  # pod    => $=pod
 );
 
 # Not working like the GTK demo... is there something off with
@@ -47,7 +47,7 @@ my $a = GTK::Application.new(
 $a.activate.tap({
   my @colors = <Red Green Blue>;
   my @dashes = <Solid Dashed Dotted>;
-  my @ends = <Square Round Arrow>;
+  my @ends = ('Square', 'Round', 'Double Arrow');
 
   my $vb = GTK::Box.new-vbox(5);
   $vb.border_width = 5;
@@ -81,6 +81,6 @@ $a.activate.tap({
 
 $a.run;
 
-=begin css
-label { padding-bottom: 6px; }
-=end css
+# =begin css
+# label { padding-bottom: 6px; }
+# =end css

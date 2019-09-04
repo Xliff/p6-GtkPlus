@@ -51,10 +51,10 @@ role GTK::Roles::Protection {
 
   # Should never be called ouside of the GTK::Widget hierarchy, but
   # how can the watcher watch itself?
-  method IS-PROTECTED {
+  method IS-PROTECTED ($nf = 2) {
     # Really kinda violates someone's idea of "object-oriented" somewhere,
     # but I am more results-oriened.
-    my $c = self.CALLING-METHOD;
+    my $c = self.CALLING-METHOD($nf);
     # Must be done, otherwise error. Note: Regexes do not like attributes.
     #my @p = @!prefixes;
     my $t = False;

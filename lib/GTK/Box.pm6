@@ -13,7 +13,7 @@ use GTK::Roles::Orientable;
 
 use GTK::Container;
 
-our subset BoxAncestry is export 
+our subset BoxAncestry is export
   where GtkBox | GtkOrientable | ContainerAncestry;
 
 class GTK::Box is GTK::Container {
@@ -43,12 +43,12 @@ class GTK::Box is GTK::Container {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkBox is also<Box> { $!b }
 
   method setBox($box) {
     self.IS-PROTECTED;
-    
+
     my $to-parent;
     $!b = do given $box {
       when GtkBox {
@@ -104,7 +104,7 @@ class GTK::Box is GTK::Container {
         GtkBaselinePosition( gtk_box_get_baseline_position($!b) );
       },
       STORE => sub ($, Int() $position is copy) {
-        my uint32 $p = self.RESOLVE-UINT($position);
+        my uint32 $p = resolve-uint($position);
         gtk_box_set_baseline_position($!b, $p);
       }
     );
@@ -127,7 +127,7 @@ class GTK::Box is GTK::Container {
         gtk_box_get_homogeneous($!b);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = self.RESOLVE-BOOL($homogeneous);
+        my gboolean $h = resolve-bool($homogeneous);
         gtk_box_set_homogeneous($!b, $h);
       }
     );
@@ -139,7 +139,7 @@ class GTK::Box is GTK::Container {
         gtk_box_get_spacing($!b);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = self.RESOLVE-INT($spacing);
+        my gint $s = resolve-int($spacing);
         gtk_box_set_spacing($!b, $s);
       }
     );
@@ -165,7 +165,7 @@ class GTK::Box is GTK::Container {
     Int() $padding = 0
   ) {
     my @u = ($expand, $fill, $padding);
-    my ($e, $f, $p) = self.RESOLVE-UINT(@u);
+    my ($e, $f, $p) = resolve-uint(@u);
     self.unshift-end($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_box_pack_end($!b, $child, $e, $f, $p);
@@ -204,7 +204,7 @@ class GTK::Box is GTK::Container {
     Int() $padding = 0
   ) {
     my @u = ($expand, $fill, $padding);
-    my uint32 ($e, $f, $p) = self.RESOLVE-UINT(@u);
+    my uint32 ($e, $f, $p) = resolve-uint(@u);
     self.push-start($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_box_pack_start($!b, $child, $e, $f, $p);
@@ -254,8 +254,8 @@ class GTK::Box is GTK::Container {
   ) {
     my @b = ($expand, $fill);
     my @ui = ($padding, $pack_type);
-    my gboolean ($e, $f) = self.RESOLVE-BOOL(@b);
-    my guint ($p, $pt) = self.RESOLVE-UINT(@ui);
+    my gboolean ($e, $f) = resolve-bool(@b);
+    my guint ($p, $pt) = resolve-uint(@ui);
     my $rc = gtk_box_query_child_packing($!b, $child, $e, $f, $p, $pt);
     ($expand, $fill, $padding, $pack_type) = ($e, $f, $p, $pt);
     $rc;
@@ -264,7 +264,7 @@ class GTK::Box is GTK::Container {
   multi method reorder_child (GtkWidget() $child, Int() $position)
     is also<reorder-child>
   {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = resolve-int($position);
     gtk_box_reorder_child($!b, $child, $p);
   }
 
@@ -279,8 +279,8 @@ class GTK::Box is GTK::Container {
   {
     my @b = ($expand, $fill);
     my @ui = ($padding, $pack_type);
-    my ($e, $f) = self.RESOLVE-BOOL(@b);
-    my ($p, $pt) = self.RESOLVE-UINT(@ui);
+    my ($e, $f) = resolve-bool(@b);
+    my ($p, $pt) = resolve-uint(@ui);
     gtk_box_set_child_packing($!b, $child, $e, $f, $p, $pt);
   }
 

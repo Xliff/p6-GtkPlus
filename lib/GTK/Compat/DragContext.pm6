@@ -5,12 +5,11 @@ use NativeCall;
 
 use GTK::Compat::Raw::DragContext;
 use GTK::Compat::Types;
+use GTK::Raw::Utils;
 
 use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
 
 class GTK::Compat::DragContext {
-  also does GTK::Roles::Types;
   also does GTK::Roles::Signals::Generic;
 
   has GdkDragContext $!dc;
@@ -53,7 +52,7 @@ class GTK::Compat::DragContext {
     is also<begin-from-point>
   {
     my @i = ($x_root, $y_root);
-    my gint ($xr, $yr) = self.RESOLVE-INT(@i);
+    my gint ($xr, $yr) = resolve-int(@i);
     my $context = gdk_drag_begin_from_point(
       $window, $device, $targets, $x_root, $y_root
     );
@@ -106,7 +105,7 @@ class GTK::Compat::DragContext {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method abort (Int() $time) {
-    my guint $t = self.RESOLVE-UINT($time);
+    my guint $t = resolve-uint($time);
     gdk_drag_abort($!dc, $t);
   }
 
@@ -152,7 +151,7 @@ class GTK::Compat::DragContext {
   )
     is also<manage-dnd>
   {
-    my guint $a = self.RESOLVE-UINT($actions);
+    my guint $a = resolve-uint($actions);
     gdk_drag_context_manage_dnd($!dc, $ipc_window, $a);
   }
 
@@ -163,12 +162,12 @@ class GTK::Compat::DragContext {
   }
 
   method drop (Int() $time) {
-    my guint $t = self.RESOLVE-UINT($time);
+    my guint $t = resolve-uint($time);
     gdk_drag_drop($!dc, $t);
   }
 
   method drop_done (Int() $success) is also<drop-done> {
-    my guint $s = self.RESOLVE-UINT($success);
+    my guint $s = resolve-uint($success);
     gdk_drag_drop_done($!dc, $s);
   }
 
@@ -187,8 +186,8 @@ class GTK::Compat::DragContext {
     is also<find-window-for-screen>
   {
     my @i = ($x_root, $y_root);
-    my gint ($xr, $yr) = self.RESOLVE-INT(@i);
-    my guint $p = self.RESOLVE-UINT($protocol);
+    my gint ($xr, $yr) = resolve-int(@i);
+    my guint $p = resolve-uint($protocol);
     gdk_drag_find_window_for_screen(
       $!dc, $drag_win, $screen, $xr, $yr, $dest_win, $p
     );
@@ -197,16 +196,16 @@ class GTK::Compat::DragContext {
   method drop_finish (Int() $success, Int() $time)
     is also<drop-finish>
   {
-    my gboolean $s = self.RESOLVE-BOOL($success);
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my gboolean $s = resolve-bool($success);
+    my guint32 $t = resolve-uint($time);
     gdk_drop_finish($!dc, $s, $t);
   }
 
   method drop_reply (Int() $accepted, Int() $time)
     is also<drop-reply>
   {
-    my gboolean $a = self.RESOLVE-BOOL($accepted);
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my gboolean $a = resolve-bool($accepted);
+    my guint32 $t = resolve-uint($time);
     gdk_drop_reply($!dc, $a, $t);
   }
 
@@ -225,14 +224,14 @@ class GTK::Compat::DragContext {
   ) {
     my @i = ($x_root, $y_root);
     my @u = ($protocol, $suggested_action, $possible_actions, $time);
-    my gint ($xr, $yr) = self.RESOLVE-INT(@i);
-    my guint ($p, $sa, $pa, $t) = self.RESOLVE-UINT(@u);
+    my gint ($xr, $yr) = resolve-int(@i);
+    my guint ($p, $sa, $pa, $t) = resolve-uint(@u);
     gdk_drag_motion($!dc, $dest_win, $p, $xr, $yr, $sa, $pa, $t);
   }
 
   method status (Int() $action, Int() $time) {
     my @u = ($action, $time);
-    my guint ($a, $t) = self.RESOLVE-UINT(@u);
+    my guint ($a, $t) = resolve-uint(@u);
     gdk_drag_status($!dc, $a, $t);
   }
 

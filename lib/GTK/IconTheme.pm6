@@ -9,17 +9,16 @@ use GTK::Compat::RGBA;
 use GTK::Compat::Types;
 use GTK::Raw::IconTheme;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::IconInfo;
 
 use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
 use GTK::Compat::Roles::ListData;   # Not to be composed in GTK::IconTheme
 use GTK::Compat::Roles::Object;
 
 class GTK::IconTheme {
   also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Object;
 
   has GtkIconTheme $!it;
@@ -75,7 +74,7 @@ class GTK::IconTheme {
   method add_builtin_icon (Str $name, Int() $size, GdkPixbuf() $pixbuf)
     is also<add-builtin-icon>
   {
-    my gint $s = self.RESOLVE-INT($size);
+    my gint $s = resolve-int($size);
     gtk_icon_theme_add_builtin_icon($name, $s, $pixbuf);
   }
 
@@ -104,12 +103,12 @@ class GTK::IconTheme {
   }
 
   method list_contexts is also<list-contexts> {
-    GTK::Compat::GList.new( Str, gtk_icon_theme_list_contexts($!it) )
+    GTK::Compat::GList.new( gtk_icon_theme_list_contexts($!it) )
       but GTK::Compat::Roles::ListData[Str];
   }
 
   method list_icons (Str() $context) is also<list-icons> {
-    GTK::Compat::GList.new( Str, gtk_icon_theme_list_icons($!it, $context) )
+    GTK::Compat::GList.new( gtk_icon_theme_list_icons($!it, $context) )
       but GTK::Compat::Roles::ListData[Str];
   }
 
@@ -121,8 +120,8 @@ class GTK::IconTheme {
   )
     is also<load-icon>
   {
-    my gint $s = self.RESOLVE-INT($size);
-    my guint $f = self.RESOLVE-UINT($flags);
+    my gint $s = resolve-int($size);
+    my guint $f = resolve-uint($flags);
     my $p = gtk_icon_theme_load_icon($!it, $icon_name, $s, $f, $error);
     $p.defined ?? GTK::Compat::Pixbuf.new($p) !! Nil;
   }
@@ -137,8 +136,8 @@ class GTK::IconTheme {
     is also<load-icon-for-scale>
   {
     my @i = ($size, $scale);
-    my gint ($si, $sc) = self.RESOLVE-INT(@i);
-    my guint $f = self.RESOLVE-UINT($flags);
+    my gint ($si, $sc) = resolve-int(@i);
+    my guint $f = resolve-uint($flags);
     GTK::Compat::Pixbuf.new(
       gtk_icon_theme_load_icon_for_scale($!it, $name, $si, $sc, $f, $error)
     )
@@ -155,8 +154,8 @@ class GTK::IconTheme {
     is also<load-surface>
   {
     my @i = ($size, $scale);
-    my gint ($si, $sc) = self.RESOLVE-INT(@i);
-    my guint $f = self.RESOLVE-UINT($flags);
+    my gint ($si, $sc) = resolve-int(@i);
+    my guint $f = resolve-uint($flags);
     $ERROR = Nil;
     my $rc = gtk_icon_theme_load_surface(
       $!it, $name, $si, $sc, $fw, $f, $error
@@ -172,8 +171,8 @@ class GTK::IconTheme {
   )
     is also<lookup-by-gicon>
   {
-    my guint $f = self.RESOLVE-INT($flags);
-    my gint $s = self.RESOLVE-INT($size);
+    my guint $f = resolve-int($flags);
+    my gint $s = resolve-int($size);
     GTK::IconInfo.new(
       gtk_icon_theme_lookup_by_gicon($!it, $icon, $s, $f)
     );
@@ -188,8 +187,8 @@ class GTK::IconTheme {
     is also<lookup-by-gicon-for-scale>
   {
     my @i = ($size, $scale);
-    my gint ($si, $sc) = self.RESOLVE-INT(@i);
-    my guint $f = self.RESOLVE-UINT($flags);
+    my gint ($si, $sc) = resolve-int(@i);
+    my guint $f = resolve-uint($flags);
     GTK::IconInfo.new(
       gtk_icon_theme_lookup_by_gicon_for_scale($!it, $icon, $si, $sc, $f)
     );
@@ -202,8 +201,8 @@ class GTK::IconTheme {
   )
     is also<lookup-icon>
   {
-    my gint $s = self.RESOLVE-INT($size);
-    my guint $f = self.RESOLVE-UINT($flags);
+    my gint $s = resolve-int($size);
+    my guint $f = resolve-uint($flags);
     GTK::IconInfo.new(
       gtk_icon_theme_lookup_icon($!it, $icon_name, $s, $f)
     );
@@ -218,8 +217,8 @@ class GTK::IconTheme {
     is also<lookup-icon-for-scale>
   {
     my @i = ($size, $scale);
-    my gint ($si, $sc) = self.RESOLVE-INT(@i);
-    my guint $f = self.RESOLVE-UINT($flags);
+    my gint ($si, $sc) = resolve-int(@i);
+    my guint $f = resolve-uint($flags);
     GTK::IconInfo.new(
       gtk_icon_theme_lookup_icon_for_scale($!it, $icon_name, $si, $sc, $f)
     );

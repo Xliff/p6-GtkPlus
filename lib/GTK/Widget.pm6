@@ -87,7 +87,13 @@ class GTK::Widget {
     unstable_get_type(::?CLASS.^name, &sub, $n, $t);
   }
 
-  method GTK::Raw::Types::GtkWidget is also<Widget> { $!w }
+  method GTK::Raw::Types::GtkWidget
+    is also<
+      GtkWidget
+      Widget
+      widget
+    >
+  { $!w }
 
   method setWidget($widget) {
 #    "setWidget".say;

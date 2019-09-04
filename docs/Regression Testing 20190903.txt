@@ -1,0 +1,91 @@
+GTK+ Regression Testing 09/03/2019
+==================================
+
+0010: PASSED
+0020: PASSED
+0030: PASSED
+0040: PASSED
+0050: PASSED
+0060: PASSED
+0070: PASSED
+0080: PASSED
+0090: PASSED
+00A0: PASSED
+00B0: Not Written!
+00B1: PASSED   - Updating needed: Size-Request of top-level window needs to be wider.
+00B2: PASSED   - Updating needed: Could reflect the results of the dialog in the GUI
+                                  as opposed (or in addition) to the console.
+00C0: PASSED   - Updating needed: Size-Request of top-level window needs to be wider.
+00C1: PASSED   - Updating needed: Size-Request of top-level window needs to be wider.
+                                  Also, reflect the results of the dialog in the GUI
+                                  as opposed (or in addition) to the console.
+00C2: PASSED
+0100: PASSED   - Updating needed: Size-Request of top-level window needs to be wider.
+0110: MARGINAL - Downgrade due to the fact that the original size does not match
+                 the actual size of the window upon opening. This size is what
+                 should be preserved. Restore should return window to this
+                 size.
+0120: FAILED   - "No such method 'active' for invocant of type 'Array'."
+                 Check the return value of GTK::RadioGroup.new;
+0130: PASSED   - Note: The GTK::RadioGroup in this example works just fine...
+0140: PASSED
+0150: PASSED
+0170: PASSED
+0180: PASSED
+0190: PASSED   - Warning received upon exit:
+                 "(perl6:3000): Gtk-WARNING **: 23:07:04.759: A floating object was finalized."
+0200: PASSED
+0210: PASSED
+0220: MARGINAL - Improved from last test, however the 3rd drop-down is still linked
+                 to its closest sibling. In the refernce example, these have independent
+                 widths.
+0230: PASSED
+0240: PASSED   - Warning received upon exit:
+                 "(perl6:5513): GLib-GObject-CRITICAL **: 23:39:05.322: g_object_unref: assertion 'G_IS_OBJECT (object)' failed"
+0250: PASSED
+0260: PASSED   - Note: After removal of GTK::Roles::Types references from GTK::TreeStore
+0270: MARGINAL - Functionality wise there don't seem to be any problems, however...
+                 Message received during execution:
+                 "Cannot call method from outside of a GTK:: object (listbox_test.buildListRow)
+                  in method IS-PROTECTED..."
+                 ... and ...
+                 "(perl6:6989): Gtk-WARNING **: 23:57:28.552: A floating object was finalized. ..."
+0280: PASSED
+0290: PASSED   - Updating needed: Remove extra borders.
+0300: PASSED
+0310: PASSED   - Note: Numerous instances of the following warning:
+                     "(perl6:8472): Gtk-WARNING **: 02:03:37.804: A floating object was finalized.'
+0320: PASSED   - Updating needed: Increase initial width of top-level window to insure
+                 progress bars are visible.
+0330: PASSED   - Note: SEGV occurred when exiting with the following message:
+                     'double free or corruption (!prev)' -- Looks like a GList issue
+                     Second execution to verify the first message did not, but got the following:
+                     "(perl6:9191): Gtk-WARNING **: 02:09:28.083: A floating object was finalized."
+                     ...This occurred when dragging one of the bottom icons.
+0340: PASSED   - Note: All images shown.
+0350: PASSED   - Note: Execution only proceeded successfully after removal of
+                     several references to GTK::Roles::Types. Drag and Drop on
+                     the ToolPalette is also a problem in the reference
+                     implementation. I cannot tell if they are exactly the same,
+                     but neither behave as intuition says they should.
+                     Also, several GLib messages were emitted upon exit:
+                     "(perl6:10917): GLib-GObject-CRITICAL **: 02:29:25.778: g_signal_handlers_destroy: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed"
+                     "(perl6:10917): GLib-GObject-CRITICAL **: 02:29:25.778: g_object_unref: assertion 'G_IS_OBJECT (object)' failed"
+                     "(perl6:10917): GLib-GObject-WARNING **: 02:29:25.778: instance with invalid (NULL) class pointer"
+                     "(perl6:10917): GLib-GObject-CRITICAL **: 02:29:25.778: g_signal_emit_valist: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed"
+                     "(perl6:10917): GLib-GObject-CRITICAL **: 02:29:25.778: g_object_set_qdata: assertion 'G_IS_OBJECT (object)' failed"
+                     "(perl6:10917): GLib-GObject-WARNING **: 02:29:25.778: instance with invalid (NULL) class pointer"
+0360: MARGINAL - Notes: Notebook tabs are shown, but not the blank page as in the reference implementation.
+0370: PASSED   - Notes: Need to insure that GTK::PrintOperation was NOT global,
+                        or Bad Things Happen.
+                 Updating needed: Increase initial width of top-level window.
+0380: PASSED
+0390: PASSED
+0391: PASSED   - Notes: Renamed to denote difference between 0390.
+0400: PASSED   - Notes: Warning emitted upon exit:
+                        "(perl6:13389): Gtk-WARNING **: 02:58:22.159: A floating object was finalized."
+0410: PASSED
+0500: PASSED
+0520: BROKEN   - Notes: (GTK::Utils::MenuBuilder in the process of being refactored)
+0540: BROKEN   - Notes: Floating SEGV when progress bar completes.
+0720: PASSED   - Notes: See 0270.

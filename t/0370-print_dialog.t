@@ -81,11 +81,12 @@ sub draw_page ($po, $pc is copy, $pn, $pd) {
   } while ++$i < $pd<lines_per_page> && ++$line < $pd<num_lines>;
 }
 
-sub do_print_settings ($po, $ps, $w) {
-  my (%pd, $err);
+sub do_print_settings ($ps, $w) {
+  my (%pd, $po, $err);
   %pd<resourcename> = $?FILE;
   %pd<font_size> = 12;
 
+  $po = GTK::PrintOperation.new;
   $ps.set(GTK_PRINT_SETTINGS_OUTPUT_BASENAME, $?FILE);
   $po.begin-print.tap(-> *@a { begin_print( $po,     @a[1], %pd ) });
   $po.draw-page.tap(->   *@a {   draw_page( $po, |@a[1..2], %pd ) });
@@ -114,7 +115,6 @@ sub do_page_settings ($w) {
 
 my $a = GTK::Application.new( title => 'org.genex.unix_print' );
 $a.activate.tap({
-  my $po  = GTK::PrintOperation.new;
   my $ps  = GTK::PrintSettings.new;
   my $vb  = GTK::Box.new-vbox(5);
   my @b   = GTK::Button.new xx 2;
@@ -125,7 +125,7 @@ $a.activate.tap({
   @b[0].label = 'Print Settings';
   @b[1].label = 'Page Setup';
 
-  @b[0].clicked.tap({ do_print_settings($po, $ps, $a.window) });
+  @b[0].clicked.tap({ do_print_settings($ps, $a.window) });
   @b[1].clicked.tap({  do_page_settings($a.window) });
 
   $a.window.show_all;
