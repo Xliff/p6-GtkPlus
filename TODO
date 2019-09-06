@@ -21,6 +21,9 @@
   - Test latest inplementation of GTK::Compat::GList and GTK::Roles::ListData
 + Generate GTK::Widgets and GTK::NonWidgets comprised of need statements (build-mro.pl6 could do this)
   - build-mro.pl6 is now doing this.
+- Figure out the best way to place this:
+    multi method Numeric { $!o.p }
+  So that we can change the entire object chain in the most efficient way.
 - Insure all method-level gchar paramters are converted to Str()
 - COMPLETE a working GSList implementation
 - GDK

@@ -1,0 +1,93 @@
+./p6-Clutter/lib/Clutter/DeviceManager.pm6:11:use GTK::Compat::Roles::ListData;
+./p6-Clutter/lib/Clutter/DeviceManager.pm6:74:    ) but GTK::Compat::Roles::ListData[ClutterInputDevice];
+./p6-Clutter/lib/Clutter/DeviceManager.pm6:82:    ) but GTK::Compat::Roles::ListData[ClutterInputDevice];
+./p6-Clutter/lib/Clutter/InputDevice.pm6:311:    ) but GTK::Compat::Roles::ListData[ClutterInputDevice];
+./p6-Clutter/lib/Clutter/Actor.pm6:1712:      but GTK::Compat::Roles::ListData[ClutterActor];
+./p6-Clutter/lib/Clutter/Actor.pm6:2807:      but GTK::Compat::Roles::ListData[ClutterAction];
+./p6-Clutter/lib/Clutter/Actor.pm6:2879:      but GTK::Compat::Roles::ListData[ClutterConstraint];
+./p6-Clutter/lib/Clutter/Actor.pm6:2945:      but GTK::Compat::Roles::ListData[ClutterEffect];
+./p6-Clutter/lib/Clutter/Path.pm6:17:use GTK::Compat::Roles::ListData;
+./p6-Clutter/lib/Clutter/Path.pm6:147:      but GTK::Compat::Roles::ListData[ClutterPathNode];
+./p6-GStreamer/lib/GStreamer/Toc.pm6:10:use GTK::Compat::Roles::ListData;
+./p6-GStreamer/lib/GStreamer/Toc.pm6:96:      but GTK::Compat::Roles::ListData[GstTocEntry];
+./p6-GStreamer/lib/GStreamer/Toc.pm6:240:      but GTK::Compat::Roles::ListData[GstTocEntry];
+./p6-GStreamer/lib/GStreamer/ElementFactory.pm6:12:use GTK::Compat::Roles::ListData;
+./p6-GStreamer/lib/GStreamer/ElementFactory.pm6:159:    ) but GTK::Compat::Roles::ListData[GstStaticPadTemplate];
+./p6-GStreamer/lib/GStreamer/ElementFactory.pm6:199:    ) but GTK::Compat::Roles::ListData[GstElementFactory];
+./p6-GStreamer/lib/GStreamer/ElementFactory.pm6:217:    ) but GTK::Compat::Roles::ListData[GstElementFactory];
+./p6-GStreamer/lib/GStreamer/Element.pm6:241:      GTK::Compat::Roles::ListData[GstPadTemplate];
+./p6-GtkPlus/lib/GTK/IconTheme.pm6:17:use GTK::Compat::Roles::ListData;   # Not to be composed in GTK::IconTheme
+./p6-GtkPlus/lib/GTK/IconTheme.pm6:107:      but GTK::Compat::Roles::ListData[Str];
+./p6-GtkPlus/lib/GTK/IconTheme.pm6:112:      but GTK::Compat::Roles::ListData[Str];
+./p6-GtkPlus/lib/GTK/TextIter.pm6:9:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus/lib/GTK/TextIter.pm6:495:      but GTK::Compat::Roles::ListData[GtkTextMark];
+./p6-GtkPlus/lib/GTK/Compat/Roles/AppInfo.pm6:37:    ) but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus/lib/GTK/Compat/Roles/AppInfo.pm6:60:    ) but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus/lib/GTK/Compat/Roles/AppInfo.pm6:67:    ) but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus/lib/GTK/Compat/Roles/AppInfo.pm6:152:      but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus/lib/GTK/Compat/Roles/ListData.pm6:7:role GTK::Compat::Roles::ListData[::T] {
+./p6-GtkPlus/lib/GTK/Compat/GList.pm6:12:# - Move ALL data related routines to a ListData parameterized role.
+./p6-GtkPlus/lib/GTK/Compat/GList.pm6:33:    # No longer necessary due to GTK::Compat::Roles::ListData
+./p6-GtkPlus/lib/GTK/Compat/GList.pm6:100:  # Probably better to finish work on GTK::Compat::ListData role and move
+./p6-GtkPlus/lib/GTK/Compat/ContentType.pm6:13:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus/lib/GTK/Compat/ContentType.pm6:37:      GTK::Compat::GList.new($list) but GTK::Compat::Roles::ListData[Str]
+./p6-GtkPlus/lib/GTK/Compat/HashTable.pm6:204:      $l !! $l but GTK::Compat::ListData[$type];
+./p6-GtkPlus/lib/GTK/TextChildAnchor.pm6:11:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus/lib/GTK/TextChildAnchor.pm6:58:      but GTK::Compat::Roles::ListData[GtkWidget];
+./p6-GtkPlus/lib/GTK/Roles/RecentChooser.pm6:177:      but GTK::Compat::Roles::ListData[GtkRecentInfo];
+./p6-GtkPlus/lib/GTK/Roles/RecentChooser.pm6:196:      but GTK::Compat::Roles::ListData[GtkRecentFilter];
+./p6-GtkPlus/lib/GTK/RecentManager.pm6:11:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus/lib/GTK/RecentManager.pm6:74:      but GTK::Compat::Roles::ListData[GtkRecentInfo];
+./p6-SourceViewGTK/lib/SourceViewGTK/Buffer.pm6:11:use GTK::Compat::Roles::ListData;
+./p6-SourceViewGTK/lib/SourceViewGTK/Buffer.pm6:287:    ) but GTK::Compat::Roles::ListData[GtkSourceMark];
+./p6-GooCanvas.orig/lib/Goo/Canvas.pm6:12:use GTK::Compat::Roles::ListData;
+./p6-GooCanvas.orig/lib/Goo/Canvas.pm6:571:    ) but GTK::Compat::Roles::ListData[GooCanvasItem];
+./p6-GooCanvas.orig/lib/Goo/Canvas.pm6:592:    ) but GTK::Compat::Roles::ListData[GooCanvasItem];
+./p6-GooCanvas.orig/lib/Goo/Roles/CanvasItem.pm6:424:    ) but GTK::Compat::Roles::ListData[GooCanvasItem];
+./p6-Slope/lib/Slope/Item.pm6:13:use GTK::Compat::Roles::ListData;
+./p6-Slope/lib/Slope/Item.pm6:114:      ($l but GTK::Compat::Roles::ListData[SlopeItem])
+./p6-Slope/lib/Slope/Figure.pm6:76:      but GTK::Compat::Roles::ListData[SlopeScale];
+./p6-Slope/lib/Slope/Sampler.pm6:13:use GTK::Compat::Roles::ListData;
+./p6-Slope/lib/Slope/Sampler.pm6:110:     GTK::Compat::Roles::ListData[SlopeSample]).Array;
+./p6-Slope/lib/Slope/Scale.pm6:10:use GTK::Compat::Roles::ListData;
+./p6-Slope/lib/Slope/Scale.pm6:127:      but GTK::Compat::Roles::ListData[SlopeItem];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/IconTheme.pm6:18:use GTK::Compat::Roles::ListData;   # Not to be composed in GTK::IconTheme
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/IconTheme.pm6:110:      but GTK::Compat::Roles::ListData[Str];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/IconTheme.pm6:115:      but GTK::Compat::Roles::ListData[Str];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/TextIter.pm6:9:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/TextIter.pm6:495:      but GTK::Compat::Roles::ListData[GtkTextMark];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/Roles/AppInfo.pm6:37:    ) but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/Roles/AppInfo.pm6:60:    ) but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/Roles/AppInfo.pm6:67:    ) but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/Roles/AppInfo.pm6:152:      but GTK::Compat::Roles::ListData[GAppInfo];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/Roles/ListData.pm6:7:role GTK::Compat::Roles::ListData[::T] {
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/GList.pm6:12:# - Move ALL data related routines to a ListData parameterized role.
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/GList.pm6:33:    # No longer necessary due to GTK::Compat::Roles::ListData
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/GList.pm6:99:  # Probably better to finish work on GTK::Compat::ListData role and move
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/ContentType.pm6:13:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/ContentType.pm6:37:      GTK::Compat::GList.new($list) but GTK::Compat::Roles::ListData[Str]
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Compat/HashTable.pm6:188:      $l !! $l but GTK::Compat::ListData[$type];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/TextChildAnchor.pm6:11:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/TextChildAnchor.pm6:58:      but GTK::Compat::Roles::ListData[GtkWidget];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Roles/RecentChooser.pm6:177:      but GTK::Compat::Roles::ListData[GtkRecentInfo];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/Roles/RecentChooser.pm6:196:      but GTK::Compat::Roles::ListData[GtkRecentFilter];
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/RecentManager.pm6:11:use GTK::Compat::Roles::ListData;
+./p6-GtkPlus.detatchedhead-201905020/lib/GTK/RecentManager.pm6:74:      but GTK::Compat::Roles::ListData[GtkRecentInfo];
+./p6-WNCK/lib/WNCK/Screen.pm6:17:use GTK::Compat::Roles::ListData;
+./p6-WNCK/lib/WNCK/Screen.pm6:281:       but GTK::Compat::Roles::ListData[WnckWindow];
+./p6-WNCK/lib/WNCK/Screen.pm6:295:      but GTK::Compat::Roles::ListData[WnckWindow];
+./p6-WNCK/lib/WNCK/Screen.pm6:312:      but GTK::Compat::ListData[WnckWorkspace];
+./p6-WNCK/lib/WNCK/Application.pm6:17:use GTK::Compat::Roles::ListData;
+./p6-WNCK/lib/WNCK/Application.pm6:112:      but GTK::Compat::Roles::ListData[WnckWindow];
+./p6-WNCK/lib/WNCK/ClassGroup.pm6:87:      but GTK::Compat::Roles::ListData[WnckWindow];
+./p6-TEPL/lib/TEPL/Roles/TabGroup.pm6:11:use GTK::Compat::Roles::ListData;
+./p6-TEPL/lib/TEPL/Roles/TabGroup.pm6:40:      but GTK::Compat::Roles::ListData[TeplTab];
+./p6-TEPL/lib/TEPL/Roles/TabGroup.pm6:47:      but GTK::Compat::Roles::ListData[TeplTab];
+./p6-TEPL/lib/TEPL/Roles/TabGroup.pm6:59:      but GTK::Compat::Roles::ListData[TeplView];
+./p6-TEPL/lib/TEPL/Encoding.pm6:8:use GTK::Compat::Roles::ListData;
+./p6-TEPL/lib/TEPL/Encoding.pm6:86:      but GTK::Compat::Roles::ListData[TeplEncoding];
+./p6-TEPL/lib/TEPL/Encoding.pm6:100:    ) but GTK::Compat::Roles::ListData[TeplEncoding];
+./p6-GooCanvas/lib/Goo/Canvas.pm6:12:use GTK::Compat::Roles::ListData;
+./p6-GooCanvas/lib/Goo/Canvas.pm6:571:    ) but GTK::Compat::Roles::ListData[GooCanvasItem];
+./p6-GooCanvas/lib/Goo/Canvas.pm6:592:    ) but GTK::Compat::Roles::ListData[GooCanvasItem];
+./p6-GooCanvas/lib/Goo/Roles/CanvasItem.pm6:424:    ) but GTK::Compat::Roles::ListData[GooCanvasItem];

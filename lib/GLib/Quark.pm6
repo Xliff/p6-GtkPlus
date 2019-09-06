@@ -30,10 +30,13 @@ class GLib::Quark {
     g_intern_string($string);
   }
 
+  # This method is not a "convert to a String representation", it's
+  # "let's create a string from another representation" so should not get the
+  # Str alias!
   method to_string (Int() $quark) is also<to-string> {
     my GQuark $q = $quark;
 
-    g_quark_to_string();
+    g_quark_to_string($quark);
   }
 
   method try_string (Str() $string) is also<try-string> {
