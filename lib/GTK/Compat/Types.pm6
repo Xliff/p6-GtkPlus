@@ -956,6 +956,7 @@ class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Point
 class GThread               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThreadPool           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTimeZone             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantDict          is repr('CPointer') is export does GTK::Roles::Pointers { }
