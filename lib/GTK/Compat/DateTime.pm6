@@ -13,12 +13,24 @@ class GTK::Compat::DateTime {
     $!dt = $datetime;
   }
 
-  submethod GTK::Compat::Types::GDateTime
+  method GTK::Compat::Types::GDateTime
+    is also<GDateTime>
   { $!dt }
 
   multi method new (GDateTime $datetime) {
     self.bless( :$datetime );
   }
+  multi method new (DateTime $pdt) {
+    ::?CLASS.new_from_unix($pdt.posix);
+  }
+
+  multi method new (
+    DateTime $pdt,
+    :$utc is required
+  ) {
+    ::?CLASS.new_from_unix_utc($pdt.utc.posix);
+  }
+
   multi method new (
     GTimeZone() $tz,
     Int() $year,
@@ -474,13 +486,15 @@ class GTK::Compat::DateTime {
       is also<to-timeval>
   { * }
 
-  multi method to_timeval (:$all = False, :$raw = False) {
-    samewith($, :$all, :$raw);
+  # GTimeVal is deprecated. See: https://tecnocode.co.uk/2019/08/24/gtimeval-deprecation-in-glib-2-61-2/
+  # So there will be no object representation. These methods are provided for
+  # compatibility purposes, only.
+  multi method to_timeval (:$all = False) {
+    samewith($, :$all);
   }
-  multi method to_timeval (GTimeVal() $tv, :$all = False, :$raw = False) {
+  multi method to_timeval (GTimeVal() $tv, :$all = False) {
     my $rc = g_date_time_to_timeval($!dt, $tv);
 
-    # $tv = GTK::Compat::TimeVal.new($tv) if $raw.not;
     $rc ??
       ( $all ?? $tv !! ($tv, $rc) )
       !!
