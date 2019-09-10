@@ -371,6 +371,13 @@ our enum GTypeEnum is export (
   G_TYPE_RESERVED_USER_FIRST => 49
 );
 
+constant GTimeType is export  := guint;
+our enum GTimeTypeEnum is export <
+  G_TIME_TYPE_STANDARD
+  G_TIME_TYPE_DAYLIGHT
+  G_TIME_TYPE_UNIVERSAL
+>;
+
 # Uint32. Be careful not to conflate this with GVariantType which is a pointer!
 our enum GVariantTypeEnum is export <
   G_VARIANT_CLASS_BOOLEAN
