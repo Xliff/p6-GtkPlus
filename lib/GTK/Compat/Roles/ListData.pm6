@@ -14,7 +14,8 @@ role GTK::Compat::Roles::ListData[::T] {
   method !rebuild {
     return unless self.dirty;
 
-    my $l = GTK::Compat::Types::GList.new;
+    my GTK::Compat::Types::GList $l;
+
     @!nat = ();
     loop ($l = self.first; $l.defined; $l = $l.next) {
       @!nat.push: self.data($l);

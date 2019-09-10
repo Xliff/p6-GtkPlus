@@ -99,10 +99,10 @@ sub MAIN (
         (\s* (<[A..Z]>+)+ %% '_')?';'
       }
       my rule func_def_noav {
-        <func_def>
+        'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
       }
       my rule func_def_av {
-        <availability> <func_def>
+        <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
       }
 
       my (@tv, $av);

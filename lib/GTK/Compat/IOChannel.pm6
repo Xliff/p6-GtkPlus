@@ -165,7 +165,7 @@ class GTK::Compat::IOChannel {
     set_error($error);
 
     ($str_return, $length, $terminator_pos) = ($sa[0], $l, $tp);
-    ($str_return, $length, $terminator_pos, GIOStatus($rc) );
+    ( $str_return, $length, $terminator_pos, GIOStatus($rc) );
   }
 
   method read_line_string (
