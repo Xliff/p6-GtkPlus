@@ -960,6 +960,7 @@ class GOutputStream         is repr('CPointer') is export does GTK::Roles::Point
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GRand                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRWLock               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettings             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsBackend      is repr('CPointer') is export does GTK::Roles::Pointers { }
