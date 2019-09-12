@@ -382,14 +382,19 @@ class GTK::Compat::DateTime {
     g_date_time_get_seconds($!dt);
   }
 
-  method get_timezone
+  method get_timezone (:$raw = False)
     is also<
       get-timezone
       timezone
       tz
     >
   {
-    g_date_time_get_timezone($!dt);
+    my $tz = g_date_time_get_timezone($!dt);
+
+    $tz ??
+      ( $raw ?? $tz !! GTK::Compat::TimeZone.new($tz) )
+      !!
+      Nil;
   }
 
   method get_timezone_abbreviation
