@@ -488,6 +488,15 @@ our enum GIOCondition is export (
   G_IO_NVAL   => 32,
 );
 
+constant GChecksumType is export := guint;
+our enum GChecksumTypeEnum is export <
+  G_CHECKSUM_MD5,
+  G_CHECKSUM_SHA1,
+  G_CHECKSUM_SHA256,
+  G_CHECKSUM_SHA512,
+  G_CHECKSUM_SHA384
+>;
+
 # In the future, this mechanism may need to be used via BEGIN block for all
 # enums that vary by OS -- Kaiepi++!
 #
@@ -922,6 +931,7 @@ class GFileInputStream      is repr('CPointer') is export does GTK::Roles::Point
 class GFileIOStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileOutputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GHmac                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTable            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTableIter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
