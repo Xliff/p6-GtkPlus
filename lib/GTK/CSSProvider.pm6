@@ -18,7 +18,7 @@ use GTK::Roles::Types;
 
 class GTK::CSSProvider {
   also does GTK::Compat::Roles::Object;
-  
+
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;
   also does GTK::Roles::StyleProvider;
@@ -56,7 +56,7 @@ class GTK::CSSProvider {
       }
       $css ~= %sections<css>;
     }
-    self.load_from_data($_) with $css;
+    self.load_from_data($css) if $css.defined;
   }
 
   submethod DESTROY {
@@ -67,7 +67,7 @@ class GTK::CSSProvider {
     my $provider = gtk_css_provider_new();
     self.bless(:$provider, :$priority, :$pod, :$style);
   }
-  
+
   method get_named (Str() $name, Str() $variant) is also<get-named> {
     GTK::CSSProvider.new( gtk_css_provider_get_named($name, $variant) );
   }
@@ -151,5 +151,3 @@ class GTK::CSSProvider {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-  
-  
