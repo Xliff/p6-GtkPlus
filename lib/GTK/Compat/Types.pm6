@@ -916,6 +916,7 @@ class GAppInfo              is repr('CPointer') is export does GTK::Roles::Point
 class GAppInfoMonitor       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppLaunchContext     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GApplication          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GAsyncQueue           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAsyncResult          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBinding              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBookmarkFile         is repr('CPointer') is export does GTK::Roles::Pointers { }

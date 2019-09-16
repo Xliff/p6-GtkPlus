@@ -2,6 +2,7 @@ Cairo
 Data::Dump::Tree
 GDK::Raw::Main
 GDK::Raw::Threads
+GLib::Raw::AsyncQueue
 GLib::Raw::Base64
 GLib::Raw::Checksum
 GLib::Raw::HMAC
@@ -47,11 +48,13 @@ GTK::Roles::Types
 GDK::Main
 GDK::Raw::Main
 GDK::Threads
+GLib::AsyncQueue
 GLib::Base64
 GLib::Checksum
 GLib::HMAC
 GLib::Quark
 GLib::Rand
+GLib::Raw::AsyncQueue
 GLib::Raw::Base64
 GLib::Raw::Checksum
 GLib::Raw::HMAC
