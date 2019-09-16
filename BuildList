@@ -2,6 +2,11 @@ Cairo
 Data::Dump::Tree
 GDK::Raw::Main
 GDK::Raw::Threads
+GLib::Raw::Base64
+GLib::Raw::Checksum
+GLib::Raw::HMAC
+GLib::Raw::Quark
+GLib::Raw::Rand
 Method::Also
 Pango::AttrList
 Pango::Context
@@ -42,6 +47,17 @@ GTK::Roles::Types
 GDK::Main
 GDK::Raw::Main
 GDK::Threads
+GLib::Base64
+GLib::Checksum
+GLib::HMAC
+GLib::Quark
+GLib::Rand
+GLib::Raw::Base64
+GLib::Raw::Checksum
+GLib::Raw::HMAC
+GLib::Raw::Quark
+GLib::Raw::Rand
+GLib::URI
 GTK::Builder::Actionable
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
@@ -53,6 +69,7 @@ GTK::Compat::Raw::Binding
 GTK::Compat::Raw::BookmarkFile
 GTK::Compat::Raw::ContentType
 GTK::Compat::Raw::Cursor
+GTK::Compat::Raw::DateTime
 GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
 GTK::Compat::Raw::DisplayManager
@@ -86,6 +103,7 @@ GTK::Compat::Raw::SimpleAction
 GTK::Compat::Raw::Slice
 GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
+GTK::Compat::Raw::TimeZone
 GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Variant
@@ -106,6 +124,7 @@ GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::Slice
 GTK::Compat::ThreadPool
+GTK::Compat::TimeZone
 GTK::Compat::Timer
 GTK::Compat::Variant
 GTK::Compat::VariantIter
@@ -124,6 +143,7 @@ GDK::Raw::Threads
 GTK::Compat::Array
 GTK::Compat::BookmarkFile
 GTK::Compat::ContentType
+GTK::Compat::DateTime
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList

@@ -14,7 +14,8 @@ sub MAIN (
   :$static = 0,       #= Class is static. Do not remove first parameter.
   :$internal = 0,     #= Add checking for INTERNAL methods
   :$bland = 0,        #= Do NOT attempt to process preprocessor prefixes to subroutines
-  :$output-only       #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
+  :$output-only,      #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
+  :$no-headers        #= Do not display section headers.
 ) {
   my $fn = $filename;
 
@@ -263,7 +264,7 @@ sub MAIN (
   }
 
   if %do_output<all> || %do_output<attributes> {
-    say "\nGETSET\n------";
+    say "\nGETSET\n------" unless $no-headers;
     for %getset.keys.sort -> $gs {
       if $output-only.defined {
         next unless $gs ~~ /<{ $output-only }>/;
@@ -313,9 +314,7 @@ sub MAIN (
     }
   }
 
-
-
-  say "\nMETHODS\n-------";
+  say "\nMETHODS\n-------" unless $no-headers;
   if %do_output<all> || %do_output<methods> {
     for %methods.keys.sort -> $m {
       if $output-only.defined {
@@ -372,13 +371,14 @@ sub MAIN (
   }
 
   if %do_output<all> || %do_output<subs> {
+    say "\nSUBS\n----\n" unless $no-headers;
     outputSub( %methods{$_} )     for %methods.keys.sort;
     outputSub( %getset{$_}<get> ) for  %getset.keys.sort;
     outputSub( %getset{$_}<set> ) for  %getset.keys.sort;
   }
 
   for %collider.pairs.grep( *.value > 1 ) -> $d {
-    $*ERR.say: "DUPLICATES\n----------" if !$++;
+    $*ERR.say: "DUPLICATES\n----------" if !$++ ;
     $*ERR.say: "$d";
   }
 
