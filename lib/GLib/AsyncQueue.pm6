@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GLib::Raw::AsyncQueue;
 
@@ -11,13 +13,14 @@ class GLib::AsyncQueue {
   }
 
   method GTK::Compat::Types::GAsyncQueue
+    is also<GAsyncQueue>
   { $!aq }
 
   method new {
     self.bless( queue => g_async_queue_new() );
   }
 
-  method new_full (GDestroyNotify $item_free_func) {
+  method new_full (GDestroyNotify $item_free_func) is also<new-full> {
     g_async_queue_new_full($item_free_func);
   }
 
@@ -25,7 +28,7 @@ class GLib::AsyncQueue {
     g_async_queue_length($!aq);
   }
 
-  method length_unlocked {
+  method length_unlocked is also<length-unlocked> {
     g_async_queue_length_unlocked($!aq);
   }
 
@@ -37,7 +40,7 @@ class GLib::AsyncQueue {
     g_async_queue_pop($!aq);
   }
 
-  method pop_unlocked {
+  method pop_unlocked is also<pop-unlocked> {
     g_async_queue_pop_unlocked($!aq);
   }
 
@@ -45,11 +48,11 @@ class GLib::AsyncQueue {
     g_async_queue_push($!aq, $data);
   }
 
-  method push_front (gpointer $item) {
+  method push_front (gpointer $item) is also<push-front> {
     g_async_queue_push_front($!aq, $item);
   }
 
-  method push_front_unlocked (gpointer $item) {
+  method push_front_unlocked (gpointer $item) is also<push-front-unlocked> {
     g_async_queue_push_front_unlocked($!aq, $item);
   }
 
@@ -57,7 +60,9 @@ class GLib::AsyncQueue {
     gpointer $data,
     GCompareDataFunc $func,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<push-sorted>
+  {
     g_async_queue_push_sorted($!aq, $data, $func, $user_data);
   }
 
@@ -65,11 +70,13 @@ class GLib::AsyncQueue {
     gpointer $data,
     GCompareDataFunc $func,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<push-sorted-unlocked>
+  {
     g_async_queue_push_sorted_unlocked($!aq, $data, $func, $user_data);
   }
 
-  method push_unlocked (gpointer $data) {
+  method push_unlocked (gpointer $data) is also<push-unlocked> {
     g_async_queue_push_unlocked($!aq, $data);
   }
 
@@ -81,7 +88,7 @@ class GLib::AsyncQueue {
     g_async_queue_remove($!aq, $item);
   }
 
-  method remove_unlocked (gpointer $item) {
+  method remove_unlocked (gpointer $item) is also<remove-unlocked> {
     g_async_queue_remove_unlocked($!aq, $item);
   }
 
@@ -93,27 +100,29 @@ class GLib::AsyncQueue {
     gpointer $data,
     GCompareDataFunc $func,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<sort-unlocked>
+  {
     g_async_queue_sort_unlocked($!aq, $func, $user_data);
   }
 
-  method timeout_pop (Int() $timeout) {
+  method timeout_pop (Int() $timeout) is also<timeout-pop> {
     my guint64 $t = $timeout;
 
     g_async_queue_timeout_pop($!aq, $t);
   }
 
-  method timeout_pop_unlocked (Int() $timeout) {
+  method timeout_pop_unlocked (Int() $timeout) is also<timeout-pop-unlocked> {
     my guint64 $t = $timeout;
 
     g_async_queue_timeout_pop_unlocked($!aq, $t);
   }
 
-  method try_pop {
+  method try_pop is also<try-pop> {
     g_async_queue_try_pop($!aq);
   }
 
-  method try_pop_unlocked {
+  method try_pop_unlocked is also<try-pop-unlocked> {
     g_async_queue_try_pop_unlocked($!aq);
   }
 
