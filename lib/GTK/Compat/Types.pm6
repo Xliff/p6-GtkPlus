@@ -150,6 +150,7 @@ constant GClosureNotify          is export := Pointer;
 constant GDestroyNotify          is export := Pointer;
 constant GEqualFunc              is export := Pointer;
 constant GFunc                   is export := Pointer;
+constant GHFunc                  is export := Pointer;
 constant GIOFunc                 is export := Pointer;
 constant GLogFunc                is export := Pointer;
 constant GLogWriterFunc          is export := Pointer;
@@ -836,6 +837,51 @@ our enum GKeyFileFlags is export (
   G_KEY_FILE_KEEP_TRANSLATIONS => 2
 );
 
+constant GErrorType is export := guint32;
+our enum GErrorTypeEnum is export <
+  G_ERR_UNKNOWN
+  G_ERR_UNEXP_EOF
+  G_ERR_UNEXP_EOF_IN_STRING
+  G_ERR_UNEXP_EOF_IN_COMMENT
+  G_ERR_NON_DIGIT_IN_CONST
+  G_ERR_DIGIT_RADIX
+  G_ERR_FLOAT_RADIX
+  G_ERR_FLOAT_MALFORMED
+>;
+
+# Token types
+constant GTokenType is export := uint32;
+our enum GTokenTypeEnum is export (
+  G_TOKEN_EOF                   =>  0,
+  G_TOKEN_LEFT_PAREN            => '('.ord,
+  G_TOKEN_RIGHT_PAREN           => ')'.ord,
+  G_TOKEN_LEFT_CURLY            => '{'.ord,
+  G_TOKEN_RIGHT_CURLY           => '}'.ord,
+  G_TOKEN_LEFT_BRACE            => '['.ord,
+  G_TOKEN_RIGHT_BRACE           => ']'.ord,
+  G_TOKEN_EQUAL_SIGN            => '='.ord,
+  G_TOKEN_COMMA                 => ','.ord,
+
+  G_TOKEN_NONE                  => 256,
+
+  'G_TOKEN_ERROR',
+  'G_TOKEN_CHAR',
+  'G_TOKEN_BINARY',
+  'G_TOKEN_OCTAL',
+  'G_TOKEN_INT',
+  'G_TOKEN_HEX',
+  'G_TOKEN_FLOAT',
+  'G_TOKEN_STRING',
+  'G_TOKEN_SYMBOL',
+  'G_TOKEN_IDENTIFIER',
+  'G_TOKEN_IDENTIFIER_NULL',
+  'G_TOKEN_COMMENT_SINGLE',
+  'G_TOKEN_COMMENT_MULTI',
+
+  # Private
+  'G_TOKEN_LAST'
+);
+
 our enum GSignalFlags is export (
   G_SIGNAL_RUN_FIRST    => 1,
   G_SIGNAL_RUN_LAST     => 1 +< 1,
@@ -888,6 +934,13 @@ our enum GLogLevelFlags is export (
 our enum GLogWriterOutput is export (
   G_LOG_WRITER_UNHANDLED => 0,
   G_LOG_WRITER_HANDLED   => 1,
+);
+
+constant GModuleFlags is export := guint;
+our enum GModuleFlagsEnum is export (
+  G_MODULE_BIND_LAZY    => 1,
+  G_MODULE_BIND_LOCAL   => 1 +< 1,
+  G_MODULE_BIND_MASK    => 0x03
 );
 
 our enum GOnceStatus is export <
@@ -950,6 +1003,7 @@ class GMenuItem             is repr('CPointer') is export does GTK::Roles::Point
 class GMenuAttributeIter    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuLinkIter         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GModule               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMount                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMountOperation       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMutex                is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -963,6 +1017,11 @@ class GPrivate              is repr('CPointer') is export does GTK::Roles::Point
 class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRand                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRWLock               is repr('CPointer') is export does GTK::Roles::Pointers { }
+# To be converted into CStruct when I'm not so scurred of it.
+# It has bits.... BITS! -- See https://stackoverflow.com/questions/1490092/c-c-force-bit-field-order-and-alignment
+class GScannerConfig        is repr('CPointer') is export does GTK::Roles::Pointers { }
+# Also has a CStruct representation, and should be converted.
+class GScanner              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettings             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsBackend      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSettingsSchema       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -977,6 +1036,7 @@ class GThread               is repr('CPointer') is export does GTK::Roles::Point
 class GThreadPool           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimeZone             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTokenValue           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantDict          is repr('CPointer') is export does GTK::Roles::Pointers { }
