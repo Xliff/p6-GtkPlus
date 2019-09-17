@@ -2,6 +2,7 @@ Cairo
 Data::Dump::Tree
 GDK::Raw::Main
 GDK::Raw::Threads
+GIO::Raw::Stream
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
 GLib::Raw::Checksum
@@ -50,6 +51,7 @@ GTK::Roles::Types
 GDK::Main
 GDK::Raw::Main
 GDK::Threads
+GIO::Raw::Stream
 GLib::AsyncQueue
 GLib::Base64
 GLib::Checksum
@@ -467,6 +469,7 @@ GTK::RecentManager
 GTK::Roles::Scrollable
 GTK::Roles::ToolShell
 GTK::TextIter
+GIO::Stream
 GTK::CellRendererAccel
 GTK::CellRendererSpin
 GTK::Compat::AppLaunchContext

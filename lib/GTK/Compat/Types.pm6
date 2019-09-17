@@ -341,6 +341,21 @@ class GValueArray is repr('CStruct') does GTK::Roles::Pointers is export {
   has gpointer $.values; # GValue *
 };
 
+constant GIOStreamSpliceFlags is export := uint32;
+our enum GIOStreamSpliceFlagsEnum is export (
+  G_IO_STREAM_SPLICE_NONE          => 0,
+  G_IO_STREAM_SPLICE_CLOSE_STREAM1 => 1,
+  G_IO_STREAM_SPLICE_CLOSE_STREAM2 => (1 +< 1),
+  G_IO_STREAM_SPLICE_WAIT_FOR_BOTH => (1 +< 2)
+);
+
+constant GOutputStreamSpliceFlags is export := uint32;
+our enum GOutputStreamSpliceFlagsEnum is export (
+  G_OUTPUT_STREAM_SPLICE_NONE         => 0,
+  G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE => 1,
+  G_OUTPUT_STREAM_SPLICE_CLOSE_TARGET => (1 +< 1)
+);
+
 our enum GTypeEnum is export (
   G_TYPE_INVALID   => 0,
   G_TYPE_NONE      => (1  +< 2),
@@ -992,6 +1007,7 @@ class GHashTableIter        is repr('CPointer') is export does GTK::Roles::Point
 class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GInputStream          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIOChannel            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GIOStream             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GKeyFile              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GListModel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GLoadableIcon         is repr('CPointer') is export does GTK::Roles::Pointers { }
