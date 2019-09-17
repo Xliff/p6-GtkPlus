@@ -6,7 +6,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Stream;
 
-use GTK::Compat::InputStream;
+use GIO::InputStream;
+use GIO::OutputStream;
 
 class GIO::Stream {
   has GIOStream $!ios;
@@ -68,7 +69,7 @@ class GIO::Stream {
     my $is = g_io_stream_get_input_stream($!ios);
 
     $is ??
-      ( $raw ?? $is !! GTK::Compat::InputStream.new($is) )
+      ( $raw ?? $is !! GIO::InputStream.new($is) )
       !!
       Nil
   }

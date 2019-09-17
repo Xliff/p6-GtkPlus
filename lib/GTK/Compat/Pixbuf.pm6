@@ -245,7 +245,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method new_from_stream (
-    GInputStream $stream,
+    GInputStream() $stream,
     GCancellable $cancellable,
     CArray[Pointer[GError]] $error = gerror()
   )
@@ -317,7 +317,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method new_from_stream_finish (
-    GAsyncResult $result,
+    GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror()
   )
     is also<new-from-stream-finish>

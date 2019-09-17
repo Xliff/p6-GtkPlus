@@ -77,7 +77,7 @@ class GTK::Compat::Pixbuf::Animation {
   }
 
   method new_from_stream_finish (
-    GAsyncResult $async_result,
+    GAsyncResult() $async_result,
     CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;

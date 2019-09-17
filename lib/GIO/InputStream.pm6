@@ -3,13 +3,13 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::InputStream;
+use GIO::Raw::InputStream;
 
 use GTK::Raw::Utils;
 
 use GTK::Compat::Roles::Object;
 
-class GTK::Compat::InputStream {
+class GIO::InputStream {
   also does GTK::Compat::Roles::Object;
 
   has GInputStream $!is;

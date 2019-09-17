@@ -2,6 +2,9 @@ Cairo
 Data::Dump::Tree
 GDK::Raw::Main
 GDK::Raw::Threads
+GIO::InputStream
+GIO::OutputStream
+GIO::Raw::InputStream
 GIO::Raw::OutputStream
 GIO::Raw::Stream
 GLib::Raw::AsyncQueue
@@ -53,8 +56,10 @@ GDK::Main
 GDK::Raw::Main
 GDK::Threads
 GIO::OutputStream
+GIO::Raw::InputStream
 GIO::Raw::OutputStream
 GIO::Raw::Stream
+GIO::Stream
 GLib::AsyncQueue
 GLib::Base64
 GLib::Checksum
@@ -95,7 +100,6 @@ GTK::Compat::Raw::GSList
 GTK::Compat::Raw::HashTable
 GTK::Compat::Raw::IOChannel
 GTK::Compat::Raw::Icon
-GTK::Compat::Raw::InputStream
 GTK::Compat::Raw::IsType
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
@@ -132,6 +136,7 @@ GTK::Compat::Roles::ActionMap
 GTK::Compat::Roles::AppInfo
 GTK::Compat::Roles::Icon
 GTK::Compat::Roles::ListData
+GTK::Compat::Roles::LoadableIcon
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
@@ -434,6 +439,7 @@ GTK::TreeModelSort
 GTK::TreeSelection
 GTK::TreeStore
 GTK::WindowGroup
+GIO::InputStream
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
@@ -452,13 +458,11 @@ GTK::Compat::Display
 GTK::Compat::DisplayManager
 GTK::Compat::Event
 GTK::Compat::HashTable
-GTK::Compat::InputStream
 GTK::Compat::MenuModel
 GTK::Compat::Notification
 GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::Action
 GTK::Compat::Roles::GFile
-GTK::Compat::Roles::LoadableIcon
 GTK::Compat::Seat
 GTK::Compat::SimpleAction
 GTK::EntryBuffer
@@ -472,7 +476,6 @@ GTK::RecentManager
 GTK::Roles::Scrollable
 GTK::Roles::ToolShell
 GTK::TextIter
-GIO::Stream
 GTK::CellRendererAccel
 GTK::CellRendererSpin
 GTK::Compat::AppLaunchContext

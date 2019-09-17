@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::InputStream;
+use GIO::InputStream;
 
 role GTK::Compat::Roles::LoadableIcon {
   has GLoadableIcon $!li;
@@ -29,15 +29,14 @@ role GTK::Compat::Roles::LoadableIcon {
     Int() $size,
     CArray[Str] $type,
     GCancellable $cancellable       = Pointer,
-    CArray[Pointer[GError]] $error  = gerror()
+    CArray[Pointer[GError]] $error  = gerror,
+    :$raw = False
   ) {
     my gint $s = resolve-int($size);
     clear_error;
     my $rc = g_loadable_icon_load($!li, $s, $type, $cancellable, $error);
     set_error($error);
-    GTK::Compat::InputStream.new(
-      $rc
-    );
+    $raw ?? $rc !! GIO::InputStream.new($rc);
   }
 
   proto method load_async (|)
@@ -62,24 +61,40 @@ role GTK::Compat::Roles::LoadableIcon {
 
   multi method load_finish (
     GAsyncResult() $res,
-    Str $type is rw
+    :$all = False,
+    :$raw = False
   ) {
-    my $s = CArray[Str].new;
-    my $rc = samewith($res, $s);
-    $type = $s[0];
-    $rc;
+    samewith($res, $, gerror, :$all, :$raw);
+  }
+  multi method load_finish (
+    GAsyncResult() $res,
+    $type is rw,
+    :$all = False,
+    :$raw = False,
+  ) {
+    samewith($res, $type, gerror, :$all, :$raw);
   }
   method load_finish (
     GAsyncResult() $res,
-    CArray[Str] $type              = CArray[Str],
-    CArray[Pointer[GError]] $error = gerror()
+    $type is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False,
+    :$raw = False
   ) {
+    my $s = CArray[Str].new;
+    $s[0] = '';
     clear_error;
-    my $rc = g_loadable_icon_load_finish($!li, $res, $type, $error);
+    my $rc = g_loadable_icon_load_finish($!li, $res, $s, $error);
     set_error($error);
-    GTK::Compat::InputStream.new(
-      $rc
-    )
+
+    do if $rc {
+      my $is = $raw ?? $rc !! GTK::Compat::InputStream.new($rc);
+      $type = $s[0].defined ?? $s[0] !! Nil;
+      $all ?? $is !! ($is, $type);
+    } else {
+      $type = Nil;
+      Nil;
+    }
   }
 }
 
