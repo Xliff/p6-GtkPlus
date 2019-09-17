@@ -46,6 +46,8 @@
       "GDK::Main"                              :  "lib/GDK/Main.pm6"                            ,
       "GDK::Raw::Main"                         :  "lib/GDK/Raw/Main.pm6"                        ,
       "GDK::Threads"                           :  "lib/GDK/Threads.pm6"                         ,
+      "GIO::OutputStream"                      :  "lib/GIO/OutputStream.pm6"                    ,
+      "GIO::Raw::OutputStream"                 :  "lib/GIO/Raw/OutputStream.pm6"                ,
       "GIO::Raw::Stream"                       :  "lib/GIO/Raw/Stream.pm6"                      ,
       "GLib::AsyncQueue"                       :  "lib/GLib/AsyncQueue.pm6"                     ,
       "GLib::Base64"                           :  "lib/GLib/Base64.pm6"                         ,

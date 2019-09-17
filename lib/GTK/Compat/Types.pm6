@@ -1028,6 +1028,7 @@ class GObject               is repr('CPointer') is export does GTK::Roles::Point
 class GOptionEntry          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOptionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GOutputVector         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }

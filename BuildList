@@ -2,6 +2,7 @@ Cairo
 Data::Dump::Tree
 GDK::Raw::Main
 GDK::Raw::Threads
+GIO::Raw::OutputStream
 GIO::Raw::Stream
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
@@ -51,6 +52,8 @@ GTK::Roles::Types
 GDK::Main
 GDK::Raw::Main
 GDK::Threads
+GIO::OutputStream
+GIO::Raw::OutputStream
 GIO::Raw::Stream
 GLib::AsyncQueue
 GLib::Base64
