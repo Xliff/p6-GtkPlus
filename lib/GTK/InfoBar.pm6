@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::InfoBar;
 use GTK::Raw::Types;
 
+use GTK::Raw::Utils;
+
 use GTK::Box;
 
 our subset InfoBarAncestry is export where GtkInfoBar | BoxAncestry;
@@ -52,6 +54,7 @@ class GTK::InfoBar is GTK::Box {
   }
   multi method new {
     my $infobar = gtk_info_bar_new();
+
     self.bless(:$infobar);
   }
 
@@ -78,7 +81,8 @@ class GTK::InfoBar is GTK::Box {
         GtkMessageType( gtk_info_bar_get_message_type($!ib) );
       },
       STORE => sub ($, Int() $message_type is copy) {
-        my uint32 $mt = self.RESOLVE-UINT($message_type);
+        my uint32 $mt = resolve-uint($message_type);
+
         gtk_info_bar_set_message_type($!ib, $mt);
       }
     );
@@ -90,7 +94,8 @@ class GTK::InfoBar is GTK::Box {
         so gtk_info_bar_get_revealed($!ib);
       },
       STORE => sub ($, Int() $revealed is copy) {
-        my gboolean $r = self.RESOLVE-BOOL($revealed);
+        my gboolean $r = resolve-bool($revealed);
+
         gtk_info_bar_set_revealed($!ib, $revealed);
       }
     );
@@ -102,7 +107,8 @@ class GTK::InfoBar is GTK::Box {
         so gtk_info_bar_get_show_close_button($!ib);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = resolve-bool($setting);
+
         gtk_info_bar_set_show_close_button($!ib, $s);
       }
     );
@@ -113,14 +119,16 @@ class GTK::InfoBar is GTK::Box {
   method add_action_widget (GtkWidget() $child, Int() $response_id)
     is also<add-action-widget>
   {
-    my gint $r = self.RESOLVE-INT($response_id);
+    my gint $r = resolve-int($response_id);
+
     gtk_info_bar_add_action_widget($!ib, $child, $r);
   }
 
   method add_button (Str() $button_text, Int() $response_id)
     is also<add-button>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = resolve-int($response_id);
+
     gtk_info_bar_add_button($!ib, $button_text, $ri);
   }
 
@@ -136,26 +144,30 @@ class GTK::InfoBar is GTK::Box {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_info_bar_get_type, $n, $t );
   }
 
   multi method response (Int() $response_id) {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = resolve-int($response_id);
+
     gtk_info_bar_response($!ib, $ri);
   }
 
   method set_default_response (Int() $response_id)
     is also<set-default-response>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = resolve-int($response_id);
+
     gtk_info_bar_set_default_response($!ib, $ri);
   }
 
   method set_response_sensitive (Int() $response_id, Int() $setting)
     is also<set-response-sensitive>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
-    my gboolean $s = self.RESOLVE-BOOL($setting);
+    my gint $ri = resolve-int($response_id);
+    my gboolean $s = resolve-bool($setting);
+
     gtk_info_bar_set_response_sensitive($!ib, $ri, $s);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
