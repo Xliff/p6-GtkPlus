@@ -6,6 +6,8 @@ GIO::InputStream
 GIO::OutputStream
 GIO::Raw::InputStream
 GIO::Raw::OutputStream
+GIO::Raw::Socket
+GIO::Raw::SocketAddress
 GIO::Raw::Stream
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
@@ -58,7 +60,11 @@ GDK::Threads
 GIO::OutputStream
 GIO::Raw::InputStream
 GIO::Raw::OutputStream
+GIO::Raw::Socket
+GIO::Raw::SocketAddress
 GIO::Raw::Stream
+GIO::Socket
+GIO::SocketAddress
 GIO::Stream
 GLib::AsyncQueue
 GLib::Base64

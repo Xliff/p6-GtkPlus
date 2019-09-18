@@ -69,6 +69,10 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
   has int32         $.code;
   has Str           $.message;
+
+  method new ($domain, $code, $message) {
+    GError.new(:$domain, :$code, :$message);
+  }
 }
 
 our $ERROR is export;
@@ -193,7 +197,6 @@ sub real-resolve-uint64($v) is export {
   $v +& 0xffffffffffffffff;
 }
 
-
 class GTypeClass is repr('CStruct') does GTK::Roles::Pointers is export {
   has GType      $.g_type;
 }
@@ -227,6 +230,36 @@ class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 }
 
+class GInputVector  is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer $.buffer;
+  has gssize  $.size;
+}
+
+class GInputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer       $.address;                # GSocketAddress **
+  has GInputVector  $.vectors;                # GInputVector *
+  has guint         $.num_vectors;
+  has gsize         $.bytes_received;
+  has gint          $.flags;
+  has Pointer       $.control_messages;       # GSocketControlMessage ***
+  has CArray[guint] $.num_control_messages;   # Pointer with 1 element == *guint
+}
+
+class GOutputVector is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer $.buffer;
+  has gssize  $.size;
+}
+
+class GOutputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer       $.address;
+  has GOutputVector $.vectors;
+  has guint         $.num_vectors;
+  has guint         $.bytes_sent;
+  has Pointer       $.control_messages;
+  has guint         $.num_control_messages;
+};
+
+
 class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $!data;
   has GList   $.next;
@@ -234,21 +267,17 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
 
   method data is rw {
     Proxy.new:
-      FETCH => -> $      { $!data },
-      STORE => -> $, $nv {
-        my $err = qq:to/DIE/.chomp;
-          Cannot store { $nv.^name } values in a GList as they must be of{
-          } CStruct or CPointer representation.
-          DIE
-
-        die $err unless $nv ~~ Pointer || $nv.REPR eq <CStruct CPointer>.any;
-
-        nqp::bindattr(
-          nqp::decont(self),
-          GList,
-          '$!data',
-          nqp::decont( nativecast(Pointer, $nv) )
-        )
+      FETCH => -> $              { $!data },
+      STORE => -> $, GList() $nv {
+        # Thank GOD we can now replace this monstrosity:
+        # nqp::bindattr(
+        #   nqp::decont(self),
+        #   GList,
+        #   '$!data',
+        #   nqp::decont( nativecast(Pointer, $nv) )
+        # )
+        # ...with this lesser one:
+        ::?CLASS.^Attributes[0].set_value(self, $nv);
       };
   }
 }
@@ -341,6 +370,21 @@ class GValueArray is repr('CStruct') does GTK::Roles::Pointers is export {
   has gpointer $.values; # GValue *
 };
 
+# Because an enum wasn't good enough due to:
+# "Incompatible MROs in P6opaque rebless for types GLIB_SYSDEF_LINUX and GSocketFamily"
+constant GLIB_SYSDEF_POLLIN        = 1;
+constant GLIB_SYSDEF_POLLOUT       = 4;
+constant GLIB_SYSDEF_POLLPRI       = 2;
+constant GLIB_SYSDEF_POLLHUP       = 16;
+constant GLIB_SYSDEF_POLLERR       = 8;
+constant GLIB_SYSDEF_POLLNVAL      = 32;
+constant GLIB_SYSDEF_AF_UNIX       = 1;
+constant GLIB_SYSDEF_AF_INET       = 2;
+constant GLIB_SYSDEF_AF_INET6      = 10;
+constant GLIB_SYSDEF_MSG_OOB       = 1;
+constant GLIB_SYSDEF_MSG_PEEK      = 2;
+constant GLIB_SYSDEF_MSG_DONTROUTE = 4;
+
 constant GIOStreamSpliceFlags is export := uint32;
 our enum GIOStreamSpliceFlagsEnum is export (
   G_IO_STREAM_SPLICE_NONE          => 0,
@@ -393,6 +437,13 @@ our enum GTimeTypeEnum is export <
   G_TIME_TYPE_DAYLIGHT
   G_TIME_TYPE_UNIVERSAL
 >;
+
+constant GPollableReturn is export := gint;
+our enum GPollableReturnEnum is export (
+  G_POLLABLE_RETURN_FAILED       => 0,
+  G_POLLABLE_RETURN_OK           => 1,
+  G_POLLABLE_RETURN_WOULD_BLOCK  => -27 # -G_IO_ERROR_WOULD_BLOCK
+);
 
 # Uint32. Be careful not to conflate this with GVariantType which is a pointer!
 our enum GVariantTypeEnum is export <
@@ -462,12 +513,62 @@ our enum GIOChannelError is export <
   G_IO_CHANNEL_ERROR_FAILED
 >;
 
-our enum GIOError is export <
-  G_IO_ERROR_NONE
-  G_IO_ERROR_AGAIN
-  G_IO_ERROR_INVAL
-  G_IO_ERROR_UNKNOWN
->;
+our enum GIOError is export (
+  'G_IO_ERROR_FAILED',
+  'G_IO_ERROR_NOT_FOUND',
+  'G_IO_ERROR_EXISTS',
+  'G_IO_ERROR_IS_DIRECTORY',
+  'G_IO_ERROR_NOT_DIRECTORY',
+  'G_IO_ERROR_NOT_EMPTY',
+  'G_IO_ERROR_NOT_REGULAR_FILE',
+  'G_IO_ERROR_NOT_SYMBOLIC_LINK',
+  'G_IO_ERROR_NOT_MOUNTABLE_FILE',
+  'G_IO_ERROR_FILENAME_TOO_LONG',
+  'G_IO_ERROR_INVALID_FILENAME',
+  'G_IO_ERROR_TOO_MANY_LINKS',
+  'G_IO_ERROR_NO_SPACE',
+  'G_IO_ERROR_INVALID_ARGUMENT',
+  'G_IO_ERROR_PERMISSION_DENIED',
+  'G_IO_ERROR_NOT_SUPPORTED',
+  'G_IO_ERROR_NOT_MOUNTED',
+  'G_IO_ERROR_ALREADY_MOUNTED',
+  'G_IO_ERROR_CLOSED',
+  'G_IO_ERROR_CANCELLED',
+  'G_IO_ERROR_PENDING',
+  'G_IO_ERROR_READ_ONLY',
+  'G_IO_ERROR_CANT_CREATE_BACKUP',
+  'G_IO_ERROR_WRONG_ETAG',
+  'G_IO_ERROR_TIMED_OUT',
+  'G_IO_ERROR_WOULD_RECURSE',
+  'G_IO_ERROR_BUSY',
+  'G_IO_ERROR_WOULD_BLOCK',
+  'G_IO_ERROR_HOST_NOT_FOUND',
+  'G_IO_ERROR_WOULD_MERGE',
+  'G_IO_ERROR_FAILED_HANDLED',
+  'G_IO_ERROR_TOO_MANY_OPEN_FILES',
+  'G_IO_ERROR_NOT_INITIALIZED',
+  'G_IO_ERROR_ADDRESS_IN_USE',
+  'G_IO_ERROR_PARTIAL_INPUT',
+  'G_IO_ERROR_INVALID_DATA',
+  'G_IO_ERROR_DBUS_ERROR',
+  'G_IO_ERROR_HOST_UNREACHABLE',
+  'G_IO_ERROR_NETWORK_UNREACHABLE',
+  'G_IO_ERROR_CONNECTION_REFUSED',
+  'G_IO_ERROR_PROXY_FAILED',
+  'G_IO_ERROR_PROXY_AUTH_FAILED',
+  'G_IO_ERROR_PROXY_NEED_AUTH',
+  'G_IO_ERROR_PROXY_NOT_ALLOWED',
+  'G_IO_ERROR_BROKEN_PIPE',
+  G_IO_ERROR_CONNECTION_CLOSED => 44, # G_IO_ERROR_BROKEN_PIPE,
+  'G_IO_ERROR_NOT_CONNECTED',
+  'G_IO_ERROR_MESSAGE_TOO_LARGE',
+
+  # Restart from the beginning.
+  G_IO_ERROR_NONE      => 0,
+  G_IO_ERROR_AGAIN     => 1,
+  G_IO_ERROR_INVAL     => 2,
+  G_IO_ERROR_UNKNOWN   => 3
+);
 
 our enum GIOStatus is export <
   G_IO_STATUS_ERROR
@@ -495,7 +596,8 @@ our enum GIOFlags is export (
 );
 
 # cw: These values are for LINUX!
-our enum GIOCondition is export (
+constant GIOCondition is export := guint;
+our enum GIOConditionEnum is export (
   G_IO_IN     => 1,
   G_IO_OUT    => 4,
   G_IO_PRI    => 2,
@@ -503,6 +605,31 @@ our enum GIOCondition is export (
   G_IO_HUP    => 16,
   G_IO_NVAL   => 32,
 );
+
+constant GSocketProtocol is export := gint;
+enum GSocketProtocolEnum is export (
+  G_SOCKET_PROTOCOL_UNKNOWN => -1,
+  G_SOCKET_PROTOCOL_DEFAULT => 0,
+  G_SOCKET_PROTOCOL_TCP     => 6,
+  G_SOCKET_PROTOCOL_UDP     => 17,
+  G_SOCKET_PROTOCOL_SCTP    => 132
+);
+
+constant GSocketFamily is export := guint;
+our enum GSocketFamilyEnum is export (
+  'G_SOCKET_FAMILY_INVALID',
+  G_SOCKET_FAMILY_UNIX => GLIB_SYSDEF_AF_UNIX,
+  G_SOCKET_FAMILY_IPV4 => GLIB_SYSDEF_AF_INET,
+  G_SOCKET_FAMILY_IPV6 => GLIB_SYSDEF_AF_INET6
+);
+
+constant GSocketType is export := guint;
+our enum GSocketTypeEnum is export <
+  G_SOCKET_TYPE_INVALID
+  G_SOCKET_TYPE_STREAM
+  G_SOCKET_TYPE_DATAGRAM
+  G_SOCKET_TYPE_SEQPACKET
+>;
 
 constant GChecksumType is export := guint;
 our enum GChecksumTypeEnum is export <
@@ -992,6 +1119,7 @@ class GByteArray            is repr('CPointer') is export does GTK::Roles::Point
 class GBytes                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GChecksum             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GCredentials          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDateTime             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeInfo    is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1005,6 +1133,7 @@ class GHmac                 is repr('CPointer') is export does GTK::Roles::Point
 class GHashTable            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTableIter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GInetAddress          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GInputStream          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIOChannel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIOStream             is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1028,7 +1157,6 @@ class GObject               is repr('CPointer') is export does GTK::Roles::Point
 class GOptionEntry          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOptionGroup          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GOutputVector         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1047,6 +1175,9 @@ class GSettingsSchemaSource is repr('CPointer') is export does GTK::Roles::Point
 class GSimpleAction         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleActionGroup    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSliceConfig          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSocket               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSocketAddress        is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSocketControlMessage is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThread               is repr('CPointer') is export does GTK::Roles::Pointers { }
