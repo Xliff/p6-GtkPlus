@@ -1134,6 +1134,7 @@ class GHashTable            is repr('CPointer') is export does GTK::Roles::Point
 class GHashTableIter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIcon                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GInetAddress          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GInetAddressMask      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GInputStream          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIOChannel            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GIOStream             is repr('CPointer') is export does GTK::Roles::Pointers { }

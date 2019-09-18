@@ -4,6 +4,8 @@ GDK::Raw::Main
 GDK::Raw::Threads
 GIO::InputStream
 GIO::OutputStream
+GIO::Raw::InetAddress
+GIO::Raw::InetAddressMask
 GIO::Raw::InputStream
 GIO::Raw::OutputStream
 GIO::Raw::Socket
@@ -57,7 +59,11 @@ GTK::Roles::Types
 GDK::Main
 GDK::Raw::Main
 GDK::Threads
+GIO::InetAddress
+GIO::InetAddressMask
 GIO::OutputStream
+GIO::Raw::InetAddress
+GIO::Raw::InetAddressMask
 GIO::Raw::InputStream
 GIO::Raw::OutputStream
 GIO::Raw::Socket
