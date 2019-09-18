@@ -14,6 +14,7 @@ class GIO::InetAddress {
   }
 
   method GTK::Compat::Types::GInetAddress
+    is also<GInetAddress>
   { $!ia }
 
   multi method new (GInetAddress $address) {
@@ -31,8 +32,8 @@ class GIO::InetAddress {
   }
 
 # my $ia = GIO::InetAddress.new(:bytes, $bytes, $family)
-  multi method new (CArray[uint8] $bytes, Int() $family, :$bytes is required) {
-    GIO::InetAddress.new_from_bytes($bytes, $family);
+  multi method new (CArray[uint8] $ba, Int() $family, :$bytes is required) {
+    GIO::InetAddress.new_from_bytes($ba, $family);
   }
   method new_from_bytes (CArray[uint8] $bytes, Int() $family) is also<new-from-bytes> {
     my GSocketFamily $f = $family;
@@ -41,8 +42,8 @@ class GIO::InetAddress {
   }
 
   # my $ia = GIO::InetAddress.new(:string, $string)
-  multi method new (Str() $string, :$string is required) {
-    GIO::InetAddress.new_from_string($string);
+  multi method new (Str() $s, :$string is required) {
+    GIO::InetAddress.new_from_string($s);
   }
   method new_from_string (Str() $string) is also<new-from-string> {
     self.bless( address => g_inet_address_new_from_string($string) );
