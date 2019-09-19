@@ -7,11 +7,24 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Socket;
 
+use GTK::Compat::Roles::Object;
+use GIO::Roles::Initable;
+use GIO::Roles::DatagramBased;
+
 class GIO::Socket {
+  also does GTK::Compat::Roles::Object;
+  also does GIO::Roles::Initable;
+  also does GIO::Roles::DatagramBased;
+
   has GSocket $!s;
 
   submethod BUILD (:$socket) {
     $!s = $socket;
+
+    # Needs ancestry logic!
+    self.roleInit-Object;
+    self.roleInit-Initable;
+    self.roleInit-DatagramBased;
   }
 
   method GTK::Compat::Types::GSocket

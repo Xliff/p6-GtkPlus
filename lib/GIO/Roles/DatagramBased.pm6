@@ -12,8 +12,8 @@ use GTK::Compat::Source;
 role GIO::Roles::DatagramBased {
   has GDatagramBased $!d;
 
-  submethod TWEAK {
-    $!d = cast(GDatagramBased, self.GObject);
+  submethod roleInit-DatagramBased {
+    $!d = cast(GDatagramBased, self.^attributes(:local)[0].get-value(self));
   }
 
   method GTK::Compat::Types::GDatagramBased

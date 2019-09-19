@@ -9,8 +9,8 @@ use GTK::Compat::Types;
 role GIO::Roles::Initable {
   has GInitable $!i;
 
-  submethod TWEAK {
-    $!i = cast(GInitable, self.GObject);
+  method roleInit-Initable {
+    $!i = cast( GInitable, self.^attributes(:local)[0].get-value(self) );
   }
 
   method GTK::Compat::Types::GInitable

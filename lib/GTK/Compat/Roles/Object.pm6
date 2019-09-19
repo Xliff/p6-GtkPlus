@@ -12,11 +12,17 @@ use GTK::Raw::Subs;
 role GTK::Compat::Roles::Object {
   has GObject $!o;
 
+  submethod roleInit-Object {
+    $!o = cast( GObject, self.^attributes(:local)[0].get-value(self) );
+  }
+
   method !setObject($obj) {
     $!o = nativecast(GObject, $obj);
   }
 
-  method GTK::Compat::Types::GObject { $!o }
+  method GTK::Compat::Types::GObject
+    is also<GObject>
+  { $!o }
 
   method is_type (GObjectOrPointer $t) {
     is_type($t, self);
