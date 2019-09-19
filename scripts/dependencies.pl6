@@ -37,9 +37,10 @@ sub MAIN (
       my $mn = $_;
       my $a = [ $mn, S/ '.pm6' // ];
       $a[1] = do given $a[1] {
-        # Find a better way to specify file to module mapping.
-        #when 'lib/GTK.pm6'       { 'GTK' }
-        when "lib/{$prefix}.pm6" { $prefix }
+        # Find a better way to specify file to module mapping,
+        # especially now that $prefix can be a comma separater list!
+        #when "lib/{$prefix}.pm6" { $prefix }
+
         default                  { .split('/').Array[1..*].join('::') }
       }
       $a;
@@ -68,7 +69,7 @@ sub MAIN (
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
       $mn .= trim;
-      unless $mn.starts-with($prefix) {
+      unless $mn.starts-with( $prefix.split(',').any ) {
         @others.push: $mn;
         next;
       }
