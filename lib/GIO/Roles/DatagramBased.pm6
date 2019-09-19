@@ -13,7 +13,7 @@ role GIO::Roles::DatagramBased {
   has GDatagramBased $!d;
 
   submethod roleInit-DatagramBased {
-    $!d = cast(GDatagramBased, self.^attributes(:local)[0].get-value(self));
+    $!d = cast(GDatagramBased, self.GObject);
   }
 
   method GTK::Compat::Types::GDatagramBased
