@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -14,7 +16,11 @@ role GIO::Roles::DatagramBased {
     $!d = cast(GDatagramBased, self.GObject);
   }
 
-  method condition_check (Int() $condition) {
+  method GTK::Compat::Types::GDatagramBased
+    is also<GDatagramBased>
+  { $!d }
+
+  method condition_check (Int() $condition) is also<condition-check> {
     my GIOCondition $c = $condition;
 
     GIOConditionEnum( g_datagram_based_condition_check($!d, $c) );
@@ -25,7 +31,9 @@ role GIO::Roles::DatagramBased {
     Int() $timeout,
     GCancellable $cancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<condition-wait>
+  {
     my GIOCondition $c = $condition;
     my gint64 $t = $timeout;
 
@@ -40,14 +48,16 @@ role GIO::Roles::DatagramBased {
     Int() $condition,
     GCancellable $cancellable,
     :$raw = False
-  ) {
+  )
+    is also<create-source>
+  {
     my GIOCondition $c = $condition;
 
     my $s = g_datagram_based_create_source($!d, $c, $cancellable);
     $raw ?? $s !! GTK::Compat::Source.new($s);
   }
 
-  method get_type {
+  method datagrambased_get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_datagram_based_get_type, $n, $t );
@@ -60,7 +70,9 @@ role GIO::Roles::DatagramBased {
     Int() $timeout,
     GCancellable $cancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<receive-messages>
+  {
     my guint  $nm = $num_messages;
     my gint    $f = $flags;
     my gint64  $t = $timeout;
@@ -86,7 +98,9 @@ role GIO::Roles::DatagramBased {
     Int() $timeout,
     GCancellable $cancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<send-messages>
+  {
     my guint  $nm = $num_messages;
     my gint    $f = $flags;
     my gint64  $t = $timeout;
