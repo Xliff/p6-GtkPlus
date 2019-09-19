@@ -1121,6 +1121,7 @@ class GChecksum             is repr('CPointer') is export does GTK::Roles::Point
 class GClosure              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCredentials          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDateTime             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDatagramBased        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeInfo    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileInfo             is repr('CPointer') is export does GTK::Roles::Pointers { }
