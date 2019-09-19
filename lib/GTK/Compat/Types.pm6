@@ -141,6 +141,9 @@ constant gulong              is export := uint64;
 constant gunichar            is export := uint32;
 constant va_list             is export := Pointer;
 constant time_t              is export := uint64;
+constant uid_t               is export := uint32;
+constant gid_t               is export := uint32;
+constant pid_t               is export := int32;
 
 # Function Pointers
 constant GAsyncReadyCallback     is export := Pointer;
@@ -493,6 +496,16 @@ our enum GBindingFlags is export (
   G_BINDING_SYNC_CREATE    => 1 +< 1,
   G_BINDING_INVERT_BOOLEAN => 1 +< 2
 );
+
+constant GCredentialsType is export := guint;
+our enum GCredentialsTypeEnum is export <
+  G_CREDENTIALS_TYPE_INVALID
+  G_CREDENTIALS_TYPE_LINUX_UCRED
+  G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED
+  G_CREDENTIALS_TYPE_OPENBSD_SOCKPEERCRED
+  G_CREDENTIALS_TYPE_SOLARIS_UCRED
+  G_CREDENTIALS_TYPE_NETBSD_UNPCBID
+>;
 
 our enum GNotificationPriority is export <
   G_NOTIFICATION_PRIORITY_NORMAL
