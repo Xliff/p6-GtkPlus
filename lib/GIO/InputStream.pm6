@@ -15,7 +15,9 @@ class GIO::InputStream {
   has GInputStream $!is;
 
   submethod BUILD (:$stream) {
-    self!setObject($!is = $stream);
+    $!is = $stream;
+
+    self.roleInit-Object;
   }
 
   method clear_pending {

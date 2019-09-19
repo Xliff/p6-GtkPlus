@@ -6,11 +6,17 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::InetAddressMask;
 
+use GTK::Compat::Roles::Object;
+
 class GIO::InetAddressMask {
+  also does GTK::Compat::Roles::Object;
+
   has GInetAddressMask $!iam;
 
   submethod BUILD (:$mask) {
     $!iam = $mask;
+
+    self.roleInit-Object;
   }
 
   method GTK::Compat::Types::GInetAddressMask

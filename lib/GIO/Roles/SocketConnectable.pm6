@@ -6,6 +6,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GIO::SocketAddressEnumerator;
+
 role GIO::Roles::SocketConnectable {
   has GSocketConnectable $!sc;
 
@@ -17,8 +19,10 @@ role GIO::Roles::SocketConnectable {
     cast(GSocketConnectable, self.GObject);
   }
 
-  method enumerate {
-    g_socket_connectable_enumerate($!sc);
+  method enumerate (:$raw = False) {
+    my $se = g_socket_connectable_enumerate($!sc);
+
+    $raw ?? $se !! GIO::GSocketAddressEnumerator.new($se);
   }
 
   method socketconnectable_get_type is also<socketconnectable-get-type> {
@@ -27,8 +31,10 @@ role GIO::Roles::SocketConnectable {
     unstable_get_type( self.^name, &g_socket_connectable_get_type, $n, $t );
   }
 
-  method proxy_enumerate is also<proxy-enumerate> {
-    g_socket_connectable_proxy_enumerate($!sc);
+  method proxy_enumerate (:$raw = False) is also<proxy-enumerate> {
+    my $se = g_socket_connectable_proxy_enumerate($!sc);
+
+    $raw ?? $se !! GIO::GSocketAddressEnumerator.new($se);
   }
 
   method to_string

@@ -6,11 +6,15 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::InetAddress;
 
+use GTK::Compat::Roles::Object;
+
 class GIO::InetAddress {
   has GInetAddress $!ia;
 
   submethod BUILD (:$address) {
     $!ia = $address;
+
+    self.roleInit-Object;
   }
 
   method GTK::Compat::Types::GInetAddress

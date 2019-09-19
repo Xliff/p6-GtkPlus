@@ -7,11 +7,19 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::SocketAddress;
 
+use GIO::Roles::SocketConnectable;
+
 class GIO::SocketAddress {
+  also does GTK::Compat::Roles::Object;
+  also does GIO::Roles::SocketConnectable;
+
   has GSocketAddress $!sa;
 
   submethod BUILD (:$address) {
     $!sa = $address;
+
+    self.roleInit-Object;
+    self.roleInit-SockedConnectable;
   }
 
   method GTK::Compat::Types::GSocketAddress
@@ -39,7 +47,7 @@ class GIO::SocketAddress {
 
     unstable_get_type( self.^name, &g_socket_address_get_type, $n, $t );
   }
-  
+
   method to_native (
     Pointer $dest,
     Int() $destlen,

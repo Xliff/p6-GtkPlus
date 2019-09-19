@@ -6,8 +6,6 @@ use GTK::Compat::Types;
 
 use GTK::Compat::Roles::Object;
 
-use GIO::SocketAddress;
-
 class GIO::SocketAddressEnumerator {
   also does GTK::Compat::Roles::Object;
 
@@ -42,7 +40,7 @@ class GIO::SocketAddressEnumerator {
     clear_error;
     my $sa = g_socket_address_enumerator_next($!se, $cancellable, $error);
     set_error($error);
-    $raw ?? $sa !! GIO::SocketAddress.new($sa);
+    $raw ?? $sa !! ::('GIO::SocketAddress').new($sa);
   }
 
   method next_async (
@@ -67,7 +65,7 @@ class GIO::SocketAddressEnumerator {
     clear_error;
     my $sa = g_socket_address_enumerator_next_finish($!se, $result, $error);
     set_error($error);
-    $raw ?? $sa !! GIO::SocketAddress.new($sa);
+    $raw ?? $sa !! ::('GIO::SocketAddress').new($sa);
   }
 
 }

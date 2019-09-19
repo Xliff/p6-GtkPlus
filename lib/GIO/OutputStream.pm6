@@ -7,7 +7,11 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::OutputStream;
 
+use GTK::Compat::Roles::Object;
+
 class GIO::OutputStream {
+  also does GTK::Compat::Roles::Object;
+
   has GOutputStream $!os;
 
   submethod BUILD (:$output-stream) {
@@ -16,6 +20,7 @@ class GIO::OutputStream {
 
   method setOutputStream (GOutputStream $output-stream) {
     $!os = $output-stream;
+    self.roleInit-Object;
   }
 
   method GTK::Compat::Types::GOutputStream

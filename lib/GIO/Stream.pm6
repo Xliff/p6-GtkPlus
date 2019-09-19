@@ -9,11 +9,17 @@ use GIO::Raw::Stream;
 use GIO::InputStream;
 use GIO::OutputStream;
 
+use GTK::Compat::Roles::Object;
+
 class GIO::Stream {
+  also does GTK::Compat::Roles::Object;
+
   has GIOStream $!ios;
 
   submethod BUILD (:$stream) {
     self.setStream($stream) if $stream;
+
+    self.roleInit-Object;
   }
 
   method setStream (GIOStream $stream) {
