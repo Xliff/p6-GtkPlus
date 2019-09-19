@@ -1177,6 +1177,8 @@ class GOutputStream            is repr('CPointer') is export does GTK::Roles::Po
 class GParamSpec               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GProxy                   is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GProxyAddress            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRand                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRWLock                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 # To be converted into CStruct when I'm not so scurred of it.
