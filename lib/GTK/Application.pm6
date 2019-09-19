@@ -82,8 +82,7 @@ class GTK::Application is export {
         }
       };
       say "WindowType is { $!wtype }: { $!window }" if $DEBUG;
-      $!window.destroy-signal.tap({ self.exit })
-        unless $!wtype eq 'custom';
+      $!window.destroy-signal.tap({ self.exit }) unless $!wtype eq 'custom';
       $!init.keep;
     });
   }
