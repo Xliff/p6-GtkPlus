@@ -9,6 +9,9 @@ use GIO::Raw::SocketAddress;
 
 use GIO::Roles::SocketConnectable;
 
+our subset SocketAddressAncestry is export of Mu
+  where GSocketConnectable | GSocket;
+
 class GIO::SocketAddress {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::SocketConnectable;
@@ -16,10 +19,22 @@ class GIO::SocketAddress {
   has GSocketAddress $!sa;
 
   submethod BUILD (:$address) {
-    $!sa = $address;
+    self.setSocketAddress($address) if $address;
+  }
 
-    self.roleInit-Object;
-    self.roleInit-SockedConnectable;
+  method setSocketAddress (SocketAddressAncestry $_) {
+    my $role-set = False;
+
+    when GSocketConnectable {
+      self.roleInit-SocketConnectable($_);
+      $role-set = True;
+      proceed;
+    }
+
+    default {
+      $!sa = $_ ~~ GSocketAddress ?? $_ !! cast(GSocketAddress, $_);
+      self.roleInit-Object unless $role-set;
+    }
   }
 
   method GTK::Compat::Types::GSocketAddress

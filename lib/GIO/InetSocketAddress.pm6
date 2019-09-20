@@ -8,8 +8,8 @@ use GIO::Raw::InetSocketAddress;
 use GIO::InetAddress;
 use GIO::SocketAddress;
 
-our subset InetSocketAncestry is export
-  where GInetSocketAddress | GSocketAddress;
+our subset InetSocketAddressAncestry is export
+  where GInetSocketAddress | SocketAddressAncestry;
 
 class GIO::InetSocketAddress is GIO::SocketAddress {
   has GInetSocketAddress $!isa;
@@ -18,7 +18,7 @@ class GIO::InetSocketAddress is GIO::SocketAddress {
     self.setInetSocketAddr($inetsocketaddr);
   }
 
-  method setInetSocketAddr(InetSocketAncestry $_) {
+  method setInetSocketAddr(InetSocketAddressAncestry $_) {
     my $to-parent;
     $!isa = do {
       when GInetSocketAddress {

@@ -15,8 +15,9 @@ role GIO::Roles::SocketConnectable {
     is also<GSocketConnectable>
   { $!sc }
 
-  method roleInit-SockedConnectable {
-    cast(GSocketConnectable, self.GObject);
+  method roleInit-SocketConnectable (GSocketConnectable :$role) {
+    $!sc = $role ??
+      $role !! cast(GSocketConnectable, self.GObject);
   }
 
   method enumerate (:$raw = False) {

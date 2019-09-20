@@ -8,7 +8,7 @@ use GIO::Raw::UnixSocketAddress;
 use GIO::SocketAddress;
 
 our subset UnixSocketAddressAncestry is export of Mu
-  where GUnixSocketAddress | GSocketAddress;
+  where GUnixSocketAddress | SocketAddressAncestry;
 
 class GIO::UnixSocketAddress is GIO::SocketAddress {
   has GUnixSocketAddress $!us;
