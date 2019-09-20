@@ -30,34 +30,38 @@ class GTK::Grid is GTK::Container {
   }
 
   submethod BUILD(:$grid) {
-    my $to-parent;
     given $grid {
       when GridAncestry {
-        $!g = do {
-          when GtkGrid  {
-            $to-parent = nativecast(GtkContainer, $_);
-            $_;
-          }
-          when GtkOrientable {
-            $!or = $_;                                # GTK::Roles::Orientable
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkGrid, $_);
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkGrid, $_);
-          }
-        }
-        $!or //= nativecast(GtkOrientable, $grid);    # GTK::Roles::Orientable
-        self.setContainer($to-parent);
+        self.setGrid($grid);
       }
+
       when GTK::Grid {
       }
+
       default {
       }
     }
-    # For GTK::Roles::GtkOrientable
-    $!or = nativecast(GtkOrientable, $!g);
+  }
+
+  method setGrid (GridAncestry $_) {
+    my $to-parent;
+    $!g = do {
+      when GtkGrid  {
+        $to-parent = nativecast(GtkContainer, $_);
+        $_;
+      }
+      when GtkOrientable {
+        $!or = $_;                                # GTK::Roles::Orientable
+        $to-parent = nativecast(GtkContainer, $_);
+        nativecast(GtkGrid, $_);
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkGrid, $_);
+      }
+    }
+    $!or //= nativecast(GtkOrientable, $!g);      # GTK::Roles::Orientable
+    self.setContainer($to-parent);
   }
 
   method GTK::Raw::Types::GtkGrid
@@ -77,15 +81,17 @@ class GTK::Grid is GTK::Container {
     self.bless(:$grid);
   }
 
-  method new-vgrid {
+  method new-vgrid (Int() $spacing = 2) {
     my $o = GTK::Grid.new;
     $o.orientation = GTK_ORIENTATION_VERTICAL;
+    $o.spacing = $spacing;
     $o;
   }
 
-  method new-hgrid {
+  method new-hgrid (Int() $spacing = 2) {
     my $o = GTK::Grid.new;
     $o.orientation = GTK_ORIENTATION_HORIZONTAL;
+    $o.spacing = $spacing;
     $o;
   }
 
@@ -292,6 +298,14 @@ class GTK::Grid is GTK::Container {
         gtk_grid_set_row_spacing($!g, $s);
       }
     );
+  }
+
+  method spacing is rw {
+    Proxy.new:
+      FETCH => -> $ { (self.row_spacing, self.column_spacing).max },
+      STORE => -> $, Int() $val {
+        (self.row_spacing, self.column_spacing) = $val xx 2;
+      };
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 

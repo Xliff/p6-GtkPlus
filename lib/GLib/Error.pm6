@@ -10,7 +10,7 @@ use GLib::Raw::Error;
 use GTK::Compat::Roles::TypedBuffer;
 
 class GLib::Error {
-  has GError $!e handles;
+  has GError $!e handles <domain code message>;
 
   submethod BUILD (:$error) {
     $!e = $error;
@@ -45,12 +45,12 @@ class GLib::Error {
 
   method clear {
     my $eb = GTK::Compat::Roles::TypedBuffer[GError].new( size => 1 );
-    $ea.bind(0, $!e);
+    $eb.bind(0, $!e);
 
     my $ea = CArray[Pointer[GError]].new;
     $ea[0] = $eb.p;
 
-    g_clear_error($eb);
+    g_clear_error($ea);
   }
 
   # Not sure of a valid use-case for this.

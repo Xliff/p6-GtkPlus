@@ -23,26 +23,30 @@ class GTK::InfoBar is GTK::Box {
   }
 
   submethod BUILD(:$infobar) {
-    my $to-parent;
     given $infobar {
       when InfoBarAncestry {
-        $!ib = do {
-          when GtkInfoBar {
-            $to-parent = nativecast(GtkBox, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkInfoBar, $_);
-          }
-        };
-        self.setBox($to-parent);
+        self.setInfoBar($infobar);
       }
       when GTK::InfoBar {
       }
       default {
       }
     }
+  }
+
+  method setInfoBar (InfoBarAncestry $_) {
+    my $to-parent;
+    $!ib = do {
+      when GtkInfoBar {
+        $to-parent = nativecast(GtkBox, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkInfoBar, $_);
+      }
+    };
+    self.setBox($to-parent);
   }
 
   method GTK::Raw::Types::GtkInfoBar is also<InfoBar> { $!ib }

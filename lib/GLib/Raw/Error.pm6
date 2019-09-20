@@ -4,19 +4,16 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-class GLib::Error {
-  has GError $!e;
-
 sub g_error_copy (GError $error)
   returns GError
   is native(glib)
   is export
 { * }
 
-sub g_error_free (GError $error)
-  is native(glib)
-  is export
-{ * }
+# sub g_error_free (GError $error)
+#   is native(glib)
+#   is export
+# { * }
 
 sub g_clear_error (CArray[Pointer[GError]] $err)
   is native(glib)
