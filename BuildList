@@ -45,9 +45,12 @@ GIO::Raw::InetAddressMask
 GIO::Raw::InetSocketAddress
 GIO::Raw::InputStream
 GIO::Raw::OutputStream
+GIO::Raw::Proxy
 GIO::Raw::Socket
 GIO::Raw::SocketAddress
 GIO::Raw::Stream
+GIO::Raw::Subs
+GIO::Raw::UnixSocketAddress
 GIO::Roles::Initable
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
@@ -58,8 +61,10 @@ GLib::Raw::Module
 GLib::Raw::Quark
 GLib::Raw::Rand
 GLib::Raw::Scanner
+GLib::Raw::Unicode
 GLib::Scanner
 GLib::URI
+GLib::Unicode
 GTK::Builder::Actionable
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
@@ -143,6 +148,7 @@ GTK::Roles::StyleProvider
 GDK::Main
 GDK::Raw::Threads
 GDK::Threads
+GIO::Raw::Quarks
 GLib::AsyncQueue
 GLib::Base64
 GLib::Checksum
@@ -477,8 +483,10 @@ GTK::RecentManager
 GTK::Roles::Scrollable
 GTK::Roles::ToolShell
 GTK::TextIter
+GIO::Roles::Proxy
 GIO::Roles::SocketConnectable
 GIO::SocketAddress
+GIO::UnixSocketAddress
 GTK::CellRendererAccel
 GTK::CellRendererSpin
 GTK::Compat::AppLaunchContext
