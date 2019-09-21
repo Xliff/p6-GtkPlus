@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -26,6 +28,7 @@ class GIO::UnixFDList {
   }
 
   proto method new_from_array (|)
+      is also<new-from-array>
   { * }
 
   multi method new_from_array(@fds) {
@@ -63,17 +66,18 @@ class GIO::UnixFDList {
     $rv;
   }
 
-  method get_length {
+  method get_length is also<get-length> {
     g_unix_fd_list_get_length($!fd);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_unix_fd_list_get_type, $n, $t );
   }
 
   proto method peek_fds (|)
+      is also<peek-fds>
   { * }
 
   multi method peek_fds (:$raw = False) {
@@ -91,6 +95,7 @@ class GIO::UnixFDList {
   }
 
   proto method steal_fds (|)
+      is also<steal-fds>
   { * }
 
   multi method steal_fds (:$raw = False) {
