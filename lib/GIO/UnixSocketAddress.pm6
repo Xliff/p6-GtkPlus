@@ -47,7 +47,10 @@ class GIO::UnixSocketAddress is GIO::SocketAddress {
     is also<GUnixSocketAddress>
   { $!us }
 
-  method new (Str() $path) {
+  multi method new (UnixSocketAddressAncestry $unix-socket) {
+    self.bless( :$unix-socket );
+  }
+  multi method new (Str() $path) {
     self.bless( unix-socket => g_unix_socket_address_new($path) );
   }
 

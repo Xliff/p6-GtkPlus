@@ -20,6 +20,10 @@ class GIO::InputStream {
     self.roleInit-Object;
   }
 
+  method new (GInputStream $stream) {
+    self.bless( :$stream );
+  }
+
   method clear_pending {
     g_input_stream_clear_pending($!is);
   }

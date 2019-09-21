@@ -10,15 +10,15 @@ use GIO::Raw::UnixFDMessage;
 use GIO::SocketControlMessage;
 use GIO::UnixFDList;
 
-our subset UnixMessageAncestry is export of Mu
-  where GUnixFDMessage | SocketControlAncestry;
+our subset UnixFDMessageAncestry is export of Mu
+  where GUnixFDMessage | SocketControlMessageAncestry;
 
 class GIO::UnixFDMessage is GIO::SocketControlMessage {
   has GUnixFDMessage $!fdm;
 
   submethod BUILD (:$fd-message) {
     given $fd-message {
-      when UnixMessageAncestry {
+      when UnixFDMessageAncestry {
         self.setFDMessage($fd-message);
       }
 
@@ -30,7 +30,7 @@ class GIO::UnixFDMessage is GIO::SocketControlMessage {
     }
   }
 
-  method setFDMessage (UnixMessageAncestry $_) {
+  method setFDMessage (UnixFDMessageAncestry $_) {
     my $to-parent;
     $!fdm = do {
       when GUnixFDMessage {
@@ -50,7 +50,10 @@ class GIO::UnixFDMessage is GIO::SocketControlMessage {
     is also<GUnixFDMessage>
   { $!fdm }
 
-  method new {
+  multi method new (UnixFDMessageAncestry $fd-message) {
+    self.bless( :$fd-message );
+  }
+  multi method new {
     self.bless( fd-message => g_unix_fd_message_new() );
   }
 

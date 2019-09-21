@@ -7,7 +7,7 @@ use GIO::Raw::SocketControlMessage;
 
 use GTK::Compat::Roles::Object;
 
-our subset SocketControlAncestry is export of Mu
+our subset SocketControlMessageAncestry is export of Mu
   where GSocketControlMessage | GObject;
 
 class GIO::SocketControlMessage {
@@ -16,12 +16,20 @@ class GIO::SocketControlMessage {
   has GSocketControlMessage $!scm;
 
   submethod BUILD (:$message) {
-    $!scm = $message;
+    given $message {
+      when SocketControlMessageAncestry {
+        self.setSocketControlMessage($message);
+      }
 
-    self.roleInit-Object;
+      when GIO::SocketControlMessage {
+      }
+
+      default {
+      }
+    }
   }
 
-  method setSocketControlMessage (SocketControlAncestry $_) {
+  method setSocketControlMessage (SocketControlMessageAncestry $_) {
     $!scm =
       $_ ~~ GSocketControlMessage ?? $_ !! cast(GSocketControlMessage, $_);
 
@@ -36,9 +44,14 @@ class GIO::SocketControlMessage {
     is also<GSocketControlMessage>
   { * }
 
-  method deserialize (Int() $level, Int() $type, Int() $size, gpointer $data)
-    is also<new>
-  {
+  multi method new (SocketControlMessageAncestry $message) {
+    self.bless( :$message )
+  }
+  multi method new (Int() $level, Int() $type, Int() $size, gpointer $data) {
+    self.deserialize($level, $type, $size, $data);
+  }
+
+  method deserialize (Int() $level, Int() $type, Int() $size, gpointer $data) {
     my gint ($l, $t) = ($level, $type);
     my gsize $s = $size;
 

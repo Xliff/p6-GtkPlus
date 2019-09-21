@@ -47,7 +47,10 @@ class GIO::ProxyAddress is GIO::InetSocketAddress {
   method GTK::Compat::Types::GProxyAddress
   { $!pa }
 
-  method new (
+  multi method new (ProxyAddressAncestry $proxy-address) {
+    self.bless( :$proxy-address );
+  }
+  multi method new (
     GInetAddress() $inetaddr,
     Int() $port,
     Str() $protocol,

@@ -38,7 +38,7 @@ class GIO::InetSocketAddress is GIO::SocketAddress {
     is also<GInetSocketAddress>
   { $!isa }
 
-  multi method new (GInetSocketAddress $inetsocketaddr) {
+  multi method new (InetSocketAddressAncestry $inetsocketaddr) {
     self.bless( :$inetsocketaddr );
   }
   multi method new (GInetAddress() $address, Int() $port) {

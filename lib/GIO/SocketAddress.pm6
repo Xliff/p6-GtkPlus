@@ -41,6 +41,10 @@ class GIO::SocketAddress {
     is also<GSocketAddress>
   { $!sa }
 
+  method new (GSocketAddress $address) {
+    self.bless( :$address );
+  }
+
   method new_from_native (Pointer $native, Int() $len)
     is also<new-from-native>
   {

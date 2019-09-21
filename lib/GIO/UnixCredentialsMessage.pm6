@@ -20,7 +20,7 @@ class GIO::UnixCredentialsMessage is GIO::SocketControlMessage {
         self.setUnixCredentialsMessage($cred-message);
       }
 
-      when GIO::UNixCredentialsMessage {
+      when GIO::UnixCredentialsMessage {
       }
 
       default {
@@ -30,7 +30,7 @@ class GIO::UnixCredentialsMessage is GIO::SocketControlMessage {
 
   method setUnixCredentialsMessage (UnixCredentialsMessageAncestry $_) {
     my $to-parent;
-    $!cm = do
+    $!cm = do {
       when GUnixCredentialsMessage {
         $to-parent = cast(GSocketControlMessage, $_);
         $_;
@@ -47,7 +47,7 @@ class GIO::UnixCredentialsMessage is GIO::SocketControlMessage {
     is also<GUnixCredentialsMessage>
   { $!cm }
 
-  multi message new (GUnixCredentialsMessage $cred-message) {
+  multi method new (UnixCredentialsMessageAncestry $cred-message) {
     self.bless( :$cred-message );
   }
   multi method new {

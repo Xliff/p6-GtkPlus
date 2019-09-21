@@ -26,6 +26,10 @@ class GIO::Stream {
     $!ios = $stream
   }
 
+  method new (GIOStream $stream) {
+    self.bless( :$stream );
+  }
+
   method GTK::Compat::Types::GIOStream
     is also<GIOStream>
   { $!ios }

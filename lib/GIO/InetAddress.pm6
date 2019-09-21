@@ -24,7 +24,7 @@ class GIO::InetAddress {
   multi method new (GInetAddress $address) {
     self.bless( :$address );
   }
-
+  
   # my $ia = GIO::InetAddress.new(:any, $family)
   multi method new (Int() $family, :$any is required) {
     GIO::InetAddress.new_any($family);

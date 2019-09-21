@@ -20,7 +20,10 @@ class GIO::Credentials {
     is also<GCredentials>
   { $!c }
 
-  method new {
+  multi method new (GCredentials $credentials) {
+    self.bless( :$credentials );
+  }
+  multi method new {
     self.bless( credentials => g_credentials_new() );
   }
 

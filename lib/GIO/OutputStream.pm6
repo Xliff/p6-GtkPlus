@@ -27,6 +27,10 @@ class GIO::OutputStream {
     is also<GOutputStream>
   { $!os }
 
+  method new (GOutputStream $output-stream) {
+    self.bless( :$output-stream );
+  }
+
   method clear_pending is also<clear-pending> {
     g_output_stream_clear_pending($!os);
   }
