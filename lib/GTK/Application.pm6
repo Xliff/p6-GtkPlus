@@ -66,7 +66,9 @@ class GTK::Application is export {
     self.activate.tap({
       $!window = do given $!wtype {
         when 'application' {
-          GTK::ApplicationWindow.new($!app);
+          my $w = GTK::ApplicationWindow.new($!app);
+          $w.set_size_request($width, $height) if $width && $height;
+          $w;
         }
         when 'window' {
           GTK::Window.new(

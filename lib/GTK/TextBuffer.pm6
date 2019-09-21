@@ -5,6 +5,9 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Compat::Value;
+
+use GTK::Raw::Utils;
+
 use GTK::Raw::TextBuffer;
 use GTK::Raw::Types;
 
@@ -15,17 +18,15 @@ use GTK::TextTagTable;
 
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::TextBuffer;
-use GTK::Roles::Types;
 
 class GTK::TextBuffer {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::TextBuffer;
-  also does GTK::Roles::Types;
 
   has GtkTextBuffer $!tb;
 
   submethod BUILD(:$buffer) {
-    self.setTextBuffer($buffer);
+    self.setTextBuffer($buffer) if $buffer;
   }
 
   method setTextBuffer($buffer) {
@@ -292,13 +293,17 @@ D
   method add_mark (
     GtkTextMark() $mark,
     GtkTextIter() $where
-  ) is also<add-mark> {
+  )
+    is also<add-mark>
+  {
     gtk_text_buffer_add_mark($!tb, $mark, $where);
   }
 
   method add_selection_clipboard (
     GtkClipboard() $clipboard
-  ) is also<add-selection-clipboard> {
+  )
+    is also<add-selection-clipboard>
+  {
     gtk_text_buffer_add_selection_clipboard($!tb, $clipboard);
   }
 
@@ -334,7 +339,8 @@ D
     Int() $default_editable       # gboolean $default_editable
   ) {
     my @b = ($interactive, $default_editable);
-    my gboolean ($i, $de) = self.RESOLVE-BOOL(@b);;
+    my gboolean ($i, $de) = resolve-bool(@b);
+
     gtk_text_buffer_backspace($!tb, $iter, $i, $de);
   }
 
@@ -357,14 +363,15 @@ D
   method create_mark (
     Str() $mark_name,
     GtkTextIter() $where,
-    Int() $left_gravity           # gboolean $left_gravity
+    Int() $left_gravity,           # gboolean $left_gravity
+    :$raw = False
   )
     is also<create-mark>
   {
-    my gboolean $lg = self.RESOLE-BOOL($left_gravity);
-    GTK::TextMark.new(
-      gtk_text_buffer_create_mark($!tb, $mark_name, $where, $lg)
-    );
+    my gboolean $lg = resolve-bool($left_gravity);
+    my $tm = gtk_text_buffer_create_mark($!tb, $mark_name, $where, $lg);
+
+    $raw ?? $tm !! GTK::TextMark.new($tm);
   }
 
   # method create_tag omitted due to '...' parameter.
@@ -375,7 +382,8 @@ D
   )
     is also<cut-clipboard>
   {
-    my gboolean $de = self.RESOLVE-BOOL($default_editable);
+    my gboolean $de = resolve-bool($default_editable);
+
     gtk_text_buffer_cut_clipboard($!tb, $clipboard, $de);
   }
 
@@ -401,7 +409,8 @@ D
     GtkTextIter() $end_iter,
     Int() $default_editable       # gboolean $default_editable
   ) {
-    my gboolean $de = self.RESOLVE-BOOL($default_editable);
+    my gboolean $de = resolve-bool($default_editable);
+
     gtk_text_buffer_delete_interactive($!tb, $start_iter, $end_iter, $de);
   }
 
@@ -424,7 +433,8 @@ D
     is also<delete-selection>
   {
     my @b = ($interactive, $default_editable);
-    my gboolean ($i, $de) = self.RESOLVE-BOOL(@b);
+    my gboolean ($i, $de) = resolve-bool(@b);
+
     gtk_text_buffer_delete_selection($!tb, $i, $de);
   }
 
@@ -433,41 +443,46 @@ D
   }
 
   # cw: Has a proto been attempted for this, yet?
-  multi method get-bounds {
-    self.get_bounds;
-  }
-  multi method get_bounds {
+  proto method get_bounds (|)
+    is also<get-bounds>
+  { * }
+
+  multi method get_bounds (:$raw = False) {
     my GtkTextIter $start .= new;
     my GtkTextIter $end .= new;
-    samewith($start, $end);
-    (
-      GTK::TextIter.new($start),
-      GTK::TextIter.new($end)
-    )
-  }
-  multi method get-bounds (
-    GtkTextIter() $start is rw,
-    GtkTextIter() $end is rw
-  ) {
-    self.get_bounds($start, $end);
+
+    samewith($start, $end, :$raw);
   }
   multi method get_bounds (
     GtkTextIter() $start is rw,
-    GtkTextIter() $end is rw
+    GtkTextIter() $end is rw,
+    :$raw = False;
   ) {
     gtk_text_buffer_get_bounds($!tb, $start, $end);
-    ( GTK::TextIter.new($start), GTK::TextIter.new($end) );
+
+    $raw ??
+      ($start, $end)
+      !!
+      ( GTK::TextIter.new($start), GTK::TextIter.new($end) );
   }
 
   # method get_bounds_p? -- So that we don't have to create objects to get
   # the pointers, to then dispose of the objects...
 
-  method get_char_count is also<get-char-count> {
+  method get_char_count
+    is also<
+      get-char-count
+      char_count
+      char-count
+    >
+  {
     gtk_text_buffer_get_char_count($!tb);
   }
 
-  method get_copy_target_list is also<get-copy-target-list> {
-    GTK::TargetList.new( gtk_text_buffer_get_copy_target_list($!tb) );
+  method get_copy_target_list (:$raw = False) is also<get-copy-target-list> {
+    my $tl = gtk_text_buffer_get_copy_target_list($!tb);
+
+    $raw ?? $tl !! GTK::TargetList.new($tl);
   }
 
   proto method get_end_iter (|)
@@ -478,170 +493,208 @@ D
     >
   { * }
 
-  multi method get_end_iter {
+  multi method get_end_iter (:$raw = False) {
     my $iter = GtkTextIter.new;
-    samewith($iter);
+
+    samewith($iter, :$raw);
   }
-  multi method get_end_iter (GtkTextIter() $iter) {
+  multi method get_end_iter (GtkTextIter() $iter, :$raw = False) {
     gtk_text_buffer_get_end_iter($!tb, $iter);
-    GTK::TextIter.new($iter);
+
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
   method get_has_selection is also<get-has-selection> {
     gtk_text_buffer_get_has_selection($!tb);
   }
 
-  method get_insert is also<get-insert> {
-    GTK::TextMark.new( gtk_text_buffer_get_insert($!tb) );
+  method get_insert (:$raw = False) is also<get-insert> {
+    my $tm = gtk_text_buffer_get_insert($!tb);
+    $raw ?? $tm !! GTK::TextMark.new($tm);
   }
 
   proto method get_iter_at_child_anchor (|)
     is also<get-iter-at-child-anchor>
-    { * }
+  { * }
 
-  multi method get_iter_at_child_anchor (GtkTextChildAnchor $anchor) {
+  multi method get_iter_at_child_anchor (
+    GtkTextChildAnchor() $anchor,
+    :$raw = False
+  ) {
     my $iter = GtkTextIter.new;
-    samewith($iter, $anchor);
+
+    samewith($iter, $anchor, :$raw);
   }
   multi method get_iter_at_child_anchor (
     GtkTextIter() $iter,
-    GtkTextChildAnchor $anchor
+    GtkTextChildAnchor() $anchor,
+    :$raw = False;
   ) {
     gtk_text_buffer_get_iter_at_child_anchor($!tb, $iter, $anchor);
-    GTK::TextIter.new($iter);
+
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
   proto method get_iter_at_line (|)
     is also<get-iter-at-line>
-    { * }
+  { * }
 
-  multi method get_iter_at_line (Int() $line_number) {
+  multi method get_iter_at_line (Int() $line_number, :$raw = False) {
     my $iter = GtkTextIter.new;
-    samewith($iter, $line_number);
+
+    samewith($iter, $line_number, :$raw);
   }
   multi method get_iter_at_line (
     GtkTextIter() $iter,
-    Int() $line_number            # gint $line_number
+    Int() $line_number,            # gint $line_number
+    :$raw = False;
   ) {
-    my gint $ln = self.RESOLVE-INT($line_number);
+    my gint $ln = resolve-int($line_number);
+
     gtk_text_buffer_get_iter_at_line($!tb, $iter, $ln);
-    GTK::TextIter.new($iter);
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
   proto method get_iter_at_line_index (|)
     is also<get-iter-at-line-index>
-    { * }
+  { * }
 
   multi method get_iter_at_line_index (
     Int() $line_number,           # gint $line_number,
-    Int() $byte_index             # gint $byte_index
+    Int() $byte_index,            # gint $byte_index
+    :$raw = False
   ) {
     my $iter = GtkTextIter.new;
-    samewith($iter, $line_number, $byte_index);
+
+    samewith($iter, $line_number, $byte_index, :$raw);
   }
   multi method get_iter_at_line_index (
     GtkTextIter() $iter,
     Int() $line_number,           # gint $line_number,
-    Int() $byte_index             # gint $byte_index
+    Int() $byte_index,            # gint $byte_index
+    :$raw = False
   ) {
     my @i = ($line_number, $byte_index);
-    my gint ($ln, $bi) = self.RESOLVE-INT(@i);
+    my gint ($ln, $bi) = resolve-int(@i);
+
     gtk_text_buffer_get_iter_at_line_index($!tb, $iter, $ln, $bi);
-    GTK::TextIter.new($iter);
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
   proto method get_iter_at_line_offset (|)
     is also<get-iter-at-line-offset>
-    { * }
+  { * }
 
   multi method get_iter_at_line_offset (
     Int() $line_number,           # gint $line_number,
-    Int() $char_offset            # gint $char_offset
+    Int() $char_offset,           # gint $char_offset
+    :$raw = False
   ) {
     my $iter = GtkTextIter.new;
-    samewith($iter, $line_number, $char_offset);
+
+    samewith($iter, $line_number, $char_offset, :$raw);
   }
   multi method get_iter_at_line_offset (
     GtkTextIter() $iter,
     Int() $line_number,           # gint $line_number,
-    Int() $char_offset            # gint $char_offset
+    Int() $char_offset,           # gint $char_offset
+    :$raw = False
   ) {
     my @i = ($line_number, $char_offset);
-    my gint ($ln, $co) = self.RESOLVE-INT(@i);
+    my gint ($ln, $co) = resolve-int(@i);
     gtk_text_buffer_get_iter_at_line_offset($!tb, $iter, $ln, $co);
-    GTK::TextIter.new($iter);
+
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
   proto method get_iter_at_mark (|)
     is also<get-iter-at-mark>
-    { * }
+  { * }
 
-  multi method get_iter_at_mark (GtkTextMark() $mark) {
+  multi method get_iter_at_mark (GtkTextMark() $mark, :$raw = False) {
     my $iter = GtkTextIter.new;
-    samewith($iter, $mark);
+
+    samewith($iter, $mark, :$raw);
   }
   multi method get_iter_at_mark (
     GtkTextIter() $iter,
-    GtkTextMark() $mark
+    GtkTextMark() $mark,
+    :$raw = False;
   ) {
     gtk_text_buffer_get_iter_at_mark($!tb, $iter, $mark);
-    GTK::TextIter.new($iter);
+
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
   proto method get_iter_at_offset (|)
     is also<get-iter-at-offset>
-    { * }
+  { * }
 
   multi method get_iter_at_offset (
-    Int() $char_offset            # gint $char_offset
+    Int() $char_offset,            # gint $char_offset
+    :$raw = False
   ) {
     my $iter = GtkTextIter.new;
-    samewith($iter, $char_offset);
+
+    samewith($iter, $char_offset, :$raw);
   }
 
   multi method get_iter_at_offset (
     GtkTextIter() $iter,
-    Int() $char_offset            # gint $char_offset
+    Int() $char_offset,            # gint $char_offset
+    :$raw = False
   ) {
-    my gint $co = self.RESOLVE-INT($char_offset);
+    my gint $co = resolve-int($char_offset);
+
     gtk_text_buffer_get_iter_at_offset($!tb, $iter, $co);
-    GTK::TextIter.new($iter);
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
   method get_line_count is also<get-line-count> {
     gtk_text_buffer_get_line_count($!tb);
   }
 
-  method get_mark (Str() $name) is also<get-mark> {
-    GTK::TextMark.new( gtk_text_buffer_get_mark($!tb, $name) );
+  method get_mark (Str() $name, :$raw = False) is also<get-mark> {
+    my $tm = gtk_text_buffer_get_mark($!tb, $name);
+
+    $raw ?? $tm !! GTK::TextMark.new($tm);
   }
 
-  method get_paste_target_list is also<get-paste-target-list> {
-    GTK::TargetList.new( gtk_text_buffer_get_paste_target_list($!tb) );
+  method get_paste_target_list (:$raw = False) is also<get-paste-target-list> {
+    my $tl = gtk_text_buffer_get_paste_target_list($!tb);
+
+    $raw ?? $tl !! GTK::TargetList.new($tl);
   }
 
-  method get_selection_bound is also<get-selection-bound> {
-    GTK::TextMark.new( gtk_text_buffer_get_selection_bound($!tb) );
+  method get_selection_bound (:$raw = False) is also<get-selection-bound> {
+    my $tm = gtk_text_buffer_get_selection_bound($!tb);
+
+    $raw ?? $tm !! GTK::TextMark.new($tm);
   }
 
   proto method get_selection_bounds (|)
     is also<get-selection-bounds>
-    { * }
+  { * }
 
-  multi method get_selection_bounds {
+  multi method get_selection_bounds (:$raw = False) {
     my ($start, $end) = GtkTextIter.new xx 2;
-    my $rc = samewith($start, $end);
-    (
-      $start.defined ?? GTK::TextIter.new($start) !! Nil,
-      $end.defined   ?? GTK::TextIter.new($end)   !! Nil,
-      $rc
-    )
+    samewith($start, $end);
   }
   multi method get_selection_bounds (
     GtkTextIter() $start,
-    GtkTextIter() $end
+    GtkTextIter() $end,
+    :$raw = False
   ) {
-    so gtk_text_buffer_get_selection_bounds($!tb, $start, $end);
+    my $rc = so gtk_text_buffer_get_selection_bounds($!tb, $start, $end);
+
+    $raw ??
+      ($start, $end, $rc)
+      !!
+      (
+        $start.defined ?? GTK::TextIter.new($start) !! Nil,
+        $end.defined   ?? GTK::TextIter.new($end)   !! Nil,
+        $rc
+      )
   }
 
   method get_slice (
@@ -651,7 +704,7 @@ D
   )
     is also<get-slice>
   {
-    my gboolean $ih = self.RESOLVE-BOOL($include_hidden_chars);
+    my gboolean $ih = resolve-bool($include_hidden_chars);
     gtk_text_buffer_get_slice($!tb, $start, $end, $ih);
   }
 
@@ -661,25 +714,28 @@ D
       start_iter
       start-iter
     >
-    { * }
+  { * }
 
-  multi method get_start_iter {
+  multi method get_start_iter (:$raw = False) {
     my $iter = GtkTextIter.new;
-    samewith($iter);
+
+    samewith($iter, :$raw);
   }
-  multi method get_start_iter (GtkTextIter $iter) {
+  multi method get_start_iter (GtkTextIter() $iter, :$raw = False) {
     gtk_text_buffer_get_start_iter($!tb, $iter);
-    GTK::TextIter.new($iter);
+
+    $raw ?? $iter !! GTK::TextIter.new($iter);
   }
 
-  method get_tag_table
-    is also<get-tag-table> {
-    GTK::TextTagTable.new( gtk_text_buffer_get_tag_table($!tb) );
+  method get_tag_table (:$raw = False) is also<get-tag-table> {
+    my $tt = gtk_text_buffer_get_tag_table($!tb);
+
+    $raw ?? $tt !! GTK::TextTagTable.new($tt);
   }
 
   proto method get_text (|)
     is also<get-text>
-    { * }
+  { * }
 
   multi method get_text (Int() $include_hidden_chars) {
     samewith(|self.get-bounds, $include_hidden_chars);
@@ -689,12 +745,15 @@ D
     GtkTextIter() $end,
     Int() $include_hidden_chars   # gboolean $include_hidden_chars
   ) {
-    my gboolean $ih = self.RESOLVE-BOOL($include_hidden_chars);
+    my gboolean $ih = resolve-bool($include_hidden_chars);
+
     gtk_text_buffer_get_text($!tb, $start, $end, $ih);
   }
 
   method get_type is also<get-type> {
-    gtk_text_buffer_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, ^gtk_text_buffer_get_type, $n, $t );
   }
 
   # Convenience
@@ -730,13 +789,14 @@ D
     Str() $text,
     Int() $len = $text.chars      # gint $len
   ) {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = resolve-int($len);
+
     gtk_text_buffer_insert($!tb, $iter, $text, $l);
   }
 
   proto method insert_at_cursor (|)
     is also<insert-at-cursor>
-    { * }
+  { * }
 
   multi method insert_at_cursor (Buf $text) {
     samewith($text.encode)
@@ -745,7 +805,8 @@ D
     Str() $text,
     Int() $len  = $text.chars     # gint $len
   ) {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = resolve-int($len);
+
     gtk_text_buffer_insert_at_cursor($!tb, $text, $l);
   }
 
@@ -760,7 +821,7 @@ D
 
   proto method insert_interactive (|)
     is also<insert-interactive>
-    { * }
+  { * }
 
   multi method insert_interractive (
     GtkTextIter() $iter,
@@ -768,6 +829,7 @@ D
     Int() $default_editable
   ) {
     my $t = $text.encode;
+
     samewith($iter, $t, $t.chars, $default_editable);
   }
   multi method insert_interactive (
@@ -778,20 +840,22 @@ D
   ) {
     $text = self!resolve-text-arg($text);
     $len //= $text.chars;
-    my gint $l = self.RESOLVE-INT($len);
-    my gboolean $de = self.RESOLVE-BOOL($default_editable);
+    my gint $l = resolve-int($len);
+    my gboolean $de = resolve-bool($default_editable);
+
     gtk_text_buffer_insert_interactive($!tb, $iter, $text, $l, $de);
   }
 
   proto method insert_interractive_at_cursor (|)
     is also<insert-interactive-at-cursor>
-    { * }
+  { * }
 
   multi method insert_interractive_at_cursor (
     Buf $text,
     Int() $default_editable
   ) {
     my $t = $text.encode;
+
     samewith($t, $t.chars, $default_editable);
   }
   multi method insert_interactive_at_cursor (
@@ -800,14 +864,15 @@ D
     Int() $default_editable       # gboolean $default_editable
   ) {
     $len //= $text.chars;
-    my gint $l = self.RESOLVE-INT($len);
-    my gboolean $de = self.RESOLVE-BOOL($default_editable);
+    my gint $l = resolve-int($len);
+    my gboolean $de = resolve-bool($default_editable);
+
     gtk_text_buffer_insert_interactive_at_cursor($!tb, $text, $l, $de);
   }
 
   proto method insert_markup(|)
     is also<insert-markup>
-    { * }
+  { * }
 
   multi method insert_markup (
     GtkTextIter() $iter,
@@ -821,7 +886,8 @@ D
     Str() $markup,
     Int() $len = $markup.chars
   ) {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = resolve-int($len);
+
     $markup = self!resolve-text-arg($markup);
     gtk_text_buffer_insert_markup($!tb, $iter, $markup, $l);
   }
@@ -855,7 +921,8 @@ D
   )
     is also<insert-range-interactive>
   {
-    my gboolean $de = self.RESOLVE-BOOL($default_editable);
+    my gboolean $de = resolve-bool($default_editable);
+
     gtk_text_buffer_insert_range_interactive($!tb, $iter, $start, $end, $de);
   }
 
@@ -880,7 +947,7 @@ D
 
   proto method prepend_with_tag (|)
     is also<prepend-with-tag>
-    { * }
+  { * }
 
   multi method prepend_with_tag (Buf $text, Str $tag_name) {
     samewith($text.decode, $tag_name);
@@ -899,7 +966,7 @@ D
 
   proto method insert_with_tag (|)
     is also<insert-with-tag>
-    { * }
+  { * }
 
   multi method insert_with_tag (
     GtkTextIter() $iter,
@@ -907,6 +974,7 @@ D
     GtkTextTag() $tag
   ) {
     my $t = $text.decode;
+
     samewith($iter, $t, $t.chars, $tag);
   }
   multi method insert_with_tag (
@@ -922,7 +990,8 @@ D
     Int() $len,
     GtkTextTag() $tag
   ) {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = resolve-int($len);
+
     gtk_text_buffer_insert_with_tags(
       $!tb, $iter, $text, $l, $tag, GtkTextTag
     );
@@ -930,7 +999,7 @@ D
 
   proto method insert_with_tag_by_name (|)
     is also<insert-with-tag-by-name>
-    { * }
+  { * }
 
   multi method insert_with_tag_by_name (
     GtkTextIter() $iter,
@@ -938,6 +1007,7 @@ D
     Str() $tag_name
   ) {
     my $t = $text.decode;
+
     samewith($iter, $t, $t.chars, $tag_name);
   }
   multi method insert_with_tag_by_name (
@@ -953,7 +1023,8 @@ D
     Int() $len,
     Str() $tag_name,
   ) {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = resolve-int($len);
+
     gtk_text_buffer_insert_with_tags_by_name (
       $!tb, $iter, $text, $l, $tag_name, Str
     );
@@ -981,7 +1052,8 @@ D
   )
     is also<paste-clipboard>
   {
-    my gboolean $de = self.RESOLVE-BOOL($default_editable);
+    my gboolean $de = resolve-bool($default_editable);
+
     gtk_text_buffer_paste_clipboard($!tb, $clipboard, $override_location, $de);
   }
 
@@ -1010,7 +1082,7 @@ D
 
   proto method emit_remove_tag (|)
     is also<emit-remove-tag>
-    { * }
+  { * }
 
   multi method emit_remove_tag (GtkTextTag $tag) {
     samewith($tag, |self.get-bounds);
@@ -1025,7 +1097,7 @@ D
 
   proto method remove_tag_by_name (|)
     is also<remove-tag-by-name>
-    { * }
+  { * }
 
   multi method remove_tag_by_name (Str() $name) {
     samewith($name, |self.get-bounds);
@@ -1052,7 +1124,8 @@ D
   {
     $text = self!resolve-text-arg($text);
     $len //= $text.chars;
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = resolve-int($len);
+
     gtk_text_buffer_set_text($!tb, $text, $l);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

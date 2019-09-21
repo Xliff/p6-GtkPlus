@@ -11,7 +11,8 @@ use GTK::Raw::Utils;
 
 use GTK::Box;
 
-our subset InfoBarAncestry is export where GtkInfoBar | BoxAncestry;
+our subset InfoBarAncestry is export of Mu
+  where GtkInfoBar | BoxAncestry;
 
 class GTK::InfoBar is GTK::Box {
   has GtkInfoBar $!ib;
@@ -49,7 +50,12 @@ class GTK::InfoBar is GTK::Box {
     self.setBox($to-parent);
   }
 
-  method GTK::Raw::Types::GtkInfoBar is also<InfoBar> { $!ib }
+  method GTK::Raw::Types::GtkInfoBar
+    is also<
+      GtkInfoBar
+      InfoBar
+    >
+  { $!ib }
 
   multi method new (InfoBarAncestry $infobar) {
     my $o = self.bless(:$infobar);
@@ -57,9 +63,7 @@ class GTK::InfoBar is GTK::Box {
     $o;
   }
   multi method new {
-    my $infobar = gtk_info_bar_new();
-
-    self.bless(:$infobar);
+    self.bless( infobar => gtk_info_bar_new() );
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

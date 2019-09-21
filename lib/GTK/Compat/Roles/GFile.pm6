@@ -23,7 +23,9 @@ role GTK::Compat::Roles::GFile {
     $!file = $file;
   }
 
-  method GTK::Compat::Raw::Types::GFile is also<GFile> { $!file }
+  method GTK::Compat::Types::GFile
+    is also<GFile>
+  { $!file }
 
   multi method new (GFile $file) {
     die 'Role constructor called.' unless ::?CLASS.^name eq ::?ROLE.^name;
@@ -1207,7 +1209,12 @@ role GTK::Compat::Roles::GFile {
     $rc;
   }
 
-  method parse_name (Str $name) is also<parse-name> {
+  method parse_name (
+    GTK::Compat::Roles::GFile:U:
+    Str() $name
+  )
+    is also<parse-name>
+  {
     g_file_parse_name($name);
   }
 

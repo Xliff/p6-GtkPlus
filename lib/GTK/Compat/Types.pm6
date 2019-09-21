@@ -68,10 +68,22 @@ sub g_free (Pointer)
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
   has int32         $.code;
-  has Str           $.message;
+  has Str           $!message;
+
+  submethod BUILD (:$!domain, :$!code, :$message) {
+    self.message = $message;
+  }
 
   method new ($domain, $code, $message) {
-    GError.new(:$domain, :$code, :$message);
+    self.bless(:$domain, :$code, :$message);
+  }
+
+  method message is rw {
+    Proxy.new:
+      FETCH => -> $ { $!message },
+      STORE => -> $, Str() $val {
+        ::?CLASS.^attributes[* - 1].set_value(self, $val)
+      };
   }
 }
 
