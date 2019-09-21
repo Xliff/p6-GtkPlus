@@ -7,6 +7,9 @@ use GIO::Raw::SocketControlMessage;
 
 use GTK::Compat::Roles::Object;
 
+our subset SocketControlAncestry is export of Mu
+  where GSocketControlMessage | GObject;
+
 class GIO::SocketControlMessage {
   also does GTK::Compat::Roles::Object;
 
@@ -15,6 +18,17 @@ class GIO::SocketControlMessage {
   submethod BUILD (:$message) {
     $!scm = $message;
 
+    self.roleInit-Object;
+  }
+
+  method setSocketControlMessage (SocketControlAncestry $_) {
+    $!scm =
+      $_ ~~ GSocketControlMessage ?? $_ !! cast(GSocketControlMessage, $_);
+
+    # cw: xxx -NOTE- xxx
+    # There is a wasted cast here. Must figure out a better mechanism to handle
+    # descendant objects. The best solution would probably be to make GObject
+    # a class!
     self.roleInit-Object;
   }
 
