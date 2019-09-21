@@ -46,10 +46,15 @@ GIO::Raw::InetSocketAddress
 GIO::Raw::InputStream
 GIO::Raw::OutputStream
 GIO::Raw::Proxy
+GIO::Raw::ProxyAddress
 GIO::Raw::Socket
 GIO::Raw::SocketAddress
+GIO::Raw::SocketControlMessage
 GIO::Raw::Stream
 GIO::Raw::Subs
+GIO::Raw::UnixCredentialsMessage
+GIO::Raw::UnixFDList
+GIO::Raw::UnixFDMessage
 GIO::Raw::UnixSocketAddress
 GIO::Roles::Initable
 GLib::Raw::AsyncQueue
@@ -59,6 +64,7 @@ GLib::Raw::Error
 GLib::Raw::HMAC
 GLib::Raw::Module
 GLib::Raw::Quark
+GLib::Raw::Quarks
 GLib::Raw::Rand
 GLib::Raw::Scanner
 GLib::Raw::Unicode
@@ -445,7 +451,11 @@ GIO::InputStream
 GIO::OutputStream
 GIO::Socket
 GIO::SocketAddressEnumerator
+GIO::SocketControlMessage
 GIO::Stream
+GIO::UnixCredentialsMessage
+GIO::UnixFDList
+GIO::UnixFDMessage
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
@@ -498,6 +508,7 @@ GTK::Compat::Window
 GTK::TextBuffer
 GTK::Widget
 GIO::InetSocketAddress
+GIO::ProxyAddress
 GTK::Calendar
 GTK::DrawingArea
 GTK::Entry
