@@ -1139,7 +1139,8 @@ our enum GdkWindowEdge is export <
   GDK_WINDOW_EDGE_SOUTH_EAST
 >;
 
-our enum GTlsCertificateFlags is export (
+constant GTlsCertificateFlags is export := guint;
+our enum GTlsCertificateFlagsEnum is export (
   G_TLS_CERTIFICATE_UNKNOWN_CA    => (1 +< 0),
   G_TLS_CERTIFICATE_BAD_IDENTITY  => (1 +< 1),
   G_TLS_CERTIFICATE_NOT_ACTIVATED => (1 +< 2),
@@ -1473,6 +1474,7 @@ class GPrivate                 is repr('CPointer') is export does GTK::Roles::Po
 class GPropertyAction          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GProxy                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GProxyAddress            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GProxyResolver           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRand                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRWLock                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 # To be converted into CStruct when I'm not so scurred of it.
@@ -1489,9 +1491,11 @@ class GSimpleAction            is repr('CPointer') is export does GTK::Roles::Po
 class GSimpleActionGroup       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSliceConfig             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocket                  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSocketClient            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketAddress           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketAddressEnumerator is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketConnectable       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSocketConnection        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketControlMessage    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
