@@ -1505,6 +1505,7 @@ class GTimer                   is repr('CPointer') is export does GTK::Roles::Po
 class GTimeZone                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTokenValue              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixCredentialsMessage  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GUnixConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixFDList              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixFDMessage           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixSocketAddress       is repr('CPointer') is export does GTK::Roles::Pointers { }
