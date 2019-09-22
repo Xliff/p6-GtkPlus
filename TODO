@@ -112,6 +112,8 @@
   parameters removed from the signature.
 - Perform a review on GTK::Widget. Any method that is capable of returning an object, should have code giving the
   user that option.
+- If GTK::Roles::Properties is still a separate entity, refactor it to use self.GObject for all calls and
+  eliminate the need for $!prop.
 
 INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   - A parsing routine at the GLib/GTK level will handle interpreting the
