@@ -18,12 +18,12 @@ class GIO::Stream {
 
   submethod BUILD (:$stream) {
     self.setStream($stream) if $stream;
-
-    self.roleInit-Object;
   }
 
   method setStream (GIOStream $stream) {
-    $!ios = $stream
+    $!ios = $stream;
+
+    self.roleInit-Object;
   }
 
   method new (GIOStream $stream) {
