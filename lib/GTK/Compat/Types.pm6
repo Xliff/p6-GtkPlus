@@ -1497,6 +1497,7 @@ class GSocketAddressEnumerator is repr('CPointer') is export does GTK::Roles::Po
 class GSocketConnectable       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketConnection        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketControlMessage    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSocketListener          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThread                  is repr('CPointer') is export does GTK::Roles::Pointers { }

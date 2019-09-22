@@ -17,6 +17,11 @@ role GTK::Roles::Properties {
     is also<GObject>
   { $!prop }
 
+  # Superior to !setObject
+  method roleInit-Properties {
+    $!prop = cast( GObject, self.^attributes(:local)[0].get_value(self) );
+  }
+
   method !setObject($obj) {
     $!prop = nativecast(GObject, $obj);
   }
