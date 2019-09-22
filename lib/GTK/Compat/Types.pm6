@@ -657,6 +657,14 @@ our enum GSocketTypeEnum is export <
   G_SOCKET_TYPE_SEQPACKET
 >;
 
+constant GNetworkConnectivity is export := guint;
+enum GNetworkConnectivityEnum is export (
+  G_NETWORK_CONNECTIVITY_LOCAL       => 1,
+  G_NETWORK_CONNECTIVITY_LIMITED     => 2,
+  G_NETWORK_CONNECTIVITY_PORTAL      => 3,
+  G_NETWORK_CONNECTIVITY_FULL        => 4
+);
+
 constant GChecksumType is export := guint;
 our enum GChecksumTypeEnum is export <
   G_CHECKSUM_MD5,
@@ -1464,6 +1472,7 @@ class GModule                  is repr('CPointer') is export does GTK::Roles::Po
 class GMount                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMountOperation          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMutex                   is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GNetworkMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GNotification            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GObject                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOptionEntry             is repr('CPointer') is export does GTK::Roles::Pointers { }

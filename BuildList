@@ -10,6 +10,7 @@ Pango::Layout
 Pango::Raw::Types
 Pango::Tabs
 Pluggable
+GTK::Raw::ReturnedValue
 GTK::Builder::MRO
 GTK::Builder::Base
 GTK::Builder::Box
@@ -31,7 +32,6 @@ GTK::Builder::Widget
 GTK::BuilderWidgets
 GTK::Roles::Pointers
 GTK::Compat::FileTypes
-GTK::Raw::ReturnedValue
 GTK::Compat::Types
 GTK::Compat::X11_Types
 GTK::Raw::Utils
@@ -44,6 +44,7 @@ GIO::Raw::InetAddress
 GIO::Raw::InetAddressMask
 GIO::Raw::InetSocketAddress
 GIO::Raw::InputStream
+GIO::Raw::NetworkMonitor
 GIO::Raw::OutputStream
 GIO::Raw::Proxy
 GIO::Raw::ProxyAddress
@@ -54,6 +55,7 @@ GIO::Raw::SocketClient
 GIO::Raw::SocketConnection
 GIO::Raw::SocketControlMessage
 GIO::Raw::SocketListener
+GIO::Raw::SocketService
 GIO::Raw::Stream
 GIO::Raw::Subs
 GIO::Raw::UnixConnection
@@ -62,7 +64,9 @@ GIO::Raw::UnixFDList
 GIO::Raw::UnixFDMessage
 GIO::Raw::UnixSocketAddress
 GIO::Roles::Initable
+GIO::Roles::NetworkMonitor
 GIO::Roles::ProxyResolver
+GIO::Roles::Signals::SocketService
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
 GLib::Raw::Checksum
@@ -505,6 +509,7 @@ GIO::SocketAddress
 GIO::SocketClient
 GIO::SocketConnection
 GIO::SocketListener
+GIO::SocketService
 GIO::UnixConnection
 GIO::UnixSocketAddress
 GTK::CellRendererAccel
