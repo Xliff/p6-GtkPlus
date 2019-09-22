@@ -9,9 +9,10 @@ use GIO::Raw::SocketClient;
 
 use GTK::Compat::Roles::Object;
 
-# use GIO::ProxyResolver;     # NYI
 use GIO::SocketAddress;
 # use GIO::SocketConnection;  # NYI
+
+use GIO::Roles::ProxyResolver;
 
 class GIO::SocketClient {
   also does GTK::Compat::Roles::Object;
@@ -91,7 +92,7 @@ class GIO::SocketClient {
       FETCH => sub ($) {
         my $pr = g_socket_client_get_proxy_resolver($!sc);
 
-        $raw ?? $pr !! GIO::ProxyResolver.new($pr);
+        $raw ?? $pr !! GIO::Roles::ProxyResolver.new-role-obj($pr);
       },
       STORE => sub ($, GProxyResolver() $proxy_resolver is copy) {
         g_socket_client_set_proxy_resolver($!sc, $proxy_resolver);
