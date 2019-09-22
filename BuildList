@@ -49,6 +49,7 @@ GIO::Raw::OutputStream
 GIO::Raw::Proxy
 GIO::Raw::ProxyAddress
 GIO::Raw::ProxyResolver
+GIO::Raw::Resolver
 GIO::Raw::Socket
 GIO::Raw::SocketAddress
 GIO::Raw::SocketClient
@@ -459,6 +460,7 @@ GIO::InetAddress
 GIO::InetAddressMask
 GIO::InputStream
 GIO::OutputStream
+GIO::Resolver
 GIO::Socket
 GIO::SocketAddressEnumerator
 GIO::SocketControlMessage

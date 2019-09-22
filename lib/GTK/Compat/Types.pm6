@@ -632,6 +632,29 @@ our enum GIOConditionEnum is export (
   G_IO_NVAL   => 32,
 );
 
+constant GResolverNameLookupFlags is export := guint;
+our enum GResolverNameLookupFlagsEnum is export (
+  G_RESOLVER_NAME_LOOKUP_FLAGS_DEFAULT   => 0,
+  G_RESOLVER_NAME_LOOKUP_FLAGS_IPV4_ONLY => 1,
+  G_RESOLVER_NAME_LOOKUP_FLAGS_IPV6_ONLY => 1 +< 1,
+);
+
+constant GResolverError is export := guint;
+our enum GResolverErrorEnum is export <
+  G_RESOLVER_ERROR_NOT_FOUND
+  G_RESOLVER_ERROR_TEMPORARY_FAILURE
+  G_RESOLVER_ERROR_INTERNAL
+>;
+
+constant GResolverRecordType is export := guint;
+our enum GResolverRecordTypeEnum is export (
+  'G_RESOLVER_RECORD_SRV' => 1,
+  'G_RESOLVER_RECORD_MX',
+  'G_RESOLVER_RECORD_TXT',
+  'G_RESOLVER_RECORD_SOA',
+  'G_RESOLVER_RECORD_NS'
+);
+
 constant GSocketProtocol is export := gint;
 enum GSocketProtocolEnum is export (
   G_SOCKET_PROTOCOL_UNKNOWN => -1,
@@ -1499,6 +1522,7 @@ class GSettingsSchemaSource    is repr('CPointer') is export does GTK::Roles::Po
 class GSimpleAction            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleActionGroup       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSliceConfig             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GResolver                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocket                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketClient            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketAddress           is repr('CPointer') is export does GTK::Roles::Pointers { }
