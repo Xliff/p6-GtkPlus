@@ -1543,6 +1543,7 @@ class GTcpWrapperConnection    is repr('CPointer') is export does GTK::Roles::Po
 class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThread                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThreadPool              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GThreadedSocketService   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimeZone                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTokenValue              is repr('CPointer') is export does GTK::Roles::Pointers { }
