@@ -167,3 +167,4 @@ Applications
 + A Perl6 port of Clutter (https://wiki.gnome.org/Projects/Clutter)
 + A Perl6 port of Slope (https://github.com/bytebrew/slope)
 - Port JSON-glib to Perl6 https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
+- A Perl6 port for libsoup
