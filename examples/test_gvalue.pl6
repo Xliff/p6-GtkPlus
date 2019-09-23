@@ -13,7 +13,17 @@ my $props = CArray[Str].new;
 $props[0] = 'icon-name';
 my $vals = CArray[GValue].new;
 $vals[0] = $v;
+
 # Whuuut?
+# cw: The surpised comment above was written by a less intelligent version
+#     of myself. It was due to the fact that CArray[GValue] is not REALLY
+#     An array of GValue objects, it would rather be an array of GValue
+#     POINTERS.
+#
+#     The reason that using $v works, is that...for the first element,
+#     such an array is really indistinguishable from a Pointer to a struct.
+#
+#     The simple fix for getv/setv, then is to use a ::TypedBuffer.
 g_object_setv(nativecast(GObject, $i), 1, $props, nativecast(Pointer, $v));
 
 g_value_unset($v);
