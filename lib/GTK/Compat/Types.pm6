@@ -1499,6 +1499,7 @@ class GFileInputStream         is repr('CPointer') is export does GTK::Roles::Po
 class GFileIOStream            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileMonitor             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileOutputStream        is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFilterInputStream       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHmac                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTable               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GHashTableIter           is repr('CPointer') is export does GTK::Roles::Pointers { }
