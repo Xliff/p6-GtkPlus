@@ -11,6 +11,10 @@ use GIO::SocketAddressEnumerator;
 role GIO::Roles::SocketConnectable {
   has GSocketConnectable $!sc;
 
+  submethod BUILD (:$connectable) {
+    $!sc = $connectable;
+  }
+
   method GTK::Compat::Types::GSocketConnectable
     is also<GSocketConnectable>
   { $!sc }
@@ -18,6 +22,10 @@ role GIO::Roles::SocketConnectable {
   method roleInit-SocketConnectable (GSocketConnectable :$role) {
     $!sc = $role ??
       $role !! cast(GSocketConnectable, self.GObject);
+  }
+
+  method new-role-obj (GSocketConnectable $connectable) {
+    self.bless( :$connectable );
   }
 
   method enumerate (:$raw = False) {

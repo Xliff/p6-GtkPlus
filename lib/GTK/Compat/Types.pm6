@@ -1506,6 +1506,7 @@ class GPrivate                 is repr('CPointer') is export does GTK::Roles::Po
 class GPropertyAction          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GProxy                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GProxyAddress            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GProxyAddressEnumerator  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GProxyResolver           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRand                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRWLock                  is repr('CPointer') is export does GTK::Roles::Pointers { }
