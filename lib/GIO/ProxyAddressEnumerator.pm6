@@ -80,12 +80,12 @@ class GIO::ProxyAddressEnumerator {
         my $o = cast(GProxyResolver, $gv.object);
 
         $o ??
-          ( $raw ?? $o !! GIO::SocketConnectable.new-role-obj($o) )
+          ( $raw ?? $o !! GIO::ProxyResolver.new-role-obj($o) )
           !!
           Nil;
       },
-      STORE => -> $,  $val is copy {
-        #$gv.TYPE = $val;
+      STORE => -> $, GProxyResolver() $val is copy {
+        $gv.TYPE = $val;
         self.prop_set('proxy-resolver', $gv);
       }
     );
