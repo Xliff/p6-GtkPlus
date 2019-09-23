@@ -1538,6 +1538,8 @@ class GSocketListener          is repr('CPointer') is export does GTK::Roles::Po
 class GSocketService           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSource                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSrvTarget               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTcpConnection           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTcpWrapperConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThread                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThreadPool              is repr('CPointer') is export does GTK::Roles::Pointers { }
