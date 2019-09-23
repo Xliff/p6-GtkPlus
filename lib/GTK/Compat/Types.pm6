@@ -503,6 +503,16 @@ our enum GSettingsBindFlags is export (
   G_SETTINGS_BIND_INVERT_BOOLEAN => 1 +< 4
 );
 
+constant GAskPasswordFlags is export := guint;
+our enum GAskPasswordFlagsEnum is export (
+  G_ASK_PASSWORD_NEED_PASSWORD           => 1,
+  G_ASK_PASSWORD_NEED_USERNAME           => (1 +< 1),
+  G_ASK_PASSWORD_NEED_DOMAIN             => (1 +< 2),
+  G_ASK_PASSWORD_SAVING_SUPPORTED        => (1 +< 3),
+  G_ASK_PASSWORD_ANONYMOUS_SUPPORTED     => (1 +< 4),
+  G_ASK_PASSWORD_TCRYPT                  => (1 +< 5)
+);
+
 our enum GBindingFlags is export (
   G_BINDING_DEFAULT        => 0,
   G_BINDING_BIDIRECTIONAL  => 1,
@@ -520,11 +530,30 @@ our enum GCredentialsTypeEnum is export <
   G_CREDENTIALS_TYPE_NETBSD_UNPCBID
 >;
 
+our constant GMountMountFlags is export := guint;
+our enum GMountMountFlagsEnum is export (
+  G_MOUNT_MOUNT_NONE => 0
+);
+
+constant GMountOperationResult is export := guint;
+our enum GMountOperationResultEnum is export <
+  G_MOUNT_OPERATION_HANDLED
+  G_MOUNT_OPERATION_ABORTED
+  G_MOUNT_OPERATION_UNHANDLED
+>;
+
 our enum GNotificationPriority is export <
   G_NOTIFICATION_PRIORITY_NORMAL
   G_NOTIFICATION_PRIORITY_LOW
   G_NOTIFICATION_PRIORITY_HIGH
   G_NOTIFICATION_PRIORITY_URGENT
+>;
+
+constant GPasswordSave is export := guint;
+our enum GPasswordSaveEnum is export <
+  G_PASSWORD_SAVE_NEVER
+  G_PASSWORD_SAVE_FOR_SESSION
+  G_PASSWORD_SAVE_PERMANENTLY
 >;
 
 our enum GIOChannelError is export <
