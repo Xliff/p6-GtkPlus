@@ -1495,6 +1495,7 @@ class GModule                  is repr('CPointer') is export does GTK::Roles::Po
 class GMount                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMountOperation          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMutex                   is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GNetworkAddress          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GNetworkMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GNotification            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GObject                  is repr('CPointer') is export does GTK::Roles::Pointers { }

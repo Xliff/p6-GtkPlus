@@ -19,9 +19,11 @@ role GIO::Roles::SocketConnectable {
     is also<GSocketConnectable>
   { $!sc }
 
-  method roleInit-SocketConnectable (GSocketConnectable :$role) {
-    $!sc = $role ??
-      $role !! cast(GSocketConnectable, self.GObject);
+  method roleInit-SocketConnectable {
+    $!sc = cast(
+      GSocketConnectable,
+      self.^attributes(:local)[0].get_value(self)
+    );
   }
 
   method new-role-obj (GSocketConnectable $connectable) {
