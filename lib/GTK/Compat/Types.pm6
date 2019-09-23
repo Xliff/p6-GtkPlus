@@ -632,6 +632,7 @@ our enum GIOStatus is export <
   G_IO_STATUS_AGAIN
 >;
 
+constant GSeekTypeEnum is export := guint;
 our enum GSeekType is export <
   G_SEEK_CUR
   G_SEEK_SET
@@ -1556,6 +1557,7 @@ class GSimpleActionGroup       is repr('CPointer') is export does GTK::Roles::Po
 class GSimpleProxyResolver     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSliceConfig             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GResolver                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSeekable                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocket                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketClient            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocketAddress           is repr('CPointer') is export does GTK::Roles::Pointers { }
