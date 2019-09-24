@@ -632,8 +632,8 @@ our enum GIOStatus is export <
   G_IO_STATUS_AGAIN
 >;
 
-constant GSeekTypeEnum is export := guint;
-our enum GSeekType is export <
+constant GSeekType is export := guint;
+our enum GSeekTypeEnum is export <
   G_SEEK_CUR
   G_SEEK_SET
   G_SEEK_END
@@ -1348,6 +1348,13 @@ our enum GKeyFileFlags is export (
   G_KEY_FILE_KEEP_TRANSLATIONS => 2
 );
 
+constant GDataStreamByteOrder is export := guint;
+our enum GDataStreamByteOrderEnum is export <
+  G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN
+  G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN
+  G_DATA_STREAM_BYTE_ORDER_HOST_ENDIAN
+>;
+
 constant GErrorType is export := guint32;
 our enum GErrorTypeEnum is export <
   G_ERR_UNKNOWN
@@ -1484,6 +1491,7 @@ class GAsyncQueue              is repr('CPointer') is export does GTK::Roles::Po
 class GAsyncResult             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBinding                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBookmarkFile            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GByteArray               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }
