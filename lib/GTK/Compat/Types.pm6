@@ -1355,6 +1355,14 @@ our enum GDataStreamByteOrderEnum is export <
   G_DATA_STREAM_BYTE_ORDER_HOST_ENDIAN
 >;
 
+constant GDataStreamNewlineType is export := guint;
+our enum GDataStreamNewlineTypeEnum is export <
+  G_DATA_STREAM_NEWLINE_TYPE_LF
+  G_DATA_STREAM_NEWLINE_TYPE_CR
+  G_DATA_STREAM_NEWLINE_TYPE_CR_LF
+  G_DATA_STREAM_NEWLINE_TYPE_ANY
+>;
+
 constant GErrorType is export := guint32;
 our enum GErrorTypeEnum is export <
   G_ERR_UNKNOWN
@@ -1497,6 +1505,7 @@ class GBytes                   is repr('CPointer') is export does GTK::Roles::Po
 class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCredentials             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDataInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDateTime                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDatagramBased           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                    is repr('CPointer') is export does GTK::Roles::Pointers { }
