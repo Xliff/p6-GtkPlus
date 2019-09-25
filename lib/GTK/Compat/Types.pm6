@@ -1552,6 +1552,7 @@ class GOptionEntry             is repr('CPointer') is export does GTK::Roles::Po
 class GOptionGroup             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GPollableInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GProxy                   is repr('CPointer') is export does GTK::Roles::Pointers { }
