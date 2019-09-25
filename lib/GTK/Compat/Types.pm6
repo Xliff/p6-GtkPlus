@@ -1348,6 +1348,21 @@ our enum GKeyFileFlags is export (
   G_KEY_FILE_KEEP_TRANSLATIONS => 2
 );
 
+constant GConverterFlags is export := guint32;
+our enum GConverterFlagsEnum is export (
+  G_CONVERTER_NO_FLAGS     => 0,         #< nick=none >
+  G_CONVERTER_INPUT_AT_END => 1,         #< nick=input-at-end >
+  G_CONVERTER_FLUSH        => (1 +< 1)   #< nick=flush >
+);
+
+constant GConverterResult is export := guint32;
+our enum GConverterResultEnum is export (
+  G_CONVERTER_ERROR     => 0,  # < nick=error >
+  G_CONVERTER_CONVERTED => 1,  # < nick=converted >
+  G_CONVERTER_FINISHED  => 2,  # < nick=finished >
+  G_CONVERTER_FLUSHED   => 3   # < nick=flushed >
+);
+
 constant GDataStreamByteOrder is export := guint;
 our enum GDataStreamByteOrderEnum is export <
   G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN
@@ -1504,6 +1519,8 @@ class GByteArray               is repr('CPointer') is export does GTK::Roles::Po
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure                 is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GConverter               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GConverterInputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCredentials             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDataInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDateTime                is repr('CPointer') is export does GTK::Roles::Pointers { }
