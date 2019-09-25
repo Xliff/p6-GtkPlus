@@ -45,7 +45,7 @@ class GTK::Compat::Pixbuf  {
   }
 
   method new_from_bytes (
-    GBytes $data,
+    GBytes() $data,
     Int() $colorspace,
     Int() $has_alpha,
     Int() $bits_per_sample,
