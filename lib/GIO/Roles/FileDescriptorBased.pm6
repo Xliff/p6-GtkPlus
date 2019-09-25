@@ -13,6 +13,13 @@ role GIO::Roles::FileDescriptorBased {
     is also<GFileDescriptorBased>
   { $!fdb }
 
+  method roleInit-FileDescriptorBased is also<roleInit_FileDescriptorBased> {
+    $!fdb = cast(
+      GFileDescriptorBased,
+      self.^attributes(:local)[0].get_value(self)
+    );
+  }
+
   method role_get_fd is also<role-get-fd> {
     g_file_descriptor_based_get_fd($!fdb);
   }

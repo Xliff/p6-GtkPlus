@@ -1603,6 +1603,7 @@ class GUnixCredentialsMessage  is repr('CPointer') is export does GTK::Roles::Po
 class GUnixConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixFDList              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixFDMessage           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GUnixInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixSocketAddress       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder          is repr('CPointer') is export does GTK::Roles::Pointers { }
