@@ -47,11 +47,13 @@ GIO::Raw::InetAddress
 GIO::Raw::InetAddressMask
 GIO::Raw::InetSocketAddress
 GIO::Raw::InputStream
+GIO::Raw::MemoryInputStream
 GIO::Raw::MountOperation
 GIO::Raw::NetworkAddress
 GIO::Raw::NetworkMonitor
 GIO::Raw::NetworkService
 GIO::Raw::OutputStream
+GIO::Raw::PollableInputStream
 GIO::Raw::Proxy
 GIO::Raw::ProxyAddress
 GIO::Raw::ProxyResolver
@@ -75,6 +77,7 @@ GIO::Raw::UnixFDMessage
 GIO::Raw::UnixSocketAddress
 GIO::Roles::Initable
 GIO::Roles::NetworkMonitor
+GIO::Roles::PollableInputStream
 GIO::Roles::ProxyResolver
 GIO::Roles::Seekable
 GIO::Roles::Signals::MountOperation
@@ -471,6 +474,7 @@ GIO::Credentials
 GIO::InetAddress
 GIO::InetAddressMask
 GIO::InputStream
+GIO::MemoryInputStream
 GIO::MountOperation
 GIO::OutputStream
 GIO::Resolver

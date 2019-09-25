@@ -1534,6 +1534,7 @@ class GLoadableIcon            is repr('CPointer') is export does GTK::Roles::Po
 class GMainContext             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMainLoop                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMarkupParser            is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMemoryInputStream       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenu                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuItem                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuAttributeIter       is repr('CPointer') is export does GTK::Roles::Pointers { }

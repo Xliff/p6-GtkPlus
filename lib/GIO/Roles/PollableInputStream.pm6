@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::PollableInputStream;
 
-role GIO::PollableInputStream {
+role GIO::Roles::PollableInputStream {
   has GPollableInputStream $!pis;
 
   method roleInit-PollableInputStream is also<roleInit_PollableInputStream> {
