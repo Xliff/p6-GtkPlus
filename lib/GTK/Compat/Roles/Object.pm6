@@ -12,7 +12,15 @@ use GTK::Raw::Subs;
 role GTK::Compat::Roles::Object {
   has GObject $!o;
 
-  submethod roleInit-Object {
+  submethod BUILD (:$object) {
+    $!o = $object;
+  }
+
+  method new-object-obj (GObject $object) {
+    self.bless( :$object );
+  }
+
+  method roleInit-Object {
     $!o = cast( GObject, self.^attributes(:local)[0].get-value(self) );
   }
 

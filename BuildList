@@ -42,6 +42,7 @@ GIO::Raw::BufferedInputStream
 GIO::Raw::Credentials
 GIO::Raw::DataInputStream
 GIO::Raw::DatagramBased
+GIO::Raw::FileInfo
 GIO::Raw::FilterInputStream
 GIO::Raw::InetAddress
 GIO::Raw::InetAddressMask
@@ -74,7 +75,10 @@ GIO::Raw::UnixConnection
 GIO::Raw::UnixCredentialsMessage
 GIO::Raw::UnixFDList
 GIO::Raw::UnixFDMessage
+GIO::Raw::UnixInputStream
 GIO::Raw::UnixSocketAddress
+GIO::Roles::Converter
+GIO::Roles::FileDescriptorBased
 GIO::Roles::Initable
 GIO::Roles::NetworkMonitor
 GIO::Roles::PollableInputStream
@@ -180,6 +184,7 @@ GTK::Roles::StyleProvider
 GDK::Main
 GDK::Raw::Threads
 GDK::Threads
+GIO::FileAttributeMatcher
 GIO::Raw::Quarks
 GLib::AsyncQueue
 GLib::Base64
@@ -471,6 +476,7 @@ GTK::TreeSelection
 GTK::TreeStore
 GTK::WindowGroup
 GIO::Credentials
+GIO::FileInfo
 GIO::InetAddress
 GIO::InetAddressMask
 GIO::InputStream
@@ -486,6 +492,7 @@ GIO::Stream
 GIO::UnixCredentialsMessage
 GIO::UnixFDList
 GIO::UnixFDMessage
+GIO::UnixInputStream
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
@@ -547,6 +554,7 @@ GTK::Compat::Window
 GTK::TextBuffer
 GTK::Widget
 GIO::BufferedInputStream
+GIO::ConverterInputStream
 GIO::DataInputStream
 GIO::InetSocketAddress
 GIO::NetworkAddress
