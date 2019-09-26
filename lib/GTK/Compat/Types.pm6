@@ -162,7 +162,6 @@ constant pid_t               is export := int32;
 constant GAsyncReadyCallback     is export := Pointer;
 constant GBindingTransformFunc   is export := Pointer;
 constant GCallback               is export := Pointer;
-constant GCancellable            is export := Pointer;
 constant GCompareDataFunc        is export := Pointer;
 constant GCompareFunc            is export := Pointer;
 constant GCopyFunc               is export := Pointer;
@@ -1557,6 +1556,7 @@ class GBookmarkFile            is repr('CPointer') is export does GTK::Roles::Po
 class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GByteArray               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GConverter               is repr('CPointer') is export does GTK::Roles::Pointers { }
