@@ -12,6 +12,7 @@ use GTK::Compat::FileTypes;
 
 use GTK::Compat::Roles::Object;
 
+# This WILL be renamed to ::File
 role GTK::Compat::Roles::GFile {
   has GFile $!file;
 
@@ -26,6 +27,10 @@ role GTK::Compat::Roles::GFile {
   method GTK::Compat::Types::GFile
     is also<GFile>
   { $!file }
+
+  method new-file-obj (GFile $file) {
+    self.bless( :$file );
+  }
 
   multi method new (GFile $file) {
     die 'Role constructor called.' unless ::?CLASS.^name eq ::?ROLE.^name;
