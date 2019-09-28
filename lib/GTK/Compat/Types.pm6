@@ -1551,6 +1551,13 @@ our enum GPriority is export (
   G_PRIORITY_LOW          => 300
 );
 
+constant GZlibCompressorFormat is export := guint;
+our enum GZlibCompressorFormatEnum is export <
+  G_ZLIB_COMPRESSOR_FORMAT_ZLIB
+  G_ZLIB_COMPRESSOR_FORMAT_GZIP
+  G_ZLIB_COMPRESSOR_FORMAT_RAW
+>;
+
 class cairo_font_options_t     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t          is repr('CPointer') is export does GTK::Roles::Pointers { }
 
@@ -1686,6 +1693,7 @@ class GVariantDict             is repr('CPointer') is export does GTK::Roles::Po
 class GVariantIter             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantType             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume                  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GZlibCompressor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is export {
   has GFileAttributeInfo $.infos;
