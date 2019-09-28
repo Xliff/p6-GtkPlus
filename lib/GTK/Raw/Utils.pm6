@@ -6,6 +6,14 @@ use GTK::Compat::Types;
 
 unit package GTK::Raw::Utils;
 
+sub CStringArrayToArray (CArray[Str] $sa) is export {
+  my ($i, @a) = (0);
+  while $sa[$i] {
+    @a.push: $sa[$i++];
+  }
+  @a;
+}
+
 sub get_flags($t, $s) is export {
   $t.enums
     .map({ $s +& .value ?? .key !! '' })
@@ -202,4 +210,4 @@ sub gtk_main_iteration_do_raw (gboolean $blocking)
   is native(gtk)
   is symbol('gtk_main_iteration_do')
   is export
-  { * }
+{ * }
