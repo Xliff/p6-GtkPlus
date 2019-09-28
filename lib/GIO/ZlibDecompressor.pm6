@@ -23,6 +23,7 @@ class GIO::ZlibDecompressor {
   }
 
   method GTK::Compat::Types::GZlibDecompressor
+    is also<GZlibDecompressor>
   { $!zd }
 
   method new (Int() $format) {
