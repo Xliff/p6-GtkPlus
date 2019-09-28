@@ -7,6 +7,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::FilenameCompleter;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Roles::Object;
 
 class GIO::FilenameCompleter {
@@ -38,13 +40,9 @@ class GIO::FilenameCompleter {
   }
 
   method get_completions (Str() $initial_text) is also<get-completions> {
-    my $sa = g_filename_completer_get_completions($!fc, $initial_text);
-
-    my ($i, @c) = (0);
-    while $sa[$i] {
-      @c.push: $sa[i++];
-    }
-    @c;
+    CStringArrayToArray(
+      g_filename_completer_get_completions($!fc, $initial_text)
+    );
   }
 
   method get_type is also<get-type> {

@@ -63,13 +63,7 @@ class GIO::SimpleProxyResolver {
           self.prop_get('ignore-hosts', $gv)
         );
 
-        # This could be stuffed into GTK::Raw::Utils!
-        my $v = cast(CArray[Str], $gv.pointer);
-        my ($idx, @v) = (0);
-        while $v[$idx] {
-          @v.push: $v[$idx++];
-        }
-        @v;
+        CStringArrayToArray( cast(CArray[Str], $gv.pointer) );
       },
       STORE => -> $, @val is copy {
         $gv.pointer = resolve-gstrv(@val);

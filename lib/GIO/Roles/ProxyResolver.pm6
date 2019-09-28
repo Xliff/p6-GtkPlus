@@ -7,6 +7,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::ProxyResolver;
 
+use GTK::Raw::Utils;
+
 role GIO::ProxyResolver {
   has GProxyResolver $!pr;
 
@@ -52,11 +54,7 @@ role GIO::ProxyResolver {
     my $sa = g_proxy_resolver_lookup($!pr, $uri, $cancellable, $error);
     set_error($error);
 
-    my ($cnt, @s) = (0);
-    while $sa[$cnt].defined {
-      @s.push: $sa[$cnt++];
-    }
-    @s;
+    CStringArrayToArray($sa);
   }
 
   method lookup_async (
@@ -86,11 +84,7 @@ role GIO::ProxyResolver {
     my $sa = g_proxy_resolver_lookup_finish($!pr, $result, $error);
     set_error($error);
 
-    my ($cnt, @s) = (0);
-    while $sa[$cnt].defined {
-      @s.push: $sa[$cnt++];
-    }
-    @s;
+    CStringArrayToArray($sa);
   }
 
 }

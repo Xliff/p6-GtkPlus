@@ -264,13 +264,7 @@ class GIO::FileInfo {
   method get_attribute_stringv (Str() $attribute)
     is also<get-attribute-stringv>
   {
-    my $av = g_file_info_get_attribute_stringv($!fi, $attribute);
-
-    my ($i, @attrs) = (0);
-    while $i {
-      @attrs.push: $av[$i++];
-    }
-    @attrs;
+    CStringArrayToArray( g_file_info_get_attribute_stringv($!fi, $attribute) );
   }
 
   method get_attribute_type (Str() $attribute) is also<get-attribute-type> {
@@ -334,13 +328,7 @@ class GIO::FileInfo {
   }
 
   method list_attributes (Str() $name_space) is also<list-attributes> {
-    my $aa = g_file_info_list_attributes($!fi, $name_space);
-
-    my ($i, @attrs) = (0);
-    while $i {
-      @attrs.push: $aa[$i++];
-    }
-    @attrs;
+    CStringArrayToArray( g_file_info_list_attributes($!fi, $name_space) );
   }
 
   method remove_attribute (Str() $attribute) is also<remove-attribute> {
