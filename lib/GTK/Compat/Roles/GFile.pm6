@@ -59,7 +59,7 @@ role GTK::Compat::Roles::GFile {
       } orwith $uri {
         self.new_for_uri($uri);
       } orwith $iostream {
-        my $e = $error // gerror();
+        my $e = $error // gerror;
         with $tmpl {
           self.new_tmpl($tmpl, $iostream, $e);
         } else {
@@ -102,14 +102,14 @@ role GTK::Compat::Roles::GFile {
   }
   multi method new_tmp (
     CArray[Pointer[GFileIOStream]] $iostream,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   ) {
     samewith(Str, $iostream, $error);
   }
   multi method new_tmp (
     Str() $tmpl,
     CArray[Pointer[GFileIOStream]] $iostream,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my $rc = g_file_new_tmp($tmpl, $iostream, $error);
@@ -119,8 +119,8 @@ role GTK::Compat::Roles::GFile {
 
   method append_to (
     Int() $flags,                       # GFileCreateFlags $flags,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<append-to>
   {
@@ -139,15 +139,15 @@ role GTK::Compat::Roles::GFile {
     Int() $flags,                       # GFileCreateFlags $flags,
     Int() $io_priority,
     &callback,
-    GCancellable $cancellable = Pointer,
-    gpointer $user_data       = Pointer
+    GCancellable() $cancellable = GCancellable,
+    gpointer $user_data         = Pointer
   ) {
     samewith($flags, $io_priority, $cancellable, &callback, $user_data);
   }
   multi method append_to_async (
     Int() $flags,                       # GFileCreateFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -160,7 +160,7 @@ role GTK::Compat::Roles::GFile {
 
   method append_to_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error  = gerror()
+    CArray[Pointer[GError]] $error  = gerror
   )
     is also<append-to-finish>
   {
@@ -175,8 +175,8 @@ role GTK::Compat::Roles::GFile {
     Int() $flags,                       # GFileCreateFlags $flags,
     &progress_callback               = -> $, $, $ { },
     gpointer $progress_callback_data = Pointer,
-    GCancellable $cancellable        = Pointer,
-    CArray[Pointer[GError]] $error   = gerror()
+    GCancellable() $cancellable      = GCancellable,
+    CArray[Pointer[GError]] $error   = gerror
   ) {
     samewith(
       $destination,
@@ -190,10 +190,10 @@ role GTK::Compat::Roles::GFile {
   multi method copy (
     GFile() $destination,
     Int() $flags,                       # GFileCreateFlags $flags,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &progress_callback,
     gpointer $progress_callback_data = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my guint $f = resolve-uint($flags);
@@ -222,7 +222,7 @@ role GTK::Compat::Roles::GFile {
     &progress_callback               = -> $, $, $ { },
     gpointer $progress_callback_data = Pointer,
     gpointer $user_data              = Pointer,
-    GCancellable $cancellable        = Pointer
+    GCancellable() $cancellable      = GCancellable
   ) {
     samewith(
       $destination,
@@ -239,7 +239,7 @@ role GTK::Compat::Roles::GFile {
     GFile() $destination,
     Int() $flags,                       # GFileCreateFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &progress_callback,
     gpointer $progress_callback_data,
     &callback,
@@ -263,8 +263,8 @@ role GTK::Compat::Roles::GFile {
   method copy_attributes (
     GFile() $destination,
     Int() $flags,                       # GFileCreateFlags $flags,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<copy-attributes>
   {
@@ -276,7 +276,7 @@ role GTK::Compat::Roles::GFile {
 
   method copy_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<copy-finish>
   {
@@ -288,8 +288,8 @@ role GTK::Compat::Roles::GFile {
 
   method create (
     Int() $flags,                       # GFileCreateFlags $flags,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     my guint $f = resolve-uint($flags);
     g_file_create($!file, $f, $cancellable, $error);
@@ -303,15 +303,15 @@ role GTK::Compat::Roles::GFile {
     GFileCreateFlags $flags,
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith($flags, $io_priority, $cancellable, &callback, $user_data);
   }
   multi method create_async (
     GFileCreateFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -324,7 +324,7 @@ role GTK::Compat::Roles::GFile {
 
   method create_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<create-finish>
   {
@@ -336,8 +336,8 @@ role GTK::Compat::Roles::GFile {
 
   method create_readwrite (
     GFileCreateFlags $flags,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<create-readwrite>
   {
@@ -356,15 +356,15 @@ role GTK::Compat::Roles::GFile {
     GFileCreateFlags $flags,
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith($flags, $io_priority, $cancellable, &callback, $user_data);
   }
   multi method create_readwrite_async (
     GFileCreateFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -377,7 +377,7 @@ role GTK::Compat::Roles::GFile {
 
   method create_readwrite_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<create-readwrite-finish>
   {
@@ -388,8 +388,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method delete (
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my $rc = g_file_delete($!file, $cancellable, $error);
@@ -404,14 +404,14 @@ role GTK::Compat::Roles::GFile {
   multi method delete_async (
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith($io_priority, $cancellable, &callback, $user_data);
   }
   multi method delete_async (
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -422,7 +422,7 @@ role GTK::Compat::Roles::GFile {
 
   method delete_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<delete-finish>
   {
@@ -460,7 +460,7 @@ role GTK::Compat::Roles::GFile {
   #
   # method eject_mountable_finish (
   #   GAsyncResult $result,
-  #   CArray[Pointer[GError]] $error = gerror()
+  #   CArray[Pointer[GError]] $error = gerror
   # )
   #   is also<eject-mountable-finish>
   # {
@@ -478,15 +478,15 @@ role GTK::Compat::Roles::GFile {
     GMountUnmountFlags $flags,
     GMountOperation $mount_operation,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith($flags, $mount_operation, $cancellable, &callback, $user_data);
   }
   multi method eject_mountable_with_operation (
     GMountUnmountFlags $flags,
     GMountOperation $mount_operation,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -498,7 +498,7 @@ role GTK::Compat::Roles::GFile {
 
   method eject_mountable_with_operation_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<eject-mountable-with-operation-finish>
   {
@@ -515,8 +515,8 @@ role GTK::Compat::Roles::GFile {
   method enumerate_children (
     Str() $attributes,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<enumerate-children>
   {
@@ -543,8 +543,8 @@ role GTK::Compat::Roles::GFile {
     GFileQueryInfoFlags $flags,
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith(
       $attributes,
@@ -559,7 +559,7 @@ role GTK::Compat::Roles::GFile {
     Str() $attributes,
     GFileQueryInfoFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -578,7 +578,7 @@ role GTK::Compat::Roles::GFile {
 
   method enumerate_children_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<enumerate-children-finish>
   {
@@ -593,8 +593,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method find_enclosing_mount (
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<find-enclosing-mount>
   {
@@ -611,14 +611,14 @@ role GTK::Compat::Roles::GFile {
   multi method find_enclosing_mount_async (
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith($io_priority, $cancellable, &callback, $user_data);
   }
   multi method find_enclosing_mount_async (
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -633,7 +633,7 @@ role GTK::Compat::Roles::GFile {
 
   method find_enclosing_mount_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<find-enclosing-mount-finish>
   {
@@ -658,7 +658,7 @@ role GTK::Compat::Roles::GFile {
 
   method get_child_for_display_name (
     Str() $display_name,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-child-for-display-name>
   {
@@ -748,9 +748,9 @@ role GTK::Compat::Roles::GFile {
   }
 
   method load_bytes (
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     Str() $etag_out,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-bytes>
   {
@@ -761,7 +761,7 @@ role GTK::Compat::Roles::GFile {
   }
 
   method load_bytes_async (
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -773,7 +773,7 @@ role GTK::Compat::Roles::GFile {
   method load_bytes_finish (
     GAsyncResult $result,
     Str() $etag_out,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-bytes-finish>
   {
@@ -784,11 +784,11 @@ role GTK::Compat::Roles::GFile {
   }
 
   method load_contents (
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     Str() $contents,
     gsize $length,
     Str() $etag_out,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-contents>
   {
@@ -806,7 +806,7 @@ role GTK::Compat::Roles::GFile {
   }
 
   method load_contents_async (
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -820,7 +820,7 @@ role GTK::Compat::Roles::GFile {
     Str() $contents,
     gsize $length,
     Str() $etag_out,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-contents-finish>
   {
@@ -838,7 +838,7 @@ role GTK::Compat::Roles::GFile {
   }
 
   method load_partial_contents_async (
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &read_more_callback,
     &callback,
     gpointer $user_data = Pointer
@@ -859,7 +859,7 @@ role GTK::Compat::Roles::GFile {
     Str() $contents,
     gsize $length,
     Str() $etag_out,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-partial-contents-finish>
   {
@@ -877,8 +877,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method make_directory (
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<make-directory>
   {
@@ -890,7 +890,7 @@ role GTK::Compat::Roles::GFile {
 
   method make_directory_async (
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -908,7 +908,7 @@ role GTK::Compat::Roles::GFile {
 
   method make_directory_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<make-directory-finish>
   {
@@ -919,8 +919,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method make_directory_with_parents (
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<make-directory-with-parents>
   {
@@ -932,8 +932,8 @@ role GTK::Compat::Roles::GFile {
 
   method make_symbolic_link (
     Str() $symlink_value,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<make-symbolic-link>
   {
@@ -950,13 +950,13 @@ role GTK::Compat::Roles::GFile {
 
   method measure_disk_usage (
     GFileMeasureFlags $flags,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &progress_callback,
     gpointer $progress_data,
     Int() $disk_usage,
     Int() $num_dirs,
     Int() $num_files,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<measure-disk-usage>
   {
@@ -982,7 +982,7 @@ role GTK::Compat::Roles::GFile {
   method measure_disk_usage_async (
     GFileMeasureFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &progress_callback,
     gpointer $progress_data,
     &callback,
@@ -1009,7 +1009,7 @@ role GTK::Compat::Roles::GFile {
     Int() $disk_usage,
     Int() $num_dirs,
     Int() $num_files,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<measure-disk-usage-finish>
   {
@@ -1030,8 +1030,8 @@ role GTK::Compat::Roles::GFile {
 
   method monitor (
     GFileMonitorFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     my guint $f = resolve-uint($flags);
     clear_error;
@@ -1042,8 +1042,8 @@ role GTK::Compat::Roles::GFile {
 
   method monitor_directory (
     GFileMonitorFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<monitor-directory>
   {
@@ -1056,8 +1056,8 @@ role GTK::Compat::Roles::GFile {
 
   method monitor_file (
     GFileMonitorFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<monitor-file>
   {
@@ -1071,7 +1071,7 @@ role GTK::Compat::Roles::GFile {
   method mount_enclosing_volume (
     GMountMountFlags $flags,
     GMountOperation $mount_operation,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1090,7 +1090,7 @@ role GTK::Compat::Roles::GFile {
 
   method mount_enclosing_volume_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<mount-enclosing-volume-finish>
   {
@@ -1103,7 +1103,7 @@ role GTK::Compat::Roles::GFile {
   method mount_mountable (
     GMountMountFlags $flags,
     GMountOperation $mount_operation,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1122,7 +1122,7 @@ role GTK::Compat::Roles::GFile {
 
   method mount_mountable_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<mount-mountable-finish>
   {
@@ -1137,8 +1137,8 @@ role GTK::Compat::Roles::GFile {
     Int() $flags,
     &progress_callback               = -> $, $, $ { },
     gpointer $progress_callback_data = Pointer,
-    GCancellable $cancellable        = Pointer,
-    CArray[Pointer[GError]] $error   = gerror()
+    GCancellable() $cancellable      = GCancellable,
+    CArray[Pointer[GError]] $error   = gerror
   ) {
     samewith(
       $destination,
@@ -1152,10 +1152,10 @@ role GTK::Compat::Roles::GFile {
   multi method move (
     GFile() $destination,
     Int() $flags,
-    GCancellable $cancellable        = Pointer,
+    GCancellable() $cancellable      = GCancellable,
     &progress_callback               = -> $, $, $ { },
     gpointer $progress_callback_data = Pointer,
-    CArray[Pointer[GError]] $error   = gerror()
+    CArray[Pointer[GError]] $error   = gerror
   ) {
     my guint $f = resolve-uint($flags);
     clear_error;
@@ -1173,8 +1173,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method open_readwrite (
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<open-readwrite>
   {
@@ -1186,7 +1186,7 @@ role GTK::Compat::Roles::GFile {
 
   method open_readwrite_async (
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data  = Pointer
   )
@@ -1204,7 +1204,7 @@ role GTK::Compat::Roles::GFile {
 
   method open_readwrite_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<open-readwrite-finish>
   {
@@ -1228,7 +1228,7 @@ role GTK::Compat::Roles::GFile {
   }
 
   method poll_mountable (
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1239,7 +1239,7 @@ role GTK::Compat::Roles::GFile {
 
   method poll_mountable_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<poll-mountable-finish>
   {
@@ -1250,8 +1250,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method query_default_handler (
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<query-default-handler>
   {
@@ -1261,13 +1261,13 @@ role GTK::Compat::Roles::GFile {
     $rc;
   }
 
-  method query_exists (GCancellable $cancellable) is also<query-exists> {
+  method query_exists (GCancellable() $cancellable) is also<query-exists> {
     g_file_query_exists($!file, $cancellable);
   }
 
   method query_file_type (
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable
+    GCancellable() $cancellable
   )
     is also<query-file-type>
   {
@@ -1277,8 +1277,8 @@ role GTK::Compat::Roles::GFile {
 
   method query_filesystem_info (
     Str() $attributes,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<query-filesystem-info>
   {
@@ -1288,7 +1288,7 @@ role GTK::Compat::Roles::GFile {
   method query_filesystem_info_async (
     Str() $attributes,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1307,7 +1307,7 @@ role GTK::Compat::Roles::GFile {
 
   method query_filesystem_info_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<query-filesystem-info-finish>
   {
@@ -1320,8 +1320,8 @@ role GTK::Compat::Roles::GFile {
   method query_info (
     Str() $attributes,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<query-info>
   {
@@ -1336,7 +1336,7 @@ role GTK::Compat::Roles::GFile {
     Str() $attributes,
     GFileQueryInfoFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1357,7 +1357,7 @@ role GTK::Compat::Roles::GFile {
 
   method query_info_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<query-info-finish>
   {
@@ -1368,8 +1368,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method query_settable_attributes (
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<query-settable-attributes>
   {
@@ -1380,8 +1380,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method query_writable_namespaces (
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<query-writable-namespaces>
   {
@@ -1392,8 +1392,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method read (
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my $rc = g_file_read($!file, $cancellable, $error);
@@ -1403,7 +1403,7 @@ role GTK::Compat::Roles::GFile {
 
   method read_async (
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data
   )
@@ -1416,7 +1416,7 @@ role GTK::Compat::Roles::GFile {
 
   method read_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<read-finish>
   {
@@ -1430,8 +1430,8 @@ role GTK::Compat::Roles::GFile {
     Str() $etag,
     gboolean $make_backup,
     GFileCreateFlags $flags,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     g_file_replace($!file, $etag, $make_backup, $flags, $cancellable, $error);
   }
@@ -1441,7 +1441,7 @@ role GTK::Compat::Roles::GFile {
     gboolean $make_backup,
     GFileCreateFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1468,8 +1468,8 @@ role GTK::Compat::Roles::GFile {
     gboolean $make_backup,
     GFileCreateFlags $flags,
     Str() $new_etag,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<replace-contents>
   {
@@ -1496,7 +1496,7 @@ role GTK::Compat::Roles::GFile {
     Str() $etag,
     gboolean $make_backup,
     GFileCreateFlags $flags,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1521,7 +1521,7 @@ role GTK::Compat::Roles::GFile {
     Str() $etag,
     gboolean $make_backup,
     GFileCreateFlags $flags,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1543,7 +1543,7 @@ role GTK::Compat::Roles::GFile {
   method replace_contents_finish (
     GAsyncResult $res,
     Str() $new_etag,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<replace-contents-finish>
   {
@@ -1555,7 +1555,7 @@ role GTK::Compat::Roles::GFile {
 
   method replace_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<replace-finish>
   {
@@ -1569,8 +1569,8 @@ role GTK::Compat::Roles::GFile {
     Str() $etag,
     gboolean $make_backup,
     GFileCreateFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<replace-readwrite>
   {
@@ -1593,7 +1593,7 @@ role GTK::Compat::Roles::GFile {
     gboolean $make_backup,
     GFileCreateFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1615,7 +1615,7 @@ role GTK::Compat::Roles::GFile {
 
   method replace_readwrite_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<replace-readwrite-finish>
   {
@@ -1636,8 +1636,8 @@ role GTK::Compat::Roles::GFile {
     GFileAttributeType $type,
     gpointer $value_p,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attribute>
   {
@@ -1660,8 +1660,8 @@ role GTK::Compat::Roles::GFile {
     Str() $attribute,
     Str() $value,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attribute-byte-string>
   {
@@ -1683,8 +1683,8 @@ role GTK::Compat::Roles::GFile {
     Str() $attribute,
     gint32 $value,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attribute-int32>
   {
@@ -1706,8 +1706,8 @@ role GTK::Compat::Roles::GFile {
     Str() $attribute,
     gint64 $value,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attribute-int64>
   {
@@ -1729,8 +1729,8 @@ role GTK::Compat::Roles::GFile {
     Str() $attribute,
     Str() $value,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attribute-string>
   {
@@ -1752,8 +1752,8 @@ role GTK::Compat::Roles::GFile {
     Str() $attribute,
     guint32 $value,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attribute-uint32>
   {
@@ -1775,8 +1775,8 @@ role GTK::Compat::Roles::GFile {
     Str() $attribute,
     guint64 $value,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attribute-uint64>
   {
@@ -1799,7 +1799,7 @@ role GTK::Compat::Roles::GFile {
     GFileInfo $info,
     GFileQueryInfoFlags $flags,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1821,7 +1821,7 @@ role GTK::Compat::Roles::GFile {
   method set_attributes_finish (
     GAsyncResult $result,
     CArray[Pointer[GFileInfo]] $info,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attributes-finish>
   {
@@ -1834,8 +1834,8 @@ role GTK::Compat::Roles::GFile {
   method set_attributes_from_info (
     GFileInfo $info,
     GFileQueryInfoFlags $flags,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-attributes-from-info>
   {
@@ -1854,8 +1854,8 @@ role GTK::Compat::Roles::GFile {
 
   method set_display_name (
     Str() $display_name,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-display-name>
   {
@@ -1873,7 +1873,7 @@ role GTK::Compat::Roles::GFile {
   method set_display_name_async (
     Str() $display_name,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1893,7 +1893,7 @@ role GTK::Compat::Roles::GFile {
 
   method set_display_name_finish (
     GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-display-name-finish>
   {
@@ -1906,7 +1906,7 @@ role GTK::Compat::Roles::GFile {
   method start_mountable (
     GDriveStartFlags $flags,
     GMountOperation $start_operation,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1925,7 +1925,7 @@ role GTK::Compat::Roles::GFile {
 
   method start_mountable_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<start-mountable-finish>
   {
@@ -1938,7 +1938,7 @@ role GTK::Compat::Roles::GFile {
   method stop_mountable (
     GMountUnmountFlags $flags,
     GMountOperation $mount_operation,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -1957,7 +1957,7 @@ role GTK::Compat::Roles::GFile {
 
   method stop_mountable_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<stop-mountable-finish>
   {
@@ -1972,8 +1972,8 @@ role GTK::Compat::Roles::GFile {
   }
 
   method trash (
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my $rc = g_file_trash($!file, $cancellable, $error);
@@ -1983,7 +1983,7 @@ role GTK::Compat::Roles::GFile {
 
   method trash_async (
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   )
@@ -2001,7 +2001,7 @@ role GTK::Compat::Roles::GFile {
 
   method trash_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<trash-finish>
   {
@@ -2025,7 +2025,7 @@ role GTK::Compat::Roles::GFile {
   #
   # method unmount_mountable_finish (
   #   GAsyncResult $result,
-  #   CArray[Pointer[GError]] $error = gerror()
+  #   CArray[Pointer[GError]] $error = gerror
   # )
   #   is also<unmount-mountable-finish>
   # {
@@ -2038,7 +2038,7 @@ role GTK::Compat::Roles::GFile {
   method unmount_mountable_with_operation (
     GMountUnmountFlags $flags,
     GMountOperation $mount_operation,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     GAsyncReadyCallback &callback,
     gpointer $user_data = Pointer
   )
@@ -2057,7 +2057,7 @@ role GTK::Compat::Roles::GFile {
 
   method unmount_mountable_with_operation_finish (
     GAsyncResult $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<unmount-mountable-with-operation-finish>
   {

@@ -3,7 +3,7 @@ use v6.c;
 unit package GTK::Builder::WidgetMRO;
 
 # Number of times I've had to force THIS to recompile.
-constant forced = 13;
+constant forced = 14;
 
 our %w-mro is export = (
 'GTK::Widget' => ('GTK::Roles::Types', 'GTK::Roles::Protection', 'GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::References', 'GTK::Roles::Properties', 'GTK::Roles::Data', 'GTK::Roles::Buildable', 'Any', 'Mu'),

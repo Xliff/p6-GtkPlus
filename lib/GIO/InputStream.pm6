@@ -29,7 +29,7 @@ class GIO::InputStream {
   }
 
   method close (
-    GCancellable $cancellable      = Pointer,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror()
   ) {
     g_input_stream_close($!is, $cancellable, $error);
@@ -38,14 +38,14 @@ class GIO::InputStream {
   multi method close_async (
     Int() $io_priority,
     &callback,
-    GCancellable $cancellable = Pointer,
-    gpointer $user_data       = Pointer
+    GCancellable() $cancellable = GCancellable,
+    gpointer $user_data         = Pointer
   ) {
     samewith($io_priority, $cancellable, &callback, $user_data);
   }
   multi method close_async (
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -85,8 +85,8 @@ class GIO::InputStream {
   method read (
     Pointer $buffer,
     Int() $count,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my uint64 $c = resolve-uint64($count);
@@ -99,8 +99,8 @@ class GIO::InputStream {
     Pointer $buffer,
     Int() $count,
     Int() $bytes_read,
-    GCancellable $cancellable      = Pointer,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     my gsize ($c, $b) = resolve-uint64($count, $bytes_read);
     clear_error;
@@ -121,8 +121,8 @@ class GIO::InputStream {
     Int() $count,
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable,
   ) {
     samewith(
       $buffer,
@@ -137,7 +137,7 @@ class GIO::InputStream {
     Pointer $buffer,
     Int() $count,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
@@ -171,8 +171,8 @@ class GIO::InputStream {
     Int() $count,
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith(
       $buffer,
@@ -187,7 +187,7 @@ class GIO::InputStream {
     Pointer $buffer,
     Int() $count,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data
   ) {
@@ -221,7 +221,7 @@ class GIO::InputStream {
     Int() $io_priority,
     &callback,
     gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    GCancellable $cancellable = GCancellable
   ) {
     samewith($count, $io_priority, $cancellable, &callback, $user_data);
   }
@@ -246,7 +246,7 @@ class GIO::InputStream {
 
   method read_bytes_finish (
     GAsyncResult() $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my $rc = so g_input_stream_read_bytes_finish($!is, $result, $error);
@@ -256,7 +256,7 @@ class GIO::InputStream {
 
   method read_finish (
     GAsyncResult() $result,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
     my $rc = so g_input_stream_read_finish($!is, $result, $error);
@@ -264,7 +264,7 @@ class GIO::InputStream {
     $rc;
   }
 
-  method set_pending (CArray[Pointer[GError]] $error = gerror()) {
+  method set_pending (CArray[Pointer[GError]] $error = gerror) {
     clear_error;
     my $rc = so g_input_stream_set_pending($!is, $error);
     set_error($error);
@@ -273,8 +273,8 @@ class GIO::InputStream {
 
   method skip (
     Int() $count,
-    GCancellable $cancellable,
-    CArray[Pointer[GError]] $error = gerror()
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
   ) {
     my gsize $c = resolve-uint64($count);
     clear_error;
@@ -287,15 +287,15 @@ class GIO::InputStream {
     Int() $count,
     Int() $io_priority,
     &callback,
-    gpointer $user_data       = Pointer,
-    GCancellable $cancellable = Pointer
+    gpointer $user_data         = Pointer,
+    GCancellable() $cancellable = GCancellable
   ) {
     samewith($count, $io_priority, $cancellable, &callback, $user_data);
   }
   multi method skip_async (
     Int() $count,
     Int() $io_priority,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {

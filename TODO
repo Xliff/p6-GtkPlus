@@ -75,8 +75,8 @@
 - Consider altering scripts/dirty_typing.pl6 to only go through files later the latest date amongst the stubs in in .dirty_typing
 - Consider altering scripts/dependencies.pl6 to exit if a module name is listed as a dependency but has no node. If this does occur, report discrepancy and the module(s) where it appeared.
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
-
   * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
+
 - NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
 - Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
 - Reminder for when GHashTable is implemented: Write subclasses that properly use the right hash functions. Or maybe parameterized roles?
@@ -87,6 +87,8 @@
 - Check to see if GTK::Builder loading issue is related to the lexical nature of `require`.
 - Add the ability for relevant GTK Objects to .ACCEPT a GObject. This will mean that Ancestries will be used.
   All .ACCEPT methods will use these hierarchies. This can EASILY just be done for GTK::Widget.
+  - Use .wrap or too expensive?
+  - Cost of just overloading.
   Other base objects across all GTK project will need to be evaluated.
 - Should GTK::Widget.CreateObject accept an override type as an optional parameter?
 - All objects should have a proper gist method. Using DDT is a work-around, but not a proper implementation.
@@ -114,6 +116,10 @@
   user that option.
 - If GTK::Roles::Properties is still a separate entity, refactor it to use self.GObject for all calls and
   eliminate the need for $!prop.
+- Adjust build.sh to set an environment variable, and creating items in .build, as scripts/test-new.pl6 does with
+  .touch. Should accept a --clean flag to force from scratch. If forced counts are not the same as last recorded,
+  then operation proceeds as if a --clean was issued.
+
 
 INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   - A parsing routine at the GLib/GTK level will handle interpreting the
