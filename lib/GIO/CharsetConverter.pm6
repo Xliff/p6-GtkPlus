@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -24,6 +26,10 @@ class GIO::CharsetConverter {
     self.roleInit-Initable;
   }
 
+  method GTK::Compat::Raw::GCharsetConverter
+    is also<GCharsetConverter>
+  { $!cc }
+
   multi method new (GCharsetConverter :$converter) {
     self.bless( :$converter );
   }
@@ -39,7 +45,7 @@ class GIO::CharsetConverter {
   }
 
   # Type: gchar
-  method from-charset is rw  {
+  method from-charset is rw  is also<from_charset> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -56,7 +62,7 @@ class GIO::CharsetConverter {
   }
 
   # Type: gchar
-  method to-charset is rw  {
+  method to-charset is rw  is also<to_charset> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -73,7 +79,7 @@ class GIO::CharsetConverter {
   }
 
   # Type: gboolean
-  method use_fallback is rw {
+  method use_fallback is rw is also<use-fallback> {
     Proxy.new(
       FETCH => sub ($) {
         so g_charset_converter_get_use_fallback($!cc);
@@ -86,11 +92,17 @@ class GIO::CharsetConverter {
     );
   }
 
-  method get_num_fallbacks {
+  method get_num_fallbacks
+    is also<
+      get-num-fallbacks
+      num_fallbacks
+      num-fallbacks
+    >
+  {
     g_charset_converter_get_num_fallbacks($!cc);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_charset_converter_get_type, $n, $t );
