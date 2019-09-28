@@ -1571,6 +1571,7 @@ class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Po
 class GByteArray               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GCharsetConverter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GConverter               is repr('CPointer') is export does GTK::Roles::Pointers { }
