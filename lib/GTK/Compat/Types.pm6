@@ -1578,6 +1578,7 @@ class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Po
 class GByteArray               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDrive                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCharsetConverter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GClosure                 is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1693,6 +1694,7 @@ class GVariantDict             is repr('CPointer') is export does GTK::Roles::Po
 class GVariantIter             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantType             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume                  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVolumeMonitor           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GZlibCompressor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GZlibDecompressor        is repr('CPointer') is export does GTK::Roles::Pointers { }
 
