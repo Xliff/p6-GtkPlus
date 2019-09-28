@@ -119,7 +119,21 @@
 - Adjust build.sh to set an environment variable, and creating items in .build, as scripts/test-new.pl6 does with
   .touch. Should accept a --clean flag to force from scratch. If forced counts are not the same as last recorded,
   then operation proceeds as if a --clean was issued.
+- Potential mechanism for initializing all composed roles:
+  - Firstly, should also provide a mechanism to disable, ala $!doRoleInit, which shall
+    have a default value of True. Objects that need special handling can set to False.
+  - Secondly, all GTK-based roles should implement a method "roleDefined-<name of role>" which returns if the
+    role variable has been initialized.
+  - Next, all roles should inheret from a parent role, ala GRole.
 
+  - Finally, at a low-level (potentially GObject) we do the following:
+    if $!doRoleInit {
+      for self.^roles {
+        when GRole {
+          self."roleInit-{ .^shortname }"() unless self."roleDefined-{ .^shortname }"()
+        }
+      }
+    }
 
 INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   - A parsing routine at the GLib/GTK level will handle interpreting the
