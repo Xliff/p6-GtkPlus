@@ -44,11 +44,11 @@ class GTK::Compat::Value {
     g_object_unref( nativecast(Pointer, $!v) );
   }
 
-  method value {
+  method value is rw {
     do given self.type {
       when G_TYPE_CHAR     { self.char;       }
       when G_TYPE_UCHAR    { self.uchar;      }
-      when G_TYPE_BOOLEAN  { so self.boolean; }
+      when G_TYPE_BOOLEAN  { self.boolean;    }
       when G_TYPE_INT      { self.int;        }
       when G_TYPE_UINT     { self.uint;       }
       when G_TYPE_LONG     { self.long;       }

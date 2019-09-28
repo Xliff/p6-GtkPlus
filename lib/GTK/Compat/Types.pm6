@@ -1694,6 +1694,7 @@ class GVariantIter             is repr('CPointer') is export does GTK::Roles::Po
 class GVariantType             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GZlibCompressor          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GZlibDecompressor        is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is export {
   has GFileAttributeInfo $.infos;
@@ -2559,3 +2560,19 @@ our enum GdkGrabStatus is export (
   GDK_GRAB_FROZEN          => 4,
   GDK_GRAB_FAILED          => 5
 );
+
+# GLib-level
+sub typeToGType (\t) is export {
+  do given t {
+    when Str             { G_TYPE_STRING  }
+    when int16  | int32  { G_TYPE_INT     }
+    when uint16 | uint32 { G_TYPE_UINT    }
+    when int64           { G_TYPE_INT64   }
+    when uint64          { G_TYPE_UINT64  }
+    when num32           { G_TYPE_FLOAT   }
+    when num64           { G_TYPE_DOUBLE  }
+    when Pointer         { G_TYPE_POINTER }
+    when Bool            { G_TYPE_BOOLEAN }
+    when GObject         { G_TYPE_OBJECT  }
+  }
+}
