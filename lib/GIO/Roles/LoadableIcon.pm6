@@ -87,6 +87,10 @@ role GIO::Roles::LoadableIcon {
     g_loadable_icon_load_async($!li, $s, $cancellable, &callback, $user_data);
   }
 
+  proto method load_finish (|)
+    is also<load-finish>
+  { * }
+
   multi method load_finish (
     GAsyncResult() $res,
     :$all = False,
@@ -102,7 +106,7 @@ role GIO::Roles::LoadableIcon {
   ) {
     samewith($res, $type, gerror, :$all, :$raw);
   }
-  method load_finish (
+  multi method load_finish (
     GAsyncResult() $res,
     $type is rw,
     CArray[Pointer[GError]] $error = gerror,
