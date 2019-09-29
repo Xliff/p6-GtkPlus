@@ -16,4 +16,5 @@ t/004-large-items.t
 .precomp/
 dead/
 examples/
-
+*.ipynb
+jupyter.log
