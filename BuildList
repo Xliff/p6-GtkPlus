@@ -31,7 +31,6 @@ GTK::Builder::ToggleButton
 GTK::Builder::Widget
 GTK::BuilderWidgets
 GTK::Roles::Pointers
-GTK::Compat::FileTypes
 GTK::Compat::Types
 GTK::Compat::X11_Types
 GTK::Raw::Utils
@@ -41,6 +40,7 @@ GDK::Raw::Main
 GIO::Raw::AsyncResult
 GIO::Raw::BufferedInputStream
 GIO::Raw::Cancellable
+GIO::Raw::CharsetConverter
 GIO::Raw::Credentials
 GIO::Raw::DataInputStream
 GIO::Raw::DatagramBased
@@ -84,6 +84,7 @@ GIO::Raw::UnixFDList
 GIO::Raw::UnixFDMessage
 GIO::Raw::UnixInputStream
 GIO::Raw::UnixSocketAddress
+GIO::Raw::VolumeMonitor
 GIO::Roles::AsyncResult
 GIO::Roles::Converter
 GIO::Roles::FileDescriptorBased
@@ -95,6 +96,7 @@ GIO::Roles::Seekable
 GIO::Roles::Signals::FileMonitor
 GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
+GIO::Roles::Signals::VolumeMonitor
 GIO::SrvTarget
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
@@ -111,6 +113,7 @@ GLib::Scanner
 GLib::URI
 GLib::Unicode
 GTK::Builder::Actionable
+GTK::Compat::FileTypes
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
 GTK::Compat::Raw::Action
@@ -194,7 +197,10 @@ GDK::Main
 GDK::Raw::Threads
 GDK::Threads
 GIO::FileAttributeMatcher
+GIO::Raw::Drive
+GIO::Raw::Mount
 GIO::Raw::Quarks
+GIO::Raw::Volume
 GLib::AsyncQueue
 GLib::Base64
 GLib::Checksum
@@ -485,6 +491,7 @@ GTK::TreeSelection
 GTK::TreeStore
 GTK::WindowGroup
 GIO::Cancellable
+GIO::CharsetConverter
 GIO::Credentials
 GIO::FileInfo
 GIO::FileMonitor
@@ -506,6 +513,9 @@ GIO::UnixCredentialsMessage
 GIO::UnixFDList
 GIO::UnixFDMessage
 GIO::UnixInputStream
+GIO::VolumeMonitor
+GIO::ZlibCompressor
+GIO::ZlibDecompressor
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
@@ -548,6 +558,7 @@ GIO::FileEnumerator
 GIO::FilterInputStream
 GIO::Roles::Proxy
 GIO::Roles::SocketConnectable
+GIO::Roles::Volume
 GIO::SocketAddress
 GIO::SocketClient
 GIO::SocketConnection
@@ -576,6 +587,8 @@ GIO::NetworkAddress
 GIO::NetworkService
 GIO::ProxyAddress
 GIO::ProxyAddressEnumerator
+GIO::Roles::Drive
+GIO::Roles::Mount
 GTK::Calendar
 GTK::DrawingArea
 GTK::Entry
