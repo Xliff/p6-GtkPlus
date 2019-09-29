@@ -1591,6 +1591,7 @@ class GDatagramBased           is repr('CPointer') is export does GTK::Roles::Po
 class GFile                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeInfo       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeMatcher    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GFileIcon                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileInfo                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileDescriptorBased     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileEnumerator          is repr('CPointer') is export does GTK::Roles::Pointers { }
