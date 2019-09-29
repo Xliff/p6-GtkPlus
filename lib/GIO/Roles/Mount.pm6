@@ -10,6 +10,10 @@ use GIO::Raw::Mount;
 use GTK::Raw::Utils;
 
 use GTK::Roles::Signals::Generic;
+use GTK::Compat::Roles::GFile;
+use GTK::Compat::Roles::Icon;
+use GIO::Roles::Volume;
+use GIO::Roles::Drive;
 
 role GIO::Roles::Mount {
   has GMount $!m;
