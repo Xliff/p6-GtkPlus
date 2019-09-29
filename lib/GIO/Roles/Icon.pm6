@@ -4,13 +4,9 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Icon;
+use GIO::Raw::Icon;
 
-use GTK::Roles::Types;
-
-role GTK::Compat::Roles::Icon {
-  also does GTK::Roles::Types;
-
+role GIO::Roles::Icon {
   has GIcon $!icon;
 
   submethod BLESS (:$icon) {

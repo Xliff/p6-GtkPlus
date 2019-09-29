@@ -9,8 +9,23 @@ use GTK::Raw::Utils;
 
 use GIO::InputStream;
 
-role GTK::Compat::Roles::LoadableIcon {
+role GIO::Roles::LoadableIcon {
   has GLoadableIcon $!li;
+
+  submethod BUILD (:$loadable) {
+    $!li = $loadable;
+  }
+
+  method roleInit-LoadableIcon {
+    $!li = cast(
+      GLoadableIcon,
+      self.^attributes(:local)[0].get_value(self)
+    );
+  }
+
+  method GTK::Compat::Types::GLoadableIcon
+    is also<GLoadableIcon>
+  { $!li }
 
   method get_type {
     state ($n, $t);
@@ -20,28 +35,37 @@ role GTK::Compat::Roles::LoadableIcon {
 
   multi method load (
     Int() $size,
-    Str $type is rw
+    CArray[Pointer[GError]] $error  = gerror,
+    :$all = False,
+    :$raw = False,
   ) {
-    my $s = CArray[Str].new;
-    my $rc = samewith($size, $s);
+    my $rc = samewith($size, $, GCancellable, $error, :$all, :$raw);
     $rc;
   }
   multi method load (
     Int() $size,
-    CArray[Str] $type,
+    $type is rw,
     GCancellable() $cancellable     = GCancellable,
     CArray[Pointer[GError]] $error  = gerror,
+    :$all = False,
     :$raw = False
   ) {
     my gint $s = resolve-int($size);
+    my $t = CArray[Str].new;
+    $t[0] = Str;
+
     clear_error;
-    my $rc = g_loadable_icon_load($!li, $s, $type, $cancellable, $error);
+    my $rc = g_loadable_icon_load($!li, $s, $t, $cancellable, $error);
     set_error($error);
 
-    $rc ??
+    $type = $t[0] if $t[0];
+
+    my $is = $rc ??
       ( $raw ?? $rc !! GIO::InputStream.new($rc) )
       !!
       Nil;
+
+    $all ?? $is !! ($is, $type);
   }
 
   proto method load_async (|)
@@ -51,9 +75,8 @@ role GTK::Compat::Roles::LoadableIcon {
   multi method load_async (
     &callback,
     gpointer $user_data         = Pointer,
-    GCancellable() $cancellable = GCancellable
   ) {
-    samewith($cancellable, &callback, $user_data);
+    samewith(GCancellable, &callback, $user_data);
   }
   multi method load_async (Int() $size,
     GCancellable() $cancellable,
