@@ -28,7 +28,13 @@ role GTK::Compat::Roles::GFile {
     is also<GFile>
   { $!file }
 
-  method new-file-obj is also<new-gfile-obj> (GFile $file) {
+  method new-file-obj (GFile $file)
+    is also<
+      new_file_obj
+      new_gfile_obj
+      new-gfile-obj
+    >
+  {
     self.bless( :$file );
   }
 
