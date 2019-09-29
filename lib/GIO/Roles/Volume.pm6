@@ -11,6 +11,7 @@ use GIO::Raw::Volume;
 use GTK::Raw::Utils;
 
 use GTK::Compat::Roles::Icon;
+use GTK::Compat::Roles::GFile;
 
 use GTK::Roles::Signals::Generic;
 
@@ -118,7 +119,7 @@ role GIO::Roles::Volume {
     my $d = g_volume_get_drive($!v);
 
     $d ??
-      ( $raw ?? $d !! GIO::Drive.new($d) )
+      ( $raw ?? $d !! ::('GIO::Roles::Drive').new-drive-obj($d) )
       !!
       Nil;
   }
@@ -140,7 +141,7 @@ role GIO::Roles::Volume {
     my $m = g_volume_get_mount($!v);
 
     $m ??
-      ( $raw ?? $m !! GIO::Mount.new($m) )
+      ( $raw ?? $m !! ::('GIO::Roles::Mount').new-mount-obj($m) )
       !!
       Nil;
   }
