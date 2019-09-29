@@ -1676,12 +1676,13 @@ class GSrvTarget               is repr('CPointer') is export does GTK::Roles::Po
 class GTask                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTcpConnection           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTcpWrapperConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GThemedIcon              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThread                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThreadPool              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GThreadedSocketService   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimeZone                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTokenValue              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixCredentialsMessage  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
