@@ -28,7 +28,7 @@ role GTK::Compat::Roles::GFile {
     is also<GFile>
   { $!file }
 
-  method new-file-obj (GFile $file) {
+  method new-file-obj is also<new-gfile-obj> (GFile $file) {
     self.bless( :$file );
   }
 
@@ -36,6 +36,7 @@ role GTK::Compat::Roles::GFile {
     die 'Role constructor called.' unless ::?CLASS.^name eq ::?ROLE.^name;
     self.bless(:$file);
   }
+  # XXX - To be replaced with multiple dispatchers!
   multi method new (
     :$path,
     :$uri,
@@ -61,9 +62,9 @@ role GTK::Compat::Roles::GFile {
       } orwith $iostream {
         my $e = $error // gerror;
         with $tmpl {
-          self.new_tmpl($tmpl, $iostream, $e);
+          self.new_tmp($tmpl, $iostream, $e);
         } else {
-          self.new_tmpl($iostream, $e);
+          self.new_tmp($iostream, $e);
         }
       } else {
         self.new_tmpl;
