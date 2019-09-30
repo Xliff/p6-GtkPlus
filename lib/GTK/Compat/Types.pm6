@@ -183,6 +183,7 @@ constant GSignalEmissionHook     is export := Pointer;
 constant GSignalCMarshaller      is export := Pointer;
 constant GSignalCVaMarshaller    is export := Pointer;
 constant GThreadFunc             is export := Pointer;
+constant GVfsFileLookupFunc      is export := Pointer;
 
 constant GDate                   is export := uint64;
 constant GPid                    is export := gint;
@@ -1698,6 +1699,7 @@ class GVariantBuilder          is repr('CPointer') is export does GTK::Roles::Po
 class GVariantDict             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantIter             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantType             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GVfs                     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolume                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVolumeMonitor           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GZlibCompressor          is repr('CPointer') is export does GTK::Roles::Pointers { }
