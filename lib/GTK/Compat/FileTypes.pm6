@@ -12,6 +12,14 @@ our enum GAppInfoCreateFlagsEnum is export (
   G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  => (1 +< 2)   # nick=supports-startup-notification
 );
 
+constant GEmblemOrigin is export := guint;
+our enum GEmblemOriginEnum is export <
+  G_EMBLEM_ORIGIN_UNKNOWN
+  G_EMBLEM_ORIGIN_DEVICE
+  G_EMBLEM_ORIGIN_LIVEMETADATA
+  G_EMBLEM_ORIGIN_TAG
+>;
+
 constant GFileQueryInfoFlags is export := guint;
 our enum GFileQueryInfoFlagsEnum is export (
   G_FILE_QUERY_INFO_NONE              => 0,
