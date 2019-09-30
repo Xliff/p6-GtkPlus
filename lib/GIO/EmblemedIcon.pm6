@@ -51,7 +51,13 @@ class GIO::EmblemedIcon {
       Nil;
   }
 
-  method get_icon (:$raw = False) is also<get-icon> {
+  method get_icon (:$raw = False)
+    is also<
+      get-icon
+      icon
+      gicon
+    >
+  {
     my $i = g_emblemed_icon_get_icon($!ei);
 
     $i ??
