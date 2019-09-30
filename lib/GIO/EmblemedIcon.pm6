@@ -13,6 +13,7 @@ use GIO::Roles::Icon;
 
 class GIO::EmblemedIcon {
   also does GTK::Compat::Roles::Object;
+  also does GIO::Roles::Icon;
 
   has GEmblemedIcon $!ei;
 
@@ -20,6 +21,7 @@ class GIO::EmblemedIcon {
     $!ei = $emblem;
 
     self.roleInit-Object;
+    self.roleInit-Icon;
   }
 
   method GTK::Compat::Types::GEmblemedIcon

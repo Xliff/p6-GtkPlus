@@ -10,7 +10,7 @@ use GIO::FileIcon;
 
 use GIO::Roles::Icon;
 
-plan 34;
+plan 40;
 
 sub compare-path-nodes ($uri, @a?) {
   my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
@@ -164,7 +164,38 @@ sub icon-to-string {
       ok $i.equal($i2), 'ThemeIcon and Icon from same URI, are equivalen';
     }
 
+    {
+      use GTK::Compat::FileTypes;
+      use GIO::Emblem;
+      use GIO::EmblemedIcon;
+
+      my $i = GIO::ThemedIcon.new('face-smirk');
+      my $i2 = GIO::ThemedIcon.new('emblem-important');
+      $i2.append-name('emblem-shared');
+
+      my $uri = 'file::///some/path/somewhere.png';
+      my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
+      my $i3 = GIO::FileIcon.new($l);
+      my $e1 = GIO::Emblem.new-with-origin($i2, G_EMBLEM_ORIGIN_DEVICE);
+      my $e2 = GIO::Emblem.new-with-origin($i3, G_EMBLEM_ORIGIN_LIVEMETADATA);
+      my $i4 = GIO::EmblemedIcon.new($i, $e1);
+      $i4.add-emblem($e2);
+
+      my $d = ~$i4;
+      my $i5 = GIO::Roles::Icon.new-for-string($d);
+
+      nok $ERROR, "No error when consturcting Icon with URI '{$d}'";
+      ok  $i4.equal($i5), 'Emblemed Icon and newly constructed Icon are equivalent';
+      is  $e1.origin, G_EMBLEM_ORIGIN_DEVICE,
+          'Emblem1 origin matches G_EMBLEM_ORIGIN_DEVICE';
+      ok  +$i2.GIcon.p == +$e1.icon(:raw).p,
+          "Icon2 and the value of Emblem1's icon property are the same";
+
+      # .unref for $i, $e1, $e2, $i, $i2, $i3, $i4, $i5;
+    }
+
   }
+
 }
 
 icon-to-string;

@@ -35,7 +35,7 @@ sub g_emblemed_icon_get_type ()
 { * }
 
 sub g_emblemed_icon_new (GIcon $icon, GEmblem $emblem)
-  returns GIcon
+  returns GEmblemedIcon
   is native(gio)
   is export
 { * }
