@@ -174,6 +174,7 @@ constant GIOFunc                 is export := Pointer;
 constant GLogFunc                is export := Pointer;
 constant GLogWriterFunc          is export := Pointer;
 constant GPrintFunc              is export := Pointer;
+constant GReallocFunc            is export := Pointer;
 constant GSettingsBindGetMapping is export := Pointer;
 constant GSettingsBindSetMapping is export := Pointer;
 constant GSettingsGetMapping     is export := Pointer;
@@ -1619,6 +1620,7 @@ class GMainContext             is repr('CPointer') is export does GTK::Roles::Po
 class GMainLoop                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMarkupParser            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMemoryInputStream       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GMemoryOutputStream      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenu                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuItem                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMenuAttributeIter       is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1638,6 +1640,7 @@ class GOptionGroup             is repr('CPointer') is export does GTK::Roles::Po
 class GOutputStream            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPollableInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GPollableOutputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPropertyAction          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GProxy                   is repr('CPointer') is export does GTK::Roles::Pointers { }
