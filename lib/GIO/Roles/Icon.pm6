@@ -72,6 +72,7 @@ role GIO::Roles::Icon {
 
   method icon_get_type is also<icon-get-type> {
     state ($n, $t);
+    
     unstable_get_type( self.^name, &g_icon_get_type, $n, $t );
   }
 
