@@ -10,7 +10,7 @@ use GIO::FileIcon;
 
 use GIO::Roles::Icon;
 
-plan 30;
+plan 34;
 
 sub compare-path-nodes ($uri, @a?) {
   my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
@@ -151,6 +151,17 @@ sub icon-to-string {
       my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
       my $i2 = GIO::FileIcon.new($l);
       ok $i2.equal($i), 'Icon and FileIcon from same URI, are equivalent';
+    }
+
+    # Test GIO::ThemedIcon.append-name
+    for 'nework-server', 'icon name with whitespace', 'network-server-xyz' {
+      my $i = GIO::ThemedIcon.new($_);
+      $i.append-name('computer');
+
+      my $d = ~$i;
+      my $i2 = GIO::Roles::Icon.new-for-string($d);
+      nok $ERROR, "No error when consturcting Icon with URI '{$_}'";
+      ok $i.equal($i2), 'ThemeIcon and Icon from same URI, are equivalen';
     }
 
   }
