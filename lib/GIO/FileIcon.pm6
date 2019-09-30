@@ -11,6 +11,8 @@ use GTK::Compat::Roles::GFile;
 use GIO::Roles::Icon;
 use GIO::Roles::LoadableIcon;
 
+# Does roles so Ancestry logic?
+
 class GIO::FileIcon {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::Icon;
@@ -25,13 +27,17 @@ class GIO::FileIcon {
     self.roleInit-Object;
     self.roleInit-Icon;
     self.roleInit-LoadableIcon;
+    #say "FI: $!fi";
   }
 
   method GTK::Compat::Types::GFileIcon
     is also<GFileIcon>
   { $!fi }
 
-  method new (GFile() $icon) {
+  multi method new (GFileIcon $fileicon) {
+    self.bless( :$fileicon );
+  }
+  multi method new (GFile() $icon) {
     self.bless( fileicon => g_file_icon_new($icon) );
   }
 

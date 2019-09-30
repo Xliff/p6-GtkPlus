@@ -17,7 +17,7 @@ role GTK::Compat::Roles::GFile {
   has GFile $!file;
 
   submethod BUILD (:$file) {
-    self!GFileRoleInit($file);
+    self!GFileRoleInit($file) if $file;
   }
 
   method !GFileRoleInit (GFile $file) {
@@ -82,21 +82,21 @@ role GTK::Compat::Roles::GFile {
   method new_for_commandline_arg (Str() $cmd)
     is also<new-for-commandline-arg>
   {
-    g_file_new_for_commandline_arg($cmd);
+    self.bless( file => g_file_new_for_commandline_arg($cmd) );
   }
 
   method new_for_commandline_arg_and_cwd (Str() $cmd, Str() $cwd)
     is also<new-for-commandline-arg-and-cwd>
   {
-    g_file_new_for_commandline_arg_and_cwd($cmd, $cwd);
+    self.bless( file => g_file_new_for_commandline_arg_and_cwd($cmd, $cwd) );
   }
 
   method new_for_path (Str() $path) is also<new-for-path> {
-    g_file_new_for_path($path);
+    self.bless( file => g_file_new_for_path($path) );
   }
 
   method new_for_uri (Str() $uri) is also<new-for-uri> {
-    g_file_new_for_uri($uri);
+    self.bless( file => g_file_new_for_uri($uri) );
   }
 
   proto method new_tmp (|)
@@ -121,7 +121,7 @@ role GTK::Compat::Roles::GFile {
     clear_error;
     my $rc = g_file_new_tmp($tmpl, $iostream, $error);
     set_error($error);
-    $rc;
+    self.bless( file => $rc );
   }
 
   method append_to (

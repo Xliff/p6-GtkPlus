@@ -21,7 +21,10 @@ role GTK::Compat::Roles::Object {
   }
 
   method roleInit-Object {
-    $!o = cast( GObject, self.^attributes(:local)[0].get-value(self) );
+    $!o = cast(
+      GObject,
+      self.^attributes(:local)[0].get_value(self)
+    );
   }
 
   method !setObject($obj) {

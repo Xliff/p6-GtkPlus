@@ -9,18 +9,18 @@ use GIO::Raw::Icon;
 role GIO::Roles::Icon {
   has GIcon $!icon;
 
-  submethod BLESS (:$icon) {
+  submethod BUILD (:$icon) {
     $!icon = $icon;
   }
 
   method roleInit-Icon {
-    my $icon = cast(
+    $!icon = cast(
       GIcon,
       self.^attributes(:local)[0].get_value(self)
     );
   }
 
-  method GTK::Raw::Types::GIcon
+  method GTK::Compat::Types::GIcon
     is also<
       GIcon
       Icon
@@ -56,7 +56,7 @@ role GIO::Roles::Icon {
   }
 
   method equal (GIcon() $icon2) {
-    g_icon_equal($!icon, $icon2);
+    so g_icon_equal($!icon, $icon2);
   }
 
   method icon_get_type is also<icon-get-type> {
