@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -65,9 +67,9 @@ class GIO::MemoryOutputStream is GIO::OutputStream {
     self.RoleInit-PollableOutputStream unless $!pos;
   }
 
-  method GTK::Compat::Types::GMemoryOutputStream {
-    $!mos;
-  }
+  method GTK::Compat::Types::GMemoryOutputStream
+    is also<GMemoryOutputStream>
+  { $!mos }
 
   multi method new (GMemoryOutputStream :$memory-output) {
     self.bless( :$memory-output );
@@ -102,33 +104,33 @@ class GIO::MemoryOutputStream is GIO::OutputStream {
     )
   }
 
-  method new_resizable {
+  method new_resizable is also<new-resizable> {
     self.bless( memory-output => g_memory_output_stream_new_resizable() )
   }
 
-  method get_data (:$raw = False) {
+  method get_data (:$raw = False) is also<get-data> {
     g_memory_output_stream_get_data($!mos);
   }
 
-  method get_data_size {
+  method get_data_size is also<get-data-size> {
     g_memory_output_stream_get_data_size($!mos);
   }
 
-  method get_size {
+  method get_size is also<get-size> {
     g_memory_output_stream_get_size($!mos);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_memory_output_stream_get_type, $n, $t );
   }
 
-  method steal_as_bytes {
+  method steal_as_bytes is also<steal-as-bytes> {
     g_memory_output_stream_steal_as_bytes($!mos);
   }
 
-  method steal_data {
+  method steal_data is also<steal-data> {
     g_memory_output_stream_steal_data($!mos);
   }
 
