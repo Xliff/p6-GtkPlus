@@ -1590,6 +1590,8 @@ class GCredentials             is repr('CPointer') is export does GTK::Roles::Po
 class GDataInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDateTime                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDatagramBased           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GEmblem                  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GEmblemedIcon            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFile                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeInfo       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GFileAttributeMatcher    is repr('CPointer') is export does GTK::Roles::Pointers { }
