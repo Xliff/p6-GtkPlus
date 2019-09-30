@@ -56,6 +56,16 @@ class GIO::VFS {
       Nil;
   }
 
+  method get_supported_uri_schemes
+    is also<
+      get-supported-uri-schemes
+      supported_uri_schemes
+      supported-uri-schemes
+    >
+  {
+    CStringArrayToArray( g_vfs_get_supported_uri_schemes($!fs) );
+  }
+
   method get_type is also<get-type> {
     state ($n, $t);
 

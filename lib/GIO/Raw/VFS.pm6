@@ -68,3 +68,9 @@ sub g_vfs_unregister_uri_scheme (GVfs $vfs, Str $scheme)
   is native(gio)
   is export
 { * }
+
+sub g_vfs_get_supported_uri_schemes (GVfs $vfs)
+  returns CArray[Str]
+  is native(gio)
+  is export
+{ * }
