@@ -18,19 +18,19 @@ sub g_themed_icon_get_type ()
 { * }
 
 sub g_themed_icon_new (Str $iconname)
-  returns GIcon
+  returns GThemedIcon
   is native(gio)
   is export
 { * }
 
 sub g_themed_icon_new_from_names (CArray[Str] $iconnames, gint $len)
-  returns GIcon
+  returns GThemedIcon
   is native(gio)
   is export
 { * }
 
 sub g_themed_icon_new_with_default_fallbacks (Str $iconname)
-  returns GIcon
+  returns GThemedIcon
   is native(gio)
   is export
 { * }

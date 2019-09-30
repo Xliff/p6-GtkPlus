@@ -29,7 +29,7 @@ class GIO::ThemedIcon {
   { $!ti }
 
   method new (Str() $icon-name) {
-    self.bless( themedicon => g_themed_icon_new($icon-name) );
+    self.bless( themed-icon => g_themed_icon_new($icon-name) );
   }
 
   proto method new_from_names (|)
