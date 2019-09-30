@@ -20,6 +20,7 @@ class GIO::OutputStream {
 
   method setOutputStream (GOutputStream $output-stream) {
     $!os = $output-stream;
+    
     self.roleInit-Object;
   }
 
