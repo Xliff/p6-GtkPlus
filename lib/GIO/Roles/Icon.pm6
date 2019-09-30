@@ -51,8 +51,17 @@ role GIO::Roles::Icon {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method deserialize(GVariant() $v) {
-    g_icon_deserialize($v);
+  method deserialize(
+    GIO::Roles::Icon:U:
+    GVariant() $v,
+    :$raw = False
+  ) {
+    my $i = g_icon_deserialize($v);
+
+    $i ??
+      ( $raw ?? $i !! self.bless( icon => $i ) )
+      !!
+      Nil;
   }
 
   method equal (GIcon() $icon2) {

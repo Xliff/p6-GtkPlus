@@ -10,7 +10,7 @@ use GIO::FileIcon;
 
 use GIO::Roles::Icon;
 
-plan 40;
+plan 42;
 
 sub compare-path-nodes ($uri, @a?) {
   my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
@@ -107,36 +107,32 @@ sub icon-to-string {
     }
 
     {
-      use GIO::FileIcon;
+      my $uri = '/path/to/somewhere.png';
+      my $i = GIO::Roles::Icon.new-for-string($uri);
+      nok $ERROR, "No error when constructing Icon with URI '{$uri}'";
 
-      {
-        my $uri = '/path/to/somewhere.png';
-        my $i = GIO::Roles::Icon.new-for-string($uri);
-        nok $ERROR, "No error when constructing Icon with URI '{$uri}'";
+      my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
+      my $i2 = GIO::FileIcon.new($l);
+      ok $i2.equal($i), 'Icon and FileIcon initialized from GFile, are equivalent';
+    }
 
-        my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
-        my $i2 = GIO::FileIcon.new($l);
-        ok $i2.equal($i), 'Icon and FileIcon initialized from GFile, are equivalent';
-      }
+    {
+      my $uri = '/path/to/somewhere with whitespace.png';
+      my $i = GIO::Roles::Icon.new-for-string($uri);
+      nok $ERROR, "No error when consturcting Icon with URI '{$uri}'";
 
-      {
-        my $uri = '/path/to/somewhere with whitespace.png';
-        my $i = GIO::Roles::Icon.new-for-string($uri);
-        nok $ERROR, "No error when consturcting Icon with URI '{$uri}'";
+      my $d = ~$i;
+      ok  $*SPEC.splitdir($d) cmp «path to "somewhere with whitespace.png"»,
+          'Path nodes for icon match properly.';
 
-        my $d = ~$i;
-        ok  $*SPEC.splitdir($d) cmp «path to "somewhere with whitespace.png"»,
-            'Path nodes for icon match properly.';
+      my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
+      my $i2 = GIO::FileIcon.new($l);
+      ok $i2.equal($i), 'Icon and FileIcon from same URI, are equivalent';
 
-        my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
-        my $i2 = GIO::FileIcon.new($l);
-        ok $i2.equal($i), 'Icon and FileIcon from same URI, are equivalent';
-
-        my $uri2 = $uri.subst(' ', '%20', :g);
-        $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri2);
-        $i2 = GIO::FileIcon.new($l);
-        nok $i.equal($i2), "Icon and FileIcon from URI {$uri2}, are equivalent";
-      }
+      my $uri2 = $uri.subst(' ', '%20', :g);
+      $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri2);
+      $i2 = GIO::FileIcon.new($l);
+      nok $i.equal($i2), "Icon and FileIcon from URI {$uri2}, are equivalent";
     }
 
     {
@@ -193,9 +189,34 @@ sub icon-to-string {
 
       # .unref for $i, $e1, $e2, $i, $i2, $i3, $i4, $i5;
     }
+  }
+}
 
+sub icon-serialize {
+  use GTK::Compat::Variant;
+
+  {
+    my $u = 'network-server%';
+    my $d = GTK::Compat::Variant.new-string($u);
+    my $i = GIO::Roles::Icon.deserialize($d.ref-sink);
+    my $i2 = GIO::ThemedIcon.new($u);
+
+    ok  $i.equal($i2),
+        'Icon from variant and ThemedIcon from string are equivalent';
+  }
+
+  {
+    my $u  = '/path/to/somewhere.png';
+    my $d  = GTK::Compat::Variant.new-string($u);
+    my $i  = GIO::Roles::Icon.deserialize($d.ref-sink);
+    my $l  = GTK::Compat::Roles::GFile.new-for-commandline-arg($u);
+    my $i2 = GIO::FileIcon.new($l);
+
+    ok  $i.equal($i2),
+        'Icon from variant and FileIcon from GFile are equivalent';
   }
 
 }
 
 icon-to-string;
+icon-serialize;
