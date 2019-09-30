@@ -10,8 +10,8 @@ use GIO::Raw::Volume;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Icon;
 use GTK::Compat::Roles::GFile;
+use GIO::Roles::Icon;
 
 use GTK::Roles::Signals::Generic;
 
@@ -128,7 +128,7 @@ role GIO::Roles::Volume {
     my $i = g_volume_get_icon($!v);
 
     $i ??
-      ( $raw ?? $i !! GTK::Compat::Roles::Icon.new-icon-obj($i) )
+      ( $raw ?? $i !! GIO::Roles::Icon.new-icon-obj($i) )
       !!
       Nil;
   }

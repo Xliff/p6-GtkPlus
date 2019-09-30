@@ -7,6 +7,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Socket;
 
+use GIO::SocketAddress;
+
 use GTK::Compat::Roles::Object;
 use GIO::Roles::Initable;
 use GIO::Roles::DatagramBased;

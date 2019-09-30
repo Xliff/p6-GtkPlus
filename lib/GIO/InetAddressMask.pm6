@@ -6,6 +6,8 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::InetAddressMask;
 
+use GIO::InetAddress;
+
 use GTK::Compat::Roles::Object;
 
 class GIO::InetAddressMask {

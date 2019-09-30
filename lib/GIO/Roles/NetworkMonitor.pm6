@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::NetworkMonitor;
 
-role GIO::NetworkMonitor {
+role GIO::Roles::NetworkMonitor {
   has GNetworkMonitor $!nm;
 
   submethod BUILD (:$monitor) {
@@ -22,7 +22,9 @@ role GIO::NetworkMonitor {
     is also<GNetworkMonitor>
   { $!nm }
 
-  method new-role-obj (GNetworkMonitor $monitor) {
+  method new-networkmonitor-obj (GNetworkMonitor $monitor)
+    is also<new_networkmonitor_obj>
+  {
     self.bless( :$monitor );
   }
 
@@ -82,7 +84,7 @@ role GIO::NetworkMonitor {
     my $nm = g_network_monitor_get_default();
 
     $nm ??
-      ( $raw ?? $nm !! GIO::Roles::NetworkMonitor.new-role-obj($nm) )
+      ( $raw ?? $nm !! GIO::Roles::NetworkMonitor.new-networkmonitor-obj($nm) )
       !!
       Nil;
   }

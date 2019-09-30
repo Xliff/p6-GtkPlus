@@ -11,7 +11,7 @@ use GTK::Raw::Utils;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Compat::Roles::GFile;
-use GTK::Compat::Roles::Icon;
+use GIO::Roles::Icon;
 use GIO::Roles::Volume;
 use GIO::Roles::Drive;
 
@@ -130,7 +130,7 @@ role GIO::Roles::Mount {
     my $i = g_mount_get_icon($!m);
 
     $i ??
-      ( $raw ?? $i !! GTK::Compat::Roles::Icon.new-icon-obj($i) )
+      ( $raw ?? $i !! GIO::Roles::Icon.new-icon-obj($i) )
       !!
       Nil;
   }
@@ -156,7 +156,7 @@ role GIO::Roles::Mount {
     my $i = g_mount_get_symbolic_icon($!m);
 
     $i ??
-      ( $raw ?? $i !! GTK::Compat::Roles::Icon.new-icon-obj($i) )
+      ( $raw ?? $i !! GIO::Roles::Icon.new-icon-obj($i) )
       !!
       Nil;
   }

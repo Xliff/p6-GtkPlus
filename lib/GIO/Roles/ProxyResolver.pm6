@@ -27,7 +27,9 @@ role GIO::ProxyResolver {
     is also<GProxyResolver>
   { $!pr }
 
-  multi method new-role-obj (GProxyResolver $proxy-resolver) {
+  multi method new-proxyresolber-obj (GProxyResolver $proxy-resolver)
+    is also<new_proxyresolver_obj>
+  {
     self.bless( :$proxy-resolver );
   }
 

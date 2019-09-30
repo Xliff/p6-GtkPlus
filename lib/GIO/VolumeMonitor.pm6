@@ -6,6 +6,10 @@ use GIO::Raw::VolumeMonitor;
 use GTK::Compat::Roles::Object;
 use GIO::Roles::Signals::VolumeMonitor;
 
+use GIO::Roles::Drive;
+use GIO::Roles::Mount;
+use GIO::Roles::Volume;
+
 class GIO::VolumeMonitor {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::Signals::VolumeMonitor;
@@ -112,7 +116,7 @@ class GIO::VolumeMonitor {
     my $v = g_volume_monitor_adopt_orphan_mount($mount);
 
     $v ??
-      ( $raw ?? $v !! GIO::Volume.new($v) )
+      ( $raw ?? $v !! GIO::Roles::Volume.new-volume-obj($v) )
       !!
       Nil;
   }
@@ -122,7 +126,10 @@ class GIO::VolumeMonitor {
       but GTK::Compat::Roles::ListData[GDrive];
 
     $dl ??
-      ( $raw ?? $dl.Array !! $dl.Array.map({ GIO::Drive.new($_) }) )
+      ( $raw ??
+        $dl.Array !!
+        $dl.Array.map({ GIO::Roles::Drive.new-drive-obj($_) })
+      )
       !!
       Nil;
   }
@@ -131,7 +138,7 @@ class GIO::VolumeMonitor {
     my $m = g_volume_monitor_get_mount_for_uuid($!vm, $uuid);
 
     $m ??
-      ( $raw ?? $m !! GIO::Mount.new($m) )
+      ( $raw ?? $m !! GIO::Roles::Mount.new-mount-obj($m) )
       !!
       Nil;
   }
@@ -141,7 +148,10 @@ class GIO::VolumeMonitor {
       but GTK::Compat::Roles::ListData[GMount];
 
     $ml ??
-      ( $raw ?? $ml.Array !! $ml.Array.map({ GIO::Mount.new($_) }) )
+      ( $raw ??
+        $ml.Array !!
+        $ml.Array.map({ GIO::Roles::Mount.new-mount-obj($_) })
+      )
       !!
       Nil;
   }
@@ -156,7 +166,7 @@ class GIO::VolumeMonitor {
     my $v = g_volume_monitor_get_volume_for_uuid($!vm, $uuid);
 
     $v ??
-      ( $raw ?? $v !! GIO::Volume.new($v) )
+      ( $raw ?? $v !! GIO::Roles::Volume.new-volume-obj($v) )
       !!
       Nil;
   }
@@ -165,7 +175,10 @@ class GIO::VolumeMonitor {
     my $vl = g_volume_monitor_get_volumes($!vm);
 
     $vl ??
-      ( $raw ?? $vl.Array !! $vl.Array.map({ GIO::Volume.new($_) }) )
+      ( $raw ??
+        $vl.Array !!
+        $vl.Array.map({ GIO::Roles::Volume.new-volume-obj($_) })
+      )
       !!
       Nil
   }

@@ -8,6 +8,7 @@ use GTK::Compat::Types;
 use GIO::Raw::SocketConnection;
 
 use GIO::Stream;
+use GIO::Socket;
 use GIO::SocketAddress;
 
 our subset SocketConnectionAncestry is export of Mu

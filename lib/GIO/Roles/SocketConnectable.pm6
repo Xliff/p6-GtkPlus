@@ -26,14 +26,16 @@ role GIO::Roles::SocketConnectable {
     );
   }
 
-  method new-role-obj (GSocketConnectable $connectable) {
+  method new-socketconnectable-obj (GSocketConnectable $connectable)
+    is also<new_socketconnectable_obj>
+  {
     self.bless( :$connectable );
   }
 
   method enumerate (:$raw = False) {
     my $se = g_socket_connectable_enumerate($!sc);
 
-    $raw ?? $se !! GIO::GSocketAddressEnumerator.new($se);
+    $raw ?? $se !! GIO::SocketAddressEnumerator.new($se);
   }
 
   method socketconnectable_get_type is also<socketconnectable-get-type> {
@@ -45,7 +47,7 @@ role GIO::Roles::SocketConnectable {
   method proxy_enumerate (:$raw = False) is also<proxy-enumerate> {
     my $se = g_socket_connectable_proxy_enumerate($!sc);
 
-    $raw ?? $se !! GIO::GSocketAddressEnumerator.new($se);
+    $raw ?? $se !! GIO::SocketAddressEnumerator.new($se);
   }
 
   method to_string

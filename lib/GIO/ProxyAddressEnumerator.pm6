@@ -40,7 +40,10 @@ class GIO::ProxyAddressEnumerator {
         my $o = $gv.object;
 
         $o ??
-          ( $raw ?? $o !! GIO::SocketConnectable.new-role-obj($o) )
+          ( $raw ??
+            $o !!
+            GIO::Roles::SocketConnectable.new-socketconnectable-obj($o)
+          )
           !!
           Nil;
       },
@@ -80,7 +83,10 @@ class GIO::ProxyAddressEnumerator {
         my $o = cast(GProxyResolver, $gv.object);
 
         $o ??
-          ( $raw ?? $o !! GIO::ProxyResolver.new-role-obj($o) )
+          ( $raw ??
+            $o !!
+            GIO::Roles::ProxyResolver.new-proxyresolver-obj($o)
+          )
           !!
           Nil;
       },

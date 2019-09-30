@@ -6,6 +6,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GIO::FileInfo;
+
 use GTK::Roles::Properties;
 use GIO::Roles::Converter;
 

@@ -7,6 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::UnixConnection;
 
+use GIO::Credentials;
 use GIO::SocketConnection;
 
 our subset UnixConnectionAncestry is export of Mu

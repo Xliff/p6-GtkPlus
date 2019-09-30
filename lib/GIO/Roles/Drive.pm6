@@ -10,7 +10,7 @@ use GTK::Compat::FileTypes;
 use GTK::Raw::Utils;
 use GIO::Raw::Drive;
 
-use GTK::Compat::Roles::Icon;
+use GIO::Roles::Icon;
 use GTK::Roles::Signals::Generic;
 use GIO::Roles::Volume;
 
@@ -125,7 +125,7 @@ role GIO::Roles::Drive {
     my $i = g_drive_get_icon($!d);
 
     $i ??
-      ( $raw ?? $i !! GTK::Compat::Roles::Icon.new-icon-obj($i) )
+      ( $raw ?? $i !! GIO::Roles::Icon.new-icon-obj($i) )
       !!
       Nil;
   }
@@ -150,7 +150,7 @@ role GIO::Roles::Drive {
     my $i = g_drive_get_symbolic_icon($!d);
 
     $i ??
-      ( $raw ?? $i !! GTK::Compat::Roles::Icon.new-icon-obj($i) )
+      ( $raw ?? $i !! GIO::Roles::Icon.new-icon-obj($i) )
       !!
       Nil;
   }
@@ -161,11 +161,11 @@ role GIO::Roles::Drive {
     unstable_get_type( self.^name, &g_drive_get_type, $n, $t );
   }
 
-  method get_volumes (:raw_list(:$raw-list) = False, :$raw = False) is also<get-volumes> {
+  method get_volumes (:$glist = False, :$raw = False) is also<get-volumes> {
     my $vl = g_drive_get_volumes($!d)
       but GTK::Compat::Roles::ListData[GVolume];
 
-    return $vl if $raw-list;
+    return $vl if $glist;
 
     $vl ??
       ( $raw ??

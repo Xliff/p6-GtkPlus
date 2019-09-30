@@ -7,6 +7,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Resolver;
 
+use GIO::InetAddress;
+
 use GTK::Compat::Roles::Object;
 
 use GTK::Roles::Signals::Generic;

@@ -5,6 +5,8 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::EmblemedIcon;
 
+use GIO::Emblem;
+
 use GTK::Compat::Roles::Object;
 use GTK::Compat::Roles::ListData;
 use GIO::Roles::Icon;
@@ -39,11 +41,11 @@ class GIO::EmblemedIcon {
     g_emblemed_icon_clear_emblems($!ei);
   }
 
-  method get_emblems (:$list = False, :$raw = False) is also<get-emblems> {
+  method get_emblems (:$glist = False, :$raw = False) is also<get-emblems> {
     return (
       my $el = g_emblemed_icon_get_emblems($!ei)
         but GTK::Compat::Roles::ListData[GEmblem]
-    ) if $list;
+    ) if $glist;
 
     $el ??
       ( $raw ?? $el.Array !! $el.Array.map({ GIO::Emblem.new($_) }) )

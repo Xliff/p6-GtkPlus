@@ -79,7 +79,7 @@ class GIO::ConverterInputStream is GIO::FilterInputStream {
     my $c = g_converter_input_stream_get_converter($!cis);
 
     $c ??
-      ( $raw ?? $c !! GIO::Converter.new($c) )
+      ( $raw ?? $c !! GIO::Roles::Converter.new-converter-obj($c) )
       !!
       Nil;
   }
