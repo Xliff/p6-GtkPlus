@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -26,13 +28,19 @@ class GIO::FileIcon {
   }
 
   method GTK::Compat::Types::GFileIcon
+    is also<GFileIcon>
   { $!fi }
 
   method new (GFile() $icon) {
     self.bless( fileicon => g_file_icon_new($icon) );
   }
 
-  method get_file (:$raw = False) {
+  method get_file (:$raw = False)
+    is also<
+      get-file
+      file
+    >
+  {
     my $f = g_file_icon_get_file($!fi);
 
     $f ??
@@ -41,7 +49,7 @@ class GIO::FileIcon {
       Nil;
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_file_icon_get_type, $n, $t );
