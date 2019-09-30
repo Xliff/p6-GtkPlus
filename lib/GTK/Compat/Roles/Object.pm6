@@ -41,7 +41,7 @@ role GTK::Compat::Roles::Object {
 
   # We use these for inc/dec ops
   method ref   is also<upref>   {   g_object_ref($!o); self; }
-  method unref is also<downref> { g_object_unref($!o); self; }
+  method unref is also<downref> { g_object_unref($!o); }
 
   method check_gobject_type($compare_type) {
     my $o = nativecast(GTypeInstance, $!o);

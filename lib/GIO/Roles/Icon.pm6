@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Variant;
+
 use GTK::Compat::Types;
 use GIO::Raw::Icon;
 

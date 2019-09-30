@@ -17,8 +17,12 @@ class GTK::Compat::Variant {
   }
 
   method GTK::Compat::Types::GVariant
-  #  is also<Variant>
+    is also<GVariant>
   { $!v }
+
+  method new (GVariant $variant) {
+    self.bless( :$variant );
+  }
 
   method new_boolean(
     GTK::Compat::Variant:U:
