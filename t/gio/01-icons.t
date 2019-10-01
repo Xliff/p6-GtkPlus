@@ -11,7 +11,7 @@ use GIO::ThemedIcon;
 
 use GIO::Roles::Icon;
 
-plan 51;
+plan 67;
 
 sub compare-path-nodes ($uri, @a?) {
   my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
@@ -267,5 +267,44 @@ sub icon-serialize {
 
 }
 
+sub test-themed-icon {
+  my $i = GIO::ThemedIcon.new('testicon');
+  nok $i.use-default-fallbacks, 'Icon has no fallbacks';
+
+  my @n = $i.names;
+
+  is +@n, 2, 'Icon contains only 2 names';
+  is @n[0],  'testicon', 'First icon is "testicon"';
+  is @n[1],  'testicon-symbolic', 'Second name is "testicon-symbolic"';
+
+  $i.prepend-name('first-symbolic');
+  $i.append-name('last');
+  @n = $i.names;
+  is +@n, 6,  'Icon contains 6 names after append and prepend';
+  is @n[0],   'first-symbolic',     'First name is "first-symbolic"';
+  is @n[1],   'testicon',           'Second name is "testicon"';
+  is @n[2],   'last',               'Third name is "last"';
+  is @n[3],   'first',              'Fourth name is "first"';
+  is @n[4],   'testicon-symbolic',  'Fifth name is "testicon-symbolic"';
+  is @n[5],   'last-symbolic',      'Last name is "last-symbolic"';
+  is $i.hash, 1812785139,           'Hash value of icon is correct';
+
+  @n = <first-symbolic testicon last>;
+  my $i2 = GIO::ThemedIcon.new-from-names(@n);
+  ok $i.equal($i2), 'First Icon matches new Icon created from array';
+
+  my $i3 = GIO::Roles::Icon.new-for-string(~$i2);
+  ok  $i2.equal($i3),
+      "Second Icon matches third icon created from Second's string representation";
+
+  my $v = $i3.serialize;
+  my $i4 = GIO::Roles::Icon.deserialize($v);
+  ok  $i3.equal($i4),
+      'Fourth icon created from serialize/deserialize of Third Icon matches';
+
+  is  $i3.hash, $i4.hash, 'Hashes from Third and Fourth Icons are the same.';
+}
+
 icon-to-string;
 icon-serialize;
+test-themed-icon;

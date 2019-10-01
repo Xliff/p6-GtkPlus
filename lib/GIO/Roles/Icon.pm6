@@ -72,11 +72,14 @@ role GIO::Roles::Icon {
 
   method icon_get_type is also<icon-get-type> {
     state ($n, $t);
-    
+
     unstable_get_type( self.^name, &g_icon_get_type, $n, $t );
   }
 
-  method hash (GIcon() $i) {
+  multi method hash(GIO::Roles::Icon:D:) {
+    GIO::Roles::Icon.hash($!icon);
+  }
+  multi method hash (GIO::Roles::Icon:U: GIcon() $i) {
     g_icon_hash($i);
   }
 

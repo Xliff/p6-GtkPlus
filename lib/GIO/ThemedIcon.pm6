@@ -9,11 +9,11 @@ use GIO::Raw::ThemedIcon;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Object;
+use GTK::Roles::Properties;
 use GIO::Roles::Icon;
 
 class GIO::ThemedIcon {
-  also does GTK::Compat::Roles::Object;
+  also does GTK::Roles::Properties;
   also does GIO::Roles::Icon;
 
   has GThemedIcon $!ti;
@@ -53,6 +53,22 @@ class GIO::ThemedIcon {
   {
     self.bless(
       themed-icon => g_themed_icon_new_with_default_fallbacks($icon-name)
+    );
+  }
+
+  # Type: gboolean
+  method use-default-fallbacks is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('use-default-fallbacks', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, $val is copy {
+        warn 'use-default-fallbacks does not allow writing';
+      }
     );
   }
 

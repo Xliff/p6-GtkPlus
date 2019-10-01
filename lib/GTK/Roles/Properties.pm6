@@ -18,7 +18,13 @@ role GTK::Roles::Properties {
   { $!prop }
 
   # Superior to !setObject
-  method roleInit-Properties {
+  method roleInit-Object
+    is also<
+      roleInit_Object
+      roleInit_Properties
+      roleInit-Properties
+    >
+  {
     $!prop = cast( GObject, self.^attributes(:local)[0].get_value(self) );
   }
 
@@ -143,7 +149,7 @@ role GTK::Roles::Properties {
     });
   }
 
-  method prop_get_int(Str() $name) {
+  method prop_get_int(Str() $name) is also<prop-get-int> {
     my $a = g_object_get_int($!prop.p, $name);
     $a[0];
   }
