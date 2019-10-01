@@ -3,15 +3,18 @@ use v6.c;
 use Test;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
 
 use GTK::Compat::Roles::GFile;
 
+use GIO::Emblem;
+use GIO::EmblemedIcon;
 use GIO::FileIcon;
 use GIO::ThemedIcon;
 
 use GIO::Roles::Icon;
 
-plan 67;
+plan 80;
 
 sub compare-path-nodes ($uri, @a?) {
   my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
@@ -42,10 +45,6 @@ sub compare-path-nodes ($uri, @a?) {
 }
 
 sub compareEmblem (&f) {
-  use GTK::Compat::FileTypes;
-  use GIO::Emblem;
-  use GIO::EmblemedIcon;
-
   my $i = GIO::ThemedIcon.new('face-smirk');
   my $i2 = GIO::ThemedIcon.new('emblem-important');
   $i2.append-name('emblem-shared');
@@ -305,6 +304,63 @@ sub test-themed-icon {
   is  $i3.hash, $i4.hash, 'Hashes from Third and Fourth Icons are the same.';
 }
 
+sub test-emblemed-icon {
+  {
+    my $i1 = GIO::ThemedIcon.new('testicon');
+    my $i2 = GIO::ThemedIcon.new('testemblem');
+    my $e1 = GIO::Emblem.new($i2);
+    my $e2 = GIO::Emblem.new-with-origin($i2, G_EMBLEM_ORIGIN_TAG);
+    my $i3 = GIO::EmblemedIcon.new($i1, $e1);
+    my @e  = $i3.emblems;
+
+    is  +@e, 1,
+        'Only 1 emblem in Icon3';
+
+    is  +$i3.icon(:raw).p, +$i1.GIcon.p,
+        "Icon3's base icon is Icon1";
+
+    my $i4 = GIO::EmblemedIcon.new($i1, $e1);
+    $i4.add-emblem($e2);
+    @e = $i4.emblems;
+
+    is  +@e, 2,
+        'Two emblems in Icon4';
+
+    nok $i3.equal($i4),
+        'Icon3 and Icon4 are different';
+
+    my $v  = $i4.serialize;
+    my $i5 = GIO::Roles::Icon.deserialize($v);
+
+    ok  $i4.equal($i5),
+        'Icon4 and Icon5 are the same';
+    is  $i4.hash, $i5.hash,
+        "Icon4's hash and Icon5's hash match";
+
+    # Consideration for refactor: Icon Comparisons MUST be less arcane to
+    # type.
+    is  +@e[0].icon(:raw).p, +$i2.GIcon.p,
+        "Emblem1's icon is Icon2";
+    is  @e[0].origin, G_EMBLEM_ORIGIN_UNKNOWN,
+        "Emblem1's origin is G_EMBLEM_ORIGIN_UNKNOWN";
+    is  +@e[1].icon(:raw).p, +$i2.GIcon.p,
+        "Emblem2's icon is Icon2";
+    is  @e[1].origin, G_EMBLEM_ORIGIN_TAG,
+        "Emblem2's origin is G_EMBLEM_ORIGIN_TAG";
+
+    $i4.clear-emblems;
+    is  $i4.emblems.elems, 0,
+        'Icon4 has no emblems after they have been cleared';
+    nok $i4.hash == $i2.hash,
+        "Icon4's hash does not match that of Icon2";
+    is  +$i4.icon(:raw).p, +$i1.GIcon.p,
+        "Icon4's base icon is Icon1";
+
+  }
+
+}
+
 icon-to-string;
 icon-serialize;
 test-themed-icon;
+test-emblemed-icon;

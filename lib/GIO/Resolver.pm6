@@ -7,10 +7,12 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Resolver;
 
+use GTK::Compat::GList;
 use GIO::InetAddress;
 
-use GTK::Compat::Roles::Object;
+use GTK::Compat::Roles::ListData;
 
+use GTK::Compat::Roles::Object;
 use GTK::Roles::Signals::Generic;
 
 class GIO::Resolver {
@@ -116,13 +118,18 @@ class GIO::Resolver {
     Str() $hostname,
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror,
-    :$raw = False;
+    :$glist = False,
+    :$raw = False
   )
     is also<lookup-by-name>
   {
     clear_error;
     my $l = g_resolver_lookup_by_name($!r, $hostname, $cancellable, $error);
     set_error($error);
+
+    return $l if $glist;
+
+    $l = GTK::Compat::GList.new($l);
 
     $l ??
       ( $raw ?? $l.Array !! $l.Array.map({ GIO::InetAddress.new($_) }) )

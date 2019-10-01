@@ -5,6 +5,10 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::SrvTarget;
 
+use GTK::Compat::GList;
+
+use GTK::Compat::Roles::ListData;
+
 class GIO::SrvTarget {
   # BOXED
   has GSrvTarget $!st;
@@ -84,11 +88,16 @@ class GIO::SrvTarget {
   method list_sort (
     GIO::SrvTarget:U:
     GList() $targets,
+    :$glist = False,
     :$raw = False
   )
     is also<list-sort>
   {
     my $tl = g_srv_target_list_sort($targets);
+    return $tl if $glist;
+
+    $tl = GTK::Compat::GList.new($tl) but
+      GTK::Compat::Roles::ListData[GSrvTarget];
 
     $tl ??
       ( $raw ?? $tl.Array !! $tl.Array.map({ GIO::SrvTarget.new($_) }) )
