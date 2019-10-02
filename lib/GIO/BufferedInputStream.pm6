@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -56,6 +58,7 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
   }
 
   method GTK::Compat::Types::GBufferedInputStream
+    is also<GBufferedInputStream>
   { $!bis }
 
   proto method new (|)
@@ -70,11 +73,11 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     );
   }
 
-  method new_sized (GInputStream() $base, Int() $size) {
+  method new_sized (GInputStream() $base, Int() $size) is also<new-sized> {
     my gsize $s = $size;
 
     self.bless(
-      buffered-stream => g_buffered_input_stream_new_sized($base, $size)
+      buffered-stream => g_buffered_input_stream_new_sized($base, $s)
     );
   }
 
@@ -97,7 +100,9 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     GCancellable() $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<fill-async>
+  {
     my gsize $c = $count;
     my gint $i = $io_priority;
 
@@ -114,30 +119,35 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
   method fill_finish (
     GAsyncResult $result,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  ) is also<fill-finish> {
     clear_error;
     my $rv = g_buffered_input_stream_fill_finish($!bis, $result, $error);
     set_error($error);
     $rv;
   }
 
-  method get_available {
+  method get_available
+    is also<
+      get-available
+      available
+    >
+  {
     g_buffered_input_stream_get_available($!bis);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_buffered_input_stream_get_type, $n, $t );
   }
 
-  method peek (Pointer $buffer, Int() $offset, Int() $count) {
+  method peek (Blob() $buffer, Int() $offset, Int() $count) {
     my gsize ($o, $c) = ($offset, $count);
 
     g_buffered_input_stream_peek($!bis, $buffer, $offset, $count);
   }
 
-  method peek_buffer (Int() $count) {
+  method peek_buffer (Int() $count) is also<peek-buffer> {
     my gsize $c = $count;
 
     g_buffered_input_stream_peek_buffer($!bis, $c);
@@ -146,7 +156,9 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
   method read_byte (
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<read-byte>
+  {
     clear_error;
     my $rv = g_buffered_input_stream_read_byte($!bis, $cancellable, $error);
     set_error($error);

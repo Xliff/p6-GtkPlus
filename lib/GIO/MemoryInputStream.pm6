@@ -81,7 +81,11 @@ class GIO::MemoryInputStream is GIO::InputStream {
     self.bless( memory-stream => g_memory_input_stream_new_from_bytes($bytes) );
   }
 
-  method new_from_data (Str() $data, Int() $len, GDestroyNotify $destroy)
+  method new_from_data (
+    Blob() $data,
+    Int() $len = -1,
+    GDestroyNotify $destroy = Pointer
+  )
     is also<new-from-data>
   {
     my gssize $l = $len;
@@ -95,7 +99,11 @@ class GIO::MemoryInputStream is GIO::InputStream {
     g_memory_input_stream_add_bytes($!mis, $bytes);
   }
 
-  method add_data (Pointer $data, Int() $len, GDestroyNotify $destroy)
+  method add_data (
+    Blob() $data,
+    Int() $len,
+    GDestroyNotify $destroy = Pointer
+  )
     is also<add-data>
   {
     my gssize $l = $len;

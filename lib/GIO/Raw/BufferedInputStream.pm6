@@ -65,7 +65,7 @@ sub g_buffered_input_stream_new_sized (GInputStream $base_stream, gsize $size)
 
 sub g_buffered_input_stream_peek (
   GBufferedInputStream $stream,
-  Pointer $buffer,
+  Blob $buffer,
   gsize $offset,
   gsize $count
 )
