@@ -1565,6 +1565,8 @@ class cairo_surface_t          is repr('CPointer') is export does GTK::Roles::Po
 
 class AtkObject                is repr('CPointer') is export does GTK::Roles::Pointers { }
 
+
+# --- GLIB TYPES ---
 class GAction                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GActionGroup             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GActionMap               is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1579,6 +1581,7 @@ class GBookmarkFile            is repr('CPointer') is export does GTK::Roles::Po
 class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GByteArray               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GBytesIcon               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDrive                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCharsetConverter        is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1953,6 +1956,7 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
 
 };
 
+# --- GDK TYPES ---
 class GdkAppLaunchContext    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkAtom                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GdkCursor              is repr('CPointer') is export does GTK::Roles::Pointers { }
