@@ -76,8 +76,9 @@ sub g_buffered_input_stream_peek (
 
 sub g_buffered_input_stream_peek_buffer (
   GBufferedInputStream $stream,
-  gsize $count
+  gsize $count is rw
 )
+  returns CArray[uint8]
   is native(gio)
   is export
 { * }

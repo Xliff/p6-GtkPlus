@@ -81,6 +81,19 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     );
   }
 
+  method buffer_size is rw is also<buffer-size> {
+    Proxy.new(
+      FETCH => sub ($) {
+        g_buffered_input_stream_get_buffer_size($!bis);
+      },
+      STORE => sub ($, Int() $size is copy) {
+        my gsize $s = $size;
+
+        g_buffered_input_stream_set_buffer_size($!bis, $s);
+      }
+    );
+  }
+
   method fill (
     Int() $count,
     GCancellable() $cancellable = GCancellable,
@@ -147,10 +160,21 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     g_buffered_input_stream_peek($!bis, $buffer, $offset, $count);
   }
 
-  method peek_buffer (Int() $count) is also<peek-buffer> {
-    my gsize $c = $count;
+  proto method peek_buffer (|)
+    is also<peek-buffer>
+  { * }
 
-    g_buffered_input_stream_peek_buffer($!bis, $c);
+  multi method peek_buffer (:$all = False) {
+    samewith($, :$all);
+  }
+  multi method peek_buffer ($count is rw, :$all = False) {
+    my gsize $c = 0;
+
+    my $b = g_buffered_input_stream_peek_buffer($!bis, $c);
+    $count = $c;
+    my $buf = Buf.new($b[^$count]);
+
+    $all.not ?? $buf !! ($buf, $count);
   }
 
   method read_byte (

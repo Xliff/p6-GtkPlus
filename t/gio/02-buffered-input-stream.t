@@ -6,10 +6,16 @@ use GIO::InputStream;
 use GIO::MemoryInputStream;
 use GIO::BufferedInputStream;
 
+sub tests-init {
+  my $data    = 'abcdefghijk';
+  my $base    = GIO::MemoryInputStream.new-from-data( $data.encode('ISO-8859-1') );
+  my $in      = GIO::BufferedInputStream.new($base);
+
+  ($data, $base, $in);
+}
+
 sub test-peek {
-  my $data = 'abcdefghijk';
-  my $base = GIO::MemoryInputStream.new-from-data( $data.encode('ISO-8859-1') );
-  my $in   = GIO::BufferedInputStream.new-sized($base, 64);
+  my ($data, $base, $in) = tests-init;
 
   $in.fill(5);
 
@@ -57,4 +63,46 @@ sub test-peek {
   #.unref for $in, $base
 }
 
+sub test-peek-buffer {
+  my ($data, $base, $in) = tests-init;
+
+  my $nf      = $in.fill($data.chars);
+  my ($b, $c) = $in.peek-buffer(:all);
+
+  is  $nf, $c,
+      "Number of filled bytes equals number of bytes peek'd";
+
+  is  $b.decode, $data,
+      'Buffer returned from peek is the same as original data';
+
+  #.unref for $in, $base;
+}
+
+sub test-set-buffer-size {
+  my ($data, $base, $in) = tests-init;
+
+  is  $in.buffer-size, 4096,
+      'Default BufferedInputStream buffer-size is 4096';
+
+  $in.buffer-size = 64;
+
+  is  $in.buffer-size, 64,
+      'After resetting, current buffer-size is 64';
+
+  $in.fill($data.chars);
+  my ($b, $c) = $in.peek-buffer(:all);
+  $in.buffer-size = 2;
+  is  $in.buffer-size, $c,
+      "Peek'd buffer size is the same before buffer-size reset to 2";
+
+  $in.unref;
+  $in = GIO::BufferedInputStream.new-sized($base, 64);
+  is  $in.buffer-size, 64,
+      'Newly allocated BufferedInputStream has the proper buffer size of 64.';
+
+  #.unref for $in, $base;
+}
+
 test-peek;
+test-peek-buffer;
+test-set-buffer-size;
