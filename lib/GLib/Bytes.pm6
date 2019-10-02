@@ -8,7 +8,7 @@ use GLib::Raw::Bytes;
 class GLib::Bytes {
   has GBytes $!b;
 
-  submethod BUILD (:$bytes) {
+  submethod BUILD (GBytes :$bytes) {
     $!b = $bytes;
   }
 
@@ -16,7 +16,7 @@ class GLib::Bytes {
     is also<GBytes>
   { $!b }
 
-  method new (Buf() $data, Int() $size) {
+  method new (Blob() $data, Int() $size) {
     my gsize $s = $size;
 
     self.bless( bytes => g_bytes_new($data, $s) );
@@ -30,20 +30,20 @@ class GLib::Bytes {
     self.bless( bytes => g_bytes_new_from_bytes($bytes, $o, $l) );
   }
 
-  method new_static (Buf() $data, Int() $size) is also<new-static> {
+  method new_static (Blob() $data, Int() $size) is also<new-static> {
     my gsize $s = $size;
 
     self.bless( bytes => g_bytes_new_static($data, $s) );
   }
 
-  method new_take (Buf() $data, Int() $size) is also<new-take> {
+  method new_take (Blob() $data, Int() $size) is also<new-take> {
     my gsize $s = $size;
 
     self.bless( bytes => g_bytes_new_take($data, $s) );
   }
 
   method new_with_free_func (
-    Buf() $data,
+    Blob() $data,
     Int() $size,
     GDestroyNotify $free_func,
     gpointer $user_data = gpointer

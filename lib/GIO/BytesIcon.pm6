@@ -6,7 +6,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Bytes;
+use GLib::Bytes;
 
 use GTK::Compat::Roles::Object;
 use GIO::Roles::Icon;
@@ -19,8 +19,12 @@ class GIO::BytesIcon {
 
   has GBytesIcon $!bi;
 
-  submethod BUILD (GBytes :$bytes-icon) {
-    $!bi = $bytes;
+  submethod BUILD (GBytesIcon :$bytes-icon) {
+    $!bi = $bytes-icon;
+
+    self.roleInit-Object;
+    self.roleInit-Icon;
+    self.roleInit-LoadableIcon;
   }
 
   method GTK::Compat::Types::GBytesIcon
@@ -31,7 +35,9 @@ class GIO::BytesIcon {
     self.bless( :$bytes-icon );
   }
   multi method new (GBytes() $bytes) {
-    g_bytes_icon_new();
+    my $bi = g_bytes_icon_new($bytes);
+
+    self.bless( bytes-icon => $bi );
   }
 
   method get_bytes (:$raw = False)
@@ -43,7 +49,7 @@ class GIO::BytesIcon {
     my $b = g_bytes_icon_get_bytes($!bi);
 
     $b ??
-      ( $raw ?? $b !! GTK::Compat::Bytes.new($b) )
+      ( $raw ?? $b !! GLib::Bytes.new($b) )
       !!
       Nil;
   }

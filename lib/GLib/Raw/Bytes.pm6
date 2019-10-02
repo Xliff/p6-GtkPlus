@@ -36,7 +36,7 @@ sub g_bytes_hash (GBytes $bytes)
   is export
 { * }
 
-sub g_bytes_new (Buf $data, gsize $size)
+sub g_bytes_new (Blob $data, gsize $size)
   returns GBytes
   is native(glib)
   is export
@@ -48,20 +48,20 @@ sub g_bytes_new_from_bytes (GBytes $bytes, gsize $offset, gsize $length)
   is export
 { * }
 
-sub g_bytes_new_static (Buf $data, gsize $size)
+sub g_bytes_new_static (Blob $data, gsize $size)
   returns GBytes
   is native(glib)
   is export
 { * }
 
-sub g_bytes_new_take (Buf $data, gsize $size)
+sub g_bytes_new_take (Blob $data, gsize $size)
   returns GBytes
   is native(glib)
   is export
 { * }
 
 sub g_bytes_new_with_free_func (
-  gconstpointer $data,
+  Blob $data,
   gsize $size,
   GDestroyNotify $free_func,
   gpointer $user_data

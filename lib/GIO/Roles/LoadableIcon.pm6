@@ -141,7 +141,7 @@ sub g_loadable_icon_get_type ()
   returns GType
   is native(gio)
   is export
-  { * }
+{ * }
 
 sub g_loadable_icon_load (
   GLoadableIcon $icon,
@@ -153,7 +153,7 @@ sub g_loadable_icon_load (
   returns GInputStream
   is native(gio)
   is export
-  { * }
+{ * }
 
 sub g_loadable_icon_load_async (
   GLoadableIcon $icon,
@@ -164,7 +164,7 @@ sub g_loadable_icon_load_async (
 )
   is native(gio)
   is export
-  { * }
+{ * }
 
 sub g_loadable_icon_load_finish (
   GLoadableIcon $icon,
@@ -175,4 +175,4 @@ sub g_loadable_icon_load_finish (
   returns GInputStream
   is native(gio)
   is export
-  { * }
+{ * }

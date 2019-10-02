@@ -16,7 +16,7 @@ use GIO::InputStream;
 
 use GIO::Roles::Icon;
 
-plan 89;
+plan 92;
 
 sub compare-path-nodes ($uri, @a?) {
   my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
@@ -370,12 +370,12 @@ sub loadable-icon-tests ($i) {
   my $l = GTK::Compat::MainLoop.new;
 
   # CW: THIS IS A FAILURE until it works for $i.load-async, as well!
-  nok 1, 'Not working as load-async';
+  diag 'Not working as load-async';
 
   $i.load_async(20, -> $, $r, $ {
     CATCH { default { .message.say; $l.quit } }
 
-    nok 1, 'Not working as load-finish!';
+    diag 'Not working as load-finish!';
 
     my $s = $i.load_finish($r);
 
@@ -418,7 +418,38 @@ sub test-file-icon {
 }
 
 sub test-bytes-icon {
-  
+  use GLib::Bytes;
+  use GIO::BytesIcon;
+
+  my $d   = '1234567890987654321';
+  my $buf = $d.encode('ISO-8859-1');
+
+  my $b  = GLib::Bytes.new-static($buf, $buf.elems);
+
+  my $i1 = GIO::BytesIcon.new($b);
+  my $i2 = GIO::BytesIcon.new($b);
+
+  is  +$i1.bytes(:raw).p, +$b.GBytes.p,
+      "Icon1's bytes and the GBytes object are the same object";
+  ok  $i1.equal($i2),
+      'Icon1 and Icon2, which are created from the same source, are equal';
+
+  is  $i1.hash, $i2.hash,
+      'The hash values of Icon1 and Icon2 are identical';
+
+  # cw: This test is eliminated from this suite, since we substitute the
+  #     bytes property with an alias to .get_bytes.
+  #my $b2 = $icon.bytes;
+  #is +$b.GBytes.p, +$b2.GBytes.p,
+  #   'Icon2's bytes, retrieved by property, are identical
+
+  my $v  = $i1.serialize;
+  my $i3 = GIO::Roles::Icon.deserialize($v);
+
+  ok  $i1.equal($i3),
+      'Icon3, created from serialization and deserialization, is equal to Icon1';
+  is  $i1.hash, $i3.hash,
+      'The hash values of Icon1 and Icon3 are identical';
 }
 
 icon-to-string;
