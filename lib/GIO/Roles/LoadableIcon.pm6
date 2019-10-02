@@ -65,7 +65,7 @@ role GIO::Roles::LoadableIcon {
       !!
       Nil;
 
-    $all ?? $is !! ($is, $type);
+    $all.not ?? $is !! ($is, $type);
   }
 
   proto method load_async (|)
@@ -73,17 +73,20 @@ role GIO::Roles::LoadableIcon {
   { * }
 
   multi method load_async (
+    Int() $size,
     &callback,
     gpointer $user_data         = Pointer,
   ) {
-    samewith(GCancellable, &callback, $user_data);
+    samewith($size, GCancellable, &callback, $user_data);
   }
-  multi method load_async (Int() $size,
+  multi method load_async (
+    Int() $size,
     GCancellable() $cancellable,
     &callback,
     gpointer $user_data = Pointer
   ) {
     my gint $s = resolve-int($size);
+
     g_loadable_icon_load_async($!li, $s, $cancellable, &callback, $user_data);
   }
 
@@ -121,12 +124,12 @@ role GIO::Roles::LoadableIcon {
 
     do if $rc {
       my $is = $rc ??
-        ( $raw ?? $rc !! GTK::Compat::InputStream.new($rc) )
+        ( $raw ?? $rc !! GIO::InputStream.new($rc) )
         !!
         Nil;
 
       $type = $s[0].defined ?? $s[0] !! Nil;
-      $all ?? $is !! ($is, $type);
+      $all.not ?? $is !! ($is, $type);
     } else {
       $type = Nil;
       Nil;
@@ -156,7 +159,7 @@ sub g_loadable_icon_load_async (
   GLoadableIcon $icon,
   int32 $size,                        # Only marked as int
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (GObject, GAsyncResult, Pointer),
   gpointer $user_data
 )
   is native(gio)
