@@ -27,7 +27,10 @@ sub test-peek {
 
     is  $peek, 3,
         "Number of bytes peek'ed is 3";
-    is  $buf.decode, 'cde',
+
+    # Remove all NULs before comparison!
+    my $s = $buf.decode.trans( "\0" => '');
+    is  $s, 'cde',
         'Result of peek has "cde" in $buf';
   }
 
@@ -37,7 +40,9 @@ sub test-peek {
 
     is  $peek, 2,
         "Number of bytes peek'ed is 2";
-    is  $buf.decode, 'jk',
+
+    my $s = $buf.decode.trans( "\0" => '');
+    is  $s, 'jk',
         'Result of peek has "jk" in $buf';
   }
 
