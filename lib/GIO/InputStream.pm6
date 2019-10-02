@@ -319,11 +319,11 @@ class GIO::InputStream {
     my gsize $c = resolve-uint64($count);
     clear_error;
     my $rc = g_input_stream_skip($!is, $c, $cancellable, $error);
-    set_error($rc);
+    set_error($error);
     $rc;
   }
 
-  proto method skup_async (|)
+  proto method skip_async (|)
     is also<skip-async>
   { * }
 

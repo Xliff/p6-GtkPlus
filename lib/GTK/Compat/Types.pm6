@@ -101,12 +101,12 @@ sub g_error_free(GError $err)
   { *  }
 
 sub clear_error($error = $ERROR) is export {
-  g_error_free($error) with $error;
+  g_error_free($error) if $error.defined;
   $ERROR = Nil;
 }
 
 sub set_error(CArray $e) is export {
-  $ERROR = $e[0].deref with $e[0];
+  $ERROR = $e[0].deref if $e[0].defined;
 }
 
 sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
