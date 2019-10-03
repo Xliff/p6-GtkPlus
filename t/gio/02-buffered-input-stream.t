@@ -311,7 +311,36 @@ sub test-skip-async {
   }
 }
 
-plan 109;
+sub test-close {
+  {
+    my ($data, $base, $in) = tests-init(
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ',
+      0,
+      'ISO-8859-1'
+    );
+
+    ok  $in.close-base-stream, '.close-base-stream is enabled.';
+    ok  $in.close,             '.close returns TRUE';
+    nok $ERROR,                'No error was raised by .close';
+    ok  $base.is-closed,       'Base Stream is closed';
+  }
+
+  {
+    my ($data, $base, $in) = tests-init(
+      'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ',
+      0,
+      'ISO-8859-1'
+    );
+
+    $in.close-base-stream = False;
+
+    ok  $in.close,             '.close returns TRUE';
+    nok $ERROR,                'No error was raised by .close';
+    nok $base.is-closed,       'Base Stream is NOT closed';
+  }
+}
+
+plan 116;
 
 test-peek;
 test-peek-buffer;
@@ -321,3 +350,4 @@ test-read;
 test-read-async;
 test-skip;
 test-skip-async;
+test-close;

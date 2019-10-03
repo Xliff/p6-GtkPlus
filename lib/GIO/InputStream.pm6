@@ -64,6 +64,7 @@ class GIO::InputStream {
     gpointer $user_data = Pointer
   ) {
     my int32 $io = resolve-int($io_priority);
+
     g_input_stream_close_async(
       $!is,
       $io_priority,
@@ -87,6 +88,7 @@ class GIO::InputStream {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_input_stream_get_type, $n, $t );
   }
 
@@ -165,6 +167,7 @@ class GIO::InputStream {
   ) {
     my int32 $io = resolve-int($io_priority);
     my gsize $c = resolve-uint64($count);
+
     g_input_stream_read_all_async(
       $!is,
       $buffer,
@@ -221,6 +224,7 @@ class GIO::InputStream {
   ) {
     my gsize $c = resolve-uint64($count);
     my guint $io = resolve-uint($io_priority);
+
     g_input_stream_read_async(
       $!is,
       $buffer,
@@ -268,6 +272,7 @@ class GIO::InputStream {
   ) {
     my uint32 $io = resolve-uint($io_priority);
     my gsize $c = resolve-uint64($count);
+
     g_input_stream_read_bytes_async(
       $!is,
       $c,
@@ -345,6 +350,7 @@ class GIO::InputStream {
   ) {
     my uint32 $io = resolve-uint($io_priority);
     my gsize $c = resolve-uint64($count);
+
     g_input_stream_skip_async(
       $!is,
       $c,
