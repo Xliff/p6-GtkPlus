@@ -29,7 +29,7 @@ sub test-peek {
       'All of $data available in buffer after call to .fill(-1)';
 
   {
-    my $buf  = Buf.allocate(64);
+    my $buf  = Buf.allocate(64, 0);
     my $peek = $in.peek($buf, 2, 3);
 
     is  $peek, 3,
@@ -37,21 +37,19 @@ sub test-peek {
 
     # Remove all NULs before comparison!
     # cw: This is a flapping failures. Find out why.
-    my $s = $buf.decode.trans( "\0" => '');
-    is  $s, 'cde',
+    is  $buf.decode.substr(0, $peek), 'cde',
         'Result of peek has "cde" in $buf';
   }
 
   {
-    my $buf  = Buf.allocate(64);
+    my $buf  = Buf.allocate(64, 0);
     my $peek = $in.peek($buf, 9, 5);
 
     is  $peek, 2,
         "Number of bytes peek'ed is 2";
 
     # cw: This is a flapping failures. Find out why.
-    my $s = $buf.decode.trans( "\0" => '');
-    is  $s, 'jk',
+    is  $buf.decode.substr(0, $peek), 'jk',
         'Result of peek has "jk" in $buf';
   }
 
@@ -75,7 +73,9 @@ sub test-peek-buffer {
   is  $nf, $c,
       "Number of filled bytes equals number of bytes peek'd";
 
-  is  $b.decode, $data,
+  #diag $b.perl;
+
+  is  $b.decode('ISO-8859-1'), $data,
       'Buffer returned from peek is the same as original data';
 
   #.unref for $in, $base;
@@ -153,10 +153,54 @@ sub test-read-byte {
         $ERROR.code   == G_IO_ERROR_CLOSED
       ),
       'Proper error was returned after byte read on closed stream';
-      
 }
+
+sub test-read {
+  my $data = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  my $base = GIO::MemoryInputStream.new-from-data( $data.encode('ISO-8859-1') );
+  my $in   = GIO::BufferedInputStream.new-sized($base, 8);
+
+  is  $in.available, 0,
+      'No available bytes in input stream';
+
+  is  $in.fill(8), 8,
+      'Number of bytes (8) requested for fill and number returned are the same';
+
+  nok $ERROR,
+      'No error resulted from call to .fill';
+
+  is  $in.available, 8,
+      'Input stream reports that 8 bytes are available';
+
+  sub getChunk ($cmp = '') {
+    my $buf  = Buf.allocate(20, 0);
+    my $size = $cmp.chars;
+
+    is  $in.read($buf, 16), $size,
+        ".read operation returned the proper number of bytes ({$size})";
+
+    is  $buf.decode.substr(0, $size), $cmp,
+        ".read operation returned the proper value ('{$cmp}')" if $cmp;
+
+    nok $ERROR,
+        '.read operation did not incur an error';
+  }
+
+  getChunk('abcdefghijklmnop');
+
+  is  $in.available, 0,
+      'Input stream reports no available bytes after read.';
+
+  getChunk('qrstuvwxyzABCDEF');
+  getChunk('GHIJKLMNOPQRSTUV');
+  getChunk('WXYZ');
+  getChunk;
+}
+
+plan 48;
 
 test-peek;
 test-peek-buffer;
 test-set-buffer-size;
 test-read-byte;
+test-read;

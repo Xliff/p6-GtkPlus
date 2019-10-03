@@ -99,7 +99,7 @@ class GIO::InputStream {
   }
 
   method read (
-    Pointer $buffer,
+    Blob() $buffer,
     Int() $count,
     GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
@@ -112,7 +112,7 @@ class GIO::InputStream {
   }
 
   method read_all (
-    Pointer $buffer,
+    Blob() $buffer,
     Int() $count,
     Int() $bytes_read,
     GCancellable() $cancellable    = GCancellable,
@@ -139,7 +139,7 @@ class GIO::InputStream {
   { * }
 
   multi method read_all_async (
-    Pointer $buffer,
+    Blob() $buffer,
     Int() $count,
     Int() $io_priority,
     &callback,

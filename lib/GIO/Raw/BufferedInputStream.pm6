@@ -74,6 +74,7 @@ sub g_buffered_input_stream_peek (
   is export
 { * }
 
+# Occasionally returns corrupted data! -- WHY?
 sub g_buffered_input_stream_peek_buffer (
   GBufferedInputStream $stream,
   gsize $count is rw

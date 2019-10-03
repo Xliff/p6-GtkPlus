@@ -132,7 +132,9 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
   method fill_finish (
     GAsyncResult $result,
     CArray[Pointer[GError]] $error = gerror
-  ) is also<fill-finish> {
+  )
+    is also<fill-finish>
+  {
     clear_error;
     my $rv = g_buffered_input_stream_fill_finish($!bis, $result, $error);
     set_error($error);
@@ -170,9 +172,12 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
   multi method peek_buffer ($count is rw, :$all = False) {
     my gsize $c = 0;
 
+    # Minimize possibility of corruption by prepping buf in
+    # stages
     my $b = g_buffered_input_stream_peek_buffer($!bis, $c);
     $count = $c;
-    my $buf = Buf.new($b[^$count]);
+    my $buf = Buf.allocate($count, 0);
+    $buf[$_] = $b[$_] for ^$count;
 
     $all.not ?? $buf !! ($buf, $count);
   }
