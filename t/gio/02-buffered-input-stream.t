@@ -9,7 +9,7 @@ use GIO::MemoryInputStream;
 use GIO::BufferedInputStream;
 
 sub tests-init ($data = 'abcdefghijk') {
-  my $base    = GIO::MemoryInputStream.new-from-data( $data.encode('ISO-8859-1') );
+  my $base    = GIO::MemoryInputStream.new-from-data( $data.encode('ASCII') );
   my $in      = GIO::BufferedInputStream.new($base);
 
   ($data, $base, $in);
@@ -75,7 +75,7 @@ sub test-peek-buffer {
 
   #diag $b.perl;
 
-  is  $b.decode('ISO-8859-1'), $data,
+  is  $b.decode('ASCII'), $data,
       'Buffer returned from peek is the same as original data';
 
   #.unref for $in, $base;
