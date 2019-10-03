@@ -19,3 +19,4 @@ examples/
 *.ipynb
 jupyter.log
 c-helpers/time
+core

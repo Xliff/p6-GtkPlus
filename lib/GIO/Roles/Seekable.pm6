@@ -48,7 +48,7 @@ role GIO::Roles::Seekable {
   }
 
   method tell {
-    so g_seekable_tell($!s);
+    g_seekable_tell($!s);
   }
 
   method truncate (

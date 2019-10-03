@@ -1,0 +1,46 @@
+ERROR #1
+========
+cbwood@Infinity4:~/Projects/p6-GtkPlus$ p6gtkexec t/gio/02-buffered-input-stream.t
+Stage start      :   0.000
+Stage parse      :   1.453
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.037
+Stage mast       :   0.090
+Stage mbc        :   0.009
+Stage moar       :   0.000
+1..155
+ok 1 - 5 Bytes read into buffer after call to .fill(5)
+ok 2 - All of $data available in buffer after call to .fill(-1)
+ok 3 - Number of bytes peek'ed is 3
+Malformed UTF-8 at line 1 col 1
+  in sub test-peek at t/gio/02-buffered-input-stream.t line 45
+  in block <unit> at t/gio/02-buffered-input-stream.t line 385
+
+# You planned 155 tests, but ran 3
+
+ERROR #2
+========
+
+cbwood@Infinity4:~/Projects/p6-GtkPlus$ p6gtkexec t/gio/02-buffered-input-stream.t
+Stage start      :   0.000
+Stage parse      :   1.402
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.032
+Stage mast       :   0.067
+Stage mbc        :   0.006
+Stage moar       :   0.000
+1..155
+ok 1 - 5 Bytes read into buffer after call to .fill(5)
+ok 2 - All of $data available in buffer after call to .fill(-1)
+ok 3 - Number of bytes peek'ed is 3
+not ok 4 - Result of peek has "cde" in $buf
+# Failed test 'Result of peek has "cde" in $buf'
+# at t/gio/02-buffered-input-stream.t line 45
+# expected: 'cde'
+#      got: '(_~'
+ok 5 - Number of bytes peek'ed is 2
+Malformed UTF-8 at line 1 col 1
+  in sub test-peek at t/gio/02-buffered-input-stream.t line 57
+  in block <unit> at t/gio/02-buffered-input-stream.t line 385

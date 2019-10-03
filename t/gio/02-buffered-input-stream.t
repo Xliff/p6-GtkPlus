@@ -311,6 +311,46 @@ sub test-skip-async {
   }
 }
 
+sub test-seek {
+  my ($data, $base, $in) = tests-init(
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ',
+    4,
+    'ISO-8859-1'
+  );
+
+  my $curPos = 0;
+  sub seekTest($c, $o = 0, $t = G_SEEK_CUR) {
+    if $o {
+      my $rc = $in.seek($o, $t);
+
+      given $t {
+        when G_SEEK_CUR { $curPos += $o               }
+        when G_SEEK_SET { $curPos  = $o               }
+        when G_SEEK_END { $curPos  = $data.chars + $o }
+      }
+
+      nok $ERROR,             'No error received from seek operation';
+      ok  $rc,                'Seek operation return code was non-zero';
+      is  $in.tell, $curPos,  "Current position of stream is byte {$curPos}";
+    }
+
+    my $b = $in.read-byte;
+    $curPos++;
+
+    nok $ERROR,               'No error received from read operation';
+    is  $b, $c.ord,           "Byte received from read is '{$c}'";
+    is  $in.tell, $curPos,    "Current position of stream is byte {$curPos}";
+  }
+
+  seekTest('a');
+  seekTest('c',  1);
+  seekTest('b', -2);
+  seekTest('i',  6);
+  seekTest('d', -6);
+  seekTest('i',  8, G_SEEK_SET);
+  seekTest('Z', -1, G_SEEK_END);
+}
+
 sub test-close {
   {
     my ($data, $base, $in) = tests-init(
@@ -340,7 +380,7 @@ sub test-close {
   }
 }
 
-plan 116;
+plan 155;
 
 test-peek;
 test-peek-buffer;
@@ -350,4 +390,5 @@ test-read;
 test-read-async;
 test-skip;
 test-skip-async;
+test-seek;
 test-close;
