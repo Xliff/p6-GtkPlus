@@ -107,15 +107,25 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     $rv;
   }
 
-  method fill_async (
+  proto method fill_async (|)
+    is also<fill-async>
+  { * }
+
+  multi method fill_async (
+    Int() $count,
+    Int() $io_priority,
+    &callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith($count, $io_priority, GCancellable, &callback, $user_data);
+  }
+  multi method fill_async (
     Int() $count,
     Int() $io_priority,
     GCancellable() $cancellable,
-    GAsyncReadyCallback $callback,
+    &callback,
     gpointer $user_data = gpointer
-  )
-    is also<fill-async>
-  {
+  ) {
     my gsize $c = $count;
     my gint $i = $io_priority;
 
@@ -124,13 +134,13 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
       $c,
       $i,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
 
   method fill_finish (
-    GAsyncResult $result,
+    GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<fill-finish>

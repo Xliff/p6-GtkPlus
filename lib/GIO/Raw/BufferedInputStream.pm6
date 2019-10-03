@@ -22,7 +22,7 @@ sub g_buffered_input_stream_fill_async (
   gssize $count,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (GObject, GAsyncResult, Pointer),
   gpointer $user_data
 )
   is native(gio)

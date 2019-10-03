@@ -195,7 +195,7 @@ class GIO::InputStream {
   { * }
 
   multi method read_async (
-    Pointer $buffer,
+    Blob() $buffer,
     Int() $count,
     Int() $io_priority,
     &callback,
@@ -212,7 +212,7 @@ class GIO::InputStream {
     );
   }
   multi method read_async (
-    Pointer $buffer,
+    Blob() $buffer,
     Int() $count,
     Int() $io_priority,
     GCancellable() $cancellable,

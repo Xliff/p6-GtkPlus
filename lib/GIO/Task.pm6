@@ -11,20 +11,51 @@ use GTK::Compat::MainContext;
 use GIO::Cancellable;
 
 use GTK::Compat::Roles::Object;
+use GIO::Roles::AsyncResult;
+
+our subset TaskAncestry is export of Mu
+  where GTask | GAsyncResult | GObject;
 
 class GIO::Task {
+  also does GTK::Compat::Roles::Object;
+  also does GIO::Roles::AsyncResult;
+
   has GTask $!t;
 
   submethod BUILD (:$task) {
-    $!t = $task;
+    given $task {
+      when TaskAncestry {
+        self.setTask($task);
+      }
 
+      when GIO::Task {
+      }
+
+      default {
+      }
+    }
+  }
+
+  # Not as efficient as it could be, but... less typing!
+  method setTask (TaskAncestry $_) {
+    $!t = do {
+      when GTask {
+        $_;
+      }
+
+      when GAsyncResult | GObject {
+        cast(GTask, $_);
+      }
+    }
     self.roleInit-Object;
+    self.roleInit-AsyncResult;
   }
 
   method GTK::Compat::Types::GTask
+    is also<GTask>
   { $!t }
 
-  multi method new (GTask $task) {
+  multi method new (TaskAncestry $task) {
     self.bless( :$task );
   }
   multi method new (

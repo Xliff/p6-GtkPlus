@@ -4,13 +4,18 @@ use Test;
 
 use GTK::Compat::Types;
 
+use GTK::Compat::MainContext;
+
+use GIO::BufferedInputStream;
 use GIO::InputStream;
 use GIO::MemoryInputStream;
-use GIO::BufferedInputStream;
+use GIO::Task;
 
-sub tests-init ($data = 'abcdefghijk') {
-  my $base    = GIO::MemoryInputStream.new-from-data( $data.encode('ASCII') );
-  my $in      = GIO::BufferedInputStream.new($base);
+sub tests-init ($data = 'abcdefghijk', $size = 0, $enc = 'ASCII') {
+  my $base    = GIO::MemoryInputStream.new-from-data( $data.encode($enc) );
+  my $in      = $size ??  GIO::BufferedInputStream.new-sized($base, $size) !!
+                          GIO::BufferedInputStream.new($base);
+
 
   ($data, $base, $in);
 }
@@ -156,9 +161,11 @@ sub test-read-byte {
 }
 
 sub test-read {
-  my $data = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  my $base = GIO::MemoryInputStream.new-from-data( $data.encode('ISO-8859-1') );
-  my $in   = GIO::BufferedInputStream.new-sized($base, 8);
+  my ($data, $base, $in) = tests-init(
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    8,
+    'ISO-8859-1'
+  );
 
   is  $in.available, 0,
       'No available bytes in input stream';
@@ -197,10 +204,58 @@ sub test-read {
   getChunk;
 }
 
-plan 48;
+sub test-read-async {
+  my ($data, $base, $in) = tests-init(
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
+    8,
+    'ISO-8859-1'
+  );
+
+  is  $in.available, 0,
+      'No bytes available after stream init.';
+
+  my ($result, $buffer);
+
+  sub result-cb ($, $r, $) {
+    CATCH { default { .message.say } }
+
+    $result = GIO::Task.new($r).ref;
+  }
+
+  sub getChunk ($cmp = '', $size = 16) {
+    if $size == 8 {
+      $in.fill-async($size, G_PRIORITY_DEFAULT, &result-cb);
+    } else {
+      $buffer = Buf.allocate(20, 0);
+      $in.read-async($buffer, $size, G_PRIORITY_DEFAULT, &result-cb);
+    }
+
+    repeat { GTK::Compat::MainContext.iteration } until $result;
+
+    is  $in.fill-finish($result), $size,
+        "Async read operation returned proper number of bytes ({$size})";
+
+    is  $buffer.decode('ISO-8859-1').substr(0, $cmp.chars), $cmp,
+        "Async read operation returned proper data ('{$cmp}')" if $cmp;
+
+    nok $ERROR,
+        'Async operation did not incur an error';
+
+    # !!!!
+    # clear_object($result)
+    $result = Nil;
+  }
+
+  getChunk('', 8);
+  getChunk($_, .chars) for $data.comb(16);
+  getChunk('', 0);
+}
+
+plan 65;
 
 test-peek;
 test-peek-buffer;
 test-set-buffer-size;
 test-read-byte;
 test-read;
+test-read-async;
