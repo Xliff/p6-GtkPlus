@@ -204,6 +204,13 @@ sub test-read {
   getChunk;
 }
 
+my $result;
+sub result-cb ($, $r, $) {
+  CATCH { default { .message.say } }
+
+  $result = GIO::Task.new($r).ref;
+}
+
 sub test-read-async {
   my ($data, $base, $in) = tests-init(
     'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ',
@@ -214,13 +221,7 @@ sub test-read-async {
   is  $in.available, 0,
       'No bytes available after stream init.';
 
-  my ($result, $buffer);
-
-  sub result-cb ($, $r, $) {
-    CATCH { default { .message.say } }
-
-    $result = GIO::Task.new($r).ref;
-  }
+  my $buffer;
 
   sub getChunk ($cmp = '', $size = 16) {
     if $size == 8 {
@@ -251,7 +252,36 @@ sub test-read-async {
   getChunk('', 0);
 }
 
-plan 65;
+sub test-skip {
+  my ($data, $base, $in) = tests-init(
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ',
+    5,
+    'ISO-8859-1'
+  );
+
+  for <a b c> {
+    is  $in.read-byte, $_.ord,  "Byte read in is '$_'";
+    nok $ERROR,                 'No read error occurred.';
+  }
+
+  for <7 k 10 v 20 Q>.rotor(2) -> ($s, $l) {
+    is  $in.skip($s), $s,       "Skip operation returned {$s} bytes";
+    nok $ERROR,                 'No read error occurred.';
+    is  $in.read-byte, $l.ord,  "Next byte read was a '{$l}'";
+    nok $ERROR,                 'No read error occurred.';
+  }
+
+  for 8, 0 {
+    is  $in.skip(10), $_,
+        "After attempted skip of 10 bytes, only {$_} were really skipped.";
+
+    nok $ERROR, 'No read error occurred.';
+  }
+
+  #.unref for $in, $base;
+}
+
+plan 87;
 
 test-peek;
 test-peek-buffer;
@@ -259,3 +289,4 @@ test-set-buffer-size;
 test-read-byte;
 test-read;
 test-read-async;
+test-skip;
