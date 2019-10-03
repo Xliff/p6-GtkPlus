@@ -225,9 +225,7 @@ sub test-read-async {
       $in.read-async($buffer, $size, G_PRIORITY_DEFAULT, &result-cb);
     }
 
-    repeat {
-      GTK::Compat::MainContext.iteration
-    } until $result && $result.valid;
+repeat { GTK::Compat::MainContext.iteration } until $result;
 
     is  $in.fill-finish($result), $size,
         "Async read operation returned proper number of bytes ({$size})";
@@ -288,9 +286,7 @@ sub test-skip-async {
   for <7 k 10 v 20 Q>.rotor(2) -> ($s, $l) {
     $in.skip-async($s, G_PRIORITY_DEFAULT, &result-cb);
 
-    repeat {
-      GTK::Compat::MainContext.iteration
-    } until $result && $result.valid;
+    repeat { GTK::Compat::MainContext.iteration } until $result;
 
     is  $in.skip-finish($result), $s, "Async Skip operation returned {$s} bytes";
     nok $ERROR,                       'No read error occurred.';
@@ -303,9 +299,7 @@ sub test-skip-async {
   for 8, 0 {
     $in.skip-async(10, G_PRIORITY_DEFAULT, &result-cb);
 
-    repeat {
-      GTK::Compat::MainContext.iteration
-    } until $result && $result.valid;
+    repeat { GTK::Compat::MainContext.iteration } until $result;
 
     is  $in.skip-finish($result), $_,
         "Attempted skip of 10 bytes returned {$_} bytes";
