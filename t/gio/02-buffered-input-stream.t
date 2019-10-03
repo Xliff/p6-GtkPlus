@@ -65,8 +65,6 @@ sub test-peek {
     is  $peek, 0,
         "Number of bytes peek'ed is 0 (outside range of \$data)";
   }
-
-  #.unref for $in, $base
 }
 
 sub test-peek-buffer {
@@ -82,8 +80,6 @@ sub test-peek-buffer {
 
   is  $b.decode('ASCII'), $data,
       'Buffer returned from peek is the same as original data';
-
-  #.unref for $in, $base;
 }
 
 sub test-set-buffer-size {
@@ -107,8 +103,6 @@ sub test-set-buffer-size {
   $in = GIO::BufferedInputStream.new-sized($base, 64);
   is  $in.buffer-size, 64,
       'Newly allocated BufferedInputStream has the proper buffer size of 64.';
-
-  #.unref for $in, $base;
 }
 
 sub test-read-byte {
@@ -231,7 +225,9 @@ sub test-read-async {
       $in.read-async($buffer, $size, G_PRIORITY_DEFAULT, &result-cb);
     }
 
-    repeat { GTK::Compat::MainContext.iteration } until $result;
+    repeat {
+      GTK::Compat::MainContext.iteration
+    } until $result && $result.valid;
 
     is  $in.fill-finish($result), $size,
         "Async read operation returned proper number of bytes ({$size})";
@@ -242,8 +238,6 @@ sub test-read-async {
     nok $ERROR,
         'Async operation did not incur an error';
 
-    # !!!!
-    # clear_object($result)
     $result = Nil;
   }
 
@@ -277,11 +271,53 @@ sub test-skip {
 
     nok $ERROR, 'No read error occurred.';
   }
-
-  #.unref for $in, $base;
 }
 
-plan 87;
+sub test-skip-async {
+  my ($data, $base, $in) = tests-init(
+    'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ',
+    5,
+    'ISO-8859-1'
+  );
+
+  for <a b c> {
+    is  $in.read-byte, $_.ord,  "Byte read in is '$_'";
+    nok $ERROR,                 'No read error occurred.';
+  }
+
+  for <7 k 10 v 20 Q>.rotor(2) -> ($s, $l) {
+    $in.skip-async($s, G_PRIORITY_DEFAULT, &result-cb);
+
+    repeat {
+      GTK::Compat::MainContext.iteration
+    } until $result && $result.valid;
+
+    is  $in.skip-finish($result), $s, "Async Skip operation returned {$s} bytes";
+    nok $ERROR,                       'No read error occurred.';
+    is  $in.read-byte, $l.ord,        "Next byte read was a '{$l}'";
+    nok $ERROR,                       'No read error occurred.';
+
+    $result = Nil;
+  }
+
+  for 8, 0 {
+    $in.skip-async(10, G_PRIORITY_DEFAULT, &result-cb);
+
+    repeat {
+      GTK::Compat::MainContext.iteration
+    } until $result && $result.valid;
+
+    is  $in.skip-finish($result), $_,
+        "Attempted skip of 10 bytes returned {$_} bytes";
+
+    nok $ERROR,
+        'No read error occurred.';
+
+    $result = Nil;
+  }
+}
+
+plan 109;
 
 test-peek;
 test-peek-buffer;
@@ -290,3 +326,4 @@ test-read-byte;
 test-read;
 test-read-async;
 test-skip;
+test-skip-async;

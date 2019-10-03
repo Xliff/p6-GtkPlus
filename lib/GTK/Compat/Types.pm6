@@ -58,12 +58,12 @@ constant gtk        is export = 'gtk-3',v0;
 
 sub g_destroy_none(Pointer)
   is export
-  { }
+{ * }
 
 sub g_free (Pointer)
   is native(glib)
   is export
-  { * }
+{ * }
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
@@ -1564,7 +1564,6 @@ class cairo_font_options_t     is repr('CPointer') is export does GTK::Roles::Po
 class cairo_surface_t          is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class AtkObject                is repr('CPointer') is export does GTK::Roles::Pointers { }
-
 
 # --- GLIB TYPES ---
 class GAction                  is repr('CPointer') is export does GTK::Roles::Pointers { }
