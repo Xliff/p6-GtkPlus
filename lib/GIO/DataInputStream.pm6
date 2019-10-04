@@ -49,6 +49,10 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     is also<GDataInputStream>
   { $!dis }
 
+  # Prevent descent to base new if signature match.
+  proto method new (|)
+  { * }
+
   multi method new (GDataInputStream $data-stream) {
     self.bless( :$data-stream );
   }
