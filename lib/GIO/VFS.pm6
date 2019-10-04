@@ -5,6 +5,8 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::VFS;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Roles::Object;
 
 class GIO::VFS {
