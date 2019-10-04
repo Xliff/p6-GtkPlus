@@ -62,7 +62,7 @@ sub g_input_stream_is_closed (GInputStream $stream)
 
 sub g_input_stream_read (
   GInputStream $stream,
-  Pointer $buffer,
+  Blob $buffer,
   gsize $count,
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
@@ -74,7 +74,7 @@ sub g_input_stream_read (
 
 sub g_input_stream_read_all (
   GInputStream $stream,
-  Pointer $buffer,
+  Blob $buffer,
   gsize $count,
   gsize $bytes_read,
   GCancellable $cancellable,
@@ -87,7 +87,7 @@ sub g_input_stream_read_all (
 
 sub g_input_stream_read_all_async (
   GInputStream $stream,
-  Pointer $buffer,
+  Blob $buffer,
   gsize $count,
   int32 $io_priority,
   GCancellable $cancellable,
@@ -111,7 +111,7 @@ sub g_input_stream_read_all_finish (
 
 sub g_input_stream_read_async (
   GInputStream $stream,
-  Pointer $buffer,
+  Blob $buffer,
   gsize $count,
   int32 $io_priority,
   GCancellable $cancellable,

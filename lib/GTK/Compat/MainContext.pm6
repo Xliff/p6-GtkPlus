@@ -37,6 +37,7 @@ class GTK::Compat::MainContext {
 
   method add_poll (GPollFD $fd, Int() $priority) is also<add-poll> {
     my gint $p = resolve-int($priority);
+
     g_main_context_add_poll($!mc, $fd, $p);
   }
 
@@ -45,6 +46,7 @@ class GTK::Compat::MainContext {
     Int() $n_fds
   ) {
     my gpointer $fds = calloc(nativesizeof(GPollFD), $n_fds);
+
     samewith($max_priority, $fds, $n_fds);
   }
   multi method check (
@@ -79,6 +81,7 @@ class GTK::Compat::MainContext {
 
    method find_source_by_id (Int() $source_id) is also<find-source-by-id> {
      my guint $sid = resolve-uint($source_id);
+
      g_main_context_find_source_by_id($!mc, $sid);
    }
 
@@ -105,6 +108,7 @@ class GTK::Compat::MainContext {
     is also<invoke-full>
   {
     my gint $p = resolve-int($priority);
+
     g_main_context_invoke_full($!mc, $p, &function, $data, $notify);
   }
 
@@ -112,13 +116,26 @@ class GTK::Compat::MainContext {
     g_main_context_is_owner($!mc);
   }
 
-  method iteration (Int() $may_block) {
+  multi method iteration (
+    GTK::Compat::MainContext:U:
+  ) {
+    GTK::Compat::MainContext.iteration(GMainContext);
+  }
+  multi method iteration (Int() $may_block = True) {
+    GTK::Compat::MainContext.iteration($!mc, $may_block);
+  }
+  multi method iteration (
+    GTK::Compat::MainContext:U:
+    GMainContext $context = GMainContext,
+    Int() $may_block = True
+  ) {
     my gboolean $mb = resolve-bool($may_block);
-    g_main_context_iteration($!mc, $mb);
+
+    g_main_context_iteration($context, $mb);
   }
 
   method pending {
-    g_main_context_pending($!mc);
+    so g_main_context_pending($!mc);
   }
 
   method pop_thread_default is also<pop-thread-default> {
@@ -127,6 +144,7 @@ class GTK::Compat::MainContext {
 
   method prepare (Int() $priority) {
     my gint $p = resolve-int($priority);
+
     g_main_context_prepare($!mc, $priority);
   }
 
@@ -140,6 +158,7 @@ class GTK::Compat::MainContext {
     Int() $n_fds
   ) {
     my gpointer $fds = calloc(nativesizeof(GPollFD), $n_fds);
+
     samewith($max_priority, $timeout, $fds, $n_fds);
   }
   multi method query (
@@ -156,8 +175,9 @@ class GTK::Compat::MainContext {
     @pd;
   }
 
-  method ref {
+  method ref is also<upref> {
     g_main_context_ref($!mc);
+    self;
   }
 
   method ref_thread_default is also<ref-thread-default> {
@@ -172,7 +192,7 @@ class GTK::Compat::MainContext {
     g_main_context_remove_poll($!mc, $fd);
   }
 
-  method unref {
+  method unref is also<downref> {
     g_main_context_unref($!mc);
   }
 

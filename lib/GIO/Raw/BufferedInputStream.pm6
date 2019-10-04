@@ -22,7 +22,7 @@ sub g_buffered_input_stream_fill_async (
   gssize $count,
   gint $io_priority,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (GObject, GAsyncResult, Pointer),
   gpointer $user_data
 )
   is native(gio)
@@ -65,7 +65,7 @@ sub g_buffered_input_stream_new_sized (GInputStream $base_stream, gsize $size)
 
 sub g_buffered_input_stream_peek (
   GBufferedInputStream $stream,
-  Pointer $buffer,
+  Blob $buffer,
   gsize $offset,
   gsize $count
 )
@@ -74,10 +74,12 @@ sub g_buffered_input_stream_peek (
   is export
 { * }
 
+# Occasionally returns corrupted data! -- WHY?
 sub g_buffered_input_stream_peek_buffer (
   GBufferedInputStream $stream,
-  gsize $count
+  gsize $count is rw
 )
+  returns CArray[uint8]
   is native(gio)
   is export
 { * }

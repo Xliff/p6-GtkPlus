@@ -9,6 +9,10 @@ use GIO::Raw::AsyncResult;
 role GIO::Roles::AsyncResult {
   has GAsyncResult $!ar;
 
+  submethod BUILD (:$result) {
+    $!ar = $result if $result;
+  }
+
   method roleInit-AsyncResult is also<roleInit_AsyncResult> {
     $!ar = cast(
       GAsyncResult,
@@ -19,6 +23,10 @@ role GIO::Roles::AsyncResult {
   method GTK::Compat::Types::GAsyncResult
     is also<GAsyncResult>
   { $!ar }
+
+  method new-asyncresult-obj (GAsyncResult $result) {
+    self.bless( :$result );
+  }
 
   method get_source_object (:$raw = False) is also<get-source-object> {
     my $o = g_async_result_get_source_object($!ar);

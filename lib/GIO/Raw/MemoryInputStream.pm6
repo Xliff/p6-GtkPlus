@@ -43,11 +43,11 @@ sub g_memory_input_stream_new_from_bytes (GBytes $bytes)
 { * }
 
 sub g_memory_input_stream_new_from_data (
-  Pointer $data,
+  Blob $data,
   gssize $len,
   GDestroyNotify $destroy
 )
-  returns GInputStream
+  returns GMemoryInputStream
   is native(gio)
   is export
 { * }

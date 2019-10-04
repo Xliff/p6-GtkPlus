@@ -58,12 +58,12 @@ constant gtk        is export = 'gtk-3',v0;
 
 sub g_destroy_none(Pointer)
   is export
-  { }
+{ * }
 
 sub g_free (Pointer)
   is native(glib)
   is export
-  { * }
+{ * }
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
@@ -101,12 +101,12 @@ sub g_error_free(GError $err)
   { *  }
 
 sub clear_error($error = $ERROR) is export {
-  g_error_free($error) with $error;
+  g_error_free($error) if $error.defined;
   $ERROR = Nil;
 }
 
 sub set_error(CArray $e) is export {
-  $ERROR = $e[0].deref with $e[0];
+  $ERROR = $e[0].deref if $e[0].defined;
 }
 
 sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
@@ -1564,7 +1564,6 @@ class cairo_font_options_t     is repr('CPointer') is export does GTK::Roles::Po
 class cairo_surface_t          is repr('CPointer') is export does GTK::Roles::Pointers { }
 
 class AtkObject                is repr('CPointer') is export does GTK::Roles::Pointers { }
-
 
 # --- GLIB TYPES ---
 class GAction                  is repr('CPointer') is export does GTK::Roles::Pointers { }

@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -56,6 +58,7 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
   }
 
   method GTK::Compat::Types::GBufferedInputStream
+    is also<GBufferedInputStream>
   { $!bis }
 
   proto method new (|)
@@ -70,11 +73,24 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     );
   }
 
-  method new_sized (GInputStream() $base, Int() $size) {
+  method new_sized (GInputStream() $base, Int() $size) is also<new-sized> {
     my gsize $s = $size;
 
     self.bless(
-      buffered-stream => g_buffered_input_stream_new_sized($base, $size)
+      buffered-stream => g_buffered_input_stream_new_sized($base, $s)
+    );
+  }
+
+  method buffer_size is rw is also<buffer-size> {
+    Proxy.new(
+      FETCH => sub ($) {
+        g_buffered_input_stream_get_buffer_size($!bis);
+      },
+      STORE => sub ($, Int() $size is copy) {
+        my gsize $s = $size;
+
+        g_buffered_input_stream_set_buffer_size($!bis, $s);
+      }
     );
   }
 
@@ -91,11 +107,23 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     $rv;
   }
 
-  method fill_async (
+  proto method fill_async (|)
+    is also<fill-async>
+  { * }
+
+  multi method fill_async (
+    Int() $count,
+    Int() $io_priority,
+    &callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith($count, $io_priority, GCancellable, &callback, $user_data);
+  }
+  multi method fill_async (
     Int() $count,
     Int() $io_priority,
     GCancellable() $cancellable,
-    GAsyncReadyCallback $callback,
+    &callback,
     gpointer $user_data = gpointer
   ) {
     my gsize $c = $count;
@@ -106,47 +134,70 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
       $c,
       $i,
       $cancellable,
-      $callback,
+      &callback,
       $user_data
     );
   }
 
   method fill_finish (
-    GAsyncResult $result,
+    GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<fill-finish>
+  {
     clear_error;
     my $rv = g_buffered_input_stream_fill_finish($!bis, $result, $error);
     set_error($error);
     $rv;
   }
 
-  method get_available {
+  method get_available
+    is also<
+      get-available
+      available
+    >
+  {
     g_buffered_input_stream_get_available($!bis);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_buffered_input_stream_get_type, $n, $t );
   }
 
-  method peek (Pointer $buffer, Int() $offset, Int() $count) {
+  method peek (Blob() $buffer, Int() $offset, Int() $count) {
     my gsize ($o, $c) = ($offset, $count);
 
     g_buffered_input_stream_peek($!bis, $buffer, $offset, $count);
   }
 
-  method peek_buffer (Int() $count) {
-    my gsize $c = $count;
+  proto method peek_buffer (|)
+    is also<peek-buffer>
+  { * }
 
-    g_buffered_input_stream_peek_buffer($!bis, $c);
+  multi method peek_buffer (:$all = False) {
+    samewith($, :$all);
+  }
+  multi method peek_buffer ($count is rw, :$all = False) {
+    my gsize $c = 0;
+
+    # Minimize possibility of corruption by prepping buf in
+    # stages
+    my $b = g_buffered_input_stream_peek_buffer($!bis, $c);
+    $count = $c;
+    my $buf = Buf.allocate($count, 0);
+    $buf[$_] = $b[$_] for ^$count;
+
+    $all.not ?? $buf !! ($buf, $count);
   }
 
   method read_byte (
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<read-byte>
+  {
     clear_error;
     my $rv = g_buffered_input_stream_read_byte($!bis, $cancellable, $error);
     set_error($error);
