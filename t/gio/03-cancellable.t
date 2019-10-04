@@ -127,7 +127,8 @@ sub test-cancel-multiple-concurrent {
 
     mock-operation-async(
       $iterations,
-      ^Bool.pick,
+      #^Bool.pick,
+      False,
       $cancellable,
       -> $s, $r, $d {
         mock-operation-ready($s, $r, $iterations);
