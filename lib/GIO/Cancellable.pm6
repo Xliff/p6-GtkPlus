@@ -40,7 +40,7 @@ class GIO::Cancellable {
     self.connect($!c, 'cancelled');
   }
 
-  multi multi method cancel {
+  multi method cancel {
     GIO::Cancellable.cancel($!c);
   }
   multi method cancel (
