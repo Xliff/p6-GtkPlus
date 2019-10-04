@@ -59,18 +59,20 @@ class GIO::Task {
     self.bless( :$task );
   }
   multi method new (
+    GObject() $source,
     &callback,
     gpointer $callback_data = gpointer
   ) {
-    samewith(GCancellable, &callback, $callback_data);
+    samewith($source, GCancellable, &callback, $callback_data);
   }
   multi method new (
+    GObject() $source,
     GCancellable() $cancellable,
     &callback,
     gpointer $callback_data = gpointer
   ) {
     self.bless(
-      task => g_task_new($!t, $cancellable, &callback, $callback_data)
+      task => g_task_new($source, $cancellable, &callback, $callback_data)
     );
   }
 
@@ -135,11 +137,39 @@ class GIO::Task {
     );
   }
 
+  method task_data is rw is also<task-data> {
+    Proxy.new:
+      FETCH => -> $ { self.get-task-data },
+      STORE => -> $, $val {
+        self.set-task-data(
+          $val ~~ (Pointer, GTK::Compat::Roles::Pointer).any ??
+            $val
+            !!
+            cast(
+              Pointer,
+              do given $val {
+                when GTK::Compat::Roles::Object { $val.GObject }
+                when .REPR eq 'CStruct'         { $_           }
+
+                default {
+                  die "Cannot store object of type { .^name } as task data!"
+                }
+              }
+            )
+        );
+      };
+  }
+
   method attach_source (GSource() $source, &callback) is also<attach-source> {
     g_task_attach_source($!t, $source, &callback);
   }
 
-  method get_cancellable (:$raw = False) is also<get-cancellable> {
+  method get_cancellable (:$raw = False)
+    is also<
+      get-cancellable
+      cancellable
+    >
+  {
     my $c = g_task_get_cancellable($!t);
 
     $c ??
@@ -148,11 +178,21 @@ class GIO::Task {
       Nil;
   }
 
-  method get_completed is also<get-completed> {
+  method get_completed
+    is also<
+      get-completed
+      completed
+    >
+  {
     so g_task_get_completed($!t);
   }
 
-  method get_context (:$raw = False) is also<get-context> {
+  method get_context (:$raw = False)
+    is also<
+      get-context
+      context
+    >
+  {
     my $c = g_task_get_context($!t);
 
     $c ??
@@ -161,7 +201,13 @@ class GIO::Task {
       Nil;
   }
 
-  method get_source_object (:$raw = False) is also<get-source-object> {
+  method get_source_object (:$raw = False)
+    is also<
+      get-source-object
+      source_object
+      source-object
+    >
+  {
     my $o = g_task_get_source_object($!t);
 
     $o ??
@@ -170,6 +216,7 @@ class GIO::Task {
       Nil;
   }
 
+  # No arg alias here as we have the attribute .task_data
   method get_task_data is also<get-task-data> {
     g_task_get_task_data($!t);
   }
