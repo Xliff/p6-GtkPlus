@@ -159,7 +159,7 @@ sub g_data_input_stream_read_upto (
   GDataInputStream $stream,
   Str $stop_chars,
   gssize $stop_chars_len,
-  gsize $length,
+  gsize $length is rw,
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
@@ -184,7 +184,42 @@ sub g_data_input_stream_read_upto_async (
 sub g_data_input_stream_read_upto_finish (
   GDataInputStream $stream,
   GAsyncResult $result,
-  gsize $length,
+  gsize $length is rw,
+  CArray[Pointer[GError]] $error
+)
+  returns Str
+  is native(gio)
+  is export
+{ * }
+
+sub g_data_input_stream_read_until (
+  GDataInputStream $stream,
+  Str $stop_chars,
+  gsize $length is rw,
+  GCancellable $cancellable,
+  CArray[Pointer[GError]] $error
+)
+  returns Str
+  is native(gio)
+  is export
+{ * }
+
+sub g_data_input_stream_read_until_async (
+  GDataInputStream $stream,
+  Str $stop_chars,
+  gint $io_priority,
+  GCancellable $cancellable,
+  GAsyncReadyCallback $callback,
+  gpointer $user_data
+)
+  is native(gio)
+  is export
+{ * }
+
+sub g_data_input_stream_read_until_finish (
+  GDataInputStream $stream,
+  GAsyncResult $result,
+  gsize $length is rw,
   CArray[Pointer[GError]] $error
 )
   returns Str

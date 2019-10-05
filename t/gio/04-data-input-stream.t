@@ -133,9 +133,42 @@ sub test-read-lines-LF-utf8 (:$valid!) {
           "Correct number of { $valid ?? '' !! 'in' }valid UTF8 lines read";
 }
 
-plan 76;
+sub test-read-until {
+  my constant REPEATS         = 10;
+  my constant DATA_STRING     = ' part1 # part2 $ part3 % part4 ^';
+  my constant DATA_PART_LEN   = 7;
+  my constant DATA_SEP        = '#$%^';
+  my constant DATA_SEP_LEN    = 4;
+  my constant DATA_PARTS_NUM  = DATA_SEP_LEN * REPEATS;
+
+  my $base   = GIO::MemoryInputStream.new;
+  my $stream = GIO::DataInputStream.new($base);
+
+  $base.add-data(DATA_STRING, enc => 'ISO-8859-1') for ^REPEATS;
+
+  my ($line, $data) = (0);
+  repeat {
+    $data = $stream.read-until(DATA_SEP);
+    if $data {
+      is  $data.chars, DATA_PART_LEN,
+          'Data part read string is the proper length';
+
+      nok $ERROR,
+          'No error occurred during stop-char read';
+
+      $line++;
+    }
+  } while $data;
+
+  nok $ERROR,                 'No error detected';
+
+  is  $line, DATA_PARTS_NUM,  'All data parts read successfully';
+}
+
+plan 158;
 
 test-basic;
 test-read-lines(.value) for GDataStreamNewlineTypeEnum.enums.sort( *.key );
 test-read-lines-LF-utf8( :valid );
 test-read-lines-LF-utf8( :!valid );
+test-read-until;

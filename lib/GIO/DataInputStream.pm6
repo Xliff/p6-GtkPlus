@@ -326,7 +326,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
   multi method read_upto (
     Str() $stop_chars,
     Int() $stop_chars_len,
-    $length,
+    $length is rw,
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror,
     :$all = False
@@ -394,6 +394,89 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
 
     clear_error;
     my $rv = g_data_input_stream_read_upto_finish($!dis, $result, $l, $error);
+    set_error($error);
+    $length = $l;
+
+    $all.not ?? $rv !! ($rv, $length);
+  }
+
+  proto method read_until (|)
+      is also<read-until>
+  { * }
+
+  multi method read_until (
+    Str() $stop_chars,
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    samewith($stop_chars, $, $cancellable, $error, :$all);
+  }
+  multi method read_until (
+    Str() $stop_chars,
+    $length is rw,
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my gsize $l = 0;
+
+    clear_error;
+    my $rv = g_data_input_stream_read_until(
+      $!dis,
+      $stop_chars,
+      $l,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+    $length = $l;
+
+    $all.not ?? $rv !! ($rv, $length);
+  }
+
+  method read_until_async (
+    Str() $stop_chars,
+    Int() $io_priority,
+    GCancellable $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gerror
+  )
+    is also<read-until-async>
+  {
+    my gint $i = $io_priority,
+
+    g_data_input_stream_read_until_async(
+      $!dis,
+      $stop_chars,
+      $i,
+      $cancellable,
+      $callback,
+      $user_data
+    );
+  }
+
+  proto method read_until_finish (|)
+      is also<read-until-finish>
+  { * }
+
+  multi method read_until_finish (
+    GAsyncResult() $result,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    samewith($result, $, $error, :$all);
+  }
+  multi method read_until_finish (
+    GAsyncResult() $result,
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my gsize $l = 0;
+
+    clear_error;
+    my $rv = g_data_input_stream_read_until_finish($!dis, $result, $l, $error);
     set_error($error);
     $length = $l;
 
