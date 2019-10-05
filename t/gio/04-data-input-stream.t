@@ -70,6 +70,7 @@ sub test-read-lines ($nl is copy) {
   is  $stream.byte-order, G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN,
       'Data input stream can be set to Little Endian byte order';
 
+  # Convert parameter back to enum.
   $nl = GDataStreamNewlineTypeEnum($nl);
   $stream.newline-type = $nl;
   is  $stream.newline-type, $nl,
@@ -94,26 +95,47 @@ sub test-read-lines ($nl is copy) {
   is  $line, +@lines,             'All lines were read';
 }
 
-sub test-read-lines-LF-valid-utf8 {
+sub test-read-lines-LF-utf8 (:$valid!) {
   my $base   = GIO::MemoryInputStream.new;
   my $stream = GIO::DataInputStream.new($base);
 
-  $base.add-data("foo\nthis is valid UTF-8 ☺!\nbar\n");
+  $stream.newline-type = G_DATA_STREAM_NEWLINE_TYPE_LF;
+
+  if $valid {
+    $base.add-data("foo\nthis is valid UTF-8 ☺!\nbar\n");
+  } else {
+    $base.add-data(
+      "foo\nthis is not valid UTF-8 \xE5 =(\nbar\n",
+      enc => 'ISO-8859-1'
+    );
+  }
 
   my $lines = 0;
   loop {
     my $line = $stream.read-line-utf8;
-    nok   $ERROR,     'No error detected during read';
+
+    if $valid {
+      nok       $ERROR,     'No error detected during read';
+    } else {
+      if $lines {
+        ok    $ERROR,       "Error detected when reading line {$lines}";
+        last;
+      } else {
+        nok   $ERROR,       'No error detected during read';
+      }
+    }
 
     last unless $line;
     $lines++
   }
 
-  is      $lines, 3,  'Correct number of valid UTF8 lines read';
+  is      $lines, $valid ?? 3 !! 1,
+          "Correct number of { $valid ?? '' !! 'in' }valid UTF8 lines read";
 }
 
-plan 73;
+plan 76;
 
 test-basic;
 test-read-lines(.value) for GDataStreamNewlineTypeEnum.enums.sort( *.key );
-test-read-lines-LF-valid-utf8;
+test-read-lines-LF-utf8( :valid );
+test-read-lines-LF-utf8( :!valid );
