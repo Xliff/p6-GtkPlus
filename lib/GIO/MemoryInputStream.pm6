@@ -99,13 +99,22 @@ class GIO::MemoryInputStream is GIO::InputStream {
     g_memory_input_stream_add_bytes($!mis, $bytes);
   }
 
-  method add_data (
-    Blob() $data,
-    Int() $len,
-    GDestroyNotify $destroy = Pointer
-  )
+  proto method add_data (|)
     is also<add-data>
-  {
+  { * }
+
+  multi method add_data (
+    Str() $data,
+    Int() $len  = -1,
+    :$enc       = 'UTF8'
+  ) {
+    samewith($data.encode($enc), $len);
+  }
+  multi method add_data (
+    Blob() $data,
+    Int() $len              = -1,
+    GDestroyNotify $destroy = Pointer
+  ) {
     my gssize $l = $len;
 
     g_memory_input_stream_add_data($!mis, $data, $l, $destroy);

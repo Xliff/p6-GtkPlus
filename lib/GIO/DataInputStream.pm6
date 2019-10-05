@@ -131,7 +131,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
   }
 
   method read_int64 (
-    GCancellable() $cancellable = GCancellable,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<read-int64>
@@ -147,7 +147,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
   { * }
 
   multi method read_line (
-    GCancellable() $cancellable = GCancellable,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror,
     :$all = False
   ) {
@@ -155,7 +155,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
   }
   multi method read_line (
     $length is rw,
-    GCancellable() $cancellable = GCancellable,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror,
     :$all = False
   ) {
@@ -166,7 +166,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     set_error($error);
     $length = $l;
 
-    $all ?? $rv !! ($rv, $length);
+    $all.not ?? $rv !! ($rv, $length);
   }
 
   method read_line_async (
@@ -212,7 +212,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     set_error($error);
     $length = $l;
 
-    $all ?? $rv !! ($rv, $length);
+    $all.not ?? $rv !! ($rv, $length);
   }
 
   proto method read_line_finish_utf8 (|)
@@ -239,7 +239,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     set_error($error);
     $length = $l;
 
-    $all ?? $rv !! ($rv, $length);
+    $all.not ?? $rv !! ($rv, $length);
   }
 
   proto method read_line_utf8 (|)
@@ -251,7 +251,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     CArray[Pointer[GError]] $error = gerror,
     :$all = False
   ) {
-    samewith($cancellable, $, $error, :$all);
+    samewith($, $cancellable, $error, :$all);
   }
   multi method read_line_utf8 (
     $length is rw,
@@ -271,7 +271,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     set_error($error);
     $length = $l;
 
-    $all ?? $rv !! ($rv, $length);
+    $all.not ?? $rv !! ($rv, $length);
   }
 
   method read_uint16 (
@@ -346,7 +346,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     set_error($error);
     $length = $l;
 
-    $all ?? $rv !! ($rv, $length);
+    $all.not ?? $rv !! ($rv, $length);
   }
 
   method read_upto_async (
@@ -397,7 +397,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     set_error($error);
     $length = $l;
 
-    $all ?? $rv !! ($rv, $length);
+    $all.not ?? $rv !! ($rv, $length);
   }
 
 }

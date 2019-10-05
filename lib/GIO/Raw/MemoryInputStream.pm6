@@ -16,7 +16,7 @@ sub g_memory_input_stream_add_bytes (
 
 sub g_memory_input_stream_add_data (
   GMemoryInputStream $stream,
-  Pointer $data,
+  Blob $data,
   gssize $len,
   GDestroyNotify $destroy
 )
