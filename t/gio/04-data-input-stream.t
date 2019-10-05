@@ -12,7 +12,7 @@ use GIO::MemoryInputStream;
 
 constant MAX_LINES = 4;
 #constant MAX_BYTES = 0x10000;
-constant MAX_BYTES = 64;
+constant MAX_BYTES = 8;
 
 sub swap-endian ($bits, $i, :$signed = False) {
   diag "SE#{$bits}/$i/{$signed}";
@@ -228,7 +228,11 @@ sub test-data-array ($stream, $base, $buf, $len, $data-type, $byte-order) {
 
   repeat {
     $data = $stream."read-{$type}"();
-    $data = swap-endian($bits, $data, signed => $un.not) if $swap && $bits > 1;
+    $data = swap-endian($bits, $data, signed => $un.not)
+      if $swap.not && $bits > 1;
+
+    # Normalization due to signage issues.
+    $data += 256 if $type eq 'byte' && $data < 0;
 
     diag $data if $bits > 1;
 
