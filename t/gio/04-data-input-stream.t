@@ -15,7 +15,7 @@ constant MAX_LINES = 4;
 constant MAX_BYTES = 8;
 
 sub swap-endian ($bits, $i, :$signed = False) {
-  diag "SE#{$bits}/$i/{$signed}";
+  #diag "SE#{$bits}/$i/{$signed}";
 
   my $b = Buf.new;
   my $s = $signed ?? '' !! 'u';
@@ -228,11 +228,17 @@ sub test-data-array ($stream, $base, $buf, $len, $data-type, $byte-order) {
 
   repeat {
     $data = $stream."read-{$type}"();
+    diag $type;
+
+    # Normalization due to signage issues, pre-swap
+    $data += 256     if $type eq 'byte'   && $data < 0;
+    $data += 2 ** 64 if $type eq 'uint64' && $data < 0;
+
     $data = swap-endian($bits, $data, signed => $un.not)
       if $swap.not && $bits > 1;
 
-    # Normalization due to signage issues.
-    $data += 256 if $type eq 'byte' && $data < 0;
+    # Normalization due to signage issues, post swap.
+    $data += 256     if $type eq 'byte'   && $data < 0;
 
     diag $data if $bits > 1;
 
