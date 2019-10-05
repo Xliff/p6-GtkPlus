@@ -15,7 +15,10 @@ sub swap-endian ($bits, $i, :$signed = False) {
   my $s = $signed ?? '' !! 'u';
 
   $b."write-{$s}int{$bits}"(0, $i);
-  $b."read-{$s}int{$bits}"(0, BigEndian);
+  $b."read-{$s}int{$bits}"(
+    0,
+    $*KERNEL.endian == BigEndian ?? LittleEndian !! BigEndian
+  );
 }
 
 sub swap-endian16 ($i, :$signed = False) {
@@ -194,6 +197,58 @@ sub test-read-sep(:$upto, :$until) {
   nok $ERROR,                 'No error detected';
 
   is  $line, $DATA_PARTS_NUM, 'All data parts read successfully';
+}
+
+enum TestDataType <
+  TEST_DATA_BYTE
+  TEST_DATA_INT16
+  TEST_DATA_UINT16
+  TEST_DATA_INT32
+  TEST_DATA_UINT32
+  TEST_DATA_INT64
+  TEST_DATA_UINT64
+>;
+
+sub test-data-array ($stream, $base, $buf, $len, $data-type, $byte-order) {
+
+  my $native = $*KERNEL.endian == BigEndian ??
+    G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN    !!
+    G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN;
+
+  my $swap = [&&](
+    $byte-order != G_DATA_STREAM_BYTE_ORDER_HOST_ENDIAN,
+    $byte-order != $native
+  );
+
+  test-seek-to-start($base);
+
+  my ($pos, $data) = (0);
+  my ($type, $un) = ( $data-type.Str.lc.split('_')[* - 1], 0 );
+  my $size = do {
+    if $type ~~ /(u)?\w+(\d+)$/ {
+      $un = $0.defined;
+      $1.Int;
+    } else {
+      1;
+    }
+  };
+
+  repeat {
+    $data = $stream."read-{$type}"();
+    $data = swap-endian($size, $data, signed => $un) if $swap && $size > 1;
+
+    unless $ERROR {
+      is  $data, $buf."read-{$type}"($pos, BigEndian),
+          "Normalized integer from read-{$type} matches data from buffer";
+    }
+
+    $pos  += $size.log(2) + 1;
+  } while $data;
+
+  nok $ERROR,               'No error occured during read operation'
+    if $pos < $len + 1;
+
+  is  $pos - $size, $len,   'Position in buffer is properly set';
 }
 
 plan 320;
