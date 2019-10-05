@@ -95,7 +95,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
   }
 
   method read_byte (
-    GCancellable() $cancellable = GCancellable,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<read-byte>
@@ -107,7 +107,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
   }
 
   method read_int16 (
-    GCancellable() $cancellable,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<read-int16>
@@ -119,7 +119,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
   }
 
   method read_int32 (
-    GCancellable() $cancellable = GCancellable,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<read-int32>

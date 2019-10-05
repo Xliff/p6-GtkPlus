@@ -10,25 +10,21 @@ use GTK::Compat::FileTypes;
 use GIO::DataInputStream;
 use GIO::MemoryInputStream;
 
+constant MAX_LINES = 4;
+#constant MAX_BYTES = 0x10000;
+constant MAX_BYTES = 64;
+
 sub swap-endian ($bits, $i, :$signed = False) {
+  diag "SE#{$bits}/$i/{$signed}";
+
   my $b = Buf.new;
   my $s = $signed ?? '' !! 'u';
 
-  $b."write-{$s}int{$bits}"(0, $i);
+  $b."write-{$s}int{$bits}"(0, $i, $*KERNEL.endian);
   $b."read-{$s}int{$bits}"(
     0,
     $*KERNEL.endian == BigEndian ?? LittleEndian !! BigEndian
   );
-}
-
-sub swap-endian16 ($i, :$signed = False) {
-  swap-endian(16, $i, :$signed);
-}
-sub swap-endian32 ($i, :$signed = False) {
-  swap-endian(32, $i, :$signed);
-}
-sub swap-endian64 ($i, $signed = False) {
-  swap-endian(64, $i, :$signed);
 }
 
 sub test-basic {
@@ -56,7 +52,7 @@ sub test-seek-to-start ($s) {
 }
 
 sub test-read-lines ($nl is copy) {
-  my @lines = 'some text' xx 4;
+  my @lines = 'some text' xx MAX_LINES;
   my @ends = ( "\n", "\r", "\r\n", "\n" );
 
   my $base   = GIO::MemoryInputStream.new;
@@ -80,7 +76,7 @@ sub test-read-lines ($nl is copy) {
       "Data input stream can be set to the {$nl} newline type";
 
   $base.add-data($_, enc => 'ISO-8859-1')
-    for @lines »~« @ends[$nl] xx +@lines;
+    for @lines »~« @ends[$nl.Int] xx +@lines;
 
   test-seek-to-start($base);
 
@@ -158,9 +154,6 @@ sub test-read-sep(:$upto, :$until) {
   my $base   = GIO::MemoryInputStream.new;
   my $stream = GIO::DataInputStream.new($base);
 
-  diag $DATA_STRING;
-  diag $DATA_SEP;
-
   $base.add-data(
     $DATA_STRING,
     $until ?? -1 !! 32,
@@ -224,38 +217,65 @@ sub test-data-array ($stream, $base, $buf, $len, $data-type, $byte-order) {
 
   my ($pos, $data) = (0);
   my ($type, $un) = ( $data-type.Str.lc.split('_')[* - 1], 0 );
-  my $size = do {
-    if $type ~~ /(u)?\w+(\d+)$/ {
+  my ($bits, $bytes) = do {
+    if $type ~~ /(u)?<[a..z]>+(\d+)$/ {
       $un = $0.defined;
-      $1.Int;
+      ( $1.Int, ($1 / 8).Int );
     } else {
-      1;
+      (8, 1);
     }
   };
 
   repeat {
     $data = $stream."read-{$type}"();
-    $data = swap-endian($size, $data, signed => $un) if $swap && $size > 1;
+    $data = swap-endian($bits, $data, signed => $un.not) if $swap && $bits > 1;
 
-    unless $ERROR {
-      is  $data, $buf."read-{$type}"($pos, BigEndian),
+    diag $data if $bits > 1;
+
+    unless $ERROR || $pos > $len {
+      my $bt = $type eq 'byte' ?? 'uint8' !! $type;
+
+      is  $data, $buf."read-{$bt}"($pos, BigEndian),
           "Normalized integer from read-{$type} matches data from buffer";
     }
 
-    $pos  += $size.log(2) + 1;
+    $pos += $bytes;
   } while $data;
 
   nok $ERROR,               'No error occured during read operation'
     if $pos < $len + 1;
 
-  is  $pos - $size, $len,   'Position in buffer is properly set';
+  is  $pos - $bytes, $len,   'Position in buffer is properly set';
+}
+
+sub test-read-int {
+  my $buf = Buf.allocate(MAX_BYTES, 0);
+  $buf[$_] = (0^..255).pick for ^MAX_BYTES;
+
+  my $base   = GIO::MemoryInputStream.new;
+  my $stream = GIO::DataInputStream.new($base);
+  $base.add-data($buf, MAX_BYTES);
+
+  my &orderedEnum = -> $e, $t --> List {
+    $e.enums
+      .pairs
+      .sort( *.value )
+      .map({ $t(.value) })
+  };
+
+  for GDataStreamByteOrderEnum.&orderedEnum(GDataStreamByteOrderEnum) -> $bo {
+    $stream.byte-order = $bo;
+    test-data-array($stream, $base, $buf, MAX_BYTES, $_, $bo)
+      for TestDataType.&orderedEnum(TestDataType);
+  }
 }
 
 plan 320;
 
-test-basic;
-test-read-lines(.value) for GDataStreamNewlineTypeEnum.enums.sort( *.key );
-test-read-lines-LF-utf8( :valid   );
-test-read-lines-LF-utf8( :invalid );
-test-read-sep( :until );
-test-read-sep( :upto  );
+# test-basic;
+# test-read-lines(.value) for GDataStreamNewlineTypeEnum.enums.sort( *.key );
+# test-read-lines-LF-utf8( :valid   );
+# test-read-lines-LF-utf8( :invalid );
+# test-read-sep( :until );
+# test-read-sep( :upto  );
+test-read-int;
