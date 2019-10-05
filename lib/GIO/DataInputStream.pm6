@@ -402,6 +402,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
 
   proto method read_until (|)
       is also<read-until>
+      is DEPRECATED<GIO::DataInputStream.read_upto>
   { * }
 
   multi method read_until (
@@ -443,6 +444,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     gpointer $user_data = gerror
   )
     is also<read-until-async>
+    is DEPRECATED<GIO::DataInputStream.read_upto_async>
   {
     my gint $i = $io_priority,
 
@@ -458,6 +460,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
 
   proto method read_until_finish (|)
       is also<read-until-finish>
+      is DEPRECATED<GIO::DataInputStream.read_upto_finish>
   { * }
 
   multi method read_until_finish (
