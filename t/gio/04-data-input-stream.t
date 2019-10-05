@@ -95,13 +95,16 @@ sub test-read-lines ($nl is copy) {
   is  $line, +@lines,             'All lines were read';
 }
 
-sub test-read-lines-LF-utf8 (:$valid!) {
+sub test-read-lines-LF-utf8 (:$valid, :$invalid) {
+  die ':valid OR :invalid MUST be specified' unless $valid ^^ $invalid;
+
+  my $VALID  = $valid.defined;
   my $base   = GIO::MemoryInputStream.new;
   my $stream = GIO::DataInputStream.new($base);
 
   $stream.newline-type = G_DATA_STREAM_NEWLINE_TYPE_LF;
 
-  if $valid {
+  if $VALID {
     $base.add-data("foo\nthis is valid UTF-8 ☺!\nbar\n");
   } else {
     $base.add-data(
@@ -114,7 +117,7 @@ sub test-read-lines-LF-utf8 (:$valid!) {
   loop {
     my $line = $stream.read-line-utf8;
 
-    if $valid {
+    if $VALID {
       nok       $ERROR,     'No error detected during read';
     } else {
       if $lines {
@@ -129,32 +132,60 @@ sub test-read-lines-LF-utf8 (:$valid!) {
     $lines++
   }
 
-  is      $lines, $valid ?? 3 !! 1,
-          "Correct number of { $valid ?? '' !! 'in' }valid UTF8 lines read";
+  is      $lines, $VALID ?? 3 !! 1,
+          "Correct number of { $VALID ?? '' !! 'in' }valid UTF8 lines read";
 }
 
-sub test-read-until {
-  my constant REPEATS         = 10;
-  my constant DATA_STRING     = ' part1 # part2 $ part3 % part4 ^';
-  my constant DATA_PART_LEN   = 7;
-  my constant DATA_SEP        = '#$%^';
-  my constant DATA_SEP_LEN    = 4;
-  my constant DATA_PARTS_NUM  = DATA_SEP_LEN * REPEATS;
+sub test-read-sep(:$upto, :$until) {
+  die ':upto OR :until MUST be specified' unless $upto ^^ $until;
+
+  my $REPEATS             = 10;
+  my $DATA_STRING         = $until ??
+                              ' part1 # part2 $ part3 % part4 ^'
+                              !!
+                              " part1 # part2 \$ part3 \x0 part4 ^";
+  my $DATA_PART_LEN       = 7;
+  my $DATA_SEP            = $until ??
+                              '#$%^'
+                              !!
+                              "#\$\x0^";
+  my $DATA_SEP_LEN        = 4;
+  my $DATA_PARTS_NUM      = $DATA_SEP_LEN * $REPEATS;
 
   my $base   = GIO::MemoryInputStream.new;
   my $stream = GIO::DataInputStream.new($base);
 
-  $base.add-data(DATA_STRING, enc => 'ISO-8859-1') for ^REPEATS;
+  diag $DATA_STRING;
+  diag $DATA_SEP;
+
+  $base.add-data(
+    $DATA_STRING,
+    $until ?? -1 !! 32,
+    enc => 'ISO-8859-1'
+  ) for ^$REPEATS;
 
   my ($line, $data) = (0);
   repeat {
-    $data = $stream.read-until(DATA_SEP);
+    $data = $until ??
+      $stream.read-until($DATA_SEP)
+      !!
+      $stream.read-upto($DATA_SEP, $DATA_SEP_LEN);
+
     if $data {
-      is  $data.chars, DATA_PART_LEN,
-          'Data part read string is the proper length';
+      my $u = $until ?? 'until' !! 'upto';
+
+      is  $data.chars, $DATA_PART_LEN,
+          "Data part of read-{$u} string is the proper length";
 
       nok $ERROR,
-          'No error occurred during stop-char read';
+          "No error occurred during read-{$u}";
+
+      if $upto {
+        my $sc = $stream.read-byte;
+
+        ok  $DATA_SEP.contains($sc.chr), 'Read byte is in stop char list';
+        nok $ERROR,                      'No error detected reading stop char';
+      }
 
       $line++;
     }
@@ -162,13 +193,14 @@ sub test-read-until {
 
   nok $ERROR,                 'No error detected';
 
-  is  $line, DATA_PARTS_NUM,  'All data parts read successfully';
+  is  $line, $DATA_PARTS_NUM, 'All data parts read successfully';
 }
 
-plan 158;
+plan 320;
 
 test-basic;
 test-read-lines(.value) for GDataStreamNewlineTypeEnum.enums.sort( *.key );
-test-read-lines-LF-utf8( :valid );
-test-read-lines-LF-utf8( :!valid );
-test-read-until;
+test-read-lines-LF-utf8( :valid   );
+test-read-lines-LF-utf8( :invalid );
+test-read-sep( :until );
+test-read-sep( :upto  );
