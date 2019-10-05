@@ -75,7 +75,8 @@ sub test-read-lines ($nl is copy) {
   is  $stream.newline-type, $nl,
       "Data input stream can be set to the {$nl} newline type";
 
-  $base.add-data($_, enc => 'ISO-8859-1') for @lines »~« @ends;
+  $base.add-data($_, enc => 'ISO-8859-1')
+    for @lines »~« @ends[$nl] xx +@lines;
 
   test-seek-to-start($base);
 
@@ -110,6 +111,8 @@ sub test-read-lines-LF-valid-utf8 {
 
   is      $lines, 3,  'Correct number of valid UTF8 lines read';
 }
+
+plan 73;
 
 test-basic;
 test-read-lines(.value) for GDataStreamNewlineTypeEnum.enums.sort( *.key );
