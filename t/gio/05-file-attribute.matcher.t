@@ -23,9 +23,10 @@ sub test-exact {
 }
 
 sub test-equality {
-  # star makes everything else go away
   my @equals = (
     # Expected      # Actual
+
+    # star makes everything else go away
     '*'         =>  '*,*',
     '*'         =>  '*,a::*',
     '*'         =>  '*,a::b',
@@ -53,5 +54,85 @@ sub test-equality {
   }
 }
 
+sub test-subtract {
+  my @subtractions = (
+    # subtracts everything
+
+    # Attributes        # Subtract   # Result
+    [ '*',              '*',         Nil ],
+    [ 'a::*',           '*',         Nil ],
+    [ 'a::b',           '*',         Nil ],
+    [ 'a::b,a::c',      '*',         Nil ],
+    [ 'a::*,b::*',      '*',         Nil ],
+    [ 'a::*,b::c',      '*',         Nil ],
+    [ 'a::b,b::*',      '*',         Nil ],
+    [ 'a::b,b::c',      '*',         Nil ],
+    [ 'a::b,a::c,b::*', '*',         Nil ],
+    [ 'a::b,a::c,b::c', '*',         Nil ],
+
+    # a::* subtracts all a's
+    [ '*',              'a::*',      '*'    ],
+    [ 'a::*',           'a::*',      Nil    ],
+    [ 'a::b',           'a::*',      Nil    ],
+    [ 'a::b,a::c',      'a::*',      Nil    ],
+    [ 'a::*,b::*',      'a::*',      'b::*' ],
+    [ 'a::*,b::c',      'a::*',      'b::c' ],
+    [ 'a::b,b::*',      'a::*',      'b::*' ],
+    [ 'a::b,b::c',      'a::*',      'b::c' ],
+    [ 'a::b,a::c,b::*', 'a::*',      'b::*' ],
+    [ 'a::b,a::c,b::c', 'a::*',      'b::c' ],
+
+    # a::b subtracts exactly that
+    [ '*',              'a::b',      '*'         ],
+    [ 'a::*',           'a::b',      'a::*'      ],
+    [ 'a::b',           'a::b',      Nil         ],
+    [ 'a::b,a::c',      'a::b',      'a::c'      ],
+    [ 'a::*,b::*',      'a::b',      'a::*,b::*' ],
+    [ 'a::*,b::c',      'a::b',      'a::*,b::c' ],
+    [ 'a::b,b::*',      'a::b',      'b::*'      ],
+    [ 'a::b,b::c',      'a::b',      'b::c'      ],
+    [ 'a::b,a::c,b::*', 'a::b',      'a::c,b::*' ],
+    [ 'a::b,a::c,b::c', 'a::b',      'a::c,b::c' ],
+
+    # a::b,b::* subtracts both of those
+    [ '*',              'a::b,b::*', '*'    ],
+    [ 'a::*',           'a::b,b::*', 'a::*' ],
+    [ 'a::b',           'a::b,b::*', Nil    ],
+    [ 'a::b,a::c',      'a::b,b::*', 'a::c' ],
+    [ 'a::*,b::*',      'a::b,b::*', 'a::*' ],
+    [ 'a::*,b::c',      'a::b,b::*', 'a::*' ],
+    [ 'a::b,b::*',      'a::b,b::*',  Nil   ],
+    [ 'a::b,b::c',      'a::b,b::*',  Nil   ],
+    [ 'a::b,a::c,b::*', 'a::b,b::*', 'a::c' ],
+    [ 'a::b,a::c,b::c', 'a::b,b::*', 'a::c' ],
+
+    # a::b,b::c should work, too
+    [ '*',              'a::b,b::c', '*'         ],
+    [ 'a::*',           'a::b,b::c', 'a::*'      ],
+    [ 'a::b',           'a::b,b::c', Nil         ],
+    [ 'a::b,a::c',      'a::b,b::c', 'a::c'      ],
+    [ 'a::*,b::*',      'a::b,b::c', 'a::*,b::*' ],
+    [ 'a::*,b::c',      'a::b,b::c', 'a::*'      ],
+    [ 'a::b,b::*',      'a::b,b::c', 'b::*'      ],
+    [ 'a::b,b::c',      'a::b,b::c', Nil         ],
+    [ 'a::b,a::c,b::*', 'a::b,b::c', 'a::c,b::*' ],
+    [ 'a::b,a::c,b::c', 'a::b,b::c', 'a::c'      ]
+  );
+
+  for @subtractions {
+    my ($m, $s) = .[0,1]».&{ GIO::FileAttributeMatcher.new($_) };
+    my $r = $m.subtract($s);
+
+    if .[2] {
+      is  ~$r, .[2],  " FAM('{~$m}') - FAM('{~$s}') = FAM('{~$r}')";
+    } else {
+      nok  ~$r,       " FAM('{~$m}') - FAM('{~$s}') = Nil";
+    }
+  }
+}
+
+plan 69;
+
 test-exact;
 test-equality;
+test-subtract;
