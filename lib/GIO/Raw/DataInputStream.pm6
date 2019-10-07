@@ -72,7 +72,7 @@ sub g_data_input_stream_read_int64 (
 
 sub g_data_input_stream_read_line (
   GDataInputStream $stream,
-  gsize $length,
+  gsize $length is rw,
   GCancellable $cancellable,
   CArray[Pointer[GError]] $error
 )
