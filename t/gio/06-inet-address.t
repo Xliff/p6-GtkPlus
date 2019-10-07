@@ -52,7 +52,6 @@ sub test-any {
     my $s = $f == G_SOCKET_FAMILY_IPV4 ?? 4 !! 16;
     my $a = GIO::InetAddress.new($f, :any);
 
-
     ok  $a.is-any,                'InetAddress is ANY';
     is  $a.family,       $f,      "InetAddress belongs to { $f }";
     is  $a.native-size,  $s,      "InetAddress native size is { $s }";
@@ -69,5 +68,18 @@ sub test-any {
   }
 }
 
+sub test-loopback {
+  my $a1 = GIO::InetAddress.new('::1', :string);
+
+  is  $a1.family, G_SOCKET_FAMILY_IPV6,   '::1 Address family is IPv6';
+  ok  $a1.is-loopback,                    '::1 recognized as a loopback addr';
+
+  my $a2 = GIO::InetAddress.new('127.0.0.1', :string);
+
+  is  $a2.family, G_SOCKET_FAMILY_IPV4,   '127.0.0.1 Address family is IPv4';
+  ok  $a2.is-loopback,                    '127.0.0.1 recognized as a loopback addr';
+}
+
 test-parse;
 test-any;
+test-loopback;
