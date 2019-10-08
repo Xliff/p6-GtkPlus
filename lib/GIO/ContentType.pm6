@@ -1,18 +1,15 @@
 use v6.c;
 
-use GTK::Raw::Utils;
-
 use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::ContentType;
-
-# STATIC CATCH-ALL
+use GIO::Raw::ContentType;
 
 use GTK::Compat::Roles::ListData;
 
-class GTK::Compat::ContentType {
+# STATIC CATCH-ALL
+class GIO::ContentType {
 
   method can_be_executable (Str() $type) is also<can-be-executable> {
     so g_content_type_can_be_executable($type);
@@ -26,18 +23,20 @@ class GTK::Compat::ContentType {
     g_content_type_from_mime_type($mime_type);
   }
 
-  method get_registered
+  method get_registered (:$glist = False)
     is also<
       get-registered
       registered
     >
   {
     my $list = g_content_types_get_registered();
-    my @list = (
+
+    return Nil   unless $list;
+    return $list if     $glist;
+
+    (
       GTK::Compat::GList.new($list) but GTK::Compat::Roles::ListData[Str]
-    ).Array;
-    #g_list_free_full ($list, &g_free);
-    @list;
+    ).Array
   }
 
   method get_description (Str() $type) is also<get-description> {
@@ -66,9 +65,10 @@ class GTK::Compat::ContentType {
     Int() $data_size,
     $result_uncertain is rw
   ) {
-    my gulong $ds = resolve-uint64($data_size);
+    my gulong $ds = $data_size;
     my guint $ru = 0;
     my $rc = g_content_type_guess($filename, $data, $ds, $ru);
+
     $result_uncertain = $ru.defined ?? $ru !! Nil;
     # g_free($rc);
     $rc;

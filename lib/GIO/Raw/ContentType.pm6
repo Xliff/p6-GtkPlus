@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::ContentType;
+unit package GIO::Raw::ContentType;
 
 sub g_content_type_can_be_executable (Str $type)
   returns uint32
