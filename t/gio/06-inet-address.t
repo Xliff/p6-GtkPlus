@@ -5,6 +5,7 @@ use Test;
 use GTK::Compat::Types;
 
 use GIO::InetAddress;
+use GIO::InetAddressMask;
 use GIO::InetSocketAddress;
 
 sub test-parse {
@@ -158,7 +159,33 @@ sub test-socket-address-to-string {
   }
 }
 
-plan 69;
+sub test-mask-parse {
+  my @tests = (
+    [ '10.0.0.0/8',    0 ],
+    [ 'fe80::/10',     0 ],
+    [ '::',            0 ],
+    [ ':/abc',         G_IO_ERROR_INVALID_ARGUMENT ],
+    [ '127.0.0.1/128', G_IO_ERROR_INVALID_ARGUMENT ],
+  );
+
+  for @tests {
+    my $m = GIO::InetAddressMask.new_from_string( .[0] );
+
+    if .[1] {
+      ok  [&&](
+        $ERROR,
+        #$ERROR.domain == $G_IO_ERROR,
+        $ERROR.code == .[1]
+      ),           "inetaddrmask object creation from '{.[0]}' failed";
+      nok $m,      'inetaddrmask object is undefined';
+    } else {
+      nok $ERROR,  "inetaddrmask object successfully created from '{.[0]}'";
+      ok  $m,      'inetaddrmask object is defined';
+    }
+  }
+}
+
+plan 79;
 
 test-parse;
 test-any;
@@ -167,3 +194,4 @@ test-bytes;
 test-attributes;
 test-socket-address;
 test-socket-address-to-string;
+test-mask-parse;
