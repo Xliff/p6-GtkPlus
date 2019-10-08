@@ -68,7 +68,7 @@ sub g_app_launch_context_get_display (
   { * }
 
 sub g_app_launch_context_get_environment (GAppLaunchContext $context)
-  returns CArray[gchar]
+  returns CArray[Str]
   is native(gtk)
   is export
   { * }
