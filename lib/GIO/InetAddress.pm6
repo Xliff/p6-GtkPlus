@@ -38,11 +38,24 @@ class GIO::InetAddress {
     $a ?? self.bless( address => $a ) !! Nil;
   }
 
-# my $ia = GIO::InetAddress.new(:bytes, $bytes, $family)
-  multi method new (CArray[uint8] $ba, Int() $family, :$bytes is required) {
-    GIO::InetAddress.new_from_bytes($ba, $family);
+  # my $ia = GIO::InetAddress.new(:bytes, $bytes, $family)
+
+  proto method new(|) { * }
+
+  multi method new ($b, Int() $family, :$bytes is required) {
+    GIO::InetAddress.new_from_bytes($b, $family);
   }
-  method new_from_bytes (CArray[uint8] $bytes, Int() $family)
+  multi method new_from_bytes (@bytes, Int() $family) {
+    my $ca = CArray[uint8].new;
+    $ca[$_] = @bytes[$_] for ^@bytes.elems;
+    samewith($ca, $family);
+  }
+  multi method new_from_bytes (Buf $bytes, Int() $family) {
+    my $ca = CArray[uint8].new;
+    $ca[$_] = $bytes[$_] for ^$bytes.elems;
+    samewith($ca, $family);
+  }
+  multi method new_from_bytes (CArray[uint8] $bytes, Int() $family)
     is also<new-from-bytes>
   {
     my GSocketFamily $f = $family;
@@ -202,9 +215,14 @@ class GIO::InetAddress {
     unstable_get_type( self.^name, &g_inet_address_get_type, $n, $t );
   }
 
-  method to_bytes is also<to-bytes> {
-    # xxx - This should be converted to Buf.
-    g_inet_address_to_bytes($!ia);
+  # Default set to true for use in .new(..., :bytes)
+  method to_bytes (:$buf = True) is also<to-bytes> {
+    my @bytes;
+    my $bytes = g_inet_address_to_bytes($!ia);
+    @bytes[$_] = $bytes[$_] for ^self.native_size;
+    return unless $buf;
+
+    Buf.new(@bytes);
   }
 
   method to_string

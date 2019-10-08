@@ -80,6 +80,20 @@ sub test-loopback {
   ok  $a2.is-loopback,                    '127.0.0.1 recognized as a loopback addr';
 }
 
+sub test-bytes {
+  my ($a1, $a2) =
+    ('192.168.0.100', '192.168.0.101')».&{ GIO::InetAddress.new($_, :string) };
+  my $a3 = GIO::InetAddress.new(
+    $a1.to-bytes,
+    G_SOCKET_FAMILY_IPV4,
+    :bytes
+  );
+
+  nok $a1.equal($a2), 'Address1 does NOT equal Address2';
+  ok  $a1.equal($a3), 'Address1 equals Address3';
+}
+
 test-parse;
 test-any;
 test-loopback;
+test-bytes;
