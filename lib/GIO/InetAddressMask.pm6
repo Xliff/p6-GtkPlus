@@ -36,7 +36,7 @@ class GIO::InetAddressMask {
     clear_error;
     my $rv = g_inet_address_mask_new($addr, $length, $error);
     set_error($error);
-    self.bless( mask => $rv );
+    self.bless( mask => $rv ) if $rv;
   }
 
   multi method new(
@@ -55,7 +55,7 @@ class GIO::InetAddressMask {
     clear_error;
     my $rv = g_inet_address_mask_new_from_string($mask_string, $error);
     set_error($error);
-    self.bless( mask => $rv );
+    self.bless( mask => $rv ) if $rv;
   }
 
   method equal (GInetAddressMask() $mask2) {
