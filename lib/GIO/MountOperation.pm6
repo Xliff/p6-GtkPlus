@@ -25,7 +25,8 @@ class GIO::MountOperation {
     self.bless( :$mount-op );
   }
   multi method new {
-    self.bless( mount-op => g_mount_operation_new() );
+    my $mo = g_mount_operation_new();
+    self.bless( mount-op =>  $mo) if $mo;
   }
 
   method anonymous is rw {

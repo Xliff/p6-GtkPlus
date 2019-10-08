@@ -28,6 +28,7 @@ role GTK::Roles::Properties {
     $!prop = cast( GObject, self.^attributes(:local)[0].get_value(self) );
   }
 
+  # Deprecated.
   method !setObject($obj) {
     $!prop = nativecast(GObject, $obj);
   }
