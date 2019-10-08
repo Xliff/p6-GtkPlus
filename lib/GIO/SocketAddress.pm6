@@ -25,16 +25,22 @@ class GIO::SocketAddress {
   method setSocketAddress (SocketAddressAncestry $_) {
     my $role-set = False;
 
-    when GSocketConnectable {
-      self.roleInit-SocketConnectable($_);
-      $role-set = True;
-      proceed;
+    # This is NOT the normal when processing. since it is NOT an assignment!
+    {
+      when GSocketConnectable {
+        self.roleInit-SocketConnectable($_);
+        $role-set = True;
+        proceed;
+      }
+
+      default {
+        $!sa = $_ ~~ GSocketAddress ?? $_ !! cast(GSocketAddress, $_);
+      }
     }
 
-    default {
-      $!sa = $_ ~~ GSocketAddress ?? $_ !! cast(GSocketAddress, $_);
-      self.roleInit-Object unless $role-set;
-    }
+    # ALWAYS set Object first!
+    self.roleInit-Object;
+    self.roleInit-SocketConnectable unless $role-set;
   }
 
   method GTK::Compat::Types::GSocketAddress

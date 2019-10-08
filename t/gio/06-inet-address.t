@@ -139,11 +139,31 @@ sub test-socket-address {
   is  $sa.scope-id, 25,       'Socket address scope-ids is set correctly';
 }
 
-plan 65;
+sub test-socket-address-to-string {
+  my @tests = (
+    [ '123.1.123.1',         80, '123.1.123.1:80' ],
+    [ 'fe80::80',            80, '[fe80::80]:80'  ],
+    [ 'fe80::80',             0, 'fe80::80'       ],
+    [ '::1',      (123, 10, 25), '[::1%25]:123'   ]
+  );
+
+  for @tests {
+    my $ia =  GIO::InetAddress.new(.[0], :string);
+    my $sa =  [.1] ~~ Array ??
+      GIO::InetSocketAddress.new( $ia, |.[1] ) !!
+      GIO::InetSocketAddress.new( $ia,  .[1] );
+
+    my $ln = ++$;
+    is ~$sa, .[2], "Stringified inetsocketaddr object {$ln} equals '{.[2]}'";
+  }
+}
+
+plan 69;
 
 test-parse;
 test-any;
 test-loopback;
 test-bytes;
 test-attributes;
-test-socket-address
+test-socket-address;
+test-socket-address-to-string;
