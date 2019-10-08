@@ -185,7 +185,56 @@ sub test-mask-parse {
   }
 }
 
-plan 79;
+sub test-mask-properties {
+  my $a = GIO::InetAddress.new('fe80::', :string);
+  my $m = GIO::InetAddressMask.new('fe80::/10', :string);
+
+  is  $m.family, G_SOCKET_FAMILY_IPV6,  'Mask family is IPv6';
+  ok  $a.equal($m.address),             "Address object equals Mask's address obj";
+  is  $m.length, 10,                    'The mask length is 10';
+
+  # YYY - TODO - XXX - NOTE
+  # To be ported and tested when property code between GTK::Roles::Data and
+  # GTK::Roles::Properties has been resolved into a single role or object.
+  #
+  # g_object_get (mask,
+  #             "family", &family,
+  #             "address", &addr,
+  #             "length", &len,
+  #             NULL);
+  # g_assert (family == G_SOCKET_FAMILY_IPV6);
+  # g_assert (addr != NULL);
+  # g_assert (len == 10);
+  # g_object_unref (addr);
+}
+
+sub test-mask-match {
+  my @tests = (
+    '1.2.0.0/16' => [
+      '1.2.0.0',  True,
+      '1.2.3.4',  True,
+      '1.3.1.1',  False
+    ],
+
+    '1.2.0.0/24' => [
+      '1.2.0.0',  True,
+      '1.2.3.4',  False,
+      '1.2.0.24', True
+    ]
+  );
+
+  for @tests {
+    my $m = GIO::InetAddressMask.new(.key, :string);
+    for .value.rotor(2) -> ($addr, $matches) {
+      my $a = GIO::InetAddress.new($addr, :string);
+
+      is  $m.matches($a), $matches,
+          "{$a} { $matches ?? 'matches' !! 'does not match' } mask {$m}";
+    }
+  }
+}
+
+plan 88;
 
 test-parse;
 test-any;
@@ -195,3 +244,5 @@ test-attributes;
 test-socket-address;
 test-socket-address-to-string;
 test-mask-parse;
+test-mask-properties;
+test-mask-match;
