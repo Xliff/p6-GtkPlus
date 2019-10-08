@@ -37,13 +37,27 @@ sub g_inet_socket_address_get_type ()
 { * }
 
 sub g_inet_socket_address_new (GInetAddress $address, guint16 $port)
-  returns GSocketAddress
+  returns GInetSocketAddress
   is native(gio)
   is export
 { * }
 
 sub g_inet_socket_address_new_from_string (Str $address, guint $port)
-  returns GSocketAddress
+  returns GInetSocketAddress
   is native(gio)
+  is export
+{ * }
+
+sub g_object_new_inet_socket_address(
+  GType,
+  Str, GInetAddress,
+  Str, guint16,
+  Str, guint16,
+  Str, guint16,
+  Str
+)
+  returns GInetSocketAddress
+  is symbol('g_object_new')
+  is native(gobject)
   is export
 { * }

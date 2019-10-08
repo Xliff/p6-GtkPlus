@@ -5,6 +5,7 @@ use Test;
 use GTK::Compat::Types;
 
 use GIO::InetAddress;
+use GIO::InetSocketAddress;
 
 sub test-parse {
   my @non-null = <
@@ -108,13 +109,41 @@ sub test-attributes {
   nok $a.is_mc_link_local,              "$pre is NOT multicast link local";
   nok $a.is_mc_node_local,              "$pre is NOT multicast node local";
   nok $a.is_mc_org_local,               "$pre is NOT muilticast org local";
-  ok $a.is_mc_site_local,               "$pre is multicast site local";
+  ok  $a.is_mc_site_local,              "$pre is multicast site local";
 }
 
-plan 57;
+sub test-socket-address {
+  my $addr  = '::ffff:125.1.15.5';
+  my $port  = 308;
+  my $a     = GIO::InetAddress.new($addr, :string);
+  my $sa    = GIO::InetSocketAddress.new($a, $port);
+
+  ok  $a.equal($sa.address(:raw)),
+      'Address object and address from Socket object are equal';
+
+  is  $sa.port, $port,    "Socket address is set to port {$port}";
+  nok $sa.flowinfo,       'Socket flowinfo is not set';
+  nok $sa.scope-id,       'Socket scope-id is not set';
+
+  $sa = GIO::InetSocketAddress.new(
+    GIO::InetAddress.new('::1', :string),
+    $port,
+    10,
+    25
+  );
+
+  my $fam = G_SOCKET_FAMILY_IPV6;
+  is  $sa.family,   $fam,     "Socket address belongs to family {$fam}";
+  is  $sa.port,     $port,    "Socket address is set to port {$port}";
+  is  $sa.flowinfo, 10,       'Socket address flowinfo is set correctly';
+  is  $sa.scope-id, 25,       'Socket address scope-ids is set correctly';
+}
+
+plan 65;
 
 test-parse;
 test-any;
 test-loopback;
 test-bytes;
 test-attributes;
+test-socket-address

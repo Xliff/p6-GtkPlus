@@ -10,7 +10,7 @@ use GIO::Raw::SocketAddress;
 use GIO::Roles::SocketConnectable;
 
 our subset SocketAddressAncestry is export of Mu
-  where GSocketConnectable | GSocket;
+  where GSocketConnectable | GSocketAddress;
 
 class GIO::SocketAddress {
   also does GTK::Compat::Roles::Object;
@@ -53,11 +53,22 @@ class GIO::SocketAddress {
     self.bless( address => g_socket_address_new_from_native($native, $l) )
   }
 
-  method get_family is also<get-family> {
+  method get_family
+    is also<
+      get-family
+      family
+    >
+  {
     GSocketFamilyEnum( g_socket_address_get_family($!sa) );
   }
 
-  method get_native_size is also<get-native-size> {
+  method get_native_size
+    is also<
+      get-native-size
+      native_size
+      native-size
+    >
+  {
     g_socket_address_get_native_size($!sa);
   }
 
