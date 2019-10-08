@@ -93,7 +93,28 @@ sub test-bytes {
   ok  $a1.equal($a3), 'Address1 equals Address3';
 }
 
+sub test-attributes {
+  my $addr = 'ff85::';
+  my $a = GIO::InetAddress.new($addr, :string);
+  my $pre = "'{$addr}'";
+
+  is  $a.family, G_SOCKET_FAMILY_IPV6,  "$pre belongs to the IPv family";
+  nok $a.is-any,                        "$pre is NOT an ANY";
+  nok $a.is-loopback,                   "$pre is NOT a loopback";
+  nok $a.is_link_local,                 "$pre is NOT link local";
+  nok $a.is_site_local,                 "$pre is NOT site local";
+  ok  $a.is_multicast,                  "$pre is multicast";
+  nok $a.is_mc_global,                  "$pre is NOT multicast global";
+  nok $a.is_mc_link_local,              "$pre is NOT multicast link local";
+  nok $a.is_mc_node_local,              "$pre is NOT multicast node local";
+  nok $a.is_mc_org_local,               "$pre is NOT muilticast org local";
+  ok $a.is_mc_site_local,               "$pre is multicast site local";
+}
+
+plan 57;
+
 test-parse;
 test-any;
 test-loopback;
 test-bytes;
+test-attributes;

@@ -99,6 +99,10 @@ class GIO::InetAddress {
     GSocketFamilyEnum( g_inet_address_get_family($!ia) );
   }
 
+  # Consideration for review:
+  # Given that we do NOT need the property code, there is argument that
+  # the get_is_* methods can also drop the "is" portion.
+
   method get_is_any
     is also<
       get-is-any
