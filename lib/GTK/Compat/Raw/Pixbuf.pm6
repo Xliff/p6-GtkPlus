@@ -21,9 +21,9 @@ unit package GTK::Compat::Raw::Pixbuf;
 sub gdk_pixbuf_add_alpha (
   GdkPixbuf $pixbuf,
   gboolean $substitute_color,
-  guchar $r,
-  guchar $g,
-  guchar $b
+  guint8 $r,
+  guint8 $g,
+  guint8 $b
 )
   returns GdkPixbuf
   is native(gtk)
@@ -265,7 +265,7 @@ sub gdk_pixbuf_new_from_file_utf8 (gchar $filename, CArray[Pointer[GError]] $err
 
 sub gdk_pixbuf_new_from_inline (
   gint $data_length,
-  guint8 $data,
+  Blob $data,
   gboolean $copy_pixels,
   CArray[Pointer[GError]] $error
 )
