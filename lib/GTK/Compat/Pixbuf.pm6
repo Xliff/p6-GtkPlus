@@ -7,7 +7,10 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Pixbuf;
 use GTK::Compat::Pixbuf::Transforms;
 
+use GTK::Compat::GList;
+
 use GTK::Compat::Roles::Object;
+use GTK::Compat::Roles::ListData;
 
 class GTK::Compat::Pixbuf {
   also does GTK::Compat::Roles::Object;
@@ -45,7 +48,7 @@ class GTK::Compat::Pixbuf {
     my guint $cs =$colorspace;
     my $pixbuf = gdk_pixbuf_new($cs, $ha, $bps, $w, $h);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_bytes (
@@ -67,7 +70,7 @@ class GTK::Compat::Pixbuf {
       $data, $cs, $ha, $bps, $w, $h, $rs
     );
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   # Would Blob be a better type for $data?
@@ -95,7 +98,7 @@ class GTK::Compat::Pixbuf {
       $destroy_fn_data
     );
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_file (
@@ -108,7 +111,7 @@ class GTK::Compat::Pixbuf {
     my $pixbuf = gdk_pixbuf_new_from_file($filename, $error);
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_file_at_scale (
@@ -128,7 +131,7 @@ class GTK::Compat::Pixbuf {
     );
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_file_at_scale_utf8 (
@@ -148,7 +151,7 @@ class GTK::Compat::Pixbuf {
     );
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_file_at_size (
@@ -164,7 +167,7 @@ class GTK::Compat::Pixbuf {
     my $pixbuf = gdk_pixbuf_new_from_file_at_size($filename, $w, $h, $error);
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_file_at_size_utf8 (
@@ -182,7 +185,7 @@ class GTK::Compat::Pixbuf {
     );
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_file_utf8 (
@@ -195,7 +198,7 @@ class GTK::Compat::Pixbuf {
     my $pixbuf = gdk_pixbuf_new_from_file_utf8($filename, $error);
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   proto method new_from_inline (|)
@@ -227,7 +230,7 @@ class GTK::Compat::Pixbuf {
     my $pixbuf = gdk_pixbuf_new_from_inline($l, $data, $cp, $error);
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_resource (
@@ -240,7 +243,7 @@ class GTK::Compat::Pixbuf {
     my $pixbuf = gdk_pixbuf_new_from_resource($resource_path, $error);
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_resource_at_scale (
@@ -260,7 +263,7 @@ class GTK::Compat::Pixbuf {
     );
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_from_stream (
@@ -274,7 +277,7 @@ class GTK::Compat::Pixbuf {
     my $pixbuf = gdk_pixbuf_new_from_stream($stream, $cancellable, $error);
     set_error($error);
 
-    self.bless(:$pixbuf);
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   proto method new_from_stream_async (|)
@@ -320,7 +323,7 @@ class GTK::Compat::Pixbuf {
     );
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   proto method new_from_stream_at_scale_async (|)
@@ -372,7 +375,7 @@ class GTK::Compat::Pixbuf {
     my $pixbuf = gdk_pixbuf_new_from_stream_finish($result, $error);
     set_error($error);
 
-    self.bless(:$pixbuf) if $pixbuf
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   proto method new_from_xpm_data(|)
@@ -391,7 +394,7 @@ class GTK::Compat::Pixbuf {
   multi method new_from_xpm_data(CArray[Str] $data) {
     my $pixbuf = gdk_pixbuf_new_from_xpm_data($data);
 
-    self.bless(:$pixbuf) if $pixbuf
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
 
   method new_subpixbuf (
@@ -406,7 +409,7 @@ class GTK::Compat::Pixbuf {
     my gint ($sx, $sy, $w, $h) = ($src_x, $src_y, $width, $height);
     my $pixbuf = gdk_pixbuf_new_subpixbuf($src, $sx, $sy, $w, $h);
 
-    self.bless(:$pixbuf) if $pixbuf;
+    $pixbuf ?? self.bless(:$pixbuf) !! Nil;
   }
   # ↑↑↑↑ OBJECT CREATION ↑↑↑↑
 
@@ -813,6 +816,23 @@ class GTK::Compat::Pixbuf {
   method unref is also<downref> {
     gdk_pixbuf_unref($!p);
   }
+
+  method get_formats (
+    GTK::Compat::Pixbuf:U:
+    :gslist(:$glist) = False
+  ) is also<get-formats> {
+    my $f = gdk_pixbuf_get_formats();
+
+    return Nil unless $f;
+    return $f  if $glist;
+
+    # XXX - Should be GSList, but implementation is not properly working!!
+    my $fl = GTK::Compat::GList.new($f)
+      but GTK::Compat::Roles::ListData[GdkPixbufFormat];
+
+    $fl.Array;
+  }
+
   # ↑↑↑↑ METHODS ↑↑↑↑
 
   # ↑↑↑↑ TRANSFORM METHODS ↑↑↑↑

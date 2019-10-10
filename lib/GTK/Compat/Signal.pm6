@@ -131,7 +131,6 @@ class GTK::Compat::Signal {
     g_signal_connect_closure_by_id($instance, $sid, $detail, $closure, $a);
   }
 
-
   # Should be aliased to "connect"
   method connect_data (
     GObject() $instance,

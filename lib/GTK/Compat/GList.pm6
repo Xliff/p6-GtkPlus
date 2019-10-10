@@ -64,7 +64,9 @@ class GTK::Compat::GList {
     self.bless(:$list);
   }
 
-  method GTK::Compat::Types::GList is also<GList> { $!list }
+  method GTK::Compat::Types::GList
+    is also<GList> 
+  { $!list }
 
   method current_node
     is also<

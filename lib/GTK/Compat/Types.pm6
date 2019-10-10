@@ -2023,6 +2023,24 @@ class GdkRectangle is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint $.height is rw;
 }
 
+class GdkPixbufModulePattern is repr('CStruct') does GTK::Roles::Pointers is export {
+	has Str $.prefix;
+	has Str $.mask;
+	has int $.relevance;
+}
+
+class GdkPixbufFormat is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str                     $.name;
+  has GdkPixbufModulePattern  $.signature;
+  has Str                     $.domain;
+  has Str                     $.description;
+  has CArray[Str]             $.mime_types;
+  has CArray[Str]             $.extensions;
+  has guint32                 $.flags;
+  has gboolean                $.disabled;
+  has Str                     $.license;
+}
+
 class GdkPoint is repr('CStruct') does GTK::Roles::Pointers is export {
   has gint $.x is rw;
   has gint $.y is rw;

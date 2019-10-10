@@ -861,8 +861,10 @@ class GTK::Widget {
       FETCH => sub ($) {
         gtk_widget_get_events($!w);
       },
-      STORE => sub ($, $events is copy) {
-        gtk_widget_set_events($!w, $events);
+      STORE => sub ($, Int() $events is copy) {
+        my guint $e = $events;
+
+        gtk_widget_set_events($!w, $e);
       }
     );
   }

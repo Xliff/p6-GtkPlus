@@ -10,10 +10,13 @@ use GTK::Compat::Raw::GSList;
 class GTK::Compat::GSList {
   also does GTK::Roles::Types;
 
-  has GSList $!list handles <next data>;
+  has GSList $!list;
+  has GSList $!cur;
 
   has @!nat;
-  has $!dirty = False;
+
+  # Left active, but see NOTE in GTK::Compat::GList
+  has $.dirty = False;
 
   # CLASS HAS NOT PROPERLY BEEN OPTIMIZED FOR PERL6.
   #
@@ -22,7 +25,10 @@ class GTK::Compat::GSList {
   #
   # Memory management is a SPECIFIC concern.
 
-  submethod BUILD(:$!list) { }
+  submethod BUILD(:$list) {
+    $!dirty = True;
+    $!cur   = $!list = $list;
+  }
 
   # May need to write something to free every element in the list.
   submethod DESTROY {
@@ -53,8 +59,29 @@ class GTK::Compat::GSList {
     }
   }
 
-  method GTK::Compat::Types::GSList {
-    $!list;
+  method GTK::Compat::Types::GSList
+    is also<GSList>
+  { $!list }
+
+  method !_data is rw {
+    $!cur.data;
+  }
+
+  method cleaned {
+    $!dirty = False;
+  }
+
+  method current_node
+    is also<
+      current-node
+      cur
+      current
+      node
+    >
+  { $!cur }
+
+  method data is rw {
+    self!_data;
   }
 
   # Import methods from
@@ -147,6 +174,10 @@ class GTK::Compat::GSList {
 
   method length {
     g_slist_length($!list);
+  }
+
+  method next {
+    $!cur .= next;
   }
 
   method nth (Int() $n) {
