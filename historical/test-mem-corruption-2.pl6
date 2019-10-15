@@ -29,30 +29,25 @@ class GError is repr<CStruct> {
 
 my $data = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVXYZ';
 
+sub result-cb ($, $r, $) {
+  CATCH { default { .message.say } }
+
+  $result = GIO::Task.new($r).ref;
+}
+
 for ^100 {
   my $base = g_memory_input_stream_new();
-  my $in   = g_data_input_stream_new($base);
+  my $in   = g_data_input_stream_new-sized($base, 5);
 
-  g_memory_input_stream_add_data(
-    $base,
-    $data.encode,
-    -1,
-    Pointer
-  );
+  is g_buffered_input_stream_read_byte($in), $_.ord, "Char is {$_}"
+    for <a b c>;
 
-  my guint $len = 0;
-  my $error = CArray[GError].new;
-  $error[0] = GError;
+  for <7 k 10 v 20 Q>.rotor(2) -> ($s, $l) {
+    is g_input_stream_skip_async (in, $s, G_PRIORITY_DEFAULT), $s, 'Skip OK';
+    is  $in.read-byte, $l.ord,  "Next byte read was a '{$l}'";
+    nok $ERROR,                 'No read error occurred.';
+  }
 
-  g_seekable_seek(
-    nativecast(GSeekable, $in),
-    0,
-    G_SEEK_SET,
-    Pointer,
-    $error
-  );
-  my $s = g_data_input_stream_read_line($in, $len, Pointer, $error);
-  $s.say;
 }
 
 sub g_data_input_stream_read_line (
