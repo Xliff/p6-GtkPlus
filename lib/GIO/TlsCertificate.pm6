@@ -64,6 +64,23 @@ class GIO::TlsCertificate {
     $tls ?? self.bless( :$tls ) !! Nil;
   }
 
+  method list_new_from_file (
+    GIO::TlsCertificate:U:
+    Str() $file,
+    CArray[Pointer[GError]] $error = gerror,
+    :$glist = False, :$raw = False
+  ) {
+    my $la = g_tls_certificate_list_new_from_file($file, $error);
+
+    return $la if     $glist;
+    return Nil unless $la;
+
+    $la = GTK::Compat::GList.new($la)
+      but GTK::Compat::Roles::ListData[GTlsCertificate];
+
+    $raw ?? $la.Array !! $la.Array.map({ GIO::TlsCertificate.new($_) });
+  }
+
   # Type: GByteArray
   method certificate (:$raw = False) is rw  {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
@@ -172,23 +189,6 @@ class GIO::TlsCertificate {
     GTlsCertificate() $cert_two
   ) {
     so g_tls_certificate_is_same($cert_one, $cert_two);
-  }
-
-  method list_new_from_file (
-    GIO::TlsCertificate:U:
-    Str() $file,
-    CArray[Pointer[GError]] $error = gerror,
-    :$glist = False, :$raw = False
-  ) {
-    my $la = g_tls_certificate_list_new_from_file($file, $error);
-
-    return $la if     $glist;
-    return Nil unless $la;
-
-    $la = GTK::Compat::GList.new($la)
-      but GTK::Compat::Roles::ListData[GTlsCertificate];
-
-    $raw ?? $la.Array !! $la.Array.map({ GIO::TlsCertificate.new($_) });
   }
 
   method verify (GSocketConnectable() $identity, GTlsCertificate() $trusted_ca) {
