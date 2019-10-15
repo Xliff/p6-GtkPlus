@@ -85,6 +85,7 @@ GIO::Raw::Stream
 GIO::Raw::Subs
 GIO::Raw::Task
 GIO::Raw::ThemedIcon
+GIO::Raw::TlsCertificate
 GIO::Raw::UnixConnection
 GIO::Raw::UnixCredentialsMessage
 GIO::Raw::UnixFDList
@@ -105,6 +106,7 @@ GIO::Roles::Signals::FileMonitor
 GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
 GIO::Roles::Signals::VolumeMonitor
+GLib::Raw::Arrays
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
 GLib::Raw::Bytes
@@ -452,10 +454,10 @@ GTK::WidgetPath
 GIO::Roles::DatagramBased
 GIO::Roles::PollableOutputStream
 GIO::SrvTarget
+GLib::ByteArray
 GTK::Compat::Cairo
 GTK::Compat::DragContext
 GTK::Compat::FrameClock
-GTK::Compat::Pixbuf
 GTK::Compat::Pixbuf::Animation
 GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals
@@ -469,8 +471,6 @@ GTK::Compat::VariantDict
 GTK::DragContext
 GTK::FileFilter
 GTK::Get
-GTK::IconInfo
-GTK::IconTheme
 GTK::PaperSize
 GTK::PrintSettings
 GTK::RecentFilter
@@ -521,6 +521,7 @@ GIO::SocketControlMessage
 GIO::Stream
 GIO::Task
 GIO::ThemedIcon
+GIO::TlsCertificate
 GIO::UnixCredentialsMessage
 GIO::UnixFDList
 GIO::UnixFDMessage
@@ -548,12 +549,15 @@ GTK::Compat::Event
 GTK::Compat::HashTable
 GTK::Compat::MenuModel
 GTK::Compat::Notification
+GTK::Compat::Pixbuf
 GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::Action
 GTK::Compat::Roles::GFile
 GTK::Compat::Seat
 GTK::Compat::SimpleAction
 GTK::EntryBuffer
+GTK::IconInfo
+GTK::IconTheme
 GTK::ListStore
 GTK::PageSetup
 GTK::PrintContext

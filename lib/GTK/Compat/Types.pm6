@@ -8,7 +8,7 @@ use Cairo;
 use GTK::Roles::Pointers;
 
 # Number of times I've had to force compile the whole project.
-constant forced = 27;
+constant forced = 28;
 
 our $DEBUG is export = 0;
 
@@ -1578,7 +1578,6 @@ class GAsyncResult             is repr('CPointer') is export does GTK::Roles::Po
 class GBinding                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBookmarkFile            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GByteArray               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytesIcon               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1708,6 +1707,15 @@ class GVolume                  is repr('CPointer') is export does GTK::Roles::Po
 class GVolumeMonitor           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GZlibCompressor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GZlibDecompressor        is repr('CPointer') is export does GTK::Roles::Pointers { }
+
+class GByteArray is repr('CStruct') does GTK::Roles::Pointers is export {
+  has CArray[uint8] $.data;
+  has guint         $.len;
+
+  method Blob {
+    Blob.new( $.data[ ^$.len ] );
+  }
+}
 
 class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is export {
   has GFileAttributeInfo $.infos;
