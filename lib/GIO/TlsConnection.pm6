@@ -52,6 +52,7 @@ class GIO::TlsConnection is GIO::Stream {
   }
 
   method GTK::Compat::Types::GTlsConnection
+    is also<GTlsConnection>
   { $!tc }
 
   proto method new(|)
@@ -188,7 +189,9 @@ class GIO::TlsConnection is GIO::Stream {
   method emit_accept_certificate (
     GTlsCertificate() $peer_cert,
     Int() $errors
-  ) is also<emit-accept-certificate> {
+  )
+    is also<emit-accept-certificate>
+  {
     my GTlsCertificateFlags $e = $errors;
 
     g_tls_connection_emit_accept_certificate($!tc, $peer_cert, $e);
@@ -230,7 +233,9 @@ class GIO::TlsConnection is GIO::Stream {
       peer-certificate-errors
     >
   {
-    GTlsCertificateFlags( g_tls_connection_get_peer_certificate_errors($!tc) );
+    GTlsCertificateFlagsEnum(
+      g_tls_connection_get_peer_certificate_errors($!tc)
+    );
   }
 
   method get_type is also<get-type> {
@@ -280,7 +285,9 @@ class GIO::TlsConnection is GIO::Stream {
   method handshake_finish (
     GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror
-  ) is also<handshake-finish> {
+  )
+    is also<handshake-finish>
+  {
     clear_error;
     my $rv = so g_tls_connection_handshake_finish($!tc, $result, $error);
     set_error($error);
