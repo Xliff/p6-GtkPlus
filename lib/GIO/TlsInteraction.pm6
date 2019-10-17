@@ -19,6 +19,7 @@ class GIO::TlsInteraction {
   }
 
   method GTK::Compat::Types::GTlsInteraction
+    is also<GTlsInteraction>
   { $!ti }
 
   method new (GTlsInteraction $tls-interaction) {
