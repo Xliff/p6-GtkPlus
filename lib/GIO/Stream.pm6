@@ -9,10 +9,11 @@ use GIO::Raw::Stream;
 use GIO::InputStream;
 use GIO::OutputStream;
 
-use GTK::Compat::Roles::Object;
+# Due to subclass need.
+use GTK::Roles::Properties;
 
 class GIO::Stream {
-  also does GTK::Compat::Roles::Object;
+  also does GTK::Roles::Properties;
 
   has GIOStream $!ios;
 

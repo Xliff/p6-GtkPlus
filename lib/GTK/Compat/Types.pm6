@@ -1690,6 +1690,9 @@ class GThreadedSocketService   is repr('CPointer') is export does GTK::Roles::Po
 class GTimer                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimeZone                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTlsConnection           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTlsDatabase             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTlsInteraction          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTokenValue              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixCredentialsMessage  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
