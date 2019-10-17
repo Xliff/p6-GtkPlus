@@ -4,6 +4,7 @@ use NativeCall;
 use Method::Also;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
 
 use GTK::Raw::Utils;
 use GIO::Raw::TlsConnection;
