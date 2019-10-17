@@ -5,6 +5,7 @@ use NativeCall;
 use GTK::Raw::ReturnedValue;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
 
 role GIO::Roles::Signals::TlsConnection {
   has %!signals-tc;

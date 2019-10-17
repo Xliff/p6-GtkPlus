@@ -1201,18 +1201,6 @@ our enum GdkWindowEdge is export <
   GDK_WINDOW_EDGE_SOUTH_EAST
 >;
 
-constant GTlsCertificateFlags is export := guint;
-our enum GTlsCertificateFlagsEnum is export (
-  G_TLS_CERTIFICATE_UNKNOWN_CA    => (1 +< 0),
-  G_TLS_CERTIFICATE_BAD_IDENTITY  => (1 +< 1),
-  G_TLS_CERTIFICATE_NOT_ACTIVATED => (1 +< 2),
-  G_TLS_CERTIFICATE_EXPIRED       => (1 +< 3),
-  G_TLS_CERTIFICATE_REVOKED       => (1 +< 4),
-  G_TLS_CERTIFICATE_INSECURE      => (1 +< 5),
-  G_TLS_CERTIFICATE_GENERIC_ERROR => (1 +< 6),
-  G_TLS_CERTIFICATE_VALIDATE_ALL  => 0x007f
-);
-
 our enum GdkCursorType is export (
   GDK_X_CURSOR            => 0,
   GDK_ARROW               => 2,

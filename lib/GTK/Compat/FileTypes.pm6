@@ -80,3 +80,37 @@ our enum GFileMonitorFlagsEnum is export (
   G_FILE_MONITOR_WATCH_HARD_LINKS => (1 +< 2),
   G_FILE_MONITOR_WATCH_MOVES      => (1 +< 3)
 );
+
+constant GTlsAuthenticationMode is export := guint;
+our enum GTlsAuthenticationModeEnum is export <
+  G_TLS_AUTHENTICATION_NONE
+  G_TLS_AUTHENTICATION_REQUESTED
+  G_TLS_AUTHENTICATION_REQUIRED
+>;
+
+constant GTlsCertificateFlags is export := guint;
+our enum GTlsCertificateFlagsEnum is export (
+  G_TLS_CERTIFICATE_UNKNOWN_CA    => (1 +< 0),
+  G_TLS_CERTIFICATE_BAD_IDENTITY  => (1 +< 1),
+  G_TLS_CERTIFICATE_NOT_ACTIVATED => (1 +< 2),
+  G_TLS_CERTIFICATE_EXPIRED       => (1 +< 3),
+  G_TLS_CERTIFICATE_REVOKED       => (1 +< 4),
+  G_TLS_CERTIFICATE_INSECURE      => (1 +< 5),
+  G_TLS_CERTIFICATE_GENERIC_ERROR => (1 +< 6),
+  G_TLS_CERTIFICATE_VALIDATE_ALL  => 0x007f
+);
+
+constant GTlsInteractionResult is export := guint;
+our enum GTlsInteractionResultEnum is export <
+  G_TLS_INTERACTION_UNHANDLED
+  G_TLS_INTERACTION_HANDLED
+  G_TLS_INTERACTION_FAILED
+>;
+
+constant GTlsPasswordFlags is export := guint;
+our enum GTlsPasswordFlagsEnum is export (
+  G_TLS_PASSWORD_NONE       => 0,
+  G_TLS_PASSWORD_RETRY      => 1 +< 1,
+  G_TLS_PASSWORD_MANY_TRIES => 1 +< 2,
+  G_TLS_PASSWORD_FINAL_TRY  => 1 +< 3
+);

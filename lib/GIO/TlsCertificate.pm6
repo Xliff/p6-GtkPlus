@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
 
 use GIO::Raw::TlsCertificate;
 
