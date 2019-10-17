@@ -10,6 +10,7 @@ use GTK::Raw::Utils;
 use GIO::Raw::TlsConnection;
 
 use GIO::Stream;
+use GIO::TlsDatabase;
 
 use GIO::Roles::Signals::TlsConnection;
 

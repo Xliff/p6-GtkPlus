@@ -75,7 +75,6 @@ GIO::Raw::Seekable
 GIO::Raw::SimpleProxyResolver
 GIO::Raw::Socket
 GIO::Raw::SocketAddress
-GIO::Raw::SocketClient
 GIO::Raw::SocketConnection
 GIO::Raw::SocketControlMessage
 GIO::Raw::SocketListener
@@ -85,8 +84,6 @@ GIO::Raw::Stream
 GIO::Raw::Subs
 GIO::Raw::Task
 GIO::Raw::ThemedIcon
-GIO::Raw::TlsCertificate
-GIO::Raw::TlsConnection
 GIO::Raw::UnixConnection
 GIO::Raw::UnixCredentialsMessage
 GIO::Raw::UnixFDList
@@ -107,7 +104,6 @@ GIO::Roles::Seekable
 GIO::Roles::Signals::FileMonitor
 GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
-GIO::Roles::Signals::TlsConnection
 GIO::Roles::Signals::VolumeMonitor
 GLib::Raw::Arrays
 GLib::Raw::AsyncQueue
@@ -211,8 +207,14 @@ GIO::Raw::Drive
 GIO::Raw::Emblem
 GIO::Raw::Mount
 GIO::Raw::Quarks
+GIO::Raw::SocketClient
+GIO::Raw::TlsCertificate
+GIO::Raw::TlsConnection
+GIO::Raw::TlsDatabase
+GIO::Raw::TlsInteraction
 GIO::Raw::Volume
 GIO::Roles::Icon
+GIO::Roles::Signals::TlsConnection
 GLib::AsyncQueue
 GLib::Base64
 GLib::Bytes
@@ -525,7 +527,8 @@ GIO::Stream
 GIO::Task
 GIO::ThemedIcon
 GIO::TlsCertificate
-GIO::TlsConnection
+GIO::TlsDatabase
+GIO::TlsInteraction
 GIO::UnixCredentialsMessage
 GIO::UnixFDList
 GIO::UnixFDMessage
@@ -584,6 +587,7 @@ GIO::Roles::SocketConnectable
 GIO::Roles::Volume
 GIO::SocketAddress
 GIO::SocketClient
+GIO::TlsConnection
 GIO::UnixSocketAddress
 GTK::CellRendererAccel
 GTK::CellRendererSpin
