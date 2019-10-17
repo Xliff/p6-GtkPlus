@@ -12,6 +12,11 @@ our enum GAppInfoCreateFlagsEnum is export (
   G_APP_INFO_CREATE_SUPPORTS_STARTUP_NOTIFICATION  => (1 +< 2)   # nick=supports-startup-notification
 );
 
+constant GTlsCertificateRequestFlags is export := guint;
+our enum GTlsCertificateRequestFlagsEnum (
+  G_TLS_CERTIFICATE_REQUEST_NONE => 0
+);
+
 constant GEmblemOrigin is export := guint;
 our enum GEmblemOriginEnum is export <
   G_EMBLEM_ORIGIN_UNKNOWN
@@ -98,6 +103,17 @@ our enum GTlsCertificateFlagsEnum is export (
   G_TLS_CERTIFICATE_INSECURE      => (1 +< 5),
   G_TLS_CERTIFICATE_GENERIC_ERROR => (1 +< 6),
   G_TLS_CERTIFICATE_VALIDATE_ALL  => 0x007f
+);
+
+constant GTlsDatabaseLookupFlags is export := guint;
+our enum GTlsDatabaseLookupFlagsEnum is export (
+  G_TLS_DATABASE_LOOKUP_NONE    => 0,
+  G_TLS_DATABASE_LOOKUP_KEYPAIR => 1
+);
+
+constant GTlsDatabaseVerifyFlags is export := guint;
+our enum GTlsDatabaseVerifyFlagsEnum is export (
+  G_TLS_DATABASE_VERIFY_NONE => 0
 );
 
 constant GTlsInteractionResult is export := guint;
