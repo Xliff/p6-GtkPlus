@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -30,7 +32,9 @@ class GIO::TlsInteraction {
     GTlsPassword() $password,
     GCancellable $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<ask-password>
+  {
     clear_error;
     my $rv = g_tls_interaction_ask_password(
       $!ti,
@@ -44,6 +48,7 @@ class GIO::TlsInteraction {
   }
 
   proto method ask_password_async (|)
+      is also<ask-password-async>
   { * }
 
   multi method ask_password_async (
@@ -71,7 +76,9 @@ class GIO::TlsInteraction {
   method ask_password_finish (
     GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<ask-password-finish>
+  {
     clear_error;
     my $rv = g_tls_interaction_ask_password_finish($!ti, $result, $error);
     set_error($error);
@@ -79,7 +86,7 @@ class GIO::TlsInteraction {
     GTlsInteractionResult($rv);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     self ($n, $t);
 
     unstable_get_type( self.^name, &g_tls_interaction_get_type, $n, $t );
@@ -89,7 +96,9 @@ class GIO::TlsInteraction {
     GTlsPassword() $password,
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<invoke-ask-password>
+  {
     clear_error;
     my $rv = g_tls_interaction_invoke_ask_password(
       $!ti,
@@ -107,7 +116,9 @@ class GIO::TlsInteraction {
     Int() $flags,
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<invoke-request-certificate>
+  {
     my GTlsCertificateRequestFlags $f = $flags;
 
     clear_error;
@@ -128,7 +139,9 @@ class GIO::TlsInteraction {
     Int() $flags,
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<request-certificate>
+  {
     my GTlsCertificateRequestFlags $f = $flags;
 
     clear_error;
@@ -145,6 +158,7 @@ class GIO::TlsInteraction {
   }
 
   proto method request_certificate_async (|)
+      is also<request-certificate-async>
   { * }
 
   multi method request_certificate_async (
@@ -177,7 +191,9 @@ class GIO::TlsInteraction {
   method request_certificate_finish (
     GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<request-certificate-finish>
+  {
     g_tls_interaction_request_certificate_finish($!ti, $result, $error);
   }
 
