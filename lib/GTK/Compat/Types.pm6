@@ -1677,6 +1677,7 @@ class GThreadPool              is repr('CPointer') is export does GTK::Roles::Po
 class GThreadedSocketService   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimer                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTimeZone                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTlsBackend              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsClientConnection     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsConnection           is repr('CPointer') is export does GTK::Roles::Pointers { }
