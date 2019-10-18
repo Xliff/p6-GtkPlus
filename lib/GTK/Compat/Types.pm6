@@ -1681,6 +1681,7 @@ class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Po
 class GTlsConnection           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsDatabase             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsInteraction          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTlsPassword             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTokenValue              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixCredentialsMessage  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
