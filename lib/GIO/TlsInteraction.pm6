@@ -7,6 +7,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
+use GIO::Raw::TlsInteraction;
+
 use GTK::Compat::Roles::Object;
 
 class GIO::TlsInteraction {
@@ -87,7 +89,7 @@ class GIO::TlsInteraction {
   }
 
   method get_type is also<get-type> {
-    self ($n, $t);
+    my ($n, $t);
 
     unstable_get_type( self.^name, &g_tls_interaction_get_type, $n, $t );
   }
