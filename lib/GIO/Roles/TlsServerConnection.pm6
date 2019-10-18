@@ -24,6 +24,7 @@ role GIO::Roles::TlsServerConnection {
   }
 
   method GTK::Compat::Types::GTlsServerConnection
+    is also<GTlsServerConnection>
   { $!tsc }
 
   proto method new-tlsserverconnection-obj (|)
