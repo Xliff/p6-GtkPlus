@@ -92,7 +92,9 @@ class GIO::TlsPassword {
     Str $value,
     Int() $length,
     GDestroyNotify $destroy = gpointer
-  ) is also<set-value-full> {
+  )
+    is also<set-value-full> 
+  {
     my gsize $l = $length;
 
     g_tls_password_set_value_full($!tp, $value, $l, $destroy);
