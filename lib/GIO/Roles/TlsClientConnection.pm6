@@ -109,7 +109,11 @@ role GIO::Roles::TlsClientConnection {
   }
 
   method get_accepted_cas (:$glist = False, :$raw = False)
-    is also<get-accepted-cas>
+    is also<
+      get-accepted-cas
+      accepted_cas
+      accepted-cas
+    >
   {
     my $cal = g_tls_client_connection_get_accepted_cas($!tcc);
 
