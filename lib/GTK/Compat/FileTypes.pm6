@@ -86,6 +86,23 @@ our enum GFileMonitorFlagsEnum is export (
   G_FILE_MONITOR_WATCH_MOVES      => (1 +< 3)
 );
 
+constant GResourceError is export := guint;
+our enum GResourceErrorEnum is export <
+  G_RESOURCE_ERROR_NOT_FOUND
+  G_RESOURCE_ERROR_INTERNAL
+>;
+
+constant GResourceFlags is export := guint;
+our enum GResourceFlagsEnum is export (
+  G_RESOURCE_FLAGS_NONE       => 0,
+  G_RESOURCE_FLAGS_COMPRESSED => 1
+);
+
+constant GResourceLookupFlags is export := guint;
+our enum GResourceLookupFlagsEnum is export (
+  G_RESOURCE_LOOKUP_FLAGS_NONE  => 0
+);
+
 constant GTlsAuthenticationMode is export := guint;
 our enum GTlsAuthenticationModeEnum is export <
   G_TLS_AUTHENTICATION_NONE
