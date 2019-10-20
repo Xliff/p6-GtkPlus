@@ -77,6 +77,7 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
 
   method bind (Int() $pos, T $elem) {
     my uint64 $p = resolve-uint($pos);
+
     memcpy(
       Pointer.new( $!b + $p * nativesizeof(T) ),
       nativecast(Pointer, $elem),
