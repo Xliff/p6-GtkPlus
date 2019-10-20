@@ -21,6 +21,7 @@
   - Test latest inplementation of GTK::Compat::GList and GTK::Roles::ListData
 + Generate GTK::Widgets and GTK::NonWidgets comprised of need statements (build-mro.pl6 could do this)
   - build-mro.pl6 is now doing this.
+- Consider: Any UINT parameter should have a "where * > 0" placed on it. LARGE initiative. Subject to review.
 - Figure out the best way to place this:
     multi method Numeric { $!o.p }
   So that we can change the entire object chain in the most efficient way.
