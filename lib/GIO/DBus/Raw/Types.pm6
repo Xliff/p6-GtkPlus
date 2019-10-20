@@ -1,5 +1,8 @@
 use v6.c;
 
+use NativeCall;
+use Method::Also;
+
 use GTK::Compat::Types;
 
 unit package GIO::DBus::Raw::Types;
@@ -179,3 +182,23 @@ our enum GDBusSubtreeFlagsEnum is export (
   G_DBUS_SUBTREE_FLAGS_NONE                           => 0,
   G_DBUS_SUBTREE_FLAGS_DISPATCH_TO_UNENUMERATED_NODES => 1
 );
+
+class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
+  has gint $!error-code;
+  has Str  $!dbus-error-name;
+
+  method error-code is rw is also<error_code> {
+    Proxy.new:
+      FETCH => -> $             { $!error-code },
+      STORE => -> $, Int() $val { $!error-code = $val };
+  }
+
+  method dbus-error-name is rw is also<dbus_error_name> {
+    Proxy.new:
+      FETCH => -> $ { $!dbus-error-name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+}
