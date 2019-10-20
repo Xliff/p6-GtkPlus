@@ -202,3 +202,48 @@ class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
       };
   }
 }
+
+class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+  has gint                              $.ref_count;
+  has Str                               $!name;
+  CArray[Pointer[GDBusArgInfo]]         $!in_args;
+  CArray[Pointer[GDBusArgInfo]]         $!out_args;
+  CArray[Pointer[GDBusAnnotationInfo]]  $!annotations;
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $ { $!name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+
+  method in_args is rw is also<in-args> {
+    Proxy.new:
+      FETCH => -> $ { $!in_args },
+
+      STORE => -> $, CArray[Pointer[GDBusArgInfo]] $val {
+        self.^attributes(:local)[2].set_value(self, $val)
+      };
+  }
+
+  method out_args is rw is also<out-args> {
+    Proxy.new:
+      FETCH => -> $ { $!out_args },
+
+      STORE => -> $, CArray[Pointer[GDBusArgInfo]] $val {
+        self.^attributes(:local)[3].set_value(self, $val)
+      };
+  }
+
+  method annotations is rw {
+    Proxy.new:
+      FETCH => -> $ { $!annotations },
+
+      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+        self.^attributes(:local)[4].set_value(self, $val)
+      };
+  }
+
+}
