@@ -22,6 +22,15 @@
 + Generate GTK::Widgets and GTK::NonWidgets comprised of need statements (build-mro.pl6 could do this)
   - build-mro.pl6 is now doing this.
 - Consider: Any UINT parameter should have a "where * > 0" placed on it. LARGE initiative. Subject to review.
+
+- Determine if GTK::Roles::Pointers.p can return a generic Pointer[T] where T is the type of the original object:
+  NOTE: This invocation WILL work:
+    nativecast( Pointer.^parameterize(self.WHAT), self );
+  However there are wide-reaching consequenses of its use that need to be tackled. For one: This should only be
+  necessary for CStructs, but there are places in the code that use it for CStructs AND CPointers. If this
+  change is made, then there are places in the code that will need to be refactored, since a Pointer should take
+  a CPointer without modification.
+
 - Figure out the best way to place this:
     multi method Numeric { $!o.p }
   So that we can change the entire object chain in the most efficient way.
