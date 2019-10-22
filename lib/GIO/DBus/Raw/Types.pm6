@@ -210,6 +210,14 @@ class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
   CArray[Pointer[GDBusArgInfo]]         $!out_args;
   CArray[Pointer[GDBusAnnotationInfo]]  $!annotations;
 
+  submethod BUILD {
+    $!ref_count = 1;
+  }
+
+  submethod DESTROY {
+    self.unref;
+  }
+
   method name is rw {
     Proxy.new:
       FETCH => -> $ { $!name },
