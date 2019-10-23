@@ -529,7 +529,9 @@ class GIO::DBus::Connection {
     GUnixFDList() $fd_list,
     GAsyncReadyCallback $callback,
     gpointer $user_data = gpointer,
-    :unix_fd(:unix-fd(:unix_fd_list(:$unix-fd-list))) is required
+    :unix_fd_async(
+      :unix-fd-async(:unix_fd_list_async(:$unix-fd-list-async))
+    ) is required
   ) {
     self.call_with_unix_fd_list(
       $bus_name,
@@ -586,7 +588,9 @@ class GIO::DBus::Connection {
     GCancellable() $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data = gpointer,
-    :unix_fd(:unix-fd(:unix_fd_list(:$unix-fd-list))) is required
+    :unix_fd_async(
+      :unix-fd-async(:unix_fd_list_async(:$unix-fd-list-async))
+    ) is required
   ) {
     self.call_with_unix_fd_list(
       $bus_name,
@@ -638,23 +642,239 @@ class GIO::DBus::Connection {
     );
   }
 
-  method call_with_unix_fd_list_finish (GUnixFDList $out_fd_list, GAsyncResult $res, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_call_with_unix_fd_list_finish($!dc, $out_fd_list, $res, $error);
+  multi method call (
+    GUnixFDList() $out_fd_list,
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror,
+    :unix_fd_finish(
+      :unix-fd-finish(:unix_fd_list_finish(:$unix-fd-list-finish))
+    ) is required,
+    :$raw = False
+  ) {
+    self.call_with_unix_fd_list_finish (
+      $out_fd_list,
+      $res,
+      $error,
+      :$raw
+    )
+  }
+  method call_with_unix_fd_list_finish (
+    GUnixFDList() $out_fd_list,
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror,
+    :$raw = False
+  ) {
+    clear_error;
+    my $v = g_dbus_connection_call_with_unix_fd_list_finish(
+      $!dc,
+      $out_fd_list,
+      $res,
+      $error
+    );
+    set_error($error);
+
+    $v ??
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      !!
+      Nil;
   }
 
-  method call_with_unix_fd_list_sync (Str $bus_name, Str $object_path, Str $interface_name, Str $method_name, GVariant $parameters, GVariantType $reply_type, GDBusCallFlags $flags, gint $timeout_msec, GUnixFDList $fd_list, GUnixFDList $out_fd_list, GCancellable $cancellable, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_call_with_unix_fd_list_sync($!dc, $bus_name, $object_path, $interface_name, $method_name, $parameters, $reply_type, $flags, $timeout_msec, $fd_list, $out_fd_list, $cancellable, $error);
+  proto method call_with_unix_fd_list_sync (|)
+  { * }
+
+  multi method call (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    :unix_fd(:unix-fd(:unix_fd_list(:$unix-fd-list))) is required,
+    :$all = True,
+    :$raw = False,
+  ) {
+    my $r = self.call_with_unix_fd_list(
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $reply_type,
+      $flags,
+      $timeout_msec,
+      $fd_list,
+      $,
+      GCancellable,
+      gerror,
+      :$all,
+      :$raw
+    );
+  }
+  multi method call_with_unix_fd_list_sync (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    :$all = True,
+    :$raw = False
+  ) {
+    samewith(
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $reply_type,
+      $flags,
+      $timeout_msec,
+      $fd_list,
+      $,
+      GCancellable,
+      gerror,
+      :$all,
+      :$raw
+    );
+  }
+  multi method call (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    $out_fd_list is rw,
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror,
+    :unix_fd(:unix-fd(:unix_fd_list(:$unix-fd-list))) is required,
+    :$all = False,
+    :$raw = False
+  ) {
+    self.call_with_unix_fd_list(
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $reply_type,
+      $flags,
+      $timeout_msec,
+      $fd_list,
+      $out_fd_list,
+      $cancellable,
+      $error,
+      :$all,
+      :$raw
+    );
+  }
+  multi method call_with_unix_fd_list_sync (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    $out_fd_list is rw,
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False,
+    :$raw = False
+  ) {
+    my $ofl = CArray[Pointer[GUnixFDList]].new;
+    $ofl[0] = Pointer[GUnixFDList];
+
+    clear_error;
+    my $v = g_dbus_connection_call_with_unix_fd_list_sync(
+      $!dc,
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $reply_type,
+      $flags,
+      $timeout_msec,
+      $fd_list,
+      $ofl,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+
+    $out_fd_list = $ofl[0] ?? $ofl[0] !! Nil;
+    $v = $v ??
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      !!
+      Nil;
+    $all.not ?? $v !! ($v, $out_fd_list);
   }
 
-  method close (GCancellable $cancellable, GAsyncReadyCallback $callback, gpointer $user_data) {
+  proto method close_async (|)
+  { * }
+
+  multi method close (
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+    :$async is required
+  ) {
+    self.close_async(GCancellable, $callback, $user_data);
+  }
+  multi method close_async (
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+  ) {
+    samewith(GCancellable, $callback, $user_data);
+  }
+  multi method close (
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+    :$async is required
+  ) {
+    self.close_async($cancellable, $callback, $user_data);
+  }
+  multi method close_async (
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+  ) {
     g_dbus_connection_close($!dc, $cancellable, $callback, $user_data);
   }
 
-  method close_finish (GAsyncResult $res, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_close_finish($!dc, $res, $error);
+  multi method close (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror,
+    :$finish is required
+  ) {
+    self.close_finish($res, $error);
+  }
+  method close_finish (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    clear_error;
+    my $rv = so g_dbus_connection_close_finish($!dc, $res, $error);
+    set_error($error);
+    $rv;
   }
 
-  method close_sync (GCancellable $cancellable, CArray[Pointer[GError]] $error = gerror) {
+  multi method close (
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
     g_dbus_connection_close_sync($!dc, $cancellable, $error);
   }
 
