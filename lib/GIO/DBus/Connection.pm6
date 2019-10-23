@@ -7,6 +7,8 @@ use GIO::DBus::Raw::Connection;
 
 use GTK::Compat::Variant;
 
+use GIO::DBus::Message;
+
 use GTK::Compat::Roles::Object;
 
 class GIO::DBus::Connection {
@@ -66,6 +68,9 @@ class GIO::DBus::Connection {
 
     $c ?? self.bless( connection => $c ) !! Nil;
   }
+
+  proto method new_async (|)
+  { * }
 
   multi method new (
     GIOStream() $io,
@@ -160,6 +165,9 @@ class GIO::DBus::Connection {
 
     $c ?? self.bless( connection => $c ) !! Nil;
   }
+
+  proto method new_for_address (|)
+  { * }
 
   multi method new (
     Str() $address,
@@ -303,6 +311,9 @@ class GIO::DBus::Connection {
     );
   }
 
+  proto method call_async (|)
+  { * }
+
   # $timeout_msec can be -1
   multi method call(
     Str() $bus_name,
@@ -384,7 +395,7 @@ class GIO::DBus::Connection {
       $user_data
     );
   }
-  method call_async (
+  multi method call_async (
     Str() $bus_name,
     Str() $object_path,
     Str() $interface_name,
@@ -417,6 +428,14 @@ class GIO::DBus::Connection {
     );
   }
 
+  multi method call(
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror,
+    :$finish is required,
+    :$raw = False
+  } (
+    self.call_finish($res, $gerror);
+  }
   method call_finish (
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror,
@@ -432,12 +451,191 @@ class GIO::DBus::Connection {
       Nil
   }
 
-  method call_sync (Str $bus_name, Str $object_path, Str $interface_name, Str $method_name, GVariant $parameters, GVariantType $reply_type, GDBusCallFlags $flags, gint $timeout_msec, GCancellable $cancellable, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_call_sync($!dc, $bus_name, $object_path, $interface_name, $method_name, $parameters, $reply_type, $flags, $timeout_msec, $cancellable, $error);
+  multi method call (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror,
+    :$raw = False
+  ) {
+    self.call_sync(
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $r,
+      $f,
+      $t,
+      $cancellable,
+      $error,
+      :$raw
+    );
+  }
+  method call_sync (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror,
+    :$raw = False
+  ) {
+    my GVariantType $r = $reply_type;
+    my GDBusCallFlags $f = $flags;
+    my gint $t = $timeout_msec;
+
+    clear_error;
+    my $v = g_dbus_connection_call_sync(
+      $!dc,
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $r,
+      $f,
+      $t,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+
+    $v ??
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      !!
+      Nil;
   }
 
-  method call_with_unix_fd_list (Str $bus_name, Str $object_path, Str $interface_name, Str $method_name, GVariant $parameters, GVariantType $reply_type, GDBusCallFlags $flags, gint $timeout_msec, GUnixFDList $fd_list, GCancellable $cancellable, GAsyncReadyCallback $callback, gpointer $user_data) {
-    g_dbus_connection_call_with_unix_fd_list($!dc, $bus_name, $object_path, $interface_name, $method_name, $parameters, $reply_type, $flags, $timeout_msec, $fd_list, $cancellable, $callback, $user_data);
+  multi method call (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+    :unix_fd(:unix-fd(:unix_fd_list(:$unix-fd-list))) is required
+  ) {
+    self.call_with_unix_fd_list(
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $reply_type,
+      $flags,
+      $timeout_msec,
+      $fd_list,
+      $callback,
+      $user_data
+    );
+  }
+  method call_with_unix_fd_list (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith(
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $reply_type,
+      $flags,
+      $timeout_msec,
+      $fd_list,
+      GCancellable,
+      $callback,
+      $user_data
+    );
+  }
+  multi method call (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+    :unix_fd(:unix-fd(:unix_fd_list(:$unix-fd-list))) is required
+  ) {
+    self.call_with_unix_fd_list(
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $reply_type,
+      $flags,
+      $timeout_msec,
+      $fd_list,
+      $cancellable,
+      $callback,
+      $user_data
+    );
+  }
+  method call_with_unix_fd_list (
+    Str() $bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $method_name,
+    GVariant() $parameters,
+    Int() $reply_type,
+    Int() $flags,
+    Int() $timeout_msec,
+    GUnixFDList() $fd_list,
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    my GVariantType   $r = $reply_type;
+    my GDBusCallFlags $f = $flags;
+    my gint           $t = $timeout_msec;
+
+    g_dbus_connection_call_with_unix_fd_list(
+      $!dc,
+      $bus_name,
+      $object_path,
+      $interface_name,
+      $method_name,
+      $parameters,
+      $r,
+      $f,
+      $t,
+      $fd_list,
+      $cancellable,
+      $callback,
+      $user_data
+    );
   }
 
   method call_with_unix_fd_list_finish (GUnixFDList $out_fd_list, GAsyncResult $res, CArray[Pointer[GError]] $error = gerror) {
@@ -476,6 +674,7 @@ class GIO::DBus::Connection {
     g_dbus_connection_flush_sync($!dc, $cancellable, $error);
   }
 
+  # Class methods. Returns a GDBusConnection
   method g_bus_get (GCancellable $cancellable, GAsyncReadyCallback $callback, gpointer $user_data) {
     g_bus_get($!dc, $cancellable, $callback, $user_data);
   }
@@ -488,40 +687,42 @@ class GIO::DBus::Connection {
     g_bus_get_sync($!dc, $cancellable, $error);
   }
 
-  method get_capabilities () {
+  method get_capabilities {
     g_dbus_connection_get_capabilities($!dc);
   }
 
-  method get_flags () {
+  method get_flags {
     g_dbus_connection_get_flags($!dc);
   }
 
-  method get_guid () {
+  method get_guid {
     g_dbus_connection_get_guid($!dc);
   }
 
-  method get_last_serial () {
+  method get_last_serial {
     g_dbus_connection_get_last_serial($!dc);
   }
 
-  method get_peer_credentials () {
+  method get_peer_credentials {
     g_dbus_connection_get_peer_credentials($!dc);
   }
 
-  method get_stream () {
+  method get_stream {
     g_dbus_connection_get_stream($!dc);
   }
 
-  method get_type () {
-    g_dbus_connection_get_type();
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_dbus_connection_get_type, $n, $t );
   }
 
-  method get_unique_name () {
+  method get_unique_name {
     g_dbus_connection_get_unique_name($!dc);
   }
 
-  method is_closed () {
-    g_dbus_connection_is_closed($!dc);
+  method is_closed {
+    so g_dbus_connection_is_closed($!dc);
   }
 
   method register_object (Str $object_path, GDBusInterfaceInfo $interface_info, GDBusInterfaceVTable $vtable, gpointer $user_data, GDestroyNotify $user_data_free_func, CArray[Pointer[GError]] $error = gerror) {
@@ -540,8 +741,69 @@ class GIO::DBus::Connection {
     g_dbus_connection_remove_filter($!dc, $filter_id);
   }
 
-  method send_message_with_reply_finish (GAsyncResult $res, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_send_message_with_reply_finish($!dc, $res, $error);
+  proto method send_message_with_reply (|)
+  { * }
+
+  multi method send_message_with_reply (
+    GDBusMessage()        $message,
+    Int()                 $flags,
+    Int()                 $timeout_msec,
+    GAsyncReadyCallback   $callback,
+    gpointer              $user_data = gpointer
+  ) {
+    self.send_message_with_reply(
+      $message,
+      $flags,
+      $timeout_msec,
+      $,
+      GCancellable,
+      $callback,
+      $user_data
+    );
+  }
+  multi method send_message_with_reply (
+    GDBusMessage()        $message,
+    Int()                 $flags,
+    Int()                 $timeout_msec,
+                          $out_serial is rw,
+    GCancellable()        $cancellable,
+    GAsyncReadyCallback   $callback,
+    gpointer              $user_data = gpointer
+  ) {
+    my GDBusSendMessageFlags $f = $flags;
+    my gint $t = $timeout_msec;
+    my guint $o = 0;
+
+    g_dbus_connection_send_message_with_reply (
+      $!dc,
+      $message,
+      $f,
+      $t,
+      $o,
+      $cancellable,
+      $callback,
+      $user_data
+    );
+    $out_serial = $o;
+  }
+
+  method send_message_with_reply_finish (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror,
+    :$raw = False
+  ) {
+    clear_error;
+    my $m = g_dbus_connection_send_message_with_reply_finish(
+      $!dc,
+      $res,
+      $error
+    );
+    set_error($error);
+
+    $m ??
+      ( $raw ?? $m !! GIO::DBus::Message.new($m) )
+      !!
+      Nil;
   }
 
   method signal_subscribe (Str $sender, Str $interface_name, Str $member, Str $object_path, Str $arg0, GDBusSignalFlags $flags, GDBusSignalCallback $callback, gpointer $user_data, GDestroyNotify $user_data_free_func) {
@@ -552,7 +814,7 @@ class GIO::DBus::Connection {
     g_dbus_connection_signal_unsubscribe($!dc, $subscription_id);
   }
 
-  method start_message_processing () {
+  method start_message_processing {
     g_dbus_connection_start_message_processing($!dc);
   }
 

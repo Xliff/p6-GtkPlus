@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GIO::Compat::FileTypes;
+use GIO::DBus::Raw::Types;
 
 unit package GIO::DBus::Raw::Connection;
 
@@ -456,6 +456,20 @@ sub g_dbus_connection_get_exit_on_close (GDBusConnection $connection)
 sub g_dbus_connection_set_exit_on_close (
   GDBusConnection $connection,
   gboolean $exit_on_close
+)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_connection_send_message_with_reply (
+  GDBusConnection       $connection,
+  GDBusMessage          $message,
+  GDBusSendMessageFlags $flags,
+  gint                  $timeout_msec,
+  guint32               $out_serial is rw,
+  GCancellable          $cancellable,
+  GAsyncReadyCallback   $callback,
+  gpointer              $user_data
 )
   is native(gio)
   is export
