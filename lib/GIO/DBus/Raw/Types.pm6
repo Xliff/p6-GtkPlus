@@ -5,6 +5,8 @@ use Method::Also;
 
 use GTK::Compat::Types;
 
+use GTK::Raw::Utils;
+
 unit package GIO::DBus::Raw::Types;
 
 constant GBusNameOwnerFlags is export := guint;
@@ -184,10 +186,10 @@ our enum GDBusSubtreeFlagsEnum is export (
 );
 
 class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers {
-  has gint                $!ref_count;
-  has Str                 $!key;
-  has Str                 $!value;
-  has GDBusAnnotationInfo $!annotations;
+  has gint                                 $!ref_count;
+  has Str                                  $!key;
+  has Str                                  $!value;
+  #has CArray[Pointer[GDBusAnnotationInfo]] $!annotations;
 
   submethod BUILD {
     $!ref_count = 1;
@@ -219,14 +221,14 @@ class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers {
       };
   }
 
-  method annotations ($raw = False) is rw {
-    Proxy.new:
-      FETCH => -> $ { $raw ?? $!annotations !! CArrayToArray($!annotations) },
-
-      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
-        self.^attributes(:local)[3].set_value(self, $val)
-      };
-  }
+  # method annotations ($raw = False) is rw {
+  #   Proxy.new:
+  #     FETCH => -> $ { $raw ?? $!annotations !! CArrayToArray($!annotations) },
+  #
+  #     STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+  #       self.^attributes(:local)[3].set_value(self, $val)
+  #     };
+  # }
 }
 
 class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers {
@@ -269,7 +271,7 @@ class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers {
     Proxy.new:
       FETCH => -> $ { $raw ?? $!annotations !! CArrayToArray($!annotations) },
 
-      STORE => -> $, CArray[Pointer[GDBusAnnocationInfo]] $val {
+      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
         self.^attributes(:local)[3].set_value(self, $val)
       };
   }
@@ -280,10 +282,6 @@ class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers {
 class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
   has gint $!error-code;
   has Str  $!dbus-error-name;
-
-  submethod BUILD {
-    $!ref_count = 1;
-  }
 
   submethod DESTROY {
     self.unref;
@@ -310,7 +308,7 @@ class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
 }
 
 class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
-  has gint                                  $.ref_count;
+  has gint                                  $!ref_count;
   has Str                                   $!name;
   has CArray[Pointer[GDBusArgInfo]]         $!in_args;
   has CArray[Pointer[GDBusArgInfo]]         $!out_args;
