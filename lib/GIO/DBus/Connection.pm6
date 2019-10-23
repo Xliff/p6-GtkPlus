@@ -951,24 +951,107 @@ class GIO::DBus::Connection {
   }
 
   # Class methods. Returns a GDBusConnection
-  method g_bus_get (GCancellable $cancellable, GAsyncReadyCallback $callback, gpointer $user_data) {
-    g_bus_get($!dc, $cancellable, $callback, $user_data);
+  multi method get (
+    GIO::DBus::Connection:U:
+    Int() $bus_type,
+    GCancellable() $cancellable = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    GIO::DBus::Connection.get_sync($bus_type, $cancellable, $error);
+  }
+  method get_sync (
+    GIO::DBus::Connection:U:
+    Int() $bus_type,
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    my GBusType $b = $bus_type;
+
+    my $c = g_bus_get_sync($b, $cancellable, $error);
+
+    $c ?? self.bless(connection => $c) !! Nil;
   }
 
-  method g_bus_get_finish (CArray[Pointer[GError]] $error = gerror) {
-    g_bus_get_finish($!dc, $error);
+  multi method get (
+    GIO::DBus::Connection:U:
+    Int() $bus_type,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+    :$async is required
+  ) {
+    GIO::DBus::Connection.get_async(
+      $bus_name,
+      GCancellable,
+      $callback,
+      $user_data
+    );
+  }
+  method get_async (
+    GIO::DBus::Connection:U:
+    Int() $bus_type,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    my GBusType $b = $bus_type;
+
+    GIO::DBus::Connection.get_async(
+      $bus_type,
+      GCancellable,
+      $callback,
+      $user_data
+    );
+  }
+  multi method get (
+    GIO::DBus::Connection:U:
+    Int() $bus_type,
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer,
+    :$async is required
+  ) {
+    GIO::DBus::Connection.get_async(
+      $bus_type,
+      $cancellable,
+      $callback,
+      $user_data
+    );
+  }
+  method get_async (
+    GIO::DBus::Connection:U:
+    Int() $bus_type,
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    my GBusType $b = $bus_type;
+
+    g_bus_get($b, $cancellable, $callback, $user_data);
   }
 
-  method g_bus_get_sync (GCancellable $cancellable, CArray[Pointer[GError]] $error = gerror) {
-    g_bus_get_sync($!dc, $cancellable, $error);
+  multi method get (
+    GIO::DBus::Connection:U:
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror
+    :$finish is required
+  ) {
+    GIO::DBus::Connection.get_finish($res, $error);
+  }
+  method get_finish (
+    GIO::DBus::Connection:U:
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    my $c = g_bus_get_finish($res, $error);
+
+    $c ?? self.bless( connection => $c ) !! Nil;
   }
 
   method get_capabilities {
-    g_dbus_connection_get_capabilities($!dc);
+    GBusConnectionFlagsEnum( g_dbus_connection_get_capabilities($!dc) );
   }
 
   method get_flags {
-    g_dbus_connection_get_flags($!dc);
+    GDbusConnectionFlagsEnum( g_dbus_connection_get_flags($!dc) );
   }
 
   method get_guid {
@@ -979,12 +1062,22 @@ class GIO::DBus::Connection {
     g_dbus_connection_get_last_serial($!dc);
   }
 
-  method get_peer_credentials {
-    g_dbus_connection_get_peer_credentials($!dc);
+  method get_peer_credentials (:$raw = False) {
+    my $c = g_dbus_connection_get_peer_credentials($!dc);
+
+    $c ??
+      ( $raw ?? $c !! GIO::Credentials.new($c) )
+      !!
+      Nil
   }
 
-  method get_stream {
-    g_dbus_connection_get_stream($!dc);
+  method get_stream ($raw = False) {
+    my $s = g_dbus_connection_get_stream($!dc);
+
+    $s ??
+      ( $raw ?? $s !! GIO::Stream.new($s) )
+      !!
+      Nil
   }
 
   method get_type {
