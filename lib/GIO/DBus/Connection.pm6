@@ -878,20 +878,76 @@ class GIO::DBus::Connection {
     g_dbus_connection_close_sync($!dc, $cancellable, $error);
   }
 
-  method emit_signal (Str $destination_bus_name, Str $object_path, Str $interface_name, Str $signal_name, GVariant $parameters, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_emit_signal($!dc, $destination_bus_name, $object_path, $interface_name, $signal_name, $parameters, $error);
+  method emit_signal (
+    Str() $destination_bus_name,
+    Str() $object_path,
+    Str() $interface_name,
+    Str() $signal_name,
+    GVariant() $parameters,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    so g_dbus_connection_emit_signal(
+      $!dc,
+      $destination_bus_name,
+      $object_path,
+      $interface_name,
+      $signal_name,
+      $parameters,
+      $error
+    );
   }
 
-  method flush (GCancellable $cancellable, GAsyncReadyCallback $callback, gpointer $user_data) {
+  proto method flush_async (|)
+  { * }
+
+  multi method flush (
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+    :$async is required
+  ) {
+    self.flush_async($callback, $user_data);
+  }
+  multi method flush_async (
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    self.flush_async(GCancellable, $callback, $user_data);
+  }
+  multi method flush (
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+    :$async is required
+  ) {
+    self.flush_async($cancellable, $callback, $user_data);
+  }
+  multi method flush_async (
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
     g_dbus_connection_flush($!dc, $cancellable, $callback, $user_data);
   }
 
-  method flush_finish (GAsyncResult $res, CArray[Pointer[GError]] $error = gerror) {
+  multi method flush (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror,
+    :$finish is required
+  ) {
+    self.flush_finish($res, $error);
+  }
+  method flush_finish (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
     g_dbus_connection_flush_finish($!dc, $res, $error);
   }
 
-  method flush_sync (GCancellable $cancellable, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_flush_sync($!dc, $cancellable, $error);
+  method flush (
+    GCancellable() $cancellable,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    so g_dbus_connection_flush_sync($!dc, $cancellable, $error);
   }
 
   # Class methods. Returns a GDBusConnection
