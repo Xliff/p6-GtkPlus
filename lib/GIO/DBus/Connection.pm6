@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GIO::DBus::Raw::Types;
 
@@ -9,10 +11,11 @@ use GTK::Compat::Variant;
 
 use GIO::DBus::Message;
 
-use GTK::Compat::Roles::Object;
+use GTK::Roles::Properties;
+use GIO::DBus::Roles::Signals::Connection;
 
 class GIO::DBus::Connection {
-  also does GTK::Compat::Roles::Object;
+  also does GTK::Roles::Properties;
 
   has GDbusConnection $!dc;
 
@@ -29,7 +32,7 @@ class GIO::DBus::Connection {
     self.bless( :$connection );
   }
 
-  method new (
+  multi method new (
     GIOStream() $io,
     Str() $guid,
     Int() $flags,
@@ -45,7 +48,7 @@ class GIO::DBus::Connection {
       $error
     );
   }
-  method new (
+  multi method new (
     GIOStream() $io,
     Str() $guid,
     Int() $flags,
@@ -70,6 +73,7 @@ class GIO::DBus::Connection {
   }
 
   proto method new_async (|)
+      is also<new-async>
   { * }
 
   multi method new (
@@ -158,7 +162,9 @@ class GIO::DBus::Connection {
   method new_finish (
     GSayncResult() $res,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<new-finish>
+  {
     clear_error;
     my $c = g_dbus_connection_new_finish($res, $error);
     set_error($error);
@@ -167,6 +173,7 @@ class GIO::DBus::Connection {
   }
 
   proto method new_for_address (|)
+      is also<new-for-address>
   { * }
 
   multi method new (
@@ -202,7 +209,7 @@ class GIO::DBus::Connection {
       $user_data
     );
   }
-  method new (
+  multi method new (
     Str() $address,
     Int() $flags,
     GDBusAuthObserver() $observer,
@@ -252,7 +259,9 @@ class GIO::DBus::Connection {
   method new_for_address_finish (
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<new-for-address-finish>
+  {
     clear_error;
     my $c = g_dbus_connection_new_for_address_finish($res, $error);
     set_error($error);
@@ -282,7 +291,9 @@ class GIO::DBus::Connection {
     GDBusAuthObserver() $observer,
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<new-for-address-sync>
+  {
     my GDBusConnectionFlags $f = $flags;
 
     clear_error;
@@ -298,11 +309,36 @@ class GIO::DBus::Connection {
     $c ?? self.bless( connection => $c ) !! Nil;
   }
 
+  # Type: gboolean
+  method exit-on-close is rw  is also<exit_on_close> {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('exit-on-close', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('exit-on-close', $gv);
+      }
+    );
+  }
+
+  # Is originally:
+  # GDBusConnection, gboolean, GError, gpointer --> void
+  method closed {
+    self.connect-closed($!w);
+  }
+
   method add_filter (
     GDBusMessageFilterFunction $filter_function,
     gpointer $user_data,
     GDestroyNotify $user_data_free_func = gpointer
-  ) {
+  )
+    is also<add-filter>
+  {
     g_dbus_connection_add_filter(
       $!dc,
       $filter_function,
@@ -312,6 +348,7 @@ class GIO::DBus::Connection {
   }
 
   proto method call_async (|)
+      is also<call-async>
   { * }
 
   # $timeout_msec can be -1
@@ -490,7 +527,9 @@ class GIO::DBus::Connection {
     GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror,
     :$raw = False
-  ) {
+  )
+    is also<call-sync>
+  {
     my GVariantType $r = $reply_type;
     my GDBusCallFlags $f = $flags;
     my gint $t = $timeout_msec;
@@ -516,6 +555,10 @@ class GIO::DBus::Connection {
       !!
       Nil;
   }
+
+  proto method call_with_unix_fd_list (|)
+    is also<call-with-unix-fd-list>
+  { * }
 
   multi method call (
     Str() $bus_name,
@@ -663,7 +706,9 @@ class GIO::DBus::Connection {
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror,
     :$raw = False
-  ) {
+  )
+    is also<call-with-unix-fd-list-finish>
+  {
     clear_error;
     my $v = g_dbus_connection_call_with_unix_fd_list_finish(
       $!dc,
@@ -680,6 +725,7 @@ class GIO::DBus::Connection {
   }
 
   proto method call_with_unix_fd_list_sync (|)
+      is also<call-with-unix-fd-list-sync>
   { * }
 
   multi method call (
@@ -823,6 +869,7 @@ class GIO::DBus::Connection {
   }
 
   proto method close_async (|)
+      is also<close-async>
   { * }
 
   multi method close (
@@ -864,7 +911,9 @@ class GIO::DBus::Connection {
   method close_finish (
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<close-finish>
+  {
     clear_error;
     my $rv = so g_dbus_connection_close_finish($!dc, $res, $error);
     set_error($error);
@@ -885,7 +934,9 @@ class GIO::DBus::Connection {
     Str() $signal_name,
     GVariant() $parameters,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<emit-signal>
+  {
     so g_dbus_connection_emit_signal(
       $!dc,
       $destination_bus_name,
@@ -898,6 +949,7 @@ class GIO::DBus::Connection {
   }
 
   proto method flush_async (|)
+      is also<flush-async>
   { * }
 
   multi method flush (
@@ -939,7 +991,9 @@ class GIO::DBus::Connection {
   method flush_finish (
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<flush-finish>
+  {
     g_dbus_connection_flush_finish($!dc, $res, $error);
   }
 
@@ -964,13 +1018,19 @@ class GIO::DBus::Connection {
     Int() $bus_type,
     GCancellable() $cancellable,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<get-sync>
+  {
     my GBusType $b = $bus_type;
 
     my $c = g_bus_get_sync($b, $cancellable, $error);
 
     $c ?? self.bless(connection => $c) !! Nil;
   }
+
+  proto method get_async (|)
+    is also<get-async>
+  { * }
 
   multi method get (
     GIO::DBus::Connection:U:
@@ -1016,7 +1076,7 @@ class GIO::DBus::Connection {
       $user_data
     );
   }
-  method get_async (
+  multi method get_async (
     GIO::DBus::Connection:U:
     Int() $bus_type,
     GCancellable() $cancellable,
@@ -1040,29 +1100,58 @@ class GIO::DBus::Connection {
     GIO::DBus::Connection:U:
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<get-finish>
+  {
     my $c = g_bus_get_finish($res, $error);
 
     $c ?? self.bless( connection => $c ) !! Nil;
   }
 
-  method get_capabilities {
+  method get_capabilities
+    is also<
+      get-capabilities
+      capabilities
+    >
+  {
     GBusConnectionFlagsEnum( g_dbus_connection_get_capabilities($!dc) );
   }
 
-  method get_flags {
+  method get_flags
+    is also<
+      get-flags
+      flags
+    >
+  {
     GDbusConnectionFlagsEnum( g_dbus_connection_get_flags($!dc) );
   }
 
-  method get_guid {
+  method get_guid
+    is also<
+      get-guid
+      guid
+    >
+  {
     g_dbus_connection_get_guid($!dc);
   }
 
-  method get_last_serial {
+  method get_last_serial
+    is also<
+      get-last-serial
+      last_serial
+      last-serial
+    >
+  {
     g_dbus_connection_get_last_serial($!dc);
   }
 
-  method get_peer_credentials (:$raw = False) {
+  method get_peer_credentials (:$raw = False)
+    is also<
+      get-peer-credentials
+      peer_credentials
+      peer-credentials
+    >
+  {
     my $c = g_dbus_connection_get_peer_credentials($!dc);
 
     $c ??
@@ -1071,7 +1160,12 @@ class GIO::DBus::Connection {
       Nil
   }
 
-  method get_stream ($raw = False) {
+  method get_stream ($raw = False)
+    is also<
+      get-stream
+      stream
+    >
+  {
     my $s = g_dbus_connection_get_stream($!dc);
 
     $s ??
@@ -1080,37 +1174,113 @@ class GIO::DBus::Connection {
       Nil
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_dbus_connection_get_type, $n, $t );
   }
 
-  method get_unique_name {
+  method get_unique_name
+    is also<
+      get-unique-name
+      unique_name
+      unique-name
+    >
+  {
     g_dbus_connection_get_unique_name($!dc);
   }
 
-  method is_closed {
+  method is_closed
+    is also<
+      is-closed
+      closed
+    >
+  {
     so g_dbus_connection_is_closed($!dc);
   }
 
-  method register_object (Str $object_path, GDBusInterfaceInfo $interface_info, GDBusInterfaceVTable $vtable, gpointer $user_data, GDestroyNotify $user_data_free_func, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_register_object($!dc, $object_path, $interface_info, $vtable, $user_data, $user_data_free_func, $error);
+  method register_object (
+    Str() $object_path,
+    GDBusInterfaceInfo $interface_info,
+    GDBusInterfaceVTable $vtable,
+    gpointer $user_data,
+    GDestroyNotify $user_data_free_func,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<register-object>
+  {
+    clear_error;
+    my $rv = g_dbus_connection_register_object(
+      $!dc,
+      $object_path,
+      $interface_info,
+      $vtable,
+      $user_data,
+      $user_data_free_func,
+      $error
+    );
+    set_error($error);
+    $rv;
   }
 
-  method register_object_with_closures (Str $object_path, GDBusInterfaceInfo $interface_info, GClosure $method_call_closure, GClosure $get_property_closure, GClosure $set_property_closure, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_register_object_with_closures($!dc, $object_path, $interface_info, $method_call_closure, $get_property_closure, $set_property_closure, $error);
+  method register_object_with_closures (
+    Str() $object_path,
+    GDBusInterfaceInfo $interface_info,
+    GClosure() $method_call_closure,
+    GClosure() $get_property_closure,
+    GClosure() $set_property_closure,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<register-object-with-closures>
+  {
+    clear_error;
+    my $rv = g_dbus_connection_register_object_with_closures(
+      $!dc,
+      $object_path,
+      $interface_info,
+      $method_call_closure,
+      $get_property_closure,
+      $set_property_closure,
+      $error
+    );
+    set_error($error);
+    $rv;
   }
 
-  method register_subtree (Str $object_path, GDBusSubtreeVTable $vtable, GDBusSubtreeFlags $flags, gpointer $user_data, GDestroyNotify $user_data_free_func, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_connection_register_subtree($!dc, $object_path, $vtable, $flags, $user_data, $user_data_free_func, $error);
+  method register_subtree (
+    Str() $object_path,
+    GDBusSubtreeVTable $vtable,
+    Int() $flags,
+    gpointer $user_data = gpointer,
+    GDestroyNotify $user_data_free_func = gpointer,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<register-subtree>
+  {
+    my GDBusSubtreeFlags $f = $flags;
+
+    clear_error;
+    my $rv = g_dbus_connection_register_subtree(
+      $!dc,
+      $object_path,
+      $vtable,
+      $f,
+      $user_data,
+      $user_data_free_func,
+      $error
+    );
+    set_error($error);
+    $rv;
   }
 
-  method remove_filter (guint $filter_id) {
-    g_dbus_connection_remove_filter($!dc, $filter_id);
+  method remove_filter (Int() $filter_id) is also<remove-filter> {
+    my guint $f = $filter_id;
+
+    g_dbus_connection_remove_filter($!dc, $f);
   }
 
   proto method send_message_with_reply (|)
+      is also<send-message-with-reply>
   { * }
 
   multi method send_message_with_reply (
@@ -1160,7 +1330,9 @@ class GIO::DBus::Connection {
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror,
     :$raw = False
-  ) {
+  )
+    is also<send-message-with-reply-finish>
+  {
     clear_error;
     my $m = g_dbus_connection_send_message_with_reply_finish(
       $!dc,
@@ -1175,24 +1347,64 @@ class GIO::DBus::Connection {
       Nil;
   }
 
-  method signal_subscribe (Str $sender, Str $interface_name, Str $member, Str $object_path, Str $arg0, GDBusSignalFlags $flags, GDBusSignalCallback $callback, gpointer $user_data, GDestroyNotify $user_data_free_func) {
-    g_dbus_connection_signal_subscribe($!dc, $sender, $interface_name, $member, $object_path, $arg0, $flags, $callback, $user_data, $user_data_free_func);
+  proto method signal_subscribe (|)
+      is also<signal-subscribe>
+  { * }
+
+  multi method signal_subscribe (
+    Int() $flags,
+    GDBusSignalCallback $callback,
+    gpointer $user_data, = gpointer
+  ) {
+    samewith(Str, Str, Str, Str, Str, $flags, $callback, $user_data);
+  }
+  multi method signal_subscribe (
+    Str() $sender,
+    Str() $interface_name,
+    Str() $member,
+    Str() $object_path,
+    Str() $arg0,
+    Int() $flags,
+    GDBusSignalCallback $callback,
+    gpointer $user_data, = gpointer
+    GDestroyNotify $user_data_free_func = gpointer
+  ) {
+    my GDBusSignalFlags $f = $flags;
+
+    g_dbus_connection_signal_subscribe(
+      $!dc,
+      $sender,
+      $interface_name,
+      $member,
+      $object_path,
+      $arg0,
+      $f,
+      $callback,
+      $user_data,
+      $user_data_free_func
+    );
   }
 
-  method signal_unsubscribe (guint $subscription_id) {
-    g_dbus_connection_signal_unsubscribe($!dc, $subscription_id);
+  method signal_unsubscribe (Int() $subscription_id) is also<signal-unsubscribe> {
+    my guint $s = $subscription_id;
+
+    g_dbus_connection_signal_unsubscribe($!dc, $s);
   }
 
-  method start_message_processing {
+  method start_message_processing is also<start-message-processing> {
     g_dbus_connection_start_message_processing($!dc);
   }
 
-  method unregister_object (guint $registration_id) {
-    g_dbus_connection_unregister_object($!dc, $registration_id);
+  method unregister_object (Int() $registration_id) is also<unregister-object> {
+    my guint $r = $registration_id;
+
+    g_dbus_connection_unregister_object($!dc, $r);
   }
 
-  method unregister_subtree (guint $registration_id) {
-    g_dbus_connection_unregister_subtree($!dc, $registration_id);
+  method unregister_subtree (Int() $registration_id) is also<unregister-subtree> {
+    my guint $r = $registration_id;
+
+    g_dbus_connection_unregister_subtree($!dc, $r);
   }
 
 }
