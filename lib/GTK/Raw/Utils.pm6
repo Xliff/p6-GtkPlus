@@ -7,9 +7,13 @@ use GTK::Compat::Types;
 unit package GTK::Raw::Utils;
 
 sub CStringArrayToArray (CArray[Str] $sa) is export {
+  CArrayToArray($sa)
+}
+
+sub CArrayToArray(CArray $ca) is export {
   my ($i, @a) = (0);
-  while $sa[$i] {
-    @a.push: $sa[$i++];
+  while $ca[$i] {
+    @a.push: $ca[$i++];
   }
   @a;
 }
