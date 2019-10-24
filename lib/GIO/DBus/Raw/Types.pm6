@@ -185,11 +185,17 @@ our enum GDBusSubtreeFlagsEnum is export (
   G_DBUS_SUBTREE_FLAGS_DISPATCH_TO_UNENUMERATED_NODES => 1
 );
 
-class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers {
-  has gint                                 $!ref_count;
-  has Str                                  $!key;
-  has Str                                  $!value;
-  #has CArray[Pointer[GDBusAnnotationInfo]] $!annotations;
+role Annotations {
+  method lookup (Str() $name) {
+    g_dbus_annotation_info_lookup(self.annotations, $name);
+  }
+}
+
+class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+  has gint     $!ref_count;
+  has Str      $!key;
+  has Str      $!value;
+  has Pointer  $!annotations;   # GDBusAnnotationInfo **
 
   submethod BUILD {
     $!ref_count = 1;
@@ -197,10 +203,6 @@ class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers {
 
   submethod DESTROY {
     self.unref;
-  }
-
-  method unref {
-    g_free(self.p);
   }
 
   method key is rw {
@@ -221,17 +223,32 @@ class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers {
       };
   }
 
-  # method annotations ($raw = False) is rw {
-  #   Proxy.new:
-  #     FETCH => -> $ { $raw ?? $!annotations !! CArrayToArray($!annotations) },
-  #
-  #     STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
-  #       self.^attributes(:local)[3].set_value(self, $val)
-  #     };
-  # }
+  method annotations ($raw = False) is rw {
+    Proxy.new:
+      FETCH => -> $ { $!annotations },
+
+      STORE => -> $, Pointer $val {
+        self.^attributes(:local)[3].set_value(self, $val)
+      };
+  }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_dbus_annotation_info_get_type, $n, $t );
+  }
+
+  method ref {
+    g_dbus_annotation_info_ref(self);
+    self;
+  }
+
+  method unref {
+    g_dbus_annotation_info_unref(self);
+  }
 }
 
-class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
   has gint                                  $!ref_count;
   has Str                                   $!name;
   has Str                                   $!signature;
@@ -243,10 +260,6 @@ class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers {
 
   submethod DESTROY {
     self.unref;
-  }
-
-  method unref {
-    g_free(self.p);
   }
 
   method name is rw {
@@ -276,10 +289,21 @@ class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers {
       };
   }
 
+  method get_type {
+    g_dbus_arg_info_get_type();
+  }
+
+  method ref {
+    g_dbus_arg_info_ref(self);
+    self;
+  }
+
+  method unref {
+    g_dbus_arg_info_unref(self);
+  }
 }
 
-
-class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
   has gint $!error-code;
   has Str  $!dbus-error-name;
 
@@ -307,7 +331,7 @@ class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
   }
 }
 
-class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
   has gint                                  $!ref_count;
   has Str                                   $!name;
   has CArray[Pointer[GDBusArgInfo]]         $!in_args;
@@ -320,10 +344,6 @@ class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
 
   submethod DESTROY {
     self.unref;
-  }
-
-  method unref {
-    g_free(self.p);
   }
 
   method name is rw {
@@ -361,9 +381,24 @@ class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
         self.^attributes(:local)[4].set_value(self, $val)
       };
   }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_dbus_method_info_get_type, $n, $t );
+  }
+
+  method ref {
+    g_dbus_method_info_ref(self);
+    self;
+  }
+
+  method unref {
+    g_dbus_method_info_unref(self);
+  }
 }
 
-class GDBusPropertyInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusPropertyInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
   has gint                                 $!ref_count;
   has Str                                  $!name;
   has Str                                  $!signature;
@@ -376,10 +411,6 @@ class GDBusPropertyInfo is export is repr<CStruct> does GTK::Roles::Pointers {
 
   submethod DESTROY {
     self.unref;
-  }
-
-  method unref {
-    g_free(self.p);
   }
 
   method name is rw {
@@ -414,9 +445,24 @@ class GDBusPropertyInfo is export is repr<CStruct> does GTK::Roles::Pointers {
         self.^attributes(:local)[4].set_value(self, $val)
       };
   }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_dbus_property_info_get_type, $n, $t );
+  }
+
+  method ref {
+    g_dbus_property_info_ref(self);
+    self;
+  }
+
+  method unref {
+    g_dbus_property_info_unref(self);
+  }
 }
 
-class GDBusSignalInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusSignalInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
   has gint                                 $!ref_count;
   has Str                                  $!name;
   has CArray[Pointer[GDBusArgInfo]]        $!args;
@@ -428,10 +474,6 @@ class GDBusSignalInfo is export is repr<CStruct> does GTK::Roles::Pointers {
 
   submethod DESTROY {
     self.unref;
-  }
-
-  method unref {
-    g_free(self.p);
   }
 
   method name is rw {
@@ -460,9 +502,24 @@ class GDBusSignalInfo is export is repr<CStruct> does GTK::Roles::Pointers {
         self.^attributes(:local)[3].set_value(self, $val)
       };
   }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_dbus_signal_info_get_type, $n, $t );
+  }
+
+  method ref {
+    g_dbus_signal_info_ref(self);
+    self;
+  }
+
+  method unref {
+    g_dbus_signal_info_unref(self);
+  }
 }
 
-class GDBusInterfaceInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusInterfaceInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
   has gint                                 $!ref_count;
   has Str                                  $!name;
   has CArray[Pointer[GDBusMethodInfo]]     $!methods;
@@ -476,10 +533,6 @@ class GDBusInterfaceInfo is export is repr<CStruct> does GTK::Roles::Pointers {
 
   submethod DESTROY {
     self.unref;
-  }
-
-  method unref {
-    g_free(self.p);
   }
 
   method name is rw {
@@ -526,6 +579,126 @@ class GDBusInterfaceInfo is export is repr<CStruct> does GTK::Roles::Pointers {
         self.^attributes(:local)[5].set_value(self, $val)
       };
   }
+
+  method cache_build {
+    g_dbus_interface_info_cache_build(self);
+  }
+
+  method cache_release {
+    g_dbus_interface_info_cache_release(self);
+  }
+
+  method generate_xml (Int() $indent, GString() $string_builder) {
+    my guint $i = $indent;
+
+    g_dbus_interface_info_generate_xml(self, $i, $string_builder);
+  }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_dbus_interface_info_get_type, $n, $t );
+  }
+
+  method lookup_method (Str() $name) {
+    g_dbus_interface_info_lookup_method(self, $name);
+  }
+
+  method lookup_property (Str() $name) {
+    g_dbus_interface_info_lookup_property(self, $name);
+  }
+
+  method lookup_signal (Str() $name) {
+    g_dbus_interface_info_lookup_signal(self, $name);
+  }
+
+  method ref {
+    g_dbus_interface_info_ref(self);
+    self;
+  }
+
+  method unref {
+    g_dbus_interface_info_unref(self);
+  }
+}
+
+class GDBusNodeInfo  is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+  has gint                                 $!ref_count;
+  has Str                                  $!path;
+  has CArray[Pointer[GDBusInterfaceInfo]]  $!interfaces;
+  has Pointer                              $!nodes;  # GDBusNodeInfo **
+  has CArray[Pointer[GDBusAnnotationInfo]] $!annotations;
+
+  method path is rw {
+    Proxy.new:
+      FETCH => -> $ { $!path },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+
+  method interfaces is rw {
+    Proxy.new:
+      FETCH => -> $ { $!interfaces },
+
+      STORE => -> $, CArray[Pointer[GDBusInterfaceInfo]] $val {
+        self.^attributes(:local)[2].set_value(self, $val)
+      };
+  }
+
+  method nodes is rw {
+    Proxy.new:
+      FETCH => -> $ { $!nodes },
+
+      STORE => -> $, Pointer $val {
+        self.^attributes(:local)[3].set_value(self, $val)
+      };
+  }
+
+  method annotations is rw {
+    Proxy.new:
+      FETCH => -> $ { $!annotations },
+
+      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+        self.^attributes(:local)[4].set_value(self, $val)
+      };
+  }
+
+  method new_for_xml (
+    Str() $xml_data,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    clear_error;
+    my $ni = g_dbus_node_info_new_for_xml($xml_data, $error);
+    set_error($error);
+    $ni;
+  }
+
+  method generate_xml (Int() $indent, GString() $string_builder) {
+    my guint $i = $indent;
+
+    g_dbus_node_info_generate_xml(self, $i, $string_builder);
+  }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_dbus_node_info_get_type, $n, $t );
+  }
+
+  method lookup_interface (Str() $name) {
+    g_dbus_node_info_lookup_interface(self, $name);
+  }
+
+  method ref {
+    g_dbus_node_info_ref(self);
+    self;
+  }
+
+  method unref {
+    g_dbus_node_info_unref(self);
+  }
 }
 
 class GDBusInterfaceVTable is export is repr<CStruct> does GTK::Roles::Pointers {
@@ -539,3 +712,189 @@ class GDBusSubtreeVTable is export is repr<CStruct> does GTK::Roles::Pointers {
   has Pointer $.introspect;
   has Pointer $.dispatch;
 }
+
+sub g_dbus_annotation_info_get_type ()
+  returns GType
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_annotation_info_lookup (Pointer $annotations, Str $name)
+  returns Str
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_annotation_info_ref (GDBusAnnotationInfo $info)
+  returns GDBusAnnotationInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_annotation_info_unref (GDBusAnnotationInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_arg_info_get_type ()
+  returns GType
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_arg_info_ref (GDBusArgInfo $info)
+  returns GDBusArgInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_arg_info_unref (GDBusArgInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_cache_build (GDBusInterfaceInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_cache_release (GDBusInterfaceInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_generate_xml (
+  GDBusInterfaceInfo $info,
+  guint $indent,
+  GString $string_builder
+)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_get_type ()
+  returns GType
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_lookup_method (GDBusInterfaceInfo $info, Str $name)
+  returns GDBusMethodInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_lookup_property (GDBusInterfaceInfo $info, Str $name)
+  returns GDBusPropertyInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_lookup_signal (GDBusInterfaceInfo $info, Str $name)
+  returns GDBusSignalInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_ref (GDBusInterfaceInfo $info)
+  returns GDBusInterfaceInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_interface_info_unref (GDBusInterfaceInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_method_info_get_type ()
+  returns GType
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_method_info_ref (GDBusMethodInfo $info)
+  returns GDBusMethodInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_method_info_unref (GDBusMethodInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_node_info_generate_xml (
+  GDBusNodeInfo $info,
+  guint $indent,
+  GString $string_builder
+)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_node_info_get_type ()
+  returns GType
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_node_info_lookup_interface (GDBusNodeInfo $info, Str $name)
+  returns GDBusInterfaceInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_node_info_new_for_xml (
+  Str $xml_data,
+  CArray[Pointer[GError]] $error
+)
+  returns GDBusNodeInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_node_info_ref (GDBusNodeInfo $info)
+  returns GDBusNodeInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_node_info_unref (GDBusNodeInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_property_info_get_type ()
+  returns GType
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_property_info_ref (GDBusPropertyInfo $info)
+  returns GDBusPropertyInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_property_info_unref (GDBusPropertyInfo $info)
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_signal_info_get_type ()
+  returns GType
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_signal_info_ref (GDBusSignalInfo $info)
+  returns GDBusSignalInfo
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_signal_info_unref (GDBusSignalInfo $info)
+  is native(gio)
+  is export
+{ * }
