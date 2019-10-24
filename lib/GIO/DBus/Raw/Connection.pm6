@@ -9,7 +9,7 @@ unit package GIO::DBus::Raw::Connection;
 
 sub g_dbus_connection_add_filter (
   GDBusConnection $connection,
-  GDBusMessageFilterFunction $filter_function,
+  &filter (GDBusConnection, GDBusMessage, gboolean, Pointer --> GDBusMessage),
   gpointer $user_data,
   GDestroyNotify $user_data_free_func
 )
@@ -407,7 +407,7 @@ sub g_dbus_connection_signal_subscribe (
   Str $object_path,
   Str $arg0,
   GDBusSignalFlags $flags,
-  GDBusSignalCallback $callback,
+  &callback (GDBusConnection, Str, Str, Str, Str, GVariant, Pointer),
   gpointer $user_data,
   GDestroyNotify $user_data_free_func
 )
