@@ -5,6 +5,8 @@ use Method::Also;
 
 use GTK::Compat::Types;
 
+use GTK::Raw::Utils;
+
 unit package GIO::DBus::Raw::Types;
 
 constant GBusNameOwnerFlags is export := guint;
@@ -183,9 +185,111 @@ our enum GDBusSubtreeFlagsEnum is export (
   G_DBUS_SUBTREE_FLAGS_DISPATCH_TO_UNENUMERATED_NODES => 1
 );
 
+class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+  has gint                                 $!ref_count;
+  has Str                                  $!key;
+  has Str                                  $!value;
+  #has CArray[Pointer[GDBusAnnotationInfo]] $!annotations;
+
+  submethod BUILD {
+    $!ref_count = 1;
+  }
+
+  submethod DESTROY {
+    self.unref;
+  }
+
+  method unref {
+    g_free(self.p);
+  }
+
+  method key is rw {
+    Proxy.new:
+      FETCH => -> $             { $!key },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+
+  method value is rw {
+    Proxy.new:
+      FETCH => -> $             { $!value },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[2].set_value(self, $val)
+      };
+  }
+
+  # method annotations ($raw = False) is rw {
+  #   Proxy.new:
+  #     FETCH => -> $ { $raw ?? $!annotations !! CArrayToArray($!annotations) },
+  #
+  #     STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+  #       self.^attributes(:local)[3].set_value(self, $val)
+  #     };
+  # }
+}
+
+class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+  has gint                                  $!ref_count;
+  has Str                                   $!name;
+  has Str                                   $!signature;
+  has CArray[Pointer[GDBusAnnotationInfo]]  $!annotations;
+
+  submethod BUILD {
+    $!ref_count = 1;
+  }
+
+  submethod DESTROY {
+    self.unref;
+  }
+
+  method unref {
+    g_free(self.p);
+  }
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $             { $!name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+
+  method signature is rw {
+    Proxy.new:
+      FETCH => -> $             { $!name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[2].set_value(self, $val)
+      };
+  }
+
+  method annotations ($raw = False) is rw {
+    Proxy.new:
+      FETCH => -> $ { $raw ?? $!annotations !! CArrayToArray($!annotations) },
+
+      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+        self.^attributes(:local)[3].set_value(self, $val)
+      };
+  }
+
+}
+
+
 class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
   has gint $!error-code;
   has Str  $!dbus-error-name;
+
+  submethod DESTROY {
+    self.unref;
+  }
+
+  method unref {
+    g_free(self.p);
+  }
 
   method error-code is rw is also<error_code> {
     Proxy.new:
@@ -204,11 +308,23 @@ class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers {
 }
 
 class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
-  has gint                              $.ref_count;
-  has Str                               $!name;
-  CArray[Pointer[GDBusArgInfo]]         $!in_args;
-  CArray[Pointer[GDBusArgInfo]]         $!out_args;
-  CArray[Pointer[GDBusAnnotationInfo]]  $!annotations;
+  has gint                                  $!ref_count;
+  has Str                                   $!name;
+  has CArray[Pointer[GDBusArgInfo]]         $!in_args;
+  has CArray[Pointer[GDBusArgInfo]]         $!out_args;
+  has CArray[Pointer[GDBusAnnotationInfo]]  $!annotations;
+
+  submethod BUILD {
+    $!ref_count = 1;
+  }
+
+  submethod DESTROY {
+    self.unref;
+  }
+
+  method unref {
+    g_free(self.p);
+  }
 
   method name is rw {
     Proxy.new:
@@ -245,5 +361,181 @@ class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers {
         self.^attributes(:local)[4].set_value(self, $val)
       };
   }
+}
 
+class GDBusPropertyInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+  has gint                                 $!ref_count;
+  has Str                                  $!name;
+  has Str                                  $!signature;
+  has GDBusPropertyInfoFlags               $!flags;
+  has CArray[Pointer[GDBusAnnotationInfo]] $!annotations;
+
+  submethod BUILD {
+    $!ref_count = 1;
+  }
+
+  submethod DESTROY {
+    self.unref;
+  }
+
+  method unref {
+    g_free(self.p);
+  }
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $ { $!name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+
+  method signature is rw {
+    Proxy.new:
+      FETCH => -> $             { $!name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[2].set_value(self, $val)
+      };
+  }
+
+  method flags is rw {
+    Proxy.new:
+      FETCH => -> $             { GDBusPropertyInfoFlagsEnum($!flags) },
+      STORE => -> $, Int() $val { $!flags = $val                      };
+  }
+
+  method annotations is rw {
+    Proxy.new:
+      FETCH => -> $ { $!annotations },
+
+      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+        self.^attributes(:local)[4].set_value(self, $val)
+      };
+  }
+}
+
+class GDBusSignalInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+  has gint                                 $!ref_count;
+  has Str                                  $!name;
+  has CArray[Pointer[GDBusArgInfo]]        $!args;
+  has CArray[Pointer[GDBusAnnotationInfo]] $!annotations;
+
+  submethod BUILD {
+    $!ref_count = 1;
+  }
+
+  submethod DESTROY {
+    self.unref;
+  }
+
+  method unref {
+    g_free(self.p);
+  }
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $ { $!name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+
+  method args is rw {
+    Proxy.new:
+      FETCH => -> $ { $!args },
+
+      STORE => -> $, CArray[Pointer[GDBusArgInfo]] $val {
+        self.^attributes(:local)[2].set_value(self, $val)
+      };
+  }
+
+  method annotations is rw {
+    Proxy.new:
+      FETCH => -> $ { $!annotations },
+
+      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+        self.^attributes(:local)[3].set_value(self, $val)
+      };
+  }
+}
+
+class GDBusInterfaceInfo is export is repr<CStruct> does GTK::Roles::Pointers {
+  has gint                                 $!ref_count;
+  has Str                                  $!name;
+  has CArray[Pointer[GDBusMethodInfo]]     $!methods;
+  has CArray[Pointer[GDBusSignalInfo]]     $!signals;
+  has CArray[Pointer[GDBusPropertyInfo]]   $!properties;
+  has CArray[Pointer[GDBusAnnotationInfo]] $!annotations;
+
+  submethod BUILD {
+    $!ref_count = 1;
+  }
+
+  submethod DESTROY {
+    self.unref;
+  }
+
+  method unref {
+    g_free(self.p);
+  }
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $ { $!name },
+
+      STORE => -> $, Str() $val {
+        self.^attributes(:local)[1].set_value(self, $val)
+      };
+  }
+
+  method methods is rw {
+    Proxy.new:
+      FETCH => -> $ { $!methods },
+
+      STORE => -> $, CArray[Pointer[GDBusMethodInfo]] $val {
+        self.^attributes(:local)[2].set_value(self, $val)
+      };
+  }
+
+  method signals is rw {
+    Proxy.new:
+      FETCH => -> $ { $!signals },
+
+      STORE => -> $, CArray[Pointer[GDBusSignalInfo]] $val {
+        self.^attributes(:local)[3].set_value(self, $val)
+      };
+  }
+
+  method properties is rw {
+    Proxy.new:
+      FETCH => -> $ { $!properties },
+
+      STORE => -> $, CArray[Pointer[GDBusPropertyInfo]] $val {
+        self.^attributes(:local)[4].set_value(self, $val)
+      };
+  }
+
+  method annotations is rw {
+    Proxy.new:
+      FETCH => -> $ { $!annotations },
+
+      STORE => -> $, CArray[Pointer[GDBusAnnotationInfo]] $val {
+        self.^attributes(:local)[5].set_value(self, $val)
+      };
+  }
+}
+
+class GDBusInterfaceVTable is export is repr<CStruct> does GTK::Roles::Pointers {
+  has Pointer $.method_call;  # GDBusInterfaceMethodCallFunc
+  has Pointer $.get_property; # GDBusInterfaceGetPropertyFunc
+  has Pointer $.set_property; # GDBusInterfaceSetPropertyFunc
+}
+
+class GDBusSubtreeVTable is export is repr<CStruct> does GTK::Roles::Pointers {
+  has Pointer $.enumerate;
+  has Pointer $.introspect;
+  has Pointer $.dispatch;
 }
