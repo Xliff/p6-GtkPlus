@@ -5,12 +5,14 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
+
 use GIO::Raw::SocketClient;
 
 use GTK::Compat::Roles::Object;
 
 use GIO::SocketAddress;
-# use GIO::SocketConnection;  # NYI
+use GIO::SocketConnection;
 
 use GIO::Roles::ProxyResolver;
 

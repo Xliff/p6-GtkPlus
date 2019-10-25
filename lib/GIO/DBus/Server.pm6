@@ -8,7 +8,7 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Server;
 
-use GIO::DBus::AuthObserver
+use GIO::DBus::AuthObserver;
 
 use GTK::Roles::Properties;
 use GIO::DBus::Roles::Signals::Server;
