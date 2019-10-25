@@ -38,6 +38,12 @@ GTK::Roles::Protection
 GTK::Roles::Types
 GDK::Raw::Main
 GIO::DBus::Raw::Types
+GIO::DBus::Raw::Utils
+GIO::DBus::Roles::Signals::AuthObserver
+GIO::DBus::Roles::Signals::Connection
+GIO::DBus::Roles::Signals::Object
+GIO::DBus::Roles::Signals::Server
+GIO::DBus::Utils
 GIO::Raw::AppInfo
 GIO::Raw::AsyncResult
 GIO::Raw::BufferedInputStream
@@ -119,8 +125,10 @@ GLib::Raw::Quark
 GLib::Raw::Quarks
 GLib::Raw::Rand
 GLib::Raw::Scanner
+GLib::Raw::String
 GLib::Raw::Unicode
 GLib::Scanner
+GLib::String
 GLib::URI
 GLib::Unicode
 GTK::Builder::Actionable
@@ -204,6 +212,13 @@ GDK::Raw::Threads
 GDK::Threads
 GIO::ContentType
 GIO::DBus::Raw::Address
+GIO::DBus::Raw::Connection
+GIO::DBus::Raw::Error
+GIO::DBus::Raw::Interface
+GIO::DBus::Raw::Message
+GIO::DBus::Raw::MethodInvocation
+GIO::DBus::Raw::Server
+GIO::DBus::Roles::Interface
 GIO::FileAttributeMatcher
 GIO::LaunchContext
 GIO::Raw::Drive
@@ -465,6 +480,8 @@ GTK::TreeIter
 GTK::TreePath
 GTK::TreeRowReference
 GTK::WidgetPath
+GIO::DBus::Error
+GIO::DBus::Roles::Object
 GIO::Resource
 GIO::Roles::DatagramBased
 GIO::Roles::PollableOutputStream
@@ -516,6 +533,8 @@ GTK::WindowGroup
 GIO::Cancellable
 GIO::CharsetConverter
 GIO::Credentials
+GIO::DBus::AuthObserver
+GIO::DBus::Server
 GIO::Emblem
 GIO::EmblemedIcon
 GIO::FileInfo
@@ -592,6 +611,7 @@ GTK::Roles::ToolShell
 GTK::TextIter
 GIO::BytesIcon
 GIO::DBus::Address
+GIO::DBus::Message
 GIO::FileAttributeInfoList
 GIO::FileEnumerator
 GIO::FileIcon
@@ -619,6 +639,8 @@ GTK::TextBuffer
 GTK::Widget
 GIO::BufferedInputStream
 GIO::ConverterInputStream
+GIO::DBus::Connection
+GIO::DBus::MethodInvocation
 GIO::DataInputStream
 GIO::InetSocketAddress
 GIO::NetworkAddress
