@@ -1,6 +1,7 @@
 use v6.c;
 
 use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -8,9 +9,15 @@ use GIO::DBus::Raw::Types;
 
 use GTK::Compat::GList;
 
+use GIO::DBus::Roles::Interface;
+
 use GTK::Compat::Roles::ListData;
 
+use GIO::DBus::Roles::Signals::Object;
+
 role GIO::DBus::Roles::Object {
+  also does GIO::DBus::Roles::Signals::Object;
+
   has GDBusObject $!do;
 
   submethod BUILD (:$object) {
@@ -32,13 +39,25 @@ role GIO::DBus::Roles::Object {
     self.bless(:$object);
   }
 
+  # Is originally:
+  # GDBusObject, GDBusInterface, gpointer --> void
+  method interface-added {
+    self.connect-interface($!do, 'interface-added');
+  }
+
+  # Is originally:
+  # GDBusObject, GDBusInterface, gpointer --> void
+  method interface-removed {
+    self.connect-interface($!do, 'interface-removed');
+  }
+
   method get_interface (Str() $interface_name, :$raw = False)
     is also<get-interface>
   {
     my $i = g_dbus_object_get_interface($!do, $interface_name);
 
     $i ??
-      ( $raw ?? $i !! ::('GIO::DBus::Roles::Interface').new-interface-obj($i) )
+      ( $raw ?? $i !! GIO::DBus::Roles::Interface.new-interface-obj($i) )
       !!
       Nil;
   }
@@ -51,7 +70,8 @@ role GIO::DBus::Roles::Object {
 
     $il = $il but GTK::Compat::Roles::ListData[GDBusInterface];
     $raw ??
-      $il.Array !!
+      $il.Array
+      !!
       $il.Array.map({ GIO::DBus::Roles::Interface.new-interface-obj($_) });
   }
 
