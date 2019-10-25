@@ -7,8 +7,6 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Interface;
 
-use GIO::DBus::Roles::Object;
-
 role GIO::DBus::Roles::Interface {
   has GDBusInterface $!di;
 
@@ -39,7 +37,7 @@ role GIO::DBus::Roles::Interface {
         my $o = g_dbus_interface_get_object($!di);
 
         $o ??
-          ( $raw ?? $o !! GIO::DBus::Roles::Object.new-dbusobject-obj($o) )
+          ( $raw ?? $o !! ::('GIO::DBus::Roles::Object').new-dbusobject-obj($o) )
           !!
           Nil;
       },
