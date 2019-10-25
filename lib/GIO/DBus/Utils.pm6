@@ -150,4 +150,92 @@ class GIO::DBus::Utils {
     g_bus_unown_name($o);
   }
 
+  method unwatch_name (guint $watcher_id) {
+    my guint $w = $watcher_id;
+
+    g_bus_unwatch_name($w);
+  }
+
+  method watch_name (
+    Int() $bus_type,
+    Str() $name,
+    Int() $flags,
+    &name_appeared_handler,
+    &name_vanished_handler,
+    gpointer $user_data                 = gpointer,
+    GDestroyNotify $user_data_free_func = gpointer
+  ) {
+    my GBusType $b = $bus_type;
+    my GBusNameWatcherFlags $f = $flags;
+
+    g_bus_watch_name(
+      $b,
+      $name,
+      $f,
+      &name_appeared_handler,
+      &name_vanished_handler,
+      $user_data,
+      $user_data_free_func
+    );
+  }
+
+  method watch_name_on_connection (
+    GDBusConnection() $connection,
+    Str() $name,
+    Int() $flags,
+    &name_appeared_handler,
+    &name_vanished_handler,
+    gpointer $user_data                 = gpointer,
+    GDestroyNotify $user_data_free_func = gpointer
+  ) {
+    my GBusNameWatcherFlags $f = $flags;
+
+    g_bus_watch_name_on_connection(
+      $connection,
+      $name,
+      $f,
+      &name_appeared_handler,
+      &name_vanished_handler,
+      $user_data,
+      $user_data_free_func
+    );
+  }
+
+  method watch_name_on_connection_with_closures (
+    GDBusConnection() $connection,
+    Str() $name,
+    Int() $flags,
+    GClosure() $name_appeared_closure,
+    GClosure() $name_vanished_closure
+  ) {
+    my GBusNameWatcherFlags $f = $flags;
+
+    g_bus_watch_name_on_connection_with_closures(
+      $connection,
+      $name,
+      $f,
+      $name_appeared_closure,
+      $name_vanished_closure
+    );
+  }
+
+  method watch_name_with_closures (
+    Int() $bus_type,
+    Str() $name,
+    Int() $flags,
+    GClosure() $name_appeared_closure,
+    GClosure() $name_vanished_closure
+  ) {
+    my GBusType $b = $bus_type;
+    my GBusNameWatcherFlags $f = $flags;
+
+    g_bus_watch_name_with_closures(
+      $b,
+      $name,
+      $f,
+      $name_appeared_closure,
+      $name_vanished_closure
+    );
+  }
+
 }

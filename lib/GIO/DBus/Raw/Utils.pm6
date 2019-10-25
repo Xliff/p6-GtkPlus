@@ -113,3 +113,61 @@ sub g_bus_unown_name (guint $owner_id)
   is native(gio)
   is export
 { * }
+
+sub g_bus_unwatch_name (guint $watcher_id)
+  is native(gio)
+  is export
+{ * }
+
+# GDBus Name watching
+sub g_bus_watch_name (
+  GBusType $bus_type,
+  Str $name,
+  GBusNameWatcherFlags $flags,
+  &name_appeared_handler (GDBusConnection, Str, Str, Pointer),
+  &name_vanished_handler (GDBusConnection, Str, Pointer),
+  gpointer $user_data,
+  GDestroyNotify $user_data_free_func
+)
+  returns guint
+  is native(gio)
+  is export
+{ * }
+
+sub g_bus_watch_name_on_connection (
+  GDBusConnection $connection,
+  Str $name,
+  GBusNameWatcherFlags $flags,
+  &name_appeared_handler (GDBusConnection, Str, Str, Pointer),
+  &name_vanished_handler (GDBusConnection, Str, Pointer),
+  gpointer $user_data,
+  GDestroyNotify $user_data_free_func
+)
+  returns guint
+  is native(gio)
+  is export
+{ * }
+
+sub g_bus_watch_name_on_connection_with_closures (
+  GDBusConnection $connection,
+  Str $name,
+  GBusNameWatcherFlags $flags,
+  GClosure $name_appeared_closure,
+  GClosure $name_vanished_closure
+)
+  returns guint
+  is native(gio)
+  is export
+{ * }
+
+sub g_bus_watch_name_with_closures (
+  GBusType $bus_type,
+  Str $name,
+  GBusNameWatcherFlags $flags,
+  GClosure $name_appeared_closure,
+  GClosure $name_vanished_closure
+)
+  returns guint
+  is native(gio)
+  is export
+{ * }
