@@ -179,6 +179,12 @@ our enum GDBusSignalFlagsEnum is export (
   G_DBUS_SIGNAL_FLAGS_MATCH_ARG0_PATH      => 4
 );
 
+constant GDBusInterfaceSkeletonFlags is export := guint;
+enum GDBusInterfaceSkeletonFlagsEnum is export (
+  G_DBUS_INTERFACE_SKELETON_FLAGS_NONE                                => 0,
+  G_DBUS_INTERFACE_SKELETON_FLAGS_HANDLE_METHOD_INVOCATIONS_IN_THREAD => 1
+);
+
 constant GDBusSubtreeFlags is export := guint;
 our enum GDBusSubtreeFlagsEnum is export (
   G_DBUS_SUBTREE_FLAGS_NONE                           => 0,

@@ -1585,6 +1585,7 @@ class GDtlsServerConnection    is repr('CPointer') is export does GTK::Roles::Po
 class GDBusAuthObserver        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusInterface           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDBusInterfaceSkeleton   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusMessage             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusMethodInvocation    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusObject              is repr('CPointer') is export does GTK::Roles::Pointers { }
