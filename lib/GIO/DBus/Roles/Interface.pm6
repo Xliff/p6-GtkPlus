@@ -7,10 +7,14 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Interface;
 
-#use GIO::DBus::Object;
+use GIO::DBus::Roles::Object;
 
 role GIO::DBus::Roles::Interface {
   has GDBusInterface $!di;
+
+  submethod BUILD (:$interface) {
+    $!di = $interface if $interface;
+  }
 
   method roleInit-DBusInterface is also<roleInit_DBusInterface> {
     $!di = cast(
@@ -23,13 +27,19 @@ role GIO::DBus::Roles::Interface {
     is also<GDBusInterface>
   { $!di }
 
+  method new_interface_obj (GDBusInterface $interface)
+    is also<new-interface-obj>
+  {
+    self.bless( :$interface );
+  }
+
   method object (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
         my $o = g_dbus_interface_get_object($!di);
 
         $o ??
-          ( $raw ?? $o !! GIO::DBus::Object.new($o) )
+          ( $raw ?? $o !! GIO::DBus::Roles::Object.new-dbusobject-obj($o) )
           !!
           Nil;
       },
