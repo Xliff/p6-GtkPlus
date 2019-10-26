@@ -26,12 +26,109 @@ class GIO::DBus::Proxy {
   method GTK::Compat::Types::GDBusProxy
   { $!dp }
 
-  method new (GDBusProxyFlags $flags, GDBusInterfaceInfo $info, Str $name, Str $object_path, Str $interface_name, GCancellable $cancellable, GAsyncReadyCallback $callback, gpointer $user_data) {
-    g_dbus_proxy_new($!dp, $flags, $info, $name, $object_path, $interface_name, $cancellable, $callback, $user_data);
+  multi method new (GDBusProxy $proxy) {
+    self.bless( :$proxy );
   }
 
-  method new_finish (CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_proxy_new_finish($!dp, $error);
+  multi method new (
+    GDBusConnection() $connection,
+    Int() $flags,
+    Str() $name,
+    Str() $object_path,
+    Str() $interface_name,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    samewith(
+      $connection,
+      $flags,
+      GDBusInterfaceInfo,
+      $name,
+      $object_path,
+      $interface_name,
+      GCancellable,
+      $error
+    );
+  }
+  multi method new (
+    GDBusConnection() $connection,
+    Int() $flags,
+    GDBusInterfaceInfo $info,
+    Str() $name,
+    Str() $object_path,
+    Str() $interface_name,
+    GCancellable() $cancellable    = GCancellable,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    my GDBusProxyFlags $f = $flags;
+
+    clear_error;
+    my $p = g_dbus_proxy_new_sync(
+      $connection,
+      $f,
+      $info,
+      $name,
+      $object_path,
+      $interface_name,
+      $cancellable,
+      $error
+    );
+    set_error($error);
+
+    $p ?? self.bless( proxy => $p ) !! Nil;
+  }
+
+  method new_async (
+    GDBusConnection() $connection,
+    Int() $flags,
+    Str() $name,
+    Str() $object_path,
+    Str() $interface_name,
+    &callback             = -> *@a { },
+    gpointer $user_data   = gpointer
+  ) {
+    samewith(
+      $connection,
+      $flags,
+      GDBusInterfaceInfo,
+      $name,
+      $object_path,
+      $interface_name,
+      GCancellable,
+      &callback,
+      $user_data
+    );
+  }
+  method new_async (
+    GDBusConnection() $connection,
+    Int() $flags,
+    GDBusInterfaceInfo $info,
+    Str() $name,
+    Str() $object_path,
+    Str() $interface_name,
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    my GDBusProxyFlags $f = $flags;
+
+    g_dbus_proxy_new(
+      $connection,
+      $f,
+      $info,
+      $name,
+      $object_path,
+      $interface_name,
+      $cancellable,
+      $callback,
+      $user_data
+    );
+  }
+
+  method new_finish (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    g_dbus_proxy_new_finish($res, $error);
   }
 
   method new_for_bus (GDBusProxyFlags $flags, GDBusInterfaceInfo $info, Str $name, Str $object_path, Str $interface_name, GCancellable $cancellable, GAsyncReadyCallback $callback, gpointer $user_data) {
@@ -44,10 +141,6 @@ class GIO::DBus::Proxy {
 
   method new_for_bus_sync (GDBusProxyFlags $flags, GDBusInterfaceInfo $info, Str $name, Str $object_path, Str $interface_name, GCancellable $cancellable, CArray[Pointer[GError]] $error = gerror) {
     g_dbus_proxy_new_for_bus_sync($!dp, $flags, $info, $name, $object_path, $interface_name, $cancellable, $error);
-  }
-
-  method new_sync (GDBusProxyFlags $flags, GDBusInterfaceInfo $info, Str $name, Str $object_path, Str $interface_name, GCancellable $cancellable, CArray[Pointer[GError]] $error = gerror) {
-    g_dbus_proxy_new_sync($!dp, $flags, $info, $name, $object_path, $interface_name, $cancellable, $error);
   }
 
   method default_timeout is rw {
