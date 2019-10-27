@@ -21,7 +21,7 @@ sub g_dbus_proxy_call (
   is export
 { * }
 
-sub g_dbus_proxy_call_finish
+sub g_dbus_proxy_call_finish (
   GDBusProxy $proxy,
   GAsyncResult $res,
   CArray[Pointer[GError]] $error

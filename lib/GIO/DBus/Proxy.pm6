@@ -4,6 +4,8 @@ use Method::Also;
 
 use NativeCall;
 
+use GTK::Raw::Utils;
+
 use GTK::Compat::Types;
 use GIO::DBus::Raw::Types;
 
@@ -97,7 +99,7 @@ class GIO::DBus::Proxy {
       $connection,
       $flags,
       $object_path,
-      $interface,
+      $interface_name,
       $info
     );
   }
@@ -119,7 +121,7 @@ class GIO::DBus::Proxy {
       $object_path,
       $interface_name,
       GCancellable,
-      -> *$a { $s.emit( @a[1] ) },
+      -> *@a { $s.emit( @a[1] ) },
       gpointer,
     );
     $s.Supply;
@@ -138,7 +140,7 @@ class GIO::DBus::Proxy {
       $connection,
       $flags,
       $object_path,
-      $interface,
+      $interface_name,
       &callback,
       $user_data
     );
@@ -164,7 +166,7 @@ class GIO::DBus::Proxy {
       $user_data
     );
   }
-  multi new (
+  multi method new (
     GDBusConnection() $connection,
     Int() $flags,
     GDBusInterfaceInfo $info,
@@ -263,14 +265,14 @@ class GIO::DBus::Proxy {
     Str() $name,
     Str() $object_path,
     Str() $interface_name,
-    GCancellable() $cancellable    = GCancellables,
+    GCancellable() $cancellable    = GCancellable,
     CArray[Pointer[GError]] $error = gerror
   ) {
     my GDBusProxyFlags $f = $flags;
 
     clear_error;
     my $p = g_dbus_proxy_new_for_bus_sync(
-      $connecction,
+      $connection,
       $f,
       $info,
       $name,
@@ -295,7 +297,7 @@ class GIO::DBus::Proxy {
     Str() $name,
     Str() $object_path,
     Str() $interface_name,
-    GDBusInterfaceInfo $info = GDBusInterfaceInfo
+    GDBusInterfaceInfo $info = GDBusInterfaceInfo,
     :bus_async(:$bus-async) is required
   ) {
     self.new_for_bus_async(
@@ -349,7 +351,7 @@ class GIO::DBus::Proxy {
       $user_data,
     );
   }
-  method new_for_bus_async (
+  multi method new_for_bus_async (
     GDBusConnection() $connection,
     Int() $flags,
     Str() $name,
@@ -380,7 +382,7 @@ class GIO::DBus::Proxy {
     GCancellable() $cancellable,
     &callback,
     gpointer $user_data = gpointer,
-    :bus_async(:$bus-async)) is required
+    :bus_async(:$bus-async) is required
   ) {
     self.new_for_bus_async(
       $connection,
@@ -422,7 +424,7 @@ class GIO::DBus::Proxy {
 
   multi method new (
     GAsyncResult() $res,
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror,
     :bus_finish(:$bus-finish) is required
   ) {
     self.new_for_bus_finish($res, $error);
@@ -570,8 +572,8 @@ class GIO::DBus::Proxy {
     self.call_async(
       $method_name,
       $parameters,
-      $f,
-      $t,
+      $flags,
+      $timeout_msec,
       $cancellable,
       &callback,
       $user_data
@@ -606,8 +608,8 @@ class GIO::DBus::Proxy {
     CArray[Pointer[GError]] $error = gerror,
     :$finish is required
   ) {
-    self.call_finish($res, $gerror)
-  }s
+    self.call_finish($res, $error)
+  }
   method call_finish (
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror
@@ -630,7 +632,7 @@ class GIO::DBus::Proxy {
       $flags,
       $timeout_msec,
       GCancellable,
-      $gerror
+      $error
     );
   }
   multi method call (
@@ -665,9 +667,7 @@ class GIO::DBus::Proxy {
     GUnixFDList() $fd_list,
     GVariant() $parameters = GVariant,
     Int() $timeout_msec    = -1,
-    &callback              = -> *@a { },
-    gpointer $user_data    = gpointer,
-    :unix_fd_list_asynbc(
+    :unix_fd_list_async(
       :unix-fd-list-async(:unix_fd_async(:$unix-fd-async))
     ) is required
   ) {
@@ -676,9 +676,7 @@ class GIO::DBus::Proxy {
       $flags,
       $fd_list,
       $parameters,
-      $timeout_msec,
-      &callback,
-      $user_data
+      $timeout_msec
     );
   }
   multi method call_with_unix_fd_list (
@@ -686,20 +684,20 @@ class GIO::DBus::Proxy {
     Int() $flags,
     GUnixFDList() $fd_list,
     GVariant() $parameters = GVariant,
-    Int() $timeout_msec    = -1,
-    &callback              = -> *@a { },
-    gpointer $user_data    = gpointer
-  } (
-    samewith(
+    Int() $timeout_msec    = -1
+  ) {
+    my $s = Supplier::Preserving.new;
+    self.call_with_unix_fd_list(
       $method_name,
       $parameters,
       $flags,
       $timeout_msec,
       $fd_list,
       GCancellable,
-      &callback,
-      $user_data
+      -> *@a { $s.emit( @a[1] ) },
+      gpointer
     );
+    $s.Supply;
   }
   multi method call (
     Str() $method_name,
@@ -710,7 +708,7 @@ class GIO::DBus::Proxy {
     GCancellable() $cancellable,
     &callback,
     gpointer $user_data = gpointer,
-    :unix_fd_list_asynbc(
+    :unix_fd_list_async(
       :unix-fd-list-async(:unix_fd_async(:$unix-fd-async))
     ) is required
   ) {
@@ -725,7 +723,7 @@ class GIO::DBus::Proxy {
       $user_data
     );
   }
-  multi method call_with_unix_fd_list (
+  multi method call_with_unix_fd_list_async (
     Str() $method_name,
     GVariant() $parameters,
     Int() $flags,
@@ -734,9 +732,7 @@ class GIO::DBus::Proxy {
     GCancellable() $cancellable,
     &callback,
     gpointer $user_data = gpointer
-  )
-    is also<call-with-unix-fd-list>
-  {
+  ) {
     my GDBusCallFlags $f =  $flags;
     my gint $t = $timeout_msec;
 
@@ -765,15 +761,15 @@ class GIO::DBus::Proxy {
     ) is required,
     :$all = True,
     :$raw = False
-  } (
-    self.call_with_unix_fd_list($res, $error, :$all, :$false);
+  ) {
+    self.call_with_unix_fd_list($res, $error, :$all, :$raw);
   }
   multi method call_with_unix_fd_list_finish (
     GAsyncResult() $res,
     CArray[Pointer[GError]] $error = gerror,
     :$all = True,
     :$raw = False
-  } (
+  ) {
     self.call_with_unix_fd_list_finish($, $res, $error, :$all, :$raw);
   }
   multi method call (
@@ -785,8 +781,8 @@ class GIO::DBus::Proxy {
     ) is required,
     :$all = True,
     :$raw = False
-  } (
-    self.call_with_unix_fd_list($out_fd_list, $res, $error, :$all, :$false);
+  ) {
+    self.call_with_unix_fd_list($out_fd_list, $res, $error, :$all, :$raw);
   }
   multi method call_with_unix_fd_list_finish (
     $out_fd_list is rw,
@@ -837,7 +833,7 @@ class GIO::DBus::Proxy {
     self.call_with_unix_fd_list(
       $method_name,
       $flags,
-      $fd_list
+      $fd_list,
       $parameters,
       $timeout_msec,
       $error,
@@ -892,14 +888,14 @@ class GIO::DBus::Proxy {
     );
   }
   multi method call_with_unix_fd_list (
-    Str()                  $method_name,
-    GVariant()             $parameters,
-    Int()                  $flags,
-    Int()                  $timeout_msec,
-    GUnixFDList()          $fd_list,
-                           $out_fd_list is rw,
-    GCancellable()         $cancellable   = GCancellable,
-    Array[Pointer[GError]] $error = gerror,
+    Str()                   $method_name,
+    GVariant()              $parameters,
+    Int()                   $flags,
+    Int()                   $timeout_msec,
+    GUnixFDList()           $fd_list,
+                            $out_fd_list is rw,
+    GCancellable()          $cancellable   = GCancellable,
+    CArray[Pointer[GError]] $error = gerror,
     :$all = False,
     :$raw = False,
   ) {
@@ -952,7 +948,7 @@ class GIO::DBus::Proxy {
       cached-property-names
     >
   {
-    my $sa = g_dbus_proxy_get_cached_property_names($!dp)
+    my $sa = g_dbus_proxy_get_cached_property_names($!dp);
 
     $raw ?? $sa !! CStringArrayToArray($sa);
   }
