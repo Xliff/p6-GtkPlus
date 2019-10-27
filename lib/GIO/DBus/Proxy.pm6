@@ -90,15 +90,37 @@ class GIO::DBus::Proxy {
     Str() $name,
     Str() $object_path,
     Str() $interface_name,
+    GDBusInterfaceInfo $info = GDBusInterfaceInfo,
+    :$async is required
+  ) {
+    self.new_async(
+      $connection,
+      $flags,
+      $object_path,
+      $interface,
+      $info
+    );
+  }
+  multi method new_async (
+    GDBusConnection() $connection,
+    Int() $flags,
+    Str() $name,
+    Str() $object_path,
+    Str() $interface_name,
+    GDBusInterfaceInfo $info = GDBusInterfaceInfo,
     :$async is required
   ) {
     my $s = Supplier::Preserving.new;
     self.new_async(
       $connection,
       $flags,
+      $info,
+      $name,
       $object_path,
-      $interface,
-      -> *@a { $s.emit( @a[1] ) }
+      $interface_name,
+      GCancellable,
+      -> *$a { $s.emit( @a[1] ) },
+      gpointer,
     );
     $s.Supply;
   }
@@ -141,30 +163,6 @@ class GIO::DBus::Proxy {
       &callback,
       $user_data
     );
-  }
-  multi new (
-    GDBusConnection() $connection,
-    Int() $flags,
-    GDBusInterfaceInfo $info,
-    Str() $name,
-    Str() $object_path,
-    Str() $interface_name,
-    GCancellable() $cancellable,
-    :$async is required
-  ) {
-    my $s = Supplier::Preserving.new;
-    self.new_async(
-      $connection,
-      $flags,
-      $info,
-      $name,
-      $object_path,
-      $interface_name,
-      $cancellable,
-      -> *$a { $s.emit( @a[1] ) },
-      gpointer,
-    );
-    $s.Supply;
   }
   multi new (
     GDBusConnection() $connection,
@@ -291,6 +289,46 @@ class GIO::DBus::Proxy {
   { * }
 
   # Add Supplier::Preserving variants!
+  multi method new (
+    GDBusConnection() $connection,
+    Int() $flags,
+    Str() $name,
+    Str() $object_path,
+    Str() $interface_name,
+    GDBusInterfaceInfo $info = GDBusInterfaceInfo
+    :bus_async(:$bus-async) is required
+  ) {
+    self.new_for_bus_async(
+      $connection,
+      $flags,
+      $name,
+      $object_path,
+      $interface_name,
+      $info,
+    );
+  }
+  multi method new_for_bus_async (
+    GDBusConnection() $connection,
+    Int() $flags,
+    Str() $name,
+    Str() $object_path,
+    Str() $interface_name,
+    GDBusInterfaceInfo $info = GDBusInterfaceInfo
+  ) {
+    my $s = Supplier::Preserving.new;
+    self.new_for_bus_async(
+      $connection,
+      $flags,
+      $info,
+      $name,
+      $object_path,
+      $interface_name,
+      GCancellable,
+      -> *@a { $s.emit( @a[1] ) },
+      gpointer,
+    );
+    $s.Supply;
+  }
   multi method new (
     GDBusConnection() $connection,
     Int() $flags,
@@ -451,6 +489,38 @@ class GIO::DBus::Proxy {
       is also<call-async>
   { * }
 
+  multi method call (
+    Str()          $method_name,
+    GVariant()     $parameters,
+    Int()          $flags,
+    Int()          $timeout_msec  = -1,
+    :$async is required
+  ) {
+    self.call_async(
+      $method_name,
+      $parameters,
+      $flags,
+      $timeout_msec,
+    );
+  }
+  multi method call_async (
+    Str()          $method_name,
+    GVariant()     $parameters,
+    Int()          $flags,
+    Int()          $timeout_msec  = -1,
+    :$async is required
+  ) {
+    my $s = Supplier::Preserving.new;
+    self.call_async(
+      $method_name,
+      $flags,
+      $timeout_msec,
+      $parameters,
+      -> *@a { $s.emit( @a[1] ) },
+      gpointer
+    );
+    $s.Supply;
+  }
   multi method call (
     Str()          $method_name,
     Int()          $flags,
