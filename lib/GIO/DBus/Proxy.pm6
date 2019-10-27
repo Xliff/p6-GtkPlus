@@ -12,12 +12,15 @@ use GIO::DBus::Raw::Types;
 use GIO::DBus::Raw::Proxy;
 
 use GTK::Compat::Roles::Object;
+use GIO::DBus::Roles::Object;
 
 use GIO::DBus::Roles::Signals::Proxy;
 
 class GIO::DBus::Proxy {
   also does GTK::Compat::Roles::Object;
+  also does GIO::DBus::Roles::Object;
   also does GIO::DBus::Roles::Signals::Proxy;
+
 
   has GDBusProxy $!dp;
 
@@ -25,6 +28,7 @@ class GIO::DBus::Proxy {
     $!dp = $proxy;
 
     self.roleInit-Object;
+    self.roleInit-DBusObject;
   }
 
   method GTK::Compat::Types::GDBusProxy

@@ -8,9 +8,11 @@ use GIO::DBus::Raw::Types;
 use GIO::DBus::Raw::ObjectSkeleton;
 
 use GTK::Roles::Properties;
+use GIO::DBus::Roles::Object;
 
 class GIO::DBus::ObjectSkeleton {
   also does GTK::Roles::Properties;
+  also does GIO::DBus::Roles::Object;
 
   has GDBusObjectSkeleton $!dos;
 
@@ -18,6 +20,7 @@ class GIO::DBus::ObjectSkeleton {
     $!dos = $skeleton;
 
     self.roleInit-Object;
+    self.roleInit-DBusObject;
   }
 
   method GTK::Compat::TYpes::GDBusObjectSkeleton

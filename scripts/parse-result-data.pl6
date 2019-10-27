@@ -28,21 +28,21 @@ grammar ParseBuildResults {
   regex header {
     ^^ \s* '=== ' <module> ' ===' $$
   }
-  regex stage {
-    ^^ 'Stage ' <stage_type> \s* ':' [
-      \s* <num> \s*
-      |
-      \s* <err_msg> \s*
-    ]
-  }
   # regex stage {
-  #   ^^ \s* 'Stage ' <stage_type> \s* ':' [
+  #   ^^ 'Stage ' <stage_type> \s* ':' [
   #     \s* <num> \s*
   #     |
   #     \s* <err_msg> \s*
   #   ]
-  #   [ \s* 'precomp' \s* .+? \s* <stage>* ]?
   # }
+  regex stage {
+    ^^ \s* 'Stage ' <stage_type> \s* ':' [
+      \s* <num> \s*
+      |
+      \s* <err_msg> \s*
+    ]
+    [ \s* 'precomp' \s* .+? \s* <stage>* ]?
+  }
   regex err_msg {
     '===SORRY!===' .+? <?before \v '==='> $$
   }
@@ -117,9 +117,11 @@ class ResultsBuilder {
 sub MAIN($file = 'LastBuildResults', :$debug) {
   my $*debug = $debug // False;
   die "Cannot find build results file '$file'." unless $file.IO.e;
+
   my $last-results = $file.IO.open.slurp-rest;
   my $parse = ParseBuildResults.parse( $last-results, :actions(ResultsBuilder) );
   die 'Could not parse build results file!' unless $parse;
+
   "{ $file }.json".IO.open(:w).say( to-json($parse.made) );
   say "Output written to '{$file}.json'";
 }
