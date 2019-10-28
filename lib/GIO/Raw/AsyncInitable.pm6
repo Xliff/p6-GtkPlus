@@ -47,7 +47,7 @@ sub g_async_initable_newv_async (
   GType                $object_type,
   guint                $n_parameters,
   GParameter           $parameters,
-  int                  $io_priority,
+  gint                 $io_priority,
   GCancellable         $cancellable,
   GAsyncReadyCallback  $callback,
   gpointer             $user_data

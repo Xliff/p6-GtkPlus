@@ -1787,6 +1787,7 @@ class GParameter           is repr('CStruct') does GTK::Roles::Pointers is expor
       FETCH => -> $                { $!value },
       STORE => -> $, GValue() $val { self.^attributes(:local)[0]
                                          .set_value(self, $val)    };
+  }
 }
 
 class GOnce                is repr('CStruct') does GTK::Roles::Pointers is export {

@@ -6,6 +6,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GIO::Raw::AsyncInitable;
+
 use GTK::Compat::Roles::TypedBuffer;
 
 role GIO::Roles::AsyncInitable {
@@ -15,7 +17,7 @@ role GIO::Roles::AsyncInitable {
     $!ai = cast(
       GAsyncInitable,
       self.^attributes(:local)[0].get_value(self)
-    };
+    );
   }
 
   method GTK::Compat::Types::GAsyncInitable
@@ -56,7 +58,7 @@ role GIO::Roles::AsyncInitable {
       $user_data
     );
   }
-  method init_async (
+  multi method init_async (
     Int() $io_priority,
     &callback,
     gpointer $user_data = gpointer
@@ -68,7 +70,7 @@ role GIO::Roles::AsyncInitable {
       $user_data
     );
   }
-  method init (
+  multi method init (
     Int() $io_priority,
     GCancellable() $cancellable,
     &callback,
@@ -82,7 +84,7 @@ role GIO::Roles::AsyncInitable {
       $user_data
     );
   }
-  method init_async (
+  multi method init_async (
     Int() $io_priority,
     GCancellable() $cancellable,
     &callback,
@@ -92,7 +94,6 @@ role GIO::Roles::AsyncInitable {
 
     g_async_initable_init_async(
       $!ai,
-      $initable,
       $io_priority,
       $cancellable,
       &callback,
@@ -128,7 +129,7 @@ role GIO::Roles::AsyncInitable {
       is also<new-async>
   { * }
 
-  multi method new {
+  multi method new (
     Int() $io_priority,
     Int() $object_type,
           *@parameters,
@@ -136,19 +137,19 @@ role GIO::Roles::AsyncInitable {
     :$list  is required
   ) {
     self.new_async(
-      $io_property,
+      $io_priority,
       $object_type,
       @parameters
     );
   }
-  multi method new {
+  multi method new (
     Int() $io_priority,
     Int() $object_type,
-          @parameters
+          @parameters,
     :$async is required,
   ) {
     self.new_async(
-      $io_property,
+      $io_priority,
       $object_type,
       @parameters
     );
@@ -240,14 +241,14 @@ role GIO::Roles::AsyncInitable {
       &callback,
       $user_data
     );
-  );
+  }
   multi method new (
     Int()                $object_type,
     Int()                $n_parameters,
     gpointer             $parameters,
     Int()                $io_priority,
     GCancellable()       $cancellable,
-    GAsyncReadyCallback  $callback,
+                         &callback,
     gpointer             $user_data = gpointer,
                          :$async is required
   ) {
