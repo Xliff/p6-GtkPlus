@@ -1536,6 +1536,7 @@ class GDBusInterfaceSkeleton   is repr('CPointer') is export does GTK::Roles::Po
 class GDBusMessage             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusMethodInvocation    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusObject              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDBusObjectManager       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusObjectSkeleton      is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusProxy               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusObjectProxy         is repr('CPointer') is export does GTK::Roles::Pointers { }

@@ -12,6 +12,7 @@ use GTK::Compat::Variant;
 
 use GIO::DBus::Message;
 
+use GIO::Roles::AsyncInitable;
 use GTK::Roles::Properties;
 use GIO::DBus::Roles::Signals::Connection;
 
@@ -24,9 +25,11 @@ class GIO::DBus::Connection {
     $!dc = $connection;
 
     self.roleInit-Object;
+    self.roleInit-AsyncInitable;
   }
 
-  method GTK::Compat::Types::GDbusConnection
+  method GTK::Compat::Types::GDBusConnection
+    is also<GDBusConnection>
   { $!dc }
 
   multi method new (GDBusConnection $connection) {
