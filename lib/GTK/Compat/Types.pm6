@@ -1824,6 +1824,24 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
 
 }
 
+class GParameter           is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Str    $!name;
+  has GValue $!value;
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $                { $!name },
+      STORE => -> $, Str() $val    { self.^attributes(:local)[0]
+                                         .set_value(self, $val)    };
+  }
+
+  method value is rw {
+    Proxy.new:
+      FETCH => -> $                { $!value },
+      STORE => -> $, GValue() $val { self.^attributes(:local)[0]
+                                         .set_value(self, $val)    };
+}
+
 class GOnce                is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint    $.status;    # GOnceStatus
   has gpointer $.retval;

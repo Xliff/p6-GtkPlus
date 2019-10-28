@@ -163,7 +163,7 @@ role GIO::Roles::AsyncInitable {
     );
     $s.Supply;
   }
-  # cw: This is PROPER way to handle GParam based functions. -- 10/28/2019
+  # cw: This is PROPER way to handle GParameter based functions. -- 10/28/2019
   multi method new (
     Int() $object_type,
           @parameters,
