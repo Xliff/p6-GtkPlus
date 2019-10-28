@@ -2,6 +2,8 @@ use v6.c;
 
 use GTK::Compat::Types;
 
+use GIO::DBus::Raw::ObjectManagerServer;
+
 use GIO::DBus::Connection;
 
 use GTK::Compat::Roles::Object;

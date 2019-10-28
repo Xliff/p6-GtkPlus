@@ -1,6 +1,8 @@
 use v6.c;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
+
 use GIO::Raw::FileMonitor;
 
 use GTK::Roles::Properties;

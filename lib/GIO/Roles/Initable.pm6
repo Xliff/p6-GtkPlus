@@ -23,7 +23,7 @@ role GIO::Roles::Initable {
     unstable_get_type( self.^name, &g_initable_get_type, $n, $t );
   }
 
-  method init (
+  multi method init (
     GCancellable $cancellable,
     CArray[Pointer[GError]] $error = gerror
   ) {

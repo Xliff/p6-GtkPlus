@@ -46,7 +46,7 @@ role GIO::Roles::AsyncInitable {
     );
     $s.Supply;
   }
-  method init (
+  multi method init (
     Int() $io_priority,
     &callback,
     gpointer $user_data = gpointer,

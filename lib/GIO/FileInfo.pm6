@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
+
 use GIO::Raw::FileInfo;
 
 use GTK::Raw::Utils;
