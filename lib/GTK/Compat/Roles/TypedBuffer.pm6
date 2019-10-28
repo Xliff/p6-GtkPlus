@@ -56,7 +56,7 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
     #     Pointer,
     #     Buf.allocate( $!size * nativesizeof(T) )
     #   );
-    # }s
+    # }
     nativecast(
       T,
       Pointer.new( $!b + $field * nativesizeof(T) )

@@ -14,13 +14,16 @@ use GIO::DBus::Raw::Proxy;
 use GTK::Compat::Roles::Object;
 use GIO::DBus::Roles::Object;
 
+use GIO::Roles::Initable;
+use GIO::Roles::AsyncInitable;
 use GIO::DBus::Roles::Signals::Proxy;
+use GIO::DBus::Roles::Interface;
 
 class GIO::DBus::Proxy {
   also does GTK::Compat::Roles::Object;
-  also does GIO::DBus::Roles::Object;
   also does GIO::DBus::Roles::Signals::Proxy;
-
+  also does GIO::Roles::Initable;
+  also does GIO::Roles::AsyncInitable;
 
   has GDBusProxy $!dp;
 
@@ -28,7 +31,8 @@ class GIO::DBus::Proxy {
     $!dp = $proxy;
 
     self.roleInit-Object;
-    self.roleInit-DBusObject;
+    self.roleInit-Initable;
+    self.roleInit-AsyncInitable;
   }
 
   method GTK::Compat::Types::GDBusProxy
