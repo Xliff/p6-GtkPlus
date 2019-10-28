@@ -1379,60 +1379,6 @@ our enum GErrorTypeEnum is export <
   G_ERR_FLOAT_MALFORMED
 >;
 
-constant GFileAttributeType is export := guint;
-enum GFileAttributeTypeEnum (
-  G_FILE_ATTRIBUTE_TYPE_INVALID => 0,
-  'G_FILE_ATTRIBUTE_TYPE_STRING',
-  'G_FILE_ATTRIBUTE_TYPE_BYTE_STRING',
-  'G_FILE_ATTRIBUTE_TYPE_BOOLEAN',
-  'G_FILE_ATTRIBUTE_TYPE_UINT32',
-  'G_FILE_ATTRIBUTE_TYPE_INT32',
-  'G_FILE_ATTRIBUTE_TYPE_UINT64',
-  'G_FILE_ATTRIBUTE_TYPE_INT64',
-  'G_FILE_ATTRIBUTE_TYPE_OBJECT',
-  'G_FILE_ATTRIBUTE_TYPE_STRINGV'
-);
-
-constant GFileAttributeInfoFlags is export := guint;
-our enum GFileAttributeInfoFlagsEnum is export (
-  G_FILE_ATTRIBUTE_INFO_NONE            => 0,
-  G_FILE_ATTRIBUTE_INFO_COPY_WITH_FILE  => 1,
-  G_FILE_ATTRIBUTE_INFO_COPY_WHEN_MOVED => 2
-);
-
-constant GFileAttributeStatus is export := guint;
-our enum GFileAttributeStatusEnum is export (
-  'G_FILE_ATTRIBUTE_STATUS_UNSET' => 0,
-  'G_FILE_ATTRIBUTE_STATUS_SET',
-  'G_FILE_ATTRIBUTE_STATUS_ERROR_SETTING'
-);
-
-constant GFileType is export := guint;
-our enum GFileTypeEnum is export (
-  G_FILE_TYPE_UNKNOWN => 0,
-  'G_FILE_TYPE_REGULAR',
-  'G_FILE_TYPE_DIRECTORY',
-  'G_FILE_TYPE_SYMBOLIC_LINK',
-  'G_FILE_TYPE_SPECIAL',
-  'G_FILE_TYPE_SHORTCUT',
-  'G_FILE_TYPE_MOUNTABLE'
-);
-
-constant GFileMonitorEvent is export := guint;
-our enum GFileMonitorEventEnum is export <
-  G_FILE_MONITOR_EVENT_CHANGED
-  G_FILE_MONITOR_EVENT_CHANGES_DONE_HINT
-  G_FILE_MONITOR_EVENT_DELETED
-  G_FILE_MONITOR_EVENT_CREATED
-  G_FILE_MONITOR_EVENT_ATTRIBUTE_CHANGED
-  G_FILE_MONITOR_EVENT_PRE_UNMOUNT
-  G_FILE_MONITOR_EVENT_UNMOUNTED
-  G_FILE_MONITOR_EVENT_MOVED
-  G_FILE_MONITOR_EVENT_RENAMED
-  G_FILE_MONITOR_EVENT_MOVED_IN
-  G_FILE_MONITOR_EVENT_MOVED_OUT
->;
-
 # Token types
 constant GTokenType is export := uint32;
 our enum GTokenTypeEnum is export (
@@ -1561,6 +1507,7 @@ class GAppInfo                 is repr('CPointer') is export does GTK::Roles::Po
 class GAppInfoMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAppLaunchContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GApplication             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GAsyncInitable           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAsyncQueue              is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GAsyncResult             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBinding                 is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -2646,5 +2593,5 @@ sub typeToGType (\t) is export {
     when Pointer         { G_TYPE_POINTER }
     when Bool            { G_TYPE_BOOLEAN }
     when GObject         { G_TYPE_OBJECT  }
-  }
+  };
 }

@@ -6,8 +6,17 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GTK::Compat::Roles::TypedBuffer;
+
 role GIO::Roles::AsyncInitable {
   has GAsyncInitable $!ai;
+
+  method roleInit-AsyncInitable {
+    $!ai = cast(
+      GAsyncInitable,
+      self.^attributes(:local)[0].get_value(self)
+    };
+  }
 
   method GTK::Compat::Types::GAsyncInitable
     is also<GAsyncInitable>
