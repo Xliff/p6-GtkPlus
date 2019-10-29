@@ -141,6 +141,12 @@ our enum GDBusMessageTypeEnum is export <
   G_DBUS_MESSAGE_TYPE_SIGNAL
 >;
 
+constant GDBusObjectManagerClientFlags is export := guint;
+our enum GDBusObjectManagerClientFlagsEnum is export (
+  G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_NONE              => 0,
+  G_DBUS_OBJECT_MANAGER_CLIENT_FLAGS_DO_NOT_AUTO_START => 1
+);
+
 constant GDBusPropertyInfoFlags is export := guint;
 our enum GDBusPropertyInfoFlagsEnum is export (
   G_DBUS_PROPERTY_INFO_FLAGS_NONE     => 0,
