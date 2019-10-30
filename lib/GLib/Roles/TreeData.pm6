@@ -1,10 +1,12 @@
 use v6.c;
 
+use NativeCall;
+
 use GTK::Compat::Types;
 
 sub HandleType (\type) {
   my $act;
-  my \tp = do given K {
+  my \tp = do given type {
     when .repr eq 'CStruct'  { $act = 'cast'; Pointer[K]     }
     when Str                 { $act = 'aset'; CArray[K]      }
     when int8  | uint8       { $act = 'aset'; CArray[K]      }
@@ -36,16 +38,16 @@ role GLib::ListData[::K, ::V] {
 
     # cw: $act values are holdovers from key-handling. I'm ambivalent about 'em.
     my $ka;
-    given $act {
+    given $kact {
       when 'cast' { $ka = kt.new; $ka = cast(Pointer[K], $key) }
       when 'aset' { $ka = kt.new; $ka[0] = $key                }
       when 'set'  { $ka = $key                                 }
     }
 
     my $l = do given $vact {
-      when 'cast' { sub($lv) {   cast(vt, $lv)      } }
-      when 'aset' { sub($lv) { ( cast(vt, $lv) )[0] } }
-      when 'set'  { sub($lv) {   $lv                } }
+      when 'cast' { -> $lv {   cast(vt, $lv)      } }
+      when 'aset' { -> $lv { ( cast(vt, $lv) )[0] } }
+      when 'set'  { -> $lv {   $lv                } }
     };
 
     %!keyCache{$key} =
@@ -57,7 +59,7 @@ role GLib::ListData[::K, ::V] {
           state $n = 0;
 
           if $val.defined {
-            my $v = given $vact {
+            my $v = do given $vact {
               when 'cast' { cast(Pointer[V], $val)        }
               when 'aset' { $v = vt.new; $v[0] = $val; $v }
               when 'set'  { $val }
@@ -76,7 +78,7 @@ role GLib::ListData[::K, ::V] {
     my ($kact, \kt) = handleType(K);
 
     my $ka;
-    given $act {
+    given $kact {
       when 'cast' { $ka = kt.new; $ka = cast(Pointer[K], $key) }
       when 'aset' { $ka = kt.new; $ka[0] = $key                }
       when 'set'  { $ka = $key                                 }
