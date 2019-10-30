@@ -54,13 +54,21 @@ role GLib::ListData[::K, ::V] {
           $l( self.lookup($ka) );
         },
         STORE => -> $, V $val {
-          my $v = given $vact {
-            when 'cast' { cast(Pointer[V], $val)        }
-            when 'aset' { $v = vt.new; $v[0] = $val; $v }
-            when 'set'  { $val }
+          state $n = 0;
+
+          if $val.defined {
+            my $v = given $vact {
+              when 'cast' { cast(Pointer[V], $val)        }
+              when 'aset' { $v = vt.new; $v[0] = $val; $v }
+              when 'set'  { $val }
+            }
+
+            $n++ ?? self.insert($ka, $v) !!
+                    self.replace($ka, $v)
+          } else {
+            self.remove($ka);
+            $n = 0;
           }
-          $++ ?? self.insert($ka, $v) !!
-          self.replace($ka, $v)
         };
   }
 
