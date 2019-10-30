@@ -11,12 +11,13 @@ sub MAIN (
   :$force,           #= Force dependency generation
   :$prefix is copy   #= Module prefix
 ) {
-  my %nodes;
+  my (%nodes, @build-exclude);
   my $dep_file = '.build-deps'.IO;
 
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);
     $prefix //= %config<prefix>;
+    @build-exclude = %config<build_exclude>;
   }
 
   my @files = find
@@ -45,7 +46,8 @@ sub MAIN (
       }
       $a;
     })
-    .sort( *[1] );
+    .sort( *[1] )
+    .grep( *[1] ne @build-exclude.any );
 
   for @modules {
     %nodes{$_[1]} = (

@@ -1,3 +1,4 @@
 prefix=GTK,GLib,GIO,GDK
 modules=GTK::Raw::Types,GTK::Compat::Types
 backups=backup,bitbucket
+build_exclude=GLib::Roles::TreeData

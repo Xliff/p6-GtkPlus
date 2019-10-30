@@ -45,6 +45,7 @@ GIO::DBus::Roles::Signals::Connection
 GIO::DBus::Roles::Signals::InterfaceSkeleton
 GIO::DBus::Roles::Signals::Object
 GIO::DBus::Roles::Signals::ObjectManager
+GIO::DBus::Roles::Signals::ObjectManagerClient
 GIO::DBus::Roles::Signals::ObjectSkeleton
 GIO::DBus::Roles::Signals::Proxy
 GIO::DBus::Roles::Signals::Server
@@ -61,8 +62,6 @@ GIO::Raw::DataInputStream
 GIO::Raw::DatagramBased
 GIO::Raw::EmblemedIcon
 GIO::Raw::FileEnumerator
-GIO::Raw::FileInfo
-GIO::Raw::FileMonitor
 GIO::Raw::FilenameCompleter
 GIO::Raw::FilterInputStream
 GIO::Raw::Icon
@@ -114,7 +113,6 @@ GIO::Roles::NetworkMonitor
 GIO::Roles::PollableInputStream
 GIO::Roles::ProxyResolver
 GIO::Roles::Seekable
-GIO::Roles::Signals::FileMonitor
 GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::Proxy
 GIO::Roles::Signals::SocketService
@@ -132,9 +130,11 @@ GLib::Raw::Quarks
 GLib::Raw::Rand
 GLib::Raw::Scanner
 GLib::Raw::String
+GLib::Raw::Tree
 GLib::Raw::Unicode
 GLib::Scanner
 GLib::String
+GLib::Tree
 GLib::URI
 GLib::Unicode
 GTK::Builder::Actionable
@@ -225,18 +225,20 @@ GIO::DBus::Raw::InterfaceSkeleton
 GIO::DBus::Raw::Message
 GIO::DBus::Raw::MethodInvocation
 GIO::DBus::Raw::ObjectManager
+GIO::DBus::Raw::ObjectManagerClient
 GIO::DBus::Raw::ObjectSkeleton
 GIO::DBus::Raw::Proxy
 GIO::DBus::Raw::Server
 GIO::DBus::Roles::Interface
 GIO::DBus::Roles::ObjectManager
-GIO::FileAttributeMatcher
 GIO::LaunchContext
 GIO::Raw::Drive
 GIO::Raw::DtlsClientConnection
 GIO::Raw::DtlsConnection
 GIO::Raw::Emblem
 GIO::Raw::FileAttributeInfoList
+GIO::Raw::FileInfo
+GIO::Raw::FileMonitor
 GIO::Raw::Mount
 GIO::Raw::Quarks
 GIO::Raw::Resource
@@ -251,6 +253,7 @@ GIO::Raw::Volume
 GIO::Roles::AsyncInitable
 GIO::Roles::Icon
 GIO::Roles::Signals::DtlsConnection
+GIO::Roles::Signals::FileMonitor
 GIO::Roles::Signals::TlsConnection
 GLib::AsyncQueue
 GLib::Base64
@@ -495,6 +498,7 @@ GTK::TreeRowReference
 GTK::WidgetPath
 GIO::DBus::Error
 GIO::DBus::Roles::Object
+GIO::FileAttributeMatcher
 GIO::Resource
 GIO::Roles::DatagramBased
 GIO::Roles::PollableOutputStream
@@ -656,6 +660,7 @@ GIO::BufferedInputStream
 GIO::ConverterInputStream
 GIO::DBus::Connection
 GIO::DBus::MethodInvocation
+GIO::DBus::ObjectManagerClient
 GIO::DBus::ObjectManagerServer
 GIO::DBus::ObjectProxy
 GIO::DataInputStream
