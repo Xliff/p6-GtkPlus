@@ -46,8 +46,9 @@ sub MAIN (
       }
       $a;
     })
-    .sort( *[1] )
-    .grep( *[1] ne @build-exclude.any );
+    # Remove modules excluded via project file.
+    .grep( *[1] ne @build-exclude.any )
+    .sort( *[1] );
 
   for @modules {
     %nodes{$_[1]} = (
