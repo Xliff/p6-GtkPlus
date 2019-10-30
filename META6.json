@@ -4,13 +4,17 @@
         "Method::Also",
         "Pluggable",
         "Data::Dump::Tree",
-	"Config::INI"
+        "Config::INI"
     ],
     "description": "Perl6 library bindings for GTK+ 3.0",
     "version": "r0.2",
     "meta-version": "0",
     "license": "GPL-3.0",
     "source-url": "https://github.com/Xliff/p6-GtkPlus",
+    "resources": [
+      "lib/linux/libtree-helper.so",
+      "lib/windows/treehelper.dll"
+    ],
     "provides": {
       "GTK::Builder::Role"                           :  "lib/GTK/Builder/Role.pm6"                         ,
       "GTK::Builder::WidgetMRO"                      :  "lib/GTK/Builder/WidgetMRO.pm6"                    ,
@@ -796,7 +800,7 @@
       "GTK::ToggleToolButton"                        :  "lib/GTK/ToggleToolButton.pm6"                     ,
       "GTK::RadioToolButton"                         :  "lib/GTK/RadioToolButton.pm6"                      ,
       "GTK"                                          :  "lib/GTK.pm6"                                      ,
-      "GTK::Builder"                                 :  "lib/GTK/Builder.pm6"                              
+      "GTK::Builder"                                 :  "lib/GTK/Builder.pm6"
     },
     "name": "Perl6-GtkPlus",
     "perl": "6.c",

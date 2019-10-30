@@ -6,6 +6,17 @@ use GTK::Compat::Types;
 
 unit package GLib::Raw::Tree;
 
+sub string_compare (Pointer, Pointer --> gint)
+  is native
+  is symbol('strcmp')
+  is export
+{ * }
+
+sub int_compare (Pointer, Pointer --> gint)
+  is native( %?RESOURCES<lib/linux/libtree-helper.so>.absolute )
+  is export
+{ * }
+
 sub g_tree_destroy (GTree $tree)
   is native(glib)
   is export
