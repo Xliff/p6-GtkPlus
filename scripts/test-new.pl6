@@ -19,8 +19,8 @@ sub MAIN( $rev = 'HEAD' ) {
   });
 
   for @files.sort( *[2] ) {
-    unless $_[0].IO.e {
-      say "{ $_[0] } no longer exists.";
+    unless .[3] {
+      say "{ $_[0] } is not in the BuildList.";
       next;
     }
     next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
