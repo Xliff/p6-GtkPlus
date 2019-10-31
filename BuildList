@@ -83,6 +83,7 @@ GIO::Raw::ProxyAddress
 GIO::Raw::ProxyResolver
 GIO::Raw::Resolver
 GIO::Raw::Seekable
+GIO::Raw::SettingsBackend
 GIO::Raw::SimpleProxyResolver
 GIO::Raw::Socket
 GIO::Raw::SocketAddress
@@ -572,6 +573,7 @@ GIO::Roles::DTlsServerConnection
 GIO::Roles::LoadableIcon
 GIO::Roles::TlsFileDatabase
 GIO::Roles::TlsServerConnection
+GIO::SettingsBackend
 GIO::SimpleProxyResolver
 GIO::SocketAddressEnumerator
 GIO::SocketControlMessage
