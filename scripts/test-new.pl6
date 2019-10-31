@@ -1,6 +1,8 @@
 #!/usr/bin/env perl6
 use v6.c;
 
+qx[ scripts/dependencies.pl6 ];
+
 die 'Cannot find BuildList file in current directory.'
   unless 'BuildList'.IO.e;
 
@@ -19,8 +21,8 @@ sub MAIN( $rev = 'HEAD' ) {
   });
 
   for @files.sort( *[2] ) {
-    unless $_[0].IO.e {
-      say "{ $_[0] } no longer exists.";
+    unless .[3] {
+      say "{ $_[0] } is not in the BuildList.";
       next;
     }
     next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;

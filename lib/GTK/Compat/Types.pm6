@@ -1494,6 +1494,24 @@ our enum GZlibCompressorFormatEnum is export <
   G_ZLIB_COMPRESSOR_FORMAT_RAW
 >;
 
+constant GTraverseFlags is export := guint;
+our enum GTraverseFlagsEnum is export (
+  G_TRAVERSE_LEAVES     => 1,      # 1 << 0,
+  G_TRAVERSE_NON_LEAVES => 2,      # 1 << 1,
+  G_TRAVERSE_ALL        => 1 +| 2, # G_TRAVERSE_LEAVES | G_TRAVERSE_NON_LEAVES,
+  G_TRAVERSE_MASK       => 0x03,   # 0x03,
+  G_TRAVERSE_LEAFS      => 1,      # G_TRAVERSE_LEAVES,
+  G_TRAVERSE_NON_LEAFS  => 2       # G_TRAVERSE_NON_LEAVES
+);
+
+constant GTraverseType is export := guint;
+our enum GTraverseTypeEnum is export <
+  G_IN_ORDER
+  G_PRE_ORDER
+  G_POST_ORDER
+  G_LEVEL_ORDER
+>;
+
 class cairo_font_options_t     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t          is repr('CPointer') is export does GTK::Roles::Pointers { }
 
@@ -1652,6 +1670,7 @@ class GTlsInteraction          is repr('CPointer') is export does GTK::Roles::Po
 class GTlsPassword             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTlsServerConnection     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GTokenValue              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GTree                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixCredentialsMessage  is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixFDList              is repr('CPointer') is export does GTK::Roles::Pointers { }
