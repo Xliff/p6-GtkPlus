@@ -234,13 +234,18 @@ class GIO::SettingsSchema::Source {
     );
   }
 
-  method list_schemas (
+  proto method list_schemas (|)
+    is also<list-schemas>
+  { * }
+
+  multi method list_schemas (Int() $recursive) {
+    samewith($recursive, $, $)
+  }
+  multi method list_schemas (
     Int() $recursive,
     $non_relocatable is rw,
     $relocatable     is rw
-  )
-    is also<list-schemas>
-  {
+  ) {
     my gboolean $r = $recursive;
     my ($na, $ra) = CArray[CArray[Str]].new xx 2;
     ($na[0], $ra[0]) = CArray[Str] xx 2;
