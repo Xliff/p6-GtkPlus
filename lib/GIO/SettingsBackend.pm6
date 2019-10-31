@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -22,6 +24,7 @@ class GIO::SettingsBackend {
   }
 
   method GTK::Compat::Types::GSettingsBackend
+    is also<GSettingsBackend>
   { $!sb }
 
   multi method new (GSettingsBackend $backend, :$ref = True) {
@@ -42,7 +45,9 @@ class GIO::SettingsBackend {
     Str() $filename,
     Str() $root_path,
     Str() $root_group
-  ) {
+  )
+    is also<new-keyfile-backend>
+  {
     my $b = g_keyfile_settings_backend_new($filename, $root_path, $root_group);
     $b ?? self.bless( backend => $b ) !! Nil;
   }
@@ -50,7 +55,7 @@ class GIO::SettingsBackend {
   multi method new ( :$memory is required ) {
     self.new_memory_backend;
   }
-  method new_memory_backend {
+  method new_memory_backend is also<new-memory-backend> {
     my $b = g_memory_settings_backend_new();
     $b ?? self.bless( backend => $b ) !! Nil;
   }
@@ -58,7 +63,7 @@ class GIO::SettingsBackend {
   multi method new ( :$null is required ) {
     self.new_null_backend;
   }
-  method new_null_backend {
+  method new_null_backend is also<new-null-backend> {
     my $b = g_null_settings_backend_new();
     $b ?? self.bless( backend => $b ) !! Nil;
   }
@@ -66,12 +71,18 @@ class GIO::SettingsBackend {
   multi method new {
     self.get_default;
   }
-  method get_default {
+  method get_default
+    is also<
+      get-default
+      default
+    >
+  {
     my $b = g_settings_backend_get_default();
     $b ?? self.bless( backend => $b ) !! Nil;
   }
 
   proto method backend_keys_changed (|)
+      is also<backend-keys-changed>
   { * }
 
   multi method backend_keys_changed (
@@ -93,11 +104,14 @@ class GIO::SettingsBackend {
     g_settings_backend_changed($!sb, $key, $origin_tag);
   }
 
-  method changed_tree (GTree() $tree, gpointer $origin_tag) {
+  method changed_tree (GTree() $tree, gpointer $origin_tag)
+    is also<changed-tree>
+  {
     g_settings_backend_changed_tree($!sb, $tree, $origin_tag);
   }
 
   proto method flatten_tree (|)
+      is also<flatten-tree>
   { * }
 
   multi method flatten_tree (
@@ -138,21 +152,27 @@ class GIO::SettingsBackend {
     };
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_settings_backend_get_type, $n, $t );
   }
 
-  method path_changed (Str() $path, gpointer $origin_tag) {
+  method path_changed (Str() $path, gpointer $origin_tag)
+    is also<path-changed>
+  {
     g_settings_backend_path_changed($!sb, $path, $origin_tag);
   }
 
-  method path_writable_changed (Str() $path) {
+  method path_writable_changed (Str() $path)
+    is also<path-writable-changed>
+  {
     g_settings_backend_path_writable_changed($!sb, $path);
   }
 
-  method writable_changed (Str() $key) {
+  method writable_changed (Str() $key)
+    is also<writable-changed>
+  {
     g_settings_backend_writable_changed($!sb, $key);
   }
 
