@@ -20,8 +20,14 @@ class GTK::Compat::Variant {
     is also<GVariant>
   { $!v }
 
-  method new (GVariant $variant) {
-    self.bless( :$variant );
+  method new (GVariant $variant, :$ref = True) {
+    my $o = self.bless( :$variant );
+    $o.upref if $ref;
+    $o;
+  }
+
+  submethod DESTROY {
+    self.downref;
   }
 
   method new_boolean(
@@ -270,10 +276,10 @@ class GTK::Compat::Variant {
     Str() $endptr,
     CArray[Pointer[GError]] $error = gerror
   ) {
-    $ERROR = Nil;
+    clear_error;
     my $rc = g_variant_parse($type, $text, $limit, $endptr, $error);
-    $ERROR = $error with $error[0];
-    $ERROR.defined ?? Nil !! self.bless( variant => $rc );
+    set_error($error);
+    $rc ?? self.bless( variant => $rc ) !! Nil;
   }
 
   method byteswap {
@@ -547,7 +553,7 @@ class GTK::Compat::Variant {
     my $v = g_variant_get_variant($!v);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
       !!
       Nil;
   }

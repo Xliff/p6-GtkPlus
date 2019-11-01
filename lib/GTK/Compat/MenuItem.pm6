@@ -67,7 +67,8 @@ class GTK::Compat::MenuItem {
     is also<get-attribute-value>
   {
     GTK::Compat::Variant.new(
-      g_menu_item_get_attribute_value($!mitem, $attribute, $expected_type)
+      g_menu_item_get_attribute_value($!mitem, $attribute, $expected_type),
+      :!ref
     );
   }
 

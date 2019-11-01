@@ -125,7 +125,7 @@ class GIO::DBus::InterfaceSkeleton {
     my $v = g_dbus_interface_skeleton_get_properties($!dis);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
       !!
       Nil;
   }

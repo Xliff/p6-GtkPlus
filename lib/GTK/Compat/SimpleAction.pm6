@@ -97,7 +97,7 @@ class GTK::Compat::SimpleAction {
           self.prop_get('state', $gv)
         );
         GTK::Compat::Variant.new(
-          nativecast(GVariant, $gv.object)
+          nativecast(GVariant, $gv.object), :!ref
         );
       },
       STORE => -> $, GVariant() $val is copy {

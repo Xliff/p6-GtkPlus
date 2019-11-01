@@ -488,7 +488,7 @@ class GIO::DBus::Connection {
     set_error($error);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
       !!
       Nil
   }
@@ -556,7 +556,7 @@ class GIO::DBus::Connection {
     set_error($error);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
       !!
       Nil;
   }
@@ -724,7 +724,7 @@ class GIO::DBus::Connection {
     set_error($error);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
       !!
       Nil;
   }
@@ -867,7 +867,7 @@ class GIO::DBus::Connection {
 
     $out_fd_list = $ofl[0] ?? $ofl[0] !! Nil;
     $v = $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
       !!
       Nil;
     $all.not ?? $v !! ($v, $out_fd_list);

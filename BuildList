@@ -83,7 +83,7 @@ GIO::Raw::ProxyAddress
 GIO::Raw::ProxyResolver
 GIO::Raw::Resolver
 GIO::Raw::Seekable
-GIO::Raw::SettingsBackend
+GIO::Raw::SettingsSchema
 GIO::Raw::SimpleProxyResolver
 GIO::Raw::Socket
 GIO::Raw::SocketAddress
@@ -118,6 +118,7 @@ GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::Proxy
 GIO::Roles::Signals::SocketService
 GIO::Roles::Signals::VolumeMonitor
+GIO::SettingsSchema
 GLib::Raw::Arrays
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64

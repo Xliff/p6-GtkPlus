@@ -87,7 +87,7 @@ role GIO::Roles::Icon {
     my $si = g_icon_serialize($!icon);
 
     $si ??
-      ( $raw ?? $si !! GTK::Compat::Variant.new($si) )
+      ( $raw ?? $si !! GTK::Compat::Variant.new($si, :!ref) )
       !!
       Nil
   }
