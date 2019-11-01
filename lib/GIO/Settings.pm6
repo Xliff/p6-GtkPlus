@@ -32,6 +32,7 @@ class GIO::Settings {
 
   multi method new (Str() $schema_id) {
     my $s = g_settings_new($schema_id);
+
     $s ?? self.bless( settings => $s ) !! Nil;
   }
 
@@ -49,6 +50,7 @@ class GIO::Settings {
     Str() $path
   ) {
     my $s = g_settings_new_full($schema_id, $backend, $path);
+
     $s ?? self.bless( settings => $s ) !! Nil;
   }
 
@@ -61,6 +63,7 @@ class GIO::Settings {
   }
   method new_with_backend (Str() $schema_id, GSettingsBackend() $backend) {
     my $s = g_settings_new_with_backend($schema_id, $backend);
+
     $s ?? self.bless( settings => $s ) !! Nil;
   }
 
@@ -82,12 +85,139 @@ class GIO::Settings {
       $backend,
       $path
     );
+
     $s ?? self.bless( settings => $s ) !! Nil;
   }
 
   method new_with_path (Str() $schema_id, Str() $path) {
     my $s = g_settings_new_with_path($schema_id, $path);
+
     $s ?? self.bless( settings => $s ) !! Nil;
+  }
+
+  # Type: GSettingsBackend
+  method backend (:$raw = False) is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('backend', $gv)
+        );
+        return Nil unless $gv.object;
+
+        my $rv = cast(GSettingsBackend, $gv.object);
+        $rv = GIO::SettingsBackend.new($rv) unless $raw;
+        $rv;
+      },
+      STORE => -> $,  $val is copy {
+        warn "{ &?ROUTINE.name } can not be modified after creation!"
+          if $DEBUG;
+      }
+    );
+  }
+
+  # Type: gboolean
+  method delay-apply is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('delay-apply', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'delay-apply does not allow writing' if $DEBUG;
+      }
+    );
+  }
+
+  # Type: gboolean
+  method has-unapplied is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('has-unapplied', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'has-unapplied does not allow writing' if $DEBUG;
+      }
+    );
+  }
+
+  # Type: gchar
+  method path is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('path', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        warn "{ &?ROUTINE.name } can not be modified after creation!"
+          if $DEBUG;
+      }
+    );
+  }
+
+  # Type: gchar
+  method schema is rw  is DEPRECATED( the 'schema-id' property ) {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('schema', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        warn "{ &?ROUTINE.name } can not be modified after creation!"
+          if $DEBUG;
+      }
+    );
+  }
+
+  # Type: gchar
+  method schema-id is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('schema-id', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        warn "{ &?ROUTINE.name } can not be modified after creation!"
+          if $DEBUG;
+      }
+    );
+  }
+
+  # Type: GSettingsSchema
+  method settings-schema (:$raw = False) is rw  {
+    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    Proxy.new(
+      FETCH => -> $ {
+        $gv = GTK::Compat::Value.new(
+          self.prop_get('settings-schema', $gv)
+        );
+        return Nil unless $gv.object;
+
+        my $rv = cast(GSettingsSchema, $gv.object);
+        $rv = GIO::Settings::Schema.new($rv) unless $raw;
+        $rv;
+      },
+      STORE => -> $, GSettingsSchema() $val is copy {
+        warn "{ &?ROUTINE.name } can not be modified after creation!"
+          if $DEBUG;
+      }
+    );
   }
 
   method apply {
@@ -150,11 +280,16 @@ class GIO::Settings {
   }
 
   method get_boolean (Str() $key) {
-    g_settings_get_boolean($!s, $key);
+    so g_settings_get_boolean($!s, $key);
   }
 
-  method get_child (Str() $name) {
-    g_settings_get_child($!s, $name);
+  method get_child (Str() $name, :$raw = False) {
+    my $s = g_settings_get_child($!s, $name);
+
+    $s ??
+      ( $raw ?? $s !! GIO::Settings.new($s) )
+      !!
+      Nil;
   }
 
   method get_default_value (Str() $key) {
@@ -174,7 +309,7 @@ class GIO::Settings {
   }
 
   method get_has_unapplied {
-    g_settings_get_has_unapplied($!s);
+    so g_settings_get_has_unapplied($!s);
   }
 
   method get_int (Str() $key) {
@@ -202,7 +337,9 @@ class GIO::Settings {
   }
 
   method get_type {
-    g_settings_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_settings_get_type, $n, $t );
   }
 
   method get_uint (Str() $key) {
@@ -217,16 +354,21 @@ class GIO::Settings {
     g_settings_get_user_value($!s, $key);
   }
 
-  method get_value (Str() $key) {
-    g_settings_get_value($!s, $key);
+  method get_value (Str() $key, :$raw = False) {
+    my $v = g_settings_get_value($!s, $key);
+
+    $v ??
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      !!
+      Nil;
   }
 
   method is_writable (Str() $name) {
-    g_settings_is_writable($!s, $name);
+    so g_settings_is_writable($!s, $name);
   }
 
   method list_children {
-    g_settings_list_children($!s);
+    CStringArrayToArray( g_settings_list_children($!s) );
   }
 
   method reset (Str() $key) {
@@ -237,20 +379,28 @@ class GIO::Settings {
     g_settings_revert($!s);
   }
 
-  method set_boolean (Str() $key, gboolean $value) {
-    g_settings_set_boolean($!s, $key, $value);
+  method set_boolean (Str() $key, Int() $value) {
+    my gboolean $v = $value;
+
+    so g_settings_set_boolean($!s, $key, $v);
   }
 
-  method set_double (Str() $key, gdouble $value) {
-    g_settings_set_double($!s, $key, $value);
+  method set_double (Str() $key, Num() $value) {
+    my gdouble $v = $value;
+
+    so g_settings_set_double($!s, $key, $v);
   }
 
-  method set_enum (Str() $key, gint $value) {
-    g_settings_set_enum($!s, $key, $value);
+  method set_enum (Str() $key, Int() $value) {
+    my gint $v = $value;
+
+    so g_settings_set_enum($!s, $key, $v);
   }
 
-  method set_flags (Str() $key, guint $value) {
-    g_settings_set_flags($!s, $key, $value);
+  method set_flags (Str() $key, Int() $value) {
+    my gint $v = $value;
+
+    so g_settings_set_flags($!s, $key, $v);
   }
 
   proto method set_gstrv (|)
@@ -266,31 +416,39 @@ class GIO::Settings {
     Str()       $key,
     CArray[Str] $value
   ) {
-    g_settings_set_gstrv($!s, $key, $value)
+    so g_settings_set_gstrv($!s, $key, $value)
   }
 
   method set_int (Str() $key, gint $value) {
-    g_settings_set_int($!s, $key, $value);
+    my gint $v = $value;
+
+    so g_settings_set_int($!s, $key, $v);
   }
 
-  method set_int64 (Str() $key, gint64 $value) {
-    g_settings_set_int64($!s, $key, $value);
+  method set_int64 (Str() $key, Int() $value) {
+    my gint64 $v = $value;
+
+    so g_settings_set_int64($!s, $key, $v);
   }
 
-  method set_string (Str() $key, Str $value) {
-    g_settings_set_string($!s, $key, $value);
+  method set_string (Str() $key, Str() $value) {
+    so g_settings_set_string($!s, $key, $value);
   }
 
-  method set_uint (Str() $key, guint $value) {
-    g_settings_set_uint($!s, $key, $value);
+  method set_uint (Str() $key, Int() $value) {
+    my guint $v = $value;
+
+    so g_settings_set_uint($!s, $key, $v);
   }
 
-  method set_uint64 (Str() $key, guint64 $value) {
-    g_settings_set_uint64($!s, $key, $value);
+  method set_uint64 (Str() $key, Int() $value) {
+    my guint64 $v = $value;
+
+    so g_settings_set_uint64($!s, $key, $v);
   }
 
   method set_value (Str() $key, GVariant() $value) {
-    g_settings_set_value($!s, $key, $value);
+    so g_settings_set_value($!s, $key, $value);
   }
 
   method sync {
