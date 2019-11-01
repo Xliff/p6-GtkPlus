@@ -152,12 +152,12 @@ role GTK::Roles::Signals::Generic {
     %!signals{$signal} //= do {
       my $s = Supplier.new;
       $hid = g_connect_string($obj, $signal,
-        -> $, $p, $ud {
+        -> $, $s, $ud {
           CATCH {
             default { note($_) }
           }
 
-          $s.emit( [self, $p, $ud] );
+          $s.emit( [self, $s, $ud] );
         },
         Pointer, 0
       );
@@ -366,7 +366,7 @@ role GTK::Roles::Signals::Generic {
     %!signals{$signal}[0].tap(&handler) with &handler;
     %!signals{$signal}[0];
   }
-  
+
   method connect-strint (
     $obj,
     $signal,
@@ -979,7 +979,7 @@ sub g-connect-long(
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
 { * }
-  
+
 # Pointer, Str, gint, gpointer
 sub g-connect-strint(
   Pointer $app,

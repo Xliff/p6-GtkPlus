@@ -495,15 +495,6 @@ our enum GApplicationFlags is export (
   G_APPLICATION_CAN_OVERRIDE_APP_ID  => 64
 );
 
-our enum GSettingsBindFlags is export (
-  G_SETTINGS_BIND_DEFAULT        => 0,        # Assumption! See /usr/include/glib-2.0/gio/gsettings.h
-  G_SETTINGS_BIND_GET            => 1,
-  G_SETTINGS_BIND_SET            => 1 +< 1,
-  G_SETTINGS_BIND_NO_SENSITIVITY => 1 +< 2,
-  G_SETTINGS_BIND_GET_NO_CHANGES => 1 +< 3,
-  G_SETTINGS_BIND_INVERT_BOOLEAN => 1 +< 4
-);
-
 constant GAskPasswordFlags is export := guint;
 our enum GAskPasswordFlagsEnum is export (
   G_ASK_PASSWORD_NEED_PASSWORD           => 1,

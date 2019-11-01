@@ -244,6 +244,7 @@ GIO::Raw::FileMonitor
 GIO::Raw::Mount
 GIO::Raw::Quarks
 GIO::Raw::Resource
+GIO::Raw::Settings
 GIO::Raw::SocketClient
 GIO::Raw::TlsCertificate
 GIO::Raw::TlsClientConnection
@@ -504,6 +505,7 @@ GIO::FileAttributeMatcher
 GIO::Resource
 GIO::Roles::DatagramBased
 GIO::Roles::PollableOutputStream
+GIO::Roles::Signals::Settings
 GIO::SrvTarget
 GLib::ByteArray
 GTK::Compat::Cairo
@@ -574,6 +576,8 @@ GIO::Roles::DTlsServerConnection
 GIO::Roles::LoadableIcon
 GIO::Roles::TlsFileDatabase
 GIO::Roles::TlsServerConnection
+GIO::Settings
+GIO::SettingsBackend
 GIO::SimpleProxyResolver
 GIO::SocketAddressEnumerator
 GIO::SocketControlMessage
