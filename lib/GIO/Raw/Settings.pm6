@@ -14,7 +14,7 @@ sub g_settings_apply (GSettings $settings)
 sub g_settings_bind (
   GSettings $settings,
   Str $key,
-  gpointer $object,
+  GObject $object,
   Str $property,
   GSettingsBindFlags $flags
 )
@@ -25,7 +25,7 @@ sub g_settings_bind (
 sub g_settings_bind_with_mapping (
   GSettings $settings,
   Str $key,
-  gpointer $object,
+  GObject $object,
   Str $property,
   GSettingsBindFlags $flags,
   GSettingsBindGetMapping $get_mapping,
@@ -40,7 +40,7 @@ sub g_settings_bind_with_mapping (
 sub g_settings_bind_writable (
   GSettings $settings,
   Str $key,
-  gpointer $object,
+  GObject $object,
   Str $property,
   gboolean $inverted
 )
@@ -291,7 +291,7 @@ sub g_settings_sync ()
   is export
 { * }
 
-sub g_settings_unbind (gpointer $object, Str $property)
+sub g_settings_unbind (GObject $object, Str $property)
   is native(gio)
   is export
 { * }

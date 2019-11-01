@@ -24,24 +24,70 @@ class GIO::Settings {
   method GTK::Compat::Types::GSettings
   { $!s }
 
-  method new {
-    g_settings_new();
+  multi method new (GSettings $settings, :$ref = True) {
+    my $o = self.bless( :$settings );
+    $o.upref if $ref;
+    $o;
   }
 
-  method new_full (GSettingsBackend $backend, Str $path) {
-    g_settings_new_full($!s, $backend, $path);
+  multi method new (Str() $schema_id) {
+    my $s = g_settings_new($schema_id);
+    $s ?? self.bless( settings => $s ) !! Nil;
   }
 
-  method new_with_backend (GSettingsBackend $backend) {
-    g_settings_new_with_backend($!s, $backend);
+  multi method new (
+    Str() $schema_id,
+    GSettingsBackend() $backend,
+    Str() $path,
+    :$full is required
+  ) {
+    self.new_full($schema, $backend, $path);
+  }
+  method new_full (
+    Str() $schema_id,
+    GSettingsBackend() $backend,
+    Str() $path
+  ) {
+    my $s = g_settings_new_full($schema_id, $backend, $path);
+    $s ?? self.bless( settings => $s ) !! Nil;
   }
 
-  method new_with_backend_and_path (GSettingsBackend $backend, Str $path) {
-    g_settings_new_with_backend_and_path($!s, $backend, $path);
+  multi method new (
+    Str() $schema_id,
+    GSettingsBackend() $backend,
+    :$backend is required
+  ) {
+    self.new_with_backend($schema_id, $backend);
+  }
+  method new_with_backend (Str() $schema_id, GSettingsBackend() $backend) {
+    my $s = g_settings_new_with_backend($schema_id, $backend);
+    $s ?? self.bless( settings => $s ) !! Nil;
   }
 
-  method new_with_path (Str() $path) {
-    g_settings_new_with_path($!s, $path);
+  multi method new (
+    Str() $schema_id,
+    GSettingsBackend() $backend,
+    Str() $path,
+    :backend_path(:$backend-path)
+  ) {
+    self.new_with_backend_and_path($schema_id, $backend, $path);
+  }
+  method new_with_backend_and_path (
+    Str() $schema_id,
+    GSettingsBackend() $backend,
+    Str() $path
+  ) {
+    my $s = g_settings_new_with_backend_and_path(
+      $schema_id,
+      $backend,
+      $path
+    );
+    $s ?? self.bless( settings => $s ) !! Nil;
+  }
+
+  method new_with_path (Str() $schema_id, Str() $path) {
+    my $s = g_settings_new_with_path($schema_id, $path);
+    $s ?? self.bless( settings => $s ) !! Nil;
   }
 
   method apply {
@@ -50,23 +96,27 @@ class GIO::Settings {
 
   method bind (
     Str() $key,
-    gpointer $object,
+    GObject() $object,
     Str() $property,
-    GSettingsBindFlags $flags
+    Int() $flags
   ) {
-    g_settings_bind($!s, $key, $object, $property, $flags);
+    my GSettingsBindFlags $f = $flags;
+
+    g_settings_bind($!s, $key, $object, $property, $f);
   }
 
   method bind_with_mapping (
     Str() $key,
-    gpointer $object,
+    GObject() $object,
     Str() $property,
-    GSettingsBindFlags $flags,
+    Int() $flags,
     GSettingsBindGetMapping $get_mapping,
     GSettingsBindSetMapping $set_mapping,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    gpointer $user_data     = gpointer,
+    GDestroyNotify $destroy = gpointer
   ) {
+    my GSettingsBindFlags $f = $flags;
+
     g_settings_bind_with_mapping(
       $!s,
       $key,
@@ -82,10 +132,12 @@ class GIO::Settings {
 
   method bind_writable (
     Str $key,
-    gpointer $object,
+    GObject() $object,
     Str $property,
-    gboolean $inverted
+    Int() $inverted
   ) {
+    my gboolean $i = $inverted;
+
     g_settings_bind_writable($!s, $key, $object, $property, $inverted);
   }
 
@@ -136,7 +188,7 @@ class GIO::Settings {
   method get_mapped (
     Str() $key,
     GSettingsGetMapping $mapping,
-    gpointer $user_data
+    gpointer $user_data = gpointer
   ) {
     g_settings_get_mapped($!s, $key, $mapping, $user_data);
   }
