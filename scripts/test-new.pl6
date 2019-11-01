@@ -21,7 +21,7 @@ sub MAIN( $rev = 'HEAD' ) {
   });
 
   for @files.sort( *[2] ) {
-    unless .[3] {
+    unless .[2] {
       say "{ $_[0] } is not in the BuildList.";
       next;
     }

@@ -140,6 +140,16 @@ our enum GFileMonitorFlagsEnum is export (
   G_FILE_MONITOR_WATCH_MOVES      => (1 +< 3)
 );
 
+constant GSettingsBindFlags is export := guint;
+our enum GSettingsBindFlagsEnum is export (
+  'G_SETTINGS_BIND_DEFAULT',
+  G_SETTINGS_BIND_GET            => 1,
+  G_SETTINGS_BIND_SET            => 1 +<1,
+  G_SETTINGS_BIND_NO_SENSITIVITY => 1 +<2,
+  G_SETTINGS_BIND_GET_NO_CHANGES => 1 +<3,
+  G_SETTINGS_BIND_INVERT_BOOLEAN => 1 +<4
+);
+
 constant GResourceError is export := guint;
 our enum GResourceErrorEnum is export <
   G_RESOURCE_ERROR_NOT_FOUND
