@@ -10,8 +10,11 @@ use GIO::Raw::Settings;
 
 use GTK::Roles::Properties;
 
+use GIO::Roles::Signals::Settings;
+
 class GIO::Settings {
   also does GTK::Roles::Properties;
+  also does GIO::Roles::Signals::Settings;
 
   has GSettings $!s;
 
@@ -219,6 +222,31 @@ class GIO::Settings {
       }
     );
   }
+
+  # Is originally:
+  # GSettings, gpointer, gint, gpointer --> gboolean
+  method change-event {
+    self.connect-change-event($!s, 'change-event');
+  }
+
+  # Is originally:
+  # GSettings, gchar, gpointer --> void
+  method changed {
+    self.connect-string($!s, 'changed');
+  }
+
+  # Is originally:
+  # GSettings, guint, gpointer --> gboolean
+  method writable-change-event {
+    self.connect-int($!s, 'writeable-change-event');
+  }
+
+  # Is originally:
+  # GSettings, gchar, gpointer --> void
+  method writable-changed {
+    self.connect-string($!s, 'writable-changed');
+  }
+
 
   method apply {
     g_settings_apply($!s);
