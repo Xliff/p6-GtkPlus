@@ -4,6 +4,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GTK::Raw::ReturnedValue;
+
 use GTK::Roles::Signals::Generic;
 
 role GIO::Roles::Signals::Settings {

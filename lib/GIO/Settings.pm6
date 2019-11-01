@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
+use GTK::Compat::FileTypes;
 
 use GTK::Raw::Utils;
 
@@ -45,7 +46,7 @@ class GIO::Settings {
     Str() $path,
     :$full is required
   ) {
-    self.new_full($schema, $backend, $path);
+    self.new_full($schema_id, $backend, $path);
   }
   method new_full (
     Str() $schema_id,
@@ -59,10 +60,10 @@ class GIO::Settings {
 
   multi method new (
     Str() $schema_id,
-    GSettingsBackend() $backend,
+    GSettingsBackend() $settings_backend,
     :$backend is required
   ) {
-    self.new_with_backend($schema_id, $backend);
+    self.new_with_backend($schema_id, $settings_backend);
   }
   method new_with_backend (Str() $schema_id, GSettingsBackend() $backend) {
     my $s = g_settings_new_with_backend($schema_id, $backend);
@@ -158,23 +159,6 @@ class GIO::Settings {
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('path', $gv)
-        );
-        $gv.string;
-      },
-      STORE => -> $, Str() $val is copy {
-        warn "{ &?ROUTINE.name } can not be modified after creation!"
-          if $DEBUG;
-      }
-    );
-  }
-
-  # Type: gchar
-  method schema is rw  is DEPRECATED( the 'schema-id' property ) {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
-    Proxy.new(
-      FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
-          self.prop_get('schema', $gv)
         );
         $gv.string;
       },
@@ -431,23 +415,23 @@ class GIO::Settings {
     so g_settings_set_flags($!s, $key, $v);
   }
 
-  proto method set_gstrv (|)
+  proto method set_strv (|)
   { * }
 
-  multi method set_gstrv(
+  multi method set_strv(
     Str() $key,
     @value
   ) {
     samewith( $key, resolve-gstrv(@value) );
   }
-  multi method set_gstrv (
+  multi method set_strv (
     Str()       $key,
     CArray[Str] $value
   ) {
-    so g_settings_set_gstrv($!s, $key, $value)
+    so g_settings_set_strv($!s, $key, $value)
   }
 
-  method set_int (Str() $key, gint $value) {
+  method set_int (Str() $key, Int() $value) {
     my gint $v = $value;
 
     so g_settings_set_int($!s, $key, $v);
@@ -480,11 +464,15 @@ class GIO::Settings {
   }
 
   method sync {
-    g_settings_sync($!s);
+    g_settings_sync();
   }
 
-  method unbind (Str() $property) {
-    g_settings_unbind($!s, $property);
+  method unbind (
+    GIO::Settings:U:
+    GObject() $object,
+    Str() $property
+  ) {
+    g_settings_unbind($object, $property);
   }
 
 }
