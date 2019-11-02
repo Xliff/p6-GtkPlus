@@ -64,6 +64,7 @@ GIO::Raw::EmblemedIcon
 GIO::Raw::FileEnumerator
 GIO::Raw::FilenameCompleter
 GIO::Raw::FilterInputStream
+GIO::Raw::FilterOutputStream
 GIO::Raw::Icon
 GIO::Raw::InetAddress
 GIO::Raw::InetAddressMask
@@ -83,6 +84,7 @@ GIO::Raw::ProxyAddress
 GIO::Raw::ProxyResolver
 GIO::Raw::Resolver
 GIO::Raw::Seekable
+GIO::Raw::SettingsBackend
 GIO::Raw::SettingsSchema
 GIO::Raw::SimpleProxyResolver
 GIO::Raw::Socket
@@ -175,7 +177,6 @@ GTK::Compat::Raw::Rectangle
 GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
-GTK::Compat::Raw::Settings
 GTK::Compat::Raw::Signal
 GTK::Compat::Raw::SimpleAction
 GTK::Compat::Raw::Slice
@@ -517,7 +518,6 @@ GTK::Compat::Roles::Signals
 GTK::Compat::Roles::Signals::Device
 GTK::Compat::Roles::Signals::Settings
 GTK::Compat::Screen
-GTK::Compat::Settings
 GTK::Compat::SimpleActionGroup
 GTK::Compat::Value
 GTK::Compat::VariantDict
@@ -642,6 +642,7 @@ GIO::FileAttributeInfoList
 GIO::FileEnumerator
 GIO::FileIcon
 GIO::FilterInputStream
+GIO::FilterOutputStream
 GIO::MemoryOutputStream
 GIO::Roles::DtlsConnection
 GIO::Roles::Proxy
