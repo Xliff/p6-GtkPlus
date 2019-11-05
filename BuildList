@@ -54,6 +54,7 @@ GIO::Raw::AppInfo
 GIO::Raw::AsyncInitable
 GIO::Raw::AsyncResult
 GIO::Raw::BufferedInputStream
+GIO::Raw::BufferedOutputStream
 GIO::Raw::Cancellable
 GIO::Raw::CharsetConverter
 GIO::Raw::ContentType
@@ -664,6 +665,7 @@ GTK::Compat::Window
 GTK::TextBuffer
 GTK::Widget
 GIO::BufferedInputStream
+GIO::BufferedOutputStream
 GIO::ConverterInputStream
 GIO::DBus::Connection
 GIO::DBus::MethodInvocation

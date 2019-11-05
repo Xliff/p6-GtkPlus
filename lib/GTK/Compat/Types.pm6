@@ -1522,6 +1522,7 @@ class GAsyncResult             is repr('CPointer') is export does GTK::Roles::Po
 class GBinding                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBookmarkFile            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GBufferedOutputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytesIcon               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
