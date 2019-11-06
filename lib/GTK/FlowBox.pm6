@@ -5,20 +5,24 @@ use NativeCall;
 
 use GTK::Compat::GList;
 use GTK::Compat::Types;
-use GTK::Raw::FlowBox;
 use GTK::Raw::Types;
+
+use GTK::Raw::Utils;
+use GTK::Raw::FlowBox;
 
 use GTK::FlowBoxChild;
 use GTK::Container;
 use GTK::Widget;
 
 use GTK::Roles::Orientable;
+use GTK::Roles::Signals::FlowBox;
 
 our subset FlowBoxAncestry is export
   where GtkFlowBox | GtkOrientable | ContainerAncestry;
 
 class GTK::FlowBox is GTK::Container {
   also does GTK::Roles::Orientable;
+  also does GTK::Roles::Signals::FlowBox;
 
   has GtkFlowBox $!fb;
 
@@ -58,8 +62,10 @@ class GTK::FlowBox is GTK::Container {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkFlowBox is also<FlowBox> { $!fb }
+
+  method GTK::Raw::Types::GtkFlowBox
+    is also<FlowBox>
+  { $!fb }
 
   multi method new (FlowBoxAncestry $flowbox) {
     my $o = self.bless(:$flowbox);
@@ -122,7 +128,8 @@ class GTK::FlowBox is GTK::Container {
         so gtk_flow_box_get_activate_on_single_click($!fb);
       },
       STORE => sub ($, Int() $single is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($single);
+        my gboolean $s = resolve-bool($single);
+
         gtk_flow_box_set_activate_on_single_click($!fb, $s);
       }
     );
@@ -134,7 +141,8 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_column_spacing($!fb);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = self.RESOLVE-INT($spacing);
+        my gint $s = resolve-int($spacing);
+
         gtk_flow_box_set_column_spacing($!fb, $s);
       }
     );
@@ -146,7 +154,8 @@ class GTK::FlowBox is GTK::Container {
         so gtk_flow_box_get_homogeneous($!fb);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = self.RESOLVE-BOOL($homogeneous);
+        my gboolean $h = resolve-bool($homogeneous);
+
         gtk_flow_box_set_homogeneous($!fb, $h);
       }
     );
@@ -158,7 +167,8 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_max_children_per_line($!fb);
       },
       STORE => sub ($, Int() $n_children is copy) {
-        my gint $n = self.RESOLVE-INT($n_children);
+        my gint $n = resolve-int($n_children);
+
         gtk_flow_box_set_max_children_per_line($!fb, $n);
       }
     );
@@ -170,7 +180,8 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_min_children_per_line($!fb);
       },
       STORE => sub ($, Int() $n_children is copy) {
-        my gint $n = self.RESOLVE-INT($n_children);
+        my gint $n = resolve-int($n_children);
+
         gtk_flow_box_set_min_children_per_line($!fb, $n);
       }
     );
@@ -182,7 +193,8 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_row_spacing($!fb);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = self.RESOLVE-INT($spacing);
+        my gint $s = resolve-int($spacing);
+
         gtk_flow_box_set_row_spacing($!fb, $s);
       }
     );
@@ -194,7 +206,8 @@ class GTK::FlowBox is GTK::Container {
         GtkSelectionMode( gtk_flow_box_get_selection_mode($!fb) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = self.RESOLVE-UINT($mode);
+        my uint32 $m = resolve-uint($mode);
+
         gtk_flow_box_set_selection_mode($!fb, $m);
       }
     );
@@ -217,6 +230,7 @@ class GTK::FlowBox is GTK::Container {
 
   # Override.
   method add($widget) {
+    say 'Flowbox add';
     my $adding = do given $widget {
       when GTK::FlowBoxChild { $_ }
 
@@ -262,10 +276,10 @@ class GTK::FlowBox is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   multi method bind_model (
-    GListModel $model,
+    GListModel() $model,
     GtkFlowBoxCreateWidgetFunc $create_widget_func,
-    gpointer $user_data,
-    GDestroyNotify $user_data_free_func
+    gpointer $user_data                 = gpointer,
+    GDestroyNotify $user_data_free_func = gpointer
   )
     is also<bind-model>
   {
@@ -275,18 +289,23 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method get_child_at_index (Int() $idx) is also<get-child-at-index> {
-    my gint $i = self.RESOLVE-INT($idx);
+    my gint $i = resolve-int($idx);
     self.end[$idx];
     # GTK::FlowBoxChild.new(
     #   gtk_flow_box_get_child_at_index($!fb, $i)
     # );
   }
 
-  method get_child_at_pos (Int() $x, Int() $y) is also<get-child-at-pos> {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
-    GTK::FlowBoxChild.new(
-      gtk_flow_box_get_child_at_pos($!fb, $xx, $yy)
-    );
+  method get_child_at_pos (Int() $x, Int() $y, :$raw = False)
+    is also<get-child-at-pos>
+  {
+    my gint ($xx, $yy) = resolve-int($x, $y);
+    my $fbc = gtk_flow_box_get_child_at_pos($!fb, $xx, $yy);
+
+    $fbc ??
+      ( $raw ?? $fbc !! GTK::FlowBoxChild.new($fbc) )
+      !!
+      Nil;
   }
 
   method get_selected_children is also<get-selected-children> {
@@ -296,10 +315,12 @@ class GTK::FlowBox is GTK::Container {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_flow_box_get_type, $n, $t );
   }
 
   method insert ($widget, Int() $position) {
+    my gint $p = resolve-int($position);
     my $inserting = do given $widget {
       when GTK::FlowBoxChild { $_ }
 
@@ -315,9 +336,9 @@ class GTK::FlowBox is GTK::Container {
           .^name }";
       }
     };
+
     %!child-manifest{ +.get-child.Widget.p } = $_ given $inserting;
     self.insert-end-at($inserting, $position);
-    my gint $p = self.RESOLVE-INT($position);
     gtk_flow_box_insert($!fb, $inserting, $p);
   }
 
@@ -334,7 +355,8 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method select_child ($child) is also<select-child> {
-    my $to-be-selected = self!resolve-selected-child;
+    my $to-be-selected = self.resolve-selected-child($child);
+
     gtk_flow_box_select_child($!fb, $to-be-selected);
   }
 
@@ -392,7 +414,8 @@ class GTK::FlowBox is GTK::Container {
   method unselect_child (GtkFlowBoxChild() $child)
     is also<unselect-child>
   {
-    my $to-be-unselected = self!resolve-selected-child;
+    my $to-be-unselected = self.resolve-selected-child($child);
+
     gtk_flow_box_unselect_child($!fb, $to-be-unselected);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

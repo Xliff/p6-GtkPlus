@@ -8,13 +8,15 @@ use GTK::Compat::Types;
 use GTK::Raw::Container;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
+use GTK::Raw::Utils;
 
 use GTK::Adjustment;
 use GTK::Widget;
 
 use GTK::Roles::LatchedContents;
 
-our subset ContainerAncestry is export where GtkContainer | WidgetAncestry;
+our subset ContainerAncestry is export
+  where GtkContainer | WidgetAncestry;
 
 class GTK::Container is GTK::Widget {
   also does GTK::Roles::LatchedContents;
@@ -163,7 +165,8 @@ D
     Str() $prop,
     Int $val is rw
   ) {
-    my guint $v = self.RESOLVE-BOOL($val);
+    my guint $v = resolve-bool($val);
+
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
     $val = $v;
@@ -176,7 +179,8 @@ D
   )
     is also<child_set_bool>
   {
-    my guint $v = self.RESOLVE-BOOL($val);
+    my guint $v = resolve-bool($val);
+
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
 
@@ -193,7 +197,8 @@ D
     Str() $prop,
     Int $val is rw
   ) {
-    my guint $v = self.RESOLVE-INT($val);
+    my guint $v = resolve-int($val);
+
     # CArray[guint]?
     gtk_container_child_get_int($!c, $child, $prop, $v, Str);
     $val = $v
@@ -206,7 +211,8 @@ D
   )
     is also<child_set_int>
   {
-    my gint $v = self.RESOLVE-INT($val);
+    my gint $v = resolve-int($val);
+
     gtk_container_child_set_int($!c, $child, $prop, $v, Str);
   }
 
@@ -223,7 +229,8 @@ D
     Str() $prop,
     Int $val is rw
   ) {
-    my guint $v = self.RESOLVE-UINT($val);
+    my guint $v = resolve-uint($val);
+
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
     $val = $v;
@@ -236,7 +243,8 @@ D
   )
     is also<child_set_uint>
   {
-    my gint $v = self.RESOLVE-UINT($val);
+    my gint $v = resolve-uint($val);
+
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
 
@@ -303,18 +311,23 @@ D
         gtk_container_get_border_width($!c);
       },
       STORE => sub ($, Int() $border_width is copy) {
-        my $bw = self.RESOLVE-UINT($border_width);
+        my $bw = resolve-uint($border_width);
+
         gtk_container_set_border_width($!c, $bw);
       }
     );
   }
 
   multi method add (GTK::Widget $widget) {
+    say 'Container object add';
+
     @!end.push: $widget;
     self.SET-LATCH;
     samewith($widget.Widget);
   }
   multi method add (GtkWidget $widget) {
+    say 'Container pointer add';
+
     @!end.push: $widget unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_container_add($!c, $widget);
@@ -464,7 +477,8 @@ D
   method set_reallocate_redraws (Int() $needs_redraws)
     is also<set-reallocate-redraws>
   {
-    my gboolean $nr = self.RESOLVE-BOOL($needs_redraws);
+    my gboolean $nr = resolve-bool($needs_redraws);
+
     gtk_container_set_reallocate_redraws($!c, $nr);
   }
 
