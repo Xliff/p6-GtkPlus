@@ -4,23 +4,32 @@ if [ "$1" = "--debug" ]; then
   echo "Running perl6 script in debug mode..."
   EXEC=perl6-gdb-m
   shift
+elif [ "$1" = "--pbuild" ]; then
+  PARALLEL_BUILD=1
+  EXEC=perl6
+  shift
 else
   #echo "Running perl6 script..."
   EXEC=perl6
 fi
 
-${EXEC} --stagestats \
-    -I${P6_GTK_HOME}/p6-Pango/lib         \
-    -I${P6_GTK_HOME}/p6-GtkPlus/lib       \
-    -I${P6_GTK_HOME}/p6-WebkitGTK/lib     \
-    -I${P6_GTK_HOME}/p6-SourceViewGTK/lib \
-    -I${P6_GTK_HOME}/p6-AMTK/lib          \
-    -I${P6_GTK_HOME}/p6-TEPL/lib          \
-    -I${P6_GTK_HOME}/p6-GooCanvas/lib     \
-		-I${P6_GTK_HOME}/p6-Slope/lib         \
-		-I${P6_GTK_HOME}/p6-WNCK/lib          \
-		-I${P6_GTK_HOME}/p6-Clutter/lib       \
-		-I${P6_GTK_HOME}/p6-GtkClutter/lib    \
-		-I${P6_GTK_HOME}/p6-COGL/lib          \
-    -I${P6_GTK_HOME}/p6-GStreamer/lib     \
-    -I${P6_GTK_HOME}/p6-RSVG/lib     "$@"
+INCLUDES="-I${P6_GTK_HOME}/p6-Pango/lib \
+-I${P6_GTK_HOME}/p6-GtkPlus/lib         \
+-I${P6_GTK_HOME}/p6-WebkitGTK/lib       \
+-I${P6_GTK_HOME}/p6-SourceViewGTK/lib   \
+-I${P6_GTK_HOME}/p6-AMTK/lib            \
+-I${P6_GTK_HOME}/p6-TEPL/lib            \
+-I${P6_GTK_HOME}/p6-GooCanvas/lib       \
+-I${P6_GTK_HOME}/p6-Slope/lib           \
+-I${P6_GTK_HOME}/p6-WNCK/lib            \
+-I${P6_GTK_HOME}/p6-Clutter/lib         \
+-I${P6_GTK_HOME}/p6-GtkClutter/lib      \
+-I${P6_GTK_HOME}/p6-COGL/lib            \
+-I${P6_GTK_HOME}/p6-GStreamer/lib       \
+-I${P6_GTK_HOME}/p6-RSVG/lib"
+
+if [[ -z "${PARALLEL_BUILD}" ]]; then
+  ${EXEC} --stagestats ${INCLUDES} "$@"
+else
+  ${EXEC} --stagestats ${INCLUDES} "$@" 2>&1 | perl -pe 's/^/$$ /'
+fi
