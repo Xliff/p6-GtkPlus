@@ -236,6 +236,7 @@ GIO::DBus::Raw::Server
 GIO::DBus::Roles::Interface
 GIO::DBus::Roles::ObjectManager
 GIO::LaunchContext
+GIO::Raw::DataOutputStream
 GIO::Raw::Drive
 GIO::Raw::DtlsClientConnection
 GIO::Raw::DtlsConnection
@@ -673,6 +674,7 @@ GIO::DBus::ObjectManagerClient
 GIO::DBus::ObjectManagerServer
 GIO::DBus::ObjectProxy
 GIO::DataInputStream
+GIO::DataOutputStream
 GIO::InetSocketAddress
 GIO::NetworkAddress
 GIO::NetworkService

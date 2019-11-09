@@ -1534,6 +1534,7 @@ class GConverter               is repr('CPointer') is export does GTK::Roles::Po
 class GConverterInputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCredentials             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDataInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDataOutputStream        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDateTime                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDatagramBased           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDtlsClientConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
