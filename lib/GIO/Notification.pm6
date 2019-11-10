@@ -14,7 +14,9 @@ class GIO::Notification {
   has GNotification $!n;
 
   submethod BUILD (:$notification) {
-    self!setObject($!n = $notification);
+    $!n = $notification
+
+    self!roleInit-Object;
   }
 
   method GTK::Compat::Types::GNotification
