@@ -534,7 +534,8 @@ our enum GMountOperationResultEnum is export <
   G_MOUNT_OPERATION_UNHANDLED
 >;
 
-our enum GNotificationPriority is export <
+constant GNotificationPriority is export := guint;
+our enum GNotificationPriorityEnum is export <
   G_NOTIFICATION_PRIORITY_NORMAL
   G_NOTIFICATION_PRIORITY_LOW
   G_NOTIFICATION_PRIORITY_HIGH

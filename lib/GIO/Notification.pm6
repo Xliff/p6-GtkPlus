@@ -1,12 +1,14 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 
 use GTK::Compat::Raw::Notification;
 
 use GTK::Compat::Roles::Object;
 
-class GTK::Compat::Notification {
+class GIO::Notification {
   also does GTK::Compat::Roles::Object;
 
   has GNotification $!n;
@@ -15,11 +17,21 @@ class GTK::Compat::Notification {
     self!setObject($!n = $notification);
   }
 
-  method new(Str() $title) {
-    self.bless( notification => g_notification_new($title) );
+  method GTK::Compat::Types::GNotification
+    is also<GNotification>
+  { $!n }
+
+  multi method new (GNotification $notification) {
+    self.bless( :$notification );
+  }
+  multi method new(Str() $title) {
+    my $n = g_notification_new($title)
+    self.bless( notification => $n );
   }
 
-  method add_button (Str() $label, Str() $detailed_action) {
+  method add_button (Str() $label, Str() $detailed_action)
+    is also<add-button>
+  {
     g_notification_add_button($!n, $label, $detailed_action);
   }
 
@@ -27,7 +39,9 @@ class GTK::Compat::Notification {
     Str() $label,
     Str() $action,
     GVariant() $target
-  ) {
+  )
+    is also<add-button-with-target-value>
+  {
     g_notification_add_button_with_target_value(
       $!n,
       $label,
@@ -36,23 +50,28 @@ class GTK::Compat::Notification {
     );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_notification_get_type, $n, $t );
   }
 
-  method set_body (Str() $body) {
+  method set_body (Str() $body) is also<set-body> {
     g_notification_set_body($!n, $body);
   }
 
-  method set_default_action (Str() $detailed_action) {
+  method set_default_action (Str() $detailed_action)
+    is also<set-default-action>
+  {
     g_notification_set_default_action($!n, $detailed_action);
   }
 
   method set_default_action_and_target_value (
     Str() $action,
     GVariant() $target
-  ) {
+  )
+    is also<set-default-action-and-target-value>
+  {
     g_notification_set_default_action_and_target_value(
       $!n,
       $action,
@@ -60,15 +79,17 @@ class GTK::Compat::Notification {
     );
   }
 
-  method set_icon (GIcon() $icon) {
+  method set_icon (GIcon() $icon) is also<set-icon> {
     g_notification_set_icon($!n, $icon);
   }
 
-  method set_priority (GNotificationPriority $priority) {
-    g_notification_set_priority($!n, $priority);
+  method set_priority (Int() $priority) is also<set-priority> {
+    my GNotificationPriority $p = $priority;
+
+    g_notification_set_priority($!n, $p);
   }
 
-  method set_title (Str() $title) {
+  method set_title (Str() $title) is also<set-title> {
     g_notification_set_title($!n, $title);
   }
 
