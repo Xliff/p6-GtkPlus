@@ -17,7 +17,7 @@ sub MAIN (
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);
     $prefix //= %config<prefix>;
-    @build-exclude = %config<build_exclude>;
+    @build-exclude = %config<build_exclude> // ();
   }
 
   my @files = find
@@ -36,14 +36,10 @@ sub MAIN (
     .map( *.path )
     .map({
       my $mn = $_;
-      my $a = [ $mn, S/ '.pm6' // ];
-      $a[1] = do given $a[1] {
-        # Find a better way to specify file to module mapping,
-        # especially now that $prefix can be a comma separater list!
-        #when "lib/{$prefix}.pm6" { $prefix }
-
-        default                  { .split('/').Array[1..*].join('::') }
-      }
+      my $a = [
+        $mn,
+        .subst('.pm6', '').split('/').Array[1..*].join('::')
+      ];
       $a;
     })
     # Remove modules excluded via project file.

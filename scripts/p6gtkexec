@@ -26,7 +26,8 @@ INCLUDES="-I${P6_GTK_HOME}/p6-Pango/lib \
 -I${P6_GTK_HOME}/p6-GtkClutter/lib      \
 -I${P6_GTK_HOME}/p6-COGL/lib            \
 -I${P6_GTK_HOME}/p6-GStreamer/lib       \
--I${P6_GTK_HOME}/p6-RSVG/lib"
+-I${P6_GTK_HOME}/p6-RSVG/lib            \
+-I${P6_GTK_HOME}/p6-GtkSheet/lib"
 
 if [[ -z "${PARALLEL_BUILD}" ]]; then
   ${EXEC} --stagestats ${INCLUDES} "$@"

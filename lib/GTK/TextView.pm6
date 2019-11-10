@@ -19,7 +19,7 @@ use GTK::Roles::Signals::TextView;
 
 use Pango::Tabs;
 
-our subset TextViewAncestry is export
+our subset TextViewAncestry is export of Mu
   where GtkTextView  | GtkScrollable | ContainerAncestry;
 
 class GTK::TextView is GTK::Container {
@@ -46,11 +46,11 @@ class GTK::TextView is GTK::Container {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkTextView
     is also<TextView>
     { $!tv }
-  
+
   method setTextView($view) {
     my $to-parent;
     $!tv = do given $view {
@@ -433,7 +433,7 @@ class GTK::TextView is GTK::Container {
       }
     );
   }
-  
+
   # Super convenience.
   # See https://stackoverflow.com/questions/14770018/scroll-to-end-of-scrolledwindow-textview
   method autoscroll is rw {
@@ -453,7 +453,7 @@ class GTK::TextView is GTK::Container {
       }
     )
   }
-  
+
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
