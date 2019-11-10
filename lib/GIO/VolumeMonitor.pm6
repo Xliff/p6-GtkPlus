@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GIO::Raw::VolumeMonitor;
 
@@ -23,6 +25,7 @@ class GIO::VolumeMonitor {
   }
 
   method GTK::Compat::Types::GVolumeMonitor
+    is also<GVolumeMonitor>
   { $!vm }
 
   method new (GVolumeMonitor $monitor) {
@@ -31,73 +34,73 @@ class GIO::VolumeMonitor {
 
   # Is originally:
   # GVolumeMonitor, GDrive, gpointer --> void
-  method drive-changed {
+  method drive-changed is also<drive_changed> {
     self.connect-drive($!vm, 'drive-changed');
   }
 
   # Is originally:
   # GVolumeMonitor, GDrive, gpointer --> void
-  method drive-connected {
+  method drive-connected is also<drive_connected> {
     self.connect-drive($!vm, 'drive-connected');
   }
 
   # Is originally:
   # GVolumeMonitor, GDrive, gpointer --> void
-  method drive-disconnected {
+  method drive-disconnected is also<drive_disconnected> {
     self.connect-drive($!vm, 'drive-disconnected');
   }
 
   # Is originally:
   # GVolumeMonitor, GDrive, gpointer --> void
-  method drive-eject-button {
+  method drive-eject-button is also<drive_eject_button> {
     self.connect-drive($!vm, 'drive-eject-button');
   }
 
   # Is originally:
   # GVolumeMonitor, GDrive, gpointer --> void
-  method drive-stop-button {
+  method drive-stop-button is also<drive_stop_button> {
     self.connect-drive($!vm, 'drive-stop-button');
   }
 
   # Is originally:
   # GVolumeMonitor, GMount, gpointer --> void
-  method mount-added {
+  method mount-added is also<mount_added> {
     self.connect-mount($!vm, 'mount-added');
   }
 
   # Is originally:
   # GVolumeMonitor, GMount, gpointer --> void
-  method mount-changed {
+  method mount-changed is also<mount_changed> {
     self.connect-mount($!vm, 'mount-changed');
   }
 
   # Is originally:
   # GVolumeMonitor, GMount, gpointer --> void
-  method mount-pre-unmount {
+  method mount-pre-unmount is also<mount_pre_unmount> {
     self.connect-mount($!vm, 'mount-pre-unmount');
   }
 
   # Is originally:
   # GVolumeMonitor, GMount, gpointer --> void
-  method mount-removed {
+  method mount-removed is also<mount_removed> {
     self.connect-mount($!vm, 'mount-remove;');
   }
 
   # Is originally:
   # GVolumeMonitor, GVolume, gpointer --> void
-  method volume-added {
+  method volume-added is also<volume_added> {
     self.connect-volume($!vm, 'volume-added');
   }
 
   # Is originally:
   # GVolumeMonitor, GVolume, gpointer --> void
-  method volume-changed {
+  method volume-changed is also<volume_changed> {
     self.connect-volume($!vm, 'volume-changed');
   }
 
   # Is originally:
   # GVolumeMonitor, GVolume, gpointer --> void
-  method volume-removed {
+  method volume-removed is also<volume_removed> {
     self.connect-volume($!vm, 'volume-removed');
   }
 
@@ -112,6 +115,7 @@ class GIO::VolumeMonitor {
 
   method adopt_orphan_mount (GMount() $mount, :$raw = False)
     is DEPRECATED<the shadow mounts routines in GIO::Mount>
+    is       also<adopt-orphan-mount>
   {
     my $v = g_volume_monitor_adopt_orphan_mount($mount);
 
@@ -121,7 +125,7 @@ class GIO::VolumeMonitor {
       Nil;
   }
 
-  method get_connected_drives (:$raw = False) {
+  method get_connected_drives (:$raw = False) is also<get-connected-drives> {
     my $dl = g_volume_monitor_get_connected_drives($!vm)
       but GTK::Compat::Roles::ListData[GDrive];
 
@@ -134,7 +138,9 @@ class GIO::VolumeMonitor {
       Nil;
   }
 
-  method get_mount_for_uuid (Str() $uuid, :$raw = False) {
+  method get_mount_for_uuid (Str() $uuid, :$raw = False)
+    is also<get-mount-for-uuid>
+  {
     my $m = g_volume_monitor_get_mount_for_uuid($!vm, $uuid);
 
     $m ??
@@ -143,7 +149,7 @@ class GIO::VolumeMonitor {
       Nil;
   }
 
-  method get_mounts (:$raw = False) {
+  method get_mounts (:$raw = False) is also<get-mounts> {
     my $ml = g_volume_monitor_get_mounts($!vm)
       but GTK::Compat::Roles::ListData[GMount];
 
@@ -156,13 +162,15 @@ class GIO::VolumeMonitor {
       Nil;
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_volume_monitor_get_type, $n, $t );
   }
 
-  method get_volume_for_uuid (Str() $uuid, :$raw = False) {
+  method get_volume_for_uuid (Str() $uuid, :$raw = False)
+    is also<get-volume-for-uuid>
+  {
     my $v = g_volume_monitor_get_volume_for_uuid($!vm, $uuid);
 
     $v ??
@@ -171,7 +179,7 @@ class GIO::VolumeMonitor {
       Nil;
   }
 
-  method get_volumes (:$raw = False) {
+  method get_volumes (:$raw = False) is also<get-volumes> {
     my $vl = g_volume_monitor_get_volumes($!vm);
 
     $vl ??

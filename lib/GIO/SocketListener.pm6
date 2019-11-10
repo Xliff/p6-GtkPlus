@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -28,6 +30,7 @@ class GIO::SocketListener {
   }
 
   method GTK::Compat::Types::GSocketListener
+    is also<GSocketListener>
   { $!sl }
 
   method new {
@@ -35,7 +38,7 @@ class GIO::SocketListener {
   }
 
   # Type: gint
-  method listen-backlog is rw  {
+  method listen-backlog is rw  is also<listen_backlog> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -72,7 +75,9 @@ class GIO::SocketListener {
     GCancellable $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<accept-async>
+  {
     g_socket_listener_accept_async($!sl, $cancellable, $callback, $user_data);
   }
 
@@ -81,7 +86,9 @@ class GIO::SocketListener {
     GObject() $source_object,
     CArray[Pointer[GError]] $error = gerror,
     :$raw = False
-  ) {
+  )
+    is also<accept-finish>
+  {
     clear_error;
     my $rv =
       g_socket_listener_accept_finish($!sl, $result, $source_object, $error);
@@ -98,7 +105,9 @@ class GIO::SocketListener {
     GCancellable $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror,
     :$raw = False
-  ) {
+  )
+    is also<accept-socket>
+  {
     clear_error;
     my $rv = g_socket_listener_accept_socket(
       $!sl,
@@ -118,7 +127,9 @@ class GIO::SocketListener {
     GCancellable $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<accept-socket-async>
+  {
     g_socket_listener_accept_socket_async(
       $!sl,
       $cancellable,
@@ -132,7 +143,9 @@ class GIO::SocketListener {
     GObject() $source_object,
     CArray[Pointer[GError]] $error = gerror,
     :$raw = False
-  ) {
+  )
+    is also<accept-socket-finish>
+  {
     clear_error;
     my $rv = g_socket_listener_accept_socket_finish(
       $!sl,
@@ -155,7 +168,9 @@ class GIO::SocketListener {
     GObject() $source_object,
     GSocketAddress() $effective_address,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<add-address>
+  {
     my GSocketType $t = $type;
     my GSocketProtocol $p = $protocol;
 
@@ -176,7 +191,9 @@ class GIO::SocketListener {
   method add_any_inet_port (
     GObject() $source_object,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<add-any-inet-port>
+  {
     clear_error;
     my $rv =
       so g_socket_listener_add_any_inet_port($!sl, $source_object, $error);
@@ -188,7 +205,9 @@ class GIO::SocketListener {
     Int() $port,
     GObject() $source_object,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<add-inet-port>
+  {
     my guint16 $p = $port;
 
     clear_error;
@@ -202,7 +221,9 @@ class GIO::SocketListener {
     GSocket() $socket,
     GObject() $source_object,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<add-socket>
+  {
     clear_error;
     my $rv =
       so g_socket_listener_add_socket($!sl, $socket, $source_object, $error);
@@ -214,13 +235,13 @@ class GIO::SocketListener {
     g_socket_listener_close($!sl);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_socket_listener_get_type, $n, $t );
   }
 
-  method set_backlog (Int() $listen_backlog) {
+  method set_backlog (Int() $listen_backlog) is also<set-backlog> {
     my gint $lb = $listen_backlog;
 
     g_socket_listener_set_backlog($!sl, $lb);

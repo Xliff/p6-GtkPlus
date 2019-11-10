@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
@@ -21,6 +23,7 @@ class GIO::FileMonitor {
   }
 
   method GTK::Compat::Types::GFileMonitor
+    is also<GFileMonitor>
   { $!m }
 
   method new (GFileMonitor $monitor) {
@@ -28,7 +31,7 @@ class GIO::FileMonitor {
   }
 
   # Type: gint
-  method rate-limit is rw  {
+  method rate-limit is rw  is also<rate_limit> {
     my GTK::Compat::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
@@ -58,21 +61,23 @@ class GIO::FileMonitor {
     GFile() $child,
     GFile() $other_file,
     GFileMonitorEvent $event_type
-  ) {
+  )
+    is also<emit-event> 
+  {
     g_file_monitor_emit_event($!m, $child, $other_file, $event_type);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_file_monitor_get_type, $n, $t );
   }
 
-  method is_cancelled {
+  method is_cancelled is also<is-cancelled> {
     so g_file_monitor_is_cancelled($!m);
   }
 
-  method set_rate_limit (gint $limit_msecs) {
+  method set_rate_limit (gint $limit_msecs) is also<set-rate-limit> {
     my gint $l = $limit_msecs;
 
     g_file_monitor_set_rate_limit($!m, $l);

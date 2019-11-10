@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -25,13 +27,16 @@ class GIO::TlsCertificate {
   }
 
   method GTK::Compat::Types::GTlsCertificate
+    is also<GTlsCertificate>
   { $!c }
 
   method new (GTlsCertificate $tls) {
     $tls ?? self.bless( :$tls ) !! Nil;
   }
 
-  method new_from_file (Str() $file, CArray[Pointer[GError]] $error = gerror) {
+  method new_from_file (Str() $file, CArray[Pointer[GError]] $error = gerror)
+    is also<new-from-file>
+  {
     clear_error;
     my $tls = g_tls_certificate_new_from_file($file, $error);
     set_error($error);
@@ -43,7 +48,9 @@ class GIO::TlsCertificate {
     Str() $cert_file,
     Str() $key_file,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<new-from-files>
+  {
     clear_error;
     my $tls = g_tls_certificate_new_from_files($cert_file, $key_file, $error);
     set_error($error);
@@ -55,7 +62,9 @@ class GIO::TlsCertificate {
     Blob() $data,
     Int() $length,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<new-from-pem>
+  {
     my gssize $l = $length;
 
     clear_error;
@@ -70,7 +79,9 @@ class GIO::TlsCertificate {
     Str() $file,
     CArray[Pointer[GError]] $error = gerror,
     :$glist = False, :$raw = False
-  ) {
+  )
+    is also<list-new-from-file>
+  {
     my $la = g_tls_certificate_list_new_from_file($file, $error);
 
     return $la if     $glist;
@@ -105,7 +116,7 @@ class GIO::TlsCertificate {
   }
 
   # Type: gchar
-  method certificate-pem is rw  {
+  method certificate-pem is rw  is also<certificate_pem> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -134,7 +145,7 @@ class GIO::TlsCertificate {
   }
 
   # Type: GByteArray
-  method private-key is rw  {
+  method private-key is rw  is also<private_key> {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
@@ -149,7 +160,7 @@ class GIO::TlsCertificate {
   }
 
   # Type: gchar
-  method private-key-pem is rw  {
+  method private-key-pem is rw  is also<private_key_pem> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
@@ -163,7 +174,7 @@ class GIO::TlsCertificate {
     );
   }
 
-  method get_issuer (:$raw = False) {
+  method get_issuer (:$raw = False) is also<get-issuer> {
     my $i = g_tls_certificate_get_issuer($!c);
 
     $i ??
@@ -172,13 +183,14 @@ class GIO::TlsCertificate {
       Nil;
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_tls_certificate_get_type, $n, $t );
   }
 
   proto method is_same (|)
+      is also<is-same>
   { * }
 
   multi method is_same (GTlsCertificate() $cert_two) {
@@ -192,9 +204,13 @@ class GIO::TlsCertificate {
     so g_tls_certificate_is_same($cert_one, $cert_two);
   }
 
-  method verify (GSocketConnectable() $identity, GTlsCertificate() $trusted_ca) {
+  method verify (
+    GSocketConnectable() $identity,
+    GTlsCertificate() $trusted_ca
+  ) {
     GTlsCertificateFlagsEnum(
       g_tls_certificate_verify($!c, $identity, $trusted_ca)
     );
   }
+  
 }

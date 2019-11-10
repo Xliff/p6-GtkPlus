@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GIO::Raw::MountOperation;
 
@@ -19,6 +21,7 @@ class GIO::MountOperation {
   }
 
   method GTK::Compat::Types::GMountOperation
+    is also<GMountOperation>
   { $!mo }
 
   multi method new (GMountOperation $mount-op) {
@@ -66,7 +69,7 @@ class GIO::MountOperation {
     );
   }
 
-  method is_tcrypt_hidden_volume is rw {
+  method is_tcrypt_hidden_volume is rw is also<is-tcrypt-hidden-volume> {
     Proxy.new(
       FETCH => sub ($) {
         so g_mount_operation_get_is_tcrypt_hidden_volume($!mo);
@@ -79,7 +82,7 @@ class GIO::MountOperation {
     );
   }
 
-  method is_tcrypt_system_volume is rw {
+  method is_tcrypt_system_volume is rw is also<is-tcrypt-system-volume> {
     Proxy.new(
       FETCH => sub ($) {
         so g_mount_operation_get_is_tcrypt_system_volume($!mo);
@@ -103,7 +106,7 @@ class GIO::MountOperation {
     );
   }
 
-  method password_save is rw {
+  method password_save is rw is also<password-save> {
     Proxy.new(
       FETCH => sub ($) {
         GPasswordSaveEnum( g_mount_operation_get_password_save($!mo) );
@@ -148,13 +151,13 @@ class GIO::MountOperation {
 
   # Is originally:
   # GMountOperation, gchar, gchar, gchar, GAskPasswordFlags, gpointer --> void
-  method ask-password {
+  method ask-password is also<ask_password> {
     self.connect-ask-password($!mo);
   }
 
   # Is originally:
   # GMountOperation, gchar, GStrv, gpointer --> void
-  method ask-question {
+  method ask-question is also<ask_question> {
     self.connect-ask-question($!mo);
   }
 
@@ -166,23 +169,23 @@ class GIO::MountOperation {
 
   # Is originally:
   # GMountOperation, gchar, GArray, GStrv, gpointer --> void
-  method show-processes {
+  method show-processes is also<show_processes> {
     self.connect-show-processes($!mo);
   }
 
   # Is originally:
   # GMountOperation, gchar, gint64, gint64, gpointer --> void
-  method show-unmount-progress {
+  method show-unmount-progress is also<show_unmount_progress> {
     self.connect-show-unmount-progress($!mo);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_mount_operation_get_type, $n, $t );
   }
 
-  method emit-reply (Int() $result) {
+  method emit-reply (Int() $result) is also<emit_reply> {
     my GMountOperationResult $r = $result;
 
     g_mount_operation_reply($!mo, $r);

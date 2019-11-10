@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use GTK::Compat::Types;
 use GIO::Raw::UnixInputStream;
 
@@ -71,13 +73,14 @@ class GIO::UnixInputStream is GIO::InputStream {
   }
 
   method GTK::Compat::Types::GUnixInputStream
+    is also<GUnixInputStream>
   { $!uis }
 
-  method get_fd {
+  method get_fd is also<get-fd> {
     g_unix_input_stream_get_fd($!uis);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_unix_input_stream_get_type, $n, $t );

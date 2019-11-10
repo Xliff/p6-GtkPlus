@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -17,11 +19,15 @@ class GIO::SocketAddressEnumerator {
     self.roleInit-Object;
   }
 
+  method GTK::Compat::Types::GSocketAddressEnumerator
+    is also<GSocketAddressEnumerator>
+  { $!se }
+
   method new (GSocketAddressEnumerator $enumerator) {
     self.bless( :$enumerator );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type(
@@ -47,7 +53,9 @@ class GIO::SocketAddressEnumerator {
     GCancellable $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<next-async>
+  {
     g_socket_address_enumerator_next_async(
       $!se,
       $cancellable,
@@ -61,7 +69,9 @@ class GIO::SocketAddressEnumerator {
     GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror,
     :$raw = False
-  ) {
+  )
+    is also<next-finish>
+  {
     clear_error;
     my $sa = g_socket_address_enumerator_next_finish($!se, $result, $error);
     set_error($error);
