@@ -1673,6 +1673,7 @@ class GUnixMountEntry          is repr('CPointer') is export does GTK::Roles::Po
 class GUnixMountMonitor        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixMountPoint          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GUnixOutputStream        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GUnixSocketAddress       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariant                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GVariantBuilder          is repr('CPointer') is export does GTK::Roles::Pointers { }

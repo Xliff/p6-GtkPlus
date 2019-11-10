@@ -106,6 +106,7 @@ GIO::Raw::UnixFDList
 GIO::Raw::UnixFDMessage
 GIO::Raw::UnixInputStream
 GIO::Raw::UnixMount
+GIO::Raw::UnixOutputStream
 GIO::Raw::UnixSocketAddress
 GIO::Raw::VFS
 GIO::Raw::VolumeMonitor
@@ -595,6 +596,7 @@ GIO::UnixFDList
 GIO::UnixFDMessage
 GIO::UnixInputStream
 GIO::UnixMount
+GIO::UnixOutputStream
 GIO::VFS
 GIO::ZlibCompressor
 GIO::ZlibDecompressor
