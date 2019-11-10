@@ -50,6 +50,7 @@ GIO::DBus::Roles::Signals::ObjectSkeleton
 GIO::DBus::Roles::Signals::Proxy
 GIO::DBus::Roles::Signals::Server
 GIO::DBus::Utils
+GIO::Raw::ActionGroup
 GIO::Raw::AppInfo
 GIO::Raw::AsyncInitable
 GIO::Raw::AsyncResult
@@ -77,6 +78,7 @@ GIO::Raw::MountOperation
 GIO::Raw::NetworkAddress
 GIO::Raw::NetworkMonitor
 GIO::Raw::NetworkService
+GIO::Raw::Notification
 GIO::Raw::OutputStream
 GIO::Raw::PollableInputStream
 GIO::Raw::PollableOutputStream
@@ -110,6 +112,7 @@ GIO::Raw::UnixOutputStream
 GIO::Raw::UnixSocketAddress
 GIO::Raw::VFS
 GIO::Raw::VolumeMonitor
+GIO::Roles::ActionGroup
 GIO::Roles::AsyncResult
 GIO::Roles::Converter
 GIO::Roles::FileDescriptorBased
@@ -509,6 +512,7 @@ GIO::FileAttributeMatcher
 GIO::Resource
 GIO::Roles::DatagramBased
 GIO::Roles::PollableOutputStream
+GIO::Roles::Signals::ActionGroup
 GIO::Roles::Signals::Settings
 GIO::SrvTarget
 GLib::ByteArray
@@ -572,6 +576,7 @@ GIO::InetAddressMask
 GIO::InputStream
 GIO::MemoryInputStream
 GIO::MountOperation
+GIO::Notification
 GIO::OutputStream
 GIO::Resolver
 GIO::Roles::AppInfo
@@ -619,7 +624,6 @@ GTK::Compat::DisplayManager
 GTK::Compat::Event
 GTK::Compat::HashTable
 GTK::Compat::MenuModel
-GTK::Compat::Notification
 GTK::Compat::Pixbuf
 GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::Action

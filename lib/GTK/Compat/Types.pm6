@@ -462,8 +462,8 @@ our enum GPollableReturnEnum is export (
   G_POLLABLE_RETURN_WOULD_BLOCK  => -27 # -G_IO_ERROR_WOULD_BLOCK
 );
 
-# Uint32. Be careful not to conflate this with GVariantType which is a pointer!
-our enum GVariantTypeEnum is export <
+constant GVariantClass is export := guint;
+our enum GVariantClassEnum is export <
   G_VARIANT_CLASS_BOOLEAN
   G_VARIANT_CLASS_BYTE
   G_VARIANT_CLASS_INT16

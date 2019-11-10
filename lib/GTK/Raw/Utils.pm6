@@ -11,6 +11,7 @@ sub CStringArrayToArray (CArray[Str] $sa) is export {
 }
 
 sub CArrayToArray(CArray $ca) is export {
+  return Nil unless $ca;
   my ($i, @a) = (0);
   while $ca[$i] {
     @a.push: $ca[$i++];
