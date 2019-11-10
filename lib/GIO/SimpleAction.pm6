@@ -8,19 +8,17 @@ use GTK::Compat::Types;
 use GIO::Raw::SimpleAction;
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Object;
 use GIO::Roles::Action;
 
 # Will need ancestry since this could be built from a GAction!!
 
 class GTK::Compat::SimpleAction {
-  also does GTK::Compat::Roles::Object;
   also does GIO::Roles::Action;
 
   has GSimpleAction $!sa;
 
   submethod BUILD (:$simple-action) {
-    $!sa = $action;
+    $!sa = $simple-action;
 
     self!roleInit-Object;
   }
