@@ -670,6 +670,7 @@ GTK::Widget
 GIO::BufferedInputStream
 GIO::BufferedOutputStream
 GIO::ConverterInputStream
+GIO::ConverterOutputStream
 GIO::DBus::Connection
 GIO::DBus::MethodInvocation
 GIO::DBus::ObjectManagerClient

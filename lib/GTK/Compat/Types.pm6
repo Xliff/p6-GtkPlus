@@ -1532,6 +1532,7 @@ class GChecksum                is repr('CPointer') is export does GTK::Roles::Po
 class GClosure                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GConverter               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GConverterInputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GConverterOutputStream   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCredentials             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDataInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDataOutputStream        is repr('CPointer') is export does GTK::Roles::Pointers { }

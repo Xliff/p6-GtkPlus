@@ -680,6 +680,7 @@
       "GIO::BufferedInputStream"                       :  "lib/GIO/BufferedInputStream.pm6"                    ,
       "GIO::BufferedOutputStream"                      :  "lib/GIO/BufferedOutputStream.pm6"                   ,
       "GIO::ConverterInputStream"                      :  "lib/GIO/ConverterInputStream.pm6"                   ,
+      "GIO::ConverterOutputStream"                     :  "lib/GIO/ConverterOutputStream.pm6"                  ,
       "GIO::DBus::Connection"                          :  "lib/GIO/DBus/Connection.pm6"                        ,
       "GIO::DBus::MethodInvocation"                    :  "lib/GIO/DBus/MethodInvocation.pm6"                  ,
       "GIO::DBus::ObjectManagerClient"                 :  "lib/GIO/DBus/ObjectManagerClient.pm6"               ,
