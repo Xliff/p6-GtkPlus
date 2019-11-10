@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::SimpleAction;
+unit package GIO::Raw::SimpleAction;
 
 sub g_simple_action_get_type ()
   returns GType

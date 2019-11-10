@@ -50,6 +50,7 @@ GIO::DBus::Roles::Signals::ObjectSkeleton
 GIO::DBus::Roles::Signals::Proxy
 GIO::DBus::Roles::Signals::Server
 GIO::DBus::Utils
+GIO::Raw::Action
 GIO::Raw::ActionGroup
 GIO::Raw::AppInfo
 GIO::Raw::AsyncInitable
@@ -89,6 +90,7 @@ GIO::Raw::Resolver
 GIO::Raw::Seekable
 GIO::Raw::SettingsBackend
 GIO::Raw::SettingsSchema
+GIO::Raw::SimpleAction
 GIO::Raw::SimpleProxyResolver
 GIO::Raw::Socket
 GIO::Raw::SocketAddress
@@ -150,7 +152,6 @@ GTK::Builder::Actionable
 GTK::Compat::FileTypes
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
-GTK::Compat::Raw::Action
 GTK::Compat::Raw::AppLaunchContext
 GTK::Compat::Raw::Array
 GTK::Compat::Raw::Binding
@@ -183,7 +184,6 @@ GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Signal
-GTK::Compat::Raw::SimpleAction
 GTK::Compat::Raw::Slice
 GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
@@ -579,6 +579,7 @@ GIO::MountOperation
 GIO::Notification
 GIO::OutputStream
 GIO::Resolver
+GIO::Roles::Action
 GIO::Roles::AppInfo
 GIO::Roles::DTlsServerConnection
 GIO::Roles::LoadableIcon
@@ -586,6 +587,7 @@ GIO::Roles::TlsFileDatabase
 GIO::Roles::TlsServerConnection
 GIO::Settings
 GIO::SettingsBackend
+GIO::SimpleAction
 GIO::SimpleProxyResolver
 GIO::SocketAddressEnumerator
 GIO::SocketControlMessage
@@ -625,11 +627,10 @@ GTK::Compat::Event
 GTK::Compat::HashTable
 GTK::Compat::MenuModel
 GTK::Compat::Pixbuf
+GTK::Compat::PropertyAction
 GTK::Compat::Raw::Monitor
-GTK::Compat::Roles::Action
 GTK::Compat::Roles::GFile
 GTK::Compat::Seat
-GTK::Compat::SimpleAction
 GTK::EntryBuffer
 GTK::IconInfo
 GTK::IconTheme
@@ -667,7 +668,6 @@ GTK::Compat::AppLaunchContext
 GTK::Compat::Cursor
 GTK::Compat::Menu
 GTK::Compat::Monitor
-GTK::Compat::PropertyAction
 GTK::Compat::Window
 GTK::TextBuffer
 GTK::Widget

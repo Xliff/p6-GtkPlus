@@ -4,10 +4,11 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Roles::Action;
+use GTK::Compat::Value;
+use GIO::Roles::Action;
 
 class GTK::Compat::PropertyAction {
-  also does GTK::Compat::Roles::Action;
+  also does GIO::Roles::Action;
 
   has GPropertyAction $!pa;
 

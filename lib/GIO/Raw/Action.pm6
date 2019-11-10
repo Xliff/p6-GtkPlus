@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Action;
+unit package GIO::Raw::Action;
 
 sub g_action_activate (GAction $action, GVariant $parameter)
   is native(gio)

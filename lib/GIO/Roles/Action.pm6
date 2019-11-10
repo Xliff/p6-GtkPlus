@@ -4,28 +4,36 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Action;
+
+use GIO::Raw::Action;
 
 use GTK::Roles::Properties;
 
-role GTK::Compat::Roles::Action {
+role GIO::Roles::Action {
   also does GTK::Roles::Properties;
 
   has GAction $!a;
 
   submethod BUILD (:$action) {
-    self!setObject($!a = $action);
+    $!a = $action;
+
+    self!roleInit-Object;
+  }
+
+  method !roleInit-Action {
+    $!a = cast(
+      GAction,
+      self.^attributes(:local)[0].get_value(self)
+    );
   }
 
   method GTK::Compat::Types::GAction
     is also<Action>
   { $!a }
 
-  # Specifics MUST be done by object
-  #
-  # method new (GAction $action) {
-  #   self.bless(:$action);
-  # }
+  method new-action-object (GAction $action) {
+    self.bless( :$action );
+  }
 
   method activate (GVariant() $parameter) {
     g_action_activate($!a, $parameter);
@@ -94,6 +102,7 @@ role GTK::Compat::Roles::Action {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_action_get_type, $n, $t );
   }
 
@@ -108,7 +117,7 @@ role GTK::Compat::Roles::Action {
   multi method parse_detailed_name (
     Str() $detailed_name,
     Str() $action_name,
-    GVariant $target_value,
+    GVariant() $target_value,
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error;

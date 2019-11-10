@@ -4,35 +4,46 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::SimpleAction;
 
+use GIO::Raw::SimpleAction;
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Action;
+use GTK::Compat::Roles::Object;
+use GIO::Roles::Action;
+
+# Will need ancestry since this could be built from a GAction!!
 
 class GTK::Compat::SimpleAction {
-  also does GTK::Compat::Roles::Action;
+  also does GTK::Compat::Roles::Object;
+  also does GIO::Roles::Action;
 
   has GSimpleAction $!sa;
 
-  submethod BUILD (:$action) {
-    self!setObject($!sa = $action);
+  submethod BUILD (:$simple-action) {
+    $!sa = $action;
+
+    self!roleInit-Object;
   }
 
   method GTK::Compat::Types::GSimpleAction
-    #is also<SimpleAction>
+    is also<GSimpleAction>
   { $!sa }
 
-  method new (GVariantType() $parameter_type) {
-    self.bless( action => g_simple_action_new($$parameter_type) );
+  multi method new (GSimpleAction $simple-action) {
+    self.bless( :$simple-action );
+  }
+  multi method new (GVariantType() $parameter_type) {
+    my $sa = g_simple_action_new($$parameter_type);
+
+    $sa ?? self.bless( simple-action => $sa) !! Nil;
   }
 
   method new_stateful (GVariantType() $parameter_type, GVariant() $state)
     is also<new-stateful>
   {
-    self.bless(
-      action => g_simple_action_new_stateful($parameter_type, $state)
-    );
+    my $sa = g_simple_action_new_stateful($parameter_type, $state);
+
+    $sa ?? self.bless( action => $sa ) !! Nil;
   }
 
   # Type: gboolean
@@ -139,11 +150,13 @@ class GTK::Compat::SimpleAction {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_simple_action_get_type, $n, $t );
   }
 
   method set_enabled (Int() $enabled) is also<set-enabled> {
-    my gboolean $e = resolve-bool($enabled);
+    my gboolean $e = $enabled;
+
     g_simple_action_set_enabled($!sa, $e);
   }
 
