@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -7,33 +9,36 @@ use GTK::Compat::Types;
 use GTK::Compat::Value;
 use GIO::Roles::Action;
 
-class GTK::Compat::PropertyAction {
+class GIO::PropertyAction {
   also does GIO::Roles::Action;
 
   has GPropertyAction $!pa;
 
   submethod BUILD (:$action) {
-    self!setObject($!pa = $action);
-    $!a = cast(GAction, $!pa);            # GTK::Compat::Roles::Action
+    $!pa = $action;
+
+    self.roleInit-Object;
+    self!roleInit-Action;
   }
 
   method GTK::Compat::Types::GPropertyAction
-    # is also<PropertyAction>
+    is also<GPropertyAction>
   { $!pa }
 
-  proto method new (|) { * }
+  proto method new (|)
+  { * }
 
-  multi method new (Str() $name, GObject() $object, Str $property_name) {
-    samewith($name, $property_name, $object);
-  }
   multi method new (
     Str() $name,
     Str $property_name,
     GObject() $object = GObject
   ) {
-    self.bless(
-      action => g_property_action_new($name, $object, $property_name)
-    );
+    samewith($name, $object, $property_name);
+  }
+  multi method new (Str() $name, GObject() $object, Str() $property_name) {
+    my $a = g_property_action_new($name, $object, $property_name);
+
+    $a ?? self.bless( action => $a ) !! Nil;
   }
 
   # Type: gboolean
@@ -53,7 +58,7 @@ class GTK::Compat::PropertyAction {
   }
 
   # Type: gboolean
-  method invert-boolean is rw  {
+  method invert-boolean is rw is also<invert_boolean> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
@@ -91,7 +96,7 @@ class GTK::Compat::PropertyAction {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        warn "object does not allow reading"
+        warn 'object does not allow reading'
       },
       STORE => -> $, GObject() $val is copy {
         $gv.object = $val;
@@ -101,29 +106,33 @@ class GTK::Compat::PropertyAction {
   }
 
   # Type: GVariantType
-  method parameter-type is rw  {
+  method parameter-type (:$raw = False) is rw is also<parameter_type> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOXED );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('parameter-type', $gv)
         );
-        GTK::Compat::VariantType.new(
-          nativecast(GVariantType, $gv.pointer)
-        );
+
+        do if $gv.pointer {
+          my $vt = cast(GVariantType, $gv.pointer);
+          $raw ?? $vt !! GTK::Compat::VariantType.new($vt);
+        } else {
+          Nil;
+        }
       },
       STORE => -> $,  $val is copy {
-        warn "parameter-type does not allow writing"
+        warn 'parameter-type does not allow writing';
       }
     );
   }
 
   # Type: gchar
-  method property-name is rw  {
+  method property-name is rw  is also<property_name> {
     my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        warn "property-name does not allow reading"
+        warn 'property-name does not allow reading'
       },
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
@@ -133,43 +142,51 @@ class GTK::Compat::PropertyAction {
   }
 
   # Type: GVariant
-  method state is rw  {
+  method state (:$raw = False) is rw  {
     my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('state', $gv)
         );
-        GTK::Compat::Variant.new(
-          nativecast(GVariant, $gv.object), :!ref
-        );
+
+        do if $gv.object {
+          my $v = cast(GVariant, $gv.object);
+          $raw ?? $v !! $GTK::Compat::Variant.new($v, :!ref);
+        } else {
+          Nil;
+        }
       },
       STORE => -> $,  $val is copy {
-        warn "state does not allow writing"
+        warn 'state does not allow writing'
       }
     );
   }
 
   # Type: GVariantType
-  method state-type is rw  {
+  method state-type (:$raw = False) is rw  is also<state_type> {
     my GTK::Compat::Value $gv .= new( G_TYPE_BOXED );
     Proxy.new(
       FETCH => -> $ {
         $gv = GTK::Compat::Value.new(
           self.prop_get('state-type', $gv)
         );
-        GTK::Compat::VariantType.new(
-          nativecast(GVariantType, $gv.pointer )
-        );
+        do if $gv.pointer {
+          my $vt = cast(GVariantType, $gv.pointer);
+          $raw ?? $vt !! GTK::Compat::VariantType.new($vt);
+        } else {
+          Nil;
+        }
       },
       STORE => -> $, $val is copy {
-        warn "state-type does not allow writing"
+        warn 'state-type does not allow writing';
       }
     );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_property_action_get_type, $n, $t );
   }
 

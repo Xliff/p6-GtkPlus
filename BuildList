@@ -627,7 +627,6 @@ GTK::Compat::Event
 GTK::Compat::HashTable
 GTK::Compat::MenuModel
 GTK::Compat::Pixbuf
-GTK::Compat::PropertyAction
 GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::GFile
 GTK::Compat::Seat
@@ -653,6 +652,7 @@ GIO::FileIcon
 GIO::FilterInputStream
 GIO::FilterOutputStream
 GIO::MemoryOutputStream
+GIO::PropertyAction
 GIO::Roles::DtlsConnection
 GIO::Roles::Proxy
 GIO::Roles::SocketConnectable
