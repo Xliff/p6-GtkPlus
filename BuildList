@@ -74,6 +74,7 @@ GIO::Raw::InetAddressMask
 GIO::Raw::InetSocketAddress
 GIO::Raw::InputStream
 GIO::Raw::ListModel
+GIO::Raw::ListStore
 GIO::Raw::MemoryInputStream
 GIO::Raw::MemoryOutputStream
 GIO::Raw::MountOperation
@@ -576,6 +577,7 @@ GIO::FilenameCompleter
 GIO::InetAddress
 GIO::InetAddressMask
 GIO::InputStream
+GIO::ListStore
 GIO::MemoryInputStream
 GIO::MountOperation
 GIO::Notification

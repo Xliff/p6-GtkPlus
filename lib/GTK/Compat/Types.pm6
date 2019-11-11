@@ -1585,6 +1585,7 @@ class GIOChannel               is repr('CPointer') is export does GTK::Roles::Po
 class GIOStream                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GKeyFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GListModel               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GListStore               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GLoadableIcon            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMainContext             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GMainLoop                is repr('CPointer') is export does GTK::Roles::Pointers { }
