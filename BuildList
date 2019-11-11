@@ -73,6 +73,7 @@ GIO::Raw::InetAddress
 GIO::Raw::InetAddressMask
 GIO::Raw::InetSocketAddress
 GIO::Raw::InputStream
+GIO::Raw::ListModel
 GIO::Raw::MemoryInputStream
 GIO::Raw::MemoryOutputStream
 GIO::Raw::MountOperation
@@ -123,6 +124,7 @@ GIO::Roles::NetworkMonitor
 GIO::Roles::PollableInputStream
 GIO::Roles::ProxyResolver
 GIO::Roles::Seekable
+GIO::Roles::Signals::ListModel
 GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::Proxy
 GIO::Roles::Signals::SocketService
@@ -582,6 +584,7 @@ GIO::Resolver
 GIO::Roles::Action
 GIO::Roles::AppInfo
 GIO::Roles::DTlsServerConnection
+GIO::Roles::ListModel
 GIO::Roles::LoadableIcon
 GIO::Roles::TlsFileDatabase
 GIO::Roles::TlsServerConnection
