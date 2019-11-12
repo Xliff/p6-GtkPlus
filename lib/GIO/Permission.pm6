@@ -4,25 +4,25 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Permission;
 
-use GTK::Roles::Types;
+use GTK::Raw::Utils;
 
-class GTK::Compat::Permission {
-  also does GTK::Roles::Types;
+use GIO::Raw::Permission;
 
+class GIO::Permission {
   has GPermission $!p;
 
   submethod BUILD(:$permission) {
     $!p = $permission;
   }
 
-  method new (GPermission $p?) {
-    my $permission = $p // GPermission.new;
-    self.bless(:$permission);
+  multi method new-permission-obj (GPermission $permission) {
+    $permission ?? self.bless( :$permission ) !! Nil;
   }
 
-  method GTK::Compat::Types::GPermission is also<Permission> { $!p }
+  method GTK::Compat::Types::GPermission
+    is also<GPermission>
+  { $!p }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -32,67 +32,77 @@ class GTK::Compat::Permission {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method acquire (
-    GCancellable $cancellable,
+    GCancellable() $cancellable = GCancellable,
     CArray[Pointer[GError]] $error = gerror()
   ) {
-    my GCancellable $c = $cancellable // GCancellable;
     clear_error;
-    g_permission_acquire($!p, $c, $error);
+    my $rv = so g_permission_acquire($!p, $cancellable, $error);
     set_error($error);
+    $rv;
   }
 
-  method acquire_async  (
-    GCancellable $cancellable = GCancellable,
-    GAsyncReadyCallback $callback = GAsyncReadyCallback,
-    gpointer $user_data = gpointer
-  ) 
+  proto method acquire_async (|)
     is also<acquire-async>
-  {
-    g_permission_acquire_async($!p, $cancellable, $callback, $user_data);
+  { * }
+
+  multi method acquire_async (
+    &callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith(GCancellable, &callback, $user_data);
+  }
+  multi method acquire_async  (
+    GCancellable() $cancellable,
+    &callback,
+    gpointer $user_data = gpointer
+  ) {
+    g_permission_acquire_async($!p, $cancellable, &callback, $user_data);
   }
 
   method acquire_finish  (
-    GAsyncResult $result,
+    GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror()
-  ) 
+  )
     is also<acquire-finish>
   {
     clear_error
-    g_permission_acquire_finish($!p, $result, $error);
+    my $rv = so g_permission_acquire_finish($!p, $result, $error);
     set_error($error);
+    $rv;
   }
 
-  method get_allowed 
+  method get_allowed
     is also<
       get-allowed
       allowed
-    > 
+    >
   {
     so g_permission_get_allowed($!p);
   }
 
-  method get_can_acquire 
+  method get_can_acquire
     is also<
       get-can-acquire
       can_acquire
       can-acquire
-    > 
+    >
   {
     so g_permission_get_can_acquire($!p);
   }
 
-  method get_can_release 
+  method get_can_release
     is also<
       get-can-release
       can_relase
       can-release
-    > 
+    >
   {
     so g_permission_get_can_release($!p);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_permission_get_type, $n, $t );
   }
 
@@ -100,11 +110,12 @@ class GTK::Compat::Permission {
     Int() $allowed,
     Int() $can_acquire,
     Int() $can_release
-  ) 
+  )
     is also<impl-update>
   {
-    my @b = ($allowed, $can_acquire, $can_release);
-    my gboolean ($a, $ca, $cr) = self.RESOLVE-BOOL(@b);
+    my gboolean ($a, $ca, $cr) =
+      resolve-bool($allowed, $can_acquire, $can_release);
+
     g_permission_impl_update($!p, $a, $ca, $cr);
   }
 
@@ -113,29 +124,39 @@ class GTK::Compat::Permission {
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error;
-    g_permission_release($!p, $cancellable, $error);
+    my $rv = so g_permission_release($!p, $cancellable, $error);
     set_error($error);
+    $rv;
   }
 
-  method release_async  (
-    GCancellable $cancellable,
-    GAsyncReadyCallback $callback = GAsyncReadyCallback,
-    gpointer $user_data = gpointer
-  ) 
+  proto method release_async (|)
     is also<release-async>
-  {
-    g_permission_release_async($!p, $cancellable, $callback, $user_data);
+  { * }
+
+  multi method release_async  (
+    &callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith(GCancellable, &callback, $user_data);
+  }
+  multi method release_async  (
+    GCancellable() $cancellable,
+    &callback,
+    gpointer $user_data = gpointer
+  ) {
+    g_permission_release_async($!p, $cancellable, &callback, $user_data);
   }
 
   method release_finish (
-    GAsyncResult $result, 
+    GAsyncResult() $result,
     CArray[Pointer[GError]] $error = gerror()
-  ) 
+  )
     is also<release-finish>
   {
     clear_error;
-    g_permission_release_finish($!p, $result, $error);
+    my $rv = so g_permission_release_finish($!p, $result, $error);
     set_error($error);
+    $rv;
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

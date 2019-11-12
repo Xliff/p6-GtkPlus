@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Permission;
+unit package GIO::Raw::Permission;
 
 sub g_permission_acquire (
   GPermission $permission,
@@ -19,7 +19,7 @@ sub g_permission_acquire (
 sub g_permission_acquire_async (
   GPermission $permission,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (GObject, GAsyncResult, Pointer),
   gpointer $user_data
 )
   is native(gio)
@@ -83,7 +83,7 @@ sub g_permission_release (
 sub g_permission_release_async (
   GPermission $permission,
   GCancellable $cancellable,
-  GAsyncReadyCallback $callback,
+  &callback (GObject, GAsyncResult, Pointer),
   gpointer $user_data
 )
   is native(gio)

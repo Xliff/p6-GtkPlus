@@ -4,7 +4,7 @@ use GTK::Application;
 use GTK::Builder;
 use GTK::Statusbar;
 
-use GTK::Compat::Permission;
+use GIO::Permission;
 use GTK::Compat::RGBA;
 
 # HOPEFULLY FOR NOW!

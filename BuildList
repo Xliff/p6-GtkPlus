@@ -83,6 +83,7 @@ GIO::Raw::NetworkMonitor
 GIO::Raw::NetworkService
 GIO::Raw::Notification
 GIO::Raw::OutputStream
+GIO::Raw::Permission
 GIO::Raw::PollableInputStream
 GIO::Raw::PollableOutputStream
 GIO::Raw::Proxy
@@ -179,7 +180,6 @@ GTK::Compat::Raw::Main
 GTK::Compat::Raw::Menu
 GTK::Compat::Raw::MenuModel
 GTK::Compat::Raw::Notification
-GTK::Compat::Raw::Permission
 GTK::Compat::Raw::Pixbuf
 GTK::Compat::Raw::Pixbuf::Transforms
 GTK::Compat::Raw::Rectangle
@@ -243,6 +243,7 @@ GIO::DBus::Raw::Server
 GIO::DBus::Roles::Interface
 GIO::DBus::Roles::ObjectManager
 GIO::LaunchContext
+GIO::Permission
 GIO::Raw::DataOutputStream
 GIO::Raw::Drive
 GIO::Raw::DtlsClientConnection
@@ -293,7 +294,6 @@ GTK::Compat::MenuAttributeIter
 GTK::Compat::MenuItem
 GTK::Compat::MenuLinkIter
 GTK::Compat::Mutex
-GTK::Compat::Permission
 GTK::Compat::Pixbuf::Animation::Iter
 GTK::Compat::Pixbuf::Transforms
 GTK::Compat::PtrArray
