@@ -118,6 +118,7 @@ GIO::Raw::UnixSocketAddress
 GIO::Raw::VFS
 GIO::Raw::VolumeMonitor
 GIO::Roles::ActionGroup
+GIO::Roles::ActionMap
 GIO::Roles::AsyncResult
 GIO::Roles::Converter
 GIO::Roles::FileDescriptorBased
@@ -201,7 +202,6 @@ GTK::Compat::Raw::X11_Display
 GTK::Compat::Raw::X11_Screen
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
-GTK::Compat::Roles::ActionMap
 GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Roles::TypedBuffer
@@ -528,7 +528,6 @@ GTK::Compat::Roles::Signals
 GTK::Compat::Roles::Signals::Device
 GTK::Compat::Roles::Signals::Settings
 GTK::Compat::Screen
-GTK::Compat::SimpleActionGroup
 GTK::Compat::Value
 GTK::Compat::VariantDict
 GTK::DragContext
@@ -593,6 +592,7 @@ GIO::Roles::TlsServerConnection
 GIO::Settings
 GIO::SettingsBackend
 GIO::SimpleAction
+GIO::SimpleActionGroup
 GIO::SimpleProxyResolver
 GIO::SocketAddressEnumerator
 GIO::SocketControlMessage

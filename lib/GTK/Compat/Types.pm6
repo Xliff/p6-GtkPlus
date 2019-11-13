@@ -1707,11 +1707,11 @@ sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
     is native is symbol('sprintf') {}
 
 class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Str     $.name;
-  has Pointer $.activate;
-  has Str     $.parameter_type;
-  has Str     $.state;
-  has Pointer $.change_state;
+  has Str     $!name;
+  has Pointer $!activate;
+  has Str     $!parameter_type;
+  has Str     $!state;
+  has Pointer $!change_state;
 
   # Padding  - Not accessible
   has uint64  $!pad1;
@@ -1720,16 +1720,45 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
 
   submethod BUILD (
     :$name,
-    :$activate,
-    :$parameter_type,
-    :$state,
-    :$change_state
+    :&activate,
+    :$parameter_type = '',
+    :$state          = '',
+    :&change_state
   ) {
     self.name           = $name;
+    self.activate       = &activate     if &activate.defined;
     self.parameter_type = $parameter_type;
     self.state          = $state;
-    self.activate       = $activate     if $activate.defined;
-    self.change_state   = $change_state if $change_state.defined
+    self.change_state   = &change_state if &change_state.defined
+  }
+
+  method name is rw {
+    Proxy.new:
+      FETCH => -> $                { $!name },
+      STORE => -> $, Str() $val    { self.^attributes(:local)[0]
+                                         .set_value(self, $val)    };
+  }
+
+  method activate is rw {
+    Proxy.new:
+      FETCH => -> $ { $!activate },
+      STORE => -> $, \func {
+        $!activate := set_func_pointer( &(func), &sprintf-a);
+      };
+  }
+
+  method parameter_type is rw {
+    Proxy.new:
+      FETCH => -> $                { $!parameter_type },
+      STORE => -> $, Str() $val    { self.^attributes(:local)[2]
+                                         .set_value(self, $val)    };
+  }
+
+  method state is rw {
+    Proxy.new:
+      FETCH => -> $                { $!state },
+      STORE => -> $, Str() $val    { self.^attributes(:local)[3]
+                                         .set_value(self, $val)    };
   }
 
   method change_state is rw {
@@ -1740,53 +1769,14 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
       };
   }
 
-  method name is rw {
-    Proxy.new:
-      FETCH => -> $ { $.name },
-      STORE => -> $, Str() $val {
-        nqp::bindattr(
-          nqp::decont(self),
-          GActionEntry,
-          '$!name',
-          nqp::decont( $val )
-        );
-      }
-  }
-
-  method parameter_type is rw {
-    Proxy.new:
-      FETCH => -> $ { $.parameter_type },
-      STORE => -> $, Str() $val {
-        nqp::bindattr(
-          nqp::decont(self),
-          GActionEntry,
-          '$!parameter_type',
-          nqp::decont( $val )
-        );
-      }
-  }
-
-  method state is rw {
-    Proxy.new:
-      FETCH => -> $ { $.state },
-      STORE => -> $, Str() $val {
-        nqp::bindattr(
-          nqp::decont(self),
-          GActionEntry,
-          '$!state',
-          nqp::decont( $val )
-        );
-      }
-  }
-
   method new (
     $name,
-    $activate       = Pointer,
+    &activate       = Callable,
     $state          = Str,
     $parameter_type = Str,
-    $change_state   = Pointer
+    &change_state   = Callable
   ) {
-    self.bless(:$name, :$activate, :$parameter_type, :$state, :$change_state);
+    self.bless(:$name, :&activate, :$parameter_type, :$state, :&change_state);
   }
 
 }
@@ -1887,13 +1877,13 @@ sub sprintf-bp (
 sub sprintf-c (
   Blob,
   Str,
-  & (GSource, gint --> gboolean),
+  & (GSource, CArray[gint] --> gboolean),
   gpointer
  --> int64
 )
     is native is symbol('sprintf') { * }
 
-
+# XXX - Verify this!!
 sub sprintf-d (
   Blob,
   Str,
@@ -1912,11 +1902,14 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
                              #  gpointer    user_data);
   has Pointer $!finalize;    # (GSource    *source); /* Can be NULL */
 
+  sub p-default  (GSource, CArray[gint] $t is rw --> gboolean) {
+    $t[0] = 0;
+    1;
+  }
   sub cd-default (GSource --> gboolean) { 1 };
 
   submethod BUILD (
-    :$prepare   = -> GSource, gint $t is rw             --> gboolean { $t = 0;
-                                                                       1 },
+    :$prepare   = &p-default,
     :$check     = &cd-default,
     :$dispatch,
     :$finalize  = &cd-default

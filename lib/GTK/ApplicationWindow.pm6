@@ -7,7 +7,7 @@ use GTK::Raw::Types;
 
 use GTK::Raw::ApplicationWindow;
 
-use GTK::Compat::Roles::ActionMap;
+use GIO::Roles::ActionMap;
 
 use GTK::Window;
 
@@ -15,7 +15,7 @@ our subset ApplicationWindowAncestry is export
   where GtkApplicationWindow | GActionMap | WindowAncestry;
 
 class GTK::ApplicationWindow is GTK::Window {
-  also does GTK::Compat::Roles::ActionMap;
+  also does GIO::Roles::ActionMap;
 
   has GtkApplicationWindow $!aw;
 
@@ -56,7 +56,7 @@ class GTK::ApplicationWindow is GTK::Window {
         cast(GtkApplication, $_);
       }
     };
-    $!actmap //= cast(GActionMap, $appwindow);  # GTK::Compat::Roles::ActionMap
+    self.roleInit-ActionMap unless $!actmap;
     self.setWindow($to-parent);
   }
 

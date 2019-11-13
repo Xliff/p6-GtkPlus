@@ -7,12 +7,19 @@ use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
 
-role GTK::Compat::Roles::ActionMap {
+role GIO::Roles::ActionMap {
   has GActionMap $!actmap;
 
   method GTK::Compat::Types::GActionMap
-    is also<ActionMap>
+    is also<GActionMap>
   { $!actmap }
+
+  method roleInit-ActionMap {
+    $!actmap = cast(
+      GActionMap,
+      self.^attributes(:local)[0].get_value(self)
+    );
+  }
 
   method add_action (GAction() $action)
     is also<add-action>
@@ -20,19 +27,40 @@ role GTK::Compat::Roles::ActionMap {
     g_action_map_add_action($!actmap, $action);
   }
 
-  method add_action_entries (
+  proto method add_action_entries (|)
+    is also<add-action-entries>
+  { * }
+
+  multi method add_action_entries (
+    @entries,
+    gpointer $user_data = Pointer
+  ) {
+    @entries .= map({
+      do {
+        when GActionEntry                { $_ }
+        when .^can('GActionEntry').elems { .GActionEntry }
+        default {
+          die '@entries should only consist of GActionEntry compatible objects'
+        }
+      }
+    });
+    my $lb = GTK::Compat::Roles::TypedBuffer.new(@entries);
+
+    samewith($lb.p, @entries.elems, $user_data);
+  }
+  multi method add_action_entries (
     Pointer $entries,              # BLOCK of GActionEntry structs
     Int() $n_entries,
     gpointer $user_data = Pointer
-  )
-    is also<add-action-entries>
-  {
+  ) {
     my gint $n = resolve-int($n_entries);
+
     g_action_map_add_action_entries($!actmap, $entries, $n, $user_data);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_action_map_get_type, $n, $t );
   }
 

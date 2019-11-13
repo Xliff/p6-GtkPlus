@@ -10,7 +10,7 @@ use GTK::Raw::Application;
 use GTK::Raw::Window;
 
 use GTK::Compat::Roles::Object;
-use GTK::Compat::Roles::ActionMap;
+use GIO::Roles::ActionMap;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Application;
@@ -20,7 +20,7 @@ use GTK::Window;
 
 class GTK::Application is export {
   also does GTK::Compat::Roles::Object;
-  also does GTK::Compat::Roles::ActionMap;
+  also does GIO::Roles::ActionMap;
 
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;
@@ -48,7 +48,7 @@ class GTK::Application is export {
            :$window
   ) {
     self!setObject($!app = $app);
-    $!actmap = nativecast(GActionMap, $app);      # GTK::Compat::Roles::ActtionMap
+    self.roleInit-ActionMap;
 
     $!title  = $title;
     $!width  = $width;
@@ -94,7 +94,10 @@ class GTK::Application is export {
   }
 
   method GTK::Raw::Types::GtkApplication
-    is also<Application>
+    is also<
+      GtkApplication
+      Application
+    >
   { $!app }
 
   method init (GTK::Application:U: ) {
