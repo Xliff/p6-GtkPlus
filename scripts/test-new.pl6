@@ -20,11 +20,12 @@ sub MAIN( $rev = 'HEAD' ) {
     [ $_, $a, @buildlist.first(* eq $a, :k) // Inf ];
   });
 
-  for @files.sort( *[2] ) {
+  for @files.grep({ .[2] !~~ Inf }).sort( *[2] ) {
     unless .[2] {
       say "{ $_[0] } is not in the BuildList.";
       next;
     }
+
     next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
     # Temporary cheat.
     next if $_[0].ends-with('GFile.pm6');
