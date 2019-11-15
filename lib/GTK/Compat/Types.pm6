@@ -14,6 +14,12 @@ our $DEBUG is export = 0;
 
 unit package GTK::Compat::Types;
 
+my $bits;
+
+BEGIN {
+  $bits = $*KERNEL.bits == 32 ?? uint32 !! uint64;
+}
+
 # Cribbed from https://github.com/CurtTilmes/perl6-dbmysql/blob/master/lib/DB/MySQL/Native.pm6
 sub malloc  (size_t --> Pointer)                   is export is native {}
 sub realloc (Pointer, size_t --> Pointer)          is export is native {}
@@ -48,13 +54,14 @@ sub set_func_pointer(
   Pointer.new( $buf.subbuf(^$len).decode.Int );
 }
 
-constant glib       is export = 'glib-2.0',v0;
-constant gio        is export = 'gio-2.0',v0;
-constant gobject    is export = 'gobject-2.0',v0;
-constant cairo      is export = 'cairo',v2;
-constant gdk        is export = 'gdk-3',v0;
-constant gdk-pixbuf is export = 'gdk_pixbuf-2.0',v0;
-constant gtk        is export = 'gtk-3',v0;
+# ... to be conditionals...
+constant glib       is export  = 'glib-2.0',v0;
+constant gio        is export  = 'gio-2.0',v0;
+constant gobject    is export  = 'gobject-2.0',v0;
+constant cairo      is export  = 'cairo',v2;
+constant gdk        is export  = 'gdk-3',v0;
+constant gdk-pixbuf is export  = 'gdk_pixbuf-2.0',v0;
+constant gtk        is export  = 'gtk-3',v0;
 
 sub g_destroy_none(Pointer)
   is export
@@ -121,42 +128,45 @@ sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
 
 constant GDK_MAX_TIMECOORD_AXES is export = 128;
 
-constant cairo_t             is export := Cairo::cairo_t;
-constant cairo_format_t      is export := Cairo::cairo_format_t;
-constant cairo_pattern_t     is export := Cairo::cairo_pattern_t;
-constant cairo_region_t      is export := Pointer;
+constant cairo_t                 is export := Cairo::cairo_t;
+constant cairo_format_t          is export := Cairo::cairo_format_t;
+constant cairo_pattern_t         is export := Cairo::cairo_pattern_t;
+constant cairo_region_t          is export := Pointer;
 
-constant gboolean            is export := uint32;
-constant gchar               is export := Str;
-constant gconstpointer       is export := Pointer;
-constant gdouble             is export := num64;
-constant gfloat              is export := num32;
-constant gint                is export := int32;
-constant gint8               is export := int8;
-constant gint16              is export := int16;
-constant gint32              is export := int32;
-constant gint64              is export := int64;
-constant glong               is export := int64;
-constant goffset             is export := uint64;
-constant gpointer            is export := Pointer;
-constant gsize               is export := uint64;
-constant gssize              is export := int64;
-constant guchar              is export := Str;
-constant gshort              is export := int8;
-constant gushort             is export := uint8;
-constant guint               is export := uint32;
-constant guint8              is export := uint8;
-constant guint16             is export := uint16;
-constant guint32             is export := uint32;
-constant guint64             is export := uint64;
-constant gulong              is export := uint64;
-constant gunichar            is export := uint32;
-constant gunichar2           is export := uint16;
-constant va_list             is export := Pointer;
-constant time_t              is export := uint64;
-constant uid_t               is export := uint32;
-constant gid_t               is export := uint32;
-constant pid_t               is export := int32;
+constant gboolean                is export := uint32;
+constant gchar                   is export := Str;
+constant gconstpointer           is export := Pointer;
+constant gdouble                 is export := num64;
+constant gfloat                  is export := num32;
+constant gint                    is export := int32;
+constant gint8                   is export := int8;
+constant gint16                  is export := int16;
+constant gint32                  is export := int32;
+constant gint64                  is export := int64;
+constant glong                   is export := int64;
+constant goffset                 is export := uint64;
+constant gpointer                is export := Pointer;
+constant gsize                   is export := uint64;
+constant gssize                  is export := int64;
+constant guchar                  is export := Str;
+constant gshort                  is export := int8;
+constant gushort                 is export := uint8;
+constant guint                   is export := uint32;
+constant guint8                  is export := uint8;
+constant guint16                 is export := uint16;
+constant guint32                 is export := uint32;
+constant guint64                 is export := uint64;
+constant gulong                  is export := uint64;
+constant gunichar                is export := uint32;
+constant gunichar2               is export := uint16;
+constant va_list                 is export := Pointer;
+constant time_t                  is export := uint64;
+constant uid_t                   is export := uint32;
+constant gid_t                   is export := uint32;
+constant pid_t                   is export := int32;
+
+# Conditionals!
+constant GPid                    is export := $bits;
 
 # Function Pointers
 constant GAsyncReadyCallback     is export := Pointer;
@@ -167,6 +177,7 @@ constant GCompareFunc            is export := Pointer;
 constant GCopyFunc               is export := Pointer;
 constant GClosureNotify          is export := Pointer;
 constant GDestroyNotify          is export := Pointer;
+constant GDesktopAppLaunchCallback is export := Pointer;
 constant GEqualFunc              is export := Pointer;
 constant GFunc                   is export := Pointer;
 constant GHFunc                  is export := Pointer;
@@ -182,11 +193,11 @@ constant GSignalAccumulator      is export := Pointer;
 constant GSignalEmissionHook     is export := Pointer;
 constant GSignalCMarshaller      is export := Pointer;
 constant GSignalCVaMarshaller    is export := Pointer;
+constant GSpawnChildSetupFunc    is export := Pointer;
 constant GThreadFunc             is export := Pointer;
 constant GVfsFileLookupFunc      is export := Pointer;
 
 constant GDate                   is export := uint64;
-constant GPid                    is export := gint;
 constant GQuark                  is export := uint32;
 constant GStrv                   is export := CArray[Str];
 constant GTimeSpan               is export := int64;
@@ -1527,6 +1538,8 @@ class GBufferedOutputStream    is repr('CPointer') is export does GTK::Roles::Po
 class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GBytesIcon               is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDesktopAppInfo          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDesktopAppInfoLookup    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDrive                   is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GCharsetConverter        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }

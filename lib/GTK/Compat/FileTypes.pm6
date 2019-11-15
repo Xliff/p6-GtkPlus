@@ -167,6 +167,44 @@ our enum GResourceLookupFlagsEnum is export (
   G_RESOURCE_LOOKUP_FLAGS_NONE  => 0
 );
 
+constant GSpawnError is export := guint;
+our enum GSpawnErrorEnum is export (
+  'G_SPAWN_ERROR_FORK',        # fork failed due to lack of memory */
+  'G_SPAWN_ERROR_READ',        # read or select on pipes failed */
+  'G_SPAWN_ERROR_CHDIR',       # changing to working dir failed */
+  'G_SPAWN_ERROR_ACCES',       # execv() returned EACCES */
+  'G_SPAWN_ERROR_PERM',        # execv() returned EPERM */
+  'G_SPAWN_ERROR_TOO_BIG',     # execv() returned E2BIG */
+  'G_SPAWN_ERROR_NOEXEC',      # execv() returned ENOEXEC */
+  'G_SPAWN_ERROR_NAMETOOLONG', # ""  "" ENAMETOOLONG */
+  'G_SPAWN_ERROR_NOENT',       # ""  "" ENOENT */
+  'G_SPAWN_ERROR_NOMEM',       # ""  "" ENOMEM */
+  'G_SPAWN_ERROR_NOTDIR',      # ""  "" ENOTDIR */
+  'G_SPAWN_ERROR_LOOP',        # ""  "" ELOOP   */
+  'G_SPAWN_ERROR_TXTBUSY',     # ""  "" ETXTBUSY */
+  'G_SPAWN_ERROR_IO',          # ""  "" EIO */
+  'G_SPAWN_ERROR_NFILE',       # ""  "" ENFILE */
+  'G_SPAWN_ERROR_MFILE',       # ""  "" EMFLE */
+  'G_SPAWN_ERROR_INVAL',       # ""  "" EINVAL */
+  'G_SPAWN_ERROR_ISDIR',       # ""  "" EISDIR */
+  'G_SPAWN_ERROR_LIBBAD',      # ""  "" ELIBBAD */
+  'G_SPAWN_ERROR_FAILED'       # other fatal failure
+);
+
+our constant GSpawnFlags is export := guint32;
+enum GSpawnFlagsEnum is export (
+  G_SPAWN_DEFAULT                => 0,
+  G_SPAWN_LEAVE_DESCRIPTORS_OPEN => 1,
+  G_SPAWN_DO_NOT_REAP_CHILD      => 1 +< 1,
+  G_SPAWN_SEARCH_PATH            => 1 +< 2,
+  G_SPAWN_STDOUT_TO_DEV_NULL     => 1 +< 3,
+  G_SPAWN_STDERR_TO_DEV_NULL     => 1 +< 4,
+  G_SPAWN_CHILD_INHERITS_STDIN   => 1 +< 5,
+  G_SPAWN_FILE_AND_ARGV_ZERO     => 1 +< 6,
+  G_SPAWN_SEARCH_PATH_FROM_ENVP  => 1 +< 7,
+  G_SPAWN_CLOEXEC_PIPES          => 1 +< 8
+);
+
 constant GTlsAuthenticationMode is export := guint;
 our enum GTlsAuthenticationModeEnum is export <
   G_TLS_AUTHENTICATION_NONE

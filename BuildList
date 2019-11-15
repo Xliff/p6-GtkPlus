@@ -245,6 +245,7 @@ GIO::DBus::Roles::ObjectManager
 GIO::LaunchContext
 GIO::Permission
 GIO::Raw::DataOutputStream
+GIO::Raw::DesktopAppInfo
 GIO::Raw::Drive
 GIO::Raw::DtlsClientConnection
 GIO::Raw::DtlsConnection
@@ -651,6 +652,7 @@ GTK::TextIter
 GIO::BytesIcon
 GIO::DBus::Address
 GIO::DBus::Message
+GIO::DesktopAppInfo
 GIO::FileAttributeInfoList
 GIO::FileEnumerator
 GIO::FileIcon
