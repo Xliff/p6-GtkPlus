@@ -1411,4 +1411,48 @@ class GIO::DBus::Connection {
     g_dbus_connection_unregister_subtree($!dc, $r);
   }
 
+  method export_menu_model (
+    Str() $object_path,
+    GMenuModel() $menu,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    clear_error;
+    my $rv = g_dbus_connection_export_menu_model(
+      $!dc,
+      $object_path,
+      $menu,
+      $error
+    );
+    set_error($error);
+    $rv;
+  }
+
+  method unexport_menu_model (Int() $export_id) {
+    my guint $e = $export_id;
+
+    g_dbus_connection_unexport_menu_model($!dc, $e);
+  }
+
+  method export_action_group (
+    Str() $object_path,
+    GActionGroup() $action_group,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    clear_error;
+    my $rv = g_dbus_connection_export_action_group(
+      $!dc,
+      $object_path,
+      $action_group,
+      $error
+    );
+    set_error($error);
+    $rv;
+  }
+
+  method unexport_action_group (Int() $export_id) {
+    my guint $e = $export_id;
+
+    g_dbus_connection_unexport_action_group($!dc, $e);
+  }
+
 }

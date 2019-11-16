@@ -474,3 +474,39 @@ sub g_dbus_connection_send_message_with_reply (
   is native(gio)
   is export
 { * }
+
+
+### gio/gmenuexporter.h
+
+sub g_dbus_connection_export_menu_model (
+  GDBusConnection $connection,
+  Str $object_path,
+  GMenuModel $menu,
+  CArray[Pointer[GError]] $error
+)
+  returns guint
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_connection_unexport_menu_model (
+  GDBusConnection $connection,
+  guint $export_id
+)
+  is native(gio)
+  is export
+{ * }
+
+
+### gio/gactiongroupexporter.h
+
+sub g_dbus_connection_export_action_group (GDBusConnection $connection, Str $object_path, GActionGroup $action_group, CArray[Pointer[GError]] $error)
+  returns guint
+  is native(gio)
+  is export
+{ * }
+
+sub g_dbus_connection_unexport_action_group (GDBusConnection $connection, guint $export_id)
+  is native(gio)
+  is export
+{ * }
