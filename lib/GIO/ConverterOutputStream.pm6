@@ -92,6 +92,9 @@ class GIO::ConverterOutputStream is GIO::FilterOutputStream {
 
 }
 
+
+### gio/gconverteroutputstream.h
+
 sub g_converter_output_stream_get_converter (
   GConverterOutputStream $converter_stream
 )
