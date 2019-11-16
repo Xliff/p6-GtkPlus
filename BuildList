@@ -243,7 +243,6 @@ GIO::DBus::Raw::Server
 GIO::DBus::Roles::Interface
 GIO::DBus::Roles::ObjectManager
 GIO::LaunchContext
-GIO::Permission
 GIO::Raw::DataOutputStream
 GIO::Raw::DesktopAppInfo
 GIO::Raw::Drive
@@ -582,6 +581,7 @@ GIO::MemoryInputStream
 GIO::MountOperation
 GIO::Notification
 GIO::OutputStream
+GIO::Permission
 GIO::Resolver
 GIO::Roles::Action
 GIO::Roles::AppInfo
@@ -594,6 +594,7 @@ GIO::Settings
 GIO::SettingsBackend
 GIO::SimpleAction
 GIO::SimpleActionGroup
+GIO::SimplePermission
 GIO::SimpleProxyResolver
 GIO::SocketAddressEnumerator
 GIO::SocketControlMessage

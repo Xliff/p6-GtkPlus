@@ -1646,6 +1646,7 @@ class GSettingsSchemaKey       is repr('CPointer') is export does GTK::Roles::Po
 class GSettingsSchemaSource    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleAction            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleActionGroup       is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GSimplePermission        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleProxyResolver     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSliceConfig             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GResolver                is repr('CPointer') is export does GTK::Roles::Pointers { }

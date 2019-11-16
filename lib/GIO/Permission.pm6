@@ -9,11 +9,19 @@ use GTK::Raw::Utils;
 
 use GIO::Raw::Permission;
 
+use GTK::Compat::Roles::Object;
+
 class GIO::Permission {
   has GPermission $!p;
 
   submethod BUILD(:$permission) {
+    self.setPermission($permission);
+  }
+
+  method setPermission (GPermission $permission) {
     $!p = $permission;
+
+    self.roleInit-Object;
   }
 
   multi method new-permission-obj (GPermission $permission) {
