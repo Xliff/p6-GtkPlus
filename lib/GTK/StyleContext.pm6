@@ -56,7 +56,8 @@ class GTK::StyleContext {
   }
   multi method new {
     my $context = gtk_style_context_new();
-    self.bless(:$context);
+
+    $context ?? self.bless(:$context) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -76,7 +77,8 @@ class GTK::StyleContext {
         GtkTextDirection( gtk_style_context_get_direction($!sc) );
       },
       STORE => sub ($, Int() $direction is copy) {
-        my guint $d = resolve-uint($direction);
+        my guint $d = $direction;
+
         gtk_style_context_set_direction($!sc, $d);
       }
     );
@@ -99,7 +101,8 @@ class GTK::StyleContext {
         GtkJunctionSides( gtk_style_context_get_junction_sides($!sc) );
       },
       STORE => sub ($, Int() $sides is copy) {
-        my guint $s = resolve-uint($sides);
+        my guint $s = $sides;
+
         gtk_style_context_set_junction_sides($!sc, $s);
       }
     );
@@ -133,7 +136,8 @@ class GTK::StyleContext {
         gtk_style_context_get_scale($!sc);
       },
       STORE => sub ($, Int() $scale is copy) {
-        my gint $s = resolve-uint($scale);
+        my gint $s = $scale;
+
         gtk_style_context_set_scale($!sc, $s);
       }
     );
@@ -144,7 +148,7 @@ class GTK::StyleContext {
       FETCH => sub ($) {
         GTK::Compat::Screen.new( gtk_style_context_get_screen($!sc) );
       },
-      STORE => sub ($, GTK::Compat::Types::GdkScreen() $screen is copy) {
+      STORE => sub ($, GdkScreen() $screen is copy) {
         gtk_style_context_set_screen($!sc, $screen);
       }
     );
@@ -157,7 +161,8 @@ class GTK::StyleContext {
         gtk_style_context_get_state($!sc);
       },
       STORE => sub ($, Int() $flags is copy) {
-        my guint $f = resolve-uint($flags);
+        my guint $f = $flags;
+
         gtk_style_context_set_state($!sc, $f);
       }
     );
@@ -177,7 +182,7 @@ class GTK::StyleContext {
         );
         nativecast(GdkFrameClock, $gv.object);
       },
-      STORE => -> $, GdkFrameClock $val is copy {
+      STORE => -> $, GdkFrameClock() $val is copy {
         $gv.object = $val;
         self.prop_set('paint-clock', $gv);
       }
@@ -206,6 +211,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     GTK::Render.activity($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -230,6 +236,7 @@ class GTK::StyleContext {
     Num() $size
   ) {
     my gdouble ($aa, $xx, $yy, $ss) = ($angle, $x, $y, $size);
+
     GTK::Render.arrow($context, $cr, $angle, $xx, $yy, $ss);
   }
 
@@ -244,6 +251,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     samewith($!sc, $cr, $xx, $yy, $w, $h);
   }
   multi method render_background (
@@ -255,6 +263,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     GTK::Render.background($context, $cr, $xx, $yy, $w, $h);
   }
 
@@ -282,6 +291,7 @@ class GTK::StyleContext {
     GdkRectangle() $out_clip
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     GTK::Render.background_get_clip($context, $xx, $yy, $w, $h, $out_clip);
   }
 
@@ -306,6 +316,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my num64 ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     GTK::Render.check($context, $cr, $x, $y, $width, $height);
   }
 
@@ -330,6 +341,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     GTK::Render.expander($context, $cr, $xx, $yy, $w, $h);
   }
 
@@ -356,7 +368,8 @@ class GTK::StyleContext {
     Int() $gap_side
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
-    my guint $gs = resolve-uint($gap_side);
+    my guint $gs = $gap_side;
+
     GTK::Render.extension($context, $cr, $xx, $yy, $w, $h, $gs);
   }
 
@@ -381,6 +394,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     GTK::Render.focus($context, $cr, $xx, $yy, $w, $h);
   }
 
@@ -405,6 +419,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     GTK::Render.frame($context, $cr, $xx, $yy, $w, $h);
   }
 
@@ -443,7 +458,8 @@ class GTK::StyleContext {
   ) {
     my num64 ($xx, $yy, $w, $h, $g0, $g1)
       = ($x, $y, $width, $height, $xy0_gap, $xy1_gap);
-    my guint $gs = resolve-uint($gap_side);
+    my guint $gs = $gap_side;
+
     GTK::Render.frame_gap($context, $cr, $xx, $yy, $w, $h, $gs, $g0, $g1);
   }
 
@@ -468,6 +484,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     GTK::Render.handle($context, $cr, $xx, $yy, $w, $h);
   }
 
@@ -490,6 +507,7 @@ class GTK::StyleContext {
     Num() $y
   ) {
     my num64 ($xx, $yy) = ($x, $y);
+
     GTK::Render.icon($context, $cr, $pixbuf, $xx, $yy);
   }
 
@@ -509,7 +527,8 @@ class GTK::StyleContext {
   )
     is also<render_icon-pixbuf>
   {
-    my guint $s = resolve-uint($size);
+    my guint $s = $size;
+
     GTK::Render.icon_pixbuf($context, $source, $s);
   }
 
@@ -532,6 +551,7 @@ class GTK::StyleContext {
     Num() $y
   ) {
     my num64 ($xx, $yy) = ($x, $y);
+
     GTK::Render.icon_surface($context, $cr, $surface, $xx, $yy);
   }
 
@@ -557,10 +577,10 @@ class GTK::StyleContext {
     Int() $i,
     Int() $d                  # PangoDirection $d
   ) {
-    my @u = ($l, $d);
-    my guint ($ll, $dd) = resolve-uint(@u);
+    my guint ($ll, $dd) = ($l, $d);
     my gdouble ($xx, $yy) = ($x, $y);
-    my gint $ii = resolve-int($i);
+    my gint $ii = $i;
+
     GTK::Render.insertion_cursor($context, $cr, $xx, $yy, $ll, $ii, $dd);
   }
 
@@ -583,7 +603,8 @@ class GTK::StyleContext {
     Int() $l                  # PangoLayout $l
   ) {
     my gdouble ($xx, $yy) = ($x, $y);
-    my guint $ll = resolve-uint($l);
+    my guint $ll = $l;
+
     GTK::Render.layout($context, $cr, $xx, $yy, $ll);
   }
 
@@ -608,6 +629,7 @@ class GTK::StyleContext {
     Num() $y1
   ) {
     my gdouble ($xx0, $yy0, $xx1, $yy1);
+
     GTK::Render.line($context, $cr, $xx0, $yy0, $xx1, $yy1);
   }
 
@@ -632,6 +654,7 @@ class GTK::StyleContext {
     Num() $height
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     GTK::Render.option($context, $cr, $xx, $yy, $w, $h);
   }
 
@@ -658,7 +681,8 @@ class GTK::StyleContext {
     Int() $orientation
   ) {
     my num64 ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
-    my guint $o = resolve-uint($orientation);
+    my guint $o = $orientation;
+
     GTK::Render.slider($context, $cr, $xx, $yy, $w, $h, $o);
   }
 
@@ -668,21 +692,24 @@ class GTK::StyleContext {
     gtk_style_context_add_class($!sc, $class_name);
   }
 
-  method add_provider (GtkStyleProvider $provider, Int() $priority)
+  method add_provider (GtkStyleProvider() $provider, Int() $priority)
     is also<add-provider>
   {
-    my guint $p = resolve-uint($priority);
+    my guint $p = $priority;
+
     gtk_style_context_add_provider($!sc, $provider, $p);
   }
 
   method add_provider_for_screen (
+    GTK::StyleContext:U:
     GdkScreen() $screen,
-    GtkStyleProvider $provider,
+    GtkStyleProvider() $provider,
     Int() $priority
   )
     is also<add-provider-for-screen>
   {
-    my guint $p = resolve-uint($priority);
+    my guint $p = $priority;
+
     gtk_style_context_add_provider_for_screen($screen, $provider, $p);
   }
 
@@ -699,51 +726,101 @@ class GTK::StyleContext {
     gtk_style_context_cancel_animations($!sc, $region_id);
   }
 
-  method get_background_color (
-    Int() $state,
-    GdkRGBA $color
-  )
+  proto method get_background_color (|)
     is also<get-background-color>
-  {
-    my guint $s = resolve-uint($state);
+  { * }
+
+  multi method get_background_color (Int() $state) {
+    my $c = GdkRGBA.new;
+
+    samewith($state, $c);
+    $c;
+  }
+  multi method get_background_color (Int() $state, GdkRGBA $color) {
+    my guint $s = $state;
+
     gtk_style_context_get_background_color($!sc, $s, $color);
   }
 
-  method get_border (Int() $state, GtkBorder $border)
+  proto method get_border (|)
     is also<get-border>
-  {
-    my guint $s = resolve-uint($state);
+  { * }
+
+  multi method get_border (Int() $state) {
+    my $b = GtkBorder.new;
+
+    samewith($state, $b);
+    $b;
+  }
+  multi method get_border (Int() $state, GtkBorder $border) {
+    my guint $s = $state;
+
     gtk_style_context_get_border($!sc, $s, $border);
   }
 
   method get_border_color (Int() $state, GdkRGBA $color)
     is also<get-border-color>
   {
-    my guint $s = resolve-uint($state);
+    my guint $s = $state;
+
     gtk_style_context_get_border_color($!sc, $s, $color);
   }
 
-  method get_color (Int() $state, GdkRGBA $color) is also<get-color> {
-    my guint $s = resolve-uint($state);
+  proto method get_color(|)
+    is also<get-color>
+  { * }
+
+  multi method get_color (Int() $state)  {
+    my $c = GdkRGBA.new;
+
+    samewith($state, $c);
+    $c;
+  }
+  multi method get_color (Int() $state, GdkRGBA $color)  {
+    my guint $s = $state;
+
     gtk_style_context_get_color($!sc, $s, $color);
   }
 
-  method get_font (Int() $state) is also<get-font> {
-    my guint $s = resolve-uint($state);
-    Pango::FontDescription.new( gtk_style_context_get_font($!sc, $s) );
+  method get_font (Int() $state, :$raw = False) is also<get-font> {
+    my guint $s = $state;
+    my $f = gtk_style_context_get_font($!sc, $s);
+
+    $f ??
+      ( $raw ?? $f !! Pango::FontDescription.new($f) )
+      !!
+      Nil;
   }
 
-  method get_margin (Int() $state, GtkBorder $margin)
+  proto method get_margin (|)
     is also<get-margin>
-  {
-    my guint $s = resolve-uint($state);
+  { * }
+
+  multi method get_margin (Int() $state) {
+    my $b = GtkBorder.new;
+
+    samewith($state, $b);
+    $b;
+  }
+  multi method get_margin (Int() $state, GtkBorder $margin) {
+    my guint $s = $state;
+
     gtk_style_context_get_margin($!sc, $s, $margin);
   }
 
-  method get_padding (Int() $state, GtkBorder $padding)
+  proto method get_padding (|)
     is also<get-padding>
-  {
-    my guint $s = resolve-uint($state);
+  { * }
+
+  multi method get_padding (Int() $state) {
+    my $b = GtkBorder.new;
+
+    samewith($state, $b);
+    $b;
+  }
+  multi method get_padding (Int() $state, GtkBorder $padding) {
+    my guint $s = $state;
+
     gtk_style_context_get_padding($!sc, $s, $padding);
   }
 
@@ -769,7 +846,8 @@ class GTK::StyleContext {
     $value is rw,
     :$raw = False
   ) {
-    my gint $s = resolve-uint($state);
+    my gint $s = $state;
+
     my $gv = $value // GValue.new;
     $gv .= GValue if $gv ~~ GTK::Compat::Value;
     die 'Cannot obtain proper value object!' unless $gv ~~ GValue;
@@ -800,23 +878,29 @@ class GTK::StyleContext {
   }
 
   method has_class (Str() $class_name) is also<has-class> {
-    gtk_style_context_has_class($!sc, $class_name);
+    so gtk_style_context_has_class($!sc, $class_name);
   }
 
   method has_region (Str() $region_name, Int() $flags_return)
     is also<has-region>
   {
-    my guint $fr = resolve-uint($flags_return);
-    gtk_style_context_has_region($!sc, $region_name, $fr);
+    my guint $fr = $flags_return;
+
+    so gtk_style_context_has_region($!sc, $region_name, $fr);
   }
 
   method invalidate {
     gtk_style_context_invalidate($!sc);
   }
 
-  method list_classes is also<list-classes> {
-    # GET GLIST WORKING!!!
-    gtk_style_context_list_classes($!sc);
+  method list_classes (:$glist = False) is also<list-classes> {
+    my $sl = gtk_style_context_list_classes($!sc);
+
+    return Nil unless $sl;
+    return $sl if     $glist;
+
+    $sl = GTK::Compat::GList.new($sl) but GTK::Compat::Roles::ListData[Str];
+    $sl.Array;
   }
 
   method list_regions is also<list-regions> {
@@ -841,8 +925,8 @@ class GTK::StyleContext {
   )
     is also<notify-state-change>
   {
-    my @u = ($state, $state_value);
-    my guint ($s, $sv) = resolve-uint(@u);
+    my guint ($s, $sv) = ($state, $state_value);
+
     gtk_style_context_notify_state_change($!sc, $window, $region_id, $s, $sv);
   }
 
@@ -894,8 +978,8 @@ class GTK::StyleContext {
   method scroll_animations (GdkWindow() $window, Int() $dx, Int() $dy)
     is also<scroll-animations>
   {
-    my @i = ($dx, $dy);
-    my gint ($ddx, $ddy) = resolve-int(@i);
+    my gint ($ddx, $ddy) = ($dx, $dy);
+
     gtk_style_context_scroll_animations($!sc, $window, $ddx, $ddy);
   }
 
@@ -907,12 +991,14 @@ class GTK::StyleContext {
     is also<state-is-running>
   {
     my gdouble $pp = $progress;
-    my guint $s = resolve-uint($state);
+    my guint $s = $state;
+
     gtk_style_context_state_is_running($!sc, $s, $pp);
   }
 
   method to_string (Int() $flags = self.state) is also<to-string Str> {
-    my guint $f = resolve-uint($flags);
+    my guint $f = $flags;
+
     gtk_style_context_to_string($!sc, $f);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -564,11 +564,11 @@ GTK::WindowGroup
 GIO::Cancellable
 GIO::CharsetConverter
 GIO::Credentials
+GIO::DBus::ActionGroup
 GIO::DBus::AuthObserver
 GIO::DBus::InterfaceSkeleton
 GIO::DBus::ObjectSkeleton
 GIO::DBus::Proxy
-GIO::DBus::Raw::ActionGroup
 GIO::DBus::Server
 GIO::Emblem
 GIO::EmblemedIcon
