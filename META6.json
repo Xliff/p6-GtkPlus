@@ -578,6 +578,7 @@
       "GIO::DBus::InterfaceSkeleton"                   :  "lib/GIO/DBus/InterfaceSkeleton.pm6"                 ,
       "GIO::DBus::ObjectSkeleton"                      :  "lib/GIO/DBus/ObjectSkeleton.pm6"                    ,
       "GIO::DBus::Proxy"                               :  "lib/GIO/DBus/Proxy.pm6"                             ,
+      "GIO::DBus::Raw::ActionGroup"                    :  "lib/GIO/DBus/Raw/ActionGroup.pm6"                   ,
       "GIO::DBus::Server"                              :  "lib/GIO/DBus/Server.pm6"                            ,
       "GIO::Emblem"                                    :  "lib/GIO/Emblem.pm6"                                 ,
       "GIO::EmblemedIcon"                              :  "lib/GIO/EmblemedIcon.pm6"                           ,

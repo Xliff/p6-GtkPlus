@@ -1555,6 +1555,7 @@ class GDatagramBased           is repr('CPointer') is export does GTK::Roles::Po
 class GDtlsClientConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDtlsConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDtlsServerConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GDBusActionGroup         is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusAuthObserver        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GDBusInterface           is repr('CPointer') is export does GTK::Roles::Pointers { }
