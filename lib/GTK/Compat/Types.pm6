@@ -1633,6 +1633,7 @@ class GProxyAddressEnumerator  is repr('CPointer') is export does GTK::Roles::Po
 class GProxyResolver           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRand                    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GResource                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GRemoteActionGroup       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GRWLock                  is repr('CPointer') is export does GTK::Roles::Pointers { }
 # To be converted into CStruct when I'm not so scurred of it.
 # It has bits.... BITS! -- See https://stackoverflow.com/questions/1490092/c-c-force-bit-field-order-and-alignment

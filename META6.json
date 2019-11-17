@@ -136,6 +136,7 @@
       "GIO::Roles::NetworkMonitor"                     :  "lib/GIO/Roles/NetworkMonitor.pm6"                   ,
       "GIO::Roles::PollableInputStream"                :  "lib/GIO/Roles/PollableInputStream.pm6"              ,
       "GIO::Roles::ProxyResolver"                      :  "lib/GIO/Roles/ProxyResolver.pm6"                    ,
+      "GIO::Roles::RemoteActionGroup"                  :  "lib/GIO/Roles/RemoteActionGroup.pm6"                ,
       "GIO::Roles::Seekable"                           :  "lib/GIO/Roles/Seekable.pm6"                         ,
       "GIO::Roles::Signals::ListModel"                 :  "lib/GIO/Roles/Signals/ListModel.pm6"                ,
       "GIO::Roles::Signals::MountOperation"            :  "lib/GIO/Roles/Signals/MountOperation.pm6"           ,

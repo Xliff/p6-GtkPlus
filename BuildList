@@ -126,6 +126,7 @@ GIO::Roles::Initable
 GIO::Roles::NetworkMonitor
 GIO::Roles::PollableInputStream
 GIO::Roles::ProxyResolver
+GIO::Roles::RemoteActionGroup
 GIO::Roles::Seekable
 GIO::Roles::Signals::ListModel
 GIO::Roles::Signals::MountOperation
