@@ -512,3 +512,4 @@
 /usr/include/glib-2.0/gio/gaction.h
 /usr/include/glib-2.0/gio/gappinfo.h
 /usr/include/glib-2.0/gio/gconverteroutputstream.h
+/usr/include/glib-2.0/gio/gremoteactiongroup.h

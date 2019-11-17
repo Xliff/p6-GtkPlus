@@ -372,6 +372,7 @@ sub MAIN (
 
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
+    say "\n\n### $filename\n";
     outputSub( %methods{$_} )     for %methods.keys.sort;
     outputSub( %getset{$_}<get> ) for  %getset.keys.sort;
     outputSub( %getset{$_}<set> ) for  %getset.keys.sort;
