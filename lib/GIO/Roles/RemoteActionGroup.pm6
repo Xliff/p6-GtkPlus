@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Compat::Types;
@@ -11,7 +13,11 @@ role GIO::Roles::RemoteActionGroup {
 
   has GRemoteActionGroup $!rag;
 
-  method roleInit-RemoteActionGroup {
+  method GTK::Compat::Types::GRemoteActionGroup
+    is also<GRemoteActionGroup>
+  { $!rag }
+
+  method roleInit-RemoteActionGroup is also<roleInit_RemoteActionGroup> {
     $!rag = cast(
       GRemoteActionGroup,
       self.^attributes(:local)[0].get_value(self)
@@ -22,7 +28,9 @@ role GIO::Roles::RemoteActionGroup {
     Str() $action_name,
     GVariant() $parameter,
     GVariant() $platform_data
-  ) {
+  )
+    is also<activate-action-full>
+  {
     g_remote_action_group_activate_action_full(
       $!rag,
       $action_name,
@@ -35,7 +43,9 @@ role GIO::Roles::RemoteActionGroup {
     Str() $action_name,
     GVariant() $value,
     GVariant() $platform_data
-  ) {
+  )
+    is also<change-action-state-full>
+  {
     g_remote_action_group_change_action_state_full(
       $!rag,
       $action_name,
@@ -44,7 +54,7 @@ role GIO::Roles::RemoteActionGroup {
     );
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &g_remote_action_group_get_type, $n, $t );
