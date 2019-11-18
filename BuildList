@@ -65,6 +65,7 @@ GIO::Raw::DataInputStream
 GIO::Raw::DatagramBased
 GIO::Raw::EmblemedIcon
 GIO::Raw::FileEnumerator
+GIO::Raw::FileIOStream
 GIO::Raw::FilenameCompleter
 GIO::Raw::FilterInputStream
 GIO::Raw::FilterOutputStream
@@ -658,6 +659,7 @@ GIO::DBus::Message
 GIO::DesktopAppInfo
 GIO::FileAttributeInfoList
 GIO::FileEnumerator
+GIO::FileIOStream
 GIO::FileIcon
 GIO::FilterInputStream
 GIO::FilterOutputStream
