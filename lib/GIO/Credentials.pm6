@@ -10,7 +10,7 @@ use GIO::Raw::Credentials;
 use GTK::Compat::Roles::Object;
 
 class GIO::Credentials {
-  has GCredentials $!c;
+  has GCredentials $!c is implementor;
 
   submethod BUILD (:$credentials) {
     $!c = $credentials;

@@ -14,7 +14,7 @@ class GIO::DBus::ObjectSkeleton {
   also does GTK::Roles::Properties;
   also does GIO::DBus::Roles::Object;
 
-  has GDBusObjectSkeleton $!dos;
+  has GDBusObjectSkeleton $!dos is implementor;
 
   submethod BUILD (:$skeleton) {
     $!dos = $skeleton;

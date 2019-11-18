@@ -19,7 +19,7 @@ our subset CellRendererToggleAncestry is export
 class GTK::CellRendererToggle is GTK::CellRenderer {
   also does GTK::Roles::Signals::Generic;
 
-  has GtkCellRendererToggle $!crt;
+  has GtkCellRendererToggle $!crt is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

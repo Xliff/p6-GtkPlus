@@ -8,7 +8,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::IOChannel;
 
 class GTK::Compat::IOChannel {
-  has GIOChannel $!gio;
+  has GIOChannel $!gio is implementor;
 
   submethod BUILD (:$io-channel) {
     $!gio = $io-channel;

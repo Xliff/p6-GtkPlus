@@ -20,7 +20,7 @@ class GIO::DBus::InterfaceSkeleton {
   also does GTK::Compat::Roles::Object;
   also does GIO::DBus::Roles::Signals::InterfaceSkeleton;
 
-  has GDBusInterfaceSkeleton $!dis;
+  has GDBusInterfaceSkeleton $!dis is implementor;
 
   submethod BUILD (:$skeleton) {
     $!dis = $skeleton;

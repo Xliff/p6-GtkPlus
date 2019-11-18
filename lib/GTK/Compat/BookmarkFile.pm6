@@ -8,7 +8,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::BookmarkFile;
 
 class GTK::Compat::BookmarkFile {
-  has GBookmarkFile $!bp;
+  has GBookmarkFile $!bp is implementor;
   
   submethod BUILD (:$bookmark) {
     $!bp = $bookmark;

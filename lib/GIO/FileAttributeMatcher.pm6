@@ -7,7 +7,7 @@ use GIO::Raw::FileInfo;
 
 # BOXED!
 class GIO::FileAttributeMatcher {
-  has GFileAttributeMatcher $!fam;
+  has GFileAttributeMatcher $!fam is implementor;
 
   method BUILD (:$matcher) {
     $!fam = $matcher;

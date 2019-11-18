@@ -20,7 +20,7 @@ our subset ToolPaletteAncestry is export
 class GTK::ToolPalette is GTK::Container {
   also does GTK::Roles::Orientable;
 
-  has GtkToolPalette $!tp;
+  has GtkToolPalette $!tp is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

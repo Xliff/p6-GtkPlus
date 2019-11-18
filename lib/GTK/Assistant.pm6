@@ -12,7 +12,7 @@ use GTK::Window;
 our subset AssistantAncestry is export where GtkAssistant | WindowAncestry;
 
 class GTK::Assistant is GTK::Window {
-  has GtkAssistant $!asst;
+  has GtkAssistant $!asst is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

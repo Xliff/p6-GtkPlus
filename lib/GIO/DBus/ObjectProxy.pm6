@@ -14,7 +14,7 @@ use GTK::Roles::Properties;
 class GIO::DBus::ObjectProperty {
   also does GTK::Roles::Properties;
 
-  has GDBusObjectProxy $!dop;
+  has GDBusObjectProxy $!dop is implementor;
 
   submethod BUILD (:$object-proxy) {
     $!dop = $object-proxy;

@@ -18,7 +18,7 @@ class GIO::UnixOutputStream is GIO::OutputStream {
   also does GIO::Roles::FileDescriptorBased;
   also does GIO::Roles::PollableOutputStream;
 
-  has GUnixOutputStream $!uos;
+  has GUnixOutputStream $!uos is implementor;
 
   submethod BUILD (:$unix-stream) {
     given $unix-stream {

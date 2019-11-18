@@ -17,7 +17,7 @@ our subset MenuShellAncestry is export where GtkMenuShell | ContainerAncestry;
 class GTK::MenuShell is GTK::Container {
   also does GTK::Roles::Signals::MenuShell;
 
-  has GtkMenuShell $!ms;
+  has GtkMenuShell $!ms is implementor;
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-ms;

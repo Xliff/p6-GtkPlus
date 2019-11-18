@@ -15,7 +15,7 @@ our subset CheckMenuItemAncestry is export
   where GtkCheckMenuItem | MenuItemAncestry;
 
 class GTK::CheckMenuItem is GTK::MenuItem {
-  has GtkCheckMenuItem $!cmi;
+  has GtkCheckMenuItem $!cmi is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -19,7 +19,7 @@ class GIO::MemoryOutputStream is GIO::OutputStream {
   also does GIO::Roles::Seekable;
   also does GIO::Roles::PollableOutputStream;
 
-  has GMemoryOutputStream $!mos;
+  has GMemoryOutputStream $!mos is implementor;
 
   submethod BUILD (:$memory-output) {
     do given $memory-output {

@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::DateTime;
 
 class GTK::Compat::DateTime {
-  has GDateTime $!dt;
+  has GDateTime $!dt is implementor;
 
   submethod BUILD (:$datetime) {
     $!dt = $datetime;

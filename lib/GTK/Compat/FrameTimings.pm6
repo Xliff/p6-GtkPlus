@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::FrameTimings;
 
 class GTK::Compat::FrameTimings {
-  has GdkFrameTimings $!ft;
+  has GdkFrameTimings $!ft is implementor;
 
   submethod BUILD(:$timings) {
     $!ft = $timings;

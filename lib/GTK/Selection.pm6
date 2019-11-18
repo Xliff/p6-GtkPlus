@@ -14,7 +14,7 @@ class GTK::Selection {
   also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Object;
 
-  has GtkSelectionData $!s;
+  has GtkSelectionData $!s is implementor;
 
   submethod BUILD(:$selection) {
     self!setObject($!s = $selection);

@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GIO::TlsInteraction {
   also does GTK::Compat::Roles::Object;
 
-  has GTlsInteraction $!ti;
+  has GTlsInteraction $!ti is implementor;
 
   submethod BUILD (:$tls-interaction) {
     $!ti = $tls-interaction;

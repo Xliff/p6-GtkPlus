@@ -40,7 +40,7 @@ class GTK::Widget {
   also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
 
-  has GtkWidget $!w;
+  has GtkWidget $!w is implementor;
 
   # For all widget-based *_get_type functions.
   has $!t;

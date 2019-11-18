@@ -11,7 +11,7 @@ our subset ThreadedSocketServiceAncestry is export of Mu
   where GThreadedSocketService | SocketServiceAncestry;
 
 class GIO::ThreadedSocketService is GIO::SocketService {
-  has GThreadedSocketService $!tss;
+  has GThreadedSocketService $!tss is implementor;
 
   submethod BUILD (:$socket-service) {
     given $socket-service {

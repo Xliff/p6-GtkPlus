@@ -17,7 +17,7 @@ our subset FontChooserDialogAncestry
 class GTK::Dialog::FontChooser is GTK::Dialog {
   also does GTK::Roles::FontChooser;
 
-  has GtkFontChooserDialog $!fcd;
+  has GtkFontChooserDialog $!fcd is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

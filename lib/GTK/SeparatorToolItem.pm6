@@ -13,7 +13,7 @@ our subset SeparatorToolItemAncestry is export
   where GtkSeparatorToolItem | ToolItemAncestry;
 
 class GTK::SeparatorToolItem is GTK::ToolItem {
-  has GtkSeparatorToolItem $!sti;
+  has GtkSeparatorToolItem $!sti is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

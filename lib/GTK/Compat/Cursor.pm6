@@ -11,7 +11,7 @@ use GTK::Compat::Raw::Cursor;
 use GTK::Raw::Utils;
 
 class GTK::Compat::Cursor {
-  has GdkCursor $!c;
+  has GdkCursor $!c is implementor;
 
   submethod BUILD(:$cursor) {
     $!c = $cursor

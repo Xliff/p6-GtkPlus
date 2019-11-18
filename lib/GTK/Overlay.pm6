@@ -16,7 +16,7 @@ our subset OverlayAncestry where GtkOverlay | BinAncestry;
 class GTK::Overlay is GTK::Bin {
   also does GTK::Roles::Signals::Overlay;
 
-  has GtkOverlay $!o;
+  has GtkOverlay $!o is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

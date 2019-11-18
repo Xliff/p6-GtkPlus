@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Rectangle;
 
 class GTK::Compat::Rectangle {
-  has GdkRectangle $!r handles <x y width height>;
+  has GdkRectangle $!r is implementor handles <x y width height>;
 
   submethod BUILD(:$rectangle) {
     $!r = $rectangle;

@@ -10,7 +10,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::ThreadPool;
 
 class GTK::Compat::ThreadPool {
-  has GThreadPool $!tp;
+  has GThreadPool $!tp is implementor;
   
   submethod BUILD (:$threadpool) {
     $!tp = $threadpool;

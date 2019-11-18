@@ -16,7 +16,7 @@ use GIO::TlsCertificate;
 class GIO::TlsDatabase {
   also does GTK::Compat::Roles::Object;
 
-  has GTlsDatabase $!td;
+  has GTlsDatabase $!td is implementor;
 
   submethod BUILD (:$tls-database) {
     $!td = $tls-database;

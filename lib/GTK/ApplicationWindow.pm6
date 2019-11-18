@@ -17,7 +17,7 @@ our subset ApplicationWindowAncestry is export
 class GTK::ApplicationWindow is GTK::Window {
   also does GIO::Roles::ActionMap;
 
-  has GtkApplicationWindow $!aw;
+  has GtkApplicationWindow $!aw is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

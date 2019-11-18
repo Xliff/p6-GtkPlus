@@ -18,7 +18,7 @@ our subset MenuItemAncestry is export
 class GTK::MenuItem is GTK::Bin {
   also does GTK::Roles::Actionable;
 
-  has GtkMenuItem $!mi;
+  has GtkMenuItem $!mi is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

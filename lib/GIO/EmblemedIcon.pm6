@@ -16,7 +16,7 @@ class GIO::EmblemedIcon {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::Icon;
 
-  has GEmblemedIcon $!ei;
+  has GEmblemedIcon $!ei is implementor;
 
   submethod BUILD (:$emblem) {
     $!ei = $emblem;

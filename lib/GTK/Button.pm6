@@ -19,7 +19,7 @@ our subset ButtonAncestry is export where GtkButton | BinAncestry;
 class GTK::Button is GTK::Bin {
   also does GTK::Roles::Actionable;
 
-  has GtkButton $!b;
+  has GtkButton $!b is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

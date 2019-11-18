@@ -12,7 +12,7 @@ class GIO::NetworkService {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::SocketConnectable;
 
-  has GNetworkService $!s;
+  has GNetworkService $!s is implementor;
 
   submethod BUILD (:$service) {
     $!s = $service;

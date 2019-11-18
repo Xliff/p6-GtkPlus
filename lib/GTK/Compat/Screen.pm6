@@ -14,7 +14,7 @@ class GTK::Compat::Screen {
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::Generic;
 
-  has GdkScreen $!screen;
+  has GdkScreen $!screen is implementor;
 
   submethod BUILD(:$screen) {
     $!screen = $screen;

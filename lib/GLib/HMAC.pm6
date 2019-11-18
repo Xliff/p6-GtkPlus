@@ -8,7 +8,7 @@ use GTK::Compat::Types;
 use GLib::Raw::HMAC;
 
 class GLib::HMAC {
-  has GHmac $!h;
+  has GHmac $!h is implementor;
 
   submethod BUILD (:$hmac) {
     $!h = $hmac;

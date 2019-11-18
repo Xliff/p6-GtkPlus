@@ -12,7 +12,7 @@ our subset ShortcutsSectionAncestry is export
   where GtkShortcutsSection | BoxAncestry;
 
 class GTK::ShortcutsSection is GTK::Box {
-  has GtkShortcutsSection $!ss;
+  has GtkShortcutsSection $!ss is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

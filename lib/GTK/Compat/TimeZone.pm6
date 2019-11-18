@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::TimeZone;
 
 class GTK::Compat::TimeZone {
-  has GTimeZone $!tz;
+  has GTimeZone $!tz is implementor;
 
   submethod BUILD (:$timezone) {
     $!tz = $timezone;

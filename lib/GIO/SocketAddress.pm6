@@ -16,7 +16,7 @@ class GIO::SocketAddress {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::SocketConnectable;
 
-  has GSocketAddress $!sa;
+  has GSocketAddress $!sa is implementor;
 
   submethod BUILD (:$address) {
     self.setSocketAddress($address) if $address;

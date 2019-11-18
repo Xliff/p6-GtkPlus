@@ -13,7 +13,7 @@ our subset AspectFrameAncestry is export
   where GtkAspectFrame | FrameAncestry;
 
 class GTK::AspectFrame is GTK::Frame {
-  has GtkAspectFrame $!af;
+  has GtkAspectFrame $!af is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

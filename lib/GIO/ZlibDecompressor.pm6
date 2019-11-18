@@ -15,7 +15,7 @@ class GIO::ZlibDecompressor {
   also does GTK::Roles::Properties;
   also does GIO::Roles::Converter;
 
-  has GZlibDecompressor $!zd;
+  has GZlibDecompressor $!zd is implementor;
 
   submethod BUILD (:$decompressor) {
     $!zd = $decompressor;

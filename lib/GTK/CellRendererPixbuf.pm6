@@ -10,7 +10,7 @@ use GTK::Raw::Types;
 use GTK::CellRenderer;
 
 class GTK::CellRendererPixbuf is GTK::CellRenderer {
-  has GtkCellRendererPixbuf $!crp;
+  has GtkCellRendererPixbuf $!crp is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

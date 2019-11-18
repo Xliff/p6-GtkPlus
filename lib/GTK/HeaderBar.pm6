@@ -13,7 +13,7 @@ our subset HeaderBarAncestry is export
   where GtkHeaderBar | ContainerAncestry;
 
 class GTK::HeaderBar is GTK::Container {
-  has GtkHeaderBar $!hb;
+  has GtkHeaderBar $!hb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

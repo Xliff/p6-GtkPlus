@@ -17,7 +17,7 @@ our subset LevelBarAncestry is export
 class GTK::LevelBar is GTK::Widget {
   also does GTK::Roles::Orientable;
 
-  has GtkLevelBar $!lb;
+  has GtkLevelBar $!lb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

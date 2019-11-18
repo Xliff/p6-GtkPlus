@@ -13,7 +13,7 @@ use GTK::Raw::Types;
 class GTK::PaperSize {
   also does GTK::Compat::Roles::Object;
   
-  has GtkPaperSize $!ps;
+  has GtkPaperSize $!ps is implementor;
 
   submethod BUILD(:$size) {
     self!setObject($!ps = $size);

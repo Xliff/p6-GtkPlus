@@ -9,7 +9,7 @@ use GTK::Compat::Raw::Menu;
 use GTK::Compat::Variant;
 
 class GTK::Compat::MenuItem {
-  has GMenuItem $!mitem;
+  has GMenuItem $!mitem is implementor;
 
   submethod BUILD(:$item) {
     $!mitem = $item

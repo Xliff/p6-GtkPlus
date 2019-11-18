@@ -12,7 +12,7 @@ use GTK::Label;
 our subset AccelLabelAncestry is export where GtkAccelLabel | LabelAncestry;
 
 class GTK::AccelLabel is GTK::Label {
-  has GtkAccelLabel $!al;
+  has GtkAccelLabel $!al is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

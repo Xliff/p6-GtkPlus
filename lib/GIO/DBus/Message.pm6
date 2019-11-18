@@ -16,7 +16,7 @@ use GIO::UnixFDList;
 class GIO::DBus::Message {
   also does GTK::Compat::Roles::Object;
 
-  has GDBusMessage $!dm;
+  has GDBusMessage $!dm is implementor;
 
   submethod BUILD (:$message) {
     $!dm = $message;

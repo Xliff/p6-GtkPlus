@@ -12,7 +12,7 @@ use GIO::Roles::SocketConnectable;
 class GIO::ProxyAddressEnumerator {
   also does GTK::Roles::Properties;
 
-  has GProxyAddressEnumerator $!pae;
+  has GProxyAddressEnumerator $!pae is implementor;
 
   submethod BUILD (:$proxy-enumerator) {
     $!pae = $proxy-enumerator;

@@ -8,7 +8,7 @@ use GTK::Compat::Raw::Array;
 use GTK::Raw::Utils;
 
 class GTK::Compat::Array {
-  has GArray $!a;
+  has GArray $!a is implementor;
 
   submethod BUILD(:$array) {
     $!a = $array;

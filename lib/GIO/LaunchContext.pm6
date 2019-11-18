@@ -9,7 +9,7 @@ use GTK::Compat::Types;
 use GIO::Raw::AppInfo;
 
 class GTK::Compat::LaunchContext {
-  has GAppLaunchContext $!lc;
+  has GAppLaunchContext $!lc is implementor;
 
   submethod BUILD(:$context) {
     $!lc = $context

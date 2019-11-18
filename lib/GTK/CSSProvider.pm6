@@ -24,7 +24,7 @@ class GTK::CSSProvider {
   also does GTK::Roles::StyleProvider;
   also does GTK::Roles::Types;
 
-  has GtkCSSProvider $!css;
+  has GtkCSSProvider $!css is implementor;
 
   submethod BUILD(
     :$provider,

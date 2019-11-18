@@ -11,7 +11,7 @@ use GTK::Roles::Types;
 class GTK::Compat::Keymap {
   also does GTK::Roles::Types;
 
-  has GdkKeymap $!km;
+  has GdkKeymap $!km is implementor;
 
   submethod BUILD(:$keymap) {
     $!km = $keymap;

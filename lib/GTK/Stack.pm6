@@ -14,7 +14,7 @@ use GTK::StackSidebar;
 our subset StackAncestry is export where GtkStack | ContainerAncestry;
 
 class GTK::Stack is GTK::Container {
-  has GtkStack $!s;
+  has GtkStack $!s is implementor;
   has GTK::StackSwitcher $!ss;
   has GTK::StackSidebar $!sb;
   has %!by-name;

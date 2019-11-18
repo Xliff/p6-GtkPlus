@@ -12,7 +12,7 @@ use GTK::Roles::Signals::Generic;
 class GTK::Compat::DragContext {
   also does GTK::Roles::Signals::Generic;
 
-  has GdkDragContext $!dc;
+  has GdkDragContext $!dc is implementor;
 
   submethod BUILD(:$context) {
     $!dc = $context;

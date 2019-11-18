@@ -12,7 +12,7 @@ use GIO::Roles::Icon;
 class GIO::Emblem {
   also does GTK::Compat::Roles::Object;
 
-  has GEmblem $!e;
+  has GEmblem $!e is implementor;
 
   submethod BUILD (:$emblem) {
     $!e = $emblem;

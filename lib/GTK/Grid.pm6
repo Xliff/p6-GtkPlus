@@ -17,7 +17,7 @@ our subset GridAncestry is export
 class GTK::Grid is GTK::Container {
   also does GTK::Roles::Orientable;
 
-  has GtkGrid $!g;
+  has GtkGrid $!g is implementor;
 
   has @!grid;
   has %!obj-track;

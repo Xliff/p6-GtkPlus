@@ -11,7 +11,7 @@ use GTK::Compat::Roles::Object;
 class GIO::SocketAddressEnumerator {
   also does GTK::Compat::Roles::Object;
 
-  has GSocketAddressEnumerator $!se;
+  has GSocketAddressEnumerator $!se is implementor;
 
   submethod BUILD (:$enumerator) {
     $!se = $enumerator;

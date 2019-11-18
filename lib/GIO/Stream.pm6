@@ -15,7 +15,7 @@ use GTK::Roles::Properties;
 class GIO::Stream {
   also does GTK::Roles::Properties;
 
-  has GIOStream $!ios;
+  has GIOStream $!ios is implementor;
 
   submethod BUILD (:$stream) {
     self.setStream($stream) if $stream;

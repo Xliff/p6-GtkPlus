@@ -13,7 +13,7 @@ our subset StackSidebarAncestry is export
   where GtkStackSidebar | BinAncestry;
 
 class GTK::StackSidebar is GTK::Bin {
-  has GtkStackSidebar $!ss;
+  has GtkStackSidebar $!ss is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

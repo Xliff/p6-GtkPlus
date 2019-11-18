@@ -14,7 +14,7 @@ our subset CellRendererSpinAncestry is export
   where GtkCellRendererSpin | CellRendererTextAncestry;
 
 class GTK::CellRendererSpin is GTK::CellRendererText {
-  has GtkCellRendererSpin $!crs;
+  has GtkCellRendererSpin $!crs is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

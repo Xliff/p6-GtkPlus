@@ -17,7 +17,7 @@ our subset EventBoxAncestry is export
 class GTK::EventBox is GTK::Bin {
   also does GTK::Roles::Types;
 
-  has GtkEventBox $!eb;
+  has GtkEventBox $!eb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

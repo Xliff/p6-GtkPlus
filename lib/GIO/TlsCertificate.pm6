@@ -18,7 +18,7 @@ use GTK::Roles::Properties;
 class GIO::TlsCertificate {
   also does GTK::Roles::Properties;
 
-  has GTlsCertificate $!c;
+  has GTlsCertificate $!c is implementor;
 
   submethod BUILD (:$tls) {
     $!c = $tls;

@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Variant;
 
 class GTK::Compat::VariantIter {
-  has GVariantIter $!vi;
+  has GVariantIter $!vi is implementor;
   
   submethod BUILD (:$iter) {
     $!vi = $iter;

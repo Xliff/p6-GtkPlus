@@ -8,7 +8,7 @@ use GTK::Raw::TargetEntry;
 use GTK::Raw::Types;
 
 class GTK::TargetEntry {
-  has GtkTargetEntry $!te;
+  has GtkTargetEntry $!te is implementor;
 
   submethod BUILD(:$entry) {
     $!te = $entry;

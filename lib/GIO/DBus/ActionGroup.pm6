@@ -14,7 +14,7 @@ our subset DBusActionGroupAncestry is export of Mu
 class GIO::DBus::ActionGroup {
   also does GIO::Roles::RemoteActionGroup;
 
-  has GDBusActionGroup $!dag;
+  has GDBusActionGroup $!dag is implementor;
 
   submethod BUILD (:$dbus-action-group) {
     given $dbus-action-group {

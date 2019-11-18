@@ -12,7 +12,7 @@ our subset InetSocketAddressAncestry is export
   where GInetSocketAddress | SocketAddressAncestry;
 
 class GIO::InetSocketAddress is GIO::SocketAddress {
-  has GInetSocketAddress $!isa;
+  has GInetSocketAddress $!isa is implementor;
 
   submethod BUILD (:$inetsocketaddr) {
     self.setInetSocketAddr($inetsocketaddr);

@@ -12,7 +12,7 @@ our subset SimplePermissionAncestry is export of Mu
   where GSimplePermission | GPermission;
 
 class GIO::SimplePermission is GIO::Permission {
-  has GSimplePermission $!sp;
+  has GSimplePermission $!sp is implementor;
 
   submethod BUILD (:$simple-permission) {
     given $simple-permission {

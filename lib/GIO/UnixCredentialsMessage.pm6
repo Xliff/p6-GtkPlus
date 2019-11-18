@@ -12,7 +12,7 @@ our subset UnixCredentialsMessageAncestry is export of Mu
   where GUnixCredentialsMessage | SocketControlMessageAncestry;
 
 class GIO::UnixCredentialsMessage is GIO::SocketControlMessage {
-  has GUnixCredentialsMessage $!cm;
+  has GUnixCredentialsMessage $!cm is implementor;
 
   submethod BUILD (:$cred-message) {
     given $cred-message {

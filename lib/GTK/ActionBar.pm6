@@ -12,7 +12,7 @@ use GTK::Bin;
 our subset ActionBarAncestry is export where GtkActionBar | BinAncestry;
 
 class GTK::ActionBar is GTK::Bin {
-  has GtkActionBar $!ab;
+  has GtkActionBar $!ab is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

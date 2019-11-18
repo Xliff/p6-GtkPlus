@@ -21,7 +21,7 @@ our subset ScaleAncestry is export
 class GTK::Scale is GTK::Range {
   also does GTK::Roles::Signals::Scale;
 
-  has GtkScale $!s;
+  has GtkScale $!s is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

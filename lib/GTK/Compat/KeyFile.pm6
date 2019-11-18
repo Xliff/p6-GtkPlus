@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::KeyFile;
 
 class GTK::Compat::KeyFile  {
-  has GKeyFile $!kf;
+  has GKeyFile $!kf is implementor;
 
   submethod BUILD(:$file) {
     $!kf = $file;

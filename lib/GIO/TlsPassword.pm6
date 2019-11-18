@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GIO::TlsPassword {
   also does GTK::Compat::Roles::Object;
 
-  has GTlsPassword $!tp;
+  has GTlsPassword $!tp is implementor;
 
   submethod BUILD (:$tls-password) {
     $!tp = $tls-password;

@@ -11,7 +11,7 @@ our subset UnixSocketAddressAncestry is export of Mu
   where GUnixSocketAddress | SocketAddressAncestry;
 
 class GIO::UnixSocketAddress is GIO::SocketAddress {
-  has GUnixSocketAddress $!us;
+  has GUnixSocketAddress $!us is implementor;
 
   submethod BUILD (:$unix-socket) {
     given $unix-socket {

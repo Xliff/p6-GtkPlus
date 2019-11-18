@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GIO::FilenameCompleter {
   also does GTK::Compat::Roles::Object;
 
-  has GFilenameCompleter $!fc;
+  has GFilenameCompleter $!fc is implementor;
 
   submethod BUILD (:$completer) {
     $!fc = $completer;

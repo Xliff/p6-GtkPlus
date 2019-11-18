@@ -13,7 +13,7 @@ our subset MenuBarAncestry is export
   where GtkMenuBar | MenuShellAncestry;
 
 class GTK::MenuBar is GTK::MenuShell {
-  has GtkMenuBar $!mb;
+  has GtkMenuBar $!mb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -14,7 +14,7 @@ our subset RadioButtonAncestry is export
   where GtkRadioButton | CheckButtonAncestry;
 
 class GTK::RadioButton is GTK::CheckButton {
-  has GtkRadioButton $!rb;
+  has GtkRadioButton $!rb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

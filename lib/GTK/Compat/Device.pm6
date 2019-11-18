@@ -18,7 +18,7 @@ class GTK::Compat::Device {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Types;
 
-  has GdkDevice $!d;
+  has GdkDevice $!d is implementor;
 
   submethod BUILD(:$device) {
     $!prop = nativecast(GObject, $!d = $device);

@@ -15,7 +15,7 @@ our subset OffscreenAncestry is export
   where GtkOffscreen | WindowAncestry;
 
 class GTK::Offscreen is GTK::Window {
-  has GtkOffscreen $!ow;
+  has GtkOffscreen $!ow is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

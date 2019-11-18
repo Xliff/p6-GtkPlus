@@ -13,7 +13,7 @@ our subset TcpWrapperConnectionAncestry is export of Mu
   where GTcpWrapperConnection | TcpConnectionAncestry;
 
 class GIO::TcpWrapperConnection is GIO::TcpConnection {
-  has GTcpWrapperConnection $!twc;
+  has GTcpWrapperConnection $!twc is implementor;
 
   submethod BUILD (:$wrapper-connection) {
     given $wrapper-connection {

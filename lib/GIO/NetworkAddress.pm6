@@ -14,7 +14,7 @@ class GIO::NetworkAddress {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::SocketConnectable;
 
-  has GNetworkAddress $!a;
+  has GNetworkAddress $!a is implementor;
 
   submethod BUILD (:$address) {
     $!a = $address;

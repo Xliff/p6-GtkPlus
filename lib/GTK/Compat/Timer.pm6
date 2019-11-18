@@ -8,7 +8,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Timer;
 
 class GTK::Compat::Timer {
-  has GTimer $!t;
+  has GTimer $!t is implementor;
 
   submethod BUILD (:$timer) {
     $!t = $timer;

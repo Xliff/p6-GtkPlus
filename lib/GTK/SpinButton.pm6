@@ -24,7 +24,7 @@ class GTK::SpinButton is GTK::Entry {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::SpinButton;
 
-  has GtkSpinButton $!sp;
+  has GtkSpinButton $!sp is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

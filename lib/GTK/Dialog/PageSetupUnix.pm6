@@ -16,7 +16,7 @@ my subset Ancestry
         GtkContainer           | GtkBuildable | GtkWidget;
 
 class GTK::Dialog::PageSetupUnix is GTK::Dialog {
-  has GtkPageSetupUnixDialog $!psd;
+  has GtkPageSetupUnixDialog $!psd is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

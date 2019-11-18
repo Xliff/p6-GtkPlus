@@ -14,7 +14,7 @@ use GTK::Roles::Types;
 class GTK::TreeRowReference {
   also does GTK::Roles::Types;
 
-  has GtkTreeRowReference $!tr;
+  has GtkTreeRowReference $!tr is implementor;
 
   submethod BUILD(:$row) {
     $!tr = $row

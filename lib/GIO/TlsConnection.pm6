@@ -20,7 +20,7 @@ our subset TlsConnectionAncestry is export of Mu
 class GIO::TlsConnection is GIO::Stream {
   also does GIO::Roles::Signals::TlsConnection;
 
-  has GTlsConnection $!tc;
+  has GTlsConnection $!tc is implementor;
 
   submethod BUILD (:$tls-connection) {
     given $tls-connection {

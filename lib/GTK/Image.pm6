@@ -15,7 +15,7 @@ use GTK::Widget;
 our subset ImageAncestry is export where GtkImage | WidgetAncestry;
 
 class GTK::Image is GTK::Widget {
-  has GtkImage $!i;
+  has GtkImage $!i is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

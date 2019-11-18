@@ -17,7 +17,7 @@ our subset VolumeButtonAncestry is export
 class GTK::VolumeButton is GTK::ScaleButton {
   also does GTK::Roles::Orientable;
 
-  has GtkVolumeButton $!vb;
+  has GtkVolumeButton $!vb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

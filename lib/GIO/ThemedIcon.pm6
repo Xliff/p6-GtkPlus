@@ -16,7 +16,7 @@ class GIO::ThemedIcon {
   also does GTK::Roles::Properties;
   also does GIO::Roles::Icon;
 
-  has GThemedIcon $!ti;
+  has GThemedIcon $!ti is implementor;
 
   submethod BUILD (:$themed-icon) {
     $!ti = $themed-icon;

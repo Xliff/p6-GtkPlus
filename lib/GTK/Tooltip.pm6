@@ -12,7 +12,7 @@ use GTK::Compat::Roles::Object;
 class GTK::Tooltip {
   also does GTK::Compat::Roles::Object;
   
-  has GtkTooltip $!tt;
+  has GtkTooltip $!tt is implementor;
 
   submethod BUILD(:$tooltip) {
     self!setObject($!tt = $tooltip);

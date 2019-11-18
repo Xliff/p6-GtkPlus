@@ -13,7 +13,7 @@ our subset ToggleToolButtonAncestry
   where GtkToggleToolButton | ToolButtonAncestry;
 
 class GTK::ToggleToolButton is GTK::ToolButton {
-  has GtkToggleToolButton $!ttb;
+  has GtkToggleToolButton $!ttb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

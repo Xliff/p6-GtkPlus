@@ -23,7 +23,7 @@ use GTK::TextMark;
 class GTK::TextIter {
   also does GTK::Roles::Types;
 
-  has GtkTextIter $!ti;
+  has GtkTextIter $!ti is implementor;
 
   submethod BUILD(:$textiter) {
     $!ti = $textiter;

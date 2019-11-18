@@ -13,7 +13,7 @@ our subset CellRendererProgressAncestry is export
   where GtkCellRendererProgress | GtkCellRenderer;
 
 class GTK::CellRendererProgress is GTK::CellRenderer {
-  has GtkCellRendererProgress $!crp;
+  has GtkCellRendererProgress $!crp is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

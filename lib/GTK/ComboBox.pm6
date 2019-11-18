@@ -22,7 +22,7 @@ class GTK::ComboBox is GTK::Bin {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::ComboBox;
 
-  has GtkComboBox $!cb;
+  has GtkComboBox $!cb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

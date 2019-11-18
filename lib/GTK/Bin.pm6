@@ -11,7 +11,7 @@ use GTK::Container;
 our subset BinAncestry is export where GtkBin | ContainerAncestry;
 
 class GTK::Bin is GTK::Container {
-  has GtkBin $!bin;
+  has GtkBin $!bin is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

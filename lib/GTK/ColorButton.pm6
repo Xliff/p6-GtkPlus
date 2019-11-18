@@ -19,7 +19,7 @@ our subset ColorButtonAncestry is export
 class GTK::ColorButton is GTK::Button {
   also does GTK::Roles::ColorChooser;
 
-  has GtkColorButton $!cb;
+  has GtkColorButton $!cb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

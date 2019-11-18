@@ -14,7 +14,7 @@ our subset CellRendererComboAncestry is export
   where GtkCellRendererCombo | CellRendererTextAncestry;
 
 class GTK::CellRendererCombo is GTK::CellRendererText {
-  has GtkCellRendererCombo $!crc;
+  has GtkCellRendererCombo $!crc is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

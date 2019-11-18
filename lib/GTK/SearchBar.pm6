@@ -13,7 +13,7 @@ our subset SearchBarAncestry is export
   where GtkSearchBar | BinAncestry;
 
 class GTK::SearchBar is GTK::Bin {
-  has GtkSearchBar $!sb;
+  has GtkSearchBar $!sb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

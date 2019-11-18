@@ -17,7 +17,7 @@ use GTK::Compat::Roles::Object;
 class GIO::DBus::MethodInvocation {
   also does GTK::Compat::Roles::Object;
 
-  has GDBusMethodInvocation $!dmi;
+  has GDBusMethodInvocation $!dmi is implementor;
 
   submethod BUILD (:$invocation) {
     $!dmi = $invocation;

@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GTK::Compat::Binding {
   also does GTK::Compat::Roles::Object;
   
-  has GBinding $!b;
+  has GBinding $!b is implementor;
   
   submethod BUILD (:$binding) {
     self!setObject($!b = $binding);

@@ -20,7 +20,7 @@ our subset ScrolledWindowAncestry is export
 class GTK::ScrolledWindow is GTK::Bin {
   also does GTK::Roles::Signals::ScrolledWindow;
 
-  has GtkScrolledWindow $!sw;
+  has GtkScrolledWindow $!sw is implementor;
 
   method bless(*%attrinit) {
     use nqp;

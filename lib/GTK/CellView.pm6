@@ -21,7 +21,7 @@ class GTK::CellView is GTK::Widget {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Orientable;
 
-  has GtkCellView $!cv;
+  has GtkCellView $!cv is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

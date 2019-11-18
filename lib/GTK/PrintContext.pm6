@@ -20,7 +20,7 @@ class GTK::PrintContext {
   also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Types;
 
-  has GtkPrintContext $!pc;
+  has GtkPrintContext $!pc is implementor;
 
   submethod BUILD(:$context) {
     self!setObject($!pc = $context);

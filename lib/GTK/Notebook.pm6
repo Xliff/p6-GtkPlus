@@ -42,7 +42,7 @@ class X::GTK::Notebook::InvalidPageParams is Exception {
 class GTK::Notebook is GTK::Container {
   also does GTK::Roles::Signals::Notebook;
 
-  has GtkNotebook $!n;
+  has GtkNotebook $!n is implementor;
   has @!labels;
 
   method bless(*%attrinit) {

@@ -23,7 +23,7 @@ class GTK::TextBuffer {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::TextBuffer;
 
-  has GtkTextBuffer $!tb;
+  has GtkTextBuffer $!tb is implementor;
 
   submethod BUILD(:$buffer) {
     self.setTextBuffer($buffer) if $buffer;

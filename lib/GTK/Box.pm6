@@ -22,7 +22,7 @@ class GTK::Box is GTK::Container {
   # Maybe make Widget a role that has $.w and all variants assign to it,
   # but how to keep $.w from being set from outside the object tree?
 
-  has GtkBox $!b;
+  has GtkBox $!b is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

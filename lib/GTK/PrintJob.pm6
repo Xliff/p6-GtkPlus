@@ -16,7 +16,7 @@ class GTK::PrintJob {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
-  has GtkPrintJob $!prnjob;
+  has GtkPrintJob $!prnjob is implementor;
 
   submethod BUILD(:$job) {
     self!setObject($!prnjob = $job);

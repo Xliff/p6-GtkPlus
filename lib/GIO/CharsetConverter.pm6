@@ -16,7 +16,7 @@ class GIO::CharsetConverter {
   also does GIO::Roles::Converter;
   also does GIO::Roles::Initable;
 
-  has GCharsetConverter $!cc;
+  has GCharsetConverter $!cc is implementor;
 
   submethod BUILD (:$converter) {
     $!cc = $converter;

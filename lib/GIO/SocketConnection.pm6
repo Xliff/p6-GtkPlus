@@ -15,7 +15,7 @@ our subset SocketConnectionAncestry is export of Mu
   where GSocketConnection | GIOStream;
 
 class GIO::SocketConnection is GIO::Stream {
-  has GSocketConnection $!sc;
+  has GSocketConnection $!sc is implementor;
 
   submethod BUILD (:$socket) {
     given $socket {

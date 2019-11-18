@@ -4,7 +4,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::MenuModel;
 
 class GTK::Compat::MenuAttributeIter {
-  has GMenuAttributeIter $!mai;
+  has GMenuAttributeIter $!mai is implementor;
 
   submethod BUILD(:$iter) {
     $!mai = $iter;

@@ -17,7 +17,7 @@ my subset FontButtonAncestry is export
 class GTK::FontButton is GTK::Button {
   also does GTK::Roles::FontChooser;
 
-  has GtkFontButton $!fb;
+  has GtkFontButton $!fb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

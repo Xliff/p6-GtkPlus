@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GTK::TargetList {
   also does GTK::Compat::Roles::Object;
   
-  has GtkTargetList $!tl;
+  has GtkTargetList $!tl is implementor;
 
   submethod BUILD(:$targetlist) {
     self!setObject($!tl = $targetlist)

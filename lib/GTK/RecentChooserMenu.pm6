@@ -17,7 +17,7 @@ our subset RecentChooserMenuAncestry
 class GTK::RecentChooserMenu is GTK::Menu {
   also does GTK::Roles::RecentChooser;
 
-  has GtkRecentChooserMenu $!rcm;
+  has GtkRecentChooserMenu $!rcm is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

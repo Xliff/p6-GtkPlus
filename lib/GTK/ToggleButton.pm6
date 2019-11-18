@@ -13,7 +13,7 @@ our subset ToggleButtonAncestry is export
   where GtkToggleButton | ButtonAncestry;
 
 class GTK::ToggleButton is GTK::Button {
-  has GtkToggleButton $!tb;
+  has GtkToggleButton $!tb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

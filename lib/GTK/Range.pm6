@@ -20,7 +20,7 @@ class GTK::Range is GTK::Widget {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::Range;
 
-  has GtkRange $!r;
+  has GtkRange $!r is implementor;
 
   submethod BUILD(:$range) {
     given $range {

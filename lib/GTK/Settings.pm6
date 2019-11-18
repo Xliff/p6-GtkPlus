@@ -16,7 +16,7 @@ class GTK::Settings {
   also does GTK::Roles::Types;
   also does GTK::Roles::StyleProvider;
 
-  has GtkSettings $!s;
+  has GtkSettings $!s is implementor;
 
   submethod BUILD(:$settings) {
     self!setObject($!s = $settings);              # GTK::Compat::Roles::Object

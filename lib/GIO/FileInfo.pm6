@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GIO::FileInfo {
   also does GTK::Compat::Roles::Object;
 
-  has GFileInfo $!fi;
+  has GFileInfo $!fi is implementor;
 
   submethod BUILD (:$info) {
     $!fi = $info;

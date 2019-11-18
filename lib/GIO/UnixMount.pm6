@@ -15,7 +15,7 @@ class GIO::UnixMountMonitor { ... }
 class GIO::UnixMount {
   also does GTK::Compat::Roles::Object;
 
-  has GUnixMountEntry $!um;
+  has GUnixMountEntry $!um is implementor;
 
   submethod BUILD (:$mount-entry) {
     $!um = $mount-entry;

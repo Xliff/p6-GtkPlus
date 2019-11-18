@@ -16,7 +16,7 @@ our subset DataInputStreamAncestry is export of Mu
 class GIO::DataInputStream is GIO::BufferedInputStream {
   also does GIO::Roles::Seekable;
 
-  has GDataInputStream $!dis;
+  has GDataInputStream $!dis is implementor;
 
   submethod BUILD (:$data-stream) {
     given $data-stream {

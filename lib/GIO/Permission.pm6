@@ -12,7 +12,7 @@ use GIO::Raw::Permission;
 use GTK::Compat::Roles::Object;
 
 class GIO::Permission {
-  has GPermission $!p;
+  has GPermission $!p is implementor;
 
   submethod BUILD(:$permission) {
     self.setPermission($permission);

@@ -11,7 +11,7 @@ our subset FilterInputStreamAncestry is export of Mu
   where GFilterInputStream | GInputStream;
 
 class GIO::FilterInputStream is GIO::InputStream {
-  has GFilterInputStream $!fis;
+  has GFilterInputStream $!fis is implementor;
 
   submethod BUILD (:$filter-stream) {
     given $filter-stream {

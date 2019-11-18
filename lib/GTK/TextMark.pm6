@@ -14,7 +14,7 @@ class GTK::TextMark {
   also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Types;
 
-  has GtkTextMark $!tm;
+  has GtkTextMark $!tm is implementor;
 
   submethod BUILD(:$textmark) {
     self!setObject($!tm = $textmark);

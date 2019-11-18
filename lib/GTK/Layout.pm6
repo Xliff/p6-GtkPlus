@@ -18,7 +18,7 @@ our subset LayoutAncestry where GtkLayout | GtkScrollable | ContainerAncestry;
 class GTK::Layout is GTK::Container {
   also does GTK::Roles::Scrollable;
 
-  has GtkLayout $!l;
+  has GtkLayout $!l is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

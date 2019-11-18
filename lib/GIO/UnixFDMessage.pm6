@@ -14,7 +14,7 @@ our subset UnixFDMessageAncestry is export of Mu
   where GUnixFDMessage | SocketControlMessageAncestry;
 
 class GIO::UnixFDMessage is GIO::SocketControlMessage {
-  has GUnixFDMessage $!fdm;
+  has GUnixFDMessage $!fdm is implementor;
 
   submethod BUILD (:$fd-message) {
     given $fd-message {

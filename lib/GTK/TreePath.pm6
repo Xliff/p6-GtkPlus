@@ -14,7 +14,7 @@ use GTK::Roles::Types;
 class GTK::TreePath {
   also does GTK::Roles::Types;
 
-  has GtkTreePath $!tp;
+  has GtkTreePath $!tp is implementor;
 
   submethod BUILD(:$path) {
     $!tp = $path;

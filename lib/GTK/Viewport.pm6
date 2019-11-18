@@ -19,7 +19,7 @@ our subset ViewPortAncestry is export
 class GTK::Viewport is GTK::Bin {
   also does GTK::Roles::Scrollable;
 
-  has GtkViewport $!v;
+  has GtkViewport $!v is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

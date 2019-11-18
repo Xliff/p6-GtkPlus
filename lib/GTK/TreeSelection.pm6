@@ -18,7 +18,7 @@ class GTK::TreeSelection {
   also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Object;
 
-  has GtkTreeSelection $!ts;
+  has GtkTreeSelection $!ts is implementor;
 
   submethod BUILD(:$selection) {
     self!setObject($!ts = $selection);

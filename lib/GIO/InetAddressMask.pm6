@@ -13,7 +13,7 @@ use GTK::Compat::Roles::Object;
 class GIO::InetAddressMask {
   also does GTK::Compat::Roles::Object;
 
-  has GInetAddressMask $!iam;
+  has GInetAddressMask $!iam is implementor;
 
   submethod BUILD (:$mask) {
     $!iam = $mask;

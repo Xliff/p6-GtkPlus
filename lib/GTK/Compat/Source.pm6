@@ -10,7 +10,7 @@ use GTK::Raw::Utils;
 use GTK::Compat::MainContext;
 
 class GTK::Compat::Source {
-  has GSource $!gs;
+  has GSource $!gs is implementor;
 
   submethod BUILD (GSource :$source, Int() :$attach = False) {
     self.setSource($source, :$attach) if $source;

@@ -8,7 +8,7 @@ use GTK::Compat::Raw::Array;
 use GTK::Raw::Utils;
 
 class GTK::Compat::PtrArray {
-  has GPtrArray $!pa;
+  has GPtrArray $!pa is implementor;
 
   submethod BUILD(:$array) {
     $!pa = $array;

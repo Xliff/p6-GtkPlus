@@ -21,7 +21,7 @@ class GTK::IconTheme {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Compat::Roles::Object;
 
-  has GtkIconTheme $!it;
+  has GtkIconTheme $!it is implementor;
 
   submethod BUILD(:$theme) {
     self!setObject($!it = $theme);

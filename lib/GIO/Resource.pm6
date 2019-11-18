@@ -15,7 +15,7 @@ use GLib::Bytes;
 
 # BOXED
 class GIO::Resource {
-  has GResource $!r;
+  has GResource $!r is implementor;
 
   submethod BUILD (:$resource) {
     $!r = $resource;

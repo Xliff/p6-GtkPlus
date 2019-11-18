@@ -9,7 +9,7 @@ use GTK::Raw::Subs;
 use GTK::Raw::Utils;
 
 class GTK::Compat::Value {
-  has GValue $!v;
+  has GValue $!v is implementor;
 
   submethod BUILD(:$type, GValue :$value) {
     $!v = $value // GValue.new;

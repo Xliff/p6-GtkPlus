@@ -15,7 +15,7 @@ use GIO::Roles::ProxyResolver;
 class GIO::SimpleProxyResolver {
   also does GTK::Roles::Properties;
 
-  has GSimpleProxyResolver $!spr;
+  has GSimpleProxyResolver $!spr is implementor;
 
   submethod BUILD (:$simple-resolver) {
     $!spr = $simple-resolver;

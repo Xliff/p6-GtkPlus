@@ -18,7 +18,7 @@ our subset FileChooserDialogAncestry is export
 class GTK::Dialog::FileChooser is GTK::Dialog {
   also does GTK::Roles::FileChooser;
 
-  has GtkFileChooserDialog $!fcd;
+  has GtkFileChooserDialog $!fcd is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -21,7 +21,7 @@ our subset CellRendererTextAncestry is export
 class GTK::CellRendererText is GTK::CellRenderer {
   also does GTK::Roles::Signals::Generic;
 
-  has GtkCellRendererText $!crt;
+  has GtkCellRendererText $!crt is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

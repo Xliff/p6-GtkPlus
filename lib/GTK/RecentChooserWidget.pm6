@@ -15,7 +15,7 @@ our subset RecentChooserWidgetAncestry is export
 class GTK::RecentChooserWidget is GTK::Box {
   also does GTK::Roles::RecentChooser;
 
-  has GtkRecentChooserWidget $!rcw;
+  has GtkRecentChooserWidget $!rcw is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

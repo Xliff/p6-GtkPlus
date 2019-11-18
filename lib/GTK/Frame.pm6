@@ -13,7 +13,7 @@ use GTK::Bin;
 our subset FrameAncestry is export where GtkFrame | BinAncestry;
 
 class GTK::Frame is GTK::Bin {
-  has GtkFrame $!f;
+  has GtkFrame $!f is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

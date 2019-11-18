@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GLib::Raw::AsyncQueue;
 
 class GLib::AsyncQueue {
-  has GAsyncQueue $!aq;
+  has GAsyncQueue $!aq is implementor;
 
   submethod BUILD (:$queue) {
     $!aq = $queue;
