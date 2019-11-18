@@ -288,12 +288,23 @@ class GTK::FlowBox is GTK::Container {
     );
   }
 
-  method get_child_at_index (Int() $idx) is also<get-child-at-index> {
+  method get_child_at_index (Int() $idx, :$raw = False)
+    is also<get-child-at-index>
+  {
     my gint $i = resolve-int($idx);
-    self.end[$idx];
-    # GTK::FlowBoxChild.new(
-    #   gtk_flow_box_get_child_at_index($!fb, $i)
-    # );
+
+    my $fbc = self.end[$idx];
+
+    return Nil unless $fbc;
+    do given $fbc {
+      when GTK::FlowBoxChild {
+        $raw ?? .GtkFlowBoxChild !! $_;
+      }
+
+      default {
+        $raw ?? $fbc !! GTK::FlowBoxChild.new($fbc)
+      }
+    }
   }
 
   method get_child_at_pos (Int() $x, Int() $y, :$raw = False)

@@ -16,7 +16,8 @@ use GTK::Bin;
 # One could almost think this could just be a GTK::Bin. The jury is hung, at
 # the moment.
 
-our subset FlowBoxChildAncestry is export where GtkFlowBoxChild | BinAncestry;
+our subset FlowBoxChildAncestry is export of Mu
+  where GtkFlowBoxChild | BinAncestry;
 
 class GTK::FlowBoxChild is GTK::Bin {
   has GtkFlowBoxChild $!fbc;
@@ -44,8 +45,10 @@ class GTK::FlowBoxChild is GTK::Bin {
         };
         self.setBin($to-parent);
       }
+
       when GTK::FlowBoxChild {
       }
+
       default {
       }
     }
@@ -61,8 +64,12 @@ class GTK::FlowBoxChild is GTK::Bin {
     self.bless(:$flowboxchild);
   }
 
-
-  method GTK::Raw::Types::GtkFlowBoxChild is also<FlowBoxChild> { $!fbc }
+  method GTK::Raw::Types::GtkFlowBoxChild
+    is also<
+      GtkFlowBoxChild
+      FlowBoxChild
+    >
+  { $!fbc }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method activate {
