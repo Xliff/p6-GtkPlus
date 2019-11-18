@@ -21,15 +21,14 @@ use GTK::Window;
 class GTK::Application is export {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::ActionMap;
-
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;
   also does GTK::Roles::Types;
 
   my $gapp;
 
-  has $!app;      # GtkApplication
-  has $!title;    # GtkWindow OR GtkApplicationWindow;
+  has $!app is implementor;  # GtkApplication
+  has $!title;               # GtkWindow OR GtkApplicationWindow;
   has $!width;
   has $!height;
   has $!init;
@@ -47,6 +46,8 @@ class GTK::Application is export {
            :$window_type,
            :$window
   ) {
+    return unless $app;
+
     self!setObject($!app = $app);
     self.roleInit-ActionMap;
 
@@ -145,6 +146,8 @@ class GTK::Application is export {
 
     # Use raw GTK calls here since the object model will be used by the callers.
     my $app = gtk_application_new($title, $f);
+
+    return Nil unless $app;
 
     self.bless(
       :$app,

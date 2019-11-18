@@ -2625,3 +2625,16 @@ sub typeToGType (\t) is export {
     when GObject         { G_TYPE_OBJECT  }
   };
 }
+
+our role Implementor {};
+
+multi sub trait_mod:<is>(Attribute:D \attr, :$implementor) is export {
+  attr does Implementor;
+}
+
+sub findProperImplementor ($attrs) is export {
+  # Will need to search the entire attributes list for the
+  # proper main variable. Then sort for the one with the largest
+  # MRO.
+  $attrs.grep( * ~~ Implementor ).sort( -*.package.^mro.elems )[0]
+}

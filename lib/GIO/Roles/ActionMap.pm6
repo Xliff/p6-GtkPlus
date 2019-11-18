@@ -15,9 +15,11 @@ role GIO::Roles::ActionMap {
   { $!actmap }
 
   method roleInit-ActionMap {
+    my \i = findProperImplementor(self.^attributes);
+
     $!actmap = cast(
       GActionMap,
-      self.^attributes(:local)[0].get_value(self)
+      i.get_value(self)
     );
   }
 
