@@ -39,7 +39,7 @@ class GTK::TreeView is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::TreeView;
 
-  has GtkTreeView $!tv;
+  has GtkTreeView $!tv is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

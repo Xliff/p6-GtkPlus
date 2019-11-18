@@ -16,7 +16,7 @@ our subset ToolItemAncestry is export
   where GtkToolItem | BinAncestry;
 
 class GTK::ToolItem is GTK::Bin {
-  has GtkToolItem $!ti;
+  has GtkToolItem $!ti is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

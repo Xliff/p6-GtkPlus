@@ -20,7 +20,7 @@ class GTK::IconInfo {
   also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Types;
 
-  has GtkIconInfo $!ii;
+  has GtkIconInfo $!ii is implementor;
 
   submethod BUILD(:$info) {
     self!setObject($!ii = $info);             # GTK::Compat::Roles::Object

@@ -18,7 +18,7 @@ my subset Ancestry
 class GTK::Dialog::AppChooser is GTK::Dialog {
   also does GTK::Roles::AppChooser;
 
-  has GtkAppChooserDialog $!acd;
+  has GtkAppChooserDialog $!acd is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

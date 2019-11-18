@@ -11,7 +11,7 @@ use GTK::Raw::Types;
 use GTK::Roles::Types;
 
 class GTK::AccelGroup {
-  has GtkAccelGroup $!ag;
+  has GtkAccelGroup $!ag is implementor;
 
   submethod BUILD(:$group) {
     $!ag = $group;

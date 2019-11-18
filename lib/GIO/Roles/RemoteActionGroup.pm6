@@ -18,10 +18,9 @@ role GIO::Roles::RemoteActionGroup {
   { $!rag }
 
   method roleInit-RemoteActionGroup is also<roleInit_RemoteActionGroup> {
-    $!rag = cast(
-      GRemoteActionGroup,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!rag = cast( GRemoteActionGroup, i.get_value(self) );
   }
 
   method activate_action_full (

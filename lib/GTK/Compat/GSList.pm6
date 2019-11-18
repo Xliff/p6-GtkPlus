@@ -10,7 +10,7 @@ use GTK::Compat::Raw::GSList;
 class GTK::Compat::GSList {
   also does GTK::Roles::Types;
 
-  has GSList $!list;
+  has GSList $!list is implementor;
   has GSList $!cur;
 
   has @!nat;

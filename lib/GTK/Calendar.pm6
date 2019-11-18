@@ -12,7 +12,7 @@ use GTK::Widget;
 our subset CalendarAncestry is export where GtkCalendar | WidgetAncestry;
 
 class GTK::Calendar is GTK::Widget {
-  has GtkCalendar $!cal;
+  has GtkCalendar $!cal is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

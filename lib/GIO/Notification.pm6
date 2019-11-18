@@ -11,7 +11,7 @@ use GTK::Compat::Roles::Object;
 class GIO::Notification {
   also does GTK::Compat::Roles::Object;
 
-  has GNotification $!n;
+  has GNotification $!n is implementor;
 
   submethod BUILD (:$notification) {
     $!n = $notification

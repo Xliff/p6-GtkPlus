@@ -17,7 +17,7 @@ class GIO::BytesIcon {
   also does GIO::Roles::Icon;
   also does GIO::Roles::LoadableIcon;
 
-  has GBytesIcon $!bi;
+  has GBytesIcon $!bi is implementor;
 
   submethod BUILD (GBytesIcon :$bytes-icon) {
     $!bi = $bytes-icon;

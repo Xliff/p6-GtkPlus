@@ -15,7 +15,7 @@ use GTK::Compat::Roles::Object;
 class GIO::SettingsBackend {
   also does GTK::Compat::Roles::Object;
 
-  has GSettingsBackend $!sb;
+  has GSettingsBackend $!sb is implementor;
 
   submethod BUILD (:$backend) {
     $!sb = $backend;

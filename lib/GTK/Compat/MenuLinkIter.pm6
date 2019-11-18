@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::MenuModel;
 
 class GTK::Compat::MenuLinkIter {
-  has GMenuLinkIter $!mli;
+  has GMenuLinkIter $!mli is implementor;
 
   submethod BUILD (:$iter) {
     $!mli = $iter;

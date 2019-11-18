@@ -11,7 +11,7 @@ use GTK::Roles::Signals::Generic;
 class GTK::Compat::FrameClock  {
   also does GTK::Roles::Signals::Generic;
 
-  has GdkFrameClock $!fc;
+  has GdkFrameClock $!fc is implementor;
 
   submethod BUILD(:$clock) {
     $!fc = $clock;

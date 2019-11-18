@@ -15,7 +15,7 @@ use GIO::Roles::Action;
 class GTK::Compat::SimpleAction {
   also does GIO::Roles::Action;
 
-  has GSimpleAction $!sa;
+  has GSimpleAction $!sa is implementor;
 
   submethod BUILD (:$simple-action) {
     $!sa = $simple-action;

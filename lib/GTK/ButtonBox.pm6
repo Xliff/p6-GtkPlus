@@ -15,7 +15,7 @@ our subset ButtonBoxAncestry is export
   where GtkButtonBox | BoxAncestry;
 
 class GTK::ButtonBox is GTK::Box {
-  has GtkButtonBox $!bb;
+  has GtkButtonBox $!bb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -17,7 +17,7 @@ our subset CellAreaBoxAncestry
 class GTK::CellAreaBox is GTK::CellArea {
   also does GTK::Roles::Orientable;
 
-  has GtkCellAreaBox $!cab;
+  has GtkCellAreaBox $!cab is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

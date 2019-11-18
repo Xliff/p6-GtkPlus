@@ -12,7 +12,7 @@ use GTK::Button;
 our subset LinkButtonAncestry where GtkLinkButton | ButtonAncestry;
 
 class GTK::LinkButton is GTK::Button {
-  has GtkLinkButton $!lb;
+  has GtkLinkButton $!lb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

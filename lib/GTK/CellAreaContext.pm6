@@ -13,7 +13,7 @@ use GTK::Roles::Properties;
 class GTK::CellAreaContext {
   also does GTK::Roles::Properties;
   
-  has GtkCellAreaContext $!cac;
+  has GtkCellAreaContext $!cac is implementor;
   
   submethod BUILD (:$context) {
     self.setCellAreaContext($context);

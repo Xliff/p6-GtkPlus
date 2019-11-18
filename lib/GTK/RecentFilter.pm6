@@ -14,7 +14,7 @@ class GTK::RecentFilter {
   also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Buildable;
 
-  has GtkRecentFilter $!rf;
+  has GtkRecentFilter $!rf is implementor;
 
   submethod BUILD(:$filter) {
     self!setObject($!rf = $filter);           # GTK::Compat::Roles::Object

@@ -13,7 +13,7 @@ our subset ScrollbarAncestry is export
   where GtkScrollbar | RangeAncestry;
 
 class GTK::Scrollbar is GTK::Range {
-  has GtkScrollbar $!sb;
+  has GtkScrollbar $!sb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

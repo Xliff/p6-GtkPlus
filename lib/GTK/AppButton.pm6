@@ -17,7 +17,7 @@ our  subset AppButtonAncestry is export
 class GTK::AppButton is GTK::ComboBox {
   also does GTK::Roles::AppChooser;
 
-  has GtkAppChooserButton $!acb;
+  has GtkAppChooserButton $!acb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

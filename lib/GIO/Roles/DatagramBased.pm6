@@ -13,7 +13,9 @@ role GIO::Roles::DatagramBased {
   has GDatagramBased $!d;
 
   submethod roleInit-DatagramBased {
-    $!d = cast(GDatagramBased, self.GObject);
+    my \i = findProperImplementor(self.^attributes);
+
+    $!d = cast(GDatagramBased, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GDatagramBased

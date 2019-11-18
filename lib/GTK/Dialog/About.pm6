@@ -14,7 +14,7 @@ my subset Ancestry
         GtkBuilder     | GtkWidget;
 
 class GTK::Dialog::About is GTK::Dialog {
-  has GtkAboutDialog $!ad;
+  has GtkAboutDialog $!ad is implementor;
 
   method bless(*%attrinit) {
     use nqp;

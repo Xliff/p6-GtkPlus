@@ -17,7 +17,7 @@ our subset SeparatorAncestry
 class GTK::Separator is GTK::Widget {
   also does GTK::Roles::Orientable;
 
-  has GtkSeparator $!s;
+  has GtkSeparator $!s is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -13,7 +13,7 @@ our subset SeparatorMenuItemAncestry
   where GtkSeparatorMenuItem | MenuItemAncestry;
 
 class GTK::SeparatorMenuItem is GTK::MenuItem {
-  has GtkSeparatorMenuItem $!smi;
+  has GtkSeparatorMenuItem $!smi is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -20,7 +20,7 @@ class GTK::CellRenderer {
   also does GTK::Roles::Signals::CellRenderer;
   also does GTK::Roles::Types;
 
-  has GtkCellRenderer $!cr;
+  has GtkCellRenderer $!cr is implementor;
 
   method setCellRenderer(GtkCellRenderer $renderer) {
     self!setObject($!cr = $renderer);       # GTK::Roles::Properties

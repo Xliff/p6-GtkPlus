@@ -2626,12 +2626,16 @@ sub typeToGType (\t) is export {
   };
 }
 
+# Used only in the next two subs, below.
 our role Implementor {};
 
+# Mark
 multi sub trait_mod:<is>(Attribute:D \attr, :$implementor) is export {
+  # YYY - Warning if a second attribute is marked?
   attr does Implementor;
 }
 
+# Find.
 sub findProperImplementor ($attrs) is export {
   # Will need to search the entire attributes list for the
   # proper main variable. Then sort for the one with the largest

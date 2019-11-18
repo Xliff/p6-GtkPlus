@@ -16,7 +16,7 @@ use GTK::Roles::Properties;
 class GIO::DBus::ObjectManagerClient {
   also does GTK::Roles::Properties;
 
-  has GDBusObjectManagerClient $!domc;
+  has GDBusObjectManagerClient $!domc is implementor;
 
   submethod BUILD (:$client) {
     $!domc = $client;

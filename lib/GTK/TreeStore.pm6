@@ -24,7 +24,7 @@ class GTK::TreeStore  {
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeSortable;
 
-  has GtkTreeStore $!tree;
+  has GtkTreeStore $!tree is implementor;
 
   submethod BUILD(:$treestore) {
     self!setObject($!tree = $treestore);           # GTK::Compat::Roles::Object

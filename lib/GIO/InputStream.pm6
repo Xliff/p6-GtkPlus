@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GIO::InputStream {
   also does GTK::Compat::Roles::Object;
 
-  has GInputStream $!is;
+  has GInputStream $!is is implementor;
 
   submethod BUILD (GInputStream :$stream) {
     self.setInputStream($stream) if $stream;

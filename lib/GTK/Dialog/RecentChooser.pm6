@@ -18,7 +18,7 @@ our subset RecentChooserDialogAncestry is export
 class GTK::Dialog::RecentChooser is GTK::Dialog {
   also does GTK::Roles::RecentChooser;
 
-  has GtkRecentChooserDialog $!rcd;
+  has GtkRecentChooserDialog $!rcd is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -16,7 +16,7 @@ class GTK::DragContext {
   also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Object;
 
-  has GdkDragContext $!dc;
+  has GdkDragContext $!dc is implementor;
 
   submethod BUILD(:$context) {
     self!setObject($!dc = $context);

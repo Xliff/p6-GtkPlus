@@ -15,10 +15,9 @@ role GIO::DBus::Roles::Interface {
   }
 
   method roleInit-DBusInterface is also<roleInit_DBusInterface> {
-    $!di = cast(
-      GDBusInterface,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!di = cast( GDBusInterface, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GDBusInterface

@@ -13,7 +13,7 @@ class GIO::DBus::AuthObserver {
   also does GTK::Compat::Roles::Object;
   also does GIO::DBus::Roles::Signals::AuthObserver;
 
-  has GDBusAuthObserver $!dao;
+  has GDBusAuthObserver $!dao is implementor;
 
   submethod BUILD (:$observer) {
     $!dao = $observer;

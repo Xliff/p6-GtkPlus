@@ -12,7 +12,7 @@ use GTK::Compat::Roles::Object;
 class GIO::OutputStream {
   also does GTK::Compat::Roles::Object;
 
-  has GOutputStream $!os;
+  has GOutputStream $!os is implementor;
 
   submethod BUILD (:$output-stream) {
     self.setOutputStream($output-stream) if $output-stream;

@@ -16,7 +16,7 @@ class GIO::Cancellable {
   also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 
-  has GCancellable $!c;
+  has GCancellable $!c is implementor;
 
   submethod BUILD (:$cancellable) {
     $!c = $cancellable;

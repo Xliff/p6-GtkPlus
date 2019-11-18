@@ -15,7 +15,7 @@ our subset InfoBarAncestry is export of Mu
   where GtkInfoBar | BoxAncestry;
 
 class GTK::InfoBar is GTK::Box {
-  has GtkInfoBar $!ib;
+  has GtkInfoBar $!ib is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

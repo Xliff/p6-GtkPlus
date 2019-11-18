@@ -17,7 +17,7 @@ class GIO::SimpleActionGroup {
   also does GIO::Roles::ActionGroup;
   also does GIO::Roles::ActionMap;
 
-  has GSimpleActionGroup $!sag;
+  has GSimpleActionGroup $!sag is implementor;
 
   submethod BUILD (:$group) {
     with $group {

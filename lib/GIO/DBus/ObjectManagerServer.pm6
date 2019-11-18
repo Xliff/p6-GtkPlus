@@ -11,7 +11,7 @@ use GTK::Compat::Roles::Object;
 class GIO::DBus::ObjectManagerServer {
   also does GTK::Compat::Roles::Object;
 
-  has GDBusObjectManagerServer $!doms;
+  has GDBusObjectManagerServer $!doms is implementor;
 
   submethod BUILD (:$server) {
     $!doms = $server;

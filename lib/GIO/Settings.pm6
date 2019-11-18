@@ -19,7 +19,7 @@ class GIO::Settings {
   also does GTK::Roles::Properties;
   also does GIO::Roles::Signals::Settings;
 
-  has GSettings $!s;
+  has GSettings $!s is implementor;
 
   submethod BUILD (:$settings) {
     $!s = $settings;

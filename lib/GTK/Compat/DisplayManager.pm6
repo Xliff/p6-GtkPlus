@@ -13,7 +13,7 @@ use GTK::Compat::Display;
 class GTK::Compat::DisplayManager {
   also does GTK::Roles::Signals::Generic;
 
-  has GdkDisplayManager $!dm;
+  has GdkDisplayManager $!dm is implementor;
 
   submethod BUILD(:$manager) {
     $!dm = $manager;

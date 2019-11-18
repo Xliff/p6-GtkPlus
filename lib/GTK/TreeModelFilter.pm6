@@ -17,7 +17,7 @@ class GTK::TreeModelFilter {
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeDragSource;
 
-  has GtkTreeModelFilter $!tmf;
+  has GtkTreeModelFilter $!tmf is implementor;
 
   submethod BUILD(:$treefilter) {
     self!setObject($!tmf = $treefilter);            # GTK::Roles::Properties

@@ -17,7 +17,7 @@ our subset SwitchAncestry is export
 class GTK::Switch is GTK::Widget {
   also does GTK::Roles::Actionable;
 
-  has GtkSwitch $!s;
+  has GtkSwitch $!s is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

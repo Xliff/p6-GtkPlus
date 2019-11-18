@@ -19,7 +19,7 @@ class GIO::ConverterOutputStream is GIO::FilterOutputStream {
   also does GIO::Roles::Converter;
   also does GIO::Roles::PollableOutputStream;
 
-  has GConverterOutputStream $!cos;
+  has GConverterOutputStream $!cos is implementor;
 
   submethod BUILD (:$convert-stream) {
     given $convert-stream {

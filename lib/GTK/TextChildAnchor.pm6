@@ -13,7 +13,7 @@ use GTK::Compat::Roles::ListData;
 class GTK::TextChildAnchor {
   also does GTK::Compat::Roles::Object;
   
-  has GtkTextChildAnchor $!ta;
+  has GtkTextChildAnchor $!ta is implementor;
 
   submethod BUILD(:$anchor) {
     self!setObject($!ta = $anchor);

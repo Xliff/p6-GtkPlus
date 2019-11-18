@@ -10,7 +10,7 @@ use GLib::Raw::Error;
 use GTK::Compat::Roles::TypedBuffer;
 
 class GLib::Error {
-  has GError $!e handles <domain code message>;
+  has GError $!e is implementor handles <domain code message>;
 
   submethod BUILD (:$error) {
     $!e = $error;

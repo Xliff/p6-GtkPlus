@@ -27,10 +27,9 @@ role GIO::Roles::TlsClientConnection {
   method roleInit-TlsClientConnection
     is also<roleInit_TlsClientConnection>
   {
-    $!tcc = cast(
-      GTlsClientConnection,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!tcc = cast( GTlsClientConnection, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GTlsClientConnection

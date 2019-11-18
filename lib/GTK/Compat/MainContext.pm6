@@ -11,7 +11,7 @@ use GTK::Raw::Utils;
 use GTK::Compat::Roles::TypedBuffer;
 
 class GTK::Compat::MainContext {
-  has GMainContext $!mc;
+  has GMainContext $!mc is implementor;
 
   submethod BUILD (:$maincontext) {
     $!mc = $maincontext;

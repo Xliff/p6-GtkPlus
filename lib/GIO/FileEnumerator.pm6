@@ -15,7 +15,7 @@ use GTK::Compat::Roles::GFile;
 class GIO::FileEnumerator {
   also does GTK::Compat::Roles::Object;
 
-  has GFileEnumerator $!fe;
+  has GFileEnumerator $!fe is implementor;
 
   submethod BUILD (:$enumerator) {
     $!fe = $enumerator;

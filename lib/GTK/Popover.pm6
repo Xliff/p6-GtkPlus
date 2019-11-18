@@ -12,7 +12,7 @@ use GTK::Bin;
 our subset PopoverAncestry is export when GtkPopover | BinAncestry;
 
 class GTK::Popover is GTK::Bin {
-  has GtkPopover $!p;
+  has GtkPopover $!p is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

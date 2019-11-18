@@ -13,7 +13,7 @@ our subset SpinnerAncestry is export
   where GtkSpinner | WidgetAncestry;
 
 class GTK::Spinner is GTK::Widget {
-  has GtkSpinner $!spin;
+  has GtkSpinner $!spin is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -14,7 +14,7 @@ our subset UnixConnectionAncestry is export of Mu
   where GUnixConnection | SocketConnectionAncestry;
 
 class GIO::UnixConnection is GIO::SocketConnection {
-  has GUnixConnection $!uc;
+  has GUnixConnection $!uc is implementor;
 
   submethod BUILD (:$unix-connection) {
     given $unix-connection {

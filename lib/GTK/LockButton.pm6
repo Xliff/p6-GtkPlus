@@ -17,7 +17,7 @@ my subset LockButtonAncestry is export
 class GTK::LockButton is GTK::Button {
   also does GTK::Roles::Actionable;
   
-  has GtkLockButton $!lb;
+  has GtkLockButton $!lb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

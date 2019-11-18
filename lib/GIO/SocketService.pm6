@@ -15,7 +15,7 @@ our subset SocketServiceAncestry is export of Mu
 class GIO::SocketService is GIO::SocketListener {
   also does GIO::Roles::Signals::SocketService;
 
-  has GSocketService $!ss;
+  has GSocketService $!ss is implementor;
 
   submethod BUILD (:$service) {
     given $service {

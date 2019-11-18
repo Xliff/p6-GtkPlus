@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GLib::Raw::Module;
 
 class GLib::Module {
-  has GModule $!m;
+  has GModule $!m is implementor;
 
   # Change signature to (:module(:$!m)) in a later version? Means we
   # don't need the body.

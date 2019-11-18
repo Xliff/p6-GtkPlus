@@ -18,7 +18,9 @@ role GIO::Roles::Proxy {
   { $!p }
 
   method roleInit-Proxy {
-    $!p = cast(GProxy, self.GObject);
+    my \i = findProperImplementor(self.^attributes);
+
+    $!p = cast( GProxy, i.get_vale(self) );
   }
 
   method newProxy (GProxy $proxy) {

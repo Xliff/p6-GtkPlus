@@ -14,7 +14,7 @@ class GTK::PrintSettings {
   also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Object;
 
-  has GtkPrintSettings $!prnset;
+  has GtkPrintSettings $!prnset is implementor;
 
   submethod BUILD(:$settings) {
     self!setObject($!prnset = $settings);

@@ -19,7 +19,7 @@ our subset FileIOStreamAncestry is export of Mu
 class GIO::FileIOStream is GIO::Stream {
   also does GIO::Roles::Seekable;
 
-  has GFileIOStream $!fios;
+  has GFileIOStream $!fios is implementor;
 
   submethod BUILD (:$fileio-stream) {
     given $fileio-stream {

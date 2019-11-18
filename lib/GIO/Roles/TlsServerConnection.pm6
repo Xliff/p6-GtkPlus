@@ -17,10 +17,9 @@ role GIO::Roles::TlsServerConnection {
   }
 
   method roleInit-TlsServerConnection is also<roleInit_TlsServerConnection> {
-    $!tsc = cast(
-      GTlsServerConnection,
-      self.^attributes(:local)[0].get_value(self);
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!tsc = cast( GTlsServerConnection, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GTlsServerConnection

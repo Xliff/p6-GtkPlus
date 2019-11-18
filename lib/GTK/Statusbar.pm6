@@ -17,7 +17,7 @@ our subset StatusbarAncestry is export
 class GTK::Statusbar is GTK::Box {
   also does GTK::Roles::Signals::Statusbar;
 
-  has GtkStatusbar $!sb;
+  has GtkStatusbar $!sb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

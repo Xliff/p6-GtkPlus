@@ -17,7 +17,7 @@ class GTK::Compat::Display {
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::Generic;
 
-  has GdkDisplay $!d;
+  has GdkDisplay $!d is implementor;
 
   submethod BUILD(:$display) {
     $!d = $display;

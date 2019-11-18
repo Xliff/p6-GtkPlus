@@ -14,10 +14,9 @@ role GIO::Roles::FileDescriptorBased {
   { $!fdb }
 
   method roleInit-FileDescriptorBased is also<roleInit_FileDescriptorBased> {
-    $!fdb = cast(
-      GFileDescriptorBased,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!fdb = cast( GFileDescriptorBased, i.get_value(self) );
   }
 
   method role_get_fd is also<role-get-fd> {

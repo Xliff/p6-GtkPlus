@@ -11,7 +11,7 @@ our subset ProxyAddressAncestry is export of Mu
   where GProxyAddress | InetSocketAddressAncestry;
 
 class GIO::ProxyAddress is GIO::InetSocketAddress {
-  has GProxyAddress $!pa;
+  has GProxyAddress $!pa is implementor;
 
   submethod BUILD (:$proxy-address) {
     given $proxy-address {

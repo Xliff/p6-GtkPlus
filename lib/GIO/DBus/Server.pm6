@@ -17,7 +17,7 @@ class GIO::DBus::Server {
   also does GTK::Roles::Properties;
   also does GIO::DBus::Roles::Signals::Server;
 
-  has GDBusServer $!ds;
+  has GDBusServer $!ds is implementor;
 
   submethod BUILD (:$server) {
     $!ds = $server;

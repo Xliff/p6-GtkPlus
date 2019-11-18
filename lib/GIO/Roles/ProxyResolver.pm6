@@ -17,10 +17,9 @@ role GIO::ProxyResolver {
   }
 
   method roleInit-ProxyResolver {
-    $!pr = cast(
-      GProxyResolver,
-      self.^attributes(:local)[0].get-value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!pr = cast( GProxyResolver, i.get-value(self) );
   }
 
   method GTK::Compat::Types::GProxyResolver

@@ -12,7 +12,7 @@ our subset TcpConnectionAncestry is export of Mu
   where GTcpConnection | SocketConnectionAncestry;
 
 class GIO::TcpConnection is GIO::SocketConnection {
-  has GTcpConnection $!tc;
+  has GTcpConnection $!tc is implementor;
 
   submethod BUILD (:$tcp-connection) {
     given $tcp-connection {

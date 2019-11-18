@@ -24,7 +24,7 @@ class GTK::Compat::MenuModel {
   also does GTK::Compat::Roles::Object;
   also does GTK::Compat::Roles::Signals;
 
-  has GMenuModel $!m;
+  has GMenuModel $!m is implementor;
 
   submethod BUILD(:$model) {
     self!setObject($!m = $model) if $model.defined;

@@ -18,7 +18,7 @@ class GTK::TextTagTable {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Signals::TextTagTable;
 
-  has GtkTextTagTable $!ttt;
+  has GtkTextTagTable $!ttt is implementor;
 
   submethod BUILD(:$table) {
     self!setObject($!ttt = $table);           # GTK::Compat::Roles::Object

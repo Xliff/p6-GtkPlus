@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GLib::Raw::Checksum;
 
 class GLib::Checksum {
-  has GChecksum $!c;
+  has GChecksum $!c is implementor;
 
   submethod BUILD (:$checksum) {
     $!c = $checksum;

@@ -18,7 +18,7 @@ use GTK::Compat::Roles::Object;
 class GIO::DesktopAppInfo {
   also does GTK::Compat::Roles::Object;
 
-  has GDesktopAppInfo $!dai;
+  has GDesktopAppInfo $!dai is implementor;
 
   submethod BUILD (:$desktop-info) {
     $!dai = $desktop-info;

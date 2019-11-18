@@ -22,10 +22,9 @@ role GIO::Roles::Drive {
   }
 
   method roleInit-Drive is also<roleInit_Drive> {
-    $!d = cast(
-      GDrive,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!d = cast( GDrive, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GDrive

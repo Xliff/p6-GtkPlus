@@ -11,7 +11,7 @@ use GTK::Compat::Roles::Object;
 class GIO::InetAddress {
   also does GTK::Compat::Roles::Object;
 
-  has GInetAddress $!ia;
+  has GInetAddress $!ia is implementor;
 
   submethod BUILD (:$address) {
     $!ia = $address;

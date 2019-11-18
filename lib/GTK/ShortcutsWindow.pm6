@@ -11,7 +11,7 @@ use GTK::Window;
 our subset ShortcutsWindowAncestry when GtkShortcutsWindow | WindowAncestry;
 
 class GTK::ShortcutsWindow is GTK::Window {
-  has GtkShortcutsWindow $!sw;
+  has GtkShortcutsWindow $!sw is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

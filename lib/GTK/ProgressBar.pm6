@@ -20,7 +20,7 @@ our subset ProgressBarAncestry is export
 class GTK::ProgressBar is GTK::Widget {
   also does GTK::Roles::Orientable;
 
-  has GtkProgressBar $!bar;
+  has GtkProgressBar $!bar is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

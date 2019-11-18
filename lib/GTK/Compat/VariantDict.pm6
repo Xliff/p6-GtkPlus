@@ -12,7 +12,7 @@ use GTK::Compat::Roles::Object;
 class GTK::Compat::VariantDict {
   also does GTK::Compat::Roles::Object;
   
-  has GVariantDict $!vd;
+  has GVariantDict $!vd is implementor;
   
   submethod BUILD (:$dict) {
     self!setObject($!vd = $dict);

@@ -14,7 +14,7 @@ our subset DataOutputStreamAncestry is export of Mu
   where GDataOutputStream | FilterOutputStreamAncestry;
 
 class GIO::DataOutputStream is GIO::FilterOutputStream {
-  has GDataOutputStream $!dos;
+  has GDataOutputStream $!dos is implementor;
 
   submethod BUILD (:$data-stream) {
     given $data-stream {

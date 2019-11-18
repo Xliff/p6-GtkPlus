@@ -26,7 +26,7 @@ class GTK::StyleContext {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
 
-  has GtkStyleContext $!sc;
+  has GtkStyleContext $!sc is implementor;
 
   submethod BUILD(:$context) {
     self!setObject($!sc = $context);

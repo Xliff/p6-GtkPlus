@@ -14,7 +14,7 @@ my subset Ancestry
         GtkBuildable       | GtkWidget;
 
 class GTK::Dialog::PrintUnix is GTK::Dialog {
-  has GtkPrintUnixDialog $!pud;
+  has GtkPrintUnixDialog $!pud is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

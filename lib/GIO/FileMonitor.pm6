@@ -14,7 +14,7 @@ class GIO::FileMonitor {
   also does GTK::Roles::Properties;
   also does GIO::Roles::Signals::FileMonitor;
 
-  has GFileMonitor $!m;
+  has GFileMonitor $!m is implementor;
 
   submethod BUILD (:$monitor) {
     $!m = $monitor;

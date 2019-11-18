@@ -16,7 +16,7 @@ class GIO::VolumeMonitor {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::Signals::VolumeMonitor;
 
-  has GVolumeMonitor $!vm;
+  has GVolumeMonitor $!vm is implementor;
 
   submethod BUILD (:$monitor) {
     $!vm = $monitor;

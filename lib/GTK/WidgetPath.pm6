@@ -13,7 +13,7 @@ use GTK::Raw::Utils;
 # Opaque struct.
 
 class GTK::WidgetPath {
-  has GtkWidgetPath $!wp;
+  has GtkWidgetPath $!wp is implementor;
 
   submethod BUILD(:$path) {
     $!wp = $path;

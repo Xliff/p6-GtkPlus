@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GLib::Raw::Scanner;
 
 class GLib::Scanner {
-  has GScanner $!s;
+  has GScanner $!s is implementor;
 
   submethod BUILD (:$scanner) {
     $!s = $scanner;

@@ -4,7 +4,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Thread;
 
 class GTK::Compat::Mutex {
-  has GMutex $!m;
+  has GMutex $!m is implementor;
 
   submethod BUILD (:$mutex) {
     $!m = $mutex;

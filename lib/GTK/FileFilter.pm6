@@ -19,7 +19,7 @@ class GTK::FileFilter {
   also does GTK::Roles::Buildable;
   also does GTK::Compat::Roles::Object;
 
-  has GtkFileFilter $!ff;
+  has GtkFileFilter $!ff is implementor;
 
   submethod BUILD(:$filter) {
     $!b = nativecast(GtkBuildable, $!ff);         # GTK::Roles::Buildable

@@ -12,7 +12,7 @@ use GTK::Bin;
 our subset ExpanderAncestry is export where GtkExpander | BinAncestry;
 
 class GTK::Expander is GTK::Bin {
-  has GtkExpander $!e;
+  has GtkExpander $!e is implementor;
 
   method bless(*%attrinit) {
     use nqp;

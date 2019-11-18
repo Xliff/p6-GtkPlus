@@ -21,7 +21,7 @@ class GTK::PrintOperation {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::PrintOperation;
 
-  has GtkPrintOperation $!po;
+  has GtkPrintOperation $!po is implementor;
 
   submethod BUILD(:$op) {
     self!setObject($!po = $op);               # GTK::Roles::Properties

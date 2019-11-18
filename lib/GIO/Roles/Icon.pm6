@@ -16,10 +16,9 @@ role GIO::Roles::Icon {
   }
 
   method roleInit-Icon {
-    $!icon = cast(
-      GIcon,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!icon = cast( GIcon, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GIcon

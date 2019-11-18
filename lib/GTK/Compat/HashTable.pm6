@@ -36,7 +36,7 @@ S
 class GTK::Compat::HashTable {
   also does GTK::Compat::Roles::Object;
 
-  has GHashTable $!h;
+  has GHashTable $!h is implementor;
 
   submethod BUILD (:$table) {
     self!setObject($!h = $table);

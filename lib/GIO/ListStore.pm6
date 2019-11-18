@@ -11,7 +11,7 @@ use GTK::Roles::Properties;
 class GIO::ListStore {
   also does GTK::Roles::Properties;
 
-  has GListStore $!ls;
+  has GListStore $!ls is implementor;
 
   submethod BUILD (:$store) {
     $!ls = $store;

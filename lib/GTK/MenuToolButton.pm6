@@ -13,7 +13,7 @@ our subset MenuToolButtonAncestry is export
   where GtkMenuToolButton | ToolButtonAncestry;
 
 class GTK::MenuToolButton is GTK::ToolButton {
-  has GtkMenuToolButton $!mtb;
+  has GtkMenuToolButton $!mtb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

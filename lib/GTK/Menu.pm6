@@ -18,7 +18,7 @@ our subset MenuAncestry is export where GtkMenu | MenuShellAncestry;
 class GTK::Menu is GTK::MenuShell {
   also does GTK::Roles::Signals::Menu;
 
-  has GtkMenu $!m;
+  has GtkMenu $!m is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

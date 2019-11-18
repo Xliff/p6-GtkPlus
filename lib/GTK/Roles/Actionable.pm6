@@ -15,24 +15,24 @@ role GTK::Roles::Actionable {
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method action_name is rw {
     Proxy.new(
-    FETCH => sub ($) {
-      gtk_actionable_get_action_name($!action);
-    },
-    STORE => sub ($, Str() $action_name is copy) {
-      gtk_actionable_set_action_name($!action, $action_name);
-    }
+      FETCH => sub ($) {
+        gtk_actionable_get_action_name($!action);
+      },
+      STORE => sub ($, Str() $action_name is copy) {
+        gtk_actionable_set_action_name($!action, $action_name);
+      }
     );
   }
 
   # Alias back to action_target_value
   method action_target is rw {
     Proxy.new(
-    FETCH => sub ($) {
-      gtk_actionable_get_action_target_value($!action);
-    },
-    STORE => sub ($, GVariant() $target_value is copy) {
-      gtk_actionable_set_action_target_value($!action, $target_value);
-    }
+      FETCH => sub ($) {
+        gtk_actionable_get_action_target_value($!action);
+      },
+      STORE => sub ($, GVariant() $target_value is copy) {
+        gtk_actionable_set_action_target_value($!action, $target_value);
+      }
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
@@ -40,6 +40,7 @@ role GTK::Roles::Actionable {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_actionable_type {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_actionable_get_type, $n, $t );
   }
 

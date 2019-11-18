@@ -18,7 +18,7 @@ class GIO::UnixInputStream is GIO::InputStream {
   also does GIO::Roles::FileDescriptorBased;
   also does GIO::Roles::PollableInputStream;
 
-  has GUnixInputStream $!uis;
+  has GUnixInputStream $!uis is implementor;
 
   submethod BUILD (:$unix-stream) {
     given $unix-stream {

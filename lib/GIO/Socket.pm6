@@ -18,7 +18,7 @@ class GIO::Socket {
   also does GIO::Roles::Initable;
   also does GIO::Roles::DatagramBased;
 
-  has GSocket $!s;
+  has GSocket $!s is implementor;
 
   submethod BUILD (:$socket) {
     $!s = $socket;

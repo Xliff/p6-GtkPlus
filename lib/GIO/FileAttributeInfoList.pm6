@@ -11,7 +11,7 @@ use GIO::FileInfo;
 
 # BOXED!
 class GIO::FileAttributeInfoList {
-  has GFileAttributeInfoList $!fail;
+  has GFileAttributeInfoList $!fail is implementor;
 
   submethod BUILD (:$list) {
     $!fail = $list;

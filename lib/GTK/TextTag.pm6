@@ -21,7 +21,7 @@ class GTK::TextTag  {
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::TextTag;
 
-  has GtkTextTag $!tt;
+  has GtkTextTag $!tt is implementor;
 
   submethod BUILD(:$tag) {
     self.setTextTag($tag) with $tag;

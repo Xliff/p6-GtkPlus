@@ -16,7 +16,7 @@ class GTK::EntryBuffer {
   also does GTK::Roles::Signals::EntryBuffer;
   also does GTK::Roles::Signals::Generic;
 
-  has GtkEntryBuffer $!b;
+  has GtkEntryBuffer $!b is implementor;
 
   submethod BUILD (:$buffer) {
     self!setObject($!b = $buffer);

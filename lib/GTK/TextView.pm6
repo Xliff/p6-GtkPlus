@@ -26,7 +26,7 @@ class GTK::TextView is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::TextView;
 
-  has GtkTextView $!tv;
+  has GtkTextView $!tv is implementor;
   has $!autoscroll;
 
   method bless(*%attrinit) {

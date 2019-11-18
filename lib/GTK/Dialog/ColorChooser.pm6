@@ -17,7 +17,7 @@ our subset ColorChooserDialogAncestry
 class GTK::Dialog::ColorChooser is GTK::Dialog {
   also does GTK::Roles::ColorChooser;
 
-  has GtkColorChooserDialog $!ccd;
+  has GtkColorChooserDialog $!ccd is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

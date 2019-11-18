@@ -20,7 +20,7 @@ class GTK::TreeModelSort {
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeSortable;
 
-  has GtkTreeModelSort $!tms;
+  has GtkTreeModelSort $!tms is implementor;
 
   submethod BUILD(:$treesort) {
     self!setObject($!tms = $treesort);              # GTK::Compat::Roles::Object

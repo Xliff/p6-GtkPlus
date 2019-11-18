@@ -22,7 +22,7 @@ class GTK::EntryCompletion {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::EntryCompletion;
 
-  has GtkEntryCompletion $!ec;
+  has GtkEntryCompletion $!ec is implementor;
 
   submethod BUILD(:$entrycompletion) {
     die "GTK::EntryCompletion -- Not yet implemented due to GTK::ListStore";

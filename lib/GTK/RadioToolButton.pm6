@@ -14,7 +14,7 @@ our subset RadioToolButtonAncestry is export
   where GtkRadioToolButton | GtkActionable | ToggleToolButtonAncestry;
   
 class GTK::RadioToolButton is GTK::ToggleToolButton {
-  has GtkRadioToolButton $!rtb;
+  has GtkRadioToolButton $!rtb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

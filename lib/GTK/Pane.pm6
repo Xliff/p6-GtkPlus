@@ -17,7 +17,7 @@ our subset PaneAncestry is export
 class GTK::Pane is GTK::Container {
   also does GTK::Roles::Orientable;
 
-  has GtkPaned $!p;
+  has GtkPaned $!p is implementor;
 
   has @!child1;
   has @!child2;

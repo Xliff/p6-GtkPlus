@@ -10,7 +10,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Variant;
 
 class GTK::Compat::Variant {
-  has GVariant $!v;
+  has GVariant $!v is implementor;
 
   submethod BUILD (:$variant) {
     $!v = $variant;

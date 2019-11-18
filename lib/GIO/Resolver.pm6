@@ -19,7 +19,7 @@ class GIO::Resolver {
   also does GTK::Compat::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 
-  has GResolver $!r;
+  has GResolver $!r is implementor;
 
   submethod BUILD (:$resolver) {
     $!r = $resolver;

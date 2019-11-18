@@ -19,7 +19,7 @@ class GTK::Toolbar is GTK::Container {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::ToolShell;
 
-  has GtkToolbar $!tb;
+  has GtkToolbar $!tb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

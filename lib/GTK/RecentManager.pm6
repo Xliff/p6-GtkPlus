@@ -16,7 +16,7 @@ class GTK::RecentManager {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   
-  has GtkRecentManager $!rm;
+  has GtkRecentManager $!rm is implementor;
   
   submethod BUILD (:$manager) {
     self!setObject($!rm = $manager);

@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Visual;
 
 class GTK::Compat::Visual {
-  has GdkVisual $!vis;
+  has GdkVisual $!vis is implementor;
 
   submethod BUILD(:$visual) {
     $!vis = $visual;

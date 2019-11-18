@@ -16,7 +16,7 @@ class GTK::Clipboard {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
-  has GtkClipboard $!cb;
+  has GtkClipboard $!cb is implementor;
 
   submethod BUILD(:$clipboard) {
     self!setObject($!cb = $clipboard);        # GTK::Compat::Roles::Object

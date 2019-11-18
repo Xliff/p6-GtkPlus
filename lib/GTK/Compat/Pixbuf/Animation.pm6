@@ -8,7 +8,7 @@ use GTK::Compat::Pixbuf::Raw::Animation;
 use GTK::Compat::Pixbuf::Animation::Iter;
 
 class GTK::Compat::Pixbuf::Animation {
-  has GdkPixbufAnimation $!pa;
+  has GdkPixbufAnimation $!pa is implementor;
 
   submethod BUILD (:$pixbuf-anim) {
     $!pa = $pixbuf-anim;

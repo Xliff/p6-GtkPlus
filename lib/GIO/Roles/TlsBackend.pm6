@@ -16,10 +16,9 @@ role GIO::Roles::TlsBackend {
   }
 
   method roleInit-TlsBackend is also<roleInit_TlsBackend> {
-    $!tb = cast(
-      GTlsBackend,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!tb = cast( GTlsBackend, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GTlsBackend

@@ -13,7 +13,7 @@ our subset RevealerAncestry is export
   where GtkRevealer | BinAncestry;
 
 class GTK::Revealer is GTK::Bin {
-  has GtkRevealer $!r;
+  has GtkRevealer $!r is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

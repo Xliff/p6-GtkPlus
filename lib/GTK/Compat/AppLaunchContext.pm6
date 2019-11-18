@@ -16,7 +16,7 @@ class GTK::Compat::AppLaunchContext {
   also does GTK::Roles::Types;
   also does GTK::Roles::Properties;
 
-  has GdkAppLaunchContext $!alc;
+  has GdkAppLaunchContext $!alc is implementor;
 
   submethod BUILD(:$context) {
     $!prop = nativecast(GObject, $!alc = $context);

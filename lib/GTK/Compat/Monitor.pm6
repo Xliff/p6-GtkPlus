@@ -14,7 +14,7 @@ class GTK::Compat::Monitor {
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::Generic;
 
-  has GdkMonitor $!mon;
+  has GdkMonitor $!mon is implementor;
 
   submethod BUILD(:$monitor) {
     $!mon = $monitor;

@@ -13,7 +13,7 @@ our subset FixedAncestry is export
   where GtkFixed | ContainerAncestry;
 
 class GTK::Fixed is GTK::Container {
-  has GtkFixed $!f;
+  has GtkFixed $!f is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

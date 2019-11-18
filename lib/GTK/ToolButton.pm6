@@ -17,7 +17,7 @@ our subset ToolButtonAncestry
 class GTK::ToolButton is GTK::ToolItem {
   also does GTK::Roles::Actionable;
 
-  has GtkToolButton $!tb;
+  has GtkToolButton $!tb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

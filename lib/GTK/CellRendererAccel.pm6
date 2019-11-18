@@ -19,7 +19,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CellRendererAccel;
 
-  has GtkCellRendererAccel $!cra;
+  has GtkCellRendererAccel $!cra is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

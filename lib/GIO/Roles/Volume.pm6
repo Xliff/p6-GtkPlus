@@ -25,10 +25,9 @@ role GIO::Roles::Volume {
   }
 
   method roleInit-Volume is also<roleInit_Volume> {
-    $!v = cast(
-      GVolume,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!v = cast( GVolume, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GVolume

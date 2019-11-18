@@ -18,7 +18,7 @@ class GIO::FileIcon {
   also does GIO::Roles::Icon;
   also does GIO::Roles::LoadableIcon;
 
-  has GFileIcon $!fi;
+  has GFileIcon $!fi is implementor;
 
   submethod BUILD (:$fileicon) {
     $!fi = $fileicon;

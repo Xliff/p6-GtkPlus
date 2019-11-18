@@ -19,7 +19,7 @@ class GIO::MemoryInputStream is GIO::InputStream {
   also does GIO::Roles::Seekable;
   also does GIO::Roles::PollableInputStream;
 
-  has GMemoryInputStream $!mis;
+  has GMemoryInputStream $!mis is implementor;
 
   submethod BUILD (:$memory-stream) {
     given $memory-stream {

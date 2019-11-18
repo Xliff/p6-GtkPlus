@@ -17,7 +17,7 @@ our subset ListBoxRowAncestry
 class GTK::ListBoxRow is GTK::Bin {
   also does GTK::Roles::Actionable;
 
-  has GtkListBoxRow $!lbr;
+  has GtkListBoxRow $!lbr is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

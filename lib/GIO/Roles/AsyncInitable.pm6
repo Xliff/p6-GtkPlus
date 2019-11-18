@@ -14,10 +14,9 @@ role GIO::Roles::AsyncInitable {
   has GAsyncInitable $!ai;
 
   method roleInit-AsyncInitable {
-    $!ai = cast(
-      GAsyncInitable,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!ai = cast(GAsyncInitable, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GAsyncInitable

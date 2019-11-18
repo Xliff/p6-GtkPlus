@@ -27,7 +27,7 @@ class GTK::ListStore {
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeSortable;
 
-  has GtkListStore $!ls;
+  has GtkListStore $!ls is implementor;
   has $!accessed = False;
   has $!columns;
 

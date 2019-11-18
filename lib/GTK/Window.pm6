@@ -20,7 +20,7 @@ our subset WindowAncestry is export where GtkWindow | BinAncestry;
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
 class GTK::Window is GTK::Bin {
-  has GtkWindow $!win;
+  has GtkWindow $!win is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

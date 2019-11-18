@@ -21,6 +21,12 @@ class GIO::Roles::AppInfo {
     $!ai = $appinfo;
   }
 
+  method roleInit-AppInfo {
+    my \i = findProperImplementor(self.^attributes);
+
+    $!ai = cast( GAppInfo, i.get_value(self) );
+  }
+
   method GTK::Compat::Types::GAppInfo
     is also<GAppInfo>
   { $!ai }

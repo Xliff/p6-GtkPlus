@@ -12,7 +12,7 @@ use GIO::Roles::Action;
 class GIO::PropertyAction {
   also does GIO::Roles::Action;
 
-  has GPropertyAction $!pa;
+  has GPropertyAction $!pa is implementor;
 
   submethod BUILD (:$action) {
     $!pa = $action;

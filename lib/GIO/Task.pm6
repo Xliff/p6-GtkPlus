@@ -21,7 +21,7 @@ class GIO::Task {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::AsyncResult;
 
-  has GTask $!t;
+  has GTask $!t is implementor;
 
   submethod BUILD (:$task) {
     given $task {

@@ -11,11 +11,17 @@ use GIO::Roles::Signals::ListModel;
 
 role GIO::Roles::ListModel {
   also does GIO::Roles::Signals::ListModel;
-  
+
   has GListModel $!lm;
 
   submethod BUILD (:$model) {
     $!lm = $model;
+  }
+
+  method roleInit-ListModel {
+    my \i = findProperImplementor(self.^attributes);
+
+    $!lm = cast( GListModel, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GListModel

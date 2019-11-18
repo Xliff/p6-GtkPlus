@@ -19,7 +19,7 @@ use GIO::DBus::Roles::Signals::Connection;
 class GIO::DBus::Connection {
   also does GTK::Roles::Properties;
 
-  has GDBusConnection $!dc;
+  has GDBusConnection $!dc is implementor;
 
   submethod BUILD (:$connection) {
     $!dc = $connection;

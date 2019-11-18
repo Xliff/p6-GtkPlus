@@ -4,7 +4,7 @@ use GTK::Compat::Types;
 use GTK::Compat::Pixbuf::Raw::Animation;
 
 class GTK::Compat::Pixbuf::Animation::Iter {
-  has GdkPixbufAnimationIter $!pai;
+  has GdkPixbufAnimationIter $!pai is implementor;
 
   submethod BUILD (:$iter) {
     $!pai = $iter;

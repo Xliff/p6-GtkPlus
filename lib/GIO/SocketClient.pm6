@@ -19,7 +19,7 @@ use GIO::Roles::ProxyResolver;
 class GIO::SocketClient {
   also does GTK::Compat::Roles::Object;
 
-  has GSocketClient $!sc;
+  has GSocketClient $!sc is implementor;
 
   submethod BUILD (:$client) {
     $!sc = $client ~~ GSocketClient ?? $_ !! cast(GSocketClient, $_);

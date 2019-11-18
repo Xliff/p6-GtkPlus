@@ -12,7 +12,7 @@ use GTK::Compat::Roles::Object;
 class GTK::Adjustment {
   also does GTK::Compat::Roles::Object;
   
-  has GtkAdjustment $!adj;
+  has GtkAdjustment $!adj is implementor;
 
   submethod BUILD(GtkAdjustment :$adjustment) {
     self!setObject($!adj = $adjustment);

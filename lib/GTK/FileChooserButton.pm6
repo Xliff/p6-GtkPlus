@@ -19,7 +19,7 @@ our subset FileChooserButtonAncestry
 class GTK::FileChooserButton is GTK::Box {
   also does GTK::Roles::FileChooser;
 
-  has GtkFileChooserButton $!fcb;
+  has GtkFileChooserButton $!fcb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

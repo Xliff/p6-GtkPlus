@@ -13,7 +13,7 @@ class GIO::ZlibCompressor {
   also does GTK::Roles::Properties;
   also does GIO::Roles::Converter;
 
-  has GZlibCompressor $!zc;
+  has GZlibCompressor $!zc is implementor;
 
   submethod BUILD (:$compressor) {
     $!zc = $compressor;

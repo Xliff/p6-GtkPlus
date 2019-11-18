@@ -13,7 +13,7 @@ our subset SearchEntryAncestry is export
   where GtkSearchEntry | EntryAncestry;
 
 class GTK::SearchEntry is GTK::Entry {
-  has GtkSearchEntry $!se;
+  has GtkSearchEntry $!se is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

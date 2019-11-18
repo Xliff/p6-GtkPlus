@@ -14,7 +14,7 @@ my subset Ancestry where GMenu | GMenuModel;
 class GTK::Compat::Menu is GTK::Compat::MenuModel {
   also does GTK::Roles::Types;
 
-  has GMenu $!menu;
+  has GMenu $!menu is implementor;
 
   method GTK::Compat::Types::GMenu
     is also<GMenu>

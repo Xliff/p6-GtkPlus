@@ -22,7 +22,7 @@ sub gtk_drawing_area_new ()
   { * }
 
 class GTK::DrawingArea is GTK::Widget {
-  has GtkDrawingArea $!da;
+  has GtkDrawingArea $!da is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

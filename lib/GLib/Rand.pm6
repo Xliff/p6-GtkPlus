@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GLib::Raw::Rand;
 
 class GLib::Rand {
-  has GRand $!r;
+  has GRand $!r is implementor;
 
   submethod BUILD (:$rand) {
     $!r = $rand;

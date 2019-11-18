@@ -17,7 +17,7 @@ our subset ScaleButtonAncestry is export
 class GTK::ScaleButton is GTK::Button {
   also does GTK::Roles::Orientable;
 
-  has GtkScaleButton $!sb;
+  has GtkScaleButton $!sb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

@@ -17,7 +17,7 @@ class GTK::Printer {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
-  has GtkPrinter $!prn;
+  has GtkPrinter $!prn is implementor;
 
   submethod BUILD(:$printer) {
     self!setObject($!prn = $printer);

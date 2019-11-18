@@ -17,7 +17,7 @@ use GTK::Widget;
 our subset LabelAncestry is export where GtkLabel | WidgetAncestry;
 
 class GTK::Label is GTK::Widget {
-  has GtkLabel $!l;
+  has GtkLabel $!l is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

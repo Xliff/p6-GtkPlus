@@ -18,7 +18,7 @@ our subset PlacesAncestry is export
 class GTK::Places is GTK::ScrolledWindow {
   also does GTK::Roles::Signals::Places;
 
-  has GtkPlacesSidebar $!ps;
+  has GtkPlacesSidebar $!ps is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

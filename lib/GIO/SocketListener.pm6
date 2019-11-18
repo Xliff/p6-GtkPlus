@@ -17,7 +17,7 @@ use GTK::Roles::Properties;
 class GIO::SocketListener {
   also does GTK::Roles::Properties;
 
-  has GSocketListener $!sl;
+  has GSocketListener $!sl is implementor;
 
   submethod BUILD (:$listener) {
     self.setSocketListener($listener);

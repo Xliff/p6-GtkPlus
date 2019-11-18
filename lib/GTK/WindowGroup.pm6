@@ -13,7 +13,7 @@ use GTK::Compat::Roles::Object;
 class GTK::WindowGroup {
   also does GTK::Compat::Roles::Object;
 
-  has GtkWindowGroup $!wg;
+  has GtkWindowGroup $!wg is implementor;
 
   submethod BUILD(:$group) {
     self!setObject($group);

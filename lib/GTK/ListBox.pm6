@@ -20,7 +20,7 @@ class GTK::ListBox is GTK::Container {
   also does GTK::Roles::Actionable;
   also does GTK::Roles::Signals::ListBox;
 
-  has GtkListBox $!lb;
+  has GtkListBox $!lb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

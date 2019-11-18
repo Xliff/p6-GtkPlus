@@ -21,7 +21,7 @@ use GTK::Roles::ToolShell;
 class GTK::ToolItemGroup is GTK::Container {
   also does GTK::Roles::ToolShell;
 
-  has GtkToolItemGroup $!tig;
+  has GtkToolItemGroup $!tig is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

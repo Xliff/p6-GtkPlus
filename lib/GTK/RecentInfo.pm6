@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 
 # STRUCT
 class GTK::RecentInfo {
-  has GtkRecentInfo $!ri;
+  has GtkRecentInfo $!ri is implementor;
   
   submethod BUILD (:$info) {
     $!ri = $info;

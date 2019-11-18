@@ -14,7 +14,7 @@ class GIO::SettingsSchema::Key { ... }
 
 # BOXED
 class GIO::SettingsSchema {
-  has GSettingsSchema $!ss;
+  has GSettingsSchema $!ss is implementor;
 
   submethod BUILD (:$schema) {
     $!ss = $schema;

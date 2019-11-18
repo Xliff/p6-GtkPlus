@@ -16,7 +16,7 @@ my subset Ancestry
         GtkBuilder       | GtkWidget;
 
 class GTK::Dialog::Message is GTK::Dialog {
-  has GtkMessageDialog $!md;
+  has GtkMessageDialog $!md is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

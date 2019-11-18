@@ -10,7 +10,7 @@ use GTK::Compat::Raw::VariantType;
 # OPAQUE STRUCT (BOXED?)
 
 class GTK::Compat::VariantType {
-  has GVariantType $!vt;
+  has GVariantType $!vt is implementor;
 
   submethod BUILD (:$type) {
     $!vt = $type;

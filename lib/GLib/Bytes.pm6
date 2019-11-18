@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GLib::Raw::Bytes;
 
 class GLib::Bytes {
-  has GBytes $!b;
+  has GBytes $!b is implementor;
 
   submethod BUILD (GBytes :$bytes) {
     $!b = $bytes;

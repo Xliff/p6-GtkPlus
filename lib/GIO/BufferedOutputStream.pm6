@@ -17,7 +17,7 @@ our subset BufferedOutputStreamAncestry is export of Mu
 class GIO::BufferedOutputStream is GIO::FilterOutputStream {
   also does GIO::Roles::Seekable;
 
-  has GBufferedOutputStream $!bos;
+  has GBufferedOutputStream $!bos is implementor;
 
   submethod BUILD (:$buffered-stream) {
     given $buffered-stream {

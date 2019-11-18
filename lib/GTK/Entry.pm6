@@ -23,7 +23,7 @@ class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Editable;
   also does GTK::Roles::Signals::Entry;
 
-  has GtkEntry $!e;
+  has GtkEntry $!e is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

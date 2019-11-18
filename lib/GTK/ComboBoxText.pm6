@@ -13,7 +13,7 @@ our subset ComboBoxTextAncestry is export
   where GtkComboBoxText | ComboBoxAncestry;
 
 class GTK::ComboBoxText is GTK::ComboBox {
-  has GtkComboBoxText $!cbt;
+  has GtkComboBoxText $!cbt is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

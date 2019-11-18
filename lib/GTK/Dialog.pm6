@@ -16,7 +16,7 @@ use GTK::Window;
 our subset DialogAncestry is export where GtkDialog | WindowAncestry;
 
 class GTK::Dialog is GTK::Window {
-  has GtkDialog $!d;
+  has GtkDialog $!d is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

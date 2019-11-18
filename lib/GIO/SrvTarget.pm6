@@ -11,7 +11,7 @@ use GTK::Compat::Roles::ListData;
 
 class GIO::SrvTarget {
   # BOXED
-  has GSrvTarget $!st;
+  has GSrvTarget $!st is implementor;
 
   submethod BUILD (:$srv) {
     $!st = $srv;

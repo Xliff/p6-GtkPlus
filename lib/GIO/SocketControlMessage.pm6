@@ -13,7 +13,7 @@ our subset SocketControlMessageAncestry is export of Mu
 class GIO::SocketControlMessage {
   also does GTK::Compat::Roles::Object;
 
-  has GSocketControlMessage $!scm;
+  has GSocketControlMessage $!scm is implementor;
 
   submethod BUILD (:$message) {
     given $message {

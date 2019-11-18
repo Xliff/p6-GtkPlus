@@ -15,7 +15,7 @@ use GTK::Compat::Roles::ListData;
 class GTK::Compat::Pixbuf {
   also does GTK::Compat::Roles::Object;
 
-  has GdkPixbuf $!p;
+  has GdkPixbuf $!p is implementor;
 
   submethod BUILD(:$pixbuf) {
     $!p = $pixbuf;

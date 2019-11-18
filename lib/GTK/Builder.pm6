@@ -23,7 +23,7 @@ class GTK::Builder does Associative {
   
   my (@prefixes, %aliases);
   
-  has GtkBuilder $!b;
+  has GtkBuilder $!b is implementor;
   has GtkWindow $.window;
   has %!types;
   has $!css;

@@ -25,7 +25,7 @@ class GIO::DBus::Proxy {
   also does GIO::Roles::Initable;
   also does GIO::Roles::AsyncInitable;
 
-  has GDBusProxy $!dp;
+  has GDBusProxy $!dp is implementor;
 
   submethod BUILD (:$proxy) {
     $!dp = $proxy;

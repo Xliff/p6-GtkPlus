@@ -23,7 +23,7 @@ class GTK::CellArea {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::CellArea;
 
-  has GtkCellArea $!ca;
+  has GtkCellArea $!ca is implementor;
 
   # Abstract classs GTK::CellArea
 

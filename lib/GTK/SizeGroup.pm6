@@ -14,7 +14,7 @@ use GTK::Compat::Roles::Object;
 class GTK::SizeGroup {
   also does GTK::Compat::Roles::Object;
 
-  has GtkSizeGroup $!sg;
+  has GtkSizeGroup $!sg is implementor;
 
   submethod BUILD(:$sizegroup) {
     self!setObject($!sg = $sizegroup);

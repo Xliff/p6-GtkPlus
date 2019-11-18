@@ -17,7 +17,7 @@ class GTK::Compat::Seat {
   also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Signals::Device;
 
-  has GdkSeat $!s;
+  has GdkSeat $!s is implementor;
 
   submethod BUILD(:$seat) {
     $!s = $seat

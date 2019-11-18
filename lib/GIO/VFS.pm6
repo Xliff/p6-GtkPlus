@@ -12,7 +12,7 @@ use GTK::Compat::Roles::Object;
 class GIO::VFS {
   also does GTK::Compat::Roles::Object;
 
-  has GVfs $!fs;
+  has GVfs $!fs is implementor;
 
   submethod BUILD (:$vfs) {
     $!fs = $vfs;

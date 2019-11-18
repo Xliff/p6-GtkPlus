@@ -10,7 +10,9 @@ role GIO::Roles::Initable {
   has GInitable $!i;
 
   method roleInit-Initable {
-    $!i = cast(GInitable, self.GObject);
+    my \i = findProperImplementor(self.^attributes);
+
+    $!i = cast(GInitable, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GInitable

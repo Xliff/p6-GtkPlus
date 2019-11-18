@@ -24,7 +24,7 @@ class GTK::IconView is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::IconView;
 
-  has GtkIconView $!iv;
+  has GtkIconView $!iv is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

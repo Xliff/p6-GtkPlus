@@ -12,7 +12,7 @@ class GIO::MountOperation {
   also does GTK::Compat::Roles::Object;
   also does GIO::Roles::Signals::MountOperation;
 
-  has GMountOperation $!mo;
+  has GMountOperation $!mo is implementor;
 
   submethod BUILD (:$mount-op) {
     $!mo = $mount-op;

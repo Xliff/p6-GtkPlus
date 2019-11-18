@@ -14,7 +14,7 @@ our subset RadioMenuItemAncestry
   where GtkRadioMenuItem | CheckMenuItemAncestry;
 
 class GTK::RadioMenuItem is GTK::CheckMenuItem {
-  has GtkRadioMenuItem $!rmi;
+  has GtkRadioMenuItem $!rmi is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);

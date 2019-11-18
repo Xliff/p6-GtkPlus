@@ -23,7 +23,7 @@ class GTK::TreeViewColumn {
   # Using GTK::Raw::Utils to prevent circular role dependency between
   # CellLayout and Types
 
-  has GtkTreeViewColumn $!tvc;
+  has GtkTreeViewColumn $!tvc is implementor;
 
   submethod BUILD(:$treeview) {
     self!setObject($!tvc = $treeview);

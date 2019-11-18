@@ -12,7 +12,7 @@ use GTK::PaperSize;
 # BOXED TYPE
 
 class GTK::PageSetup {
-  has GtkPageSetup $!ps;
+  has GtkPageSetup $!ps is implementor;
 
   submethod BUILD(:$page) {
     $!ps = $page;

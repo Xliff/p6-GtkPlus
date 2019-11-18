@@ -24,7 +24,7 @@ class GTK::FlowBox is GTK::Container {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::FlowBox;
 
-  has GtkFlowBox $!fb;
+  has GtkFlowBox $!fb is implementor;
 
   has %!child-manifest;
 

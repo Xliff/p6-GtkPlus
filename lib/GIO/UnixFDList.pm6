@@ -12,7 +12,7 @@ use GTK::Compat::Roles::Object;
 class GIO::UnixFDList {
   also does GTK::Compat::Roles::Object;
 
-  has GUnixFDList $!fd;
+  has GUnixFDList $!fd is implementor;
 
   submethod BUILD (:$!fd) {
     $!fd = $!fd;

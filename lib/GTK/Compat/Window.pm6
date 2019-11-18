@@ -21,7 +21,7 @@ class GTK::Compat::Window {
   also does GTK::Roles::Types;
   also does GTK::Compat::Roles::Signals::Window;
 
-  has GdkWindow $!window;
+  has GdkWindow $!window is implementor;
 
   submethod BUILD(:$window) {
     $!window = $window;
