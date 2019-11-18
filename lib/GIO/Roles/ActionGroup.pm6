@@ -13,10 +13,9 @@ role GIO::Roles::ActionGroup {
   has GActionGroup $!ag;
 
   method !roleInit-ActionGroup is also<!roleInit_ActionGroup> {
-    $!ag = cast(
-      GActionGroup,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!ag = cast( GActionGroup, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GActionGroup

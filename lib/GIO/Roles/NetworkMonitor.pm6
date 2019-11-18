@@ -15,7 +15,9 @@ role GIO::Roles::NetworkMonitor {
   }
 
   method roleInit-NetworkMonitor is also<roleInit_NetworkMonitor> {
-    $!nm = cast(GNetworkMonitor, self.^attributes(:local)[0].get_value(self) );
+    my \i = findProperImplementor(self.^attributes);
+    
+    $!nm = cast( GNetworkMonitor, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GNetworkMonitor

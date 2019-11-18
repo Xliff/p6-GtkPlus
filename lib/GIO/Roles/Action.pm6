@@ -21,10 +21,9 @@ role GIO::Roles::Action {
   }
 
   method !roleInit-Action {
-    $!a = cast(
-      GAction,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!a = cast( GAction, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GAction

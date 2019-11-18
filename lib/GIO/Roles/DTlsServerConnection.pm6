@@ -17,10 +17,9 @@ role GIO::Roles::DtlsServerConnection {
   }
 
   method roleInit-DtlsServerConnection is also<roleInit_DtlsServerConnection> {
-    $!dtsc = cast(
-      GDtlsServerConnection,
-      self.^attributes(:local)[0].get_value(self);
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!dtsc = cast( GDtlsServerConnection, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GDtlsServerConnection

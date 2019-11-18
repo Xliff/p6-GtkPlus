@@ -11,10 +11,9 @@ role GIO::Roles::PollableInputStream {
   has GPollableInputStream $!pis;
 
   method roleInit-PollableInputStream is also<roleInit_PollableInputStream> {
-    $!pis = cast(
-      GPollableInputStream,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!pis = cast(GPollableInputStream, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GPollableInputStream

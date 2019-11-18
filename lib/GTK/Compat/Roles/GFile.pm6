@@ -20,6 +20,12 @@ role GTK::Compat::Roles::GFile {
     self!GFileRoleInit($file) if $file;
   }
 
+  method roleInit-GFile {
+    my \i = findProperImplementor(self.^attributes);
+
+    $!file = cast( GFile, i.get_value(self) );
+  }
+
   method !GFileRoleInit (GFile $file) {
     $!file = $file;
   }

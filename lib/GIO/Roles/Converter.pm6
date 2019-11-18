@@ -12,11 +12,9 @@ role GIO::Roles::Converter {
   }
 
   method roleInit-Converter {
-    $!c = cast(
-      GConverter,
-      # This could be -- self.getOriginal ?
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!c = cast( GConverter, i.get_value(self) );
   }
 
   method new-converrter-obj (GConverter $conv) {

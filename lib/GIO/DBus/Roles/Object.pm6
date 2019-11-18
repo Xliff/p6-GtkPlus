@@ -25,10 +25,9 @@ role GIO::DBus::Roles::Object {
   }
 
   method roleInit-DBusObject is also<roleInit_DBusObject> {
-    $!do = cast(
-      GDBusObject,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!do = cast( GDBusObject, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GDBusObject

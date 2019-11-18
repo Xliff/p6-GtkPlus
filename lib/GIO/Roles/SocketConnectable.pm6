@@ -20,10 +20,9 @@ role GIO::Roles::SocketConnectable {
   { $!sc }
 
   method roleInit-SocketConnectable {
-    $!sc = cast(
-      GSocketConnectable,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!sc = cast( GSocketConnectable, i.get_value(self) );
   }
 
   method new-socketconnectable-obj (GSocketConnectable $connectable)

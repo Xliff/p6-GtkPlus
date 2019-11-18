@@ -15,10 +15,9 @@ role GIO::Roles::TlsFileDatabase {
     die 'Must use GTK::Roles::Properties!'
       unless self ~~ GTK::Roles::Properties;
 
-    $!tfd = cast(
-      GTlsFileDatabase,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!tfd = cast( GTlsFileDatabase, i.get_value(self) );
   }
 
   proto method new-tlsfiledatabase-obj (|)

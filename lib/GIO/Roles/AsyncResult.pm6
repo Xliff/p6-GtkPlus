@@ -14,10 +14,9 @@ role GIO::Roles::AsyncResult {
   }
 
   method roleInit-AsyncResult is also<roleInit_AsyncResult> {
-    $!ar = cast(
-      GAsyncResult,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!ar = cast( GAsyncResult, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GAsyncResult

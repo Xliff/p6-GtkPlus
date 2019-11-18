@@ -27,10 +27,9 @@ role GIO::Roles::DtlsClientConnection {
   method roleInit-DtlsClientConnection
     is also<roleInit_DtlsClientConnection>
   {
-    $!tdcc = cast(
-      GDtlsClientConnection,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!tdcc = cast( GDtlsClientConnection, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GDtlsClientConnection

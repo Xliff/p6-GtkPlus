@@ -11,10 +11,9 @@ role GIO::DBus::Roles::ObjectManager {
   has GDBusObjectManager $!dom;
 
   method roleInit-ObjectManager is also<roleInit_ObjectManager> {
-    $!dom = cast(
-      GDBusObjectManager,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!dom = cast( GDBusObjectManager, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GDBusObjectManager

@@ -23,10 +23,9 @@ role GIO::Roles::Mount {
   }
 
   method roleInit-Mount is also<roleInit_Mount> {
-    $!m = cast(
-      GMount,
-      self.^attributes(:local)[0].get_value(self)
-    );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!m = cast(GMount, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GMount

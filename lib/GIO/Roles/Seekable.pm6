@@ -11,7 +11,9 @@ role GIO::Roles::Seekable {
   has GSeekable $!s;
 
   method roleInit-Seekable is also<roleInit_Seekable> {
-    $!s = cast( GSeekable, self.^attributes(:local)[0].get_value(self) );
+    my \i = findProperImplementor(self.^attributes);
+
+    $!s = cast( GSeekable, i.get_value(self) );
   }
 
   method GTK::Compat::Types::GSeekable
