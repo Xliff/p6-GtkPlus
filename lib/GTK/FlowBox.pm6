@@ -366,7 +366,7 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method select_child ($child) is also<select-child> {
-    my $to-be-selected = self.resolve-selected-child($child);
+    my $to-be-selected = self!resolve-selected-child($child);
 
     gtk_flow_box_select_child($!fb, $to-be-selected);
   }
@@ -425,7 +425,7 @@ class GTK::FlowBox is GTK::Container {
   method unselect_child (GtkFlowBoxChild() $child)
     is also<unselect-child>
   {
-    my $to-be-unselected = self.resolve-selected-child($child);
+    my $to-be-unselected = self!resolve-selected-child($child);
 
     gtk_flow_box_unselect_child($!fb, $to-be-unselected);
   }
