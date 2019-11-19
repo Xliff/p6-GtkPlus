@@ -1,9 +1,9 @@
 use v6.c;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::MenuModel;
+use GIO::Raw::MenuModel;
 
-class GTK::Compat::MenuAttributeIter {
+class GIO::MenuAttributeIter {
   has GMenuAttributeIter $!mai is implementor;
 
   submethod BUILD(:$iter) {

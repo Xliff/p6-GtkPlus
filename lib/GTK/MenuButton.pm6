@@ -8,14 +8,13 @@ use GTK::Raw::MenuButton;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
+use GIO::MenuModel;
 use GTK::Container;
 use GTK::Menu;
 use GTK::Popover;
 use GTK::ToggleButton;
 
-use GTK::Compat::MenuModel;
-
-our subset MenuButtonAncestry is export 
+our subset MenuButtonAncestry is export
   where GtkMenuButton | ToggleButtonAncestry;
 
 class GTK::MenuButton is GTK::ToggleButton {
@@ -36,6 +35,7 @@ class GTK::MenuButton is GTK::ToggleButton {
             $to-parent = nativecast(GtkToggleButton, $_);
             $_;
           }
+
           default {
             $to-parent = $_;
             nativecast(GtkMenuButton, $_);
@@ -65,10 +65,15 @@ class GTK::MenuButton is GTK::ToggleButton {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method align_widget is rw is also<align-widget> {
+  method align_widget (:$raw = False) is rw is also<align-widget> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Container.new( gtk_menu_button_get_align_widget($!mb) );
+        my $c = gtk_menu_button_get_align_widget($!mb);
+
+        $c ??
+          ( $raw ?? $c !! GTK::Container.new($c) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkContainer() $align_widget is copy) {
         gtk_menu_button_set_align_widget($!mb, $align_widget);
@@ -83,16 +88,22 @@ class GTK::MenuButton is GTK::ToggleButton {
       },
       STORE => sub ($, Int() $direction is copy) {
         my guint $d = self.RESOLVE-UINT($direction);
+
         gtk_menu_button_set_direction($!mb, $d);
       }
     );
   }
 
-  method menu_model is rw is also<menu-model> {
+  method menu_model (:$raw = False) is rw is also<menu-model> {
     # GtkMenuModel (really is GMenuModel)
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::MenuModel.new( gtk_menu_button_get_menu_model($!mb) );
+        my $mm = gtk_menu_button_get_menu_model($!mb);
+
+        $mm ??
+          ( $raw ?? $mm !! GIO::MenuModel.new($mm) )
+          !!
+          Nil;
       },
       STORE => sub ($, GMenuModel() $menu_model is copy) {
         gtk_menu_button_set_menu_model($!mb, $menu_model);
@@ -100,10 +111,15 @@ class GTK::MenuButton is GTK::ToggleButton {
     );
   }
 
-  method popover is rw {
+  method popover (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Popover.new( gtk_menu_button_get_popover($!mb) );
+        my $po = gtk_menu_button_get_popover($!mb);
+
+        $po ??
+          ( $raw ?? $po !! GTK::Popover.new($po) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkPopover() $popover is copy) {
         gtk_menu_button_set_popover($!mb, $popover);
@@ -111,10 +127,15 @@ class GTK::MenuButton is GTK::ToggleButton {
     );
   }
 
-  method popup is rw {
+  method popup (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Menu.new( gtk_menu_button_get_popup($!mb) );
+        my $m = gtk_menu_button_get_popup($!mb);
+
+        $m ??
+          ( $raw ?? $m !! GTK::Menu.new($m) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkMenu() $menu is copy) {
         gtk_menu_button_set_popup($!mb, $menu);
@@ -139,6 +160,7 @@ class GTK::MenuButton is GTK::ToggleButton {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_menu_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

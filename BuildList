@@ -78,6 +78,8 @@ GIO::Raw::ListModel
 GIO::Raw::ListStore
 GIO::Raw::MemoryInputStream
 GIO::Raw::MemoryOutputStream
+GIO::Raw::Menu
+GIO::Raw::MenuModel
 GIO::Raw::MountOperation
 GIO::Raw::NetworkAddress
 GIO::Raw::NetworkMonitor
@@ -130,6 +132,7 @@ GIO::Roles::ProxyResolver
 GIO::Roles::RemoteActionGroup
 GIO::Roles::Seekable
 GIO::Roles::Signals::ListModel
+GIO::Roles::Signals::MenuModel
 GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::Proxy
 GIO::Roles::Signals::SocketService
@@ -180,8 +183,6 @@ GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Log
 GTK::Compat::Raw::Main
-GTK::Compat::Raw::Menu
-GTK::Compat::Raw::MenuModel
 GTK::Compat::Raw::Notification
 GTK::Compat::Raw::Pixbuf
 GTK::Compat::Raw::Pixbuf::Transforms
@@ -245,6 +246,8 @@ GIO::DBus::Raw::Server
 GIO::DBus::Roles::Interface
 GIO::DBus::Roles::ObjectManager
 GIO::LaunchContext
+GIO::MenuAttributeIter
+GIO::MenuLinkIter
 GIO::Raw::DataOutputStream
 GIO::Raw::DesktopAppInfo
 GIO::Raw::Drive
@@ -292,9 +295,6 @@ GTK::Compat::Keymap
 GTK::Compat::Log
 GTK::Compat::MainContext
 GTK::Compat::MainLoop
-GTK::Compat::MenuAttributeIter
-GTK::Compat::MenuItem
-GTK::Compat::MenuLinkIter
 GTK::Compat::Mutex
 GTK::Compat::Pixbuf::Animation::Iter
 GTK::Compat::Pixbuf::Transforms
@@ -581,6 +581,8 @@ GIO::InetAddressMask
 GIO::InputStream
 GIO::ListStore
 GIO::MemoryInputStream
+GIO::MenuItem
+GIO::MenuModel
 GIO::MountOperation
 GIO::Notification
 GIO::OutputStream
@@ -635,7 +637,6 @@ GTK::Compat::Display
 GTK::Compat::DisplayManager
 GTK::Compat::Event
 GTK::Compat::HashTable
-GTK::Compat::MenuModel
 GTK::Compat::Pixbuf
 GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::GFile
@@ -664,6 +665,7 @@ GIO::FileIcon
 GIO::FilterInputStream
 GIO::FilterOutputStream
 GIO::MemoryOutputStream
+GIO::Menu
 GIO::PropertyAction
 GIO::Roles::DtlsConnection
 GIO::Roles::Proxy
@@ -678,7 +680,6 @@ GTK::CellRendererAccel
 GTK::CellRendererSpin
 GTK::Compat::AppLaunchContext
 GTK::Compat::Cursor
-GTK::Compat::Menu
 GTK::Compat::Monitor
 GTK::Compat::Window
 GTK::TextBuffer
