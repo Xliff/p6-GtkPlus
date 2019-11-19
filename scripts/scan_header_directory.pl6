@@ -22,8 +22,8 @@ sub MAIN (
     my $contents = .slurp;
 
     my $hf;
-    if $contents ~~ / ^ '### ' (.+?) $/ {
-      $hf = $/[0];
+    if $contents ~~ / ^^ '### ' (.+?) $$ / {
+      $hf = IO::Spec::Unix.splitdir($/[0])[* - 1];
     } else {
       my @path-nodes = $*SPEC.splitdir( .absolute );
       # HACK!
@@ -31,25 +31,28 @@ sub MAIN (
 
       next unless @path-nodes[* - 2] eq 'Raw';
 
-      $hf = $prefix ~ @path-nodes[* - 3, * - 1].join('').lc;
-      if $hf.IO.e {
+      $hf = @path-nodes[* - 3, * - 1].join('').lc;
+      $hf = $headers-dir.IO.add($hf).extension('h');
+      next if $hf eq @completed-headers.any;
+
+      if .IO.e {
         if $write-missing {
-          # s/// as assignment! :)
-          $contents ~~ s[^^ ( 'unit package ' <[ \w : ]>+ ) $$] =
-            "\n\n### { $hf }\n{ $[0] }\n";
-          .rename("{ $_ }.bak");
-          .spurt($contents);
+          if $hf.IO.e {
+            # s/// as assignment! :)
+            $contents ~~ s[^^ ( 'unit package ' <[ \w : ]>+ ) $$] =
+              "\n\n### { $hf }\n{ $[0] }\n";
+            .rename("{ $_ }.bak");
+            .spurt($contents);
+          } else {
+            say "$hf directory does not exist! Skipping...";
+            next;
+          }
         } else {
-          say qq[Would write "### { $hf }" to \$contents];
+          say qq[Would write "### { $hf }" to {$_}];
         }
       }
     }
-    $hf = $headers-dir.IO.add($hf);
-    next if $hf eq @completed-headers.any;
-    unless $hf.IO.e {
-      print "$hf directory does not exist! Skipping...";
-      next;
-    }
+
     @completed-headers.push( $hf );
   }
 

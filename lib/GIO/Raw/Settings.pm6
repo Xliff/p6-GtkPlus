@@ -7,6 +7,9 @@ use GTK::Compat::FileTypes;
 
 unit package GIO::Raw::Settings;
 
+
+### /usr/include/glib-2.0/gio/gsettings.h
+
 sub g_settings_apply (GSettings $settings)
   is native(gio)
   is export

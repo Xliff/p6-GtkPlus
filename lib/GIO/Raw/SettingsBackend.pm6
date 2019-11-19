@@ -6,6 +6,8 @@ use GTK::Compat::Types;
 
 unit package GIO::Raw::SettingsBackend;
 
+### /usr/include/glib-2.0/gio/gsettingsbackend.h
+
 sub g_settings_backend_changed (
   GSettingsBackend $backend,
   Str $key,
