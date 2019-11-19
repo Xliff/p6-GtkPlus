@@ -4,15 +4,19 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Menu;
+use GIO::Raw::Menu;
 
 use GTK::Compat::Variant;
 
-class GTK::Compat::MenuItem {
+use GTK::Compat::Roles::Object;
+
+class GIO::MenuItem {
   has GMenuItem $!mitem is implementor;
 
   submethod BUILD(:$item) {
-    $!mitem = $item
+    $!mitem = $item;
+
+    self.roleInit-Object;
   }
 
   method GTK::Compat::Types::GMenuItem
@@ -27,27 +31,34 @@ class GTK::Compat::MenuItem {
   }
   multi method new (Str() $label, Str() $detailed_action) {
     my $item = g_menu_item_new($label, $detailed_action);
-    self.bless(:$item);
+
+    $item ?? self.bless(:$item) !! Nil;
   }
 
   method new_from_model (GMenuModel() $model, Int() $item_index)
     is also<new-from-model>
   {
-    my gint $ii = self.RESOLVE-INT($item_index);
+    my gint $ii = $item_index;
+
     my $item = g_menu_item_new_from_model($model, $ii);
-    self.bless(:$item);
+
+    $item ?? self.bless(:$item) !! Nil;
   }
 
   method new_section (Str() $label, GMenuModel() $section)
     is also<new-section>
   {
-    self.bless( item => g_menu_item_new_section($label, $section) );
+    my $i = g_menu_item_new_section($label, $section);
+
+    $i ?? self.bless( item => $i ) !! Nil;
   }
 
   method new_submenu (Str() $label, GMenuModel() $submenu)
     is also<new-submenu>
   {
-    self.bless( item => g_menu_item_new_submenu($label, $submenu) );
+    my $i = g_menu_item_new_submenu($label, $submenu);
+
+    $i ?? self.bless( item => $i) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -62,24 +73,35 @@ class GTK::Compat::MenuItem {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_attribute_value (
     Str() $attribute,
-    GVariantType $expected_type
+    GVariantType $expected_type,
+    :$raw = False
   )
     is also<get-attribute-value>
   {
-    GTK::Compat::Variant.new(
-      g_menu_item_get_attribute_value($!mitem, $attribute, $expected_type),
-      :!ref
+    my $v = g_menu_item_get_attribute_value(
+      $!mitem,
+      $attribute,
+      $expected_type
     );
+
+    $v ??
+      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
+      !!
+      Nil;
   }
 
-  method get_link (Str() $link) is also<get-link> {
-    GTK::Compat::MenuModel.new(
-      g_menu_item_get_link($!mitem, $link)
-    );
+  method get_link (Str() $link, :$raw = False) is also<get-link> {
+    my $mm = g_menu_item_get_link($!mitem, $link);
+
+    $mm ??
+      ( $raw ?? $mm !! GTK::Compat::MenuModel.new($mm) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &g_menu_item_get_type, $n, $t );
   }
 

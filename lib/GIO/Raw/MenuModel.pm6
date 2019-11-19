@@ -4,7 +4,6 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::MenuModel;
 
 # va_list...
 sub g_menu_model_get_item_attribute (

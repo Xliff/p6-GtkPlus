@@ -4,9 +4,9 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Menu;
+unit package GIO::Raw::Menu;
 
-sub g_menu_append (GMenu $menu, gchar $label, gchar $detailed_action)
+sub g_menu_append (GMenu $menu, Str $label, Str $detailed_action)
   is native(gio)
   is export
   { * }
@@ -16,12 +16,12 @@ sub g_menu_append_item (GMenu $menu, GMenuItem $item)
   is export
   { * }
 
-sub g_menu_append_section (GMenu $menu, gchar $label, GMenuModel $section)
+sub g_menu_append_section (GMenu $menu, Str $label, GMenuModel $section)
   is native(gio)
   is export
   { * }
 
-sub g_menu_append_submenu (GMenu $menu, gchar $label, GMenuModel $submenu)
+sub g_menu_append_submenu (GMenu $menu, Str $label, GMenuModel $submenu)
   is native(gio)
   is export
   { * }
@@ -34,8 +34,8 @@ sub g_menu_freeze (GMenu $menu)
 sub g_menu_insert (
   GMenu $menu,
   gint $position,
-  gchar $label,
-  gchar $detailed_action
+  Str $label,
+  Str $detailed_action
 )
   is native(gio)
   is export
@@ -49,7 +49,7 @@ sub g_menu_insert_item (GMenu $menu, gint $position, GMenuItem $item)
 sub g_menu_insert_section (
   GMenu $menu,
   gint $position,
-  gchar $label,
+  Str $label,
   GMenuModel $section
 )
   is native(gio)
@@ -59,7 +59,7 @@ sub g_menu_insert_section (
 sub g_menu_insert_submenu (
   GMenu $menu,
   gint $position,
-  gchar $label,
+  Str $label,
   GMenuModel $submenu
 )
   is native(gio)
@@ -68,7 +68,7 @@ sub g_menu_insert_submenu (
 
 sub g_menu_item_get_attribute_value (
   GMenuItem $menu_item,
-  gchar $attribute,
+  Str $attribute,
   uint32 $expected_type       # GVariantType $expected_type
 )
   returns GVariant
@@ -76,7 +76,7 @@ sub g_menu_item_get_attribute_value (
   is export
   { * }
 
-sub g_menu_item_get_link (GMenuItem $menu_item, gchar $link)
+sub g_menu_item_get_link (GMenuItem $menu_item, Str $link)
   returns GMenuModel
   is native(gio)
   is export
@@ -88,7 +88,7 @@ sub g_menu_item_get_type ()
   is export
   { * }
 
-sub g_menu_item_new (gchar $label, gchar $detailed_action)
+sub g_menu_item_new (Str $label, Str $detailed_action)
   returns GMenuItem
   is native(gio)
   is export
@@ -100,13 +100,13 @@ sub g_menu_item_new_from_model (GMenuModel $model, gint $item_index)
   is export
   { * }
 
-sub g_menu_item_new_section (gchar $label, GMenuModel $section)
+sub g_menu_item_new_section (Str $label, GMenuModel $section)
   returns GMenuItem
   is native(gio)
   is export
   { * }
 
-sub g_menu_item_new_submenu (gchar $label, GMenuModel $submenu)
+sub g_menu_item_new_submenu (Str $label, GMenuModel $submenu)
   returns GMenuItem
   is native(gio)
   is export
@@ -114,7 +114,7 @@ sub g_menu_item_new_submenu (gchar $label, GMenuModel $submenu)
 
 sub g_menu_item_set_action_and_target_value (
   GMenuItem $menu_item,
-  gchar $action,
+  Str $action,
   GVariant $target_value
 )
   is native(gio)
@@ -123,7 +123,7 @@ sub g_menu_item_set_action_and_target_value (
 
 sub g_menu_item_set_attribute_value (
   GMenuItem $menu_item,
-  gchar $attribute,
+  Str $attribute,
   GVariant $value
 )
   is native(gio)
@@ -132,7 +132,7 @@ sub g_menu_item_set_attribute_value (
 
 sub g_menu_item_set_detailed_action (
   GMenuItem $menu_item,
-  gchar $detailed_action
+  Str $detailed_action
 )
   is native(gio)
   is export
@@ -143,14 +143,14 @@ sub g_menu_item_set_icon (GMenuItem $menu_item, GIcon $icon)
   is export
   { * }
 
-sub g_menu_item_set_label (GMenuItem $menu_item, gchar $label)
+sub g_menu_item_set_label (GMenuItem $menu_item, Str $label)
   is native(gio)
   is export
   { * }
 
 sub g_menu_item_set_link (
   GMenuItem $menu_item,
-  gchar $link,
+  Str $link,
   GMenuModel $model
 )
   is native(gio)
@@ -173,7 +173,7 @@ sub g_menu_new ()
   is export
   { * }
 
-sub g_menu_prepend (GMenu $menu, gchar $label, gchar $detailed_action)
+sub g_menu_prepend (GMenu $menu, Str $label, Str $detailed_action)
   is native(gio)
   is export
   { * }
@@ -183,12 +183,12 @@ sub g_menu_prepend_item (GMenu $menu, GMenuItem $item)
   is export
   { * }
 
-sub g_menu_prepend_section (GMenu $menu, gchar $label, GMenuModel $section)
+sub g_menu_prepend_section (GMenu $menu, Str $label, GMenuModel $section)
   is native(gio)
   is export
   { * }
 
-sub g_menu_prepend_submenu (GMenu $menu, gchar $label, GMenuModel $submenu)
+sub g_menu_prepend_submenu (GMenu $menu, Str $label, GMenuModel $submenu)
   is native(gio)
   is export
   { * }

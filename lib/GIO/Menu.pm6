@@ -3,32 +3,55 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::MenuModel;
-use GTK::Compat::Raw::Menu;
 use GTK::Compat::Types;
 
-use GTK::Roles::Types;
+use GIO::Raw::Menu;
 
-my subset Ancestry where GMenu | GMenuModel;
+use GIO::MenuModel;
 
-class GTK::Compat::Menu is GTK::Compat::MenuModel {
-  also does GTK::Roles::Types;
+my subset GIOMenuAncestry is export of Mu
+  where GMenu | GMenuModel;
 
-  has GMenu $!menu is implementor;
+class GIO::Menu is GIO::MenuModel {
+  has GMenu $!menu;
 
   method GTK::Compat::Types::GMenu
     is also<GMenu>
   { $!menu }
 
   submethod BUILD(:$menu) {
-    self.setMenuModel( nativecast(GMenuModel, $!menu = $menu) );
+    given $menu {
+      when GIOMenuAncestry {
+        my $to-parent;
+        $!menu = do {
+          when GMenu {
+            $to-parent = cast(GMenuModel, $_);
+            $_;
+          }
+
+          default {
+            $to-parent = $_;
+            cast(GMenu, $_);
+          }
+        }
+        self.setMenuModel($to-parent);
+      }
+
+      when GIO::Menu {
+      }
+
+      default {
+      }
+    }
   }
 
   multi method new {
-    self.bless( menu => g_menu_new() );
+    my $m = g_menu_new();
+
+    $m ?? self.bless( menu => $m ) !! Nil;
   }
-  multi method new (GMenuModel() $menu) {
-    self.bless(:$menu);
+  multi method new (GMenuModel $menu) {
+    self.bless( :$menu );
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -66,14 +89,16 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
   }
 
   method insert (Int() $position, Str() $label, Str() $detailed_action) {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     g_menu_insert($!menu, $p, $label, $detailed_action);
   }
 
   method insert_item (Int() $position, GMenuItem() $item)
     is also<insert-item>
   {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     g_menu_insert_item($!menu, $p, $item);
   }
 
@@ -84,7 +109,8 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
   )
     is also<insert-section>
   {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     g_menu_insert_section($!menu, $p, $label, $section);
   }
 
@@ -95,7 +121,8 @@ class GTK::Compat::Menu is GTK::Compat::MenuModel {
   )
     is also<insert-submenu>
   {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     g_menu_insert_submenu($!menu, $p, $label, $submenu);
   }
 

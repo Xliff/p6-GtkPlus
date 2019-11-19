@@ -3,9 +3,9 @@ use v6.c;
 use Method::Also;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::MenuModel;
+use GIO::Raw::MenuModel;
 
-class GTK::Compat::MenuLinkIter {
+class GIO::MenuLinkIter {
   has GMenuLinkIter $!mli is implementor;
 
   submethod BUILD (:$iter) {
@@ -17,7 +17,9 @@ class GTK::Compat::MenuLinkIter {
   }
 
   method get_type is also<get-type> {
-    g_menu_link_iter_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &g_menu_link_iter_get_type, $n, $t );
   }
 
   method next {
@@ -28,7 +30,12 @@ class GTK::Compat::MenuLinkIter {
     g_menu_link_iter_get_name($!mli);
   }
 
-  method value {
-    g_menu_link_iter_get_value($!mli);
+  method value (:$raw = False) {
+    my $mm = g_menu_link_iter_get_value($!mli);
+
+    $mm ??
+      ( $raw ?? $mm !! ::('GIO::MenuModel').new($mm) )
+      !!
+      Nil;
   }
 }

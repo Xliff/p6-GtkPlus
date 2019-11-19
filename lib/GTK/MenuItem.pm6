@@ -54,6 +54,7 @@ class GTK::MenuItem is GTK::Bin {
     self.activate.tap({ $clicked();  }) with $clicked;
     self.activate.tap({ $activate(); }) with $activate;
     self.right_justified = True if $right;
+    self.show;
   }
 
   method setMenuItem($menuitem) {
@@ -224,12 +225,12 @@ class GTK::MenuItem is GTK::Bin {
   }
 
   method submenu is rw {
-    # We can't bring in MenuShellAncestry without causing all kinds of bad, 
-    # so we reproduce it here. In a set of bad options, it's the one that's 
+    # We can't bring in MenuShellAncestry without causing all kinds of bad,
+    # so we reproduce it here. In a set of bad options, it's the one that's
     # the least bad.
-    my subset WidgetOrObject of Mu 
+    my subset WidgetOrObject of Mu
       where GTK::Widget | GtkWidget;
-      
+
     Proxy.new(
       FETCH => sub ($) {
         GTK::Widget.new( gtk_menu_item_get_submenu($!mi) );

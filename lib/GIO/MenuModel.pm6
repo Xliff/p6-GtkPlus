@@ -3,55 +3,57 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::MenuAttributeIter;
-use GTK::Compat::MenuLinkIter;
 use GTK::Compat::Types;
-use GTK::Compat::Raw::MenuModel;
 
-use GTK::Roles::Types;
+use GIO::Raw::MenuModel;
+
+use GIO::MenuAttributeIter;
+use GIO::MenuLinkIter;
+
 use GTK::Compat::Roles::Object;
-use GTK::Compat::Roles::Signals;
+use GIO::Roles::Signals::MenuModel;
 
 sub EXPORT {
   %(
-    GTK::Compat::MenuAttributeIter::,
-    GTK::Compat::MenuLinkIter::,
+    GIO::MenuAttributeIter::,
+    GIO::MenuLinkIter::,
   );
 }
 
-class GTK::Compat::MenuModel {
-  also does GTK::Roles::Types;
+class GIO::MenuModel {
   also does GTK::Compat::Roles::Object;
-  also does GTK::Compat::Roles::Signals;
+  also does GIO::Roles::Signals::MenuModel;
 
-  has GMenuModel $!m is implementor;
+  has GMenuModel $!mm is implementor;
 
   submethod BUILD(:$model) {
-    self!setObject($!m = $model) if $model.defined;
+    self.setModel($model) if $model;
   }
 
   submethod DESTROY {
-    self.disconnect-all(%_) for %!signals-compat;
+    self.disconnect-all(%_) for %!signals-mm;
   }
 
   method setMenuModel(GMenuModel $model) {
-    $!m = $model;
+    $!mm = $model;
+
+    self.roleInit-Object;
   }
 
   method new (GMenuModel $model) {
-    self.bless(:$model);
+    self.bless( :$model );
   }
 
   method GTK::Compat::Types::GMenuModel
     is also<GMenuModel>
-  { $!m }
+  { $!mm }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
   # GMenuModel, gint, gint, gint, gpointer
   method items-changed is also<items_changed> {
-    self.connect-items-changed($!m);
+    self.connect-items-changed($!mm);
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -67,9 +69,10 @@ class GTK::Compat::MenuModel {
   )
     is also<get-item-attribute-value>
   {
-    my gint $ii = self.RESOLVE-INT($item_index);
+    my gint $ii = $item_index;
+
     g_menu_model_get_item_attribute_value(
-      $!m,
+      $!mm,
       $ii,
       $attribute,
       $expected_type
@@ -82,16 +85,22 @@ class GTK::Compat::MenuModel {
   )
     is also<get-item-link>
   {
-    my gint $ii = self.RESOLVE-INT($item_index);
-    g_menu_model_get_item_link($!m, $ii, $link);
+    my gint $ii = $item_index;
+
+    g_menu_model_get_item_link($!mm, $ii, $link);
   }
 
-  method get_n_items is also<get-n-items> {
-    g_menu_model_get_n_items($!m);
+  method get_n_items
+    is also<
+      get-n-items
+      elems
+    >
+  {
+    g_menu_model_get_n_items($!mm);
   }
 
   method is_mutable is also<is-mutable> {
-    g_menu_model_is_mutable($!m);
+    g_menu_model_is_mutable($!mm);
   }
 
   method emit_items_changed (
@@ -102,26 +111,33 @@ class GTK::Compat::MenuModel {
     is also<emit-items-changed>
   {
     my @i = ($position, $removed, $added);
-    my gint ($p, $r, $a) = self.RESOLVE-INT(@i);
-    g_menu_model_items_changed($!m, $position, $removed, $added);
+    my gint ($p, $r, $a) = @i;
+
+    g_menu_model_items_changed($!mm, $position, $removed, $added);
   }
 
-  method iterate_item_attributes (Int() $item_index)
+  method iterate_item_attributes (Int() $item_index, :$raw = False)
     is also<iterate-item-attributes>
   {
-    my gint $ii = self.RESOLVE-INT($item_index);
-    GTK::Compat::MenuAttributeIter.new(
-      g_menu_model_iterate_item_attributes($!m, $ii);
-    );
+    my gint $ii = $item_index;
+    my $mai = g_menu_model_iterate_item_attributes($!mm, $ii);
+
+    $mai ??
+      ( $raw ?? $mai !! GIO::MenuAttributeIter.new($mai) )
+      !!
+      Nil;
   }
 
-  method iterate_item_links (Int() $item_index)
+  method iterate_item_links (Int() $item_index, :$raw = False)
     is also<iterate-item-links>
   {
-    my gint $ii = self.RESOLVE-INT($item_index);
-    GTK::Compat::MenuLinkIter.new(
-      g_menu_model_iterate_item_links($!m, $ii);
-    );
+    my gint $ii = $item_index;
+    my $mli = g_menu_model_iterate_item_links($!mm, $ii);
+
+    $mli ??
+      ( $raw ?? $mli !! GTK::Compat::MenuLinkIter.new($mli) )
+      !!
+      Nil;
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
