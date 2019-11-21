@@ -97,11 +97,17 @@ class GLib::IOChannel {
       STORE => -> $, Int() $flags { self.set_flags($flags) };
   }
 
+  method line_term is rw {
+    Proxy.new:
+      FETCH => -> $            { self.get_line_term( :!all ) },
+      STORE => -> $, Str() $lt { self.set_line_term($lt, $lt.chars) };
+  }
+
   method error_from_errno {
     GIOChannelErrorEnum( g_io_channel_error_from_errno($!gio) );
   }
 
-  method error_quark {
+  method error_quark ( GLib::IOChannel:U: ){
     g_io_channel_error_quark();
   }
 
@@ -153,7 +159,9 @@ class GLib::IOChannel {
   }
 
   method get_buffer_condition {
-    g_io_channel_get_buffer_condition($!gio);
+    GIOConditionEnum(
+      g_io_channel_get_buffer_condition($!gio)
+    );
   }
 
   method get_encoding {
@@ -164,21 +172,51 @@ class GLib::IOChannel {
     GIOStatusEnum( g_io_channel_get_flags($!gio) );
   }
 
-  method get_line_term (gint $length) {
-    g_io_channel_get_line_term($!gio, $length);
+  proto method get_line_term (|)
+  { * }
+
+  multi method get_line_term (:$all = True) {
+    samewith($, :$all);
+  }
+  multi method get_line_term ($length is rw, :$all = False) {
+    my gint $l = 0;
+    my $rv = g_io_channel_get_line_term($!gio, $length);
+
+    $length = $l;
+    $all.not ?? $rv !! ($rv, $length);
   }
 
-  method init {
-    g_io_channel_init($!gio);
+  method init (GLib::IOChannel:U: GIOChannel $io) {
+    g_io_channel_init($io);
   }
 
-  method read_chars (
-    Str $buf,
-    gsize $count,
-    gsize $bytes_read,
-    CArray[Pointer[GError]] $error = gerror
+  proto method read_chars (|)
+  { * }
+
+  multi method read_chars (
+    Str() $buf,
+    Int() $count,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = True
   ) {
-    g_io_channel_read_chars($!gio, $buf, $count, $bytes_read, $error);
+    samewith($buf, $count, $, $error, :$all);
+  }
+  multi method read_chars (
+    Str() $buf,
+    Int() $count,
+    $bytes_read is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my gsize ($c, $br) = ($count, 0);
+
+    clear_error;
+    my $rv = GIOStatusEnum(
+      g_io_channel_read_chars($!gio, $buf, $count, $bytes_read, $error
+    );
+    set_error($error);
+    $bytes_read = $br;
+    $all.not ?? $rv !! ($rv, $bytes_read);
   }
 
   proto method read_line (|)
@@ -311,7 +349,12 @@ class GLib::IOChannel {
     Str() $encoding,
     CArray[Pointer[GError]] $error = gerror
   ) {
-    g_io_channel_set_encoding($!gio, $encoding, $error);
+    clear_error;
+    my $rv = GIOStatusEnum(
+      g_io_channel_set_encoding($!gio, $encoding, $error)
+    );
+    set_error($error);
+    $rv;
   }
 
   method set_flags (
@@ -326,8 +369,10 @@ class GLib::IOChannel {
     $rc;
   }
 
-  method set_line_term (Str $line_term, gint $length) {
-    g_io_channel_set_line_term($!gio, $line_term, $length);
+  method set_line_term (Str() $line_term, Int() $length) {
+    my gint $l = $length;
+
+    g_io_channel_set_line_term($!gio, $line_term, $l);
   }
 
   method shutdown (
