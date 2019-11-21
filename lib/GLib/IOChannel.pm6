@@ -23,13 +23,16 @@ class GLib::IOChannel {
 
   multi method new (
     Int() $filedesc,
-    :$unix is required
+    :file-descriptor(:fle_descriptor(:$fd)) is required
   ) {
-    self.unix_new($filedesc);
+    self.new_fd($filedesc);
   }
-  method unix_new (Int() $filedesc) {
-    my gint $fd = resolve-int($filedesc);
-    my $io = g_io_channel_unix_new($fd);
+  method new_fd (Int() $filedesc) {
+    my gint $fd = $filedesc;
+    my $io = $*DISTRO.is-win ??
+      g_io_channel_win32_new_fd($filedesc)
+      !!
+      g_io_channel_unix_new($fd)
 
     $io ?? self.bless( io-channel => $io ) !! Nil;
   }
@@ -50,6 +53,18 @@ class GLib::IOChannel {
     clear_error;
     my $io = g_io_channel_new_file($filename, $mode, $error);
     set_error($error);
+  }
+
+  method win32_new_messages {
+    die 'This call only allowed on windows' unless $*DISTRO.is-win;
+
+    g_io_channel_win32_new_messages($!gio);
+  }
+
+  method win32_new_socket {
+    die 'This call only allowed on windows' unless $*DISTRO.is-win;
+
+    g_io_channel_win32_new_socket($!gio);
   }
 
   method buffer_size is rw {
@@ -166,6 +181,13 @@ class GLib::IOChannel {
 
   method get_encoding {
     g_io_channel_get_encoding($!gio);
+  }
+
+  method get_fd {
+    $*DISTRO.is-win ??
+      g_io_channel_win32_get_fd($!gio)
+      !!
+      g_io_channel_unix_get_fd($!gio)
   }
 
   method get_flags {
@@ -387,39 +409,25 @@ class GLib::IOChannel {
     $rc;
   }
 
-  method unix_get_fd {
-    g_io_channel_unix_get_fd($!gio);
-  }
-
   method unref {
     g_io_channel_unref($!gio);
   }
 
-  method win32_get_fd {
-    g_io_channel_win32_get_fd($!gio);
-  }
-
   method win32_make_pollfd (GIOCondition $condition, GPollFD $fd) {
+    die 'This call only allowed on windows' unless $*DISTRO.is-win;
+
     g_io_channel_win32_make_pollfd($!gio, $condition, $fd);
   }
 
-  method win32_new_fd {
-    g_io_channel_win32_new_fd($!gio);
-  }
+  method win32_poll (GPollFDNonWin $fds, gint $n_fds, gint $timeout) {
+    die 'This call only allowed on windows' unless $*DISTRO.is-win;
 
-  method win32_new_messages {
-    g_io_channel_win32_new_messages($!gio);
-  }
-
-  method win32_new_socket {
-    g_io_channel_win32_new_socket($!gio);
-  }
-
-  method win32_poll (GPollFDNonWin $fds, gint $n_fds, gint $timeout_) {
-    g_io_channel_win32_poll($fds, $n_fds, $timeout_);
+    g_io_channel_win32_poll($fds, $n_fds, $timeout=);
   }
 
   method win32_set_debug (gboolean $flag) {
+    die 'This call only allowed on windows' unless $*DISTRO.is-win;
+
     g_io_channel_win32_set_debug($!gio, $flag);
   }
 
