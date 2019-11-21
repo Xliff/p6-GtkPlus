@@ -560,7 +560,8 @@ our enum GPasswordSaveEnum is export <
   G_PASSWORD_SAVE_PERMANENTLY
 >;
 
-our enum GIOChannelError is export <
+constant GIOChannelError is export := guint;
+our enum GIOChannelErrorEnum is export <
   G_IO_CHANNEL_ERROR_FBIG
   G_IO_CHANNEL_ERROR_INVAL
   G_IO_CHANNEL_ERROR_IO
@@ -629,7 +630,8 @@ our enum GIOError is export (
   G_IO_ERROR_UNKNOWN   => 3
 );
 
-our enum GIOStatus is export <
+constant GIOStatus is export := guint;
+our enum GIOStatusEnum is export <
   G_IO_STATUS_ERROR
   G_IO_STATUS_NORMAL
   G_IO_STATUS_EOF
@@ -643,7 +645,8 @@ our enum GSeekTypeEnum is export <
   G_SEEK_END
 >;
 
-our enum GIOFlags is export (
+constant GIOFlags is export := guint;
+our enum GIOFlagsEnum is export (
   G_IO_FLAG_APPEND       => 1,
   G_IO_FLAG_NONBLOCK     => 2,
   G_IO_FLAG_IS_READABLE  => 1 +< 2,      # Read only flag

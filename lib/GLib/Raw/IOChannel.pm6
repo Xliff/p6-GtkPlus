@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::IOChannel;
+unit package GLib::Raw::IOChannel;
 
 sub g_io_channel_error_from_errno (gint $en)
   returns uint32 # GIOChannelError

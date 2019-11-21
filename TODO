@@ -24,7 +24,9 @@
   - build-mro.pl6 is now doing this (check to insure it is using ::Bundle !).
   - GTK.pm6 would then consist of all GTK::Bundle files
 - Consider: Any UINT parameter should have a "where * > 0" placed on it. LARGE initiative. Subject to review.
-
+- For refactoring: the code in the "attributes" (not "properties") routines should have the getter and setter routines 
+  broken out into their own methods. The existing "attribute" methods should then call the corresponding method. This will
+  allow for better compatibility with all GLib based code.
 - Determine if GTK::Roles::Pointers.p can return a generic Pointer[T] where T is the type of the original object:
   NOTE: This invocation WILL work:
     nativecast( Pointer.^parameterize(self.WHAT), self );
