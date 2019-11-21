@@ -145,6 +145,7 @@ GLib::Raw::Bytes
 GLib::Raw::Checksum
 GLib::Raw::Error
 GLib::Raw::HMAC
+GLib::Raw::IOChannel
 GLib::Raw::Module
 GLib::Raw::Quark
 GLib::Raw::Quarks
@@ -177,7 +178,6 @@ GTK::Compat::Raw::GFile
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
 GTK::Compat::Raw::HashTable
-GTK::Compat::Raw::IOChannel
 GTK::Compat::Raw::IsType
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
@@ -289,7 +289,6 @@ GTK::Compat::DateTime
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
-GTK::Compat::IOChannel
 GTK::Compat::KeyFile
 GTK::Compat::Keymap
 GTK::Compat::Log
@@ -521,6 +520,7 @@ GIO::Roles::Signals::ActionGroup
 GIO::Roles::Signals::Settings
 GIO::SrvTarget
 GLib::ByteArray
+GLib::IOChannel
 GTK::Compat::Cairo
 GTK::Compat::DragContext
 GTK::Compat::FrameClock

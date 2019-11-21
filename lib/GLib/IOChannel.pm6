@@ -1,5 +1,6 @@
 use v6.c;
 
+use Method::Also;
 use NativeCall;
 
 use GTK::Raw::Utils;
@@ -27,12 +28,12 @@ class GLib::IOChannel {
   ) {
     self.new_fd($filedesc);
   }
-  method new_fd (Int() $filedesc) {
+  method new_fd (Int() $filedesc) is also<new-fd> {
     my gint $fd = $filedesc;
     my $io = $*DISTRO.is-win ??
       g_io_channel_win32_new_fd($filedesc)
       !!
-      g_io_channel_unix_new($fd)
+      g_io_channel_unix_new($fd);
 
     $io ?? self.bless( io-channel => $io ) !! Nil;
   }
@@ -49,25 +50,27 @@ class GLib::IOChannel {
     Str() $filename,
     Str() $mode,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<new-file>
+  {
     clear_error;
     my $io = g_io_channel_new_file($filename, $mode, $error);
     set_error($error);
   }
 
-  method win32_new_messages {
+  method win32_new_messages is also<win32-new-messages> {
     die 'This call only allowed on windows' unless $*DISTRO.is-win;
 
     g_io_channel_win32_new_messages($!gio);
   }
 
-  method win32_new_socket {
+  method win32_new_socket is also<win32-new-socket> {
     die 'This call only allowed on windows' unless $*DISTRO.is-win;
 
     g_io_channel_win32_new_socket($!gio);
   }
 
-  method buffer_size is rw {
+  method buffer_size is rw is also<buffer-size> {
     Proxy.new(
       FETCH => sub ($) {
         g_io_channel_get_buffer_size($!gio);
@@ -93,7 +96,7 @@ class GLib::IOChannel {
     );
   }
 
-  method close_on_unref is rw {
+  method close_on_unref is rw is also<close-on-unref> {
     Proxy.new(
       FETCH => sub ($) {
         so g_io_channel_get_close_on_unref($!gio);
@@ -112,17 +115,17 @@ class GLib::IOChannel {
       STORE => -> $, Int() $flags { self.set_flags($flags) };
   }
 
-  method line_term is rw {
+  method line_term is rw is also<line-term> {
     Proxy.new:
       FETCH => -> $            { self.get_line_term( :!all ) },
       STORE => -> $, Str() $lt { self.set_line_term($lt, $lt.chars) };
   }
 
-  method error_from_errno {
+  method error_from_errno is also<error-from-errno> {
     GIOChannelErrorEnum( g_io_channel_error_from_errno($!gio) );
   }
 
-  method error_quark ( GLib::IOChannel:U: ){
+  method error_quark ( GLib::IOChannel:U: )is also<error-quark> {
     g_io_channel_error_quark();
   }
 
@@ -137,7 +140,9 @@ class GLib::IOChannel {
     Int() $condition,
     &func,
     gpointer $user_data = gpointer
-  ) {
+  )
+    is also<add-watch>
+  {
     my guint $c = $condition,
 
     g_io_add_watch($!gio, $condition, &func, $user_data);
@@ -149,7 +154,9 @@ class GLib::IOChannel {
     &func,
     gpointer $user_data    = gpointer,
     GDestroyNotify $notify = gpointer
-  ) {
+  )
+    is also<add-watch-full>
+  {
     my gint  $p = $priority;
     my guint $c = $condition; # GIOCondition
 
@@ -163,7 +170,7 @@ class GLib::IOChannel {
     );
   }
 
-  method create_watch (Int() $condition, :$raw = False) {
+  method create_watch (Int() $condition, :$raw = False) is also<create-watch> {
     my GIOCondition $c = $condition;
     my $s = g_io_create_watch($!gio, $c);
 
@@ -173,28 +180,29 @@ class GLib::IOChannel {
       Nil;
   }
 
-  method get_buffer_condition {
+  method get_buffer_condition is also<get-buffer-condition> {
     GIOConditionEnum(
       g_io_channel_get_buffer_condition($!gio)
     );
   }
 
-  method get_encoding {
+  method get_encoding is also<get-encoding> {
     g_io_channel_get_encoding($!gio);
   }
 
-  method get_fd {
+  method get_fd is also<get-fd> {
     $*DISTRO.is-win ??
       g_io_channel_win32_get_fd($!gio)
       !!
       g_io_channel_unix_get_fd($!gio)
   }
 
-  method get_flags {
+  method get_flags is also<get-flags> {
     GIOStatusEnum( g_io_channel_get_flags($!gio) );
   }
 
   proto method get_line_term (|)
+      is also<get-line-term>
   { * }
 
   multi method get_line_term (:$all = True) {
@@ -213,6 +221,7 @@ class GLib::IOChannel {
   }
 
   proto method read_chars (|)
+      is also<read-chars>
   { * }
 
   multi method read_chars (
@@ -234,7 +243,7 @@ class GLib::IOChannel {
 
     clear_error;
     my $rv = GIOStatusEnum(
-      g_io_channel_read_chars($!gio, $buf, $count, $bytes_read, $error
+      g_io_channel_read_chars($!gio, $buf, $count, $bytes_read, $error)
     );
     set_error($error);
     $bytes_read = $br;
@@ -242,6 +251,7 @@ class GLib::IOChannel {
   }
 
   proto method read_line (|)
+      is also<read-line>
   { * }
 
   multi method read_line (
@@ -270,6 +280,7 @@ class GLib::IOChannel {
   }
 
   proto method read_line_string (|)
+      is also<read-line-string>
   { * }
 
   multi method read_line_string (
@@ -297,6 +308,7 @@ class GLib::IOChannel {
   }
 
   proto method read_to_end (|)
+      is also<read-to-end>
   { * }
 
   multi method read_to_end (
@@ -305,9 +317,9 @@ class GLib::IOChannel {
   ) {
     samewith($, $, $error, :$all);
   }
-  method read_to_end (
+  multi method read_to_end (
     $str_return is rw,
-    $length is rw,
+    $length     is rw,
     CArray[Pointer[GError]] $error = gerror,
     :$all = False
   ) {
@@ -320,11 +332,12 @@ class GLib::IOChannel {
       g_io_channel_read_to_end($!gio, $sr, $l, $error)
     );
     set_error($error);
-    ($str_return, $length) = ($str[0], $l);
+    ($str_return, $length) = ($sr[0], $l);
     $all.not ?? $rc !! ($rc, $str_return, $length);
   }
 
   proto method read_unichar (|)
+      is also<read-unichar>
   { * }
 
   multi method read_unichar (
@@ -345,19 +358,22 @@ class GLib::IOChannel {
       g_io_channel_read_unichar($!gio, $t, $error)
     );
     set_error($error);
-    $the_char = $t;
-    $all.not ?? $rc !! ($rc, $the_char);
+    $thechar = $t;
+    $all.not ?? $rc !! ($rc, $thechar);
   }
 
   method ref {
     g_io_channel_ref($!gio);
+    self;
   }
 
   method seek_position (
     Int() $offset,
     Int() $type,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<seek-position>
+  {
     my gint64 $o = $offset;
     my GSeekType $t = $type,
 
@@ -370,7 +386,9 @@ class GLib::IOChannel {
   method set_encoding (
     Str() $encoding,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<set-encoding>
+  {
     clear_error;
     my $rv = GIOStatusEnum(
       g_io_channel_set_encoding($!gio, $encoding, $error)
@@ -382,7 +400,9 @@ class GLib::IOChannel {
   method set_flags (
     Int() $flags,
     CArray[Pointer[GError]] $error = gerror
-  ) {
+  )
+    is also<set-flags>
+  {
     my GIOFlags $f = $flags;
 
     clear_error;
@@ -391,7 +411,9 @@ class GLib::IOChannel {
     $rc;
   }
 
-  method set_line_term (Str() $line_term, Int() $length) {
+  method set_line_term (Str() $line_term, Int() $length)
+    is also<set-line-term>
+  {
     my gint $l = $length;
 
     g_io_channel_set_line_term($!gio, $line_term, $l);
@@ -413,38 +435,99 @@ class GLib::IOChannel {
     g_io_channel_unref($!gio);
   }
 
-  method win32_make_pollfd (GIOCondition $condition, GPollFD $fd) {
+  proto method win32_make_pollfd (|)
+      is also<win32-make-pollfd>
+  { * }
+
+  multi method win32_make_pollfd (Int() $condition) {
+    my $fd = GPollFD.new;
+
+    samewith($condition, $fd);
+  }
+  multi method win32_make_pollfd (Int() $condition, GPollFD $fd) {
     die 'This call only allowed on windows' unless $*DISTRO.is-win;
+
+    my GIOCondition $c = $condition;
 
     g_io_channel_win32_make_pollfd($!gio, $condition, $fd);
+    $fd
   }
 
-  method win32_poll (GPollFDNonWin $fds, gint $n_fds, gint $timeout) {
-    die 'This call only allowed on windows' unless $*DISTRO.is-win;
+  proto method win32_poll (|)
+      is also<win32-poll>
+  { * }
 
-    g_io_channel_win32_poll($fds, $n_fds, $timeout=);
+  multi method win32_poll (@fds, Int() $timeout) {
+    die '@fds must only contain GPollFD objects!' unless @fds.all ~~ GPollFD;
+
+    my $fds = GTK::Compat::Roles::TypedBuffer.new(@fds);
+
+    samewith($fds.p, @fds.elems, $timeout);
   }
-
-  method win32_set_debug (gboolean $flag) {
-    die 'This call only allowed on windows' unless $*DISTRO.is-win;
-
-    g_io_channel_win32_set_debug($!gio, $flag);
-  }
-
-  method write_chars (
-    Str $buf,
-    gssize $count,
-    gsize $bytes_written,
-    CArray[Pointer[GError]] $error = gerror
+  multi method win32_poll (
+    GLib::IOChannel:U:
+    Pointer $fds,
+    Int() $n_fds,
+    Int() $timeout
   ) {
-    g_io_channel_write_chars($!gio, $buf, $count, $bytes_written, $error);
+    die 'This call only allowed on windows' unless $*DISTRO.is-win;
+
+    my gint ($n, $t) = ($n_fds, $timeout);
+
+    # Is there more to the return gint??
+    g_io_channel_win32_poll($fds, $n, $t);
+  }
+
+  method win32_set_debug (gboolean $flag) is also<win32-set-debug> {
+    die 'This call only allowed on windows' unless $*DISTRO.is-win;
+
+    my gboolean $f = $flag;
+
+    g_io_channel_win32_set_debug($!gio, $f);
+  }
+
+  proto method write_chars (|)
+      is also<write-chars>
+  { * }
+
+  multi method write_chars (
+    Str() $buf,
+    Int() $count,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = True
+  ) {
+    samewith($buf, $count, $, $error, :$all);
+  }
+  multi method write_chars (
+    Str() $buf,
+    Int() $count,
+    $bytes_written is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my gssize $c = $count;
+    my gsize $bw = 0;
+
+    clear_error;
+    my $rv = GIOStatusEnum(
+      g_io_channel_write_chars($!gio, $buf, $count, $bw, $error)
+    );
+    set_error($error);
+    $bytes_written = $bw;
+    $all.not ?? $rv !! ($rv, $bytes_written)
   }
 
   method write_unichar (
-    gunichar $thechar,
+    Int() $thechar,
     CArray[Pointer[GError]] $error = gerror
-  ) {
-    g_io_channel_write_unichar($!gio, $thechar, $error);
+  )
+    is also<write-unichar>
+  {
+    my gunichar $t = $thechar;
+
+    clear_error;
+    GIOStatusEnum( g_io_channel_write_unichar($!gio, $t, $error) );
+    set_error($error);
   }
 
 }

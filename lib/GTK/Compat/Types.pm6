@@ -386,8 +386,6 @@ class GPollFDWin is repr('CStruct') does GTK::Roles::Pointers is export {
   has gushort 	$.revents;
 }
 
-constant GPollFD is export := GPollFDNonWin;
-
 class GTimeVal is repr('CStruct') does GTK::Roles::Pointers is export {
   has glong $.tv_sec;
   has glong $.tv_usec;
@@ -2644,4 +2642,8 @@ sub findProperImplementor ($attrs) is export {
   # proper main variable. Then sort for the one with the largest
   # MRO.
   $attrs.grep( * ~~ Implementor ).sort( -*.package.^mro.elems )[0]
+}
+
+BEGIN {   
+  constant GPollFD is export := $*DISTRO.is-win ?? GPollFDWin !! GPollFDNonWin;
 }
