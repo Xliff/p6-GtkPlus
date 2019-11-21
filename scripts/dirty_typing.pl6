@@ -3,20 +3,16 @@ use lib 'scripts';
 
 use GTKScripts;
 
-use File::Find;
-
 sub MAIN (
-  $pattern is copy,        #= Filespec. Wildcards expected (ala '*.pm6')
-  :$prefix is copy,        #= Name prefix (ala 'GTK', 'WebKit' or 'Clutter')
-  :@module is copy = ()    #= Extra modules to load. More than one of this parameter can be specified.
+  :$extension is copy is required,   #= Extension to search on (ala 'pm6')
+  :$prefix is copy,                  #= Name prefix (ala 'GTK', 'WebKit' or 'Clutter')
+  :@module is copy = ()              #= Extra modules to load. More than one of this parameter can be specified.
 ) {
-  $pattern ~~ s/\*//;
-  my @files = find
-    dir     => 'lib',
-    name    => /{$pattern}/,
-    type    => 'file',
-    exclude => /'Types.pm6'$/,
-    exclude => /'.precomp'/;
+  my @files = find-files(
+    'lib',
+    extension => $extension,
+    exclude => [ rx/ 'Types.pm6' $/, rx/ '.precomp' / ]
+  );
 
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);

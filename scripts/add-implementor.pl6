@@ -1,12 +1,14 @@
 use v6.c;
 
-use File::Find;
+use lib 'scripts';
+
+use GTKScripts;
 
 sub MAIN ($filename = '.') {
   my @files;
 
   if $filename eq '.' {
-    @files = find dir => 'lib', name => /'.pm6' $/;
+    @files = find-files('lib', extension => 'pm6');
   } else {
     @files.push: $filename;
   }

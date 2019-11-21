@@ -1,6 +1,8 @@
 #!/usr/bin/env perl6
 
-use File::Find;
+use lib 'scripts';
+
+use GTKScripts;
 
 my token q             { <["'“”‘’«»「」‹›]>         }
 my token mod           { [\w+]+ %% '::'            }
@@ -28,10 +30,7 @@ sub MAIN (:$filename, :$prefix is required) {
   my @files = $filename ??
     $filename.Array
     !!
-    find
-      dir => 'lib',
-      exclude => / '.touch' | 'Raw' /,
-      name => /'.pm6' $/;
+    get-module-files.grep({ ! / '.touch' | 'Raw' / });
 
   for @files {
     my $contents = .IO.slurp;

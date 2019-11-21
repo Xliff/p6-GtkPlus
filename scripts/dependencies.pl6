@@ -4,7 +4,6 @@ use v6.c;
 use lib 'scripts';
 
 use GTKScripts;
-use File::Find;
 use Dependency::Sort;
 
 sub MAIN (
@@ -20,11 +19,7 @@ sub MAIN (
     @build-exclude = %config<build_exclude> // ();
   }
 
-  my @files = find
-    dir => 'lib',
-    name => /'.pm6' $/;
-
-  @files .= sort( *.IO.modified );
+  my @files = get-module-files.sort( *.IO.modified );
   unless $force {
     if $dep_file.e && $dep_file.modified >= @files[*-1].modified {
       say 'No change in dependencies.';

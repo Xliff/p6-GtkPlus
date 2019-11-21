@@ -1,6 +1,8 @@
 use v6.c;
 
-use File::Find;
+use lib 'scripts';
+
+use GTKScripts;
 
 my regex name {
   <[_ A..Z a..z]>+
@@ -37,7 +39,7 @@ sub MAIN ($dir?, :$file) {
     } single file.
     SAY
 
-    &*GENERATE-USAGE(&?ROUTINE).say;
+    $*USAGE.say;
     exit 1;
   }
 
@@ -52,9 +54,7 @@ sub MAIN ($dir?, :$file) {
     die "Directory '$dir' either does not exist, or is not a directory"
       unless $dir.IO.e && $dir.IO.d;
 
-    @files = find
-      dir => $dir,
-      name => /'.h' $/;
+    @files = find-files($dir, extension => 'h');
   }
 
   my %etype;

@@ -1,14 +1,22 @@
-use File::Find;
+use v6.c;
 
-my @files = find
-  dir     => '.',
-  name    => /^ 'LastBuildResults' /,
-  exclude => / '.json' $/;
+use lib 'scripts';
+
+use GTKScripts;
+
+my @files = find-files(
+  '.',
+  pattern    => "{$*CWD}/LastBuildResults",
+  exclude    => rx/ '.json' $/
+);
+
+@files.gist.say;
 
 @files .= map({
   s/ '.' (\d+) $//;
   [ $_, ($/[0] // 0).Int ];
 });
+
 my $max;
 for @files.sort( *[1] ).reverse {
   FIRST { $max = $_[1].chars }
@@ -19,7 +27,7 @@ for @files.sort( *[1] ).reverse {
     "{ $_[0] }.{ $nc }"
   );
 
-  if $_[1] {
+  if $_[1] eq '0' || $_[1] {
     if $old.IO.e {
       $old.IO.rename($new);
     } else {
