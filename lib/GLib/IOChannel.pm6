@@ -34,6 +34,14 @@ class GLib::IOChannel {
     $io ?? self.bless( io-channel => $io ) !! Nil;
   }
 
+  multi method new (
+    Str() $filename,
+    Str() $mode,
+    CArray[Pointer[GError]] $error = gerror,
+    :$file is required
+  ) {
+    self.new_file($filename, $mode, $error);
+  }
   method new_file (
     Str() $filename,
     Str() $mode,
