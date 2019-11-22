@@ -269,12 +269,7 @@ class GTK::Compat::Event  {
     gdk_event_get_time($!e);
   }
 
-  method get_window
-    is also<
-      get-window
-      window
-    >
-  {
+  method get_window is also<get-window> {
     gdk_event_get_window($!e);
   }
 

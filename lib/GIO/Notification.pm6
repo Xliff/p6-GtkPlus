@@ -14,9 +14,9 @@ class GIO::Notification {
   has GNotification $!n is implementor;
 
   submethod BUILD (:$notification) {
-    $!n = $notification
+    $!n = $notification;
 
-    self!roleInit-Object;
+    self.roleInit-Object;
   }
 
   method GTK::Compat::Types::GNotification
@@ -27,7 +27,8 @@ class GIO::Notification {
     self.bless( :$notification );
   }
   multi method new(Str() $title) {
-    my $n = g_notification_new($title)
+    my $n = g_notification_new($title);
+
     self.bless( notification => $n );
   }
 

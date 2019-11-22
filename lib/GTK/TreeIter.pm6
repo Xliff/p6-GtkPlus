@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 use GTK::Raw::TreeModel;
 
@@ -19,9 +21,12 @@ class GTK::TreeIter is export {
     self.bless(:$iter);
   }
 
-  method GTK::Raw::Types::GtkTreeIter 
-    is also<TreeIter>
-    { $!ti }
+  method GTK::Raw::Types::GtkTreeIter
+    is also<
+      GtkTreeIter
+      TreeIter
+    >
+  { $!ti }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -31,9 +36,13 @@ class GTK::TreeIter is export {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method copy {
+  method copy (:$raw = False ) {
     my $iter = gtk_tree_iter_copy($!ti);
-    self.bless(:$iter);
+
+    $iter ??
+      ( $raw ?? $iter !! self.bless( :$iter ) )
+      !!
+      Nil;
   }
 
   method free {

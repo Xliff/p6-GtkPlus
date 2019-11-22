@@ -45,7 +45,6 @@ sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
       }
     }
     for @pattern-arg -> $p {
-      $elem.absolute.say;
       if $elem.absolute ~~ $p {
         take $elem;
         next;
@@ -56,5 +55,5 @@ sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
 }
 
 sub get-module-files is export {
-  my @files = find-files('lib', extension => 'pm6');
+  find-files('lib', extension => 'pm6');
 }

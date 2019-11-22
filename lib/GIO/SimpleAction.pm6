@@ -20,7 +20,7 @@ class GTK::Compat::SimpleAction {
   submethod BUILD (:$simple-action) {
     $!sa = $simple-action;
 
-    self!roleInit-Object;
+    self.roleInit-Object;
   }
 
   method GTK::Compat::Types::GSimpleAction

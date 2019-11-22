@@ -3,6 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 use GTK::Raw::StackSwitcher;
 
@@ -13,7 +15,7 @@ our subset StackSwitcherAncestry is export
 
 class GTK::StackSwitcher is GTK::Box {
   has GtkStackSwitcher $!ss is implementor;
-  
+
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
     $o.setType(self.^name);
@@ -31,12 +33,12 @@ class GTK::StackSwitcher is GTK::Box {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkStackSwitcher is also<StackSwitcher> { $!ss }
-  
+
   method setStackSwitcher (StackSwitcherAncestry $switcher) {
     self.IS-PROTECTED;
-    
+
     my $to-parent;
     $!ss = do given $switcher {
       when GtkStackSwitcher {
@@ -68,9 +70,9 @@ class GTK::StackSwitcher is GTK::Box {
       }
     );
   }
-  
+
   method get_type is also<get-type> {
     gtk_stack_switcher_get_type();
   }
-  
+
 }
