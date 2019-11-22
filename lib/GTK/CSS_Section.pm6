@@ -1,15 +1,17 @@
 use v6.c;
 
+use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 use GTK::Raw::CSS_Section;
 
 use GTK::CSSProvider;
 
-# BOXED TYPE 
+# BOXED TYPE
 
 class GTK::CSS_Section {
   has GtkCssSection $!css_s is implementor;
-  
+
   submethod BUILD (:$section) {
     $!css_s = $section;
   }

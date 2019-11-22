@@ -23,8 +23,10 @@ sub parse-file ($filename) is export {
 sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
   my @pattern-arg;
 
-  $pattern .= trans( [ '/', '-' ] => [ '\\/', '\\-' ] );
-  @pattern-arg.push( rx/     <{ $pattern   }>   / ) if $pattern;
+  if $pattern {
+    $pattern .= trans( [ '/', '-' ] => [ '\\/', '\\-' ] );
+    @pattern-arg.push( rx/     <{ $pattern   }>   / );
+  }
   @pattern-arg.push( rx/ '.' <{ $extension }> $ / ) if $extension;
 
   my @targets = dir($dir);
@@ -43,7 +45,6 @@ sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
       }
     }
     for @pattern-arg -> $p {
-      $elem.absolute.say;
       if $elem.absolute ~~ $p {
         take $elem;
         next;
@@ -54,5 +55,5 @@ sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
 }
 
 sub get-module-files is export {
-  my @files = find-files('lib', extension => 'pm6');
+  find-files('lib', extension => 'pm6');
 }

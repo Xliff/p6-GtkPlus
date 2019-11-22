@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::IOChannel;
+unit package GLib::Raw::IOChannel;
 
 sub g_io_channel_error_from_errno (gint $en)
   returns uint32 # GIOChannelError
@@ -78,7 +78,7 @@ sub g_io_channel_get_flags (GIOChannel $channel)
   is export
 { * }
 
-sub g_io_channel_get_line_term (GIOChannel $channel, gint $length)
+sub g_io_channel_get_line_term (GIOChannel $channel, gint $length is rw)
   returns Str
   is native(glib)
   is export
@@ -103,7 +103,7 @@ sub g_io_channel_read_chars (
   GIOChannel $channel,
   Str $buf,
   gsize $count,
-  gsize $bytes_read,
+  gsize $bytes_read is rw,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -114,8 +114,8 @@ sub g_io_channel_read_chars (
 sub g_io_channel_read_line (
   GIOChannel $channel,
   CArray[Str] $str_return,
-  gsize $length,
-  gsize $terminator_pos,
+  gsize $length                  is rw,
+  gsize $terminator_pos          is rw,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -126,7 +126,7 @@ sub g_io_channel_read_line (
 sub g_io_channel_read_line_string (
   GIOChannel $channel,
   GString $buffer,
-  gsize $terminator_pos,
+  gsize $terminator_pos          is rw,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -136,8 +136,8 @@ sub g_io_channel_read_line_string (
 
 sub g_io_channel_read_to_end (
   GIOChannel $channel,
-  Str $str_return,
-  gsize $length,
+  Str $str_return                is rw,
+  gsize $length                  is rw,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -147,7 +147,7 @@ sub g_io_channel_read_to_end (
 
 sub g_io_channel_read_unichar (
   GIOChannel $channel,
-  gunichar $thechar,
+  gunichar $thechar              is rw,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
@@ -261,7 +261,7 @@ sub g_io_channel_win32_new_socket (gint $socket)
   is export
 { * }
 
-sub g_io_channel_win32_poll (GPollFD $fds, gint $n_fds, gint $timeout_)
+sub g_io_channel_win32_poll (Pointer $fds, gint $n_fds, gint $timeout)
   returns gint
   is native(glib)
   is export
@@ -276,7 +276,7 @@ sub g_io_channel_write_chars (
   GIOChannel $channel,
   Str $buf,
   gssize $count,
-  gsize $bytes_written,
+  gsize $bytes_written           is rw,
   CArray[Pointer[GError]] $error
 )
   returns guint # GIOStatus
