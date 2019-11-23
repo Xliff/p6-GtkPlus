@@ -151,10 +151,12 @@ GLib::Raw::Quark
 GLib::Raw::Quarks
 GLib::Raw::Rand
 GLib::Raw::Scanner
+GLib::Raw::Slice
 GLib::Raw::String
 GLib::Raw::Tree
 GLib::Raw::Unicode
 GLib::Scanner
+GLib::Slice
 GLib::String
 GLib::Tree
 GLib::URI
@@ -191,7 +193,6 @@ GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Signal
-GTK::Compat::Raw::Slice
 GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
 GTK::Compat::Raw::TimeZone
@@ -210,7 +211,6 @@ GTK::Compat::Roles::Signals::Window
 GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
 GTK::Compat::Signal
-GTK::Compat::Slice
 GTK::Compat::ThreadPool
 GTK::Compat::TimeZone
 GTK::Compat::Timer

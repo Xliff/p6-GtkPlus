@@ -24,7 +24,7 @@
   - build-mro.pl6 is now doing this (check to insure it is using ::Bundle !).
   - GTK.pm6 would then consist of all GTK::Bundle files
 - Consider: Any UINT parameter should have a "where * > 0" placed on it. LARGE initiative. Subject to review.
-- For refactoring: the code in the "attributes" (not "properties") routines should have the getter and setter routines 
+- For refactoring: the code in the "attributes" (not "properties") routines should have the getter and setter routines
   broken out into their own methods. The existing "attribute" methods should then call the corresponding method. This will
   allow for better compatibility with all GLib based code.
 - Determine if GTK::Roles::Pointers.p can return a generic Pointer[T] where T is the type of the original object:
@@ -34,7 +34,8 @@
   necessary for CStructs, but there are places in the code that use it for CStructs AND CPointers. If this
   change is made, then there are places in the code that will need to be refactored, since a Pointer should take
   a CPointer without modification.
-
+- Write wrappers for the eventual GLib::Object object that will wrap the
+  "GObject-invocant" methods from GTK::Compat::Signal
 - Figure out the best way to place this:
     multi method Numeric { $!o.p }
   So that we can change the entire object chain in the most efficient way.

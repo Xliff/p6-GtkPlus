@@ -4,7 +4,28 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Slice;
+unit package GLib::Slice;
+
+### /usr/include/glib-2.0/glib/gslice.h
+
+sub g_slice_alloc (gsize $block_size)
+  returns Pointer
+  is native(glib)
+  is export
+{ * }
+
+sub g_slice_alloc0 (gsize $block_size)
+  returns Pointer
+  is native(glib)
+  is export
+{ * }
+
+sub g_slice_copy (gsize $block_size, gconstpointer $mem_block)
+  returns Pointer
+  is native(glib)
+  is export
+{ * }
+
 
 sub g_slice_debug_tree_statistics ()
   is native(glib)
@@ -17,8 +38,8 @@ sub g_slice_free1 (gsize $block_size, gpointer $mem_block)
 { * }
 
 sub g_slice_free_chain_with_offset (
-  gsize $block_size, 
-  gpointer $mem_chain, 
+  gsize $block_size,
+  gpointer $mem_chain,
   gsize $next_offset
 )
   is native(glib)
@@ -26,8 +47,8 @@ sub g_slice_free_chain_with_offset (
 { * }
 
 sub g_slice_get_config_state (
-  GSliceConfig $ckey, 
-  gint64 $address, 
+  GSliceConfig $ckey,
+  gint64 $address,
   guint $n_values
 )
   returns gint64

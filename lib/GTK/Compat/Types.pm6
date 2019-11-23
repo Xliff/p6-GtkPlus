@@ -1516,6 +1516,16 @@ our enum GTraverseTypeEnum is export <
   G_LEVEL_ORDER
 >;
 
+constant GSliceConfig is export := guint;
+our enum GSliceConfigEnum is export (
+  G_SLICE_CONFIG_ALWAYS_MALLOC        => 1,
+  'G_SLICE_CONFIG_BYPASS_MAGAZINES',
+  'G_SLICE_CONFIG_WORKING_SET_MSECS',
+  'G_SLICE_CONFIG_COLOR_INCREMENT',
+  'G_SLICE_CONFIG_CHUNK_SIZES',
+  'G_SLICE_CONFIG_CONTENTION_COUNTER'
+);
+
 class cairo_font_options_t     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class cairo_surface_t          is repr('CPointer') is export does GTK::Roles::Pointers { }
 
@@ -1651,7 +1661,6 @@ class GSimpleAction            is repr('CPointer') is export does GTK::Roles::Po
 class GSimpleActionGroup       is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimplePermission        is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSimpleProxyResolver     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSliceConfig             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GResolver                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSeekable                is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GSocket                  is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -2644,6 +2653,6 @@ sub findProperImplementor ($attrs) is export {
   $attrs.grep( * ~~ Implementor ).sort( -*.package.^mro.elems )[0]
 }
 
-BEGIN {   
+BEGIN {
   constant GPollFD is export := $*DISTRO.is-win ?? GPollFDWin !! GPollFDNonWin;
 }
