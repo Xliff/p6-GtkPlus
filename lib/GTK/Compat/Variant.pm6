@@ -217,7 +217,9 @@ class GTK::Compat::Variant {
     self.bless( variant => g_variant_new_string($value) );
   }
 
-  # Do not know how this will function when g_free is called on $value
+  # Do not know how this will function when GLib::Memory.free is called on
+  # $value
+  #
   # method new_take_string (
   #   GTK::Compat::Variant:U:
   #   Str() $value

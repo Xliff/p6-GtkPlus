@@ -70,7 +70,7 @@ class GIO::ContentType {
     my $rc = g_content_type_guess($filename, $data, $ds, $ru);
 
     $result_uncertain = $ru.defined ?? $ru !! Nil;
-    # g_free($rc);
+    # GLib::Memory.free($rc);
     $rc;
   }
 

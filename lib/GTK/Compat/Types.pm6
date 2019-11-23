@@ -67,11 +67,6 @@ sub g_destroy_none(Pointer)
   is export
 { * }
 
-sub g_free (Pointer)
-  is native(glib)
-  is export
-{ * }
-
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
   has int32         $.code;

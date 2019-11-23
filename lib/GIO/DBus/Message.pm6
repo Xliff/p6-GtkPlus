@@ -418,7 +418,7 @@ class GIO::DBus::Message {
     } until $ia[$i++] == G_DBUS_MESSAGE_HEADER_FIELD_INVALID;
 
     # Let's hope this doesn't crash MoarVM.
-    g_free( cast(Pointer, $ia) );
+    GLib::Memory.free( cast(Pointer, $ia) );
 
     @f;
   }

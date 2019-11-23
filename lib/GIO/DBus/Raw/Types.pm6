@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 
 use GTK::Raw::Utils;
 
+use GLib::Memory;
+
 unit package GIO::DBus::Raw::Types;
 
 constant GBusNameOwnerFlags is export := guint;
@@ -324,7 +326,7 @@ class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers does 
   }
 
   method unref {
-    g_free(self.p);
+    GLib::Memory.free(self.p);
   }
 
   method error-code is rw is also<error_code> {
