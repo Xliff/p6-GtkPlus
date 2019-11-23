@@ -66,21 +66,3 @@ sub g_slice_set_config (GSliceConfig $ckey, gint64 $value)
   is native(glib)
   is export
 { * }
-
-sub g_slice_alloc (gsize $block_size)
-  returns gpointer
-  is native(glib)
-  is export
-{ * }
-
-sub g_slice_alloc0 (gsize $block_size)
-  returns gpointer
-  is native(glib)
-  is export
-{ * }
-
-sub g_slice_copy (gsize $block_size, Pointer $mem_block)
-  returns gpointer
-  is native(glib)
-  is export
-{ * }
