@@ -11,7 +11,20 @@ grammar C-Function-Def {
   rule    type { 'const'? $<n>=\w+ <p>? }
   rule     var { <t> }
   rule returns { :!s 'const '? <t> \s* <p>? }
-  rule postdec { (<[A..Z]>+)+ %% '_' [ '(' .+? ')' ]? }
+  rule postdec { (<[A..Z0..9]>+)+ %% '_' [ '(' .+? ')' ]? }
+  token     ad { 'AVAILABLE' | 'DEPRECATED' }
+
+  token availability {
+    [
+      ( <[A..Z]>+'_' )+?
+      <ad> [
+        '_'
+        ( <[A..Z 0..9]>+ )+ %% '_'
+      ]?
+      |
+      <[A..Z]>+'_API'
+    ]
+  };
 
   rule func_def {
     <returns>
@@ -30,6 +43,10 @@ grammar C-Function-Def {
   rule func_def_av {
     <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
   }
+}
+
+grammar C-Function-Internal-Def is C-Function-Def {
+  token ad { 'INTERNAL' }
 }
 
 sub MAIN (
@@ -73,6 +90,12 @@ sub MAIN (
 
   my $contents = $fn.IO.open.slurp-rest;
 
+  # Post process for bland
+  if $bland {
+    $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
+    $contents ~~ s:g/^^ '#' .+? \n//;      # Preprocessor
+  }
+
   my @ad = <AVAILABLE DEPRECATED>;
   @ad = ('INTERNAL') if $internal;
   my token availability {
@@ -86,12 +109,6 @@ sub MAIN (
       <[A..Z]>+'_API'
     ]
   };
-
-  # Post process for bland
-  if $bland {
-    $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
-    $contents ~~ s:g/^^ '#' .+? \n//;      # Preprocessor
-  }
 
   my $la;
   my $fd = '';
@@ -115,7 +132,7 @@ sub MAIN (
       my rule     type { 'const'? $<n>=\w+ <p>? }
       my rule      var { <t> }
       my rule  returns { :!s 'const '? <t> \s* <p>? }
-      my token postdec { (<[A..Z]>+)+ %% '_' [ '(' .+? ')' ]? }
+      my token postdec { (<[A..Z0..9]>+)+ %% '_' [ '(' .+? ')' ]? }
 
       my rule func_def {
         <returns>

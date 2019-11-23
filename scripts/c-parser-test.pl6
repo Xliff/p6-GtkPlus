@@ -18,7 +18,7 @@ my token       t { <[\w _]>+ }
 my rule     type { 'const'? $<n>=\w+ <p>? }
 my rule      var { <t> }
 my rule  returns { :!s 'const '? <t> \s* <p>? }
-my token postdec { (<[A..Z]>+)+ %% '_' [ '(' .+? ')' ]? }
+my token postdec { (<[A..Z0..9]>+)+ %% '_' [ '(' .+? ')' ]? }
 
 my rule func_def {
   <returns>
@@ -37,14 +37,12 @@ my rule func_def_av {
 }
 
 my $orig = q:to/CDEF/;
-  GLIB_AVAILABLE_IN_ALL
-  gpointer g_slice_alloc          	(gsize	       block_size) G_GNUC_MALLOC G_GNUC_ALLOC_SIZE(1);
+  GLIB_AVAILABLE_IN_ALL gpointer g_try_malloc0_n  (gsize  n_blocks,                         gsize         n_block_bytes) G_GNUC_MALLOC G_GNUC_ALLOC_SIZE2(1,2);
   CDEF
 
 my $parse_target = q:to/CDEF/;
-  GLIB_AVAILABLE_IN_ALL
-  gpointer g_slice_alloc          	(gsize	       block_size) G_GNUC_MALLOC G_GNUC_ALLOC_SIZE(1);
+  GLIB_AVAILABLE_IN_ALL gpointer g_try_malloc0_n  (gsize  n_blocks,                         gsize         n_block_bytes) G_GNUC_MALLOC G_GNUC_ALLOC_SIZE2(1,2);
   CDEF
 
-say "G_GNUC_MALLOC G_GNUC_ALLOC_SIZE(1)" ~~ &postdec;
+say "G_GNUC_MALLOC G_GNUC_ALLOC_SIZE2(1,2)" ~~ &postdec;
 say $parse_target ~~ &func_def_av;
