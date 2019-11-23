@@ -1,5 +1,7 @@
 use v6.c;
 
+use Method::Also;
+
 use NativeCall;
 
 use GTK::Raw::Utils;
@@ -7,14 +9,10 @@ use GTK::Raw::Utils;
 use GTK::Compat::Types;
 use GLib::Raw::Slice;
 
+use GLib::Roles::StaticClass;
+
 class GLib::Slice {
-
-  multi method new (|) {
-    warn 'GLib::Slice is a static class and does not need to be instantiated!'
-      if $DEBUG;
-
-    GLib::Slice;
-  }
+  also does GLib::Roles::StaticClass;
 
   #
   # Deprecated
@@ -78,7 +76,7 @@ class GLib::Slice {
 
   # g_slice_free_chain is NYI!
 
-  method debug_tree_statistics {
+  method debug_tree_statistics is also<debug-tree-statistics> {
     g_slice_debug_tree_statistics();
   }
 
@@ -92,7 +90,9 @@ class GLib::Slice {
     Int() $block_size,
     gpointer $mem_chain,
     Int() $next_offset
-  ) {
+  )
+    is also<free-chain-with-offset>
+  {
     my gsize ($b, $n) = ($block_size, $next_offset);
 
     g_slice_free_chain_with_offset($b, $mem_chain, $n);

@@ -146,6 +146,7 @@ GLib::Raw::Checksum
 GLib::Raw::Error
 GLib::Raw::HMAC
 GLib::Raw::IOChannel
+GLib::Raw::Memory
 GLib::Raw::Module
 GLib::Raw::Quark
 GLib::Raw::Quarks
@@ -155,6 +156,7 @@ GLib::Raw::Slice
 GLib::Raw::String
 GLib::Raw::Tree
 GLib::Raw::Unicode
+GLib::Roles::StaticClass
 GLib::Scanner
 GLib::Slice
 GLib::String
@@ -280,6 +282,7 @@ GLib::Bytes
 GLib::Checksum
 GLib::Error
 GLib::HMAC
+GLib::Memory
 GLib::Module
 GLib::Quark
 GLib::Rand
