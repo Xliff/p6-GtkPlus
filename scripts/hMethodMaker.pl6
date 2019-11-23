@@ -5,6 +5,33 @@ use v6.c;
 
 my %do_output;
 
+grammar C-Function-Def {
+  token      p { '*'+ }
+  token      t { <[\w _]>+ }
+  rule    type { 'const'? $<n>=\w+ <p>? }
+  rule     var { <t> }
+  rule returns { :!s 'const '? <t> \s* <p>? }
+  rule postdec { (<[A..Z]>+)+ %% '_' [ '(' .+? ')' ]? }
+
+  rule func_def {
+    <returns>
+    $<sub>=[ \w+ ]
+    [
+      '(void)'
+      |
+      '(' [ <type> <var> ]+ % [ \s* ',' \s* ] ')'
+    ][ \s* <postdec>+ % \s+ ]?';'
+  }
+
+  rule func_def_noav {
+    'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
+  }
+
+  rule func_def_av {
+    <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
+  }
+}
+
 sub MAIN (
   $filename,          #= Filename to process
   :$remove,           #= Prefix to remove from method names
@@ -83,11 +110,12 @@ sub MAIN (
     #[ \s* '//' \s* .+? ]?
 
     if $fd ~~ /';' \s* $$/ {
-      my token      p { '*'+ }
-      my token      t { <[\w _]>+ }
-      my rule    type { 'const'? $<n>=\w+ <p>? }
-      my rule     var { <t> }
-      my rule returns { :!s 'const '? <t> \s* <p>? }
+      my token       p { '*'+ }
+      my token       t { <[\w _]>+ }
+      my rule     type { 'const'? $<n>=\w+ <p>? }
+      my rule      var { <t> }
+      my rule  returns { :!s 'const '? <t> \s* <p>? }
+      my token postdec { (<[A..Z]>+)+ %% '_' [ '(' .+? ')' ]? }
 
       my rule func_def {
         <returns>
@@ -96,8 +124,7 @@ sub MAIN (
           '(void)'
           |
           '(' [ <type> <var> ]+ % [ \s* ',' \s* ] ')'
-        ]
-        (\s* (<[A..Z]>+)+ %% '_')?';'
+        ][ \s* <postdec>+ % \s+ ]?';'
       }
       my rule func_def_noav {
         'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
