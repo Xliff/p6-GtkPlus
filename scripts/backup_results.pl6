@@ -10,8 +10,6 @@ my @files = find-files(
   exclude    => rx/ '.json' $/
 );
 
-@files.gist.say;
-
 @files .= map({
   s/ '.' (\d+) $//;
   [ $_, ($/[0] // 0).Int ];

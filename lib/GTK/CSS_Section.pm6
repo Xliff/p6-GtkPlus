@@ -10,7 +10,7 @@ use GTK::CSSProvider;
 # BOXED TYPE
 
 class GTK::CSS_Section {
-  has GtkCssSection $!css_s is implementor;
+  has GtkCssSection $!css_s;
 
   submethod BUILD (:$section) {
     $!css_s = $section;

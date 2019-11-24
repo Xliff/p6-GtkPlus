@@ -14,7 +14,7 @@ our subset StackSwitcherAncestry is export
   where GtkStackSwitcher | BoxAncestry;
 
 class GTK::StackSwitcher is GTK::Box {
-  has GtkStackSwitcher $!ss is implementor;
+  has GtkStackSwitcher $!ss;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
