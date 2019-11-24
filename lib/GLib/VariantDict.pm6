@@ -36,8 +36,13 @@ class GLib::VariantDict {
     so g_variant_dict_contains($!vd, $key);
   }
 
-  method end {
-    g_variant_dict_end($!vd);
+  method end (:$raw = False) {
+    my $v = g_variant_dict_end($!vd);
+
+    $v ??
+      ( $raw ?? $v !! GLib::Variant.new($v) )
+      !!
+      Nil;
   }
 
   method init (GVariant() $from_asv) {
@@ -48,10 +53,19 @@ class GLib::VariantDict {
     g_variant_dict_insert_value($!vd, $key, $value);
   }
 
-  method lookup_value (Str() $key, GVariantType() $expected_type)
+  method lookup_value (
+    Str() $key,
+    GVariantType() $expected_type,
+    :$raw = False
+  )
     is also<lookup-value>
   {
-    g_variant_dict_lookup_value($!vd, $key, $expected_type);
+    my $v = g_variant_dict_lookup_value($!vd, $key, $expected_type);
+
+    $v ??
+      ( $raw ?? $v !! GLib::Variant.new($v) )
+      !!
+      Nil;
   }
 
   method ref is also<upref> {
