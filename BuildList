@@ -137,6 +137,7 @@ GLib::Raw::Error
 GLib::Raw::HMAC
 GLib::Raw::Hostname
 GLib::Raw::IOChannel
+GLib::Raw::Markup
 GLib::Raw::Memory
 GLib::Raw::Module
 GLib::Raw::Quark
@@ -260,6 +261,7 @@ GLib::DateTime
 GLib::Error
 GLib::HMAC
 GLib::Hostname
+GLib::Markup
 GLib::Memory
 GLib::Module
 GLib::Quark
