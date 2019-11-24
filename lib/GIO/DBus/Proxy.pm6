@@ -816,7 +816,7 @@ class GIO::DBus::Proxy {
       Nil;
 
     $rv = $rv ??
-      ( $raw ?? $rv !! GTK::Compat::Variant.new($_, :!ref) )
+      ( $raw ?? $rv !! GLib::Variant.new($_, :!ref) )
       !!
       Nil;
 
@@ -931,7 +931,7 @@ class GIO::DBus::Proxy {
       Nil;
 
     $rv = $rv ??
-      ( $raw ?? $rv !! GTK::Compat::Variant.new($_, :!ref) )
+      ( $raw ?? $rv !! GLib::Variant.new($_, :!ref) )
       !!
       Nil;
 
@@ -944,7 +944,7 @@ class GIO::DBus::Proxy {
     my $v = g_dbus_proxy_get_cached_property($!dp, $property_name);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
+      ( $raw ?? $v !! GLib::Variant.new($v, :!ref) )
       !!
       Nil;
   }

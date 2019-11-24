@@ -9,7 +9,7 @@ use GTK::Compat::Raw::VariantType;
 
 # OPAQUE STRUCT (BOXED?)
 
-class GTK::Compat::VariantType {
+class GLib::VariantType {
   has GVariantType $!vt is implementor;
 
   submethod BUILD (:$type) {
@@ -60,8 +60,8 @@ class GTK::Compat::VariantType {
     so g_variant_type_equal($!vt, $type2);
   }
 
-  method first (GTK::Compat::VariantType:D: ) {
-    GTK::Compat::VariantType.new( g_variant_type_first($!vt) );
+  method first (GLib::VariantType:D: ) {
+    GLib::VariantType.new( g_variant_type_first($!vt) );
   }
 
   method free {
@@ -115,16 +115,16 @@ class GTK::Compat::VariantType {
     so g_variant_type_is_variant($!vt);
   }
 
-  method key (GTK::Compat::VariantType:D: ) {
-    GTK::Compat::VariantType.new( type => g_variant_type_key($!vt) );
+  method key (GLib::VariantType:D: ) {
+    GLib::VariantType.new( type => g_variant_type_key($!vt) );
   }
 
   method n_items {
     g_variant_type_n_items($!vt);
   }
 
-  method next (GTK::Compat::VariantType:D: ) {
-    GTK::Compat::VariantType.new( type => g_variant_type_next($!vt) );
+  method next (GLib::VariantType:D: ) {
+    GLib::VariantType.new( type => g_variant_type_next($!vt) );
   }
 
   method peek_string {
@@ -150,8 +150,8 @@ class GTK::Compat::VariantType {
     $endptr[0] if $rc && $endptr.defined;
   }
 
-  method value (GTK::Compat::VariantType:D: ) {
-    GTK::Compat::VariantType.new( type => g_variant_type_value($!vt) );
+  method value (GLib::VariantType:D: ) {
+    GLib::VariantType.new( type => g_variant_type_value($!vt) );
   }
 
 }
@@ -160,8 +160,8 @@ multi sub infix:<eqv> (GVariantType $a, GVariantType $b) {
   g_variant_type_equal($a, $b);
 }
 multi sub infix:<eqv> (
-  GTK::Compat::VariantType $a,
-  GTK::Compat::VariantType $b
+  GLib::VariantType $a,
+  GLib::VariantType $b
 ) {
   $a.equal($b);
 }

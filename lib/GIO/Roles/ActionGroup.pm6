@@ -91,7 +91,7 @@ role GIO::Roles::ActionGroup {
     my $pvt = g_action_group_get_action_parameter_type($!ag, $action_name);
 
     $pvt ??
-      ( $raw ?? $pvt !! GTK::Compat::VariantType.new($pvt) )
+      ( $raw ?? $pvt !! GLib::VariantType.new($pvt) )
       !!
       Nil;
   }
@@ -102,7 +102,7 @@ role GIO::Roles::ActionGroup {
     my $s = g_action_group_get_action_state($!ag, $action_name);
 
     $s ??
-      ( $raw ?? $s !! GTK::Compat::Variant.new($s) )
+      ( $raw ?? $s !! GLib::Variant.new($s) )
       !!
       Nil;
   }
@@ -113,7 +113,7 @@ role GIO::Roles::ActionGroup {
     my $sh = g_action_group_get_action_state_hint($!ag, $action_name);
 
     $sh ??
-      ( $raw ?? $sh !! GTK::Compat::Variant.new($sh) )
+      ( $raw ?? $sh !! GLib::Variant.new($sh) )
       !!
       Nil;
   }
@@ -124,7 +124,7 @@ role GIO::Roles::ActionGroup {
     my $svt = g_action_group_get_action_state_type($!ag, $action_name);
 
     $svt ??
-      ( $raw ?? $svt !! GTK::Compat::VariantType.new($svt) )
+      ( $raw ?? $svt !! GLib::VariantType.new($svt) )
       !!
       Nil;
   }
@@ -186,22 +186,22 @@ role GIO::Roles::ActionGroup {
     $enabled = $ea[0] ?? ( so $ea[0] ) !! Nil;
 
     $parameter_type = $pvta[0] ??
-      ( $raw ?? $pvta[0] !! GTK::Compat::VariantType.new( $pvta[0] ) )
+      ( $raw ?? $pvta[0] !! GLib::VariantType.new( $pvta[0] ) )
       !!
       Nil;
 
     $state_type = $svta[0] ??
-      ( $raw ?? $svta[0] !! GTK::Compat::VariantType.new( $svta[0] ) )
+      ( $raw ?? $svta[0] !! GLib::VariantType.new( $svta[0] ) )
       !!
       Nil;
 
     $state_hint = $sha[0] ??
-      ( $raw ?? $sha[0] !! GTK::Compat::Variant.new( $sha[0] ) )
+      ( $raw ?? $sha[0] !! GLib::Variant.new( $sha[0] ) )
       !!
       Nil;
 
     $state = $sa[0] ??
-      ( $raw ?? $sa[0] !! GTK::Compat::Variant.new( $sa[0] ) )
+      ( $raw ?? $sa[0] !! GLib::Variant.new( $sa[0] ) )
       !!
       Nil;
 

@@ -7,7 +7,7 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Message;
 
-use GTK::Compat::Variant;
+use GLib::Variant;
 
 use GTK::Compat::Roles::Object;
 
@@ -176,7 +176,7 @@ class GIO::DBus::Message {
         my $v = g_dbus_message_get_body($!dm);
 
         $v ??
-          ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
+          ( $raw ?? $v !! GLib::Variant.new($v, :!ref) )
           !!
           Nil;
       },
@@ -404,7 +404,7 @@ class GIO::DBus::Message {
     my $hv = g_dbus_message_get_header($!dm, $header_field);
 
     $hv ??
-      ( $raw ?? $hv !! GTK::Compat::Variant.new($hv, :!ref) )
+      ( $raw ?? $hv !! GLib::Variant.new($hv, :!ref) )
       !!
       Nil;
   }

@@ -145,7 +145,7 @@ class GIO::SettingsBackend {
 
     $values = do if $va[0] {
       my @v = CArrayToArray( $va[0] );
-      @v .= map({ GTK::Compat::Variant.new($_) }) unless $raw;
+      @v .= map({ GLib::Variant.new($_) }) unless $raw;
       @v;
     } else {
       Nil

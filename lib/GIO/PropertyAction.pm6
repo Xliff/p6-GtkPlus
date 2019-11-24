@@ -116,7 +116,7 @@ class GIO::PropertyAction {
 
         do if $gv.pointer {
           my $vt = cast(GVariantType, $gv.pointer);
-          $raw ?? $vt !! GTK::Compat::VariantType.new($vt);
+          $raw ?? $vt !! GLib::VariantType.new($vt);
         } else {
           Nil;
         }
@@ -152,7 +152,7 @@ class GIO::PropertyAction {
 
         do if $gv.object {
           my $v = cast(GVariant, $gv.object);
-          $raw ?? $v !! $GTK::Compat::Variant.new($v, :!ref);
+          $raw ?? $v !! $GLib::Variant.new($v, :!ref);
         } else {
           Nil;
         }
@@ -173,7 +173,7 @@ class GIO::PropertyAction {
         );
         do if $gv.pointer {
           my $vt = cast(GVariantType, $gv.pointer);
-          $raw ?? $vt !! GTK::Compat::VariantType.new($vt);
+          $raw ?? $vt !! GLib::VariantType.new($vt);
         } else {
           Nil;
         }

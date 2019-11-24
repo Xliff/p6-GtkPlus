@@ -385,7 +385,7 @@ class GIO::Settings {
     my $v = g_settings_get_value($!s, $key);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v) )
+      ( $raw ?? $v !! GLib::Variant.new($v) )
       !!
       Nil;
   }

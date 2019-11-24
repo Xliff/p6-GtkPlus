@@ -105,7 +105,7 @@ class GTK::Compat::SimpleAction {
         $gv = GTK::Compat::Value.new(
           self.prop_get('state', $gv)
         );
-        GTK::Compat::Variant.new(
+        GLib::Variant.new(
           nativecast(GVariant, $gv.object), :!ref
         );
       },
@@ -124,7 +124,7 @@ class GTK::Compat::SimpleAction {
         $gv = GTK::Compat::Value.new(
           self.prop_get('state-type', $gv)
         );
-        GTK::Compat::VariantType.new(
+        GLib::VariantType.new(
           nativecast(GVariantType, $gv.object )
         )
       },

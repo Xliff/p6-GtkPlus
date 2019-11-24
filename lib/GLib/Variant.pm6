@@ -32,14 +32,14 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $bool,
     :bool(:$boolean) is required
   ) {
     self.new_boolean($bool);
   }
   method new_boolean(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $bool
   )
     is also<new-boolean>
@@ -51,14 +51,14 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $byte
     :$byte is required
   ) {
     self.new_byte($byte);
   }
   method new_byte(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $byte
   )
     is also<new-byte>
@@ -71,14 +71,14 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $bytestring
     :$bytestring is required
   ) {
     self.new_bytestring($bytestring);
   }
   method new_bytestring(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $bytestring
   )
     is also<new-bytestring>
@@ -89,7 +89,7 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariant() $key,
     GVariant() $value
     :entry(:dict_entry(:$dict-entry)) is required
@@ -97,7 +97,7 @@ class Glib::Variant {
     self.new_dict_entry($key, $value);
   }
   method new_dict_entry (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariant() $key,
     GVariant() $value
   )
@@ -109,14 +109,14 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Num() $double
     :$double is required
   ) {
     self.new_double($double);
   }
   method new_double (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Num() $double
   )
     is also<new-double>
@@ -128,7 +128,7 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $element_type,
     Pointer $elements,
     Int() $n_elements,
@@ -138,7 +138,7 @@ class Glib::Variant {
     self.new_fixed_array($element_type, $elements, $n_elements, $element_size);
   }
   method new_fixed_array (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $element_type,
     Pointer $elements,
     Int() $n_elements,
@@ -159,7 +159,7 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     GBytes $bytes,
     Int() $trusted,
@@ -168,7 +168,7 @@ class Glib::Variant {
     self.new_from_bytes($type, $bytes, $trusted);
   }
   method new_from_bytes (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     GBytes $bytes,
     Int() $trusted
@@ -182,7 +182,7 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     gconstpointer $data,
     Int() $size,
@@ -194,7 +194,7 @@ class Glib::Variant {
     self.new_from_data($type, $data, $size, $trusted, $notify, $user_data);
   }
   method new_from_data (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     gconstpointer $data,
     Int() $size,
@@ -220,14 +220,14 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $handle_int
     :$handle is required
   ) {
     self.new_handle($handle_int);
   }
   method new_handle(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $handle
   )
     is also<new-handle>
@@ -239,14 +239,14 @@ class Glib::Variant {
   }
 
   multi method new (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
     :int_16(:$int-16) is required
   } {
     self.new_int16($value);
   }
   method new_int16 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-int16>
@@ -258,7 +258,7 @@ class Glib::Variant {
   }
 
   method new_int32 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     int32 $value
   )
     is also<new-int32>
@@ -270,7 +270,7 @@ class Glib::Variant {
   }
 
   method new_int64 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     int64 $value
   )
     is also<new-int64>
@@ -282,7 +282,7 @@ class Glib::Variant {
   }
 
   method new_maybe (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     GVariant() $child
   )
@@ -294,7 +294,7 @@ class Glib::Variant {
   }
 
   method new_object_path (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $value
   )
     is also<new-object-path>
@@ -309,7 +309,7 @@ class Glib::Variant {
   # }
 
   method new_signature (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $value
   )
     is also<new-signature>
@@ -320,7 +320,7 @@ class Glib::Variant {
   }
 
   method new_string (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $value
   )
     is also<new-string>
@@ -334,14 +334,14 @@ class Glib::Variant {
   # $value
   #
   # method new_take_string (
-  #   GTK::Compat::Variant:U:
+  #   GLib::Variant:U:
   #   Str() $value
   # ) {
   #   g_variant_new_take_string($!v);
   # }
 
   method new_uint16 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-uint16>
@@ -353,7 +353,7 @@ class Glib::Variant {
   }
 
   method new_uint32 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-uint32>
@@ -365,7 +365,7 @@ class Glib::Variant {
   }
 
   method new_uint64 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-uint64>
@@ -381,7 +381,7 @@ class Glib::Variant {
   # }
 
   method new_variant (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariant() $value
   )
     is also<new-variant>
@@ -392,7 +392,7 @@ class Glib::Variant {
   }
 
   method parse (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     Str() $text,
     Str() $limit,
@@ -676,7 +676,7 @@ class Glib::Variant {
     my $v = g_variant_get_variant($!v);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
+      ( $raw ?? $v !! GLib::Variant.new($v, :!ref) )
       !!
       Nil;
   }
@@ -698,7 +698,7 @@ class Glib::Variant {
   }
 
   method is_object_path (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $path
   )
     is also<is-object-path>
@@ -711,7 +711,7 @@ class Glib::Variant {
   }
 
   method is_signature (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $signature
   )
     is also<is-signature>
@@ -735,7 +735,7 @@ class Glib::Variant {
   }
 
   method parse_error_print_context (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GError() $error,
     Str() $source_str
   )
