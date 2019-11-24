@@ -1,4 +1,3 @@
-ALL::Your::Base
 Cairo
 Data::Dump::Tree
 Method::Also
@@ -136,6 +135,7 @@ GLib::Raw::Checksum
 GLib::Raw::DateTime
 GLib::Raw::Error
 GLib::Raw::HMAC
+GLib::Raw::Hostname
 GLib::Raw::IOChannel
 GLib::Raw::Memory
 GLib::Raw::Module
@@ -259,6 +259,7 @@ GLib::Checksum
 GLib::DateTime
 GLib::Error
 GLib::HMAC
+GLib::Hostname
 GLib::Memory
 GLib::Module
 GLib::Quark
