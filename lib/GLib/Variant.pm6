@@ -8,27 +8,27 @@ use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
 
-use Glib::Raw::Variant;
+use GLib::Raw::Variant;
 
-class Glib::Variant {
+class GLib::Variant {
   has GVariant $!v is implementor;
 
   submethod BUILD (:$variant) {
     $!v = $variant;
   }
 
+  submethod DESTROY {
+    self.downref;
+  }
+
   method GTK::Compat::Types::GVariant
     is also<GVariant>
   { $!v }
 
-  method new (GVariant $variant, :$ref = True) {
+  multi method new (GVariant $variant, :$ref = True) {
     my $o = self.bless( :$variant );
     $o.upref if $ref;
     $o;
-  }
-
-  submethod DESTROY {
-    self.downref;
   }
 
   multi method new (
@@ -52,10 +52,10 @@ class Glib::Variant {
 
   multi method new (
     GLib::Variant:U:
-    Int() $byte
+    Int() $byte_val,
     :$byte is required
   ) {
-    self.new_byte($byte);
+    self.new_byte($byte_val);
   }
   method new_byte(
     GLib::Variant:U:
@@ -64,18 +64,17 @@ class Glib::Variant {
     is also<new-byte>
   {
     my uint8 $b = $byte;
+    my $v = g_variant_new_byte($b);
 
     $v ?? self.bless( variant => $v ) !! Nil;
-
-    my $v = g_variant_new_byte($b);
   }
 
   multi method new (
     GLib::Variant:U:
-    Str() $bytestring
+    Str() $bytestring_val,
     :$bytestring is required
   ) {
-    self.new_bytestring($bytestring);
+    self.new_bytestring($bytestring_val);
   }
   method new_bytestring(
     GLib::Variant:U:
@@ -91,7 +90,7 @@ class Glib::Variant {
   multi method new (
     GLib::Variant:U:
     GVariant() $key,
-    GVariant() $value
+    GVariant() $value,
     :entry(:dict_entry(:$dict-entry)) is required
   ) {
     self.new_dict_entry($key, $value);
@@ -110,10 +109,10 @@ class Glib::Variant {
 
   multi method new (
     GLib::Variant:U:
-    Num() $double
+    Num() $double_val,
     :$double is required
   ) {
-    self.new_double($double);
+    self.new_double($double_val);
   }
   method new_double (
     GLib::Variant:U:
@@ -132,7 +131,7 @@ class Glib::Variant {
     GVariantType $element_type,
     Pointer $elements,
     Int() $n_elements,
-    Int() $element_size
+    Int() $element_size,
     :fixed_array(:fixed-array(:$array)) is required
   ) {
     self.new_fixed_array($element_type, $elements, $n_elements, $element_size);
@@ -148,11 +147,10 @@ class Glib::Variant {
   {
     my uint64 ($ne, $es) = resolve-uint64($n_elements, $element_size);
     my $v = g_variant_new_fixed_array(
-        $element_type,
-        $elements,
-        $ne,
-        $es
-      )
+      $element_type,
+      $elements,
+      $ne,
+      $es
     );
 
     $v ?? self.bless( variant => $v ) !! Nil;
@@ -161,11 +159,11 @@ class Glib::Variant {
   multi method new (
     GLib::Variant:U:
     GVariantType $type,
-    GBytes $bytes,
+    GBytes $bytes_val,
     Int() $trusted,
     :$bytes is required
   ) {
-    self.new_from_bytes($type, $bytes, $trusted);
+    self.new_from_bytes($type, $bytes_val, $trusted);
   }
   method new_from_bytes (
     GLib::Variant:U:
@@ -184,14 +182,14 @@ class Glib::Variant {
   multi method new (
     GLib::Variant:U:
     GVariantType $type,
-    gconstpointer $data,
+    gconstpointer $data_val,
     Int() $size,
     Int() $trusted,
     GDestroyNotify $notify = Pointer,
-    gpointer $user_data    = Pointer
+    gpointer $user_data    = Pointer,
     :$data is required
   ) {
-    self.new_from_data($type, $data, $size, $trusted, $notify, $user_data);
+    self.new_from_data($type, $data_val, $size, $trusted, $notify, $user_data);
   }
   method new_from_data (
     GLib::Variant:U:
@@ -207,13 +205,12 @@ class Glib::Variant {
     my uint64 $s = $size;
     my gboolean $t = $trusted;
     my $v = g_variant_new_from_data(
-        $type,
-        $data,
-        $s,
-        $t,
-        $notify,
-        $user_data
-      )
+      $type,
+      $data,
+      $s,
+      $t,
+      $notify,
+      $user_data
     );
 
     $v ?? self.bless( variant => $v ) !! Nil;
@@ -221,7 +218,7 @@ class Glib::Variant {
 
   multi method new (
     GLib::Variant:U:
-    Int() $handle_int
+    Int() $handle_int,
     :$handle is required
   ) {
     self.new_handle($handle_int);
@@ -240,9 +237,9 @@ class Glib::Variant {
 
   multi method new (
     GLib::Variant:U:
-    Int() $value
-    :int_16(:$int-16) is required
-  } {
+    Int() $value,
+    :$int16 is required
+  ) {
     self.new_int16($value);
   }
   method new_int16 (
@@ -257,9 +254,16 @@ class Glib::Variant {
     $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$int32 is required
+  ) {
+    self.new_int32($value);
+  }
   method new_int32 (
     GLib::Variant:U:
-    int32 $value
+    Int() $value
   )
     is also<new-int32>
   {
@@ -269,9 +273,16 @@ class Glib::Variant {
     $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$int64 is required
+  ) {
+    self.new_int64($value);
+  }
   method new_int64 (
     GLib::Variant:U:
-    int64 $value
+    Int() $value
   )
     is also<new-int64>
   {
@@ -281,6 +292,14 @@ class Glib::Variant {
     $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariantType() $type,
+    GVariant() $child,
+    :$maybe is required
+  ) {
+    self.new_maybe($type, $child);
+  }
   method new_maybe (
     GLib::Variant:U:
     GVariantType $type,
@@ -293,6 +312,13 @@ class Glib::Variant {
     $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Str() $value,
+    :object_path(:object-path(:obj_path(:obj-path(:$path)))) is required
+  ) {
+    self.new_object_path($value);
+  }
   method new_object_path (
     GLib::Variant:U:
     Str() $value
@@ -308,6 +334,13 @@ class Glib::Variant {
   #   g_variant_new_parsed_va($!v, $app);
   # }
 
+  multi method new (
+    GLib::Variant:U:
+    Str() $value,
+    :$signature is required
+  ) {
+    self.new_signature($value);
+  }
   method new_signature (
     GLib::Variant:U:
     Str() $value
@@ -319,6 +352,13 @@ class Glib::Variant {
     $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Str() $value,
+    :$string is required
+  ) {
+    self.new_string($value);
+  }
   method new_string (
     GLib::Variant:U:
     Str() $value
@@ -340,6 +380,13 @@ class Glib::Variant {
   #   g_variant_new_take_string($!v);
   # }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$uint16 is required
+  ) {
+    self.new_uint16($value);
+  }
   method new_uint16 (
     GLib::Variant:U:
     Int() $value
@@ -352,6 +399,13 @@ class Glib::Variant {
     $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$uint32 is required
+  ) {
+    self.new_uint32($value);
+  }
   method new_uint32 (
     GLib::Variant:U:
     Int() $value
@@ -364,6 +418,13 @@ class Glib::Variant {
     $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$uint64 is required
+  ) {
+    self.new_uint64($value);
+  }
   method new_uint64 (
     GLib::Variant:U:
     Int() $value
@@ -371,7 +432,7 @@ class Glib::Variant {
     is also<new-uint64>
   {
     my uint64 $val = $value;
-    my $v = g_variant_new_uint64($!val);
+    my $v = g_variant_new_uint64($val);
 
     $v ?? self.bless( variant => $v ) !! Nil;
   }
@@ -380,6 +441,13 @@ class Glib::Variant {
   #   g_variant_new_va($!v, $endptr, $app);
   # }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariant() $value,
+    :$variant is required
+  ) {
+    self.new_variant($value);
+  }
   method new_variant (
     GLib::Variant:U:
     GVariant() $value
@@ -413,6 +481,7 @@ class Glib::Variant {
     is also<check-format-string>
   {
     my gboolean $co = $copy_only;
+
     g_variant_check_format_string($!v, $format_string, $co);
   }
 
@@ -427,26 +496,31 @@ class Glib::Variant {
 
   method dup_bytestring (Int() $length) is also<dup-bytestring> {
     my uint64 $l = $length;
+
     g_variant_dup_bytestring($!v, $l);
   }
 
   method dup_bytestring_array (Int() $length) is also<dup-bytestring-array> {
     my uint64 $l = $length;
+
     g_variant_dup_bytestring_array($!v, $l);
   }
 
   method dup_objv (Int() $length) is also<dup-objv> {
     my uint64 $l = $length;
+
     g_variant_dup_objv($!v, $l);
   }
 
   method dup_string (Int() $length) is also<dup-string> {
     my uint64 $l = $length;
+
     g_variant_dup_string($!v, $l);
   }
 
   method dup_strv (Int() $length) is also<dup-strv> {
     my uint64 $l = $length;
+
     g_variant_dup_strv($!v, $l);
   }
 
@@ -525,6 +599,7 @@ class Glib::Variant {
     is also<get-fixed-array>
   {
     my uint64 ($ne, $es) = resolve-uint64($n_elements, $element_size);
+
     g_variant_get_fixed_array($!v, $ne, $es);
   }
 
@@ -615,7 +690,7 @@ class Glib::Variant {
     CStringArrayToArray( g_variant_get_strv($!v, $l) );
   }
 
-  # This is GLib, not GLib descendant, so it means what you'd think it means!
+  # This is GLib, not a GLib descendant, so it means what you'd think it means!
   # That is: no unstable_get_type needed, here!
   method get_type
     is also<
@@ -685,15 +760,27 @@ class Glib::Variant {
     g_variant_hash($!v);
   }
 
-  method is_container is also<is-container> {
+  method is_container
+    is also<
+      is-container
+      container
+    >
+  {
     so g_variant_is_container($!v);
   }
 
-  method is_floating is also<is-floating> {
+  method is_floating
+    is also<
+      is-floating
+      floating
+    >
+  {
     so g_variant_is_floating($!v);
   }
 
-  method is_normal_form is also<is-normal-form> {
+  # Shorter aliases go in favor of the get_* form
+  method is_normal_form is also<is-normal-form>
+  {
     so g_variant_is_normal_form($!v);
   }
 

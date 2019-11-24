@@ -1,6 +1,5 @@
 Cairo
 Data::Dump::Tree
-Glib::Raw::Variant
 Method::Also
 Pango::AttrList
 Pango::Context
