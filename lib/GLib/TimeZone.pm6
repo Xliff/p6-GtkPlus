@@ -3,7 +3,8 @@ use v6.c;
 use Method::Also;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::TimeZone;
+
+use GLib::Raw::TimeZone;
 
 class GTK::Compat::TimeZone {
   has GTimeZone $!tz is implementor;

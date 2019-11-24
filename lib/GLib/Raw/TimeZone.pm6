@@ -4,6 +4,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+unit package GLib::Raw::TimeZone;
+
 sub g_time_zone_adjust_time (GTimeZone $tz, GTimeType $type, gint64 $time)
   returns gint
   is native(glib)
