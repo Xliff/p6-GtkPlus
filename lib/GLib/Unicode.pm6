@@ -7,14 +7,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GLib::Raw::Unicode;
 
+use GLib::Roles::StaticClass;
+
 class GLib::Unicode {
-
-  method new (|) {
-    warn 'GLib::Unicode is a static class and does not need instantiation'
-      if $DEBUG;
-
-    GLib::Unicode;
-  }
+  also does GLib::Roles::StaticClass;
 
   method break_type (Int() $char) is also<break-type> {
     my gunichar $c = $char;
@@ -84,70 +80,6 @@ class GLib::Unicode {
     $result = $r;
   }
 
-  proto method ucs4_to_utf16
-    is also<ucs4-to-utf16>
-  { * }
-
-  multi method ucs4_to_utf16 (Str() $str, :$all = False) {
-    samewith($str, -1, $, $, $, :$all);
-  }
-  multi method ucs4_to_utf16 (
-    Str() $str,
-    Int() $len,
-    :$all = False
-  ) {
-    samewith($str, $len, $, $, $, :$all);
-  }
-  multi method ucs4_to_utf16 (
-    Str() $str,
-    Int() $len,
-    $items_read    is rw,
-    $items_written is rw,
-    CArray[Pointer[GError]] $error = gerror,
-    :$all = False
-  ) {
-    my glong ($ir, $iw) = 0 xx 2;
-    my glong $l = $len;
-
-    clear_error;
-    my $rc = g_ucs4_to_utf16($str, $l, $ir, $iw, $error);
-    set_error($error);
-    ($items_read, $items_written) = ($ir, $iw);
-    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
-  }
-
-  proto method ucs4_to_utf8 (|)
-    is also<ucs4-to-utf8>
-  { * }
-
-  multi method ucs4_to_utf8 (Str() $str, :$all = False) {
-    samewith($str, -1, $, $, $, :$all);
-  }
-  multi method ucs4_to_utf8 (
-    Str() $str,
-    Int() $len,
-    :$all = False
-  ) {
-    samewith($str, $len, $, $, $, :$all);
-  }
-  multi method ucs4_to_utf8 (
-    Str() $str,
-    Int() $len,
-    $items_read    is rw,
-    $items_written is rw,
-    CArray[Pointer[GError]] $error = gerror,
-    :$all = False
-  ) {
-    my glong ($ir, $iw) = 0 xx 2;
-    my glong $l = $len;
-
-    clear_error;
-    my $rc = g_ucs4_to_utf8($str, $l, $ir, $iw, $error);
-    set_error($error);
-    ($items_read, $items_written) = ($ir, $iw);
-    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
-  }
-
   # method unicode_canonical_decomposition (gunichar $ch, gsize $result_len)
   #   is also<unicode-canonical-decomposition>
   # {
@@ -176,342 +108,6 @@ class GLib::Unicode {
     my GUnicodeScript $s = $script;
 
     g_unicode_script_to_iso15924($s);
-  }
-
-  proto method utf16_to_ucs4 (|)
-    is also<utf16-to-ucs4>
-  { * }
-
-  multi method utf16_to_ucs4 (Str() $str, :$all = False) {
-    samewith($str, -1, $, $, $, :$all);
-  }
-  multi method utf16_to_ucs4 (
-    Str() $str,
-    Int() $len,
-    :$all = False
-  ) {
-    samewith($str, $len, $, $, $, :$all);
-  }
-  multi method utf16_to_ucs4 (
-    Str() $str,
-    Int() $len,
-    $items_read    is rw,
-    $items_written is rw,
-    CArray[Pointer[GError]] $error = gerror,
-    :$all = False
-  ) {
-    my glong ($l, $ir, $iw) = ($len, 0, 0);
-
-    clear_error;
-    my $rc = g_utf16_to_ucs4($str, $l, $ir, $iw, $error);
-    set_error($error);
-    ($items_read, $items_written) = ($ir, $iw);
-    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
-  }
-
-  proto method utf16_to_utf8 (|)
-    is also<utf16-to-utf8>
-  { * }
-
-  multi method utf16_to_utf8 (Str() $str, :$all = False) {
-    samewith($str, -1, $, $, $, :$all);
-  }
-  multi method utf16_to_utf8 (
-    Str() $str,
-    Int() $len,
-    :$all = False
-  ) {
-    samewith($str, $len, $, $, $, :$all);
-  }
-  multi method utf16_to_utf8 (
-    Str() $str,
-    Int() $len,
-    $items_read    is rw,
-    $items_written is rw,
-    CArray[Pointer[GError]] $error = gerror,
-    :$all = False
-  ) {
-    my glong ($l, $ir, $iw) = ($len, 0, 0);
-
-    clear_error;
-    my $rc = g_utf16_to_utf8($str, $len, $items_read, $items_written, $error);
-    set_error($error);
-    ($items_read, $items_written) = ($ir, $iw);
-    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
-  }
-
-  method utf8_casefold (Str() $str, Int() $len = -1) is also<utf8-casefold> {
-    my gssize $l = $len;
-
-    g_utf8_casefold($str, $l);
-  }
-
-  method utf8_collate (Str() $str1, Str() $str2) is also<utf8-collate> {
-    g_utf8_collate($str1, $str2);
-  }
-
-  method utf8_collate_key (Str() $str, Int() $len = -1)
-    is also<utf8-collate-key>
-  {
-    my gssize $l = $len;
-
-    g_utf8_collate_key($str, $l);
-  }
-
-  method utf8_collate_key_for_filename (Str() $str, Int() $len = -1)
-    is also<utf8-collate-key-for-filename>
-  {
-    my gssize $l = $len;
-
-    g_utf8_collate_key_for_filename($str, $l);
-  }
-
-  method utf8_find_next_char (Str() $p, Str() $end)
-    is also<utf8-find-next-char>
-  {
-    g_utf8_find_next_char($p, $end);
-  }
-
-  method utf8_find_prev_char (Str() $str, Str() $p)
-    is also<utf8-find-prev-char>
-  {
-    g_utf8_find_prev_char($str, $p);
-  }
-
-  method utf8_get_char (Str() $p) is also<utf8-get-char> {
-    g_utf8_get_char($p);
-  }
-
-  method utf8_get_char_validated (Str() $p, Int() $max_len = -1)
-    is also<utf8-get-char-validated>
-  {
-    my gssize $ml = $max_len;
-
-    g_utf8_get_char_validated($p, $ml);
-  }
-
-  method utf8_make_valid (Str() $str, Int() $len = -1) is also<utf8-make-valid> {
-    my gssize $l = $len;
-
-    g_utf8_make_valid($str, $l);
-  }
-
-  method utf8_normalize (Str() $str, Int() $len, Int() $mode)
-    is also<utf8-normalize>
-  {
-    my gssize $l = $len;
-    my GNormalizeMode $m = $mode;
-
-    g_utf8_normalize($str, $l, $m);
-  }
-
-  method utf8_offset_to_pointer (Str() $str, Int() $offset)
-    is also<utf8-offset-to-pointer>
-  {
-    my glong $o = $offset;
-
-    g_utf8_offset_to_pointer($str, $o);
-  }
-
-  method utf8_pointer_to_offset (Str() $str, Str() $pos)
-    is also<utf8-pointer-to-offset>
-  {
-    g_utf8_pointer_to_offset($str, $pos);
-  }
-
-  method utf8_prev_char (Str() $p) is also<utf8-prev-char> {
-    g_utf8_prev_char($p);
-  }
-
-  method utf8_strchr (Str() $p, Int() $len, Int() $c) is also<utf8-strchr> {
-    my gssize $l = $len;
-    my gunichar $cc = $c;
-
-    g_utf8_strchr($p, $l, $cc);
-  }
-
-  method utf8_strdown (Str() $str, Int() $len = -1) is also<utf8-strdown> {
-    my gssize $l = $len;
-
-    g_utf8_strdown($str, $l);
-  }
-
-  method utf8_strlen (Str() $p, Int() $max = -1) is also<utf8-strlen> {
-    my gssize $m = $max;
-
-    g_utf8_strlen($p, $m);
-  }
-
-  method utf8_strncpy (Str() $dest, Str() $src, Int() $n)
-    is also<utf8-strncpy>
-  {
-    my gsize $nn = $n;
-
-    g_utf8_strncpy($dest, $src, $nn);
-  }
-
-  proto method utf8_strrchr (|)
-    is also<utf8-strrchr>
-  { * }
-
-  multi method utf8_strrchr(Str() $p, Int() $c) {
-    samewith($p, -1, $c);
-  }
-  multi method utf8_strrchr (Str() $p, Int() $len, Int() $c) {
-    my gssize $l = $len;
-
-    g_utf8_strrchr($p, $l, $c);
-  }
-
-  method utf8_strreverse (Str() $str, Int() $len = -1) is also<utf8-strreverse> {
-    my gssize $l = $len;
-
-    g_utf8_strreverse($str, $l);
-  }
-
-  method utf8_strup (Str() $str, Int() $len = -1) is also<utf8-strup> {
-    my gssize $l = $len;
-
-    g_utf8_strup($str, $l);
-  }
-
-  method utf8_substring (
-    Str() $str,
-    Int() $start_pos,
-    Int() $end_pos
-  )
-    is also<utf8-substring>
-  {
-    my glong ($sp, $ep) = ($start_pos, $end_pos);
-
-    g_utf8_substring($str, $sp, $ep);
-  }
-
-  method utf8_to_ucs4 (
-    Str() $str,
-    Int() $len,
-    $items_read    is rw,
-    $items_written is rw,
-    CArray[Pointer[GError]] $error = gerror
-  )
-    is also<utf8-to-ucs4>
-  {
-    my glong ($l, $ir, $iw) = ($len, 0, 0);
-
-    clear_error;
-    my $rc = g_utf8_to_ucs4($str, $l, $ir, $iw, $error);
-    set_error($error);
-    ($items_read, $items_written) = ($ir, $iw);
-    $rc;
-  }
-
-  proto method utf8_to_ucs4_fast (|)
-    is also<utf8-to-ucs4-fast>
-  { * }
-
-  multi method utf8to_ucs4_fast (Str() $str, :$all = False) {
-    samewith($str, -1, $, :$all);
-  }
-  multi method utf8_to_ucs4_fast (
-    Str() $str,
-    $items_written is rw,
-    :$all = False
-  ) {
-    samewith($str, -1, $items_written, :$all);
-  }
-  multi method utf8_to_ucs4_fast (
-    Str() $str,
-    Int() $len,
-    $items_written is rw,
-    :$all = False
-  ) {
-    my glong ($l, $iw) = ($len, 0);
-
-    my $rc = g_utf8_to_ucs4_fast($str, $l, $iw);
-    $items_written = $iw;
-    $all.not ?? $rc !! ($rc, $items_written);
-  }
-
-  proto method utf8_to_utf16 (|)
-    is also<utf8-to-utf16>
-  { * }
-
-  multi method utf8_to_utf16 ( Str() $str, :$all = False ) {
-    samewith($str, -1, $, $, $, :all);
-  }
-  multi method utf8_to_utf16 (
-    Str() $str,
-    Int() $len,
-    :$all = False
-  ) {
-    samewith($str, $len, $, $, $, :$all);
-  }
-  multi method utf8_to_utf16 (
-    Str() $str,
-    Int() $len,
-    $items_read    is rw,
-    $items_written is rw,
-    CArray[Pointer[GError]] $error = gerror,
-    :$all = False
-  ) {
-    my glong ($l, $ir, $iw) = ($len, 0, 0);
-
-    clear_error;
-    my $rc = g_utf8_to_utf16($str, $l, $ir, $iw, $error);
-    set_error($error);
-    ($items_read, $items_written) = ($ir, $iw);
-    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
-  }
-
-  proto method utf8_validate (|)
-    is also<utf8-validate>
-  { * }
-
-  multi method utf8_validate ( Str() $str, :$all = False ) {
-    samewith($str, -1, $, :$all);
-  }
-  multi method utf8_validate (Str() $str, Int() $max_len, :$all = False) {
-    samewith($str, $max_len, $, :$all);
-  }
-  multi method utf8_validate (
-    Str() $str,
-    Int() $max_len,
-    $end is rw,
-    :$all = False
-  ) {
-    my gssize $ml = $max_len;
-    my $ea = CArray[Str].new;
-    $ea[0] = '';
-
-    my $rc = g_utf8_validate($str, $ml, $ea);
-    $end = $ea[0];
-    $all.not ?? $rc !! ($rc, $end);
-  }
-
-  proto method utf8_validate_len (|)
-    is also<utf8-validate-len>
-  { * }
-
-  multi method utf8_validate_len (
-    Str() $str,
-    Int() $max_len,
-    :$all = False
-  ) {
-    samewith($str, $max_len, $, :$all);
-  }
-  multi method utf8_validate_len (
-    Str() $str,
-    Int() $max_len,
-    $end is rw,
-    :$all = False
-  ) {
-    my gssize $ml = $max_len;
-    my $ea = CArray[Str].new;
-    $ea[0] = '';
-
-    my $rc = g_utf8_validate_len($str, $max_len, $end);
-    $end = $ea[0];
-    $all.not ?? $rc !! ($rc, $end);
   }
 
   proto method get_mirror_char (|)
@@ -687,6 +283,408 @@ class GLib::Unicode {
     my gunichar $c = $ch;
 
     g_unichar_xdigit_value($c);
+  }
+
+}
+
+
+class GLib::UTF8 {
+  also does GLib::Roles::StaticClass;
+
+  method casefold (Str() $str, Int() $len = -1) {
+    my gssize $l = $len;
+
+    g_utf8_casefold($str, $l);
+  }
+
+  method collate (Str() $str1, Str() $str2) {
+    g_utf8_collate($str1, $str2);
+  }
+
+  method collate_key (Str() $str, Int() $len = -1)
+    is also<collate-key>
+  {
+    my gssize $l = $len;
+
+    g_utf8_collate_key($str, $l);
+  }
+
+  method collate_key_for_filename (Str() $str, Int() $len = -1)
+    is also<collate-key-for-filename>
+  {
+    my gssize $l = $len;
+
+    g_utf8_collate_key_for_filename($str, $l);
+  }
+
+  method find_next_char (Str() $p, Str() $end)
+    is also<find-next-char>
+  {
+    g_utf8_find_next_char($p, $end);
+  }
+
+  method find_prev_char (Str() $str, Str() $p)
+    is also<find-prev-char>
+  {
+    g_utf8_find_prev_char($str, $p);
+  }
+
+  method get_char (Str() $p) is also<get-char> {
+    g_utf8_get_char($p);
+  }
+
+  method get_char_validated (Str() $p, Int() $max_len = -1)
+    is also<get-char-validated>
+  {
+    my gssize $ml = $max_len;
+
+    g_utf8_get_char_validated($p, $ml);
+  }
+
+  method make_valid (Str() $str, Int() $len = -1) is also<make-valid> {
+    my gssize $l = $len;
+
+    g_utf8_make_valid($str, $l);
+  }
+
+  method normalize (Str() $str, Int() $len, Int() $mode) {
+    my gssize $l = $len;
+    my GNormalizeMode $m = $mode;
+
+    g_utf8_normalize($str, $l, $m);
+  }
+
+  method offset_to_pointer (Str() $str, Int() $offset)
+    is also<offset-to-pointer>
+  {
+    my glong $o = $offset;
+
+    g_utf8_offset_to_pointer($str, $o);
+  }
+
+  method pointer_to_offset (Str() $str, Str() $pos)
+    is also<pointer-to-offset>
+  {
+    g_utf8_pointer_to_offset($str, $pos);
+  }
+
+  method prev_char (Str() $p) is also<prev-char> {
+    g_utf8_prev_char($p);
+  }
+
+  method strchr (Str() $p, Int() $len, Int() $c) {
+    my gssize $l = $len;
+    my gunichar $cc = $c;
+
+    g_utf8_strchr($p, $l, $cc);
+  }
+
+  method strdown (Str() $str, Int() $len = -1) {
+    my gssize $l = $len;
+
+    g_utf8_strdown($str, $l);
+  }
+
+  method strlen (Str() $p, Int() $max = -1) {
+    my gssize $m = $max;
+
+    g_utf8_strlen($p, $m);
+  }
+
+  method strncpy (Str() $dest, Str() $src, Int() $n) {
+    my gsize $nn = $n;
+
+    g_utf8_strncpy($dest, $src, $nn);
+  }
+
+  multi method strrchr(Str() $p, Int() $c) {
+    samewith($p, -1, $c);
+  }
+  multi method strrchr (Str() $p, Int() $len, Int() $c) {
+    my gssize $l = $len;
+
+    g_utf8_strrchr($p, $l, $c);
+  }
+
+  method strreverse (Str() $str, Int() $len = -1) {
+    my gssize $l = $len;
+
+    g_utf8_strreverse($str, $l);
+  }
+
+  method strup (Str() $str, Int() $len = -1) {
+    my gssize $l = $len;
+
+    g_utf8_strup($str, $l);
+  }
+
+  method substring (
+    Str() $str,
+    Int() $start_pos,
+    Int() $end_pos
+  ) {
+    my glong ($sp, $ep) = ($start_pos, $end_pos);
+
+    g_utf8_substring($str, $sp, $ep);
+  }
+
+  method to_ucs4 (
+    Str() $str,
+    Int() $len,
+    $items_read    is rw,
+    $items_written is rw,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<to-ucs4>
+  {
+    my glong ($l, $ir, $iw) = ($len, 0, 0);
+
+    clear_error;
+    my $rc = g_utf8_to_ucs4($str, $l, $ir, $iw, $error);
+    set_error($error);
+    ($items_read, $items_written) = ($ir, $iw);
+    $rc;
+  }
+
+  proto method to_ucs4_fast (|)
+    is also<to-ucs4-fast>
+  { * }
+
+  multi method utf8to_ucs4_fast (Str() $str, :$all = False) {
+    samewith($str, -1, $, :$all);
+  }
+  multi method to_ucs4_fast (
+    Str() $str,
+    $items_written is rw,
+    :$all = False
+  ) {
+    samewith($str, -1, $items_written, :$all);
+  }
+  multi method to_ucs4_fast (
+    Str() $str,
+    Int() $len,
+    $items_written is rw,
+    :$all = False
+  ) {
+    my glong ($l, $iw) = ($len, 0);
+
+    my $rc = g_utf8_to_ucs4_fast($str, $l, $iw);
+    $items_written = $iw;
+    $all.not ?? $rc !! ($rc, $items_written);
+  }
+
+  proto method to_utf16 (|)
+    is also<to-utf16>
+  { * }
+
+  multi method to_utf16 ( Str() $str, :$all = False ) {
+    samewith($str, -1, $, $, $, :all);
+  }
+  multi method to_utf16 (
+    Str() $str,
+    Int() $len,
+    :$all = False
+  ) {
+    samewith($str, $len, $, $, $, :$all);
+  }
+  multi method to_utf16 (
+    Str() $str,
+    Int() $len,
+    $items_read    is rw,
+    $items_written is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my glong ($l, $ir, $iw) = ($len, 0, 0);
+
+    clear_error;
+    my $rc = g_utf8_to_utf16($str, $l, $ir, $iw, $error);
+    set_error($error);
+    ($items_read, $items_written) = ($ir, $iw);
+    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
+  }
+
+  multi method validate ( Str() $str, :$all = False ) {
+    samewith($str, -1, $, :$all);
+  }
+  multi method validate (Str() $str, Int() $max_len, :$all = False) {
+    samewith($str, $max_len, $, :$all);
+  }
+  multi method validate (
+    Str() $str,
+    Int() $max_len,
+    $end is rw,
+    :$all = False
+  ) {
+    my gssize $ml = $max_len;
+    my $ea = CArray[Str].new;
+    $ea[0] = '';
+
+    my $rc = g_utf8_validate($str, $ml, $ea);
+    $end = $ea[0];
+    $all.not ?? $rc !! ($rc, $end);
+  }
+
+  proto method validate_len (|)
+    is also<validate-len>
+  { * }
+
+  multi method validate_len (
+    Str() $str,
+    Int() $max_len,
+    :$all = False
+  ) {
+    samewith($str, $max_len, $, :$all);
+  }
+  multi method validate_len (
+    Str() $str,
+    Int() $max_len,
+    $end is rw,
+    :$all = False
+  ) {
+    my gssize $ml = $max_len;
+    my $ea = CArray[Str].new;
+    $ea[0] = '';
+
+    my $rc = g_utf8_validate_len($str, $max_len, $end);
+    $end = $ea[0];
+    $all.not ?? $rc !! ($rc, $end);
+  }
+
+}
+
+class GLib::UTF16 {
+  also does GLib::Roles::StaticClass;
+
+  proto method to_ucs4 (|)
+    is also<to-ucs4>
+  { * }
+
+  multi method to_ucs4 (Str() $str, :$all = False) {
+    samewith($str, -1, $, $, $, :$all);
+  }
+  multi method to_ucs4 (
+    Str() $str,
+    Int() $len,
+    :$all = False
+  ) {
+    samewith($str, $len, $, $, $, :$all);
+  }
+  multi method to_ucs4 (
+    Str() $str,
+    Int() $len,
+    $items_read    is rw,
+    $items_written is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my glong ($l, $ir, $iw) = ($len, 0, 0);
+
+    clear_error;
+    my $rc = g_utf16_to_ucs4($str, $l, $ir, $iw, $error);
+    set_error($error);
+    ($items_read, $items_written) = ($ir, $iw);
+    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
+  }
+
+  proto method to_utf8 (|)
+    is also<to-utf8>
+  { * }
+
+  multi method to_utf8 (Str() $str, :$all = False) {
+    samewith($str, -1, $, $, $, :$all);
+  }
+  multi method to_utf8 (
+    Str() $str,
+    Int() $len,
+    :$all = False
+  ) {
+    samewith($str, $len, $, $, $, :$all);
+  }
+  multi method to_utf8 (
+    Str() $str,
+    Int() $len,
+    $items_read    is rw,
+    $items_written is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my glong ($l, $ir, $iw) = ($len, 0, 0);
+
+    clear_error;
+    my $rc = g_utf16_to_utf8($str, $len, $items_read, $items_written, $error);
+    set_error($error);
+    ($items_read, $items_written) = ($ir, $iw);
+    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
+  }
+
+}
+
+class GLib::UTF4 {
+  also does GLib::Roles::StaticClass;
+
+  proto method to_utf16
+    is also<to-utf16>
+  { * }
+
+  multi method to_utf16 (Str() $str, :$all = False) {
+    samewith($str, -1, $, $, $, :$all);
+  }
+  multi method to_utf16 (
+    Str() $str,
+    Int() $len,
+    :$all = False
+  ) {
+    samewith($str, $len, $, $, $, :$all);
+  }
+  multi method to_utf16 (
+    Str() $str,
+    Int() $len,
+    $items_read    is rw,
+    $items_written is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my glong ($ir, $iw) = 0 xx 2;
+    my glong $l = $len;
+
+    clear_error;
+    my $rc = g_ucs4_to_utf16($str, $l, $ir, $iw, $error);
+    set_error($error);
+    ($items_read, $items_written) = ($ir, $iw);
+    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
+  }
+
+  proto method to_utf8 (|)
+    is also<to-utf8>
+  { * }
+
+  multi method to_utf8 (Str() $str, :$all = False) {
+    samewith($str, -1, $, $, $, :$all);
+  }
+  multi method to_utf8 (
+    Str() $str,
+    Int() $len,
+    :$all = False
+  ) {
+    samewith($str, $len, $, $, $, :$all);
+  }
+  multi method to_utf8 (
+    Str() $str,
+    Int() $len,
+    $items_read    is rw,
+    $items_written is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my glong ($ir, $iw) = 0 xx 2;
+    my glong $l = $len;
+
+    clear_error;
+    my $rc = g_ucs4_to_utf8($str, $l, $ir, $iw, $error);
+    set_error($error);
+    ($items_read, $items_written) = ($ir, $iw);
+    $all.not ?? $rc !! ($rc, $items_read, $items_written, $error);
   }
 
 }
