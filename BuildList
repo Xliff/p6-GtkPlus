@@ -1,5 +1,6 @@
 Cairo
 Data::Dump::Tree
+Glib::Raw::Variant
 Method::Also
 Pango::AttrList
 Pango::Context
@@ -149,6 +150,8 @@ GLib::Raw::String
 GLib::Raw::TimeZone
 GLib::Raw::Tree
 GLib::Raw::Unicode
+GLib::Raw::Variant
+GLib::Raw::VariantType
 GLib::Roles::StaticClass
 GLib::Scanner
 GLib::Slice
@@ -157,6 +160,9 @@ GLib::TimeZone
 GLib::Tree
 GLib::URI
 GLib::Unicode
+GLib::Variant
+GLib::VariantIter
+GLib::VariantType
 GTK::Builder::Actionable
 GTK::Compat::FileTypes
 GTK::Compat::Pixbuf::Raw::Animation
@@ -192,8 +198,6 @@ GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
 GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
-GTK::Compat::Raw::Variant
-GTK::Compat::Raw::VariantType
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
 GTK::Compat::Raw::X11_Display
@@ -207,9 +211,6 @@ GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::ThreadPool
 GTK::Compat::Timer
-GTK::Compat::Variant
-GTK::Compat::VariantIter
-GTK::Compat::VariantType
 GTK::Compat::Visual
 GTK::Raw::Types
 GTK::Raw::Viewport
@@ -522,7 +523,6 @@ GTK::Compat::Roles::Signals::Device
 GTK::Compat::Roles::Signals::Settings
 GTK::Compat::Screen
 GTK::Compat::Value
-GTK::Compat::VariantDict
 GTK::DragContext
 GTK::FileFilter
 GTK::Get
@@ -622,6 +622,7 @@ GIO::UnixOutputStream
 GIO::VFS
 GIO::ZlibCompressor
 GIO::ZlibDecompressor
+GLib::VariantDict
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
