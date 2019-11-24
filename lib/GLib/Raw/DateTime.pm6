@@ -4,6 +4,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+unit package GLib::Raw::DateTime;
+
 sub g_date_time_add (GDateTime $datetime, GTimeSpan $timespan)
   returns GDateTime
   is native(glib)

@@ -132,6 +132,7 @@ GLib::Raw::AsyncQueue
 GLib::Raw::Base64
 GLib::Raw::Bytes
 GLib::Raw::Checksum
+GLib::Raw::DateTime
 GLib::Raw::Error
 GLib::Raw::HMAC
 GLib::Raw::IOChannel
@@ -143,12 +144,14 @@ GLib::Raw::Rand
 GLib::Raw::Scanner
 GLib::Raw::Slice
 GLib::Raw::String
+GLib::Raw::TimeZone
 GLib::Raw::Tree
 GLib::Raw::Unicode
 GLib::Roles::StaticClass
 GLib::Scanner
 GLib::Slice
 GLib::String
+GLib::TimeZone
 GLib::Tree
 GLib::URI
 GLib::Unicode
@@ -161,7 +164,6 @@ GTK::Compat::Raw::Array
 GTK::Compat::Raw::Binding
 GTK::Compat::Raw::BookmarkFile
 GTK::Compat::Raw::Cursor
-GTK::Compat::Raw::DateTime
 GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
 GTK::Compat::Raw::DisplayManager
@@ -186,7 +188,6 @@ GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Signal
 GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
-GTK::Compat::Raw::TimeZone
 GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Variant
@@ -203,7 +204,6 @@ GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::ThreadPool
-GTK::Compat::TimeZone
 GTK::Compat::Timer
 GTK::Compat::Variant
 GTK::Compat::VariantIter
@@ -255,6 +255,7 @@ GLib::AsyncQueue
 GLib::Base64
 GLib::Bytes
 GLib::Checksum
+GLib::DateTime
 GLib::Error
 GLib::HMAC
 GLib::Memory
@@ -263,7 +264,6 @@ GLib::Quark
 GLib::Rand
 GTK::Compat::Array
 GTK::Compat::BookmarkFile
-GTK::Compat::DateTime
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList

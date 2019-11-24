@@ -9,6 +9,8 @@ use GIO::Raw::FileInfo;
 
 use GTK::Raw::Utils;
 
+use GLib::DateTime;
+
 use GTK::Compat::Roles::Object;
 
 class GIO::FileInfo {
@@ -289,7 +291,7 @@ class GIO::FileInfo {
     my $dt = g_file_info_get_deletion_date($!fi);
 
     $dt ??
-      ( $raw ?? $dt !! GTK::Compat::DateTime.new($dt) )
+      ( $raw ?? $dt !! GLib::DateTime.new($dt) )
       !!
       Nil;
   }

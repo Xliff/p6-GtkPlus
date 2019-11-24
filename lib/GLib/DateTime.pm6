@@ -4,9 +4,10 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::DateTime;
 
-class GTK::Compat::DateTime {
+use GLib::Raw::DateTime;
+
+class GLib::DateTime {
   has GDateTime $!dt is implementor;
 
   submethod BUILD (:$datetime) {
@@ -175,9 +176,12 @@ class GTK::Compat::DateTime {
   }
 
   multi method add (
-    $timespan where * ~~ (GTK::Compat::TimeSpan, GTimeSpan).any
+    Int() $timespan_int,
+    :ts(:$timespan) is required
   ) {
-    g_date_time_add($!dt, $timespan);
+    my GTimeSpan $t = $timespan_int;
+
+    g_date_time_add($!dt, $t);
   }
 
   multi method add ( Int() $d, :d(:$days) is required) {
@@ -274,7 +278,6 @@ class GTK::Compat::DateTime {
     g_date_time_compare($!dt, $dt2);
   }
 
-  # GTimeSpan - NYI
   method difference (GDateTime() $begin) {
     g_date_time_difference($!dt, $begin);
   }
