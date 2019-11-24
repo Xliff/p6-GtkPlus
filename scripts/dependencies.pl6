@@ -57,6 +57,7 @@ sub MAIN (
 
     my token useneed { 'use' | 'need' }
     my $f = $p.value<filename>;
+
     my $m = $f.IO.open.slurp-rest ~~ m:g/^^<useneed>  \s+ $<m>=((\w+)+ % '::') \s* ';'/;
     for $m.list -> $mm {
       my $mn = $mm;
@@ -69,10 +70,14 @@ sub MAIN (
       }
 
       %nodes{$p.key}<edges>.push: $mn;
+
+      die qq:to/DIE/ unless %nodes{$mn}:exists;
+        { $mn }, used by { $p.key }, does not exist!
+        DIE
+
       $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
     }
     #say "P: {$p.key} / { %nodes{$p.key}.gist }";
-    #exit if $p.key.ends-with('AppLaunchContext');
   }
 
   if %*ENV<P6_GTK_DEBUG> {
