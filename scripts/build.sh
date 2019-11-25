@@ -2,6 +2,10 @@
 
 echo -e "Dependency Generation\n=====================" >> LastBuildResults
 /usr/bin/time -p -o LastBuildResults -a perl6 scripts/dependencies.pl6
+if [ "$?" -ne "0" ];
+  exit;
+fi
+
 if [ "$1" == "--start-at" ]; then
   shift
   re='^[0-9]+$'

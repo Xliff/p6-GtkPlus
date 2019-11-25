@@ -1,7 +1,8 @@
 #!/usr/bin/env perl6
 use v6.c;
 
-qx[ scripts/dependencies.pl6 ];
+my $p = run q[scripts/dependencies.pl6], :out;
+exit if $p.exitcode;
 
 die 'Cannot find BuildList file in current directory.'
   unless 'BuildList'.IO.e;
