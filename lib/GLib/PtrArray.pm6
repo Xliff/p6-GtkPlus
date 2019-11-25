@@ -4,31 +4,36 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Array;
+
 use GTK::Raw::Utils;
 
-class GTK::Compat::PtrArray {
-  has GPtrArray $!pa is implementor;
+use GLib::Raw::Array;
 
-  submethod BUILD(:$array) {
-    $!pa = $array;
+class GLib::PtrArray {
+  also does Positional;
+
+  has GPtrArray $!pa;
+
+  submethod BUILD(:$ptr-array) {
+    $!pa = $ptr-array;
   }
 
   submethod DESTROY {
     self.downref;
   }
 
-  method GTK::Compat::Types::GPtrArray is also<garray> {
-    $!pa;
-  }
+  method GTK::Compat::Types::GPtrArray
+    is also<GPtrArray>
+  { $!pa; }
 
   multi method new (GPtrArray $array) {
     my $o = self.bless(:$array);
     $o.upref;
-    $o;
   }
   multi method new {
-    self.bless( array => g_ptr_array_new() );
+    my $pa = g_ptr_array_new();
+
+    $pa ?? self.bless( ptr-array => $pa ) !! Nil;
   }
 
   method new_full (
@@ -37,27 +42,26 @@ class GTK::Compat::PtrArray {
   )
     is also<new-full>
   {
-    my guint $rs = resolve-uint($reserved_size);
-    self.bless(
-      array => g_ptr_array_new_full($!pa, $rs, $element_free_func)
-    );
+    my guint $rs = $reserved_size;
+    my $pa = g_ptr_array_new_full($rs, $element_free_func);
+
+    $pa ?? self.bless( ptr-array => $pa) !! Nil;
   }
 
   method new_with_free_func (&free_func) is also<new-with-free-func> {
-    self.bless(
-      array => g_ptr_array_new_with_free_func(&free_func)
-    );
+    my $pa = g_ptr_array_new_with_free_func(&free_func);
+
+    $pa ?? self.bless( ptr-array => $pa) !! Nil;
   }
 
   method sized_new (Int() $reserved_size) is also<sized-new> {
-    my guint $rs = resolve-uint($reserved_size);
-    self.bless( array => g_ptr_array_sized_new($rs) );
+    my guint $rs = $reserved_size;
+    my $pa = g_ptr_array_sized_new($rs);
+
+    $pa ?? self.bless( ptr-array => $pa) !! Nil;
   }
 
-  method remove_range (Int() $index, Int() $length) is also<remove-range> {
-    my guint ($i, $l) = resolve-uint($index, $length);
-    self.bless( array => g_ptr_array_remove_range($!pa, $i, $length) );
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -77,7 +81,8 @@ class GTK::Compat::PtrArray {
     die '$needle parameter must be of REPR "CStruct" or "CPointer"'
       unless $needle.REPR eq <CStruct CPointer>.any;
     $needle = nativecast(Pointer, $needle) unless $needle.REPR eq 'CPointer';
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     g_ptr_array_find($!pa, $needle, $i);
   }
 
@@ -91,7 +96,8 @@ class GTK::Compat::PtrArray {
     die '$needle parameter must be of REPR "CStruct" or "CPointer"'
       unless $needle.REPR eq <CStruct CPointer>.any;
     $needle = nativecast(Pointer, $needle) unless $needle.REPR eq 'CPointer';
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     g_ptr_array_find_with_equal_func($!pa, $needle, &equal_func, $i);
   }
 
@@ -100,12 +106,14 @@ class GTK::Compat::PtrArray {
   }
 
   method free (Int() $free_seg) {
-    my gboolean $fs = resolve-bool($free_seg);
+    my gboolean $fs = $free_seg;
+
     g_ptr_array_free($!pa, $fs);
   }
 
   method insert (Int() $index, gpointer $data = Pointer) {
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     g_ptr_array_insert($!pa, $i, $data);
   }
 
@@ -119,17 +127,26 @@ class GTK::Compat::PtrArray {
   }
 
   method remove_fast (gpointer $data) is also<remove-fast> {
-    g_ptr_array_remove_fast($!pa, $data);
+    so g_ptr_array_remove_fast($!pa, $data);
   }
 
   method remove_index (Int() $index) is also<remove-index> {
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     g_ptr_array_remove_index($!pa, $i);
   }
 
   method remove_index_fast (Int() $index) is also<remove-index-fast> {
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     g_ptr_array_remove_index_fast($!pa, $i);
+  }
+
+  method remove_range (Int() $index, Int() $length) is also<remove-range> {
+    my guint ($i, $l) = ($index, $length);
+    my $pa = g_ptr_array_remove_range($!pa, $i, $l);
+
+    self;
   }
 
   method set_free_func (GDestroyNotify $element_free_func)
@@ -152,12 +169,14 @@ class GTK::Compat::PtrArray {
   }
 
   method steal_index (Int() $index) is also<steal-index> {
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     g_ptr_array_steal_index($!pa, $i);
   }
 
   method steal_index_fast (Int() $index) is also<steal-index-fast> {
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     g_ptr_array_steal_index_fast($!pa, $i);
   }
 
@@ -170,7 +189,8 @@ class GTK::Compat::PtrArray {
   }
 
   method index (Int() $index) is also<AT-POS> {
-    my guint $i = resolve-uint($index);
+    my guint $i = $index;
+
     $!pa.data[$i];
   }
 

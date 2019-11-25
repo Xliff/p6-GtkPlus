@@ -127,6 +127,7 @@ GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
 GIO::Roles::Signals::VolumeMonitor
 GIO::SettingsSchema
+GLib::Raw::Array
 GLib::Raw::Arrays
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
@@ -167,7 +168,6 @@ GTK::Compat::FileTypes
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppLaunchContext
-GTK::Compat::Raw::Array
 GTK::Compat::Raw::Binding
 GTK::Compat::Raw::BookmarkFile
 GTK::Compat::Raw::Cursor
@@ -253,6 +253,7 @@ GIO::Roles::Icon
 GIO::Roles::Signals::DtlsConnection
 GIO::Roles::Signals::FileMonitor
 GIO::Roles::Signals::TlsConnection
+GLib::Array
 GLib::AsyncQueue
 GLib::Base64
 GLib::Bytes
@@ -264,9 +265,9 @@ GLib::Hostname
 GLib::Markup
 GLib::Memory
 GLib::Module
+GLib::PtrArray
 GLib::Quark
 GLib::Rand
-GTK::Compat::Array
 GTK::Compat::BookmarkFile
 GTK::Compat::FrameTimings
 GTK::Compat::GList
@@ -279,7 +280,6 @@ GTK::Compat::MainLoop
 GTK::Compat::Mutex
 GTK::Compat::Pixbuf::Animation::Iter
 GTK::Compat::Pixbuf::Transforms
-GTK::Compat::PtrArray
 GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
