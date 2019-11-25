@@ -5,37 +5,42 @@ use NativeCall;
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Log;
 
-class GTK::Compat::Log {
+use GLib::Raw::Log;
+
+use GLib::Roles::StaticClass;
+
+class GLib::Log {
+  also does GLib::Roles::StaticClass;
 
   method log (Str() $log_domain, Int() $log_level, Str() $format) {
-    my guint $ll = resolve-uint($log_level);
+    my guint $ll = $log_level;
+
     g_log($log_domain, $ll, $format);
   }
 
   method message (Str() $format) {
-    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_MESSAGE,  $format);
+    GLib::Log.log('GTK::Compat', G_LOG_LEVEL_MESSAGE,  $format);
   }
 
   method critical (Str() $format) {
-    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_CRITICAL, $format);
+    GLib::Log.log('GTK::Compat', G_LOG_LEVEL_CRITICAL, $format);
   }
 
   method error (Str() $format) {
-    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_ERROR,    $format);
+    GLib::Log.log('GTK::Compat', G_LOG_LEVEL_ERROR,    $format);
   }
 
   method warn (Str() $format) {
-    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_WARNING,  $format);
+    GLib::Log.log('GTK::Compat', G_LOG_LEVEL_WARNING,  $format);
   }
 
   method info (Str() $format) {
-    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_INFO,     $format);
+    GLib::Log.log('GTK::Compat', G_LOG_LEVEL_INFO,     $format);
   }
 
   method debug (Str() $format) {
-    GTK::Compat::Log.log('GTK::Compat', G_LOG_LEVEL_DEBUG,    $format);
+    GLib::Log.log('GTK::Compat', G_LOG_LEVEL_DEBUG,    $format);
   }
 
   method default_handler (
@@ -78,12 +83,14 @@ class GTK::Compat::Log {
     Str() $func,
     Str() $warnexpr
   ) {
-    my gint $l = GTK::Compat::Log.resolve-int($line);
+    my gint $l = $line;
+
     g_warn_message($domain, $file, $l, $func, $warnexpr);
   }
 
   method remove_handler (Str() $log_domain, Int() $handler_id) {
-    my guint $hid = resolve-uint($handler_id);
+    my guint $hid = $handler_id;
+
     g_log_remove_handler($log_domain, $hid);
   }
 
@@ -99,7 +106,8 @@ class GTK::Compat::Log {
   }
 
   method set_fatal_mask (Str() $log_domain, Int() $fatal_mask) {
-    my guint $fm = resolve-uint($fatal_mask);
+    my guint $fm = $fatal_mask;
+
     g_log_set_fatal_mask($log_domain, $fm);
   }
 
@@ -109,7 +117,8 @@ class GTK::Compat::Log {
     GLogFunc $log_func,
     gpointer $user_data = Pointer
   ) {
-    my guint $ll = resolve-uint($log_levels);
+    my guint $ll = $log_levels;
+
     g_log_set_handler($log_domain, $ll, $log_func, $user_data);
   }
 
@@ -120,7 +129,8 @@ class GTK::Compat::Log {
     gpointer $user_data     = Pointer,
     GDestroyNotify $destroy = Pointer
   ) {
-    my guint $ll = resolve-uint($log_levels);
+    my guint $ll = $log_levels;
+
     g_log_set_handler_full($log_domain, $ll, $log_func, $user_data, $destroy);
   }
 
@@ -137,13 +147,15 @@ class GTK::Compat::Log {
     GLogField $fields,
     Int() $n_fields
   ) {
-    my guint $ll = resolve-uint($log_level);
-    my uint64 $nf = resolve-uint64($n_fields);
+    my guint $ll = $log_level;
+    my uint64 $nf = $n_fields;
+
     g_log_structured_array($ll, $fields, $nf);
   }
 
   method variant (Str() $log_domain, Int() $log_level, GVariant() $fields) {
-    my guint $ll = resolve-uint($log_level);
+    my guint $ll = $log_level;
+
     g_log_variant($log_domain, $log_level, $fields);
   }
 
@@ -153,8 +165,9 @@ class GTK::Compat::Log {
     Int() $n_fields,
     gpointer $user_data = Pointer
   ) {
-    my guint $ll = resolve-uint($log_level);
-    my uint64 $nf = resolve-uint64($n_fields);
+    my guint $ll = $log_level;
+    my uint64 $nf = $n_fields;
+
     g_log_writer_default($ll, $fields, $nf, $user_data);
   }
 
@@ -164,15 +177,17 @@ class GTK::Compat::Log {
     Int() $n_fields,
     Int() $use_color
   ) {
-    my guint $ll = resolve-uint($log_level);
-    my uint64 $nf = resolve-uint64($n_fields);
-    my gboolean $uc = resolve-bool($use_color);
+    my guint $ll = $log_level;
+    my uint64 $nf = $n_fields;
+    my gboolean $uc = so $use_color;
+
     g_log_writer_format_fields($ll, $fields, $nf, $uc);
   }
 
   # Handle IO::Handle, too?
   method writer_is_journald (Int() $output_fd) {
-    my guint $of = resolve-uint($output_fd);
+    my guint $of = $output_fd;
+
     g_log_writer_is_journald($of);
   }
 
@@ -182,8 +197,9 @@ class GTK::Compat::Log {
     Int() $n_fields,
     Int() $user_data = Pointer
   ) {
-    my guint $ll = resolve-uint($log_level);
-    my uint64 $nf = resolve-uint64($n_fields);
+    my guint $ll = $log_level;
+    my uint64 $nf = $n_fields;
+
     g_log_writer_journald($ll, $fields, $nf, $user_data);
   }
 
@@ -193,14 +209,16 @@ class GTK::Compat::Log {
     Int() $n_fields,
     Int() $user_data = Pointer
   ) {
-    my guint $ll = resolve-uint($log_level);
-    my uint64 $nf = resolve-uint64($n_fields);
+    my guint $ll = $log_level;
+    my uint64 $nf = $n_fields;
+
     g_log_writer_standard_streams($ll, $fields, $nf, $user_data);
   }
 
   # Handle IO::Handle, too?
   method writer_supports_color (Int() $output_fd) {
-    my guint $of = resolve-uint($output_fd);
+    my guint $of = $output_fd;
+
     g_log_writer_supports_color($of);
   }
 

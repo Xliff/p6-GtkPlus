@@ -141,6 +141,7 @@ GLib::Raw::HashTable
 GLib::Raw::Hostname
 GLib::Raw::IOChannel
 GLib::Raw::KeyFile
+GLib::Raw::Log
 GLib::Raw::Markup
 GLib::Raw::Memory
 GLib::Raw::Module
@@ -183,7 +184,6 @@ GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
 GTK::Compat::Raw::IsType
 GTK::Compat::Raw::Keymap
-GTK::Compat::Raw::Log
 GTK::Compat::Raw::Main
 GTK::Compat::Raw::Notification
 GTK::Compat::Raw::Pixbuf
@@ -265,6 +265,7 @@ GLib::HMAC
 GLib::HashTable
 GLib::Hostname
 GLib::KeyFile
+GLib::Log
 GLib::Markup
 GLib::Memory
 GLib::Module
@@ -275,7 +276,6 @@ GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
 GTK::Compat::Keymap
-GTK::Compat::Log
 GTK::Compat::MainContext
 GTK::Compat::MainLoop
 GTK::Compat::Mutex

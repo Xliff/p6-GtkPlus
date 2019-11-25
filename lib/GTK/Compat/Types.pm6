@@ -368,7 +368,7 @@ class GSignalQuery is repr('CStruct') does GTK::Roles::Pointers is export {
 class GLogField is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str     $.key;
   has Pointer $.value;
-  has int64   $.length;
+  has gssize  $.length;
 }
 
 class GPollFDNonWin is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -1008,7 +1008,8 @@ our enum GUnixSocketAddressTypeEnum is export <
   G_UNIX_SOCKET_ADDRESS_ABSTRACT_PADDED
 >;
 
-our enum GKeyFileFlags is export (
+constant GKeyFileFlags is export := guint;
+our enum GKeyFileFlagsEnum is export (
   G_KEY_FILE_NONE              => 0,
   G_KEY_FILE_KEEP_COMMENTS     => 1,
   G_KEY_FILE_KEEP_TRANSLATIONS => 2
