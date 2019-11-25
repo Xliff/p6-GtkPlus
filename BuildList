@@ -131,6 +131,7 @@ GLib::Raw::Array
 GLib::Raw::Arrays
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
+GLib::Raw::BookmarkFile
 GLib::Raw::Bytes
 GLib::Raw::Checksum
 GLib::Raw::DateTime
@@ -169,7 +170,6 @@ GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppLaunchContext
 GTK::Compat::Raw::Binding
-GTK::Compat::Raw::BookmarkFile
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
@@ -256,6 +256,7 @@ GIO::Roles::Signals::TlsConnection
 GLib::Array
 GLib::AsyncQueue
 GLib::Base64
+GLib::BookmarkFile
 GLib::Bytes
 GLib::Checksum
 GLib::DateTime
@@ -268,7 +269,6 @@ GLib::Module
 GLib::PtrArray
 GLib::Quark
 GLib::Rand
-GTK::Compat::BookmarkFile
 GTK::Compat::FrameTimings
 GTK::Compat::GList
 GTK::Compat::GSList
