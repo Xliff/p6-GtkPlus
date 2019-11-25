@@ -454,3 +454,59 @@ sub g_key_file_unref (GKeyFile $key_file)
   is native(gtk)
   is export
 { * }
+
+sub g_key_file_set_string_list (
+  GKeyFile         $key_file,
+  Str              $group_name,
+  Str              $key,
+  CArray[Str]      $list,
+  gsize            $length
+)
+  is native(gtk)
+  is export
+{ * }
+
+sub g_key_file_set_locale_string_list (
+  GKeyFile         $key_file,
+  Str              $group_name,
+  Str              $key,
+  Str              $locale,
+  CArray[Str]      $list,
+  gsize            $length
+)
+  is native(gtk)
+  is export
+{ * }
+
+sub g_key_file_set_boolean_list (
+  GKeyFile         $key_file,
+  Str              $group_name,
+  Str              $key,
+  CArray[gboolean] $list,
+  gsize            $length
+)
+  is native(gtk)
+  is export
+{ * }
+
+sub g_key_file_set_double_list (
+  GKeyFile        $key_file,
+  Str             $group_name,
+  Str             $key,
+  CArray[gdouble] $list,
+  gsize           $length
+)
+  is native(gtk)
+  is export
+{ * }
+
+sub g_key_file_set_integer_list (
+  GKeyFile     $key_file,
+  Str          $group_name,
+  Str          $key,
+  CArray[gint] $list,
+  gsize        $length
+)
+  is native(gtk)
+  is export
+{ * }

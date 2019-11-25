@@ -4,7 +4,10 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::KeyFile;
+
+use GTK::Raw::Utils;
+
+use GLib::Raw::KeyFile;
 
 class GLib::KeyFile  {
   has GKeyFile $!kf;
@@ -32,42 +35,174 @@ class GLib::KeyFile  {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
-  #void      g_key_file_set_string_list (
-  #   GKeyFile             *key_file,
-  #   const Str()          *group_name,
-  #   const Str()          *key,
-  #   const Str() * const   list[],
-  #   gsize                 length
-  # );
-  # void      g_key_file_set_locale_string_list (
-  #   GKeyFile             *key_file,
-  #   const Str()          *group_name,
-  #   const Str()          *key,
-  #   const Str()          *locale,
-  #   const Str() * const   list[],
-  #   gsize                 length
-  # );
-  #void      g_key_file_set_boolean_list       (
-  #   GKeyFile             *key_file,
-  #   const Str()          *group_name,
-  #   const Str()          *key,
-  #   gboolean              list[],
-  #   gsize                 length
-  # );
-  # void      g_key_file_set_double_list        (
-  #   GKeyFile             *key_file,
-  #   const Str()          *group_name,
-  #   const Str()          *key,
-  #   gdouble               list[],
-  #   gsize                 length
-  # );
-  # void      g_key_file_set_integer_list       (
-  #   GKeyFile             *key_file,
-  #   const Str()          *group_name,
-  #   const Str()          *key,
-  #   gint                  list[],
-  #   gsize                 length
-  # );
+  proto method set_string_list (|)
+    is also<set-string-list>
+  { * }
+
+  multi method set_string_list (
+    Str() $group_name,
+    Str() $key,
+          @list
+  ) {
+    @list .= map({
+      die '@list must only contain string compatible items!'
+        unless .^can('Str').elems;
+      .Str.so
+    });
+
+    my $ca  = CArray[Str].new;
+    my $l   = @list.elems;
+    $ca[$_] = @list[$_] for ^$l;
+
+    samewith($group_name, $key, $ca, $l);
+  }
+  multi method set_string_list (
+    Str()       $group_name,
+    Str()       $key,
+    CArray[Str] $list,
+    Int()       $length
+  ) {
+    my gsize $l = $length;
+
+    g_key_file_set_string_list($!kf, $group_name, $key, $list, $length);
+  }
+
+  proto method set_locale_string_list (|)
+    is also<set-locale-string-list>
+  { * }
+
+  multi method set_locale_string_list (
+    Str() $group_name,
+    Str() $key,
+    Str() $locale,
+          @list
+  ) {
+    @list .= map({
+      die '@list must only contain string compatible items!'
+        unless .^can('Str').elems;
+      .Str.so
+    });
+
+    my $ca  = CArray[Str].new;
+    my $l   = @list.elems;
+    $ca[$_] = @list[$_] for ^$l;
+
+    samewith($group_name, $key, $locale, $ca, $l);
+  }
+  multi method set_locale_string_list (
+    Str()       $group_name,
+    Str()       $key,
+    Str()       $locale,
+    CArray[Str] $list,
+    Int()       $length
+  ) {
+    my gsize $l = $length;
+
+    g_key_file_set_locale_string_list(
+      $!kf,
+      $group_name,
+      $key,
+      $locale,
+      $list,
+      $length
+    );
+  }
+
+  proto method set_boolean_list (|)
+    is also<set-boolean-list>
+  { * }
+
+  multi method set_boolean_list (
+    Str() $group_name,
+    Str() $key,
+          @list
+  ) {
+    @list .= map({
+      die '@list must only contain boolean compatible items!'
+        unless .^can('Int').elems;
+      .Int.so
+    });
+
+    my $ca  = CArray[gboolean].new;
+    my $l   = @list.elems;
+    $ca[$_] = @list[$_] for ^$l;
+
+    samewith($group_name, $key, $ca, $l);
+  }
+  multi method set_boolean_list (
+    Str()            $group_name,
+    Str()            $key,
+    CArray[gboolean] $list,
+    Int()            $length
+  ) {
+    my gsize $l = $length;
+
+    g_key_file_set_boolean_list($!kf, $group_name, $key, $list, $length);
+  }
+
+  proto method set_double_list (|)
+    is also<set-double-list>
+  { * }
+
+  multi method set_double_list (
+    Str() $group_name,
+    Str() $key,
+          @list
+  ) {
+    @list .= map({
+      die '@list must only contain Num compatible items!'
+        unless .^can('Num').elems;
+      .Num.so
+    });
+
+    my $ca  = CArray[gdouble].new;
+    my $l   = @list.elems;
+    $ca[$_] = @list[$_] for ^$l;
+
+    samewith($group_name, $key, $ca, $l);
+  }
+  multi method set_double_list (
+    Str()            $group_name,
+    Str()            $key,
+    CArray[gdouble]  $list,
+    Int()            $length
+  ) {
+    my gsize $l = $length;
+
+    g_key_file_set_double_list($!kf, $group_name, $key, $list, $length);
+  }
+
+  proto method set_integer_list (|)
+    is also<set-integer-list>
+  { * }
+
+  multi method set_integer_list (
+    Str() $group_name,
+    Str() $key,
+          @list
+  ) {
+    @list .= map({
+      die '@list must only contain Int compatible items!'
+        unless .^can('Int').elems;
+      .Num.so
+    });
+
+    my $ca  = CArray[gint].new;
+    my $l   = @list.elems;
+    $ca[$_] = @list[$_] for ^$l;
+
+    samewith($group_name, $key, $ca, $l);
+  }
+  multi method set_integer_list (
+    Str()        $group_name,
+    Str()        $key,
+    CArray[gint] $list,
+    Int()        $length
+  ) {
+    my gsize $l = $length;
+
+    g_key_file_set_integer_list($!kf, $group_name, $key, $list, $length);
+  }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method error_quark is also<error-quark> {
@@ -91,22 +226,30 @@ class GLib::KeyFile  {
     $rv;
   }
 
+  proto method get_boolean_list (|)
+    is also<get-boolean-list>
+  { * }
+
+  multi method get_boolean_list (
+    Str() $group_name,
+    Str() $key,
+    CArray[Pointer[GError]] $error = gerror
+  ) {
+    samewith($group_name, $key, $, $error);
+  }
   multi method get_boolean_list (
     Str() $group_name,
     Str() $key,
     $length is rw,
-    CArray[Pointer[GError]] $error = gerror,
-    :$all = False
-  )
-    is also<get-boolean-list>
-  {
+    CArray[Pointer[GError]] $error = gerror
+  ) {
     my gsize $l = 0;
 
     clear_error;
     my $rv = g_key_file_get_boolean_list($!kf, $group_name, $key, $l, $error);
-    $rv = CArrayToArray($rv, $l);
+    $rv = CArrayToArray($rv, $length = $l);
     set_error($error);
-    @a
+    $rv;
   }
 
   method get_comment (
@@ -149,7 +292,7 @@ class GLib::KeyFile  {
     my $rv = g_key_file_get_double_list($!kf, $group_name, $key, $l, $error);
     $rv = CArrayToArray($rv, $l);
     set_error($error);
-    @a
+    $rv;
   }
 
   proto method get_groups (|)
@@ -201,19 +344,15 @@ class GLib::KeyFile  {
     Str() $group_name,
     Str() $key,
     CArray[Pointer[GError]] $error = gerror,
-    :$all = False
   ) {
-    samewith($group_name, $key, $error, :$all);
+    samewith($group_name, $key, $error);
   }
   multi method get_integer_list (
     Str() $group_name,
     Str() $key,
     $length is rw,
     CArray[Pointer[GError]] $error = gerror,
-    :$all = False
-  )
-    is also<get-integer-list>
-  {
+  ) {
     my gsize $l = 0;
 
     clear_error;
@@ -224,9 +363,9 @@ class GLib::KeyFile  {
       $l,
       $error
     );
-    $rv = CArrayToArray($rv, $l);
+    $rv = CArrayToArray($rv, $length = $l);
     set_error($error);
-    @a;
+    $rv;
   }
 
   proto method get_keys (|)
@@ -246,11 +385,13 @@ class GLib::KeyFile  {
     CArray[Pointer[GError]] $error = gerror,
     :$all = False
   ) {
+    my gsize $l = 0;
+
     clear_error;
     my $rv = g_key_file_get_keys($!kf, $group_name, $l, $error);
-    $rv = CArrayToArray($rv, $l);
+    $rv = CArrayToArray($rv, $length = $l);
     set_error($error);
-    @a
+    $rv;
   }
 
   method get_locale_for_key (
@@ -293,9 +434,8 @@ class GLib::KeyFile  {
     Str() $key,
     Str() $locale,
     CArray[Pointer[GError]] $error = gerror,
-    :$all = False
   ) {
-    samewith($group_name, $key, $locale, $, $error, :$all);
+    samewith($group_name, $key, $locale, $, $error);
   }
   multi method get_locale_string_list (
     Str() $group_name,
@@ -303,7 +443,6 @@ class GLib::KeyFile  {
     Str() $locale,
     $length is rw,
     CArray[Pointer[GError]] $error = gerror,
-    :$all = False
   ) {
     my gsize $l = 0;
 
@@ -316,9 +455,9 @@ class GLib::KeyFile  {
       $l,
       $error
     );
-    $rv = CArrayToArray($rv, $l);
+    $rv = CArrayToArray($rv, $length = $l);
     set_error($error);
-    @a
+    $rv;
   }
 
   method get_start_group
@@ -341,18 +480,29 @@ class GLib::KeyFile  {
     g_key_file_get_string($!kf, $group_name, $key, $error);
   }
 
-  method get_string_list (
+  proto method get_string_list (|)
+    is also<get-string-list>
+  { * }
+
+  multi method get_string_list (
     Str() $group_name,
     Str() $key,
-    gsize $length,
-    CArray[Pointer[GError]] $error = gerror
-  )
-    is also<get-string-list>
-  {
-    g_key_file_get_string_list($!kf, $group_name, $key, $length, $error);
-    $rv = CArrayToArray($rv, $l);
+    CArray[Pointer[GError]] $error = gerror,
+  ) {
+    samewith($group_name, $key, $, $error);
+  }
+  multi method get_string_list (
+    Str() $group_name,
+    Str() $key,
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
+  ) {
+    my gsize $l = 0;
+
+    my $rv = g_key_file_get_string_list($!kf, $group_name, $key, $l, $error);
+    $rv = CArrayToArray($rv, $length = $l);
     set_error($error);
-    @a
+    $rv;
   }
 
   method get_uint64 (
@@ -362,7 +512,10 @@ class GLib::KeyFile  {
   )
     is also<get-uint64>
   {
-    g_key_file_get_uint64($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = g_key_file_get_uint64($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
   method get_value (
@@ -372,7 +525,10 @@ class GLib::KeyFile  {
   )
     is also<get-value>
   {
-    g_key_file_get_value($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = g_key_file_get_value($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
   method has_group (Str() $group_name) is also<has-group> {
@@ -386,51 +542,79 @@ class GLib::KeyFile  {
   )
     is also<has-key>
   {
-    so g_key_file_has_key($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = so g_key_file_has_key($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
   method load_from_bytes (
     GBytes() $bytes,
-    GKeyFileFlags $flags,
+    Int() $flags,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-bytes>
   {
-    g_key_file_load_from_bytes($!kf, $bytes, $flags, $error);
+    my GKeyFileFlags $f = $flags;
+
+    clear_error;
+    my $rv = g_key_file_load_from_bytes($!kf, $bytes, $f, $error);
+    set_error($error);
+    $rv;
   }
 
   method load_from_data (
     Str() $data,
-    gsize $length,
-    GKeyFileFlags $flags,
+    Int() $length,
+    Int() $flags,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-data>
   {
-    g_key_file_load_from_data($!kf, $data, $length, $flags, $error);
+    my gsize $l = $length;
+    my GKeyFileFlags $f = $flags;
+
+    clear_error;
+    my $rv = g_key_file_load_from_data($!kf, $data, $l, $f, $error);
+    set_error($error);
+    $rv;
   }
 
   method load_from_data_dirs (
     Str() $file,
     Str() $full_path,
-    GKeyFileFlags $flags,
+    Int() $flags,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-data-dirs>
   {
-    g_key_file_load_from_data_dirs($!kf, $file, $full_path, $flags, $error);
+    my GKeyFileFlags $f = $flags;
+
+    clear_error;
+    my $rv = so g_key_file_load_from_data_dirs(
+      $!kf,
+      $file,
+      $full_path,
+      $f,
+      $error
+    );
+    set_error($error);
+    $rv;
   }
 
   method load_from_dirs (
     Str() $file,
     Str() $search_dirs,
     Str() $full_path,
-    GKeyFileFlags $flags,
+    Int() $flags,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-dirs>
   {
-    g_key_file_load_from_dirs(
+    my GKeyFileFlags $f = $flags;
+
+    clear_error;
+    my $rv = so g_key_file_load_from_dirs(
       $!kf,
       $file,
       $search_dirs,
@@ -438,20 +622,28 @@ class GLib::KeyFile  {
       $flags,
       $error
     );
+    set_error($error);
+    $rv;
   }
 
   method load_from_file (
     Str() $file,
-    GKeyFileFlags $flags,
+    Int() $flags,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-file>
   {
-    g_key_file_load_from_file($!kf, $file, $flags, $error);
+    my GKeyFileFlags $f = $flags;
+
+    clear_error;
+    my $rv = so g_key_file_load_from_file($!kf, $file, $flags, $error);
+    set_error($error);
+    $rv;
   }
 
   method ref is also<upref> {
     g_key_file_ref($!kf);
+    self;
   }
 
   method remove_comment (
@@ -461,7 +653,10 @@ class GLib::KeyFile  {
   )
     is also<remove-comment>
   {
-    g_key_file_remove_comment($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = so g_key_file_remove_comment($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
   method remove_group (
@@ -470,7 +665,10 @@ class GLib::KeyFile  {
   )
     is also<remove-group>
   {
-    g_key_file_remove_group($!kf, $group_name, $error);
+    clear_error;
+    my $rv = g_key_file_remove_group($!kf, $group_name, $error);
+    set_error($error);
+    $rv;
   }
 
   method remove_key (
@@ -480,7 +678,10 @@ class GLib::KeyFile  {
   )
     is also<remove-key>
   {
-    g_key_file_remove_key($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = g_key_file_remove_key($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
   method save_to_file (
@@ -489,12 +690,17 @@ class GLib::KeyFile  {
   )
     is also<save-to-file>
   {
-    g_key_file_save_to_file($!kf, $filename, $error);
+    clear_error;
+    my $rv = g_key_file_save_to_file($!kf, $filename, $error);
+    set_error($error);
+    $rv;
   }
 
-  method set_boolean (Str() $group_name, Str() $key, gboolean $value)
+  method set_boolean (Str() $group_name, Str() $key, Int() $value)
     is also<set-boolean>
   {
+    my gboolean $v = so $value;
+
     g_key_file_set_boolean($!kf, $group_name, $key, $value);
   }
 
@@ -506,25 +712,34 @@ class GLib::KeyFile  {
   )
     is also<set-comment>
   {
-    g_key_file_set_comment($!kf, $group_name, $key, $comment, $error);
+    clear_error;
+    my $rv = g_key_file_set_comment($!kf, $group_name, $key, $comment, $error);
+    set_error($error);
+    $rv;
   }
 
-  method set_double (Str() $group_name, Str() $key, gdouble $value)
+  method set_double (Str() $group_name, Str() $key, Num() $value)
     is also<set-double>
   {
-    g_key_file_set_double($!kf, $group_name, $key, $value);
+    my gdouble $v = $value;
+
+    g_key_file_set_double($!kf, $group_name, $key, $v);
   }
 
-  method set_int64 (Str() $group_name, Str() $key, gint64 $value)
+  method set_int64 (Str() $group_name, Str() $key, Int() $value)
     is also<set-int64>
   {
-    g_key_file_set_int64($!kf, $group_name, $key, $value);
+    my gint64 $v = $value;
+
+    g_key_file_set_int64($!kf, $group_name, $key, $v);
   }
 
-  method set_integer (Str() $group_name, Str() $key, gint $value)
+  method set_integer (Str() $group_name, Str() $key, Int() $value)
     is also<set-integer>
   {
-    g_key_file_set_integer($!kf, $group_name, $key, $value);
+    my gint $v = $value;
+
+    g_key_file_set_integer($!kf, $group_name, $key, $v);
   }
 
   method set_list_separator (Str() $separator)
@@ -553,7 +768,9 @@ class GLib::KeyFile  {
   method set_uint64 (Str() $group_name, Str() $key, guint64 $value)
     is also<set-uint64>
   {
-    g_key_file_set_uint64($!kf, $group_name, $key, $value);
+    my guint64 $v = $value;
+
+    g_key_file_set_uint64($!kf, $group_name, $key, $v);
   }
 
   method set_value (Str() $group_name, Str() $key, Str() $value)
@@ -562,13 +779,29 @@ class GLib::KeyFile  {
     g_key_file_set_value($!kf, $group_name, $key, $value);
   }
 
-  method to_data (
-    gsize $length,
-    CArray[Pointer[GError]] $error = gerror
-  )
+  proto method to_data (|)
     is also<to-data>
-  {
-    g_key_file_to_data($!kf, $length, $error);
+  { * }
+
+  # Can get the length from the string, so :$all defaults to False.
+  multi method to_data (
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    samewith($, $error, :$all);
+  }
+  multi method to_data (
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my gsize $l = 0;
+
+    clear_error;
+    my $rv = g_key_file_to_data($!kf, $length, $error);
+    set_error($error);
+    $length = $l;
+    $all.not ?? $rv !! ($rv, $length);
   }
 
   method unref is also<downref> {
