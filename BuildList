@@ -151,6 +151,7 @@ GLib::Raw::Rand
 GLib::Raw::Scanner
 GLib::Raw::Slice
 GLib::Raw::String
+GLib::Raw::Thread
 GLib::Raw::TimeZone
 GLib::Raw::Tree
 GLib::Raw::Unicode
@@ -193,7 +194,6 @@ GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
 GTK::Compat::Raw::Signal
-GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
 GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
@@ -269,6 +269,7 @@ GLib::Log
 GLib::Markup
 GLib::Memory
 GLib::Module
+GLib::Mutex
 GLib::PtrArray
 GLib::Quark
 GLib::Rand
@@ -278,7 +279,6 @@ GTK::Compat::GSList
 GTK::Compat::Keymap
 GTK::Compat::MainContext
 GTK::Compat::MainLoop
-GTK::Compat::Mutex
 GTK::Compat::Pixbuf::Animation::Iter
 GTK::Compat::Pixbuf::Transforms
 GTK::Compat::Raw::Cairo

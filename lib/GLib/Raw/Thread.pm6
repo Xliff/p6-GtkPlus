@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Thread;
+unit package GLib::Raw::Thread;
 
 sub g_mutex_clear (GMutex $mutex)
   is native(glib)

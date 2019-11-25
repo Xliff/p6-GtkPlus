@@ -1,18 +1,23 @@
 use v6.c;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Thread;
 
-class GTK::Compat::Mutex {
-  has GMutex $!m is implementor;
+use GLib::Raw::Thread;
+
+class GLib::Mutex {
+  has GMutex $!m;
 
   submethod BUILD (:$mutex) {
     $!m = $mutex;
   }
 
-  method new {
+  multi method new (GMutex $mutex) {
+    self.bless( :$mutex );
+  }
+  multi method new {
+    # No need for Nil check since its a struct.
     my $m = GMutex.new;
-    
+
     GTK::Compat::Mutex.init($m);
     self.bless( mutex => $m );
   }
@@ -21,7 +26,7 @@ class GTK::Compat::Mutex {
     g_mutex_clear($!m);
   }
 
-  method init (GTK::Compat::Mutex:U: $mutex) {
+  method init (GLib::Mutex:U: $mutex) {
     g_mutex_init($mutex);
   }
 
