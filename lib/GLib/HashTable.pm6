@@ -36,7 +36,7 @@ class GLib::HashTable {
   has GHashTable $!h;
 
   submethod BUILD (:$table) {
-    self!setObject($!h = $table);
+    $!h = $table;
   }
 
   submethod DESTROY {
