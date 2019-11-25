@@ -127,6 +127,7 @@ GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
 GIO::Roles::Signals::VolumeMonitor
 GIO::SettingsSchema
+GLib::Raw::Array
 GLib::Raw::Arrays
 GLib::Raw::AsyncQueue
 GLib::Raw::Base64
@@ -149,6 +150,8 @@ GLib::Raw::String
 GLib::Raw::TimeZone
 GLib::Raw::Tree
 GLib::Raw::Unicode
+GLib::Raw::Variant
+GLib::Raw::VariantType
 GLib::Roles::StaticClass
 GLib::Scanner
 GLib::Slice
@@ -157,12 +160,14 @@ GLib::TimeZone
 GLib::Tree
 GLib::URI
 GLib::Unicode
+GLib::Variant
+GLib::VariantIter
+GLib::VariantType
 GTK::Builder::Actionable
 GTK::Compat::FileTypes
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppLaunchContext
-GTK::Compat::Raw::Array
 GTK::Compat::Raw::Binding
 GTK::Compat::Raw::BookmarkFile
 GTK::Compat::Raw::Cursor
@@ -192,8 +197,6 @@ GTK::Compat::Raw::Thread
 GTK::Compat::Raw::ThreadPool
 GTK::Compat::Raw::Timer
 GTK::Compat::Raw::Value
-GTK::Compat::Raw::Variant
-GTK::Compat::Raw::VariantType
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
 GTK::Compat::Raw::X11_Display
@@ -207,9 +210,6 @@ GTK::Compat::Selection
 GTK::Compat::Signal
 GTK::Compat::ThreadPool
 GTK::Compat::Timer
-GTK::Compat::Variant
-GTK::Compat::VariantIter
-GTK::Compat::VariantType
 GTK::Compat::Visual
 GTK::Raw::Types
 GTK::Raw::Viewport
@@ -253,6 +253,7 @@ GIO::Roles::Icon
 GIO::Roles::Signals::DtlsConnection
 GIO::Roles::Signals::FileMonitor
 GIO::Roles::Signals::TlsConnection
+GLib::Array
 GLib::AsyncQueue
 GLib::Base64
 GLib::Bytes
@@ -264,9 +265,9 @@ GLib::Hostname
 GLib::Markup
 GLib::Memory
 GLib::Module
+GLib::PtrArray
 GLib::Quark
 GLib::Rand
-GTK::Compat::Array
 GTK::Compat::BookmarkFile
 GTK::Compat::FrameTimings
 GTK::Compat::GList
@@ -279,7 +280,6 @@ GTK::Compat::MainLoop
 GTK::Compat::Mutex
 GTK::Compat::Pixbuf::Animation::Iter
 GTK::Compat::Pixbuf::Transforms
-GTK::Compat::PtrArray
 GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
@@ -522,7 +522,6 @@ GTK::Compat::Roles::Signals::Device
 GTK::Compat::Roles::Signals::Settings
 GTK::Compat::Screen
 GTK::Compat::Value
-GTK::Compat::VariantDict
 GTK::DragContext
 GTK::FileFilter
 GTK::Get
@@ -622,6 +621,7 @@ GIO::UnixOutputStream
 GIO::VFS
 GIO::ZlibCompressor
 GIO::ZlibDecompressor
+GLib::VariantDict
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider

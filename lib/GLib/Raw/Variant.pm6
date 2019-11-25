@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Variant;
+unit package GLib::Raw::Variant;
 
 sub g_variant_builder_add_value (GVariantBuilder $builder, GVariant $value)
   is native(glib)
@@ -61,8 +61,8 @@ sub g_variant_byteswap (GVariant $value)
   { * }
 
 sub g_variant_check_format_string (
-  GVariant $value, 
-  Str $format_string, 
+  GVariant $value,
+  Str $format_string,
   gboolean $copy_only
 )
   returns uint32
@@ -105,8 +105,8 @@ sub g_variant_dict_init (GVariantDict $dict, GVariant $from_asv)
   { * }
 
 sub g_variant_dict_insert_value (
-  GVariantDict $dict, 
-  Str $key, 
+  GVariantDict $dict,
+  Str $key,
   GVariant $value
 )
   is native(glib)
@@ -114,8 +114,8 @@ sub g_variant_dict_insert_value (
   { * }
 
 sub g_variant_dict_lookup_value (
-  GVariantDict $dict, 
-  Str $key, 
+  GVariantDict $dict,
+  Str $key,
   GVariantType $expected_type
 )
   returns GVariant
@@ -231,8 +231,8 @@ sub g_variant_get_double (GVariant $value)
   { * }
 
 sub g_variant_get_fixed_array (
-  GVariant $value, 
-  gsize $n_elements, 
+  GVariant $value,
+  gsize $n_elements,
   gsize $element_size
 )
   returns Pointer
@@ -331,9 +331,9 @@ sub g_variant_get_uint64 (GVariant $value)
   { * }
 
 # sub g_variant_get_va (
-#   GVariant $value, 
-#   Str $format_string, 
-#   Str $endptr, 
+#   GVariant $value,
+#   Str $format_string,
+#   Str $endptr,
 #   va_list $app
 # )
 #   is native(glib)
@@ -424,8 +424,8 @@ sub g_variant_iter_next_value (GVariantIter $iter)
   { * }
 
 sub g_variant_lookup_value (
-  GVariant $dictionary, 
-  Str $key, 
+  GVariant $dictionary,
+  Str $key,
   GVariantType $expected_type
 )
   returns GVariant
@@ -470,9 +470,9 @@ sub g_variant_new_double (gdouble $value)
   { * }
 
 sub g_variant_new_fixed_array (
-  GVariantType $element_type, 
-  gconstpointer $elements, 
-  gsize $n_elements, 
+  GVariantType $element_type,
+  gconstpointer $elements,
+  gsize $n_elements,
   gsize $element_size
 )
   returns GVariant
@@ -481,8 +481,8 @@ sub g_variant_new_fixed_array (
   { * }
 
 sub g_variant_new_from_bytes (
-  GVariantType $type, 
-  GBytes $bytes, 
+  GVariantType $type,
+  GBytes $bytes,
   gboolean $trusted
 )
   returns GVariant
@@ -491,11 +491,11 @@ sub g_variant_new_from_bytes (
   { * }
 
 sub g_variant_new_from_data (
-  GVariantType $type, 
-  gconstpointer $data, 
-  gsize $size, 
-  gboolean $trusted, 
-  GDestroyNotify $notify, 
+  GVariantType $type,
+  gconstpointer $data,
+  gsize $size,
+  gboolean $trusted,
+  GDestroyNotify $notify,
   gpointer $user_data
 )
   returns GVariant
@@ -594,10 +594,10 @@ sub g_variant_new_variant (GVariant $value)
   { * }
 
 sub g_variant_parse (
-  GVariantType $type, 
-  Str $text, 
-  Str $limit, 
-  Str $endptr, 
+  GVariantType $type,
+  Str $text,
+  Str $limit,
+  Str $endptr,
   CArray[Pointer[GError]] $error
 )
   returns GVariant
@@ -627,8 +627,8 @@ sub g_variant_print (GVariant $value, gboolean $type_annotate)
   { * }
 
 sub g_variant_print_string (
-  GVariant $value, 
-  GString $string, 
+  GVariant $value,
+  GString $string,
   gboolean $type_annotate
 )
   returns GString

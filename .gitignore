@@ -21,3 +21,4 @@ jupyter.log
 c-helpers/time
 core
 *.imp-bak
+*.ref-bak

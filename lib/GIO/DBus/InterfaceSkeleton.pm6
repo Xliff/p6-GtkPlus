@@ -8,7 +8,7 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::InterfaceSkeleton;
 
-use GTK::Compat::Variant;
+use GLib::Variant;
 use GTK::Compat::GList;
 
 use GTK::Compat::Roles::Object;
@@ -125,7 +125,7 @@ class GIO::DBus::InterfaceSkeleton {
     my $v = g_dbus_interface_skeleton_get_properties($!dis);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
+      ( $raw ?? $v !! GLib::Variant.new($v, :!ref) )
       !!
       Nil;
   }

@@ -7,80 +7,137 @@ use NativeCall;
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Variant;
 
-class GTK::Compat::Variant {
+use GLib::Raw::Variant;
+
+class GLib::Variant {
   has GVariant $!v is implementor;
 
   submethod BUILD (:$variant) {
     $!v = $variant;
   }
 
+  submethod DESTROY {
+    self.downref;
+  }
+
   method GTK::Compat::Types::GVariant
     is also<GVariant>
   { $!v }
 
-  method new (GVariant $variant, :$ref = True) {
+  multi method new (GVariant $variant, :$ref = True) {
     my $o = self.bless( :$variant );
     $o.upref if $ref;
     $o;
   }
 
-  submethod DESTROY {
-    self.downref;
+  multi method new (
+    GLib::Variant:U:
+    Int() $bool,
+    :bool(:$boolean) is required
+  ) {
+    self.new_boolean($bool);
   }
-
   method new_boolean(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $bool
   )
     is also<new-boolean>
   {
-    my gboolean $b = resolve-bool($bool);
-    self.bless( variant => g_variant_new_boolean($b) );
+    my gboolean $b = $bool;
+    my $v = g_variant_new_boolean($b);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $byte_val,
+    :$byte is required
+  ) {
+    self.new_byte($byte_val);
+  }
   method new_byte(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $byte
   )
     is also<new-byte>
   {
-    my uint8 $b = resolve-uint8($byte);
-    self.bless( variant => g_variant_new_byte($b) );
+    my uint8 $b = $byte;
+    my $v = g_variant_new_byte($b);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Str() $bytestring_val,
+    :$bytestring is required
+  ) {
+    self.new_bytestring($bytestring_val);
+  }
   method new_bytestring(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $bytestring
   )
     is also<new-bytestring>
   {
-    self.bless( variant => g_variant_new_bytestring($bytestring) );
+    my $v = g_variant_new_bytestring($bytestring);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariant() $key,
+    GVariant() $value,
+    :entry(:dict_entry(:$dict-entry)) is required
+  ) {
+    self.new_dict_entry($key, $value);
+  }
   method new_dict_entry (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariant() $key,
     GVariant() $value
   )
     is also<new-dict-entry>
   {
-    self.bless( variant => g_variant_new_dict_entry($key, $value) );
+    my $v = g_variant_new_dict_entry($key, $value);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Num() $double_val,
+    :$double is required
+  ) {
+    self.new_double($double_val);
+  }
   method new_double (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Num() $double
   )
     is also<new-double>
   {
     my gdouble $d = $double;
-    self.bless( variant => g_variant_new_double($d) );
+    my $v = g_variant_new_double($d);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariantType $element_type,
+    Pointer $elements,
+    Int() $n_elements,
+    Int() $element_size,
+    :fixed_array(:fixed-array(:$array)) is required
+  ) {
+    self.new_fixed_array($element_type, $elements, $n_elements, $element_size);
+  }
   method new_fixed_array (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $element_type,
     Pointer $elements,
     Int() $n_elements,
@@ -89,30 +146,53 @@ class GTK::Compat::Variant {
     is also<new-fixed-array>
   {
     my uint64 ($ne, $es) = resolve-uint64($n_elements, $element_size);
-    self.bless(
-      variant => g_variant_new_fixed_array(
-        $element_type,
-        $elements,
-        $ne,
-        $es
-      )
+    my $v = g_variant_new_fixed_array(
+      $element_type,
+      $elements,
+      $ne,
+      $es
     );
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariantType $type,
+    GBytes $bytes_val,
+    Int() $trusted,
+    :$bytes is required
+  ) {
+    self.new_from_bytes($type, $bytes_val, $trusted);
+  }
   method new_from_bytes (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     GBytes $bytes,
     Int() $trusted
   )
     is also<new-from-bytes>
   {
-    my gboolean $t = resolve-bool($trusted);
-    self.bless( variant => g_variant_new_from_bytes($type, $bytes, $t) );
+    my gboolean $t = $trusted;
+    my $v = g_variant_new_from_bytes($type, $bytes, $t);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariantType $type,
+    gconstpointer $data_val,
+    Int() $size,
+    Int() $trusted,
+    GDestroyNotify $notify = Pointer,
+    gpointer $user_data    = Pointer,
+    :$data is required
+  ) {
+    self.new_from_data($type, $data_val, $size, $trusted, $notify, $user_data);
+  }
   method new_from_data (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     gconstpointer $data,
     Int() $size,
@@ -122,156 +202,265 @@ class GTK::Compat::Variant {
   )
     is also<new-from-data>
   {
-    my uint64 $s = resolve-uint64($size);
-    my gboolean $t = resolve-bool($trusted);
-    self.bless(
-      variant => g_variant_new_from_data(
-        $type,
-        $data,
-        $s,
-        $t,
-        $notify,
-        $user_data
-      )
+    my uint64 $s = $size;
+    my gboolean $t = $trusted;
+    my $v = g_variant_new_from_data(
+      $type,
+      $data,
+      $s,
+      $t,
+      $notify,
+      $user_data
     );
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $handle_int,
+    :$handle is required
+  ) {
+    self.new_handle($handle_int);
+  }
   method new_handle(
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $handle
   )
     is also<new-handle>
   {
-    my gint $h = resolve-int($handle);
-    self.bless( variant => g_variant_new_handle($h) );
+    my gint $h = $handle;
+    my $v = g_variant_new_handle($h);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$int16 is required
+  ) {
+    self.new_int16($value);
+  }
   method new_int16 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-int16>
   {
-    my int16 $v = resolve-int16($value);
-    self.bless( variant => g_variant_new_int16($value) );
+    my int16 $val = $value;
+    my $v = g_variant_new_int16($val);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$int32 is required
+  ) {
+    self.new_int32($value);
+  }
   method new_int32 (
-    GTK::Compat::Variant:U:
-    int32 $value
+    GLib::Variant:U:
+    Int() $value
   )
     is also<new-int32>
   {
-    my int32 $v = resolve-int32($value);
-    self.bless( variant => g_variant_new_int32($value) );
+    my int32 $val = $value;
+    my $v = g_variant_new_int32($val);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$int64 is required
+  ) {
+    self.new_int64($value);
+  }
   method new_int64 (
-    GTK::Compat::Variant:U:
-    int64 $value
+    GLib::Variant:U:
+    Int() $value
   )
     is also<new-int64>
   {
-    my int64 $v = resolve-int64($value);
-    self.bless( variant => g_variant_new_int64($value) );
+    my int64 $val = $value;
+    my $v = g_variant_new_int64($val);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariantType() $type,
+    GVariant() $child,
+    :$maybe is required
+  ) {
+    self.new_maybe($type, $child);
+  }
   method new_maybe (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     GVariant() $child
   )
     is also<new-maybe>
   {
-    self.bless( variant => g_variant_new_maybe($type, $child) );
+    my $v = g_variant_new_maybe($type, $child);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Str() $value,
+    :object_path(:object-path(:obj_path(:obj-path(:$path)))) is required
+  ) {
+    self.new_object_path($value);
+  }
   method new_object_path (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $value
   )
     is also<new-object-path>
   {
-    self.bless( variant => g_variant_new_object_path($value) );
+    my $v = g_variant_new_object_path($value);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
   # method new_parsed_va (va_list $app) {
   #   g_variant_new_parsed_va($!v, $app);
   # }
 
+  multi method new (
+    GLib::Variant:U:
+    Str() $value,
+    :$signature is required
+  ) {
+    self.new_signature($value);
+  }
   method new_signature (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $value
   )
     is also<new-signature>
   {
-    self.bless( variant => g_variant_new_signature($value) );
+    my $v = g_variant_new_signature($value);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Str() $value,
+    :$string is required
+  ) {
+    self.new_string($value);
+  }
   method new_string (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $value
   )
     is also<new-string>
   {
-    self.bless( variant => g_variant_new_string($value) );
+    my $v = g_variant_new_string($value);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
   # Do not know how this will function when GLib::Memory.free is called on
   # $value
   #
   # method new_take_string (
-  #   GTK::Compat::Variant:U:
+  #   GLib::Variant:U:
   #   Str() $value
   # ) {
   #   g_variant_new_take_string($!v);
   # }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$uint16 is required
+  ) {
+    self.new_uint16($value);
+  }
   method new_uint16 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-uint16>
   {
-    my uint16 $v = resolve-uint16($value);
-    self.bless( variant => g_variant_new_uint16($value) );
+    my uint16 $val = $value;
+    my $v = g_variant_new_uint16($val);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$uint32 is required
+  ) {
+    self.new_uint32($value);
+  }
   method new_uint32 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-uint32>
   {
-    my uint32 $v = resolve-uint16($value);
-    self.bless( variant => g_variant_new_uint32($value) );
+    my uint32 $val = $value;
+    my $v = g_variant_new_uint32($val);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
+  multi method new (
+    GLib::Variant:U:
+    Int() $value,
+    :$uint64 is required
+  ) {
+    self.new_uint64($value);
+  }
   method new_uint64 (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Int() $value
   )
     is also<new-uint64>
   {
-    my uint64 $v = resolve-uint64($value);
-    self.bless( variant => g_variant_new_uint64($!v) );
+    my uint64 $val = $value;
+    my $v = g_variant_new_uint64($val);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
   # method new_va (Str() $endptr, va_list $app) {
   #   g_variant_new_va($!v, $endptr, $app);
   # }
 
+  multi method new (
+    GLib::Variant:U:
+    GVariant() $value,
+    :$variant is required
+  ) {
+    self.new_variant($value);
+  }
   method new_variant (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariant() $value
   )
     is also<new-variant>
   {
-    self.bless( variant => g_variant_new_variant($value) );
+    my $v = g_variant_new_variant($value);
+
+    $v ?? self.bless( variant => $v ) !! Nil;
   }
 
   method parse (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GVariantType $type,
     Str() $text,
     Str() $limit,
@@ -291,7 +480,8 @@ class GTK::Compat::Variant {
   method check_format_string (Str() $format_string, Int() $copy_only)
     is also<check-format-string>
   {
-    my gboolean $co = resolve-bool($copy_only);
+    my gboolean $co = $copy_only;
+
     g_variant_check_format_string($!v, $format_string, $co);
   }
 
@@ -305,27 +495,32 @@ class GTK::Compat::Variant {
   }
 
   method dup_bytestring (Int() $length) is also<dup-bytestring> {
-    my uint64 $l = resolve-uint64($length);
+    my uint64 $l = $length;
+
     g_variant_dup_bytestring($!v, $l);
   }
 
   method dup_bytestring_array (Int() $length) is also<dup-bytestring-array> {
-    my uint64 $l = resolve-uint64($length);
+    my uint64 $l = $length;
+
     g_variant_dup_bytestring_array($!v, $l);
   }
 
   method dup_objv (Int() $length) is also<dup-objv> {
-    my uint64 $l = resolve-uint64($length);
+    my uint64 $l = $length;
+
     g_variant_dup_objv($!v, $l);
   }
 
   method dup_string (Int() $length) is also<dup-string> {
-    my uint64 $l = resolve-uint64($length);
+    my uint64 $l = $length;
+
     g_variant_dup_string($!v, $l);
   }
 
   method dup_strv (Int() $length) is also<dup-strv> {
-    my uint64 $l = resolve-uint64($length);
+    my uint64 $l = $length;
+
     g_variant_dup_strv($!v, $l);
   }
 
@@ -404,6 +599,7 @@ class GTK::Compat::Variant {
     is also<get-fixed-array>
   {
     my uint64 ($ne, $es) = resolve-uint64($n_elements, $element_size);
+
     g_variant_get_fixed_array($!v, $ne, $es);
   }
 
@@ -483,18 +679,18 @@ class GTK::Compat::Variant {
       string
     >
   {
-    my uint64 $l = resolve-uint64($length);
+    my uint64 $l = $length;
 
     g_variant_get_string($!v, $l);
   }
 
   method get_strv (Int() $length) is also<get-strv> {
-    my uint64 $l = resolve-uint64($length);
+    my uint64 $l = $length;
 
     CStringArrayToArray( g_variant_get_strv($!v, $l) );
   }
 
-  # This is GLib, not GLib descendant, so it means what you'd think it means!
+  # This is GLib, not a GLib descendant, so it means what you'd think it means!
   # That is: no unstable_get_type needed, here!
   method get_type
     is also<
@@ -555,7 +751,7 @@ class GTK::Compat::Variant {
     my $v = g_variant_get_variant($!v);
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
+      ( $raw ?? $v !! GLib::Variant.new($v, :!ref) )
       !!
       Nil;
   }
@@ -564,20 +760,32 @@ class GTK::Compat::Variant {
     g_variant_hash($!v);
   }
 
-  method is_container is also<is-container> {
+  method is_container
+    is also<
+      is-container
+      container
+    >
+  {
     so g_variant_is_container($!v);
   }
 
-  method is_floating is also<is-floating> {
+  method is_floating
+    is also<
+      is-floating
+      floating
+    >
+  {
     so g_variant_is_floating($!v);
   }
 
-  method is_normal_form is also<is-normal-form> {
+  # Shorter aliases go in favor of the get_* form
+  method is_normal_form is also<is-normal-form>
+  {
     so g_variant_is_normal_form($!v);
   }
 
   method is_object_path (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $path
   )
     is also<is-object-path>
@@ -590,7 +798,7 @@ class GTK::Compat::Variant {
   }
 
   method is_signature (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     Str() $signature
   )
     is also<is-signature>
@@ -614,7 +822,7 @@ class GTK::Compat::Variant {
   }
 
   method parse_error_print_context (
-    GTK::Compat::Variant:U:
+    GLib::Variant:U:
     GError() $error,
     Str() $source_str
   )

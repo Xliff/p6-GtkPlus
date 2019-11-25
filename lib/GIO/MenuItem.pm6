@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Menu;
 
-use GTK::Compat::Variant;
+use GLib::Variant;
 
 use GTK::Compat::Roles::Object;
 
@@ -85,7 +85,7 @@ class GIO::MenuItem {
     );
 
     $v ??
-      ( $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref) )
+      ( $raw ?? $v !! GLib::Variant.new($v, :!ref) )
       !!
       Nil;
   }

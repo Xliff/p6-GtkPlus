@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::VariantType;
+unit package GLib::Raw::VariantType;
 
 sub g_variant_type_copy (GVariantType $type)
   returns GVariantType

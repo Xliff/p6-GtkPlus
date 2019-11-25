@@ -3,19 +3,19 @@ use v6.c;
 use Method::Also;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Variant;
+use GLib::Raw::Variant;
 
-class GTK::Compat::VariantIter {
+class GLib::VariantIter {
   has GVariantIter $!vi is implementor;
-  
+
   submethod BUILD (:$iter) {
     $!vi = $iter;
   }
-  
-  method GTK::Compat::Types::GVariantIter 
+
+  method GTK::Compat::Types::GVariantIter
     is also<VariantIter>
     { $!vi }
-  
+
   method new (GVariant() $value) {
     self.bless( iter => g_variant_iter_new($value) );
   }

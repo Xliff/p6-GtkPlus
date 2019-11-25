@@ -128,7 +128,7 @@ class GIO::SettingsSchema::Key {
   {
     my $v = g_settings_schema_key_get_range($!ssk);
 
-    $raw ?? $v !! GTK::Compat::Variant.new($v, :!ref);
+    $raw ?? $v !! GLib::Variant.new($v, :!ref);
   }
 
   method get_summary

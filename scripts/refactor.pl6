@@ -7,21 +7,29 @@ use GTKScripts;
 
 sub do-clean {
   # Add a confirmation check!
-  .unlink for find-files( 'lib', extension => 'ref-bak' );
+  .unlink for find-files( 'lib', extension => 'ref\-bak' );
   say 'All refactor backup files have been removed.';
 }
 
 sub do-refactor (@replace, $delim) {
+  # First quote out all metachars in this version.
+  @replace = @replace.split($delim);
+  @replace[0].trans(
+    [ ':' ] => [ '\\:' ],
+    [ '-' ] => [ '\\-' ]
+  );
+  @replace[0] = rx/<{ @replace[0] }> /;
+
   for get-module-files() {
-    my @newlines;
-    for .lines -> $l {
-      for @replace.map({ .split($delim) }) {
-        $l.subst(/ <{ .[0] }> /, .[1], :global);
-      }
-      @newlines.push($l);
+    .say;
+
+    my $c = .IO.slurp;
+    for @replace {
+      $c.subst( .[0], .[1], :global );
     }
+
     .rename( .extension('ref-bak') );
-    .spurt( @newlines.join("\n") );
+    .spurt($c);
   }
 }
 
@@ -30,7 +38,7 @@ sub MAIN (
                         #= Can be specified more than once.
   :$delimeter = ',',    #= The delimeter used by a replacement pair.
                         #= The default is ','
-  :$clean               #= Clean the backup files produced by this script
+  :$clean = 0           #= Clean the backup files produced by this script
 ) {
   my @mains = ('replace', 'clean');
   my $dieMsg = qq:to/DIE/;

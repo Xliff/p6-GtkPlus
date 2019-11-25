@@ -11,7 +11,7 @@ use GTK::Raw::TreeModel;
 # BOXED TYPE
 
 class GTK::TreeIter is export {
-  has GtkTreeIter $!ti is implementor;
+  has GtkTreeIter $!ti;
 
   submethod BUILD(:$iter) {
     $!ti = $iter;

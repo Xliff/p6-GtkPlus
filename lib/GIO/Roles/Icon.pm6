@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Variant;
+use GLib::Variant;
 
 use GTK::Compat::Types;
 use GIO::Raw::Icon;
@@ -86,7 +86,7 @@ role GIO::Roles::Icon {
     my $si = g_icon_serialize($!icon);
 
     $si ??
-      ( $raw ?? $si !! GTK::Compat::Variant.new($si, :!ref) )
+      ( $raw ?? $si !! GLib::Variant.new($si, :!ref) )
       !!
       Nil
   }
