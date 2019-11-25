@@ -10,12 +10,18 @@ sub CStringArrayToArray (CArray[Str] $sa) is export {
   CArrayToArray($sa)
 }
 
-sub CArrayToArray(CArray $ca) is export {
+multi sub CArrayToArray(CArray $ca) is export {
   return Nil unless $ca;
   my ($i, @a) = (0);
   while $ca[$i] {
     @a.push: $ca[$i++];
   }
+  @a;
+}
+multi sub CArrayToArray(CArray $ca, Int(Cool) $len) is export {
+  return Nil unless $ca;
+  my @a;
+  @a[$_] = $ca[$_] for ^$len;
   @a;
 }
 

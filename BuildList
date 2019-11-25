@@ -137,6 +137,7 @@ GLib::Raw::Checksum
 GLib::Raw::DateTime
 GLib::Raw::Error
 GLib::Raw::HMAC
+GLib::Raw::HashTable
 GLib::Raw::Hostname
 GLib::Raw::IOChannel
 GLib::Raw::Markup
@@ -179,7 +180,6 @@ GTK::Compat::Raw::FrameTimings
 GTK::Compat::Raw::GFile
 GTK::Compat::Raw::GList
 GTK::Compat::Raw::GSList
-GTK::Compat::Raw::HashTable
 GTK::Compat::Raw::IsType
 GTK::Compat::Raw::KeyFile
 GTK::Compat::Raw::Keymap
@@ -262,6 +262,7 @@ GLib::Checksum
 GLib::DateTime
 GLib::Error
 GLib::HMAC
+GLib::HashTable
 GLib::Hostname
 GLib::Markup
 GLib::Memory
@@ -639,7 +640,6 @@ GTK::Compat::Device
 GTK::Compat::Display
 GTK::Compat::DisplayManager
 GTK::Compat::Event
-GTK::Compat::HashTable
 GTK::Compat::Pixbuf
 GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::GFile

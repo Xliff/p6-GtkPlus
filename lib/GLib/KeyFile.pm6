@@ -6,8 +6,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::KeyFile;
 
-class GTK::Compat::KeyFile  {
-  has GKeyFile $!kf is implementor;
+class GLib::KeyFile  {
+  has GKeyFile $!kf;
 
   submethod BUILD(:$file) {
     $!kf = $file;
@@ -15,12 +15,13 @@ class GTK::Compat::KeyFile  {
 
   method new {
     my $file = g_key_file_new();
-    self.bless(:$file);
+
+    $file ?? self.bless(:$file) !! Nil;
   }
 
-  method GTK::Compat::Types::GKeyFile {
-    $!kf;
-  }
+  method GTK::Compat::Types::GKeyFile
+    is also<GKeyFile>
+  { $!kf }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -68,7 +69,6 @@ class GTK::Compat::KeyFile  {
   #   gsize                 length
   # );
 
-
   # ↓↓↓↓ METHODS ↓↓↓↓
   method error_quark is also<error-quark> {
     g_key_file_error_quark();
@@ -81,98 +81,176 @@ class GTK::Compat::KeyFile  {
   method get_boolean (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-boolean>
   {
-    g_key_file_get_boolean($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = so g_key_file_get_boolean($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
-  method get_boolean_list (
+  multi method get_boolean_list (
     Str() $group_name,
     Str() $key,
-    gsize $length,
-    GError $error = GError
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
   )
     is also<get-boolean-list>
   {
-    g_key_file_get_boolean_list($!kf, $group_name, $key, $length, $error);
+    my gsize $l = 0;
+
+    clear_error;
+    my $rv = g_key_file_get_boolean_list($!kf, $group_name, $key, $l, $error);
+    $rv = CArrayToArray($rv, $l);
+    set_error($error);
+    @a
   }
 
   method get_comment (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-comment>
   {
-    g_key_file_get_comment($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = g_key_file_get_comment($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
   method get_double (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-double>
   {
-    g_key_file_get_double($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = g_key_file_get_double($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
-  method get_double_list (
+  multi method get_double_list (
     Str() $group_name,
     Str() $key,
-    gsize $length,
-    GError $error = GError
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
   )
     is also<get-double-list>
   {
-    g_key_file_get_double_list($!kf, $group_name, $key, $length, $error);
+    my gsize $l = 0;
+
+    clear_error;
+    my $rv = g_key_file_get_double_list($!kf, $group_name, $key, $l, $error);
+    $rv = CArrayToArray($rv, $l);
+    set_error($error);
+    @a
   }
 
-  method get_groups (gsize $length) is also<get-groups> {
-    g_key_file_get_groups($!kf, $length);
+  proto method get_groups (|)
+    is also<get-groups>
+  { * }
+
+  multi method get_groups (:$all = True) {
+    samewith($);
+  }
+  # We use a hash return to remove ambiguity!
+  multi method get_groups ($length is rw, :$all = False)  {
+    my gsize $l = 0;
+    my @a = CStringArrayToArray( g_key_file_get_groups($!kf, $l) );
+
+    $all.not ?? @a !! { return => @a, length => ($length = $l) };
   }
 
   method get_int64 (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-int64>
   {
-    g_key_file_get_int64($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = g_key_file_get_int64($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
   method get_integer (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-integer>
   {
-    g_key_file_get_integer($!kf, $group_name, $key, $error);
+    clear_error;
+    my $rv = g_key_file_get_integer($!kf, $group_name, $key, $error);
+    set_error($error);
+    $rv;
   }
 
-  method get_integer_list (
+  proto method get_integer_list (|)
+    is also<get-integer-list>
+  { * }
+
+  multi method get_integer_list (
     Str() $group_name,
     Str() $key,
-    gsize $length,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    samewith($group_name, $key, $error, :$all);
+  }
+  multi method get_integer_list (
+    Str() $group_name,
+    Str() $key,
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
   )
     is also<get-integer-list>
   {
-    g_key_file_get_integer_list($!kf, $group_name, $key, $length, $error);
+    my gsize $l = 0;
+
+    clear_error;
+    my $rv = g_key_file_get_integer_list(
+      $!kf,
+      $group_name,
+      $key,
+      $l,
+      $error
+    );
+    $rv = CArrayToArray($rv, $l);
+    set_error($error);
+    @a;
   }
 
-  method get_keys (
-    Str() $group_name,
-    gsize $length,
-    GError $error = GError
-  )
+  proto method get_keys (|)
     is also<get-keys>
-  {
-    g_key_file_get_keys($!kf, $group_name, $length, $error);
+  { * }
+
+  multi method get_keys (
+    Str() $group_name,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    samewith($group_name, $error, :$all);
+  }
+  multi method get_keys (
+    Str() $group_name,
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    clear_error;
+    my $rv = g_key_file_get_keys($!kf, $group_name, $l, $error);
+    $rv = CArrayToArray($rv, $l);
+    set_error($error);
+    @a
   }
 
   method get_locale_for_key (
@@ -189,40 +267,74 @@ class GTK::Compat::KeyFile  {
     Str() $group_name,
     Str() $key,
     Str() $locale,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-locale-string>
   {
-    g_key_file_get_locale_string($!kf, $group_name, $key, $locale, $error);
-  }
-
-  method get_locale_string_list (
-    Str() $group_name,
-    Str() $key,
-    Str() $locale,
-    gsize $length,
-    GError $error = GError
-  )
-    is also<get-locale-string-list>
-  {
-    g_key_file_get_locale_string_list(
+    clear_error;
+    my $rv = g_key_file_get_locale_string(
       $!kf,
       $group_name,
       $key,
       $locale,
-      $length,
       $error
     );
+    set_error($error);
+    $rv;
   }
 
-  method get_start_group is also<get-start-group> {
+
+  proto method get_locale_string_list (|)
+    is also<get-locale-string-list>
+  { * }
+
+  multi method get_locale_string_list (
+    Str() $group_name,
+    Str() $key,
+    Str() $locale,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    samewith($group_name, $key, $locale, $, $error, :$all);
+  }
+  multi method get_locale_string_list (
+    Str() $group_name,
+    Str() $key,
+    Str() $locale,
+    $length is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False
+  ) {
+    my gsize $l = 0;
+
+    clear_error;
+    my $rv = g_key_file_get_locale_string_list(
+      $!kf,
+      $group_name,
+      $key,
+      $locale,
+      $l,
+      $error
+    );
+    $rv = CArrayToArray($rv, $l);
+    set_error($error);
+    @a
+  }
+
+  method get_start_group
+    is also<
+      get-start-group
+      start_group
+      start-group
+    >
+  {
     g_key_file_get_start_group($!kf);
   }
 
   method get_string (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-string>
   {
@@ -233,17 +345,20 @@ class GTK::Compat::KeyFile  {
     Str() $group_name,
     Str() $key,
     gsize $length,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-string-list>
   {
     g_key_file_get_string_list($!kf, $group_name, $key, $length, $error);
+    $rv = CArrayToArray($rv, $l);
+    set_error($error);
+    @a
   }
 
   method get_uint64 (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-uint64>
   {
@@ -253,7 +368,7 @@ class GTK::Compat::KeyFile  {
   method get_value (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<get-value>
   {
@@ -261,23 +376,23 @@ class GTK::Compat::KeyFile  {
   }
 
   method has_group (Str() $group_name) is also<has-group> {
-    g_key_file_has_group($!kf, $group_name);
+    so g_key_file_has_group($!kf, $group_name);
   }
 
   method has_key (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<has-key>
   {
-    g_key_file_has_key($!kf, $group_name, $key, $error);
+    so g_key_file_has_key($!kf, $group_name, $key, $error);
   }
 
   method load_from_bytes (
-    GBytes $bytes,
+    GBytes() $bytes,
     GKeyFileFlags $flags,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-bytes>
   {
@@ -288,7 +403,7 @@ class GTK::Compat::KeyFile  {
     Str() $data,
     gsize $length,
     GKeyFileFlags $flags,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-data>
   {
@@ -299,7 +414,7 @@ class GTK::Compat::KeyFile  {
     Str() $file,
     Str() $full_path,
     GKeyFileFlags $flags,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-data-dirs>
   {
@@ -311,7 +426,7 @@ class GTK::Compat::KeyFile  {
     Str() $search_dirs,
     Str() $full_path,
     GKeyFileFlags $flags,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-dirs>
   {
@@ -328,7 +443,7 @@ class GTK::Compat::KeyFile  {
   method load_from_file (
     Str() $file,
     GKeyFileFlags $flags,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-file>
   {
@@ -342,7 +457,7 @@ class GTK::Compat::KeyFile  {
   method remove_comment (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<remove-comment>
   {
@@ -351,7 +466,7 @@ class GTK::Compat::KeyFile  {
 
   method remove_group (
     Str() $group_name,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<remove-group>
   {
@@ -361,7 +476,7 @@ class GTK::Compat::KeyFile  {
   method remove_key (
     Str() $group_name,
     Str() $key,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<remove-key>
   {
@@ -370,7 +485,7 @@ class GTK::Compat::KeyFile  {
 
   method save_to_file (
     Str() $filename,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<save-to-file>
   {
@@ -387,7 +502,7 @@ class GTK::Compat::KeyFile  {
     Str() $group_name,
     Str() $key,
     Str() $comment,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-comment>
   {
@@ -449,7 +564,7 @@ class GTK::Compat::KeyFile  {
 
   method to_data (
     gsize $length,
-    GError $error = GError
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<to-data>
   {
