@@ -1,13 +1,12 @@
 use v6.c;
 
 use NativeCall;
+
 use GTK::Compat::Types;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Raw::HashTable;
-
-use GTK::Compat::Roles::Object;
+use GLib::Raw::HashTable;
 
 INIT {
   say qq:to/S/ unless %*ENV<P6_BUILDING_GTK>.so;
@@ -34,9 +33,7 @@ S
 #    - These will be handled via a nativecast to Pointer
 
 class GTK::Compat::HashTable {
-  also does GTK::Compat::Roles::Object;
-
-  has GHashTable $!h is implementor;
+  has GHashTable $!h;
 
   submethod BUILD (:$table) {
     self!setObject($!h = $table);
@@ -46,7 +43,7 @@ class GTK::Compat::HashTable {
     self.downref
   }
 
-  method GTK::Compat::Types::Raw::GHashTable
+  method GTK::Compat::Types::GHashTable
   { $!h }
 
   # Really, the only thing that's needed.
@@ -307,7 +304,7 @@ class GTK::Compat::HashTable::Double is GTK::Compat::HashTable {
 class GTK::Compat::HashTableIter {
     has GHashTableIter $!hi;
 
-    method GTK::Compat::Raw::Types::GHashTableIter
+    method GTK::Compat::Types::GHashTableIter
     { $!hi }
 
     method get_hash_table {

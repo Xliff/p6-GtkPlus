@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::HashTable;
+unit package GLib::Raw::HashTable;
 
 # Oy-ya-mama, this had to be difficult!
 
