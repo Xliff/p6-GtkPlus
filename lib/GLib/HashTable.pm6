@@ -1,13 +1,12 @@
 use v6.c;
 
 use NativeCall;
+
 use GTK::Compat::Types;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Raw::HashTable;
-
-use GTK::Compat::Roles::Object;
+use GLib::Raw::HashTable;
 
 INIT {
   say qq:to/S/ unless %*ENV<P6_BUILDING_GTK>.so;
@@ -33,10 +32,8 @@ S
 #    - By extension, this means that this object will also handle all GObject derivatives
 #    - These will be handled via a nativecast to Pointer
 
-class GTK::Compat::HashTable {
-  also does GTK::Compat::Roles::Object;
-
-  has GHashTable $!h is implementor;
+class GLib::HashTable {
+  has GHashTable $!h;
 
   submethod BUILD (:$table) {
     self!setObject($!h = $table);
@@ -46,13 +43,13 @@ class GTK::Compat::HashTable {
     self.downref
   }
 
-  method GTK::Compat::Types::Raw::GHashTable
+  method GTK::Compat::Types::GHashTable
   { $!h }
 
   # Really, the only thing that's needed.
   # Look into the diff between %table and *%table.
   multi method new(%table) {
-    my $o = GTK::Compat::HashTable.new(&g_str_hash, &g_str_equal);
+    my $o = GLib::HashTable.new(&g_str_hash, &g_str_equal);
     $o.insert($_, %table{$_}) for %table.keys;
     $o;
   }
@@ -129,43 +126,43 @@ class GTK::Compat::HashTable {
   }
 
   # STATIC METHODS -- start
-  method g_direct_equal (GTK::Compat::HashTable:U: $v1, $v2) {
+  method g_direct_equal (GLib::HashTable:U: $v1, $v2) {
     g_direct_equal($v1, $v2);
   }
 
-  method g_direct_hash (GTK::Compat::HashTable:U: Pointer $dh) {
+  method g_direct_hash (GLib::HashTable:U: Pointer $dh) {
     g_direct_hash($dh);
   }
 
-  method g_double_equal (GTK::Compat::HashTable:U: $v1, $v2) {
+  method g_double_equal (GLib::HashTable:U: $v1, $v2) {
     g_double_equal($v1, $v2);
   }
 
-  method g_double_hash (GTK::Compat::HashTable:U: CArray[num64] $d) {
+  method g_double_hash (GLib::HashTable:U: CArray[num64] $d) {
     g_double_hash($d);
   }
 
-  method g_int64_equal (GTK::Compat::HashTable:U: $v1, $v2) {
+  method g_int64_equal (GLib::HashTable:U: $v1, $v2) {
     g_int64_equal($v1, $v2);
   }
 
-  method g_int64_hash (GTK::Compat::HashTable:U: CArray[int64] $i) {
+  method g_int64_hash (GLib::HashTable:U: CArray[int64] $i) {
     g_int64_hash($i);
   }
 
-  method g_int_equal (GTK::Compat::HashTable:U: $i1, $i2) {
+  method g_int_equal (GLib::HashTable:U: $i1, $i2) {
     g_int_equal($i1, $i2);
   }
 
-  method g_int_hash (GTK::Compat::HashTable:U: CArray[int32] $i) {
+  method g_int_hash (GLib::HashTable:U: CArray[int32] $i) {
     g_int_hash($i);
   }
 
-  method g_str_equal (GTK::Compat::HashTable:U: Str $s1, Str $s2) {
+  method g_str_equal (GLib::HashTable:U: Str $s1, Str $s2) {
     g_str_equal($s1, $s2);
   }
 
-  method g_str_hash (GTK::Compat::HashTable:U: Str $s) {
+  method g_str_hash (GLib::HashTable:U: Str $s) {
     g_str_hash($s);
   }
   # STATIC METHODS -- end
@@ -226,7 +223,7 @@ class GTK::Compat::HashTable {
     &sub($!h, $key, $v);
   }
   multi method insert (Str $key, $value is copy) {
-    die "Do not know how to handle { $value.^name } for GTK::Compat::HashTable!"
+    die "Do not know how to handle { $value.^name } for GLib::HashTable!"
       unless $value.REPR eq <CPointer CStruct>.any;
     my Pointer $v = $value.REPR eq 'CStruct' ?? cast(Pointer, $value) !! $value;
     g_hash_table_insert_pointer($!h, $key, $v);
@@ -278,25 +275,25 @@ class GTK::Compat::HashTable {
 
 }
 
-class GTK::Compat::HashTable::String is GTK::Compat::HashTable {
+class GLib::HashTable::String is GLib::HashTable {
   method new {
     self.new(&g_str_hash, &g_str_equal);
   }
 }
 
-class GTK::Compat::HashTable::Int is GTK::Compat::HashTable {
+class GLib::HashTable::Int is GLib::HashTable {
   method new {
     self.new(&g_int_hash, &g_int_equal);
   }
 }
 
-class GTK::Compat::HashTable::Int64 is GTK::Compat::HashTable {
+class GLib::HashTable::Int64 is GLib::HashTable {
   method new {
     self.new(&g_int64_hash, &g_int64_equal);
   }
 }
 
-class GTK::Compat::HashTable::Double is GTK::Compat::HashTable {
+class GLib::HashTable::Double is GLib::HashTable {
   method new {
     self.new(&g_double_hash, &g_double_equal);
   }
@@ -304,14 +301,14 @@ class GTK::Compat::HashTable::Double is GTK::Compat::HashTable {
 
 # OPAQUE STRUCT
 
-class GTK::Compat::HashTableIter {
+class GLib::HashTableIter {
     has GHashTableIter $!hi;
 
-    method GTK::Compat::Raw::Types::GHashTableIter
+    method GTK::Compat::Types::GHashTableIter
     { $!hi }
 
     method get_hash_table {
-      GTK::Compat::HashTable.new(
+      GLib::HashTable.new(
         g_hash_table_iter_get_hash_table($!hi)
       );
     }
