@@ -8,11 +8,11 @@ use GTK::Compat::Raw::Main;
 
 use GTK::Raw::Utils;
 
-class GTK::Compat::Timeout {
+class GLib::Timeout {
 
   method new (|) {
-    warn 'GTK::Compat::Timeout is a static class and cannot be instantiated';
-    GTK::Compat::Timeout;
+    warn 'GLib::Timeout is a static class and cannot be instantiated';
+    GLib::Timeout;
   }
 
   method add (
@@ -93,7 +93,7 @@ class GTK::Compat::Timeout {
   method simple_timeout_in_seconds(Cool $sec)
     is also<simple-timeout-in-seconds>
   {
-    GTK::Compat::Timeout.simple-timeout($sec * 1000);
+    GLib::Timeout.simple-timeout($sec * 1000);
   }
 
   method cancel (Int() $tag) {
