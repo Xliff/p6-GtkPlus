@@ -1,14 +1,13 @@
 use v6.c;
 
-use Method::Also;
-
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Timer;
 
-class GTK::Compat::Timer {
-  has GTimer $!t is implementor;
+use GLib::Raw::Timer;
+
+class GLib::Timer {
+  has GTimer $!t;
 
   submethod BUILD (:$timer) {
     $!t = $timer;
@@ -19,10 +18,14 @@ class GTK::Compat::Timer {
   { $!t }
 
   multi method new(GTimer $timer) {
+    return Nil unless $timer;
+
     self.bless( :$timer );
   }
   multi method new {
-    self.bless( timer => g_timer_new() );
+    my $t = g_timer_new();
+
+    $t ?? self.bless( timer => $t ) !! Nil
   }
 
   method continue {
@@ -34,8 +37,8 @@ class GTK::Compat::Timer {
   }
 
   method elapsed (Int() $microseconds = 0) {
-    my gulong $us = resolve-ulong($microseconds);
-    
+    my gulong $us = $microseconds;
+
     g_timer_elapsed($!t, $us);
   }
 
@@ -53,7 +56,7 @@ class GTK::Compat::Timer {
       timeval-add-μs
     >
   {
-    my gulong $us = resolve-long($microseconds);
+    my gulong $us = $microseconds;
     g_time_val_add($tv, $us);
   }
 
@@ -90,7 +93,7 @@ class GTK::Compat::Timer {
       μsleep
     >
   {
-    my gulong $i = resolve-ulong($interval);
+    my gulong $i = $interval;
     g_usleep($i);
   }
 

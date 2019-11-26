@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Timer;
+unit package GLib::Raw::Timer;
 
 sub g_timer_continue (GTimer $timer)
   is native(glib)
