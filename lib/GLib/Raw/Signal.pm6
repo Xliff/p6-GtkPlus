@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Signal;
+unit package GLib::Raw::Signal;
 
 sub g_signal_accumulator_first_wins (
   GSignalInvocationHint $ihint,

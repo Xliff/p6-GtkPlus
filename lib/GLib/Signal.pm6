@@ -6,11 +6,15 @@ use NativeCall;
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::Signal;
+
+use GLib::Raw::Signal;
 
 # STATIC CLASS
 
+use GLib::Roles::StaticClass;
+
 class GTK::Compat::Signal {
+  also does GLib::Roles::StaticClass;
 
   # method new_valist (Str() $signal_name, GType $itype, GSignalFlags $signal_flags, GClosure $class_closure, GSignalAccumulator $accumulator, gpointer $accu_data, GSignalCMarshaller $c_marshaller, GType $return_type, guint $n_params, va_list $args) {
   #   g_signal_new_valist($signal_name, $itype, $signal_flags, $class_closure, $accumulator, $accu_data, $c_marshaller, $return_type, $n_params, $args);
@@ -29,8 +33,8 @@ class GTK::Compat::Signal {
     Int() $n_params,
     CArray[uint64] $param_types
   ) {
-    my guint ($sf, $np) = resolve-uint($signal_flags, $n_params);
-    my uint64 ($it, $rt) = resolve-uint64($itype, $return_type);
+    my guint ($sf, $np) = ($signal_flags, $n_params);
+    my uint64 ($it, $rt) = ($itype, $return_type);
     g_signal_newv(
       $signal_name,
       $it,
@@ -86,7 +90,8 @@ class GTK::Compat::Signal {
   )
     is also<add-emission-hook>
   {
-    my guint $sid = resolve-uint($signal_id);
+    my guint $sid = $signal_id;
+
     g_signal_add_emission_hook(
       $sid,
       $detail,
@@ -113,7 +118,8 @@ class GTK::Compat::Signal {
   )
     is also<connect-closure>
   {
-    my gboolean $a = resolve-bool($after);
+    my gboolean $a = $after;
+
     g_signal_connect_closure($instance, $detailed_signal, $closure, $a);
   }
 
@@ -126,8 +132,9 @@ class GTK::Compat::Signal {
   )
     is also<connect-closure-by-id>
   {
-    my gboolean $a = resolve-bool($after);
-    my guint $sid = resolve-uint($signal_id);
+    my gboolean $a = $after;
+    my guint $sid = $signal_id;
+
     g_signal_connect_closure_by_id($instance, $sid, $detail, $closure, $a);
   }
 
@@ -145,7 +152,8 @@ class GTK::Compat::Signal {
       connect
     >
   {
-    my guint $cf = resolve-uint($connect_flags);
+    my guint $cf = $connect_flags;
+
     g_signal_connect_data(
       $instance,
       $detailed_signal,
@@ -221,7 +229,8 @@ class GTK::Compat::Signal {
     GQuark $detail,
     GValue() $return_value
   ) {
-    my guint $sid = resolve-uint($signal_id);
+    my guint $sid = $signal_id;
+
     g_signal_emitv($instance_and_params, $sid, $detail, $return_value);
   }
 
@@ -234,14 +243,16 @@ class GTK::Compat::Signal {
   method handler_block (GObject() $instance, Int() $handler_id)
     is also<handler-block>
   {
-    my gulong $hid = resolve-uint64($handler_id);
+    my gulong $hid = $handler_id;
+
     g_signal_handler_block($instance, $hid);
   }
 
   method handler_disconnect (GObject() $instance, Int() $handler_id)
     is also<handler-disconnect>
   {
-    my gulong $hid = resolve-uint64($handler_id);
+    my gulong $hid = $handler_id;
+
     g_signal_handler_disconnect($instance, $handler_id);
   }
 
@@ -256,7 +267,8 @@ class GTK::Compat::Signal {
   )
     is also<handler-find>
   {
-    my guint ($m, $sid) = resolve-uint($mask, $signal_id);
+    my guint ($m, $sid) = ($mask, $signal_id);
+
     g_signal_handler_find(
       $instance,
       $m,
@@ -271,7 +283,8 @@ class GTK::Compat::Signal {
   method handler_is_connected (GObject() $instance, Int() $handler_id)
     is also<handler-is-connected>
   {
-    my gulong $hid = resolve-uint64($handler_id);
+    my gulong $hid = $handler_id;
+
     g_signal_handler_is_connected($instance, $hid);
   }
 
@@ -292,7 +305,8 @@ class GTK::Compat::Signal {
   )
     is also<handlers-block-matched>
   {
-    my guint ($m, $sid) = resolve-uint($mask, $signal_id);
+    my guint ($m, $sid) = ($mask, $signal_id);
+
     g_signal_handlers_block_matched(
       $instance,
       $m,
@@ -319,7 +333,8 @@ class GTK::Compat::Signal {
   )
     is also<handlers-disconnect-matched>
   {
-    my guint ($m, $sid) = resolve-uint($mask, $signal_id);
+    my guint ($m, $sid) = ($mask, $signal_id);
+
     g_signal_handlers_disconnect_matched(
       $instance,
       $m,
@@ -342,7 +357,8 @@ class GTK::Compat::Signal {
   )
     is also<handlers-unblock-matched>
   {
-    my guint ($m, $sid) = resolve-uint($mask, $signal_id);
+    my guint ($m, $sid) = ($mask, $signal_id);
+
     g_signal_handlers_unblock_matched(
       $instance,
       $m,
@@ -362,27 +378,28 @@ class GTK::Compat::Signal {
   )
     is also<has-handler-pending>
   {
-    my guint $sid = resolve-uint($signal_id);
-    my gboolean $m = resolve-bool($may_be_blocked);
-    g_signal_has_handler_pending($instance, $sid, $detail, $m);
+    my guint $sid = $signal_id;
+    my gboolean $m = $may_be_blocked;
+
+    so g_signal_has_handler_pending($instance, $sid, $detail, $m);
   }
 
   method list_ids (Int() $itype) is also<list-ids> {
     my ($n_ids, @ids) = (0);
-    my guint $it = resolve-uint64($itype);
+    my guint $it = $itype;
 
-    my CArray[uint32] $cids = g_signal_list_ids($it, $n_ids);
-    @ids[$_] = $cids[$_] for ^$n_ids;
-    @ids;
+    CArrayToArray( g_signal_list_ids($it, $n_ids) );
   }
 
   method lookup (Str() $name, Int() $itype) {
-    my uint64 $it = resolve-uint64($itype);
+    my uint64 $it = $itype;
+
     g_signal_lookup($name, $it);
   }
 
   method name (Int() $signal_id) {
-    my guint $sid = resolve-uint($signal_id);
+    my guint $sid = $signal_id;
+
     g_signal_name($sid);
   }
 
@@ -393,8 +410,9 @@ class GTK::Compat::Signal {
   )
     is also<override-class-closure>
   {
-    my guint $sid = resolve-uint($signal_id);
-    my uint64 $it = resolve-uint64($instance_type);
+    my guint $sid = $signal_id;
+    my uint64 $it = $instance_type;
+
     g_signal_override_class_closure($sid, $it, $class_closure);
   }
 
@@ -405,22 +423,34 @@ class GTK::Compat::Signal {
   )
     is also<override-class-handler>
   {
-    my uint64 $it = resolve-uint64($instance_type);
+    my uint64 $it = $instance_type;
+
     g_signal_override_class_handler($signal_name, $it, $class_handler);
   }
 
-  method parse_name (
+  proto method parse_name (|)
+    is also<parse-name>
+  { * }
+
+  multi method parse_name (
+    Str() $detailed_signal,
+    Int() $itype,
+    Int() $force_detail_quark,
+    :$all = True
+  ) {
+    samewith($detailed_signal, $itype, $, $, $force_detail_quark, :$all);
+  }
+  multi method parse_name (
     Str() $detailed_signal,
     Int() $itype,
     $signal_id_p is rw,
     $detail_p    is rw,
-    Int() $force_detail_quark
-  )
-    is also<parse-name>
-  {
-    my gboolean $f = resolve-bool($force_detail_quark);
+    Int() $force_detail_quark,
+    :$all = False
+  ) {
+    my gboolean $f = $force_detail_quark;
     my guint $sidp = 0;
-    my uint64 $it = resolve-uint64($itype);
+    my uint64 $it = $itype;
     my $cdp = CArray[uint32].new;
     my $rc = g_signal_parse_name(
       $detailed_signal,
@@ -429,23 +459,23 @@ class GTK::Compat::Signal {
       $cdp,
       $force_detail_quark
     );
-    if $rc {
-      $signal_id_p = $sidp;
-      $detail_p = $cdp[0];
-    }
-    $rc;
+
+    ($signal_id_p, $detail_p) = ($sidp, $cdp[0]);
+    $all.not ?? $rc !! ($rc, $signal_id_p, $detail_p);
   }
 
   method query (Int() $signal_id, GSignalQuery $query) {
-    my guint $sid = resolve-uint($signal_id);
+    my guint $sid = $signal_id;
+
     g_signal_query($sid, $query);
   }
 
   method remove_emission_hook (Int() $signal_id, Int() $hook_id)
     is also<remove-emission-hook>
   {
-    my guint $sid = resolve-uint($signal_id);
-    my gulong $hi = resolve-uint64($hook_id);
+    my guint $sid = $signal_id;
+    my gulong $hi = $hook_id;
+
     g_signal_remove_emission_hook($sid, $hi);
   }
 
@@ -456,8 +486,9 @@ class GTK::Compat::Signal {
   )
     is also<set-va-marshaller>
   {
-    my guint $sid = resolve-uint($signal_id);
-    my uint64 $it = resolve-uint64($instance_type);
+    my guint $sid = $signal_id;
+    my uint64 $it = $instance_type;
+
     g_signal_set_va_marshaller($sid, $it, $va_marshaller);
   }
 
@@ -468,7 +499,8 @@ class GTK::Compat::Signal {
   )
     is also<stop-emission>
   {
-    my guint $sid = resolve-uint($signal_id);
+    my guint $sid = $signal_id;
+
     g_signal_stop_emission($instance, $sid, $detail);
   }
 
