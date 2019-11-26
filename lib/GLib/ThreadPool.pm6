@@ -7,48 +7,51 @@ use NativeCall;
 use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
-use GTK::Compat::Raw::ThreadPool;
 
-class GTK::Compat::ThreadPool {
+use GLib::Raw::ThreadPool;
+
+class GLib::ThreadPool {
   has GThreadPool $!tp is implementor;
-  
+
   submethod BUILD (:$threadpool) {
     $!tp = $threadpool;
   }
-  
+
   method GTK::Compat::Types::GThreadPool
     is also<GThreadPool>
   { $!tp }
-  
+
   multi method new (
     &func,
-    Int() $max_threads, 
+    Int() $max_threads,
     Int() $exclusive
   ) {
     samewith(&func, gpointer, $max_threads, $exclusive);
   }
   multi method new (
     &func,
-    gpointer $user_data, 
-    Int() $max_threads, 
-    Int() $exclusive, 
+    gpointer $user_data,
+    Int() $max_threads,
+    Int() $exclusive,
     CArray[Pointer[GError]] $error = gerror
   ) {
-    my gint $mt = resolve-int($max_threads);
-    my gboolean $e = resolve-bool($exclusive);
+    my gint $mt = $max_threads;
+    my gboolean $e = so $exclusive;
+
     clear_error;
     my $rc = g_thread_pool_new(&func, $user_data, $mt, $e, $error);
     set_error($error);
-    self.bless( threadpool => $rc )
+    $rc ?? self.bless( threadpool => $rc ) !! Nil;
   }
-  
+
   method free (Int() $immediate, Int() $wait) {
-    my gboolean ($i, $w) = resolve-bool($immediate, $wait);
+    my gboolean ($i, $w) = ($immediate, $wait)».so;
+
     g_thread_pool_free($!tp, $i, $w);
   }
 
-  method get_max_idle_time ( GTK::Compat::ThreadPool:U: )
-    is also<get-max-idle-time> 
+  method get_max_idle_time ( GLib::ThreadPool:U: )
+    is also<get-max-idle-time>
   {
     g_thread_pool_get_max_idle_time();
   }
@@ -57,8 +60,8 @@ class GTK::Compat::ThreadPool {
     g_thread_pool_get_max_threads($!tp);
   }
 
-  method get_max_unused_threads ( GTK::Compat::ThreadPool:U: )
-    is also<get-max-unused-threads> 
+  method get_max_unused_threads ( GLib::ThreadPool:U: )
+    is also<get-max-unused-threads>
   {
     g_thread_pool_get_max_unused_threads();
   }
@@ -67,8 +70,8 @@ class GTK::Compat::ThreadPool {
     g_thread_pool_get_num_threads($!tp);
   }
 
-  method get_num_unused_threads ( GTK::Compat::ThreadPool:U: )
-    is also<get-num-unused-threads> 
+  method get_num_unused_threads ( GLib::ThreadPool:U: )
+    is also<get-num-unused-threads>
   {
     g_thread_pool_get_num_unused_threads();
   }
@@ -78,7 +81,7 @@ class GTK::Compat::ThreadPool {
   }
 
   method push (
-    gpointer $data, 
+    gpointer $data,
     CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
@@ -92,12 +95,13 @@ class GTK::Compat::ThreadPool {
   }
 
   method set_max_threads (
-    Int() $max_threads, 
+    Int() $max_threads,
     CArray[Pointer[GError]] $error = gerror
-  ) 
-    is also<set-max-threads> 
+  )
+    is also<set-max-threads>
   {
-    my gint $mt = resolve-int($max_threads);
+    my gint $mt = $max_threads;
+
     clear_error;
     my $rc = g_thread_pool_set_max_threads($!tp, $mt, $error);
     set_error($error);
@@ -109,16 +113,16 @@ class GTK::Compat::ThreadPool {
   }
 
   method set_sort_function (
-    &func, 
+    &func,
     gpointer $user_data = gpointer
-  ) 
-    is also<set-sort-function> 
+  )
+    is also<set-sort-function>
   {
     g_thread_pool_set_sort_function($!tp, &func, $user_data);
   }
 
-  method stop_unused_threads ( GTK::Compat::ThreadPool:U: )
-    is also<stop-unused-threads> 
+  method stop_unused_threads ( GLib::ThreadPool:U: )
+    is also<stop-unused-threads>
   {
     g_thread_pool_stop_unused_threads();
   }
