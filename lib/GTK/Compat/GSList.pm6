@@ -4,13 +4,10 @@ use Method::Also;
 
 use GTK::Roles::Types;
 
-use GTK::Compat::Types;
 use GTK::Compat::Raw::GSList;
 
 class GTK::Compat::GSList {
-  also does GTK::Roles::Types;
-
-  has GSList $!list is implementor;
+  has GSList $!list;
   has GSList $!cur;
 
   has @!nat;
@@ -129,7 +126,7 @@ class GTK::Compat::GSList {
     g_slist_free($!list);
   }
 
-  method free_1 is also<free-1> {
+  method free_1 is also<free1> {
     g_slist_free_1($!list);
   }
 
@@ -142,7 +139,8 @@ class GTK::Compat::GSList {
   }
 
   method insert (gpointer $data, Int() $position) {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     g_slist_insert($!list, $data, $p);
   }
 
@@ -181,12 +179,14 @@ class GTK::Compat::GSList {
   }
 
   method nth (Int() $n) {
-    my guint $nn = self.RESOLVE-UINT($n);
+    my guint $nn = $n;
+
     g_slist_nth($!list, $nn);
   }
 
   method nth_data (Int() $n) is also<nth-data> {
-    my guint $nn = self.RESOLVE-UINT($n);
+    my guint $nn = $n;
+
     g_slist_nth_data($!list, $nn);
   }
 

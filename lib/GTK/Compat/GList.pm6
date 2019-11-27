@@ -56,16 +56,17 @@ class GTK::Compat::GList {
   }
   multi method new {
     my $list = g_list_alloc();
-    die "Cannot allocate GList" unless $list;
 
-    self.bless(:$list);
+    $list ?? self.bless(:$list) !! Nil;
   }
   multi method new (GTK::Compat::Types::GList $list) {
+    return Nil unless $list;
+
     self.bless(:$list);
   }
 
   method GTK::Compat::Types::GList
-    is also<GList> 
+    is also<GList>
   { $!list }
 
   method current_node
@@ -119,6 +120,7 @@ class GTK::Compat::GList {
 
   method append (Pointer $data) {
     my $list = g_list_append($!list, $data);
+
     $!dirty = True;
     $!list = $list;
   }
@@ -132,15 +134,15 @@ class GTK::Compat::GList {
   }
   multi method concat (GTK::Compat::Types::GList() $list2) {
     my $list = g_list_concat($!list, $list2);
+
     $!dirty = True;
     $!list = $list;
   }
 
   method copy {
-    self.bless(
-      #type => $!type,
-      list => g_list_copy($!list)
-    );
+    my $l = g_list_copy($!list);
+
+    $l ?? self.bless( list => $l ) !! Nil;
   }
 
   method copy_deep (
@@ -190,12 +192,12 @@ class GTK::Compat::GList {
   }
 
   # Aliases with numbers after the dash are still a Bad Idea
-  method free_1 {
+  method free_1 is also<free1> {
     g_list_free_1($!list);
   }
 
   method free_full (
-    &free_func = -> { }
+    &free_func = -> is also<free-full> { }
   )
     is also<free-full>
   {
@@ -208,8 +210,9 @@ class GTK::Compat::GList {
   }
 
   method insert (Pointer $data, Int() $position) {
-    my gint $p = resolve-int($position);
-    my $list = g_list_insert($!list, $data, $position);
+    my gint $p = $position;
+    my $list = g_list_insert($!list, $data, $p);
+
     $!dirty = True;
     $!list = $list;
   }
@@ -218,6 +221,7 @@ class GTK::Compat::GList {
     is also<insert-before>
   {
     my $list = g_list_insert_before($!list, $sibling, $data);
+
     $!dirty = True;
     $!list = $list;
   }
@@ -253,19 +257,22 @@ class GTK::Compat::GList {
   }
 
   method nth (Int() $n) {
-    my guint $nn = resolve-uint($n);
-    g_list_nth($!list, $n);
+    my guint $nn = $n;
+
+    g_list_nth($!list, $nn);
   }
 
   method nth_data (Int() $n)
     is also<nth-data>
   {
-    my guint $nn = resolve-uint($n);
+    my guint $nn = $n;
+
     g_list_nth_data($!list, $nn);
   }
 
-  method nth_prev (Int() $n) {
-    my guint $nn = resolve-uint($n);
+  method nth_prev (Int() $n) is also<nth-prev> {
+    my guint $nn = $n;
+
     g_list_nth_prev($!list, $nn);
   }
 
@@ -275,30 +282,37 @@ class GTK::Compat::GList {
 
   method prepend (Pointer $data) {
     my $list = g_list_prepend($!list, $data);
+
     $!dirty = True;
     $!list = $list;
   }
 
   method remove (Pointer $data) {
     my $list = g_list_remove($!list, $data);
+
     $!dirty = True;
     $!list = $list;
   }
 
-  method remove_all (Pointer $data) {
+  method remove_all (Pointer $data) is also<remove-all> {
     g_list_remove_all($!list, $data);
+
     $!dirty = True;
     #!nat = ();
   }
 
-  method remove_link (GTK::Compat::Types::GList() $llink) {
+  method remove_link (GTK::Compat::Types::GList() $llink)
+    is also<remove-link>
+  {
     my $list = g_list_remove_link($!list, $llink);
+
     $!dirty = True;
     $!list = $list;
   }
 
   method reverse {
     my $list = g_list_reverse($!list);
+
     $!dirty = True;
     $!list = $list;
   }
@@ -308,7 +322,9 @@ class GTK::Compat::GList {
     $!dirty = True;
   }
 
-  method sort_with_data (&compare_func, Pointer $user_data = Pointer) {
+  method sort_with_data (&compare_func, Pointer $user_data = Pointer)
+    is also<sort-with-data>
+  {
     $!list = g_list_sort_with_data($!list, &compare_func, $user_data);
     $!dirty = True;
   }
