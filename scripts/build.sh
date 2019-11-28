@@ -11,7 +11,7 @@ if [ "$1" == "--start-at" ]; then
   re='^[0-9]+$'
   if ! [[ $1 =~ $re ]] ; then
     echo "Searching for $1"
-    ln=`awk '/$1/{ print NR; exit }' BuildList`
+    ln=`awk "/$1/{ print NR; exit }" BuildList`
   else
     echo "Starting at $1"
     ln=$1

@@ -35,3 +35,7 @@ for @files.sort( *[1] ).reverse {
     'LastBuildResults'.IO.rename('LastBuildResults.0');
   }
 }
+
+# Ugly, HORRIBLE fix...but it's still a fix!
+my $lbr = 'LastBuildResults'.IO;
+$lbr.rename('LastBuildResults.1') if $lbr.e;
