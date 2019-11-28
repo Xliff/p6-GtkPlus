@@ -4,7 +4,7 @@ use Method::Also;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Raw::Notification;
+use GIO::Raw::Notification;
 
 use GTK::Compat::Roles::Object;
 

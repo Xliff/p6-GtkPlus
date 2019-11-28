@@ -3,12 +3,14 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::GSList;
+use GLib::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::RadioMenuItem;
 use GTK::Raw::Types;
 
 use GTK::CheckMenuItem;
+
+use GTK::Compat::Roles::ListData;
 
 our subset RadioMenuItemAncestry
   where GtkRadioMenuItem | CheckMenuItemAncestry;
@@ -18,7 +20,7 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::RadioMenuItem');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -46,6 +48,8 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
   }
 
   my sub postconf($o, %opts) {
+    return Nil unless $o;
+
     $o.toggled.tap({ %opts<clicked>() }) with %opts<clicked>;
     $o.toggled.tap({ %opts<toggled>() }) with %opts<toggled>;
 
@@ -56,6 +60,7 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
   }
 
   multi method new (RadioMenuItemAncestry $radiomenu) {
+    return unless $radiomenu;
     my $o = self.bless(:$radiomenu);
     $o.upref;
     $o;
@@ -70,9 +75,9 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
   # May have to merge these next two with complex type checking logic for
   # the $group parameter.
   multi method new(
-    GSList() $group, 
-    Str() $label, 
-    :$mnemonic = False, 
+    GSList() $group,
+    Str() $label,
+    :$mnemonic = False,
     *%opts
   ) {
     my $radiomenu;
@@ -108,14 +113,16 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
     is also<new-from-widget>
   {
     my $radiomenu = gtk_radio_menu_item_new_from_widget($group);
-    self.bless(:$radiomenu);
+
+    $radiomenu ?? self.bless(:$radiomenu) !! Nil;
   }
 
   method new_with_label (GSList() $group, Str() $label)
     is also<new-with-label>
   {
     my $radiomenu = gtk_radio_menu_item_new_with_label($group, $label);
-    self.bless(:$radiomenu);
+
+    $radiomenu ?? self.bless(:$radiomenu) !! Nil;
   }
 
   method new_with_label_from_widget (
@@ -128,14 +135,16 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
       $group,
       $label
     );
-    self.bless(:$radiomenu);
+
+    $radiomenu ?? self.bless(:$radiomenu) !! Nil;
   }
 
   method new_with_mnemonic (GSList() $group, Str() $label)
     is also<new-with-mnemonic>
   {
     my $radiomenu = gtk_radio_menu_item_new_with_mnemonic($group, $label);
-    self.bless(:$radiomenu);
+
+    $radiomenu ?? self.bless(:$radiomenu) !! Nil;
   }
 
   method new_with_mnemonic_from_widget (
@@ -148,7 +157,8 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
       $group,
       $label
     );
-    self.bless(:$radiomenu);
+
+    $radiomenu ?? self.bless(:$radiomenu) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -162,10 +172,17 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓\
-  method group is rw {
+  method group (:$glist = False, :$raw = False) is rw {
   Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::GSList.new( gtk_radio_menu_item_get_group($!rmi) );
+        my $gl = gtk_radio_menu_item_get_group($!rmi);
+
+        return Nil unless $gl;
+        return $gl if     $glist;
+
+        $gl = GLib::GSList.new($gl) but GTK::Compat::Roles::ListData;
+
+        $raw ?? $gl.Array !! $gl.Array.map({ GTK::RadioMenuItem.new($_) });
       },
       STORE => sub ($, GSList() $group is copy) {
         gtk_radio_menu_item_set_group($!rmi, $group);
@@ -181,6 +198,7 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_radio_menu_item_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

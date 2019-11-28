@@ -136,6 +136,7 @@ GLib::Raw::Bytes
 GLib::Raw::Checksum
 GLib::Raw::DateTime
 GLib::Raw::Error
+GLib::Raw::GSList
 GLib::Raw::HMAC
 GLib::Raw::HashTable
 GLib::Raw::Hostname
@@ -153,6 +154,7 @@ GLib::Raw::Signal
 GLib::Raw::Slice
 GLib::Raw::String
 GLib::Raw::Thread
+GLib::Raw::ThreadPool
 GLib::Raw::TimeZone
 GLib::Raw::Timer
 GLib::Raw::Tree
@@ -164,6 +166,7 @@ GLib::Scanner
 GLib::Signal
 GLib::Slice
 GLib::String
+GLib::ThreadPool
 GLib::TimeZone
 GLib::Timer
 GLib::Tree
@@ -186,18 +189,15 @@ GTK::Compat::Raw::DragContext
 GTK::Compat::Raw::FrameTimings
 GTK::Compat::Raw::GFile
 GTK::Compat::Raw::GList
-GTK::Compat::Raw::GSList
 GTK::Compat::Raw::IsType
 GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Main
-GTK::Compat::Raw::Notification
 GTK::Compat::Raw::Pixbuf
 GTK::Compat::Raw::Pixbuf::Transforms
 GTK::Compat::Raw::Rectangle
 GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
-GTK::Compat::Raw::ThreadPool
 GTK::Compat::Raw::Value
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
@@ -209,7 +209,6 @@ GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
-GTK::Compat::ThreadPool
 GTK::Compat::Visual
 GTK::Raw::Types
 GTK::Raw::Viewport
@@ -261,6 +260,7 @@ GLib::Bytes
 GLib::Checksum
 GLib::DateTime
 GLib::Error
+GLib::GSList
 GLib::HMAC
 GLib::HashTable
 GLib::Hostname
@@ -275,7 +275,6 @@ GLib::Quark
 GLib::Rand
 GTK::Compat::FrameTimings
 GTK::Compat::GList
-GTK::Compat::GSList
 GTK::Compat::Keymap
 GTK::Compat::MainContext
 GTK::Compat::MainLoop
