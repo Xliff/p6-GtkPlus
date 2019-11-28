@@ -43,7 +43,7 @@ class GLib::Timer {
   }
 
   method val_add (
-    GTK::Compat::Timer:U:
+    GLib::Timer:U:
     GTimeVal $tv, Int() $microseconds
   )
     is also<
@@ -62,7 +62,7 @@ class GLib::Timer {
   }
 
   method val_from_iso8601 (
-    GTK::Compat::Timer:U:
+    GLib::Timer:U:
     Str() $t, GTimeVal $time
   )
     is also<
@@ -75,7 +75,7 @@ class GLib::Timer {
   }
 
   method val_to_iso8601 (
-    GTK::Compat::Timer:U:
+    GLib::Timer:U:
     GTimeVal $tv
   )
     is also<

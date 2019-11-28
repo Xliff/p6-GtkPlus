@@ -1,5 +1,5 @@
 #!/bin/bash
-
+perl6 scripts/backup_results.pl6
 echo -e "Dependency Generation\n=====================" >> LastBuildResults
 /usr/bin/time -p -o LastBuildResults -a perl6 scripts/dependencies.pl6
 if [ "$?" -ne "0" ]; then
@@ -21,12 +21,7 @@ if [ "$1" == "--start-at" ]; then
 else
   cp BuildList BuildList.now
 fi
-if [ "$1" == "--new" ]; then
-  shift
-  rm LastBuildResults*
-else
-  perl6 scripts/backup_results.pl6
-fi
+
 /usr/bin/time -p /bin/bash -c '(
   for a in `cat BuildList.now`; do
     (
