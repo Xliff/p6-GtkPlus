@@ -56,6 +56,8 @@ class GLib::IOChannel {
     clear_error;
     my $io = g_io_channel_new_file($filename, $mode, $error);
     set_error($error);
+
+    $io ?? self.bless( io-channel => $io ) !! Nil;
   }
 
   method win32_new_messages is also<win32-new-messages> {

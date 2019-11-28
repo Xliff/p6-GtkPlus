@@ -1,6 +1,6 @@
 use v6.c;
 
-use GTK::Raw::Utils;
+use Method::Also;
 
 use GTK::Compat::Types;
 
@@ -57,6 +57,7 @@ class GLib::Timer {
     >
   {
     my gulong $us = $microseconds;
+
     g_time_val_add($tv, $us);
   }
 
@@ -94,6 +95,7 @@ class GLib::Timer {
     >
   {
     my gulong $i = $interval;
+
     g_usleep($i);
   }
 
