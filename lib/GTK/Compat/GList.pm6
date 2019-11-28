@@ -24,7 +24,7 @@ class GTK::Compat::GList {
   has $.dirty;
 
   submethod BUILD(:$list) {
-    # die 'Must use a type object for $type when creating a GTK::Compat::GSList'
+    # die 'Must use a type object for $type when creating a GLib::GSList'
     #   if $type.defined;
 
     $!dirty = True;
@@ -196,11 +196,7 @@ class GTK::Compat::GList {
     g_list_free_1($!list);
   }
 
-  method free_full (
-    &free_func = -> is also<free-full> { }
-  )
-    is also<free-full>
-  {
+  method free_full (&free_func) is also<free-full> {
     my &func := &free_func // &g_destroy_none;
     g_list_free_full($!list, &func);
   }

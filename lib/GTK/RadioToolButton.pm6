@@ -3,22 +3,25 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::GSList;
+use GLib::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::RadioToolButton;
 use GTK::Raw::Types;
 
+use GTK::RadioButton;
 use GTK::ToggleToolButton;
+
+use GTK::Compat::Roles::ListData;
 
 our subset RadioToolButtonAncestry is export
   where GtkRadioToolButton | GtkActionable | ToggleToolButtonAncestry;
-  
+
 class GTK::RadioToolButton is GTK::ToggleToolButton {
   has GtkRadioToolButton $!rtb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::RadioToolButton');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -31,6 +34,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
             $to-parent = nativecast(GtkToggleToolButton, $_);
             $_;
           }
+
           default {
             $to-parent = $_;
             nativecast(GtkRadioToolButton, $_);
@@ -38,41 +42,49 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
         }
         self.setToggleToolButton($to-parent);
       }
+
       when GTK::RadioToolButton {
       }
+
       default {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkRadioToolButton 
-    is also<RadioToolButton> 
+
+  method GTK::Raw::Types::GtkRadioToolButton
+    is also<RadioToolButton>
   { $!rtb }
 
   multi method new (RadioToolButtonAncestry $radiotoolbutton) {
+    return unless $radiotoolbutton;
+
     my $o = self.bless(:$radiotoolbutton);
     $o.upref;
     $o;
   }
   multi method new(GSList() $group) {
     my $radiotoolbutton = gtk_radio_tool_button_new($group);
-    self.bless(:$radiotoolbutton);
+
+    $radiotoolbutton ?? self.bless(:$radiotoolbutton) !! Nil;
   }
 
   method new_from_stock (GSList() $group, Str() $stock_id)
     is DEPRECATED( 'GTK::RadioToolButton.new()' )
-  is also<new-from-stock> {
+    is also<new-from-stock>
+  {
     my $radiotoolbutton = gtk_radio_tool_button_new_from_stock(
       $group, $stock_id
     );
-    self.bless(:$radiotoolbutton);
+
+    $radiotoolbutton ?? self.bless(:$radiotoolbutton) !! $radiotoolbutton;
   }
 
   method new_from_widget(GtkRadioToolButton() $group)
     is also<new-from-widget>
   {
     my $radiotoolbutton = gtk_radio_tool_button_new_from_widget($group);
-    self.bless(:$radiotoolbutton);
+
+    $radiotoolbutton ?? self.bless(:$radiotoolbutton) !! $radiotoolbutton;
   }
 
   method new_with_stock_from_widget (
@@ -85,18 +97,26 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     my $radiotoolbutton = gtk_radio_tool_button_new_with_stock_from_widget(
       $group, $stock_id
     );
-    self.bless(:$radiotoolbutton);
+
+    $radiotoolbutton ?? self.bless(:$radiotoolbutton) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method group is rw {
+  method group (:$glist = False, :$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        #GTK::Compat::GSList.new( gtk_radio_tool_button_get_group($!rtb) );
-        gtk_radio_tool_button_get_group($!rtb);
+        my $gl = gtk_radio_tool_button_get_group($!rtb);
+
+        return Nil unless $gl;
+        return $gl if     $glist;
+
+        $gl = GLib::GSList.new($gl)
+          but GTK::Compat::Roles::ListData[GtkRadioButton];
+
+        $raw ?? $gl.Array !! $gl.Array.map({ GTK::RadioButton.new($_) });
       },
       STORE => sub ($, GSList() $group is copy) {
         gtk_radio_tool_button_set_group($!rtb, $group);
@@ -108,6 +128,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_radio_tool_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

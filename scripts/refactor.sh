@@ -1,9 +1,8 @@
 #!/bin/sh
 
+# Should also exclude $1, but that's not really required.
 filelist=`find . \
   \( \
-    -wholename lib/GLib/Variant.pm6 \
-    -o \
     -name examples \
     -o \
     -name .touch \
@@ -18,6 +17,9 @@ filelist=`find . \
   -type f \
   -name \*.pm6 \
 `
-echo $filelist;
-exit;
-for a in $filelist; do echo $a; mv $a $a.ref-bak; sed -e 's/GTK::Compat::Variant/GLib::Variant/' $a.ref-bak > $a; done
+
+for a in $filelist; do
+  echo $a
+  mv $a $a.ref-bak
+  sed -e "s/$1/$2/" $a.ref-bak > $a
+done

@@ -538,7 +538,8 @@ our enum GtkScrollablePolicy is export <<
   GTK_SCROLL_NATURAL
 >>;
 
-our enum GtkStateFlags is export (
+constant GtkStateFlags is export := guint32;
+our enum GtkStateFlagsEnum is export (
   GTK_STATE_FLAG_NORMAL       => 0,
   GTK_STATE_FLAG_ACTIVE       => 1,
   GTK_STATE_FLAG_PRELIGHT     => 2,

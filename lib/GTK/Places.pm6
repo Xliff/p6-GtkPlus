@@ -3,14 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::GSList;
+use GLib::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::Places;
 use GTK::Raw::Types;
 
-use GTK::Roles::Signals::Places;
+use GLib::GSList;
 
 use GTK::ScrolledWindow;
+
+use GTK::Compat::Roles::GFile;
+use GTK::Roles::Signals::Places;
+
 
 our subset PlacesAncestry is export
   where GtkPlacesSidebar | ScrolledWindowAncestry;
@@ -52,7 +56,7 @@ class GTK::Places is GTK::ScrolledWindow {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-p;
   }
-  
+
   method GTK::Raw::Types::GtkPlacesSidebar is also<Places> { $!ps }
 
   multi method new (PlacesAncestry $places) {
@@ -287,8 +291,20 @@ class GTK::Places is GTK::ScrolledWindow {
     GTK::Widget.unstable_get_type( &gtk_places_sidebar_get_type, $n, $t );
   }
 
-  method list_shortcuts is also<list-shortcuts> {
-    GTK::Compat::GSList.new( gtk_places_sidebar_list_shortcuts($!ps) );
+  method list_shortcuts (:$glist = False, :$raw = False)
+    is also<list-shortcuts>
+  {
+    my $sl = gtk_places_sidebar_list_shortcuts($!ps);
+
+    return Nil unless $sl;
+    return $sl if     $glist;
+
+    $sl = GLib::GSList.new($sl) but GTK::Compat::Roles::ListData[GFile];
+
+    $raw ??
+      $sl.Array
+      !!
+      $sl.Array.map({ GTK::Compat::Roles::GFile.new-file-obj($_) });
   }
 
   method remove_shortcut (GFile() $location) is also<remove-shortcut> {

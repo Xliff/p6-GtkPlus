@@ -12,11 +12,15 @@ use GTK::Roles::Types;
 
 use Pango::Language;
 
-use GTK::Compat::GSList;
+use GLib::GSList;
 use GTK::Compat::Pixbuf;
 use GTK::Compat::Types;
 
+use GTK::TextChildAnchor;
 use GTK::TextMark;
+use GTK::TextTag;
+
+use GTK::Compat::Roles::ListData;
 
 # BOXED TYPE
 
@@ -31,13 +35,18 @@ class GTK::TextIter {
 
   method GTK::Raw::Types::GtkTextIter
     is also<TextIter>
-    { $!ti }
+  { $!ti }
 
   multi method new (GtkTextIter $textiter) {
+    return unless $textiter;
+
     self.bless(:$textiter);
   }
   multi method new {
     my $textiter = GtkTextIter.new;
+    # On the unlikely chance that Raku can't allocate...
+    return unless $textiter;
+
     self.bless(:$textiter);
   }
 
@@ -51,7 +60,8 @@ class GTK::TextIter {
         gtk_text_iter_get_line($!ti);
       },
       STORE => sub ($, Int() $line_number is copy) {
-        my gint $ln = self.RESOLVE-INT($line_number);
+        my gint $ln = $line_number;
+
         gtk_text_iter_set_line($!ti, $ln);
       }
     );
@@ -63,7 +73,8 @@ class GTK::TextIter {
         gtk_text_iter_get_line_index($!ti);
       },
       STORE => sub ($, Int() $byte_on_line is copy) {
-        my gint $b = self.RESOLVE-INT($byte_on_line);
+        my gint $b = $byte_on_line;
+
         gtk_text_iter_set_line_index($!ti, $b);
       }
     );
@@ -75,7 +86,8 @@ class GTK::TextIter {
         gtk_text_iter_get_line_offset($!ti);
       },
       STORE => sub ($, int() $char_on_line is copy) {
-        my gint $c = self.RESOLVE-INT($char_on_line);
+        my gint $c = $char_on_line;
+
         gtk_text_iter_set_line_offset($!ti, $c);
       }
     );
@@ -87,7 +99,8 @@ class GTK::TextIter {
         gtk_text_iter_get_offset($!ti);
       },
       STORE => sub ($, Int() $char_offset is copy) {
-        my gint $c = self.RESOLVE-INT($char_offset);
+        my gint $c = $char_offset;
+
         gtk_text_iter_set_offset($!ti, $c);
       }
     );
@@ -99,7 +112,8 @@ class GTK::TextIter {
         gtk_text_iter_get_visible_line_index($!ti);
       },
       STORE => sub ($, Int() $byte_on_line is copy) {
-        my gint $b = self.RESOLVE-INT($byte_on_line);
+        my gint $b = $byte_on_line;
+
         gtk_text_iter_set_visible_line_index($!ti, $b);
       }
     );
@@ -111,7 +125,8 @@ class GTK::TextIter {
         gtk_text_iter_get_visible_line_offset($!ti);
       },
       STORE => sub ($, Int() $char_on_line is copy) {
-        my gint $c = self.RESOLVE-INT($char_on_line);
+        my gint $c = $char_on_line;
+
         gtk_text_iter_set_visible_line_offset($!ti, $c);
       }
     );
@@ -128,7 +143,8 @@ class GTK::TextIter {
   }
 
   method backward_chars (Int() $count) is also<backward-chars> {
-    my $c = self.RESOLVE-INT($count);
+    my $c = $count;
+
     so gtk_text_iter_backward_chars($!ti, $c);
   }
 
@@ -139,7 +155,8 @@ class GTK::TextIter {
   method backward_cursor_positions (Int() $count)
     is also<backward-cursor-positions>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_backward_cursor_positions($!ti, $c);
   }
 
@@ -158,7 +175,8 @@ class GTK::TextIter {
   }
 
   method backward_lines (Int() $count) is also<backward-lines> {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_backward_lines($!ti, $c);
   }
 
@@ -171,7 +189,8 @@ class GTK::TextIter {
   )
     is also<backward-search>
   {
-    my guint $f = self.RESOLVE-UINT($flags);
+    my guint $f = $flags;
+
     so gtk_text_iter_backward_search(
       $!ti,
       $str,
@@ -189,7 +208,8 @@ class GTK::TextIter {
   method backward_sentence_starts (Int() $count)
     is also<backward-sentence-starts>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_backward_sentence_starts($!ti, $c);
   }
 
@@ -208,7 +228,8 @@ class GTK::TextIter {
   method backward_visible_cursor_positions (Int() $count)
     is also<backward-visible-cursor-positions>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_backward_visible_cursor_positions($!ti, $c);
   }
 
@@ -219,7 +240,8 @@ class GTK::TextIter {
   method backward_visible_lines (Int() $count)
     is also<backward-visible-lines>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_backward_visible_lines($!ti, $c);
   }
 
@@ -230,7 +252,8 @@ class GTK::TextIter {
   method backward_visible_word_starts (Int() $count)
     is also<backward-visible-word-starts>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_backward_visible_word_starts($!ti, $c);
   }
 
@@ -239,7 +262,8 @@ class GTK::TextIter {
   }
 
   method backward_word_starts (Int() $count) is also<backward-word-starts> {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_backward_word_starts($!ti, $c);
   }
 
@@ -248,7 +272,8 @@ class GTK::TextIter {
   }
 
   method can_insert (Int() $default_editability) is also<can-insert> {
-    my gboolean $de = self.RESOLVE-BOOL($default_editability);
+    my gboolean $de = $default_editability;
+
     so gtk_text_iter_can_insert($!ti, $de);
   }
 
@@ -261,7 +286,8 @@ class GTK::TextIter {
   }
 
   method editable (Int() $default_setting) {
-    my gboolean $ds = self.RESOLVE-BOOL($default_setting);
+    my gboolean $ds = $default_setting;
+
     so gtk_text_iter_editable($!ti, $ds);
   }
 
@@ -290,7 +316,8 @@ class GTK::TextIter {
   }
 
   method forward_chars (Int() $count) is also<forward-chars> {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_forward_chars($!ti, $c);
   }
 
@@ -301,7 +328,8 @@ class GTK::TextIter {
   method forward_cursor_positions (Int() $count)
     is also<forward-cursor-positions>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_forward_cursor_positions($!ti, $c);
   }
 
@@ -318,7 +346,8 @@ class GTK::TextIter {
   }
 
   method forward_lines (Int() $count) is also<forward-lines> {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_forward_lines($!ti, $c);
   }
 
@@ -331,7 +360,8 @@ class GTK::TextIter {
   )
     is also<forward-search>
   {
-    my $f = self.RESOLVE-UINT($flags);
+    my $f = $flags;
+
     so gtk_text_iter_forward_search(
       $!ti,
       $str,
@@ -349,7 +379,8 @@ class GTK::TextIter {
   method forward_sentence_ends (Int() $count)
     is also<forward-sentence-ends>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_forward_sentence_ends($!ti, $c);
   }
 
@@ -376,7 +407,8 @@ class GTK::TextIter {
   method forward_visible_cursor_positions (Int() $count)
     is also<forward-visible-cursor-positions>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_forward_visible_cursor_positions($!ti, $c);
   }
 
@@ -387,7 +419,8 @@ class GTK::TextIter {
   method forward_visible_lines (Int() $count)
     is also<forward-visible-lines>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_forward_visible_lines($!ti, $c);
   }
 
@@ -398,7 +431,8 @@ class GTK::TextIter {
   method forward_visible_word_ends (Int() $count)
     is also<forward-visible-word-ends>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
+
     so gtk_text_iter_forward_visible_word_ends($!ti, $c);
   }
 
@@ -427,82 +461,93 @@ class GTK::TextIter {
     so gtk_text_iter_get_attributes($!ti, $values);
   }
 
-  method get_buffer 
+  method get_buffer
     is also<
       get-buffer
       buffer
-    > 
+    >
   {
     # Late binding to prevent circular dependency.
     ::('GTK::TextBuffer').new( gtk_text_iter_get_buffer($!ti) );
   }
 
-  method get_bytes_in_line 
+  method get_bytes_in_line
     is also<
       get-bytes-in-line
       bytes_in_line
       bytes-in-line
-    > 
+    >
   {
     gtk_text_iter_get_bytes_in_line($!ti);
   }
 
-  method get_char 
+  method get_char
     is also<
       get-char
       char
-    > 
+    >
   {
     gtk_text_iter_get_char($!ti);
   }
 
-  method get_chars_in_line 
+  method get_chars_in_line
     is also<
       get-chars-in-line
       chars_in_line
       chars-in-line
-    > 
+    >
   {
     gtk_text_iter_get_chars_in_line($!ti);
   }
 
-  method get_child_anchor 
+  method get_child_anchor
     is also<
       get-child-anchor
       child_anchor
       child-anchor
-    > 
+    >
   {
-    GTK::TextChildAnchor.new( gtk_text_iter_get_child_anchor($!ti) );
+    my $ta = gtk_text_iter_get_child_anchor($!ti);
+
+    $ta ?? GTK::TextChildAnchor.new($ta) !! Nil;
   }
 
-  method get_language 
+  method get_language
     is also<
       get-language
       language
-    > 
+    >
   {
-    Pango::Language.new( gtk_text_iter_get_language($!ti) );
+    my $ti = gtk_text_iter_get_language($!ti);
+
+    $ti ?? Pango::Language.new($ti) !! Nil;
   }
 
-  method get_marks 
+  method get_marks (:$glist = False, :$raw = False)
     is also<
       get-marks
       marks
     >
   {
-    my $l = GTK::Compat::GSList.new( gtk_text_iter_get_marks($!ti) ) 
-      but GTK::Compat::Roles::ListData[GtkTextMark];
-    $l.Array.map({ GTK::TextMark.new($_) with $_ });
+    my $ll = gtk_text_iter_get_marks($!ti);
+
+    return Nil unless $ll;
+    return $ll if     $glist;
+
+    $ll = GLib::GSList.new($ll) but GTK::Compat::Roles::ListData[GtkTextMark];
+
+    $raw ?? $ll.Array !! $ll.Array.map({ GTK::TextMark.new($_) });
   }
 
-  method get_pixbuf 
+  method get_pixbuf
     is also<
       get-pixbuf
       pixbuf
-    > 
+    >
   {
-    GTK::Compat::Pixbuf.new( gtk_text_iter_get_pixbuf($!ti) );
+    my $p = gtk_text_iter_get_pixbuf($!ti);
+
+    $p ?? GTK::Compat::Pixbuf.new($p) !! Nil;
   }
 
   proto method get_slice(|)
@@ -519,8 +564,15 @@ class GTK::TextIter {
     gtk_text_iter_get_slice($!ti, $end);
   }
 
-  method get_tags is also<get-tags> {
-    GTK::Compat::GSList.new( gtk_text_iter_get_tags($!ti) );
+  method get_tags (:$glist = False, :$raw = False) is also<get-tags> {
+    my $tl = gtk_text_iter_get_tags($!ti);
+
+    return Nil unless $tl;
+    return $tl if     $glist;
+
+    $tl = GLib::GSList($tl) but GTK::Compat::Raw::ListData[GtkTextTag];
+
+    $raw ?? $tl.Array !! $tl.Array.map({ GTK::TextTag.new($_) });
   }
 
   proto method get_text (|)
@@ -540,12 +592,14 @@ class GTK::TextIter {
   method get_toggled_tags (Int() $toggled_on)
     is also<get-toggled-tags>
   {
-    my gboolean $t = self.RESOLVE-BOOL($toggled_on);
+    my gboolean $t = $toggled_on;
+
     gtk_text_iter_get_toggled_tags($!ti, $t);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &gtk_text_iter_get_type, $n, $t );
   }
 

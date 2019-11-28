@@ -2,11 +2,11 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Roles::Types;
+use GTK::Compat::Types;
 
-use GTK::Compat::Raw::GSList;
+use GLib::Raw::GSList;
 
-class GTK::Compat::GSList {
+class GLib::GSList {
   has GSList $!list;
   has GSList $!cur;
 
@@ -37,7 +37,7 @@ class GTK::Compat::GSList {
   multi method new (@list) {
     my $list;
     for @list {
-      my $l = GTK::Compat::GSList.alloc();
+      my $l = GLib::GSList.alloc();
       $l.data = $_;
       with $list  {
         $list.append($l);
@@ -51,7 +51,7 @@ class GTK::Compat::GSList {
     with $list {
       self.bless(:$list);
     } else {
-      my $list = GTK::Compat::GSList.alloc();
+      my $list = GLib::GSList.alloc();
       self.bless(:$list)
     }
   }

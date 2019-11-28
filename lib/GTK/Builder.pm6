@@ -5,7 +5,7 @@ use NativeCall;
 
 use Data::Dump::Tree;
 
-use GTK::Compat::GSList;
+use GLib::GSList;
 use GTK::Compat::Types;
 use GTK::Raw::Builder;
 use GTK::Raw::Types;
@@ -20,9 +20,9 @@ use GTK::Compat::Roles::Object;
 
 class GTK::Builder does Associative {
   also does GTK::Compat::Roles::Object;
-  
+
   my (@prefixes, %aliases);
-  
+
   has GtkBuilder $!b is implementor;
   has GtkWindow $.window;
   has %!types;
@@ -83,7 +83,7 @@ class GTK::Builder does Associative {
     }
 
   }
-  
+
   method GTK::Raw::Types::GtkBuilder is also<Builder> { $!b }
 
   method new (
@@ -116,9 +116,9 @@ class GTK::Builder does Associative {
     my $builder = gtk_builder_new_from_string($ui, $l);
     self.bless(:$builder, :$ui);
   }
-  
+
   #  new-from-buf??
-  
+
   method register (GTK::Builder:U: *@t) {
     for @t -> $t {
       if $t.^can('register').elems > 0 {
@@ -130,7 +130,7 @@ class GTK::Builder does Associative {
           }
           if %aliases{ .key }:exists {
             say qq:to/M/.chomp;
-              { .key } already registered for { %aliases{ .key } 
+              { .key } already registered for { %aliases{ .key }
               }, skipping...
               M
           } else {
@@ -171,7 +171,7 @@ class GTK::Builder does Associative {
         # For use in regex.
         my @p = @prefixes;
         for $m.Array -> $o {
-          (my $type = $o<tag><t>.Str) ~~ 
+          (my $type = $o<tag><t>.Str) ~~
             s/ ( @p ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
           my $args;
           # Last-chance special case resolution -- should probably be broken
@@ -220,16 +220,16 @@ class GTK::Builder does Associative {
       %!widgets{$k} = do {
         my $wt = %!types{$k}[0];
         my $at = %aliases{$wt} // $wt;
-        
-        CATCH { 
+
+        CATCH {
           say qq:to/D/.chomp;
           Error encountered when processing { $k } ({ $at }):
           D
-          
-          .message.say; 
-          exit; 
+
+          .message.say;
+          exit;
         }
-        
+
         when $args.defined {
            # After significant review, I don't think there will be many
            # uses of this when case, since much of this work is already done
@@ -291,7 +291,7 @@ class GTK::Builder does Associative {
   {
     clear_error;
     gtk_builder_add_from_file($!b, $filename, $error);
-    $ERROR = $error if $error[0].defined;
+    set_error($error);
     self!postProcess(:file($filename));
   }
 
@@ -304,7 +304,7 @@ class GTK::Builder does Associative {
   {
     clear_error;
     gtk_builder_add_from_resource($!b, $resource_path, $error);
-    $ERROR = $error if $error[0].defined;
+    set_error($error);
     self!postProcess(:resource($resource_path));
   }
 
@@ -324,8 +324,8 @@ class GTK::Builder does Associative {
 
     clear_error;
     my $rc = gtk_builder_add_from_string($!b, $buffer, $len, $err);
-    self!postProcess(:ui_def($buffer));
-    $ERROR = $err if $err[0].defined;
+    self!postProcess( ui_def => $buffer );
+    set_error($error);
     $rc;
   }
 
@@ -343,7 +343,7 @@ class GTK::Builder does Associative {
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     gtk_builder_add_objects_from_file($!b, $filename, $oi, $error);
-    $ERROR = $error if $error[0].defined;
+    set_error($error);
     #self!postHandle;
   }
 
@@ -361,7 +361,7 @@ class GTK::Builder does Associative {
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     gtk_builder_add_objects_from_resource($!b, $resource_path, $oi, $error);
-    $ERROR = $error if $error[0].defined;
+    set_error($error);
     #self!postProcess;
   }
 
@@ -398,8 +398,8 @@ class GTK::Builder does Associative {
       $oi,
       $error
     );
-    $ERROR = $error if $error[0].defined;
-    self!postProcess(:ui_def($buffer));
+    set_error($error);
+    self!postProcess( ui_def => $buffer );
     $rc;
   }
 
@@ -429,7 +429,7 @@ class GTK::Builder does Associative {
   # YYY - Return type?
   method extend_with_template (
     GtkWidget() $widget,
-    GType $template_type,
+    Int() $template_type,
     Str() $buffer,
     Int() $length,
     CArray[Pointer[GError]] $error = gerror
@@ -442,7 +442,7 @@ class GTK::Builder does Associative {
     gtk_builder_extend_with_template(
       $!b, $widget, $template_type, $buffer, $l, $error
     );
-    $ERROR = $error if $error[0].defined;
+    set_error($error);
     self!postProcess;
   }
 
@@ -452,11 +452,13 @@ class GTK::Builder does Associative {
   }
 
   method get_objects is also<get-objects> {
-    GTK::Compat::GSList.new( gtk_builder_get_objects($!b) );
+    GLib::GSList.new( gtk_builder_get_objects($!b) );
   }
 
   method get_type is also<get-type> {
-    gtk_builder_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_builder_get_type, $n, $t );
   }
 
   method get_type_from_name (Str() $type_name)
@@ -482,7 +484,7 @@ class GTK::Builder does Associative {
   {
     clear_error;
     gtk_builder_value_from_string($!b, $pspec, $string, $value, $error);
-    $ERROR = $error if $error[0].defined;
+    set_error($error);
   }
 
   # YYY - Return type?
@@ -496,7 +498,7 @@ class GTK::Builder does Associative {
   {
     clear_error;
     gtk_builder_value_from_string_type($!b, $type, $string, $value, $error);
-    $ERROR = $error if $error[0].defined;
+    set_error($error);
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
