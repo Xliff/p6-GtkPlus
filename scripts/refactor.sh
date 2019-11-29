@@ -1,4 +1,10 @@
-#!/bin/sh
+#!/bin/bash
+
+if [ "$1" == "--clean" ]; then
+	find . -name \*.ref-bak -exec rm {} \;
+	echo "All refactor backup files have been removed."
+	exit 0
+fi
 
 # Should also exclude $1, but that's not really required.
 filelist=`find . \

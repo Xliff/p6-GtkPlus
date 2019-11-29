@@ -23,6 +23,9 @@
 + Generate GTK::Bundle::Widgets and GTK::Bundle::NonWidgets comprised of need statements (build-mro.pl6 could do this)
   - build-mro.pl6 is now doing this (check to insure it is using ::Bundle !).
   - GTK.pm6 would then consist of all GTK::Bundle files
+- SERIOUS CONSIDERATION: Add multis for ALL (yes EVERY) method in p6-GTK and its descendant projects that allows
+  a consumer to pass NATIVE parameters. This will ALMOST CERTAINLY entail an engineered solution (ie a script).
+  Said script needs include a mechanism that will extract the unit prefix from its contents.
 - Consider: Any UINT parameter should have a "where * > 0" placed on it. LARGE initiative. Subject to review.
 - For refactoring: the code in the "attributes" (not "properties") routines should have the getter and setter routines
   broken out into their own methods. The existing "attribute" methods should then call the corresponding method. This will
