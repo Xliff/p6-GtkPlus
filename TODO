@@ -26,6 +26,7 @@
 - SERIOUS CONSIDERATION: Add multis for ALL (yes EVERY) method in p6-GTK and its descendant projects that allows
   a consumer to pass NATIVE parameters. This will ALMOST CERTAINLY entail an engineered solution (ie a script).
   Said script needs include a mechanism that will extract the unit prefix from its contents.
+  -- hMethodMaker should be adjusted to emit such code so that new projects will not have this discrepancy.
 - Consider: Any UINT parameter should have a "where * > 0" placed on it. LARGE initiative. Subject to review.
 - For refactoring: the code in the "attributes" (not "properties") routines should have the getter and setter routines
   broken out into their own methods. The existing "attribute" methods should then call the corresponding method. This will
@@ -80,7 +81,7 @@
    - Role can have submethod BUILD, but will be overrided by any implementing class
    - Initialization should be done in private method that is called by BUILD and all implementing classes
    - Insure all implementing classes override for safety reasons.
-- Finish GTK::Utils::LockedHash
+* Finish GTK::Utils::LockedHash -- Now no longer necessary with v6.e and the introduction of Dict.
 √ Implement GTK::Compat::ActionEntry (done as CStruct)
 √ Implement GTK::ApplicationWindow
 √ Implement
