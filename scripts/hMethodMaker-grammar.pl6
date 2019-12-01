@@ -14,7 +14,12 @@ grammar C-Function-Def {
   }
 
   rule function-bland {
-    'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
+    \s* <pre-definitions>? <func_def>
+  }
+
+  token pre-definitions {
+    'G_GNUC_WARN_UNUSED_RESULT' |
+    'G_GNUC_INTERNAL'
   }
 
   rule func_def {
@@ -63,7 +68,8 @@ sub MAIN (
   :$internal = 0,     #= Add checking for INTERNAL methods
   :$bland = 0,        #= Do NOT attempt to process preprocessor prefixes to subroutines
   :$output-only,      #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
-  :$no-headers        #= Do not display section headers.
+  :$no-headers,       #= Do not display section headers.
+  :$get-set = False   #= Convert simple get/set routine to "attribute" code.
 ) {
   my $fn = $filename;
 
@@ -92,20 +98,11 @@ sub MAIN (
     $attr = '$!' ~ $attr unless $attr ~~ /^ '$!' /;
   }
 
+  my @detected;
   my $contents = $fn.IO.open.slurp-rest;
 
-  # Post process for bland
-  if $bland {
-    $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
-    $contents ~~ s:g/^^ '#' .+? \n//;      # Preprocessor
-  }
-
-  my $la;
-  my $fd = '';
-  my $i = 1;
-  my @detected;
-
   # Remove extraneous, non-necessary bits!
+  $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
   $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
   $contents ~~ s:g/ ^^ \s* 'G_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
 
@@ -117,9 +114,16 @@ sub MAIN (
   my $func-rule = $bland ?? 'function-bland' !! 'function-normal';
   my $matched = grammar.parse($contents, rule => $top-rule);
 
-  die 'Could not find any functions!' unless $matched;
+  unless $matched {
+    say 'Could not find any functions!';
+    say '-----------------------------';
+    say $contents;
+    exit 1;
+  }
 
   for $matched{$func-rule}[] -> $m is rw {
+    $m.gist.say;
+
     my $av = $bland ?? {} !! $m<availability>;
     my $avail = ($av<ad> // '') ne 'DEPRECATED';
     my @p;
@@ -241,6 +245,7 @@ sub MAIN (
 
   for %getset.keys.sort -> $gs {
     if !(
+      $get-set                              &&
       %getset{$gs}<get>                     &&
       %getset{$gs}<get><params>.elems == 1  &&
       %getset{$gs}<set>                     &&
