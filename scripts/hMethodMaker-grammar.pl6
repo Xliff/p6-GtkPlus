@@ -122,8 +122,6 @@ sub MAIN (
   }
 
   for $matched{$func-rule}[] -> $m is rw {
-    $m.gist.say;
-
     my $av = $bland ?? {} !! $m<availability>;
     my $avail = ($av<ad> // '') ne 'DEPRECATED';
     my @p;

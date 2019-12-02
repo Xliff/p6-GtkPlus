@@ -236,7 +236,7 @@ class GTK::MenuItem is GTK::Bin {
         GTK::Widget.new( gtk_menu_item_get_submenu($!mi) );
       },
       STORE => sub ($, WidgetOrObject $submenu is copy) {
-        self.set-end($submenu);
+        self.set_end($submenu);
         $submenu .= Widget if $submenu ~~ GTK::Widget;
         gtk_menu_item_set_submenu($!mi, $submenu);
       }
