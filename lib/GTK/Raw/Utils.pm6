@@ -6,7 +6,10 @@ use GTK::Compat::Types;
 
 unit package GTK::Raw::Utils;
 
-sub CStringArrayToArray (CArray[Str] $sa) is export {
+multi sub CStringArrayToArray(CArray[Str] $sa, Int(Cool) $len) {
+  CArrayToArray($sa, $len);
+}
+multi sub CStringArrayToArray (CArray[Str] $sa) is export {
   CArrayToArray($sa)
 }
 
