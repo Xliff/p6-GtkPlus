@@ -71,7 +71,7 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
   }
 
   # For use on externally retrieved data.
-  method setSize(Int() $s, :$force = False) {
+  method setSize(Int() $s, :$forced = False) {
     if $!size.defined && $forced.not {
       warn 'Cannot reset size!'
     } else {
