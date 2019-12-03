@@ -11,6 +11,7 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
   has $!size;
   has Pointer $!b;
 
+  # What if not all malloc'd at once?
   submethod BUILD (:$buffer, :$size) {
     if $buffer.defined {
       $!b = $buffer;
@@ -70,9 +71,12 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
   }
 
   # For use on externally retrieved data.
-  method setSize(Int() $s) {
-    warn 'Cannot reset size!' if $!size.defined;
-    $!size = $s unless $!size.defined;
+  method setSize(Int() $s, :$force = False) {
+    if $!size.defined && $forced.not {
+      warn 'Cannot reset size!'
+    } else {
+      $!size = $s;
+    }
   }
 
   method bind (Int() $pos, T $elem) {
