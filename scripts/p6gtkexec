@@ -13,6 +13,8 @@ else
   EXEC=perl6
 fi
 
+EXTRAS='-I/home/cbwood/Other_Projects/Method-Also/lib'
+
 INCLUDES="-I${P6_GTK_HOME}/p6-Pango/lib \
 -I${P6_GTK_HOME}/p6-GtkPlus/lib         \
 -I${P6_GTK_HOME}/p6-WebkitGTK/lib       \
@@ -27,10 +29,11 @@ INCLUDES="-I${P6_GTK_HOME}/p6-Pango/lib \
 -I${P6_GTK_HOME}/p6-COGL/lib            \
 -I${P6_GTK_HOME}/p6-GStreamer/lib       \
 -I${P6_GTK_HOME}/p6-RSVG/lib            \
--I${P6_GTK_HOME}/p6-GtkSheet/lib"
+-I${P6_GTK_HOME}/p6-GtkSheet/lib	\
+-I${P6_GTK_HOME}/p6-GIMP/lib"
 
 if [[ -z "${PARALLEL_BUILD}" ]]; then
-  ${EXEC} --stagestats ${INCLUDES} "$@"
+  ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@"
 else
-  ${EXEC} --stagestats ${INCLUDES} "$@" 2>&1 | perl -pe 's/^/$$ /'
+  ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@" 2>&1 | perl -pe 's/^/$$ /'
 fi

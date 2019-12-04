@@ -65,6 +65,7 @@ sub MAIN (
       $mn ~~ s/';' $//;
       $mn .= trim;
       unless $mn.starts-with( $prefix.split(',').any ) {
+        next if $mn ~~ / 'v6''.'? (.+)? /;
         @others.push: $mn;
         next;
       }

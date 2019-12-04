@@ -7,12 +7,12 @@ use Cairo;
 
 use GTK::Roles::Pointers;
 
+unit package GTK::Compat::Types;
+
 # Number of times I've had to force compile the whole project.
 constant forced = 30;
 
 our $DEBUG is export = 0;
-
-unit package GTK::Compat::Types;
 
 my $bits;
 
