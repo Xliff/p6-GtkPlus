@@ -15,13 +15,25 @@ my regex name {
 my token d { <[0..9 x]> }
 my token m { '-' }
 my token L { 'L' }
-
-my rule enum_entry {
-  \s* ( <[_ A..Z]>+ ) ( [ '=' <m>?<d>+<L>? [ '<<' (<d>+) ]? ]? ) ','? \v*
-}
+my token w { <[A..Za..z _]> }
 
 my rule comment {
   '/*' .+? '*/'
+}
+
+my rule enum_entry {
+  \s* ( <[_ A..Z]>+ ) (
+    [ '='
+      [
+        <m>?<d>+<L>?
+        |
+        <w>+
+      ]
+      [ '<<' ( [<d>+ | <w>+] ) ]?
+    ]?
+  ) ','?
+  <comment>?
+  \v*
 }
 
 my rule enum {
@@ -61,6 +73,9 @@ sub MAIN ($dir?, :$file) {
   for @files -> $file {
     say "Checking { $file } ...";
     my $contents = $file.IO.slurp;
+
+    # Remove preprocessor directives.
+    $contents ~~ s:g/^^'#' .+? $$//;
 
     my $m = $contents ~~ m:g/<enum>/;
     for $m.Array -> $l {
