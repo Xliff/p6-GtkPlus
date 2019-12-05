@@ -29,7 +29,7 @@ grammar C-Function-Def {
       '(void)'
       |
       '(' [ <type> <var> ]+ % [ \s* ',' \s* ] ')'
-    ][ \s* <postdec>+ % \s+ ]?';'
+    ][ \s* <postdec>+ % \s* ]?';'
   }
 
   token      p  { '*'+ }
@@ -37,7 +37,7 @@ grammar C-Function-Def {
   rule    type  { 'const'? $<n>=\w+ <p>? }
   rule     var  { <t> }
   token returns { 'const'? <.ws> <t> \s* <p>? }
-  rule postdec  { (<[A..Z0..9]>+)+ %% '_' [ '(' .+? ')' ]? }
+  token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
   token     ad  { 'AVAILABLE' | 'DEPRECATED' }
 
   token availability {
@@ -105,6 +105,9 @@ sub MAIN (
   $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
   $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
   $contents ~~ s:g/ ^^ \s* 'G_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
+  $contents ~~ s:g/'struct' <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
+  $contents ~~ s:g/'typedef' <.ws> 'enum' \s* '{' .+? '}' <.ws> \w+ \s* ';'//;
+  $contents ~~ s:g/<!after ';'>\n//;
 
   my \grammar := $internal ??
     C-Function-Internal-Def
