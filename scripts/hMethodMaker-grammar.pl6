@@ -19,7 +19,8 @@ grammar C-Function-Def {
 
   token pre-definitions {
     'G_GNUC_WARN_UNUSED_RESULT' |
-    'G_GNUC_INTERNAL'
+    'G_GNUC_INTERNAL'           |
+    'GIMPVAR'
   }
 
   rule func_def {
@@ -108,6 +109,7 @@ sub MAIN (
   $contents ~~ s:g/'struct' <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
   $contents ~~ s:g/'typedef' <.ws> 'enum' \s* '{' .+? '}' <.ws> \w+ \s* ';'//;
   $contents ~~ s:g/<!after ';'>\n//;
+  $contents ~~ s:g/'GIMP_DEPRECATED_FOR' \s* '(' .+? ')'//;
 
   my \grammar := $internal ??
     C-Function-Internal-Def

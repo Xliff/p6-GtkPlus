@@ -406,6 +406,22 @@ constant GLIB_SYSDEF_MSG_OOB       = 1;
 constant GLIB_SYSDEF_MSG_PEEK      = 2;
 constant GLIB_SYSDEF_MSG_DONTROUTE = 4;
 
+constant GParamFlags is export := gint32;
+our enum GParamFlagsEnum is export (
+  G_PARAM_READABLE         => 1 +< 0,
+  G_PARAM_WRITABLE         => 1 +< 1,
+  G_PARAM_READWRITE        => 1 +| 1 +< 1, # (G_PARAM_READABLE | G_PARAM_WRITABLE),
+  G_PARAM_CONSTRUCT        => 1 +< 2,
+  G_PARAM_CONSTRUCT_ONLY   => 1 +< 3,
+  G_PARAM_LAX_VALIDATION   => 1 +< 4,
+  G_PARAM_STATIC_NAME      => 1 +< 5,
+  G_PARAM_PRIVATE          => 1 +< 5,      # GLIB_DEPRECATED_ENUMERATOR_IN_2_26
+  G_PARAM_STATIC_NICK      => 1 +< 6,
+  G_PARAM_STATIC_BLURB     => 1 +< 7,
+  G_PARAM_EXPLICIT_NOTIFY  => 1 +< 30,
+  G_PARAM_DEPRECATED       => -2147483648
+);
+
 constant GIOStreamSpliceFlags is export := uint32;
 our enum GIOStreamSpliceFlagsEnum is export (
   G_IO_STREAM_SPLICE_NONE          => 0,
