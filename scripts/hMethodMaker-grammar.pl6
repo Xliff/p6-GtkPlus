@@ -1,6 +1,8 @@
 #!/usr/bin/env perl6
 use v6.c;
 
+use Grammar::Tracer;
+
 #use Data::Dump::Tree;
 
 my %do_output;
@@ -19,8 +21,7 @@ grammar C-Function-Def {
 
   token pre-definitions {
     'G_GNUC_WARN_UNUSED_RESULT' |
-    'G_GNUC_INTERNAL'           |
-    'GIMPVAR'
+    'G_GNUC_INTERNAL'
   }
 
   rule func_def {
@@ -29,8 +30,8 @@ grammar C-Function-Def {
     [
       '(void)'
       |
-      '(' [ <type> <var> ]+ % [ \s* ',' \s* ] ')'
-    ][ \s* <postdec>+ % \s* ]?';'
+      '(' [ <type> <var> | $<va>='...' ]+ % [ \s* ',' \s* ] ')'
+    ] [ <postdec>+ % \s* ]?';'
   }
 
   token      p  { '*'+ }
@@ -110,6 +111,7 @@ sub MAIN (
   $contents ~~ s:g/'typedef' <.ws> 'enum' \s* '{' .+? '}' <.ws> \w+ \s* ';'//;
   $contents ~~ s:g/<!after ';'>\n//;
   $contents ~~ s:g/'GIMP_DEPRECATED_FOR' \s* '(' .+? ')'//;
+  $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
 
   my \grammar := $internal ??
     C-Function-Internal-Def
@@ -152,6 +154,7 @@ sub MAIN (
       $t;
     });
     my $o_call = (@t [Z] @v).join(', ');
+    $o_call ~= ', ...' if $m<func_def><va>;
 
     if $attr && $static.not {
       @v.shift if +@v;
@@ -161,6 +164,7 @@ sub MAIN (
     my $sig = (@t [Z] @v).join(', ');
     my $call = @v.map( *.trim ).join(', ');
     my $sub = $m<func_def><sub>.Str.trim;
+    $sig ~= ', ...' if $m<func_def><va>;
 
     if $attr {
       if $call.chars {
@@ -192,7 +196,8 @@ sub MAIN (
             call => $call,
              sig => $sig,
        call_vars => @v,
-      call_types => @t
+      call_types => @t,
+         var_arg => $m<func_def><va>:exists
     };
 
     #my $p = 1;
