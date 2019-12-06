@@ -108,7 +108,7 @@ sub MAIN (
   $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
   $contents ~~ s:g/ ^^ \s* 'G_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
   $contents ~~ s:g/'struct' <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
-  $contents ~~ s:g/'typedef' <.ws> 'enum' \s* '{' .+? '}' <.ws> \w+ \s* ';'//;
+  $contents ~~ s:g/'typedef' .+? ';'//;
   $contents ~~ s:g/<!after ';'>\n//;
   $contents ~~ s:g/'GIMP_DEPRECATED_FOR' \s* '(' .+? ')'//;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
