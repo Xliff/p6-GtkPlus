@@ -1,14 +1,12 @@
 #!/usr/bin/env perl6
 use v6.c;
 
-use Grammar::Tracer;
-
 #use Data::Dump::Tree;
 
 my %do_output;
 
 grammar C-Function-Def {
-  rule top-normal { <function>+ }
+  rule top-normal { <function-normal>+ }
   rule top-bland  { <function-bland>+ }
 
   rule function-normal {
