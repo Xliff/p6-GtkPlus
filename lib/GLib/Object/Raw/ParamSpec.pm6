@@ -302,28 +302,6 @@ sub g_param_spec_variant (
 
 ### /usr/include/glib-2.0/gobject/gparam.h
 
-sub g_value_dup_param (GValue $value)
-  returns GParamSpec
-  is native(gobject)
-  is export
-{ * }
-
-sub g_value_get_param (GValue $value)
-  returns GParamSpec
-  is native(gobject)
-  is export
-{ * }
-
-sub g_value_set_param (GValue $value, GParamSpec $param)
-  is native(gobject)
-  is export
-{ * }
-
-sub g_value_take_param (GValue $value, GParamSpec $param)
-  is native(gobject)
-  is export
-{ * }
-
 sub g_param_spec_get_blurb (GParamSpec $pspec)
   returns Str
   is native(gobject)
