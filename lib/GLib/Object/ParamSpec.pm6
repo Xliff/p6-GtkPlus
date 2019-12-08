@@ -379,7 +379,9 @@ class GLib::Object::ParamSpec {
   }
 
   method get_default_value {
-    g_param_spec_get_default_value($!ps);
+    my $v = g_param_spec_get_default_value($!ps);
+
+    $v ?? GTK::Compat::Value.new($v, :!ref) !! Nil
   }
 
   method get_name {
@@ -399,7 +401,9 @@ class GLib::Object::ParamSpec {
   }
 
   method get_redirect_target {
-    g_param_spec_get_redirect_target($!ps);
+    my $p = g_param_spec_get_redirect_target($!ps);
+
+    $p ?? GLib::Object::ParamSpec.new($p, :!ref) !! Nil;
   }
 
   method internal (Str() $name, Str() $nick, Str() $blurb, Int() $flags) {
@@ -443,11 +447,37 @@ class GLib::Object::ParamSpec {
   }
 
   method type_register_static (GParamSpecTypeInfo $pspec_info) {
-    g_param_type_register_static($!ps, $pspec_info);
+    my $t = g_param_type_register_static($!ps, $pspec_info);
+
+    # INFO -- The PROPER way to handle GTypeEnum as a return value.
+    my $ret = GTypeEnum($t);
+    $ret.so ?? $ret !! $t
   }
 
   method values_cmp (GValue() $value1, GValue() $value2) {
     so g_param_values_cmp($!ps, $value1, $value2);
+  }
+
+  method value_convert (
+    GValue() $src_value,
+    GValue() $dest_value,
+    Int() $strict_validation
+  ) {
+    my gboolean $s = (so $strict_validation).Int;
+
+    so g_param_value_convert($!ps, $src_value, $dest_value, $s);
+  }
+
+  method value_defaults (GValue() $value) {
+    so g_param_value_defaults($!ps, $value);
+  }
+
+  method value_set_default (GValue() $value) {
+    g_param_value_set_default($!ps, $value);
+  }
+
+  method value_validate (GValue() $value) {
+    so g_param_value_validate($!ps, $value);
   }
 
 }
@@ -521,8 +551,9 @@ class GLib::Object::ParamSpec::Pool {
   method lookup (Str() $param_name, Int() $owner_type, Int() $walk_ancestors) {
     my GType $o = $owner_type;
     my gboolean $w = $walk_ancestors;
+    my $p = g_param_spec_pool_lookup($!psp, $param_name, $o, $w);
 
-    g_param_spec_pool_lookup($!psp, $param_name, $o, $w);
+    $p ?? GLib::Object::ParamSpec.new($p, :!ref) !! Nil;
   }
 
   method remove (GParamSpec() $pspec) {
