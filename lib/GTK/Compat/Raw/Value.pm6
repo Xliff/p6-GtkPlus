@@ -286,3 +286,28 @@ sub g_value_set_flags (GValue $value, guint $flags)
   is native(gobject)
   is export
   { * }
+
+
+### /usr/include/glib-2.0/gobject/gparam.h
+
+sub g_value_dup_param (GValue $value)
+  returns GParamSpec
+  is native(gobject)
+  is export
+{ * }
+
+sub g_value_get_param (GValue $value)
+  returns GParamSpec
+  is native(gobject)
+  is export
+{ * }
+
+sub g_value_set_param (GValue $value, GParamSpec $param)
+  is native(gobject)
+  is export
+{ * }
+
+sub g_value_take_param (GValue $value, GParamSpec $param)
+  is native(gobject)
+  is export
+{ * }
