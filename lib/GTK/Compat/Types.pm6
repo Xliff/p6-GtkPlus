@@ -1334,6 +1334,7 @@ class GOptionEntry             is repr('CPointer') is export does GTK::Roles::Po
 class GOptionGroup             is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GOutputStream            is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GParamSpec               is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GParamSpecPool           is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPollableInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPollableOutputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
 class GPrivate                 is repr('CPointer') is export does GTK::Roles::Pointers { }
@@ -1679,7 +1680,104 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
 
   method size-of (GSourceFuncs:U:) { return nativesizeof(GSourceFuncs) }
 
+}
+
+
+sub sprintf-Ps (
+  Blob,
+  Str,
+  & (GParamSpec),
+  gpointer
+ --> int64
+)
+    is native is symbol('sprintf') { * }
+
+sub sprintf-PsV (
+  Blob,
+  Str,
+  & (GParamSpec, GValue),
+  gpointer
+ --> int64
+)
+    is native is symbol('sprintf') { * }
+
+sub sprintf-PsV-b (
+  Blob,
+  Str,
+  & (GParamSpec, GValue),
+  gpointer
+ --> int64
+)
+    is native is symbol('sprintf') { * }
+
+sub sprintf-PsVV-i (
+  Blob,
+  Str,
+  & (GParamSpec, GValue),
+  gpointer
+ --> int64
+)
+    is native is symbol('sprintf') { * }
+
+class GParamSpecTypeInfo is repr('CStruct') does GTK::Roles::Pointers is export {
+  # type system portion
+  has guint16       $.n_preallocs   is rw;                            # optional
+  has guint16       $.instance_size is rw;                            # obligatory
+  has Pointer       $!instance_init;         # (GParamSpec   *pspec);   optional
+
+  # class portion
+  has GType         $.value_type    is rw;                            # obligatory
+  has Pointer       $!finalize;              # (GParamSpec   *pspec); # optional
+  has Pointer       $!value_set_default;     # (GParamSpec   *pspec,  # recommended
+                                             #  GValue       *value);
+  has Pointer       $!value_validate;        # (GParamSpec   *pspec,  # optional
+                                             #  GValue       *value); # --> gboolean
+  has Pointer       $!values_cmp;            # (GParamSpec   *pspec,  # recommended
+                                             #  const GValue *value1,
+                                             #  const GValue *value2) # --> gint
+
+  method instance_init is rw {
+    Proxy.new:
+      FETCH => -> $ { $!instance_init },
+      STORE => -> $, \func {
+        $!finalize := set_func_pointer( &(func), &sprintf-Ps);
+      };
+  }
+
+  method finalize is rw {
+    Proxy.new:
+      FETCH => -> $ { $!finalize },
+      STORE => -> $, \func {
+        $!finalize := set_func_pointer( &(func), &sprintf-Ps);
+      };
+  }
+
+  method value_set_default is rw {
+    Proxy.new:
+      FETCH => -> $ { $!finalize },
+      STORE => -> $, \func {
+        $!value_set_default := set_func_pointer( &(func), &sprintf-PsV);
+      };
+  }
+
+  method value_validate is rw {
+    Proxy.new:
+      FETCH => -> $ { $!value_validate },
+      STORE => -> $, \func {
+        $!value_validate := set_func_pointer( &(func), &sprintf-PsV-b);
+      };
+  }
+
+  method value_cmp is rw {
+    Proxy.new:
+      FETCH => -> $ { $!values_cmp },
+      STORE => -> $, \func {
+        $!values_cmp := set_func_pointer( &(func), &sprintf-PsVV-i);
+      };
+  }
+
 };
+
 
 # --- GDK TYPES ---
 class GdkAppLaunchContext    is repr('CPointer') is export does GTK::Roles::Pointers { }

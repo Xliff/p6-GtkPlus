@@ -127,6 +127,7 @@ GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
 GIO::Roles::Signals::VolumeMonitor
 GIO::SettingsSchema
+GLib::Object::Raw::ParamSpec
 GLib::Raw::Array
 GLib::Raw::Arrays
 GLib::Raw::AsyncQueue
@@ -621,6 +622,7 @@ GIO::UnixOutputStream
 GIO::VFS
 GIO::ZlibCompressor
 GIO::ZlibDecompressor
+GLib::Object::ParamSpec
 GLib::VariantDict
 GTK::AccelGroup
 GTK::Adjustment

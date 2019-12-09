@@ -4,19 +4,21 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GTK::Raw::Utils;
+
 use GLib::Object::Raw::ParamSpec;
 
 use GTK::Compat::Value;
 
 class GLib::Object::ParamSpec {
-  has GParamSpec $name;
+  has GParamSpec $!ps;
 
   submethod BUILD (:$spec) {
-    $name = $spec;
+    $!ps = $spec;
   }
 
   method GTK::Compat::Types::GParamSpec
-  { * }
+  { $!ps }
 
   method new (GParamSpec $spec, :$ref = True) {
     return Nil unless $spec;
@@ -28,7 +30,7 @@ class GLib::Object::ParamSpec {
 
   method new_boolean (
     Str() $name,
-    Str() $nick,,
+    Str() $nick,
     Str() $blurb,
     Int() $default_value,
     Int() $flags
@@ -42,7 +44,7 @@ class GLib::Object::ParamSpec {
 
   method new_boxed (
     Str() $name,
-    Str() $nick,,
+    Str() $nick,
     Str() $blurb,
     Int() $boxed_type,
     Int() $flags
@@ -56,7 +58,7 @@ class GLib::Object::ParamSpec {
 
   method new_char (
     Str() $name,
-    Str() $nick,,
+    Str() $nick,
     Str() $blurb,
     Int() $minimum,
     Int() $maximum,
@@ -72,7 +74,7 @@ class GLib::Object::ParamSpec {
 
   method new_double (
     Str() $name,
-    Str() $nick,,
+    Str() $nick,
     Str() $blurb,
     Num() $minimum,
     Num() $maximum,
@@ -88,13 +90,14 @@ class GLib::Object::ParamSpec {
 
   method new_enum (
     Str() $name,
-    Str() $nick,,
+    Str() $nick,
     Str() $blurb,
     Int() $enum_type,
     Int() $default_value,
     Int() $flags
   ) {
     my GType $e = $enum_type;
+    my gint $d = $default_value;
     my GParamFlags $f = $flags;
     my $spec = g_param_spec_enum($name, $nick, $blurb, $e, $d, $f);
 
@@ -109,10 +112,10 @@ class GLib::Object::ParamSpec {
     Int() $default_value,
     Int() $flags
   ) {
-    my GType $e = $enum_type;
+    my GType $ft = $flags_type;
     my guint $d = $default_value;
     my GParamFlags $f = $flags;
-    my $spec = g_param_spec_flags($name, $nick, $blurb, $f, $d, $f);
+    my $spec = g_param_spec_flags($name, $nick, $blurb, $ft, $d, $f);
 
     $spec ?? self.bless( :$spec ) !! Nil;
   }
@@ -202,14 +205,14 @@ class GLib::Object::ParamSpec {
     Int() $object_type,
     Int() $flags
   ) {
-    my GType $o = $object_type
+    my GType $o = $object_type;
     my GParamFlags $f = $flags;
     my $spec = g_param_spec_object($name, $nick, $blurb, $object_type, $flags);
 
     $spec ?? self.bless( :$spec ) !! Nil;
   }
 
-  method new_override (Int() $overridden) {
+  method new_override (Str() $name, Int() $overridden) {
     my GParamSpec $o = $overridden;
     my $spec = g_param_spec_override($name, $overridden);
 
@@ -266,7 +269,7 @@ class GLib::Object::ParamSpec {
   ) {
     my guint8 ($mn, $mx, $d) = ($minimum, $maximum, $default_value);
     my GParamFlags $f = $flags;
-    g_param_spec_uchar($name, $nick, $blurb, $mn, $mx, $d, $flags);
+    my $spec = g_param_spec_uchar($name, $nick, $blurb, $mn, $mx, $d, $flags);
 
     $spec ?? self.bless( :$spec ) !! Nil;
   }
@@ -446,8 +449,12 @@ class GLib::Object::ParamSpec {
     g_param_spec_unref($!ps);
   }
 
-  method type_register_static (GParamSpecTypeInfo $pspec_info) {
-    my $t = g_param_type_register_static($!ps, $pspec_info);
+  method type_register_static (
+    GLib::Object::ParamSpec:U:
+    Str() $name,
+    GParamSpecTypeInfo $pspec_info
+  ) {
+    my $t = g_param_type_register_static($name, $pspec_info);
 
     # INFO -- The PROPER way to handle GTypeEnum as a return value.
     my $ret = GTypeEnum($t);
@@ -538,7 +545,7 @@ class GLib::Object::ParamSpec::Pool {
     return Nil unless $pl;
     return $pl if     $glist;
 
-    $pl = GTK::Compat::List.new($gl)
+    $pl = GTK::Compat::List.new($pl)
       but GTK::Compat::Roles::ListData[GParamSpec];
 
     $raw ??
@@ -557,7 +564,7 @@ class GLib::Object::ParamSpec::Pool {
   }
 
   method remove (GParamSpec() $pspec) {
-    g_param_spec_pool_remove($!ps, $pspec);
+    g_param_spec_pool_remove($!psp, $pspec);
   }
 
 }

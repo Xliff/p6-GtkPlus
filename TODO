@@ -201,14 +201,15 @@ Include a coercion method for GVariantType.
 Applications
 ============
 √ A text editor in Perl6. Think about using it as a visual Regex tester (in progress, see p6-VisualGrammar.git)
-+ Glade UI to p6-GtkPerl application (in progress see GTK::Builder:: objects and ui-to-code.pl6)
 √ A Perl6 port of http://gtklipsum.sourceforge.net/ (a better version of t/41-textview-scrolling.t)
++ Glade UI to p6-GtkPerl application (in progress see GTK::Builder:: objects and ui-to-code.pl6)
 + A Perl6 port of WNCK (https://developer.gnome.org/libwnck/)
 + A Perl6 port of Devil's Pie 2 (http://git.savannah.nongnu.org/cgit/devilspie2.git) that uses WNCK
 + A Perl6 port of Clutter (https://wiki.gnome.org/Projects/Clutter)
 + A Perl6 port of Slope (https://github.com/bytebrew/slope)
-- Port JSON-glib to Perl6 https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
-- A Perl6 port for libsoup
 + Using Azawawi's libzip bindings, extract XLSX files to memory (grab only *.xml, for now), parse the
   required files using XML::Actions, and then display resulting data in a GtkSheet.
-- Perl6 GIMP Library bindings!
++ Perl6 GIMP Library bindings!
+- Port JSON-glib to Perl6 https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
+- Consider BABL bindings
+- A Perl6 port for libsoup

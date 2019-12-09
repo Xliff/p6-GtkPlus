@@ -342,11 +342,11 @@ class GTK::Compat::Value {
     g_value_take_variant($!v, $variant);
   }
 
-  method dup_param {
+  method dup_param (:$raw = False) {
     my $p = g_value_dup_param($!v);
 
     $p ??
-      ( $raw ?? $p !! ::('GLib::GObject::ParamSpec').new($v, :!ref) )
+      ( $raw ?? $p !! ::('GLib::GObject::ParamSpec').new($p, :!ref) )
       !!
       Nil;
   }
@@ -355,17 +355,17 @@ class GTK::Compat::Value {
     my $p = g_value_get_param($!v);
 
     $p ??
-      ( $raw ?? $p !! ::('GLib::GObject::ParamSpec').new($v, :!ref) )
+      ( $raw ?? $p !! ::('GLib::GObject::ParamSpec').new($p, :!ref) )
       !!
       Nil;
   }
 
   method set_param (GParamSpec() $param) {
-    g_value_set_param($!ps, $param);
+    g_value_set_param($!v, $param);
   }
 
   method take_param (GParamSpec() $param) {
-    g_value_take_param($!ps, $param);
+    g_value_take_param($!v, $param);
   }
 
 
