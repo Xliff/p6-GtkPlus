@@ -32,13 +32,13 @@ grammar C-Function-Def {
     ] [ <postdec>+ % \s* ]?';'
   }
 
-  token      p  { '*'+ }
-  token      t  { <[\w _]>+ }
-  rule    type  { 'const'? $<n>=\w+ <p>? }
-  rule     var  { <t> }
+  token       p { '*'+ }
+  token       t { <[\w _]>+ }
+  rule     type { 'const'? $<n>=\w+ <p>? }
+  rule      var { <t>'[]'? }
   token returns { 'const'? <.ws> <t> \s* <p>? }
   token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
-  token     ad  { 'AVAILABLE' | 'DEPRECATED' }
+  token      ad { 'AVAILABLE' | 'DEPRECATED' }
 
   token availability {
     [
@@ -105,11 +105,14 @@ sub MAIN (
   $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
   $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
   $contents ~~ s:g/ ^^ \s* 'G_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
-  $contents ~~ s:g/'struct' <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
+  $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
   $contents ~~ s:g/'typedef' .+? ';'//;
+  $contents ~~ s:g/ ^^ .+? '\\' $$//;
+  $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
   $contents ~~ s:g/<!after ';'>\n//;
   $contents ~~ s:g/'GIMP_DEPRECATED_FOR' \s* '(' .+? ')'//;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
+
 
   my \grammar := $internal ??
     C-Function-Internal-Def
