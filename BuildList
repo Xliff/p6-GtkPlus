@@ -172,6 +172,7 @@ GLib::TimeZone
 GLib::Timer
 GLib::Tree
 GLib::URI
+GLib::UUID
 GLib::Unicode
 GLib::Variant
 GLib::VariantIter

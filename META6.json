@@ -182,6 +182,7 @@
       "GLib::Timer"                                    :  "lib/GLib/Timer.pm6"                                 ,
       "GLib::Tree"                                     :  "lib/GLib/Tree.pm6"                                  ,
       "GLib::URI"                                      :  "lib/GLib/URI.pm6"                                   ,
+      "GLib::UUID"                                     :  "lib/GLib/UUID.pm6"                                  ,
       "GLib::Unicode"                                  :  "lib/GLib/Unicode.pm6"                               ,
       "GLib::Variant"                                  :  "lib/GLib/Variant.pm6"                               ,
       "GLib::VariantIter"                              :  "lib/GLib/VariantIter.pm6"                           ,
