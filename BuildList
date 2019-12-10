@@ -147,6 +147,7 @@ GLib::Raw::Log
 GLib::Raw::Markup
 GLib::Raw::Memory
 GLib::Raw::Module
+GLib::Raw::Pattern
 GLib::Raw::Quark
 GLib::Raw::Quarks
 GLib::Raw::Rand
@@ -272,6 +273,7 @@ GLib::Markup
 GLib::Memory
 GLib::Module
 GLib::Mutex
+GLib::Pattern
 GLib::PtrArray
 GLib::Quark
 GLib::Rand
