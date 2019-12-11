@@ -69,7 +69,9 @@ sub MAIN (
   :$bland = 0,        #= Do NOT attempt to process preprocessor prefixes to subroutines
   :$output-only,      #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
   :$no-headers,       #= Do not display section headers.
-  :$get-set = False   #= Convert simple get/set routine to "attribute" code.
+  :$get-set = False,  #= Convert simple get/set routine to "attribute" code.
+  :$trim-start,       #= Trim lines from the beginning of the post-processed file
+  :$trim-end          #= Trim lines from the end of the post-processed file
 ) {
   my $fn = $filename;
 
@@ -107,12 +109,16 @@ sub MAIN (
   $contents ~~ s:g/ ^^ \s* 'G_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
   $contents ~~ s:g/'typedef' .+? ';'//;
-  $contents ~~ s:g/ ^^ .+? '\\' $$//;
+  $contents ~~ s:g/ ^ .+? '\\' $//;
   $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
   $contents ~~ s:g/<!after ';'>\n//;
   $contents ~~ s:g/'GIMP_DEPRECATED_FOR' \s* '(' .+? ')'//;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
 
+  $contents = $contents.lines.skip($trim-start).join("\n")
+    if $trim-start & $trim-start ~~ Int;
+  $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
+    if $trim-end && $trim-end ~~ Int;
 
   my \grammar := $internal ??
     C-Function-Internal-Def
