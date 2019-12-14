@@ -39,13 +39,129 @@ sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
 }
 
-sub sprintf-vv(Blob, Str, & () --> int64)
+constant GDK_MAX_TIMECOORD_AXES is export = 128;
+
+constant cairo_t                        is export := Cairo::cairo_t;
+constant cairo_format_t                 is export := Cairo::cairo_format_t;
+constant cairo_pattern_t                is export := Cairo::cairo_pattern_t;
+constant cairo_region_t                 is export := Pointer;
+
+constant gboolean                       is export := uint32;
+constant gchar                          is export := Str;
+constant gconstpointer                  is export := Pointer;
+constant gdouble                        is export := num64;
+constant gfloat                         is export := num32;
+constant gint                           is export := int32;
+constant gint8                          is export := int8;
+constant gint16                         is export := int16;
+constant gint32                         is export := int32;
+constant gint64                         is export := int64;
+constant glong                          is export := int64;
+constant goffset                        is export := uint64;
+constant gpointer                       is export := Pointer;
+constant gsize                          is export := uint64;
+constant gssize                         is export := int64;
+constant guchar                         is export := Str;
+constant gshort                         is export := int8;
+constant gushort                        is export := uint8;
+constant guint                          is export := uint32;
+constant guint8                         is export := uint8;
+constant guint16                        is export := uint16;
+constant guint32                        is export := uint32;
+constant guint64                        is export := uint64;
+constant gulong                         is export := uint64;
+constant gunichar                       is export := uint32;
+constant gunichar2                      is export := uint16;
+constant va_list                        is export := Pointer;
+constant time_t                         is export := uint64;
+constant uid_t                          is export := uint32;
+constant gid_t                          is export := uint32;
+constant pid_t                          is export := int32;
+
+# Conditionals!
+constant GPid                           is export := $bits;
+
+# Function Pointers
+constant GAsyncReadyCallback            is export := Pointer;
+constant GBindingTransformFunc          is export := Pointer;
+constant GCallback                      is export := Pointer;
+constant GCompareDataFunc               is export := Pointer;
+constant GCompareFunc                   is export := Pointer;
+constant GCopyFunc                      is export := Pointer;
+constant GClosureNotify                 is export := Pointer;
+constant GDestroyNotify                 is export := Pointer;
+constant GDesktopAppLaunchCallback      is export := Pointer;
+constant GEqualFunc                     is export := Pointer;
+constant GFunc                          is export := Pointer;
+constant GHFunc                         is export := Pointer;
+constant GIOFunc                        is export := Pointer;
+constant GLogFunc                       is export := Pointer;
+constant GLogWriterFunc                 is export := Pointer;
+constant GPrintFunc                     is export := Pointer;
+constant GReallocFunc                   is export := Pointer;
+constant GSettingsBindGetMapping        is export := Pointer;
+constant GSettingsBindSetMapping        is export := Pointer;
+constant GSettingsGetMapping            is export := Pointer;
+constant GSignalAccumulator             is export := Pointer;
+constant GSignalEmissionHook            is export := Pointer;
+constant GSignalCMarshaller             is export := Pointer;
+constant GSignalCVaMarshaller           is export := Pointer;
+constant GSpawnChildSetupFunc           is export := Pointer;
+constant GThreadFunc                    is export := Pointer;
+constant GVfsFileLookupFunc             is export := Pointer;
+
+constant GDate                          is export := uint64;
+constant GQuark                         is export := uint32;
+constant GStrv                          is export := CArray[Str];
+constant GTimeSpan                      is export := int64;
+constant GType                          is export := uint64;
+
+constant GdkFilterFunc                  is export := Pointer;
+constant GdkPixbufDestroyNotify         is export := Pointer;
+constant GdkPixbufSaveFunc              is export := Pointer;
+constant GdkSeatGrabPrepareFunc         is export := Pointer;
+constant GdkWindowChildFunc             is export := Pointer;
+constant GdkWindowInvalidateHandlerFunc is export := Pointer;
+constant GdkWMFunction                  is export := Pointer;
+
+sub sprintf-v ( Blob, Str, & () )
   is export
   is native
   is symbol('sprintf')
 { * }
 
-sub sprintf-vp(Blob, Str, & (Pointer) --> int64)
+sub sprintf-P ( Blob, Str, & (Pointer) )
+  is export
+  is native
+  is symbol('sprintf')
+{ * }
+
+sub sprintf-SP ( Blob, Str, & (Str, Pointer) )
+  is export
+  is native
+  is symbol('sprintf')
+{ * }
+
+# Also is -SUP
+sub sprintf-SBP ( Blob, Str, & (Str, gboolean, Pointer) )
+  is export
+  is native
+  is symbol('sprintf')
+{ * }
+
+sub sprintf-v-L (Blob, Str, & () --> int64)
+  is export
+  is native
+  is symbol('sprintf')
+{ * }
+
+sub sprintf-P-L (Blob, Str, & (Pointer) --> int64)
+  is export
+  is native
+  is symbol('sprintf')
+{ * }
+
+sub sprintf-DP ( Blob, Str, & (gdouble, Pointer) )
   is export
   is native
   is symbol('sprintf')
@@ -53,7 +169,7 @@ sub sprintf-vp(Blob, Str, & (Pointer) --> int64)
 
 sub set_func_pointer(
   \func,
-  &sprint = &sprintf-vv
+  &sprint = &sprintf-v-L
 ) is export {
   my $buf = buf8.allocate(20);
   my $len = &sprint($buf, '%lld', func);
@@ -126,91 +242,6 @@ sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
   } until $t == &sub();
   $t;
 }
-
-constant GDK_MAX_TIMECOORD_AXES is export = 128;
-
-constant cairo_t                 is export := Cairo::cairo_t;
-constant cairo_format_t          is export := Cairo::cairo_format_t;
-constant cairo_pattern_t         is export := Cairo::cairo_pattern_t;
-constant cairo_region_t          is export := Pointer;
-
-constant gboolean                is export := uint32;
-constant gchar                   is export := Str;
-constant gconstpointer           is export := Pointer;
-constant gdouble                 is export := num64;
-constant gfloat                  is export := num32;
-constant gint                    is export := int32;
-constant gint8                   is export := int8;
-constant gint16                  is export := int16;
-constant gint32                  is export := int32;
-constant gint64                  is export := int64;
-constant glong                   is export := int64;
-constant goffset                 is export := uint64;
-constant gpointer                is export := Pointer;
-constant gsize                   is export := uint64;
-constant gssize                  is export := int64;
-constant guchar                  is export := Str;
-constant gshort                  is export := int8;
-constant gushort                 is export := uint8;
-constant guint                   is export := uint32;
-constant guint8                  is export := uint8;
-constant guint16                 is export := uint16;
-constant guint32                 is export := uint32;
-constant guint64                 is export := uint64;
-constant gulong                  is export := uint64;
-constant gunichar                is export := uint32;
-constant gunichar2               is export := uint16;
-constant va_list                 is export := Pointer;
-constant time_t                  is export := uint64;
-constant uid_t                   is export := uint32;
-constant gid_t                   is export := uint32;
-constant pid_t                   is export := int32;
-
-# Conditionals!
-constant GPid                    is export := $bits;
-
-# Function Pointers
-constant GAsyncReadyCallback     is export := Pointer;
-constant GBindingTransformFunc   is export := Pointer;
-constant GCallback               is export := Pointer;
-constant GCompareDataFunc        is export := Pointer;
-constant GCompareFunc            is export := Pointer;
-constant GCopyFunc               is export := Pointer;
-constant GClosureNotify          is export := Pointer;
-constant GDestroyNotify          is export := Pointer;
-constant GDesktopAppLaunchCallback is export := Pointer;
-constant GEqualFunc              is export := Pointer;
-constant GFunc                   is export := Pointer;
-constant GHFunc                  is export := Pointer;
-constant GIOFunc                 is export := Pointer;
-constant GLogFunc                is export := Pointer;
-constant GLogWriterFunc          is export := Pointer;
-constant GPrintFunc              is export := Pointer;
-constant GReallocFunc            is export := Pointer;
-constant GSettingsBindGetMapping is export := Pointer;
-constant GSettingsBindSetMapping is export := Pointer;
-constant GSettingsGetMapping     is export := Pointer;
-constant GSignalAccumulator      is export := Pointer;
-constant GSignalEmissionHook     is export := Pointer;
-constant GSignalCMarshaller      is export := Pointer;
-constant GSignalCVaMarshaller    is export := Pointer;
-constant GSpawnChildSetupFunc    is export := Pointer;
-constant GThreadFunc             is export := Pointer;
-constant GVfsFileLookupFunc      is export := Pointer;
-
-constant GDate                   is export := uint64;
-constant GQuark                  is export := uint32;
-constant GStrv                   is export := CArray[Str];
-constant GTimeSpan               is export := int64;
-constant GType                   is export := uint64;
-
-constant GdkFilterFunc                  is export := Pointer;
-constant GdkPixbufDestroyNotify         is export := Pointer;
-constant GdkPixbufSaveFunc              is export := Pointer;
-constant GdkSeatGrabPrepareFunc         is export := Pointer;
-constant GdkWindowChildFunc             is export := Pointer;
-constant GdkWindowInvalidateHandlerFunc is export := Pointer;
-constant GdkWMFunction                  is export := Pointer;
 
 class GTypeInstance is repr('CStruct') does GTK::Roles::Pointers is export { ... }
 
@@ -1577,7 +1608,7 @@ class GSourceCallbackFuncs is repr('CStruct') does GTK::Roles::Pointers is expor
     Proxy.new:
       FETCH => -> $        { $!ref },
       STORE => -> $, \func {
-        $!ref := set_func_pointer( &(func), &sprintf-vp )
+        $!ref := set_func_pointer( &(func), &sprintf-P-L )
       };
   }
 
@@ -1585,7 +1616,7 @@ class GSourceCallbackFuncs is repr('CStruct') does GTK::Roles::Pointers is expor
     Proxy.new:
       FETCH => -> $        { $!unref },
       STORE => -> $, \func {
-        $!unref := set_func_pointer( &(func), &sprintf-vp )
+        $!unref := set_func_pointer( &(func), &sprintf-P-L )
       };
   }
 
@@ -1681,7 +1712,7 @@ class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
     Proxy.new:
       FETCH => -> $ { $!finalize },
       STORE => -> $, \func {
-        $!finalize := set_func_pointer( &(func), &sprintf-vp);
+        $!finalize := set_func_pointer( &(func), &sprintf-P-L);
       }
   }
 

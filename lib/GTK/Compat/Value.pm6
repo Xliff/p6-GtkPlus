@@ -13,7 +13,7 @@ class GTK::Compat::Value {
 
   submethod BUILD(:$type, GValue :$value) {
     $!v = $value // GValue.new;
-    g_value_init($!v, $type) with $type;
+    g_value_init($!v, $type) if $type;
   }
 
   submethod DESTROY {
