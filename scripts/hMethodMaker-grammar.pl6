@@ -18,8 +18,9 @@ grammar C-Function-Def {
   }
 
   token pre-definitions {
-    'G_GNUC_WARN_UNUSED_RESULT' |
-    'G_GNUC_INTERNAL'
+    'G_GNUC_WARN_UNUSED_RESULT'                        |
+    'G_GNUC_INTERNAL'                                  |
+    <[A..Z]>+ '_DEPRECATED_FOR' \s* '(' <[\w _]>+ ')'
   }
 
   rule func_def {
@@ -112,7 +113,6 @@ sub MAIN (
   $contents ~~ s:g/ ^ .+? '\\' $//;
   $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
   $contents ~~ s:g/<!after ';'>\n//;
-  $contents ~~ s:g/'GIMP_DEPRECATED_FOR' \s* '(' .+? ')'//;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
 
   $contents = $contents.lines.skip($trim-start).join("\n")
@@ -136,20 +136,22 @@ sub MAIN (
   }
 
   for $matched{$func-rule}[] -> $m is rw {
-    my $av = $bland ?? {} !! $m<availability>;
-    my $avail = ($av<ad> // '') ne 'DEPRECATED';
+    my $av = $bland ??
+      { pre-definitions => ($m<pre-definitions> // '').Str } !!
+      $m<availability>;
+
+    my $avail = $bland ??
+      !$av<pre-definitions>.contains('DEPRECATED')
+        !!
+      ($av<ad> // '') ne '_DEPRECATED';
+
     my @p;
     my $orig = $m<func_def><sub>.Str.trim;
     my @tv = ($m<func_def><type> [Z] $m<func_def><var>);
 
-    @p.push: [ $_[0], $_[1] ] for @tv;
+    @p.push: [ .[0], .[1] ] for @tv;
 
-    my @v = @p.map({ '$' ~ $_[1]<t>.Str.trim });
-    my @t = @p.map({
-      my $t = $_[0]<n>.Str.trim;
-      if $_[1]<p> {
-        $t = "CArray[{ $t }]" for ^($_[1]<p>.Str.trim.chars - 1);
-      }
+    sub resolve-type($t) {
       # cw: FINALLY got around to doing something that should have been
       #     done from the start.
       $t ~~ s/^g?u?[ 'char' | 'Str' ]/Str/;
@@ -158,8 +160,26 @@ sub MAIN (
       $t ~~ s/^double/gdouble/;
       $t ~~ s/void/Pointer/;
       $t ~~ s/GError/CArray[Pointer[GError]]/;
+      if (my $np = (.[0]<p> // '').Str.chars) {
+        if $np > 1 {
+          $t = "CArray[{ $t }]" for ^($np.Str.trim.chars - 1);
+        }
+      }
+
       $t;
+    }
+
+    my @v = @p.map({
+      my $t = resolve-type(.[0]<n>.Str.trim);
+      '$' ~ .[1]<t>.Str.trim ~ do if (my $np = (.[0]<p> // '').Str.chars) {
+        if $np == 1 &&
+           ($t eq <gfloat gdouble>.any || $t.starts-with(<gint guint>.any).so)
+        {
+          ' is rw';
+        }
+      }
     });
+    my @t = @p.map({ resolve-type(.[0]<n>.Str.trim) });
     my $o_call = (@t [Z] @v).join(', ');
     $o_call ~= ', ...' if $m<func_def><va>;
 
@@ -313,22 +333,43 @@ sub MAIN (
 
     if $m<p6_return> && $m<p6_return> ne 'void' {
 
-       say qq:to/SUB/;
-       $subcall
-         returns $m<p6_return>
-         is native({ $lib })
-         is export
-       \{ * \}
-       SUB
+      if $m<avail> {
+        say qq:to/SUB/;
+          $subcall
+            returns $m<p6_return>
+            is native({ $lib })
+            is export
+          \{ * \}
+          SUB
+      } else {
+        say qq:to/SUB/;
+          $subcall
+            is DEPRECATED
+            returns $m<p6_return>
+            is native({ $lib })
+            is export
+          \{ * \}
+          SUB
+      }
 
     }  else {
 
-      say qq:to/SUB/;
-      $subcall
-        is native({ $lib })
-        is export
-      \{ * \}
-      SUB
+      if $m<avail> {
+        say qq:to/SUB/;
+          $subcall
+            is native({ $lib })
+            is export
+          \{ * \}
+          SUB
+      } else {
+        say qq:to/SUB/;
+          $subcall
+            is DEPRECATEDs
+            is native({ $lib })
+            is export
+          \{ * \}
+          SUB
+      }
 
     }
   }
