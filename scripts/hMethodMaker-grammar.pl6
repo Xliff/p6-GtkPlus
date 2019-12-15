@@ -151,7 +151,7 @@ sub MAIN (
 
     @p.push: [ .[0], .[1] ] for @tv;
 
-    sub resolve-type($t) {
+    sub resolve-type($t is copy) {
       # cw: FINALLY got around to doing something that should have been
       #     done from the start.
       $t ~~ s/^g?u?[ 'char' | 'Str' ]/Str/;
