@@ -42,9 +42,15 @@ sub cast($cast-to, $obj) is export {
 constant GDK_MAX_TIMECOORD_AXES is export = 128;
 
 constant cairo_t                        is export := Cairo::cairo_t;
+constant cairo_surface_t                is export := Cairo::cairo_surface_t;
 constant cairo_format_t                 is export := Cairo::cairo_format_t;
 constant cairo_pattern_t                is export := Cairo::cairo_pattern_t;
 constant cairo_region_t                 is export := Pointer;
+
+our subset CairoContext is export of Mu
+  where Cairo::cairo_t | Cairo::Context;
+our subset CairoSurface is export of Mu
+  where Cairo::cairo_surface_t | Cairo::Surface;
 
 constant gboolean                       is export := uint32;
 constant gchar                          is export := Str;
