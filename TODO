@@ -211,5 +211,6 @@ Applications
   required files using XML::Actions, and then display resulting data in a GtkSheet.
 + Perl6 GIMP Library bindings!
 - Port JSON-glib to Perl6 https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
+- DEFINITELY consider GEGL bindings. Use generated data structures for operations, since they have no .h files, however the good bits are easily parsable from .c
 - Consider BABL bindings
 - A Perl6 port for libsoup
