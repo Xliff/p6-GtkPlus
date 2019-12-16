@@ -2,10 +2,9 @@ use v6.c;
 
 use NativeCall;
 
+use Cairo;
 use GTK::Compat::Types;
 use GTK::Raw::ReturnedValue;
-
-our constant CairoSurface := cairo_surface_t;
 
 role GTK::Compat::Roles::Signals::Window {
   has %!signals-window;
@@ -20,7 +19,7 @@ role GTK::Compat::Roles::Signals::Window {
     %!signals-window{$signal} //= do {
       my $s = Supplier.new;
       $hid = g-connect-create-surface($obj, $signal,
-        -> $, $i1, $i2, $ud --> CairoSurface {
+        -> $, $i1, $i2, $ud --> cairo_surface_t {
           CATCH {
             default { $s.quit($_) }
           }
@@ -121,7 +120,7 @@ role GTK::Compat::Roles::Signals::Window {
 sub g-connect-create-surface(
   Pointer $app,
   Str $name,
-  &handler (Pointer, gint, gint, Pointer --> CairoSurface),
+  &handler (Pointer, gint, gint, Pointer --> cairo_surface_t),
   Pointer $data,
   uint32 $flags
 )
