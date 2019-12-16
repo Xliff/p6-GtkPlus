@@ -119,7 +119,7 @@ class GTK::Widget {
 
   # REALLY EXPERIMENTAL attempt to create a global object creation
   # factory.
-  method CreateObject(GtkWidget $o) {
+  method CreateObject(GTK::Widget:U: GtkWidget $o) {
     my $type = GTK::Widget.getType($o);
 
     # If no type, then we fall back to GTK::Widget.

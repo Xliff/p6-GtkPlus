@@ -686,7 +686,8 @@ enum GtkPlacesOpenFlags is export (
 );
 
 #Determines how the size should be computed to achieve the one of the visibility mode for the scrollbars.
-enum GtkPolicyType is export (
+constant GtkPolicyType is export := guint32;
+enum GtkPolicyTypeEnum is export (
     GTK_POLICY_ALWAYS => 0,     #The scrollbar is always visible.
                                 #The view size is independent of the content.
     GTK_POLICY_AUTOMATIC => 1,  #The scrollbar will appear and disappear as necessary.
