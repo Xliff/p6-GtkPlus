@@ -11,19 +11,23 @@ sub MAIN (
   :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
 ) {
   # If it's a URL, then try to pick it apart
-  if $control ~~ / ^ 'https://' / {
+  my $ext = '';
+  if $control ~~ / ^ 'http's?'://' / {
     $control ~~ / 'http' s? '://' <-[\#]>+ /;
     my $new_prefix = $/.Str;
     my $new_control = $new_prefix.split('/')[* - 1];
-    $new_control ~~ s/ '.' .+? $//;
+    $new_control ~~ s/ '.' (.+?) $//;
+    $ext = ".{ $/[0] }";
     $new_prefix ~~ s| '/' <-[/]>+? $|/|;
     ($prefix, $control) = ($new_prefix.trim, $new_control.trim);
 
     say "Attempting with prefix = { $prefix } control = { $control }";
   }
 
+  my $uri = "{ $prefix }{ $control }{ $ext }";
+  say "Retrieving: $uri";
   my $dom = Mojo::DOM.new(
-    LWP::Simple.new.get("{ $prefix }{ $control }.html")
+    LWP::Simple.new.get($uri);
   );
 
   my $v = "\$\!$var";
