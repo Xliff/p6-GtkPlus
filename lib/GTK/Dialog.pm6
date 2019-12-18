@@ -7,6 +7,7 @@ use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
 use GTK::Raw::Dialog;
+use GTK::Raw::Types;
 
 use GTK::Box;
 use GTK::HeaderBar;
@@ -150,29 +151,28 @@ class GTK::Dialog is GTK::Window {
     gtk_dialog_add_action_widget($!d, $child, $ri);
   }
 
-  multi method add-buttons(%buttons) {
-    self.add_buttons(%buttons);
-  }
+  proto method add_buttons (|)
+    is also<add-buttons>
+  { * }
+
   multi method add_buttons(%buttons) {
-    samewith(%buttons.pairs);
-  }
-  multi method add-buttons(*@buttons) {
-    self.add_buttons(@buttons);
+    samewith( |%buttons.pairs );
   }
   multi method add_buttons(*@buttons) {
     die '\@buttons is not an array of pair objects!'
       unless @buttons.all ~~ Pair;
-    self.add_button( .key, resolve-int(.value) ) for @buttons;
+    self.add_button( .key, .value ) for @buttons;
   }
 
   method add_button (Str() $button_text, Int() $response_id)
     is also<add-button>
   {
     my gint $ri = $response_id;
+
     gtk_dialog_add_button($!d, $button_text, $ri);
   }
 
-  method get_action_area is also<get-action-area> {
+  method get_action_area ( :$raw = False ) is also<get-action-area> {
     my $b = gtk_dialog_get_action_area($!d);
 
     $b ??
@@ -181,7 +181,7 @@ class GTK::Dialog is GTK::Window {
       Nil;
   }
 
-  method get_content_area is also<get-content-area> {
+  method get_content_area ( :$raw = False ) is also<get-content-area> {
     my $b = gtk_dialog_get_content_area($!d);
 
     $b ??
@@ -194,7 +194,7 @@ class GTK::Dialog is GTK::Window {
     my $hb = gtk_dialog_get_header_bar($!d);
 
     $hb ??
-      ( $raw ?? $hb !! GTK::HeaderBar.new($hb )\
+      ( $raw ?? $hb !! GTK::HeaderBar.new($hb ) )
       !!
       Nil;
   }
