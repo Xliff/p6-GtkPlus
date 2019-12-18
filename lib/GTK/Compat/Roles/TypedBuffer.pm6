@@ -97,6 +97,8 @@ role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
     self.bless(:$buffer);
   }
   multi method new (@entries) {
+    return Pointer unless @entries;
+
     die 'TypedBuffer type must be a CStruct!' unless T.REPR eq 'CStruct';
 
     die qq:to/D/.chomp unless @entries.all ~~ T;
