@@ -830,7 +830,8 @@ our enum GtkButtonsType is export <
   GTK_BUTTONS_OK_CANCEL
 >;
 
-our enum GtkDialogFlags is export (
+constant GtkDialogFlags is export := guint32;
+our enum GtkDialogFlagsEnum is export (
   GTK_DIALOG_MODAL               => 1,
   GTK_DIALOG_DESTROY_WITH_PARENT => (1 +< 1),
   GTK_DIALOG_USE_HEADER_BAR      => (1 +< 2)

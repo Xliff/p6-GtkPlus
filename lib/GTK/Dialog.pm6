@@ -7,13 +7,13 @@ use GTK::Raw::Utils;
 
 use GTK::Compat::Types;
 use GTK::Raw::Dialog;
-use GTK::Raw::Types;
 
 use GTK::Box;
 use GTK::HeaderBar;
 use GTK::Window;
 
-our subset DialogAncestry is export where GtkDialog | WindowAncestry;
+our subset DialogAncestry is export of Mu
+  where GtkDialog | WindowAncestry;
 
 class GTK::Dialog is GTK::Window {
   has GtkDialog $!d is implementor;
@@ -26,19 +26,15 @@ class GTK::Dialog is GTK::Window {
 
   submethod BUILD(:$dialog) {
     given $dialog {
-      when DialogAncestry {
-        self.setDialog($dialog);
-      }
-      when GTK::Dialog {
-      }
-      default {
-      }
+      when DialogAncestry { self.setDialog($dialog) }
+      when GTK::Dialog    { }
+      default             { }
     }
   }
 
-  method setDialog(DialogAncestry $dialog) {
+  method setDialog(DialogAncestry $_) {
     my $to-parent;
-    $!d = do given $dialog {
+    $!d = do {
       when GtkDialog {
         $to-parent = nativecast(GtkWindow, $_);
         $_;
@@ -52,13 +48,16 @@ class GTK::Dialog is GTK::Window {
   }
 
   multi method new (DialogAncestry $dialog) {
+    return unless $dialog;
+
     my $o = self.bless(:$dialog);
     $o.upref;
     $o;
   }
   multi method new {
     my $dialog = gtk_dialog_new();
-    self.bless(:$dialog);
+
+    $dialog ?? self.bless( :$dialog ) !! Nil;
   }
 
 
@@ -68,22 +67,25 @@ class GTK::Dialog is GTK::Window {
   method new_with_button(
    Str()       $title,
    GtkWindow() $parent,
-   uint32      $flags,          # GtkDialogFlags $flags
+   Int()       $flags,          # GtkDialogFlags $flags
    Str()       $button_text,
    Int()       $button_response_id
   )
     is also<new-with-button>
   {
-    my gint $br = resolve-int($button_response_id);
+    my gint $br = $button_response_id;
+    my GtkDialogFlags $f = $flags;
+
     my $dialog = gtk_dialog_new_with_buttons(
       $title,
       $parent,
-      $flags,
+      $f,
       $button_text,
       $br,
       Str
     );
-    self.bless(:$dialog);
+
+    $dialog ?? self.bless( :$dialog ) !! Nil;
   }
 
   proto method new_with_buttons (|)
@@ -93,7 +95,7 @@ class GTK::Dialog is GTK::Window {
   multi method new_with_buttons(
     Str()       $title,
     GtkWindow() $parent,
-    uint32      $flags,          # GtkDialogFlags $flags
+    Int()       $flags,          # GtkDialogFlags $flags
     *%buttons
   ) {
     samewith($title, $parent, $flags, %buttons.pairs.Array);
@@ -102,7 +104,7 @@ class GTK::Dialog is GTK::Window {
   multi method new_with_buttons (
     Str()       $title,
     GtkWindow() $parent,
-    uint32      $flags,          # GtkDialogFlags $flags
+    Int()       $flags,          # GtkDialogFlags $flags
     @buttons
   ) {
     die '@buttons cannot be empty' unless +@buttons;
@@ -114,7 +116,7 @@ class GTK::Dialog is GTK::Window {
       $parent,
       $flags,
       $fb.key,
-      self.RESOLVE-INT($fb.value)
+      $fb.value
     );
     $o.add_buttons(@buttons);
     $o;
@@ -144,7 +146,7 @@ class GTK::Dialog is GTK::Window {
   method add_action_widget (GtkWidget() $child, Int() $response_id)
     is also<add-action-widget>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = $response_id;
     gtk_dialog_add_action_widget($!d, $child, $ri);
   }
 
@@ -160,26 +162,41 @@ class GTK::Dialog is GTK::Window {
   multi method add_buttons(*@buttons) {
     die '\@buttons is not an array of pair objects!'
       unless @buttons.all ~~ Pair;
-    self.add_button( .key, self.RESOLVE-INT(.value) ) for @buttons;
+    self.add_button( .key, resolve-int(.value) ) for @buttons;
   }
 
   method add_button (Str() $button_text, Int() $response_id)
     is also<add-button>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = $response_id;
     gtk_dialog_add_button($!d, $button_text, $ri);
   }
 
   method get_action_area is also<get-action-area> {
-    GTK::Box.new( gtk_dialog_get_action_area($!d) );
+    my $b = gtk_dialog_get_action_area($!d);
+
+    $b ??
+      ( $raw ?? $b !! GTK::Box.new($b) )
+      !!
+      Nil;
   }
 
   method get_content_area is also<get-content-area> {
-    GTK::Box.new( gtk_dialog_get_content_area($!d) );
+    my $b = gtk_dialog_get_content_area($!d);
+
+    $b ??
+      ( $raw ?? $b !! GTK::Box.new($b) )
+      !!
+      Nil;
   }
 
-  method get_header_bar is also<get-header-bar> {
-    GTK::HeaderBar.new( gtk_dialog_get_header_bar($!d) );
+  method get_header_bar ( :$raw = False ) is also<get-header-bar> {
+    my $hb = gtk_dialog_get_header_bar($!d);
+
+    $hb ??
+      ( $raw ?? $hb !! GTK::HeaderBar.new($hb )\
+      !!
+      Nil;
   }
 
   method get_response_for_widget (GtkWidget() $widget)
@@ -190,13 +207,15 @@ class GTK::Dialog is GTK::Window {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_dialog_get_type, $n, $t );
   }
 
   method get_widget_for_response (Int() $response_id)
     is also<get-widget-for-response>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = $response_id;
+
     gtk_dialog_get_widget_for_response($!d, $ri);
   }
 
@@ -209,7 +228,8 @@ class GTK::Dialog is GTK::Window {
   }
 
   multi method response (Int() $response_id) {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = $response_id;
+
     gtk_dialog_response($!d, $ri);
   }
 
@@ -226,7 +246,7 @@ class GTK::Dialog is GTK::Window {
     is DEPRECATED
     is also<set-alternative-button-order-from-array>
   {
-    my gint $np = self.RESOLVE-INT($n_params);
+    my gint $np = $n_params;
     my CArray[gint] $no = CArray[gint].new;
     my $i = 0;
     $no[$i++] = $_ for @new_order;
@@ -237,15 +257,17 @@ class GTK::Dialog is GTK::Window {
   method set_default_response (Int() $response_id)
     is also<set-default-response>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
+    my gint $ri = $response_id;
+
     gtk_dialog_set_default_response($!d, $ri);
   }
 
   method set_response_sensitive (Int() $response_id, Int() $setting)
     is also<set-response-sensitive>
   {
-    my gint $ri = self.RESOLVE-INT($response_id);
-    my gboolean $s = self.RESOLVE-BOOL($setting);
+    my gint $ri = $response_id;
+    my gboolean $s = $setting;
+
     gtk_dialog_set_response_sensitive($!d, $ri, $s);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
