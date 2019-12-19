@@ -9,21 +9,17 @@ use GTK::Compat::Device;
 use GTK::Compat::Screen;
 use GTK::Compat::Types;
 
-use GTK::Roles::Types;
-
 class GTK::Compat::Event  {
-  also does GTK::Roles::Types;
-
   has GdkEvents $!e is implementor handles<type window send_event>;
 
   submethod BUILD(:$event) {
     $!e = $event;
   }
 
-  method GTK::Compat::Types::GdkEvents
+  method GTK::Compat::Types::GdkEvent
     is also<
-      GdkEvents
-      GtkEvents
+      GdkEvent
+      GtkEvent
     >
   { $!e }
 
@@ -56,7 +52,12 @@ class GTK::Compat::Event  {
   method device is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Device.new( gdk_event_get_device($!e) );
+        my $d = gdk_event_get_device($!e);
+
+        $d ??
+          ( $raw ?? $d !! GTK::Compat::Device.new($d) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkDevice() $device is copy) {
         gdk_event_set_device($!e, $device);
@@ -70,16 +71,21 @@ class GTK::Compat::Event  {
       FETCH => sub ($) {
         gdk_event_get_device_tool($!e);
       },
-      STORE => sub ($, $tool is copy) {
+      STORE => sub ($, GdkDeviceTool $tool is copy) {
         gdk_event_set_device_tool($!e, $tool);
       }
     );
   }
 
-  method screen is rw {
+  method screen ( :$raw = False )is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Screen.new( gdk_event_get_screen($!e) );
+        my $s = gdk_event_get_screen($!e);
+
+        $s ??
+          ( $raw ?? $s !! GTK::Compat::Screen.new($s) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkScreen() $screen is copy) {
         gdk_event_set_screen($!e, $screen);
@@ -87,10 +93,15 @@ class GTK::Compat::Event  {
     );
   }
 
-  method source_device is rw is also<source-device> {
+  method source_device ( :$raw = False ) is rw is also<source-device> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Device.new( gdk_event_get_source_device($!e) );
+        my $d = gdk_event_get_source_device($!e)
+
+        $d ??
+          ( $raw ?? $d !! GTK::Compat::Device.new($d) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkDevice() $device is copy) {
         gdk_event_set_source_device($!e, $device);
@@ -208,7 +219,9 @@ class GTK::Compat::Event  {
     gdk_event_get_pointer_emulated($!e);
   }
 
-  method get_root_coords (Num() $x_root, Num() $y_root) is also<get-root-coords> {
+  method get_root_coords (Num() $x_root, Num() $y_root)
+    is also<get-root-coords>
+  {
     my gdouble ($xr, $yr) = ($x_root, $y_root);
 
     gdk_event_get_root_coords($!e, $x_root, $y_root);
