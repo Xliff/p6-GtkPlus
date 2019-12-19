@@ -18,7 +18,7 @@ class GTK::Bin is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Bin');
+    $o.setType(self.^name);
     $o;
   }
 
@@ -27,10 +27,12 @@ class GTK::Bin is GTK::Container {
       when BinAncestry {
         self.setBin($bin);
       }
+
       when GTK::Bin {
         my $c = ::?CLASS.^name;
         warn "To copy a { $c } object, use { $c }.clone.";
       }
+
       default {
         # DO NOT throw exception here due to BUILD path logic and descendant
         # creation!
@@ -45,16 +47,18 @@ class GTK::Bin is GTK::Container {
     >
   { $!bin }
 
-  method setBin($bin) {
+  method setBin(BinAncestry $_) {
+    return unless $_;
+
     my $to-parent;
-    $!bin = do given $bin {
+    $!bin = do {
       when GtkBin {
-        $to-parent = nativecast(GtkContainer, $_);
+        $to-parent = cast(GtkContainer, $_);
         $_;
       }
       when ContainerAncestry {
         $to-parent = $_;
-        nativecast(GtkBin, $_);
+        cast(GtkBin, $_);
       }
     };
     self.setContainer($to-parent);
