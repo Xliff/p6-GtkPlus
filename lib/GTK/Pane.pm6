@@ -24,50 +24,49 @@ class GTK::Pane is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Pane');
+    $o.setType(self.^name);
     $o;
   }
 
   submethod BUILD(:$pane) {
-    my $to-parent;
     given $pane {
-      when PaneAncestry {
-        $!p = do {
-          when GtkPaned {
-            $to-parent = nativecast(GtkContainer, $_);
-            $pane;
-          }
-          when GtkOrientable {
-            $!or = $_;                              # GTK::Roles::GtkOrientable
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkPaned, $pane);
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkPaned, $pane);
-          }
-        }
-        $!or //= nativecast(GtkOrientable, $pane);  # GTK::Roles::Orientable
-        self.setContainer($to-parent);
-      }
-      when GTK::Pane {
-      }
-      default {
-      }
+      when PaneAncestry { self.setPane($pane) }
+      when GTK::Pane    { }
+      default           { }
     }
   }
 
-  method GTK::Raw::Types::GtkPaned is also<Pane> { $!p }
+  method setPane (PaneAncestry $_) {
+    my $to-parent;
+    $!p = do {
+      when GtkPaned {
+        $to-parent = nativecast(GtkContainer, $_);
+        $_;
+      }
+      when GtkOrientable {
+        $!or = $_;                              # GTK::Roles::GtkOrientable
+        $to-parent = nativecast(GtkContainer, $_);
+        nativecast(GtkPaned, $_);
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkPaned, $_);
+      }
+    }
+    $!or //= nativecast(GtkOrientable, $_);     # GTK::Roles::Orientable
+    self.setContainer($to-parent);
+  }
+
+  method GTK::Raw::Types::GtkPaned
+    is also<Pane>
+  { $!p }
 
   multi method new (PaneAncestry $pane) {
+    return Nil unless $pane;
+
     my $o = self.bless(:$pane);
     $o.upref;
     $o;
-  }
-  multi method new (Int() $orientation) {
-    my uint32 $o = self.RESOLVE-UINT($orientation);
-    my $pane = gtk_paned_new($orientation);
-    self.bless(:$pane);
   }
   multi method new (:$horizontal = False, :$vertical = False) {
     die "Must specify either :horizontal or :vertical when creating GTK::Pane"
@@ -80,15 +79,24 @@ class GTK::Pane is GTK::Container {
 
     samewith($orientation);
   }
+  multi method new (Int() $orientation) {
+    my uint32 $o = $orientation;
+
+    my $pane = gtk_paned_new($orientation);
+
+    $pane ?? self.bless(:$pane) !! Nil;
+  }
 
   method new-hpane is also<new_hpane> {
     my $pane = gtk_paned_new(GTK_ORIENTATION_HORIZONTAL.Int);
-    self.bless(:$pane);
+
+    $pane ?? self.bless(:$pane) !! Nil;
   }
 
   method new-vpane is also<new_vpane> {
     my $pane = gtk_paned_new(GTK_ORIENTATION_VERTICAL.Int);
-    self.bless(:$pane);
+
+    $pane ?? self.bless(:$pane) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -138,7 +146,8 @@ class GTK::Pane is GTK::Container {
         gtk_paned_get_position($!p);
       },
       STORE => sub ($, Int() $position is copy) {
-        my gint $p = self.RESOLVE-UINT($position);
+        my gint $p = $position;
+
         gtk_paned_set_position($!p, $p);
       }
     );
@@ -150,7 +159,8 @@ class GTK::Pane is GTK::Container {
         so gtk_paned_get_wide_handle($!p);
       },
       STORE => sub ($, Int() $wide is copy) {
-        my gboolean $w = self.RESOLVE-BOOL($wide);
+        my gboolean $w = $wide;
+
         gtk_paned_set_wide_handle($!p, $w);
       }
     );
@@ -200,6 +210,7 @@ class GTK::Pane is GTK::Container {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_paned_get_type, $n, $t );
   }
 
@@ -208,8 +219,7 @@ class GTK::Pane is GTK::Container {
     Int() $resize,                # gboolean $resize,
     Int() $shrink                 # gboolean $shrink
   ) {
-    my @b = ($resize, $shrink);
-    my gboolean ($r, $s) = self.RESOLVE-BOOL(@b);
+    my gboolean ($r, $s) = ($resize, $shrink).map( *.so.Int );
     @!child1.push($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_paned_pack1($!p, $child, $r, $s);
@@ -229,8 +239,7 @@ class GTK::Pane is GTK::Container {
     Int() $resize,
     Int() $shrink
   ) {
-    my @b = ($resize, $shrink);
-    my gboolean ($r, $s) = self.RESOLVE-BOOL(@b);
+    my gboolean ($r, $s) = ($resize, $shrink).map( *.so.Int );
     @!child2.push($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_paned_pack2($!p, $child, $r, $s);
