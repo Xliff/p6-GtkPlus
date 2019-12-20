@@ -33,7 +33,7 @@ class GTK::Box is GTK::Container {
   submethod BUILD(:$box) {
     given $box {
       when BoxAncestry {
-        self.setBox($box);
+        self.setBox($_);
       }
       when GTK::Box {
         my $class = ::?CLASS.^name;
@@ -44,23 +44,28 @@ class GTK::Box is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkBox is also<Box> { $!b }
+  method GTK::Raw::Types::GtkBox
+    is also<
+      GtkBox
+      Box
+    >
+  { $!b }
 
-  method setBox($box) {
-    self.IS-PROTECTED;
-
+  method setBox(BoxAncestry $_) {
     my $to-parent;
-    $!b = do given $box {
+    $!b = do {
       when GtkBox {
         $to-parent = nativecast(GtkContainer, $_);
         $_;
       }
+
       when GtkOrientable {
-        $!or = $box;                            # For GTK::Roles::Orientable
+        $!or = $_;                            # For GTK::Roles::Orientable
         $to-parent = nativecast(GtkContainer, $_);
         nativecast(GtkBox, $_);
       }
-      when ContainerAncestry {
+
+      default {
         $to-parent = $_;
         nativecast(GtkBox, $_);
       }
@@ -70,6 +75,8 @@ class GTK::Box is GTK::Container {
   }
 
   multi method new (BoxAncestry $box) {
+    return unless $box;
+
     my $o = self.bless(:$box);
     $o.upref;
     $o;
@@ -80,22 +87,25 @@ class GTK::Box is GTK::Container {
     Int() $spacing = 0
   ) {
     # This works because it is NOT the array version.
-    my guint $o = resolve-uint($orientation);
-    my gint $s = resolve-int($spacing);
+    my guint $o = $orientation;
+    my gint $s = $spacing;
     my $box = gtk_box_new($o, $s);
-    self.bless(:$box);
+
+    $box ?? self.bless( :$box ) !! Nil;
   }
 
   method new-hbox(Int $spacing = 0) is also<new_hbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $s);
-    self.bless(:$box);
+
+    $box ?? self.bless( :$box ) !! Nil;
   }
 
   method new-vbox(Int $spacing = 0) is also<new_vbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $s);
-    self.bless(:$box);
+
+    $box ?? self.bless( :$box ) !! Nil;
   }
 
   method baseline_position is rw is also<baseline-position> {
@@ -104,7 +114,8 @@ class GTK::Box is GTK::Container {
         GtkBaselinePosition( gtk_box_get_baseline_position($!b) );
       },
       STORE => sub ($, Int() $position is copy) {
-        my uint32 $p = resolve-uint($position);
+        my uint32 $p = $position;
+
         gtk_box_set_baseline_position($!b, $p);
       }
     );
@@ -127,7 +138,8 @@ class GTK::Box is GTK::Container {
         gtk_box_get_homogeneous($!b);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = resolve-bool($homogeneous);
+        my gboolean $h = $homogeneous.so.Int;
+
         gtk_box_set_homogeneous($!b, $h);
       }
     );
@@ -139,7 +151,8 @@ class GTK::Box is GTK::Container {
         gtk_box_get_spacing($!b);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = resolve-int($spacing);
+        my gint $s = $spacing;
+
         gtk_box_set_spacing($!b, $s);
       }
     );
@@ -147,6 +160,7 @@ class GTK::Box is GTK::Container {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_box_get_type, $n, $t );
   }
 
@@ -164,8 +178,8 @@ class GTK::Box is GTK::Container {
     Int() $fill    = 0,
     Int() $padding = 0
   ) {
-    my @u = ($expand, $fill, $padding);
-    my ($e, $f, $p) = resolve-uint(@u);
+    my ($e, $f, $p) = ($expand, $fill, $padding);
+
     self.unshift-end($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_box_pack_end($!b, $child, $e, $f, $p);
@@ -203,8 +217,8 @@ class GTK::Box is GTK::Container {
     Int() $fill    = 0,
     Int() $padding = 0
   ) {
-    my @u = ($expand, $fill, $padding);
-    my uint32 ($e, $f, $p) = resolve-uint(@u);
+    my uint32 ($e, $f, $p) = ($expand, $fill, $padding);
+
     self.push-start($child) unless self.IS-LATCHED;
     self.UNSET-LATCH;
     gtk_box_pack_start($!b, $child, $e, $f, $p);
@@ -228,43 +242,33 @@ class GTK::Box is GTK::Container {
     samewith($child.Widget, $expand, $fill, $padding);
   }
 
-  multi method query-child-packing (GtkWidget() $child) {
-    self.query-child-packing($child);
-  }
-  multi method query_child_packing (GtkWidget() $child) {
-    my ($e, $f, $p, $pt) = (0 xx 4);
-    callwith($child, $e, $f, $p, $pt);
-    ($e, $f, $p, GtkPackType($pt));
-  }
-  multi method query-child-packing (
-    GtkWidget() $child,
-    Int() $expand is rw,
-    Int() $fill is rw,
-    Int() $padding is rw,
-    Int() $pack_type is rw
-  ) {
-    self.query_child_packing($child, $expand, $fill, $padding, $pack_type);
+  proto method query_child_packing (|)
+    is also<query-child-packing>
+  { * }
+
+  multi method query_child_packing (GtkWidget() $child, :$all = True) {
+    samewith($child, $, $, $, $, :$all);
   }
   multi method query_child_packing (
     GtkWidget() $child,
-    Int() $expand is rw,
-    Int() $fill is rw,
-    Int() $padding is rw,
-    Int() $pack_type is rw
+    $expand is rw,
+    $fill is rw,
+    $padding is rw,
+    $pack_type is rw,
+    :$all = False
   ) {
-    my @b = ($expand, $fill);
-    my @ui = ($padding, $pack_type);
-    my gboolean ($e, $f) = resolve-bool(@b);
-    my guint ($p, $pt) = resolve-uint(@ui);
+    my gboolean ($e, $f) = 0 xx 2;
+    my guint ($p, $pt) = 0 xx 2;
     my $rc = gtk_box_query_child_packing($!b, $child, $e, $f, $p, $pt);
+
     ($expand, $fill, $padding, $pack_type) = ($e, $f, $p, $pt);
-    $rc;
+    $all.not ?? $rc !! ($rc, $expand, $fill, $padding, $pack_type);
   }
 
   multi method reorder_child (GtkWidget() $child, Int() $position)
     is also<reorder-child>
   {
-    my gint $p = resolve-int($position);
+    my gint $p = $position;
     gtk_box_reorder_child($!b, $child, $p);
   }
 
@@ -277,10 +281,9 @@ class GTK::Box is GTK::Container {
   )
     is also<set-child-packing>
   {
-    my @b = ($expand, $fill);
-    my @ui = ($padding, $pack_type);
-    my ($e, $f) = resolve-bool(@b);
-    my ($p, $pt) = resolve-uint(@ui);
+    my ($e, $f) = ($expand, $fill).map( *.so.Int );
+    my ($p, $pt) = ($padding, $pack_type);
+
     gtk_box_set_child_packing($!b, $child, $e, $f, $p, $pt);
   }
 

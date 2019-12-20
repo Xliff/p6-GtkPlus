@@ -32,25 +32,20 @@ class GTK::DrawingArea is GTK::Widget {
 
   submethod BUILD(:$draw) {
     given $draw {
-      when DrawingAreaAncestry {
-        self.setDrawingArea($draw);
-      }
-      when GTK::DrawingArea {
-      }
-      default {
-      }
+      when DrawingAreaAncestry { self.setDrawingArea($draw) }
+      when GTK::DrawingArea    { }
+      default                  { }
     }
   }
 
-  method setDrawingArea (DrawingAreaAncestry $draw) {
-    self.IS-PROTECTED;
-    
+  method setDrawingArea (DrawingAreaAncestry $_) {
     my $to-parent;
-    $!da = do given $draw {
+    $!da = do {
       when GtkDrawingArea {
         $to-parent = nativecast(GtkWidget, $_);
         $_;
       }
+
       default {
         $to-parent = $_;
         nativecast(GtkDrawingArea, $_);
@@ -60,16 +55,24 @@ class GTK::DrawingArea is GTK::Widget {
   }
 
   multi method new (DrawingAreaAncestry $draw) {
+    return unless $draw;
+
     my $o = self.bless(:$draw);
     $o.upref;
     $o;
   }
   multi method new {
     my $draw = gtk_drawing_area_new();
-    self.bless(:$draw);
+
+    $draw ?? self.bless( :$draw ) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkDrawingArea is also<DrawingArea> { $!da }
+  method GTK::Raw::Types::GtkDrawingArea
+    is also<
+      GtkDrawingArea
+      DrawingArea
+    >
+  { $!da }
 
   # cw: Is this true?!?
   method GTK::Compat::Types::cairo_t is also<cairo_t> {
@@ -85,6 +88,7 @@ class GTK::DrawingArea is GTK::Widget {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_drawing_area_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

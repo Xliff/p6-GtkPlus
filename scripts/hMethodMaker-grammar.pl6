@@ -18,9 +18,10 @@ grammar C-Function-Def {
   }
 
   token pre-definitions {
-    'G_GNUC_WARN_UNUSED_RESULT'                        |
-    'G_GNUC_INTERNAL'                                  |
-    <[A..Z]>+ '_DEPRECATED_FOR' \s* '(' <[\w _]>+ ')'
+    'G_GNUC_WARN_UNUSED_RESULT'                            |
+    'G_GNUC_INTERNAL'                                      |
+    <[A..Z]>+ '_DEPRECATED' [ '_IN_' (\d+)+ % '_' ]?
+      '_FOR' \s* '(' <[\w _]>+ ')'
   }
 
   rule func_def {
@@ -364,7 +365,7 @@ sub MAIN (
       } else {
         say qq:to/SUB/;
           $subcall
-            is DEPRECATEDs
+            is DEPRECATED
             is native({ $lib })
             is export
           \{ * \}
