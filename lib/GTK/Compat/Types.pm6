@@ -2798,8 +2798,7 @@ sub typeToGType (\t) is export {
   };
 }
 
-# Used only in the next two subs, below.
-our role Implementor {};
+our role Implementor is export {};
 
 # Mark
 multi sub trait_mod:<is>(Attribute:D \attr, :$implementor) is export {
