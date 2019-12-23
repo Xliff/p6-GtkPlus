@@ -14,11 +14,7 @@ constant forced = 31;
 
 our $DEBUG is export = 0;
 
-my $bits;
-
-BEGIN {
-  $bits = $*KERNEL.bits == 32 ?? uint32 !! uint64;
-}
+BEGIN constant realUInt is export = $*KERNEL.bits == 32 ?? uint32 !! uint64;
 
 # Cribbed from https://github.com/CurtTilmes/perl6-dbmysql/blob/master/lib/DB/MySQL/Native.pm6
 sub malloc  (size_t --> Pointer)                   is export is native {}
@@ -84,7 +80,7 @@ constant gid_t                          is export := uint32;
 constant pid_t                          is export := int32;
 
 # Conditionals!
-constant GPid                           is export := $bits;
+constant GPid                           is export := realUInt;
 
 # Function Pointers
 constant GAsyncReadyCallback            is export := Pointer;
@@ -360,9 +356,9 @@ class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
 }
 
 class GString is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Str     $.str;
-  has uint64  $.len;              # NOTE: Should be processor wordsize, so using 64 bit.
-  has uint64  $.allocated_len;    # NOTE: Should be processor wordsize, so using 64 bit.
+  has Str       $.str;
+  has realUInt  $.len;
+  has realUInt  $.allocated_len;
 }
 
 class GTypeValueList is repr('CUnion') does GTK::Roles::Pointers is export {
