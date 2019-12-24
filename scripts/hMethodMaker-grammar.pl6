@@ -63,10 +63,9 @@ grammar C-Function-Internal-Def is C-Function-Def {
 sub MAIN (
   $filename,          #= Filename to process
   :$remove,           #= Prefix to remove from method names
-  :$var,              #= Class variable name [defaults to '$!w'
+  :$var,              #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
   :$output = 'all',   #= Type of output: 'method', 'attributes', 'subs' or 'all'
   :$lib = 'gtk',      #= Library name to use
-  :$static = 0,       #= Class is static. Do not remove first parameter.
   :$internal = 0,     #= Add checking for INTERNAL methods
   :$bland = 0,        #= Do NOT attempt to process preprocessor prefixes to subroutines
   :$output-only,      #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
@@ -182,16 +181,16 @@ sub MAIN (
     });
     my @t = @p.map({ resolve-type(.[0]<n>.Str.trim) });
     my $o_call = (@t [Z] @v).join(', ');
+    my $sub = $m<func_def><sub>.Str.trim;
     $o_call ~= ', ...' if $m<func_def><va>;
 
-    if $attr && $static.not {
+    if $attr && $sub.starts-with("{$remove // ''}new_").not {
       @v.shift if +@v;
       @t.shift if +@t;
     }
 
     my $sig = (@t [Z] @v).join(', ');
     my $call = @v.map( *.trim ).join(', ');
-    my $sub = $m<func_def><sub>.Str.trim;
     $sig ~= ', ...' if $m<func_def><va>;
 
     if $attr {

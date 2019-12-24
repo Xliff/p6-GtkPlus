@@ -18,8 +18,13 @@ class GLib::Scanner {
     is also<GScanner>
   { $!s }
 
-  method new (GScannerConfig() $templ) {
-    self.bless( scanner => g_scanner_new($templ) );
+  multi method new (GScanner :$scanner) {
+    $scanner ?? self.bless( :$scanner ) !! Nil;
+  }
+  multi method new (GScannerConfig() $templ) {
+    my $scanner = g_scanner_new($templ);
+
+    $scanner ?? self.bless( :$scanner ) !! Nil;
   }
 
   method cur_line is also<cur-line> {
