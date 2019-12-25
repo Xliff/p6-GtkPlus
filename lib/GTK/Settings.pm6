@@ -3,9 +3,10 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 use GTK::Raw::Settings;
 use GTK::Raw::Types;
+
+use GLib::Value;
 
 use GTK::Compat::Roles::Object;
 use GTK::Roles::Types;
@@ -31,10 +32,10 @@ class GTK::Settings {
 
   # Type: GHashTable
   method color-hash is rw  is DEPRECATED {
-    # my GTK::Compat::Value $gv .= new( -type- );
+    # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
     #   FETCH => -> $ {
-    #     $gv = GTK::Compat::Value.new(
+    #     $gv = GLib::Value.new(
     #       self.prop_get('color-hash', $gv)
     #     );
     #     #$gv.TYPE
@@ -47,10 +48,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-alternative-button-order is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-alternative-button-order', $gv)
         );
         $gv.boolean;
@@ -64,10 +65,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-alternative-sort-arrows is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-alternative-sort-arrows', $gv)
         );
         $gv.boolean;
@@ -81,10 +82,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-application-prefer-dark-theme is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-application-prefer-dark-theme', $gv)
         );
         $gv.boolean;
@@ -98,10 +99,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-auto-mnemonics is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-auto-mnemonics', $gv)
         );
         $gv.boolean;
@@ -115,10 +116,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-button-images is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-button-images', $gv)
         );
         $gv.boolean;
@@ -132,10 +133,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-can-change-accels is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-can-change-accels', $gv)
         );
         $gv.boolean;
@@ -149,10 +150,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-color-palette is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-color-palette', $gv)
         );
         $gv.string;
@@ -166,10 +167,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-cursor-blink is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-blink', $gv)
         );
         $gv.boolean;
@@ -183,10 +184,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-cursor-blink-time is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-blink-time', $gv)
         );
         $gv.int;
@@ -200,10 +201,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-cursor-blink-timeout is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-blink-timeout', $gv)
         );
         $gv.int;
@@ -217,10 +218,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-cursor-theme-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-theme-name', $gv)
         );
         $gv.string;
@@ -234,10 +235,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-cursor-theme-size is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-theme-size', $gv)
         );
         $gv.int;
@@ -251,10 +252,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-decoration-layout is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-decoration-layout', $gv)
         );
         $gv.string;
@@ -268,10 +269,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-dialogs-use-header is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-dialogs-use-header', $gv)
         );
         $gv.boolean;
@@ -285,10 +286,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-dnd-drag-threshold is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-dnd-drag-threshold', $gv)
         );
         $gv.int;
@@ -302,10 +303,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-double-click-distance is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-double-click-distance', $gv)
         );
         $gv.int;
@@ -319,10 +320,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-double-click-time is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-double-click-time', $gv)
         );
         $gv.int;
@@ -336,10 +337,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-enable-accels is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-enable-accels', $gv)
         );
         $gv.boolean;
@@ -353,10 +354,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-enable-animations is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-enable-animations', $gv)
         );
         $gv.boolean;
@@ -370,10 +371,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-enable-event-sounds is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-enable-event-sounds', $gv)
         );
         $gv.boolean;
@@ -387,10 +388,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-enable-input-feedback-sounds is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-enable-input-feedback-sounds', $gv)
         );
         $gv.boolean;
@@ -404,10 +405,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-enable-mnemonics is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-enable-mnemonics', $gv)
         );
         $gv.boolean;
@@ -421,10 +422,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-enable-primary-paste is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-enable-primary-paste', $gv)
         );
         $gv.boolean;
@@ -438,10 +439,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-enable-tooltips is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-enable-tooltips', $gv)
         );
         $gv.boolean;
@@ -455,10 +456,10 @@ class GTK::Settings {
 
   # Type: guint
   method gtk-entry-password-hint-timeout is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-entry-password-hint-timeout', $gv)
         );
         $gv.uint;
@@ -472,10 +473,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-entry-select-on-focus is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-entry-select-on-focus', $gv)
         );
         $gv.boolean;
@@ -489,10 +490,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-error-bell is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-error-bell', $gv)
         );
         $gv.boolean;
@@ -506,10 +507,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-fallback-icon-theme is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-fallback-icon-theme', $gv)
         );
         $gv.string;
@@ -523,10 +524,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-file-chooser-backend is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-file-chooser-backend', $gv)
         );
         $gv.string;
@@ -540,10 +541,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-font-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-font-name', $gv)
         );
         $gv.string;
@@ -557,10 +558,10 @@ class GTK::Settings {
 
   # Type: guint
   method gtk-fontconfig-timestamp is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-fontconfig-timestamp', $gv)
         );
         $gv.uint;
@@ -574,10 +575,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-icon-sizes is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-icon-sizes', $gv)
         );
         $gv.string;
@@ -591,10 +592,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-icon-theme-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-icon-theme-name', $gv)
         );
         $gv.string;
@@ -608,10 +609,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-im-module is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-im-module', $gv)
         );
         $gv.string;
@@ -625,10 +626,10 @@ class GTK::Settings {
 
   # Type: GtkIMPreeditStyle
   method gtk-im-preedit-style is rw  is DEPRECATED {
-    # my GTK::Compat::Value $gv .= new( -type- );
+    # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
     #   FETCH => -> $ {
-    #     $gv = GTK::Compat::Value.new(
+    #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-im-preedit-style', $gv)
     #     );
     #     #$gv.TYPE
@@ -642,10 +643,10 @@ class GTK::Settings {
 
   # Type: GtkIMStatusStyle
   method gtk-im-status-style is rw  is DEPRECATED {
-    # my GTK::Compat::Value $gv .= new( -type- );
+    # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
     #   FETCH => -> $ {
-    #     $gv = GTK::Compat::Value.new(
+    #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-im-status-style', $gv)
     #     );
     #     #$gv.TYPE
@@ -659,10 +660,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-key-theme-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-key-theme-name', $gv)
         );
         $gv.string;
@@ -676,10 +677,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-keynav-cursor-only is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-keynav-cursor-only', $gv)
         );
         $gv.boolean;
@@ -693,10 +694,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-keynav-use-caret is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-keynav-use-caret', $gv)
         );
         $gv.boolean;
@@ -710,10 +711,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-keynav-wrap-around is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-keynav-wrap-around', $gv)
         );
         $gv.boolean;
@@ -727,10 +728,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-label-select-on-focus is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-label-select-on-focus', $gv)
         );
         $gv.boolean;
@@ -744,10 +745,10 @@ class GTK::Settings {
 
   # Type: guint
   method gtk-long-press-time is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-long-press-time', $gv)
         );
         $gv.uint;
@@ -761,10 +762,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-menu-bar-accel is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-menu-bar-accel', $gv)
         );
         $gv.string;
@@ -778,10 +779,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-menu-bar-popup-delay is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-menu-bar-popup-delay', $gv)
         );
         $gv.int;
@@ -795,10 +796,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-menu-images is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-menu-images', $gv)
         );
         $gv.boolean;
@@ -812,10 +813,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-menu-popdown-delay is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-menu-popdown-delay', $gv)
         );
         $gv.int;
@@ -829,10 +830,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-menu-popup-delay is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-menu-popup-delay', $gv)
         );
         $gv.int;
@@ -846,10 +847,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-modules is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-modules', $gv)
         );
         $gv.string;
@@ -863,10 +864,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-primary-button-warps-slider is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-primary-button-warps-slider', $gv)
         );
         $gv.boolean;
@@ -880,10 +881,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-print-backends is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-print-backends', $gv)
         );
         $gv.string;
@@ -897,10 +898,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-print-preview-command is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-print-preview-command', $gv)
         );
         $gv.string;
@@ -914,10 +915,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-recent-files-enabled is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-recent-files-enabled', $gv)
         );
         $gv.boolean;
@@ -931,10 +932,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-recent-files-limit is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-recent-files-limit', $gv)
         );
         $gv.int;
@@ -948,10 +949,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-recent-files-max-age is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-recent-files-max-age', $gv)
         );
         $gv.int;
@@ -965,10 +966,10 @@ class GTK::Settings {
 
   # Type: GtkCornerType
   method gtk-scrolled-window-placement is rw  is DEPRECATED {
-    # my GTK::Compat::Value $gv .= new( -type- );
+    # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
     #   FETCH => -> $ {
-    #     $gv = GTK::Compat::Value.new(
+    #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-scrolled-window-placement', $gv)
     #     );
     #     #$gv.TYPE
@@ -982,10 +983,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-shell-shows-app-menu is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-shell-shows-app-menu', $gv)
         );
         $gv.boolean;
@@ -999,10 +1000,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-shell-shows-desktop is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-shell-shows-desktop', $gv)
         );
         $gv.boolean;
@@ -1016,10 +1017,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-shell-shows-menubar is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-shell-shows-menubar', $gv)
         );
         $gv.boolean;
@@ -1033,10 +1034,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-show-input-method-menu is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-show-input-method-menu', $gv)
         );
         $gv.boolean;
@@ -1050,10 +1051,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-show-unicode-menu is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-show-unicode-menu', $gv)
         );
         $gv.boolean;
@@ -1067,10 +1068,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-sound-theme-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-sound-theme-name', $gv)
         );
         $gv.string;
@@ -1084,10 +1085,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-split-cursor is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-split-cursor', $gv)
         );
         $gv.boolean;
@@ -1101,10 +1102,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-theme-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-theme-name', $gv)
         );
         $gv.string;
@@ -1118,10 +1119,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-timeout-expand is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-timeout-expand', $gv)
         );
         $gv.int;
@@ -1135,10 +1136,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-timeout-initial is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-timeout-initial', $gv)
         );
         $gv.int;
@@ -1152,10 +1153,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-timeout-repeat is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-timeout-repeat', $gv)
         );
         $gv.int;
@@ -1169,10 +1170,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-titlebar-double-click is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-titlebar-double-click', $gv)
         );
         $gv.string;
@@ -1186,10 +1187,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-titlebar-middle-click is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-titlebar-middle-click', $gv)
         );
         $gv.string;
@@ -1203,10 +1204,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-titlebar-right-click is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-titlebar-right-click', $gv)
         );
         $gv.string;
@@ -1220,10 +1221,10 @@ class GTK::Settings {
 
   # Type: GtkIconSize
   method gtk-toolbar-icon-size is rw  is DEPRECATED {
-    # my GTK::Compat::Value $gv .= new( -type- );
+    # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
     #   FETCH => -> $ {
-    #     $gv = GTK::Compat::Value.new(
+    #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-toolbar-icon-size', $gv)
     #     );
     #     #$gv.TYPE
@@ -1237,10 +1238,10 @@ class GTK::Settings {
 
   # Type: GtkToolbarStyle
   method gtk-toolbar-style is rw  is DEPRECATED {
-    # my GTK::Compat::Value $gv .= new( -type- );
+    # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
     #   FETCH => -> $ {
-    #     $gv = GTK::Compat::Value.new(
+    #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-toolbar-style', $gv)
     #     );
     #     #$gv.TYPE
@@ -1254,10 +1255,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-tooltip-browse-mode-timeout is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-tooltip-browse-mode-timeout', $gv)
         );
         $gv.int;
@@ -1271,10 +1272,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-tooltip-browse-timeout is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-tooltip-browse-timeout', $gv)
         );
         $gv.int;
@@ -1288,10 +1289,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-tooltip-timeout is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-tooltip-timeout', $gv)
         );
         $gv.int;
@@ -1305,10 +1306,10 @@ class GTK::Settings {
 
   # Type: gboolean
   method gtk-touchscreen-mode is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-touchscreen-mode', $gv)
         );
         $gv.boolean;
@@ -1322,10 +1323,10 @@ class GTK::Settings {
 
   # Type: GtkPolicyType
   method gtk-visible-focus is rw  is DEPRECATED {
-    # my GTK::Compat::Value $gv .= new( -type- );
+    # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
     #   FETCH => -> $ {
-    #     $gv = GTK::Compat::Value.new(
+    #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-visible-focus', $gv)
     #     );
     #     #$gv.TYPE
@@ -1339,10 +1340,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-xft-antialias is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-xft-antialias', $gv)
         );
         $gv.int;
@@ -1356,10 +1357,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-xft-dpi is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-xft-dpi', $gv)
         );
         $gv.int;
@@ -1373,10 +1374,10 @@ class GTK::Settings {
 
   # Type: gint
   method gtk-xft-hinting is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-xft-hinting', $gv)
         );
         $gv.int;
@@ -1390,10 +1391,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-xft-hintstyle is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-xft-hintstyle', $gv)
         );
         $gv.string;
@@ -1407,10 +1408,10 @@ class GTK::Settings {
 
   # Type: gchar
   method gtk-xft-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gtk-xft-rgba', $gv)
         );
         $gv.string;

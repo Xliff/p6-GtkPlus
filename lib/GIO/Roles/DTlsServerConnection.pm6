@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
-use GTK::Compat::Value;
+use GLib::Value;
 
 role GIO::Roles::DtlsServerConnection {
   has GDtlsServerConnection $!dtsc;
@@ -52,10 +52,10 @@ role GIO::Roles::DtlsServerConnection {
 
   # Type: GDtlsAuthenticationMode
   method authentication-mode is rw  is also<authentication_mode> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('authentication-mode', $gv)
         );
         GTlsAuthenticationModeEnum( $gv.uint );

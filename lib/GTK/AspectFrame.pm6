@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::AspectFrame;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Frame;
 
 our subset AspectFrameAncestry is export
@@ -72,7 +73,7 @@ class GTK::AspectFrame is GTK::Frame {
 
   # Type: gboolean
   method obey-child is rw is also<obey_child> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('obey-child', $gv);
@@ -87,7 +88,7 @@ class GTK::AspectFrame is GTK::Frame {
 
   # Type: gfloat
   method ratio is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('ratio', $gv);
@@ -102,7 +103,7 @@ class GTK::AspectFrame is GTK::Frame {
 
   # Type: gfloat
   method xalign is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('xalign', $gv);
@@ -117,7 +118,7 @@ class GTK::AspectFrame is GTK::Frame {
 
   # Type: gfloat
   method yalign is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('yalign', $gv);

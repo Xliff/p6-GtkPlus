@@ -10,11 +10,12 @@ use GTK::Raw::ColorChooser;
 use GTK::Raw::Label;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Box;
 
 use GTK::Roles::ColorChooser;
 
-our subset ColorChooserAncestry is export 
+our subset ColorChooserAncestry is export
   where GtkColorChooser | BoxAncestry;
 
 class GTK::ColorChooser is GTK::Box {
@@ -74,10 +75,10 @@ class GTK::ColorChooser is GTK::Box {
   # Type: gboolean
 
   method show-editor is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('show-editor', $gv)
         );
         $gv.boolean;

@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::TreeModelFilter;
 use GTK::Raw::Types;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeDnD;
@@ -25,7 +27,7 @@ class GTK::TreeModelFilter {
     $!tm = nativecast(GtkTreeModel, $!tmf);         # GTK::Roles::TreeModel
     $!ds = nativecast(GtkTreeDragSource, $!tmf);    # GTK::Roles::TreeDragSource
   }
-  
+
   method GTK::Raw::Types::GtkTreeModelFilter is also<TreeModelFilter> { $!tmf }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -38,7 +40,7 @@ class GTK::TreeModelFilter {
 
   # Type: GtkTreeModel
   method child-model is rw is also<child_model> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('child-model', $gv);
@@ -53,7 +55,7 @@ class GTK::TreeModelFilter {
 
   # Type: GtkTreePath
   method virtual-root is rw is also<virtual_root> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('virtual-root', $gv) ;
@@ -76,8 +78,8 @@ class GTK::TreeModelFilter {
   method convert_child_iter_to_iter (
     GtkTreeIter() $filter_iter,
     GtkTreeIter() $child_iter
-  ) 
-    is also<convert-child-iter-to-iter> 
+  )
+    is also<convert-child-iter-to-iter>
   {
     gtk_tree_model_filter_convert_child_iter_to_iter(
       $!tmf,
@@ -86,8 +88,8 @@ class GTK::TreeModelFilter {
     );
   }
 
-  method convert_child_path_to_path (GtkTreePath() $child_path) 
-    is also<convert-child-path-to-path> 
+  method convert_child_path_to_path (GtkTreePath() $child_path)
+    is also<convert-child-path-to-path>
   {
     gtk_tree_model_filter_convert_child_path_to_path($!tmf, $child_path);
   }
@@ -95,8 +97,8 @@ class GTK::TreeModelFilter {
   method convert_iter_to_child_iter (
     GtkTreeIter() $child_iter,
     GtkTreeIter() $filter_iter
-  ) 
-    is also<convert-iter-to-child-iter> 
+  )
+    is also<convert-iter-to-child-iter>
   {
     gtk_tree_model_filter_convert_iter_to_child_iter(
       $!tmf,
@@ -105,8 +107,8 @@ class GTK::TreeModelFilter {
     );
   }
 
-  method convert_path_to_child_path (GtkTreePath() $filter_path) 
-    is also<convert-path-to-child-path> 
+  method convert_path_to_child_path (GtkTreePath() $filter_path)
+    is also<convert-path-to-child-path>
   {
     gtk_tree_model_filter_convert_path_to_child_path($!tmf, $filter_path);
   }
@@ -133,8 +135,8 @@ class GTK::TreeModelFilter {
     GtkTreeModelFilterModifyFunc $func,
     gpointer $data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
-  ) 
-    is also<set-modify-func> 
+  )
+    is also<set-modify-func>
   {
     my gint $nc = self.RESOLVE-INT($n_columns);
     gtk_tree_model_filter_set_modify_func(
@@ -156,8 +158,8 @@ class GTK::TreeModelFilter {
     GtkTreeModelFilterVisibleFunc $func,
     gpointer $data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
-  ) 
-    is also<set-visible-func> 
+  )
+    is also<set-visible-func>
   {
     gtk_tree_model_filter_set_visible_func($!tmf, $func, $data, $destroy);
   }

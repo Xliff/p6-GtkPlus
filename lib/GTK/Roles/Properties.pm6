@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Compat::Raw::IsType;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
+use GLib::Value;
 
 use GTK::Raw::Subs;
 
@@ -113,7 +113,7 @@ role GTK::Roles::Properties {
   { * }
 
   multi method get_prop(Str() $name, Int() $type) {
-    my @v = ( GTK::Compat::Value.new($type).gvalue );
+    my @v = ( GLib::Value.new($type).gvalue );
     samewith( [$name], @v );
     @v[0];
   }
@@ -142,7 +142,7 @@ role GTK::Roles::Properties {
     g_object_getv( $!prop, $ne, $n, @v[0].p );
 
     # @values = ();
-    # @values.push( GTK::Compat::Value.new($v[$_]) ) for (^$v.elems);
+    # @values.push( GLib::Value.new($v[$_]) ) for (^$v.elems);
 
     # Be perlish with the return. -- Maybe do @values[$_].value
     %(do for (^@names.elems) {

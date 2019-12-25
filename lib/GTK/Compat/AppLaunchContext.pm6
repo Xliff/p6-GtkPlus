@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Value;
+use GLib::Value;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::AppLaunchContext;
 
@@ -37,10 +37,10 @@ class GTK::Compat::AppLaunchContext {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
   # Type: GdkDisplay
 method display is rw  {
-  my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+  my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('display', $gv)
         );
         GTK::Compat::Display.new( nativecast(GdkDisplay, $gv.object) );

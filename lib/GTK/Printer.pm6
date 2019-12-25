@@ -8,6 +8,8 @@ use GTK::Compat::Types;
 use GTK::Raw::Printer;
 use GTK::Raw::Types;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
@@ -26,7 +28,7 @@ class GTK::Printer {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
-  
+
   method GTK::Raw::Types::GtkPrinter is also<Printer> { $!prn }
 
   multi method new (GtkPrinter $printer) {
@@ -59,10 +61,10 @@ class GTK::Printer {
 
   # Type: gboolean
   method accepting-jobs is rw is also<accepting_jobs> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'accepting-jobs', $gv)
         );
         $gv.boolean;
@@ -75,10 +77,10 @@ class GTK::Printer {
 
   # Type: GtkPrintBackend
   method backend is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'backend', $gv)
         );
         nativecast(GtkPrintBackend, $gv.object);
@@ -92,10 +94,10 @@ class GTK::Printer {
 
   # Type: gchar
   method icon-name is rw is also<icon_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'icon-name', $gv)
         );
         $gv.string;
@@ -108,10 +110,10 @@ class GTK::Printer {
 
   # Type: gint
   method job-count is rw is also<job_count> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'job-count', $gv)
         );
         $gv.int;
@@ -124,10 +126,10 @@ class GTK::Printer {
 
   # Type: gchar
   method location is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'location', $gv)
         );
         $gv.string;
@@ -140,10 +142,10 @@ class GTK::Printer {
 
   # Type: gchar
   method name is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'name', $gv)
         );
         $gv.string;
@@ -157,10 +159,10 @@ class GTK::Printer {
 
   # Type: gboolean
   method paused is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'paused', $gv)
         );
         $gv.boolean;
@@ -173,10 +175,10 @@ class GTK::Printer {
 
   # Type: gchar
   method state-message is rw is also<state_message> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get( $!prn, 'state-message', $gv)
         );
         $gv.string;

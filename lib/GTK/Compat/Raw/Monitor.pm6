@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
+use GLib::Value;
 
 unit package GTK::Compat::Raw::Monitor;
 

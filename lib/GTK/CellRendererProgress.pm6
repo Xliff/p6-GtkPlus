@@ -7,9 +7,10 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRendererProgress;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::CellRenderer;
 
-our subset CellRendererProgressAncestry is export 
+our subset CellRendererProgressAncestry is export
   where GtkCellRendererProgress | GtkCellRenderer;
 
 class GTK::CellRendererProgress is GTK::CellRenderer {
@@ -32,7 +33,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
       }
     }
   }
-  
+
   method setCellRendererProgress(CellRendererProgressAncestry $progress) {
     my $to-parent;
     $!crp = do given $progress {
@@ -48,8 +49,8 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     self.setCellRenderer($to-parent);
   }
 
-  method GTK::Raw::Types::CellRendererProgress 
-    is also<CellRendererProgress> 
+  method GTK::Raw::Types::CellRendererProgress
+    is also<CellRendererProgress>
   { $!crp }
 
   multi method new {
@@ -67,7 +68,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   # Type: gboolean
   method inverted is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('inverted', $gv);
@@ -82,7 +83,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   # Type: gint
   method pulse is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pulse', $gv);
@@ -97,7 +98,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   # Type: gchar
   method text is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('text', $gv);
@@ -112,7 +113,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   # Type: gfloat
   method text-xalign is rw is also<text_xalign> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('text-xalign', $gv);
@@ -127,7 +128,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   # Type: gfloat
   method text-yalign is rw is also<text_yalign> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('text-yalign', $gv);
@@ -142,7 +143,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   # Type: gint
   method value is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('value', $gv);

@@ -10,6 +10,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Image;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Widget;
 
 our subset ImageAncestry is export where GtkImage | WidgetAncestry;
@@ -134,10 +135,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: Str()
   method file is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('file', $gv)
         );
         $gv.string;
@@ -151,10 +152,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: GIcon
   method gicon is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('gicon', $gv)
         );
         nativecast(GIcon, $gv.object);
@@ -168,10 +169,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: Str()
   method icon-name is rw is also<icon_name> {
-    my $gv = GTK::Compat::Value.new( G_TYPE_STRING );
+    my $gv = GLib::Value.new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('icon-name', $gv)
         );
         $gv.string;
@@ -188,10 +189,10 @@ class GTK::Image is GTK::Widget {
     is DEPRECATED('GTK::Image.icon-name')
     is also<icon_set>
   {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('icon-set', $gv)
         );
         nativecast(GtkIconSet, $gv.object);
@@ -205,10 +206,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: gint
   method icon-size is rw is also<icon_size> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('icon-size', $gv)
         );
         $gv.int;
@@ -222,10 +223,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: GdkPixbuf
   method pixbuf (:$raw) is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        # $gv = GTK::Compat::Value.new(
+        # $gv = GLib::Value.new(
         #   self.prop_get('pixbuf', $gv)
         # );
         # GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
@@ -241,10 +242,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: GdkPixbufAnimation
   method pixbuf-animation is rw is also<pixbuf_animation> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('pixbuf-animation', $gv)
         );
         nativecast(GdkPixbufAnimation, $gv.object);
@@ -258,10 +259,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: Str()
   method resource is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('resource', $gv)
         );
         $gv.string;
@@ -275,10 +276,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: Str()
   method stock is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('stock', $gv)
         );
         $gv.string;
@@ -292,10 +293,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: GtkImageType
   method storage-type is rw is also<storage_type> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('storage-type', $gv)
         );
         GtkImageType( $gv.int );
@@ -308,10 +309,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: CairoSurface
   method surface is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('surface', $gv)
         );
         nativecast(cairo_surface_t, $gv.pointer);
@@ -325,10 +326,10 @@ class GTK::Image is GTK::Widget {
 
   # Type: gboolean
   method use-fallback is rw is also<use_fallback> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('use-fallback', $gv)
         );
         $gv.boolean;

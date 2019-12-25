@@ -7,9 +7,10 @@ use GTK::Compat::Types;
 use GTK::Raw::Revealer;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Bin;
 
-our subset RevealerAncestry is export 
+our subset RevealerAncestry is export
   where GtkRevealer | BinAncestry;
 
 class GTK::Revealer is GTK::Bin {
@@ -59,10 +60,10 @@ class GTK::Revealer is GTK::Bin {
 
   # Type: gboolean
   method child-revealed is rw is also<child_revealed> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('child-revealed', $gv)
         );
         $gv.boolean;

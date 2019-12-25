@@ -122,7 +122,7 @@ sub MAIN (
       }
       with $rw {
         %c<read> =
-        '$gv = GTK::Compat::Value.new(' ~
+        '$gv = GLib::Value.new(' ~
         "\n\t  " ~ "self.prop_get('{ $mn }', \$gv)\n" ~
         "\t);\n" ~
         $vtype-r
@@ -152,7 +152,7 @@ sub MAIN (
       %methods{$mn} = qq:to/METH/;
     # Type: { $types }
     method $mn is rw { $deprecated } \{
-      my GTK::Compat::Value \$gv .= new( $gtype );
+      my GLib::Value \$gv .= new( $gtype );
       Proxy.new(
         FETCH => -> \$ \{
           { %c<read> }

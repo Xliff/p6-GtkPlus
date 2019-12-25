@@ -10,13 +10,14 @@ use GTK::Compat::Types;
 use GTK::Raw::Entry;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Widget;
 use GTK::EntryBuffer;
 
 use GTK::Roles::Editable;
 use GTK::Roles::Signals::Entry;
 
-our subset EntryAncestry is export 
+our subset EntryAncestry is export
   where GtkEntry | GtkEditable | WidgetAncestry;
 
 class GTK::Entry is GTK::Widget {
@@ -413,10 +414,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gint
   method cursor-position is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('cursor-position', $gv)
         );
         $gv.int;
@@ -429,10 +430,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gboolean
   method editable is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('editable', $gv)
         );
         $gv.boolean;
@@ -446,10 +447,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gboolean
   method enable-emoji-completion is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('enable-emoji-completion', $gv)
         );
         $gv.boolean;
@@ -463,10 +464,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gchar
   method im-module is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('im-module', $gv)
         );
         $gv.string;
@@ -477,13 +478,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: guint
   method invisible-char is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('invisible-char', $gv)
         );
         $gv.uint;
@@ -497,10 +498,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gboolean
   method invisible-char-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('invisible-char-set', $gv)
         );
         $gv.boolean;
@@ -511,13 +512,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gboolean
   method populate-all is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('populate-all', $gv)
         );
         $gv.boolean;
@@ -531,10 +532,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gboolean
   method primary-icon-activatable is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-activatable', $gv)
         );
         $gv.boolean;
@@ -545,14 +546,14 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
-  # GIcon us supposedly 
+
+  # GIcon us supposedly
   # # Type: GIcon
   # method primary-icon-gicon is rw  {
-  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new(
+  #       $gv = GLib::Value.new(
   #         self.prop_get('primary-icon-gicon', $gv)
   #       );
   #       #$gv.TYPE
@@ -566,10 +567,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gchar
   method primary-icon-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-name', $gv)
         );
         $gv.string;
@@ -580,13 +581,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: GdkPixbuf
   method primary-icon-pixbuf is rw  {
-    my GTK::Compat::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+    my GLib::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-pixbuf', $gv)
         );
         GTK::Compat::Pixbuf.new(
@@ -602,10 +603,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gboolean
   method primary-icon-sensitive is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-sensitive', $gv)
         );
         $gv.boolean;
@@ -619,10 +620,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gchar
   method primary-icon-stock is rw  is DEPRECATED( “primary-icon-name” ) {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-stock', $gv)
         );
         $gv.string;
@@ -633,13 +634,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: GtkImageType (uint32)
   method primary-icon-storage-type is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-storage-type', $gv)
         );
         GtkImageType( $gv.uint);
@@ -649,13 +650,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gchar
   method primary-icon-tooltip-markup is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-tooltip-markup', $gv)
         );
         $gv.string;
@@ -666,13 +667,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gchar
   method primary-icon-tooltip-text is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('primary-icon-tooltip-text', $gv)
         );
         $gv.string;
@@ -686,10 +687,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gint
   method scroll-offset is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('scroll-offset', $gv)
         );
         $gv.int;
@@ -699,13 +700,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gboolean
   method secondary-icon-activatable is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-activatable', $gv)
         );
         $gv.boolean;
@@ -716,14 +717,14 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # GIcon is supposedly deprecated.
   # # Type: GIcon
   # method secondary-icon-gicon is rw  {
-  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new(
+  #       $gv = GLib::Value.new(
   #         self.prop_get('secondary-icon-gicon', $gv)
   #       );
   #       #$gv.TYPE
@@ -734,13 +735,13 @@ class GTK::Entry is GTK::Widget {
   #     }
   #   );
   # }
-  
+
   # Type: gchar
   method secondary-icon-name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-name', $gv)
         );
         $gv.string;
@@ -751,16 +752,16 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: GdkPixbuf
   method secondary-icon-pixbuf is rw  {
-    my GTK::Compat::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+    my GLib::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-pixbuf', $gv)
         );
-        GTK::Compat::Pixbuf.new( 
+        GTK::Compat::Pixbuf.new(
           nativecast(GdkPixbuf, $gv.objecty)
         );
       },
@@ -770,13 +771,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gboolean
   method secondary-icon-sensitive is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-sensitive', $gv)
         );
         $gv.boolean;
@@ -790,10 +791,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gchar
   method secondary-icon-stock is rw  is DEPRECATED( “secondary-icon-name” ) {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-stock', $gv)
         );
         $gv.string;
@@ -807,10 +808,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: GtkImageType (uint32)
   method secondary-icon-storage-type is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-storage-type', $gv)
         );
         GtkImageType( $gv.uint );
@@ -820,13 +821,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
- 
+
   # Type: gchar
   method secondary-icon-tooltip-markup is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-tooltip-markup', $gv)
         );
         $gv.string;
@@ -837,13 +838,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gchar
   method secondary-icon-tooltip-text is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('secondary-icon-tooltip-text', $gv)
         );
         $gv.string;
@@ -854,13 +855,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gint
   method selection-bound is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('selection-bound', $gv)
         );
         $gv.int;
@@ -873,10 +874,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gboolean
   method show-emoji-icon is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('show-emoji-icon', $gv)
         );
         $gv.boolean;
@@ -890,10 +891,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: guint
   method text-length is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('text-length', $gv)
         );
         $gv.uint;
@@ -903,13 +904,13 @@ class GTK::Entry is GTK::Widget {
       }
     );
   }
-  
+
   # Type: gboolean
   method truncate-multiline is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('truncate-multiline', $gv)
         );
         $gv.boolean;
@@ -923,10 +924,10 @@ class GTK::Entry is GTK::Widget {
 
   # Type: gfloat
   method xalign is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('xalign', $gv)
         );
         $gv.float;

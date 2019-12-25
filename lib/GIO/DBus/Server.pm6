@@ -8,6 +8,7 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Server;
 
+use GLib::Value;
 use GIO::DBus::AuthObserver;
 
 use GTK::Roles::Properties;
@@ -57,10 +58,10 @@ class GIO::DBus::Server {
 
   # Type: gchar
   method address is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('address', $gv)
         );
         $gv.string;
@@ -73,10 +74,10 @@ class GIO::DBus::Server {
 
   # Type: GDBusAuthObserver
   method authentication-observer (:$raw = False) is rw is also<authentication_observer> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('authentication-observer', $gv)
         );
         return Nil unless $gv.object;

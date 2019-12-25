@@ -4,10 +4,10 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 use GTK::Raw::Frame;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Bin;
 
 our subset FrameAncestry is export where GtkFrame | BinAncestry;
@@ -59,10 +59,10 @@ class GTK::Frame is GTK::Bin {
 
   # Type: gfloat
   method label-xalign is rw is also<label_xalign> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('label-xalign', $gv)
         );
         $gv.float;
@@ -76,10 +76,10 @@ class GTK::Frame is GTK::Bin {
 
   # Type: gfloat
   method label-yalign is rw is also<label_yalign> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_FLOAT );
+    my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('label-yalign', $gv)
         );
         $gv.float;

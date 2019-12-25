@@ -6,6 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Box;
 
 our subset ShortcutsShortcutAncestry is export
@@ -42,8 +43,8 @@ class GTK::ShortcutsShortcut is GTK::Box {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkShortcutsShortcut 
+
+  method GTK::Raw::Types::GtkShortcutsShortcut
     is also<ShortcutsShortcut>
   { $!s }
 
@@ -63,7 +64,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: GtkSizeGroup
   method accel-size-group is rw is also<accel_size_group> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         warn 'accel-size-group does not allow reading' if $DEBUG;
@@ -78,10 +79,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: gchar
   method accelerator is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('accelerator', $gv) );
+        $gv = GLib::Value.new( self.prop_get('accelerator', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -93,10 +94,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: gchar
   method action-name is rw is also<action_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('action-name', $gv) );
+        $gv = GLib::Value.new( self.prop_get('action-name', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -108,10 +109,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: GtkTextDirection
   method direction is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('direction', $gv) );
+        $gv = GLib::Value.new( self.prop_get('direction', $gv) );
         GtkTextDirection( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
@@ -123,10 +124,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: GIcon
   method icon is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('icon', $gv) );
+        $gv = GLib::Value.new( self.prop_get('icon', $gv) );
         nativecast(GIcon, $gv.pointer);
       },
       STORE => -> $, GIcon $val is copy {
@@ -138,10 +139,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: gboolean
   method icon-set is rw is also<icon_set> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('icon-set', $gv) );
+        $gv = GLib::Value.new( self.prop_get('icon-set', $gv) );
         $gv.boolean;
       },
       STORE => -> $, $val is copy {
@@ -153,10 +154,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: GtkShortcutType
   method shortcut-type is rw is also<shortcut_type> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('shortcut-type', $gv) );
+        $gv = GLib::Value.new( self.prop_get('shortcut-type', $gv) );
         GtkShortcutType( $gv.enum );
       },
       STORE => -> $, $val is copy {
@@ -168,10 +169,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: gchar
   method subtitle is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('subtitle', $gv) );
+        $gv = GLib::Value.new( self.prop_get('subtitle', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -183,10 +184,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: gboolean
   method subtitle-set is rw is also<subtitle_set> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('subtitle-set', $gv) );
+        $gv = GLib::Value.new( self.prop_get('subtitle-set', $gv) );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -198,10 +199,10 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: gchar
   method title is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv) );
+        $gv = GLib::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -213,7 +214,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
 
   # Type: GtkSizeGroup
   method title-size-group is rw is also<title_size_group> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         warn 'title-size-group does not allow reading' if $DEBUG;

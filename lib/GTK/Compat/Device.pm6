@@ -6,6 +6,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Device;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GTK::Roles::Types;
 
@@ -77,10 +79,10 @@ class GTK::Compat::Device {
 
   # Type: GdkDevice
   method associated-device is rw is also<associated_device> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('associated-device', $gv)
         );
         GTK::Compat::Device.new( $gv.object );
@@ -93,10 +95,10 @@ class GTK::Compat::Device {
 
   # Type: GdkAxisFlags
   method axes is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('axes', $gv)
         );
         GdkAxisFlags( $gv.uint );
@@ -109,10 +111,10 @@ class GTK::Compat::Device {
 
   # Type: GdkDeviceManager
   method device-manager is rw is also<device_manager> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('device-manager', $gv)
         );
         $gv.object;
@@ -126,10 +128,10 @@ class GTK::Compat::Device {
 
   # Type: GdkDisplay
   method display is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('display', $gv)
         );
         $gv.object;
@@ -143,10 +145,10 @@ class GTK::Compat::Device {
 
   # Type: gboolean
   method has-cursor is rw is also<has_cursor> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('has-cursor', $gv)
         );
         $gv.boolean;
@@ -160,10 +162,10 @@ class GTK::Compat::Device {
 
   # Type: GdkInputMode
   method input-mode is rw is also<input_mode> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('input-mode', $gv)
         );
         GdkInputMode( $gv.uint );
@@ -177,10 +179,10 @@ class GTK::Compat::Device {
 
   # Type: GdkInputSource
   method input-source is rw is also<input_source> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('input-source', $gv)
         );
         GdkInputSource( $gv.uint );
@@ -194,10 +196,10 @@ class GTK::Compat::Device {
 
   # Type: guint
   method n-axes is rw is also<n_axes> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('n-axes', $gv)
         );
         $gv.uint;
@@ -210,10 +212,10 @@ class GTK::Compat::Device {
 
   # Type: gchar
   method name is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('name', $gv)
         );
         $gv.string;
@@ -227,10 +229,10 @@ class GTK::Compat::Device {
 
   # Type: guint
   method num-touches is rw is also<num_touches> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('num-touches', $gv)
         );
         $gv.uint;
@@ -244,10 +246,10 @@ class GTK::Compat::Device {
 
   # Type: gchar
   method product-id is rw is also<product_id> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('product-id', $gv)
         );
         $gv.string;
@@ -261,10 +263,10 @@ class GTK::Compat::Device {
 
   # Type: GdkSeat
   method seat is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('seat', $gv)
         );
         $gv.object;
@@ -278,10 +280,10 @@ class GTK::Compat::Device {
 
   # Type: GdkDeviceTool
   method tool is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('tool', $gv)
         );
         $gv.object
@@ -294,10 +296,10 @@ class GTK::Compat::Device {
 
   # Type: GdkDeviceType
   method type is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('type', $gv)
         );
         GdkDeviceType( $gv.uint );
@@ -311,10 +313,10 @@ class GTK::Compat::Device {
 
   # Type: gchar
   method vendor-id is rw is also<vendor_id> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('vendor-id', $gv)
         );
         $gv.string;

@@ -6,10 +6,11 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Box;
 use GTK::SizeGroup;
 
-our subset ShortcutsGroupAncestry is export 
+our subset ShortcutsGroupAncestry is export
   where GtkShortcutsGroup | BoxAncestry;
 
 class GTK::ShortcutsGroup is GTK::Box {
@@ -43,7 +44,7 @@ class GTK::ShortcutsGroup is GTK::Box {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkShortcutsGroup is also<ShortcutsGroup> { $!sg }
 
   method new (ShortcutsGroupAncestry $group) {
@@ -62,7 +63,7 @@ class GTK::ShortcutsGroup is GTK::Box {
 
   # Type: GtkSizeGroup
   method accel-size-group is rw is also<accel_size_group> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         warn 'accel-size-group does not allow reading' if $DEBUG;
@@ -77,10 +78,10 @@ class GTK::ShortcutsGroup is GTK::Box {
 
   # Type: guint
   method height is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv) );
+        $gv = GLib::Value.new( self.prop_get('height', $gv) );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
@@ -91,10 +92,10 @@ class GTK::ShortcutsGroup is GTK::Box {
 
   # Type: gchar
   method title is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv) );
+        $gv = GLib::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -106,7 +107,7 @@ class GTK::ShortcutsGroup is GTK::Box {
 
   # Type: GtkSizeGroup
   method title-size-group is rw is also<title_size_group> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         warn 'title-size-group does not allow reading' if $DEBUG;
@@ -121,10 +122,10 @@ class GTK::ShortcutsGroup is GTK::Box {
 
   # Type: gchar
   method view is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('view', $gv) );
+        $gv = GLib::Value.new( self.prop_get('view', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {

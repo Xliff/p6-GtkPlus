@@ -161,6 +161,7 @@ GLib::Raw::TimeZone
 GLib::Raw::Timer
 GLib::Raw::Tree
 GLib::Raw::Unicode
+GLib::Raw::Value
 GLib::Raw::Variant
 GLib::Raw::VariantType
 GLib::Roles::StaticClass
@@ -201,7 +202,6 @@ GTK::Compat::Raw::Rectangle
 GTK::Compat::Raw::Screen
 GTK::Compat::Raw::Seat
 GTK::Compat::Raw::Selection
-GTK::Compat::Raw::Value
 GTK::Compat::Raw::Visual
 GTK::Compat::Raw::Window
 GTK::Compat::Raw::X11_Display
@@ -516,16 +516,18 @@ GIO::SrvTarget
 GLib::ByteArray
 GLib::IOChannel
 GLib::Timeout
+GLib::Value
+GTK::AccelGroup
 GTK::Compat::Cairo
 GTK::Compat::DragContext
 GTK::Compat::FrameClock
 GTK::Compat::Pixbuf::Animation
+GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals
 GTK::Compat::Roles::Signals::Device
 GTK::Compat::Roles::Signals::Settings
 GTK::Compat::Screen
-GTK::Compat::Value
 GTK::DragContext
 GTK::FileFilter
 GTK::Get
@@ -627,7 +629,6 @@ GIO::ZlibCompressor
 GIO::ZlibDecompressor
 GLib::Object::ParamSpec
 GLib::VariantDict
-GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
 GTK::CSS_Section
@@ -644,8 +645,8 @@ GTK::Compat::Device
 GTK::Compat::Display
 GTK::Compat::DisplayManager
 GTK::Compat::Event
+GTK::Compat::Monitor
 GTK::Compat::Pixbuf
-GTK::Compat::Raw::Monitor
 GTK::Compat::Roles::GFile
 GTK::Compat::Seat
 GTK::EntryBuffer
@@ -691,7 +692,6 @@ GTK::CellRendererAccel
 GTK::CellRendererSpin
 GTK::Compat::AppLaunchContext
 GTK::Compat::Cursor
-GTK::Compat::Monitor
 GTK::Compat::Window
 GTK::TextBuffer
 GTK::Widget

@@ -9,6 +9,8 @@ use GIO::Raw::ThemedIcon;
 
 use GTK::Raw::Utils;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GIO::Roles::Icon;
 
@@ -58,10 +60,10 @@ class GIO::ThemedIcon {
 
   # Type: gboolean
   method use-default-fallbacks is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('use-default-fallbacks', $gv)
         );
         $gv.boolean;

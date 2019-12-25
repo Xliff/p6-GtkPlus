@@ -8,7 +8,7 @@ use GTK::Raw::Utils;
 
 use GLib::Object::Raw::ParamSpec;
 
-use GTK::Compat::Value;
+use GLib::Value;
 
 class GLib::Object::ParamSpec {
   has GParamSpec $!ps;
@@ -384,7 +384,7 @@ class GLib::Object::ParamSpec {
   method get_default_value {
     my $v = g_param_spec_get_default_value($!ps);
 
-    $v ?? GTK::Compat::Value.new($v, :!ref) !! Nil
+    $v ?? GLib::Value.new($v, :!ref) !! Nil
   }
 
   method get_name {

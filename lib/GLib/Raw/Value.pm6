@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Value;
+unit package GLib::Raw::Value;
 
 sub g_value_dup_string (GValue $value)
   returns Str

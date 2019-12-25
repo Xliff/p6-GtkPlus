@@ -9,6 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Raw::Utils;
 
+use GLib::Value;
 use GTK::Box;
 
 use GTK::Roles::FileChooser;
@@ -108,7 +109,7 @@ class GTK::FileChooserButton is GTK::Box {
 
   # Type: GtkFileChooser
   method dialog is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         warn 'GTK::FileChooserButton.dialog does not allow reading'

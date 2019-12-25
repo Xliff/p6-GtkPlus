@@ -4,31 +4,32 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 use GTK::Raw::CellAreaContext;
 use GTK::Raw::Types;
+
+use GLib::Value;
 
 use GTK::Roles::Properties;
 
 class GTK::CellAreaContext {
   also does GTK::Roles::Properties;
-  
+
   has GtkCellAreaContext $!cac is implementor;
-  
+
   submethod BUILD (:$context) {
     self.setCellAreaContext($context);
   }
-  
+
   method setCellAreaContext(GtkCellAreaContext $context) {
     self!setObject($!cac = $context);
   }
-    
+
   method GTK::Raw::Types::GtkCellAreaContext is also<CellAreaContext> { $!cac }
-  
+
   method new (GtkCellAreaContext $context) {
     self.bless(:$context);
   }
-  
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -40,7 +41,7 @@ class GTK::CellAreaContext {
 
   # Type: GtkCellArea
   method area is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('area', $gv);
@@ -55,7 +56,7 @@ class GTK::CellAreaContext {
 
   # Type: gint
   method minimum-height is rw is also<minimum_height> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('minimum-height', $gv);
@@ -69,7 +70,7 @@ class GTK::CellAreaContext {
 
   # Type: gint
   method minimum-width is rw is also<minimum_width> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('minimum-width', $gv);
@@ -83,7 +84,7 @@ class GTK::CellAreaContext {
 
   # Type: gint
   method natural-height is rw is also<natural_height> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('natural-height', $gv);
@@ -97,7 +98,7 @@ class GTK::CellAreaContext {
 
   # Type: gint
   method natural-width is rw is also<natural_width> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('natural-width', $gv);
@@ -118,8 +119,8 @@ class GTK::CellAreaContext {
     gtk_cell_area_context_allocate($!cac, $w, $h);
   }
 
-  method get_allocation (Int() $width, Int() $height) 
-    is also<get-allocation> 
+  method get_allocation (Int() $width, Int() $height)
+    is also<get-allocation>
   {
     my @i = ($width, $height);
     my gint ($w, $h) = self.RESOLVE-INT(@i);
@@ -130,8 +131,8 @@ class GTK::CellAreaContext {
     gtk_cell_area_context_get_area($!cac);
   }
 
-  method get_preferred_height (Int() $minimum_height, Int() $natural_height) 
-    is also<get-preferred-height> 
+  method get_preferred_height (Int() $minimum_height, Int() $natural_height)
+    is also<get-preferred-height>
   {
     my @i = ($minimum_height, $natural_height);
     my gint ($mh, $nh) = self.RESOLVE-INT(@i);
@@ -142,16 +143,16 @@ class GTK::CellAreaContext {
     Int() $width,
     Int() $minimum_height,
     Int() $natural_height
-  ) 
-    is also<get-preferred-height-for-width> 
+  )
+    is also<get-preferred-height-for-width>
   {
     my @i = ($width, $minimum_height, $natural_height);
     my gint ($w, $mh, $nh) = self.RESOLVE-INT(@i);
     gtk_cell_area_context_get_preferred_height_for_width($!cac, $w, $mh, $nh);
   }
 
-  method get_preferred_width (Int() $minimum_width, Int() $natural_width) 
-    is also<get-preferred-width> 
+  method get_preferred_width (Int() $minimum_width, Int() $natural_width)
+    is also<get-preferred-width>
   {
     my @i = ($minimum_width, $natural_width);
     my gint ($mw, $nw) = self.RESOLVE-INT(@i);
@@ -162,8 +163,8 @@ class GTK::CellAreaContext {
     Int() $height,
     Int() $minimum_width,
     Int() $natural_width
-  ) 
-    is also<get-preferred-width-for-height> 
+  )
+    is also<get-preferred-width-for-height>
   {
     my @i = ($height, $minimum_width, $natural_width);
     my gint ($h, $mw, $nw) = self.RESOLVE-INT(@i);
@@ -174,16 +175,16 @@ class GTK::CellAreaContext {
     gtk_cell_area_context_get_type();
   }
 
-  method push_preferred_height (Int() $minimum_height, Int() $natural_height) 
-    is also<push-preferred-height> 
+  method push_preferred_height (Int() $minimum_height, Int() $natural_height)
+    is also<push-preferred-height>
   {
     my @i = ($minimum_height, $natural_height);
     my gint ($mh, $nh) = self.RESOLVE-INT(@i);
     gtk_cell_area_context_push_preferred_height($!cac, $mh, $nh);
   }
 
-  method push_preferred_width (Int() $minimum_width, Int() $natural_width) 
-    is also<push-preferred-width> 
+  method push_preferred_width (Int() $minimum_width, Int() $natural_width)
+    is also<push-preferred-width>
   {
     my @i = ($minimum_width, $natural_width);
     my gint ($mw, $nw) = self.RESOLVE-INT(@i);

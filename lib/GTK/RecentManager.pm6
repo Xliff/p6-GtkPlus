@@ -8,6 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::Raw::RecentInfo;   # Contains Raw calls for ::RecentManager
 
+use GLib::Value;
+
 use GTK::Compat::Roles::ListData;
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
@@ -15,31 +17,31 @@ use GTK::Roles::Signals::Generic;
 class GTK::RecentManager {
   also does GTK::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
-  
+
   has GtkRecentManager $!rm is implementor;
-  
+
   submethod BUILD (:$manager) {
     self!setObject($!rm = $manager);
   };
-  
-  method GTK::Raw::Types::GtkRecentManager 
+
+  method GTK::Raw::Types::GtkRecentManager
     is also<RecentManager>
   { * }
-  
+
   method new {
     self.bless( manager => gtk_recent_manager_new() );
   }
-  
+
   method get_default {
     self.bless( manager => gtk_recent_manager_get_default() );
   }
-  
+
   # Type: gint
   method size is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('size', $gv)
         );
         $gv.int;
@@ -50,13 +52,13 @@ class GTK::RecentManager {
     );
   }
 
-  
+
   # Is originally:
   # GtkRecentManager, gpointer --> void
   method changed {
     self.connect($!rm, 'changed');
   }
-  
+
   method add_full (Str() $uri, GtkRecentData $recent_data) {
     so gtk_recent_manager_add_full($!rm, $uri, $recent_data);
   }
@@ -85,7 +87,7 @@ class GTK::RecentManager {
   }
 
   method lookup_item (
-    Str() $uri, 
+    Str() $uri,
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error
@@ -95,8 +97,8 @@ class GTK::RecentManager {
   }
 
   method move_item (
-    Str() $uri, 
-    Str() $new_uri, 
+    Str() $uri,
+    Str() $new_uri,
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error;
@@ -115,7 +117,7 @@ class GTK::RecentManager {
   }
 
   method remove_item (
-    Str() $uri, 
+    Str() $uri,
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error;

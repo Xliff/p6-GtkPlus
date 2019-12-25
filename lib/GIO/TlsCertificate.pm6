@@ -10,6 +10,7 @@ use GTK::Compat::FileTypes;
 use GIO::Raw::TlsCertificate;
 
 use GLib::ByteArray;
+use GLib::Value;
 use GTK::Compat::GList;
 
 use GTK::Compat::Roles::ListData;
@@ -95,10 +96,10 @@ class GIO::TlsCertificate {
 
   # Type: GByteArray
   method certificate (:$raw = False) is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('certificate', $gv)
         );
 
@@ -117,10 +118,10 @@ class GIO::TlsCertificate {
 
   # Type: gchar
   method certificate-pem is rw  is also<certificate_pem> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('certificate-pem', $gv)
         );
         $gv.string;
@@ -134,7 +135,7 @@ class GIO::TlsCertificate {
 
   # Type: GTlsCertificate
   method issuer (:$raw = False) is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ { self.get_issuer(:$raw) },
       STORE => -> $, GTlsCertificate() $val is copy {
@@ -146,7 +147,7 @@ class GIO::TlsCertificate {
 
   # Type: GByteArray
   method private-key is rw  is also<private_key> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         warn 'private-key does not allow reading' if $DEBUG;
@@ -161,7 +162,7 @@ class GIO::TlsCertificate {
 
   # Type: gchar
   method private-key-pem is rw  is also<private_key_pem> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         warn 'private-key-pem does not allow reading' if $DEBUG;
@@ -212,5 +213,5 @@ class GIO::TlsCertificate {
       g_tls_certificate_verify($!c, $identity, $trusted_ca)
     );
   }
-  
+
 }

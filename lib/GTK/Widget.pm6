@@ -6,11 +6,12 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::Context;
 
+use GLib::Value;
+
 use GTK::Compat::Display;
 use GTK::Compat::RGBA;
 use GTK::Compat::Screen;
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 use GTK::Compat::Window;
 
 use GTK::Raw::DnD;
@@ -1181,10 +1182,10 @@ class GTK::Widget {
 
   # Type: gboolean
   method composite-child is rw is also<composite_child> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
+    my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('composite-child', $gv)
         );
         $gv.boolean;
@@ -1198,10 +1199,10 @@ class GTK::Widget {
 
   # Type: gboolean
   method expand is rw {
-    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
+    my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('expand', $gv)
         );
         $gv.boolean;
@@ -1215,10 +1216,10 @@ class GTK::Widget {
 
   # Type: gboolean
   method has-focus is rw is also<has_focus> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
+    my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('has-focus', $gv)
         );
         $gv.boolean;
@@ -1232,10 +1233,10 @@ class GTK::Widget {
 
   # Type: gint
   method height-request is rw is also<height_request> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
+    my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('height-request', $gv)
         );
         $gv.int;
@@ -1249,10 +1250,10 @@ class GTK::Widget {
 
   # Type: gboolean
   method is-focus is rw is also<is_focus> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_BOOLEAN);
+    my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('is-focus', $gv) );
+        $gv = GLib::Value.new( self.prop_get('is-focus', $gv) );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1264,10 +1265,10 @@ class GTK::Widget {
 
   # Type: gint
   method margin is rw {
-    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
+    my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('margin', $gv) );
+        $gv = GLib::Value.new( self.prop_get('margin', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1279,10 +1280,10 @@ class GTK::Widget {
 
   # Type: gint
   method scale-factor is rw is also<scale_factor> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
+    my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get(
+        $gv = GLib::Value.new( self.prop_get(
           $!w, 'scale-factor', $gv)
         );
         $gv.int;
@@ -1299,7 +1300,7 @@ class GTK::Widget {
   #   my GValue $gv .= new;
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new( self.prop_get('style', $gv) );
+  #       $gv = GLib::Value.new( self.prop_get('style', $gv) );
   # #        $gv.get_TYPE;
   #     },
   #     STORE => -> $, GValue() $val is copy {
@@ -1314,7 +1315,7 @@ class GTK::Widget {
     my GValue $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get(
+        $gv = GLib::Value.new( self.prop_get(
           $!w, 'width-request', $gv)
         );
         $gv.int;

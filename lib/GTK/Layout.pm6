@@ -7,8 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::Layout;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Compat::Window;
-
 use GTK::Container;
 
 use GTK::Roles::Scrollable;
@@ -37,7 +37,7 @@ class GTK::Layout is GTK::Container {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkLayout is also<Layout> { $!l }
 
   method setLayout(LayoutAncestry $layout) {
@@ -86,10 +86,10 @@ class GTK::Layout is GTK::Container {
 
   # Type: guint
   method height is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('height', $gv) );
+        $gv = GLib::Value.new( self.prop_get('height', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -101,10 +101,10 @@ class GTK::Layout is GTK::Container {
 
   # Type: guint
   method width is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('width', $gv) );
+        $gv = GLib::Value.new( self.prop_get('width', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -121,10 +121,10 @@ class GTK::Layout is GTK::Container {
     GDK::Compat::Window.new( gtk_layout_get_bin_window($!l) );
   }
 
-  proto method get_size (|) 
+  proto method get_size (|)
     is also<get-size>
   { * }
-  
+
   multi method get_size {
     my ($w, $h);
     samewith($w, $h);

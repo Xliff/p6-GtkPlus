@@ -9,6 +9,7 @@ use GTK::Compat::FileTypes;
 use GTK::Raw::Utils;
 use GIO::Raw::TlsConnection;
 
+use GLib::Value;
 use GIO::Stream;
 use GIO::TlsDatabase;
 
@@ -66,10 +67,10 @@ class GIO::TlsConnection is GIO::Stream {
 
   # Type: GStrv
   method advertised-protocols is rw  is also<advertised_protocols> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('advertised-protocols', $gv)
         );
         return Nil unless $gv.pointer;
@@ -82,10 +83,10 @@ class GIO::TlsConnection is GIO::Stream {
 
   # Type: GIOStream
   method base-io-stream (:$raw = False) is rw is also<base_io_stream> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('base-io-stream', $gv)
         );
         return Nil unless $gv.object;

@@ -9,6 +9,7 @@ use GTK::Raw::Types;
 
 use GTK::Raw::Utils;
 
+use GLib::Value;
 use GTK::CellRenderer;
 
 use GTK::Roles::Signals::Generic;
@@ -119,7 +120,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
 
   # Type: gboolean
   method inconsistent is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('inconsistent', $gv);
@@ -134,7 +135,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
 
   # Type: gint
   method indicator-size is rw is also<indicator_size> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('indicator-size', $gv);

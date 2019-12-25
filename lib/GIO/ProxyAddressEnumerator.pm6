@@ -4,6 +4,8 @@ use Method::Also;
 
 use GTK::Compat::Types;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 
 use GIO::Roles::ProxyResolver;
@@ -30,10 +32,10 @@ class GIO::ProxyAddressEnumerator {
 
   # Type: GSocketConnectable
   method connectable (:$raw = False) is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('connectable', $gv)
         );
 
@@ -56,10 +58,10 @@ class GIO::ProxyAddressEnumerator {
 
   # Type: guint
   method default-port is rw  is also<default_port> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('default-port', $gv)
         );
         $gv.uint;
@@ -73,10 +75,10 @@ class GIO::ProxyAddressEnumerator {
 
   # Type: GProxyResolver
   method proxy-resolver (:$raw = False) is rw is also<proxy_resolver> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('proxy-resolver', $gv)
         );
 
@@ -99,10 +101,10 @@ class GIO::ProxyAddressEnumerator {
 
   # Type: gchar
   method uri is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('uri', $gv)
         );
         $gv.string;

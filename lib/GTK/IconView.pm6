@@ -7,17 +7,18 @@ use GTK::Compat::Types;
 use GTK::Raw::IconView;
 use GTK::Raw::Types;
 
-use GTK::Roles::CellLayout;
-use GTK::Roles::Scrollable;
-use GTK::Roles::Signals::IconView;
-
+use GLib::Value;
 use GTK::CellArea;
 use GTK::CellRenderer;
 use GTK::Container;
 use GTK::TreePath;
 
-our subset IconViewAncestry 
-  where GtkIconView | GtkCellLayout | GtkScrollable | ContainerAncestry;                       
+use GTK::Roles::CellLayout;
+use GTK::Roles::Scrollable;
+use GTK::Roles::Signals::IconView;
+
+our subset IconViewAncestry
+  where GtkIconView | GtkCellLayout | GtkScrollable | ContainerAncestry;
 
 class GTK::IconView is GTK::Container {
   also does GTK::Roles::CellLayout;
@@ -153,13 +154,13 @@ class GTK::IconView is GTK::Container {
       }
     );
   }
-  
+
   # Type: GtkCellArea
   method cell-area is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('cell-area', $gv)
         );
         GTK::CellArea.new( nativecast(GtkCellArea, $gv.object) );
@@ -418,7 +419,7 @@ class GTK::IconView is GTK::Container {
 
   # Needs better interface that considers object reuse (or at least recycling)
   method get_cursor (
-    GtkTreePath     $path is rw, 
+    GtkTreePath     $path is rw,
     GtkCellRenderer $cell is rw
   )
     is also<get-cursor>
@@ -428,11 +429,11 @@ class GTK::IconView is GTK::Container {
     $cpath[0] = nativecast(Pointer[GtkTreePath], $path);
     $ccell[0] = nativecast(Pointer[GtkCellRenderer], $cell);
     my $rc = gtk_icon_view_get_cursor($!iv, $cpath, $ccell);
-    
+
     if $rc {
-      $path = $cpath[0].defined ?? 
+      $path = $cpath[0].defined ??
         nativecast(GtkTreePath, $cpath[0])     !! GtkTreePath;
-      $cell = $ccell[0].defined ?? 
+      $cell = $ccell[0].defined ??
         nativecast(GtkCellRenderer, $ccell[0]) !! GtkCellRenderer;
     }
     $rc;
@@ -478,7 +479,7 @@ class GTK::IconView is GTK::Container {
     $ccell[0] = nativecast(Pointer[GtkCellRenderer], $cell);
     my $rc = gtk_icon_view_get_item_at_pos($!iv, $xx, $yy, $cpath, $ccell);
     if $rc {
-      $path = $cpath[0].defined ?? 
+      $path = $cpath[0].defined ??
         nativecast(GtkTreePath, $cpath[0]) !! GtkTreePath;
       $cell = $ccell[0].defined ??
         nativecast(GtkCellRenderer, $ccell[0]) !! GtkCellRenderer;
@@ -539,7 +540,7 @@ class GTK::IconView is GTK::Container {
       $citer
     );
     if $rc {
-      $model = $cmodel[0].defined ?? 
+      $model = $cmodel[0].defined ??
         nativecast(GtkTreeModel, $cmodel[0]) !! GtkTreeModel;
       $path  = $cpath[0].defined ??
         nativecast(GtkTreePath, $cpath[0])   !! GtkTreePath;
@@ -556,7 +557,7 @@ class GTK::IconView is GTK::Container {
 
   method get_visible_range (
     GtkTreePath $start_path is rw ,
-    GtkTreePath $end_path   is rw 
+    GtkTreePath $end_path   is rw
   )
     is also<get-visible-range>
   {

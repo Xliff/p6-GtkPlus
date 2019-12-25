@@ -4,21 +4,20 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 use GTK::Raw::ListStore;
 use GTK::Raw::Types;
-
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Object;
+use GLib::Value;
 
+use GTK::Compat::Roles::Object;
 use GTK::Roles::Buildable;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
 
 use GTK::TreeIter;
 
-my subset GValues where GTK::Compat::Value | GValue;
+my subset GValues where GLib::Value | GValue;
 
 class GTK::ListStore {
   also does GTK::Compat::Roles::Object;
@@ -108,7 +107,7 @@ class GTK::ListStore {
     die '$position cannot be less than -1 (append)' unless $position >= -1;
     die '@columns must consist of Integers.'
       unless @columns.all ~~ (Int, IntStr).any;
-    die '@values must contain GTK::Compat::Value or GValue elements'
+    die '@values must contain GLib::Value or GValue elements'
       unless @values.all ~~ GValues;
     if $n_values > @columns.elems {
       $n_values = @columns.elems;
@@ -147,7 +146,7 @@ class GTK::ListStore {
   {
     die 'Keys used %values must be integers.'
       unless %values.keys.all ~~ (Int, IntStr).any;
-    die 'Values used in %values must be GTK::Compat::Value or GValue.'
+    die 'Values used in %values must be GLib::Value or GValue.'
       unless %values.values.all ~~ GValues;
 
     my CArray[gint] $c_columns;
@@ -239,7 +238,7 @@ class GTK::ListStore {
         die 'Keys used %values must be integers.' unless .^can('Int').elems;
       }
     }
-    die 'Values used in %values must be GTK::Compat::Value or GValue.'
+    die 'Values used in %values must be GLib::Value or GValue.'
       unless %values.values.all ~~ GValues;
 
     %values.gist.say;
@@ -275,7 +274,7 @@ class GTK::ListStore {
 
     die '@columns must contain values that have an integer representation.'
       unless @columns.map( *.^can('Int').elems ).all > 0;
-    die '@values must contain GTK::Compat::Value or GValue elements'
+    die '@values must contain GLib::Value or GValue elements'
       unless @values.all ~~ GValues;
     $!accessed = True;
     my $c_columns = CArray[gint].new;
@@ -283,7 +282,7 @@ class GTK::ListStore {
     $c_columns[$_] = @columns[$_].Int for (^$n_values);
     for (^$n_values) {
       $c_values[$_]  = do given @values[$_] {
-        when GTK::Compat::Value { .gvalue }
+        when GLib::Value { .gvalue }
         when GValue             { $_      }
         default {
           die "Unknown type '{ .^name }' passed to GTK::ListStore.set_valuesv";

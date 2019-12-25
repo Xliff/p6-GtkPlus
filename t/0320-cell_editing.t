@@ -3,6 +3,8 @@ use v6.c;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GLib::Value;
+
 use GTK::Application;
 use GTK::Box;
 use GTK::Button;
@@ -21,7 +23,7 @@ my enum Cols <COLUMN_ITEM_NUMBER COLUMN_ITEM_PRODUCT COLUMN_ITEM_YUMMY>;
 sub set_values($model, $iter, $i) {
   my $idx = 0;
   for $i.Array -> $e {
-    my $v = GTK::Compat::Value.new(do given $e {
+    my $v = GLib::Value.new(do given $e {
       when Str { G_TYPE_STRING }
       default  { G_TYPE_UINT   }
     });
@@ -56,7 +58,7 @@ sub create_numbers_model {
   my $model = GTK::ListStore.new(G_TYPE_STRING, G_TYPE_INT);
   for ^10 {
     my $iter = $model.append;
-    my $v = GTK::Compat::Value.new(G_TYPE_STRING);
+    my $v = GLib::Value.new(G_TYPE_STRING);
 
     $v.string = $_;
     $model.set_value($iter, 0, $v);
@@ -110,7 +112,7 @@ sub cell_edited($c, $m, $col, $ps, $nt) {
   #my $col = $c.get_data_uint('column');
   my $idx = $p.get_indices()[1];
 
-  my $v = GTK::Compat::Value.new($col == 0 ?? G_TYPE_INT !! G_TYPE_STRING);
+  my $v = GLib::Value.new($col == 0 ?? G_TYPE_INT !! G_TYPE_STRING);
   if $col == 0 {
     $v.int = $nt;
   } elsif $col == 1 {

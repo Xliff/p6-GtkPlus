@@ -7,10 +7,11 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRendererCombo;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::CellRendererText;
 use GTK::ComboBox;
 
-our subset CellRendererComboAncestry is export 
+our subset CellRendererComboAncestry is export
   where GtkCellRendererCombo | CellRendererTextAncestry;
 
 class GTK::CellRendererCombo is GTK::CellRendererText {
@@ -45,8 +46,8 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
     }
   }
 
-  method GTK::Raw::Types::GtkCellRendererCombo 
-    is also<CellRendererCombo> 
+  method GTK::Raw::Types::GtkCellRendererCombo
+    is also<CellRendererCombo>
   { $!crc }
 
   multi method new {
@@ -67,7 +68,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
 
   # Type: gboolean
   method has-entry is rw is also<has_entry> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('has-entry', $gv);
@@ -82,7 +83,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
 
   # Type: GtkTreeModel
   method model is rw {
-    my GTK::Compat::Value $gv .= new(G_TYPE_OBJECT);
+    my GLib::Value $gv .= new(G_TYPE_OBJECT);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('model', $gv);
@@ -98,7 +99,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
 
   # Type: gint
   method text-column is rw is also<text_column> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('text-column', $gv);

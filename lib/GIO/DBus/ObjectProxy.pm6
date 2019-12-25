@@ -7,6 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::DBus::Raw::Types;
 
+use GLib::Value;
 use GIO::DBus::Connection;
 
 use GTK::Roles::Properties;
@@ -40,10 +41,10 @@ class GIO::DBus::ObjectProperty {
       object_path
     >
   {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('g-object-path', $gv)
         );
         $gv.string;
