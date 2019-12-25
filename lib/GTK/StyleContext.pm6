@@ -9,13 +9,13 @@ use Pango::FontDescription;
 use GTK::Compat::RGBA;
 use GTK::Compat::Screen;
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 
 use GTK::Raw::StyleContext;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
 
+use GLib::Value;
 use GTK::Render;
 use GTK::WidgetPath;
 
@@ -174,10 +174,10 @@ class GTK::StyleContext {
 
   # Type: GdkFrameClock
   method paint-clock is rw is also<paint_clock> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('paint-clock', $gv)
         );
         nativecast(GdkFrameClock, $gv.object);
@@ -849,7 +849,7 @@ class GTK::StyleContext {
     my gint $s = $state;
 
     my $gv = $value // GValue.new;
-    $gv .= GValue if $gv ~~ GTK::Compat::Value;
+    $gv .= GValue if $gv ~~ GLib::Value;
     die 'Cannot obtain proper value object!' unless $gv ~~ GValue;
 
     gtk_style_context_get_property($!sc, $property, $s, $gv);
@@ -858,7 +858,7 @@ class GTK::StyleContext {
     $value ??
       $value
       !!
-      $value = ( $raw ?? $gv !! GTK::Compat::Value.new($gv) )
+      $value = ( $raw ?? $gv !! GLib::Value.new($gv) )
   }
 
   method get_section (Str() $property) is also<get-section> {

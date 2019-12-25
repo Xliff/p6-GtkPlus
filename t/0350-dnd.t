@@ -4,7 +4,6 @@ use Cairo;
 
 use GTK::Compat::Cairo;
 use GTK::Compat::DragContext;
-use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 

@@ -6,6 +6,8 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GIO::Roles::Converter;
 
@@ -45,10 +47,10 @@ class GIO::ZlibCompressor {
 
   # Type: GZlibCompressorFormat
   method format is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('format', $gv)
         );
         GZlibCompressorFormatEnum( $gv.uint )
@@ -62,10 +64,10 @@ class GIO::ZlibCompressor {
 
   # Type: gint
   method level is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('level', $gv)
         );
         $gv.int;

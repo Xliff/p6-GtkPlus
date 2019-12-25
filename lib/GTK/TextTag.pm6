@@ -7,12 +7,13 @@ use Pango::Raw::Types;
 use Pango::Tabs;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
+
 use GTK::Raw::TextTag;
 use GTK::Raw::Types;
 
-use GTK::Roles::Types;
+use GLib::Value;
 
+use GTK::Roles::Types;
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::TextTag;
 
@@ -26,7 +27,7 @@ class GTK::TextTag  {
   submethod BUILD(:$tag) {
     self.setTextTag($tag) with $tag;
   }
-  
+
   # PROTECTED
   method setTextTag (GtkTextTag $tag) {
     self!setObject($!tt = $tag);              # GTK::Roles::Properties (+)
@@ -44,8 +45,8 @@ class GTK::TextTag  {
     self.bless(:$tag);
   }
 
-  method GTK::Raw::Types::GtkTextTag 
-    is also<TextTag> 
+  method GTK::Raw::Types::GtkTextTag
+    is also<TextTag>
     { $!tt }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -95,10 +96,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method accumulative-margin is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('accumulative-margin', $gv)
         );
         $gv.boolean;
@@ -112,7 +113,7 @@ class GTK::TextTag  {
 
   # Type: gchar
   method background is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         warn "background does not allow reading"
@@ -126,10 +127,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method background-full-height is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('background-full-height', $gv)
         );
         $gv.boolean;
@@ -143,10 +144,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method background-full-height-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('background-full-height-set', $gv)
         );
         $gv.boolean;
@@ -160,10 +161,10 @@ class GTK::TextTag  {
 
   # Type: GdkColor
   # method background-gdk is rw  is DEPRECATED( “background-rgba” ) {
-  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new(
+  #       $gv = GLib::Value.new(
   #         self.prop_get('background-gdk', $gv)
   #       );
   #       #$gv.TYPE
@@ -177,10 +178,10 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method background-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('background-rgba', $gv)
         );
         nativecast(GTK::Compat::RGBA, $gv.boxed);
@@ -194,10 +195,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method background-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('background-set', $gv)
         );
         $gv.boolean;
@@ -211,10 +212,10 @@ class GTK::TextTag  {
 
   # Type: GtkTextDirection
   method direction is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('direction', $gv)
         );
         GtkTextDirection( $gv.uint );
@@ -228,10 +229,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method editable is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('editable', $gv)
         );
         $gv.boolean;
@@ -245,10 +246,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method editable-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('editable-set', $gv)
         );
         $gv.boolean;
@@ -262,10 +263,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method fallback is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('fallback', $gv)
         );
         $gv.boolean;
@@ -279,10 +280,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method fallback-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('fallback-set', $gv)
         );
         $gv.boolean;
@@ -296,10 +297,10 @@ class GTK::TextTag  {
 
   # Type: gchar
   method family is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('family', $gv)
         );
         $gv.string;
@@ -313,10 +314,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method family-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('family-set', $gv)
         );
         $gv.boolean;
@@ -330,10 +331,10 @@ class GTK::TextTag  {
 
   # Type: gchar
   method font is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('font', $gv)
         );
         $gv.string;
@@ -347,10 +348,10 @@ class GTK::TextTag  {
 
   # Type: PangoFontDescription
   method font-desc is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('font-desc', $gv)
         );
         Pango::FontDescription.new(
@@ -366,10 +367,10 @@ class GTK::TextTag  {
 
   # Type: gchar
   method font-features is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('font-features', $gv)
         );
         $gv.string;
@@ -383,10 +384,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method font-features-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('font-features-set', $gv)
         );
         $gv.boolean;
@@ -400,7 +401,7 @@ class GTK::TextTag  {
 
   # Type: gchar
   method foreground is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         warn 'foreground does not allow reading'
@@ -414,10 +415,10 @@ class GTK::TextTag  {
 
   # Type: GdkColor
   # method foreground-gdk is rw  is DEPRECATED( “foreground-rgba” ) {
-  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new(
+  #       $gv = GLib::Value.new(
   #         self.prop_get('foreground-gdk', $gv)
   #       );
   #       #$gv.TYPE
@@ -431,10 +432,10 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method foreground-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('foreground-rgba', $gv)
         );
         nativecast( GTK::Compat::RGBA, $gv.boxed );
@@ -448,10 +449,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method foreground-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('foreground-set', $gv)
         );
         $gv.boolean;
@@ -465,10 +466,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method indent is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('indent', $gv)
         );
         $gv.int;
@@ -482,10 +483,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method indent-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('indent-set', $gv)
         );
         $gv.boolean;
@@ -499,10 +500,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method invisible is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('invisible', $gv)
         );
         $gv.boolean;
@@ -516,10 +517,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method invisible-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('invisible-set', $gv)
         );
         $gv.boolean;
@@ -533,10 +534,10 @@ class GTK::TextTag  {
 
   # Type: GtkJustification
   method justification is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('justification', $gv)
         );
         GtkJustification( $gv.uint );
@@ -550,10 +551,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method justification-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('justification-set', $gv)
         );
         $gv.boolean;
@@ -567,10 +568,10 @@ class GTK::TextTag  {
 
   # Type: gchar
   method language is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('language', $gv)
         );
         $gv.string;
@@ -584,10 +585,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method language-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('language-set', $gv)
         );
         $gv.boolean;
@@ -601,10 +602,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method left-margin is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('left-margin', $gv)
         );
         $gv.int;
@@ -618,10 +619,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method left-margin-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('left-margin-set', $gv)
         );
         $gv.boolean;
@@ -635,10 +636,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method letter-spacing is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('letter-spacing', $gv)
         );
         $gv.int;
@@ -652,10 +653,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method letter-spacing-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('letter-spacing-set', $gv)
         );
         $gv.boolean;
@@ -669,10 +670,10 @@ class GTK::TextTag  {
 
   # Type: gchar
   method name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('name', $gv)
         );
         $gv.string;
@@ -686,7 +687,7 @@ class GTK::TextTag  {
 
   # Type: gchar
   method paragraph-background is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         warn "paragraph-background does not allow reading"
@@ -700,10 +701,10 @@ class GTK::TextTag  {
 
   # Type: GdkColor
   # method paragraph-background-gdk is rw  is DEPRECATED( “paragraph-background-rgba” ) {
-  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new(
+  #       $gv = GLib::Value.new(
   #         self.prop_get('paragraph-background-gdk', $gv)
   #       );
   #       #$gv.TYPE
@@ -717,10 +718,10 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method paragraph-background-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('paragraph-background-rgba', $gv)
         );
         nativecast(GTK::Compat::RGBA, $gv.boxed);
@@ -734,10 +735,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method paragraph-background-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('paragraph-background-set', $gv)
         );
         $gv.boolean;
@@ -751,10 +752,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method pixels-above-lines is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('pixels-above-lines', $gv)
         );
         $gv.int;
@@ -768,10 +769,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method pixels-above-lines-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('pixels-above-lines-set', $gv)
         );
         $gv.boolean;
@@ -785,10 +786,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method pixels-below-lines is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('pixels-below-lines', $gv)
         );
         $gv.int;
@@ -802,10 +803,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method pixels-below-lines-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('pixels-below-lines-set', $gv)
         );
         $gv.boolean;
@@ -819,10 +820,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method pixels-inside-wrap is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('pixels-inside-wrap', $gv)
         );
         $gv.int;
@@ -836,10 +837,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method pixels-inside-wrap-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('pixels-inside-wrap-set', $gv)
         );
         $gv.boolean;
@@ -853,10 +854,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method right-margin is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('right-margin', $gv)
         );
         $gv.int;
@@ -870,10 +871,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method right-margin-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('right-margin-set', $gv)
         );
         $gv.boolean;
@@ -887,10 +888,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method rise is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('rise', $gv)
         );
         $gv.int;
@@ -904,10 +905,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method rise-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('rise-set', $gv)
         );
         $gv.boolean;
@@ -921,10 +922,10 @@ class GTK::TextTag  {
 
   # Type: gdouble
   method scale is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
+    my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('scale', $gv)
         );
         $gv.double;
@@ -938,10 +939,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method scale-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('scale-set', $gv)
         );
         $gv.boolean;
@@ -955,10 +956,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method size is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('size', $gv)
         );
         $gv.int;
@@ -972,10 +973,10 @@ class GTK::TextTag  {
 
   # Type: gdouble
   method size-points is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
+    my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('size-points', $gv)
         );
         $gv.double;
@@ -989,10 +990,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method size-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('size-set', $gv)
         );
         $gv.boolean;
@@ -1006,10 +1007,10 @@ class GTK::TextTag  {
 
   # Type: PangoStretch
   method stretch is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('stretch', $gv)
         );
         PangoStretch( $gv.uint );
@@ -1023,10 +1024,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method stretch-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('stretch-set', $gv)
         );
         $gv.boolean;
@@ -1040,10 +1041,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method strikethrough is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('strikethrough', $gv)
         );
         $gv.boolean;
@@ -1057,10 +1058,10 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method strikethrough-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('strikethrough-rgba', $gv)
         );
         nativecast( GTK::Compat::RGBA, $gv.boxed );
@@ -1074,10 +1075,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method strikethrough-rgba-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('strikethrough-rgba-set', $gv)
         );
         $gv.boolean;
@@ -1091,10 +1092,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method strikethrough-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('strikethrough-set', $gv)
         );
         $gv.boolean;
@@ -1108,10 +1109,10 @@ class GTK::TextTag  {
 
   # Type: PangoStyle
   method style is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('style', $gv)
         );
         PangoStyle( $gv.uint );
@@ -1125,10 +1126,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method style-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('style-set', $gv)
         );
         $gv.boolean;
@@ -1142,10 +1143,10 @@ class GTK::TextTag  {
 
   # Type: PangoTabArray
   method tabs is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('tabs', $gv)
         );
         Pango::TabArray.new( nativecast(PangoTabArray, $gv.pointer) );
@@ -1165,10 +1166,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method tabs-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('tabs-set', $gv)
         );
         $gv.boolean;
@@ -1182,10 +1183,10 @@ class GTK::TextTag  {
 
   # Type: PangoUnderline
   method underline is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('underline', $gv)
         );
         PangoUnderline( $gv.uint );
@@ -1199,10 +1200,10 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method underline-rgba is rw  {
-    my GTK::Compat::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('underline-rgba', $gv)
         );
         nativecast( GTK::Compat::RGBA, $gv.boxed );
@@ -1216,10 +1217,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method underline-rgba-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('underline-rgba-set', $gv)
         );
         $gv.boolean;
@@ -1233,10 +1234,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method underline-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('underline-set', $gv)
         );
         $gv.boolean;
@@ -1250,10 +1251,10 @@ class GTK::TextTag  {
 
   # Type: PangoVariant
   method variant is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('variant', $gv)
         );
         PangoVariant( $gv.uint );
@@ -1267,10 +1268,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method variant-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('variant-set', $gv)
         );
         $gv.boolean;
@@ -1284,10 +1285,10 @@ class GTK::TextTag  {
 
   # Type: gint
   method weight is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('weight', $gv)
         );
         $gv.int;
@@ -1301,10 +1302,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method weight-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('weight-set', $gv)
         );
         $gv.boolean;
@@ -1318,10 +1319,10 @@ class GTK::TextTag  {
 
   # Type: GtkWrapMode
   method wrap-mode is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('wrap-mode', $gv)
         );
         GtkWrapMode( $gv.uint );
@@ -1335,10 +1336,10 @@ class GTK::TextTag  {
 
   # Type: gboolean
   method wrap-mode-set is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('wrap-mode-set', $gv)
         );
         $gv.boolean;

@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::Assistant;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Window;
 
 our subset AssistantAncestry is export where GtkAssistant | WindowAncestry;
@@ -249,7 +250,7 @@ class GTK::Assistant is GTK::Window {
         when 'title'         { self.child-set-string($c, $p, $v) }
 
         when 'header-image'  |
-             'sidebar-image' { my $gv = GTK::Compat::Value.new(
+             'sidebar-image' { my $gv = GLib::Value.new(
                                  GTK::Compat::Pixbuf.get_type()
                                );
                                $gv.object = do given $v {

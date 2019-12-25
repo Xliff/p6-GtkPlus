@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRendererAccel;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::CellRendererText;
 
 use GTK::Roles::Signals::Generic;
@@ -89,7 +90,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: guint
   method accel-key is rw is also<accel_key> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
+    my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('accel-key', $gv);
@@ -104,7 +105,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: GtkCellRendererAccelMode
   method accel-mode is rw is also<accel_mode> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
+    my GLib::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('accel-mode', $gv);
@@ -119,7 +120,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: GdkModifierType
   method accel-mods is rw is also<accel_mods> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_ENUM);
+    my GLib::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('accel-mods', $gv);
@@ -134,7 +135,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # Type: guint
   method keycode is rw {
-    my GTK::Compat::Value $gv .= new(G_TYPE_INT);
+    my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('keycode', $gv);

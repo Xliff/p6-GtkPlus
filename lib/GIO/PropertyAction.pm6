@@ -6,7 +6,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Value;
+use GLib::Value;
 use GIO::Roles::Action;
 
 class GIO::PropertyAction {
@@ -43,10 +43,10 @@ class GIO::PropertyAction {
 
   # Type: gboolean
   method enabled is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('enabled', $gv)
         );
         $gv.boolean;
@@ -59,10 +59,10 @@ class GIO::PropertyAction {
 
   # Type: gboolean
   method invert-boolean is rw is also<invert_boolean> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('invert-boolean', $gv)
         );
         $gv.boolean;
@@ -76,10 +76,10 @@ class GIO::PropertyAction {
 
   # Type: gchar
   method name is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('name', $gv)
         );
         $gv.string;
@@ -93,7 +93,7 @@ class GIO::PropertyAction {
 
   # Type: GObject
   method object is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         warn 'object does not allow reading'
@@ -107,10 +107,10 @@ class GIO::PropertyAction {
 
   # Type: GVariantType
   method parameter-type (:$raw = False) is rw is also<parameter_type> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOXED );
+    my GLib::Value $gv .= new( G_TYPE_BOXED );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('parameter-type', $gv)
         );
 
@@ -129,7 +129,7 @@ class GIO::PropertyAction {
 
   # Type: gchar
   method property-name is rw  is also<property_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         warn 'property-name does not allow reading'
@@ -143,10 +143,10 @@ class GIO::PropertyAction {
 
   # Type: GVariant
   method state (:$raw = False) is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('state', $gv)
         );
 
@@ -165,10 +165,10 @@ class GIO::PropertyAction {
 
   # Type: GVariantType
   method state-type (:$raw = False) is rw  is also<state_type> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOXED );
+    my GLib::Value $gv .= new( G_TYPE_BOXED );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('state-type', $gv)
         );
         do if $gv.pointer {

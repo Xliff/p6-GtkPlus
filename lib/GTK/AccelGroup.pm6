@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Value;
+use GLib::Value;
 use GTK::Compat::Types;
 use GTK::Raw::AccelGroup;
 use GTK::Raw::Types;
@@ -46,10 +46,10 @@ class GTK::AccelGroup {
 
   # Type: gboolean
   method is-locked is rw is also<is_locked> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('is-locked', $gv)
          );
         $gv.boolean;
@@ -62,10 +62,10 @@ class GTK::AccelGroup {
 
   # Type: GdkModifierType
   method modifier-mask is rw is also<modifier_mask> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
+    my GLib::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('modifier-mask', $gv)
         );
         GdkModifierType( $gv.enum );

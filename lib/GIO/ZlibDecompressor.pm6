@@ -6,6 +6,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
+use GLib::Value;
 use GIO::FileInfo;
 
 use GTK::Roles::Properties;
@@ -36,10 +37,10 @@ class GIO::ZlibDecompressor {
 
   # Type: GZlibCompressorFormat
   method format is rw  {
-    my GTK::Compat::Value $gv .= new( typeToGType(GZlibCompressorFormat) );
+    my GLib::Value $gv .= new( typeToGType(GZlibCompressorFormat) );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('format', $gv)
         );
         GZlibCompressorFormatEnum( $gv.value );

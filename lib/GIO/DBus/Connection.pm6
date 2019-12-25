@@ -8,8 +8,8 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Connection;
 
+use GLib::Value;
 use GLib::Variant;
-
 use GIO::DBus::Message;
 
 use GIO::Roles::AsyncInitable;
@@ -316,10 +316,10 @@ class GIO::DBus::Connection {
 
   # Type: gboolean
   method exit-on-close is rw  is also<exit_on_close> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('exit-on-close', $gv)
         );
         $gv.boolean;

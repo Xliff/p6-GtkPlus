@@ -7,6 +7,8 @@ use GTK::Compat::FileTypes;
 
 use GIO::Raw::FileMonitor;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GIO::Roles::Signals::FileMonitor;
 
@@ -32,10 +34,10 @@ class GIO::FileMonitor {
 
   # Type: gint
   method rate-limit is rw  is also<rate_limit> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('rate-limit', $gv)
         );
         $gv.int;
@@ -62,7 +64,7 @@ class GIO::FileMonitor {
     GFile() $other_file,
     GFileMonitorEvent $event_type
   )
-    is also<emit-event> 
+    is also<emit-event>
   {
     g_file_monitor_emit_event($!m, $child, $other_file, $event_type);
   }

@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRendererSpin;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Adjustment;
 use GTK::CellRendererText;
 
@@ -45,8 +46,8 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     }
   }
 
-  method GTK::Raw::Types::GtkCellRendererSpin 
-    is also<CellRendererSpin> 
+  method GTK::Raw::Types::GtkCellRendererSpin
+    is also<CellRendererSpin>
   { $!crs }
 
   multi method new {
@@ -56,7 +57,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   multi method new (CellRendererSpinAncestry $cellspin) {
     self.bless(:$cellspin);
   }
-  
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -67,7 +68,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
 
   # Type: GtkAdjustment
   method adjustment is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('adjustment', $gv);
@@ -82,7 +83,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
 
   # Type: gdouble
   method climb-rate is rw is also<climb_rate> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_DOUBLE );
+    my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('climb-rate', $gv);
@@ -97,7 +98,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
 
   # Type: guint
   method digits is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('digits', $gv);

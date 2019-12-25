@@ -7,9 +7,10 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRendererSpinner;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::CellRenderer;
 
-our subset CellRendererSpinnerAncestry is export 
+our subset CellRendererSpinnerAncestry is export
   where GtkCellRendererSpinner | GtkCellRenderer;
 
 class GTK::CellRendererSpinner is GTK::CellRenderer {
@@ -44,7 +45,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
     }
   }
 
-  method GTK::Raw::Types::CellRendererSpinner 
+  method GTK::Raw::Types::CellRendererSpinner
     is also<CellRendererSpinner>
   { $!crs }
 
@@ -67,7 +68,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
 
   # Type: gboolean
   method active is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('active', $gv);
@@ -82,7 +83,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
 
   # Type: guint
   method pulse is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pulse', $gv);
@@ -97,7 +98,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
 
   # Type: GtkIconSize
   method size is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_ENUM );
+    my GLib::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('size', $gv);

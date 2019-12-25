@@ -7,6 +7,8 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::CharsetConverter;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GIO::Roles::Converter;
 use GIO::Roles::Initable;
@@ -46,10 +48,10 @@ class GIO::CharsetConverter {
 
   # Type: gchar
   method from-charset is rw  is also<from_charset> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('from-charset', $gv)
         );
         $gv.string;
@@ -63,10 +65,10 @@ class GIO::CharsetConverter {
 
   # Type: gchar
   method to-charset is rw  is also<to_charset> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('to-charset', $gv)
         );
         $gv.string;

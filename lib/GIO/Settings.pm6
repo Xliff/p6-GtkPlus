@@ -8,11 +8,11 @@ use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
 use GTK::Raw::Utils;
-
 use GIO::Raw::Settings;
 
-use GTK::Roles::Properties;
+use GLib::Value;
 
+use GTK::Roles::Properties;
 use GIO::Roles::Signals::Settings;
 
 class GIO::Settings {
@@ -110,10 +110,10 @@ class GIO::Settings {
 
   # Type: GSettingsBackend
   method backend (:$raw = False) is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('backend', $gv)
         );
         return Nil unless $gv.object;
@@ -131,10 +131,10 @@ class GIO::Settings {
 
   # Type: gboolean
   method delay-apply is rw  is also<delay_apply> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('delay-apply', $gv)
         );
         $gv.boolean;
@@ -147,10 +147,10 @@ class GIO::Settings {
 
   # Type: gboolean
   method has-unapplied is rw  is also<has_unapplied> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('has-unapplied', $gv)
         );
         $gv.boolean;
@@ -163,10 +163,10 @@ class GIO::Settings {
 
   # Type: gchar
   method path is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('path', $gv)
         );
         $gv.string;
@@ -180,10 +180,10 @@ class GIO::Settings {
 
   # Type: gchar
   method schema-id is rw  is also<schema_id> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('schema-id', $gv)
         );
         $gv.string;
@@ -197,10 +197,10 @@ class GIO::Settings {
 
   # Type: GSettingsSchema
   method settings-schema (:$raw = False) is rw  is also<settings_schema> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('settings-schema', $gv)
         );
         return Nil unless $gv.object;

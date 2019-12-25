@@ -3,12 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Raw::Value;
+use GLib::Raw::Value;
 use GTK::Compat::Types;
 use GTK::Raw::Subs;
 use GTK::Raw::Utils;
 
-class GTK::Compat::Value {
+class GLib::Value {
   has GValue $!v is implementor;
 
   submethod BUILD(:$type, GValue :$value) {
@@ -21,7 +21,7 @@ class GTK::Compat::Value {
   }
 
   multi method new (Int $t = G_TYPE_NONE) {
-    die "Invalid type passed to GTK::Compat::Value.new - { $t.^name }"
+    die "Invalid type passed to GLib::Value.new - { $t.^name }"
       unless $t ~~ Int || $t.^can('Int').elems;
     my $type = resolve-ulint($t.Int);
     self.bless(:$type);
@@ -376,55 +376,55 @@ class GTK::Compat::Value {
 # Helper functions
 
 sub gv_str(Str() $s) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_STRING );
+  my $gv = GLib::Value.new( G_TYPE_STRING );
   $gv.string = $s;
   $gv;
 }
 
 sub gv_bool(Int() $b) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_BOOLEAN );
+  my $gv = GLib::Value.new( G_TYPE_BOOLEAN );
   $gv.boolean = $b;
   $gv;
 }
 
 sub gv_int(Int() $i) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_INT );
+  my $gv = GLib::Value.new( G_TYPE_INT );
   $gv.int = $i;
   $gv;
 }
 
 sub gv_uint(Int() $i) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_UINT );
+  my $gv = GLib::Value.new( G_TYPE_UINT );
   $gv.uint = $i;
   $gv;
 }
 
 sub gv_flt(Num() $f) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_FLOAT );
+  my $gv = GLib::Value.new( G_TYPE_FLOAT );
   $gv.float = $f;
   $gv;
 }
 
 sub gv_dbl(Num() $d) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_DOUBLE );
+  my $gv = GLib::Value.new( G_TYPE_DOUBLE );
   $gv.double = $d;
   $gv;
 }
 
 sub gv_flag(Int() $f) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_FLAGS );
+  my $gv = GLib::Value.new( G_TYPE_FLAGS );
   $gv.flags = $f;
   $gv;
 }
 
 sub gv_obj($o, :$type) is export {
-  my $gv = GTK::Compat::Value.new( $type // G_TYPE_OBJECT );
+  my $gv = GLib::Value.new( $type // G_TYPE_OBJECT );
   $gv.object = $o;
   $gv;
 }
 
 sub gv_ptr($p) is export {
-  my $gv = GTK::Compat::Value.new( G_TYPE_POINTER );
+  my $gv = GLib::Value.new( G_TYPE_POINTER );
   $gv.pointer = $p;
   $gv;
 }

@@ -4,13 +4,12 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 
 use GTK::Raw::Utils;
-
 use GTK::Raw::TextBuffer;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::TargetList;
 use GTK::TextIter;
 use GTK::TextMark;
@@ -179,10 +178,10 @@ D
     is rw
     is also<copy_target_list>
   {
-    my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
+    my GLib::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('copy-target-list', $gv)
         );
         GTK::TargetList.new( nativecast(GtkTargetList, $gv.boxed) );
@@ -198,10 +197,10 @@ D
     is rw
     is also<cursor_position>
   {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('cursor-position', $gv)
         );
         $gv.int;
@@ -217,10 +216,10 @@ D
     is rw
     is also<has_selection>
   {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('has-selection', $gv)
         );
         $gv.boolean;
@@ -236,10 +235,10 @@ D
     is rw
     is also<paste_target_list>
   {
-    my GTK::Compat::Value $gv .= new( GTK::TargetList.get_type );
+    my GLib::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('paste-target-list', $gv)
         );
         GTK::TargetList.new( nativecast(GtkTargetList, $gv.boxed) );
@@ -255,10 +254,10 @@ D
     is rw
     is also<tag_table>
   {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('tag-table', $gv)
         );
         GTK::TextTagTable.new( nativecast(GtkTextTagTable, $gv.object ) );
@@ -272,10 +271,10 @@ D
 
   # Type: gchar
   method text is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('text', $gv)
         );
         $gv.string;

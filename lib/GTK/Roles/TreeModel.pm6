@@ -4,12 +4,11 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Compat::Value;
 use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
-
 use GTK::Raw::Utils;
 
+use GLib::Value;
 use GTK::TreeIter;
 use GTK::TreePath;
 
@@ -80,7 +79,7 @@ role GTK::Roles::TreeModel {
       do {
         my $v = GValue.new;
         self.get_value($iter, $_, $v);
-        GTK::Compat::Value.new($v);
+        GLib::Value.new($v);
       }
     ) for @cols;
     @r;
@@ -153,7 +152,7 @@ role GTK::Roles::TreeModel {
     my gint $c = resolve-int($column);
     my $value = GValue.new;
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
-    GTK::Compat::Value.new($value);
+    GLib::Value.new($value);
   }
   multi method get_value (
     GtkTreeIter() $iter, Int() $column,

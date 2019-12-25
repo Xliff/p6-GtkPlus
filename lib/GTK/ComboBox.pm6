@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::ComboBox;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Bin;
 use GTK::TreeIter;
 
@@ -14,7 +15,7 @@ use GTK::Roles::CellEditable;
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::ComboBox;
 
-our subset ComboBoxAncestry is export 
+our subset ComboBoxAncestry is export
   where GtkComboBox  | GtkCellEditable | GtkCellLayout | BinAncestry;
 
 class GTK::ComboBox is GTK::Bin {
@@ -47,8 +48,8 @@ class GTK::ComboBox is GTK::Bin {
   }
 
   method setComboBox($combobox) {
-    self.IS-PROTECTED; 
-    
+    self.IS-PROTECTED;
+
     my $to-parent;
     $!cb = do given $combobox {
       when GtkComboBox  {
@@ -150,10 +151,10 @@ class GTK::ComboBox is GTK::Bin {
 
   # Type: gboolean
   method has-frame is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('has-frame', $gv)
         );
         $gv.boolean;
@@ -167,10 +168,10 @@ class GTK::ComboBox is GTK::Bin {
 
   # Type: gboolean
    method popup-shown is rw  {
-     my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
      Proxy.new(
        FETCH => -> $ {
-         $gv = GTK::Compat::Value.new(
+         $gv = GLib::Value.new(
            self.prop_get('popup-shown', $gv)
          );
          $gv.boolean;
@@ -330,10 +331,10 @@ class GTK::ComboBox is GTK::Bin {
 
   # Type: gchar
   method tearoff-title is rw  is DEPRECATED {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('tearoff-title', $gv)
         );
         $gv.string;
@@ -363,11 +364,11 @@ class GTK::ComboBox is GTK::Bin {
     is also<get-active-iter>
     { * }
 
-  multi method get_active_iter 
+  multi method get_active_iter
     is also<
-      active_iter 
+      active_iter
       active-iter
-    > 
+    >
   {
     my GtkTreeIter $iter = GtkTreeIter.new;
     samewith($iter);
@@ -377,32 +378,32 @@ class GTK::ComboBox is GTK::Bin {
     gtk_combo_box_get_active_iter($!cb, $iter);
   }
 
-  method get_has_entry 
+  method get_has_entry
     is also<
       get-has-entry
       has_entry
       has-entry
-    > 
+    >
   {
     gtk_combo_box_get_has_entry($!cb);
   }
 
-  method get_popup_accessible 
+  method get_popup_accessible
     is also<
       get-popup-accessible
       popup_accessible
       popup-accessible
-    > 
+    >
   {
     gtk_combo_box_get_popup_accessible($!cb);
   }
 
-  method get_row_separator_func 
+  method get_row_separator_func
     is also<
       get-row-separator-func
       row_separator_func
       row-separator-func
-    > 
+    >
   {
     gtk_combo_box_get_row_separator_func($!cb);
   }

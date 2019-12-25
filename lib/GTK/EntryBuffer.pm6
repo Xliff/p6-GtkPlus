@@ -2,10 +2,11 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Raw::EntryBuffer;
 use GTK::Raw::Types;
+
+use GLib::Value;
 
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::EntryBuffer;
@@ -25,8 +26,8 @@ class GTK::EntryBuffer {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals, %!signals-eb;
   }
-  
-  method GTK::Raw::Types::GtkEntryBuffer 
+
+  method GTK::Raw::Types::GtkEntryBuffer
     is also<EntryBuffer>
   { $!b }
 
@@ -78,7 +79,7 @@ class GTK::EntryBuffer {
 
   # Type: guint
   method length is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('length', $gv);

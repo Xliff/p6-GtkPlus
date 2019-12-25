@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Dialog::Raw::AppChooser;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Dialog;
 
 use GTK::Roles::AppChooser;
@@ -94,10 +95,10 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
 
   # Type: GFile
   method gfile is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('gfile', $gv) );
+        $gv = GLib::Value.new( self.prop_get('gfile', $gv) );
         nativecast(GFile, $gv.object);
       },
       STORE => -> $, GFile() $val is copy {
@@ -109,10 +110,10 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
 
   # Type: gchar
   method heading is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('heading', $gv) );
+        $gv = GLib::Value.new( self.prop_get('heading', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {

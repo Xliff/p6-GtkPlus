@@ -6,9 +6,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Box;
 
-our subset ShortcutsSectionAncestry is export 
+our subset ShortcutsSectionAncestry is export
   where GtkShortcutsSection | BoxAncestry;
 
 class GTK::ShortcutsSection is GTK::Box {
@@ -66,10 +67,10 @@ class GTK::ShortcutsSection is GTK::Box {
 
   # Type: guint
   method max-height is rw is also<max_height> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('max-height', $gv) );
+        $gv = GLib::Value.new( self.prop_get('max-height', $gv) );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
@@ -81,10 +82,10 @@ class GTK::ShortcutsSection is GTK::Box {
 
   # Type: gchar
   method section-name is rw is also<section_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('section-name', $gv) );
+        $gv = GLib::Value.new( self.prop_get('section-name', $gv) );
         $gv.string
       },
       STORE => -> $, Str() $val is copy {
@@ -96,10 +97,10 @@ class GTK::ShortcutsSection is GTK::Box {
 
   # Type: gchar
   method title is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('title', $gv) );
+        $gv = GLib::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {
@@ -111,10 +112,10 @@ class GTK::ShortcutsSection is GTK::Box {
 
   # Type: gchar
   method view-name is rw is also<view_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('view-name', $gv) );
+        $gv = GLib::Value.new( self.prop_get('view-name', $gv) );
         $gv.string;
       },
       STORE => -> $, Str() $val is copy {

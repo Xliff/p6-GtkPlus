@@ -11,6 +11,7 @@ use GTK::Compat::FileTypes;
 
 use GIO::Raw::DtlsConnection;
 
+use GLib::Value;
 use GIO::TlsCertificate;
 use GIO::TlsDatabase;
 use GIO::TlsInteraction;
@@ -117,10 +118,10 @@ role GIO::Roles::DtlsConnection {
 
   # Type: GStrv
   method advertised-protocols is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('advertised-protocols', $gv)
         );
         CStringArrayToArray( cast(CArray[Str], $gv.pointer) );
@@ -141,10 +142,10 @@ role GIO::Roles::DtlsConnection {
 
   # Type: GDatagramBased
   method base-socket (:$raw = False) is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('base-socket', $gv)
         );
         return Nil unless $gv.object;

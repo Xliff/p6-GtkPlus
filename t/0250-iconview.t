@@ -50,11 +50,11 @@ sub fill_store {
   $store.clear;
   for dir($parent.path) {
     my %data = (
-      0 => GTK::Compat::Value.new(G_TYPE_STRING) ,
-      1 => GTK::Compat::Value.new(G_TYPE_STRING) ,
-      #2 => GTK::Compat::Value.new($pb_type),
-      2 => GTK::Compat::Value.new(G_TYPE_OBJECT) ,
-      3 => GTK::Compat::Value.new(G_TYPE_BOOLEAN),
+      0 => GLib::Value.new(G_TYPE_STRING) ,
+      1 => GLib::Value.new(G_TYPE_STRING) ,
+      #2 => GLib::Value.new($pb_type),
+      2 => GLib::Value.new(G_TYPE_OBJECT) ,
+      3 => GLib::Value.new(G_TYPE_BOOLEAN),
     );
     %data<0>.string  = .path;
     %data<1>.string  = .basename;

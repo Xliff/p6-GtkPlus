@@ -3,8 +3,6 @@ use v6.c;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
-use GTK::Compat::Value;
-
 use GTK::Application;
 use GTK::Box;
 use GTK::CellRendererText;

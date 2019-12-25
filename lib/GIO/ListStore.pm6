@@ -6,6 +6,8 @@ use GTK::Compat::Types;
 
 use GIO::Raw::ListStore;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 
 class GIO::ListStore {
@@ -31,10 +33,10 @@ class GIO::ListStore {
 
   # Type: GType
   method item-type is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT64 );
+    my GLib::Value $gv .= new( G_TYPE_UINT64 );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('item-type', $gv)
         );
         # YYY -
@@ -54,7 +56,7 @@ class GIO::ListStore {
     g_list_store_append($!ls, $item);
   }
 
-  method insert (guint $position, gpointer $item) {
+  method insert (Int() $position, gpointer $item) {
     my guint $p = $position;
 
     g_list_store_insert($!ls, $p, $item);
@@ -68,7 +70,7 @@ class GIO::ListStore {
     g_list_store_insert_sorted($!ls, $item, $compare_func, $user_data);
   }
 
-  method remove (guint $position) {
+  method remove (Int() $position) {
     my guint $p = $position;
 
     g_list_store_remove($!ls, $p);

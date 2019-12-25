@@ -6,6 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Window;
 
 our subset ShortcutsWindowAncestry when GtkShortcutsWindow | WindowAncestry;
@@ -69,7 +70,7 @@ class GTK::ShortcutsWindow is GTK::Window {
 
   # Type: gchar
   method section-name is rw is also<section_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('section-name', $gv);
@@ -84,7 +85,7 @@ class GTK::ShortcutsWindow is GTK::Window {
 
   # Type: gchar
   method view-name is rw is also<view_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('view-name', $gv);

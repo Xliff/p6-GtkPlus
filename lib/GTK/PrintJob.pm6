@@ -7,6 +7,8 @@ use GTK::Compat::Types;
 use GTK::Raw::PrintJob;
 use GTK::Raw::Types;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
@@ -25,7 +27,7 @@ class GTK::PrintJob {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals;
   }
-  
+
   method GTK::Raw::Types::GtkPrintJob is also<PrintJob> { $!prnjob }
 
   multi method new(GtkPrintJob() $job) {
@@ -178,10 +180,10 @@ class GTK::PrintJob {
 
   # Type: GtkPageSetup
   method page-setup is rw is also<page_setup> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('page-setup', $gv)
         );
         GTK::PageSetup.new( nativecast(GtkPrintStatus, $gv.object) );
@@ -195,10 +197,10 @@ class GTK::PrintJob {
 
   # Type: GtkPrinter
   method printer is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('printer', $gv)
         );
         GTK::Printer.new( nativecast(GtkPrinter, $gv.object) );
@@ -212,10 +214,10 @@ class GTK::PrintJob {
 
   # Type: GtkPrintSettings
   method settings is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('settings', $gv)
         );
         GTK::PrintSettings.new( nativecast(GtkPrintSettings, $gv.object) );
@@ -229,10 +231,10 @@ class GTK::PrintJob {
 
   # Type: gchar
   method title is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('title', $gv)
         );
         $gv.string;

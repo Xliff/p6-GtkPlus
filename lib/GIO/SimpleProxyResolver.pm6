@@ -9,6 +9,8 @@ use GIO::Raw::SimpleProxyResolver;
 
 use GTK::Raw::Utils;
 
+use GLib::Value;
+
 use GTK::Roles::Properties;
 use GIO::Roles::ProxyResolver;
 
@@ -39,10 +41,10 @@ class GIO::SimpleProxyResolver {
 
   # Type: gchar
   method default-proxy is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('default-proxy', $gv)
         );
         $gv.string;
@@ -56,10 +58,10 @@ class GIO::SimpleProxyResolver {
 
   # Type: GStrv
   method ignore-hosts is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('ignore-hosts', $gv)
         );
 

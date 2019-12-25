@@ -3,18 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Value;
 use GTK::Compat::Types;
 use GTK::Raw::PrintOperation;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
 
+use GLib::Value;
+use GTK::PageSetup;
+use GTK::PrintSettings;
+
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::PrintOperation;
-
-use GTK::PageSetup;
-use GTK::PrintSettings;
 
 class GTK::PrintOperation {
   also does GTK::Roles::Properties;
@@ -201,10 +201,10 @@ class GTK::PrintOperation {
 
   # Type: gboolean
   method allow-async is rw is also<allow_async> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('allow-async', $gv)
         );
         $gv.boolean;
@@ -218,10 +218,10 @@ class GTK::PrintOperation {
 
   # Type: gint
   method current-page is rw is also<current_page> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('current-page', $gv)
         );
         $gv.int;
@@ -236,10 +236,10 @@ class GTK::PrintOperation {
 
   # Type: Str()
   method custom-tab-label is rw is also<custom_tab_label> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('custom-tab-label', $gv)
         );
         $gv.string;
@@ -253,10 +253,10 @@ class GTK::PrintOperation {
 
   # Type: Str()
   method export-filename is rw is also<export_filename> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('export-filename', $gv)
         );
         $gv.string;
@@ -270,10 +270,10 @@ class GTK::PrintOperation {
 
   # Type: Str()
   method job-name is rw is also<job_name> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('job-name', $gv)
         );
         $gv.string;
@@ -287,10 +287,10 @@ class GTK::PrintOperation {
 
   # Type: gint
   method n-pages is rw is also<n_pages> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('n-pages', $gv)
         );
         $gv.int;
@@ -304,10 +304,10 @@ class GTK::PrintOperation {
 
   # Type: gint
   method n-pages-to-print is rw is also<n_pages_to_print> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('n-pages-to-print', $gv)
         );
         $gv.int;
@@ -320,10 +320,10 @@ class GTK::PrintOperation {
 
   # Type: gboolean
   method show-progress is rw is also<show_progress> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('show-progress', $gv)
         );
         $gv.boolean;
@@ -337,10 +337,10 @@ class GTK::PrintOperation {
 
   # Type: GtkPrintStatus
   method status is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('status', $gv)
         );
         GtkPrintStatus( $gv.enum );
@@ -353,10 +353,10 @@ class GTK::PrintOperation {
 
   # Type: Str()
   method status-string is rw is also<status_string> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('status-string', $gv)
         );
         $gv.string;
@@ -369,10 +369,10 @@ class GTK::PrintOperation {
 
   # Type: gboolean
   method track-print-status is rw is also<track_print_status> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('track-print-status', $gv)
         );
         $gv.boolean;
@@ -386,10 +386,10 @@ class GTK::PrintOperation {
 
   # Type: GtkUnit
   method unit is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('unit', $gv)
         );
         GtkUnit( $gv.uint );
@@ -403,10 +403,10 @@ class GTK::PrintOperation {
 
   # Type: gboolean
   method use-full-page is rw is also<use_full_page> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('use-full-page', $gv)
         );
         $gv.boolean;

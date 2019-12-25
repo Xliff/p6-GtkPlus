@@ -8,6 +8,7 @@ use GTK::Raw::TreeViewColumn;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
 
+use GLib::Value;
 use GTK::CellArea;
 
 use GTK::Roles::Buildable;
@@ -255,10 +256,10 @@ class GTK::TreeViewColumn {
 
   # Type: GtkCellArea
   method cell-area is rw is also<cell_area> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('cell-area', $gv) );
+        $gv = GLib::Value.new( self.prop_get('cell-area', $gv) );
         GTK::CellArea.new( nativecast(GtkCellArea, $gv.object) );
       },
       STORE => -> $, GtkCellArea() $val is copy {
@@ -270,10 +271,10 @@ class GTK::TreeViewColumn {
 
   # Type: gint
   method width is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('width', $gv) );
+        $gv = GLib::Value.new( self.prop_get('width', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -284,10 +285,10 @@ class GTK::TreeViewColumn {
 
   # Type: gint
   method x-offset is rw is also<x_offset> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('x-offset', $gv) );
+        $gv = GLib::Value.new( self.prop_get('x-offset', $gv) );
         $gv.int;
       },
       STORE => -> $, $val is copy {

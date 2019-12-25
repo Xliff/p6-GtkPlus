@@ -8,6 +8,8 @@ use GTK::Compat::Types;
 use GIO::Raw::SimpleAction;
 use GTK::Raw::Utils;
 
+use GLib::Value;
+
 use GIO::Roles::Action;
 
 # Will need ancestry since this could be built from a GAction!!
@@ -46,10 +48,10 @@ class GTK::Compat::SimpleAction {
 
   # Type: gboolean
   method enabled is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('enabled', $gv)
         );
         $gv.boolean;
@@ -65,10 +67,10 @@ class GTK::Compat::SimpleAction {
   #
   # Type: gchar
   # method name is rw  {
-  #   my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+  #   my GLib::Value $gv .= new( G_TYPE_STRING );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new(
+  #       $gv = GLib::Value.new(
   #         self.prop_get('name', $gv)
   #       );
   #       $gv.string;
@@ -82,10 +84,10 @@ class GTK::Compat::SimpleAction {
   #
   # # Type: GVariantType
   # method parameter-type is rw  {
-  #   my GTK::Compat::Value $gv .= new( -type- );
+  #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => -> $ {
-  #       $gv = GTK::Compat::Value.new(
+  #       $gv = GLib::Value.new(
   #         self.prop_get('parameter-type', $gv)
   #       );
   #       #$gv.TYPE
@@ -99,10 +101,10 @@ class GTK::Compat::SimpleAction {
 
   # Type: GVariant
   method state is rw  {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('state', $gv)
         );
         GLib::Variant.new(
@@ -118,10 +120,10 @@ class GTK::Compat::SimpleAction {
 
   # Type: GVariantType
   method state-type is rw  is also<state_type> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('state-type', $gv)
         );
         GLib::VariantType.new(

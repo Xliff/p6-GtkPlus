@@ -7,6 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::CellRendererPixbuf;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::CellRenderer;
 
 class GTK::CellRendererPixbuf is GTK::CellRenderer {
@@ -64,7 +65,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: gboolean
   method follow-state is rw is also<follow_state> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('follow-state', $gv);
@@ -79,7 +80,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: GIcon
   method gicon is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('gicon', $gv);
@@ -94,7 +95,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: gchar
   method icon-name is rw is also<icon_name> {
-    my GTK::Compat::Value $gv .= new(G_TYPE_STRING);
+    my GLib::Value $gv .= new(G_TYPE_STRING);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('icon-name', $gv);
@@ -109,7 +110,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: GdkPixbuf
   method pixbuf is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf', $gv);
@@ -124,7 +125,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: GdkPixbuf
   method pixbuf-expander-closed is rw is also<pixbuf_expander_closed> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf-expander-closed', $gv);
@@ -139,7 +140,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: GdkPixbuf
   method pixbuf-expander-open is rw is also<pixbuf_expander_open> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf-expander-open', $gv);
@@ -154,7 +155,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: gchar
   method stock-detail is rw is also<stock_detail> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('stock-detail', $gv);
@@ -169,7 +170,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: gchar
   method stock-id is rw is also<stock_id> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('stock-id', $gv);
@@ -184,7 +185,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: guint
   method stock-size is rw is also<stock_size> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('stock-size', $gv);
@@ -199,7 +200,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # Type: CairoSurface (cairo_surface_t)
   method surface is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('surface', $gv);

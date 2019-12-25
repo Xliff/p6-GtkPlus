@@ -8,15 +8,16 @@ use GTK::Compat::Types;
 use GTK::Raw::CellView;
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::TreePath;
 use GTK::Widget;
 
 use GTK::Roles::CellLayout;
 use GTK::Roles::Orientable;
 
-our subset CellViewAncestry is export 
+our subset CellViewAncestry is export
   where GtkCellView | GtkCellLayout | GtkOrientable | WidgetAncestry;
-  
+
 class GTK::CellView is GTK::Widget {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Orientable;
@@ -157,7 +158,7 @@ class GTK::CellView is GTK::Widget {
 
   # Type: gchar
   method background is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
         warn "background does not allow reading" if $DEBUG;
@@ -172,10 +173,10 @@ class GTK::CellView is GTK::Widget {
 
   # Type: GdkColor
   method background-gdk is rw is also<background_gdk> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('background-gdk', $gv) );
+        $gv = GLib::Value.new( self.prop_get('background-gdk', $gv) );
         nativecast(GdkColor, $gv.pointer);
       },
       STORE => -> $, GdkColor $val is copy {
@@ -187,10 +188,10 @@ class GTK::CellView is GTK::Widget {
 
   # Type: GdkRGBA
   method background-rgba is rw is also<background_rgba> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('background-rgba', $gv)
         );
         nativecast(GTK::Compat::RGBA, $gv.pointer);
@@ -204,10 +205,10 @@ class GTK::CellView is GTK::Widget {
 
   # Type: gboolean
   method background-set is rw is also<background_set> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_BOOLEAN );
+    my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('background-set', $gv)
         );
         $gv.boolean;
@@ -221,10 +222,10 @@ class GTK::CellView is GTK::Widget {
 
   # Type: GtkCellArea
   method cell-area is rw is also<cell_area> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new( self.prop_get('cell-area', $gv) );
+        $gv = GLib::Value.new( self.prop_get('cell-area', $gv) );
         GTK::CellArea.new( nativecast(GtkCellArea, $gv.pointer) );
       },
       STORE => -> $, GtkCellArea() $val is copy {
@@ -236,10 +237,10 @@ class GTK::CellView is GTK::Widget {
 
   # Type: GtkCellAreaContext
   method cell-area-context is rw is also<cell_area_context> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_POINTER );
+    my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('cell-area-context', $gv)
         );
         GTK::CellAreaContext.new(

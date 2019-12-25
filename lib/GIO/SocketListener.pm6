@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::SocketListener;
 
-use GTK::Compat::Value;
+use GLib::Value;
 
 use GIO::Socket;
 use GIO::SocketConnection;
@@ -39,10 +39,10 @@ class GIO::SocketListener {
 
   # Type: gint
   method listen-backlog is rw  is also<listen_backlog> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('listen-backlog', $gv)
         );
         $gv.int;

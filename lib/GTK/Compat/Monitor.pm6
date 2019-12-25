@@ -7,6 +7,8 @@ use GTK::Compat::Rectangle;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Monitor;
 
+use GLib::Value;
+
 use GTK::Roles::Types;
 use GTK::Roles::Signals::Generic;
 
@@ -41,10 +43,10 @@ class GTK::Compat::Monitor {
 
   # Type: GdkDisplay
   method display is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('display', $gv)
         );
         GTK::Compat::Rectangle.new( cast(GdkRectangle, $gv.object) );
@@ -58,10 +60,10 @@ class GTK::Compat::Monitor {
 
   # Type: GdkRectangle
   method geometry is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('geometry', $gv)
         );
         GTK::Compat::Rectangle.new( cast(GdkRectangle, $gv.object) )
@@ -74,10 +76,10 @@ class GTK::Compat::Monitor {
 
   # Type: gint
   method height-mm is rw is also<height_mm> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('height-mm', $gv)
         );
         $gv.int;
@@ -90,10 +92,10 @@ class GTK::Compat::Monitor {
 
   # Type: gchar
   method manufacturer is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('manufacturer', $gv)
         );
         $gv.string;
@@ -106,10 +108,10 @@ class GTK::Compat::Monitor {
 
   # Type: gchar
   method model is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_STRING );
+    my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('model', $gv)
         );
         $gv.string;
@@ -122,10 +124,10 @@ class GTK::Compat::Monitor {
 
   # Type: gint
   method refresh-rate is rw is also<refresh_rate> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('refresh-rate', $gv)
         );
         $gv.int;
@@ -138,10 +140,10 @@ class GTK::Compat::Monitor {
 
   # Type: gint
   method scale-factor is rw is also<scale_factor> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('scale-factor', $gv)
         );
         $gv.int;
@@ -154,10 +156,10 @@ class GTK::Compat::Monitor {
 
   # Type: GdkSubpixelLayout
   method subpixel-layout is rw is also<subpixel_layout> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_UINT );
+    my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('subpixel-layout', $gv)
         );
         GdkSubpixelLayout( $gv.uint );
@@ -170,10 +172,10 @@ class GTK::Compat::Monitor {
 
   # Type: gint
   method width-mm is rw is also<width_mm> {
-    my GTK::Compat::Value $gv .= new( G_TYPE_INT );
+    my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('width-mm', $gv)
         );
         $gv.int;
@@ -186,10 +188,10 @@ class GTK::Compat::Monitor {
 
   # Type: GdkRectangle
   method workarea is rw {
-    my GTK::Compat::Value $gv .= new( G_TYPE_OBJECT );
+    my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
       FETCH => -> $ {
-        $gv = GTK::Compat::Value.new(
+        $gv = GLib::Value.new(
           self.prop_get('workarea', $gv)
         );
         GTK::Compat::Rectangle.new( cast(GdkRectangle, $gv.object) );
