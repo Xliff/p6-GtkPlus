@@ -8,7 +8,7 @@ use GTK::Compat::Types;
 use GIO::Raw::Quarks;
 
 use GTK::Compat::MainLoop;
-use GTK::Compat::Timeout;
+use GLib::Timeout;
 use GTK::Compat::Timer;
 use GIO::Cancellable;
 use GIO::Task;
@@ -83,7 +83,7 @@ sub mock-operation-async ($i, $run-in-tread, $c, &callback) {
     $task.run-in-thread(&mock-operation-thread);
     say "THRD: {$i} started" if $VERBOSE;
   } else {
-    GTK::Compat::Timeout.add-full(
+    GLib::Timeout.add-full(
       G_PRIORITY_DEFAULT,
       WAIT,
       &mock-operation-timeout,
@@ -158,7 +158,7 @@ sub test-cancel-multiple-concurrent {
     $num-async-operations++;
   }
 
-  GTK::Compat::Timeout.add(WAIT * 3, &main-loop-timeout-quit);
+  GLib::Timeout.add(WAIT * 3, &main-loop-timeout-quit);
   $loop.run;
 
   is  $num-async-operations, ASYNC_OPS,
