@@ -5,7 +5,7 @@ use Test;
 use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
-use GTK::Compat::Roles::GFile;
+use GIO::Roles::GFile;
 use GTK::Compat::MainLoop;
 
 use GIO::Emblem;
@@ -19,7 +19,7 @@ use GIO::Roles::Icon;
 plan 92;
 
 sub compare-path-nodes ($uri, @a?) {
-  my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
+  my $l = GIO::Roles::GFile.new-for-uri($uri);
   my $i = GIO::FileIcon.new($l);
 
   is  +$i.file(:raw).p,
@@ -52,7 +52,7 @@ sub compareEmblem (&f) {
   $i2.append-name('emblem-shared');
 
   my $uri = 'file::///some/path/somewhere.png';
-  my $l = GTK::Compat::Roles::GFile.new-for-uri($uri);
+  my $l = GIO::Roles::GFile.new-for-uri($uri);
   my $i3 = GIO::FileIcon.new($l);
   my $e1 = GIO::Emblem.new-with-origin($i2, G_EMBLEM_ORIGIN_DEVICE);
   my $e2 = GIO::Emblem.new-with-origin($i3, G_EMBLEM_ORIGIN_LIVEMETADATA);
@@ -135,7 +135,7 @@ sub icon-to-string {
     my $i = GIO::Roles::Icon.new-for-string($uri);
     nok $ERROR, "No error when constructing Icon with URI '{$uri}'";
 
-    my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
+    my $l = GIO::Roles::GFile.new-for-commandline-arg($uri);
     my $i2 = GIO::FileIcon.new($l);
     ok $i2.equal($i), 'Icon and FileIcon initialized from GFile, are equivalent';
   }
@@ -149,12 +149,12 @@ sub icon-to-string {
     ok  $*SPEC.splitdir($d) cmp «path to "somewhere with whitespace.png"»,
         'Path nodes for icon match properly.';
 
-    my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
+    my $l = GIO::Roles::GFile.new-for-commandline-arg($uri);
     my $i2 = GIO::FileIcon.new($l);
     ok $i2.equal($i), 'Icon and FileIcon from same URI, are equivalent';
 
     my $uri2 = $uri.subst(' ', '%20', :g);
-    $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri2);
+    $l = GIO::Roles::GFile.new-for-commandline-arg($uri2);
     $i2 = GIO::FileIcon.new($l);
     nok $i.equal($i2), "Icon and FileIcon from URI {$uri2}, are equivalent";
   }
@@ -168,7 +168,7 @@ sub icon-to-string {
     is  $uri, $d,
         "Stringified Icon matches URI '{$uri}'";
 
-    my $l = GTK::Compat::Roles::GFile.new-for-commandline-arg($uri);
+    my $l = GIO::Roles::GFile.new-for-commandline-arg($uri);
     my $i2 = GIO::FileIcon.new($l);
     ok $i2.equal($i), 'Icon and FileIcon from same URI, are equivalent';
   }
@@ -210,7 +210,7 @@ sub icon-serialize {
     my $u  = '/path/to/somewhere.png';
     my $d  = GTK::Compat::Variant.new-string($u);
     my $i  = GIO::Roles::Icon.deserialize($d.ref-sink);
-    my $l  = GTK::Compat::Roles::GFile.new-for-commandline-arg($u);
+    my $l  = GIO::Roles::GFile.new-for-commandline-arg($u);
     my $i2 = GIO::FileIcon.new($l);
 
     ok  $i.equal($i2),
@@ -221,7 +221,7 @@ sub icon-serialize {
     my $u  = '/path/to/somewhere with whitespace.png';
     my $d  = GTK::Compat::Variant.new-string($u);
     my $i  = GIO::Roles::Icon.deserialize($d.ref-sink);
-    my $l  = GTK::Compat::Roles::GFile.new-for-commandline-arg($u);
+    my $l  = GIO::Roles::GFile.new-for-commandline-arg($u);
     my $i2 = GIO::FileIcon.new($l);
 
     ok  $i.equal($i2),
@@ -229,7 +229,7 @@ sub icon-serialize {
     $i2.unref;
 
     my $u2 = $u.subst(' ', '%20', :g);
-    my $l2 = GTK::Compat::Roles::GFile.new-for-commandline-arg($u2);
+    my $l2 = GIO::Roles::GFile.new-for-commandline-arg($u2);
     $i2 = GIO::FileIcon.new($l2);
 
     nok $i.equal($i2),
@@ -240,7 +240,7 @@ sub icon-serialize {
     my $u  = 'sftp:///path/to/somewhere.png';
     my $d  = GTK::Compat::Variant.new-string($u);
     my $i  = GIO::Roles::Icon.deserialize($d.ref-sink);
-    my $l  = GTK::Compat::Roles::GFile.new-for-commandline-arg($u);
+    my $l  = GIO::Roles::GFile.new-for-commandline-arg($u);
     my $i2 = GIO::FileIcon.new($l);
 
     ok  $i.equal($i2),
@@ -394,7 +394,7 @@ sub loadable-icon-tests ($i) {
 }
 
 sub test-file-icon {
-  my $f1 = GTK::Compat::Roles::GFile.new-for-path('t/g-icon.c');
+  my $f1 = GIO::Roles::GFile.new-for-path('t/g-icon.c');
   my $i1 = GIO::FileIcon.new($f1);
 
   loadable-icon-tests($i1);
@@ -403,7 +403,7 @@ sub test-file-icon {
   ok  $i1.equal($i2),
       'Icon1 equals Icon2';
 
-  my $f2 = GTK::Compat::Roles::GFile.new-for-path("/\o1\o2\o3/\o244");
+  my $f2 = GIO::Roles::GFile.new-for-path("/\o1\o2\o3/\o244");
   my $i4 = GIO::FileIcon.new($f2);
 
   my $v  = $i4.serialize;

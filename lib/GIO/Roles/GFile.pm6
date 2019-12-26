@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Raw::GFile;
+use GIO::Raw::GFile;
 
 use GTK::Compat::Types;
 use GTK::Compat::FileTypes;

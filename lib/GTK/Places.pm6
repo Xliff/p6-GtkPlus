@@ -12,7 +12,7 @@ use GLib::GSList;
 
 use GTK::ScrolledWindow;
 
-use GTK::Compat::Roles::GFile;
+use GIO::Roles::GFile;
 use GTK::Roles::Signals::Places;
 
 
@@ -304,7 +304,7 @@ class GTK::Places is GTK::ScrolledWindow {
     $raw ??
       $sl.Array
       !!
-      $sl.Array.map({ GTK::Compat::Roles::GFile.new-file-obj($_) });
+      $sl.Array.map({ GIO::Roles::GFile.new-file-obj($_) });
   }
 
   method remove_shortcut (GFile() $location) is also<remove-shortcut> {

@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 
 use GTK::Compat::Roles::Object;
-use GTK::Compat::Roles::GFile;
+use GIO::Roles::GFile;
 use GIO::Roles::Icon;
 use GIO::Roles::LoadableIcon;
 
@@ -50,7 +50,7 @@ class GIO::FileIcon {
     my $f = g_file_icon_get_file($!fi);
 
     $f ??
-      ( $raw ?? $f !! GTK::Compat::Roles::GFile.new-file-obj($f) )
+      ( $raw ?? $f !! GIO::Roles::GFile.new-file-obj($f) )
       !!
       Nil;
   }

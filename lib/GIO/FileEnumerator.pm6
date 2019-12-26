@@ -10,7 +10,7 @@ use GIO::Raw::FileEnumerator;
 use GIO::FileInfo;
 
 use GTK::Compat::Roles::Object;
-use GTK::Compat::Roles::GFile;
+use GIO::Roles::GFile;
 
 class GIO::FileEnumerator {
   also does GTK::Compat::Roles::Object;

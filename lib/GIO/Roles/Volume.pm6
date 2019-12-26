@@ -10,7 +10,7 @@ use GIO::Raw::Volume;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::GFile;
+use GIO::Roles::GFile;
 use GIO::Roles::Icon;
 
 use GTK::Roles::Signals::Generic;

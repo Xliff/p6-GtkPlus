@@ -10,7 +10,7 @@ use GIO::Raw::Mount;
 use GTK::Raw::Utils;
 
 use GTK::Roles::Signals::Generic;
-use GTK::Compat::Roles::GFile;
+use GIO::Roles::GFile;
 use GIO::Roles::Icon;
 use GIO::Roles::Volume;
 use GIO::Roles::Drive;
@@ -111,7 +111,7 @@ role GIO::Roles::Mount {
     my $f = g_mount_get_default_location($!m);
 
     $f ??
-      ( $raw ?? $f !! GTK::Compat::Roles::GFile.new-file-obj($f) )
+      ( $raw ?? $f !! GIO::Roles::GFile.new-file-obj($f) )
       !!
       Nil;
   }
@@ -142,7 +142,7 @@ role GIO::Roles::Mount {
     my $f = g_mount_get_root($!m);
 
     $f ??
-      ( $raw ?? $f !! GTK::Compat::Roles::GFile.new-file-obj($f) )
+      ( $raw ?? $f !! GIO::Roles::GFile.new-file-obj($f) )
       !!
       Nil;
   }
