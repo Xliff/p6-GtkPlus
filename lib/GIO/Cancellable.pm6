@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Cancellable;
 
-use GTK::Compat::Source;
+use GLib::Source;
 
 use GTK::Compat::Roles::Object;
 use GTK::Roles::Signals::Generic;
@@ -120,7 +120,7 @@ class GIO::Cancellable {
     my $s = g_cancellable_source_new($!c);
 
     $s ??
-      ( $raw ?? $s !! GTK::Compat::Source.new($s) )
+      ( $raw ?? $s !! GLib::Source.new($s) )
       !!
       Nil;
   }

@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Source;
+use GLib::Source;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Main;
 
@@ -97,7 +97,7 @@ class GLib::Timeout {
   }
 
   method cancel (Int() $tag) {
-    GTK::Compat::Source.remove($tag);
+    GLib::Source.remove($tag);
   }
 
 }

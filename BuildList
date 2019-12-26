@@ -287,7 +287,6 @@ GTK::Compat::Pixbuf::Transforms
 GTK::Compat::Raw::Cairo
 GTK::Compat::Raw::Event
 GTK::Compat::Raw::FrameClock
-GTK::Compat::Source
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
 GTK::Dialog::Raw::ColorChooser
@@ -507,14 +506,12 @@ GIO::DBus::Roles::Signals::Proxy
 GIO::DBus::Utils
 GIO::FileAttributeMatcher
 GIO::Resource
-GIO::Roles::DatagramBased
-GIO::Roles::PollableOutputStream
 GIO::Roles::Signals::ActionGroup
 GIO::Roles::Signals::Proxy
 GIO::Roles::Signals::Settings
 GIO::SrvTarget
 GLib::ByteArray
-GLib::IOChannel
+GLib::Source
 GLib::Timeout
 GLib::Value
 GTK::AccelGroup
@@ -599,8 +596,10 @@ GIO::Resolver
 GIO::Roles::Action
 GIO::Roles::AppInfo
 GIO::Roles::DTlsServerConnection
+GIO::Roles::DatagramBased
 GIO::Roles::ListModel
 GIO::Roles::LoadableIcon
+GIO::Roles::PollableOutputStream
 GIO::Roles::TlsFileDatabase
 GIO::Roles::TlsServerConnection
 GIO::Settings
@@ -627,6 +626,7 @@ GIO::UnixOutputStream
 GIO::VFS
 GIO::ZlibCompressor
 GIO::ZlibDecompressor
+GLib::IOChannel
 GLib::Object::ParamSpec
 GLib::VariantDict
 GTK::Adjustment

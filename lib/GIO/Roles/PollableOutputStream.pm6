@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::PollableOutputStream;
 
-use GTK::Compat::Source;
+use GLib::Source;
 
 role GIO::Roles::PollableOutputStream {
   has GPollableOutputStream $!pos;
@@ -45,7 +45,7 @@ role GIO::Roles::PollableOutputStream {
     my $s = g_pollable_output_stream_create_source($!pos, $cancellable);
 
     $s ??
-      ( $raw ?? $s !! GTK::Compat::Source.new($s) )
+      ( $raw ?? $s !! GLib::Source.new($s) )
       !!
       Nil;
   }

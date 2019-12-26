@@ -9,7 +9,7 @@ use GTK::Raw::Utils;
 
 use GTK::Compat::MainContext;
 
-class GTK::Compat::Source {
+class GLib::Source {
   has GSource $!gs is implementor;
 
   submethod BUILD (GSource :$source, Int() :$attach = False) {
@@ -131,14 +131,14 @@ class GTK::Compat::Source {
     g_source_unref($!gs);
   }
 
-  method remove (GTK::Compat::Source:U: Int() $tag) {
+  method remove (GLib::Source:U: Int() $tag) {
     my guint $t = resolve-uint($tag);
-    
+
     g_source_remove($t);
   }
 
   method remove_by_funcs_user_data (
-    GTK::Compat::Source:U:
+    GLib::Source:U:
     GSourceFuncs $funcs, gpointer $user_data
   )
     is also<remove-by-funcs-user-data>
@@ -147,7 +147,7 @@ class GTK::Compat::Source {
   }
 
   method remove_by_user_data (
-    GTK::Compat::Source:U:
+    GLib::Source:U:
     gpointer $user_data
   )
     is also<remove-by-user-data>
@@ -156,7 +156,7 @@ class GTK::Compat::Source {
   }
 
   method idle_add (
-    GTK::Compat::Source:U:
+    GLib::Source:U:
     &function,
     gpointer $data = gpointer
   )
@@ -166,7 +166,7 @@ class GTK::Compat::Source {
   }
 
   method idle_add_full (
-    GTK::Compat::Source:U:
+    GLib::Source:U:
     Int() $priority,
     &function,
     gpointer $data         = gpointer,
@@ -178,7 +178,7 @@ class GTK::Compat::Source {
   }
 
   method idle_remove_by_data (
-    GTK::Compat::Source:U:
+    GLib::Source:U:
     gpointer $data
   )
     is also<idle-remove-by-data>

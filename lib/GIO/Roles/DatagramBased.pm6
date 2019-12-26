@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::DatagramBased;
 
-use GTK::Compat::Source;
+use GLib::Source;
 
 role GIO::Roles::DatagramBased {
   has GDatagramBased $!d;
@@ -56,7 +56,7 @@ role GIO::Roles::DatagramBased {
     my GIOCondition $c = $condition;
 
     my $s = g_datagram_based_create_source($!d, $c, $cancellable);
-    $raw ?? $s !! GTK::Compat::Source.new($s);
+    $raw ?? $s !! GLib::Source.new($s);
   }
 
   method datagrambased_get_type is also<get-type> {

@@ -9,7 +9,7 @@ use GTK::Compat::Types;
 
 use GLib::Raw::IOChannel;
 
-use GTK::Compat::Source;
+use GLib::Source;
 
 class GLib::IOChannel {
   has GIOChannel $!gio;
@@ -177,7 +177,7 @@ class GLib::IOChannel {
     my $s = g_io_create_watch($!gio, $c);
 
     $s ??
-      ( $raw ?? $s !! GTK::Compat::Source.new($s) )
+      ( $raw ?? $s !! GLib::Source.new($s) )
       !!
       Nil;
   }
