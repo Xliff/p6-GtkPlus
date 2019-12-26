@@ -73,7 +73,7 @@ sub MAIN (
       }
 
       %nodes{$p.key}<edges>.push: $mn;
-      %nodes{$mn}<ancestors>.push: $p.key;
+      %nodes{$mn}<kids>.push: $p.key;
 
       die qq:to/DIE/ unless %nodes{$mn}:exists;
         { $mn }, used by { $p.key }, does not exist!
@@ -182,9 +182,10 @@ sub MAIN (
         @threads .= grep({ .status ~~ Planned });
         # say "W: »»»»»»»»»»»»»» { @threads.elems }";
       }
+
+      # If no more compile jobs and still dependencies, then something is
+      # very wrong!
       if %nodes{$n} && %nodes{$n}<edges>.elems && !@threads {
-        # If no more compile jobs and still dependencies, then something is
-        # very wrong!
         die "Cannot start $n due to missed dependencies {
              %nodes{$n}<edges>.join(', ') }";
       }
@@ -215,7 +216,7 @@ sub run-compile ($module) {
     $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
   );
   if %nodes{$module} {
-    for %nodes{$module}<ancestors>[] {
+    for %nodes{$module}<kids>[] {
       # Mute all until we are sure there are no more Nils!
       quietly {
         next unless $_ && %nodes{$_} && %nodes{$_}<edges>:exists;
