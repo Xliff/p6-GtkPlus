@@ -127,6 +127,7 @@ GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
 GIO::Roles::Signals::VolumeMonitor
 GIO::SettingsSchema
+GLib::Object::Raw::Binding
 GLib::Object::Raw::ParamSpec
 GLib::Raw::Array
 GLib::Raw::Arrays
@@ -184,7 +185,6 @@ GTK::Compat::FileTypes
 GTK::Compat::Pixbuf::Raw::Animation
 GTK::Compat::RGBA
 GTK::Compat::Raw::AppLaunchContext
-GTK::Compat::Raw::Binding
 GTK::Compat::Raw::Cursor
 GTK::Compat::Raw::Device
 GTK::Compat::Raw::Display
@@ -627,6 +627,7 @@ GIO::VFS
 GIO::ZlibCompressor
 GIO::ZlibDecompressor
 GLib::IOChannel
+GLib::Object::Binding
 GLib::Object::ParamSpec
 GLib::VariantDict
 GTK::Adjustment
@@ -640,7 +641,6 @@ GTK::CellRendererSpinner
 GTK::CellRendererText
 GTK::CellRendererToggle
 GTK::Clipboard
-GTK::Compat::Binding
 GTK::Compat::Device
 GTK::Compat::Display
 GTK::Compat::DisplayManager

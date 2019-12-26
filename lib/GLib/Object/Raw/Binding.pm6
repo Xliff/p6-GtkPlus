@@ -4,13 +4,13 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::Binding;
+unit package GLib::Object::Raw::Binding;
 
 sub g_object_bind_property (
-  GObject $source, 
-  Str $source_property, 
-  GObject $target, 
-  Str $target_property, 
+  GObject $source,
+  Str $source_property,
+  GObject $target,
+  Str $target_property,
   uint32 $flags                           # GBindingFlags $flags
 )
   returns GBinding
@@ -19,14 +19,14 @@ sub g_object_bind_property (
   { * }
 
 sub g_object_bind_property_full (
-  GObject $source, 
-  Str $source_property, 
-  GObject $target, 
-  Str $target_property, 
-  uint32 $flags,                          # GBindingFlags $flags, 
-  GBindingTransformFunc $transform_to, 
-  GBindingTransformFunc $transform_from, 
-  Pointer $user_data, 
+  GObject $source,
+  Str $source_property,
+  GObject $target,
+  Str $target_property,
+  uint32 $flags,                          # GBindingFlags $flags,
+  GBindingTransformFunc $transform_to,
+  GBindingTransformFunc $transform_from,
+  Pointer $user_data,
   GDestroyNotify $notify
 )
   returns GBinding
@@ -35,12 +35,12 @@ sub g_object_bind_property_full (
   { * }
 
 sub g_object_bind_property_with_closures (
-  GObject $source, 
-  Str $source_property, 
-  GObject $target, 
-  Str $target_property, 
-  uint32 $flags,                          # GBindingFlags $flags, 
-  GClosure $transform_to, 
+  GObject $source,
+  Str $source_property,
+  GObject $target,
+  Str $target_property,
+  uint32 $flags,                          # GBindingFlags $flags,
+  GClosure $transform_to,
   GClosure $transform_from
 )
   returns GBinding
