@@ -102,7 +102,7 @@ class GLib::String {
   }
 
   method free_to_bytes (:$raw = False) {
-    my $b = g_string_free_to_bytes(self);
+    my $b = g_string_free_to_bytes($!s);
 
     $b ??
       ( $raw ?? $b !! GLib::Bytes.new($b) )

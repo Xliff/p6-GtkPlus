@@ -180,6 +180,7 @@ sub MAIN (
       while %nodes{$n}<edges> && @threads.elems {
         await Promise.anyof(@threads);
         @threads .= grep({ .status ~~ Planned });
+        # say "W: »»»»»»»»»»»»»» { @threads.elems }";
       }
       if %nodes{$n} && %nodes{$n}<edges>.elems && !@threads {
         # If no more compile jobs and still dependencies, then something is
@@ -190,6 +191,7 @@ sub MAIN (
 
       # Start threads until we have a blocker...or we run out of threads.
       if !%nodes{$n} || %nodes{$n}<edges>.elems.not {
+        # say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 }";
         @threads.push: start { run-compile($n) };
       }
 
@@ -197,6 +199,7 @@ sub MAIN (
       if +@threads >= $*KERNEL.cpu-cores {
         await Promise.anyof(@threads);
         @threads .= grep({ .status ~~ Planned });
+        # say "C: »»»»»»»»»»»»»» { @threads.elems }";
       }
 
     }
@@ -205,8 +208,12 @@ sub MAIN (
 }
 
 sub run-compile ($module) {
+  my $cs = DateTime.Now;
   my $proc = run 'p6gtkexec', '-e',  "use $module", :out, :err;
-  output($module, $proc.err.slurp);
+  output(
+    $module,
+    $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs}"
+  );
   if %nodes{$module} {
     for %nodes{$module}<ancestors>[] {
       # Extreme paranoia and all Nil occurrences should be gone anyways!
