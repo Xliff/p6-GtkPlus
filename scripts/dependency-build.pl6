@@ -212,15 +212,14 @@ sub run-compile ($module) {
   my $proc = run 'p6gtkexec', '-e',  "use $module", :out, :err;
   output(
     $module,
-    $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs}"
+    $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
   );
   if %nodes{$module} {
     for %nodes{$module}<ancestors>[] {
-      # Extreme paranoia and all Nil occurrences should be gone anyways!
+      # Mute all until we are sure there are no more Nils!
       quietly {
-        next unless $_;
-        %nodes{$_}<edges> .= grep({ ($_ // '') ne $module })
-          if %nodes{$_}<edges>:exists;
+        next unless $_ && %nodes{$_} && %nodes{$_}<edges>:exists;
+        %nodes{$_}<edges> .= grep({ $_ ne $module });
       }
     }
   }
