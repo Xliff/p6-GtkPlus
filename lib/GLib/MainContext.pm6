@@ -10,7 +10,7 @@ use GTK::Raw::Utils;
 
 use GTK::Compat::Roles::TypedBuffer;
 
-class GTK::Compat::MainContext {
+class GLib::MainContext {
   has GMainContext $!mc is implementor;
 
   submethod BUILD (:$maincontext) {
@@ -117,15 +117,15 @@ class GTK::Compat::MainContext {
   }
 
   multi method iteration (
-    GTK::Compat::MainContext:U:
+    GLib::MainContext:U:
   ) {
-    GTK::Compat::MainContext.iteration(GMainContext);
+    GLib::MainContext.iteration(GMainContext);
   }
   multi method iteration (Int() $may_block = True) {
-    GTK::Compat::MainContext.iteration($!mc, $may_block);
+    GLib::MainContext.iteration($!mc, $may_block);
   }
   multi method iteration (
-    GTK::Compat::MainContext:U:
+    GLib::MainContext:U:
     GMainContext $context = GMainContext,
     Int() $may_block = True
   ) {

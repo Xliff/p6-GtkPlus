@@ -7,7 +7,7 @@ use GTK::Compat::Raw::Main;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::MainContext;
+use GLib::MainContext;
 
 class GLib::Source {
   has GSource $!gs is implementor;
@@ -58,7 +58,7 @@ class GLib::Source {
   }
 
   method get_context is also<get-context> {
-    GTK::Compat::MainContext.new( g_source_get_context($!gs) );
+    GLib::MainContext.new( g_source_get_context($!gs) );
   }
 
   method get_id is also<get-id> {

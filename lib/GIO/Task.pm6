@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Task;
 
-use GTK::Compat::MainContext;
+use GLib::MainContext;
 use GIO::Cancellable;
 
 use GTK::Compat::Roles::Object;
@@ -197,7 +197,7 @@ class GIO::Task {
     my $c = g_task_get_context($!t);
 
     $c ??
-      ( $raw ?? $c !! GTK::Compat::MainContext.new($c) )
+      ( $raw ?? $c !! GLib::MainContext.new($c) )
       !!
       Nil;
   }
