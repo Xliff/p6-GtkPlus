@@ -10,7 +10,7 @@ use GTK::Raw::RecentInfo;   # Contains Raw calls for ::RecentManager
 
 use GLib::Value;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 use GTK::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 
@@ -73,7 +73,7 @@ class GTK::RecentManager {
 
   method get_items (:$raw) {
     my $l = GTK::Compat::List.new( gtk_recent_manager_get_items($!rm) )
-      but GTK::Compat::Roles::ListData[GtkRecentInfo];
+      but GLib::Roles::ListData[GtkRecentInfo];
     $raw ?? $l.Array !! $l.Array.map({ GTK::RecentInfo.new($_) });
   }
 

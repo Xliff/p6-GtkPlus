@@ -7,10 +7,10 @@ use GTK::Compat::Types;
 use GTK::Compat::Raw::Pixbuf;
 use GTK::Compat::Pixbuf::Transforms;
 
-use GTK::Compat::GList;
+use GLib::GList;
 
 use GTK::Compat::Roles::Object;
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 class GTK::Compat::Pixbuf {
   also does GTK::Compat::Roles::Object;
@@ -827,8 +827,8 @@ class GTK::Compat::Pixbuf {
     return $f  if $glist;
 
     # XXX - Should be GSList, but implementation is not properly working!!
-    my $fl = GTK::Compat::GList.new($f)
-      but GTK::Compat::Roles::ListData[GdkPixbufFormat];
+    my $fl = GLib::GList.new($f)
+      but GLib::Roles::ListData[GdkPixbufFormat];
 
     $fl.Array;
   }

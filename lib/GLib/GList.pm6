@@ -5,15 +5,15 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Raw::GList;
 use GTK::Compat::Types;
+use GLib::Raw::GList;
 
 # See if this will work properly:
 # - Move ALL data related routines to a ListData parameterized role.
 # - Have raw_data method implemented in client classes that return the pointer
 #   attribute.
 
-class GTK::Compat::GList {
+class GLib::GList {
   #also does Positional;
   #also does Iterator;
 
@@ -30,7 +30,7 @@ class GTK::Compat::GList {
     $!dirty = True;
     $!cur = $!list = $list;
 
-    # No longer necessary due to GTK::Compat::Roles::ListData
+    # No longer necessary due to GLib::Roles::ListData
     #$!type := $type;
 
     # See NOTE.
@@ -47,7 +47,7 @@ class GTK::Compat::GList {
   }
 
   multi method new (@list) {
-    my $l = GTK::Compat::GList.new;
+    my $l = GLib::GList.new;
     for @list {
       # What about prototype numeric data (ints, nums) and Str?
       $l.append( nativecast(Pointer, $_) );
@@ -126,7 +126,7 @@ class GTK::Compat::GList {
   }
 
   multi method concat (
-    GTK::Compat::GList:U:
+    GLib::GList:U:
     GTK::Compat::Types::GList $list1,
     GTK::Compat::Types::GList $list2
   ) {

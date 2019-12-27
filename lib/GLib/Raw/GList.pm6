@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-unit package GTK::Compat::Raw::GList;
+unit package GLib::Raw::GList;
 
 sub g_list_alloc ()
   returns GList

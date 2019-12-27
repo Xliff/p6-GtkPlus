@@ -243,8 +243,8 @@ class GIO::TlsDatabase {
     return Nil unless $rv;
     return $rv if     $glist;
 
-    $rv = GTK::Compat::GList.new($rv)
-      but GTK::Compat::Roles::ListData[GTlsCertificate];
+    $rv = GLib::GList.new($rv)
+      but GLib::Roles::ListData[GTlsCertificate];
 
     $raw ?? $rv.Array !! $rv.Array.map({ GIO::TlsCertificate.new($_) })
   }
@@ -309,8 +309,8 @@ class GIO::TlsDatabase {
     return Nil unless $rv;
     return $rv if     $glist;
 
-    $rv = GTK::Compat::GList.new($rv)
-      but GTK::Compat::Roles::ListData[GTlsCertificate];
+    $rv = GLib::GList.new($rv)
+      but GLib::Roles::ListData[GTlsCertificate];
 
     $raw ?? $rv.Array !! $rv.Array.map({ GIO::TlsCertificate.new($_) })
   }

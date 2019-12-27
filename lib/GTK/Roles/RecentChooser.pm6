@@ -174,7 +174,7 @@ role GTK::Roles::RecentChooser {
     >
   {
     my $i = GTK::Compat::List.new( gtk_recent_chooser_get_items($!rc) )
-      but GTK::Compat::Roles::ListData[GtkRecentInfo];
+      but GLib::Roles::ListData[GtkRecentInfo];
     $raw ?? $i.Array !! $i.Array.map({ GTK::RecentInfo.new($_) });
   }
 
@@ -193,7 +193,7 @@ role GTK::Roles::RecentChooser {
 
   method list_filters (:$raw) is also<list-filters> {
     my $f = GTK::Compat::SList.new( gtk_recent_chooser_list_filters($!rc) )
-      but GTK::Compat::Roles::ListData[GtkRecentFilter];
+      but GLib::Roles::ListData[GtkRecentFilter];
     $raw ?? $f.Array !! $f.Array.map({ GTK::RecentFilter.new($_) });
   }
 

@@ -12,7 +12,7 @@ class GLib::GSList {
 
   has @!nat;
 
-  # Left active, but see NOTE in GTK::Compat::GList
+  # Left active, but see NOTE in GLib::GList
   has $.dirty = False;
 
   # CLASS HAS NOT PROPERLY BEEN OPTIMIZED FOR PERL6.

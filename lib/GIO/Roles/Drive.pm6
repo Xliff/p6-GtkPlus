@@ -162,7 +162,7 @@ role GIO::Roles::Drive {
 
   method get_volumes (:$glist = False, :$raw = False) is also<get-volumes> {
     my $vl = g_drive_get_volumes($!d)
-      but GTK::Compat::Roles::ListData[GVolume];
+      but GLib::Roles::ListData[GVolume];
 
     return $vl if $glist;
 

@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-role GTK::Compat::Roles::ListData[::T] {
+role GList::Roles::ListData[::T] {
   also does Positional;
   also does Iterable;
 

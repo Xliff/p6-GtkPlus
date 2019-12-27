@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::GList;
+use GLib::GList;
 use GTK::Compat::Pixbuf;
 use GTK::Compat::RGBA;
 use GTK::Compat::Types;
@@ -14,7 +14,7 @@ use GTK::Raw::Utils;
 use GTK::IconInfo;
 
 use GTK::Roles::Signals::Generic;
-use GTK::Compat::Roles::ListData;   # Not to be composed in GTK::IconTheme
+use GLib::Roles::ListData;   # Not to be composed in GTK::IconTheme
 use GTK::Compat::Roles::Object;
 
 class GTK::IconTheme {
@@ -103,13 +103,13 @@ class GTK::IconTheme {
   }
 
   method list_contexts is also<list-contexts> {
-    GTK::Compat::GList.new( gtk_icon_theme_list_contexts($!it) )
-      but GTK::Compat::Roles::ListData[Str];
+    GLib::GList.new( gtk_icon_theme_list_contexts($!it) )
+      but GLib::Roles::ListData[Str];
   }
 
   method list_icons (Str() $context) is also<list-icons> {
-    GTK::Compat::GList.new( gtk_icon_theme_list_icons($!it, $context) )
-      but GTK::Compat::Roles::ListData[Str];
+    GLib::GList.new( gtk_icon_theme_list_icons($!it, $context) )
+      but GLib::Roles::ListData[Str];
   }
 
   method load_icon (

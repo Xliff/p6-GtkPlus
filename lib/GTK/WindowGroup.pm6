@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::GList;
+use GLib::GList;
 use GTK::Compat::Types;
 use GTK::Raw::WindowGroup;
 use GTK::Raw::Types;
@@ -66,7 +66,7 @@ class GTK::WindowGroup {
   }
 
   method list_windows is also<list-windows> {
-    GTK::Compat::GList.new(
+    GLib::GList.new(
       GtkWindow, gtk_window_group_list_windows($!wg)
     );
   }

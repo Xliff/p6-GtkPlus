@@ -5,11 +5,11 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::EmblemedIcon;
 
-use GTK::Compat::GList;
+use GLib::GList;
 use GIO::Emblem;
 
 use GTK::Compat::Roles::Object;
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 use GIO::Roles::Icon;
 
 class GIO::EmblemedIcon {
@@ -53,8 +53,8 @@ class GIO::EmblemedIcon {
     my $el = g_emblemed_icon_get_emblems($!ei);
     return $el if $glist;
 
-    $el = GTK::Compat::GList.new($el)
-      but GTK::Compat::Roles::ListData[GEmblem];
+    $el = GLib::GList.new($el)
+      but GLib::Roles::ListData[GEmblem];
 
     $el ??
       ( $raw ?? $el.Array !! $el.Array.map({ GIO::Emblem.new($_) }) )

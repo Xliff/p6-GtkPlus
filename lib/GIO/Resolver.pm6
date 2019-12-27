@@ -7,10 +7,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Resolver;
 
-use GTK::Compat::GList;
+use GLib::GList;
 use GIO::InetAddress;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 use GTK::Compat::Roles::Object;
 use GTK::Roles::Signals::Generic;
@@ -129,7 +129,7 @@ class GIO::Resolver {
 
     return $l if $glist;
 
-    $l = GTK::Compat::GList.new($l);
+    $l = GLib::GList.new($l);
 
     $l ??
       ( $raw ?? $l.Array !! $l.Array.map({ GIO::InetAddress.new($_) }) )

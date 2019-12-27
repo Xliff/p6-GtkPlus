@@ -28,7 +28,7 @@ use GTK::ToolItem;
 use GTK::ToolItemGroup;
 use GTK::ToolPalette;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 my (@canvas_items, @special_items, $drop_item);
 my $dd_req_drop = False;

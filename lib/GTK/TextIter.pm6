@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Raw::TextIter;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 use GTK::Roles::Types;
 
@@ -20,7 +20,7 @@ use GTK::TextChildAnchor;
 use GTK::TextMark;
 use GTK::TextTag;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 # BOXED TYPE
 
@@ -534,7 +534,7 @@ class GTK::TextIter {
     return Nil unless $ll;
     return $ll if     $glist;
 
-    $ll = GLib::GSList.new($ll) but GTK::Compat::Roles::ListData[GtkTextMark];
+    $ll = GLib::GSList.new($ll) but GLib::Roles::ListData[GtkTextMark];
 
     $raw ?? $ll.Array !! $ll.Array.map({ GTK::TextMark.new($_) });
   }

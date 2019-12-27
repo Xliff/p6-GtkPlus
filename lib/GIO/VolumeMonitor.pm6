@@ -127,7 +127,7 @@ class GIO::VolumeMonitor {
 
   method get_connected_drives (:$raw = False) is also<get-connected-drives> {
     my $dl = g_volume_monitor_get_connected_drives($!vm)
-      but GTK::Compat::Roles::ListData[GDrive];
+      but GLib::Roles::ListData[GDrive];
 
     $dl ??
       ( $raw ??
@@ -151,7 +151,7 @@ class GIO::VolumeMonitor {
 
   method get_mounts (:$raw = False) is also<get-mounts> {
     my $ml = g_volume_monitor_get_mounts($!vm)
-      but GTK::Compat::Roles::ListData[GMount];
+      but GLib::Roles::ListData[GMount];
 
     $ml ??
       ( $raw ??

@@ -93,7 +93,7 @@ role GIO::DBus::Roles::ObjectManager {
     return Nil unless $ol;
     return $ol if     $glist;
 
-    $ol = GTK::Compat::GList.new($ol)
+    $ol = GLib::GList.new($ol)
       but GTK::Compat::Raw::ListData[GDBusObject];
 
     $raw ??

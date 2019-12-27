@@ -2,7 +2,7 @@ use v6.c;
 
 use Cairo;
 
-#use GTK::Compat::GList;
+#use GLib::GList;
 use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;

@@ -899,7 +899,7 @@ class GTK::StyleContext {
     return Nil unless $sl;
     return $sl if     $glist;
 
-    $sl = GTK::Compat::GList.new($sl) but GTK::Compat::Roles::ListData[Str];
+    $sl = GLib::GList.new($sl) but GLib::Roles::ListData[Str];
     $sl.Array;
   }
 

@@ -5,9 +5,9 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::SrvTarget;
 
-use GTK::Compat::GList;
+use GLib::GList;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 class GIO::SrvTarget {
   # BOXED
@@ -96,8 +96,8 @@ class GIO::SrvTarget {
     my $tl = g_srv_target_list_sort($targets);
     return $tl if $glist;
 
-    $tl = GTK::Compat::GList.new($tl) but
-      GTK::Compat::Roles::ListData[GSrvTarget];
+    $tl = GLib::GList.new($tl) but
+      GLib::Roles::ListData[GSrvTarget];
 
     $tl ??
       ( $raw ?? $tl.Array !! $tl.Array.map({ GIO::SrvTarget.new($_) }) )

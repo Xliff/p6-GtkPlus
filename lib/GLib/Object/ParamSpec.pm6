@@ -546,7 +546,7 @@ class GLib::Object::ParamSpec::Pool {
     return $pl if     $glist;
 
     $pl = GTK::Compat::List.new($pl)
-      but GTK::Compat::Roles::ListData[GParamSpec];
+      but GLib::Roles::ListData[GParamSpec];
 
     $raw ??
       $pl.Array

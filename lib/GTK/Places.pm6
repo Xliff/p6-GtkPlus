@@ -299,7 +299,7 @@ class GTK::Places is GTK::ScrolledWindow {
     return Nil unless $sl;
     return $sl if     $glist;
 
-    $sl = GLib::GSList.new($sl) but GTK::Compat::Roles::ListData[GFile];
+    $sl = GLib::GSList.new($sl) but GLib::Roles::ListData[GFile];
 
     $raw ??
       $sl.Array

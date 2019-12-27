@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::GList;
+use GLib::GList;
 use GTK::Compat::Types;
 use GTK::Raw::Printer;
 use GTK::Raw::Types;
@@ -293,7 +293,7 @@ class GTK::Printer {
   }
 
   method list_papers is also<list-papers> {
-    GTK::Compat::GList.new( GtkPageSetup, gtk_printer_list_papers($!prn) );
+    GLib::GList.new( GtkPageSetup, gtk_printer_list_papers($!prn) );
   }
 
   method request_details is also<request-details> {

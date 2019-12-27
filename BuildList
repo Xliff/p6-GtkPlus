@@ -139,6 +139,7 @@ GLib::Raw::Bytes
 GLib::Raw::Checksum
 GLib::Raw::DateTime
 GLib::Raw::Error
+GLib::Raw::GList
 GLib::Raw::GSList
 GLib::Raw::HMAC
 GLib::Raw::HashTable
@@ -166,6 +167,7 @@ GLib::Raw::Unicode
 GLib::Raw::Value
 GLib::Raw::Variant
 GLib::Raw::VariantType
+GLib::Roles::ListData
 GLib::Roles::StaticClass
 GLib::Scanner
 GLib::Signal
@@ -192,8 +194,6 @@ GTK::Compat::Raw::Display
 GTK::Compat::Raw::DisplayManager
 GTK::Compat::Raw::DragContext
 GTK::Compat::Raw::FrameTimings
-GTK::Compat::Raw::GFile
-GTK::Compat::Raw::GList
 GTK::Compat::Raw::IsType
 GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Main
@@ -209,7 +209,6 @@ GTK::Compat::Raw::X11_Display
 GTK::Compat::Raw::X11_Screen
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
-GTK::Compat::Roles::ListData
 GTK::Compat::Roles::Signals::Window
 GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
@@ -264,6 +263,7 @@ GLib::Bytes
 GLib::Checksum
 GLib::DateTime
 GLib::Error
+GLib::GList
 GLib::GSList
 GLib::HMAC
 GLib::HashTable
@@ -282,7 +282,6 @@ GLib::Rand
 GLib::Source
 GLib::Timeout
 GTK::Compat::FrameTimings
-GTK::Compat::GList
 GTK::Compat::Keymap
 GTK::Compat::MainLoop
 GTK::Compat::Pixbuf::Animation::Iter
@@ -650,7 +649,6 @@ GTK::Compat::DisplayManager
 GTK::Compat::Event
 GTK::Compat::Monitor
 GTK::Compat::Pixbuf
-GTK::Compat::Roles::GFile
 GTK::Compat::Seat
 GTK::EntryBuffer
 GTK::IconInfo

@@ -11,7 +11,7 @@ use GTK::Raw::Types;
 use GTK::RadioButton;
 use GTK::ToggleToolButton;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 our subset RadioToolButtonAncestry is export
   where GtkRadioToolButton | GtkActionable | ToggleToolButtonAncestry;
@@ -114,7 +114,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
         return $gl if     $glist;
 
         $gl = GLib::GSList.new($gl)
-          but GTK::Compat::Roles::ListData[GtkRadioButton];
+          but GLib::Roles::ListData[GtkRadioButton];
 
         $raw ?? $gl.Array !! $gl.Array.map({ GTK::RadioButton.new($_) });
       },

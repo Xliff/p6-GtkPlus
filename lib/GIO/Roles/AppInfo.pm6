@@ -75,7 +75,7 @@ class GIO::Roles::AppInfo {
     return $at if     $glist;
 
     my $atl = GTK::Compat::List.new($at)
-      but GTK::Compat::Roles::ListData[GAppInfo];
+      but GLib::Roles::ListData[GAppInfo];
 
     $raw ?? $atl.Array !!
             $atl.Array.map({ GIO::Roles::AppInfo.new_appinfo_obj($_) });
@@ -124,7 +124,7 @@ class GIO::Roles::AppInfo {
     return $f if      $glist;
 
     my $fl = GTK::Compat::List.new($f)
-      but GTK::Compat::Roles::ListData[GAppInfo];
+      but GLib::Roles::ListData[GAppInfo];
 
     $raw ?? $fl.Array !!
             $fl.Array.map({ GIO::Roles::AppInfo.new_appinfo_obj($_) });
@@ -143,7 +143,7 @@ class GIO::Roles::AppInfo {
     return $r  if     $glist;
 
     my $rl = GTK::Compat::List.new($r)
-      but GTK::Compat::Roles::ListData[GAppInfo];
+      but GLib::Roles::ListData[GAppInfo];
 
     $raw ?? $rl.Array !!
             $rl.Array.map({ GIO::Roles::AppInfo.new_appinfo_obj($_) });

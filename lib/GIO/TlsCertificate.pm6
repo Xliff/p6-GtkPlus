@@ -11,9 +11,9 @@ use GIO::Raw::TlsCertificate;
 
 use GLib::ByteArray;
 use GLib::Value;
-use GTK::Compat::GList;
+use GLib::GList;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 use GTK::Roles::Properties;
 
 class GIO::TlsCertificate {
@@ -88,8 +88,8 @@ class GIO::TlsCertificate {
     return $la if     $glist;
     return Nil unless $la;
 
-    $la = GTK::Compat::GList.new($la)
-      but GTK::Compat::Roles::ListData[GTlsCertificate];
+    $la = GLib::GList.new($la)
+      but GLib::Roles::ListData[GTlsCertificate];
 
     $raw ?? $la.Array !! $la.Array.map({ GIO::TlsCertificate.new($_) });
   }

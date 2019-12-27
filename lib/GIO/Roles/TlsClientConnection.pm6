@@ -8,11 +8,11 @@ use GTK::Compat::FileTypes;
 
 use GIO::Raw::TlsClientConnection;
 
-use GTK::Compat::GList;
+use GLib::GList;
 
 use GLib::ByteArray;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 use GIO::Roles::SocketConnectable;
 
 role GIO::Roles::TlsClientConnection {
@@ -119,8 +119,8 @@ role GIO::Roles::TlsClientConnection {
     return Nil  unless $cal;
     return $cal if     $glist;
 
-    $cal = GTK::Compat::GList.new($cal)
-      but GTK::Compat::Roles::ListData[GByteArray];
+    $cal = GLib::GList.new($cal)
+      but GLib::Roles::ListData[GByteArray];
 
     $raw ?? $cal.Array !! $cal.Array.map({ GLib::ByteArray.new($_) });
   }

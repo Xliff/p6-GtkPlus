@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::ContentType;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 # STATIC CATCH-ALL
 class GIO::ContentType {
@@ -35,7 +35,7 @@ class GIO::ContentType {
     return $list if     $glist;
 
     (
-      GTK::Compat::GList.new($list) but GTK::Compat::Roles::ListData[Str]
+      GLib::GList.new($list) but GLib::Roles::ListData[Str]
     ).Array
   }
 

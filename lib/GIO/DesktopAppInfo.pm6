@@ -82,7 +82,7 @@ class GIO::DesktopAppInfo {
     return Nil unless $il;
     return $il if     $glist;
 
-    $il = $il but GTK::Compat::Roles::ListData[GDesktopAppInfo];
+    $il = $il but GLib::Roles::ListData[GDesktopAppInfo];
     $raw ?? $il.Array !! $il.Array.map({ GIO::DesktopAppInfo.new($_) });
   }
 

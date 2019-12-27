@@ -74,7 +74,7 @@ class GLib::Markup {
     return Nil unless $sl;
     return $sl if     $glist;
 
-    $sl = $sl but GTK::Compat::Roles::ListData[Str];
+    $sl = $sl but GLib::Roles::ListData[Str];
     $sl.Array;
   }
 

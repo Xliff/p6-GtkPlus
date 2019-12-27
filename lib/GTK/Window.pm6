@@ -8,7 +8,7 @@ use GTK::Raw::Utils;
 use GTK::Bin;
 use GTK::Widget;
 
-use GTK::Compat::GList;
+use GLib::GList;
 use GTK::Compat::Pixbuf;
 use GTK::Compat::Types;
 use GTK::Compat::Screen;
@@ -339,7 +339,7 @@ class GTK::Window is GTK::Bin {
   method icon_list is rw is also<icon-list> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::GList.new( GdkPixbuf, gtk_window_get_icon_list($!win) );
+        GLib::GList.new( GdkPixbuf, gtk_window_get_icon_list($!win) );
       },
       STORE => sub ($, GList() $list is copy) {
         gtk_window_set_icon_list($!win, $list);

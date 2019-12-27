@@ -156,8 +156,8 @@ class GIO::UnixMount {
     return Nil unless $ml;
     return $ml if     $glist;
 
-    $ml = GTK::Compat::GList.new($ml)
-      but GTK::Compat::Roles::ListData[GUnixMountEntry];
+    $ml = GLib::GList.new($ml)
+      but GLib::Roles::ListData[GUnixMountEntry];
 
     my $rv = $raw ?? $ml.Array !! $ml.Array.map({ GIO::UnixMounts.new($_) });
     $all ?? $rv !! ($rv, $time-read);
@@ -399,8 +399,8 @@ class GIO::UnixMountPoint {
     return Nil unless $pl;
     return $pl if     $glist;
 
-    $pl = GTK::Compat::GList.new($pl)
-      but GTK::Compat::Roles::ListData[GUnixMountPoint];
+    $pl = GLib::GList.new($pl)
+      but GLib::Roles::ListData[GUnixMountPoint];
 
     my $rv = $raw ??
       $pl.Array

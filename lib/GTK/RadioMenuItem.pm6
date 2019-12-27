@@ -10,7 +10,7 @@ use GTK::Raw::Types;
 
 use GTK::CheckMenuItem;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 our subset RadioMenuItemAncestry
   where GtkRadioMenuItem | CheckMenuItemAncestry;
@@ -180,7 +180,7 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
         return Nil unless $gl;
         return $gl if     $glist;
 
-        $gl = GLib::GSList.new($gl) but GTK::Compat::Roles::ListData;
+        $gl = GLib::GSList.new($gl) but GLib::Roles::ListData;
 
         $raw ?? $gl.Array !! $gl.Array.map({ GTK::RadioMenuItem.new($_) });
       },

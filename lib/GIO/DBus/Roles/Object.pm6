@@ -7,11 +7,11 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::DBus::Raw::Types;
 
-use GTK::Compat::GList;
+use GLib::GList;
 
 use GIO::DBus::Roles::Interface;
 
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 use GIO::DBus::Roles::Signals::Object;
 
@@ -67,7 +67,7 @@ role GIO::DBus::Roles::Object {
     return Nil unless $il;
     return $il if     $glist;
 
-    $il = $il but GTK::Compat::Roles::ListData[GDBusInterface];
+    $il = $il but GLib::Roles::ListData[GDBusInterface];
     $raw ??
       $il.Array
       !!

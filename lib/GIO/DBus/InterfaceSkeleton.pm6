@@ -9,10 +9,10 @@ use GIO::DBus::Raw::Types;
 use GIO::DBus::Raw::InterfaceSkeleton;
 
 use GLib::Variant;
-use GTK::Compat::GList;
+use GLib::GList;
 
 use GTK::Compat::Roles::Object;
-use GTK::Compat::Roles::ListData;
+use GLib::Roles::ListData;
 
 use GIO::DBus::Roles::Signals::InterfaceSkeleton;
 
@@ -98,8 +98,8 @@ class GIO::DBus::InterfaceSkeleton {
     return Nil unless $cl;
     return $cl if     $glist;
 
-    $cl = GTK::Compat::GList.new($cl)
-      but GTK::Compat::Roles::ListData[GDBusConnection];
+    $cl = GLib::GList.new($cl)
+      but GLib::Roles::ListData[GDBusConnection];
     $raw ?? $cl.Array !! $cl.Array.map({ GIO::DBus::Connection.new($_) });
   }
 
