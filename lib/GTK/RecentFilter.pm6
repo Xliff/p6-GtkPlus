@@ -8,16 +8,16 @@ use GTK::Raw::RecentFilter;
 use GTK::Raw::Types;
 
 use GTK::Roles::Buildable;
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::RecentFilter {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Buildable;
 
   has GtkRecentFilter $!rf is implementor;
 
   submethod BUILD(:$filter) {
-    self!setObject($!rf = $filter);           # GTK::Compat::Roles::Object
+    self!setObject($!rf = $filter);           # GLib::Roles::Object
     $!b  = nativecast(GtkBuildable, $!rf);    # GTK::Roles::Buildable
   }
   

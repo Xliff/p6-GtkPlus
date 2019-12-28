@@ -12,11 +12,11 @@ use GIO::InetAddress;
 
 use GLib::Roles::ListData;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Signals::Generic;
 
 class GIO::Resolver {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 
   has GResolver $!r is implementor;

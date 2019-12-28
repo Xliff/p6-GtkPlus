@@ -10,7 +10,7 @@ use GIO::Raw::Task;
 use GLib::MainContext;
 use GIO::Cancellable;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Pointers;
 use GIO::Roles::AsyncResult;
 
@@ -18,7 +18,7 @@ our subset TaskAncestry is export of Mu
   where GTask | GAsyncResult | GObject;
 
 class GIO::Task {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::AsyncResult;
 
   has GTask $!t is implementor;
@@ -149,7 +149,7 @@ class GIO::Task {
             cast(
               Pointer,
               do given $val {
-                when GTK::Compat::Roles::Object { $val.GObject }
+                when GLib::Roles::Object { $val.GObject }
                 when .REPR eq 'CStruct'         { $_           }
 
                 default {
@@ -212,7 +212,7 @@ class GIO::Task {
     my $o = g_task_get_source_object($!t);
 
     $o ??
-      ( $raw ?? $o !! GTK::Compat::Roles::Object.new-object-obj($o) )
+      ( $raw ?? $o !! GLib::Roles::Object.new-object-obj($o) )
       !!
       Nil;
   }

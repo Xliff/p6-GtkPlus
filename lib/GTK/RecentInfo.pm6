@@ -10,7 +10,7 @@ use GTK::Raw::Utils;
 
 use GTK::Raw::RecentInfo;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 # STRUCT
 class GTK::RecentInfo {

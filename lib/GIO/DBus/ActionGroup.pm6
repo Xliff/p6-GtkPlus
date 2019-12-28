@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 # Only need this role, since it includes ActionGroup
 use GIO::Roles::RemoteActionGroup;
 

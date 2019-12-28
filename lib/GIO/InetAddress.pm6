@@ -6,10 +6,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::InetAddress;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::InetAddress {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GInetAddress $!ia is implementor;
 

@@ -8,12 +8,12 @@ use GTK::Compat::Types;
 
 use GLib::Bytes;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Icon;
 use GIO::Roles::LoadableIcon;
 
 class GIO::BytesIcon {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::Icon;
   also does GIO::Roles::LoadableIcon;
 

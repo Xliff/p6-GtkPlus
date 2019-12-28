@@ -6,14 +6,14 @@ use GTK::Compat::Types;
 
 use GIO::Raw::UnixMount;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Icon;
 use GTK::Roles::Signals::Generic;
 
 class GIO::UnixMountMonitor { ... }
 
 class GIO::UnixMount {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GUnixMountEntry $!um is implementor;
 

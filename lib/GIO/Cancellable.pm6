@@ -9,11 +9,11 @@ use GIO::Raw::Cancellable;
 
 use GLib::Source;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Signals::Generic;
 
 class GIO::Cancellable {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 
   has GCancellable $!c is implementor;

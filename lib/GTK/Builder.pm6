@@ -16,10 +16,10 @@ use GTK::Adjustment;
 use GTK::CSSProvider;
 use GTK::Widget;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::Builder does Associative {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   my (@prefixes, %aliases);
 

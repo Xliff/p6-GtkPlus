@@ -9,7 +9,7 @@ use GTK::Raw::Types;
 use GTK::Raw::Application;
 use GTK::Raw::Window;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::ActionMap;
 
 use GTK::Roles::Signals::Generic;
@@ -19,7 +19,7 @@ use GTK::ApplicationWindow;
 use GTK::Window;
 
 class GTK::Application is export {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::ActionMap;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;

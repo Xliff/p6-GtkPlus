@@ -7,10 +7,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::UnixFDList;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::UnixFDList {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GUnixFDList $!fd is implementor;
 

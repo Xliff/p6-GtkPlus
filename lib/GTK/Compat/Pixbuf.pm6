@@ -9,11 +9,11 @@ use GTK::Compat::Pixbuf::Transforms;
 
 use GLib::GList;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GLib::Roles::ListData;
 
 class GTK::Compat::Pixbuf {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GdkPixbuf $!p is implementor;
 

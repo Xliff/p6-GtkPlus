@@ -9,10 +9,10 @@ use GIO::Raw::FilenameCompleter;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::FilenameCompleter {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GFilenameCompleter $!fc is implementor;
 

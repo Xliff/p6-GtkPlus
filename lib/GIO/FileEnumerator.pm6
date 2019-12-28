@@ -9,11 +9,11 @@ use GIO::Raw::FileEnumerator;
 
 use GIO::FileInfo;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::GFile;
 
 class GIO::FileEnumerator {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GFileEnumerator $!fe is implementor;
 

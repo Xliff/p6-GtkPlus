@@ -8,13 +8,13 @@ use GTK::Raw::DnD;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 # TO BE USED WITH GTK::Compat::DragContext.
 
 class GTK::DragContext {
   also does GTK::Roles::Types;
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GdkDragContext $!dc is implementor;
 

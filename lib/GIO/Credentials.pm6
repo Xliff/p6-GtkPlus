@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::Credentials;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::Credentials {
   has GCredentials $!c is implementor;

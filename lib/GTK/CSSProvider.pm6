@@ -9,7 +9,7 @@ use GTK::Raw::CSSProvider;
 use GTK::Raw::StyleContext;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::CSSProvider;
@@ -17,7 +17,7 @@ use GTK::Roles::StyleProvider;
 use GTK::Roles::Types;
 
 class GTK::CSSProvider {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;
@@ -39,7 +39,7 @@ class GTK::CSSProvider {
 
     # GTK::Roles::StyleProvider
     $!sp = nativecast(GtkStyleProvider, $!css = $provider);
-    # GTK::Compat::Roles::Object
+    # GLib::Roles::Object
     self!setObject($provider);
 
     my uint32 $p = self.RESOLVE-UINT($priority);

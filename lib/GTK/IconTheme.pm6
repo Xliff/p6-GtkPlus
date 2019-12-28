@@ -15,11 +15,11 @@ use GTK::IconInfo;
 
 use GTK::Roles::Signals::Generic;
 use GLib::Roles::ListData;   # Not to be composed in GTK::IconTheme
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::IconTheme {
   also does GTK::Roles::Signals::Generic;
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GtkIconTheme $!it is implementor;
 

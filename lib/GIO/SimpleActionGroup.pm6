@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::ActionGroup;
 use GIO::Roles::ActionMap;
 
@@ -13,7 +13,7 @@ our subset ActionGroupAncestry is export of Mu
   where GSimpleActionGroup | GActionGroup | GActionMap;
 
 class GIO::SimpleActionGroup {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::ActionGroup;
   also does GIO::Roles::ActionMap;
 

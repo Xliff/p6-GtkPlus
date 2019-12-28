@@ -5,7 +5,7 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::VolumeMonitor;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Signals::VolumeMonitor;
 
 use GIO::Roles::Drive;
@@ -13,7 +13,7 @@ use GIO::Roles::Mount;
 use GIO::Roles::Volume;
 
 class GIO::VolumeMonitor {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::Signals::VolumeMonitor;
 
   has GVolumeMonitor $!vm is implementor;

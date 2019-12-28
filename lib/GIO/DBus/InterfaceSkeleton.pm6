@@ -11,13 +11,13 @@ use GIO::DBus::Raw::InterfaceSkeleton;
 use GLib::Variant;
 use GLib::GList;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GLib::Roles::ListData;
 
 use GIO::DBus::Roles::Signals::InterfaceSkeleton;
 
 class GIO::DBus::InterfaceSkeleton {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::DBus::Roles::Signals::InterfaceSkeleton;
 
   has GDBusInterfaceSkeleton $!dis is implementor;

@@ -5,13 +5,13 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::SocketControlMessage;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 our subset SocketControlMessageAncestry is export of Mu
   where GSocketControlMessage | GObject;
 
 class GIO::SocketControlMessage {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GSocketControlMessage $!scm is implementor;
 

@@ -6,11 +6,11 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::DBus::Roles::Signals::AuthObserver;
 
 class GIO::DBus::AuthObserver {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::DBus::Roles::Signals::AuthObserver;
 
   has GDBusAuthObserver $!dao is implementor;

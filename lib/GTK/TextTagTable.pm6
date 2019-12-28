@@ -9,19 +9,19 @@ use GTK::Raw::Types;
 
 use GTK::TextTag;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Buildable;
 use GTK::Roles::Signals::TextTagTable;
 
 class GTK::TextTagTable {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Signals::TextTagTable;
 
   has GtkTextTagTable $!ttt is implementor;
 
   submethod BUILD(:$table) {
-    self!setObject($!ttt = $table);           # GTK::Compat::Roles::Object
+    self!setObject($!ttt = $table);           # GLib::Roles::Object
     $!b = nativecast(GtkBuildable, $!ttt);    # GTK::Roles::Buildable
   }
 

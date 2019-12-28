@@ -9,7 +9,7 @@ use GTK::Raw::Utils;
 
 use GIO::Raw::Permission;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::Permission {
   has GPermission $!p is implementor;

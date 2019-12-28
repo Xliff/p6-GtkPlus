@@ -7,10 +7,10 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::OutputStream;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::OutputStream {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GOutputStream $!os is implementor;
 

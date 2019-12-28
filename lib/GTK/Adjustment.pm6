@@ -7,10 +7,10 @@ use GTK::Compat::Types;
 use GTK::Raw::Adjustment;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::Adjustment {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   
   has GtkAdjustment $!adj is implementor;
 

@@ -7,10 +7,10 @@ use GTK::Compat::Types;
 use GTK::Raw::Tooltip;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::Tooltip {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   
   has GtkTooltip $!tt is implementor;
 

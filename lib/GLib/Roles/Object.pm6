@@ -9,7 +9,7 @@ use GTK::Compat::Types;
 
 use GTK::Raw::Subs;
 
-role GTK::Compat::Roles::Object {
+role GLib::Roles::Object {
   has GObject $!o;
 
   submethod BUILD (:$object) {

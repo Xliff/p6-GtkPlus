@@ -7,13 +7,14 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::SocketAddress;
 
+use GLib::Roles::Object;
 use GIO::Roles::SocketConnectable;
 
 our subset SocketAddressAncestry is export of Mu
   where GSocketConnectable | GSocketAddress;
 
 class GIO::SocketAddress {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::SocketConnectable;
 
   has GSocketAddress $!sa is implementor;

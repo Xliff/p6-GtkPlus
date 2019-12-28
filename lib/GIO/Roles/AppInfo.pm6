@@ -11,7 +11,7 @@ use GTK::Compat::FileTypes;
 
 use GIO::Raw::AppInfo;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Signals::Generic;
 
 class GIO::Roles::AppInfo {
@@ -435,7 +435,7 @@ class GIO::Roles::AppInfo {
 
 # A bit small for its own compunit?
 class GIO::AppInfoMonitor {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 
   has GAppInfoMonitor $!aim;

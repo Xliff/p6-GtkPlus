@@ -9,10 +9,10 @@ use GIO::Raw::InputStream;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::InputStream {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GInputStream $!is is implementor;
 

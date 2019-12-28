@@ -8,11 +8,11 @@ use GTK::Raw::PrintSettings;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::PrintSettings {
   also does GTK::Roles::Types;
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GtkPrintSettings $!prnset is implementor;
 

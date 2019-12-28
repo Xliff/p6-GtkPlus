@@ -7,10 +7,10 @@ use GTK::Raw::Utils;
 use GTK::Compat::Types;
 use GLib::Raw::Variant;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GLib::VariantDict {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GVariantDict $!vd is implementor;
 

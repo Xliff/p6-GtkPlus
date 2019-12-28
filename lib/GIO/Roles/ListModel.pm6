@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 
 use GIO::Raw::ListModel;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Signals::ListModel;
 
 role GIO::Roles::ListModel {
@@ -30,7 +30,7 @@ role GIO::Roles::ListModel {
 
   # Consider this approach to initializing a role-based object.
   method new-listmodel-obj (GListModel $model) is also<new_listmodel_obj> {
-    my $o = self.bless( :$model ) but GTK::Compat::Roles::Object;
+    my $o = self.bless( :$model ) but GLib::Roles::Object;
     $o.roleInit-Object;
     $o;
   }

@@ -6,11 +6,11 @@ use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 use GIO::Raw::Emblem;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Icon;
 
 class GIO::Emblem {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GEmblem $!e is implementor;
 

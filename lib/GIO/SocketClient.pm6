@@ -9,7 +9,7 @@ use GTK::Compat::FileTypes;
 
 use GIO::Raw::SocketClient;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 use GIO::SocketAddress;
 use GIO::SocketConnection;
@@ -17,7 +17,7 @@ use GIO::SocketConnection;
 use GIO::Roles::ProxyResolver;
 
 class GIO::SocketClient {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GSocketClient $!sc is implementor;
 

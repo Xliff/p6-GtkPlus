@@ -8,19 +8,19 @@ use GTK::Raw::Types;
 
 use GLib::Value;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Types;
 use GTK::Roles::StyleProvider;
 
 class GTK::Settings {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Types;
   also does GTK::Roles::StyleProvider;
 
   has GtkSettings $!s is implementor;
 
   submethod BUILD(:$settings) {
-    self!setObject($!s = $settings);              # GTK::Compat::Roles::Object
+    self!setObject($!s = $settings);              # GLib::Roles::Object
     $!sp = nativecast(GtkSettings, $settings);    # GTK::Roles::StyleProvider
   }
 

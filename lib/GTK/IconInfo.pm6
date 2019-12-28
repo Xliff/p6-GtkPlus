@@ -11,19 +11,19 @@ use GTK::Raw::Utils;
 
 use GTK::Compat::Pixbuf;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Types;
 
 # Opaque struct
 
 class GTK::IconInfo {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Types;
 
   has GtkIconInfo $!ii is implementor;
 
   submethod BUILD(:$info) {
-    self!setObject($!ii = $info);             # GTK::Compat::Roles::Object
+    self!setObject($!ii = $info);             # GLib::Roles::Object
   }
   
   method GTK::Raw::Types::GtkIconInfo

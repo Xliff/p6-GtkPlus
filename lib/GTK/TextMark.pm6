@@ -7,11 +7,11 @@ use GTK::Compat::Types;
 use GTK::Raw::TextMark;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Types;
 
 class GTK::TextMark {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Types;
 
   has GtkTextMark $!tm is implementor;

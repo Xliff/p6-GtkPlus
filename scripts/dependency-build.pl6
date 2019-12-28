@@ -170,6 +170,12 @@ sub MAIN (
       say $table;
     }
 
+    sub waitForThreads {
+      await Promise.anyof(@threads);
+      exit 1 if @threads.grep({ .status ~~ Broken });
+      @threads .= grep({ .status ~~ Planned });
+    }
+
     # Build code begins here.
     my @buildOrder = 'BuildList'.IO.slurp.lines;
     my $start = DateTime.now;
@@ -178,8 +184,7 @@ sub MAIN (
 
       # Wait out jobs until the next set of dependencies are cleared.
       while %nodes{$n}<edges> && @threads.elems {
-        await Promise.anyof(@threads);
-        @threads .= grep({ .status ~~ Planned });
+        waitForThreads;
         # say "W: »»»»»»»»»»»»»» { @threads.elems }";
       }
 
@@ -193,13 +198,13 @@ sub MAIN (
       # Start threads until we have a blocker...or we run out of threads.
       if !%nodes{$n} || %nodes{$n}<edges>.elems.not {
         # say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 }";
-        @threads.push: start { run-compile($n) };
+        my $t = start { run-compile($n, $t) };
+        @threads.push: $t;
       }
 
       # Wait until we free up some threads.
       if +@threads >= $*KERNEL.cpu-cores {
-        await Promise.anyof(@threads);
-        @threads .= grep({ .status ~~ Planned });
+        waitForThreads;
         # say "C: »»»»»»»»»»»»»» { @threads.elems }";
       }
 
@@ -208,13 +213,14 @@ sub MAIN (
   }
 }
 
-sub run-compile ($module) {
+sub run-compile ($module, $thread) {
   my $cs = DateTime.Now;
   my $proc = run 'p6gtkexec', '-e',  "use $module", :out, :err;
   output(
     $module,
     $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
   );
+  $thread.break if $proc.exitcode;
   if %nodes{$module} {
     for %nodes{$module}<kids>[] {
       # Mute all until we are sure there are no more Nils!

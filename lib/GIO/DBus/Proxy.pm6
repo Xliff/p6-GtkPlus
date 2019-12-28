@@ -11,7 +11,7 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Proxy;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::DBus::Roles::Object;
 
 use GIO::Roles::Initable;
@@ -20,7 +20,7 @@ use GIO::DBus::Roles::Signals::Proxy;
 use GIO::DBus::Roles::Interface;
 
 class GIO::DBus::Proxy {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::DBus::Roles::Signals::Proxy;
   also does GIO::Roles::Initable;
   also does GIO::Roles::AsyncInitable;

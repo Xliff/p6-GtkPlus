@@ -9,14 +9,14 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 # BOXED TYPE
 
 class GTK::TreeSelection {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GtkTreeSelection $!ts is implementor;
 

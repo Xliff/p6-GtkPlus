@@ -9,12 +9,12 @@ use GTK::Compat::FileTypes;
 
 use GIO::Raw::TlsDatabase;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 use GIO::TlsCertificate;
 
 class GIO::TlsDatabase {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GTlsDatabase $!td is implementor;
 

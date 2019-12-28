@@ -9,12 +9,12 @@ use GIO::DBus::Raw::Message;
 
 use GLib::Variant;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 use GIO::UnixFDList;
 
 class GIO::DBus::Message {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GDBusMessage $!dm is implementor;
 

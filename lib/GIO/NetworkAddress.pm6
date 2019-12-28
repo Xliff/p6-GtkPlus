@@ -7,11 +7,11 @@ use NativeCall;
 use GTK::Compat::Types;
 use GIO::Raw::NetworkAddress;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::SocketConnectable;
 
 class GIO::NetworkAddress {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::SocketConnectable;
 
   has GNetworkAddress $!a is implementor;

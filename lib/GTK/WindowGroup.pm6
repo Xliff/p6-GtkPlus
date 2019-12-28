@@ -8,10 +8,10 @@ use GTK::Compat::Types;
 use GTK::Raw::WindowGroup;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::WindowGroup {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GtkWindowGroup $!wg is implementor;
 

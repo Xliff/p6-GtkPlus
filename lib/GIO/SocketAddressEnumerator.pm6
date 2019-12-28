@@ -6,10 +6,10 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::SocketAddressEnumerator {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GSocketAddressEnumerator $!se is implementor;
 

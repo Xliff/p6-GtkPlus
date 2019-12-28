@@ -5,11 +5,11 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::MountOperation;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Signals::MountOperation;
 
 class GIO::MountOperation {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::Signals::MountOperation;
 
   has GMountOperation $!mo is implementor;

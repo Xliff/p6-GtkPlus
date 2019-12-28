@@ -9,12 +9,12 @@ use GIO::Raw::Socket;
 
 use GIO::SocketAddress;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Initable;
 use GIO::Roles::DatagramBased;
 
 class GIO::Socket {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::Initable;
   also does GIO::Roles::DatagramBased;
 

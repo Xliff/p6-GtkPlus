@@ -5,11 +5,11 @@ use Method::Also;
 use GTK::Compat::Types;
 use GIO::Raw::NetworkService;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::SocketConnectable;
 
 class GIO::NetworkService {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::SocketConnectable;
 
   has GNetworkService $!s is implementor;

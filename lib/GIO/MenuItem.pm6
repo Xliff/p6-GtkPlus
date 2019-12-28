@@ -8,7 +8,7 @@ use GIO::Raw::Menu;
 
 use GLib::Variant;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::MenuItem {
   has GMenuItem $!mitem is implementor;

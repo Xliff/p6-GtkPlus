@@ -9,10 +9,10 @@ use GTK::Compat::Types;
 
 use GLib::Object::Raw::Binding;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GLib::Object::Binding {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GBinding $!b is implementor;
 
@@ -104,7 +104,7 @@ class GLib::Object::Binding {
     my $obj = g_binding_get_source($!b);
 
     $obj ??
-      ( $raw ?? $obj !! GTK::Compat::Roles::Object.new-object-obj($obj) )
+      ( $raw ?? $obj !! GLib::Roles::Object.new-object-obj($obj) )
       !!
       Nil;
   }
@@ -117,7 +117,7 @@ class GLib::Object::Binding {
     my $obj = g_binding_get_target($!b);
 
     $obj ??
-      ( $raw ?? $obj !! GTK::Compat::Roles::Object.new-object-obj($obj) )
+      ( $raw ?? $obj !! GLib::Roles::Object.new-object-obj($obj) )
       !!
       Nil;
   }

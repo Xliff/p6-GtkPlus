@@ -11,10 +11,10 @@ use GTK::Raw::Utils;
 
 use GLib::DateTime;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::FileInfo {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GFileInfo $!fi is implementor;
 
@@ -246,7 +246,7 @@ class GIO::FileInfo {
 
     $o ??
       # Yet another name for a common option...
-      ( $raw ?? $o !! GTK::Compat::Roles::Object.new-object-obj($o) )
+      ( $raw ?? $o !! GLib::Roles::Object.new-object-obj($o) )
       !!
       Nil;
   }

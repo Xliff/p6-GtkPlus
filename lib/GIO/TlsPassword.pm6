@@ -9,10 +9,10 @@ use GTK::Compat::FileTypes;
 
 use GIO::Raw::TlsPassword;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::TlsPassword {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GTlsPassword $!tp is implementor;
 

@@ -9,10 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::TargetEntry;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::TargetList {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   
   has GtkTargetList $!tl is implementor;
 

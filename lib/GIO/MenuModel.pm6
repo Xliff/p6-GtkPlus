@@ -10,7 +10,7 @@ use GIO::Raw::MenuModel;
 use GIO::MenuAttributeIter;
 use GIO::MenuLinkIter;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Signals::MenuModel;
 
 sub EXPORT {
@@ -21,7 +21,7 @@ sub EXPORT {
 }
 
 class GIO::MenuModel {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::Signals::MenuModel;
 
   has GMenuModel $!mm is implementor;

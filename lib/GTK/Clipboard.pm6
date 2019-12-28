@@ -7,19 +7,19 @@ use GTK::Compat::Types;
 use GTK::Raw::Clipboard;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 class GTK::Clipboard {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
   has GtkClipboard $!cb is implementor;
 
   submethod BUILD(:$clipboard) {
-    self!setObject($!cb = $clipboard);        # GTK::Compat::Roles::Object
+    self!setObject($!cb = $clipboard);        # GLib::Roles::Object
   }
 
   submethod DESTROY {

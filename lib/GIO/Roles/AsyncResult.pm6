@@ -31,7 +31,7 @@ role GIO::Roles::AsyncResult {
     my $o = g_async_result_get_source_object($!ar);
 
     $o ??
-      ( $raw ?? $o !! GTK::Compat::Roles::Object.new-object-obj($o) )
+      ( $raw ?? $o !! GLib::Roles::Object.new-object-obj($o) )
       !!
       Nil;
   }

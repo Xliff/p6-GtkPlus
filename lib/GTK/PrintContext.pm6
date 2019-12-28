@@ -11,13 +11,13 @@ use GTK::Compat::Types;
 use GTK::Raw::PrintContext;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Types;
 
 use GTK::PageSetup;
 
 class GTK::PrintContext {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Types;
 
   has GtkPrintContext $!pc is implementor;

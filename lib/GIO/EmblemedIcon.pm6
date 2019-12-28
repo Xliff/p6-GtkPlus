@@ -8,12 +8,12 @@ use GIO::Raw::EmblemedIcon;
 use GLib::GList;
 use GIO::Emblem;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GLib::Roles::ListData;
 use GIO::Roles::Icon;
 
 class GIO::EmblemedIcon {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::Icon;
 
   has GEmblemedIcon $!ei is implementor;

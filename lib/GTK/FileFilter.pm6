@@ -10,20 +10,20 @@ use GTK::Raw::Utils;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::Types;
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 my subset Ancestry where GtkFileFilter | GtkBuilder;
 
 class GTK::FileFilter {
   also does GTK::Roles::Types;
   also does GTK::Roles::Buildable;
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GtkFileFilter $!ff is implementor;
 
   submethod BUILD(:$filter) {
     $!b = nativecast(GtkBuildable, $!ff);         # GTK::Roles::Buildable
-    self!setObject($filter);                      # GTK::Compat::Roles::Object
+    self!setObject($filter);                      # GLib::Roles::Object
   }
 
   method GTK::Raw::Types::GtkFileFilter

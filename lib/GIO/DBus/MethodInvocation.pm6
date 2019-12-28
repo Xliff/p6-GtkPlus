@@ -12,10 +12,10 @@ use GIO::DBus::Raw::MethodInvocation;
 use GIO::DBus::Connection;
 use GIO::DBus::Message;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::DBus::MethodInvocation {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GDBusMethodInvocation $!dmi is implementor;
 

@@ -8,7 +8,7 @@ use GIO::Raw::BufferedOutputStream;
 
 use GIO::FilterOutputStream;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::Seekable;
 
 our subset BufferedOutputStreamAncestry is export of Mu

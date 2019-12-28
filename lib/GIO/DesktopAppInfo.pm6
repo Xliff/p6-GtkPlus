@@ -13,10 +13,10 @@ use GIO::Raw::DesktopAppInfo;
 
 use GIO::Roles::AppInfo;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::DesktopAppInfo {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GDesktopAppInfo $!dai is implementor;
 

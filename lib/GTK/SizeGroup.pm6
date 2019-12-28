@@ -9,10 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GTK::SizeGroup {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GtkSizeGroup $!sg is implementor;
 

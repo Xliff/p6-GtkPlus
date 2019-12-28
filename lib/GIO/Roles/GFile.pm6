@@ -10,7 +10,7 @@ use GIO::Raw::GFile;
 use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 # This WILL be renamed to ::File
 role GIO::Roles::GFile {

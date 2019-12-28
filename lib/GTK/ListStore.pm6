@@ -10,7 +10,7 @@ use GTK::Raw::Utils;
 
 use GLib::Value;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GTK::Roles::Buildable;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
@@ -20,7 +20,7 @@ use GTK::TreeIter;
 my subset GValues where GLib::Value | GValue;
 
 class GTK::ListStore {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   also does GTK::Roles::Buildable;
   also does GTK::Roles::TreeModel;
@@ -31,7 +31,7 @@ class GTK::ListStore {
   has $!columns;
 
   submethod BUILD(:$liststore, :$columns) {
-    self!setObject($!ls = $liststore);          # GTK::Compat::Roles::Object
+    self!setObject($!ls = $liststore);          # GLib::Roles::Object
 
     $!columns = $columns;
 

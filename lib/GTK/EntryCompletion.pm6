@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::EntryCompletion;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::Generic;

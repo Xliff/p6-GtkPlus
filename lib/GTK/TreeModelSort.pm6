@@ -7,14 +7,14 @@ use GTK::Compat::Types;
 use GTK::Raw::TreeModelSort;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 use GTK::Roles::TreeDnD;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
 
 class GTK::TreeModelSort {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   
   also does GTK::Roles::TreeDragSource;
   also does GTK::Roles::TreeModel;
@@ -23,7 +23,7 @@ class GTK::TreeModelSort {
   has GtkTreeModelSort $!tms is implementor;
 
   submethod BUILD(:$treesort) {
-    self!setObject($!tms = $treesort);              # GTK::Compat::Roles::Object
+    self!setObject($!tms = $treesort);              # GLib::Roles::Object
     
     $!ds = nativecast(GtkTreeDragSource, $!tms);    # GTK::Roles::TreeDragSource
     $!ts = nativecast(GtkTreeSortable, $!tms);      # GTK::Roles::GtkTreeSortable

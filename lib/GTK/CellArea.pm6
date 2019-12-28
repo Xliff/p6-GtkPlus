@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 use GTK::Raw::CellArea;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::CellLayout;
@@ -17,7 +17,7 @@ our subset CellAreaAncestry is export
   where GtkCellArea | GtkOrientable | GtkCellLayout | GtkBuildable;
 
 class GTK::CellArea {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   
   also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;

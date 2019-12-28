@@ -128,6 +128,7 @@ GIO::Roles::Signals::MountOperation
 GIO::Roles::Signals::SocketService
 GIO::Roles::Signals::VolumeMonitor
 GIO::SettingsSchema
+GLib::Object::IsType
 GLib::Object::Raw::Binding
 GLib::Object::Raw::ParamSpec
 GLib::Raw::Array
@@ -195,7 +196,6 @@ GTK::Compat::Raw::Display
 GTK::Compat::Raw::DisplayManager
 GTK::Compat::Raw::DragContext
 GTK::Compat::Raw::FrameTimings
-GTK::Compat::Raw::IsType
 GTK::Compat::Raw::Keymap
 GTK::Compat::Raw::Main
 GTK::Compat::Raw::Pixbuf
@@ -516,14 +516,18 @@ GIO::Roles::Signals::Settings
 GIO::SrvTarget
 GLib::ByteArray
 GLib::IOChannel
+GLib::Roles::Object
 GLib::Value
+GLib::VariantDict
 GTK::AccelGroup
+GTK::Adjustment
+GTK::Clipboard
 GTK::Compat::Cairo
 GTK::Compat::DragContext
 GTK::Compat::FrameClock
+GTK::Compat::Pixbuf
 GTK::Compat::Pixbuf::Animation
 GTK::Compat::Raw::Monitor
-GTK::Compat::Roles::Object
 GTK::Compat::Roles::Signals
 GTK::Compat::Roles::Signals::Device
 GTK::Compat::Roles::Signals::Settings
@@ -531,6 +535,8 @@ GTK::Compat::Screen
 GTK::DragContext
 GTK::FileFilter
 GTK::Get
+GTK::IconInfo
+GTK::IconTheme
 GTK::PaperSize
 GTK::PrintSettings
 GTK::RecentFilter
@@ -542,6 +548,7 @@ GTK::Roles::FileChooser
 GTK::Roles::FontChooser
 GTK::Roles::Properties
 GTK::Roles::RecentChooser
+GTK::Roles::Scrollable
 GTK::Roles::TreeModel
 GTK::Selection
 GTK::Settings
@@ -631,8 +638,6 @@ GIO::ZlibCompressor
 GIO::ZlibDecompressor
 GLib::Object::Binding
 GLib::Object::ParamSpec
-GLib::VariantDict
-GTK::Adjustment
 GTK::CSSProvider
 GTK::CSS_Section
 GTK::CellAreaContext
@@ -642,17 +647,13 @@ GTK::CellRendererProgress
 GTK::CellRendererSpinner
 GTK::CellRendererText
 GTK::CellRendererToggle
-GTK::Clipboard
 GTK::Compat::Device
 GTK::Compat::Display
 GTK::Compat::DisplayManager
 GTK::Compat::Event
 GTK::Compat::Monitor
-GTK::Compat::Pixbuf
 GTK::Compat::Seat
 GTK::EntryBuffer
-GTK::IconInfo
-GTK::IconTheme
 GTK::ListStore
 GTK::PageSetup
 GTK::PrintContext
@@ -660,7 +661,6 @@ GTK::PrintJob
 GTK::PrintOperation
 GTK::Printer
 GTK::RecentManager
-GTK::Roles::Scrollable
 GTK::Roles::ToolShell
 GTK::TextIter
 GIO::BytesIcon

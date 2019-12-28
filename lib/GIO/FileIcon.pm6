@@ -6,7 +6,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GIO::Roles::GFile;
 use GIO::Roles::Icon;
 use GIO::Roles::LoadableIcon;
@@ -14,7 +14,7 @@ use GIO::Roles::LoadableIcon;
 # Does roles so Ancestry logic?
 
 class GIO::FileIcon {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   also does GIO::Roles::Icon;
   also does GIO::Roles::LoadableIcon;
 

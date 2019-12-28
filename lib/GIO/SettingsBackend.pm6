@@ -10,10 +10,10 @@ use GTK::Raw::Utils;
 
 use GIO::Raw::SettingsBackend;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::SettingsBackend {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GSettingsBackend $!sb is implementor;
 

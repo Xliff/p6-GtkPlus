@@ -6,10 +6,10 @@ use GIO::DBus::Raw::ObjectManagerServer;
 
 use GIO::DBus::Connection;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::DBus::ObjectManagerServer {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GDBusObjectManagerServer $!doms is implementor;
 

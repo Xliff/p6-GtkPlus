@@ -121,7 +121,7 @@ role GIO::Roles::AsyncInitable {
     clear_error
     my $o = g_async_initable_new_finish($!ai, $res, $error);
     set_error($error);
-    $o ?? GTK::Compat::Roles::Object.new-object-obj($o) !! Nil;
+    $o ?? GLib::Roles::Object.new-object-obj($o) !! Nil;
   }
 
   proto method new_async (|)

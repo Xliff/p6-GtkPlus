@@ -7,11 +7,11 @@ use GTK::Compat::Types;
 use GTK::Raw::TextChildAnchor;
 use GTK::Raw::Types;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 use GLib::Roles::ListData;
 
 class GTK::TextChildAnchor {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
   
   has GtkTextChildAnchor $!ta is implementor;
 

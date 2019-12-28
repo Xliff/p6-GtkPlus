@@ -7,10 +7,10 @@ use GIO::Raw::VFS;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::Object;
+use GLib::Roles::Object;
 
 class GIO::VFS {
-  also does GTK::Compat::Roles::Object;
+  also does GLib::Roles::Object;
 
   has GVfs $!fs is implementor;
 
