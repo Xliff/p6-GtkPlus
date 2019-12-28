@@ -7,7 +7,7 @@ use Test;
 use GTK::Compat::Types;
 use GIO::Raw::Quarks;
 
-use GTK::Compat::MainLoop;
+use GLib::MainLoop;
 use GLib::Timeout;
 use GTK::Compat::Timer;
 use GIO::Cancellable;
@@ -140,7 +140,7 @@ sub main-loop-timeout-quit ($d --> gboolean) {
 sub test-cancel-multiple-concurrent {
   my $cancellable = GIO::Cancellable.new;
 
-  $loop = GTK::Compat::MainLoop.new;
+  $loop = GLib::MainLoop.new;
 
   for ^ASYNC_OPS {
     my $iterations = $_ + 10;

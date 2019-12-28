@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Roles::GFile;
-use GTK::Compat::MainLoop;
+use GLib::MainLoop;
 
 use GIO::Emblem;
 use GIO::EmblemedIcon;
@@ -367,7 +367,7 @@ sub loadable-icon-tests ($i) {
   isa-ok  $s, GIO::InputStream,
           'Returned value is a GIO::InputStream';
 
-  my $l = GTK::Compat::MainLoop.new;
+  my $l = GLib::MainLoop.new;
 
   # CW: THIS IS A FAILURE until it works for $i.load-async, as well!
   diag 'Not working as load-async';

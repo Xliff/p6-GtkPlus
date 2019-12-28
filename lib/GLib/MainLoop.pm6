@@ -7,7 +7,7 @@ use GTK::Compat::Raw::Main;
 
 use GTK::Raw::Utils;
 
-class GTK::Compat::MainLoop {
+class GLib::MainLoop {
   has GMainLoop $!ml is implementor;
 
   submethod BUILD (:$mainloop) {

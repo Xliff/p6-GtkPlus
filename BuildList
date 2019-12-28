@@ -271,6 +271,7 @@ GLib::Hostname
 GLib::KeyFile
 GLib::Log
 GLib::MainContext
+GLib::MainLoop
 GLib::Markup
 GLib::Memory
 GLib::Module
@@ -283,7 +284,6 @@ GLib::Source
 GLib::Timeout
 GTK::Compat::FrameTimings
 GTK::Compat::Keymap
-GTK::Compat::MainLoop
 GTK::Compat::Pixbuf::Animation::Iter
 GTK::Compat::Pixbuf::Transforms
 GTK::Compat::Raw::Cairo
