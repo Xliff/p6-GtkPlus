@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Raw::IsType;
+use GLib::Object::IsType;
 
 use GTK::Compat::Types;
 use GLib::Value;

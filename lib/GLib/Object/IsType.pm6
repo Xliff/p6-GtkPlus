@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 
 use GTK::Roles::Pointers;
 
-unit package GTK::Compat::Raw::IsType;
+unit package GLib::Object::IsType;
 
 our subset GObjectOrPointer of Mu is export
   where ::('GTK::Compat::Roles::Object') | GObject | GTK::Roles::Pointers;
