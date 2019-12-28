@@ -462,7 +462,7 @@ class GLib::IOChannel {
   multi method win32_poll (@fds, Int() $timeout) {
     die '@fds must only contain GPollFD objects!' unless @fds.all ~~ GPollFD;
 
-    my $fds = GTK::Compat::Roles::TypedBuffer.new(@fds);
+    my $fds = GLib::Roles::TypedBuffer.new(@fds);
 
     samewith($fds.p, @fds.elems, $timeout);
   }

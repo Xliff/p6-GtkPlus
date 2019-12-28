@@ -7,7 +7,7 @@ use GTK::Compat::Types;
 
 use GTK::Raw::Utils;
 
-role GTK::Compat::Roles::TypedBuffer[::T] does Positional {
+role GLib::Roles::TypedBuffer[::T] does Positional {
   has $!size;
   has Pointer $!b;
 

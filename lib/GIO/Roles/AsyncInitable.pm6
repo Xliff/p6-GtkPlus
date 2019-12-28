@@ -8,7 +8,7 @@ use GTK::Compat::Types;
 
 use GIO::Raw::AsyncInitable;
 
-use GTK::Compat::Roles::TypedBuffer;
+use GLib::Roles::TypedBuffer;
 
 role GIO::Roles::AsyncInitable {
   has GAsyncInitable $!ai;
@@ -196,7 +196,7 @@ role GIO::Roles::AsyncInitable {
     die '@parameters must contain only GParameter objects.'
       unless @parameters.all ~~ GParameter;
 
-    my $p = GTK::Compat::Roles::TypedBuffer[GParameter].new(@parameters);
+    my $p = GLib::Roles::TypedBuffer[GParameter].new(@parameters);
     self.new_async(
       $object_type,
       @parameters.elems,

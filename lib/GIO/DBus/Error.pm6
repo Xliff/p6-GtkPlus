@@ -9,7 +9,7 @@ use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Error;
 
-use GTK::Compat::Roles::TypedBuffer;
+use GLib::Roles::TypedBuffer;
 
 class GIO::DBus::Error {
 
@@ -113,12 +113,12 @@ class GIO::DBus::Error {
     Str $error_domain_quark_name,
     @entries,
   ) {
-    my $b = GTK::Compat::Roles::TypedBuffer[GDBusErrorEntry].new(@entries);
+    my $b = GLib::Roles::TypedBuffer[GDBusErrorEntry].new(@entries);
     samewith($error_domain_quark_name, $b);
   }
   multi method register_error_domain (
     Str $error_domain_quark_name,
-    GTK::Compat::Roles::TypedBuffer[GDBusErrorEntry] $b
+    GLib::Roles::TypedBuffer[GDBusErrorEntry] $b
   ) {
     samewith($error_domain_quark_name, $, $b.p,  $b.elems);
   }

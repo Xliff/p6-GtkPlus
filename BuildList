@@ -169,6 +169,7 @@ GLib::Raw::Variant
 GLib::Raw::VariantType
 GLib::Roles::ListData
 GLib::Roles::StaticClass
+GLib::Roles::TypedBuffer
 GLib::Scanner
 GLib::Signal
 GLib::Slice
@@ -210,7 +211,6 @@ GTK::Compat::Raw::X11_Screen
 GTK::Compat::Raw::X11_Window
 GTK::Compat::Rectangle
 GTK::Compat::Roles::Signals::Window
-GTK::Compat::Roles::TypedBuffer
 GTK::Compat::Selection
 GTK::Compat::Visual
 GTK::Raw::Types

@@ -46,7 +46,7 @@ role GIO::Roles::ActionMap {
         }
       }
     });
-    my $lb = GTK::Compat::Roles::TypedBuffer.new(@entries);
+    my $lb = GLib::Roles::TypedBuffer.new(@entries);
 
     samewith($lb.p, @entries.elems, $user_data);
   }

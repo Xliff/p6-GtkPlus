@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GLib::Raw::Error;
 
-use GTK::Compat::Roles::TypedBuffer;
+use GLib::Roles::TypedBuffer;
 
 class GLib::Error {
   has GError $!e is implementor handles <domain code message>;
@@ -44,7 +44,7 @@ class GLib::Error {
   }
 
   method clear {
-    my $eb = GTK::Compat::Roles::TypedBuffer[GError].new( size => 1 );
+    my $eb = GLib::Roles::TypedBuffer[GError].new( size => 1 );
     $eb.bind(0, $!e);
 
     my $ea = CArray[Pointer[GError]].new;
@@ -56,7 +56,7 @@ class GLib::Error {
   # Not sure of a valid use-case for this.
   #
   # method propagate_error (GError() $src) {
-  #   my $eb = GTK::Compat::Roles::TypedBuffer[GError].new( size => 1 );
+  #   my $eb = GLib::Roles::TypedBuffer[GError].new( size => 1 );
   #   $ea.bind(0, GError);
   #
   #   my $ea = CArray[Pointer[GError]].new;

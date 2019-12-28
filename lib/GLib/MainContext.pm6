@@ -8,7 +8,7 @@ use GTK::Compat::Raw::Main;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Roles::TypedBuffer;
+use GLib::Roles::TypedBuffer;
 
 class GLib::MainContext {
   has GMainContext $!mc is implementor;
@@ -56,7 +56,7 @@ class GLib::MainContext {
  ) {
     my gint ($mp, $nf) = resolve-int($max_priority, $n_fds);
     g_main_context_check($!mc, $mp, $fds, $nf);
-    my $fdb = $fds but GTK::Compat::Roles::TypedBuffer[GPollFD];
+    my $fdb = $fds but GLib::Roles::TypedBuffer[GPollFD];
     my @pd;
     @pd[$_] = $fdb[$_] for ^$n_fds;
     @pd;
@@ -169,7 +169,7 @@ class GLib::MainContext {
   ) {
     my gint ($mp, $to, $nf) = resolve-int($max_priority, $timeout, $n_fds);
     g_main_context_query($!mc, $mp, $to, $fds, $nf);
-    my $fdb = $fds but GTK::Compat::Roles::TypedBuffer[GPollFD];
+    my $fdb = $fds but GLib::Roles::TypedBuffer[GPollFD];
     my @pd;
     @pd[$_] = $fdb[$_] for ^$n_fds;
     @pd;
