@@ -5,7 +5,8 @@ use NativeCall;
 
 use GTK::Roles::Pointers;
 
-unit package GLib::Raw::Types
+unit package GLib::Raw::Types;
+
 # Number of times I've had to force compile the whole project.
 constant forced = 33;
 

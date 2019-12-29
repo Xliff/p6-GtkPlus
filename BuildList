@@ -12,6 +12,7 @@ Pango::Tabs
 Pluggable
 GTK::Raw::ReturnedValue
 GTK::Roles::Pointers
+GLib::Raw::Types
 GTK::Builder::MRO
 GTK::Builder::Base
 GTK::Builder::Box

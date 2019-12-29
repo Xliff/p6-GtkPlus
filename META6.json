@@ -22,6 +22,7 @@
       "GTK::Raw::ReturnedValue"                        :  "lib/GTK/Raw/ReturnedValue.pm6"                      ,
       "GTK::Roles::StructArray"                        :  "lib/GTK/Roles/StructArray.pm6"                      ,
       "GTK::Roles::Pointers"                           :  "lib/GTK/Roles/Pointers.pm6"                         ,
+      "GLib::Raw::Types"                               :  "lib/GLib/Raw/Types.pm6"                             ,
       "GTK::Builder::MRO"                              :  "lib/GTK/Builder/MRO.pm6"                            ,
       "GTK::Builder::Base"                             :  "lib/GTK/Builder/Base.pm6"                           ,
       "GTK::Builder::Box"                              :  "lib/GTK/Builder/Box.pm6"                            ,
