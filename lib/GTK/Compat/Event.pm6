@@ -49,7 +49,7 @@ class GTK::Compat::Event  {
     );
   }
 
-  method device is rw {
+  method device (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
         my $d = gdk_event_get_device($!e);

@@ -72,12 +72,14 @@ class GTK::Button is GTK::Bin {
     $!action //= cast(GtkActionable, $!b);        # GTK::Roles::Actionable
   }
 
+  proto method new (|)
+  { * }
+
   multi method new(ButtonAncestry $button) {
     return Nil unless $button;
 
     my $o = self.bless(:$button);
-    $o.upref;
-    $o;
+    $o.ref;
   }
   multi method new {
     my $button = gtk_button_new();

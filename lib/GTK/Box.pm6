@@ -26,7 +26,7 @@ class GTK::Box is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Box');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -77,7 +77,7 @@ class GTK::Box is GTK::Container {
   multi method new (BoxAncestry $box) {
     return unless $box;
 
-    my $o = self.bless(:$box);
+    my $o = self.bless( :$box );
     $o.upref;
     $o;
   }

@@ -78,8 +78,7 @@ class GTK::Widget {
   }
   multi method new(WidgetAncestry $widget) {
     my $o = self.bless(:$widget);
-    $o.upref;
-    $o;
+    $o.ref;
   }
 
   method unstable_get_type(&sub, $n is rw, $t is rw)
