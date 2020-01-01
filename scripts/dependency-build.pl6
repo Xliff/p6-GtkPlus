@@ -172,7 +172,7 @@ sub MAIN (
 
     sub waitForThreads {
       await Promise.anyof(@threads);
-      exit 1 if @threads.grep({ .status ~~ Broken });
+      #exit 1 if @threads.grep({ .status ~~ Broken });
       @threads .= grep({ .status ~~ Planned });
     }
 
@@ -184,8 +184,9 @@ sub MAIN (
 
       # Wait out jobs until the next set of dependencies are cleared.
       while %nodes{$n}<edges> && @threads.elems {
-        waitForThreads;
-        # say "W: »»»»»»»»»»»»»» { @threads.elems }";
+        await Promise.anyof(@threads);
+        @threads .= grep({ .status ~~ Planned });
+        say "W: »»»»»»»»»»»»»» { @threads.elems }";
       }
 
       # If no more compile jobs and still dependencies, then something is
@@ -197,15 +198,16 @@ sub MAIN (
 
       # Start threads until we have a blocker...or we run out of threads.
       if !%nodes{$n} || %nodes{$n}<edges>.elems.not {
-        # say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 }";
-        my $t = start { run-compile($n, $t) };
+        say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 }";
+        my $t = start { run-compile($n, $t); }
         @threads.push: $t;
       }
 
       # Wait until we free up some threads.
       if +@threads >= $*KERNEL.cpu-cores {
-        waitForThreads;
-        # say "C: »»»»»»»»»»»»»» { @threads.elems }";
+        await Promise.anyof(@threads);
+        @threads .= grep({ .status ~~ Planned });
+        say "C: »»»»»»»»»»»»»» { @threads.elems }";
       }
 
     }
@@ -214,19 +216,24 @@ sub MAIN (
 }
 
 sub run-compile ($module, $thread) {
-  my $cs = DateTime.Now;
+  my $cs = DateTime.now;
   my $proc = run 'p6gtkexec', '-e',  "use $module", :out, :err;
   output(
     $module,
     $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
   );
-  $thread.break if $proc.exitcode;
+  #$thread.break if $proc.exitcode;
   if %nodes{$module} {
+    say "Checking { $module }...";
     for %nodes{$module}<kids>[] {
       # Mute all until we are sure there are no more Nils!
       quietly {
-        next unless $_ && %nodes{$_} && %nodes{$_}<edges>:exists;
-        %nodes{$_}<edges> .= grep({ $_ ne $module });
+        next unless [&&](
+          $_,
+          %nodes{$_},
+          %nodes{$_}<edges>:exists
+        );
+        prune($_, $module);
       }
     }
   }
@@ -237,5 +244,18 @@ sub output ($module, $data) {
   $lock.protect({
     say " === {$module} === ";
     $data.say
+  });
+}
+
+
+my $lock2 = Lock.new;
+sub prune ($node, $module) {
+  state %locks;
+
+  $lock2.protect({ %locks{$_} //= Lock.new });
+  %locks{$_}.protect({
+    # Prunning should be behind a lock as well!
+    say "Pruning {$node}...";
+    %nodes{$node}<edges> .= grep({ $_ ne $module });
   });
 }

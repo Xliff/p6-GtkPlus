@@ -140,6 +140,7 @@
   then operation proceeds as if a --clean was issued.
   -- Consider porting to a perl5 script.
 - Consideration for review: NativeCall subs that return a Pointer where a Buf or Blob would be more useful!
+- GClosure has yet to be implemented -- it now belongs in GLib::Object
 - Potential mechanism for initializing all composed roles:
   - Firstly, should also provide a mechanism to disable, ala $!doRoleInit, which shall
     have a default value of True. Objects that need special handling can set to False.
