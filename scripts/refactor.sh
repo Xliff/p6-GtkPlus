@@ -8,7 +8,7 @@ fi
 
 # Should also exclude $1, but that's not really required.
 for a in pm6 pl6 t; do
-  filelist=`find . \
+  filelist=`find $1 \
     \( \
       -name examples \
       -o \
@@ -26,6 +26,6 @@ for a in pm6 pl6 t; do
   for b in $filelist; do
     echo $b
     mv $b $b.ref-bak
-    sed -e "s/$1/$2/" $b.ref-bak > $b
+    sed -e "s/$2/$3/" $b.ref-bak > $b
   done
 done
