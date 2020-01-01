@@ -1543,13 +1543,16 @@ class GTK::Widget {
   }
 
   method remove_accelerator (
-    GtkAccelGroup $accel_group,
-    guint $accel_key,
-    GdkModifierType $accel_mods
+    GtkAccelGroup() $accel_group,
+    Int() $accel_key,
+    Int() $accel_mods
   )
     is also<remove-accelerator>
   {
-    gtk_widget_remove_accelerator($!w, $accel_group, $accel_key, $accel_mods);
+    my guint $ak = $accel_key;
+    my GdkModifierType $am  = $accel_mods;
+
+    gtk_widget_remove_accelerator($!w, $accel_group, $ak, $am);
   }
 
   method queue_draw_region (cairo_region_t $region)
@@ -2046,29 +2049,33 @@ class GTK::Widget {
 
   method add_accelerator (
     Str() $accel_signal,
-    GtkAccelGroup $accel_group,
-    guint $accel_key,
-    GdkModifierType $accel_mods,
-    GtkAccelFlags $accel_flags
+    GtkAccelGroup() $accel_group,
+    Int() $accel_key,
+    Int() $accel_mods,
+    Int() $accel_flags
   )
     is also<add-accelerator>
   {
+    my guint $ak = $accel_key;
+    my GdkModifierType $am = $accel_mods;
+    my guint32 $af = $accel_flags; # GtkAccelFlags;
+
     gtk_widget_add_accelerator(
       $!w,
       $accel_signal,
       $accel_group,
-      $accel_key,
-      $accel_mods,
-      $accel_flags
+      $ak,
+      $am,
+      $af
     );
   }
 
   # Multi methods so as to not conflict with the signal handler of the same
   # name. Aliases implemented manually.
-  multi method size_allocate (GtkAllocation $allocation) {
+  multi method size_allocate (GtkAllocation() $allocation) {
     gtk_widget_size_allocate($!w, $allocation);
   }
-  multi method size-allocate (GtkAllocation $allocation) {
+  multi method size-allocate (GtkAllocation() $allocation) {
     self.size_allocate($allocation);
   }
 

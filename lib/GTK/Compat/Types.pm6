@@ -2264,7 +2264,8 @@ our enum GdkWindowTypeHint is export <
   GDK_WINDOW_TYPE_HINT_DND
 >;
 
-our enum GdkModifierType is export (
+constant GdkModifierType is export := guint32;
+our enum GdkModifierTypeEnum is export (
   GDK_SHIFT_MASK                 => 1,
   GDK_LOCK_MASK                  => 1 +< 1,
   GDK_CONTROL_MASK               => 1 +< 2,

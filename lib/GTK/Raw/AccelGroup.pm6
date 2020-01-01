@@ -32,7 +32,7 @@ sub gtk_accel_group_connect (
 
 sub gtk_accel_group_connect_by_path (
   GtkAccelGroup $accel_group,
-  gchar $accel_path,
+  Str $accel_path,
   GClosure $closure
 )
   is native(gtk)
@@ -113,7 +113,7 @@ sub gtk_accelerator_get_default_mod_mask ()
   is native(gtk)
   is export
   { * }
-    
+
 sub gtk_accelerator_get_label (
   guint $accelerator_key,
   uint32 $accel_mods            # GdkModifierType $accelerator_mods
@@ -155,19 +155,19 @@ sub gtk_accelerator_name_with_keycode (
   { * }
 
 sub gtk_accelerator_parse (
-  gchar $accelerator,
-  guint $accelerator_key,
-  uint32 $accel_mods            # GdkModifierType $accel_mods
+  Str $accelerator,
+  guint $accelerator_key is rw,
+  uint32 $accel_mods     is rw        # GdkModifierType $accel_mods
 )
   is native(gtk)
   is export
   { * }
 
 sub gtk_accelerator_parse_with_keycode (
-  gchar $accelerator,
-  guint $accelerator_key,
-  guint $accelerator_codes,
-  uint32 $accel_mods            # GdkModifierType $accel_mods
+  Str $accelerator,
+  guint $accelerator_key   is rw,
+  guint $accelerator_codes is rw,
+  uint32 $accel_mods       is rw      # GdkModifierType $accel_mods
 )
   is native(gtk)
   is export

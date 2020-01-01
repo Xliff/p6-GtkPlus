@@ -4,14 +4,14 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Compat::Types;
-use GTK::Raw::AppButton;
 use GTK::Raw::Types;
+use GTK::Raw::AppButton;
 
 use GTK::ComboBox;
 
 use GTK::Roles::AppChooser;
 
-our  subset AppButtonAncestry is export 
+our subset AppButtonAncestry is export
   where GtkAppChooserButton | GtkAppChooser | ComboBoxAncestry;
 
 class GTK::AppButton is GTK::ComboBox {
@@ -21,12 +21,13 @@ class GTK::AppButton is GTK::ComboBox {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$appbutton) {
     my $to-parent;
+
     given $appbutton {
       when AppButtonAncestry {
         $!acb = {
@@ -34,11 +35,13 @@ class GTK::AppButton is GTK::ComboBox {
             $to-parent = nativecast(GtkComboBox, $_);
             $_;
           }
+
           when GtkAppChooser {
             $!ac = $_;
             $to-parent = nativecast(GtkComboBox, $_);
             nativecast(GtkAppChooserButton, $_);
           }
+
           when ComboBoxAncestry {
             $to-parent = $_;
             nativecast(GtkAppChooserButton, $_);
@@ -46,8 +49,10 @@ class GTK::AppButton is GTK::ComboBox {
         }
         self.setComboBox($to-parent);
       }
+
       when GTK::AppButton {
       }
+
       default {
       }
     }
@@ -55,14 +60,20 @@ class GTK::AppButton is GTK::ComboBox {
     $!ac //= nativecast(GtkAppChooser, $!acb);
   }
 
+  proto method new (|)
+  { * }
+
   multi method new (AppButtonAncestry $appbutton) {
+    return Nil unless $appbutton;
+
     my $o = self.bless(:$appbutton);
     $o.upref;
     $o;
   }
   multi method new(Str $content-type) {
     my $appbutton = gtk_app_chooser_button_new($content-type);
-    self.bless(:$appbutton);
+
+    $appbutton ?? self.bless(:$appbutton) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -93,7 +104,8 @@ class GTK::AppButton is GTK::ComboBox {
         so gtk_app_chooser_button_get_show_default_item($!acb);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_app_chooser_button_set_show_default_item($!acb, $s);
       }
     );
@@ -105,7 +117,8 @@ class GTK::AppButton is GTK::ComboBox {
         so gtk_app_chooser_button_get_show_dialog_item($!acb);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_app_chooser_button_set_show_dialog_item($!acb, $s);
       }
     );
@@ -127,6 +140,7 @@ class GTK::AppButton is GTK::ComboBox {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_app_chooser_button_get_type, $n, $t )
   }
 

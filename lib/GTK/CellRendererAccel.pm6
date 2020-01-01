@@ -124,7 +124,8 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('accel-mods', $gv);
-        GdkModifierType( $gv.enum );
+        
+        GdkModifierTypeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);

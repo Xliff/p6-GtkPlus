@@ -8,13 +8,11 @@ use GTK::Compat::Raw::Display;
 use GTK::Compat::Raw::X11_Display;
 use GTK::Compat::X11_Types;
 
-use GTK::Roles::Types;
 use GTK::Roles::Signals::Generic;
 
 use GTK::Compat::Screen;
 
 class GTK::Compat::Display {
-  also does GTK::Roles::Types;
   also does GTK::Roles::Signals::Generic;
 
   has GdkDisplay $!d is implementor;
@@ -27,29 +25,34 @@ class GTK::Compat::Display {
     self.disconnect-all($_) for %!signals;
   }
 
-  method GTK::Compat::Types::GdkDisplay is also<gdkdisplay> {
-    $!d;
-  }
+  method GTK::Compat::Types::GdkDisplay
+    is also<
+      gdkdisplay
+      GdkDisplay
+    >
+  { $!d }
 
   multi method new (GdkDisplay $display) {
+    return Nil unless $display;
+
     self.bless(:$display);
   }
   multi method new(Str() $name) is also<open> {
-    self.bless(
-      display => gdk_display_open($name)
-    );
+    my $display = gdk_display_open($name);
+
+    $display ?? self.bless($display) !! Nil;
   }
 
   method open_default_libgtk_only is also<open-default-libgtk-only> {
-    self.bless(
-      display => gdk_display_open_default_libgtk_only();
-    );
+    my $display = gdk_display_open_default_libgtk_only();
+
+    $display ?? self.bless($display) !! Nil;
   }
 
   method get_default is also<get-default> {
-    self.bless(
-      display => gdk_display_get_default()
-    );
+    my $display = gdk_display_get_default();
+
+    $display ?? self.bless($display) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -107,9 +110,9 @@ class GTK::Compat::Display {
     gdk_display_close($!d);
   }
 
-  method device_is_grabbed (GdkDevice $device) is also<device-is-grabbed> {
-    gdk_display_device_is_grabbed($!d, $device);
-  }
+  # method device_is_grabbed (GdkDevice() $device) is also<device-is-grabbed> {
+  #   gdk_display_device_is_grabbed($!d, $device);
+  # }
 
   method flush {
     gdk_display_flush($!d);
@@ -135,31 +138,37 @@ class GTK::Compat::Display {
     gdk_display_get_default_seat($!d);
   }
 
-  method get_device_manager is also<get-device-manager> {
-    gdk_display_get_device_manager($!d);
-  }
+  # method get_device_manager is also<get-device-manager> {
+  #   gdk_display_get_device_manager($!d);
+  # }
 
   method get_event is also<get-event> {
     gdk_display_get_event($!d);
   }
 
-  method get_maximal_cursor_size (guint $width, guint $height)
+  method get_maximal_cursor_size (Int() $width, Int() $height)
     is also<get-maximal-cursor-size>
   {
-    gdk_display_get_maximal_cursor_size($!d, $width, $height);
+    my guint ($w, $h) = ($width, $height);
+
+    gdk_display_get_maximal_cursor_size($!d, $w, $h);
   }
 
-  method get_monitor (int $monitor_num) is also<get-monitor> {
-    gdk_display_get_monitor($!d, $monitor_num);
+  method get_monitor (Int() $monitor_num) is also<get-monitor> {
+    my gint $m = $monitor_num;
+
+    gdk_display_get_monitor($!d, $m);
   }
 
-  method get_monitor_at_point (int $x, int $y)
+  method get_monitor_at_point (Int() $x, Int() $y)
     is also<get-monitor-at-point>
   {
-    gdk_display_get_monitor_at_point($!d, $x, $y);
+    my gint ($xx, $yy) = ($x, $y);
+
+    gdk_display_get_monitor_at_point($!d, $xx, $yy);
   }
 
-  method get_monitor_at_window (GdkWindow $window)
+  method get_monitor_at_window (GdkWindow() $window)
     is also<get-monitor-at-window>
   {
     gdk_display_get_monitor_at_window($!d, $window);
@@ -169,42 +178,45 @@ class GTK::Compat::Display {
     gdk_display_get_n_monitors($!d);
   }
 
-  method get_n_screens is also<get-n-screens> {
-    gdk_display_get_n_screens($!d);
-  }
+  # method get_n_screens is also<get-n-screens> {
+  #   gdk_display_get_n_screens($!d);
+  # }
 
   method get_name is also<get-name> {
     gdk_display_get_name($!d);
   }
 
-  method get_pointer (
-    GdkScreen $screen,
-    gint $x,
-    gint $y,
-    GdkModifierType $mask
-  )
-    is also<get-pointer>
-  {
-    gdk_display_get_pointer($!d, $screen, $x, $y, $mask);
-  }
+  # method get_pointer (
+  #   GdkScreen() $screen,
+  #   Int() $x,
+  #   Int() $y,
+  #   Int() $mask
+  # )
+  #   is also<get-pointer>
+  # {
+  #   my gint ($xx, $yy) = ($x, $y);
+  #   my GdkModifierType $m = $mask;
+  #
+  #   gdk_display_get_pointer($!d, $screen, $xx, $yy, $m);
+  # }
 
   method get_primary_monitor is also<get-primary-monitor> {
     gdk_display_get_primary_monitor($!d);
   }
 
-  method get_screen (gint $screen_num) is also<get-screen> {
-    GTK::Compat::Screen.new( gdk_display_get_screen($!d, $screen_num) );
-  }
-
   method get_type is also<get-type> {
-    gdk_display_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gdk_display_get_type, $n, $t);
   }
 
-  method get_window_at_pointer (gint $win_x, gint $win_y)
-    is also<get-window-at-pointer>
-  {
-    gdk_display_get_window_at_pointer($!d, $win_x, $win_y);
-  }
+  # method get_window_at_pointer (Int() $win_x, Int() $win_y)
+  #   is also<get-window-at-pointer>
+  # {
+  #   my gint ($wx, $wy) = ($win_x, $win_y);
+  #
+  #   gdk_display_get_window_at_pointer($!d, $wx, $wy);
+  # }
 
   method has_pending is also<has-pending> {
     gdk_display_has_pending($!d);
@@ -214,13 +226,15 @@ class GTK::Compat::Display {
     gdk_display_is_closed($!d);
   }
 
-  method keyboard_ungrab (guint32 $time_) is also<keyboard-ungrab> {
-    gdk_display_keyboard_ungrab($!d, $time_);
-  }
+  # method keyboard_ungrab (Int() $time) is also<keyboard-ungrab> {
+  #   my guint32 $t = $time;
+  #
+  #   gdk_display_keyboard_ungrab($!d, $time);
+  # }
 
-  method list_devices is also<list-devices> {
-    gdk_display_list_devices($!d);
-  }
+  # method list_devices is also<list-devices> {
+  #   gdk_display_list_devices($!d);
+  # }
 
   method list_seats is also<list-seats> {
     gdk_display_list_seats($!d);
@@ -240,11 +254,11 @@ class GTK::Compat::Display {
     gdk_display_pointer_is_grabbed($!d);
   }
 
-  method pointer_ungrab (guint32 $time_) is also<pointer-ungrab> {
-    gdk_display_pointer_ungrab($!d, $time_);
-  }
+  # method pointer_ungrab (guint32 $time_) is also<pointer-ungrab> {
+  #   gdk_display_pointer_ungrab($!d, $time_);
+  # }
 
-  method put_event (GdkEvent $event) is also<put-event> {
+  method put_event (GdkEvent() $event) is also<put-event> {
     gdk_display_put_event($!d, $event);
   }
 
@@ -317,14 +331,14 @@ class GTK::Compat::Display {
     gdk_display_sync($!d);
   }
 
-  method warp_pointer (GdkScreen $screen, gint $x, gint $y)
-    is also<warp-pointer>
-  {
-    gdk_display_warp_pointer($!d, $screen, $x, $y);
-  }
+  # method warp_pointer (GdkScreen $screen, gint $x, gint $y)
+  #   is also<warp-pointer>
+  # {
+  #   gdk_display_warp_pointer($!d, $screen, $x, $y);
+  # }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
-  
+
   method x11_error_trap_pop_ignored is also<x11-error-trap-pop-ignored> {
     gdk_x11_display_error_trap_pop_ignored($!d);
   }
@@ -334,33 +348,34 @@ class GTK::Compat::Display {
   }
 
   # Static. Returns GTK::Compat::Display
-  method x11_lookup_xdisplay (GTK::Compat::Display:U: X11Display $display) 
+  method x11_lookup_xdisplay (GTK::Compat::Display:U: X11Display $display)
     is also<x11-lookup-display>
   {
     self.bless( display => gdk_x11_lookup_xdisplay($display) );
   }
-  
+
   # From x11/gdkx11window.h
   method x11_foreign_new_for_display (
     X11Window $window
   ) {
-    ::('GTK::Compat::Window').new( 
+    ::('GTK::Compat::Window').new(
       gdk_x11_window_foreign_new_for_display($!d, $window)
     );
   }
 
   method x11_register_standard_event_type (
-    Int() $event_base, 
+    Int() $event_base,
     Int() $n_events
-  ) 
+  )
     is also<x11-register-standard-event-type>
   {
-    my gint ($eb, $ne) = self.RESOLVE-INT($event_base, $n_events);
+    my gint ($eb, $ne) = ($event_base, $n_events);
+
     gdk_x11_register_standard_event_type($!d, $eb, $ne);
   }
 
   # Not display specific. Find it a new home.
-  method x11_set_sm_client_id (Str() $client_id) 
+  method x11_set_sm_client_id (Str() $client_id)
     is also<x11-set-sm-client-id>
   {
     gdk_x11_set_sm_client_id($client_id);
@@ -382,17 +397,19 @@ class GTK::Compat::Display {
     gdk_x11_display_grab($!d);
   }
 
-  method x11_set_cursor_theme (Str() $theme, Int() $size) 
+  method x11_set_cursor_theme (Str() $theme, Int() $size)
     is also<x11-set-cursor-theme>
   {
-    my gint $s = self.RESOLVE-INT($size);
+    my gint $s = $size;
+
     gdk_x11_display_set_cursor_theme($!d, $theme, $size);
   }
 
-  method x11_set_window_scale (Int() $scale) 
+  method x11_set_window_scale (Int() $scale)
     is also<x11-set-window-scale>
   {
-    my gint $s = self.RESOLVE-INT($scale);
+    my gint $s = $scale;
+
     gdk_x11_display_set_window_scale($!d, $s);
   }
 
