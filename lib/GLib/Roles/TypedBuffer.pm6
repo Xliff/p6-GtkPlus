@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Compat::Types;
 
-use GTK::Raw::Utils;
+use GLib::Raw::Subs;
 
 role GLib::Roles::TypedBuffer[::T] does Positional {
   has $!size;

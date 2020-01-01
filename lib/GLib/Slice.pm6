@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Raw::Utils;
+use GLib::Raw::Subs;
 
 use GTK::Compat::Types;
 use GLib::Raw::Slice;

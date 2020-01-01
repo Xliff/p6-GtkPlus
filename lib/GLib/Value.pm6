@@ -6,7 +6,7 @@ use NativeCall;
 use GLib::Raw::Value;
 use GTK::Compat::Types;
 use GTK::Raw::Subs;
-use GTK::Raw::Utils;
+use GLib::Raw::Subs;
 
 class GLib::Value {
   has GValue $!v is implementor;

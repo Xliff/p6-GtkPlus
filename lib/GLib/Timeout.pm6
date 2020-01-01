@@ -6,7 +6,7 @@ use GLib::Source;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Main;
 
-use GTK::Raw::Utils;
+use GLib::Raw::Subs;
 
 class GLib::Timeout {
 

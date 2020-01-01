@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Compat::Types;
 use GTK::Compat::Raw::Main;
 
-use GTK::Raw::Utils;
+use GLib::Raw::Subs;
 
 use GLib::Roles::TypedBuffer;
 

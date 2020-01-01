@@ -7,31 +7,18 @@ use GTK::Roles::Pointers;
 
 unit package GLib::Raw::Types;
 
+our $ERROR is export;
+
 # Number of times I've had to force compile the whole project.
 constant forced = 33;
 
+# Libs
+constant glib       is export  = 'glib-2.0',v0;
+constant gobject    is export  = 'gobject-2.0',v0;
+
 our $DEBUG is export = 0;
 
-BEGIN constant realUInt is export = $*KERNEL.bits == 32 ?? uint32 !! uint64;
-
-# Cribbed from https://github.com/CurtTilmes/perl6-dbmysql/blob/master/lib/DB/MySQL/Native.pm6
-sub malloc  (size_t --> Pointer)                   is export is native {}
-sub realloc (Pointer, size_t --> Pointer)          is export is native {}
-sub calloc  (size_t, size_t --> Pointer)           is export is native {}
-sub memcpy  (Pointer, Pointer ,size_t --> Pointer) is export is native {}
-sub memset  (Pointer, int32, size_t)               is export is native {}
-
-our proto sub free (|) is export { * }
-multi sub free (Pointer)                           is export is native {}
-
-# Cribbed from https://stackoverflow.com/questions/1281686/determine-size-of-dynamically-allocated-memory-in-c
-sub malloc_usable_size (Pointer --> size_t)        is export is native {}
-
-# Implement memcpy_pattern. Take pattern and write pattern.^elem bytes to successive areas in dest.
-
-sub cast($cast-to, $obj) is export {
-  nativecast($cast-to, $obj);
-}
+constant realUInt is export = $*KERNEL.bits == 32 ?? uint32 !! uint64;
 
 constant gboolean                       is export := uint32;
 constant gchar                          is export := Str;
@@ -76,94 +63,38 @@ constant GCompareDataFunc               is export := Pointer;
 constant GCompareFunc                   is export := Pointer;
 constant GCopyFunc                      is export := Pointer;
 constant GClosureNotify                 is export := Pointer;
+constant GDate                          is export := uint64;
 constant GDestroyNotify                 is export := Pointer;
-constant GDesktopAppLaunchCallback      is export := Pointer;
+constant GQuark                         is export := uint32;
 constant GEqualFunc                     is export := Pointer;
 constant GFunc                          is export := Pointer;
 constant GHFunc                         is export := Pointer;
-constant GIOFunc                        is export := Pointer;
 constant GLogFunc                       is export := Pointer;
 constant GLogWriterFunc                 is export := Pointer;
 constant GPrintFunc                     is export := Pointer;
 constant GReallocFunc                   is export := Pointer;
-constant GSettingsBindGetMapping        is export := Pointer;
-constant GSettingsBindSetMapping        is export := Pointer;
-constant GSettingsGetMapping            is export := Pointer;
 constant GSignalAccumulator             is export := Pointer;
 constant GSignalEmissionHook            is export := Pointer;
 constant GSignalCMarshaller             is export := Pointer;
 constant GSignalCVaMarshaller           is export := Pointer;
-constant GSpawnChildSetupFunc           is export := Pointer;
-constant GThreadFunc                    is export := Pointer;
-constant GVfsFileLookupFunc             is export := Pointer;
-
-constant GDate                          is export := uint64;
-constant GQuark                         is export := uint32;
 constant GStrv                          is export := CArray[Str];
+constant GThreadFunc                    is export := Pointer;
 constant GTimeSpan                      is export := int64;
 constant GType                          is export := uint64;
 
-sub sprintf-v ( Blob, Str, & () )
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
+constant GDesktopAppLaunchCallback      is export := Pointer;
+constant GIOFunc                        is export := Pointer;
+constant GSettingsBindGetMapping        is export := Pointer;
+constant GSettingsBindSetMapping        is export := Pointer;
+constant GSettingsGetMapping            is export := Pointer;
+constant GSpawnChildSetupFunc           is export := Pointer;
+constant GVfsFileLookupFunc             is export := Pointer;
 
-sub sprintf-P ( Blob, Str, & (Pointer) )
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
 
-sub sprintf-SP ( Blob, Str, & (Str, Pointer) )
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-# Also is -SUP
-sub sprintf-SBP ( Blob, Str, & (Str, gboolean, Pointer) )
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-v-L (Blob, Str, & () --> int64)
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-P-L (Blob, Str, & (Pointer) --> int64)
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-DP ( Blob, Str, & (gdouble, Pointer) )
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub set_func_pointer(
-  \func,
-  &sprint = &sprintf-v-L
-) is export {
-  my $buf = buf8.allocate(20);
-  my $len = &sprint($buf, '%lld', func);
-  Pointer.new( $buf.subbuf(^$len).decode.Int );
-}
-
-# ... to be conditionals...
-constant glib       is export  = 'glib-2.0',v0;
 constant gio        is export  = 'gio-2.0',v0;
-constant gobject    is export  = 'gobject-2.0',v0;
 constant cairo      is export  = 'cairo',v2;
 
-sub g_destroy_none(Pointer)
-  is export
-{ * }
+
 
 class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32        $.domain;
@@ -187,38 +118,6 @@ class GError is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 }
 
-our $ERROR is export;
-
-sub gerror is export {
-  my $cge = CArray[Pointer[GError]].new;
-  $cge[0] = Pointer[GError];
-  $cge;
-}
-
-sub g_error_free(GError $err)
-  is native(glib)
-  is export
-  { *  }
-
-sub clear_error($error = $ERROR) is export {
-  g_error_free($error) if $error.defined;
-  $ERROR = Nil;
-}
-
-sub set_error(CArray $e) is export {
-  $ERROR = $e[0].deref if $e[0].defined;
-}
-
-sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
-  return $t if ($n // 0) > 0;
-  repeat {
-    $t = &sub();
-    die "{ $name }.get_type could not get stable result"
-      if $n++ > 20;
-  } until $t == &sub();
-  $t;
-}
-
 class GTypeInstance is repr('CStruct') does GTK::Roles::Pointers is export { ... }
 
 sub g_type_check_instance_is_a (
@@ -228,10 +127,6 @@ sub g_type_check_instance_is_a (
   returns uint32
   is native(gobject)
 { * }
-
-sub real-resolve-uint64($v) is export {
-  $v +& 0xffffffffffffffff;
-}
 
 class GTypeClass is repr('CStruct') does GTK::Roles::Pointers is export {
   has GType      $.g_type;
@@ -251,6 +146,21 @@ class GTypeInstance {
   }
 }
 
+# Because an enum wasn't good enough due to:
+# "Incompatible MROs in P6opaque rebless for types GLIB_SYSDEF_LINUX and GSocketFamily"
+constant GLIB_SYSDEF_POLLIN        = 1;
+constant GLIB_SYSDEF_POLLOUT       = 4;
+constant GLIB_SYSDEF_POLLPRI       = 2;
+constant GLIB_SYSDEF_POLLHUP       = 16;
+constant GLIB_SYSDEF_POLLERR       = 8;
+constant GLIB_SYSDEF_POLLNVAL      = 32;
+constant GLIB_SYSDEF_AF_UNIX       = 1;
+constant GLIB_SYSDEF_AF_INET       = 2;
+constant GLIB_SYSDEF_AF_INET6      = 10;
+constant GLIB_SYSDEF_MSG_OOB       = 1;
+constant GLIB_SYSDEF_MSG_PEEK      = 2;
+constant GLIB_SYSDEF_MSG_DONTROUTE = 4;
+
 # Used ONLY in those situations where cheating is just plain REQUIRED.
 class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
   HAS GTypeInstance  $.g_type_instance;
@@ -265,36 +175,6 @@ class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
     self.g_type_instance.getType
   }
 }
-
-class GInputVector  is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Pointer $.buffer;
-  has gssize  $.size;
-}
-
-class GInputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Pointer       $.address;                # GSocketAddress **
-  has GInputVector  $.vectors;                # GInputVector *
-  has guint         $.num_vectors;
-  has gsize         $.bytes_received;
-  has gint          $.flags;
-  has Pointer       $.control_messages;       # GSocketControlMessage ***
-  has CArray[guint] $.num_control_messages;   # Pointer with 1 element == *guint
-}
-
-class GOutputVector is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Pointer $.buffer;
-  has gssize  $.size;
-}
-
-class GOutputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
-  has Pointer       $.address;
-  has GOutputVector $.vectors;
-  has guint         $.num_vectors;
-  has guint         $.bytes_sent;
-  has Pointer       $.control_messages;
-  has guint         $.num_control_messages;
-};
-
 
 class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $!data;
@@ -316,13 +196,6 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
         ::?CLASS.^Attributes[0].set_value(self, $nv);
       };
   }
-}
-
-class GPermission is repr('CStruct') does GTK::Roles::Pointers is export {
-  has uint64 $.dummy1;
-  has uint64 $.dummy2;
-  has uint64 $.dummy3;
-  has uint64 $.dummy4;
 }
 
 class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
@@ -404,50 +277,50 @@ class GValueArray is repr('CStruct') does GTK::Roles::Pointers is export {
   has gpointer $.values; # GValue *
 };
 
-# Because an enum wasn't good enough due to:
-# "Incompatible MROs in P6opaque rebless for types GLIB_SYSDEF_LINUX and GSocketFamily"
-constant GLIB_SYSDEF_POLLIN        = 1;
-constant GLIB_SYSDEF_POLLOUT       = 4;
-constant GLIB_SYSDEF_POLLPRI       = 2;
-constant GLIB_SYSDEF_POLLHUP       = 16;
-constant GLIB_SYSDEF_POLLERR       = 8;
-constant GLIB_SYSDEF_POLLNVAL      = 32;
-constant GLIB_SYSDEF_AF_UNIX       = 1;
-constant GLIB_SYSDEF_AF_INET       = 2;
-constant GLIB_SYSDEF_AF_INET6      = 10;
-constant GLIB_SYSDEF_MSG_OOB       = 1;
-constant GLIB_SYSDEF_MSG_PEEK      = 2;
-constant GLIB_SYSDEF_MSG_DONTROUTE = 4;
 
-constant GParamFlags is export := gint32;
-our enum GParamFlagsEnum is export (
-  G_PARAM_READABLE         => 1 +< 0,
-  G_PARAM_WRITABLE         => 1 +< 1,
-  G_PARAM_READWRITE        => 1 +| 1 +< 1, # (G_PARAM_READABLE | G_PARAM_WRITABLE),
-  G_PARAM_CONSTRUCT        => 1 +< 2,
-  G_PARAM_CONSTRUCT_ONLY   => 1 +< 3,
-  G_PARAM_LAX_VALIDATION   => 1 +< 4,
-  G_PARAM_STATIC_NAME      => 1 +< 5,
-  G_PARAM_PRIVATE          => 1 +< 5,      # GLIB_DEPRECATED_ENUMERATOR_IN_2_26
-  G_PARAM_STATIC_NICK      => 1 +< 6,
-  G_PARAM_STATIC_BLURB     => 1 +< 7,
-  G_PARAM_EXPLICIT_NOTIFY  => 1 +< 30,
-  G_PARAM_DEPRECATED       => -2147483648
-);
+# GIO
+class GInputVector  is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer $.buffer;
+  has gssize  $.size;
+}
 
-constant GIOStreamSpliceFlags is export := uint32;
-our enum GIOStreamSpliceFlagsEnum is export (
-  G_IO_STREAM_SPLICE_NONE          => 0,
-  G_IO_STREAM_SPLICE_CLOSE_STREAM1 => 1,
-  G_IO_STREAM_SPLICE_CLOSE_STREAM2 => (1 +< 1),
-  G_IO_STREAM_SPLICE_WAIT_FOR_BOTH => (1 +< 2)
-);
+class GOutputVector is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer $.buffer;
+  has gssize  $.size;
+}
 
-constant GOutputStreamSpliceFlags is export := uint32;
-our enum GOutputStreamSpliceFlagsEnum is export (
-  G_OUTPUT_STREAM_SPLICE_NONE         => 0,
-  G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE => 1,
-  G_OUTPUT_STREAM_SPLICE_CLOSE_TARGET => (1 +< 1)
+class GInputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer       $.address;                # GSocketAddress **
+  has GInputVector  $.vectors;                # GInputVector *
+  has guint         $.num_vectors;
+  has gsize         $.bytes_received;
+  has gint          $.flags;
+  has Pointer       $.control_messages;       # GSocketControlMessage ***
+  has CArray[guint] $.num_control_messages;   # Pointer with 1 element == *guint
+}
+
+class GOutputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
+  has Pointer       $.address;
+  has GOutputVector $.vectors;
+  has guint         $.num_vectors;
+  has guint         $.bytes_sent;
+  has Pointer       $.control_messages;
+  has guint         $.num_control_messages;
+};
+
+class GPermission is repr('CStruct') does GTK::Roles::Pointers is export {
+  has uint64 $.dummy1;
+  has uint64 $.dummy2;
+  has uint64 $.dummy3;
+  has uint64 $.dummy4;
+}
+
+
+our enum GBindingFlags is export (
+  G_BINDING_DEFAULT        => 0,
+  G_BINDING_BIDIRECTIONAL  => 1,
+  G_BINDING_SYNC_CREATE    => 1 +< 1,
+  G_BINDING_INVERT_BOOLEAN => 1 +< 2
 );
 
 our enum GTypeEnum is export (
@@ -495,6 +368,7 @@ our enum GPollableReturnEnum is export (
   G_POLLABLE_RETURN_WOULD_BLOCK  => -27 # -G_IO_ERROR_WOULD_BLOCK
 );
 
+# This name could be bad...
 constant GVariantClass is export := guint;
 our enum GVariantClassEnum is export <
   G_VARIANT_CLASS_BOOLEAN
@@ -516,236 +390,6 @@ our enum GVariantClassEnum is export <
   G_VARIANT_CLASS_TUPLE
   G_VARIANT_CLASS_DICT_ENTRY
 >;
-
-our enum GApplicationFlags is export (
-  G_APPLICATION_FLAGS_NONE           => 0,
-  G_APPLICATION_IS_SERVICE           => 1,
-  G_APPLICATION_IS_LAUNCHER          => 2,
-  G_APPLICATION_HANDLES_OPEN         => 4,
-  G_APPLICATION_HANDLES_COMMAND_LINE => 8,
-  G_APPLICATION_SEND_ENVIRONMENT     => 16,
-  G_APPLICATION_NON_UNIQUE           => 32,
-  G_APPLICATION_CAN_OVERRIDE_APP_ID  => 64
-);
-
-constant GAskPasswordFlags is export := guint;
-our enum GAskPasswordFlagsEnum is export (
-  G_ASK_PASSWORD_NEED_PASSWORD           => 1,
-  G_ASK_PASSWORD_NEED_USERNAME           => (1 +< 1),
-  G_ASK_PASSWORD_NEED_DOMAIN             => (1 +< 2),
-  G_ASK_PASSWORD_SAVING_SUPPORTED        => (1 +< 3),
-  G_ASK_PASSWORD_ANONYMOUS_SUPPORTED     => (1 +< 4),
-  G_ASK_PASSWORD_TCRYPT                  => (1 +< 5)
-);
-
-our enum GBindingFlags is export (
-  G_BINDING_DEFAULT        => 0,
-  G_BINDING_BIDIRECTIONAL  => 1,
-  G_BINDING_SYNC_CREATE    => 1 +< 1,
-  G_BINDING_INVERT_BOOLEAN => 1 +< 2
-);
-
-constant GCredentialsType is export := guint;
-our enum GCredentialsTypeEnum is export <
-  G_CREDENTIALS_TYPE_INVALID
-  G_CREDENTIALS_TYPE_LINUX_UCRED
-  G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED
-  G_CREDENTIALS_TYPE_OPENBSD_SOCKPEERCRED
-  G_CREDENTIALS_TYPE_SOLARIS_UCRED
-  G_CREDENTIALS_TYPE_NETBSD_UNPCBID
->;
-
-our constant GMountMountFlags is export := guint;
-our enum GMountMountFlagsEnum is export (
-  G_MOUNT_MOUNT_NONE => 0
-);
-
-constant GMountOperationResult is export := guint;
-our enum GMountOperationResultEnum is export <
-  G_MOUNT_OPERATION_HANDLED
-  G_MOUNT_OPERATION_ABORTED
-  G_MOUNT_OPERATION_UNHANDLED
->;
-
-constant GNotificationPriority is export := guint;
-our enum GNotificationPriorityEnum is export <
-  G_NOTIFICATION_PRIORITY_NORMAL
-  G_NOTIFICATION_PRIORITY_LOW
-  G_NOTIFICATION_PRIORITY_HIGH
-  G_NOTIFICATION_PRIORITY_URGENT
->;
-
-constant GPasswordSave is export := guint;
-our enum GPasswordSaveEnum is export <
-  G_PASSWORD_SAVE_NEVER
-  G_PASSWORD_SAVE_FOR_SESSION
-  G_PASSWORD_SAVE_PERMANENTLY
->;
-
-constant GIOChannelError is export := guint;
-our enum GIOChannelErrorEnum is export <
-  G_IO_CHANNEL_ERROR_FBIG
-  G_IO_CHANNEL_ERROR_INVAL
-  G_IO_CHANNEL_ERROR_IO
-  G_IO_CHANNEL_ERROR_ISDIR
-  G_IO_CHANNEL_ERROR_NOSPC
-  G_IO_CHANNEL_ERROR_NXIO
-  G_IO_CHANNEL_ERROR_OVERFLOW
-  G_IO_CHANNEL_ERROR_PIPE
-  G_IO_CHANNEL_ERROR_FAILED
->;
-
-our enum GIOError is export (
-  'G_IO_ERROR_FAILED',
-  'G_IO_ERROR_NOT_FOUND',
-  'G_IO_ERROR_EXISTS',
-  'G_IO_ERROR_IS_DIRECTORY',
-  'G_IO_ERROR_NOT_DIRECTORY',
-  'G_IO_ERROR_NOT_EMPTY',
-  'G_IO_ERROR_NOT_REGULAR_FILE',
-  'G_IO_ERROR_NOT_SYMBOLIC_LINK',
-  'G_IO_ERROR_NOT_MOUNTABLE_FILE',
-  'G_IO_ERROR_FILENAME_TOO_LONG',
-  'G_IO_ERROR_INVALID_FILENAME',
-  'G_IO_ERROR_TOO_MANY_LINKS',
-  'G_IO_ERROR_NO_SPACE',
-  'G_IO_ERROR_INVALID_ARGUMENT',
-  'G_IO_ERROR_PERMISSION_DENIED',
-  'G_IO_ERROR_NOT_SUPPORTED',
-  'G_IO_ERROR_NOT_MOUNTED',
-  'G_IO_ERROR_ALREADY_MOUNTED',
-  'G_IO_ERROR_CLOSED',
-  'G_IO_ERROR_CANCELLED',
-  'G_IO_ERROR_PENDING',
-  'G_IO_ERROR_READ_ONLY',
-  'G_IO_ERROR_CANT_CREATE_BACKUP',
-  'G_IO_ERROR_WRONG_ETAG',
-  'G_IO_ERROR_TIMED_OUT',
-  'G_IO_ERROR_WOULD_RECURSE',
-  'G_IO_ERROR_BUSY',
-  'G_IO_ERROR_WOULD_BLOCK',
-  'G_IO_ERROR_HOST_NOT_FOUND',
-  'G_IO_ERROR_WOULD_MERGE',
-  'G_IO_ERROR_FAILED_HANDLED',
-  'G_IO_ERROR_TOO_MANY_OPEN_FILES',
-  'G_IO_ERROR_NOT_INITIALIZED',
-  'G_IO_ERROR_ADDRESS_IN_USE',
-  'G_IO_ERROR_PARTIAL_INPUT',
-  'G_IO_ERROR_INVALID_DATA',
-  'G_IO_ERROR_DBUS_ERROR',
-  'G_IO_ERROR_HOST_UNREACHABLE',
-  'G_IO_ERROR_NETWORK_UNREACHABLE',
-  'G_IO_ERROR_CONNECTION_REFUSED',
-  'G_IO_ERROR_PROXY_FAILED',
-  'G_IO_ERROR_PROXY_AUTH_FAILED',
-  'G_IO_ERROR_PROXY_NEED_AUTH',
-  'G_IO_ERROR_PROXY_NOT_ALLOWED',
-  'G_IO_ERROR_BROKEN_PIPE',
-  G_IO_ERROR_CONNECTION_CLOSED => 44, # G_IO_ERROR_BROKEN_PIPE,
-  'G_IO_ERROR_NOT_CONNECTED',
-  'G_IO_ERROR_MESSAGE_TOO_LARGE',
-
-  # Restart from the beginning.
-  G_IO_ERROR_NONE      => 0,
-  G_IO_ERROR_AGAIN     => 1,
-  G_IO_ERROR_INVAL     => 2,
-  G_IO_ERROR_UNKNOWN   => 3
-);
-
-constant GIOStatus is export := guint;
-our enum GIOStatusEnum is export <
-  G_IO_STATUS_ERROR
-  G_IO_STATUS_NORMAL
-  G_IO_STATUS_EOF
-  G_IO_STATUS_AGAIN
->;
-
-constant GSeekType is export := guint;
-our enum GSeekTypeEnum is export <
-  G_SEEK_CUR
-  G_SEEK_SET
-  G_SEEK_END
->;
-
-constant GIOFlags is export := guint;
-our enum GIOFlagsEnum is export (
-  G_IO_FLAG_APPEND       => 1,
-  G_IO_FLAG_NONBLOCK     => 2,
-  G_IO_FLAG_IS_READABLE  => 1 +< 2,      # Read only flag
-  G_IO_FLAG_IS_WRITABLE  => 1 +< 3,      # Read only flag
-  G_IO_FLAG_IS_WRITEABLE => 1 +< 3,      # Misspelling in 2.29.10 and earlier
-  G_IO_FLAG_IS_SEEKABLE  => 1 +< 4,      # Read only flag
-  G_IO_FLAG_MASK         => (1 +< 5) - 1,
-  G_IO_FLAG_GET_MASK     => (1 +< 5) - 1,
-  G_IO_FLAG_SET_MASK     => 1 +| 2
-);
-
-# cw: These values are for LINUX!
-constant GIOCondition is export := guint;
-our enum GIOConditionEnum is export (
-  G_IO_IN     => 1,
-  G_IO_OUT    => 4,
-  G_IO_PRI    => 2,
-  G_IO_ERR    => 8,
-  G_IO_HUP    => 16,
-  G_IO_NVAL   => 32,
-);
-
-constant GResolverNameLookupFlags is export := guint;
-our enum GResolverNameLookupFlagsEnum is export (
-  G_RESOLVER_NAME_LOOKUP_FLAGS_DEFAULT   => 0,
-  G_RESOLVER_NAME_LOOKUP_FLAGS_IPV4_ONLY => 1,
-  G_RESOLVER_NAME_LOOKUP_FLAGS_IPV6_ONLY => 1 +< 1,
-);
-
-constant GResolverError is export := guint;
-our enum GResolverErrorEnum is export <
-  G_RESOLVER_ERROR_NOT_FOUND
-  G_RESOLVER_ERROR_TEMPORARY_FAILURE
-  G_RESOLVER_ERROR_INTERNAL
->;
-
-constant GResolverRecordType is export := guint;
-our enum GResolverRecordTypeEnum is export (
-  'G_RESOLVER_RECORD_SRV' => 1,
-  'G_RESOLVER_RECORD_MX',
-  'G_RESOLVER_RECORD_TXT',
-  'G_RESOLVER_RECORD_SOA',
-  'G_RESOLVER_RECORD_NS'
-);
-
-constant GSocketProtocol is export := gint;
-enum GSocketProtocolEnum is export (
-  G_SOCKET_PROTOCOL_UNKNOWN => -1,
-  G_SOCKET_PROTOCOL_DEFAULT => 0,
-  G_SOCKET_PROTOCOL_TCP     => 6,
-  G_SOCKET_PROTOCOL_UDP     => 17,
-  G_SOCKET_PROTOCOL_SCTP    => 132
-);
-
-constant GSocketFamily is export := guint;
-our enum GSocketFamilyEnum is export (
-  'G_SOCKET_FAMILY_INVALID',
-  G_SOCKET_FAMILY_UNIX => GLIB_SYSDEF_AF_UNIX,
-  G_SOCKET_FAMILY_IPV4 => GLIB_SYSDEF_AF_INET,
-  G_SOCKET_FAMILY_IPV6 => GLIB_SYSDEF_AF_INET6
-);
-
-constant GSocketType is export := guint;
-our enum GSocketTypeEnum is export <
-  G_SOCKET_TYPE_INVALID
-  G_SOCKET_TYPE_STREAM
-  G_SOCKET_TYPE_DATAGRAM
-  G_SOCKET_TYPE_SEQPACKET
->;
-
-constant GNetworkConnectivity is export := guint;
-enum GNetworkConnectivityEnum is export (
-  G_NETWORK_CONNECTIVITY_LOCAL       => 1,
-  G_NETWORK_CONNECTIVITY_LIMITED     => 2,
-  G_NETWORK_CONNECTIVITY_PORTAL      => 3,
-  G_NETWORK_CONNECTIVITY_FULL        => 4
-);
 
 constant GChecksumType is export := guint;
 our enum GChecksumTypeEnum is export <
@@ -1028,63 +672,12 @@ our enum GNormalizeModeEnum is export (
   G_NORMALIZE_NFKC              => 3      # G_NORMALIZE_ALL_COMPOSE
 );
 
-constant GUnixSocketAddressType is export := guint;
-our enum GUnixSocketAddressTypeEnum is export <
-  G_UNIX_SOCKET_ADDRESS_INVALID
-  G_UNIX_SOCKET_ADDRESS_ANONYMOUS
-  G_UNIX_SOCKET_ADDRESS_PATH
-  G_UNIX_SOCKET_ADDRESS_ABSTRACT
-  G_UNIX_SOCKET_ADDRESS_ABSTRACT_PADDED
->;
-
 constant GKeyFileFlags is export := guint;
 our enum GKeyFileFlagsEnum is export (
   G_KEY_FILE_NONE              => 0,
   G_KEY_FILE_KEEP_COMMENTS     => 1,
   G_KEY_FILE_KEEP_TRANSLATIONS => 2
 );
-
-constant GConverterFlags is export := guint32;
-our enum GConverterFlagsEnum is export (
-  G_CONVERTER_NO_FLAGS     => 0,         #< nick=none >
-  G_CONVERTER_INPUT_AT_END => 1,         #< nick=input-at-end >
-  G_CONVERTER_FLUSH        => (1 +< 1)   #< nick=flush >
-);
-
-constant GConverterResult is export := guint32;
-our enum GConverterResultEnum is export (
-  G_CONVERTER_ERROR     => 0,  # < nick=error >
-  G_CONVERTER_CONVERTED => 1,  # < nick=converted >
-  G_CONVERTER_FINISHED  => 2,  # < nick=finished >
-  G_CONVERTER_FLUSHED   => 3   # < nick=flushed >
-);
-
-constant GDataStreamByteOrder is export := guint;
-our enum GDataStreamByteOrderEnum is export <
-  G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN
-  G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN
-  G_DATA_STREAM_BYTE_ORDER_HOST_ENDIAN
->;
-
-constant GDataStreamNewlineType is export := guint;
-our enum GDataStreamNewlineTypeEnum is export <
-  G_DATA_STREAM_NEWLINE_TYPE_LF
-  G_DATA_STREAM_NEWLINE_TYPE_CR
-  G_DATA_STREAM_NEWLINE_TYPE_CR_LF
-  G_DATA_STREAM_NEWLINE_TYPE_ANY
->;
-
-constant GErrorType is export := guint32;
-our enum GErrorTypeEnum is export <
-  G_ERR_UNKNOWN
-  G_ERR_UNEXP_EOF
-  G_ERR_UNEXP_EOF_IN_STRING
-  G_ERR_UNEXP_EOF_IN_COMMENT
-  G_ERR_NON_DIGIT_IN_CONST
-  G_ERR_DIGIT_RADIX
-  G_ERR_FLOAT_RADIX
-  G_ERR_FLOAT_MALFORMED
->;
 
 # Token types
 constant GTokenType is export := uint32;
@@ -1173,32 +766,16 @@ our enum GLogWriterOutput is export (
   G_LOG_WRITER_HANDLED   => 1,
 );
 
-constant GModuleFlags is export := guint;
-our enum GModuleFlagsEnum is export (
-  G_MODULE_BIND_LAZY    => 1,
-  G_MODULE_BIND_LOCAL   => 1 +< 1,
-  G_MODULE_BIND_MASK    => 0x03
-);
-
-our enum GOnceStatus is export <
-  G_ONCE_STATUS_NOTCALLED
-  G_ONCE_STATUS_PROGRESS
-  G_ONCE_STATUS_READY
->;
-
-our enum GPriority is export (
-  G_PRIORITY_HIGH         => -100,
-  G_PRIORITY_DEFAULT      => 0,
-  G_PRIORITY_HIGH_IDLE    => 100,
-  G_PRIORITY_DEFAULT_IDLE => 200,
-  G_PRIORITY_LOW          => 300
-);
-
-constant GZlibCompressorFormat is export := guint;
-our enum GZlibCompressorFormatEnum is export <
-  G_ZLIB_COMPRESSOR_FORMAT_ZLIB
-  G_ZLIB_COMPRESSOR_FORMAT_GZIP
-  G_ZLIB_COMPRESSOR_FORMAT_RAW
+constant GErrorType is export := guint32;
+our enum GErrorTypeEnum is export <
+  G_ERR_UNKNOWN
+  G_ERR_UNEXP_EOF
+  G_ERR_UNEXP_EOF_IN_STRING
+  G_ERR_UNEXP_EOF_IN_COMMENT
+  G_ERR_NON_DIGIT_IN_CONST
+  G_ERR_DIGIT_RADIX
+  G_ERR_FLOAT_RADIX
+  G_ERR_FLOAT_MALFORMED
 >;
 
 constant GTraverseFlags is export := guint;
@@ -1228,6 +805,328 @@ our enum GSliceConfigEnum is export (
   'G_SLICE_CONFIG_CHUNK_SIZES',
   'G_SLICE_CONFIG_CONTENTION_COUNTER'
 );
+
+# GIO
+constant GParamFlags is export := gint32;
+our enum GParamFlagsEnum is export (
+  G_PARAM_READABLE         => 1 +< 0,
+  G_PARAM_WRITABLE         => 1 +< 1,
+  G_PARAM_READWRITE        => 1 +| 1 +< 1, # (G_PARAM_READABLE | G_PARAM_WRITABLE),
+  G_PARAM_CONSTRUCT        => 1 +< 2,
+  G_PARAM_CONSTRUCT_ONLY   => 1 +< 3,
+  G_PARAM_LAX_VALIDATION   => 1 +< 4,
+  G_PARAM_STATIC_NAME      => 1 +< 5,
+  G_PARAM_PRIVATE          => 1 +< 5,      # GLIB_DEPRECATED_ENUMERATOR_IN_2_26
+  G_PARAM_STATIC_NICK      => 1 +< 6,
+  G_PARAM_STATIC_BLURB     => 1 +< 7,
+  G_PARAM_EXPLICIT_NOTIFY  => 1 +< 30,
+  G_PARAM_DEPRECATED       => -2147483648
+);
+
+constant GIOStreamSpliceFlags is export := uint32;
+our enum GIOStreamSpliceFlagsEnum is export (
+  G_IO_STREAM_SPLICE_NONE          => 0,
+  G_IO_STREAM_SPLICE_CLOSE_STREAM1 => 1,
+  G_IO_STREAM_SPLICE_CLOSE_STREAM2 => (1 +< 1),
+  G_IO_STREAM_SPLICE_WAIT_FOR_BOTH => (1 +< 2)
+);
+
+constant GOutputStreamSpliceFlags is export := uint32;
+our enum GOutputStreamSpliceFlagsEnum is export (
+  G_OUTPUT_STREAM_SPLICE_NONE         => 0,
+  G_OUTPUT_STREAM_SPLICE_CLOSE_SOURCE => 1,
+  G_OUTPUT_STREAM_SPLICE_CLOSE_TARGET => (1 +< 1)
+);
+
+our enum GApplicationFlags is export (
+  G_APPLICATION_FLAGS_NONE           => 0,
+  G_APPLICATION_IS_SERVICE           => 1,
+  G_APPLICATION_IS_LAUNCHER          => 2,
+  G_APPLICATION_HANDLES_OPEN         => 4,
+  G_APPLICATION_HANDLES_COMMAND_LINE => 8,
+  G_APPLICATION_SEND_ENVIRONMENT     => 16,
+  G_APPLICATION_NON_UNIQUE           => 32,
+  G_APPLICATION_CAN_OVERRIDE_APP_ID  => 64
+);
+
+constant GAskPasswordFlags is export := guint;
+our enum GAskPasswordFlagsEnum is export (
+  G_ASK_PASSWORD_NEED_PASSWORD           => 1,
+  G_ASK_PASSWORD_NEED_USERNAME           => (1 +< 1),
+  G_ASK_PASSWORD_NEED_DOMAIN             => (1 +< 2),
+  G_ASK_PASSWORD_SAVING_SUPPORTED        => (1 +< 3),
+  G_ASK_PASSWORD_ANONYMOUS_SUPPORTED     => (1 +< 4),
+  G_ASK_PASSWORD_TCRYPT                  => (1 +< 5)
+);
+
+constant GCredentialsType is export := guint;
+our enum GCredentialsTypeEnum is export <
+  G_CREDENTIALS_TYPE_INVALID
+  G_CREDENTIALS_TYPE_LINUX_UCRED
+  G_CREDENTIALS_TYPE_FREEBSD_CMSGCRED
+  G_CREDENTIALS_TYPE_OPENBSD_SOCKPEERCRED
+  G_CREDENTIALS_TYPE_SOLARIS_UCRED
+  G_CREDENTIALS_TYPE_NETBSD_UNPCBID
+>;
+
+our constant GMountMountFlags is export := guint;
+our enum GMountMountFlagsEnum is export (
+  G_MOUNT_MOUNT_NONE => 0
+);
+
+constant GMountOperationResult is export := guint;
+our enum GMountOperationResultEnum is export <
+  G_MOUNT_OPERATION_HANDLED
+  G_MOUNT_OPERATION_ABORTED
+  G_MOUNT_OPERATION_UNHANDLED
+>;
+
+constant GNotificationPriority is export := guint;
+our enum GNotificationPriorityEnum is export <
+  G_NOTIFICATION_PRIORITY_NORMAL
+  G_NOTIFICATION_PRIORITY_LOW
+  G_NOTIFICATION_PRIORITY_HIGH
+  G_NOTIFICATION_PRIORITY_URGENT
+>;
+
+constant GPasswordSave is export := guint;
+our enum GPasswordSaveEnum is export <
+  G_PASSWORD_SAVE_NEVER
+  G_PASSWORD_SAVE_FOR_SESSION
+  G_PASSWORD_SAVE_PERMANENTLY
+>;
+
+constant GIOChannelError is export := guint;
+our enum GIOChannelErrorEnum is export <
+  G_IO_CHANNEL_ERROR_FBIG
+  G_IO_CHANNEL_ERROR_INVAL
+  G_IO_CHANNEL_ERROR_IO
+  G_IO_CHANNEL_ERROR_ISDIR
+  G_IO_CHANNEL_ERROR_NOSPC
+  G_IO_CHANNEL_ERROR_NXIO
+  G_IO_CHANNEL_ERROR_OVERFLOW
+  G_IO_CHANNEL_ERROR_PIPE
+  G_IO_CHANNEL_ERROR_FAILED
+>;
+
+our enum GIOError is export (
+  'G_IO_ERROR_FAILED',
+  'G_IO_ERROR_NOT_FOUND',
+  'G_IO_ERROR_EXISTS',
+  'G_IO_ERROR_IS_DIRECTORY',
+  'G_IO_ERROR_NOT_DIRECTORY',
+  'G_IO_ERROR_NOT_EMPTY',
+  'G_IO_ERROR_NOT_REGULAR_FILE',
+  'G_IO_ERROR_NOT_SYMBOLIC_LINK',
+  'G_IO_ERROR_NOT_MOUNTABLE_FILE',
+  'G_IO_ERROR_FILENAME_TOO_LONG',
+  'G_IO_ERROR_INVALID_FILENAME',
+  'G_IO_ERROR_TOO_MANY_LINKS',
+  'G_IO_ERROR_NO_SPACE',
+  'G_IO_ERROR_INVALID_ARGUMENT',
+  'G_IO_ERROR_PERMISSION_DENIED',
+  'G_IO_ERROR_NOT_SUPPORTED',
+  'G_IO_ERROR_NOT_MOUNTED',
+  'G_IO_ERROR_ALREADY_MOUNTED',
+  'G_IO_ERROR_CLOSED',
+  'G_IO_ERROR_CANCELLED',
+  'G_IO_ERROR_PENDING',
+  'G_IO_ERROR_READ_ONLY',
+  'G_IO_ERROR_CANT_CREATE_BACKUP',
+  'G_IO_ERROR_WRONG_ETAG',
+  'G_IO_ERROR_TIMED_OUT',
+  'G_IO_ERROR_WOULD_RECURSE',
+  'G_IO_ERROR_BUSY',
+  'G_IO_ERROR_WOULD_BLOCK',
+  'G_IO_ERROR_HOST_NOT_FOUND',
+  'G_IO_ERROR_WOULD_MERGE',
+  'G_IO_ERROR_FAILED_HANDLED',
+  'G_IO_ERROR_TOO_MANY_OPEN_FILES',
+  'G_IO_ERROR_NOT_INITIALIZED',
+  'G_IO_ERROR_ADDRESS_IN_USE',
+  'G_IO_ERROR_PARTIAL_INPUT',
+  'G_IO_ERROR_INVALID_DATA',
+  'G_IO_ERROR_DBUS_ERROR',
+  'G_IO_ERROR_HOST_UNREACHABLE',
+  'G_IO_ERROR_NETWORK_UNREACHABLE',
+  'G_IO_ERROR_CONNECTION_REFUSED',
+  'G_IO_ERROR_PROXY_FAILED',
+  'G_IO_ERROR_PROXY_AUTH_FAILED',
+  'G_IO_ERROR_PROXY_NEED_AUTH',
+  'G_IO_ERROR_PROXY_NOT_ALLOWED',
+  'G_IO_ERROR_BROKEN_PIPE',
+  G_IO_ERROR_CONNECTION_CLOSED => 44, # G_IO_ERROR_BROKEN_PIPE,
+  'G_IO_ERROR_NOT_CONNECTED',
+  'G_IO_ERROR_MESSAGE_TOO_LARGE',
+
+  # Restart from the beginning.
+  G_IO_ERROR_NONE      => 0,
+  G_IO_ERROR_AGAIN     => 1,
+  G_IO_ERROR_INVAL     => 2,
+  G_IO_ERROR_UNKNOWN   => 3
+);
+
+constant GIOStatus is export := guint;
+our enum GIOStatusEnum is export <
+  G_IO_STATUS_ERROR
+  G_IO_STATUS_NORMAL
+  G_IO_STATUS_EOF
+  G_IO_STATUS_AGAIN
+>;
+
+constant GSeekType is export := guint;
+our enum GSeekTypeEnum is export <
+  G_SEEK_CUR
+  G_SEEK_SET
+  G_SEEK_END
+>;
+
+constant GIOFlags is export := guint;
+our enum GIOFlagsEnum is export (
+  G_IO_FLAG_APPEND       => 1,
+  G_IO_FLAG_NONBLOCK     => 2,
+  G_IO_FLAG_IS_READABLE  => 1 +< 2,      # Read only flag
+  G_IO_FLAG_IS_WRITABLE  => 1 +< 3,      # Read only flag
+  G_IO_FLAG_IS_WRITEABLE => 1 +< 3,      # Misspelling in 2.29.10 and earlier
+  G_IO_FLAG_IS_SEEKABLE  => 1 +< 4,      # Read only flag
+  G_IO_FLAG_MASK         => (1 +< 5) - 1,
+  G_IO_FLAG_GET_MASK     => (1 +< 5) - 1,
+  G_IO_FLAG_SET_MASK     => 1 +| 2
+);
+
+# cw: These values are for LINUX!
+constant GIOCondition is export := guint;
+our enum GIOConditionEnum is export (
+  G_IO_IN     => 1,
+  G_IO_OUT    => 4,
+  G_IO_PRI    => 2,
+  G_IO_ERR    => 8,
+  G_IO_HUP    => 16,
+  G_IO_NVAL   => 32,
+);
+
+constant GResolverNameLookupFlags is export := guint;
+our enum GResolverNameLookupFlagsEnum is export (
+  G_RESOLVER_NAME_LOOKUP_FLAGS_DEFAULT   => 0,
+  G_RESOLVER_NAME_LOOKUP_FLAGS_IPV4_ONLY => 1,
+  G_RESOLVER_NAME_LOOKUP_FLAGS_IPV6_ONLY => 1 +< 1,
+);
+
+constant GResolverError is export := guint;
+our enum GResolverErrorEnum is export <
+  G_RESOLVER_ERROR_NOT_FOUND
+  G_RESOLVER_ERROR_TEMPORARY_FAILURE
+  G_RESOLVER_ERROR_INTERNAL
+>;
+
+constant GResolverRecordType is export := guint;
+our enum GResolverRecordTypeEnum is export (
+  'G_RESOLVER_RECORD_SRV' => 1,
+  'G_RESOLVER_RECORD_MX',
+  'G_RESOLVER_RECORD_TXT',
+  'G_RESOLVER_RECORD_SOA',
+  'G_RESOLVER_RECORD_NS'
+);
+
+constant GSocketProtocol is export := gint;
+enum GSocketProtocolEnum is export (
+  G_SOCKET_PROTOCOL_UNKNOWN => -1,
+  G_SOCKET_PROTOCOL_DEFAULT => 0,
+  G_SOCKET_PROTOCOL_TCP     => 6,
+  G_SOCKET_PROTOCOL_UDP     => 17,
+  G_SOCKET_PROTOCOL_SCTP    => 132
+);
+
+constant GSocketFamily is export := guint;
+our enum GSocketFamilyEnum is export (
+  'G_SOCKET_FAMILY_INVALID',
+  G_SOCKET_FAMILY_UNIX => GLIB_SYSDEF_AF_UNIX,
+  G_SOCKET_FAMILY_IPV4 => GLIB_SYSDEF_AF_INET,
+  G_SOCKET_FAMILY_IPV6 => GLIB_SYSDEF_AF_INET6
+);
+
+constant GSocketType is export := guint;
+our enum GSocketTypeEnum is export <
+  G_SOCKET_TYPE_INVALID
+  G_SOCKET_TYPE_STREAM
+  G_SOCKET_TYPE_DATAGRAM
+  G_SOCKET_TYPE_SEQPACKET
+>;
+
+constant GNetworkConnectivity is export := guint;
+enum GNetworkConnectivityEnum is export (
+  G_NETWORK_CONNECTIVITY_LOCAL       => 1,
+  G_NETWORK_CONNECTIVITY_LIMITED     => 2,
+  G_NETWORK_CONNECTIVITY_PORTAL      => 3,
+  G_NETWORK_CONNECTIVITY_FULL        => 4
+);
+
+constant GUnixSocketAddressType is export := guint;
+our enum GUnixSocketAddressTypeEnum is export <
+  G_UNIX_SOCKET_ADDRESS_INVALID
+  G_UNIX_SOCKET_ADDRESS_ANONYMOUS
+  G_UNIX_SOCKET_ADDRESS_PATH
+  G_UNIX_SOCKET_ADDRESS_ABSTRACT
+  G_UNIX_SOCKET_ADDRESS_ABSTRACT_PADDED
+>;
+
+constant GConverterFlags is export := guint32;
+our enum GConverterFlagsEnum is export (
+  G_CONVERTER_NO_FLAGS     => 0,         #< nick=none >
+  G_CONVERTER_INPUT_AT_END => 1,         #< nick=input-at-end >
+  G_CONVERTER_FLUSH        => (1 +< 1)   #< nick=flush >
+);
+
+constant GConverterResult is export := guint32;
+our enum GConverterResultEnum is export (
+  G_CONVERTER_ERROR     => 0,  # < nick=error >
+  G_CONVERTER_CONVERTED => 1,  # < nick=converted >
+  G_CONVERTER_FINISHED  => 2,  # < nick=finished >
+  G_CONVERTER_FLUSHED   => 3   # < nick=flushed >
+);
+
+constant GDataStreamByteOrder is export := guint;
+our enum GDataStreamByteOrderEnum is export <
+  G_DATA_STREAM_BYTE_ORDER_BIG_ENDIAN
+  G_DATA_STREAM_BYTE_ORDER_LITTLE_ENDIAN
+  G_DATA_STREAM_BYTE_ORDER_HOST_ENDIAN
+>;
+
+constant GDataStreamNewlineType is export := guint;
+our enum GDataStreamNewlineTypeEnum is export <
+  G_DATA_STREAM_NEWLINE_TYPE_LF
+  G_DATA_STREAM_NEWLINE_TYPE_CR
+  G_DATA_STREAM_NEWLINE_TYPE_CR_LF
+  G_DATA_STREAM_NEWLINE_TYPE_ANY
+>;
+
+constant GModuleFlags is export := guint;
+our enum GModuleFlagsEnum is export (
+  G_MODULE_BIND_LAZY    => 1,
+  G_MODULE_BIND_LOCAL   => 1 +< 1,
+  G_MODULE_BIND_MASK    => 0x03
+);
+
+our enum GOnceStatus is export <
+  G_ONCE_STATUS_NOTCALLED
+  G_ONCE_STATUS_PROGRESS
+  G_ONCE_STATUS_READY
+>;
+
+our enum GPriority is export (
+  G_PRIORITY_HIGH         => -100,
+  G_PRIORITY_DEFAULT      => 0,
+  G_PRIORITY_HIGH_IDLE    => 100,
+  G_PRIORITY_DEFAULT_IDLE => 200,
+  G_PRIORITY_LOW          => 300
+);
+
+constant GZlibCompressorFormat is export := guint;
+our enum GZlibCompressorFormatEnum is export <
+  G_ZLIB_COMPRESSOR_FORMAT_ZLIB
+  G_ZLIB_COMPRESSOR_FORMAT_GZIP
+  G_ZLIB_COMPRESSOR_FORMAT_RAW
+>;
 
 constant GMarkupParseFlags is export := guint32;
 our enum GMarkupParseFlagsEnum is export (
@@ -1557,15 +1456,6 @@ class GCond                is repr('CStruct') does GTK::Roles::Pointers is expor
   has uint64   $!i    # guint i[2];
 }
 
-
-sub sprintf-b(
-  Blob,
-  Str,
-  & (gpointer, GSource, & (gpointer --> guint32),
-  gpointer
-) --> int64)
-    is native is symbol('sprintf') {}
-
 class GSourceCallbackFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $!ref,   # (gpointer     cb_data);
   has Pointer $!unref, # (gpointer     cb_data);
@@ -1600,38 +1490,46 @@ class GSourceCallbackFuncs is repr('CStruct') does GTK::Roles::Pointers is expor
     Proxy.new:
       FETCH => -> $        { $!get },
       STORE => -> $, \func {
-        $!get := set_func_pointer( &(func), &sprintf-b )
+        $!get := set_func_pointer( &(func), &sprintf-PSfP )
       };
   }
 };
 
-sub sprintf-bp (
+sub sprintf-p-b (
   Blob,
   Str,
   & (gpointer --> gboolean),
   gpointer
-  --> int64
 )
-    is native is symbol('sprintf') { * }
+  returns int64
+  is export
+  is native
+  is symbol('sprintf')
+{ * }
 
-sub sprintf-c (
+sub sprintf-SCi-b (
   Blob,
   Str,
   & (GSource, CArray[gint] --> gboolean),
   gpointer
- --> int64
 )
-    is native is symbol('sprintf') { * }
+  returns int64
+  is export
+  is native
+  is symbol('sprintf')
+{ * }
 
 # XXX - Verify this!!
-sub sprintf-d (
+sub sprintf-Sfi-b (
   Blob,
   Str,
   & (GSource, & (gpointer --> gboolean), gint --> gboolean),
   gpointer
-  --> int64
 )
-    is native is symbol('sprintf') { * }
+  returns int64
+  is native
+  is symbol('sprintf')
+{ * }
 
 class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
   has Pointer $!prepare;     # (GSource    *source,
@@ -1829,6 +1727,5 @@ sub findProperImplementor ($attrs) is export {
   $attrs.grep( * ~~ Implementor ).sort( -*.package.^mro.elems )[0]
 }
 
-BEGIN {
-  constant GPollFD is export := $*DISTRO.is-win ?? GPollFDWin !! GPollFDNonWin;
-}
+# Must be declared LAST.
+constant GPollFD  is export = $*DISTRO.is-win ?? GPollFDWin !! GPollFDNonWin;

@@ -6,7 +6,7 @@ use GTK::Compat::Types;
 
 use GLib::Raw::Array;
 
-use GTK::Raw::Utils;
+use GLib::Raw::Subs;
 
 class GLib::Array {
   also does Positional;
