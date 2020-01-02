@@ -139,7 +139,7 @@ sub gtk_widget_is_ancestor (GtkWidget $widget, GtkWidget $ancestor)
   { * }
 
 sub gtk_widget_get_accessible (GtkWidget $widget)
-  returns AtkObject
+  returns Pointer # AtkObject
   is native(gtk)
   is export
   { * }

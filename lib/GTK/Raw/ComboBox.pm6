@@ -23,7 +23,7 @@ sub gtk_combo_box_get_has_entry (GtkComboBox $combo_box)
   { * }
 
 sub gtk_combo_box_get_popup_accessible (GtkComboBox $combo_box)
-  returns AtkObject
+  returns Pointer # AtkObject
   is native(gtk)
   is export
   { * }

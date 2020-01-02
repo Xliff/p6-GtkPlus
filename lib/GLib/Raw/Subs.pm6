@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GLib::Raw::Defs;
+use GLib::Raw::Enums;
 
 unit package GLib::Raw::Subs;
 
@@ -23,26 +24,6 @@ sub malloc_usable_size (Pointer --> size_t)        is export is native {}
 
 sub cast($cast-to, $obj) is export {
   nativecast($cast-to, $obj);
-}
-
-sub gerror is export {
-  my $cge = CArray[Pointer[GError]].new;
-  $cge[0] = Pointer[GError];
-  $cge;
-}
-
-sub g_error_free(GError $err)
-  is native(glib)
-  is export
-  { *  }
-
-sub clear_error($error = $ERROR) is export {
-  g_error_free($error) if $error.defined;
-  $ERROR = Nil;
-}
-
-sub set_error(CArray $e) is export {
-  $ERROR = $e[0].deref if $e[0].defined;
 }
 
 sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
@@ -94,6 +75,22 @@ sub get_flags($t, $s) is export {
     .join(', ');
 }
 
+# GLib-level
+sub typeToGType (\t) is export {
+  do given t {
+    when Str             { G_TYPE_STRING  }
+    when int16  | int32  { G_TYPE_INT     }
+    when uint16 | uint32 { G_TYPE_UINT    }
+    when int64           { G_TYPE_INT64   }
+    when uint64          { G_TYPE_UINT64  }
+    when num32           { G_TYPE_FLOAT   }
+    when num64           { G_TYPE_DOUBLE  }
+    when Pointer         { G_TYPE_POINTER }
+    when Bool            { G_TYPE_BOOLEAN }
+    when GObject         { G_TYPE_OBJECT  }
+  };
+}
+
 sub resolve-gtype($gt) is export {
   die "{ $gt } is not a valid GType value"
     unless $gt ∈ GTypeEnum.enums.values;
@@ -110,80 +107,4 @@ sub resolve-gstrv(*@rg) is export {
   }
   $gs[$gs.elems] = Str unless $gs[*-1] =:= Str;
   $gs;
-}
-
-sub sprintf-v ( Blob, Str, & () )
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-P ( Blob, Str, & (Pointer) )
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-SP ( Blob, Str, & (Str, Pointer) )
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-# Also is -SUP
-sub sprintf-SBP ( Blob, Str, & (Str, gboolean, Pointer) )
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-v-L (Blob, Str, & (--> int64) )
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-P-L (Blob, Str, & (Pointer --> int64) )
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-DP ( Blob, Str, & (gdouble, Pointer) )
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub sprintf-PSfP(
-  Blob,
-  Str,
-  & (
-    gpointer,
-    GSource,
-    & (gpointer --> guint32),
-    gpointer
-  )
-)
-  returns int64
-  is export
-  is native
-  is symbol('sprintf')
-{ * }
-
-sub set_func_pointer(
-  \func,
-  &sprint = &sprintf-v
-) is export {
-  my $buf = buf8.allocate(20);
-  my $len = &sprint($buf, '%lld', func);
-
-  Pointer.new( $buf.subbuf(^$len).decode.Int );
 }

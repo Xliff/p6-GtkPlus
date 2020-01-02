@@ -28,7 +28,7 @@ class GLib::Object::Binding {
     Str() $target_property,
     Int() $flags = 3    # G_BINDING_BIDIRECTIONAL +| G_BINDING_SYNC_CREATE
   ) {
-    my $f = resolve-uint($flags);
+    my $f = $flags;
     my $binding = g_object_bind_property(
       $source,
       $source_property,
@@ -54,7 +54,7 @@ class GLib::Object::Binding {
   )
     is also<bind-full>
   {
-    my $f = resolve-uint($flags);
+    my $f = $flags;
     my $binding = g_object_bind_property_full(
       $source,
       $source_property,
@@ -82,7 +82,7 @@ class GLib::Object::Binding {
   )
     is also<bind-with-closures>
   {
-    my $f = resolve-uint($flags);
+    my $f = $flags;
     my $binding =  g_object_bind_property_with_closures(
       $source,
       $source_property,
@@ -97,7 +97,7 @@ class GLib::Object::Binding {
   }
 
   method get_flags is also<get-flags> {
-    GBindingFlags( g_binding_get_flags($!b) );
+    GBindingFlagsEnum( g_binding_get_flags($!b) );
   }
 
   method get_source (:$raw = False) is also<get-source> {
