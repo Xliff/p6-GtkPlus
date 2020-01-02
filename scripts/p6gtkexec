@@ -15,7 +15,8 @@ fi
 
 EXTRAS='-I/home/cbwood/Other_Projects/Method-Also/lib'
 
-INCLUDES="-I${P6_GTK_HOME}/p6-Pango/lib \
+INCLUDES="-I${P6_GTK_HOME}/p6-GLib/lib \
+-I${P6_GTK_HOME}/p6-Pango/lib \
 -I${P6_GTK_HOME}/p6-GtkPlus/lib         \
 -I${P6_GTK_HOME}/p6-WebkitGTK/lib       \
 -I${P6_GTK_HOME}/p6-SourceViewGTK/lib   \
