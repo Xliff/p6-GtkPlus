@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::AsyncResult;
 
 role GIO::Roles::AsyncResult {
@@ -19,7 +19,7 @@ role GIO::Roles::AsyncResult {
     $!ar = cast( GAsyncResult, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GAsyncResult
+  method GLib::Raw::Types::GAsyncResult
     is also<GAsyncResult>
   { $!ar }
 

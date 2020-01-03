@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::Proxy;
 
 use GIO::Stream;
@@ -14,7 +14,7 @@ role GIO::Roles::Proxy {
     $!p = $proxy if $proxy;
   }
 
-  submethod GTK::Compat::Types::GProxy
+  submethod GLib::Raw::Types::GProxy
   { $!p }
 
   method roleInit-Proxy {

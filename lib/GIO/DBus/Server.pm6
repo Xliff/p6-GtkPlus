@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Server;
@@ -26,7 +26,7 @@ class GIO::DBus::Server {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GDBusServer
+  method GLib::Raw::Types::GDBusServer
     is also<GDBusServer>
   { $!ds }
 

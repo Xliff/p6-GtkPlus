@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Roles::Object;
 # Only need this role, since it includes ActionGroup

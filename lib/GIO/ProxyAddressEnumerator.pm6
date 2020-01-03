@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Value;
 
@@ -22,7 +22,7 @@ class GIO::ProxyAddressEnumerator {
     self.roleInit-Properties;
   }
 
-  method GTK::Compat::Types::GProxyAddressEnumerator
+  method GLib::Raw::Types::GProxyAddressEnumerator
     is also<GProxyAddressEnumerator>
   { $!pae }
 

@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 use GIO::Raw::Volume;
 
@@ -30,7 +30,7 @@ role GIO::Roles::Volume {
     $!v = cast( GVolume, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GVolume
+  method GLib::Raw::Types::GVolume
   { $!v }
 
   method new-volume-obj (GVolume :$volume) is also<new_volume_obj> {

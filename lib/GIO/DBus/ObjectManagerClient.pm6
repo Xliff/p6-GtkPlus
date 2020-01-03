@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::ObjectManagerClient;
@@ -25,7 +25,7 @@ class GIO::DBus::ObjectManagerClient {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GDBusObjectManagerClient
+  method GLib::Raw::Types::GDBusObjectManagerClient
   { $!domc }
 
   multi method new (GDBusObjectManagerClient $client) {

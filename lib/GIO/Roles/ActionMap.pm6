@@ -5,12 +5,12 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 role GIO::Roles::ActionMap {
   has GActionMap $!actmap;
 
-  method GTK::Compat::Types::GActionMap
+  method GLib::Raw::Types::GActionMap
     is also<GActionMap>
   { $!actmap }
 

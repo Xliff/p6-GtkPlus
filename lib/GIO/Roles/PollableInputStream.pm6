@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::PollableInputStream;
 
 role GIO::Roles::PollableInputStream {
@@ -16,7 +16,7 @@ role GIO::Roles::PollableInputStream {
     $!pis = cast(GPollableInputStream, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GPollableInputStream
+  method GLib::Raw::Types::GPollableInputStream
     is also<GPollableInputStream>
   { * }
 

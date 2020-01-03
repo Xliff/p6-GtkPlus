@@ -7,7 +7,7 @@ use GTK::Raw::Utils;
 
 use GIO::Raw::GFile;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GLib::Roles::Object;
@@ -30,7 +30,7 @@ role GIO::Roles::GFile {
     $!file = $file;
   }
 
-  method GTK::Compat::Types::GFile
+  method GLib::Raw::Types::GFile
     is also<GFile>
   { $!file }
 

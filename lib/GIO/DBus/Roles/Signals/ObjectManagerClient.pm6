@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 role GIO::DBus::Roles::Signals::ObjectManagerClient {

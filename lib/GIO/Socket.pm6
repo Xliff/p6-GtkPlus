@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::Socket;
 
 use GIO::SocketAddress;
@@ -29,7 +29,7 @@ class GIO::Socket {
     self.roleInit-DatagramBased;
   }
 
-  method GTK::Compat::Types::GSocket
+  method GLib::Raw::Types::GSocket
     is also<GSocket>
   { $!s }
 

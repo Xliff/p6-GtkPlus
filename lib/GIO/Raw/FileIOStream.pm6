@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 ### /usr/include/glib-2.0/gio/gfileiostream.h
 

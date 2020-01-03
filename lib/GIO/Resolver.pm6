@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::Resolver;
 
 use GLib::GList;
@@ -27,7 +27,7 @@ class GIO::Resolver {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GResolver
+  method GLib::Raw::Types::GResolver
     is also<GResolver>
   { $!r }
 

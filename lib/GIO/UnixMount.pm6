@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Raw::UnixMount;
 
@@ -23,7 +23,7 @@ class GIO::UnixMount {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GUnixMountEntry
+  method GLib::Raw::Types::GUnixMountEntry
     is also<GUnixMountEntry>
   { $!um }
 
@@ -270,7 +270,7 @@ class GIO::UnixMountPoint {
     $!mp = $mount-point;
   }
 
-  method GTK::Compat::Types::GUnixMountPoint
+  method GLib::Raw::Types::GUnixMountPoint
     is also<GUnixMountPoint>
   { $!mp }
 
@@ -422,7 +422,7 @@ class GIO::UnixMountMonitor {
     $!mm = $monitor;
   }
 
-  method GTK::Compat::Types::GUnixMountMonitor
+  method GLib::Raw::Types::GUnixMountMonitor
     is also<GUnixMountMonitor>
   { $!mm }
 

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::InterfaceSkeleton;
@@ -28,7 +28,7 @@ class GIO::DBus::InterfaceSkeleton {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GDBusInterfaceSkeleton
+  method GLib::Raw::Types::GDBusInterfaceSkeleton
     is also<GDBusInterfaceSkeleton>
   { $!dis }
 

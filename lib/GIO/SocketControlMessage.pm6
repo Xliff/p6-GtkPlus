@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::SocketControlMessage;
 
 use GLib::Roles::Object;
@@ -40,7 +40,7 @@ class GIO::SocketControlMessage {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GSocketControlMessage
+  method GLib::Raw::Types::GSocketControlMessage
     is also<GSocketControlMessage>
   { * }
 

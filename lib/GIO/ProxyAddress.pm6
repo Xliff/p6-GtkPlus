@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::ProxyAddress;
 
 use GIO::InetSocketAddress;
@@ -44,7 +44,7 @@ class GIO::ProxyAddress is GIO::InetSocketAddress {
     self.setInetSocketAddr($to-parent);
   }
 
-  method GTK::Compat::Types::GProxyAddress
+  method GLib::Raw::Types::GProxyAddress
   { $!pa }
 
   multi method new (ProxyAddressAncestry $proxy-address) {

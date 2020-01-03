@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Roles::Object;
 
@@ -19,7 +19,7 @@ class GIO::SocketAddressEnumerator {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GSocketAddressEnumerator
+  method GLib::Raw::Types::GSocketAddressEnumerator
     is also<GSocketAddressEnumerator>
   { $!se }
 

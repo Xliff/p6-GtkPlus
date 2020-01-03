@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::SocketAddressEnumerator;
 
@@ -15,7 +15,7 @@ role GIO::Roles::SocketConnectable {
     $!sc = $connectable;
   }
 
-  method GTK::Compat::Types::GSocketConnectable
+  method GLib::Raw::Types::GSocketConnectable
     is also<GSocketConnectable>
   { $!sc }
 

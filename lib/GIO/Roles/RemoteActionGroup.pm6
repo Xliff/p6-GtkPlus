@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Roles::ActionGroup;
 
@@ -13,7 +13,7 @@ role GIO::Roles::RemoteActionGroup {
 
   has GRemoteActionGroup $!rag;
 
-  method GTK::Compat::Types::GRemoteActionGroup
+  method GLib::Raw::Types::GRemoteActionGroup
     is also<GRemoteActionGroup>
   { $!rag }
 

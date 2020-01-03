@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GTK::Raw::Utils;
@@ -27,7 +27,7 @@ class GIO::Settings {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GSettings
+  method GLib::Raw::Types::GSettings
     is also<GSettings>
   { $!s }
 

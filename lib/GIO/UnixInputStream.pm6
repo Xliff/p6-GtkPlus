@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::UnixInputStream;
 
 use GIO::InputStream;
@@ -72,7 +72,7 @@ class GIO::UnixInputStream is GIO::InputStream {
     self.bless( unix-stream =>  g_unix_input_stream_new($f, $cfd) );
   }
 
-  method GTK::Compat::Types::GUnixInputStream
+  method GLib::Raw::Types::GUnixInputStream
     is also<GUnixInputStream>
   { $!uis }
 

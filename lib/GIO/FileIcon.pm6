@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Roles::Object;
 use GIO::Roles::GFile;
@@ -30,7 +30,7 @@ class GIO::FileIcon {
     #say "FI: $!fi";
   }
 
-  method GTK::Compat::Types::GFileIcon
+  method GLib::Raw::Types::GFileIcon
     is also<GFileIcon>
   { $!fi }
 

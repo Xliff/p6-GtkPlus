@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::FileMonitor;
@@ -24,7 +24,7 @@ class GIO::FileMonitor {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GFileMonitor
+  method GLib::Raw::Types::GFileMonitor
     is also<GFileMonitor>
   { $!m }
 

@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Interface;
@@ -20,7 +20,7 @@ role GIO::DBus::Roles::Interface {
     $!di = cast( GDBusInterface, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GDBusInterface
+  method GLib::Raw::Types::GDBusInterface
     is also<GDBusInterface>
   { $!di }
 

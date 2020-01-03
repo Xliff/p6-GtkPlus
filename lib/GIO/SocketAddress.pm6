@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::SocketAddress;
 
 use GLib::Roles::Object;
@@ -44,7 +44,7 @@ class GIO::SocketAddress {
     self.roleInit-SocketConnectable unless $role-set;
   }
 
-  method GTK::Compat::Types::GSocketAddress
+  method GLib::Raw::Types::GSocketAddress
     is also<GSocketAddress>
   { $!sa }
 

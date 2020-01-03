@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Raw::TlsBackend;
 
@@ -21,7 +21,7 @@ role GIO::Roles::TlsBackend {
     $!tb = cast( GTlsBackend, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GTlsBackend
+  method GLib::Raw::Types::GTlsBackend
     is also<GTlsBackend>
   { $!tb }
 

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Raw::ActionGroup;
 
@@ -18,7 +18,7 @@ role GIO::Roles::ActionGroup {
     $!ag = cast( GActionGroup, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GActionGroup
+  method GLib::Raw::Types::GActionGroup
     is also<GActionGroup>
   { $!ag }
 

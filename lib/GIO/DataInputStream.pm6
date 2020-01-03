@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::DataInputStream;
 
 use GIO::BufferedInputStream;
@@ -45,7 +45,7 @@ class GIO::DataInputStream is GIO::BufferedInputStream {
     }
   }
 
-  method GTK::Compat::Types::GDataInputStream
+  method GLib::Raw::Types::GDataInputStream
     is also<GDataInputStream>
   { $!dis }
 

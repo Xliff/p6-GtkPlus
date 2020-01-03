@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 use GLib::Value;
@@ -23,7 +23,7 @@ class GIO::DBus::ObjectProperty {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GDBusObjectProxy
+  method GLib::Raw::Types::GDBusObjectProxy
     is also<GDBusObjectProxy>
   { $!dop }
 

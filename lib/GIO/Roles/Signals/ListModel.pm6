@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 role GIO::Roles::Signals::ListModel {
   has %!signals-lm;

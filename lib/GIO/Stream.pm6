@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::Stream;
 
 use GIO::InputStream;
@@ -31,7 +31,7 @@ class GIO::Stream {
     self.bless( :$stream );
   }
 
-  method GTK::Compat::Types::GIOStream
+  method GLib::Raw::Types::GIOStream
     is also<GIOStream>
   { $!ios }
 

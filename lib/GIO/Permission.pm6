@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GTK::Raw::Utils;
 
@@ -28,7 +28,7 @@ class GIO::Permission {
     $permission ?? self.bless( :$permission ) !! Nil;
   }
 
-  method GTK::Compat::Types::GPermission
+  method GLib::Raw::Types::GPermission
     is also<GPermission>
   { $!p }
 

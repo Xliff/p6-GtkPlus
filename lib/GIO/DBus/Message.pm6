@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Message;
@@ -24,7 +24,7 @@ class GIO::DBus::Message {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GDBusMessage
+  method GLib::Raw::Types::GDBusMessage
   { $!dm }
 
   proto method new (|)

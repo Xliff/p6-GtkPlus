@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::ThemedIcon;
 
 use GTK::Raw::Utils;
@@ -27,7 +27,7 @@ class GIO::ThemedIcon {
     self.roleInit-Icon;
   }
 
-  method GTK::Compat::Types::GThemedIcon
+  method GLib::Raw::Types::GThemedIcon
   { $!ti }
 
   method new (Str() $icon-name) {

@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GLib::Value;
@@ -22,7 +22,7 @@ role GIO::Roles::TlsServerConnection {
     $!tsc = cast( GTlsServerConnection, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GTlsServerConnection
+  method GLib::Raw::Types::GTlsServerConnection
     is also<GTlsServerConnection>
   { $!tsc }
 

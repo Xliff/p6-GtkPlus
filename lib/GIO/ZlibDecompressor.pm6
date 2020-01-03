@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Value;
 use GIO::FileInfo;
@@ -25,7 +25,7 @@ class GIO::ZlibDecompressor {
     self.roleInit-Converter;
   }
 
-  method GTK::Compat::Types::GZlibDecompressor
+  method GLib::Raw::Types::GZlibDecompressor
     is also<GZlibDecompressor>
   { $!zd }
 

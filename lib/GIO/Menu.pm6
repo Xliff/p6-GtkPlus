@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Raw::Menu;
 
@@ -15,7 +15,7 @@ my subset GIOMenuAncestry is export of Mu
 class GIO::Menu is GIO::MenuModel {
   has GMenu $!menu;
 
-  method GTK::Compat::Types::GMenu
+  method GLib::Raw::Types::GMenu
     is also<GMenu>
   { $!menu }
 

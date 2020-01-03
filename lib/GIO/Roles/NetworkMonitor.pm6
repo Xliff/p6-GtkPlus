@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::NetworkMonitor;
 
 role GIO::Roles::NetworkMonitor {
@@ -20,7 +20,7 @@ role GIO::Roles::NetworkMonitor {
     $!nm = cast( GNetworkMonitor, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GNetworkMonitor
+  method GLib::Raw::Types::GNetworkMonitor
     is also<GNetworkMonitor>
   { $!nm }
 

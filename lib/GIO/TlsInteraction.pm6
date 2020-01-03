@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::TlsInteraction;
@@ -22,7 +22,7 @@ class GIO::TlsInteraction {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GTlsInteraction
+  method GLib::Raw::Types::GTlsInteraction
     is also<GTlsInteraction>
   { $!ti }
 

@@ -6,7 +6,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::Resource;
@@ -21,7 +21,7 @@ class GIO::Resource {
     $!r = $resource;
   }
 
-  method GTK::Compat::Types::GResouorce
+  method GLib::Raw::Types::GResouorce
     is also<GResource>
   { $!r }
 
@@ -52,7 +52,7 @@ class GIO::Resource {
     self.bless(:$resource);
   }
 
-  method GTK::Compat::Types::GResource
+  method GLib::Raw::Types::GResource
   { $!r }
 
   method enumerate_children (

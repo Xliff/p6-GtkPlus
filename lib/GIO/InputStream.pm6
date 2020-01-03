@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::InputStream;
 
 use GTK::Raw::Utils;
@@ -26,7 +26,7 @@ class GIO::InputStream {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GInputStream
+  method GLib::Raw::Types::GInputStream
     is also<GInputStream>
   { $!is }
 

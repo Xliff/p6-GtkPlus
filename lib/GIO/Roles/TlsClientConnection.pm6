@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::TlsClientConnection;
@@ -32,7 +32,7 @@ role GIO::Roles::TlsClientConnection {
     $!tcc = cast( GTlsClientConnection, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GTlsClientConnection
+  method GLib::Raw::Types::GTlsClientConnection
     is also<GTlsClientConnection>
   { $!tcc }
 

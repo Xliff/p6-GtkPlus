@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::SocketConnection;
 
 use GIO::Stream;
@@ -48,7 +48,7 @@ class GIO::SocketConnection is GIO::Stream {
     self.setStream($to-parent);
   }
 
-  method GTK::Compat::Types::GSocketConnection
+  method GLib::Raw::Types::GSocketConnection
     is also<GSocketConnection>
   { $!sc }
 

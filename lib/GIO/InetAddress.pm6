@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::InetAddress;
 
 use GLib::Roles::Object;
@@ -19,7 +19,7 @@ class GIO::InetAddress {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GInetAddress
+  method GLib::Raw::Types::GInetAddress
     is also<GInetAddress>
   { $!ia }
 

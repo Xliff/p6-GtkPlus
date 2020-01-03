@@ -6,7 +6,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::AppInfo;
@@ -27,7 +27,7 @@ class GIO::Roles::AppInfo {
     $!ai = cast( GAppInfo, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GAppInfo
+  method GLib::Raw::Types::GAppInfo
     is also<GAppInfo>
   { $!ai }
 
@@ -446,7 +446,7 @@ class GIO::AppInfoMonitor {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GAppInfoMonitor
+  method GLib::Raw::Types::GAppInfoMonitor
     is also<GAppInfoMonitor>
   { $!aim }
 

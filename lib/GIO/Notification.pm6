@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Raw::Notification;
 
@@ -19,7 +19,7 @@ class GIO::Notification {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GNotification
+  method GLib::Raw::Types::GNotification
     is also<GNotification>
   { $!n }
 

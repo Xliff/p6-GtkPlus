@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::FileEnumerator;
 
 use GIO::FileInfo;
@@ -23,7 +23,7 @@ class GIO::FileEnumerator {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GFileEnumerator
+  method GLib::Raw::Types::GFileEnumerator
   { $!fe }
 
   method new (GFileEnumerator $enumerator) {

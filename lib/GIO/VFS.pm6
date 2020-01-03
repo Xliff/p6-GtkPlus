@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::VFS;
 
 use GTK::Raw::Utils;
@@ -20,7 +20,7 @@ class GIO::VFS {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GVfs
+  method GLib::Raw::Types::GVfs
     is also<GVfs>
   { $!fs }
 

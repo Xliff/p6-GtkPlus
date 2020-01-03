@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GTK::Raw::Utils;
 
@@ -22,7 +22,7 @@ role GIO::Roles::LoadableIcon {
     $!li = cast( GLoadableIcon, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GLoadableIcon
+  method GLib::Raw::Types::GLoadableIcon
     is also<GLoadableIcon>
   { $!li }
 

@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::AppInfo;
 
 class GTK::Compat::LaunchContext {

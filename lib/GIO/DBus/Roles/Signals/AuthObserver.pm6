@@ -4,7 +4,7 @@ use NativeCall;
 
 use GTK::Raw::ReturnedValue;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 role GIO::DBus::Roles::Signals::AuthObserver {
   has %!signals-dao;

@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::UnixSocketAddress;
 
 use GIO::SocketAddress;
@@ -43,7 +43,7 @@ class GIO::UnixSocketAddress is GIO::SocketAddress {
     self.setSocketAddress($to-parent);
   }
 
-  method GTK::Compat::Types::GUnixSocketAddress
+  method GLib::Raw::Types::GUnixSocketAddress
     is also<GUnixSocketAddress>
   { $!us }
 

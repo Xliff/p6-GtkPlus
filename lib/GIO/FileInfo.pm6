@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::FileInfo;
@@ -24,7 +24,7 @@ class GIO::FileInfo {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GFileInfo
+  method GLib::Raw::Types::GFileInfo
     is also<GFileInfo>
   { $!fi }
 

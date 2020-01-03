@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::SocketService;
 
 use GIO::SocketListener;
@@ -48,7 +48,7 @@ class GIO::SocketService is GIO::SocketListener {
     self.setSocketListener($to-parent);
   }
 
-  method GTK::Compat::Types::GSocketService
+  method GLib::Raw::Types::GSocketService
     is also<GSocketService>
   { $!ss }
 

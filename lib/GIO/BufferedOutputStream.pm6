@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Raw::BufferedOutputStream;
 
@@ -57,7 +57,7 @@ class GIO::BufferedOutputStream is GIO::FilterOutputStream {
     self.setFilterOutputStream($to-parent);
   }
 
-  method GTK::Compat::Types::GBufferedOutputStream
+  method GLib::Raw::Types::GBufferedOutputStream
     is also<GBufferedOutputStream>
   { $!bos }
 

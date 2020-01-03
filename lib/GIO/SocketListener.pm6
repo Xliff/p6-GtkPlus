@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::SocketListener;
 
 use GLib::Value;
@@ -29,7 +29,7 @@ class GIO::SocketListener {
     self.roleInit-Properties;
   }
 
-  method GTK::Compat::Types::GSocketListener
+  method GLib::Raw::Types::GSocketListener
     is also<GSocketListener>
   { $!sl }
 

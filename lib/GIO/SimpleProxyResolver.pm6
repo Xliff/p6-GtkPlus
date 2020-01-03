@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::SimpleProxyResolver;
 
 use GTK::Raw::Utils;
@@ -25,7 +25,7 @@ class GIO::SimpleProxyResolver {
     self.roleInit-ProxyResolver;
   }
 
-  method GTK::Compat::Types::GSimpleProxyResolver
+  method GLib::Raw::Types::GSimpleProxyResolver
     is also<GSimpleProxyResolver>
   { $!spr }
 

@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::Cancellable;
 
 use GLib::Source;
@@ -24,7 +24,7 @@ class GIO::Cancellable {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GCancellable
+  method GLib::Raw::Types::GCancellable
     is also<GCancellable>
   { $!c }
 

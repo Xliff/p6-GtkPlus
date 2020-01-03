@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::EmblemedIcon;
 
 use GLib::GList;
@@ -25,7 +25,7 @@ class GIO::EmblemedIcon {
     self.roleInit-Icon;
   }
 
-  method GTK::Compat::Types::GEmblemedIcon
+  method GLib::Raw::Types::GEmblemedIcon
     is also<GEmblemedIcon>
   { $!ei }
 

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 use GIO::Raw::Mount;
 
@@ -28,7 +28,7 @@ role GIO::Roles::Mount {
     $!m = cast(GMount, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GMount
+  method GLib::Raw::Types::GMount
     is also<GMount>
   { $!m }
 

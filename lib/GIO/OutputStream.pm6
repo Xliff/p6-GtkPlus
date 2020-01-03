@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::OutputStream;
 
 use GLib::Roles::Object;
@@ -24,7 +24,7 @@ class GIO::OutputStream {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GOutputStream
+  method GLib::Raw::Types::GOutputStream
     is also<GOutputStream>
   { $!os }
 

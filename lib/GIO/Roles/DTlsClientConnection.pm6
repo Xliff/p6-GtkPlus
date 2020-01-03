@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::DtlsClientConnection;
@@ -32,7 +32,7 @@ role GIO::Roles::DtlsClientConnection {
     $!tdcc = cast( GDtlsClientConnection, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GDtlsClientConnection
+  method GLib::Raw::Types::GDtlsClientConnection
     is also<GDtlsClientConnection>
   { $!tdcc }
 

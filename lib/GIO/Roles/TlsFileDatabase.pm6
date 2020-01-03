@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Value;
 
@@ -37,7 +37,7 @@ role GIO::Roles::TlsFileDatabase {
     self.bless( :$file-database );
   }
 
-  method GTK::Compat::Types::GTlsFileDatabase
+  method GLib::Raw::Types::GTlsFileDatabase
   { $!tfd }
 
   # Type: gchar

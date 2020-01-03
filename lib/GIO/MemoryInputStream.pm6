@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::MemoryInputStream;
 
 use GIO::InputStream;
@@ -66,7 +66,7 @@ class GIO::MemoryInputStream is GIO::InputStream {
     self.setInputStream($to-parent);
   }
 
-  method GTK::Compat::Types::GMemoryInputStream
+  method GLib::Raw::Types::GMemoryInputStream
     is also<GMemoryInputStream>
   { $!mis }
 

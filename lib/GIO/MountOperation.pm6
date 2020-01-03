@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::MountOperation;
 
 use GLib::Roles::Object;
@@ -20,7 +20,7 @@ class GIO::MountOperation {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GMountOperation
+  method GLib::Raw::Types::GMountOperation
     is also<GMountOperation>
   { $!mo }
 

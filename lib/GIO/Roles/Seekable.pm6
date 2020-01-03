@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::Seekable;
 
 role GIO::Roles::Seekable {
@@ -16,7 +16,7 @@ role GIO::Roles::Seekable {
     $!s = cast( GSeekable, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GSeekable
+  method GLib::Raw::Types::GSeekable
     is also<GSeekable>
   { $!s }
 

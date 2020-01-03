@@ -6,7 +6,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::DBus::Raw::Types;
 
 use GIO::DBus::Raw::Proxy;
@@ -35,7 +35,7 @@ class GIO::DBus::Proxy {
     self.roleInit-AsyncInitable;
   }
 
-  method GTK::Compat::Types::GDBusProxy
+  method GLib::Raw::Types::GDBusProxy
     is also<GDBusProxy>
   { $!dp }
 

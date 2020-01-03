@@ -5,7 +5,7 @@ use NativeCall;
 
 use GLib::Variant;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::Icon;
 
 role GIO::Roles::Icon {
@@ -21,7 +21,7 @@ role GIO::Roles::Icon {
     $!icon = cast( GIcon, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GIcon
+  method GLib::Raw::Types::GIcon
     is also<
       GIcon
       Icon

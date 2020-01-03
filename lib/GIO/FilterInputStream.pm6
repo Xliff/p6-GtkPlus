@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::FilterInputStream;
 
 use GIO::InputStream;
@@ -44,7 +44,7 @@ class GIO::FilterInputStream is GIO::InputStream {
     self.setInputStream($to-parent);
   }
 
-  method GTK::Compat::Types::GFilterInputStream
+  method GLib::Raw::Types::GFilterInputStream
     is also<GFilterInputStream>
   { $!fis }
 

@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Raw::FileIOStream;
 
@@ -50,7 +50,7 @@ class GIO::FileIOStream is GIO::Stream {
     self.roleInit-Seekable unless $!s;
   }
 
-  method GTK::Compat::Types::GFileIOStream
+  method GLib::Raw::Types::GFileIOStream
     is also<GFileIOStream>
   { $!fios }
 

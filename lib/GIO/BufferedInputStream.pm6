@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::BufferedInputStream;
 
 use GIO::FilterInputStream;
@@ -57,7 +57,7 @@ class GIO::BufferedInputStream is GIO::FilterInputStream {
     self.setFilterInputStream($to-parent);
   }
 
-  method GTK::Compat::Types::GBufferedInputStream
+  method GLib::Raw::Types::GBufferedInputStream
     is also<GBufferedInputStream>
   { $!bis }
 

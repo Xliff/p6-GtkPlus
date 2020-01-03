@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 use Method::Also;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::SocketService;
 
@@ -40,7 +40,7 @@ class GIO::ThreadedSocketService is GIO::SocketService {
     }
   }
 
-  method GTK::Compat::Types::GThreadedSocketService
+  method GLib::Raw::Types::GThreadedSocketService
     is also<GThreadedSocketService>
   { $!tss }
 

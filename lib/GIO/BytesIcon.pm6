@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Bytes;
 
@@ -27,7 +27,7 @@ class GIO::BytesIcon {
     self.roleInit-LoadableIcon;
   }
 
-  method GTK::Compat::Types::GBytesIcon
+  method GLib::Raw::Types::GBytesIcon
     is also<GBytesIcon>
   { $!bi }
 

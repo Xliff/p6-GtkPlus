@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GIO::Permission;
 
@@ -40,7 +40,7 @@ class GIO::SimplePermission is GIO::Permission {
     }
   }
 
-  method GTK::Compat::Types::GSimplePermission
+  method GLib::Raw::Types::GSimplePermission
     is also<GSimplePermission>
   { $!sp }
 

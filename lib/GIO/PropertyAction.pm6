@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 
 use GLib::Value;
 use GIO::Roles::Action;
@@ -21,7 +21,7 @@ class GIO::PropertyAction {
     self!roleInit-Action;
   }
 
-  method GTK::Compat::Types::GPropertyAction
+  method GLib::Raw::Types::GPropertyAction
     is also<GPropertyAction>
   { $!pa }
 

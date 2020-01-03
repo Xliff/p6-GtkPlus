@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::SocketClient;
@@ -27,7 +27,7 @@ class GIO::SocketClient {
     self.roleInit-Object;
   }
 
-  method GTK::Compat::Types::GSocketClient
+  method GLib::Raw::Types::GSocketClient
   { $!sc }
 
   multi method new (GSocketClient $client) {

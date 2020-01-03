@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::NetworkAddress;
 
 use GLib::Roles::Object;
@@ -22,7 +22,7 @@ class GIO::NetworkAddress {
     self.roleInit-SocketConnectable;
   }
 
-  method GTK::Compat::Types::GNetworkAddress
+  method GLib::Raw::Types::GNetworkAddress
     is also<GNetworkAddress>
   { $!a }
 

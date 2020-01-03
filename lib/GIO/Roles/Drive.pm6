@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GTK::Raw::Utils;
@@ -27,7 +27,7 @@ role GIO::Roles::Drive {
     $!d = cast( GDrive, i.get_value(self) );
   }
 
-  method GTK::Compat::Types::GDrive
+  method GLib::Raw::Types::GDrive
     is also<GDrive>
   { $!d }
 

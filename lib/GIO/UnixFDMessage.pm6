@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GIO::Raw::UnixFDMessage;
 
 use GIO::SocketControlMessage;
@@ -46,7 +46,7 @@ class GIO::UnixFDMessage is GIO::SocketControlMessage {
     self.setSocketControlMessage($to-parent);
   }
 
-  method GTK::Compat::Types::GUnixFDMessage
+  method GLib::Raw::Types::GUnixFDMessage
     is also<GUnixFDMessage>
   { $!fdm }
 

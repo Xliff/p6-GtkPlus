@@ -4,7 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GLib::Raw::Types;
 use GTK::Compat::FileTypes;
 
 use GIO::Raw::TlsPassword;
@@ -31,7 +31,7 @@ class GIO::TlsPassword {
     self.bless( tls-password => g_tls_password_new($f, $description) )
   }
 
-  method GTK::Compat::Types::GTlsPassword
+  method GLib::Raw::Types::GTlsPassword
     is also<GTlsPassword>
   { $!tp }
 
