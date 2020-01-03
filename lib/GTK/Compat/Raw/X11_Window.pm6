@@ -4,7 +4,6 @@ use NativeCall;
 
 use GTK::Compat::Types;
 use GTK::Compat::X11_Types;
-use GTK::Roles::Pointers;
 
 package GTK::Compat::Raw::X11_Window {
 
@@ -27,7 +26,7 @@ package GTK::Compat::Raw::X11_Window {
     { * }
 
   sub gdk_x11_window_lookup_for_display (
-    GdkDisplay $display, 
+    GdkDisplay $display,
     X11Window $X11Window
   )
     returns GdkWindow
@@ -46,7 +45,7 @@ package GTK::Compat::Raw::X11_Window {
     { * }
 
   sub gdk_x11_window_set_frame_sync_enabled (
-    GdkWindow $window, 
+    GdkWindow $window,
     gboolean $frame_sync_enabled
   )
     is native(gdk)
@@ -54,7 +53,7 @@ package GTK::Compat::Raw::X11_Window {
     { * }
 
   sub gdk_x11_window_set_hide_titlebar_when_maximized (
-    GdkWindow $window, 
+    GdkWindow $window,
     gboolean $hide_titlebar_when_maximized
   )
     is native(gdk)
@@ -72,17 +71,17 @@ package GTK::Compat::Raw::X11_Window {
     { * }
 
   sub gdk_x11_window_set_utf8_property (
-    GdkWindow $window, 
-    Str $name, 
+    GdkWindow $window,
+    Str $name,
     Str $value
   )
     is native(gdk)
     is export
     { * }
-    
+
   sub gdk_x11_get_server_time (GdkWindow $window)
     is native(gdk)
     is export
     { * }
-    
+
  }

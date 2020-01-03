@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Roles::Pointers;
+use GLib::Roles::Pointers;
 
 unit package GTK::Compat::X11_Types;
 
@@ -16,5 +16,5 @@ our constant X11Colormap is export := uint64; # XID
 our constant X11KeySym   is export := uint64; # XID
 our constant GContext    is export := uint64; # XID
 
-our class X11Display is repr<CPointer> does GTK::Roles::Pointers is export {}
-our class X11Screen  is repr<CPointer> does GTK::Roles::Pointers is export {}
+our class X11Display is repr<CPointer> does GLib::Roles::Pointers is export {}
+our class X11Screen  is repr<CPointer> does GLib::Roles::Pointers is export {}

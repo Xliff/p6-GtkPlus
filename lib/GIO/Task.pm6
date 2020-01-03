@@ -11,7 +11,7 @@ use GLib::MainContext;
 use GIO::Cancellable;
 
 use GLib::Roles::Object;
-use GTK::Roles::Pointers;
+use GLib::Roles::Pointers;
 use GIO::Roles::AsyncResult;
 
 our subset TaskAncestry is export of Mu
@@ -143,7 +143,7 @@ class GIO::Task {
       FETCH => -> $ { self.get-task-data },
       STORE => -> $, $val {
         self.set-task-data(
-          $val ~~ (Pointer, GTK::Roles::Pointers).any ??
+          $val ~~ (Pointer, GLib::Roles::Pointers).any ??
             $val
             !!
             cast(

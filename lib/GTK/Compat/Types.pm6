@@ -5,7 +5,7 @@ use NativeCall;
 
 use Cairo;
 
-use GTK::Roles::Pointers;
+use GLib::Roles::Pointers;
 
 unit package GTK::Compat::Types;
 
@@ -190,7 +190,7 @@ sub g_destroy_none(Pointer)
   is export
 { * }
 
-class GError is repr('CStruct') does GTK::Roles::Pointers is export {
+class GError is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32        $.domain;
   has int32         $.code;
   has Str           $!message;
@@ -244,7 +244,7 @@ sub unstable_get_type($name, &sub, $n is rw, $t is rw) is export {
   $t;
 }
 
-class GTypeInstance is repr('CStruct') does GTK::Roles::Pointers is export { ... }
+class GTypeInstance is repr('CStruct') does GLib::Roles::Pointers is export { ... }
 
 sub g_type_check_instance_is_a (
   GTypeInstance  $instance,
@@ -258,7 +258,7 @@ sub real-resolve-uint64($v) is export {
   $v +& 0xffffffffffffffff;
 }
 
-class GTypeClass is repr('CStruct') does GTK::Roles::Pointers is export {
+class GTypeClass is repr('CStruct') does GLib::Roles::Pointers is export {
   has GType      $.g_type;
 }
 class GTypeInstance {
@@ -277,7 +277,7 @@ class GTypeInstance {
 }
 
 # Used ONLY in those situations where cheating is just plain REQUIRED.
-class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
+class GObjectStruct is repr('CStruct') does GLib::Roles::Pointers is export {
   HAS GTypeInstance  $.g_type_instance;
   has uint32         $.ref_count;
   has gpointer       $!qdata;
@@ -291,12 +291,12 @@ class GObjectStruct is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 }
 
-class GInputVector  is repr('CStruct') does GTK::Roles::Pointers is export {
+class GInputVector  is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer $.buffer;
   has gssize  $.size;
 }
 
-class GInputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
+class GInputMessage is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer       $.address;                # GSocketAddress **
   has GInputVector  $.vectors;                # GInputVector *
   has guint         $.num_vectors;
@@ -306,12 +306,12 @@ class GInputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
   has CArray[guint] $.num_control_messages;   # Pointer with 1 element == *guint
 }
 
-class GOutputVector is repr('CStruct') does GTK::Roles::Pointers is export {
+class GOutputVector is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer $.buffer;
   has gssize  $.size;
 }
 
-class GOutputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
+class GOutputMessage is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer       $.address;
   has GOutputVector $.vectors;
   has guint         $.num_vectors;
@@ -321,7 +321,7 @@ class GOutputMessage is repr('CStruct') does GTK::Roles::Pointers is export {
 };
 
 
-class GList is repr('CStruct') does GTK::Roles::Pointers is export {
+class GList is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer $!data;
   has GList   $.next;
   has GList   $.prev;
@@ -343,25 +343,25 @@ class GList is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 }
 
-class GPermission is repr('CStruct') does GTK::Roles::Pointers is export {
+class GPermission is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint64 $.dummy1;
   has uint64 $.dummy2;
   has uint64 $.dummy3;
   has uint64 $.dummy4;
 }
 
-class GSList is repr('CStruct') does GTK::Roles::Pointers is export {
+class GSList is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer $!data;
   has GSList  $.next;
 }
 
-class GString is repr('CStruct') does GTK::Roles::Pointers is export {
+class GString is repr('CStruct') does GLib::Roles::Pointers is export {
   has Str       $.str;
   has realUInt  $.len;
   has realUInt  $.allocated_len;
 }
 
-class GTypeValueList is repr('CUnion') does GTK::Roles::Pointers is export {
+class GTypeValueList is repr('CUnion') does GLib::Roles::Pointers is export {
   has int32	          $.v_int     is rw;
   has uint32          $.v_uint    is rw;
   has long            $.v_long    is rw;
@@ -373,19 +373,19 @@ class GTypeValueList is repr('CUnion') does GTK::Roles::Pointers is export {
   has OpaquePointer   $.v_pointer is rw;
 };
 
-class GValue is repr('CStruct') does GTK::Roles::Pointers is export {
+class GValue is repr('CStruct') does GLib::Roles::Pointers is export {
   has ulong           $.g_type is rw;
   HAS GTypeValueList  $.data1  is rw;
   HAS GTypeValueList  $.data2  is rw;
 }
 
-class GPtrArray is repr('CStruct') does GTK::Roles::Pointers is export {
+class GPtrArray is repr('CStruct') does GLib::Roles::Pointers is export {
   has CArray[Pointer] $.pdata;
   has guint           $.len;
 }
 
 class GSignalInvocationHint is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has guint   $.signal_id;
@@ -393,7 +393,7 @@ class GSignalInvocationHint is repr('CStruct')
   has guint32 $.run_type;             # GSignalFlags
 }
 
-class GSignalQuery is repr('CStruct') does GTK::Roles::Pointers is export {
+class GSignalQuery is repr('CStruct') does GLib::Roles::Pointers is export {
   has guint          $.signal_id;
   has Str            $.signal_name;
   has GType          $.itype;
@@ -403,28 +403,28 @@ class GSignalQuery is repr('CStruct') does GTK::Roles::Pointers is export {
   has CArray[uint64] $.param_types;
 }
 
-class GLogField is repr('CStruct') does GTK::Roles::Pointers is export {
+class GLogField is repr('CStruct') does GLib::Roles::Pointers is export {
   has Str     $.key;
   has Pointer $.value;
   has gssize  $.length;
 }
 
-class GPollFDNonWin is repr('CStruct') does GTK::Roles::Pointers is export {
+class GPollFDNonWin is repr('CStruct') does GLib::Roles::Pointers is export {
   has gint	    $.fd;
   has gushort 	$.events;
   has gushort 	$.revents;
 }
-class GPollFDWin is repr('CStruct') does GTK::Roles::Pointers is export {
+class GPollFDWin is repr('CStruct') does GLib::Roles::Pointers is export {
   has gushort 	$.events;
   has gushort 	$.revents;
 }
 
-class GTimeVal is repr('CStruct') does GTK::Roles::Pointers is export {
+class GTimeVal is repr('CStruct') does GLib::Roles::Pointers is export {
   has glong $.tv_sec;
   has glong $.tv_usec;
 };
 
-class GValueArray is repr('CStruct') does GTK::Roles::Pointers is export {
+class GValueArray is repr('CStruct') does GLib::Roles::Pointers is export {
   has guint    $.n_values;
   has gpointer $.values; # GValue *
 };
@@ -1262,199 +1262,199 @@ our enum GMarkupParseFlagsEnum is export (
     G_MARKUP_IGNORE_QUALIFIED                 =>  1 +< 3,
 );
 
-class cairo_font_options_t     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class cairo_surface_t          is repr('CPointer') is export does GTK::Roles::Pointers { }
+class cairo_font_options_t     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class cairo_surface_t          is repr('CPointer') is export does GLib::Roles::Pointers { }
 
-class AtkObject                is repr('CPointer') is export does GTK::Roles::Pointers { }
+class AtkObject                is repr('CPointer') is export does GLib::Roles::Pointers { }
 
 # --- GLIB TYPES ---
-class GAction                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GActionGroup             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GActionMap               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GAppInfo                 is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GAppInfoMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GAppLaunchContext        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GApplication             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GAsyncInitable           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GAsyncQueue              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GAsyncResult             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GBinding                 is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GBookmarkFile            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GBufferedInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GBufferedOutputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GBytes                   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GBytesIcon               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GCancellable             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDesktopAppInfo          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDesktopAppInfoLookup    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDrive                   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GCharsetConverter        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GChecksum                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GClosure                 is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GConverter               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GConverterInputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GConverterOutputStream   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GCredentials             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDataInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDataOutputStream        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDateTime                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDatagramBased           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDtlsClientConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDtlsConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDtlsServerConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusActionGroup         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusAuthObserver        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusInterface           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusInterfaceSkeleton   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusMessage             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusMethodInvocation    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusObject              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusObjectManager       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusObjectManagerClient is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusObjectManagerServer is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusObjectSkeleton      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusProxy               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusObjectProxy         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GDBusServer              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GEmblem                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GEmblemedIcon            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFile                    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileAttributeInfo       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileAttributeMatcher    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileDescriptorBased     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileEnumerator          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileIcon                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileInfo                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileIOStream            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileMonitor             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFilenameCompleter       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFileOutputStream        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFilterInputStream       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GFilterOutputStream      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GHmac                    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GHashTable               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GHashTableIter           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GIcon                    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GInetAddress             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GInetAddressMask         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GInetSocketAddress       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GInitable                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GInputStream             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GIOChannel               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GIOStream                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GKeyFile                 is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GListModel               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GListStore               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GLoadableIcon            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMainContext             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMainLoop                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMarkupParser            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMarkupParseContext      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMemoryInputStream       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMemoryOutputStream      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMenu                    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMenuItem                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMenuAttributeIter       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMenuLinkIter            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMenuModel               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GModule                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMount                   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMountOperation          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GMutex                   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GNetworkAddress          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GNetworkMonitor          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GNetworkService          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GNotification            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GObject                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GOptionEntry             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GOptionGroup             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GOutputStream            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GParamSpec               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GParamSpecPool           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GPatternSpec             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GPollableInputStream     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GPollableOutputStream    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GPrivate                 is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GPropertyAction          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GProxy                   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GProxyAddress            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GProxyAddressEnumerator  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GProxyResolver           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GRand                    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GResource                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GRemoteActionGroup       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GRWLock                  is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GAction                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GActionGroup             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GActionMap               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GAppInfo                 is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GAppInfoMonitor          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GAppLaunchContext        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GApplication             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GAsyncInitable           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GAsyncQueue              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GAsyncResult             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GBinding                 is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GBookmarkFile            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GBufferedInputStream     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GBufferedOutputStream    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GBytes                   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GBytesIcon               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GCancellable             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDesktopAppInfo          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDesktopAppInfoLookup    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDrive                   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GCharsetConverter        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GChecksum                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GClosure                 is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GConverter               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GConverterInputStream    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GConverterOutputStream   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GCredentials             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDataInputStream         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDataOutputStream        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDateTime                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDatagramBased           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDtlsClientConnection    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDtlsConnection          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDtlsServerConnection    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusActionGroup         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusAuthObserver        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusConnection          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusInterface           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusInterfaceSkeleton   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusMessage             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusMethodInvocation    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusObject              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusObjectManager       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusObjectManagerClient is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusObjectManagerServer is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusObjectSkeleton      is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusProxy               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusObjectProxy         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GDBusServer              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GEmblem                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GEmblemedIcon            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFile                    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileAttributeInfo       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileAttributeMatcher    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileDescriptorBased     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileEnumerator          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileIcon                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileInfo                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileInputStream         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileIOStream            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileMonitor             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFilenameCompleter       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFileOutputStream        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFilterInputStream       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GFilterOutputStream      is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GHmac                    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GHashTable               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GHashTableIter           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GIcon                    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GInetAddress             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GInetAddressMask         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GInetSocketAddress       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GInitable                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GInputStream             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GIOChannel               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GIOStream                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GKeyFile                 is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GListModel               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GListStore               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GLoadableIcon            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMainContext             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMainLoop                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMarkupParser            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMarkupParseContext      is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMemoryInputStream       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMemoryOutputStream      is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMenu                    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMenuItem                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMenuAttributeIter       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMenuLinkIter            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMenuModel               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GModule                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMount                   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMountOperation          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GMutex                   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GNetworkAddress          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GNetworkMonitor          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GNetworkService          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GNotification            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GObject                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GOptionEntry             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GOptionGroup             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GOutputStream            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GParamSpec               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GParamSpecPool           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GPatternSpec             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GPollableInputStream     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GPollableOutputStream    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GPrivate                 is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GPropertyAction          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GProxy                   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GProxyAddress            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GProxyAddressEnumerator  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GProxyResolver           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GRand                    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GResource                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GRemoteActionGroup       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GRWLock                  is repr('CPointer') is export does GLib::Roles::Pointers { }
 # To be converted into CStruct when I'm not so scurred of it.
 # It has bits.... BITS! -- See https://stackoverflow.com/questions/1490092/c-c-force-bit-field-order-and-alignment
-class GScannerConfig           is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GScannerConfig           is repr('CPointer') is export does GLib::Roles::Pointers { }
 # Also has a CStruct representation, and should be converted.
-class GScanner                 is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSettings                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSettingsBackend         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSettingsSchema          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSettingsSchemaKey       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSettingsSchemaSource    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSimpleAction            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSimpleActionGroup       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSimplePermission        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSimpleProxyResolver     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GResolver                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSeekable                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocket                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketClient            is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketAddress           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketAddressEnumerator is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketConnectable       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketConnection        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketControlMessage    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketListener          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSocketService           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSource                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GSrvTarget               is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTask                    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTcpConnection           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTcpWrapperConnection    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GThemedIcon              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GThread                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GThreadPool              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GThreadedSocketService   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTimer                   is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTimeZone                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsBackend              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsCertificate          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsClientConnection     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsConnection           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsDatabase             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsFileDatabase         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsInteraction          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsPassword             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTlsServerConnection     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTokenValue              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GTree                    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixCredentialsMessage  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixConnection          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixFDList              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixFDMessage           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixMountEntry          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixMountMonitor        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixMountPoint          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixInputStream         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixOutputStream        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GUnixSocketAddress       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVariant                 is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVariantBuilder          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVariantDict             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVariantIter             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVariantType             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVfs                     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVolume                  is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GVolumeMonitor           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GZlibCompressor          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GZlibDecompressor        is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GScanner                 is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSettings                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSettingsBackend         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSettingsSchema          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSettingsSchemaKey       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSettingsSchemaSource    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSimpleAction            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSimpleActionGroup       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSimplePermission        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSimpleProxyResolver     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GResolver                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSeekable                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocket                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketClient            is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketAddress           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketAddressEnumerator is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketConnectable       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketConnection        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketControlMessage    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketListener          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSocketService           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSource                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GSrvTarget               is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTask                    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTcpConnection           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTcpWrapperConnection    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GThemedIcon              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GThread                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GThreadPool              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GThreadedSocketService   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTimer                   is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTimeZone                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsBackend              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsCertificate          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsClientConnection     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsConnection           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsDatabase             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsFileDatabase         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsInteraction          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsPassword             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTlsServerConnection     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTokenValue              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GTree                    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixCredentialsMessage  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixConnection          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixFDList              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixFDMessage           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixMountEntry          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixMountMonitor        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixMountPoint          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixInputStream         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixOutputStream        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GUnixSocketAddress       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVariant                 is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVariantBuilder          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVariantDict             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVariantIter             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVariantType             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVfs                     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVolume                  is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GVolumeMonitor           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GZlibCompressor          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GZlibDecompressor        is repr('CPointer') is export does GLib::Roles::Pointers { }
 
-class GByteArray is repr('CStruct') does GTK::Roles::Pointers is export {
+class GByteArray is repr('CStruct') does GLib::Roles::Pointers is export {
   has CArray[uint8] $.data;
   has guint         $.len;
 
@@ -1463,7 +1463,7 @@ class GByteArray is repr('CStruct') does GTK::Roles::Pointers is export {
   }
 }
 
-class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is export {
+class GFileAttributeInfoList is repr('CStruct') does GLib::Roles::Pointers is export {
   has GFileAttributeInfo $.infos;
   has gint               $.n_infos;
 }
@@ -1471,7 +1471,7 @@ class GFileAttributeInfoList is repr('CStruct') does GTK::Roles::Pointers is exp
 sub sprintf-a(Blob, Str, & (GSimpleAction, GVariant, gpointer) --> int64)
     is native is symbol('sprintf') {}
 
-class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
+class GActionEntry is repr('CStruct') does GLib::Roles::Pointers is export {
   has Str     $!name;
   has Pointer $!activate;
   has Str     $!parameter_type;
@@ -1546,7 +1546,7 @@ class GActionEntry is repr('CStruct') does GTK::Roles::Pointers is export {
 
 }
 
-class GParameter           is repr('CStruct') does GTK::Roles::Pointers is export {
+class GParameter           is repr('CStruct') does GLib::Roles::Pointers is export {
   has Str    $!name;
   has GValue $!value;
 
@@ -1565,18 +1565,18 @@ class GParameter           is repr('CStruct') does GTK::Roles::Pointers is expor
   }
 }
 
-class GOnce                is repr('CStruct') does GTK::Roles::Pointers is export {
+class GOnce                is repr('CStruct') does GLib::Roles::Pointers is export {
   has guint    $.status;    # GOnceStatus
   has gpointer $.retval;
 };
 
-class GRecMutex            is repr('CStruct') does GTK::Roles::Pointers is export {
+class GRecMutex            is repr('CStruct') does GLib::Roles::Pointers is export {
   # Private
   has gpointer $!p;
   has uint64   $!i    # guint i[2];
 }
 
-class GCond                is repr('CStruct') does GTK::Roles::Pointers is export {
+class GCond                is repr('CStruct') does GLib::Roles::Pointers is export {
   # Private
   has gpointer $!p;
   has uint64   $!i    # guint i[2];
@@ -1591,7 +1591,7 @@ sub sprintf-b(
 ) --> int64)
     is native is symbol('sprintf') {}
 
-class GSourceCallbackFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
+class GSourceCallbackFuncs is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer $!ref,   # (gpointer     cb_data);
   has Pointer $!unref, # (gpointer     cb_data);
   has Pointer $!get,   # (gpointer     cb_data,
@@ -1658,7 +1658,7 @@ sub sprintf-d (
 )
     is native is symbol('sprintf') { * }
 
-class GSourceFuncs is repr('CStruct') does GTK::Roles::Pointers is export {
+class GSourceFuncs is repr('CStruct') does GLib::Roles::Pointers is export {
   has Pointer $!prepare;     # (GSource    *source,
                              #  gint       *timeout);
   has Pointer $!check;       # (GSource    *source);
@@ -1758,7 +1758,7 @@ sub sprintf-PsVV-i (
 )
     is native is symbol('sprintf') { * }
 
-class GParamSpecTypeInfo is repr('CStruct') does GTK::Roles::Pointers is export {
+class GParamSpecTypeInfo is repr('CStruct') does GLib::Roles::Pointers is export {
   # type system portion
   has guint16       $.n_preallocs   is rw;                            # optional
   has guint16       $.instance_size is rw;                            # obligatory
@@ -1819,30 +1819,30 @@ class GParamSpecTypeInfo is repr('CStruct') does GTK::Roles::Pointers is export 
 
 
 # --- GDK TYPES ---
-class GdkAppLaunchContext    is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkAtom                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkCursor              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDevice              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDeviceManager       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDeviceTool          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDisplay             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDisplayManager      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDragContext         is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkDrawingContext      is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkEventSequence       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkFrameClock          is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkFrameTimings        is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkGLContext           is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkKeymap              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkMonitor             is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkPixbuf              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkPixbufAnimation     is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkPixbufAnimationIter is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkScreen              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkSeat                is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkStyleProvider       is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkVisual              is repr('CPointer') is export does GTK::Roles::Pointers { }
-class GdkWindow              is repr('CPointer') is export does GTK::Roles::Pointers { }
+class GdkAppLaunchContext    is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkAtom                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkCursor              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkDevice              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkDeviceManager       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkDeviceTool          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkDisplay             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkDisplayManager      is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkDragContext         is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkDrawingContext      is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkEventSequence       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkFrameClock          is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkFrameTimings        is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkGLContext           is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkKeymap              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkMonitor             is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkPixbuf              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkPixbufAnimation     is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkPixbufAnimationIter is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkScreen              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkSeat                is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkStyleProvider       is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkVisual              is repr('CPointer') is export does GLib::Roles::Pointers { }
+class GdkWindow              is repr('CPointer') is export does GLib::Roles::Pointers { }
 
 sub gdk_atom_name(GdkAtom)
   returns Str
@@ -1850,14 +1850,14 @@ sub gdk_atom_name(GdkAtom)
   is export
   { * }
 
-class GdkColor is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkColor is repr('CStruct') does GLib::Roles::Pointers is export {
   has guint   $.pixel;
   has guint16 $.red;
   has guint16 $.green;
   has guint16 $.blue;
 }
 
-class GdkEventAny is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkEventAny is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32       $.type;              # GdkEventType
   has GdkWindow    $.window;
   has int8         $.send_event;
@@ -1865,7 +1865,7 @@ class GdkEventAny is repr('CStruct') does GTK::Roles::Pointers is export {
 
 constant GdkEvent is export := GdkEventAny;
 
-class GdkGeometry is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkGeometry is repr('CStruct') does GLib::Roles::Pointers is export {
   has gint       $.min_width;
   has gint       $.min_height;
   has gint       $.max_width;
@@ -1879,20 +1879,20 @@ class GdkGeometry is repr('CStruct') does GTK::Roles::Pointers is export {
   has guint      $.win_gravity;         # GdkGravity
 }
 
-class GdkRectangle is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkRectangle is repr('CStruct') does GLib::Roles::Pointers is export {
   has gint $.x is rw;
   has gint $.y is rw;
   has gint $.width is rw;
   has gint $.height is rw;
 }
 
-class GdkPixbufModulePattern is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkPixbufModulePattern is repr('CStruct') does GLib::Roles::Pointers is export {
 	has Str $.prefix;
 	has Str $.mask;
 	has int $.relevance;
 }
 
-class GdkPixbufFormat is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkPixbufFormat is repr('CStruct') does GLib::Roles::Pointers is export {
   has Str                     $.name;
   has GdkPixbufModulePattern  $.signature;
   has Str                     $.domain;
@@ -1904,12 +1904,12 @@ class GdkPixbufFormat is repr('CStruct') does GTK::Roles::Pointers is export {
   has Str                     $.license;
 }
 
-class GdkPoint is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkPoint is repr('CStruct') does GLib::Roles::Pointers is export {
   has gint $.x is rw;
   has gint $.y is rw;
 }
 
-class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkEventKey is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32       $.type;              # GdkEventType
   has GdkWindow    $.window;
   has int8         $.send_event;
@@ -1923,7 +1923,7 @@ class GdkEventKey is repr('CStruct') does GTK::Roles::Pointers is export {
   has uint32       $.is_modifier;
 }
 
-class GdkEventButton is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkEventButton is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32         $.type;            # GdkEventType
   has GdkWindow      $.window;
   has int8           $.send_event;
@@ -1938,7 +1938,7 @@ class GdkEventButton is repr('CStruct') does GTK::Roles::Pointers is export {
   has gdouble        $.y_root;
 }
 
-class GdkEventExpose is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkEventExpose is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32         $.type;            # GdkEventType
   has GdkWindow      $.window;
   has int8           $.send_event;
@@ -1948,7 +1948,7 @@ class GdkEventExpose is repr('CStruct') does GTK::Roles::Pointers is export {
 }
 
 class GdkEventCrossing is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -1966,7 +1966,7 @@ class GdkEventCrossing is repr('CStruct')
   has guint          $.state;
 }
 
-class GdkEventFocus is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkEventFocus is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32         $.type;            # GdkEventType
   has GdkWindow      $.window;
   has int8           $.send_event;
@@ -1974,7 +1974,7 @@ class GdkEventFocus is repr('CStruct') does GTK::Roles::Pointers is export {
 }
 
 class GdkEventConfigure is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -1987,7 +1987,7 @@ class GdkEventConfigure is repr('CStruct')
 }
 
 class GdkEventProperty is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -1999,7 +1999,7 @@ class GdkEventProperty is repr('CStruct')
 }
 
 class GdkEventSelection is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2013,7 +2013,7 @@ class GdkEventSelection is repr('CStruct')
 }
 
 class GdkEventDnD is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2026,7 +2026,7 @@ class GdkEventDnD is repr('CStruct')
 }
 
 class GdkEventProximity is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2037,7 +2037,7 @@ class GdkEventProximity is repr('CStruct')
 }
 
 class GdkEventWindowState is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2048,7 +2048,7 @@ class GdkEventWindowState is repr('CStruct')
 }
 
 class GdkEventSetting is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2059,7 +2059,7 @@ class GdkEventSetting is repr('CStruct')
 }
 
 class GdkEventOwnerChange is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2073,7 +2073,7 @@ class GdkEventOwnerChange is repr('CStruct')
 }
 
 class GdkEventMotion is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2091,7 +2091,7 @@ class GdkEventMotion is repr('CStruct')
 }
 
 class GdkEventGrabBroken is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has uint32         $.type;            # GdkEventType
@@ -2117,7 +2117,7 @@ our subset GdkEvents is export where
   GdkEventKey;
 
 class GdkWindowAttr is repr('CStruct')
-  does GTK::Roles::Pointers
+  does GLib::Roles::Pointers
   is export
 {
   has Str       $.title             is rw;
@@ -2189,17 +2189,17 @@ class GdkWindowAttr is repr('CStruct')
 
 }
 
-class GArray is repr('CStruct') does GTK::Roles::Pointers is export {
+class GArray is repr('CStruct') does GLib::Roles::Pointers is export {
   has Str    $.data;
   has uint32 $.len;
 }
 
-class GdkTimeCoord is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkTimeCoord is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32        $.time;
   has CArray[num64] $.axes;
 }
 
-class GdkKeymapKey is repr('CStruct') does GTK::Roles::Pointers is export {
+class GdkKeymapKey is repr('CStruct') does GLib::Roles::Pointers is export {
   has guint $.keycode;
   has gint  $.group;
   has gint  $.level;

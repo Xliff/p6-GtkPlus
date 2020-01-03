@@ -205,7 +205,7 @@ role Annotations {
   }
 }
 
-class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusAnnotationInfo is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint     $!ref_count;
   has Str      $!key;
   has Str      $!value;
@@ -262,7 +262,7 @@ class GDBusAnnotationInfo is export is repr<CStruct> does GTK::Roles::Pointers d
   }
 }
 
-class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusArgInfo is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint                                  $!ref_count;
   has Str                                   $!name;
   has Str                                   $!signature;
@@ -317,7 +317,7 @@ class GDBusArgInfo is export is repr<CStruct> does GTK::Roles::Pointers does Ann
   }
 }
 
-class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusErrorEntry is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint $!error-code;
   has Str  $!dbus-error-name;
 
@@ -345,7 +345,7 @@ class GDBusErrorEntry is export is repr<CStruct> does GTK::Roles::Pointers does 
   }
 }
 
-class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusMethodInfo is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint                                  $!ref_count;
   has Str                                   $!name;
   has CArray[Pointer[GDBusArgInfo]]         $!in_args;
@@ -412,7 +412,7 @@ class GDBusMethodInfo is export is repr<CStruct> does GTK::Roles::Pointers does 
   }
 }
 
-class GDBusPropertyInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusPropertyInfo is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint                                 $!ref_count;
   has Str                                  $!name;
   has Str                                  $!signature;
@@ -476,7 +476,7 @@ class GDBusPropertyInfo is export is repr<CStruct> does GTK::Roles::Pointers doe
   }
 }
 
-class GDBusSignalInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusSignalInfo is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint                                 $!ref_count;
   has Str                                  $!name;
   has CArray[Pointer[GDBusArgInfo]]        $!args;
@@ -533,7 +533,7 @@ class GDBusSignalInfo is export is repr<CStruct> does GTK::Roles::Pointers does 
   }
 }
 
-class GDBusInterfaceInfo is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusInterfaceInfo is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint                                 $!ref_count;
   has Str                                  $!name;
   has CArray[Pointer[GDBusMethodInfo]]     $!methods;
@@ -636,7 +636,7 @@ class GDBusInterfaceInfo is export is repr<CStruct> does GTK::Roles::Pointers do
   }
 }
 
-class GDBusNodeInfo  is export is repr<CStruct> does GTK::Roles::Pointers does Annotations {
+class GDBusNodeInfo  is export is repr<CStruct> does GLib::Roles::Pointers does Annotations {
   has gint                                 $!ref_count;
   has Str                                  $!path;
   has CArray[Pointer[GDBusInterfaceInfo]]  $!interfaces;
@@ -715,13 +715,13 @@ class GDBusNodeInfo  is export is repr<CStruct> does GTK::Roles::Pointers does A
   }
 }
 
-class GDBusInterfaceVTable is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusInterfaceVTable is export is repr<CStruct> does GLib::Roles::Pointers {
   has Pointer $.method_call;  # GDBusInterfaceMethodCallFunc
   has Pointer $.get_property; # GDBusInterfaceGetPropertyFunc
   has Pointer $.set_property; # GDBusInterfaceSetPropertyFunc
 }
 
-class GDBusSubtreeVTable is export is repr<CStruct> does GTK::Roles::Pointers {
+class GDBusSubtreeVTable is export is repr<CStruct> does GLib::Roles::Pointers {
   has Pointer $.enumerate;
   has Pointer $.introspect;
   has Pointer $.dispatch;
