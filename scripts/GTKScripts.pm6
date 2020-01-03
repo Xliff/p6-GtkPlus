@@ -20,7 +20,13 @@ sub parse-file ($filename) is export {
   %config;
 }
 
-sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
+sub find-files(
+  $dir,
+  :$pattern is copy,
+  :$extension,
+  :$exclude,
+  :$depth
+) is export {
   my @pattern-arg;
 
   if $pattern {
@@ -28,6 +34,7 @@ sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
     @pattern-arg.push( rx/     <{ $pattern   }>   / );
   }
   @pattern-arg.push( rx/ '.' <{ $extension }> $ / ) if $extension;
+
 
   my @targets = dir($dir);
   gather while @targets {
@@ -50,7 +57,13 @@ sub find-files($dir, :$pattern is copy, :$extension, :$exclude) is export {
         next;
       }
     }
-    @targets.append: $elem.dir if $elem.d;
+
+    if $elem.d {
+      if $depth {
+        next unless $*SPEC.splitdir($elem).grep( * ).elems < max($depth - 1, 0)
+      }
+      @targets.append: $elem.dir;
+    }
   }
 }
 
