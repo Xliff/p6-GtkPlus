@@ -9,7 +9,13 @@
 √ Consider refactoring scripts/build-mro.pl6 to generate both widget and non-widget MRO lists.
 √ Move GTK::Window title and size initialization to BUILD                   (implemented, but not tested)
 √ A mechanism for emitting ALL defined handlers (methods in GTL::Roles::Signals::* )
+√ COMPLETE a working GSList implementation
 Ω Implementing GIOModule and its prereqs is currently OUT-OF-SCOPE!
+Ω Determine if GTK::Roles::Pointers.p can return a generic Pointer[T] where
+  T is the type of the original object:
+    NOTE: This invocation WILL work:
+      nativecast( Pointer.^parameterize(self.WHAT), self );
+    NO LONGER RELEVANT -- This would only be useful for CStructs.
 + Find work-around for GObject's type checking system
 + Since build.sh is now running scripts/dependencies.pl6 find a way to make it do the full run only if necessary
 + Mechanism for providing PROPER event handlers for all events (in progress...)
@@ -27,61 +33,72 @@
   a consumer to pass NATIVE parameters. This will ALMOST CERTAINLY entail an engineered solution (ie a script).
   Said script needs include a mechanism that will extract the unit prefix from its contents.
   -- hMethodMaker should be adjusted to emit such code so that new projects will not have this discrepancy.
-- Consider: Any UINT parameter should have a "where * > 0" placed on it. LARGE initiative. Subject to review.
-- For refactoring: the code in the "attributes" (not "properties") routines should have the getter and setter routines
-  broken out into their own methods. The existing "attribute" methods should then call the corresponding method. This will
-  allow for better compatibility with all GLib based code.
-- Determine if GTK::Roles::Pointers.p can return a generic Pointer[T] where T is the type of the original object:
-  NOTE: This invocation WILL work:
-    nativecast( Pointer.^parameterize(self.WHAT), self );
-  However there are wide-reaching consequenses of its use that need to be tackled. For one: This should only be
-  necessary for CStructs, but there are places in the code that use it for CStructs AND CPointers. If this
-  change is made, then there are places in the code that will need to be refactored, since a Pointer should take
-  a CPointer without modification.
+- Consider: Any UINT parameter should have a "where * > 0" placed on it.
+  LARGE initiative. Subject to review.
+- For refactoring: the code in the "attributes" (not "properties") routines
+  should have the getter and setter routines broken out into their own methods.
+  The existing "attribute" methods should then call the corresponding methods.
+  This will allow for better compatibility with all GLib based code.
+  However, there are wide-reaching consequenses of its use that need to be
+  tackled. For one: This should only be necessary for CStructs, but there are
+  places in the code that use it for CStructs AND CPointers. If this change
+  is made, then there are places in the code that will need to be refactored,
+  since a Pointer should take a CPointer without modification.
 - Write wrappers for the eventual GLib::Object object that will wrap the
   "GObject-invocant" methods from GTK::Compat::Signal
 - Figure out the best way to place this:
     multi method Numeric { $!o.p }
   So that we can change the entire object chain in the most efficient way.
 - Insure all method-level gchar paramters are converted to Str()
-- COMPLETE a working GSList implementation
 - GDK
   - Refinements to all GTK::Compat::Objects
 	- Finish refinements on GTK::Compat::Window
   - Rename all GDK objects from GTK::Compat::
-- Separate all GTK::Compat::Pixbuf files into it's own project, that will become a dependency. GDK::Pixbuf is available.
+- Separate all GTK::Compat::Pixbuf files into it's own project, that will
+  become a dependency. GDK::Pixbuf is available.
 - Move signals to %Object.signal<name> to fix issue with method name conflicts
-- Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher or GtkStackSidebar
-- Add overflow warnings to appropriate RESOLVE routines in GTK::Roles::Types. Said warnings are NOT under $DEBUG check.
+- Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher
+  or GtkStackSidebar
 - Inhibit pass-through to Mu constructor in all widget-based objects!
 - Add this to the top of all activate blocks in t/
     CATCH { default { .message.say; $app.exit } }
 - Rewrite this document in Markdown format.
-- Improve GTK::Widget.CreateObject to take best guess at pointer name for widget type, if it exists.
+- Improve GTK::Widget.CreateObject to take best guess at pointer name for
+  widget type, if it exists.
 - GTK::Grid to provide sanitized version of it's tracking structure to user-code
 - Properly rename GtkCssSection to GtkCSSSection
 - Refine GTK::Compat::Window
-- GTK::Roles::Data should be deprecated in favor of GTK::Roles::Properties
-- Is there any further need for GTK::Roles::Types.RESOLVE-* now that those routines have been moved to GTK::Raw::Utils.
-  If the answer is NO, then it is an EXTREMELY LOW PRIORITY refactor. Don't rock the boat unless it's leaking.
-- Consider abstracting GTK::Roles::Protection into it's own project. Method::Protect, maybe?
+- Is there any further need for GTK::Roles::Types.RESOLVE-* now that those
+  routines have been moved to GTK::Raw::Utils. If the answer is NO, then it
+  is an EXTREMELY LOW PRIORITY refactor. Don't rock the boat unless it's
+  leaking.
+- Consider abstracting GTK::Roles::Protection into it's own project.
+  Method::Protect, maybe?
 - Properly rework GTK::Utils::MenuBuilder. It is faulty
   + Test case for all features of GTK::Utils::MenuBuilder
-- For ALL type coercer methods, insure they are aliased to a proper object-specific nickname
+- For ALL type coercer methods, insure they are aliased to a proper
+  object-specific nickname
 - Add an implementation for GTK::Compat::Closure (GClosure)
-- Roll GTK::Roles::References into GTK::Roles::Object
-- Consider having GTK::Roles::Properties do GTK::Roles::Object (could rolling properties into objects be a thing?)
+- GTK::Roles::Data should be deprecated in favor of GTK::Roles::Properties,
+  but...
+- Roll GTK::Roles::Properties into GLib::Roles::Object
+- Roll GTK::Roles::References into GLib::Roles::Object
 - For all widgets: Replace all static strings in self.setType() with self.^name.
-- Investigate all async *_finish routines to see if a multi with a simpler interface is possible.
-- Add registration system to GTK::Builder, since type names will mostly start with Gtk..., must have a way to convert those
-  names to the proper object name. Propose <Project>::Builder::Registry, with static .register method that provides
-  pair mapping detected_name => proper_name.
-- Complete implementation of GTK::Compat::Roles::GFile
+- Investigate all async *_finish routines to see if a multi with a simpler
+  interface is possible.
++ Add registration system to GTK::Builder, since type names will mostly start with
+  Gtk..., must have a way to convert those names to the proper object name.
+  Propose <Project>::Builder::Registry, with static .register method that
+  provides pair mapping detected_name => proper_name.
++ Complete implementation of GTK::Compat::Roles::GFile (now GIO::Roles::GFile!)
    - (Wrapper class is unnecessary as long as a method new is provided)
-   - Role can have submethod BUILD, but will be overrided by any implementing class
-   - Initialization should be done in private method that is called by BUILD and all implementing classes
+   - Role can have submethod BUILD, but will be overrided by any implementing
+     class
+   - Initialization should be done in private method that is called by BUILD and
+     all implementing classes
    - Insure all implementing classes override for safety reasons.
-* Finish GTK::Utils::LockedHash -- Now no longer necessary with v6.e and the introduction of Dict.
+* Finish GTK::Utils::LockedHash -- Now no longer necessary with v6.e and the
+  introduction of Dict.
 √ Implement GTK::Compat::ActionEntry (done as CStruct)
 √ Implement GTK::ApplicationWindow
 √ Implement
@@ -89,31 +106,51 @@
       √ GTK::RecentChooserMenu,
       √ GTK::Dialog::RecentChooser,
       √ GTK::RecentChooserWidget!
+√ Consider altering scripts/dependencies.pl6 to exit if a module name is listed
+  as a dependency but has no node. If this does occur, report discrepancy
+  and the module(s) where it appeared.
 - Consider separating enums from GTK::Raw::Types into GTK::Raw::Enums
   - If that goes well, then do the same for GTK::Compat::Raw::Types
-- Consider altering scripts/dirty_typing.pl6 to only go through files later the latest date amongst the stubs in in .dirty_typing
-- Consider altering scripts/dependencies.pl6 to exit if a module name is listed as a dependency but has no node. If this does occur, report discrepancy and the module(s) where it appeared.
+- Consider altering scripts/dirty_typing.pl6 to only go through files later the
+  latest date amongst the stubs in in .dirty_typing
 - Roles can now compose submethod DESTROY. So now pointer-level GC is possible, see:
-  * perl6 -e 'use NativeCall; role B { submethod DESTROY { say "BOO!" } }; class A is repr<CPointer> { also does B; }; my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }
+  * perl6 -e '
+    use NativeCall; \
+    role B { submethod DESTROY { say "BOO!" } }; \
+    class A is repr<CPointer> { also does B; }; \
+    my $a = A.new; $a = 1; for ^10 { my @a = rand xx 100000; say +@a }'
 
-- NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow list of CPointer objects to be returned.
-- Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed to self.^name
-- Reminder for when GHashTable is implemented: Write subclasses that properly use the right hash functions. Or maybe parameterized roles?
-- FOR CONSIDERATION: Add a closed sub called "event-return" to abstract out the whole @a[* - 1].r thing.
-- For all signals that use a 'detail', those handlers must be changed to add that to the signal name. This will prevent the need for specific handling through GTK::Compat::Signals. This particularly applies to 'notify'. This is another initiative.
-- Move relevant methods from GTK::Roles::Data to GTK::Compat::Roles::Data. The only GTK-Specific methods in that compunit are getType and setType and there's even argument that those aren't either.
++ NEW INITIATIVE: Where returning a GList or GSList, offer a :$raw option to allow
+  list of CPointer objects to be returned.
+- Consider...CLEANUP Init: Insure all custom bless methods use $o.^name as opposed
+  to self.^name
+- Reminder for when GHashTable is implemented: Write subclasses that properly
+  use the right hash functions. Or maybe parameterized roles?
+- FOR CONSIDERATION: Add a closed sub called "event-return" to abstract out the
+  whole @a[* - 1].r thing.
+- For all signals that use a 'detail', those handlers must be changed to add
+  that to the signal name. This will prevent the need for specific handling through
+  GTK::Compat::Signals. This particularly applies to 'notify'. This is another
+  initiative.
+- Move relevant methods from GTK::Roles::Data to GTK::Compat::Roles::Data.
+  The only GTK-Specific methods in that compunit are getType and setType and
+  there's even argument that those aren't needed, either.
 - WINDOWS SUPPORT!
-- Check to see if GTK::Builder loading issue is related to the lexical nature of `require`.
-- Add the ability for relevant GTK Objects to .ACCEPT a GObject. This will mean that Ancestries will be used.
-  All .ACCEPT methods will use these hierarchies. This can EASILY just be done for GTK::Widget.
+- Check to see if GTK::Builder loading issue is related to the lexical nature of
+  `require`.
+- Add the ability for relevant GTK Objects to .ACCEPT a GObject. This will mean
+  that Ancestries will be used. All .ACCEPT methods will use these hierarchies.
+  This can EASILY just be done for GTK::Widget.
   - Use .wrap or too expensive?
   - Cost of just overloading.
   Other base objects across all GTK project will need to be evaluated.
 - Should GTK::Widget.CreateObject accept an override type as an optional parameter?
-- All objects should have a proper gist method. Using DDT is a work-around, but not a proper implementation.
-  This is a LARGE body of work, so probably done under many commits. LOW-PRIORITY INITIATIVE!
-- GTK::Compat::Value needs to make values a proper read/write container. For that to occur, we need a mechanism
-  to extract submitted type values and use the correct method to use to place that value in the ::Value.
+- All objects should have a proper gist method. Using DDT is a work-around, but
+  not a proper implementation. This is a LARGE body of work, so probably done
+  under many commits. LOW-PRIORITY INITIATIVE!
+- GTK::Compat::Value needs to make values a proper read/write container. For that
+  to occur, we need a mechanism to extract submitted type values and use the
+  correct method to use to place that value in the ::Value.
   - This item depends on the item above!
   - Int/Num/Str should be converted to:
     - if Str then Str
@@ -127,32 +164,44 @@
   get method may not be so easy to simplify.
   + Could this be the issue with vexpand, hexpand and its ilk? I'm using the
     wrong routine to set those properties??
-- Remove type coercion from "is rw" parameters. It is better to handle them in-method. This is an initiative that
-  goes across ALL Gtk-based projects. New code is being written (starting with p6-GStreamer) that uses a better way
-  of "is rw" prep and handling. Most notably, these will almost ALWAYS involve having a multi with the "is rw"
-  parameters removed from the signature.
-- Perform a review on GTK::Widget. Any method that is capable of returning an object, should have code giving the
-  user that option.
-- If GTK::Roles::Properties is still a separate entity, refactor it to use self.GObject for all calls and
-  eliminate the need for $!prop.
-- Adjust build.sh to set an environment variable, and creating items in .build, as scripts/test-new.pl6 does with
-  .touch. Should accept a --clean flag to force from scratch. If forced counts are not the same as last recorded,
-  then operation proceeds as if a --clean was issued.
++ Remove type coercion from "is rw" parameters. It is better to handle them
+  in-method. This is an initiative that goes across ALL Gtk-based projects. New
+  code is being written (starting with p6-GStreamer) that uses a better way of
+  "is rw" prep and handling. Most notably, these will almost ALWAYS involve
+  having a multi with the "is rw" parameters removed from the signature.
+- Perform a review on GTK::Widget. Any method that is capable of returning
+  an object, should have code giving the user that option.
+- If GTK::Roles::Properties is still a separate entity, refactor it to use
+  self.GObject for all calls and eliminate the need for $!prop.
+- Consider creating a run-script that uses the same logic as
+  scripts/dependency-build, and stores those build lists as
+  .dependency/<pathspec-of-script-from-tld>. If in a separate TLD from GtkPlus,
+  .dependency will be created in the current dir.
+- Adjust build.sh to set an environment variable, and creating items in .build,
+  as scripts/test-new.pl6 does with .touch. Should accept a --clean flag to
+  force from scratch. If forced counts are not the same as last recorded, then
+  operation proceeds as if a --clean was issued.
   -- Consider porting to a perl5 script.
-- Consideration for review: NativeCall subs that return a Pointer where a Buf or Blob would be more useful!
+- Consideration for review: NativeCall subs that return a Pointer where a Buf
+  or Blob would be more useful!
 - GClosure has yet to be implemented -- it now belongs in GLib::Object
 - Potential mechanism for initializing all composed roles:
-  - Firstly, should also provide a mechanism to disable, ala $!doRoleInit, which shall
-    have a default value of True. Objects that need special handling can set to False.
-  - Secondly, all GTK-based roles should implement a method "roleDefined-<name of role>" which returns if the
-    role variable has been initialized.
-  - Next, all roles should inheret from a parent role, ala GRole.
+  - Firstly, should also provide a mechanism to disable, ala $!doRoleInit,
+    which shall have a default value of True. Objects that need special
+    handling can set to False.
+  - Secondly, all GTK-based roles should implement a method
+    "roleDefined-<name of role>" which returns if the role variable has been
+    initialized.
+  - Find a way to mark all initiator-based roles. roles are NOT hierarchical, so
+    need to figure out the best way that is easily detectable via smartmatch
+    or MOP.
 
   - Finally, at a low-level (potentially GObject) we do the following:
     if $!doRoleInit {
       for self.^roles {
         when GRole {
-          self."roleInit-{ .^shortname }"() unless self."roleDefined-{ .^shortname }"()
+          self."roleInit-{ .^shortname }"()
+            unless self."roleDefined-{ .^shortname }"()
         }
       }
     }
@@ -175,12 +224,14 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
     * If the environment variable does not match any of the above situations,
       it would be the equivalent as if all <modules> have a <value> of 1.
 
-Include a coercion method for GVariantType.
-- Add a way to mark summary compile time results as inaccurate without having to remove them.
-- PULL GTK::Roles::Types in favor of GTK::Raw::Utils
-- Insure that all instances where we create an enum in an property, we are using
+- Include a coercion method for GVariantType.
+- Add a way to mark summary compile time results as inaccurate without having
+  to remove them.
+- PULL GTK::Roles::Types. Pull GTK::Raw::Utils, if only using resolve-* routines.
+- Insure that all instances where we create an enum in a property, we are using
   $gv.enum, as opposed to $gv.int or $gv.uint
-- Normal result graphing script is no longer working as of late April, 2019. It should be fixed.
+- Normal result graphing script is no longer working as of late April, 2019.
+  It should be fixed.
 - Add a script (or two) that:
   1) Prepares a legend file mapping perl version to LOCAL PROJECT commit date.
   2) Creates a horizontal graph of date (x) vs total compile time (y)
@@ -201,17 +252,24 @@ Include a coercion method for GVariantType.
 
 Applications
 ============
-√ A text editor in Perl6. Think about using it as a visual Regex tester (in progress, see p6-VisualGrammar.git)
-√ A Perl6 port of http://gtklipsum.sourceforge.net/ (a better version of t/41-textview-scrolling.t)
-+ Glade UI to p6-GtkPerl application (in progress see GTK::Builder:: objects and ui-to-code.pl6)
+√ A text editor in Perl6. Think about using it as a visual Regex tester
+  (in progress, see p6-VisualGrammar.git)
+√ A Perl6 port of http://gtklipsum.sourceforge.net/ (a better version of
+  t/41-textview-scrolling.t)
++ Glade UI to p6-GtkPerl application (in progress see GTK::Builder:: objects
+  and ui-to-code.pl6)
 + A Perl6 port of WNCK (https://developer.gnome.org/libwnck/)
 + A Perl6 port of Devil's Pie 2 (http://git.savannah.nongnu.org/cgit/devilspie2.git) that uses WNCK
 + A Perl6 port of Clutter (https://wiki.gnome.org/Projects/Clutter)
 + A Perl6 port of Slope (https://github.com/bytebrew/slope)
-+ Using Azawawi's libzip bindings, extract XLSX files to memory (grab only *.xml, for now), parse the
-  required files using XML::Actions, and then display resulting data in a GtkSheet.
++ Using Azawawi's libzip bindings, extract XLSX files to memory (grab only
+  *.xml, for now), parse the required files using XML::Actions, and then
+  display resulting data in a GtkSheet -- This is now in a Jupyter Notebook.
 + Perl6 GIMP Library bindings!
-- Port JSON-glib to Perl6 https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
-- DEFINITELY consider GEGL bindings. Use generated data structures for operations, since they have no .h files, however the good bits are easily parsable from .c
+- Port JSON-glib to Perl6
+  https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
+- DEFINITELY consider GEGL bindings. Use generated data structures for
+  operations, since they have no .h files, however the good bits are easily
+  parsable from .c
 - Consider BABL bindings
 - A Perl6 port for libsoup
