@@ -11,8 +11,6 @@ my @files = find-files(
   depth      => 1
 );
 
-@files.say;
-
 @files .= map({
   s/ '.' (\d+) $//;
   [ $_, ($/[0] // 0).Int ];
