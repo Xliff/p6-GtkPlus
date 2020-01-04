@@ -6,10 +6,10 @@ use NativeCall;
 use GDK::Raw::Types;
 use GDK::Raw::FrameClock;
 
-use GTK::Roles::Signals::Generic;
+use GLib::Roles::Signals::Generic;
 
 class GDK::FrameClock  {
-  also does GTK::Roles::Signals::Generic;
+  also does GLib::Roles::Signals::Generic;
 
   has GdkFrameClock $!fc is implementor;
 
@@ -26,7 +26,7 @@ class GDK::FrameClock  {
   }
 
   method new (GdkFrameClock $clock) {
-    self.bless(:$clock);
+    $clock ?? self.bless(:$clock) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -113,22 +113,25 @@ class GDK::FrameClock  {
   )
     is also<get-refresh-info>
   {
-    my @ul = ($base_time, $refresh_interval_return, $presentation_time_return);
-    my ($bt, $rir, $ptr) = self.RESOLVE-ULINT($@ul);
+    my ($bt, $rir, $ptr) =
+      ($base_time, $refresh_interval_return, $presentation_time_return);
+
     gdk_frame_clock_get_refresh_info($!fc, $bt, $rir, $ptr);
   }
 
   method get_timings (Num() $frame_counter) is also<get-timings> {
     my gdouble $fc = $frame_counter;
+
     gdk_frame_clock_get_timings($!fc, $frame_counter);
   }
 
   method get_type is also<get-type> {
-    gdk_frame_clock_get_type();
+    unstable_get_type( self.^name, &gdk_frame_clock_get_type, $n, $t );
   }
 
   method request_phase (Int() $phase) is also<request-phase> {
-    my guint $p = self.RESOLVE-UINT($phase);
+    my guint $p = $phase;
+
     gdk_frame_clock_request_phase($!fc, $p);
   }
 

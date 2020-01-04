@@ -5,14 +5,10 @@ use NativeCall;
 use GDK::Raw::Types;
 use GDK::Raw::Main;
 
+use GLib::Roles::StaticClass;
+
 class GDK::Main {
-
-  method new {
-    warn 'GDK::Main is a static class and does not need instantiation.'
-      if $DEBUG;
-
-    GDK::Main;
-  }
+  also does GLib::Roles::StaticClass;
 
   method add_option_entries_libgtk_only (GOptionGroup() $group) {
     gdk_add_option_entries_libgtk_only($group);

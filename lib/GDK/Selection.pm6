@@ -5,15 +5,10 @@ use NativeCall;
 use GDK::Raw::Types;
 use GDK::Raw::Selection;
 
-use GTK::Roles::Types;
+use GLib::Roles::StaticClass;
 
 class GDK::Selection  {
-  also does GTK::Roles::Types;
-
-  method new(|) {
-    warn 'GDK::Selection is not an instantiable class';
-    GDK::Selection;
-  }
+  also does GLib::Roles::StaticClass;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -31,18 +26,31 @@ class GDK::Selection  {
     GdkAtom $target,
     Int() $time
   ) {
-    my guint $t = self.RESOLVE-UINT($time);
+    my guint $t = $time;
+
     gdk_selection_convert($requestor, $selection, $target, $t);
   }
 
-  method owner_get (GdkAtom $selection){
-    GDK::Window.new( gdk_selection_owner_get($selection) );
+  method owner_get (GdkAtom $selection, :$raw = False){
+    my $w = gdk_selection_owner_get($selection);
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window.new($w) )
+      !!
+      Nil;
   }
 
-  method owner_get_for_display (GdkDisplay() $display, GdkAtom $selection) {
-    GDK::Window.new(
-      gdk_selection_owner_get_for_display($display, $selection)
-    );
+  method owner_get_for_display (
+    GdkDisplay() $display,
+    GdkAtom $selection,
+    :$raw = False
+  ) {
+    my $w = gdk_selection_owner_get_for_display($display, $selection)
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window.new($w) )
+      !!
+      Nil;
   }
 
   method owner_set (
@@ -51,7 +59,8 @@ class GDK::Selection  {
     Int() $time,
     Int() $send_event
   ) {
-    my guint ($t, $se) = self.RESOLVE-UINT($time, $send_event);
+    my guint ($t, $se) = ($time, $send_event);
+
     so gdk_selection_owner_set($owner, $selection, $t, $se);
   }
 
@@ -62,28 +71,31 @@ class GDK::Selection  {
     Int() $time,
     Int() $send_event
   ) {
-    my guint ($t, $se) = self.RESOLVE-UINT($time, $send_event);
+    my guint ($t, $se) = ($time, $send_event);
+
     so gdk_selection_owner_set_for_display(
       $display, $owner, $selection, $t, $se
     );
   }
 
-  multi method property_get (GdkWindow() $requestor, GdkAtom $prop_type) {
-    my $pt = 0;
-    my $d = '';
-    my $rc = samewith($requestor, $d, $prop_type, $pt);
-    ($rc, $d, $prop_type);
+  multi method property_get (GdkWindow() $requestor) {
+    samewith($requestor, $, $, $);
   }
   multi method property_get (
     GdkWindow() $requestor,
-    Str $data is rw,
-    GdkAtom $prop_type,
-    Int() $prop_format is rw
+    $data        is rw,
+    $prop_type   is rw,
+    $prop_format is rw
   ) {
-    my gint $p = 0;
-    my $rc = gdk_selection_property_get($requestor, $data, $prop_type, $p);
-    $prop_format = $p;
-    $rc;
+    my GdkAtom $pt = 0;
+    my gint $pf = 0;
+    my $da = CArray[Str].new;
+    $da[0] = Str;
+    my $rc = gdk_selection_property_get($requestor, $da, $pt, $pf);
+
+    ($data, $prop_type, $prop_format) =
+      ($da[0] ?? CStringArrayToArray($da[0], $pt, $pf);
+    ($rc, $data, $prop_type, $prop_format);
   }
 
   method send_notify (
@@ -93,7 +105,8 @@ class GDK::Selection  {
     GdkAtom $property,
     Int() $time
   ) {
-    my guint $t = self.RESOLVE-UINT($time);
+    my guint $t = $time;
+
     gdk_selection_send_notify($requestor, $selection, $target, $property, $t);
   }
 
@@ -105,7 +118,8 @@ class GDK::Selection  {
     GdkAtom $property,
     Int() $time
   ) {
-    my guint $t = self.RESOLVE-UINT($time);
+    my guint $t = $time;
+
     gdk_selection_send_notify_for_display(
       $display, $requestor, $selection, $target, $property, $t
     );

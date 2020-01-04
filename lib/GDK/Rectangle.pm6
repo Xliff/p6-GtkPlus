@@ -13,9 +13,12 @@ class GDK::Rectangle {
     $!r = $rectangle;
   }
 
-  method GDK::Raw::Types::GdkRectangle is also<rectangle> {
-    $!r;
-  }
+  method GDK::Raw::Types::GdkRectangle
+    is also<
+      rectangle
+      GdkRectangle
+    >
+  { $!r }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -37,7 +40,9 @@ class GDK::Rectangle {
   }
 
   method get_type {
-    gdk_rectangle_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gdk_rectangle_get_type, $n, $t );
   }
 
   method intersect (GdkRectangle() $src2, GdkRectangle() $dest) {

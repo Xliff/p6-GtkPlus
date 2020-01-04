@@ -6,6 +6,8 @@ use NativeCall;
 use GDK::Raw::Types;
 use GDK::Raw::Visual;
 
+use GDK::Screen;
+
 class GDK::Visual {
   has GdkVisual $!vis is implementor;
 
@@ -13,6 +15,10 @@ class GDK::Visual {
     $!vis = $visual;
   }
 
+  multi method new (GdkVisual $visual) {
+    $visual ?? self.bless(:$visual) !! Nil;
+  }
+  
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -23,28 +29,10 @@ class GDK::Visual {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method gdk_list_visuals
-    is DEPRECATED('GDK::Screen.get_default')
-    is also<gdk-list-visuals>
-  {
-    gdk_list_visuals();
-  }
+  method gdk_query_depths (Int() $count) is also<gdk-query-depths> {
+    my gint $c = $count;
 
-  method gdk_query_depths (gint $count) is also<gdk-query-depths> {
-    gdk_query_depths($!vis, $count);
-  }
-
-  method gdk_query_visual_types (gint $count)
-    is DEPRECATED(
-      'GDK::Screen.get_system_visuals and GDK::Screen.get_rgba_visible'
-    )
-    is also<gdk-query-visual-types>
-  {
-    gdk_query_visual_types($!vis, $count);
-  }
-
-  method get_best is also<get-best> {
-    gdk_visual_get_best();
+    gdk_query_depths($!vis, $c);
   }
 
   method get_best_depth is also<get-best-depth> {
@@ -55,32 +43,23 @@ class GDK::Visual {
     gdk_visual_get_best_type();
   }
 
-  method get_best_with_both (GdkVisualType $visual_type)
-    is also<get-best-with-both>
-  {
-    gdk_visual_get_best_with_both($!vis, $visual_type);
-  }
-
-  method get_best_with_depth is also<get-best-with-depth> {
-    gdk_visual_get_best_with_depth($!vis);
-  }
-
-  method get_best_with_type is also<get-best-with-type> {
-    gdk_visual_get_best_with_type($!vis);
-  }
-
-  method get_bits_per_rgb is DEPRECATED is also<get-bits-per-rgb> {
-    gdk_visual_get_bits_per_rgb($!vis);
-  }
-
-  method get_blue_pixel_details (
-    guint32 $mask,
-    gint $shift,
-    gint $precision
-  )
+  proto method get_blue_pixel_details (|)
     is also<get-blue-pixel-details>
-  {
-    gdk_visual_get_blue_pixel_details($!vis, $mask, $shift, $precision);
+  { * }
+
+  multi method get_blue_pixel_details {
+    samewith($, $, $);
+  }
+  method get_blue_pixel_details (
+    $mask      is rw,
+    $shift     is rw,
+    $precision is rw
+  ) {
+    my guint32 $m = 0;
+    my gint ($s, $p) = 0 xx 2;
+
+    gdk_visual_get_blue_pixel_details($!vis, $m, $s, $p);
+    ($mask, $shift, $precision) = ($m, $s, $p);
   }
 
   # method get_byte_order {
@@ -95,40 +74,63 @@ class GDK::Visual {
     gdk_visual_get_depth($!vis);
   }
 
-  method get_green_pixel_details (
-    guint32 $mask,
-    gint $shift,
-    gint $precision
-  )
+  proto method get_green_pixel_details (|)
     is also<get-green-pixel-details>
-  {
-    gdk_visual_get_green_pixel_details($!vis, $mask, $shift, $precision);
+  { * }
+
+  multi method get_green_pixel_details {
+    samewith($, $, $);
+  }
+  multi method get_green_pixel_details (
+    $mask      is rw,
+    $shift     is rw,
+    $precision is rw
+  ) {
+    my guint32 $m = 0;
+    my gint ($s, $p) = (0, 0);
+
+    gdk_visual_get_green_pixel_details($!vis, $m, $s, $p);
+    ($mask, $shift, $precision) = ($m, $s, $p);
   }
 
-  method get_red_pixel_details (
-    guint32 $mask,
-    gint $shift,
-    gint $precision
+  proto method get_red_pixel_details (|)
+    is also<get-red-pixel-details>
+  { * }
+
+  multi method get_red_pixel_details {
+    samewith($, $, $);
+  }
+  multi method get_red_pixel_details (
+    $mask      is rw,
+    $shift     is rw,
+    $precision is rw
   )
     is also<get-red-pixel-details>
   {
-    gdk_visual_get_red_pixel_details($!vis, $mask, $shift, $precision);
+    my guint32 $m = 0;
+    my gint ($s, $p) = (0, 0);
+
+    gdk_visual_get_red_pixel_details($!vis, $m, $s, $p);
+    ($mask, $shift, $precision) = ($m, $s, $p);
   }
 
-  method get_screen is also<get-screen> {
-    gdk_visual_get_screen($!vis);
-  }
+  method get_screen (:$raw = False) is also<get-screen> {
+    my $s = gdk_visual_get_screen($!vis);
 
-  method get_system is also<get-system> {
-    gdk_visual_get_system();
+    $s ??
+      ( $raw ?? $s !! GDK::Screen.new($s) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
-    gdk_visual_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gdk_visual_get_type, $n, $t );
   }
 
   method get_visual_type is also<get-visual-type> {
-    gdk_visual_get_visual_type($!vis);
+    GdkVisualTypeEnum( gdk_visual_get_visual_type($!vis) );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

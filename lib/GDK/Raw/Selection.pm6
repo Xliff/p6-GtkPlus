@@ -56,9 +56,9 @@ sub gdk_selection_owner_set_for_display (
 
 sub gdk_selection_property_get (
   GdkWindow $requestor,
-  Str $data is rw,
-  GdkAtom $prop_type,
-  gint $prop_format is rw
+  Str $data          is rw,
+  GdkAtom $prop_type is rw,
+  gint $prop_format  is rw
 )
   returns gint
   is native(gdk)

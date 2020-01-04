@@ -5,6 +5,7 @@ use NativeCall;
 
 use GDK::Raw::Types;
 use GDK::Raw::Pixbuf;
+
 use GDK::Pixbuf::Transforms;
 
 use GLib::GList;
@@ -820,7 +821,9 @@ class GDK::Pixbuf {
   method get_formats (
     GDK::Pixbuf:U:
     :gslist(:$glist) = False
-  ) is also<get-formats> {
+  )
+    is also<get-formats>
+  {
     my $f = gdk_pixbuf_get_formats();
 
     return Nil unless $f;

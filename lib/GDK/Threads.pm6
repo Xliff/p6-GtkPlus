@@ -6,13 +6,10 @@ use NativeCall;
 use GDK::Raw::Types;
 use GDK::Raw::Threads;
 
-use GTK::Raw::Utils;
+use GLib::Roles::StatiClass;
 
 class GDK::Threads {
-
-  method new(|) {
-    die 'GDK::Threads is not an instantiable object!'
-  }
+  also does GLib::Roles::StaticClass;
 
   method add_idle (
     &function,
@@ -31,7 +28,8 @@ class GDK::Threads {
   )
     is also<add-idle-full>
   {
-    my gint $p = resolve-int($priority);
+    my gint $p = $priority;
+
     gdk_threads_add_idle_full($p, &function, $data, $notify);
   }
 
@@ -42,7 +40,8 @@ class GDK::Threads {
   )
     is also<add-timeout>
   {
-    my guint $i = resolve-uint($interval);
+    my guint $i = $interval;
+
     gdk_threads_add_timeout($interval, &function, $data);
   }
 
@@ -54,8 +53,9 @@ class GDK::Threads {
   )
     is also<add-timeout-full>
   {
-    my gint $p = resolve-int($priority);
-    my guint $i = resolve-uint($interval);
+    my gint $p = $priority;
+    my guint $i = $interval;
+
     gdk_threads_add_timeout_full($p, $i, &function, $data, $notify);
   }
 
@@ -66,7 +66,8 @@ class GDK::Threads {
   )
     is also<add-timeout-seconds>
   {
-    my guint $i = resolve-uint($interval);
+    my guint $i = $interval;
+
     gdk_threads_add_timeout_seconds($i, &function, $data);
   }
 
@@ -79,8 +80,9 @@ class GDK::Threads {
   )
     is also<add-timeout-seconds-full>
   {
-    my gint $p = resolve-int($priority);
-    my guint $i = resolve-uint($interval);
+    my gint $p = $priority;
+    my guint $i = $interval;
+
     gdk_threads_add_timeout_seconds_full($p, $i, &function, $data, $notify);
   }
 

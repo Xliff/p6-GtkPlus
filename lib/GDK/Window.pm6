@@ -5,6 +5,8 @@ use NativeCall;
 
 use Cairo;
 
+use GLib::Raw::Subs;
+
 use GDK::Cursor;
 use GDK::Raw::Types;
 use GDK::RGBA;
@@ -12,13 +14,9 @@ use GDK::Raw::Window;
 use GDK::Raw::X11_Window;
 use GDK::X11_Types;
 
-use GTK::Raw::Subs;
-
-use GTK::Roles::Types;
 use GDK::Roles::Signals::Window;
 
 class GDK::Window {
-  also does GTK::Roles::Types;
   also does GDK::Roles::Signals::Window;
 
   has GdkWindow $!window is implementor;
@@ -27,22 +25,25 @@ class GDK::Window {
     $!window = $window;
   }
 
-  method GDK::Raw::Types::GdkWindow is also<gdkwindow> {
-    $!window;
-  }
+  method GDK::Raw::Definitions::GdkWindow
+    is also<
+      gdkwindow
+      GdkWindow
+    >
+  { $!window }
 
   multi method new (GdkWindow $window) {
-    self.bless(:$window);
+    $window ?? self.bless(:$window) !! Nil;
   }
   multi method new (
     GdkWindow() $parent,
     GdkWindowAttr $attributes,
     Int() $attributes_mask
   ) {
-    my gint $am = self.RESOLVE-INT($attributes_mask);
-    self.bless(
-      window => gdk_window_new($parent, $attributes, $am)
-    );
+    my gint $am = $attributes_mask;
+    my $window = gdk_window_new($parent, $attributes, $am);
+
+    $window ?? self.bless($window) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -86,7 +87,8 @@ class GDK::Window {
         so gdk_window_get_accept_focus($!window);
       },
       STORE => sub ($, Int() $accept_focus is copy) {
-        my gboolean $af = self.RESOLVE-BOOL($accept_focus);
+        my gboolean $af = $accept_focus.so.Int;
+
         gdk_window_set_accept_focus($!window, $af);
       }
     );
@@ -98,7 +100,7 @@ class GDK::Window {
     GDK::Window.get/set_background_pattern is no longer {
     } supported by GTK.
     D
-    
+
     # Proxy.new(
     #   FETCH => sub ($) {
     #     gdk_window_get_background_pattern($!window);
@@ -115,22 +117,31 @@ class GDK::Window {
         so gdk_window_get_composited($!window);
       },
       STORE => sub ($, Int() $composited is copy) {
-        my gboolean $c = self.RESOLVE-BOOL($composited);
+        my gboolean $c = $composited.so.Int;
+
         gdk_window_set_composited($!window, $c);
       }
     );
   }
 
-  method cursor is rw {
+  method cursor (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GDK::Cursor.new( gdk_window_get_cursor($!window) );
+        my $c = gdk_window_get_cursor($!window);
+
+        $c ??
+          ( $raw ?? $c !! GDK::Cursor.new($c) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkCursor() $cursor is copy) {
         my $c = gdk_window_get_cursor($!window);
-        g_object_unref($c.p) with $c;
+
+        # The unref/ref logic that used to be here makes no sense:
+        #
+        # g_object_unref($c.p) if $c
         gdk_window_set_cursor($!window, $cursor);
-        g_object_ref($cursor.p);
+        # g_object_ref($c.p);
       }
     );
   }
@@ -155,7 +166,8 @@ class GDK::Window {
         so gdk_window_get_event_compression($!window);
       },
       STORE => sub ($, Int() $event_compression is copy) {
-        my gboolean $ec = self.RESODLVE-BOOL($event_compression);
+        my gboolean $ec = $event_compression.so.Int;
+
         gdk_window_set_event_compression($!window, $ec);
       }
     );
@@ -167,7 +179,8 @@ class GDK::Window {
         gdk_window_get_events($!window);
       },
       STORE => sub ($, Int() $event_mask is copy) {
-        my guint $em = self.RESOLVE-UINT($event_mask);
+        my guint $em = $event_mask;
+
         gdk_window_set_events($!window, $event_mask);
       }
     );
@@ -179,7 +192,8 @@ class GDK::Window {
         so gdk_window_get_focus_on_map($!window);
       },
       STORE => sub ($, Int() $focus_on_map is copy) {
-        my gboolean $fom = self.RESOLVE-BOOL($focus_on_map);
+        my gboolean $fom = $focus_on_map.so.Int;
+
         gdk_window_set_focus_on_map($!window, $fom);
       }
     );
@@ -191,7 +205,8 @@ class GDK::Window {
         GdkFullscreenMode( gdk_window_get_fullscreen_mode($!window) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my guint $m = self.RESOLVE-UINT($mode);
+        my guint $m = $mode;
+
         gdk_window_set_fullscreen_mode($!window, $m);
       }
     );
@@ -214,7 +229,8 @@ class GDK::Window {
         so gdk_window_get_modal_hint($!window);
       },
       STORE => sub ($, Int() $modal is copy) {
-        my gboolean $m = self.RESOLVE-BOOL($modal);
+        my gboolean $m = $modal.so.Int;
+
         gdk_window_set_modal_hint($!window, $m);
       }
     );
@@ -226,7 +242,8 @@ class GDK::Window {
         so gdk_window_get_pass_through($!window);
       },
       STORE => sub ($, $pass_through is copy) {
-        my gboolean $pt = self.RESOLVE-BOOL($pass_through);
+        my gboolean $pt = $pass_through.so.Int;
+
         gdk_window_set_pass_through($!window, $pt);
       }
     );
@@ -238,7 +255,8 @@ class GDK::Window {
         so gdk_window_get_support_multidevice($!window);
       },
       STORE => sub ($, $support_multidevice is copy) {
-        my gboolean $sm = self.RESOLVE-BOOL($support_multidevice);
+        my gboolean $sm = $support_multidevice.so.Int;
+
         gdk_window_set_support_multidevice($!window, $sm);
       }
     );
@@ -247,10 +265,11 @@ class GDK::Window {
   method type_hint is rw is also<type-hint> {
     Proxy.new(
       FETCH => sub ($) {
-        GdkWindowTypeHint( gdk_window_get_type_hint($!window) );
+        GdkWindowTypeHintEnum( gdk_window_get_type_hint($!window) );
       },
       STORE => sub ($, Int() $hint is copy) {
-        my guint $h = self.RESOLVE-UINT($hint);
+        my guint $h = $hint;
+
         gdk_window_set_type_hint($!window, $h);
       }
     );
@@ -269,7 +288,8 @@ class GDK::Window {
   }
 
   method at_pointer (Int() $win_x, Int() $win_y) is also<at-pointer> {
-    my gint ($wx, $wy) = self.RESOLVE-INT($win_x, $win_y);
+    my gint ($wx, $wy) = ($win_x, $win_y);
+
     gdk_window_at_pointer($wx, $wy);
   }
 
@@ -289,8 +309,9 @@ class GDK::Window {
   )
     is also<begin-move-drag>
   {
-    my gint ($b, $rx, $ry) = self.RESOLVE-INT($button, $root_x, $root_y);
-    my guint $t = self.RESOLVE-UINT($timestamp);
+    my gint ($b, $rx, $ry) = ($button, $root_x, $root_y);
+    my guint $t = $timestamp;
+
     gdk_window_begin_move_drag($!window, $b, $rx, $ry, $t);
   }
 
@@ -303,14 +324,15 @@ class GDK::Window {
   )
     is also<begin-move-drag-for-device>
   {
-    my gint ($b, $rx, $ry) = self.RESOLVE-INT($button, $root_x, $root_y);
-    my guint $t = self.RESOLVE-UINT($timestamp);
+    my gint ($b, $rx, $ry) = ($button, $root_x, $root_y);
+    my guint $t = $timestamp;
+
     gdk_window_begin_move_drag_for_device(
       $!window, $device, $b, $rx, $ry, $t
     );
   }
 
-  method begin_paint_rect (GdkRectangle $rectangle)
+  method begin_paint_rect (GdkRectangle() $rectangle)
     is also<begin-paint-rect>
   {
     gdk_window_begin_paint_rect($!window, $rectangle);
@@ -331,26 +353,29 @@ class GDK::Window {
   )
     is also<begin-resize-drag>
   {
-    my gint ($b, $rx, $ry) = self.RESOLVE-INT($button, $root_x, $root_y);
-    my guint ($e, $t) = self.RESOLVE-UINT($edge, $timestamp);
+    my gint ($b, $rx, $ry) = ($button, $root_x, $root_y);
+    my guint ($e, $t) = $edge, $timestamp;
+
     gdk_window_begin_resize_drag($!window, $e, $b, $rx, $ry, $t);
   }
 
   method begin_resize_drag_for_device (
-    GdkWindowEdge $edge,
+    Int() $edge,
     GdkDevice() $device,
-    gint $button,
-    gint $root_x,
-    gint $root_y,
-    guint $timestamp
+    Int() $button,
+    Int() $root_x,
+    Int() $root_y,
+    Int() $timestamp
   )
     is also<begin-resize-drag-for-device>
   {
-    my gint ($b, $rx, $ry) = self.RESOLVE-INT($button, $root_x, $root_y);
-    my guint $t = self.RESODLVE-UINT($timestamp);
+    my GdkWindowEdge $e = $edge;
+    my gint ($b, $rx, $ry) = $button, $root_x, $root_y;
+    my guint $t = $timestamp;
+
     gdk_window_begin_resize_drag_for_device(
       $!window,
-      $edge,
+      $e,
       $device,
       $b,
       $rx,
@@ -363,57 +388,67 @@ class GDK::Window {
     gdk_window_configure_finished($!window);
   }
 
-  method constrain_size (
+  proto method constrain_size (|)
+    is also<constrain-size>
+  { * }
+
+  multi method constrain_size (
     GdkGeometry $geometry,
-    GdkWindowHints $flags,
+    Int() $flags,
     Int() $width,
     Int() $height,
-    Int() $new_width  is rw,
-    Int() $new_height is rw
-  )
-    is also<constrain-size>
-  {
-    my gint ($w, $h, $nw, $nh) = self.RESOLVE-INT(
-      $width, $height, $new_width, $new_height
-    );
-    my $rc = gdk_window_constrain_size(
-      $geometry,
-      $flags,
-      $w,
-      $h,
-      $nw,
-      $nh
-    );
+  ) {
+    samewith($geometry, $flags, $width, $height, $, $);
+  }
+  multi method constrain_size (
+    GdkGeometry $geometry,
+    Int() $flags,
+    Int() $width,
+    Int() $height,
+    $new_width  is rw,
+    $new_height is rw
+  ) {
+    my GdkWindowHints $f = $flags;
+    my gint ($w, $h, $nw, $nh) = ($width, $height, 0, 0);
+
+    my $rc = gdk_window_constrain_size($geometry, $f, $w, $h, $nw, $nh);
     ($width, $height) = ($nw, $nh);
-    $rc;
+    ($rc, $width, $height);
   }
 
+  proto method coords_from_parent (|)
+    is also<coords-from-parent>
+  { * }
+
+  multi method coords_from_parent (Num() $parent_x, Num() $parent_y) {
+    samewith($parent_x, $parent_y, $, $);
+  }
   method coords_from_parent (
     Num() $parent_x,
     Num() $parent_y,
-    Num() $x is rw,
-    Num() $y is rw
-  )
-    is also<coords-from-parent>
-  {
-    my gdouble ($px, $py, $xx, $yy) = ($parent_x, $parent_y, $x, $y);
+    $x is rw,
+    $y is rw
+  ) {
+    my gdouble ($px, $py, $xx, $yy) = ($parent_x, $parent_y, 0, 0);
     my $rc = gdk_window_coords_from_parent($!window, $px, $py, $xx, $yy);
-    ($x, $y) = ($xx, $yy);
-    $rc;
+
+    ($rc, $x = $xx, $y = $yy);
   }
+
+  proto method coords_to_parent (|)
+    is also<coords-to-parent>
+  { * }
 
   method coords_to_parent (
     Num() $x,
     Num() $y,
-    Num() $parent_x is rw,
-    Num() $parent_y is rw
-  )
-    is also<coords-to-parent>
-  {
-    my gdouble ($px, $py, $xx, $yy) = ($parent_x, $parent_y, $x, $y);
+    $parent_x is rw,
+    $parent_y is rw
+  ) {
+    my gdouble ($px, $py, $xx, $yy) = (0, 0, $x, $y);
     my $rc = gdk_window_coords_to_parent($!window, $xx, $yy, $px, $py);
-    ($parent_x, $parent_y) = ($px, $py);
-    $rc;
+
+    ($rc, $parent_x = $px, $parent_y = $py);
   }
 
   method create_gl_context (
@@ -421,7 +456,10 @@ class GDK::Window {
   )
     is also<create-gl-context>
   {
-    gdk_window_create_gl_context($!window, $error);
+    clear_error;
+    my $rv = gdk_window_create_gl_context($!window, $error);
+    set_error($error);
+    $rv;
   }
 
   method create_similar_image_surface (
@@ -432,8 +470,9 @@ class GDK::Window {
   )
     is also<create-similar-image-surface>
   {
-    my guint $f = self.RESOLVE-UINT($format); # cairo_format_t
-    my gint ($w, $h, $s) = self.RESOLVE-INT($width, $height, $scale);
+    my guint $f = $format; # cairo_format_t
+    my gint ($w, $h, $s) = ($width, $height, $scale);
+
     gdk_window_create_similar_image_surface($!window, $f, $w, $h, $s);
   }
 
@@ -444,8 +483,9 @@ class GDK::Window {
   )
     is also<create-similar-surface>
   {
-    my guint $c = self.RESOLVE-UINT($content);
-    my gint ($w, $h) = self.RESOLVE-INT($w, $h);
+    my guint $c = $content;
+    my gint ($w, $h) = ($w, $h);
+
     gdk_window_create_similar_surface($!window, $c, $w, $h);
   }
 
@@ -482,7 +522,8 @@ class GDK::Window {
   }
 
   method focus (Int() $timestamp) {
-    my guint $t = self.RESOLVE-UINT($timestamp);
+    my guint $t = $timestamp;
+
     gdk_window_focus($!window, $t);
   }
 
@@ -503,7 +544,8 @@ class GDK::Window {
   method fullscreen_on_monitor (Int() $monitor)
     is also<fullscreen-on-monitor>
   {
-    my gint $m = self.RESOLVE-INT($monitor);
+    my gint $m = $monitor;
+
     gdk_window_fullscreen_on_monitor($!window, $m);
   }
 
@@ -556,18 +598,16 @@ class GDK::Window {
     { * }
 
   multi method get_device_position($device) {
-    my ($x, $y, $m) = (0, 0, 0);
-    samewith($device, $x, $y, $m);
-    ($x, $y, $m);
+    samewith($device, $, $, $);
   }
   multi method get_device_position (
     GdkDevice() $device,
-    Int() $x is rw,
-    Int() $y is rw,
-    Int() $mask is rw             # GdkModifierType $mask
+    $x    is rw,
+    $y    is rw,
+    $mask is rw             # GdkModifierType $mask
   ) {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
-    my guint $m = self.RESOLVE-UINT($mask);
+    my gint ($xx, $yy) = 0 xx 2;
+    my guint $m = 0;
     gdk_window_get_device_position($!window, $device, $xx, $yy, $m);
     ($x, $y, $mask) = ($xx, $yy, $m);
   }
@@ -577,147 +617,216 @@ class GDK::Window {
     { * }
 
   multi method get_device_position_double (
-    GdkDevice() $device
+    GdkDevice() $device,
+    :$raw = False
   ) {
-    my ($x, $y, $m) = (0, 0, 0);
-    samewith($device, $x, $y, $m);
+    samewith($device, $, $, $, :$raw);
   }
-
   multi method get_device_position_double (
     GdkDevice() $device,
-    Num() $x is rw,
-    Num() $y is rw,
-    Int() $mask is rw             # GdkModifierType $mask
+    $x    is rw,
+    $y    is rw,
+    $mask is rw             # GdkModifierType $mask
+    :$raw = False
   ) {
-    my guint $m = self.RESOLVE-UINT($mask);
-    gdk_window_get_device_position_double($!window, $device, $x, $y, $m);
-    ($x, $y, $mask = $m);
+    my guint $m = 0;
+    my gdouble ($xx, $yy) = 0e0 xx 2
+    my $w = gdk_window_get_device_position_double(
+      $!window, $device, $xx, $yy, $m
+    );
+
+    $w = $raw ?? $w !! GDK::Window.new($w) if $w;
+    ($w, $x = $xx, $y = $yy, $mask = $m)
   }
 
-  method get_display is also<get-display> {
+  method get_display (:$raw = False) is also<get-display> {
+    my $d = gdk_window_get_display($!window);
+
     # Late binding to prevent circular reference.
-    ::('GDK::Display').new( gdk_window_get_display($!window) );
+    $d ??
+      ( $raw ?? $d !! ::('GDK::Display').new($d) )
+      !!
+      Nil;
   }
 
   method get_drag_protocol (GdkWindow() $target) is also<get-drag-protocol> {
-    GdkDragProtocol( gdk_window_get_drag_protocol($!window, $target) );
+    GdkDragProtocolEnum( gdk_window_get_drag_protocol($!window, $target) );
   }
 
-  method get_effective_parent is also<get-effective-parent> {
-    gdk_window_get_effective_parent($!window);
+  method get_effective_parent (:$raw = False) is also<get-effective-parent> {
+    my $w = gdk_window_get_effective_parent($!window);
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window.new($w) )
+      !!
+      Nil;
   }
 
   method get_effective_toplevel is also<get-effective-toplevel> {
-    gdk_window_get_effective_toplevel($!window);
+    my $w = gdk_window_get_effective_toplevel($!window);
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window.new($w) )
+      !!
+      Nil;
   }
 
   method get_frame_clock is also<get-frame-clock> {
     gdk_window_get_frame_clock($!window);
   }
 
-  method get_frame_extents (GdkRectangle $rect) is also<get-frame-extents> {
+  method get_frame_extents (GdkRectangle() $rect) is also<get-frame-extents> {
     gdk_window_get_frame_extents($!window, $rect);
   }
 
+  proto method get_geometry (|)
+    is also<
+      get-geometry
+      geometry
+    >
+  { * }
+
+  multi method get_geometry {
+    samewith($, $, $, $)
+  }
   method get_geometry (
-    Int() $x, 
-    Int() $y, 
-    Int() $width, 
-    Int() $height)
-    is also<get-geometry geometry>
-  {
-    my gint ($xx, $yy, $w, $h) = self.RESOLVE-INT($x, $y, $width, $height);
+    $x      is rw,
+    $y      is rw,
+    $width  is rw,
+    $height is rw
+  ) {
+    my gint ($xx, $yy, $w, $h) = 0 xx 4;
+
     gdk_window_get_geometry($!window, $xx, $yy, $w, $h);
+    ($x, $y, $width, $height) = ($xx, $yy, $w, $h);
   }
 
-  method get_height is also<get-height height> {
+  method get_height
+    is also<
+      get-height
+      height
+    >
+  {
     gdk_window_get_height($!window);
   }
 
   proto method get_origin (|)
-    is also<get-origin origin>
-    { * }
-    
+    is also<
+      get-origin
+      origin
+    >
+  { * }
+
   multi method get_origin {
     my ($x, $y) = (0, 0);
     samewith($x, $y);
-    ($x, $y);
   }
   multi method get_origin (Int() $x is rw, Int() $y is rw) {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
+    my gint ($xx, $yy) = $x, $y;
     my $rc = gdk_window_get_origin($!window, $xx, $yy);
-    ($x, $y) = ($xx, $yy);
-    $rc;
+
+    ($rc, $x = $xx, $y = $yy);
   }
 
-  method get_parent is also<get-parent parent> {
-    self.bless(window => gdk_window_get_parent($!window) );
-  }
-
-  method get_pointer (Int() $x is rw, Int() $y is rw, Int() $mask is rw)
-    is also<get-pointer>
-    is DEPRECATED<GDK::Window.get_device_position()>
+  method get_parent (:$raw = False)
+    is also<
+      get-parent
+      parent
+    >
   {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
-    my guint $m = self.RESOLVE-UINT($mask);
-    my $w = GDK::Window.new( 
-      gdk_window_get_pointer($!window, $xx, $yy, $m) 
-    );
-    ($x, $y, $mask) = ($xx, $yy, $m);
-    $w;
+    my $w = gdk_window_get_parent($!window);
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window.new($w) )
+      !!
+      Nil;
   }
 
-  method get_position (Int() $x is rw, Int() $y is rw) 
-    is also<get-position> 
-  {
-    my gint ($xx, $yy) = ($x, $y);
+  proto method get_position (|)
+    is also<get-position>
+  { * }
+
+  multi method get_position {
+    samewith($, $);
+  }
+  multi method get_position ($x is rw, $y is rw) {
+    my gint ($xx, $yy) = 0 xx 2;
     my $rc = gdk_window_get_position($!window, $xx, $yy);
-    ($x, $y) = ($xx, $yy);
-    $rc;
+
+    ($rc, $x = $xx, $y = $yy);
   }
 
-  method get_root_coords (gint $x, gint $y, gint $root_x, gint $root_y)
+  proto method get_root_coords (|)
     is also<get-root-coords>
-  {
-    my gint ($xx, $yy, $rx, $ry) = self.RESOLVE-INT($x, $y, $root_x, $root_y);
+  { * }
+
+  multi method get_root_coords (Int() $x, Int() $y) {
+    samewith($x, $y, $, $);
+  }
+  multi method get_root_coords (
+    Int() $x,
+    Int() $y,
+    $root_x is rw,
+    $root_y is rw
+  ) {
+    my gint ($xx, $yy, $rx, $ry) = ($x, $y, 0, 0);
     my $rc = gdk_window_get_root_coords($!window, $xx, $yy, $rx, $ry);
-    ($x, $y, $root_x, $root_y) = ($xx, $yy, $rx, $ry);
-    $rc;
+
+    ($rc, $root_x = $rx, $root_y = $ry)
   }
 
-  method get_root_origin (Int() $x is rw, Int() $y is rw) 
-    is also<get-root-origin> 
-  {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
-    my $rc = gdk_window_get_root_origin($!window, $x, $y);
-    ($x, $y) = ($xx, $yy);
-    $rc;
+  proto method get_root_origin (|)
+    is also<get-root-origin>
+  { * }
+
+  multi method get_root_origin {
+    samewith($, $);
+  }
+  multi method get_root_origin ($x is rw, $y is rw) {
+    my gint ($xx, $yy) = 0 xx 2;
+    my $rc = gdk_window_get_root_origin($!window, $xx, $yy);
+
+    ($rc, $x = $xx, $y = $yy);
   }
 
   method get_scale_factor is also<get-scale-factor> {
     gdk_window_get_scale_factor($!window);
   }
 
-  method get_screen is also<get-screen> {
-    GDK::Screen.new( gdk_window_get_screen($!window) );
+  method get_screen (:$raw = False) is also<get-screen> {
+    my $s = gdk_window_get_screen($!window);
+
+    $s ??
+      ( $raw ?? $s !! GDK::Screen.new($s) )
+      !!
+      Nil;
   }
 
-  method get_source_events (GdkInputSource $source)
+  method get_source_events (Int() $source)
     is also<get-source-events>
   {
-    gdk_window_get_source_events($!window, $source);
+    my GdkInputSource $s = $source;
+
+    GdkEventMaskEnum( gdk_window_get_source_events($!window, $s) );
   }
 
   method get_state is also<get-state> {
-    gdk_window_get_state($!window);
+    GdkWindowStateEnum( gdk_window_get_state($!window) );
   }
 
-  method get_toplevel is also<get-toplevel> {
-    gdk_window_get_toplevel($!window);
+  method get_toplevel (:$raw = False) is also<get-toplevel> {
+    my $w = gdk_window_get_toplevel($!window);
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window.new($w) )
+      !!
+      Nil
   }
 
   method get_type is also<get-type> {
-    gdk_window_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gdk_window_get_type, $n, $t );
   }
 
   method get_update_area is also<get-update-area> {
@@ -732,8 +841,13 @@ class GDK::Window {
     gdk_window_get_visible_region($!window);
   }
 
-  method get_visual is also<get-visual> {
-    gdk_window_get_visual($!window);
+  method get_visual (:$raw = False) is also<get-visual> {
+    my $v = gdk_window_get_visual($!window);
+
+    $v ??
+      ( $raw ?? $v !! GDK::Visual.new($v) )
+      !!
+      Nil;
   }
 
   method get_width is also<get-width width> {
@@ -741,11 +855,11 @@ class GDK::Window {
   }
 
   method get_window_type is also<get-window-type> {
-    gdk_window_get_window_type($!window);
+    GdkWindowTypeEnum( gdk_window_get_window_type($!window) );
   }
 
   method has_native is also<has-native> {
-    gdk_window_has_native($!window);
+    so gdk_window_has_native($!window);
   }
 
   method hide {
@@ -763,7 +877,8 @@ class GDK::Window {
   )
     is also<input-shape-combine-region>
   {
-    my gint ($ox, $oy) = self.RESOLVE-INT($offset_x, $offset_y);
+    my gint ($ox, $oy) = ($offset_x, $offset_y);
+
     gdk_window_input_shape_combine_region(
       $!window,
       $shape_region,
@@ -775,7 +890,7 @@ class GDK::Window {
   method invalidate_maybe_recurse (
     cairo_region_t $region,
     GdkWindowChildFunc $child_func,
-    gpointer $user_data
+    gpointer $user_data = gpointer
   )
     is also<invalidate-maybe-recurse>
   {
@@ -788,12 +903,14 @@ class GDK::Window {
   }
 
   method invalidate_rect (
-    GdkRectangle $rect,
-    gboolean $invalidate_children
+    GdkRectangle() $rect,
+    Int() $invalidate_children
   )
     is also<invalidate-rect>
   {
-    gdk_window_invalidate_rect($!window, $rect, $invalidate_children);
+    my gboolean $i = $invalidate_children.so.Int;
+
+    gdk_window_invalidate_rect($!window, $rect, $i);
   }
 
   method invalidate_region (
@@ -802,28 +919,29 @@ class GDK::Window {
   )
     is also<invalidate-region>
   {
-    my gboolean $ic = self.RESOLVE-BOOL($invalidate_children);
+    my gboolean $ic = $invalidate_children.so.Int;
+
     gdk_window_invalidate_region($!window, $region, $ic);
   }
 
   method is_destroyed is also<is-destroyed> {
-    gdk_window_is_destroyed($!window);
+    so gdk_window_is_destroyed($!window);
   }
 
   method is_input_only is also<is-input-only> {
-    gdk_window_is_input_only($!window);
+    so gdk_window_is_input_only($!window);
   }
 
   method is_shaped is also<is-shaped> {
-    gdk_window_is_shaped($!window);
+    so gdk_window_is_shaped($!window);
   }
 
   method is_viewable is also<is-viewable> {
-    gdk_window_is_viewable($!window);
+    so gdk_window_is_viewable($!window);
   }
 
   method is_visible is also<is-visible> {
-    gdk_window_is_visible($!window);
+    so gdk_window_is_visible($!window);
   }
 
   method lower {
@@ -847,31 +965,34 @@ class GDK::Window {
   }
 
   method move (Int() $x, Int() $y) {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
+    my gint ($xx, $yy) = ($x, $y);
+
     gdk_window_move($!window, $xx, $yy);
   }
 
-  method move_region (cairo_region_t $region, Int() $dx, Int() $dy)  
+  method move_region (cairo_region_t $region, Int() $dx, Int() $dy)
     is also<move-region>
   {
-    my gint ($dxx, $dyy) = self.RESOLVE-INT($dx, $dy);
+    my gint ($dxx, $dyy) = ($dx, $dy);
+
     gdk_window_move_region($!window, $region, $dxx, $dyy);
   }
 
   method move_resize (
-    Int() $x, 
-    Int() $y, 
-    Int() $width, 
+    Int() $x,
+    Int() $y,
+    Int() $width,
     Int() $height
   )
     is also<move-resize>
   {
-    my gint ($xx, $yy, $w, $h) = self.RESOLVE-INT($x, $y, $width, $height);
+    my gint ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     gdk_window_move_resize($!window, $xx, $yy, $w, $h);
   }
 
   method move_to_rect (
-    GdkRectangle $rect,
+    GdkRectangle() $rect,
     Int() $rect_anchor,
     Int() $window_anchor,
     Int() $anchor_hints,
@@ -880,25 +1001,22 @@ class GDK::Window {
   )
     is also<move-to-rect>
   {
-    my guint ($ra, $wa, $ah) = self.RESOLVE-UINT(
-      $rect_anchor, $window_anchor, $anchor_hints
-    );
-    my gint ($rax, $ray) = self.RESOLVE-INT($rect_anchor_dx, $rect_anchor_dy);
+    my guint ($ra, $wa, $ah) = ($rect_anchor, $window_anchor, $anchor_hints);
+    my gint ($rax, $ray) = $rect_anchor_dx, $rect_anchor_dy;
+
     gdk_window_move_to_rect($!window, $rect, $ra, $wa, $ah, $rax, $ray);
   }
 
-  method peek_children is also<peek-children> {
-    gdk_window_peek_children($!window);
-  }
-
-  method process_all_updates is also<process-all-updates> {
-    gdk_window_process_all_updates();
-  }
-
-  method process_updates (gboolean $update_children)
-    is also<process-updates>
+  method peek_children (:$glist = False, :$raw = False)
+    is also<peek-children>
   {
-    gdk_window_process_updates($!window, $update_children);
+    my $cl = gdk_window_peek_children($!window);
+
+    return Nil unless $cl;
+    return $cl if $glist;
+
+    $cl = GLib::GList.new($cl) but GLib::Roles::ListData[GdkWindow];
+    $raw ?? $cl.Array !! $cl.Array.map({ GDK::Window.new($_) });
   }
 
   method raise {
@@ -909,49 +1027,41 @@ class GDK::Window {
     gdk_window_register_dnd($!window);
   }
 
-  method remove_filter (GdkFilterFunc $function, gpointer $data)
+  method remove_filter (
+    GdkFilterFunc $function,
+    gpointer $data = gpointer
+  )
     is also<remove-filter>
   {
     gdk_window_remove_filter($!window, $function, $data);
   }
 
   method reparent (
-    GdkWindow() $new_parent, 
-    Int() $x, 
+    GdkWindow() $new_parent,
+    Int() $x,
     Int() $y
   ) {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
+    my gint ($xx, $yy) = ($x, $y);
+
     gdk_window_reparent($!window, $new_parent, $xx, $yy);
   }
 
   method resize (Int() $width, Int() $height) {
-    my gint ($w, $h) = self.RESOLVE-INT($width, $height);
+    my gint ($w, $h) = ($width, $height);
+
     gdk_window_resize($!window, $w, $h);
   }
 
   method restack (GdkWindow() $sibling, Int() $above) {
-    my gboolean $a = self.RESOLVE-BOOL($above);
+    my gboolean $a = $above.so.Int;
+
     gdk_window_restack($!window, $sibling, $a);
   }
 
   method scroll (Int() $dx, Int() $dy) {
-    my gint ($dxx, $dyy) = self.RESOLVE-INT($dx, $dy);
+    my gint ($dxx, $dyy) = ($dx, $dy);
+
     gdk_window_scroll($!window, $dxx, $dyy);
-  }
-
-  # SEVERELY DEPRECATED, PLEASE REMOVE AFTER INITIAL RELEASE!
-  method set_background (GdkColor $color) is also<set-background> {
-    die 'GTK::Window.set_background is no longer supported, please use CSS'
-    #gdk_window_set_background($!window, $color);
-  }
-
-  # SEVERELY DEPRECATED, PLEASE REMOVE AFTER INITIAL RELEASE!
-  method set_background_rgba (GDK::RGBA $rgba)
-    is also<set-background-rgba>
-  {
-    die 
-      'GTK::Window.set_background_rgba is no longer supported, please use CSS'
-    # gdk_window_set_background_rgba($!window, $rgba);
   }
 
   method set_child_input_shapes is also<set-child-input-shapes> {
@@ -962,17 +1072,15 @@ class GDK::Window {
     gdk_window_set_child_shapes($!window);
   }
 
-  method set_debug_updates is also<set-debug-updates> {
-    gdk_window_set_debug_updates($!window);
-  }
-
-  method set_decorations (GdkWMDecoration $decorations)
+  method set_decorations (Int() $decorations)
     is also<set-decorations>
   {
-    gdk_window_set_decorations($!window, $decorations);
+    my GdkWMDecoration $d = $decorations;
+
+    gdk_window_set_decorations($!window, $d);
   }
 
-  method set_device_cursor (GdkDevice() $device, GdkCursor $cursor)
+  method set_device_cursor (GdkDevice() $device, GdkCursor() $cursor)
     is also<set-device-cursor>
   {
     gdk_window_set_device_cursor($!window, $device, $cursor);
@@ -981,12 +1089,15 @@ class GDK::Window {
   method set_device_events (GdkDevice() $device, Int() $event_mask)
     is also<set-device-events>
   {
-    my guint $m = self.RESOLVE-UINT($event_mask);
+    my guint $m = $event_mask;
+
     gdk_window_set_device_events($!window, $device, $m);
   }
 
-  method set_functions (GdkWMFunction $functions) is also<set-functions> {
-    gdk_window_set_functions($!window, $functions);
+  method set_functions (Int() $functions) is also<set-functions> {
+    my GdkWMFunction $f = $functions;
+
+    gdk_window_set_functions($!window, $f);
   }
 
   method set_geometry_hints (
@@ -995,11 +1106,28 @@ class GDK::Window {
   )
     is also<set-geometry-hints>
   {
-    my guint $m = self.RESOLVE-UINT($geom_mask);
+    my guint $m = $geom_mask;
+
     gdk_window_set_geometry_hints($!window, $geometry, $m);
   }
 
-  method set_icon_list (GList $pixbufs) is also<set-icon-list> {
+  proto method set_icon_list (|)
+    is also<set-icon-list>
+  { * }
+
+  multi method set_icon_list (@pixbufs) {
+    @pixbufs .= map({
+      if $_ ~~ GdkPixbuf {
+        $_;
+      } elsif .^can('GdkPixbuf').elems {
+        .GdkPixbuf
+      } else {
+        die '@pixbufs can only contain GdkPixbuf-compatible items';
+      }
+    });
+    samewith( GLib::GList.new(@pixbufs) );
+  }
+  multi method set_icon_list (GList() $pixbufs)  {
     gdk_window_set_icon_list($!window, $pixbufs);
   }
 
@@ -1014,28 +1142,34 @@ class GDK::Window {
   }
 
   method set_keep_above (Int() $setting) is also<set-keep-above> {
-    my gboolean $s = self.RESOLVE-BOOL($setting);
+    my gboolean $s = $setting.so.Int;
+
     gdk_window_set_keep_above($!window, $s);
   }
 
   method set_keep_below (Int() $setting) is also<set-keep-below> {
-    my gboolean $s = self.RESOLVE-BOOL($setting);
+    my gboolean $s = $setting.so.Int;
+
     gdk_window_set_keep_below($!window, $s);
   }
 
   method set_opacity (Num() $opacity) is also<set-opacity> {
     my gdouble $o = $opacity;
+
     gdk_window_set_opacity($!window, $o);
   }
 
-  method set_opaque_region (cairo_region_t $region) is also<set-opaque-region> {
+  method set_opaque_region (cairo_region_t $region)
+    is also<set-opaque-region>
+  {
     gdk_window_set_opaque_region($!window, $region);
   }
 
   method set_override_redirect (Int() $override_redirect)
     is also<set-override-redirect>
   {
-    my gboolean $or = self.RESOLVE-BOOL($override_redirect);
+    my gboolean $or = $override_redirect.so.Int;
+
     gdk_window_set_override_redirect($!window, $or);
   }
 
@@ -1051,29 +1185,37 @@ class GDK::Window {
   )
     is also<set-shadow-width>
   {
-    my gint ($l, $r, $t, $b) = self.RESOLVE-INT($left, $right, $top, $bottom);
+    my gint ($l, $r, $t, $b) = ($left, $right, $top, $bottom);
+
     gdk_window_set_shadow_width($!window, $l, $r, $t, $b);
   }
 
-  method set_skip_pager_hint (gboolean $skips_pager)
+  method set_skip_pager_hint (Int() $skips_pager)
     is also<set-skip-pager-hint>
   {
-    gdk_window_set_skip_pager_hint($!window, $skips_pager);
+    my gboolean $s = $skips_pager.so.Int;
+
+    gdk_window_set_skip_pager_hint($!window, $s);
   }
 
-  method set_skip_taskbar_hint (gboolean $skips_taskbar)
+  method set_skip_taskbar_hint (Int() $skips_taskbar)
     is also<set-skip-taskbar-hint>
   {
-    gdk_window_set_skip_taskbar_hint($!window, $skips_taskbar);
+    my gboolean $s = $skips_taskbar.so.Int;
+
+    gdk_window_set_skip_taskbar_hint($!window, $s);
   }
 
   method set_source_events (
-    GdkInputSource $source,
-    GdkEventMask $event_mask
+    Int() $source,
+    Int() $event_mask
   )
     is also<set-source-events>
   {
-    gdk_window_set_source_events($!window, $source, $event_mask);
+    my GdkInputSource $s = $source;
+    my GdkEventMask $e = $event_mask;
+
+    gdk_window_set_source_events($!window, $s, $e);
   }
 
   method set_startup_id (Str() $startup_id) is also<set-startup-id> {
@@ -1083,8 +1225,9 @@ class GDK::Window {
   method set_static_gravities (Int() $use_static)
     is also<set-static-gravities>
   {
-    my gboolean $us = self.RESOLVE-BOOL($use_static);
-    gdk_window_set_static_gravities($!window, $use_static);
+    my gboolean $us = $use_static.so.Int;
+
+    gdk_window_set_static_gravities($!window, $us);
   }
 
   method set_title (Str() $title) is also<set-title> {
@@ -1096,7 +1239,8 @@ class GDK::Window {
   }
 
   method set_urgency_hint (Int() $urgent) is also<set-urgency-hint> {
-    my gboolean $u = self.RESOLVE-BOOL($urgent);
+    my gboolean $u = $urgent.so.Int;
+
     gdk_window_set_urgency_hint($!window, $u);
   }
 
@@ -1111,7 +1255,8 @@ class GDK::Window {
   )
     is also<shape-combine-region>
   {
-    my gint ($ox, $oy) = self.RESOLVE-INT($offset_x, $offset_y);
+    my gint ($ox, $oy) = ($offset_x, $offset_y);
+
     gdk_window_shape_combine_region($!window, $shape_region, $ox, $oy);
   }
 
@@ -1179,38 +1324,42 @@ class GDK::Window {
   }
 
   method x11_move_to_desktop (Int() $desktop) is also<x11-move-to-desktop> {
-    my guint $d = self.RESOLVE-UINT($desktop);
+    my guint $d = $desktop;
+
     gdk_x11_window_move_to_desktop($!window, $d);
   }
 
-  method x11_set_frame_sync_enabled (Int() $frame_sync_enabled) 
+  method x11_set_frame_sync_enabled (Int() $frame_sync_enabled)
     is also<x11-set-frame-sync-enabled>
   {
-    my gboolean $fse = self.RESOLVE-BOOL($frame_sync_enabled);
+    my gboolean $fse = $frame_sync_enabled;
+
     gdk_x11_window_set_frame_sync_enabled($!window, $fse);
   }
 
   method x11_set_hide_titlebar_when_maximized (
     Int() $hide_titlebar_when_maximized
-  ) 
+  )
     is also<x11-set-hide-titlebar-when-maximized>
   {
-    my gboolean $htwm = self.RESOLVE-BOOL($hide_titlebar_when_maximized);
+    my gboolean $htwm = $hide_titlebar_when_maximized;
+
     gdk_x11_window_set_hide_titlebar_when_maximized($!window, $htwm);
   }
 
-  method x11_set_theme_variant (Str() $variant) 
+  method x11_set_theme_variant (Str() $variant)
     is also<x11-set-theme-variant>
   {
     gdk_x11_window_set_theme_variant($!window, $variant);
   }
 
   method x11_set_user_time (Int() $timestamp) is also<x11-set-user-time> {
-    my guint32 $t = self.RESOLVE-UINT($timestamp);
+    my guint32 $t = $timestamp;
+
     gdk_x11_window_set_user_time($!window, $timestamp);
   }
 
-  method x11_set_utf8_property (Str() $name, Str() $value) 
+  method x11_set_utf8_property (Str() $name, Str() $value)
     is also<x11-set-utf8-property>
   {
     gdk_x11_window_set_utf8_property($!window, $name, $value);

@@ -6,7 +6,7 @@ use NativeCall;
 use GDK::Raw::Types;
 use GDK::Raw::DisplayManager;
 
-use GLib::GSList;
+use GLib::GList;
 use GDK::Display;
 
 use GTK::Roles::Signals::Generic;
@@ -76,7 +76,8 @@ class GDK::DisplayManager {
     return Nil unless $dl;
     return $dl if $glist;
 
-    $dl = GLib::GSList.new($dl) but GLib::Roles::ListData[GdkDisplay];
+    # Should be GSList, but GList is compatible.
+    $dl = GLib::GList.new($dl) but GLib::Roles::ListData[GdkDisplay];
 
     $raw ?? $dl.Array !! $dl.Array.map({ GDK::Display.new($_) });
   }

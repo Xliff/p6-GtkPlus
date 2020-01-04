@@ -3,17 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GDK::Rectangle;
 use GDK::Raw::Types;
 use GDK::Raw::Monitor;
 
 use GLib::Value;
+use GDK::Rectangle;
 
-use GTK::Roles::Types;
 use GTK::Roles::Signals::Generic;
 
 class GDK::Monitor {
-  also does GTK::Roles::Types;
   also does GTK::Roles::Signals::Generic;
 
   has GdkMonitor $!mon is implementor;
@@ -234,11 +232,13 @@ class GDK::Monitor {
   }
 
   method get_subpixel_layout is also<get-subpixel-layout> {
-    gdk_monitor_get_subpixel_layout($!mon);
+    GdkSubpixelLayoutEnum( gdk_monitor_get_subpixel_layout($!mon) );
   }
 
   method get_type is also<get-type> {
-    gdk_monitor_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gdk_monitor_get_type, $n, $t );
   }
 
   method get_width_mm is also<get-width-mm> {
@@ -250,7 +250,7 @@ class GDK::Monitor {
   }
 
   method is_primary is also<is-primary> {
-    gdk_monitor_is_primary($!mon);
+    so gdk_monitor_is_primary($!mon);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

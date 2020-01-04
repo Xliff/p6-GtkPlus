@@ -5,7 +5,7 @@ use NativeCall;
 
 use GDK::Raw::Types;
 
-class GDK::RGBA is repr('CStruct') is export { ... }
+class GDK::RGBA is repr<CStruct> is export { ... }
 
 our constant GdkRGBA is export := GDK::RGBA;
 

@@ -3,16 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GDK::Raw::Types;
 use GDK::Raw::Screen;
 use GDK::Raw::X11_Screen;
-use GDK::Raw::Types;
 
-use GTK::Roles::Types;
-use GTK::Roles::Signals::Generic;
+use GDK::Visual;
+use GDK::Window;
+
+use GLib::Roles::ListData;
+use GLib::Roles::Signals::Generic;
 
 class GDK::Screen {
-  also does GTK::Roles::Types;
-  also does GTK::Roles::Signals::Generic;
+  also does GLib::Roles::Signals::Generic;
 
   has GdkScreen $!screen is implementor;
 
@@ -24,9 +26,9 @@ class GDK::Screen {
     self.disconnect-all($_) for %!signals;
   }
 
-  method GDK::Raw::Types::GdkScreen is also<screen> {
-    $!screen;
-  }
+  method GDK::Raw::Definitions::GdkScreen
+    is also<screen>
+  { $!screen }
 
   method new (GdkScreen() $screen) {
     self.bless(:$screen);
@@ -82,13 +84,22 @@ class GDK::Screen {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_active_window is also<get-active-window> {
-    gdk_screen_get_active_window($!screen);
+  method get_active_window (:$raw = False)
+    is DEPRECATED
+    is also<get-active-window>
+  {
+    my $w = gdk_screen_get_active_window($!screen);
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window.new($w) )
+      !!
+      Nil;
   }
 
   method get_default is also<get-default> {
     my $screen = gdk_screen_get_default();
-    self.bless(:$screen);
+
+    $screen ?? self.bless(:$screen) !! Nil;
   }
 
   method get_display is also<get-display> {
@@ -106,7 +117,8 @@ class GDK::Screen {
   method get_monitor_at_point (Int() $x, Int() $y)
     is also<get-monitor-at-point>
   {
-    my ($xx, $yy) = self.RESOLVE-INT($x, $y);
+    my ($xx, $yy) = ($x, $y);
+
     gdk_screen_get_monitor_at_point($!screen, $x, $y);
   }
 
@@ -116,40 +128,51 @@ class GDK::Screen {
     gdk_screen_get_monitor_at_window($!screen, $window);
   }
 
-  method get_monitor_geometry (gint $monitor_num, GdkRectangle() $dest)
+  method get_monitor_geometry (Int() $monitor_num, GdkRectangle() $dest)
     is also<get-monitor-geometry>
   {
-    gdk_screen_get_monitor_geometry($!screen, $monitor_num, $dest);
+    my gint $m = $monitor_num;
+
+    gdk_screen_get_monitor_geometry($!screen, $m, $dest);
   }
 
-  method get_monitor_height_mm (gint $monitor_num)
+  method get_monitor_height_mm (Int() $monitor_num)
     is also<get-monitor-height-mm>
   {
-    gdk_screen_get_monitor_height_mm($!screen, $monitor_num);
+    my gint $m = $monitor_num;
+
+    gdk_screen_get_monitor_height_mm($!screen, $m);
   }
 
-  method get_monitor_plug_name (gint $monitor_num)
+  method get_monitor_plug_name (Int() $monitor_num)
     is also<get-monitor-plug-name>
   {
-    gdk_screen_get_monitor_plug_name($!screen, $monitor_num);
+    my gint $m = $monitor_num;
+
+    gdk_screen_get_monitor_plug_name($!screen, $m);
   }
 
-  method get_monitor_scale_factor (gint $monitor_num)
+  method get_monitor_scale_factor (Int() $monitor_num)
     is also<get-monitor-scale-factor>
   {
-    gdk_screen_get_monitor_scale_factor($!screen, $monitor_num);
+    my gint $m = $monitor_num;
+
+    gdk_screen_get_monitor_scale_factor($!screen, $m);
   }
 
-  method get_monitor_width_mm (gint $monitor_num)
+  method get_monitor_width_mm (Int() $monitor_num)
     is also<get-monitor-width-mm>
   {
-    gdk_screen_get_monitor_width_mm($!screen, $monitor_num);
+    my gint $m = $monitor_num;
+
+    gdk_screen_get_monitor_width_mm($!screen, $m);
   }
 
   method get_monitor_workarea (Int() $monitor_num, GdkRectangle() $dest)
     is also<get-monitor-workarea>
   {
-    my $mn = self.RESOLVE-INT($monitor_num);
+    my $mn = $monitor_num;
+
     gdk_screen_get_monitor_workarea($!screen, $mn, $dest);
   }
 
@@ -161,30 +184,59 @@ class GDK::Screen {
     gdk_screen_get_number($!screen);
   }
 
-  method get_rgba_visual is also<get-rgba-visual> {
-    gdk_screen_get_rgba_visual($!screen);
+  method get_rgba_visual (:$raw = False) is also<get-rgba-visual> {
+    my $v = gdk_screen_get_rgba_visual($!screen);
+
+    $v ??
+      ( $raw ?? $v !! GDK::Visual.new($v) )
+      !!
+      Nil;
   }
 
-  method get_root_window
-    is also<get-root-window root-window root_window>
+  method get_root_window (:$raw = False)
+    is also<
+      get-root-window
+      root-window
+      root_window
+    >
   {
-    gdk_screen_get_root_window($!screen);
+    my $w = gdk_screen_get_root_window($!screen);
+
+    $w ??
+      ( $raw ?? $w !! GDK::Window($w) )
+      !!
+      Nil;
   }
 
-  method get_setting (Str $name, GValue() $value) is also<get-setting> {
-    gdk_screen_get_setting($!screen, $name, $value);
+  method get_setting (Str() $name, GValue() $value) is also<get-setting> {
+    so gdk_screen_get_setting($!screen, $name, $value);
   }
 
-  method get_system_visual is also<get-system-visual> {
-    gdk_screen_get_system_visual($!screen);
+  method get_system_visual (:$raw = False) is also<get-system-visual> {
+    my $v = gdk_screen_get_system_visual($!screen);
+
+    $v ??
+      ( $raw ?? $v !! GDK::Visual.new($v) )
+      !!
+      Nil;
   }
 
-  method get_toplevel_windows is also<get-toplevel-windows> {
-    gdk_screen_get_toplevel_windows($!screen);
+  method get_toplevel_windows (:$glist = False, :$raw = False)
+    is also<get-toplevel-windows>
+  {
+    my $wl = gdk_screen_get_toplevel_windows($!screen);
+
+    return Nil unless $wl;
+    return $wl if $glist;
+
+    $wl = GLib::GList.new($wl) but GList::Roles::ListData[GdkWindow];
+    $raw ?? $wl.Array ?? $wl.Array.map({ GDK::Window.new($_) });
   }
 
   method get_type is also<get-type> {
-    gdk_screen_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gdk_screen_get_type, $n, $t );
   }
 
   method get_width is also<get-width> {
@@ -195,23 +247,37 @@ class GDK::Screen {
     gdk_screen_get_width_mm($!screen);
   }
 
-  method get_window_stack is also<get-window-stack> {
-    gdk_screen_get_window_stack($!screen);
+  method get_window_stack (:$glist = False, :$raw = False)
+    is also<get-window-stack>
+  {
+    my $sl = gdk_screen_get_window_stack($!screen);
+
+    return Nil unless $sl;
+    return $sl if $glist;
+
+    $sl = GLib::GList.new($sl) but GList::Roles::ListData[GdkWindow];
+    $raw ?? $sl.Array !! $sl.Array.map({ GdkWindow.new($_) });
   }
 
   method is_composited is also<is-composited> {
-    gdk_screen_is_composited($!screen);
+    so gdk_screen_is_composited($!screen);
   }
 
-  method list_visuals is also<list-visuals> {
-    gdk_screen_list_visuals($!screen);
+  method list_visuals (:$glist = False, :$raw = False) is also<list-visuals> {
+    my $vl = gdk_screen_list_visuals($!screen);
+
+    return Nil unless $vl;
+    return $vl if $glist;
+
+    $vl = GLib::GList.new($vl) but GLib::Roles::ListData[GdkVisual];
+    $raw ?? $vl.Array !! $vl.Array.map({ GDK::Visual.new($_) });
   }
 
   method make_display_name is also<make-display-name> {
     gdk_screen_make_display_name($!screen);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
-  
+
   method x11_get_default_screen {
     gdk_x11_get_default_screen();
   }
@@ -221,7 +287,8 @@ class GDK::Screen {
   }
 
   method x11_get_monitor_output (Int() $monitor_num) {
-    my gint $mn = self.RESOLVE-INT($monitor_num);
+    my gint $mn = $monitor_num;
+
     gdk_x11_screen_get_monitor_output($!screen, $mn);
   }
 
@@ -234,7 +301,9 @@ class GDK::Screen {
   }
 
   method x11_get_type {
-    gdk_x11_screen_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gdk_x11_screen_get_type, $n, $t );
   }
 
   method x11_get_window_manager_name {

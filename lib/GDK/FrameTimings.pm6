@@ -50,7 +50,9 @@ class GDK::FrameTimings {
   }
 
   method get_type is also<get-type> {
-    gdk_frame_timings_get_type();
+    state ($n, $t);
+    
+    unstable_get_type( self.^name, &gdk_frame_timings_get_type, $n, $t );
   }
 
   method upref {

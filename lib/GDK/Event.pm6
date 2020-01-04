@@ -9,7 +9,7 @@ use GDK::Raw::Event;
 use GDK::Device;
 use GDK::Screen;
 
-class GDK::Event  {
+class GDK::Event {
   has GdkEventAny $!e is implementor handles<type window send_event>;
 
   submethod BUILD(:$event) {

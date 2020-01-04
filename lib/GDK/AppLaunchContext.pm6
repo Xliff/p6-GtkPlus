@@ -56,6 +56,8 @@ class GDK::AppLaunchContext {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
+    state ($n, $t);
+
     unstable_get_type( self.^name, &gdk_app_launch_context_get_type, $n, $t );
   }
 
@@ -65,7 +67,7 @@ class GDK::AppLaunchContext {
     gdk_app_launch_context_set_desktop($!alc, $d);
   }
 
-  method set_icon (GIcon $icon) is also<set-icon> {
+  method set_icon (GIcon() $icon) is also<set-icon> {
     gdk_app_launch_context_set_icon($!alc, $icon);
   }
 
