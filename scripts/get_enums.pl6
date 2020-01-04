@@ -84,7 +84,9 @@ sub MAIN ($dir?, :$file) {
       for $l<enum><enum_entry> -> $el {
         for $el -> $e {
           # Handle 32 vs 64 bit by literal.
-          $long = True if $e[1]<L> || $e[1][0].Int > 31;
+          if $e[1][0].Numeric !~~ Failure {
+            $long = True if $e[1]<L> || $e[1][0].Int > 31;
+          }
           # Handle signed vs unsigned.
           $neg  = True if $e[1]<m>;
 
