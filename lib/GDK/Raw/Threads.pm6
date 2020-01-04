@@ -2,10 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GDK::Raw::Types;
 use GTK::Raw::Types;
 
-unit package GTK::Compat::Raw::Threads;
+unit package GDK::Raw::Threads;
 
 sub gdk_threads_add_idle (
   &function (Pointer --> guint32),

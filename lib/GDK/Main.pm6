@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+use GDK::Raw::Types;
 use GDK::Raw::Main;
 
 class GDK::Main {

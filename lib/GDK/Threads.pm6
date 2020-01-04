@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+use GDK::Raw::Types;
 use GDK::Raw::Threads;
 
 use GTK::Raw::Utils;
@@ -11,7 +11,7 @@ use GTK::Raw::Utils;
 class GDK::Threads {
 
   method new(|) {
-    die 'GTK::Compat::Threads is not an instantiable object!'
+    die 'GDK::Threads is not an instantiable object!'
   }
 
   method add_idle (
