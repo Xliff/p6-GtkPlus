@@ -1,10 +1,6 @@
 {
     "depends": [
-        "Cairo",
-        "Method::Also",
-        "Pluggable",
-        "Data::Dump::Tree",
-        "Config::INI"
+        "p6-GDK"
     ],
     "description": "Perl6 library bindings for GTK+ 3.0",
     "version": "r0.2",
@@ -848,7 +844,7 @@
       "GTK::ToggleToolButton"                          :  "lib/GTK/ToggleToolButton.pm6"                       ,
       "GTK::RadioToolButton"                           :  "lib/GTK/RadioToolButton.pm6"                        ,
       "GTK"                                            :  "lib/GTK.pm6"                                        ,
-      "GTK::Builder"                                   :  "lib/GTK/Builder.pm6"                                
+      "GTK::Builder"                                   :  "lib/GTK/Builder.pm6"
     },
     "name": "Perl6-GtkPlus",
     "perl": "6.c",
