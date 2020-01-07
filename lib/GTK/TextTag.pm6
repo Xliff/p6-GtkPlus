@@ -14,11 +14,11 @@ use GTK::Raw::Types;
 use GLib::Value;
 
 use GTK::Roles::Types;
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::TextTag;
 
 class GTK::TextTag  {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::TextTag;
 
@@ -30,7 +30,7 @@ class GTK::TextTag  {
 
   # PROTECTED
   method setTextTag (GtkTextTag $tag) {
-    self!setObject($!tt = $tag);              # GTK::Roles::Properties (+)
+    self!setObject($!tt = $tag);              # GLib::Roles::Properties (+)
   }
 
   submethod DESTROY {

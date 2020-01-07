@@ -8,12 +8,12 @@ use GTK::Raw::Types;
 
 use GLib::Value;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::EntryBuffer;
 use GTK::Roles::Signals::Generic;
 
 class GTK::EntryBuffer {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::EntryBuffer;
   also does GTK::Roles::Signals::Generic;
 

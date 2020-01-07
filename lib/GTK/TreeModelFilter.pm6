@@ -9,20 +9,20 @@ use GTK::Raw::Types;
 
 use GLib::Value;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeDnD;
 use GTK::Roles::Types;
 
 class GTK::TreeModelFilter {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeDragSource;
 
   has GtkTreeModelFilter $!tmf is implementor;
 
   submethod BUILD(:$treefilter) {
-    self!setObject($!tmf = $treefilter);            # GTK::Roles::Properties
+    self!setObject($!tmf = $treefilter);            # GLib::Roles::Properties
 
     $!tm = nativecast(GtkTreeModel, $!tmf);         # GTK::Roles::TreeModel
     $!ds = nativecast(GtkTreeDragSource, $!tmf);    # GTK::Roles::TreeDragSource

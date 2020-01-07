@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
-use GTK::Raw::ReturnedValue;
+use GLib::Raw::ReturnedValue;
 
 use GTK::Roles::Signals::Generic;
 

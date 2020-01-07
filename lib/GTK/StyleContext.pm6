@@ -20,10 +20,10 @@ use GTK::Render;
 use GTK::WidgetPath;
 
 use GTK::Roles::Signals::Generic;
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 
 class GTK::StyleContext {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
 
   has GtkStyleContext $!sc is implementor;

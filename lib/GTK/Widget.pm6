@@ -24,7 +24,7 @@ use GTK::Raw::Utils;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::Data;
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 use GTK::Roles::Types;
@@ -36,7 +36,7 @@ our subset WidgetAncestry is export where GtkBuildable | GtkWidget;
 class GTK::Widget {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Data;
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
   also does GTK::Roles::Types;
@@ -112,7 +112,7 @@ class GTK::Widget {
          die "GTK::Widget initialized from unexpected source!";
       }
     };
-    $!prop = nativecast(GObject, $!w);    # GTK::Roles::Properties
+    $!prop = nativecast(GObject, $!w);    # GLib::Roles::Properties
     $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
     $!data = $!w.p;                       # GTK::Roles::Data
   }

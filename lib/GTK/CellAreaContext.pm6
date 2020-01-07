@@ -9,10 +9,10 @@ use GTK::Raw::Types;
 
 use GLib::Value;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 
 class GTK::CellAreaContext {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
 
   has GtkCellAreaContext $!cac is implementor;
 

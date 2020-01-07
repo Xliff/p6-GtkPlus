@@ -11,11 +11,11 @@ use GTK::Raw::RecentInfo;   # Contains Raw calls for ::RecentManager
 use GLib::Value;
 
 use GLib::Roles::ListData;
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 
 class GTK::RecentManager {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
 
   has GtkRecentManager $!rm is implementor;

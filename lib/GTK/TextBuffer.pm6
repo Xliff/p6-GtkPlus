@@ -15,11 +15,11 @@ use GTK::TextIter;
 use GTK::TextMark;
 use GTK::TextTagTable;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::TextBuffer;
 
 class GTK::TextBuffer {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::TextBuffer;
 
   has GtkTextBuffer $!tb is implementor;
@@ -29,7 +29,7 @@ class GTK::TextBuffer {
   }
 
   method setTextBuffer($buffer) {
-    self!setObject($!tb = $buffer);             # GTK::Roles::Properties
+    self!setObject($!tb = $buffer);             # GLib::Roles::Properties
   }
 
   submethod DESTROY {

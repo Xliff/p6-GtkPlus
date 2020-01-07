@@ -13,13 +13,13 @@ use GTK::CellArea;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::CellLayout;
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Types;
 
 class GTK::TreeViewColumn {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
 
   # Using GTK::Raw::Utils to prevent circular role dependency between
   # CellLayout and Types

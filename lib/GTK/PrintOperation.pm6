@@ -12,19 +12,19 @@ use GLib::Value;
 use GTK::PageSetup;
 use GTK::PrintSettings;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::PrintOperation;
 
 class GTK::PrintOperation {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::PrintOperation;
 
   has GtkPrintOperation $!po is implementor;
 
   submethod BUILD(:$op) {
-    self!setObject($!po = $op);               # GTK::Roles::Properties
+    self!setObject($!po = $op);               # GLib::Roles::Properties
   }
 
   submethod DESTROY {
