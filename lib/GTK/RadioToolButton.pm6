@@ -4,7 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GLib::GSList;
-use GTK::Compat::Types;
+
 use GTK::Raw::RadioToolButton;
 use GTK::Raw::Types;
 

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::TreeView;
 use GTK::Raw::Types;
 
@@ -256,7 +256,7 @@ class GTK::TreeView is GTK::Container {
   method grid_lines is rw is also<grid-lines> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkTreeViewGridLines( gtk_tree_view_get_grid_lines($!tv) );
+        GtkTreeViewGridLinesEnum( gtk_tree_view_get_grid_lines($!tv) );
       },
       STORE => sub ($, Int() $grid_lines is copy) {
         my guint $gl = self.RESOLVE-UINT($grid_lines);

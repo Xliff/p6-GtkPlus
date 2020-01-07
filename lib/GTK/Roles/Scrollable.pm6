@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Scrollable;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -30,7 +30,7 @@ role GTK::Roles::Scrollable {
   method hscroll_policy is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkScrollablePolicy( gtk_scrollable_get_hscroll_policy($!s) );
+        GtkScrollablePolicyEnum( gtk_scrollable_get_hscroll_policy($!s) );
       },
       STORE => sub ($, Int() $policy is copy) {
         my uint32 $p = resolve-uint($policy);
@@ -53,7 +53,7 @@ role GTK::Roles::Scrollable {
   method vscroll_policy is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkScrollablePolicy( gtk_scrollable_get_vscroll_policy($!s) );
+        GtkScrollablePolicyEnum( gtk_scrollable_get_vscroll_policy($!s) );
       },
       STORE => sub ($, Int() $policy is copy) {
         my guint32 $p = resolve-uint($policy);

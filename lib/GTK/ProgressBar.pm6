@@ -5,7 +5,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Label;
 use GTK::Raw::ProgressBar;
 use GTK::Raw::Types;

@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::TreeSortable;
 use GTK::Raw::Types;
 

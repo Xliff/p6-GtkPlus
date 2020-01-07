@@ -5,7 +5,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Label;
 use GTK::Raw::Types;
 
@@ -150,7 +150,7 @@ class GTK::Label is GTK::Widget {
   method justify is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkJustification( gtk_label_get_justify($!l) );
+        GtkJustificationEnum( gtk_label_get_justify($!l) );
       },
       STORE => sub ($, Int() $jtype is copy) {
         my uint32 $jt = self.RESOLVE-UINT($jtype);

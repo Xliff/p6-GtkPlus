@@ -3,8 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::RGBA;
+
 use GTK::Raw::CellView;
 use GTK::Raw::Types;
 
@@ -194,9 +194,9 @@ class GTK::CellView is GTK::Widget {
         $gv = GLib::Value.new(
           self.prop_get('background-rgba', $gv)
         );
-        nativecast(GTK::Compat::RGBA, $gv.pointer);
+        nativecast(GDK::RGBA, $gv.pointer);
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.pointer = nativecast(Pointer, $val);
         self.prop_set('background-rgba', $gv);
       }
@@ -277,7 +277,7 @@ class GTK::CellView is GTK::Widget {
     gtk_cell_view_set_background_color($!cv, $color);
   }
 
-  method set_background_rgba (GTK::Compat::RGBA() $rgba)
+  method set_background_rgba (GDK::RGBA() $rgba)
     is also<set-background-rgba>
   {
     gtk_cell_view_set_background_rgba($!cv, $rgba);

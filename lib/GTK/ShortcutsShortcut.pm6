@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 use GLib::Value;
@@ -113,7 +113,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new( self.prop_get('direction', $gv) );
-        GtkTextDirection( $gv.enum );
+        GtkTextDirectionEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);
@@ -158,7 +158,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new( self.prop_get('shortcut-type', $gv) );
-        GtkShortcutType( $gv.enum );
+        GtkShortcutTypeEnum( $gv.enum );
       },
       STORE => -> $, $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);

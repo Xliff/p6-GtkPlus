@@ -4,9 +4,9 @@ use Method::Also;
 use NativeCall;
 
 use GLib::GList;
-use GTK::Compat::Pixbuf;
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::Pixbuf;
+use GDK::RGBA;
+
 use GTK::Raw::IconTheme;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -123,7 +123,7 @@ class GTK::IconTheme {
     my gint $s = resolve-int($size);
     my guint $f = resolve-uint($flags);
     my $p = gtk_icon_theme_load_icon($!it, $icon_name, $s, $f, $error);
-    $p.defined ?? GTK::Compat::Pixbuf.new($p) !! Nil;
+    $p.defined ?? GDK::Pixbuf.new($p) !! Nil;
   }
 
   method load_icon_for_scale (
@@ -138,7 +138,7 @@ class GTK::IconTheme {
     my @i = ($size, $scale);
     my gint ($si, $sc) = resolve-int(@i);
     my guint $f = resolve-uint($flags);
-    GTK::Compat::Pixbuf.new(
+    GDK::Pixbuf.new(
       gtk_icon_theme_load_icon_for_scale($!it, $name, $si, $sc, $f, $error)
     )
   }

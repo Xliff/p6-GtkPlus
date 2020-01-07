@@ -4,7 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GLib::GSList;
-use GTK::Compat::Types;
+
 use GTK::Raw::RadioButton;
 use GTK::Raw::Types;
 
@@ -153,7 +153,7 @@ class GTK::RadioButton is GTK::CheckButton {
         return Nil unless $rl;
         return $rl if     $glist;
 
-        $rl = GLib::GSList.new($rl) but GTK::Compat::ListData[GtkRadioButton];
+        $rl = GLib::GSList.new($rl) but GDK::ListData[GtkRadioButton];
 
         $raw ?? $rl.Array !! $rl.Array.map({ GTK::RadioButton.new($rl) });
       },

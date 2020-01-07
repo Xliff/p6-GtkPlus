@@ -5,7 +5,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ToolShell;
 use GTK::Raw::Types;
 
@@ -41,20 +41,20 @@ role GTK::Roles::ToolShell {
       icon_size
     >
   {
-    GtkIconSize( gtk_tool_shell_get_icon_size($!shell) );
+    GtkIconSizeEnum( gtk_tool_shell_get_icon_size($!shell) );
   }
 
   method get_orientation is also<get-orientation> {
-    GtkOrientation( gtk_tool_shell_get_orientation($!shell) );
+    GtkOrientationEnum( gtk_tool_shell_get_orientation($!shell) );
   }
 
   method get_relief_style is also<get-relief-style>
   {
-    GtkReliefStyle( gtk_tool_shell_get_relief_style($!shell) );
+    GtkReliefStyleEnum( gtk_tool_shell_get_relief_style($!shell) );
   }
 
   method get_style is also<get-style style> {
-    GtkToolbarStyle( gtk_tool_shell_get_style($!shell) );
+    GtkToolbarStyleEnum( gtk_tool_shell_get_style($!shell) );
   }
 
   method get_text_alignment

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::TreeSelection;
 use GTK::Raw::Types;
 
@@ -50,7 +50,7 @@ class GTK::TreeSelection {
   method mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSelectionMode( gtk_tree_selection_get_mode($!ts) );
+        GtkSelectionModeEnum( gtk_tree_selection_get_mode($!ts) );
       },
       STORE => sub ($, $type is copy) {
         my uint32 $t = self.RESOLVE-UINT($type);

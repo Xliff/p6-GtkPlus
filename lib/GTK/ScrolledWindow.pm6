@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ScrolledWindow;
 use GTK::Raw::Types;
 
@@ -257,7 +257,7 @@ D
   method shadow_type is rw is also<shadow-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkShadowType( gtk_scrolled_window_get_shadow_type($!sw) );
+        GtkShadowTypeEnum( gtk_scrolled_window_get_shadow_type($!sw) );
       },
       STORE => sub ($, Int() $type is copy) {
         my uint32 $t = self.RESOLVE-UINT($type);
@@ -306,7 +306,7 @@ D
       placement
     > 
   {
-    GtkCornerType( gtk_scrolled_window_get_placement($!sw) );
+    GtkCornerTypeEnum( gtk_scrolled_window_get_placement($!sw) );
   }
   
   proto method get_policy (|)

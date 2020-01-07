@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::SpinButton;
 use GTK::Raw::Types;
 
@@ -177,7 +177,7 @@ class GTK::SpinButton is GTK::Entry {
   method update_policy is rw is also<update-policy> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSpinButtonUpdatePolicy( gtk_spin_button_get_update_policy($!sp) );
+        GtkSpinButtonUpdatePolicyEnum( gtk_spin_button_get_update_policy($!sp) );
       },
       STORE => sub ($, Int() $policy is copy) {
         my gboolean $p = self.RESOLVE-UINT($policy);

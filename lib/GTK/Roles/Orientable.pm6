@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Orientable;
 use GTK::Raw::Types;
 
@@ -18,7 +18,7 @@ role GTK::Roles::Orientable {
   method orientation is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkOrientation( gtk_orientable_get_orientation($!or) );
+        GtkOrientationEnum( gtk_orientable_get_orientation($!or) );
       },
       STORE => sub ($, Int() $orientation is copy) {
         # YYY - GTK::ROLES::TYPES CONFLICT - YYY

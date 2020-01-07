@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::LevelBar;
 use GTK::Raw::Types;
 
@@ -122,7 +122,7 @@ class GTK::LevelBar is GTK::Widget {
   method mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkLevelBarMode( gtk_level_bar_get_mode($!lb) );
+        GtkLevelBarModeEnum( gtk_level_bar_get_mode($!lb) );
       },
       STORE => sub ($, Int() $mode is copy) {
         my guint32 $m = self.RESOLVE-uint($mode);

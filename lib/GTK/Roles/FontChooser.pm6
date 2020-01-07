@@ -7,7 +7,7 @@ use Pango::Raw::Types;
 
 use Pango::FontDescription;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::FontChooser;
 use GTK::Raw::Types;
 

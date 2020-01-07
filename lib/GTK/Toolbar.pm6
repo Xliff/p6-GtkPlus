@@ -3,7 +3,7 @@
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Toolbar;
 use GTK::Raw::Types;
 
@@ -142,7 +142,7 @@ class GTK::Toolbar is GTK::Container {
       icon-size
     > 
   {
-    GtkIconSize( gtk_toolbar_get_icon_size($!tb) );
+    GtkIconSizeEnum( gtk_toolbar_get_icon_size($!tb) );
   }
 
   multi method get_item_index (GtkToolItem() $item) 
@@ -184,7 +184,7 @@ class GTK::Toolbar is GTK::Container {
       relief-style
     > 
   {
-    GtkReliefStyle( gtk_toolbar_get_relief_style($!tb) );
+    GtkReliefStyleEnum( gtk_toolbar_get_relief_style($!tb) );
   }
 
   method get_style 
@@ -193,7 +193,7 @@ class GTK::Toolbar is GTK::Container {
       style
     > 
   {
-    GtkToolbarStyle( gtk_toolbar_get_style($!tb) );
+    GtkToolbarStyleEnum( gtk_toolbar_get_style($!tb) );
   }
 
   method get_type is also<get-type> {

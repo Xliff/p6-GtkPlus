@@ -2,8 +2,8 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::RGBA;
+
 use GTK::Raw::Types;
 use Pango::Raw::Types;
 
@@ -44,8 +44,8 @@ sub gtk_widget_has_grab (GtkWidget $widget)
 
 sub gtk_widget_override_cursor (
   GtkWidget $widget,
-  GTK::Compat::RGBA $cursor,
-  GTK::Compat::RGBA $secondary_cursor
+  GDK::RGBA $cursor,
+  GDK::RGBA $secondary_cursor
 )
   is native(gtk)
   is export
@@ -573,7 +573,7 @@ sub gtk_widget_list_action_prefixes (GtkWidget $widget)
 # GtkStateFlag $state
 sub gtk_widget_override_color (
   GtkWidget $widget,uint32 $state,
-  GTK::Compat::RGBA $color
+  GDK::RGBA $color
 )
   is native(gtk)
   is export
@@ -710,7 +710,7 @@ sub gtk_widget_draw (GtkWidget $widget, cairo_t $cr)
 sub gtk_widget_override_symbolic_color (
   GtkWidget $widget,
   gchar $name,
-  GTK::Compat::RGBA $color
+  GDK::RGBA $color
 )
   is native(gtk)
   is export
@@ -832,7 +832,7 @@ sub gtk_widget_can_activate_accel (GtkWidget $widget, guint $signal_id)
 sub gtk_widget_override_background_color (
   GtkWidget $widget,
   uint32 $state,
-  GTK::Compat::RGBA $color
+  GDK::RGBA $color
 )
   is native(gtk)
   is export

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::FileChooser;
 use GTK::Raw::Types;
 
@@ -56,7 +56,7 @@ role GTK::Roles::FileChooser {
   method action is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkFileChooserAction( gtk_file_chooser_get_action($!fc) );
+        GtkFileChooserActionEnum( gtk_file_chooser_get_action($!fc) );
       },
       STORE => sub ($, Int() $action is copy) {
         my guint $a = self.RESOLVE-UINT($action);

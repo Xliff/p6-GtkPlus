@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::TreeViewColumn;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -195,7 +195,7 @@ class GTK::TreeViewColumn {
   method sort_order is rw is also<sort-order> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSortType( gtk_tree_view_column_get_sort_order($!tvc) );
+        GtkSortTypeEnum( gtk_tree_view_column_get_sort_order($!tvc) );
       },
       STORE => sub ($, Int() $order is copy) {
         my uint32 $o = resolve-uint($order);

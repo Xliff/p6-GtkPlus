@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::CellArea;
 use GTK::Raw::Types;
 
@@ -18,7 +18,7 @@ our subset CellAreaAncestry is export
 
 class GTK::CellArea {
   also does GLib::Roles::Object;
-  
+
   also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::CellArea;
@@ -44,13 +44,18 @@ class GTK::CellArea {
         default {
           nativecast(GtkCellArea, $_);
         }
-      } 
+      }
     );
     $!cl //= nativecast(GtkCellLayout, $!ca);        # GTK::Roles::CellLayout
     $!b  //= nativecast(GtkBuildable,   $!ca);       # GTK::Roles::Buildable
   }
 
-  method GTK::Raw::Types::GtkCellArea is also<CellArea> { $!ca } 
+  method GTK::Raw::Types::GtkCellArea
+    is also<
+      CellArea
+      GtkCellArea
+    >
+  { $!ca }
 
   submethod DESTROY {
     # Almost certainly a mistake! This should be done at the pointer level!!
@@ -117,8 +122,8 @@ class GTK::CellArea {
     GdkEvent $e,
     GdkRectangle $ca,
     Int() $flags                # GtkCellRendererState $flags
-  ) 
-    is also<activate-cell> 
+  )
+    is also<activate-cell>
   {
     my guint $f = self.RESOLVE-UINT($flags);
     gtk_cell_area_activate_cell($!ca, $widget, $r, $e, $ca, $f);

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::TreeStore;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;

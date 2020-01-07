@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::IconView;
 use GTK::Raw::Types;
 
@@ -199,7 +199,7 @@ class GTK::IconView is GTK::Container {
   method item_orientation is rw is also<item-orientation> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkOrientation( gtk_icon_view_get_item_orientation($!iv) );
+        GtkOrientationEnum( gtk_icon_view_get_item_orientation($!iv) );
       },
       STORE => sub ($, Int() $orientation is copy) {
         my guint $o = self.RESOLVE-UINT($orientation);
@@ -306,7 +306,7 @@ class GTK::IconView is GTK::Container {
   method selection_mode is rw is also<selection-mode> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSelectionMode( gtk_icon_view_get_selection_mode($!iv) );
+        GtkSelectionModeEnum( gtk_icon_view_get_selection_mode($!iv) );
       },
       STORE => sub ($, Int() $mode is copy) {
         my gint $m = self.RESOLVE-INT($mode);

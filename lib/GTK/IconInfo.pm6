@@ -3,13 +3,13 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::RGBA;
+
 use GTK::Raw::IconTheme;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
 
-use GTK::Compat::Pixbuf;
+use GDK::Pixbuf;
 
 use GLib::Roles::Object;
 use GTK::Roles::Types;
@@ -117,7 +117,7 @@ class GTK::IconInfo {
       builtin-pixbuf
     > 
   {
-    GTK::Compat::Pixbuf.new( gtk_icon_info_get_builtin_pixbuf($!ii) );
+    GDK::Pixbuf.new( gtk_icon_info_get_builtin_pixbuf($!ii) );
   }
 
   method get_display_name 
@@ -159,7 +159,7 @@ class GTK::IconInfo {
   )
     is also<load-icon>
   {
-    GTK::Compat::Pixbuf.new( gtk_icon_info_load_icon($!ii, $error) );
+    GDK::Pixbuf.new( gtk_icon_info_load_icon($!ii, $error) );
   }
 
   method load_icon_async (
@@ -187,7 +187,7 @@ class GTK::IconInfo {
     my $o = gtk_icon_info_load_icon_finish($!ii, $res, $error);
     set_error($error);
     # Throw exception if error.
-    GTK::Compat::Pixbuf.new($o) without $ERROR;
+    GDK::Pixbuf.new($o) without $ERROR;
   }
 
   method load_surface (
@@ -223,7 +223,7 @@ class GTK::IconInfo {
     );
     set_error($error);
     # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+    GDK::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_async (
@@ -265,7 +265,7 @@ class GTK::IconInfo {
     my $s = gtk_icon_info_load_symbolic_finish($!ii, $res, $ws, $error);
     set_error($error);
     # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+    GDK::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_for_context (
@@ -285,7 +285,7 @@ class GTK::IconInfo {
     );
     set_error($error);
     # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+    GDK::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_for_context_async (
@@ -322,7 +322,7 @@ class GTK::IconInfo {
     );
     set_error($error);
     # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+    GDK::Pixbuf.new($s) without $ERROR;
   }
 
   method load_symbolic_for_style (
@@ -342,7 +342,7 @@ class GTK::IconInfo {
     );
     set_error($error);
     # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($o) without $ERROR;
+    GDK::Pixbuf.new($o) without $ERROR;
   }
 
   method set_raw_coordinates (Int() $raw_coordinates)

@@ -7,7 +7,7 @@ use NativeCall;
 use Pango::FontMap;
 use Pango::Layout;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::PrintContext;
 use GTK::Raw::Types;
 

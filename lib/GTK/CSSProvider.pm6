@@ -3,8 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
-use GTK::Compat::Screen;
+
+use GDK::Screen;
 use GTK::Raw::CSSProvider;
 use GTK::Raw::StyleContext;
 use GTK::Raw::Types;
@@ -43,7 +43,7 @@ class GTK::CSSProvider {
     self!setObject($provider);
 
     my uint32 $p = self.RESOLVE-UINT($priority);
-    my $screen = GTK::Compat::Screen.get_default.screen;
+    my $screen = GDK::Screen.get_default.screen;
     gtk_style_context_add_provider_for_screen($screen, $!sp, $p);
 
     my %sections;

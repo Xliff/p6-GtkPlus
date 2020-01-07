@@ -3,8 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::RGBA;
+
 use GTK::Raw::ColorButton;
 use GTK::Raw::ColorChooser;
 use GTK::Raw::Types;
@@ -74,7 +74,7 @@ class GTK::ColorButton is GTK::Button {
     self.bless(:$button);
   }
 
-  method new_with_rgba (GTK::Compat::RGBA $color) is also<new-with-rgba> {
+  method new_with_rgba (GDK::RGBA $color) is also<new-with-rgba> {
     my $button = gtk_color_button_new_with_rgba($color);
     self.bless(:$button);
   }

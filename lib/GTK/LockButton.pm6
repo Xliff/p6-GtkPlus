@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::LockButton;
 use GTK::Raw::Types;
 
@@ -73,7 +73,7 @@ class GTK::LockButton is GTK::Button {
     # GPermission
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Permission.new(
+        GDK::Permission.new(
           gtk_lock_button_get_permission($!lb)
         )
       },

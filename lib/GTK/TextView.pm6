@@ -5,7 +5,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::TextView;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -267,7 +267,7 @@ class GTK::TextView is GTK::Container {
   method input_hints is rw is also<input-hints> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkInputHints( gtk_text_view_get_input_hints($!tv) );
+        GtkInputHintsEnum( gtk_text_view_get_input_hints($!tv) );
       },
       STORE => sub ($, Int() $hints is copy) {
         my uint32 $h = self.RESOLVE-UINT($hints);
@@ -279,7 +279,7 @@ class GTK::TextView is GTK::Container {
   method input_purpose is rw is also<input-purpose> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkInputPurpose( gtk_text_view_get_input_purpose($!tv) );
+        GtkInputPurposeEnum( gtk_text_view_get_input_purpose($!tv) );
       },
       STORE => sub ($, Int() $purpose is copy) {
         my uint32 $p = self.RESOLVE-UINT($purpose);
@@ -291,7 +291,7 @@ class GTK::TextView is GTK::Container {
   method justification is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkJustification( gtk_text_view_get_justification($!tv) );
+        GtkJustificationEnum( gtk_text_view_get_justification($!tv) );
       },
       STORE => sub ($, Int() $justification is copy) {
         my uint32 $j = self.RESOLVE-UINT($justification);
@@ -410,7 +410,7 @@ class GTK::TextView is GTK::Container {
   method wrap_mode is rw is also<wrap-mode wrap> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkWrapMode( gtk_text_view_get_wrap_mode($!tv) );
+        GtkWrapModeEnum( gtk_text_view_get_wrap_mode($!tv) );
       },
       STORE => sub ($, Int() $wrap_mode is copy) {
         my uint32 $wm = self.RESOLVE-UINT($wrap_mode);

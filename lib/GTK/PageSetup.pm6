@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::PageSetup;
 use GTK::Raw::Types;
 
@@ -35,7 +35,7 @@ class GTK::PageSetup {
   method orientation is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPageOrientation( gtk_page_setup_get_orientation($!ps) );
+        GtkPageOrientationEnum( gtk_page_setup_get_orientation($!ps) );
       },
       STORE => sub ($, uint32 $orientation is copy) {
         my guint $o = self.RESOLVE-UINT($orientation);

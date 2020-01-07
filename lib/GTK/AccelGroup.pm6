@@ -6,7 +6,7 @@ use NativeCall;
 use GTK::Raw::Utils;
 
 use GLib::Value;
-use GTK::Compat::Types;
+
 use GTK::Raw::AccelGroup;
 use GTK::Raw::Types;
 

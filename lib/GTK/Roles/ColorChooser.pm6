@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ColorChooser;
 use GTK::Raw::Types;
 
@@ -25,11 +25,11 @@ role GTK::Roles::ColorChooser {
   method rgba is rw {
     Proxy.new(
       FETCH => -> $ {
-        my $c = GTK::Compat::RGBA.new;
+        my $c = GDK::RGBA.new;
         self.get_rgba($c);
         $c;
       },
-      STORE => -> $, GTK::Compat::RGBA $color {
+      STORE => -> $, GDK::RGBA $color {
         gtk_color_chooser_set_rgba($!cc, $color);
       }
     );
@@ -48,7 +48,7 @@ role GTK::Roles::ColorChooser {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_rgba (GTK::Compat::RGBA $color is rw) is also<get-rgba> {
+  method get_rgba (GDK::RGBA $color is rw) is also<get-rgba> {
     gtk_color_chooser_get_rgba($!cc, $color);
     $color;
   }

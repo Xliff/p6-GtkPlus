@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::CellRendererAccel;
 use GTK::Raw::Types;
 
@@ -109,7 +109,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('accel-mode', $gv);
-        GtkCellRendererAccelMode( $gv.enum );
+        GtkCellRendererAccelModeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);

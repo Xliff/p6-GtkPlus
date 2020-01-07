@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ComboBox;
 use GTK::Raw::Types;
 
@@ -224,7 +224,7 @@ class GTK::ComboBox is GTK::Bin {
   method button_sensitivity is rw is also<button-sensitivity> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSensitivityType( gtk_combo_box_get_button_sensitivity($!cb) );
+        GtkSensitivityTypeEnum( gtk_combo_box_get_button_sensitivity($!cb) );
       },
       STORE => sub ($, Int() $sensitivity is copy) {
         my guint $s = self.RESOLVE-UINT($sensitivity);

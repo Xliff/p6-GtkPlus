@@ -5,7 +5,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ToolItem;
 use GTK::Raw::Types;
 
@@ -171,7 +171,7 @@ class GTK::ToolItem is GTK::Bin {
       icon-size
     > 
   {
-    GtkIconSize( gtk_tool_item_get_icon_size($!ti) );
+    GtkIconSizeEnum( gtk_tool_item_get_icon_size($!ti) );
   }
 
   method get_orientation 
@@ -180,7 +180,7 @@ class GTK::ToolItem is GTK::Bin {
       orientation
     > 
   {
-    GtkOrientation( gtk_tool_item_get_orientation($!ti) );
+    GtkOrientationEnum( gtk_tool_item_get_orientation($!ti) );
   }
 
   # EXample mechanism to return widget pointer for MenuItem subclases
@@ -203,7 +203,7 @@ class GTK::ToolItem is GTK::Bin {
       relief-style
     > 
   {
-    GtkReliefStyle( gtk_tool_item_get_relief_style($!ti) );
+    GtkReliefStyleEnum( gtk_tool_item_get_relief_style($!ti) );
   }
 
   method get_text_alignment 
@@ -223,7 +223,7 @@ class GTK::ToolItem is GTK::Bin {
       text-orientation
     > 
   {
-    GtkOrientation( gtk_tool_item_get_text_orientation($!ti) );
+    GtkOrientationEnum( gtk_tool_item_get_text_orientation($!ti) );
   }
 
   method get_text_size_group 
@@ -245,7 +245,7 @@ class GTK::ToolItem is GTK::Bin {
       toolbar-style
     > 
   {
-    GtkToolbarStyle( gtk_tool_item_get_toolbar_style($!ti) );
+    GtkToolbarStyleEnum( gtk_tool_item_get_toolbar_style($!ti) );
   }
 
   method get_type is also<get-type> {

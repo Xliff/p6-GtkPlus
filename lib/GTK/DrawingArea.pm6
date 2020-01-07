@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 use GTK::Widget;
@@ -75,7 +75,7 @@ class GTK::DrawingArea is GTK::Widget {
   { $!da }
 
   # cw: Is this true?!?
-  method GTK::Compat::Types::cairo_t is also<cairo_t> {
+  method GDK::Types::cairo_t is also<cairo_t> {
     nativecast(cairo_t, $!da);
   }
 

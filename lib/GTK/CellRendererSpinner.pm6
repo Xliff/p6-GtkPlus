@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::CellRendererSpinner;
 use GTK::Raw::Types;
 
@@ -102,7 +102,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('size', $gv);
-        GtkIconSize( $gv.enum );
+        GtkIconSizeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = self.RESOLVE-UINT($val);

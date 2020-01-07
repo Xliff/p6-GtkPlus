@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
-use GTK::Raw::Types;
+use GLib::Raw::Definitions;
+use GTK::Raw::Definitions;
+
+unit package GTK::Raw::Subs;
 
 # For signal handlers -- Didn't work because of missing closure, but it was
 # a nice idea.

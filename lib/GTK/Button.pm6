@@ -3,13 +3,13 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Button;
 use GTK::Raw::Types;
 
 use GTK::Roles::Actionable;
 
-use GTK::Compat::Window;
+use GDK::Window;
 
 use GTK::Bin;
 use GTK::Widget;
@@ -176,7 +176,7 @@ class GTK::Button is GTK::Bin {
   method image_position is rw is also<image-position> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPositionType( gtk_button_get_image_position($!b) );
+        GtkPositionTypeEnum( gtk_button_get_image_position($!b) );
       },
       STORE => sub ($, Int() $position is copy) {
         my uint32 $p = $position;
@@ -200,7 +200,7 @@ class GTK::Button is GTK::Bin {
   method relief is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkReliefStyle( gtk_button_get_relief($!b) );
+        GtkReliefStyleEnum( gtk_button_get_relief($!b) );
       },
       STORE => sub ($, Int() $relief is copy) {
         my uint32 $r = $relief;
@@ -304,7 +304,7 @@ class GTK::Button is GTK::Bin {
     my $w = gtk_button_get_event_window($!b);
 
     $w ??
-      ( $raw ?? $w !! GTK::Compat::Window.new($w) )
+      ( $raw ?? $w !! GDK::Window.new($w) )
       !!
       Nil;
   }

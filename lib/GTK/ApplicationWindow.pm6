@@ -2,7 +2,7 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 use GTK::Raw::ApplicationWindow;
@@ -47,7 +47,7 @@ class GTK::ApplicationWindow is GTK::Window {
         $_;
       }
       when GActionMap {
-        $!actmap = $_;                          # GTK::Compat::Roles::ActionMap
+        $!actmap = $_;                          # GDK::Roles::ActionMap
         $to-parent = cast(GtkWindow, $_);
         cast(GtkApplication, $_);
       }

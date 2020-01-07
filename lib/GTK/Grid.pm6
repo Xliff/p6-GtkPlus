@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Grid;
 use GTK::Raw::Types;
 
@@ -146,7 +146,7 @@ class GTK::Grid is GTK::Container {
       when GtkWidget   { +.p        }
     }
     my ($l, $t, $w, $h) = %!obj-track{$s}<l t w h>;
-    given GtkPositionType($side) {
+    given GtkPositionTypeEnum($side) {
       when GTK_POS_LEFT      { --$l     }
       when GTK_POS_RIGHT     { $l += $w }
       when GTK_POS_TOP       { --$t     }
@@ -369,7 +369,7 @@ class GTK::Grid is GTK::Container {
 
     # Is this an implied insert? If so:
     # my ($l, $t, $w, $h) = %!obj-track{ +$sibling.p }<l t w h>;
-    # given GtkPositionType($side) {
+    # given GtkPositionTypeEnum($side) {
     #   when GTK_POS_TOP    { self!grid-add-row($t,      :push) }
     #   when GTK_POS_BOTTOM { self!grid-add-row($t + $h, :push) }
     #   when GTK_POS_LEFT   { self!grid-add-col($l,      :push) }
@@ -434,7 +434,7 @@ class GTK::Grid is GTK::Container {
     die '$sibling not found in grid!'
       unless %!obj-manifest{+$sibling.p}:exists;
     # my ($l, $t) = %!obj-track{+$sibling.p}<l t>;
-    # given GtkPositionType($side) {
+    # given GtkPositionTypeEnum($side) {
       #Check rules. Do these follow normal insert if they are within the grid?
       # when GTK_POS_LEFT      { $l-- if $l > 0; self!grid-add-col($l, :push) }
       # when GTK_POS_RIGHT     { $l++; self!grid-add-col($l)                  }

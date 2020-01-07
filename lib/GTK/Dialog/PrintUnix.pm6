@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Dialog::Raw::PrintUnix;
 use GTK::Raw::Types;
 
@@ -98,7 +98,7 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
   method manual_capabilities is rw is also<manual-capabilities> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintCapabilities(
+        GtkPrintCapabilitiesEnum(
           gtk_print_unix_dialog_get_manual_capabilities($!pud)
         );
       },

@@ -5,8 +5,8 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::RGBA;
+
 use GTK::Raw::CellRendererText;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -109,7 +109,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('alignment', $gv);
-        PangoAlignment( $gv.enum );
+        PangoAlignmentEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = resolve-uint($val);
@@ -168,9 +168,9 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('background-rgba', $gv);
-        nativecast(GTK::Compat::RGBA, $gv.pointer);
+        nativecast(GDK::RGBA, $gv.pointer);
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.pointer = nativecast(Pointer, $val);
         self.prop_set('background-rgba', $gv);
       }
@@ -303,7 +303,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('font-desc', $gv);
-        PangoFontDescription( $gv.enum );
+        PangoFontDescriptionEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = resolve-uint($val);
@@ -347,9 +347,9 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('foreground-rgba', $gv);
-        nativecast(GTK::Compat::RGBA, $gv.pointer);
+        nativecast(GDK::RGBA, $gv.pointer);
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.pointer = nativecast(Pointer, $val);
         self.prop_set('foreground-rgba', $gv);
       }
@@ -571,7 +571,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('stretch', $gv);
-        PangoStretch( $gv.enum );
+        PangoStretchEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = resolve-uint($val);
@@ -631,7 +631,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('style', $gv);
-        PangoStyle( $gv.enum );
+        PangoStyleEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = resolve-uint($val);
@@ -676,7 +676,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('underline', $gv);
-        PangoUnderline( $gv.enum );
+        PangoUnderlineEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = resolve-uint($val);
@@ -706,7 +706,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('variant', $gv);
-        PangoVariant( $gv.enum );
+        PangoVariantEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = resolve-uint($val);
@@ -781,7 +781,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('wrap-mode', $gv);
-        PangoWrapMode( $gv.enum );
+        PangoWrapModeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
         $gv.enum = resolve-uint($val);

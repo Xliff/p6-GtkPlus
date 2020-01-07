@@ -13,8 +13,8 @@ use GTK::Roles::Types;
 use Pango::Language;
 
 use GLib::GSList;
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Types;
+use GDK::Pixbuf;
+
 
 use GTK::TextChildAnchor;
 use GTK::TextMark;
@@ -547,7 +547,7 @@ class GTK::TextIter {
   {
     my $p = gtk_text_iter_get_pixbuf($!ti);
 
-    $p ?? GTK::Compat::Pixbuf.new($p) !! Nil;
+    $p ?? GDK::Pixbuf.new($p) !! Nil;
   }
 
   proto method get_slice(|)
@@ -570,7 +570,7 @@ class GTK::TextIter {
     return Nil unless $tl;
     return $tl if     $glist;
 
-    $tl = GLib::GSList($tl) but GTK::Compat::Raw::ListData[GtkTextTag];
+    $tl = GLib::GSList($tl) but GDK::Raw::ListData[GtkTextTag];
 
     $raw ?? $tl.Array !! $tl.Array.map({ GTK::TextTag.new($_) });
   }

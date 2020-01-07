@@ -3,7 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GTK::Raw::Types;
-use GTK::Compat::Types;
+
 
 unit package GTK::Raw::DnD;
 

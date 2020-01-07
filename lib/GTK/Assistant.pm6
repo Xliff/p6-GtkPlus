@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Assistant;
 use GTK::Raw::Types;
 
@@ -251,10 +251,10 @@ class GTK::Assistant is GTK::Window {
 
         when 'header-image'  |
              'sidebar-image' { my $gv = GLib::Value.new(
-                                 GTK::Compat::Pixbuf.get_type()
+                                 GDK::Pixbuf.get_type()
                                );
                                $gv.object = do given $v {
-                                 when GTK::Compat::Pixbuf { $v.pixbuf }
+                                 when GDK::Pixbuf { $v.pixbuf }
                                  when GdkPixbuf           { $_ }
 
                                  default {

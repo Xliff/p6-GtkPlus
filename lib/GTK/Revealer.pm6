@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Revealer;
 use GTK::Raw::Types;
 
@@ -103,7 +103,7 @@ class GTK::Revealer is GTK::Bin {
   method transition_type is rw is also<transition-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkRevealerTransitionType( gtk_revealer_get_transition_type($!r) );
+        GtkRevealerTransitionTypeEnum( gtk_revealer_get_transition_type($!r) );
       },
       STORE => sub ($, Int() $transition is copy) {
         my uint32 $t = self.RESOLVE-UINT($transition);

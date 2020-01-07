@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ToolPalette;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -74,7 +74,7 @@ class GTK::ToolPalette is GTK::Container {
   method style is rw {
     Proxy.new(
       FETCH => -> $ {
-        GtkToolbarStyle( gtk_tool_palette_get_style($!tp) );
+        GtkToolbarStyleEnum( gtk_tool_palette_get_style($!tp) );
       },
       STORE => -> $, Int() $val {
         my guint $v = resolve-uint($val);
@@ -159,7 +159,7 @@ class GTK::ToolPalette is GTK::Container {
       icon-size
     >
   {
-    GtkIconSize( gtk_tool_palette_get_icon_size($!tp) );
+    GtkIconSizeEnum( gtk_tool_palette_get_icon_size($!tp) );
   }
 
   method get_type is also<get-type> {

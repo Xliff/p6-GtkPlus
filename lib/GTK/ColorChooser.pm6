@@ -3,8 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::RGBA;
+
 
 use GTK::Raw::ColorChooser;
 use GTK::Raw::Label;
@@ -103,7 +103,7 @@ class GTK::ColorChooser is GTK::Box {
     Int() $orientation,
     Int() $colors_per_line,
     Int() $n_colors,
-    GTK::Compat::RGBA $colors
+    GDK::RGBA $colors
   )
     is also<add-palette>
   {

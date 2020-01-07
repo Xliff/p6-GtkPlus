@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 
 use GTK::Raw::Box;
 use GTK::Raw::Types;
@@ -111,7 +111,7 @@ class GTK::Box is GTK::Container {
   method baseline_position is rw is also<baseline-position> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkBaselinePosition( gtk_box_get_baseline_position($!b) );
+        GtkBaselinePositionEnum( gtk_box_get_baseline_position($!b) );
       },
       STORE => sub ($, Int() $position is copy) {
         my uint32 $p = $position;

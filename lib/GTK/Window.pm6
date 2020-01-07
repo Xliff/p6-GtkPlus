@@ -9,9 +9,9 @@ use GTK::Bin;
 use GTK::Widget;
 
 use GLib::GList;
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Types;
-use GTK::Compat::Screen;
+use GDK::Pixbuf;
+
+use GDK::Screen;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
@@ -342,7 +342,7 @@ class GTK::Window is GTK::Bin {
   method icon is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Pixbuf( gtk_window_get_icon($!win) );
+        GDK::Pixbuf( gtk_window_get_icon($!win) );
       },
       STORE => sub ($, GdkPixbuf() $icon is copy) {
         gtk_window_set_icon($!win, $icon);
@@ -453,7 +453,7 @@ class GTK::Window is GTK::Bin {
   method screen is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Screen.new( gtk_window_get_screen($!win) );
+        GDK::Screen.new( gtk_window_get_screen($!win) );
       },
       STORE => sub ($, GdkScreen() $screen is copy) {
         gtk_window_set_screen($!win, $screen);

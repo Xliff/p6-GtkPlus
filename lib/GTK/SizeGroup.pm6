@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::SizeGroup;
 use GTK::Raw::Types;
 
@@ -65,7 +65,7 @@ class GTK::SizeGroup {
   method mode is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSizeGroupMode( gtk_size_group_get_mode($!sg) );
+        GtkSizeGroupModeEnum( gtk_size_group_get_mode($!sg) );
       },
       STORE => sub ($, Int() $mode is copy) {
         my uint32 $m = resolve-uint($mode);

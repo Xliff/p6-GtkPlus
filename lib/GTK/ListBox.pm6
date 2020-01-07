@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ListBox;
 use GTK::Raw::Types;
 
@@ -154,7 +154,7 @@ class GTK::ListBox is GTK::Container {
   method selection_mode is rw is also<selection-mode> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSelectionMode( gtk_list_box_get_selection_mode($!lb) );
+        GtkSelectionModeEnum( gtk_list_box_get_selection_mode($!lb) );
       },
       STORE => sub ($, Int() $mode is copy) {
         my guint $m = self.RESOLVE-UINT($mode);

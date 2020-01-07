@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::InfoBar;
 use GTK::Raw::Types;
 
@@ -86,7 +86,7 @@ class GTK::InfoBar is GTK::Box {
   method message_type is rw is also<message-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkMessageType( gtk_info_bar_get_message_type($!ib) );
+        GtkMessageTypeEnum( gtk_info_bar_get_message_type($!ib) );
       },
       STORE => sub ($, Int() $message_type is copy) {
         my uint32 $mt = resolve-uint($message_type);

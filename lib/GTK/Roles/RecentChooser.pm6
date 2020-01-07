@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 use GTK::Raw::Utils;
@@ -118,7 +118,7 @@ role GTK::Roles::RecentChooser {
   method sort_type is rw is also<sort-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkRecentSortType( gtk_recent_chooser_get_sort_type($!rc) );
+        GtkRecentSortTypeEnum( gtk_recent_chooser_get_sort_type($!rc) );
       },
       STORE => sub ($, Int() $sort_type is copy) {
         my gint $s = resolve-uint($sort_type);
@@ -173,7 +173,7 @@ role GTK::Roles::RecentChooser {
       items
     >
   {
-    my $i = GTK::Compat::List.new( gtk_recent_chooser_get_items($!rc) )
+    my $i = GDK::List.new( gtk_recent_chooser_get_items($!rc) )
       but GLib::Roles::ListData[GtkRecentInfo];
     $raw ?? $i.Array !! $i.Array.map({ GTK::RecentInfo.new($_) });
   }
@@ -192,7 +192,7 @@ role GTK::Roles::RecentChooser {
   }
 
   method list_filters (:$raw) is also<list-filters> {
-    my $f = GTK::Compat::SList.new( gtk_recent_chooser_list_filters($!rc) )
+    my $f = GDK::SList.new( gtk_recent_chooser_list_filters($!rc) )
       but GLib::Roles::ListData[GtkRecentFilter];
     $raw ?? $f.Array !! $f.Array.map({ GTK::RecentFilter.new($_) });
   }

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 use GTK::Raw::Utils;
@@ -129,7 +129,7 @@ class GTK::RecentInfo {
 
   method get_icon (Int() $size) is also<get-icon> {
     my gint $s = resolve-int($size);
-    GTK::Compat::Pixbuf.new( gtk_recent_info_get_icon($!ri, $s) );
+    GDK::Pixbuf.new( gtk_recent_info_get_icon($!ri, $s) );
   }
 
   method get_mime_type 

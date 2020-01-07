@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ButtonBox;
 use GTK::Raw::Types;
 
@@ -85,7 +85,7 @@ class GTK::ButtonBox is GTK::Box {
   method layout is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkButtonBoxStyle( gtk_button_box_get_layout($!bb) );
+        GtkButtonBoxStyleEnum( gtk_button_box_get_layout($!bb) );
       },
       STORE => sub ($, Int() $layout_style is copy) {
         my uint32 $l = self.RESOLVE-UINT($layout_style);

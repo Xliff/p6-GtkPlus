@@ -5,7 +5,7 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Scale;
 use GTK::Raw::Types;
 
@@ -191,7 +191,7 @@ class GTK::Scale is GTK::Range {
   method value_pos is rw is also<value-pos> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPositionType( gtk_scale_get_value_pos($!s) );
+        GtkPositionTypeEnum( gtk_scale_get_value_pos($!s) );
       },
       STORE => sub ($, Int() $pos is copy) {
         my uint32 $p = resolve-uint($pos);

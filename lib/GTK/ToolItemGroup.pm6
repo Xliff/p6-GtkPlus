@@ -5,7 +5,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::ToolItemGroup;
 use GTK::Raw::Types;
 
@@ -105,7 +105,7 @@ class GTK::ToolItemGroup is GTK::Container {
   method header_relief is rw is also<header-relief> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkReliefStyle(
+        GtkReliefStyleEnum(
           gtk_tool_item_group_get_header_relief($!tig)
         );
       },

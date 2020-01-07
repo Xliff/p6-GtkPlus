@@ -4,7 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GLib::GList;
-use GTK::Compat::Types;
+
 use GTK::Raw::WindowGroup;
 use GTK::Raw::Types;
 

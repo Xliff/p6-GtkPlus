@@ -6,7 +6,7 @@ use NativeCall;
 use Data::Dump::Tree;
 
 use GLib::GSList;
-use GTK::Compat::Types;
+
 use GTK::Raw::Builder;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;

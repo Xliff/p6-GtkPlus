@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::MenuButton;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
@@ -84,7 +84,7 @@ class GTK::MenuButton is GTK::ToggleButton {
   method direction is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkArrowType( gtk_menu_button_get_direction($!mb) );
+        GtkArrowTypeEnum( gtk_menu_button_get_direction($!mb) );
       },
       STORE => sub ($, Int() $direction is copy) {
         my guint $d = self.RESOLVE-UINT($direction);

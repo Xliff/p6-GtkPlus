@@ -3,15 +3,13 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
-use GTK::Raw::Viewport;
 use GTK::Raw::Types;
+use GTK::Raw::Viewport;
+
+use GDK::Window;
+use GTK::Bin;
 
 use GTK::Roles::Scrollable;
-
-use GTK::Compat::Window;
-
-use GTK::Bin;
 
 our subset ViewPortAncestry is export
   where GtkViewport | GtkScrollable | BinAncestry;
@@ -55,12 +53,17 @@ class GTK::Viewport is GTK::Bin {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkViewPort is also<ViewPort> { $!v }
 
-  multi method new (ViewPortAncestry $viewport) {
+  method GTK::Raw::Types::GtkViewPort
+    is also<
+      ViewPort
+      GtkViewPort
+    >
+  { $!v }
+
+  multi method new (ViewPortAncestry $viewport, :$ref = True) {
     my $o = self.bless(:$viewport);
-    $o.upref;
+    $o.upref if $ref;
     $o;
   }
   multi method new (
@@ -68,7 +71,8 @@ class GTK::Viewport is GTK::Bin {
     GtkAdjustment() $vadjustment
   ) {
     my $viewport = gtk_viewport_new($hadjustment, $vadjustment);
-    self.bless(:$viewport);
+
+    $viewport ?? self.bless(:$viewport) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -79,10 +83,11 @@ class GTK::Viewport is GTK::Bin {
   method shadow_type is rw is also<shadow-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkShadowType( gtk_viewport_get_shadow_type($!v) );
+        GtkShadowTypeEnum( gtk_viewport_get_shadow_type($!v) );
       },
       STORE => sub ($, Int() $type is copy) {
-        my $t = self.RESOLVE-UINT($type);
+        my $t = $type;
+
         gtk_viewport_set_shadow_type($!v, $t);
       }
     );
@@ -94,29 +99,40 @@ class GTK::Viewport is GTK::Bin {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_bin_window 
+  method get_bin_window (:$raw = False)
     is also<
       get-bin-window
       bin_window
       bin-window
-    > 
+    >
   {
-    GDK::Compat::Window.new( gtk_viewport_get_bin_window($!v) );
+    my $win = gtk_viewport_get_bin_window($!v);
+
+    $win ??
+      ( $raw ?? $win !! GDK::Window.new($win) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_viewport_get_type, $n, $t );
   }
 
-  method get_view_window 
+  method get_view_window (:$raw = False)
     is also<
       get-view-window
       view_window
       view-window
-    > 
+    >
   {
-    GDK::Compat::Window.new( gtk_viewport_get_view_window($!v) );
+    my $win = gtk_viewport_get_view_window($!v);
+
+    $win ??
+      ( $raw ?? $win !! GDK::Window.new($win) )
+      !!
+      Nil;
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

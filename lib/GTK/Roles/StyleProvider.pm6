@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 sub gtk_style_provider_get_style (GtkStyleProvider $provider, GtkWidgetPath $path)

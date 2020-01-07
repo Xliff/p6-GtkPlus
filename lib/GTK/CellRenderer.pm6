@@ -3,11 +3,11 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::CellRenderer;
 use GTK::Raw::Types;
 
-use GTK::Compat::RGBA;
+use GDK::RGBA;
 use GLib::Value;
 
 use GTK::Roles::Data;
@@ -226,7 +226,7 @@ class GTK::CellRenderer {
         $gv = GLib::Value.new(
           self.prop_get('mode', $gv)
         );
-        GtkCellRendererMode( $gv.uint )
+        GtkCellRendererModeEnum( $gv.uint )
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;

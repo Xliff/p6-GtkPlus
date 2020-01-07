@@ -4,7 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GLib::GList;
-use GTK::Compat::Types;
+
 use GTK::Raw::Printer;
 use GTK::Raw::Types;
 
@@ -221,7 +221,7 @@ class GTK::Printer {
   }
 
   method get_capabilities is also<get-capabilities> {
-    GtkPrintCapabilities( gtk_printer_get_capabilities($!prn) );
+    GtkPrintCapabilitiesEnum( gtk_printer_get_capabilities($!prn) );
   }
 
   method get_default_page_size is also<get-default-page-size> {

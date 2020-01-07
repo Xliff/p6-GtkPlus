@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::CellRendererPixbuf;
 use GTK::Raw::Types;
 
@@ -114,7 +114,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf', $gv);
-        GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
+        GDK::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
@@ -129,7 +129,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf-expander-closed', $gv);
-        GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
+        GDK::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.pointer = $val;
@@ -144,7 +144,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf-expander-open', $gv);
-        GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
+        GDK::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.pointer = $val;

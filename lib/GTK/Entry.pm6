@@ -6,7 +6,7 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::AttrList;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Entry;
 use GTK::Raw::Types;
 
@@ -276,7 +276,7 @@ class GTK::Entry is GTK::Widget {
   method input_hints is rw is also<input-hints> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkInputHints( gtk_entry_get_input_hints($!e) );
+        GtkInputHintsEnum( gtk_entry_get_input_hints($!e) );
       },
       STORE => sub ($, Int() $hints is copy) {
         my guint $h = self.RESOLVE-UINT($hints);
@@ -288,7 +288,7 @@ class GTK::Entry is GTK::Widget {
   method input_purpose is rw is also<input-purpose> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkInputPurpose( gtk_entry_get_input_purpose($!e) );
+        GtkInputPurposeEnum( gtk_entry_get_input_purpose($!e) );
       },
       STORE => sub ($, Int() $purpose is copy) {
         my uint32 $p = self.RESOLVE-UINT($purpose);
@@ -584,13 +584,13 @@ class GTK::Entry is GTK::Widget {
 
   # Type: GdkPixbuf
   method primary-icon-pixbuf is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+    my GLib::Value $gv .= new( GDK::Pixbuf.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-pixbuf', $gv)
         );
-        GTK::Compat::Pixbuf.new(
+        GDK::Pixbuf.new(
           nativecast(GdkPixbuf, $gv.object)
         );
       },
@@ -643,7 +643,7 @@ class GTK::Entry is GTK::Widget {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-storage-type', $gv)
         );
-        GtkImageType( $gv.uint);
+        GtkImageTypeEnum( $gv.uint);
       },
       STORE => -> $,  $val is copy {
         warn "primary-icon-storage-type does not allow writing"
@@ -755,13 +755,13 @@ class GTK::Entry is GTK::Widget {
 
   # Type: GdkPixbuf
   method secondary-icon-pixbuf is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+    my GLib::Value $gv .= new( GDK::Pixbuf.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-pixbuf', $gv)
         );
-        GTK::Compat::Pixbuf.new(
+        GDK::Pixbuf.new(
           nativecast(GdkPixbuf, $gv.objecty)
         );
       },
@@ -814,7 +814,7 @@ class GTK::Entry is GTK::Widget {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-storage-type', $gv)
         );
-        GtkImageType( $gv.uint );
+        GtkImageTypeEnum( $gv.uint );
       },
       STORE => -> $,  $val is copy {
         warn "secondary-icon-storage-type does not allow writing"
@@ -1021,7 +1021,7 @@ class GTK::Entry is GTK::Widget {
     is also<get-icon-storage-type>
   {
     my uint32 $ip = self.RESOLVE-INT($icon_pos);
-    GtkImageType( gtk_entry_get_icon_storage_type($!e, $ip) );
+    GtkImageTypeEnum( gtk_entry_get_icon_storage_type($!e, $ip) );
   }
 
   method get_icon_tooltip_markup (

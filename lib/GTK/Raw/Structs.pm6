@@ -4,13 +4,13 @@ use NativeCall;
 
 use GLib::Raw::Definitions;
 use Pango::Raw::Definitions;
-use GDK::Raw::Definitions;
+use GDKRaw::Definitions;
 use GLib::Raw::Structs;
-use GDK::Raw::Structs;
+use GDKRaw::Structs;
 use Pango::Raw::Structs;
 use GTK::Raw::Definitions;
 
-use GDK::RGBA;
+use GDKRGBA;
 
 unit package GTK::Raw::Structs;
 

@@ -3,14 +3,14 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::DnD;
 use GTK::Raw::Types;
 
 use GTK::Roles::Types;
 use GLib::Roles::Object;
 
-# TO BE USED WITH GTK::Compat::DragContext.
+# TO BE USED WITH GDK::DragContext.
 
 class GTK::DragContext {
   also does GTK::Roles::Types;
@@ -22,7 +22,7 @@ class GTK::DragContext {
     self!setObject($!dc = $context);
   }
   
-  method GTK::Compat::Types::GdkDragContext
+  method GDK::Types::GdkDragContext
     is also<DragContext>
     { $!dc }
 

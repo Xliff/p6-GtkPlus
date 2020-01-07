@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Calendar;
 use GTK::Raw::Types;
 
@@ -129,7 +129,7 @@ class GTK::Calendar is GTK::Widget {
   method display_options is rw is also<display-options> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkCalendarDisplayOptions(
+        GtkCalendarDisplayOptionsEnum(
           gtk_calendar_get_display_options($!cal)
         );
       },

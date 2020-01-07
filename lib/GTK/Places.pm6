@@ -4,7 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GLib::GSList;
-use GTK::Compat::Types;
+
 use GTK::Raw::Places;
 use GTK::Raw::Types;
 
@@ -181,7 +181,7 @@ class GTK::Places is GTK::ScrolledWindow {
   method open_flags is rw is also<open-flags> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPlacesOpenFlags( gtk_places_sidebar_get_open_flags($!ps) );
+        GtkPlacesOpenFlagsEnum( gtk_places_sidebar_get_open_flags($!ps) );
       },
       STORE => sub ($, Int() $flags is copy) {
         my uint32 $f = self.RESOLVE-UINT($flags);

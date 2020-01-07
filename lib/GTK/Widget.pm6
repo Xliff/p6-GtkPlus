@@ -8,11 +8,11 @@ use Pango::Context;
 
 use GLib::Value;
 
-use GTK::Compat::Display;
-use GTK::Compat::RGBA;
-use GTK::Compat::Screen;
-use GTK::Compat::Types;
-use GTK::Compat::Window;
+use GDK::Display;
+use GDK::RGBA;
+use GDK::Screen;
+
+use GDK::Window;
 
 use GTK::Raw::DnD;
 use GTK::Raw::DragDest;
@@ -848,7 +848,7 @@ class GTK::Widget {
   method window is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Window.new( gtk_widget_get_window($!w) );
+        GDK::Window.new( gtk_widget_get_window($!w) );
       },
       STORE => sub ($, GdkWindow() $window is copy) {
         gtk_widget_set_window($!w, $window);
@@ -1377,7 +1377,7 @@ class GTK::Widget {
 
   method override_background_color (
     GtkStateFlags $state,
-    GTK::Compat::RGBA $color
+    GDK::RGBA $color
   )
     is also<override-background-color>
   {
@@ -1448,8 +1448,8 @@ class GTK::Widget {
   }
 
   method override_cursor (
-    GTK::Compat::RGBA $cursor,
-    GTK::Compat::RGBA $secondary_cursor
+    GDK::RGBA $cursor,
+    GDK::RGBA $secondary_cursor
   )
     is also<override-cursor>
   {
@@ -1510,7 +1510,7 @@ class GTK::Widget {
     gtk_widget_send_expose($!w, $event);
   }
 
-  method override_symbolic_color (Str() $name, GTK::Compat::RGBA $color)
+  method override_symbolic_color (Str() $name, GDK::RGBA $color)
     is also<override-symbolic-color>
   {
     gtk_widget_override_symbolic_color($!w, $name, $color);
@@ -1587,7 +1587,7 @@ class GTK::Widget {
     gtk_widget_is_ancestor($!w, $ancestor);
   }
 
-  method override_color (GtkStateFlags $state, GTK::Compat::RGBA $color)
+  method override_color (GtkStateFlags $state, GDK::RGBA $color)
     is also<override-color>
   {
     gtk_widget_override_color($!w, $state, $color);
@@ -1903,7 +1903,7 @@ class GTK::Widget {
   }
 
   method get_display is also<get-display display> {
-    GTK::Compat::Display.new( gtk_widget_get_display($!w) );
+    GDK::Display.new( gtk_widget_get_display($!w) );
   }
 
   method list_accel_closures is also<list-accel-closures> {
@@ -2113,7 +2113,7 @@ class GTK::Widget {
   }
 
   method get_screen is also<get-screen screen> {
-    GTK::Compat::Screen.new( gtk_widget_get_screen($!w) );
+    GDK::Screen.new( gtk_widget_get_screen($!w) );
   }
 
   method queue_resize is also<queue-resize> {

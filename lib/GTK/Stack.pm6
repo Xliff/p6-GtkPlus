@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Stack;
 use GTK::Raw::Types;
 
@@ -134,7 +134,7 @@ class GTK::Stack is GTK::Container {
   method transition_type is rw is also<transition-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkStackTransitionType( gtk_stack_get_transition_type($!s) );
+        GtkStackTransitionTypeEnum( gtk_stack_get_transition_type($!s) );
       },
       STORE => sub ($, Int() $transition is copy) {
         my uint32 $t = self.RESOLVE-UINT($transition);

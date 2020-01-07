@@ -6,7 +6,7 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::Tabs;
 
-use GTK::Compat::Types;
+
 
 use GTK::Raw::TextTag;
 use GTK::Raw::Types;
@@ -178,15 +178,15 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method background-rgba is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('background-rgba', $gv)
         );
-        nativecast(GTK::Compat::RGBA, $gv.boxed);
+        nativecast(GDK::RGBA, $gv.boxed);
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.boxed = $val;
         self.prop_set('background-rgba', $gv);
       }
@@ -218,7 +218,7 @@ class GTK::TextTag  {
         $gv = GLib::Value.new(
           self.prop_get('direction', $gv)
         );
-        GtkTextDirection( $gv.uint );
+        GtkTextDirectionEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
@@ -432,15 +432,15 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method foreground-rgba is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('foreground-rgba', $gv)
         );
-        nativecast( GTK::Compat::RGBA, $gv.boxed );
+        nativecast( GDK::RGBA, $gv.boxed );
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.boxed = $val;
         self.prop_set('foreground-rgba', $gv);
       }
@@ -540,7 +540,7 @@ class GTK::TextTag  {
         $gv = GLib::Value.new(
           self.prop_get('justification', $gv)
         );
-        GtkJustification( $gv.uint );
+        GtkJustificationEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
@@ -718,15 +718,15 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method paragraph-background-rgba is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('paragraph-background-rgba', $gv)
         );
-        nativecast(GTK::Compat::RGBA, $gv.boxed);
+        nativecast(GDK::RGBA, $gv.boxed);
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.boxed = $val;
         self.prop_set('paragraph-background-rgba', $gv);
       }
@@ -1058,15 +1058,15 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method strikethrough-rgba is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('strikethrough-rgba', $gv)
         );
-        nativecast( GTK::Compat::RGBA, $gv.boxed );
+        nativecast( GDK::RGBA, $gv.boxed );
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.boxed = $val;
         self.prop_set('strikethrough-rgba', $gv);
       }
@@ -1200,15 +1200,15 @@ class GTK::TextTag  {
 
   # Type: GdkRGBA
   method underline-rgba is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::RGBA.get_type );
+    my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('underline-rgba', $gv)
         );
-        nativecast( GTK::Compat::RGBA, $gv.boxed );
+        nativecast( GDK::RGBA, $gv.boxed );
       },
-      STORE => -> $, GTK::Compat::RGBA $val is copy {
+      STORE => -> $, GDK::RGBA $val is copy {
         $gv.boxed = $val;
         self.prop_set('underline-rgba', $gv);
       }
@@ -1325,7 +1325,7 @@ class GTK::TextTag  {
         $gv = GLib::Value.new(
           self.prop_get('wrap-mode', $gv)
         );
-        GtkWrapMode( $gv.uint );
+        GtkWrapModeEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;

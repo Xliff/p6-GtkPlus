@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Notebook;
 use GTK::Raw::Types;
 
@@ -219,7 +219,7 @@ class GTK::Notebook is GTK::Container {
   method tab_pos is rw is also<tab-pos> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPositionType( gtk_notebook_get_tab_pos($!n) );
+        GtkPositionTypeEnum( gtk_notebook_get_tab_pos($!n) );
       },
       STORE => sub ($, Int() $pos is copy) {
         my uint32 $p = self.RESOLVE-UINT($pos);

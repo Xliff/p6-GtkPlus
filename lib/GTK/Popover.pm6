@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Popover;
 use GTK::Raw::Types;
 
@@ -81,7 +81,7 @@ class GTK::Popover is GTK::Bin {
   method constrain_to is rw is also<constrain-to> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPopoverConstraint( gtk_popover_get_constrain_to($!p) );
+        GtkPopoverConstraintEnum( gtk_popover_get_constrain_to($!p) );
       },
       STORE => sub ($, Int() $constraint is copy) {
         my uint32 $c = self.RESOLVE-UINT($constraint);
@@ -116,7 +116,7 @@ class GTK::Popover is GTK::Bin {
   method position is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPositionType( gtk_popover_get_position($!p) );
+        GtkPositionTypeEnum( gtk_popover_get_position($!p) );
       },
       STORE => sub ($, Int() $position is copy) {
         my uint32 $p = self.RESOLVE-UINT($position);

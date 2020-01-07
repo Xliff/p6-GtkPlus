@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 use GTK::Raw::RecentInfo;   # Contains Raw calls for ::RecentManager
@@ -72,7 +72,7 @@ class GTK::RecentManager {
   }
 
   method get_items (:$raw) {
-    my $l = GTK::Compat::List.new( gtk_recent_manager_get_items($!rm) )
+    my $l = GDK::List.new( gtk_recent_manager_get_items($!rm) )
       but GLib::Roles::ListData[GtkRecentInfo];
     $raw ?? $l.Array !! $l.Array.map({ GTK::RecentInfo.new($_) });
   }

@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::PrintSettings;
 use GTK::Raw::Types;
 
@@ -108,7 +108,7 @@ class GTK::PrintSettings {
   method duplex is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintDuplex( gtk_print_settings_get_duplex($!prnset) );
+        GtkPrintDuplexEnum( gtk_print_settings_get_duplex($!prnset) );
       },
       STORE => sub ($, Int() $duplex is copy) {
         my guint $d = self.RESOLVE-UINT($duplex);
@@ -166,7 +166,7 @@ class GTK::PrintSettings {
   method number_up_layout is rw is also<number-up-layout> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkNumberUpLayout(
+        GtkNumberUpLayoutEnum(
           gtk_print_settings_get_number_up_layout($!prnset)
         );
       },
@@ -180,7 +180,7 @@ class GTK::PrintSettings {
   method orientation is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPageOrientation( gtk_print_settings_get_orientation($!prnset) );
+        GtkPageOrientationEnum( gtk_print_settings_get_orientation($!prnset) );
       },
       STORE => sub ($, Int() $orientation is copy) {
         my guint $o = self.RESOLVE-UINT($orientation);
@@ -203,7 +203,7 @@ class GTK::PrintSettings {
   method page_set is rw is also<page-set> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPageSet( gtk_print_settings_get_page_set($!prnset) );
+        GtkPageSetEnum( gtk_print_settings_get_page_set($!prnset) );
       },
       STORE => sub ($, $page_set is copy) {
         my guint $ps = self.RESOLVE-UINT($page_set);
@@ -226,7 +226,7 @@ class GTK::PrintSettings {
   method print_pages is rw is also<print-pages> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintPages( gtk_print_settings_get_print_pages($!prnset) );
+        GtkPrintPagesEnum( gtk_print_settings_get_print_pages($!prnset) );
       },
       STORE => sub ($, Int() $pages is copy) {
         my guint $p = self.RESOLVE-UINT($pages);
@@ -260,7 +260,7 @@ class GTK::PrintSettings {
   method quality is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintQuality( gtk_print_settings_get_quality($!prnset) );
+        GtkPrintQualityEnum( gtk_print_settings_get_quality($!prnset) );
       },
       STORE => sub ($, $quality is copy) {
         my guint $q = self.RESOLVE-UINT($quality);

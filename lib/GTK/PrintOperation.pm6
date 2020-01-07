@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::PrintOperation;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -343,7 +343,7 @@ class GTK::PrintOperation {
         $gv = GLib::Value.new(
           self.prop_get('status', $gv)
         );
-        GtkPrintStatus( $gv.enum );
+        GtkPrintStatusEnum( $gv.enum );
       },
       STORE => -> $, $val is copy {
         warn 'GTK::PrintOperation.status does not allow writing'
@@ -392,7 +392,7 @@ class GTK::PrintOperation {
         $gv = GLib::Value.new(
           self.prop_get('unit', $gv)
         );
-        GtkUnit( $gv.uint );
+        GtkUnitEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
@@ -474,7 +474,7 @@ class GTK::PrintOperation {
   }
 
   method get_status is also<get-status> {
-    GtkPrintStatus( gtk_print_operation_get_status($!po) );
+    GtkPrintStatusEnum( gtk_print_operation_get_status($!po) );
   }
 
   method get_status_string is also<get-status-string> {

@@ -4,7 +4,7 @@ use Method::Also;
 use NativeCall;
 
 use GLib::GList;
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 use GTK::Raw::Utils;
@@ -203,7 +203,7 @@ class GTK::FlowBox is GTK::Container {
   method selection_mode is rw is also<selection-mode> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSelectionMode( gtk_flow_box_get_selection_mode($!fb) );
+        GtkSelectionModeEnum( gtk_flow_box_get_selection_mode($!fb) );
       },
       STORE => sub ($, Int() $mode is copy) {
         my uint32 $m = resolve-uint($mode);

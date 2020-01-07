@@ -5,8 +5,8 @@ use NativeCall;
 
 use GTK::Raw::Utils;
 
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Types;
+use GDK::Pixbuf;
+
 use GTK::Raw::Image;
 use GTK::Raw::Types;
 
@@ -47,7 +47,7 @@ class GTK::Image is GTK::Widget {
     }
   }
 
-  method GTK::Compat::Types::GdkPixbuf is also<Pixbuf> { self.get_pixbuf }
+  method GDK::Types::GdkPixbuf is also<Pixbuf> { self.get_pixbuf }
   method GTK::Raw::Types::GtkImage     is also<Image>  { $!i }
 
   multi method new (ImageAncestry $image) {
@@ -229,9 +229,9 @@ class GTK::Image is GTK::Widget {
         # $gv = GLib::Value.new(
         #   self.prop_get('pixbuf', $gv)
         # );
-        # GTK::Compat::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
+        # GDK::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
         my $p = self.get_pixbuf;
-        $raw ?? $p !! GTK::Compat::Pixbuf.new($p);
+        $raw ?? $p !! GDK::Pixbuf.new($p);
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
@@ -299,7 +299,7 @@ class GTK::Image is GTK::Widget {
         $gv = GLib::Value.new(
           self.prop_get('storage-type', $gv)
         );
-        GtkImageType( $gv.int );
+        GtkImageTypeEnum( $gv.int );
       },
       STORE => -> $, $val is copy {
         warn 'storage-type does not allow writing';
@@ -397,7 +397,7 @@ class GTK::Image is GTK::Widget {
     my $n = CArray[Str].new;
     $n[0] = $icon_name;
     gtk_image_get_icon_name($!i, $n, $s);
-    ($icon_name, $size) = ( $n[0], GtkIconSize($s) );
+    ($icon_name, $size) = ( $n[0], GtkIconSizeEnum($s) );
   }
 
   proto method get_icon_set (|) is also<get-icon-set> { * }
@@ -427,7 +427,7 @@ class GTK::Image is GTK::Widget {
   #}
 
   method get_storage_type is also<get-storage-type> {
-    GtkImageType( gtk_image_get_storage_type($!i) );
+    GtkImageTypeEnum( gtk_image_get_storage_type($!i) );
   }
 
   method get_type is also<get-type> {

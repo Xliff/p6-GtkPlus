@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Frame;
 use GTK::Raw::Types;
 
@@ -117,7 +117,7 @@ class GTK::Frame is GTK::Bin {
   method shadow_type is rw is also<shadow-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkShadowType( gtk_frame_get_shadow_type($!f) );
+        GtkShadowTypeEnum( gtk_frame_get_shadow_type($!f) );
       },
       STORE => sub ($, Int() $type is copy) {
         my uint32 $t = self.RESOLVE-UINT($type);

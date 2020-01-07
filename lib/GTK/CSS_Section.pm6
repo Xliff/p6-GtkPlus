@@ -1,6 +1,6 @@
 use v6.c;
 
-use GTK::Compat::Types;
+
 
 use GTK::Raw::Types;
 use GTK::Raw::CSS_Section;
@@ -25,7 +25,7 @@ class GTK::CSS_Section {
   }
 
   method get_file {
-    #GTK::Compat::File.new(
+    #GDK::File.new(
       gtk_css_section_get_file($!css_s)
     #);
   }
@@ -47,7 +47,7 @@ class GTK::CSS_Section {
   }
 
   method get_type {
-    GtkCssSectionType( gtk_css_section_get_type() );
+    GtkCssSectionTypeEnum( gtk_css_section_get_type() );
   }
 
   method ref {

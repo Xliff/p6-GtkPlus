@@ -3,11 +3,11 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Offscreen;
 use GTK::Raw::Types;
 
-use GTK::Compat::Pixbuf;
+use GDK::Pixbuf;
 
 use GTK::Window;
 
@@ -69,7 +69,7 @@ class GTK::Offscreen is GTK::Window {
       pixbuf
     >
  {
-    GTK::Compat::Pixbuf.new( gtk_offscreen_window_get_pixbuf($!ow) );
+    GDK::Pixbuf.new( gtk_offscreen_window_get_pixbuf($!ow) );
   }
 
   method get_surface 

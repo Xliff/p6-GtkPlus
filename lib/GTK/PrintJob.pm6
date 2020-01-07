@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::PrintJob;
 use GTK::Raw::Types;
 
@@ -82,7 +82,7 @@ class GTK::PrintJob {
   method n_up_layout is rw is also<n-up-layout> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkNumberUpLayout( gtk_print_job_get_n_up_layout($!prnjob) );
+        GtkNumberUpLayoutEnum( gtk_print_job_get_n_up_layout($!prnjob) );
       },
       STORE => sub ($, Int() $layout is copy) {
         my guint $l = self.RESOLVE-UINT($layout);
@@ -106,7 +106,7 @@ class GTK::PrintJob {
   method page_set is rw is also<page-set> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPageSet( gtk_print_job_get_page_set($!prnjob) );
+        GtkPageSetEnum( gtk_print_job_get_page_set($!prnjob) );
       },
       STORE => sub ($, Int() $page_set is copy) {
         my guint $ps = self.RESOLVE-UINT($page_set);
@@ -118,7 +118,7 @@ class GTK::PrintJob {
   method pages is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintPages( gtk_print_job_get_pages($!prnjob) );
+        GtkPrintPagesEnum( gtk_print_job_get_pages($!prnjob) );
       },
       STORE => sub ($, $pages is copy) {
         my guint $p = self.RESOLVE-UINT($pages);

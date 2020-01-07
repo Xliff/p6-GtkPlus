@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::MenuBar;
 use GTK::Raw::Types;
 
@@ -81,7 +81,7 @@ class GTK::MenuBar is GTK::MenuShell {
   method child_pack_direction is rw is also<child-pack-direction> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPackDirection( gtk_menu_bar_get_child_pack_direction($!mb) );
+        GtkPackDirectionEnum( gtk_menu_bar_get_child_pack_direction($!mb) );
       },
       STORE => sub ($, Int() $child_pack_dir is copy) {
         my $cpd = self.RESOLVE-UINT($child_pack_dir);
@@ -93,7 +93,7 @@ class GTK::MenuBar is GTK::MenuShell {
   method pack_direction is rw is also<pack-direction> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPackDirection( gtk_menu_bar_get_pack_direction($!mb) );
+        GtkPackDirectionEnum( gtk_menu_bar_get_pack_direction($!mb) );
       },
       STORE => sub ($, Int() $pack_dir is copy) {
         my uint32 $pd = self.RESOLVE-UINT($pack_dir);

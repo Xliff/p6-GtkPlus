@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
 use GTK::Raw::Utils;
@@ -91,7 +91,7 @@ role GTK::Roles::TreeModel {
   }
 
   method get_flags is also<get-flags> {
-    GtkTreeModelFlags( gtk_tree_model_get_flags($!tm) );
+    GtkTreeModelFlagsEnum( gtk_tree_model_get_flags($!tm) );
   }
 
   proto method get_iter (|) is also<get-iter> { * }

@@ -6,9 +6,9 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::FontDescription;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Screen;
-use GTK::Compat::Types;
+use GDK::RGBA;
+use GDK::Screen;
+
 
 use GTK::Raw::StyleContext;
 use GTK::Raw::Subs;
@@ -74,7 +74,7 @@ class GTK::StyleContext {
   method direction is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkTextDirection( gtk_style_context_get_direction($!sc) );
+        GtkTextDirectionEnum( gtk_style_context_get_direction($!sc) );
       },
       STORE => sub ($, Int() $direction is copy) {
         my guint $d = $direction;
@@ -98,7 +98,7 @@ class GTK::StyleContext {
   method junction_sides is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkJunctionSides( gtk_style_context_get_junction_sides($!sc) );
+        GtkJunctionSidesEnum( gtk_style_context_get_junction_sides($!sc) );
       },
       STORE => sub ($, Int() $sides is copy) {
         my guint $s = $sides;
@@ -146,7 +146,7 @@ class GTK::StyleContext {
   method screen is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Screen.new( gtk_style_context_get_screen($!sc) );
+        GDK::Screen.new( gtk_style_context_get_screen($!sc) );
       },
       STORE => sub ($, GdkScreen() $screen is copy) {
         gtk_style_context_set_screen($!sc, $screen);

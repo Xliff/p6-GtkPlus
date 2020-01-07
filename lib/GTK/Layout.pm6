@@ -3,12 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Layout;
 use GTK::Raw::Types;
 
 use GLib::Value;
-use GTK::Compat::Window;
+use GDK::Window;
 use GTK::Container;
 
 use GTK::Roles::Scrollable;
@@ -118,7 +118,7 @@ class GTK::Layout is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_bin_window is also<get-bin-window> {
-    GDK::Compat::Window.new( gtk_layout_get_bin_window($!l) );
+    GDKCompat::Window.new( gtk_layout_get_bin_window($!l) );
   }
 
   proto method get_size (|)

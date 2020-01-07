@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Range;
 use GTK::Raw::Types;
 
@@ -153,7 +153,7 @@ class GTK::Range is GTK::Widget {
   {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSensitivityType( gtk_range_get_lower_stepper_sensitivity($!r) );
+        GtkSensitivityTypeEnum( gtk_range_get_lower_stepper_sensitivity($!r) );
       },
       STORE => sub ($, Int() $sensitivity is copy) {
         my uint32 $s = self.RESOLVE-UINT($sensitivity);
@@ -229,7 +229,7 @@ class GTK::Range is GTK::Widget {
   method upper_stepper_sensitivity is rw is also<upper-stepper-sensitivity> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSensitivityType( gtk_range_get_upper_stepper_sensitivity($!r) );
+        GtkSensitivityTypeEnum( gtk_range_get_upper_stepper_sensitivity($!r) );
       },
       STORE => sub ($, Int() $sensitivity is copy) {
         my uint32 $s = self.RESOLVE-UINT($sensitivity);
