@@ -217,7 +217,7 @@ sub MAIN (
 
 sub run-compile ($module, $thread) {
   my $cs = DateTime.now;
-  my $proc = run 'p6gtkexec', '-e',  "use $module", :out, :err;
+  my $proc = run '/usr/bin/time', '-p', './p6gtkexec', '-e',  "use $module", :out, :err;
   output(
     $module,
     $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"

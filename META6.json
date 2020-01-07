@@ -12,11 +12,10 @@
       "lib/windows/treehelper.dll"
     ],
     "provides": {
+      "GTK::Builder::MRO"                      :  "lib/GTK/Builder/MRO.pm6"                     ,
       "GTK::Builder::Role"                     :  "lib/GTK/Builder/Role.pm6"                    ,
       "GTK::Builder::WidgetMRO"                :  "lib/GTK/Builder/WidgetMRO.pm6"               ,
-      "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
       "GTK::Roles::StructArray"                :  "lib/GTK/Roles/StructArray.pm6"               ,
-      "GTK::Builder::MRO"                      :  "lib/GTK/Builder/MRO.pm6"                     ,
       "GTK::Builder::Base"                     :  "lib/GTK/Builder/Base.pm6"                    ,
       "GTK::Builder::Box"                      :  "lib/GTK/Builder/Box.pm6"                     ,
       "GTK::Builder::Button"                   :  "lib/GTK/Builder/Button.pm6"                  ,
@@ -41,6 +40,7 @@
       "GTK::Raw::Exports"                      :  "lib/GTK/Raw/Exports.pm6"                     ,
       "GTK::Raw::Enums"                        :  "lib/GTK/Raw/Enums.pm6"                       ,
       "GTK::Raw::Types"                        :  "lib/GTK/Raw/Types.pm6"                       ,
+      "GTK::Raw::Utils"                        :  "lib/GTK/Raw/Utils.pm6"                       ,
       "GTK::Raw::Viewport"                     :  "lib/GTK/Raw/Viewport.pm6"                    ,
       "GTK::Raw::VolumeButton"                 :  "lib/GTK/Raw/VolumeButton.pm6"                ,
       "GTK::Raw::Widget"                       :  "lib/GTK/Raw/Widget.pm6"                      ,

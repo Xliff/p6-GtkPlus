@@ -3,14 +3,13 @@ Data::Dump::Tree
 GDK::Display
 GDK::Pixbuf
 GDK::RGBA
+GDK::Raw::Definitions
+GDK::Raw::Enums
+GDK::Raw::Exports
+GDK::Raw::Structs
+GDK::Raw::Subs
 GDK::Screen
 GDK::Window
-GDKRGBA
-GDKRaw::Definitions
-GDKRaw::Enums
-GDKRaw::Exports
-GDKRaw::Structs
-GDKRaw::Subs
 GIO::DBus::Raw::Types
 GIO::MenuModel
 GIO::Raw::Definitions
@@ -50,7 +49,6 @@ Pango::Raw::Subs
 Pango::Raw::Types
 Pango::Tabs
 Pluggable
-GTK::Raw::Utils
 GTK::Builder::MRO
 GTK::Builder::Base
 GTK::Builder::Box
@@ -76,6 +74,7 @@ GTK::Raw::Subs
 GTK::Raw::Exports
 GTK::Raw::Enums
 GTK::Raw::Types
+GTK::Raw::Utils
 GTK::Raw::Viewport
 GTK::Raw::VolumeButton
 GTK::Raw::Widget
