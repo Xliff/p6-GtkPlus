@@ -4,9 +4,7 @@ use Method::Also;
 
 use NativeCall;
 
-
-use GTK::Raw::Subs;
-use GTK::Raw::Utils;
+use GTK::Raw::Types;
 
 constant gObjectTypeKey = 'p6-GObject-Type';
 
@@ -34,7 +32,7 @@ role GTK::Roles::Data {
     is also<set-data-uint>
   {
     my $v = CArray[guint].new;
-    $v[0] = resolve-uint($val);
+    $v[0] = $val;
     g_object_set_uint($!data, $key, $v);
   }
 
@@ -48,7 +46,7 @@ role GTK::Roles::Data {
     is also<set-data-int>
   {
     my $v = CArray[gint].new;
-    $v[0] = resolve-int($val);
+    $v[0] = $val;
     g_object_set_int($!data, $key, $v);
   }
 

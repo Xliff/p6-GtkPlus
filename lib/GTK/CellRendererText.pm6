@@ -9,7 +9,7 @@ use GDK::RGBA;
 
 use GTK::Raw::CellRendererText;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
+
 
 use GLib::Value;
 use GTK::CellRenderer;
@@ -97,7 +97,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('align-set', $gv);
       }
     );
@@ -112,7 +112,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoAlignmentEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-uint($val);
+        $gv.enum = $val;
         self.prop_set('alignment', $gv);
       }
     );
@@ -186,7 +186,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('background-set', $gv);
       }
     );
@@ -201,7 +201,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('editable', $gv);
       }
     );
@@ -216,7 +216,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('editable-set', $gv);
       }
     );
@@ -231,7 +231,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoEllipsizeMode( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-int($val);
+        $gv.enum = $val;
         self.prop_set('ellipsize', $gv);
       }
     );
@@ -246,7 +246,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('ellipsize-set', $gv);
       }
     );
@@ -306,7 +306,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoFontDescriptionEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-uint($val);
+        $gv.enum = $val;
         self.prop_set('font-desc', $gv);
       }
     );
@@ -365,7 +365,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('foreground-set', $gv);
       }
     );
@@ -395,7 +395,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('language-set', $gv);
       }
     );
@@ -424,7 +424,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = resolve-int($val);
+        $gv.int = $val;
         self.prop_set('max-width-chars', $gv);
       }
     );
@@ -454,7 +454,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = resolve-int($val);
+        $gv.int = $val;
         self.prop_set('rise', $gv);
       }
     );
@@ -469,7 +469,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('rise-set', $gv);
       }
     );
@@ -499,7 +499,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('scale-set', $gv);
       }
     );
@@ -514,7 +514,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('single-paragraph-mode', $gv);
       }
     );
@@ -529,7 +529,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = resolve-int($val);
+        $gv.int = $val;
         self.prop_set('size', $gv);
       }
     );
@@ -559,7 +559,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('size-set', $gv);
       }
     );
@@ -574,7 +574,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoStretchEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-uint($val);
+        $gv.enum = $val;
         self.prop_set('stretch', $gv);
       }
     );
@@ -589,7 +589,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('stretch-set', $gv);
       }
     );
@@ -604,7 +604,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('strikethrough', $gv);
       }
     );
@@ -619,7 +619,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('strikethrough-set', $gv);
       }
     );
@@ -634,7 +634,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoStyleEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-uint($val);
+        $gv.enum = $val;
         self.prop_set('style', $gv);
       }
     );
@@ -649,7 +649,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('style-set', $gv);
       }
     );
@@ -679,7 +679,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoUnderlineEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-uint($val);
+        $gv.enum = $val;
         self.prop_set('underline', $gv);
       }
     );
@@ -694,7 +694,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('underline-set', $gv);
       }
     );
@@ -709,7 +709,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoVariantEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-uint($val);
+        $gv.enum = $val;
         self.prop_set('variant', $gv);
       }
     );
@@ -724,7 +724,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('variant-set', $gv);
       }
     );
@@ -739,7 +739,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = resolve-int($val);
+        $gv.int = $val;
         self.prop_set('weight', $gv);
       }
     );
@@ -754,7 +754,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('weight-set', $gv);
       }
     );
@@ -769,7 +769,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.int
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int =  resolve-int($val);
+        $gv.int =  $val;
         self.prop_set('width-chars', $gv);
       }
     );
@@ -784,7 +784,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         PangoWrapModeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = resolve-uint($val);
+        $gv.enum = $val;
         self.prop_set('wrap-mode', $gv);
       }
     );
@@ -799,7 +799,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = resolve-int($val);
+        $gv.int = $val;
         self.prop_set('wrap-width', $gv);
       }
     );
@@ -815,7 +815,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   method set_fixed_height_from_font (Int() $number_of_rows)
     is also<set-fixed-height-from-font>
   {
-    my gint $nr = resolve-int($number_of_rows);
+    my gint $nr = $number_of_rows;
     gtk_cell_renderer_text_set_fixed_height_from_font($!crt, $nr);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GDK::RGBA;
 
 use GTK::Raw::ColorChooser;
 use GTK::Raw::Types;

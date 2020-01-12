@@ -3,12 +3,9 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
-
 use GTK::Raw::Container;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GTK::Adjustment;
 use GTK::Widget;
@@ -165,7 +162,7 @@ D
     Str() $prop,
     Int $val is rw
   ) {
-    my guint $v = resolve-bool($val);
+    my guint $v = $val;
 
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
@@ -179,7 +176,7 @@ D
   )
     is also<child_set_bool>
   {
-    my guint $v = resolve-bool($val);
+    my guint $v = $val;
 
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
@@ -197,7 +194,7 @@ D
     Str() $prop,
     Int $val is rw
   ) {
-    my guint $v = resolve-int($val);
+    my guint $v = $val;
 
     # CArray[guint]?
     gtk_container_child_get_int($!c, $child, $prop, $v, Str);
@@ -211,7 +208,7 @@ D
   )
     is also<child_set_int>
   {
-    my gint $v = resolve-int($val);
+    my gint $v = $val;
 
     gtk_container_child_set_int($!c, $child, $prop, $v, Str);
   }
@@ -229,7 +226,7 @@ D
     Str() $prop,
     Int $val is rw
   ) {
-    my guint $v = resolve-uint($val);
+    my guint $v = $val;
 
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
@@ -243,7 +240,7 @@ D
   )
     is also<child_set_uint>
   {
-    my gint $v = resolve-uint($val);
+    my gint $v = $val;
 
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
@@ -311,7 +308,7 @@ D
         gtk_container_get_border_width($!c);
       },
       STORE => sub ($, Int() $border_width is copy) {
-        my $bw = resolve-uint($border_width);
+        my $bw = $border_width;
 
         gtk_container_set_border_width($!c, $bw);
       }
@@ -477,7 +474,7 @@ D
   method set_reallocate_redraws (Int() $needs_redraws)
     is also<set-reallocate-redraws>
   {
-    my gboolean $nr = resolve-bool($needs_redraws);
+    my gboolean $nr = $needs_redraws.so.Int;
 
     gtk_container_set_reallocate_redraws($!c, $nr);
   }

@@ -3,9 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Utils;
-
-
 use GTK::Raw::Dialog;
 use GTK::Raw::Types;
 
@@ -266,7 +263,7 @@ class GTK::Dialog is GTK::Window {
     is also<set-response-sensitive>
   {
     my gint $ri = $response_id;
-    my gboolean $s = $setting;
+    my gboolean $s = $setting.so.Int;
 
     gtk_dialog_set_response_sensitive($!d, $ri, $s);
   }

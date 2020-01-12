@@ -3,15 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Utils;
-
-
 use GTK::Raw::ButtonBox;
 use GTK::Raw::Types;
 
 use GTK::Box;
 
-our subset ButtonBoxAncestry is export 
+our subset ButtonBoxAncestry is export
   where GtkButtonBox | BoxAncestry;
 
 class GTK::ButtonBox is GTK::Box {
@@ -45,7 +42,7 @@ class GTK::ButtonBox is GTK::Box {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkButtonBox is also<ButtonBox> { $!bb }
 
   multi method new (ButtonBoxAncestry $buttonbox) {
@@ -54,7 +51,7 @@ class GTK::ButtonBox is GTK::Box {
     $o;
   }
   multi method new (Int() $orientation) {
-    my guint $o = resolve-uint($orientation);
+    my guint $o = $orientation;
     my $buttonbox = gtk_button_box_new($o);
     self.bless(:$buttonbox);
   }
@@ -88,7 +85,7 @@ class GTK::ButtonBox is GTK::Box {
         GtkButtonBoxStyleEnum( gtk_button_box_get_layout($!bb) );
       },
       STORE => sub ($, Int() $layout_style is copy) {
-        my uint32 $l = self.RESOLVE-UINT($layout_style);
+        my uint32 $l = self.$layout_style;
         gtk_button_box_set_layout($!bb, $l);
       }
     );
@@ -119,7 +116,7 @@ class GTK::ButtonBox is GTK::Box {
   )
     is also<set-child-non-homogeneous>
   {
-    my gboolean $nh = self.RESOLVE-BOOL($non_homogeneous);
+    my gboolean $nh = self.$non_homogeneous;
     gtk_button_box_set_child_non_homogeneous($!bb, $child, $nh);
   }
 
@@ -129,7 +126,7 @@ class GTK::ButtonBox is GTK::Box {
   )
     is also<set-child-secondary>
   {
-    my gboolean $is = self.RESOLVE-BOOL($is_secondary);
+    my gboolean $is = self.$is_secondary;
     gtk_button_box_set_child_secondary($!bb, $child, $is);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

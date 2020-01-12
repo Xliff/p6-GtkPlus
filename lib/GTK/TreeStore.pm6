@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::TreeStore;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Roles::Object;
 
@@ -36,7 +34,14 @@ class GTK::TreeStore  {
     $!ds = nativecast(GtkTreeDragSource, $!tree);  # GTK::Roles::TreeDragSource
   }
 
-  method new (*@types) {
+  method GTK::Raw::Definitions::GtkTreeStore
+    is also<GtkTreeStore>
+  { $!tree }
+
+  multi method new (GtkTreeStore $treestore) {
+    $treestore ?? self.bless(:$treestore) !! Nil;
+  }
+  multi method new (*@types) {
     # self does NOT exist yet, so can't use GTK::Roles::Types methods.
     #
     # Really should check into macros for these for this EXACT situation.
@@ -49,7 +54,8 @@ class GTK::TreeStore  {
     $t[$i++] = $_ for @types;
     my gint $c = @types.elems;
     my $treestore = gtk_tree_store_newv($c, $t);
-    self.bless(:$treestore);
+
+    $treestore ?? self.bless(:$treestore) !! Nil;
   }
 
   method !checkCV(@columns, @values) {
@@ -95,7 +101,9 @@ class GTK::TreeStore  {
   }
 
   method get_type is also<get-type> {
-    gtk_tree_store_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_tree_store_get_type, $n, $t );
   }
 
   method insert (
@@ -103,7 +111,8 @@ class GTK::TreeStore  {
     GtkTreeIter() $parent,
     Int() $position
   ) {
-    my gint $p = resolve-int($position);
+    my gint $p = $position;
+
     gtk_tree_store_insert($!tree, $iter, $parent, $p);
   }
 
@@ -111,7 +120,9 @@ class GTK::TreeStore  {
     GtkTreeIter() $iter,
     GtkTreeIter() $parent,
     GtkTreeIter() $sibling
-  ) is also<insert-after> {
+  )
+    is also<insert-after>
+  {
     gtk_tree_store_insert_after($!tree, $iter, $parent, $sibling);
   }
 
@@ -119,7 +130,9 @@ class GTK::TreeStore  {
     GtkTreeIter() $iter,
     GtkTreeIter() $parent,
     GtkTreeIter() $sibling
-  ) is also<insert-before> {
+  )
+    is also<insert-before>
+  {
     gtk_tree_store_insert_before($!tree, $iter, $parent, $sibling);
   }
 
@@ -128,7 +141,9 @@ class GTK::TreeStore  {
     GtkTreeIter() $pt, # parent
     Int() $position,
     %values
-  ) is also<insert-with-values> {
+  )
+    is also<insert-with-values>
+  {
     my @c = %values.keys.map( *.Int ).sort;
     my @v;
     @v.push(%values{$_}) for @c;
@@ -141,16 +156,29 @@ class GTK::TreeStore  {
     Int() $position,
     @columns,
     @values,
-  ) is also<insert-with-valuesv> {
+  )
+    is also<insert-with-valuesv>
+  {
     my ($c, $v) = self!checkCV(@columns, @values);
-    my gint $p = resolve-int($position);
-    gtk_tree_store_insert_with_valuesv($!tree, $iter, $pt, $p, $c, $v, $c.elems);
+    my gint $p = $position;
+
+    gtk_tree_store_insert_with_valuesv(
+      $!tree,
+      $iter,
+      $pt,
+      $p,
+      $c,
+      $v,
+      $c.elems
+    );
   }
 
   method is_ancestor (
     GtkTreeIter() $iter,
     GtkTreeIter() $descendant
-  ) is also<is-ancestor> {
+  )
+    is also<is-ancestor>
+  {
     gtk_tree_store_is_ancestor($!tree, $iter, $descendant);
   }
 
@@ -165,14 +193,18 @@ class GTK::TreeStore  {
   method move_after (
     GtkTreeIter() $iter,
     GtkTreeIter() $position
-  ) is also<move-after> {
+  )
+    is also<move-after>
+  {
     gtk_tree_store_move_after($!tree, $iter, $position);
   }
 
   method move_before (
     GtkTreeIter() $iter,
     GtkTreeIter() $position
-  ) is also<move-before> {
+  )
+    is also<move-before>
+  {
     gtk_tree_store_move_before($!tree, $iter, $position);
   }
 
@@ -205,8 +237,11 @@ class GTK::TreeStore  {
   #   gtk_tree_store_set_valist($!tree, $iter, $var_args);
   # }
 
-  method set_value (GtkTreeIter() $iter, Int() $column, GValue() $value) is also<set-value> {
-    my gint $c = resolve-int($column);
+  method set_value (GtkTreeIter() $iter, Int() $column, GValue() $value)
+    is also<set-value>
+  {
+    my gint $c = $column;
+
     gtk_tree_store_set_value($!tree, $iter, $c, $value);
   }
 
@@ -221,7 +256,9 @@ class GTK::TreeStore  {
     GtkTreeIter() $iter,
     @columns,
     @values,
-  ) is also<set-valuesv> {
+  )
+    is also<set-valuesv>
+  {
     my ($c, $v) = self!checkCV(@columns, @values);
     gtk_tree_store_set_valuesv($!tree, $iter, $c, $v, $c.elems);
   }

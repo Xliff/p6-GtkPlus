@@ -2,18 +2,12 @@ use v6.c;
 
 use Method::Also;
 
-
-
-use GTK::Raw::Utils;
-
 use GTK::Raw::Main;
 
+use GLib::Roles::StaticClass;
+
 class GTK::Get {
-  
-  method new (|) {
-    warn 'GTK::Get is a static class and does not need to be instantiated!';
-    GTK::Get;
-  }
+  also does GLib::Roles::StaticClass;
 
   method binary_age is also<binary-age> {
     gtk_get_binary_age();
@@ -26,7 +20,8 @@ class GTK::Get {
   )
     is also<check-version>
   {
-    my guint ($mj, $mn ,$mc) = resolve-int($major, $minor, $micro);
+    my guint ($mj, $mn ,$mc) = ($major, $minor, $micro);
+
     gtk_check_version($mj, $mn, $mc);
   }
 
@@ -39,7 +34,8 @@ class GTK::Get {
   }
 
   method current_event_state (Int() $state) is also<current-event-state> {
-    my guint $s = resolve-uint($state);
+    my guint $s = $state;
+
     gtk_get_current_event_state($s);
   }
 
@@ -76,7 +72,8 @@ class GTK::Get {
   }
 
   method option_group (Int() $open_default_display) is also<option-group> {
-    my gboolean $odd = resolve-bool($open_default_display);
+    my gboolean $odd = $open_default_display.so.Int;
+
     gtk_get_option_group($odd);
   }
 

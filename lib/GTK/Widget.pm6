@@ -20,7 +20,7 @@ use GTK::Raw::DragSource;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
-use GTK::Raw::Utils;
+
 
 use GTK::Roles::Buildable;
 use GTK::Roles::Data;

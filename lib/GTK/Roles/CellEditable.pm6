@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::CellEditable;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
 
@@ -44,7 +42,7 @@ role GTK::Roles::CellEditable {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('editing-canceled', $gv)
       }
     );

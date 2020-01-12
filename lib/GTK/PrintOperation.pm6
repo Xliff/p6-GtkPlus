@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::PrintOperation;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
 use GTK::PageSetup;
@@ -39,11 +37,12 @@ class GTK::PrintOperation {
   { $!po }
 
   multi method new (GtkPrintOperation $op) {
-    self.bless(:$op);
+    $op ?? self.bless(:$op) !! Nil;
   }
   multi method new {
     my $op = gtk_print_operation_new();
-    self.bless(:$op);
+
+    $op ?? self.bless(:$op) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -150,7 +149,8 @@ class GTK::PrintOperation {
         so gtk_print_operation_get_embed_page_setup($!po);
       },
       STORE => sub ($, Int() $embed is copy) {
-        my gboolean $e = resolve-bool($embed);
+        my gboolean $e = $embed.so.Int;
+
         gtk_print_operation_set_embed_page_setup($!po, $e);
       }
     );
@@ -162,7 +162,8 @@ class GTK::PrintOperation {
         so gtk_print_operation_get_has_selection($!po);
       },
       STORE => sub ($, Int() $has_selection is copy) {
-        my gboolean $hs = resolve-bool($has_selection);
+        my gboolean $hs = $has_selection.so.Int;
+
         gtk_print_operation_set_has_selection($!po, $hs);
       }
     );
@@ -190,7 +191,8 @@ class GTK::PrintOperation {
         so gtk_print_operation_get_support_selection($!po);
       },
       STORE => sub ($, Int() $support_selection is copy) {
-        my gboolean $ss = resolve-bool($support_selection);
+        my gboolean $ss = $support_selection.so.Int;
+
         gtk_print_operation_set_support_selection($!po, $ss);
       }
     );
@@ -504,19 +506,20 @@ class GTK::PrintOperation {
     CArray[Pointer[GError]] $error = gerror
   ) {
     clear_error;
-    my guint $a = resolve-uint($action);
+    my guint $a = $action;
     my $rc = gtk_print_operation_run($!po, $a, $parent, $error);
     set_error($error);
     $rc;
   }
 
   method set_allow_async (Int() $allow_async) is also<set-allow-async> {
-    my gboolean $aa = resolve-bool($allow_async);
+    my gboolean $aa = $allow_async;
     gtk_print_operation_set_allow_async($!po, $aa);
   }
 
   method set_current_page (Int() $current_page) is also<set-current-page> {
-    my gint $cp = resolve-int($current_page);
+    my gint $cp = $current_page.so.Int;
+
     gtk_print_operation_set_current_page($!po, $cp);
   }
 
@@ -539,31 +542,36 @@ class GTK::PrintOperation {
   }
 
   method set_n_pages (Int() $n_pages) is also<set-n-pages> {
-    my gint $np = resolve-int($n_pages);
+    my gint $np = $n_pages;
+
     gtk_print_operation_set_n_pages($!po, $np);
   }
 
   method set_show_progress (Int() $show_progress)
     is also<set-show-progress>
   {
-    my gboolean $sp = resolve-bool($show_progress);
+    my gboolean $sp = $show_progress.so.Int;
+
     gtk_print_operation_set_show_progress($!po, $sp);
   }
 
   method set_track_print_status (Int() $track_status)
     is also<set-track-print-status>
   {
-    my gboolean $ts = resolve-bool($track_status);
+    my gboolean $ts = $track_status.so.Int;
+
     gtk_print_operation_set_track_print_status($!po, $ts);
   }
 
   method set_unit (Int() $unit) is also<set-unit> {
-    my guint $u = resolve-uint($unit);
+    my guint $u = $unit;
+
     gtk_print_operation_set_unit($!po, $u);
   }
 
   method set_use_full_page (Int() $full_page) is also<set-use-full-page> {
-    my gboolean $fp = resolve-bool($full_page);
+    my gboolean $fp = $full_page.so.Int;
+
     gtk_print_operation_set_use_full_page($!po, $fp);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

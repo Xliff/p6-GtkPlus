@@ -8,7 +8,7 @@ use Pango::Raw::Types;
 
 use GTK::Raw::TextView;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
+
 
 use GTK::Container;
 use GTK::TextBuffer;

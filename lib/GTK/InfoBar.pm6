@@ -3,11 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::InfoBar;
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GTK::Box;
 
@@ -63,7 +60,9 @@ class GTK::InfoBar is GTK::Box {
     $o;
   }
   multi method new {
-    self.bless( infobar => gtk_info_bar_new() );
+    my $infobar = gtk_info_bar_new();
+
+    $infobar ?? self.bless(:$infobar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -89,7 +88,7 @@ class GTK::InfoBar is GTK::Box {
         GtkMessageTypeEnum( gtk_info_bar_get_message_type($!ib) );
       },
       STORE => sub ($, Int() $message_type is copy) {
-        my uint32 $mt = resolve-uint($message_type);
+        my uint32 $mt = $message_type;
 
         gtk_info_bar_set_message_type($!ib, $mt);
       }
@@ -102,7 +101,7 @@ class GTK::InfoBar is GTK::Box {
         so gtk_info_bar_get_revealed($!ib);
       },
       STORE => sub ($, Int() $revealed is copy) {
-        my gboolean $r = resolve-bool($revealed);
+        my gboolean $r = $revealed.so.Int;
 
         gtk_info_bar_set_revealed($!ib, $revealed);
       }
@@ -115,7 +114,7 @@ class GTK::InfoBar is GTK::Box {
         so gtk_info_bar_get_show_close_button($!ib);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = resolve-bool($setting);
+        my gboolean $s = $setting.so.Int;
 
         gtk_info_bar_set_show_close_button($!ib, $s);
       }
@@ -127,7 +126,7 @@ class GTK::InfoBar is GTK::Box {
   method add_action_widget (GtkWidget() $child, Int() $response_id)
     is also<add-action-widget>
   {
-    my gint $r = resolve-int($response_id);
+    my gint $r = $response_id;
 
     gtk_info_bar_add_action_widget($!ib, $child, $r);
   }
@@ -135,19 +134,29 @@ class GTK::InfoBar is GTK::Box {
   method add_button (Str() $button_text, Int() $response_id)
     is also<add-button>
   {
-    my gint $ri = resolve-int($response_id);
+    my gint $ri = $response_id;
 
     gtk_info_bar_add_button($!ib, $button_text, $ri);
   }
 
   # Renamed from get_action_area
-  method action_area is also<action-area> {
-    GTK::Box.new( gtk_info_bar_get_action_area($!ib) );
+  method action_area (:$raw = False) is also<action-area> {
+    my $b = gtk_info_bar_get_action_area($!ib);
+
+    $b ??
+      ( $raw ?? $b !!  GTK::Box.new($b) )
+      !!
+      Nil;
   }
 
   # Renamed from get_content_area
-  method content_area is also<content-area> {
-    GTK::Box.new( gtk_info_bar_get_content_area($!ib) );
+  method content_area (:$raw = False) is also<content-area> {
+    my $b = gtk_info_bar_get_content_area($!ib);
+
+    $b ??
+      ( $raw ?? $b !!  GTK::Box.new($b) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
@@ -157,7 +166,7 @@ class GTK::InfoBar is GTK::Box {
   }
 
   multi method response (Int() $response_id) {
-    my gint $ri = resolve-int($response_id);
+    my gint $ri = $response_id;
 
     gtk_info_bar_response($!ib, $ri);
   }
@@ -165,7 +174,7 @@ class GTK::InfoBar is GTK::Box {
   method set_default_response (Int() $response_id)
     is also<set-default-response>
   {
-    my gint $ri = resolve-int($response_id);
+    my gint $ri = $response_id;
 
     gtk_info_bar_set_default_response($!ib, $ri);
   }
@@ -173,8 +182,8 @@ class GTK::InfoBar is GTK::Box {
   method set_response_sensitive (Int() $response_id, Int() $setting)
     is also<set-response-sensitive>
   {
-    my gint $ri = resolve-int($response_id);
-    my gboolean $s = resolve-bool($setting);
+    my gint $ri = $response_id;
+    my gboolean $s = $setting.so.Int;
 
     gtk_info_bar_set_response_sensitive($!ib, $ri, $s);
   }

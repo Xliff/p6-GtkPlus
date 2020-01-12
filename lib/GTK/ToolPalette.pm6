@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::ToolPalette;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GTK::Roles::Orientable;
 
@@ -24,7 +22,7 @@ class GTK::ToolPalette is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -58,13 +56,16 @@ class GTK::ToolPalette is GTK::Container {
   }
 
   multi method new (ToolPaletteAncestry $palette) {
+    return unless $palette;
+
     my $o = self.bless(:$palette);
     $o.upref;
     $o;
   }
   multi method new {
     my $palette = gtk_tool_palette_new();
-    self.bless(:$palette);
+
+    $palette ?? self.bless(:$palette) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -77,7 +78,8 @@ class GTK::ToolPalette is GTK::Container {
         GtkToolbarStyleEnum( gtk_tool_palette_get_style($!tp) );
       },
       STORE => -> $, Int() $val {
-        my guint $v = resolve-uint($val);
+        my guint $v = $val;
+
         gtk_tool_palette_set_style($!tp, $v);
       }
     );
@@ -104,8 +106,8 @@ class GTK::ToolPalette is GTK::Container {
   )
     is also<add-drag-dest>
   {
-    my @u = ($flags, $targets, $actions);
-    my uint32 ($f, $t, $a) = resolve-uint(@u);
+    my uint32 ($f, $t, $a) = ($flags, $targets, $actions);
+
     gtk_tool_palette_add_drag_dest($!tp, $widget, $f, $t, $a);
   }
 
@@ -115,18 +117,27 @@ class GTK::ToolPalette is GTK::Container {
     gtk_tool_palette_get_drag_item($!tp, $selection);
   }
 
-  method get_drop_group (Int() $x, Int() $y) is also<get-drop-group> {
-    my @u = ($x, $y);
-    my gint ($xx, $yy) = resolve-int(@u);
-    GTK::ToolItemGroup.new(
-      gtk_tool_palette_get_drop_group($!tp, $xx, $yy)
-    );
+  method get_drop_group (Int() $x, Int() $y, :$raw = False)
+    is also<get-drop-group>
+
+    my gint ($xx, $yy) = ($x, $y);
+
+    my $tig = gtk_tool_palette_get_drop_group($!tp, $xx, $yy);
+
+    $tig ??
+      ( $raw ?? $tig !! GTK::ToolItemGroup.new($tig) )
+      !!
+      Nil;
   }
 
   method get_drop_item (Int() $x, Int() $y) is also<get-drop-item> {
-    my @u = ($x, $y);
-    my gint ($xx, $yy) = resolve-int(@u);
-    GTK::ToolItem.new( gtk_tool_palette_get_drop_item($!tp, $xx, $yy) );
+    my gint ($xx, $yy) = ($x, $y);
+    my $ti = gtk_tool_palette_get_drop_item($!tp, $xx, $yy);
+
+    $ti ??
+      ( $raw ?? $ti !! GTK::ToolItem.new($ti) )
+      !!
+      Nil;
   }
 
   method get_exclusive (GtkToolItemGroup() $group) is also<get-exclusive> {
@@ -143,13 +154,18 @@ class GTK::ToolPalette is GTK::Container {
     gtk_tool_palette_get_group_position($!tp, $group);
   }
 
-  method get_hadjustment
+  method get_hadjustment (:$raw = False)
     is also<
       get-hadjustment
       hadjustment
     >
   {
-    GTK::Adjustment.new( gtk_tool_palette_get_hadjustment($!tp) );
+    my $a = gtk_tool_palette_get_hadjustment($!tp);
+
+    $a ??
+      ( $raw ?? $a !! GTK::Adjustment.new($a) )
+      !!
+      Nil;
   }
 
   method get_icon_size
@@ -164,16 +180,22 @@ class GTK::ToolPalette is GTK::Container {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_tool_palette_get_type, $n, $t );
   }
 
-  method get_vadjustment
+  method get_vadjustment (:$raw = False)
     is also<
       get-vadjustment
       vadjustment
     >
   {
-    GTK::Adjustment.new( gtk_tool_palette_get_vadjustment($!tp) );
+    my $a = gtk_tool_palette_get_vadjustment($!tp);
+
+    $a ??
+      ( $raw ?? $a !! GTK::Adjustment.new($a) )
+      !!
+      Nil;
   }
 
   multi method set_drag_source (
@@ -181,28 +203,32 @@ class GTK::ToolPalette is GTK::Container {
   )
     is also<set-drag-source>
   {
-    my $t = resolve-uint($targets);
+    my GtkToolPaletteDragTargets $t = $targets;
+
     gtk_tool_palette_set_drag_source($!tp, $t);
   }
 
   method set_exclusive (GtkToolItemGroup() $group, Int() $exclusive)
     is also<set-exclusive>
   {
-    my gboolean $e = resolve-bool($exclusive);
+    my gboolean $e = $exclusive.so.Int;
+
     gtk_tool_palette_set_exclusive($!tp, $group, $e);
   }
 
   method set_expand (GtkToolItemGroup() $group, Int() $expand)
     is also<set-expand>
   {
-    my gboolean $e = resolve-bool($expand);
+    my gboolean $e = $expand.so.Int;
+
     gtk_tool_palette_set_expand($!tp, $group, $e);
   }
 
   method set_group_position (GtkToolItemGroup() $group, Int() $position)
     is also<set-group-position>
   {
-    my gint $p = resolve-int($position);
+    my gint $p = $position;
+
     gtk_tool_palette_set_group_position($!tp, $group, $p);
   }
 

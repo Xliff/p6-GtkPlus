@@ -3,8 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Utils;
-
 use GLib::Value;
 
 use GTK::Raw::AccelGroup;

@@ -45,7 +45,10 @@ sub gtk_recent_chooser_get_type ()
   is export
   { * }
 
-sub gtk_recent_chooser_get_uris (GtkRecentChooser $chooser, gsize $length)
+sub gtk_recent_chooser_get_uris (
+  GtkRecentChooser $chooser,
+  gsize $length is rw
+)
   returns CArray[Str]
   is native(gtk)
   is export

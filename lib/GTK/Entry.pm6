@@ -6,7 +6,6 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::AttrList;
 
-
 use GTK::Raw::Entry;
 use GTK::Raw::Types;
 
@@ -188,7 +187,8 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_activates_default($!e);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_entry_set_activates_default($!e, $s);
       }
     );
@@ -256,7 +256,8 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_has_frame($!e);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_entry_set_has_frame($!e, $s);
       }
     );
@@ -279,7 +280,7 @@ class GTK::Entry is GTK::Widget {
         GtkInputHintsEnum( gtk_entry_get_input_hints($!e) );
       },
       STORE => sub ($, Int() $hints is copy) {
-        my guint $h = self.RESOLVE-UINT($hints);
+        my guint $h = $hints;
         gtk_entry_set_input_hints($!e, $h);
       }
     );
@@ -291,7 +292,7 @@ class GTK::Entry is GTK::Widget {
         GtkInputPurposeEnum( gtk_entry_get_input_purpose($!e) );
       },
       STORE => sub ($, Int() $purpose is copy) {
-        my uint32 $p = self.RESOLVE-UINT($purpose);
+        my uint32 $p = $purpose;
         gtk_entry_set_input_purpose($!e, $p);
       }
     );
@@ -325,7 +326,7 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_overwrite_mode($!e);
       },
       STORE => sub ($, Int() $overwrite is copy) {
-        my guint $o = self.RESOLVE-UINT($overwrite);
+        my guint $o = $overwrite;
         gtk_entry_set_overwrite_mode($!e, $o);
       }
     );
@@ -394,7 +395,8 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_visibility($!e);
       },
       STORE => sub ($, Int() $visible is copy) {
-        my gboolean $v = self.RESOLVE-BOOL($visible);
+        my gboolean $v = $visible.so.Int;
+        
         gtk_entry_set_visibility($!e, $v);
       }
     );
@@ -950,7 +952,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-activatable>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_activatable($!e, $ip);
   }
 
@@ -960,13 +962,13 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-area>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_area($!e, $ip, $icon_area);
   }
 
   method get_icon_at_pos (Int() $x, Int() $y) is also<get-icon-at-pos> {
     my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy) = @i;
     gtk_entry_get_icon_at_pos($!e, $x, $y);
   }
 
@@ -975,7 +977,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-gicon>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_gicon($!e, $ip);
   }
 
@@ -984,7 +986,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-name>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_name($!e, $ip);
   }
 
@@ -993,7 +995,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-pixbuf>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_pixbuf($!e, $ip);
   }
 
@@ -1002,7 +1004,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-sensitive>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_sensitive($!e, $ip);
   }
 
@@ -1011,7 +1013,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-stock>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_stock($!e, $ip);
   }
 
@@ -1020,7 +1022,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-storage-type>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     GtkImageTypeEnum( gtk_entry_get_icon_storage_type($!e, $ip) );
   }
 
@@ -1029,7 +1031,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-tooltip-markup>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_tooltip_markup($!e, $ip);
   }
 
@@ -1038,7 +1040,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-tooltip-text>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_get_icon_tooltip_text($!e, $icon_pos);
   }
 
@@ -1054,7 +1056,7 @@ class GTK::Entry is GTK::Widget {
     is also<get-layout-offsets>
   {
     my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy) = @i;
     gtk_entry_get_layout_offsets($!e, $xx, $yy);
   }
 
@@ -1086,7 +1088,7 @@ class GTK::Entry is GTK::Widget {
   method layout_index_to_text_index (Int() $layout_index)
     is also<layout-index-to-text-index>
   {
-    my gint $li = self.RESOLVE-INT($layout_index);
+    my gint $li = $layout_index;
     gtk_entry_layout_index_to_text_index($!e, $li);
   }
 
@@ -1104,8 +1106,9 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-activatable>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
-    my gboolean $a = self.RESOLVE-BOOL($activatable);
+    my uint32 $ip = $icon_pos;
+    my gboolean $a = $activatable.so.Int;
+
     gtk_entry_set_icon_activatable($!e, $ip, $a);
   }
 
@@ -1117,7 +1120,7 @@ class GTK::Entry is GTK::Widget {
     is also<set-icon-drag-source>
   {
     my @u = ($icon_pos, $actions);
-    my uint32 ($ip, $a) = self.RESOLVE-INT(@u);
+    my uint32 ($ip, $a) = @u;
     gtk_entry_set_icon_drag_source($!e, $ip, $target_list, $a);
   }
 
@@ -1127,7 +1130,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-gicon>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_set_icon_from_gicon($!e, $ip, $icon);
   }
 
@@ -1137,7 +1140,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-icon-name>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_set_icon_from_icon_name($!e, $ip, $icon_name);
   }
 
@@ -1147,7 +1150,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-pixbuf>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_set_icon_from_pixbuf($!e, $ip, $pixbuf);
   }
 
@@ -1157,7 +1160,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-stock>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_set_icon_from_stock($!e, $ip, $stock_id);
   }
 
@@ -1167,8 +1170,9 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-sensitive>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
-    my gboolean $s = self.RESOLVE-BOOL($sensitive);
+    my uint32 $ip = $icon_pos;
+    my gboolean $s = $sensitive.so.Int;
+
     gtk_entry_set_icon_sensitive($!e, $ip, $s);
   }
 
@@ -1178,7 +1182,7 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-tooltip-markup>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_set_icon_tooltip_markup($!e, $ip, $tooltip);
   }
 
@@ -1188,14 +1192,14 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-tooltip-text>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
     gtk_entry_set_icon_tooltip_text($!e, $ip, $tooltip);
   }
 
   method text_index_to_layout_index (Int() $text_index)
     is also<text-index-to-layout-index>
   {
-    my gint $ti = self.RESOLVE-INT($text_index);
+    my gint $ti = $text_index;
     gtk_entry_text_index_to_layout_index($!e, $text_index);
   }
 

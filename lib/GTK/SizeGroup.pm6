@@ -3,13 +3,13 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::SizeGroup;
 use GTK::Raw::Types;
 
-use GTK::Raw::Utils;
+use GLib::GList;
 
 use GLib::Roles::Object;
+use GLib::Roles::ListData;
 
 class GTK::SizeGroup {
   also does GLib::Roles::Object;
@@ -27,23 +27,27 @@ class GTK::SizeGroup {
     >
   { $!sg }
 
-  multi method new (Int() $sizegroupmode) {
-    my uint32 $s = resolve-uint($sizegroupmode);
-    my $sizegroup = gtk_size_group_new($s);
-    self.bless(:$sizegroup);
-  }
-  multi method new(GtkSizeGroup $sizegroup) {
-    self.bless(:$sizegroup);
-  }
-  multi method new (:$horizontal, :$vertical) {
+  multi method new (
+    :h(:$horizontal),
+    :v(:$vertical)
+  ) {
     die 'Please specify either :horizontal or :vertical in call to GTK::SizeGroup.new'
       unless $horizontal ^^ $vertical;
     my $m = do {
-      when $horizontal { GTK_ORIENTATION_HORIZONTAL }
-      when $vertical   { GTK_ORIENTATION_VERTICAL }
+      when $horizontal.so { GTK_ORIENTATION_HORIZONTAL }
+      when $vertical.so   { GTK_ORIENTATION_VERTICAL   }
     };
-    my $sizegroup = gtk_size_group_new($m);
-    self.bless(:$sizegroup);
+    samewith($m);
+  }
+  multi method new (Int() $sizegroupmode) {
+    my uint32 $s = $sizegroupmode;
+
+    my $sizegroup = gtk_size_group_new($s);
+
+    $sizegroup ?? self.bless(:$sizegroup) !! Nil;
+  }
+  multi method new(GtkSizeGroup $sizegroup) {
+    $sizegroup ?? self.bless(:$sizegroup) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -56,7 +60,8 @@ class GTK::SizeGroup {
         Bool( gtk_size_group_get_ignore_hidden($!sg) );
       },
       STORE => sub ($, Int() $ignore_hidden is copy) {
-        my gboolean $i = resolve-bool($ignore_hidden);
+        my gboolean $i = $ignore_hidden.so.Int;
+
         gtk_size_group_set_ignore_hidden($!sg, $ignore_hidden);
       }
     );
@@ -68,7 +73,8 @@ class GTK::SizeGroup {
         GtkSizeGroupModeEnum( gtk_size_group_get_mode($!sg) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = resolve-uint($mode);
+        my uint32 $m = $mode;
+
         gtk_size_group_set_mode($!sg, $m);
       }
     );
@@ -81,11 +87,20 @@ class GTK::SizeGroup {
   }
 
   method get_type is also<get-type> {
-    gtk_size_group_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_size_group_get_type, $n, $t );
   }
 
-  method get_widgets is also<get-widgets> {
-    gtk_size_group_get_widgets($!sg);
+  # Should this attempt to use GTK::Widget.CreateObject?
+  method get_widgets (:$glist = False, :$raw = False) is also<get-widgets> {
+    my $wl = gtk_size_group_get_widgets($!sg);
+
+    return Nil unless $wl;
+    return $wl if $glist;
+
+    $wl = GLib::GList.new($wl) but GLib::Roles::ListData[GtkWidget];
+    $raw ?? $wl.Array !! $wl.Array.map({ GTK::Widget.new($_) });
   }
 
   method remove_widget (GtkWidget() $widget) is also<remove-widget> {

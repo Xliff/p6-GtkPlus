@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::FileFilter;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::Types;
@@ -27,14 +25,20 @@ class GTK::FileFilter {
   }
 
   method GTK::Raw::Types::GtkFileFilter
-    is also<FileFilter>
-    { $!ff }
+    is also<
+      FileFilter
+      GtkFileFilter
+    >
+  { $!ff }
 
   multi method new {
     my $filter = gtk_file_filter_new();
-    self.bless(:$filter);
+
+    $filter ?? self.bless(:$filter) !! Nil;
   }
   multi method new (Ancestry $filter, :$ref = True) {
+    return Nil unless $filter;
+
     my $o = self.bless(:$filter);
     $o.upref if $ref;
     $o;
@@ -46,7 +50,8 @@ class GTK::FileFilter {
     is also<new-from-gvariant>
   {
     my $filter = gtk_file_filter_new_from_gvariant($v);
-    self.bless(:$filter);
+
+    $filter ?? self.bless(:$filter) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -58,7 +63,7 @@ class GTK::FileFilter {
       FETCH => sub ($) {
         gtk_file_filter_get_name($!ff);
       },
-      STORE => sub ($, $name is copy) {
+      STORE => sub ($, Str() $name is copy) {
         gtk_file_filter_set_name($!ff, $name);
       }
     );
@@ -74,7 +79,8 @@ class GTK::FileFilter {
   )
     is also<add-custom>
   {
-    my guint $n = resolve-uint($needed);
+    my guint $n = $needed;
+
     gtk_file_filter_add_custom($!ff, $n, $func, $data, $notify);
   }
 
@@ -99,7 +105,9 @@ class GTK::FileFilter {
   }
 
   method get_type is also<get-type> {
-    gtk_file_filter_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_file_filter_get_type, $n, $t );
   }
 
   method to_gvariant is also<to-gvariant> {

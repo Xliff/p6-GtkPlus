@@ -5,10 +5,8 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-
 use GTK::Raw::Types;
 use GTK::Raw::Render;
-use GTK::Raw::Utils;
 
 class GTK::Render {
 
@@ -106,7 +104,7 @@ class GTK::Render {
     Int() $gap_side
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
-    my guint $gs = resolve-uint($gap_side);
+    my guint $gs = $gap_side;
     gtk_render_extension($context, $cr, $xx, $yy, $ww, $hh, $gs);
   }
 
@@ -149,7 +147,7 @@ class GTK::Render {
   {
     my gdouble ($xx, $yy, $ww, $hh, $g0, $g1) =
       ($x, $y, $width, $height, $xy0_gap, $xy1_gap);
-    my guint $gs = self.resolve-uint($gap_side);
+    my guint $gs = self.$gap_side;
     gtk_render_frame_gap($context, $cr, $xx, $yy, $ww, $hh, $gs, $g0, $g1);
   }
 
@@ -183,7 +181,7 @@ class GTK::Render {
   )
     is also<icon-pixbuf>
   {
-    my guint $s = self.resolve-uint($size);
+    my guint $s = self.$size;
     gtk_render_icon_pixbuf($context, $source, $s);
   }
 
@@ -212,8 +210,8 @@ class GTK::Render {
     is also<insertion-cursor>
   {
     my gdouble ($xx, $yy) = ($x, $y);
-    my guint $dd = resolve-uint($d);
-    my gint $ii = resolve-int($i);
+    my guint $dd = $d;
+    my gint $ii = $i;
     gtk_render_insertion_cursor($context, $cr, $xx, $yy, $l, $ii, $dd);
   }
 
@@ -262,7 +260,7 @@ class GTK::Render {
     Int() $orientation
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
-    my guint $o = resolve-uint($orientation);
+    my guint $o = $orientation;
     gtk_render_slider($context, $cr, $xx, $yy, $ww, $hh, $o);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

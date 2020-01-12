@@ -7,7 +7,7 @@ use NativeCall;
 use GTK::Raw::CheckMenuItem;
 use GTK::Raw::Types;
 
-use GTK::Raw::Utils;
+
 
 use GTK::MenuItem;
 
@@ -112,7 +112,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
         so gtk_check_menu_item_get_active($!cmi);
       },
       STORE => -> $, Int() $is_active is copy {
-        my $ia = resolve-bool($is_active);
+        my $ia = $is_active;
         gtk_check_menu_item_set_active($!cmi, $ia);
       }
     );
@@ -124,7 +124,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
         so gtk_check_menu_item_get_draw_as_radio($!cmi);
       },
       STORE => sub ($, Int() $draw_as_radio is copy) {
-        my $dar = resolve-bool($draw_as_radio);
+        my $dar = $draw_as_radio;
         gtk_check_menu_item_set_draw_as_radio($!cmi, $dar);
       }
     );
@@ -136,7 +136,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
         so gtk_check_menu_item_get_inconsistent($!cmi);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my $s = resolve-bool($setting);
+        my $s = $setting;
         gtk_check_menu_item_set_inconsistent($!cmi, $s);
       }
     );

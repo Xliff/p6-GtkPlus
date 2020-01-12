@@ -3,10 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GTK::Dialog;
 
@@ -80,7 +77,7 @@ class GTK::Dialog::RecentChooser is GTK::Dialog {
     die '\@buttons is not an array of Pair objects!'
       unless @buttons.all ~~ Pair;
     my $f = @buttons.shift;
-    my gint $r = resolve-int($f.value);
+    my gint $r = $f.value;
     my $recentdialog = gtk_recent_chooser_dialog_new(
       $title, $parent, $f.key, $r, Str
     );
@@ -92,7 +89,7 @@ class GTK::Dialog::RecentChooser is GTK::Dialog {
   proto method new_for_manager (|)
     is also<new-for-manager>
   { * }
-  
+
   multi method new_for_manager (
     Str() $title,
     GtkWindow() $parent,
@@ -113,7 +110,7 @@ class GTK::Dialog::RecentChooser is GTK::Dialog {
     die '\@buttons is not an array of Pair objects!'
       unless @buttons.all ~~ Pair;
     my $f = @buttons.shift;
-    my gint $r = resolve-int($f.value);
+    my gint $r = $f.value;
     my $recentdialog = gtk_recent_chooser_dialog_new_for_manager(
       $title, $parent, $manager, $f.key, $r, Str
     );

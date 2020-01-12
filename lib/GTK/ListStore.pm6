@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::ListStore;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
 
@@ -40,7 +38,12 @@ class GTK::ListStore {
     $!tm = nativecast(GtkTreeModel, $!ls);      # GTK::Roles::TreeSortable
   }
 
-  method GTK::Raw::Types::GtkListStore is also<ListStore> { $!ls }
+  method GTK::Raw::Types::GtkListStore
+    is also<
+      ListStore
+      GtkListStore
+    >
+  { $!ls }
 
   method new (*@types) {
     for @types {
@@ -53,17 +56,18 @@ class GTK::ListStore {
     my gint $columns = @types.elems;
     my $liststore = gtk_list_store_newv($columns, $t);
     die 'GtkListStore not created!' unless $liststore.defined;
-    self.bless(:$liststore, :$columns);
+
+    $liststore ?? self.bless(:$liststore, :$columns) !! Nil;
   }
 
   multi method append {
-    my $iter = GtkTreeIter.new;
-    self.append($iter);
-    GTK::TreeIter.new($iter);
+    samewith($);
   }
-  multi method append (GtkTreeIter() $iter) {
+  multi method append ($iter is rw) {
     $!accessed = True;
+    $iter = GtkTreeIter.new;
     gtk_list_store_append($!ls, $iter);
+    $iter;
   }
 
   method clear {
@@ -72,12 +76,15 @@ class GTK::ListStore {
   }
 
   method get_type is also<get-type> {
-    gtk_list_store_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_list_store_get_type, $n, $t );
   }
 
   method insert (GtkTreeIter() $iter, Int() $position) {
+    my gint $p = $position;
+
     $!accessed = True;
-    my gint $p = resolve-int($position);
     gtk_list_store_insert($!ls, $iter, $position);
   }
 
@@ -222,7 +229,8 @@ class GTK::ListStore {
   )
     is also<set-value>
   {
-    my gint $c = resolve-int($column);
+    my gint $c = $column;
+    
     gtk_list_store_set_value($!ls, $iter, $c, $value);
   }
 

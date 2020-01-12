@@ -3,11 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::CellRendererToggle;
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GLib::Value;
 use GTK::CellRenderer;
@@ -85,7 +82,8 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         so gtk_cell_renderer_toggle_get_activatable($!crt);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = resolve-bool($setting);
+        my gboolean $s = $setting.Int.so;
+
         gtk_cell_renderer_toggle_set_activatable($!crt, $s);
       }
     );
@@ -97,7 +95,8 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         gtk_cell_renderer_toggle_get_active($!crt);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = resolve-bool($setting);
+        my gboolean $s = $setting.Int.so;
+
         gtk_cell_renderer_toggle_set_active($!crt, $s);
       }
     );
@@ -109,7 +108,8 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         so gtk_cell_renderer_toggle_get_radio($!crt);
       },
       STORE => sub ($, Int() $radio is copy) {
-        my gboolean $r = resolve-bool($radio);
+        my gboolean $r = $radio.Int.so;
+
         gtk_cell_renderer_toggle_set_radio($!crt, $r);
       }
     );
@@ -127,7 +127,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('inconsistent', $gv)
       }
     );
@@ -142,7 +142,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = resolve-int($val);
+        $gv.int = $val;
         self.prop_set('indicator-size', $gv)
       }
     );
