@@ -9,8 +9,9 @@ use Dependency::Sort;
 my (%nodes, @threads);
 
 sub MAIN (
-  :$force,           #= Force dependency generation
-  :$prefix is copy   #= Module prefix
+  :$force,            #= Force dependency generation
+  :$prefix is copy,   #= Module prefix
+  :$start-at
 ) {
   my @build-exclude;
   my $dep_file = '.build-deps'.IO;
@@ -107,14 +108,15 @@ sub MAIN (
     @module-order.push( $_<name> => $++ ) for $s.result;
   }
   my %module-order = @module-order.Hash;
-  @others = @others.unique.sort.grep( * ne <NativeCall nqp>.any );
-  my $list = @others.join("\n") ~ "\n";
-  $list ~= @module-order.map({ $_.key }).join("\n");
-  "BuildList".IO.open(:w).say($list);
+  my @buildList <== @others
+                <== @others.unique.sort.grep( * ne <NativeCall nqp>.any );
+
+  @buildList.append: @module-order.map( *.key );
+  "BuildList".IO.open(:w).say( my $list = @buildList.join("\n") );
   say $list;
 
   # Add module order to modules.
-  $_.push( %module-order{$_[1]} ) for @modules;
+  .push( %module-order{$_[1]} ) for @modules;
 
   say "\nOther dependencies are:\n";
   say @others.unique.sort.join("\n");
@@ -133,7 +135,7 @@ sub MAIN (
       @modules.sort({
         ($^a[2] // 0).Int <=> ($^b[2] // 0).Int
       }).map({
-        $_.reverse.map({ qq["{ $_ // '' }"] })[1..2]
+        .reverse.map({ qq["{ $_ // '' }"] })[1..2]
       }),
       rows => {
         column_separator => ': ',
@@ -177,10 +179,31 @@ sub MAIN (
     }
 
     # Build code begins here.
-    my @buildOrder = 'BuildList'.IO.slurp.lines;
-    my $start = DateTime.now;
-    while +@buildOrder {
-      my $n = @buildOrder.shift;
+    @buildList.elems.say;
+    my $*SKIP = $start-at ??
+      ( $start-at.Int ~~ Failure ??
+        do {
+          my $i = @buildList.first($start-at, :k);
+          unless $i {
+            my @c = @buildList.map({ $_ => levenshtein($_, $start-at).abs })
+                              .sort( *.value );
+            my $cm = @c[0].key;
+
+            die "Could not find module '$start-at' did you mean '{$cm}'!"
+              unless $i;
+          }
+          $i.say;
+          $i;
+        }
+        !!
+        $start-at
+      )
+      !!
+      0;
+
+    my ($*I, $start) = (0, DateTime.now);
+    while +@buildList {
+      my $n = @buildList.shift;
 
       # Wait out jobs until the next set of dependencies are cleared.
       while %nodes{$n}<edges> && @threads.elems {
@@ -211,18 +234,25 @@ sub MAIN (
       }
 
     }
+
+    # Take care of any remaining threads.
+    await Promise.allof(@threads);
+
+    # Note total compile time.
     say "Total compile time: { DateTime.now - $start }s";
   }
 }
 
 sub run-compile ($module, $thread) {
-  my $cs = DateTime.now;
-  my $proc = run '/usr/bin/time', '-p', './p6gtkexec', '-e',  "use $module", :out, :err;
-  output(
-    $module,
-    $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
-  );
-  #$thread.break if $proc.exitcode;
+  if ++$*I > $*SKIP {
+    my $cs = DateTime.now;
+    my $proc = run './p6gtkexec', '-e',  "use $module", :out, :err;
+    output(
+      $module,
+      $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
+    );
+    #$thread.break if $proc.exitcode;
+  }
   if %nodes{$module} {
     say "Checking { $module }...";
     for %nodes{$module}<kids>[] {

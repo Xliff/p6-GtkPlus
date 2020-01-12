@@ -70,3 +70,99 @@ sub find-files(
 sub get-module-files is export {
   find-files('lib', extension => 'pm6');
 }
+
+sub levenshtein-nqp ($a, $b) is export {
+    use nqp;
+
+    my %memo;
+    my $alen := nqp::chars($a);
+    my $blen := nqp::chars($b);
+
+    return 0 if $alen eq 0 || $blen eq 0;
+
+    # the longer of the two strings is an upper bound.
+    #my $bound := $alen < $blen ?? $blen !! $alen;
+
+    sub changecost($ac, $bc) {
+        #sub issigil($_) { nqp::index('$@%&|', $_) != -1 };
+        return 0 if $ac eq $bc;
+        return 0.1 if nqp::fc($ac) eq nqp::fc($bc);
+        #return 0.5 if issigil($ac) && issigil($bc);
+        return 1;
+    }
+
+    sub levenshtein_impl($apos, $bpos, $estimate) {
+        my $key := join(":", ($apos, $bpos));
+
+        return %memo{$key} if nqp::existskey(%memo, $key);
+
+        # if either cursor reached the end of the respective string,
+        # the result is the remaining length of the other string.
+        sub check($pos1, $len1, $pos2, $len2) {
+            if $pos2 == $len2 {
+                return $len1 - $pos1;
+            }
+            return -1;
+        }
+
+        my $check := check($apos, $alen, $bpos, $blen);
+        return $check unless $check == -1;
+        $check := check($bpos, $blen, $apos, $alen);
+        return $check unless $check == -1;
+
+        my $achar = nqp::substr($a, $apos, 1);
+        my $bchar = nqp::substr($b, $bpos, 1);
+
+        my num $cost = changecost($achar, $bchar);
+
+        # hyphens and underscores cost half when adding/deleting.
+        my num $addcost = 1e0;
+        $addcost = 5e-1 if $bchar eq "-" || $bchar eq "_";
+
+        my num $delcost = 1e0;
+        $delcost = 5e-1 if $achar eq "-" || $achar eq "_";
+
+        my num $ca = nqp::add_n(levenshtein_impl($apos+1, $bpos,   nqp::add_n($estimate, $delcost)), $delcost); # what if we remove the current letter from A?
+        my num $cb = nqp::add_n(levenshtein_impl($apos,   $bpos+1, nqp::add_n($estimate, $addcost)), $addcost); # what if we add the current letter from B?
+        my num $cc = nqp::add_n(levenshtein_impl($apos+1, $bpos+1, nqp::add_n($estimate, $cost)), $cost); # what if we change/keep the current letter?
+
+        # the result is the shortest of the three sub-tasks
+        my num $distance;
+        $distance = $ca if nqp::isle_n($ca, $cb) && nqp::isle_n($ca, $cc);
+        $distance = $cb if nqp::isle_n($cb, $ca) && nqp::isle_n($cb, $cc);
+        $distance = $cc if nqp::isle_n($cc, $ca) && nqp::isle_n($cc, $cb);
+
+        # switching two letters costs only 1 instead of 2.
+        if $apos + 1 <= $alen && $bpos + 1 <= $blen &&
+           nqp::eqat($a, $bchar, $apos + 1) && nqp::eqat($b, $achar, $bpos + 1) {
+            my num $cd = nqp::add_n(levenshtein_impl($apos+2, $bpos+2, nqp::add_n($estimate, 1)), 1);
+            $distance = $cd if nqp::islt_n($cd, $distance);
+        }
+
+        %memo{$key} := $distance;
+        return $distance;
+    }
+
+    my num $result = levenshtein_impl(0, 0, 0);
+    return $result;
+}
+
+sub levenshtein ( Str $s, Str $t --> Int ) is export {
+    my @s = *, |$s.comb;
+    my @t = *, |$t.comb;
+
+    my @d;
+    @d[$_;  0] = $_ for ^@s.end;
+    @d[ 0; $_] = $_ for ^@t.end;
+
+    for 1..@s.end X 1..@t.end -> ($i, $j) {
+        @d[$i; $j] = @s[$i] eq @t[$j]
+            ??   @d[$i-1; $j-1]    # No operation required when eq
+            !! ( @d[$i-1; $j  ],   # Deletion
+                 @d[$i  ; $j-1],   # Insertion
+                 @d[$i-1; $j-1],   # Substitution
+               ).min + 1;
+    }
+
+    return @d[*-1][*-1];
+}
