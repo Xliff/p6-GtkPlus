@@ -88,7 +88,7 @@ class GTK::Scale is GTK::Range {
     GtkAdjustment() $adjustment
   ) {
     my uint32 $o = $orientation;
-    my $scale = gtk_scal_new($o, $adjustment);
+    my $scale = gtk_scale_new($o, $adjustment);
 
     $scale ?? self.bless(:$scale) !! Nil;
   }
@@ -165,7 +165,7 @@ class GTK::Scale is GTK::Range {
         gtk_scale_get_digits($!s);
       },
       STORE => sub ($, Int() $digits is copy) {
-        my gint $d = digits;
+        my gint $d = $digits;
 
         gtk_scale_set_digits($!s, $d);
       }

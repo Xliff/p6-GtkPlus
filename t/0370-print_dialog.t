@@ -6,7 +6,6 @@ use Pango::FontDescription;
 use Pango::Layout;
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GTK::PrintOperation;

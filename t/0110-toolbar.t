@@ -3,7 +3,6 @@ use v6.c;
 use lib <t .>;
 
 use GTK::Raw::Types;
-use GTK::Compat::Types;
 
 use GTK::Application;
 use GTK::Grid;

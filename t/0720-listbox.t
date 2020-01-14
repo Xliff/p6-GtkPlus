@@ -3,8 +3,9 @@ use v6.c;
 use lib <t .>;
 
 use DateTime::Format;
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
+
 use GTK::Application;
 use listbox_test;
 

@@ -121,6 +121,7 @@ class GtkExpander             is repr<CPointer> does GLib::Roles::Pointers is ex
 class GtkFileChooser          is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkFileChooserButton    is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkFileChooserDialog    is repr<CPointer> does GLib::Roles::Pointers is export { }
+class GtkFileChooserWidget    is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkFileFilter           is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkFixed                is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkFlowBox              is repr<CPointer> does GLib::Roles::Pointers is export { }

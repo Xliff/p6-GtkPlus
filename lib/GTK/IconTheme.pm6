@@ -56,7 +56,7 @@ class GTK::IconTheme {
   }
 
   method get_default (GTK::IconTheme:U: ) is also<get-default> {
-    my $theme = gtk_icon_theme_get_default()l
+    my $theme = gtk_icon_theme_get_default();
 
     $theme ?? self.bless(:$theme) !! Nil;
   }

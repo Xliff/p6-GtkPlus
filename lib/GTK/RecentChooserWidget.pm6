@@ -43,7 +43,7 @@ class GTK::RecentChooserWidget is GTK::Box {
           }
         }
         self.setBox($to-parent);
-        $!rc //= cast(GtkRecentChooser, $recentwidget);   # GTK::Roles::RecentChooser
+        self.roleInit-RecentChooser; # GTK::Roles::RecentChooser
       }
       when GTK::RecentChooserWidget {
       }

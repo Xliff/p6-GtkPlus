@@ -2,6 +2,7 @@ use v6.c;
 
 use Method::Also;
 
+use GTK::Raw::Types;
 use GTK::Raw::Main;
 
 use GLib::Roles::StaticClass;

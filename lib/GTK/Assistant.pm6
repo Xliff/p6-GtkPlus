@@ -3,11 +3,11 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::Assistant;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GDK::Pixbuf;
 use GTK::Window;
 
 our subset AssistantAncestry is export where GtkAssistant | WindowAncestry;

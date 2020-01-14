@@ -17,6 +17,12 @@ role GTK::Roles::RecentChooser {
 
   has GtkRecentChooser $!rc;
 
+  method roleInit-RecentChooser {
+    my \i = findProperImplementor(self.^attributes);
+
+    $!rc = cast( GtkRecentChooser, i.get_value(self) );
+  }
+
   method filter is rw {
     Proxy.new(
       FETCH => sub ($) {

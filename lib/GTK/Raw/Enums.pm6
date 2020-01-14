@@ -523,7 +523,8 @@ our enum GtkPopoverConstraintEnum is export <
   GTK_POPOVER_CONSTRAINT_WINDOW
 >;
 
-enum GtkWindowPosition is export (
+constant GtkWindowPosition is export := guint32;
+enum GtkWindowPositionEnum is export (
     GTK_WIN_POS_NONE               => 0,
     GTK_WIN_POS_CENTER             => 1,
     GTK_WIN_POS_MOUSE              => 2,
@@ -531,19 +532,22 @@ enum GtkWindowPosition is export (
     GTK_WIN_POS_CENTER_ON_PARENT   => 4,
 );
 
-enum GtkWindowType is export <
+constant GtkWindowType is export := guint32;
+enum GtkWindowTypeEnum is export <
   GTK_WINDOW_TOPLEVEL
   GTK_WINDOW_POPUP
 >;
 
-enum GtkFileChooserAction is export (
+constant GtkFileChooserAction is export := guint32;
+enum GtkFileChooserActionEnum is export (
     GTK_FILE_CHOOSER_ACTION_OPEN           => 0,
     GTK_FILE_CHOOSER_ACTION_SAVE           => 1,
     GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER  => 2,
     GTK_FILE_CHOOSER_ACTION_CREATE_FOLDER  => 3,
 );
 
-enum GtkPlacesOpenFlags is export (
+constant GtkPlacesOpenFlags is export := guint32;
+enum GtkPlacesOpenFlagsEnum is export (
     GTK_PLACES_OPEN_NORMAL     => 0,
     GTK_PLACES_OPEN_NEW_TAB    => 1,
     GTK_PLACES_OPEN_NEW_WINDOW => 2,
@@ -562,19 +566,22 @@ enum GtkPolicyTypeEnum is export (
                                 #This can be used e.g. to make multiple scrolled windows share a scrollbar.
 );
 
-enum GtkToolPaletteDragTargets is export (
+constant GtkToolPaletteDragTargets is export := guint32;
+enum GtkToolPaletteDragTargetsEnum is export (
   GTK_TOOL_PALETTE_DRAG_ITEMS  => 1,
   GTK_TOOL_PALETTE_DRAG_GROUPS => 2
 );
 
-enum GtkDestDefaults is export (
+constant GtkDestDefaults is export := guint32;
+enum GtkDestDefaultsEnum is export (
   GTK_DEST_DEFAULT_MOTION     => 1,
   GTK_DEST_DEFAULT_HIGHLIGHT  => 2,
   GTK_DEST_DEFAULT_DROP       => 4,
   GTK_DEST_DEFAULT_ALL        => 7
 );
 
-enum GtkRevealerTransitionType is export <
+constant GtkRevealerTransitionType is export := guint32;
+enum GtkRevealerTransitionTypeEnum is export <
   GTK_REVEALER_TRANSITION_TYPE_NONE
   GTK_REVEALER_TRANSITION_TYPE_CROSSFADE
   GTK_REVEALER_TRANSITION_TYPE_SLIDE_RIGHT
@@ -836,7 +843,8 @@ our enum GtkPrintOperationResultEnum is export <
   GTK_PRINT_OPERATION_RESULT_IN_PROGRESS
 >;
 
-enum GtkPrintOperationAction is export <
+constant GtkPrintOperationAction is export := guint32;
+enum GtkPrintOperationActionEnum is export <
   GTK_PRINT_OPERATION_ACTION_PRINT_DIALOG
   GTK_PRINT_OPERATION_ACTION_PRINT
   GTK_PRINT_OPERATION_ACTION_PREVIEW

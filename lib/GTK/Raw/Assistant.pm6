@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-
 use GTK::Raw::Types;
 
 unit package GTK::Raw::Assistant;

@@ -1,6 +1,5 @@
 use v6.c;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GLib::Value;

@@ -1,15 +1,11 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
-use Pango::Raw::Types;
 
 use GDK::RGBA;
 
-use GTK::Raw::CellRendererText;
 use GTK::Raw::Types;
-
+use GTK::Raw::CellRendererText;
 
 use GLib::Value;
 use GTK::CellRenderer;
@@ -26,7 +22,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererText');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -46,12 +42,12 @@ class GTK::CellRendererText is GTK::CellRenderer {
     my $to-parent;
     $!crt = do given $celltext {
       when GtkCellRendererText  {
-        $to-parent = nativecast(GtkCellRenderer, $_);
+        $to-parent = cast(GtkCellRenderer, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkCellRendererText, $_);
+        cast(GtkCellRendererText, $_);
       }
     }
     self.setCellRenderer($to-parent);
@@ -62,15 +58,19 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   method GTK::Raw::Types::GtkCellRendererText
-    is also<CellRendererText>
+    is also<
+      CellRendererText
+      GtkCellRendererText
+    >
   { $!crt }
 
+  multi method new (CellRendererTextAncestry $celltext) {
+    $celltext ?? self.bless(:$celltext) !! Nil;
+  }
   multi method new {
     my $celltext = gtk_cell_renderer_text_new();
-    self.bless(:$celltext);
-  }
-  multi method new (CellRendererTextAncestry $celltext) {
-    self.bless(:$celltext);
+
+    $celltext ?? self.bless(:$celltext) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -124,7 +124,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('attributes', $gv);
-        nativecast(PangoAttrList, $gv.pointer);
+        cast(PangoAttrList, $gv.pointer);
       },
       STORE => -> $, PangoAttrList $val is copy {
         $gv.pointer = $val;
@@ -153,7 +153,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('background-gdk', $gv);
-        nativecast(GdkColor, $gv.pointer);
+        cast(GdkColor, $gv.pointer);
       },
       STORE => -> $, GdkColor $val is copy {
         $gv.pointer = $val;
@@ -168,10 +168,10 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('background-rgba', $gv);
-        nativecast(GDK::RGBA, $gv.pointer);
+        cast(GDK::RGBA, $gv.pointer);
       },
       STORE => -> $, GDK::RGBA $val is copy {
-        $gv.pointer = nativecast(Pointer, $val);
+        $gv.pointer = cast(gpointer, $val);
         self.prop_set('background-rgba', $gv);
       }
     );
@@ -298,15 +298,20 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: PangoFontDescription
-  method font-desc is rw is also<font_desc> {
-    my GLib::Value $gv .= new(G_TYPE_ENUM);
+  method font-desc (:$raw = False) is rw is also<font_desc> {
+    my GLib::Value $gv .= new( Pango::FontDescription.get_type );
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('font-desc', $gv);
-        PangoFontDescriptionEnum( $gv.enum );
+
+        return unless $gv.boxed;
+
+        my $fd = cast(PangoFontDescription, $gv.boxed);
+
+        $raw ?? $fd !! Pango::FontDescription.new($fd);
       },
-      STORE => -> $, Int() $val is copy {
-        $gv.enum = $val;
+      STORE => -> $, PangoFontDescription() $val is copy {
+        $gv.boxed = $val;
         self.prop_set('font-desc', $gv);
       }
     );
@@ -334,7 +339,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
         self.prop_get('foreground-gdk', $gv);
         $gv.pointer;
       },
-      STORE => -> $, GdkColor $val is copy {
+      STORE => -> $, GdkColor() $val is copy {
         $gv.pointer = $val;
         self.prop_set('foreground-gdk', $gv);
       }
@@ -347,10 +352,10 @@ class GTK::CellRendererText is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('foreground-rgba', $gv);
-        nativecast(GDK::RGBA, $gv.pointer);
+        cast(GDK::RGBA, $gv.pointer);
       },
       STORE => -> $, GDK::RGBA $val is copy {
-        $gv.pointer = nativecast(Pointer, $val);
+        $gv.pointer = cast(gpointer, $val);
         self.prop_set('foreground-rgba', $gv);
       }
     );
@@ -809,13 +814,16 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_renderer_text_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_cell_renderer_text_get_type, $n, $t );
   }
 
   method set_fixed_height_from_font (Int() $number_of_rows)
     is also<set-fixed-height-from-font>
   {
     my gint $nr = $number_of_rows;
+
     gtk_cell_renderer_text_set_fixed_height_from_font($!crt, $nr);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

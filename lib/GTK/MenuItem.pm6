@@ -81,9 +81,13 @@ class GTK::MenuItem is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (MenuItemAncestry $menuitem) {
+  method GTK::Raw::Definitions::GtkMenuItem
+    is also<GtkMenuItem>
+  { $!mi }
+
+  multi method new (MenuItemAncestry $menuitem, :$ref = True) {
     my $o = self.bless(:$menuitem);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {

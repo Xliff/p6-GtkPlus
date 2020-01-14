@@ -26,8 +26,10 @@ $app.activate.tap({
 
   );
 
+  # $chooser.current-uri is currently unavailable due to an issue in
+  # Method::Also
   $chooser.selection-changed.tap: {
-    my $u = $chooser.current-uri;
+    my $u = $chooser.get_current_uri;
     say "Selected: { $u }" with $u;
   };
 

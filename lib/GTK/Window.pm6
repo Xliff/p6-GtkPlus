@@ -58,9 +58,9 @@ class GTK::Window is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (WindowAncestry $window) {
+  multi method new (WindowAncestry $window, :$ref = True) {
     my $o = self.bless(:$window);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (
@@ -93,7 +93,7 @@ class GTK::Window is GTK::Bin {
     $window ?? self.bless(:$window, :$title, :$width, :$height) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkWindow
+  method GTK::Raw::Definitions::GtkWindow
     is also<
       window
       GtkWindow

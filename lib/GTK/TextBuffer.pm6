@@ -249,7 +249,7 @@ D
 
         return Nil unless $gv.boxed;
 
-        my $tl = cast(GtkTargetList, $gv.boxed)
+        my $tl = cast(GtkTargetList, $gv.boxed);
         $raw ?? $tl !!GTK::TargetList.new($tl);
       },
       STORE => -> $,  $val is copy {
@@ -452,6 +452,31 @@ D
     gtk_text_buffer_end_user_action($!tb);
   }
 
+  method !resolve-iter($iter) {
+    if $iter {
+      die 'Invalid type!' unless
+        ($*i = $iter) ~~ (GTK::TextIter, GtkTextIter).any;
+
+      $*i .= GtkTextIter if $*i ~~ GTK::TextIter;
+    } else {
+      $*i = GtkTextIter.new;
+
+      die 'Could not allocate a new GtkTextIter!' unless $*i;
+    }
+    $*i;
+  }
+
+  method !handle-iter-return($iter, $raw) {
+    do if $iter {
+      # Tricky assed logic!
+      $iter ~~ GTK::TextIter
+        ?? ( $raw ?? $*i !! $iter )
+        !! ( $raw ?? $*i !! GTK::TextIter.new($*i) )
+    } else {
+      $raw ?? $*i !! GTK::TextIter.new($*i)
+    }
+  }
+
   # cw: Has a proto been attempted for this, yet?
   proto method get_bounds (|)
     is also<get-bounds>
@@ -465,15 +490,18 @@ D
     $end is rw,
     :$raw = False;
   ) {
-    gtk_text_buffer_get_bounds(
-      $!tb,
+    my $*i;
+
+    my ($s, $e) = (
       self!resolve-iter($start),
       self!resolve-iter($end)
     );
 
+    gtk_text_buffer_get_bounds($!tb, $s, $e);
+
     (
-      self!handle-iter-return($start, $raw),
-      self!handle-iter-return($end, $raw)
+      do { $*i = $s; self!handle-iter-return($start, $raw) },
+      do { $*i = $e; self!handle-iter-return($end, $raw)   }
     )
   }
 
@@ -533,32 +561,6 @@ D
       Nil;
   }
 
-  method !resolve-iter($iter) {
-    my $i;
-    if $iter {
-      die 'Invalid type!' unless
-        ($i = $iter) ~~ (GTK::TextIter, GtkTextIter).any;
-
-      $i .= GtkTextIter if $i ~~ GTK::TextIter;
-    } else {
-      $i = GtkTextIter.new;
-
-      die 'Could not allocate a new GtkTextIter!' unless $i;
-    }
-    $i;
-  }
-
-  method !handle-iter-return($iter, $raw) {
-    do if $iter {
-      # Tricky assed logic!
-      $iter ~~ GTK::TextIter
-        ?? ( $raw ?? $i !! $iter )
-        !! ( $raw ?? $i !! GTK::TextIter.new($i) )
-    } else {
-      $raw ?? $i !! GTK::TextIter.new($i)
-    }
-  }
-
   proto method get_iter_at_child_anchor (|)
     is also<get-iter-at-child-anchor>
   { * }
@@ -574,6 +576,8 @@ D
     GtkTextChildAnchor() $anchor,
     :$raw = False;
   ) {
+    my $*i;
+
     gtk_text_buffer_get_iter_at_child_anchor(
       $!tb,
       self!resolve-iter($iter),
@@ -595,6 +599,7 @@ D
     :$raw = False;
   ) {
     my gint $ln = $line_number;
+    my $*i;
 
     # So what to do if $iter is a GTK::TextIter, or a GtkTextIter?
     # How do we handle the return value. Do we try to return the inbound
@@ -626,6 +631,7 @@ D
     :$raw = False
   ) {
     my gint ($ln, $bi) = ($line_number, $byte_index);
+    my $*i;
 
     gtk_text_buffer_get_iter_at_line_index(
       $!tb,
@@ -654,6 +660,7 @@ D
     :$raw = False
   ) {
     my gint ($ln, $co) = ($line_number, $char_offset);
+    my $*i;
 
     gtk_text_buffer_get_iter_at_line_offset(
       $!tb,
@@ -676,6 +683,8 @@ D
     GtkTextMark() $mark,
     :$raw = False;
   ) {
+    my $*i;
+
     gtk_text_buffer_get_iter_at_mark(
       $!tb,
       self!resolve-iter($iter),
@@ -700,6 +709,7 @@ D
     :$raw = False
   ) {
     my gint $co = $char_offset;
+    my $*i;
 
     gtk_text_buffer_get_iter_at_offset(
       $!tb,
@@ -749,23 +759,24 @@ D
   }
   multi method get_selection_bounds (
     $start,
-    $end,
+    $end  ,
     :$all = False,
     :$raw = False
   ) {
-    my $rv = so gtk_text_buffer_get_selection_bounds(
-      $!tb,
+    my $*i;
+    my ($s, $e) = (
       self!resolve-iter($start),
       self!resolve-iter($end)
     );
+    my $rv = so gtk_text_buffer_get_selection_bounds($!tb, $s, $e);
 
     $all.not ??
       $rv
       !!
       (
         $rv,
-        self!handle-iter-return($start, $raw),
-        self!handle-iter-return($end, $raw)
+        do { $*i = $s; self!handle-iter-return($start, $raw) },
+        do { $*i = $e; self!handle-iter-return($end, $raw)   }
       )
   }
 
@@ -790,9 +801,11 @@ D
   { * }
 
   multi method get_start_iter (:$raw = False) {
-    samewith($iter, :$raw);
+    samewith($, :$raw);
   }
   multi method get_start_iter ($iter, :$raw = False) {
+    my $*i;
+
     gtk_text_buffer_get_start_iter( $!tb, self!resolve-iter($iter) );
     self!handle-iter-return($iter, $raw)
   }

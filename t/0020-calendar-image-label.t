@@ -1,5 +1,7 @@
 use v6.c;
 
+use GTK::Raw::Types;
+
 use GTK::Application;
 use GTK::Box;
 use GTK::Calendar;
@@ -7,15 +9,13 @@ use GTK::Entry;
 use GTK::Image;
 use GTK::Label;
 
-use GTK::Compat::Types;
-
 my $a = GTK::Application.new( :title('org.genex.calendar_example') );
 
 $a.activate.tap({
   my $vbox = GTK::Box.new-vbox();
   my $hbox = GTK::Box.new-hbox();
   my $label = GTK::Label.new();
-  my $image = GTK::Image.new_from_file('resource/Calendar-icon.png');
+  my $image = GTK::Image.new_from_file('resources/Calendar-icon.png');
   my $calendar = GTK::Calendar.new();
   my $entry = GTK::Entry.new();
 

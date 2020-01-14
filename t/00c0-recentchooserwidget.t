@@ -20,8 +20,9 @@ $app.activate.tap({
   my $exit = GTK::Button.new_with_label: <exit>;
   my $chooser = GTK::RecentChooserWidget.new;
 
+  # $chooser.current_uri currently unavailable due to issues with Method::Also
   $chooser.selection-changed.tap: {
-    say "Selected: { $chooser.current_uri }"
+    say "Selected: { $_ }" with $chooser.get_current_uri;
   };
 
   $exit.      clicked       .tap: { $app.exit };

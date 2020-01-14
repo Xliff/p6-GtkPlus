@@ -1,6 +1,7 @@
-use GTK::Application;
+use v6.c;
+
 use GTK::Raw::Types;
-use GTK::Compat::Types;
+use GTK::Application;
 use GTK::Box;
 use GTK::Button;
 use GTK::FlowBox;

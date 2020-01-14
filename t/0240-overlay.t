@@ -9,7 +9,6 @@ use lib <t .>;
 
 use Cairo;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 use overlay_example;
 

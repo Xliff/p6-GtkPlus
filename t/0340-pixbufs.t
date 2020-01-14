@@ -2,12 +2,12 @@ use v6.c;
 
 use Cairo;
 
+use GDK::Cairo;
+use GDK::FrameClock;
+use GDK::Pixbuf;
+use GDK::Rectangle;
+use GDK::Types;
 use GTK::Application;
-use GTK::Compat::Cairo;
-use GTK::Compat::FrameClock;
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Rectangle;
-use GTK::Compat::Types;
 use GTK::Dialog::Message;
 use GTK::DrawingArea;
 use GTK::Raw::Types;

@@ -3,9 +3,8 @@ use v6.c;
 use Cairo;
 
 #use GLib::GList;
-use GTK::Compat::Types;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
+#use GTK::Raw::Utils;
 
 use GTK::Application;
 use GTK::Box;
@@ -95,7 +94,9 @@ multi sub draw_style_common-ro ($c, $w, $h) {
 }
 multi sub draw_style_common-ro ($c, $x, $y, $w, $h) {
   my %*b = (
-    margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
+    border  => GtkBorder.new,
+    margin  => GtkBorder.new,
+    padding => GtkBorder.new
   );
   my $*cax = $x // $*x;
   my $*cay = $y // $*y;
@@ -121,7 +122,9 @@ multi sub draw_style_common (
   my $*caw = $w // $*w;
   my $*cah = $h // $*h;
   my %*b = (
-    margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
+    border  => GtkBorder.new,
+    margin  => GtkBorder.new,
+    padding => GtkBorder.new
   );
   common_draw($c, $*cax, $*cay, $*caw, $*cah);
   common_adjust($cx // $*cx, $cy // $*cy, $cw // $*cw, $ch // $*ch);
@@ -129,7 +132,9 @@ multi sub draw_style_common (
 
 multi sub query_size($cc, $w is rw, $h is rw) {
   my %*b = (
-    margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
+    border  => GtkBorder.new,
+    margin  => GtkBorder.new,
+    padding => GtkBorder.new
   );
   # Warning: dynamic method call.
   $cc."get_{ $_ }"($cc.state, %*b{$_}) for %*b.keys;

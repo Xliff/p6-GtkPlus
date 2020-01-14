@@ -3,10 +3,9 @@ use v6.c;
 # Shamelessly ripped off from:
 # https://github.com/davidt/gtk/blob/master/demos/gtk-demo/iconview.c
 
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GDK::Pixbuf;
 use GTK::Application;
 use GTK::Box;
 use GTK::IconView;

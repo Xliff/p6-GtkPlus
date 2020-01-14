@@ -33,7 +33,7 @@ class GTK::TextIter {
     $!ti = $textiter;
   }
 
-  method GTK::Raw::Types::GtkTextIter
+  method GTK::Raw::Structs::GtkTextIter
     is also<TextIter>
   { $!ti }
 

@@ -12,6 +12,7 @@ GDK::Screen
 GDK::Window
 GIO::DBus::Raw::Types
 GIO::MenuModel
+GIO::Raw::Application
 GIO::Raw::Definitions
 GIO::Raw::Enums
 GIO::Raw::Exports
@@ -182,6 +183,7 @@ GTK::Raw::EventBox
 GTK::Raw::Expander
 GTK::Raw::FileChooser
 GTK::Raw::FileChooserButton
+GTK::Raw::FileChooserWidget
 GTK::Raw::FileFilter
 GTK::Raw::Fixed
 GTK::Raw::FlowBox
@@ -392,6 +394,7 @@ GTK::EntryCompletion
 GTK::EventBox
 GTK::Expander
 GTK::FileChooserButton
+GTK::FileChooserWidget
 GTK::FlowBoxChild
 GTK::FontButton
 GTK::Frame

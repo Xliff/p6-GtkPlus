@@ -110,7 +110,7 @@ sub gtk_grab_remove (GtkWidget $widget)
   is export
 { * }
 
-sub gtk_init (gint $argc, Str $argv)
+sub gtk_init (gint $argc, CArray[Str] $argv)
   is native(gtk)
   is export
 { * }

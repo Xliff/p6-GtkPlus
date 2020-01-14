@@ -5,7 +5,6 @@ use NativeCall;
 
 use GTK::Raw::Box;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GTK::Roles::Orientable;
 

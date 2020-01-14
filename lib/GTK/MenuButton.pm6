@@ -50,9 +50,13 @@ class GTK::MenuButton is GTK::ToggleButton {
     }
   }
 
-  multi method new (MenuButtonAncestry $menubutton) {
+  method GTK::Raw::Definitions::GtkMenuButton
+    is also<GtkMenuButton>
+  { $!mb }
+
+  multi method new (MenuButtonAncestry $menubutton, :$ref = True) {
     my $o = self.bless(:$menubutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {

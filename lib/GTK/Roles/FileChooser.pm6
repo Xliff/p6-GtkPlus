@@ -18,6 +18,16 @@ role GTK::Roles::FileChooser {
 
   has GtkFileChooser $!fc;
 
+  method roleInit-FileChooser {
+    my \i = findProperImplementor(self.^attributes);
+
+    $!fc = cast( GtkFileChooser, i.get_value(self) );
+  }
+
+  method GTK::Raw::Definitions::GtkFileChooser
+    is also<GtkFileChooser>
+  { $!fc }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
@@ -144,10 +154,15 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method filter is rw {
+  method filter (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::FileFilter.new( gtk_file_chooser_get_filter($!fc) );
+        my $ff = gtk_file_chooser_get_filter($!fc);
+
+        $ff ??
+          ( $raw ?? $ff !! GTK::FileFilter.new($ff) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkFileFilter() $filter is copy) {
         gtk_file_chooser_set_filter($!fc, $filter);
@@ -167,10 +182,18 @@ role GTK::Roles::FileChooser {
     );
   }
 
-  method preview_widget is rw is also<preview-widget> {
+  method preview_widget (:$raw = False, :$widget = False)
+    is rw
+    is also<preview-widget>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_file_chooser_get_preview_widget($!fc);
+        my $pw = gtk_file_chooser_get_preview_widget($!fc);
+
+        $pw ?? ( $raw ?? $pw
+                      !! ( $widget ?? GTK::Widget.CreateObject($pw)
+                                   !! GTK::Widget.new($pw) ) )
+            !! Nil
       },
       STORE => sub ($, GtkWidget() $preview_widget is copy) {
         gtk_file_chooser_set_preview_widget($!fc, $preview_widget);
@@ -183,8 +206,9 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         so gtk_file_chooser_get_preview_widget_active($!fc);
       },
-      STORE => sub ($, $active is copy) {
-        my gboolean $a = self.RESOLVE-BOOL($active);
+      STORE => sub ($, Int() $active is copy) {
+        my gboolean $a = $active.so.Int;
+
         gtk_file_chooser_set_preview_widget_active($!fc, $a);
       }
     );
@@ -195,8 +219,9 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         so gtk_file_chooser_get_select_multiple($!fc);
       },
-      STORE => sub ($, $select_multiple is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($select_multiple);
+      STORE => sub ($, Int() $select_multiple is copy) {
+        my gboolean $s = $select_multiple.so.Int;
+
         gtk_file_chooser_set_select_multiple($!fc, $s);
       }
     );
@@ -207,8 +232,9 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         so gtk_file_chooser_get_show_hidden($!fc);
       },
-      STORE => sub ($, $show_hidden is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($show_hidden);
+      STORE => sub ($, Int() $show_hidden is copy) {
+        my gboolean $s = $show_hidden.so.Int;
+
         gtk_file_chooser_set_show_hidden($!fc, $s);
       }
     );
@@ -230,8 +256,9 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         so gtk_file_chooser_get_use_preview_label($!fc);
       },
-      STORE => sub ($, $use_label is copy) {
-        my gboolean $u = self.RESOLVE-BOOL($use_label);
+      STORE => sub ($, Int() $use_label is copy) {
+        my gboolean $u = $use_label.so.Int;
+
         gtk_file_chooser_set_use_preview_label($!fc, $u);
       }
     );
@@ -244,20 +271,38 @@ role GTK::Roles::FileChooser {
     Str() $label,
     Str() $options,
     Str() $option_labels
-  ) is also<add-choice> {
+  )
+    is also<add-choice>
+  {
     gtk_file_chooser_add_choice($!fc, $id, $label, $options, $option_labels);
   }
 
-  method add_filter (GtkFileFilter $filter) is also<add-filter> {
+  method add_filter (GtkFileFilter() $filter) is also<add-filter> {
     gtk_file_chooser_add_filter($!fc, $filter);
   }
 
-  method add_shortcut_folder (Str() $folder, GError $error) is also<add-shortcut-folder> {
-    gtk_file_chooser_add_shortcut_folder($!fc, $folder, $error);
+  method add_shortcut_folder (
+    Str() $folder,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<add-shortcut-folder>
+  {
+    clear_error;
+    my $rv = gtk_file_chooser_add_shortcut_folder($!fc, $folder, $error);
+    set_error($error);
+    $rv;
   }
 
-  method add_shortcut_folder_uri (Str() $uri, GError $error) is also<add-shortcut-folder-uri> {
-    gtk_file_chooser_add_shortcut_folder_uri($!fc, $uri, $error);
+  method add_shortcut_folder_uri (
+    Str() $uri,
+    CArray[Pointer[GError]] $error
+  )
+    is also<add-shortcut-folder-uri>
+  {
+    clear_error;
+    my $rv = gtk_file_chooser_add_shortcut_folder_uri($!fc, $uri, $error);
+    set_error($error);
+    $rv;
   }
 
   method error_quark is also<error-quark> {
@@ -276,12 +321,25 @@ role GTK::Roles::FileChooser {
     gtk_file_chooser_get_file($!fc);
   }
 
-  method get_filenames is also<get-filenames> {
-    gtk_file_chooser_get_filenames($!fc);
+  method get_filenames (:$glist = False) is also<get-filenames> {
+    my $fnl = gtk_file_chooser_get_filenames($!fc);
+
+    return Nil unless $fnl;
+    return $fnl if $glist;
+
+    ( GLib::GList.new($fnl) but GLib::Roles::ListData[Str] ).Array;
   }
 
-  method get_files is also<get-files> {
-    gtk_file_chooser_get_files($!fc);
+  method get_files (:$glist = False, :$raw = False) is also<get-files> {
+    my $fl = gtk_file_chooser_get_files($!fc);
+
+    return Nil unless $fl;
+    return $fl if $glist;
+
+    $fl = GLib::GList.new($fl) but GLib::Roles::ListData[GFile];
+
+    $raw ?? $fl.Array
+         !! $fl.Array.map({ GLib::Roles::GFile.new-file-obj($_) });
   }
 
   method get_preview_file is also<get-preview-file> {
@@ -300,42 +358,77 @@ role GTK::Roles::FileChooser {
     gtk_file_chooser_get_type();
   }
 
-  method get_uris is also<get-uris> {
-    gtk_file_chooser_get_uris($!fc);
+  method get_uris (:$glist = False) is also<get-uris> {
+    my $ul = gtk_file_chooser_get_uris($!fc);
+
+    return Nil unless $ul;
+    return $ul if $glist;
+
+    ( GLib::GList.new($ul) but GLib::Roles::ListData[Str] ).Array;
   }
 
-  method list_filters is also<list-filters> {
-    gtk_file_chooser_list_filters($!fc);
+  method list_filters (:$glist = False, :$raw = False) is also<list-filters> {
+    my $fl = gtk_file_chooser_list_filters($!fc);
+
+    return Nil unless $fl;
+    return $fl if $glist;
+
+    $fl = GLib::GList.new($fl) but GLib::Roles::ListData[GtkFileFilter];
+    $raw ?? $fl.Array !! $fl.Array.map({ GTK::FileFilter.new($_) });
   }
 
-  method list_shortcut_folder_uris is also<list-shortcut-folder-uris> {
-    gtk_file_chooser_list_shortcut_folder_uris($!fc);
+  method list_shortcut_folder_uris (:$glist = False)
+    is also<list-shortcut-folder-uris>
+  {
+    my $ful = gtk_file_chooser_list_shortcut_folder_uris($!fc);
+
+    return Nil unless $ful;
+    return $ful if $glist;
+
+    ( GLib::GList.new($ful) but GLib::Roles::ListData[Str] ).Array;
   }
 
-  method list_shortcut_folders is also<list-shortcut-folders> {
-    gtk_file_chooser_list_shortcut_folders($!fc);
+  method list_shortcut_folders (:$glist = False)
+    is also<list-shortcut-folders>
+  {
+    my $sfl = gtk_file_chooser_list_shortcut_folders($!fc);
+
+    return Nil unless $sfl;
+    return $sfl if $glist;
+
+    ( GLib::GList.new($sfl) but GLib::Roles::ListData[Str] ).Array;
   }
 
   method remove_choice (Str() $id) is also<remove-choice> {
     gtk_file_chooser_remove_choice($!fc, $id);
   }
 
-  method remove_filter (GtkFileFilter $filter) is also<remove-filter> {
+  method remove_filter (GtkFileFilter() $filter) is also<remove-filter> {
     gtk_file_chooser_remove_filter($!fc, $filter);
   }
 
   method remove_shortcut_folder (
     Str() $folder,
-    GError $error = GError
-  ) is also<remove-shortcut-folder> {
-    gtk_file_chooser_remove_shortcut_folder($!fc, $folder, $error);
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<remove-shortcut-folder>
+  {
+    clear_error;
+    my $rv = gtk_file_chooser_remove_shortcut_folder($!fc, $folder, $error);
+    set_error($error);
+    $rv;
   }
 
   method remove_shortcut_folder_uri (
     Str() $uri,
-    GError $error = GError
-  ) is also<remove-shortcut-folder-uri> {
-    gtk_file_chooser_remove_shortcut_folder_uri($!fc, $uri, $error);
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<remove-shortcut-folder-uri>
+  {
+    clear_error;
+    my $rv = gtk_file_chooser_remove_shortcut_folder_uri($!fc, $uri, $error);
+    set_error($error);
+    $rv;
   }
 
   method select_all is also<select-all> {
@@ -343,10 +436,15 @@ role GTK::Roles::FileChooser {
   }
 
   method select_file (
-    GFile $file,
-    GError $error = GError
-  ) is also<select-file> {
-    gtk_file_chooser_select_file($!fc, $file, $error);
+    GFile() $file,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<select-file>
+  {
+    clear_error;
+    my $rv = gtk_file_chooser_select_file($!fc, $file, $error);
+    set_error($error);
+    $rv;
   }
 
   method select_filename (Str() $filename) is also<select-filename> {
@@ -362,24 +460,32 @@ role GTK::Roles::FileChooser {
   }
 
   method set_current_folder_file (
-    GFile $file,
-    GError $error = GError
+    GFile() $file,
+    CArray[Pointer[GError]] $error = gerror
   ) is also<set-current-folder-file> {
-    gtk_file_chooser_set_current_folder_file($!fc, $file, $error);
+    clear_error;
+    my $rv = gtk_file_chooser_set_current_folder_file($!fc, $file, $error);
+    set_error($error);
+    $rv;
   }
 
   method set_file (
-    GFile $file,
-    GError $error = GError
-  ) is also<set-file> {
-    gtk_file_chooser_set_file($!fc, $file, $error);
+    GFile() $file,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<set-file>
+  {
+    clear_error;
+    my $rv = gtk_file_chooser_set_file($!fc, $file, $error);
+    set_error($error);
+    $rv;
   }
 
   method unselect_all is also<unselect-all> {
     gtk_file_chooser_unselect_all($!fc);
   }
 
-  method unselect_file (GFile $file) is also<unselect-file> {
+  method unselect_file (GFile() $file) is also<unselect-file> {
     gtk_file_chooser_unselect_file($!fc, $file);
   }
 
@@ -393,4 +499,3 @@ role GTK::Roles::FileChooser {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
-

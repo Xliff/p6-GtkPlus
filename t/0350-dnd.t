@@ -2,11 +2,11 @@ use v6.c;
 
 use Cairo;
 
-use GTK::Compat::Cairo;
-use GTK::Compat::DragContext;
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GDK::Cairo;
+use GDK::DragContext;
+use GDK::Types;
 use GTK::Application;
 use GTK::Box;
 use GTK::Button;

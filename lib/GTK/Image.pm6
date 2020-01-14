@@ -5,8 +5,8 @@ use NativeCall;
 
 use GDK::Pixbuf;
 
-use GTK::Raw::Image;
 use GTK::Raw::Types;
+use GTK::Raw::Image;
 
 use GLib::Value;
 use GTK::Widget;
@@ -448,9 +448,9 @@ class GTK::Image is GTK::Widget {
   }
 
   method get_pixbuf (:$raw = False) is also<get-pixbuf> {
-    warn "*** Pixbuf data is only valid if image type is GTK_IMAGE_EMPTY or { ''
-         } GTK_IMAGE_PIXBUF";
-       unless self.get-storage-type == (GTK_IMAGE_EMPTY, GTK_IMAGE_PIXBUF).any;
+    warn "*** Pixbuf data is only valid if image type is GTK_IMAGE_EMPTY or{ ''
+         } GTK_IMAGE_PIXBUF"
+    unless self.get-storage-type == (GTK_IMAGE_EMPTY, GTK_IMAGE_PIXBUF).any;
 
     my $p = gtk_image_get_pixbuf($!i);
 

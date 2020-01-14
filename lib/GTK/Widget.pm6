@@ -21,7 +21,6 @@ use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
-
 use GTK::Roles::Buildable;
 use GTK::Roles::Data;
 use GLib::Roles::Properties;
@@ -61,7 +60,7 @@ class GTK::Widget {
   # and THIS object only!
   submethod DESTROY {
     warn "DESTROYING -- { self.getType }" if $DEBUG;
-    self.downref;
+    self.unref;
     # All widget-dependents may need a variation of this.
     my $w_cheat = nativecast(GObjectStruct, $!w);
     self.cleanup unless $w_cheat.ref_count;
@@ -76,9 +75,10 @@ class GTK::Widget {
   multi method new(|c) {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
   }
-  multi method new(WidgetAncestry $widget) {
+  multi method new(WidgetAncestry $widget, :$ref = True) {
     my $o = self.bless(:$widget);
-    $o.ref;
+    $o.ref if $ref;
+    $o;
   }
 
   method unstable_get_type(&sub, $n is rw, $t is rw)
@@ -1805,8 +1805,7 @@ class GTK::Widget {
     Int() $dest_x is rw,
     Int() $dest_y is rw
   ) {
-    my @i = ($src_x, $src_y, $dest_x, $dest_y);
-    my ($sx, $sy, $dx, $dy) = resolve-int(@i);
+    my ($sx, $sy, $dx, $dy) = ($src_x, $src_y, $dest_x, $dest_y);
     my $rc = gtk_widget_translate_coordinates(
       $src_widget, $dest_widget, $sx, $sy, $dx, $dy
     );
@@ -1814,7 +1813,7 @@ class GTK::Widget {
     $rc
   }
 
-  method style_get_property (Str() $property_name, GValue $value)
+  method style_get_property (Str() $property_name, GValue() $value)
     is also<style-get-property>
   {
     gtk_widget_style_get_property($!w, $property_name, $value);

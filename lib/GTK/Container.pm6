@@ -7,9 +7,11 @@ use GTK::Raw::Container;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
 
+use GLib::GList;
 use GTK::Adjustment;
 use GTK::Widget;
 
+use GLib::Roles::ListData;
 use GTK::Roles::LatchedContents;
 
 our subset ContainerAncestry is export
@@ -55,13 +57,18 @@ class GTK::Container is GTK::Widget {
     self.setWidget($to-parent);
   }
 
-  method new (ContainerAncestry $container) {
+  method new (ContainerAncestry $container, :$ref = True) {
     my $o = self.bless(:$container);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
 
-  method GTK::Raw::Types::GtkContainer is also<Container> { $!c }
+  method GTK::Raw::Definition::GtkContainer
+    is also<
+      Container
+      GtkContainer
+    >
+  { $!c }
 
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
@@ -419,7 +426,12 @@ D
     gtk_container_foreach($!c, $callback, $callback_data);
   }
 
-  method get_children(:$obj = True) is also<get-children> {
+  method get_children(
+    :$internal = False,
+    :$glist    = False,
+    :$raw      = False,
+    :$widget   = False
+  ) is also<get-children> {
     # my @children;
     # my $list = gtk_container_get_children($!c);
     # say "List start: { $list }";
@@ -429,7 +441,18 @@ D
     #   say "List next: { $list }";
     # }
     # @children;
-    (@!start, @!end).flat;
+
+    return (@!start, @!end).flat unless $internal;
+
+    my $cl = gtk_container_get_children($!c);
+
+    return Nil unless $cl;
+    return $cl if $glist;
+
+    $cl = GLib::GList.new($cl) but GLib::Roles::ListData[GtkWidget];
+    $raw ?? $cl.Array
+         !! ( $widget ?? $cl.Array.new({ GTK::Widget.new($_) })
+                      !! $cl.Array.new({ GTK::Widget.CreateObject($_) }) );
   }
 
   method get_focus_chain (GList $focusable_widgets)
@@ -446,6 +469,7 @@ D
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_container_get_type, $n, $t);
   }
 

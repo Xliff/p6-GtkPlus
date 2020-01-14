@@ -47,7 +47,7 @@ class GTK::Notebook is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -78,7 +78,12 @@ class GTK::Notebook is GTK::Container {
     self.disconnect-all($_) for %!signals-n;
   }
 
-  method GTK::Raw::Types::GtkNotebook is also<Notebook> { $!n }
+  method GTK::Raw::Types::GtkNotebook
+    is also<
+      Notebook
+      GtkNotebook
+    >
+  { $!n }
 
   multi method new (NotebookAncestry $notebook) {
     my $o = self.bless(:$notebook);
@@ -367,7 +372,7 @@ class GTK::Notebook is GTK::Container {
 
     my uint32 $p = self.RESOLVE-UINT($position);
 
-    self.insert-start-at($child, $p);
+    self.insert_start_at($child, $p);
     @!labels.splice($p, 0, $tab-label);
     $child     .= Widget if $child     ~~ GTK::Widget;
     $tab-label .= Widget if $tab-label ~~ GTK::Widget;

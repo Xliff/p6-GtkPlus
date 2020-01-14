@@ -6,15 +6,14 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::Tabs;
 
-
-
 use GTK::Raw::TextTag;
 use GTK::Raw::Types;
 
+use GDK::RGBA;
 use GLib::Value;
 
-use GTK::Roles::Types;
 use GLib::Roles::Properties;
+use GTK::Roles::Types;
 use GTK::Roles::Signals::TextTag;
 
 class GTK::TextTag  {

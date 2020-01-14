@@ -425,10 +425,12 @@ class GTK::TextView is GTK::Container {
       FETCH => -> $ {
         my $tb = self.buffer;
         my ($s, $e) = $tb.get_bounds;
+
         $tb.get_text($s, $e, False);
       },
       STORE => -> $, Str() $t {
         my $tb = self.buffer;
+        
         $tb.set_text($t);
       }
     );

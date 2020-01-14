@@ -3,10 +3,10 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
-use GTK::Raw::Subs;
+use GIO::Raw::Application;
 use GTK::Raw::Types;
 use GTK::Raw::Application;
+use GTK::Raw::Main;
 use GTK::Raw::Window;
 
 use GLib::Roles::Object;
@@ -106,12 +106,10 @@ class GTK::Application is export {
 
     return if $init-called;
 
-    my $argc = CArray[uint32].new;
-    $argc[0] = 0;
     my $args = CArray[Str].new;
     $args[0] = $*PROGRAM.Str;
 
-    gtk_init($argc, $args);
+    gtk_init(0, $args);
     $init-called = True;
 
     Nil;

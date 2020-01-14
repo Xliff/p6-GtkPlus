@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::Calendar;
 use GTK::Raw::Types;
 
@@ -16,7 +15,7 @@ class GTK::Calendar is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Calendar');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -42,7 +41,7 @@ class GTK::Calendar is GTK::Widget {
       }
     }
   }
-  
+
   method GTK::Raw::Types::GtkCalendar is also<Calendar> { $!cal }
 
   multi method new (CalendarAncestry $calendar) {
@@ -145,14 +144,14 @@ class GTK::Calendar is GTK::Widget {
   method clear_marks is also<clear-marks> {
     gtk_calendar_clear_marks($!cal);
   }
-  
+
   proto method get_date (|)
     is also<
       get-date
       date
     >
   { * }
-  
+
   multi method get_date {
     my ($y, $m, $d) = (0 xx 3);
     samewith($y, $m, $d);

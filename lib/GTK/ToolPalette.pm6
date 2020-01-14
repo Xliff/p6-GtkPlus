@@ -119,7 +119,7 @@ class GTK::ToolPalette is GTK::Container {
 
   method get_drop_group (Int() $x, Int() $y, :$raw = False)
     is also<get-drop-group>
-
+  {
     my gint ($xx, $yy) = ($x, $y);
 
     my $tig = gtk_tool_palette_get_drop_group($!tp, $xx, $yy);
@@ -130,7 +130,9 @@ class GTK::ToolPalette is GTK::Container {
       Nil;
   }
 
-  method get_drop_item (Int() $x, Int() $y) is also<get-drop-item> {
+  method get_drop_item (Int() $x, Int() $y, :$raw = False)
+    is also<get-drop-item>
+  {  
     my gint ($xx, $yy) = ($x, $y);
     my $ti = gtk_tool_palette_get_drop_item($!tp, $xx, $yy);
 

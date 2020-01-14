@@ -2,8 +2,8 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GTK::Raw::Types;
+use GDK::RGBA;
 
 use GTK::Application;
 use GTK::Button;

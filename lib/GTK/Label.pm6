@@ -48,7 +48,7 @@ class GTK::Label is GTK::Widget {
     $o;
   }
   multi method new ($text is copy = Str) {
-    $text .= Str if $text.^can('Str').elems;
+    $text .= Str if $text && $text.^can('Str').elems;
 
     die "Cannot create a label from a { $text.^name } object."
       unless $text ~~ Str;

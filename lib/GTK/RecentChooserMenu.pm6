@@ -12,7 +12,7 @@ use GTK::Roles::RecentChooser;
 use GTK::Menu;
 
 our subset RecentChooserMenuAncestry
-  where GtkRecentChooserMenu | MenuAncestry;
+  where GtkRecentChooserMenu | GtkRecentChooser | MenuAncestry;
 
 class GTK::RecentChooserMenu is GTK::Menu {
   also does GTK::Roles::RecentChooser;
@@ -34,18 +34,25 @@ class GTK::RecentChooserMenu is GTK::Menu {
             $to-parent = cast(GtkMenu, $_);
             $_;
           }
+          when GtkRecentChooser {
+            $to-parent = cast(GtkMenu, $_);
+            $!rc = $_;
+            cast(GtkRecentChooserMenu, $_);
+          }
           default {
             $to-parent = $_;
             cast(GtkRecentChooserMenu, $_);
           }
         }
         self.setMenu($to-parent);
+        self.roleInit-RecentChooser unless $!rc;
       }
       when GTK::RecentChooserMenu {
       }
       default {
       }
     }
+
   }
 
   method new {
