@@ -25,17 +25,17 @@ $a.activate.tap({
   $a.window.add($box);
 
   say "Button 1 CLICKED status: { $b1.is-connected('clicked') }";
+  $b1.clicked.tap({ say 'Click me button was clicked'; });
+  say "Button 1 CLICKED status: { $b1.is-connected('clicked') }";
+  say "Button 2 CLICKED status: { $b2.is-connected('clicked') }";
+  $b2.clicked.tap({ say 'Open button was clicked'; });
   say "Button 2 CLICKED status: { $b2.is-connected('clicked') }";
   say "Button 3 CLICKED status: { $b3.is-connected('clicked') }";
-  $b1.clicked.tap({ say 'Click me button was clicked'; });
-  $b2.clicked.tap({ say 'Open button was clicked'; });
   $b3.clicked.tap({ say 'Closing application.'; $a.exit; });
+  say "Button 3 CLICKED status: { $b3.is-connected('clicked') }";
   $box.pack_start($b1, True, True, 0);
   $box.pack_start($b2, True, True, 0);
   $box.pack_start($b3, True, True, 0);
-  say "Button 1 CLICKED status: { $b1.is-connected('clicked') }";
-  say "Button 2 CLICKED status: { $b2.is-connected('clicked') }";
-  say "Button 3 CLICKED status: { $b3.is-connected('clicked') }";
   $a.show_all;
 });
 
