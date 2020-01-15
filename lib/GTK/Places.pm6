@@ -57,7 +57,7 @@ class GTK::Places is GTK::ScrolledWindow {
     self.disconnect-all($_) for %!signals-p;
   }
 
-  method GTK::Raw::Types::GtkPlacesSidebar is also<Places> { $!ps }
+  method GTK::Raw::Definitions::GtkPlacesSidebar is also<Places> { $!ps }
 
   multi method new (PlacesAncestry $places) {
     my $o = self.bless(:$places);

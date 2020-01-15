@@ -34,7 +34,7 @@ class GTK::StackSwitcher is GTK::Box {
     }
   }
 
-  method GTK::Raw::Types::GtkStackSwitcher is also<StackSwitcher> { $!ss }
+  method GTK::Raw::Definitions::GtkStackSwitcher is also<StackSwitcher> { $!ss }
 
   method setStackSwitcher (StackSwitcherAncestry $switcher) {
     self.IS-PROTECTED;

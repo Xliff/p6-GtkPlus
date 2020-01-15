@@ -17,12 +17,16 @@ role GTK::Roles::TreeModel {
     $!tm = $tree;
   }
 
-  method GTK::Raw::Types::GtkTreeModel
+  method GTK::Raw::Definitions::GtkTreeModel
     is also<
       GtkTreeModel
       TreeModel
     >
   { $!tm }
+
+  method new-treemodel-obj (GtkTreeModel $tree) {
+    $tree ?? self.bless(:$tree) !! Nil;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -89,7 +93,7 @@ role GTK::Roles::TreeModel {
   }
 
   method get_flags is also<get-flags> {
-    GtkTreeModelFlagsEnum( gtk_tree_model_get_flags($!tm) );
+    gtk_tree_model_get_flags($!tm);
   }
 
   proto method get_iter (|)
@@ -296,7 +300,7 @@ role GTK::Roles::TreeModel {
     is also<emit-rows-reordered-with-length>
   {
     my gint ($no, $l) = ($new_order, $length);
-    
+
     gtk_tree_model_rows_reordered_with_length($!tm, $path, $iter, $no, $l);
   }
 

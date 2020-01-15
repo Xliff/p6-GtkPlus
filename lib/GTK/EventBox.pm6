@@ -48,7 +48,7 @@ class GTK::EventBox is GTK::Bin {
     }
   }
   
-  method GTK::Raw::Types::GtkEventBox is also<EventBox> { $!eb }
+  method GTK::Raw::Definitions::GtkEventBox is also<EventBox> { $!eb }
 
   multi method new (EventBoxAncestry $box) {
     self.bless(:$box);

@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::CellRendererPixbuf;
 use GTK::Raw::Types;
@@ -15,7 +13,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererPixbuf');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -26,10 +24,10 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
         $! = do {
           when GtkCellRenderer {
             $to-parent = $_;
-            nativecast(GtkCellRendererPixbuf, $_);
+            cast(GtkCellRendererPixbuf, $_);
           }
           when GtkCellRendererPixbuf {
-            $to-parent = nativecast(GtkCellRenderer, $_);
+            $to-parent = cast(GtkCellRenderer, $_);
             $_;
           }
         }
@@ -44,18 +42,20 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   multi method new {
     my $cellpix = gtk_cell_renderer_pixbuf_new();
-    self.bless(:$cellpix);
+
+    $cellpix ?? self.bless(:$cellpix) !! Nil;
   }
+  # This screams for ancestry logic.
   multi method new (GtkCellRendererPixbuf $cellpix) {
-    self.bless(:$cellpix);
+    $cellpix ?? self.bless(:$cellpix) !! Nil;
   }
   multi method new (GtkCellRenderer $cellpix) {
-    self.bless(:$cellpix);
+    $cellpix ?? self.bless(:$cellpix) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkCellRendererPixbuf {
-    $!crp;
-  }
+  method GTK::Raw::Definitions::GtkCellRendererPixbuf
+    is also<GtkCellRendererPixbuf>
+  { $!crp }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -72,7 +72,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('follow-state', $gv)
       }
     );
@@ -84,7 +84,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('gicon', $gv);
-        nativecast(GIcon, $gv.pointer);
+        cast(GIcon, $gv.pointer);
       },
       STORE => -> $, GIcon() $val is copy {
         $gv.pointer = $val;
@@ -114,7 +114,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf', $gv);
-        GDK::Pixbuf.new( nativecast(GdkPixbuf, $gv.object) );
+        GDK::Pixbuf.new( cast(GdkPixbuf, $gv.object) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
@@ -129,7 +129,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf-expander-closed', $gv);
-        GDK::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
+        GDK::Pixbuf.new( cast(GdkPixbuf, $gv.pointer) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.pointer = $val;
@@ -144,7 +144,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('pixbuf-expander-open', $gv);
-        GDK::Pixbuf.new( nativecast(GdkPixbuf, $gv.pointer) );
+        GDK::Pixbuf.new( cast(GdkPixbuf, $gv.pointer) );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.pointer = $val;
@@ -192,7 +192,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('stock-size', $gv)
       }
     );
@@ -204,7 +204,7 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('surface', $gv);
-        nativecast(cairo_surface_t, $gv.pointer);
+        cast(cairo_surface_t, $gv.pointer);
       },
       STORE => -> $, cairo_surface_t $val is copy {
         $gv.pointer = $val;
@@ -217,7 +217,9 @@ class GTK::CellRendererPixbuf is GTK::CellRenderer {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_renderer_pixbuf_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_cell_renderer_pixbuf_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

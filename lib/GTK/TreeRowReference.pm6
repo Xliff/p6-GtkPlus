@@ -20,7 +20,7 @@ class GTK::TreeRowReference {
     $!tr = $row
   }
   
-  method GTK::Raw::Types::GtkTreeRowReference 
+  method GTK::Raw::Definitions::GtkTreeRowReference 
     is also<TreeRowReference>
     { $!tr }
 

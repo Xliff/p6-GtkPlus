@@ -32,7 +32,7 @@ class GTK::TextBuffer {
     self.disconnect-all($_) for %!signals-tb;
   }
 
-  method GTK::Raw::Types::GtkTextBuffer
+  method GTK::Raw::Definitions::GtkTextBuffer
     is also<
       TextBuffer
       GtkTextBuffer

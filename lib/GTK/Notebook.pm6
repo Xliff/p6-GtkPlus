@@ -78,7 +78,7 @@ class GTK::Notebook is GTK::Container {
     self.disconnect-all($_) for %!signals-n;
   }
 
-  method GTK::Raw::Types::GtkNotebook
+  method GTK::Raw::Definitions::GtkNotebook
     is also<
       Notebook
       GtkNotebook

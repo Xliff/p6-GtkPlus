@@ -17,7 +17,7 @@ role GTK::Roles::FontChooser {
 
   has GtkFontChooser $!fc;
 
-  method GTK::Raw::Types::GtkFontChooser
+  method GTK::Raw::Definitions::GtkFontChooser
     is also<GtkFontChooser>
   { $!fc }
 

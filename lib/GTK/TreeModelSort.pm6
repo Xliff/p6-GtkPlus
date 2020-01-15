@@ -30,7 +30,7 @@ class GTK::TreeModelSort {
     $!tm = nativecast(GtkTreeModel, $!tms);         # GTK::Roles::TreeModel
   }
   
-  method GTK::Raw::Types::GtkTreeModelSort is also<TreeModelSort> { $!tms }
+  method GTK::Raw::Definitions::GtkTreeModelSort is also<TreeModelSort> { $!tms }
 
   method new (GtkTreeModel() $model) {
     my $treesort = gtk_tree_model_sort_new_with_model($model);

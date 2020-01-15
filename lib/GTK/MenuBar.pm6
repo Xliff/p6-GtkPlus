@@ -53,7 +53,7 @@ class GTK::MenuBar is GTK::MenuShell {
     self.setMenuShell($to-parent);
   }
 
-  method GTK::Raw::Types::GtkMenuBar is also<MenuBar> { $!mb }
+  method GTK::Raw::Definitions::GtkMenuBar is also<MenuBar> { $!mb }
 
   multi method new (MenuBarAncestry $menubar) {
     my $o = self.bless(:$menubar);

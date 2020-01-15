@@ -44,7 +44,7 @@ class GTK::Scrollbar is GTK::Range {
     }
   }
   
-  multi method GTK::Raw::Types::Scrollbar is also<Scrollbar> { $!sb }
+  multi method GTK::Raw::Definitions::Scrollbar is also<Scrollbar> { $!sb }
 
   multi method new (ScrollbarAncestry $scroll) {
     my $o = self.bless(:$scroll);

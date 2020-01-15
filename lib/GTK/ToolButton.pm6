@@ -37,7 +37,7 @@ class GTK::ToolButton is GTK::ToolItem {
     }
   }
   
-  method GTK::Raw::Types::GtkToolButton is also<ToolButton> { $!tb }
+  method GTK::Raw::Definitions::GtkToolButton is also<ToolButton> { $!tb }
 
   method setToolButton(ToolButtonAncestry $toolbutton) {
     self.IS-PROTECTED;

@@ -54,7 +54,7 @@ class GTK::LevelBar is GTK::Widget {
     }
   }
   
-  method GTK::Raw::Types::GtkLevelBar is also<LevelBar> { $!lb }
+  method GTK::Raw::Definitions::GtkLevelBar is also<LevelBar> { $!lb }
 
   multi method new (LevelBarAncestry $level) {
     my $o = self.bless(:$level);

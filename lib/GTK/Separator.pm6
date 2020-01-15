@@ -54,7 +54,7 @@ class GTK::Separator is GTK::Widget {
     }
   }
   
-  method GTK::Raw::Types::GtkSeparator is also<Separator> { $!s }
+  method GTK::Raw::Definitions::GtkSeparator is also<Separator> { $!s }
 
   multi method new (SeparatorAncestry $separator) {
     my $o = self.bless(:$separator);

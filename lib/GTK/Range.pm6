@@ -36,7 +36,7 @@ class GTK::Range is GTK::Widget {
     self.disconnect-all($_) for %!signals-r;
   }
   
-  method GTK::Raw::Types::GtkRange is also<Range> { $!r }
+  method GTK::Raw::Definitions::GtkRange is also<Range> { $!r }
 
   method setRange(RangeAncestry $range) {
     my $to-parent;

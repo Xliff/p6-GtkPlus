@@ -3,8 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
-
 use GTK::Raw::Bin;
 use GTK::Raw::Types;
 
@@ -18,7 +16,7 @@ class GTK::Bin is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -40,7 +38,7 @@ class GTK::Bin is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkBin
+  method GTK::Raw::Definitions::GtkBin
     is also<
       GtkBin
       Bin
@@ -64,10 +62,11 @@ class GTK::Bin is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  method new (BinAncestry $bin) {
-    my $o = self.bless(:$bin);
+  method new (BinAncestry $bin, :$ref = True) {
+    return unless $bin;
 
-    $o.upref;
+    my $o = self.bless(:$bin);
+    $o.ref if $ref;
     $o;
   }
 

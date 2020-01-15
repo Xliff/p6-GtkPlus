@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::CellRendererProgress;
 use GTK::Raw::Types;
@@ -18,7 +16,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendereProgress');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -38,28 +36,33 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
     my $to-parent;
     $!crp = do given $progress {
       when GtkCellRendererProgress  {
-        $to-parent = nativecast(GtkCellRenderer, $_);
+        $to-parent = cast(GtkCellRenderer, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkCellRendererProgress, $_);
+        cast(GtkCellRendererProgress, $_);
       }
     }
     self.setCellRenderer($to-parent);
   }
 
-  method GTK::Raw::Types::CellRendererProgress
-    is also<CellRendererProgress>
+  method GTK::Raw::Definitions::CellRendererProgress
+    is also<
+      CellRendererProgress
+      GtkCellRende
+    >
   { $!crp }
 
+  multi method new (CellRendererProgressAncestry $cellprogress) {
+    $cellprogress ?? self.bless(:$cellprogress) !! Nil;
+  }
   multi method new {
     my $cellprogress = gtk_cell_renderer_progress_new();
-    self.bless(:$cellprogress);
+
+    $cellprogress ?? self.bless(:$cellprogress) !! Nil;
   }
-  multi method new (CellRendererProgressAncestry $cellprogress) {
-    self.bless(:$cellprogress);
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -75,7 +78,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('inverted', $gv)
       }
     );
@@ -90,7 +93,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('pulse', $gv)
       }
     );
@@ -150,7 +153,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('value', $gv)
       }
     );
@@ -163,7 +166,14 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type () is also<get-type> {
-    gtk_cell_renderer_progress_get_type();
+    state ($n, $t);
+
+    unstable_get_type(
+      self.^name,
+      &gtk_cell_renderer_progress_get_type,
+      $n,
+      $t
+    );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

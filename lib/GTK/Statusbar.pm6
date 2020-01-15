@@ -48,7 +48,7 @@ class GTK::Statusbar is GTK::Box {
     }
   }
   
-  method GTK::Raw::Types::GtkStatusbar is also<Statusbar> { $!sb }
+  method GTK::Raw::Definitions::GtkStatusbar is also<Statusbar> { $!sb }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-sb;

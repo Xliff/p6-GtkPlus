@@ -61,7 +61,7 @@ class GTK::ListBox is GTK::Container {
     self.disconnect-all($_) for %!signals-lb;
   }
   
-  method GTK::Raw::Types::GtkListBox is also<ListBox> { $!lb }
+  method GTK::Raw::Definitions::GtkListBox is also<ListBox> { $!lb }
 
   multi method new (ListBoxAncestry $listbox) {
     my $o = self.bless(:$listbox);

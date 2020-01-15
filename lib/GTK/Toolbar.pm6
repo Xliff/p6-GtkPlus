@@ -39,7 +39,7 @@ class GTK::Toolbar is GTK::Container {
     }
   }
   
-  method GTK::Raw::Types::Toolbar is also<Toolbar> { $!tb }
+  method GTK::Raw::Definitions::Toolbar is also<Toolbar> { $!tb }
   
   method setToolbar(ToolbarAncestry $toolbar) {
     my $to-parent;

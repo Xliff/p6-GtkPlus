@@ -16,7 +16,7 @@ class GTK::ButtonBox is GTK::Box {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -43,17 +43,25 @@ class GTK::ButtonBox is GTK::Box {
     }
   }
 
-  method GTK::Raw::Types::GtkButtonBox is also<ButtonBox> { $!bb }
+  method GTK::Raw::Definitions::GtkButtonBox
+    is also<
+      ButtonBox
+      GtkButtonBox
+    >
+  { $!bb }
 
-  multi method new (ButtonBoxAncestry $buttonbox) {
+  multi method new (ButtonBoxAncestry $buttonbox, :$ref = True) {
+    return Nil unless $buttonbox;
+
     my $o = self.bless(:$buttonbox);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (Int() $orientation) {
     my guint $o = $orientation;
     my $buttonbox = gtk_button_box_new($o);
-    self.bless(:$buttonbox);
+
+    $buttonbox ?? self.bless(:$buttonbox) !! Nil;
   }
   multi method new(:$horizontal, :$vertical) {
     die 'Please specify only $horizontal or $vertical'
@@ -64,7 +72,8 @@ class GTK::ButtonBox is GTK::Box {
       when $vertical   { GTK_ORIENTATION_VERTICAL.Int; }
     }
     my $buttonbox = gtk_button_box_new($o);
-    self.bless(:$buttonbox);
+
+    $buttonbox ?? self.bless(:$buttonbox) !! Nil;
   }
 
   method new-hbox is also<new_hbox> {
@@ -86,6 +95,7 @@ class GTK::ButtonBox is GTK::Box {
       },
       STORE => sub ($, Int() $layout_style is copy) {
         my uint32 $l = self.$layout_style;
+
         gtk_button_box_set_layout($!bb, $l);
       }
     );
@@ -107,6 +117,7 @@ class GTK::ButtonBox is GTK::Box {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_button_box_get_type, $n, $t );
   }
 
@@ -116,7 +127,8 @@ class GTK::ButtonBox is GTK::Box {
   )
     is also<set-child-non-homogeneous>
   {
-    my gboolean $nh = self.$non_homogeneous;
+    my gboolean $nh = $non_homogeneous.so.Int;
+
     gtk_button_box_set_child_non_homogeneous($!bb, $child, $nh);
   }
 
@@ -126,7 +138,8 @@ class GTK::ButtonBox is GTK::Box {
   )
     is also<set-child-secondary>
   {
-    my gboolean $is = self.$is_secondary;
+    my gboolean $is = $is_secondary.so.Int;
+
     gtk_button_box_set_child_secondary($!bb, $child, $is);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

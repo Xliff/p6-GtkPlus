@@ -60,14 +60,18 @@ class GTK::AppButton is GTK::ComboBox {
     $!ac //= nativecast(GtkAppChooser, $!acb);
   }
 
+  method GTK::Raw::Definitions::GtkAppButton
+    is also<GtkAppButton>
+  { $!acb }
+
   proto method new (|)
   { * }
 
-  multi method new (AppButtonAncestry $appbutton) {
+  multi method new (AppButtonAncestry $appbutton, :$ref = True) {
     return Nil unless $appbutton;
 
     my $o = self.bless(:$appbutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new(Str $content-type) {

@@ -18,7 +18,7 @@ class GTK::PageSetup {
     $!ps = $page;
   }
 
-  method GTK::Raw::Types::GtkPageSetup is also<PageSetup> { $!ps }
+  method GTK::Raw::Definitions::GtkPageSetup is also<PageSetup> { $!ps }
 
   multi method new (GtkPageSetup $page) {
     self.bless(:$page);

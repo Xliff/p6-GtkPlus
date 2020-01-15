@@ -57,7 +57,7 @@ class GTK::Pane is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  method GTK::Raw::Types::GtkPaned
+  method GTK::Raw::Definitions::GtkPaned
     is also<Pane>
   { $!p }
 

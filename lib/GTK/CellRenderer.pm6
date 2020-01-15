@@ -3,23 +3,19 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::CellRenderer;
 use GTK::Raw::Types;
 
 use GDK::RGBA;
 use GLib::Value;
-
-use GTK::Roles::Data;
 use GLib::Roles::Properties;
+use GTK::Roles::Data;
 use GTK::Roles::Signals::CellRenderer;
-use GTK::Roles::Types;
 
 class GTK::CellRenderer {
-  also does GTK::Roles::Data;
   also does GLib::Roles::Properties;
+  also does GTK::Roles::Data;
   also does GTK::Roles::Signals::CellRenderer;
-  also does GTK::Roles::Types;
 
   has GtkCellRenderer $!cr is implementor;
 
@@ -28,8 +24,11 @@ class GTK::CellRenderer {
     $!data = $!cr;                          # GTK::Roles::Data
   }
 
-  method GTK::Raw::Types::GtkCellRenderer
-    is also<CellRenderer>
+  method GTK::Raw::Definitions::GtkCellRenderer
+    is also<
+      CellRenderer
+      GtkCellRenderer
+    >
   { $!cr }
 
   method disconnect-cellrenderer-signals
@@ -61,7 +60,7 @@ class GTK::CellRenderer {
         so gtk_cell_renderer_get_sensitive($!cr);
       },
       STORE => sub ($, Int() $sensitive is copy) {
-        my gboolean $s = (so $sensitive).Int;
+        my gboolean $s = $sensitive.so.Int;
 
         gtk_cell_renderer_set_sensitive($!cr, $s);
       }
@@ -74,7 +73,7 @@ class GTK::CellRenderer {
         so gtk_cell_renderer_get_visible($!cr);
       },
       STORE => sub ($, Int() $visible is copy) {
-        my gboolean $v = (so $visible).Int;
+        my gboolean $v = $visible.so.Int;
 
         gtk_cell_renderer_set_visible($!cr, $v);
       }
@@ -123,7 +122,7 @@ class GTK::CellRenderer {
         $gv = GLib::Value.new(
           self.prop_get('cell-background-rgba', $gv)
         );
-        nativecast(GdkRGBA, $gv.pointer);
+        cast(GdkRGBA, $gv.pointer);
       },
       STORE => -> $, $val is copy {
         $gv.pointer = $val;
@@ -143,7 +142,7 @@ class GTK::CellRenderer {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = (so $val).Int;
+        $gv.boolean = $val.so.Int;
         self.prop_set('cell-background-set', $gv);
       }
     );
@@ -361,13 +360,13 @@ class GTK::CellRenderer {
     GdkEvent() $event,
     GtkWidget() $widget,
     Str() $path,
-    GdkRectangle $background_area,
-    GdkRectangle $cell_area,
+    GdkRectangle() $background_area,
+    GdkRectangle() $cell_area,
     Int() $flags                # GtkCellRendererState $flags
   ) {
     my uint32 $f = $flags;
 
-    gtk_cell_renderer_activate(
+    so gtk_cell_renderer_activate(
       $!cr,
       $event,
       $widget,
@@ -385,8 +384,8 @@ class GTK::CellRenderer {
   method get_aligned_area (
     GtkWidget() $widget,
     Int() $flags,               # GtkCellRendererState $flags,
-    GdkRectangle $cell_area,
-    GdkRectangle $aligned_area
+    GdkRectangle() $cell_area,
+    GdkRectangle() $aligned_area
   )
     is also<get-aligned-area>
   {
@@ -401,35 +400,62 @@ class GTK::CellRenderer {
     );
   }
 
-  method get_alignment (Num() $xalign, Num() $yalign)
+
+  proto method get_alignment (|)
     is also<get-alignment>
-  {
-    my gfloat ($xa, $ya) = ($xalign, $yalign);
+  { * }
+
+  multi method get_alignment {
+    samewith($, $);
+  }
+  multi method get_alignment ($xalign is rw, $yalign is rw) {
+    my gfloat ($xa, $ya) = 0e0 xx 2;
+
     gtk_cell_renderer_get_alignment($!cr, $xa, $ya);
+    ($xalign, $yalign) = ($xa, $ya);
   }
 
-  method get_fixed_size (Int() $width, Int() $height)
+  proto method get_fixed_size (|)
     is also<get-fixed-size>
-  {
-    my gint ($w, $h) = ($width, $height);
+  { * }
+
+  multi method get_fixed_size {
+    samewith($, $);
+  }
+  multi method get_fixed_size ($width is rw, $height is rw) {
+    my gint ($w, $h) = 0 xx 2;
 
     gtk_cell_renderer_get_fixed_size($!cr, $w, $h);
   }
 
-  method get_padding (Int() $xpad, Int() $ypad) is also<get-padding> {
+  proto method get_padding (|)
+    is also<get-padding>
+  { * }
+
+  multi method get_padding {
+    samewith($, $);
+  }
+  multi method get_padding ($xpad is rw, $ypad is rw) {
     my gint ($x, $y) = ($xpad, $ypad);
 
     gtk_cell_renderer_get_padding($!cr, $x, $y);
   }
 
-  method get_preferred_height (
+  proto method get_preferred_height (|)
+    is also<get-preferred-height>
+  { * }
+
+  multi method get_preferred_height (GtkWidget() $widget) {
+    samewith($widget, $, $);
+  }
+  multi method get_preferred_height (
     GtkWidget() $widget,
     Int() $minimum_size,
     Int() $natural_size
   )
-    is also<get-preferred-height>
+
   {
-    my gint ($ms, $ns) = ($minimum_size, $natural_size);
+    my gint ($ms, $ns) = 0 xx 2;
 
     gtk_cell_renderer_get_preferred_height(
       $!cr,
@@ -437,17 +463,23 @@ class GTK::CellRenderer {
       $ms,
       $ns
     );
+    ($minimum_size, $natural_size) = ($ms, $ns);
   }
 
-  method get_preferred_height_for_width (
+  proto method get_preferred_height_for_width (|)
+    is also<get-preferred-height-for-width>
+  { * }
+
+  multi method get_preferred_height_for_width (GtkWidget() $widget) {
+    samewith($widget, $, $);
+  }
+  multi method get_preferred_height_for_width (
     GtkWidget() $widget,
     Int() $width,
-    Int() $minimum_height,
-    Int() $natural_height
-  )
-    is also<get-preferred-height-for-width>
-  {
-    my gint ($w, $mh, $nh) = ($width, $minimum_height, $natural_height);
+    $minimum_height is rw,
+    $natural_height is rw
+  ) {
+    my gint ($w, $mh, $nh) = ($width, 0, 0);
 
     gtk_cell_renderer_get_preferred_height_for_width(
       $!cr,
@@ -456,45 +488,65 @@ class GTK::CellRenderer {
       $mh,
       $nh
     );
+    ($minimum_height, $natural_height) = ($mh, $nh);
   }
 
-  method get_preferred_size (
+  proto method get_preferred_size (|)
+    is also<get-preferred-size>
+  { * }
+
+  multi method get_preferred_size (GtkWidget() $widget) {
+    samewith($widget, $, $);
+  }
+  multi method get_preferred_size (
     GtkWidget() $widget,
     GtkRequisition $minimum_size,
     GtkRequisition $natural_size
-  )
-
-    is also<get-preferred-size>
-  {
+  ) {
     gtk_cell_renderer_get_preferred_size(
       $!cr,
       $widget,
       $minimum_size,
       $natural_size
     );
+    ($minimum_size, $natural_size);
   }
 
-  method get_preferred_width (
-    GtkWidget() $widget,
-    Int() $minimum_size,
-    Int() $natural_size
-  )
+  proto method get_preferred_width (|)
     is also<get-preferred-width>
-  {
-    my gint ($ms, $ns) = ($minimum_size, $natural_size);
+  { * }
+
+  multi method get_preferred_width (GtkWidget() $widget) {
+    samewith($widget, $, $);
+  }
+  multi method get_preferred_width (
+    GtkWidget() $widget,
+    $minimum_size is rw,
+    $natural_size is rw
+  ) {
+    my gint ($ms, $ns) = 0 xx 2;
 
     gtk_cell_renderer_get_preferred_width($!cr, $widget, $ms, $ns);
+    ($minimum_size, $natural_size) = ($ms, $ns);
   }
 
-  method get_preferred_width_for_height (
+  proto method get_preferred_width_for_height (|)
+    is also<get-preferred-width-for-height>
+  { * }
+
+  multi method get_preferred_width_for_height (
+    GtkWidget() $widget,
+    Int() $height
+  ) {
+    samewith($widget, $height, $, $);
+  }
+  multi method get_preferred_width_for_height (
     GtkWidget() $widget,
     Int() $height,
-    Int() $minimum_width,
-    Int() $natural_width
-  )
-    is also<get-preferred-width-for-height>
-  {
-    my gint ($h, $mw, $nw) = ($height, $minimum_width, $natural_width);
+    $minimum_width is rw,
+    $natural_width is rw
+  ) {
+    my gint ($h, $mw, $nw) = ($height, 0, 0);
 
     gtk_cell_renderer_get_preferred_width_for_height(
       $!cr,
@@ -503,25 +555,11 @@ class GTK::CellRenderer {
       $mw,
       $nw
     );
+    ($minimum_width, $natural_width) = ($mw, $nw);
   }
 
   method get_request_mode is also<get-request-mode> {
-    gtk_cell_renderer_get_request_mode($!cr);
-  }
-
-  method get_size (
-    GtkWidget() $widget,
-    GdkRectangle $cell_area,
-    Int() $x_offset,
-    Int() $y_offset,
-    Int() $width,
-    Int() $height
-  )
-    is also<get-size>
-  {
-    my gint ($xo, $yo, $w, $h) = ($x_offset, $y_offset, $width, $height);
-
-    gtk_cell_renderer_get_size($!cr, $widget, $cell_area, $xo, $yo, $w, $h);
+    GtkSizeRequestModeEnum( gtk_cell_renderer_get_request_mode($!cr) );
   }
 
   method get_state (
@@ -532,6 +570,7 @@ class GTK::CellRenderer {
   {
     my guint $cs = $cell_state;
 
+    # Flags, not an enum!
     gtk_cell_renderer_get_state($!cr, $widget, $cs);
   }
 
@@ -548,8 +587,8 @@ class GTK::CellRenderer {
   method render (
     cairo_t $cr,
     GtkWidget() $widget,
-    GdkRectangle $background_area,
-    GdkRectangle $cell_area,
+    GdkRectangle() $background_area,
+    GdkRectangle() $cell_area,
     Int() $flags                # GtkCellRendererState $flags
   ) {
     my uint32 $f = $flags;
@@ -590,8 +629,8 @@ class GTK::CellRenderer {
     GdkEvent() $event,
     GtkWidget() $widget,
     Str() $path,
-    GdkRectangle $background_area,
-    GdkRectangle $cell_area,
+    GdkRectangle() $background_area,
+    GdkRectangle() $cell_area,
     Int() $flags                # GtkCellRendererState $flags
   )
     is also<start-editing>
@@ -610,7 +649,7 @@ class GTK::CellRenderer {
   }
 
   method stop_editing (Int() $canceled) is also<stop-editing> {
-    my gboolean $c = (so $canceled).Int;
+    my gboolean $c = $canceled.so.Int;
 
     gtk_cell_renderer_stop_editing($!cr, $c);
   }

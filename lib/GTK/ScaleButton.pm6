@@ -37,7 +37,7 @@ class GTK::ScaleButton is GTK::Button {
     }
   }
   
-  method GTK::Raw::Types::GtkScaleButton is also<ScaleButton> { $!sb }
+  method GTK::Raw::Definitions::GtkScaleButton is also<ScaleButton> { $!sb }
 
   method setScaleButton(ScaleButtonAncestry $button) {
     my $to-parent;

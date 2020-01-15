@@ -45,7 +45,7 @@ class GTK::EntryCompletion {
     self.disconnect-all($_) for %!signals, %!signals-ec;
   }
   
-  method GTK::Raw::Types::GtkEntryCompletion
+  method GTK::Raw::Definitions::GtkEntryCompletion
     is also<EntryCompletion>
   { $!ec }
 

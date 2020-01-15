@@ -20,7 +20,7 @@ class GTK::TargetList {
     self!setObject($!tl = $targetlist)
   }
   
-  method GTK::Raw::Types::GtkTargetList
+  method GTK::Raw::Definitions::GtkTargetList
     is also<TargetList>
     { $!tl }
 

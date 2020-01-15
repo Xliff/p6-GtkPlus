@@ -16,7 +16,7 @@ class GTK::ActionBar is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ActionBar');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -42,12 +42,19 @@ class GTK::ActionBar is GTK::Bin {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkActionBar is also<ActionBar> { $!ab }
 
-  multi method new (ActionBarAncestry $actionbar) {
+  method GTK::Raw::Definitions::GtkActionBar
+    is also<
+      ActionBar
+      GtkActionBar
+    >
+  { $!ab }
+
+  multi method new (ActionBarAncestry $actionbar, :$ref = True) {
+    return unless $actionbar;
+    
     my $o = self.bless(:$actionbar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {

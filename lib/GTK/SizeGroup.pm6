@@ -20,7 +20,7 @@ class GTK::SizeGroup {
     self!setObject($!sg = $sizegroup);
   }
 
-  method GTK::Raw::Types::GtkSizeGroup
+  method GTK::Raw::Definitions::GtkSizeGroup
     is also<
       GtkSizeGroup
       SizeGroup

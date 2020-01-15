@@ -28,7 +28,7 @@ class GTK::TreeModelFilter {
     $!ds = nativecast(GtkTreeDragSource, $!tmf);    # GTK::Roles::TreeDragSource
   }
 
-  method GTK::Raw::Types::GtkTreeModelFilter is also<TreeModelFilter> { $!tmf }
+  method GTK::Raw::Definitions::GtkTreeModelFilter is also<TreeModelFilter> { $!tmf }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑

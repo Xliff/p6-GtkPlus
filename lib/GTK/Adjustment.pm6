@@ -11,19 +11,22 @@ use GLib::Roles::Object;
 
 class GTK::Adjustment {
   also does GLib::Roles::Object;
-  
+
   has GtkAdjustment $!adj is implementor;
 
   submethod BUILD(GtkAdjustment :$adjustment) {
     self!setObject($!adj = $adjustment);
   }
 
-  method GTK::Raw::Types::GtkAdjustment 
-    is also<Adjustment>
-    { $!adj }
+  method GTK::Raw::Definitions::GtkAdjustment
+    is also<
+      Adjustment
+      GtkAdjustment
+    >
+  { $!adj }
 
-  multi method new (GtkAdjustment $adjustment) {
-    self.bless(:$adjustment);
+  multi method new (GtkAdjustment $adjustment, :$ref = True) {
+    $adjustment ?? self.bless(:$adjustment) !! Nil;
   }
   multi method new (
     Num() $value,

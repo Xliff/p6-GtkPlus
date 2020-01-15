@@ -21,7 +21,7 @@ class GTK::RecentFilter {
     $!b  = nativecast(GtkBuildable, $!rf);    # GTK::Roles::Buildable
   }
   
-  method GTK::Raw::Types::GtkRecentFilter
+  method GTK::Raw::Definitions::GtkRecentFilter
     is also<RecentFilter>
     { $!rf }
 

@@ -60,7 +60,7 @@ class GTK::Menu is GTK::MenuShell {
     self.disconnect-all($_) for %!signals-menu;
   }
 
-  method GTK::Raw::Types::GtkMenu is also<Menu> { $!m }
+  method GTK::Raw::Definitions::GtkMenu is also<Menu> { $!m }
 
   multi method new (MenuAncestry $menu) {
     my $o = self.bless(:$menu);

@@ -51,7 +51,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     }
   }
 
-  method GTK::Raw::Types::GtkRadioToolButton
+  method GTK::Raw::Definitions::GtkRadioToolButton
     is also<RadioToolButton>
   { $!rtb }
 

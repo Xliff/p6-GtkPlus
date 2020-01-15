@@ -41,7 +41,7 @@ class GTK::Box is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkBox
+  method GTK::Raw::Definitions::GtkBox
     is also<
       GtkBox
       Box
@@ -71,11 +71,11 @@ class GTK::Box is GTK::Container {
     $!or //= nativecast(GtkOrientable, $!b);    # For GTK::Roles::Orientable
   }
 
-  multi method new (BoxAncestry $box) {
+  multi method new (BoxAncestry $box, :$ref = True) {
     return unless $box;
 
     my $o = self.bless( :$box );
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (

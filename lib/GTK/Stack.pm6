@@ -55,7 +55,7 @@ class GTK::Stack is GTK::Container {
     }
   }
   
-  method GTK::Raw::Types::GtkStack is also<Stack> { $!s }
+  method GTK::Raw::Definitions::GtkStack is also<Stack> { $!s }
 
   multi method new (StackAncestry $stack) {
     my $o = self.bless(:$stack);

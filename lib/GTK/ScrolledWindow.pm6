@@ -45,7 +45,7 @@ class GTK::ScrolledWindow is GTK::Bin {
     self.disconnect-all($_) for %!signals-sw;
   }
   
-  method GTK::Raw::Types::GtkScrolledWindow is also<ScrolledWindow> { $!sw }
+  method GTK::Raw::Definitions::GtkScrolledWindow is also<ScrolledWindow> { $!sw }
 
   method setScrolledWindow($scrolled) {
     my $to-parent;

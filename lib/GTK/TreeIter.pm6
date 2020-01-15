@@ -21,7 +21,7 @@ class GTK::TreeIter is export {
     self.bless(:$iter);
   }
 
-  method GTK::Raw::Types::GtkTreeIter
+  method GTK::Raw::Definitions::GtkTreeIter
     is also<
       GtkTreeIter
       TreeIter

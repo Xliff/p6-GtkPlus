@@ -20,7 +20,7 @@ class GTK::PrintSettings {
     self!setObject($!prnset = $settings);
   }
 
-  method GTK::Raw::Types::GtkPrintSettings 
+  method GTK::Raw::Definitions::GtkPrintSettings 
     is also<PrintSettings> 
     { $!prnset }
 

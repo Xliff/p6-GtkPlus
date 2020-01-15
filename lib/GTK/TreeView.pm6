@@ -80,7 +80,7 @@ class GTK::TreeView is GTK::Container {
     self.disconnect-all($_) for %!signals-tv;
   }
 
-  method GTK::Raw::Types::GtkTreeView is also<TreeView> { $!tv }
+  method GTK::Raw::Definitions::GtkTreeView is also<TreeView> { $!tv }
 
   multi method new (TreeViewAncestry $treeview) {
     my $o = self.bless(:$treeview);

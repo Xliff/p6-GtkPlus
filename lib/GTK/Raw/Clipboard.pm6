@@ -197,14 +197,14 @@ sub gtk_clipboard_wait_for_rich_text (
   GdkAtom $format,
   gsize $length
 )
-  returns guint8
+  returns CArray[guint8]
   is native(gtk)
   is export
   { * }
 
 sub gtk_clipboard_wait_for_targets (
   GtkClipboard $clipboard,
-  GdkAtom $targets,
+  CArray[CArray[GdkAtom]] $targets,
   gint $n_targets
 )
   returns uint32

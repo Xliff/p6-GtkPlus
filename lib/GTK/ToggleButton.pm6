@@ -33,7 +33,7 @@ class GTK::ToggleButton is GTK::Button {
     }
   }
   
-  method GTK::Raw::Types::GtkToggleButton is also<ToggleButton> { $!tb }
+  method GTK::Raw::Definitions::GtkToggleButton is also<ToggleButton> { $!tb }
   
   method setToggleButton(ToggleButtonAncestry $togglebutton) {
     self.IS-PROTECTED;

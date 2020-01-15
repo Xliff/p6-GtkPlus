@@ -29,7 +29,7 @@ class GTK::Printer {
     self.disconnect-all($_) for %!signals;
   }
 
-  method GTK::Raw::Types::GtkPrinter is also<Printer> { $!prn }
+  method GTK::Raw::Definitions::GtkPrinter is also<Printer> { $!prn }
 
   multi method new (GtkPrinter $printer) {
     self.bless(:$printer);

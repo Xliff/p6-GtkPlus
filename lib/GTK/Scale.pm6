@@ -53,7 +53,7 @@ class GTK::Scale is GTK::Range {
     self.disconnect-all($_) for %!signals-scale;
   }
 
-  method GTK::Raw::Types::GtkScale
+  method GTK::Raw::Definitions::GtkScale
     is also<
       Scale
       GtkScale

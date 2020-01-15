@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::MenuItem;
 use GTK::Raw::Types;
@@ -61,23 +59,23 @@ class GTK::MenuItem is GTK::Bin {
     my $to-parent;
     $!mi = do given $menuitem {
       when GtkMenuItem {
-        $to-parent = nativecast(GtkBin, $_);
+        $to-parent = cast(GtkBin, $_);
         $_;
       }
 
       when GtkActionable {
         $!action = $_;                            # GTK::Roles::Actionable
-        $to-parent = nativecast(GtkBin, $_);
-        nativecast(GtkMenuItem, $_);
+        $to-parent = cast(GtkBin, $_);
+        cast(GtkMenuItem, $_);
       }
 
       default {
         $to-parent = $_;
-        nativecast(GtkMenuItem, $_);
+        cast(GtkMenuItem, $_);
       }
 
     }
-    $!action //= nativecast(GtkActionable, $!mi); # GTK::Roles::Actionable
+    $!action //= cast(GtkActionable, $!mi); # GTK::Roles::Actionable
     self.setBin($to-parent);
   }
 
@@ -139,8 +137,6 @@ class GTK::MenuItem is GTK::Bin {
     my $menuitem = gtk_menu_item_new_with_mnemonic($label);
     self.bless(:$menuitem);
   }
-
-  method GTK::Raw::Types::GtkMenuItem is also<MenuItem> { $!mi }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 

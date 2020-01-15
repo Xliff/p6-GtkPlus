@@ -60,7 +60,7 @@ class GTK::ToggleToolButton is GTK::ToolButton {
     self.bless(:$toggletoolbutton);
   }
 
-  method GTK::Raw::Types::GtkToggleToolButton 
+  method GTK::Raw::Definitions::GtkToggleToolButton 
     is also<ToggleToolButton> 
   { $!ttb }
 

@@ -44,7 +44,7 @@ class GTK::StackSidebar is GTK::Bin {
     }
   }
 
-  method GTK::Raw::Types::GtkStackSidebar is also<StackSidebar> { $!ss }
+  method GTK::Raw::Definitions::GtkStackSidebar is also<StackSidebar> { $!ss }
 
   multi method new (StackSidebarAncestry $sidebar) {
     my $o = self.bless(:$sidebar);

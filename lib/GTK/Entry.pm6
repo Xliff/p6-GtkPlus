@@ -85,7 +85,7 @@ class GTK::Entry is GTK::Widget {
     self.bless(:$entry);
   }
 
-  method GTK::Raw::Types::GtkEntry is also<entry> {
+  method GTK::Raw::Definitions::GtkEntry is also<entry> {
     $!e;
   }
 

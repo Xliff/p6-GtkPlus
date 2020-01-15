@@ -37,7 +37,7 @@ class GTK::Label is GTK::Widget {
     }
   }
 
-  method GTK::Raw::Types::GtkLabel is also<Label> { $!l }
+  method GTK::Raw::Definitions::GtkLabel is also<Label> { $!l }
 
   multi method new (GTK::Widget $label) {
     samewith($label.Widget);

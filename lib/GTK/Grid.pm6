@@ -64,7 +64,7 @@ class GTK::Grid is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  method GTK::Raw::Types::GtkGrid
+  method GTK::Raw::Definitions::GtkGrid
     is also<Grid>
     { $!g }
 

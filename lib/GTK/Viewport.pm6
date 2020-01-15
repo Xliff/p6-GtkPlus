@@ -54,7 +54,7 @@ class GTK::Viewport is GTK::Bin {
     }
   }
 
-  method GTK::Raw::Types::GtkViewPort
+  method GTK::Raw::Definitions::GtkViewPort
     is also<
       ViewPort
       GtkViewPort

@@ -36,7 +36,7 @@ class GTK::RadioButton is GTK::CheckButton {
     }
   }
 
-  method GTK::Raw::Types::GtkRadioButton
+  method GTK::Raw::Definitions::GtkRadioButton
     is also<RadioButton>
   { $!rb }
 

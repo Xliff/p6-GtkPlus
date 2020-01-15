@@ -67,7 +67,7 @@ class GTK::RecentChooserMenu is GTK::Menu {
     );
   }
 
-  method GTK::Raw::Types::GtkRecentChooserMenu
+  method GTK::Raw::Definitions::GtkRecentChooserMenu
     is also<RecentChooserMenu>
   { $!rcm }
 

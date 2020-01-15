@@ -29,7 +29,7 @@ class GTK::PrintOperation {
     self.disconnect-all($_) for %!signals, %!signals-po;
   }
 
-  method GTK::Raw::Types::GtkPrintOperation
+  method GTK::Raw::Definitions::GtkPrintOperation
     is also<
       GtkPrintOperation
       PrintOperation

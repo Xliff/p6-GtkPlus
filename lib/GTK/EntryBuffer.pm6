@@ -26,7 +26,7 @@ class GTK::EntryBuffer {
     self.disconnect-all($_) for %!signals, %!signals-eb;
   }
 
-  method GTK::Raw::Types::GtkEntryBuffer
+  method GTK::Raw::Definitions::GtkEntryBuffer
     is also<EntryBuffer>
   { $!b }
 

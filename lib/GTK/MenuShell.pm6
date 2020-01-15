@@ -23,7 +23,7 @@ class GTK::MenuShell is GTK::Container {
     self.disconnect-all($_) for %!signals-ms;
   }
 
-  method GTK::Raw::Types::GtkMenuShell is also<MenuShell> { $!ms }
+  method GTK::Raw::Definitions::GtkMenuShell is also<MenuShell> { $!ms }
 
   method new {
     die 'Cannot instantiate a GTK::MenuShell object.';

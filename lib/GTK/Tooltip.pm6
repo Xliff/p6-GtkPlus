@@ -18,7 +18,7 @@ class GTK::Tooltip {
     self!setObject($!tt = $tooltip);
   }
   
-  method GTK::Raw::Types::GtkTooltip
+  method GTK::Raw::Definitions::GtkTooltip
     is also<Tooltip>
     { $!tt }
 

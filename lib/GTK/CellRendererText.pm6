@@ -7,6 +7,7 @@ use GDK::RGBA;
 use GTK::Raw::Types;
 use GTK::Raw::CellRendererText;
 
+use Pango::AttrList;
 use GLib::Value;
 use GTK::CellRenderer;
 
@@ -57,7 +58,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
     self.disconnect-cellrenderer-signals;
   }
 
-  method GTK::Raw::Types::GtkCellRendererText
+  method GTK::Raw::Definitions::GtkCellRendererText
     is also<
       CellRendererText
       GtkCellRendererText
@@ -119,12 +120,18 @@ class GTK::CellRendererText is GTK::CellRenderer {
   }
 
   # Type: PangoAttrList
-  method attributes is rw {
+  method attributes (:$raw = False) is rw {
     my GLib::Value $gv .= new(G_TYPE_POINTER);
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('attributes', $gv);
-        cast(PangoAttrList, $gv.pointer);
+
+        my $v = $gv.pointer;
+
+        return Nil unless $v;
+
+        $v = cast(PangoAttrList, $gv.pointer);
+        $raw ?? $v !! Pango::AttrList.new($v);
       },
       STORE => -> $, PangoAttrList $val is copy {
         $gv.pointer = $val;
@@ -304,7 +311,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
       FETCH => -> $ {
         self.prop_get('font-desc', $gv);
 
-        return unless $gv.boxed;
+        return Nil unless $gv.boxed;
 
         my $fd = cast(PangoFontDescription, $gv.boxed);
 

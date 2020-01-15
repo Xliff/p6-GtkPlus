@@ -80,7 +80,7 @@ class GTK::Application is export {
         }
         when 'custom' {
           die "Invalid \$window of type '{ $window.^name }' specified!"
-            unless $window.^can('GTK::Raw::Types::GtkWindow').elems;
+            unless $window.^can('GTK::Raw::Definitions::GtkWindow').elems;
           $window
         }
       };
@@ -94,7 +94,7 @@ class GTK::Application is export {
     self.disconnect-all($_) for %!signals, %!signals-app;
   }
 
-  method GTK::Raw::Types::GtkApplication
+  method GTK::Raw::Definitions::GtkApplication
     is also<
       GtkApplication
       Application
@@ -119,9 +119,11 @@ class GTK::Application is export {
     await $!init;
   }
 
-  multi method new (GtkApplication $app) {
+  multi method new (GtkApplication $app, :$ref = True) {
+    return Nil unless $app;
+
     my $o = self.bless(:$app);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new(

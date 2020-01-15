@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::CellAreaBox;
 use GTK::Raw::Types;
@@ -21,7 +19,7 @@ class GTK::CellAreaBox is GTK::CellArea {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellAreaBox');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -31,16 +29,16 @@ class GTK::CellAreaBox is GTK::CellArea {
       when CellAreaBoxAncestry {
         $!cab = do {
           when GtkCellAreaBox {
-            $to-parent = nativecast(GtkCellArea, $_);
+            $to-parent = cast(GtkCellArea, $_);
             $_;
           }
           when GtkOrientable {
             $!or = $_;                          # GTK::Roles::Orientable
-            $to-parent = nativecast(GtkCellArea, $_);
-            nativecast(GtkCellAreaBox, $_);
+            $to-parent = cast(GtkCellArea, $_);
+            cast(GtkCellAreaBox, $_);
           }
           default {
-            nativecast(GtkCellAreaBox, $to-parent = $_);
+            cast(GtkCellAreaBox, $to-parent = $_);
           }
         }
         self.setCellArea($to-parent);
@@ -50,21 +48,27 @@ class GTK::CellAreaBox is GTK::CellArea {
       default {
       }
     }
-    $!or //= nativecast(GtkOrientable, $!cab);  # GTK::Roles::Orientable
+    $!or //= cast(GtkOrientable, $!cab);  # GTK::Roles::Orientable
   }
 
   submethod DESTROY {
     self.disconnect-cellarea-signals;
   }
-  
-  method GTK::Raw::Types::GtkCellAreaBox is also<CellAreaBox> { $!cab }
 
+  method GTK::Raw::Definitions::GtkCellAreaBox
+    is also<
+      CellAreaBox
+      GtkCellAreaBox
+    >
+  { $!cab }
+
+  multi method new (CellAreaBoxAncestry $cellbox) {
+    $cellbox ?? self.bless(:$cellbox) !! Nil
+  }
   multi method new {
     my $cellbox = gtk_cell_area_box_new();
-    self.bless(:$cellbox);
-  }
-  multi method new (CellAreaBoxAncestry $cellbox) {
-    self.bless(:$cellbox);
+
+    $cellbox ?? self.bless(:$cellbox) !! Nil
   }
 
 
@@ -78,7 +82,8 @@ class GTK::CellAreaBox is GTK::CellArea {
         gtk_cell_area_box_get_spacing($!cab);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = self.RESOLVE-INT($spacing);
+        my gint $s = $spacing;
+
         gtk_cell_area_box_set_spacing($!cab, $spacing);
       }
     );
@@ -87,7 +92,9 @@ class GTK::CellAreaBox is GTK::CellArea {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_area_box_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_cell_area_box_get_type, $n, $t );
   }
 
   method pack_end (
@@ -95,11 +102,11 @@ class GTK::CellAreaBox is GTK::CellArea {
     Int() $expand,
     Int() $align,
     Int() $fixed
-  ) 
-    is also<pack-end> 
+  )
+    is also<pack-end>
   {
-    my @b = ($expand, $align, $fixed);
-    my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
+    my gboolean ($e, $a, $f) = ($expand, $align, $fixed).map( *.so.Int );
+
     gtk_cell_area_box_pack_end($!cab, $renderer, $e, $a, $f);
   }
 
@@ -108,11 +115,11 @@ class GTK::CellAreaBox is GTK::CellArea {
     Int() $expand,
     Int() $align,
     Int() $fixed
-  ) 
-    is also<pack-start> 
+  )
+    is also<pack-start>
   {
-    my @b = ($expand, $align, $fixed);
-    my gboolean ($e, $a, $f) = self.RESOLVE-BOOL(@b);
+    my gboolean ($e, $a, $f) = ($expand, $align, $fixed).map( *.so.Int );
+
     gtk_cell_area_box_pack_start($!cab, $renderer, $e, $a, $f);
   }
 

@@ -45,9 +45,15 @@ class GTK::AspectFrame is GTK::Frame {
     }
   }
 
-  multi method new (AspectFrameAncestry $frame) {
+  method GTK::Raw::Definitions::GtkAspectFrame
+    is also<GtkAspectFrame>
+  { $!af }
+
+  multi method new (AspectFrameAncestry $frame, :$ref = True) {
+    return Nil unless $frame;
+
     my $o = self.bless(:$frame);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (
@@ -58,9 +64,10 @@ class GTK::AspectFrame is GTK::Frame {
     Int() $obey_child
   ) {
     my gdouble ($xa, $ya, $r) = ($xalign, $yalign, $ratio);
-    my $o = self.RESOLVE-BOOL($obey_child);
+    my $o = $obey_child.so.Int;
     my $frame = gtk_aspect_frame_new($label, $xa, $ya, $r, $o);
-    self.bless(:$frame);
+
+    $frame ?? self.bless(:$frame) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -146,7 +153,8 @@ class GTK::AspectFrame is GTK::Frame {
     Int() $obey_child
   ) {
     my gdouble ($xa, $ya, $r) = ($xalign, $yalign, $ratio);
-    my $o = self.RESOLVE-BOOL($obey_child);
+    my $o = $obey_child.so.Int;
+
     gtk_aspect_frame_set($!af, $xa, $ya, $r, $o);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

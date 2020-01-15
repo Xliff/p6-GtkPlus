@@ -47,7 +47,7 @@ class GTK::TextView is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkTextView
+  method GTK::Raw::Definitions::GtkTextView
     is also<TextView>
     { $!tv }
 

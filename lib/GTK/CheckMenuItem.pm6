@@ -1,13 +1,9 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::CheckMenuItem;
 use GTK::Raw::Types;
-
-
 
 use GTK::MenuItem;
 
@@ -36,33 +32,37 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     }
   }
 
-  method GTK::Raw::Types::GtkCheckMenuItem
-    is also<CheckMenuItem>
+  method GTK::Raw::Definitions::GtkCheckMenuItem
+    is also<
+      CheckMenuItem
+      GtkCheckMenuItem
+    >
   { $!cmi }
 
   method setCheckMenuItem(CheckMenuItemAncestry $checkmenuitem) {
     my $to-parent;
     $!cmi = do given $checkmenuitem {
       when GtkCheckMenuItem {
-        $to-parent = nativecast(GtkMenuItem, $_);
+        $to-parent = cast(GtkMenuItem, $_);
         $_;
       }
       when MenuItemAncestry {
         $to-parent = $_;
-        nativecast(GtkCheckMenuItem, $_);
+        cast(GtkCheckMenuItem, $_);
       }
     }
     self.setMenuItem($to-parent);
   }
 
-  multi method new (CheckMenuItemAncestry $checkmenuitem) {
+  multi method new (CheckMenuItemAncestry $checkmenuitem, :$ref = True) {
     my $o = self.bless(:$checkmenuitem);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $checkmenuitem = gtk_check_menu_item_new();
-    self.bless(:$checkmenuitem);
+
+    $checkmenuitem ?? self.bless(:$checkmenuitem) !! Nil
   }
   multi method new(Str() :$label, Str() :$mnemonic) {
     die "Use ONE of \$label or \$mnemonic when using { ::?CLASS.^name }.new()"
@@ -72,7 +72,8 @@ class GTK::CheckMenuItem is GTK::MenuItem {
       with $label    { gtk_check_menu_item_new_with_label($_);    }
       with $mnemonic { gtk_check_menu_item_new_with_mnemonic($_); }
     };
-    self.bless(:$checkmenuitem);
+
+    $checkmenuitem ?? self.bless(:$checkmenuitem) !! Nil
   }
   multi method new (
     Str() $label,
@@ -80,7 +81,8 @@ class GTK::CheckMenuItem is GTK::MenuItem {
     :$toggled,
   ) {
     my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
-    my $o = self.bless(:$checkmenuitem);
+    my $o = $checkmenuitem ?? self.bless(:$checkmenuitem) !! Nil;
+    return Nil unless $o;
     $o.toggled.tap({ $clicked() }) with $clicked;
     $o.toggled.tap({ $toggled() }) with $toggled;
     $o;
@@ -88,12 +90,14 @@ class GTK::CheckMenuItem is GTK::MenuItem {
 
   method new_with_label(Str $label) is also<new-with-label> {
     my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
-    self.bless(:$checkmenuitem);
+
+    $checkmenuitem ?? self.bless(:$checkmenuitem) !! Nil
   }
 
   method new_with_mnemonic(Str $label) is also<new-with-mnemonic> {
     my $checkmenuitem = gtk_check_menu_item_new_with_mnemonic($label);
-    self.bless(:$checkmenuitem);
+
+    $checkmenuitem ?? self.bless(:$checkmenuitem) !! Nil
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -112,7 +116,8 @@ class GTK::CheckMenuItem is GTK::MenuItem {
         so gtk_check_menu_item_get_active($!cmi);
       },
       STORE => -> $, Int() $is_active is copy {
-        my $ia = $is_active;
+        my gboolean $ia = $is_active.so.Int;
+
         gtk_check_menu_item_set_active($!cmi, $ia);
       }
     );
@@ -124,7 +129,8 @@ class GTK::CheckMenuItem is GTK::MenuItem {
         so gtk_check_menu_item_get_draw_as_radio($!cmi);
       },
       STORE => sub ($, Int() $draw_as_radio is copy) {
-        my $dar = $draw_as_radio;
+        my gboolean $dar = $draw_as_radio.so.Int;
+
         gtk_check_menu_item_set_draw_as_radio($!cmi, $dar);
       }
     );
@@ -136,7 +142,8 @@ class GTK::CheckMenuItem is GTK::MenuItem {
         so gtk_check_menu_item_get_inconsistent($!cmi);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my $s = $setting;
+        my gboolean $s = $setting.so.Int;
+
         gtk_check_menu_item_set_inconsistent($!cmi, $s);
       }
     );
@@ -146,6 +153,7 @@ class GTK::CheckMenuItem is GTK::MenuItem {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_check_menu_item_get_type, $n, $t );
   }
 

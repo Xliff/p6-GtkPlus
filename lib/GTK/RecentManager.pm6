@@ -24,7 +24,7 @@ class GTK::RecentManager {
     self!setObject($!rm = $manager);
   };
 
-  method GTK::Raw::Types::GtkRecentManager
+  method GTK::Raw::Definitions::GtkRecentManager
     is also<RecentManager>
   { * }
 

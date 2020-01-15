@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GDK::RGBA;
 
@@ -13,7 +12,7 @@ use GTK::Button;
 
 use GTK::Roles::ColorChooser;
 
-our subset ColorButtonAncestry is export 
+our subset ColorButtonAncestry is export
   where GtkColorButton | GtkColorChooser | ButtonAncestry;
 
 class GTK::ColorButton is GTK::Button {
@@ -23,7 +22,7 @@ class GTK::ColorButton is GTK::Button {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ColorButton');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -33,37 +32,40 @@ class GTK::ColorButton is GTK::Button {
       when ColorButtonAncestry {
         $!cb = do {
           when GtkColorButton {
-            $to-parent = nativecast(GtkButton, $_);
+            $to-parent = cast(GtkButton, $_);
             $_;
           }
           when GtkColorChooser {
             $!cc = $_;
-            $to-parent = nativecast(GtkButton, $_);
-            nativecast(GtkColorButton, $_);
+            $to-parent = cast(GtkButton, $_);
+            cast(GtkColorButton, $_);
           }
           when ButtonAncestry {
             $to-parent = $_;
-            nativecast(GtkColorButton, $_);
+            cast(GtkColorButton, $_);
           }
         };
         self.setButton($to-parent);
+        $!cc //= cast(GtkColorChooser, $!cb);
       }
       when GTK::Button {
       }
       default {
       }
     }
-    $!cc //= nativecast(GtkColorChooser, $!cb);
   }
 
-  multi method new (ColorButtonAncestry $button) {
+  multi method new (ColorButtonAncestry $button, :$ref = True) {
+    return Nil unless $button;
+
     my $o = self.bless(:$button);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $button = gtk_color_button_new();
-    self.bless(:$button);
+
+    $button ?? self.bless(:$button) !! Nil;
   }
 
   method new_with_color (GdkColor $color)
@@ -71,12 +73,14 @@ class GTK::ColorButton is GTK::Button {
     is also<new-with-color>
   {
     my $button = gtk_color_button_new_with_color($color);
-    self.bless(:$button);
+
+    $button ?? self.bless(:$button) !! Nil;
   }
 
   method new_with_rgba (GDK::RGBA $color) is also<new-with-rgba> {
     my $button = gtk_color_button_new_with_rgba($color);
-    self.bless(:$button);
+
+    $button ?? self.bless(:$button) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -92,7 +96,8 @@ class GTK::ColorButton is GTK::Button {
         gtk_color_button_get_alpha($!cb);
       },
       STORE => sub ($, Int() $alpha is copy) {
-        my guint $a = self.RESOLVE-UINT($alpha);
+        my guint $a = $alpha;
+
         gtk_color_button_set_alpha($!cb, $a);
       }
     );
@@ -115,7 +120,8 @@ class GTK::ColorButton is GTK::Button {
         so gtk_color_button_get_use_alpha($!cb);
       },
       STORE => sub ($, Int() $use_alpha is copy) {
-        my gboolean $ua = self.RESOLVE-BOOL($use_alpha);
+        my gboolean $ua = $use_alpha.so.Int;
+
         gtk_color_button_set_use_alpha($!cb, $ua);
       }
     );
@@ -129,6 +135,7 @@ class GTK::ColorButton is GTK::Button {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_color_button_get_type, $n, $t );
   }
 

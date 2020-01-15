@@ -17,7 +17,18 @@ class GTK::AccelGroup {
     $!ag = $group;
   }
 
-  method new {
+  method GTK::Raw::Definitions::GtkAccelGroup
+    is also<GtkAccelGroup>
+  { $!ag }
+
+  multi method new (GtkAccelGroup $group, :$ref = True) {
+    return Nil unless $group;
+
+    my $o = self.bless(:$group);
+    $o.ref if $ref;
+    $o;
+  }
+  multi method new {
     my $group = gtk_accel_group_new();
 
     $group ?? self.bless(:$group) !! Nil;

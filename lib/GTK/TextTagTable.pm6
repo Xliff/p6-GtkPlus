@@ -30,7 +30,7 @@ class GTK::TextTagTable {
     self.downref;
   }
 
-  method GTK::Raw::Types::GtkTextTagTable
+  method GTK::Raw::Definitions::GtkTextTagTable
     is also<
       GtkTextTagTable
       TextTagTable

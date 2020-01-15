@@ -52,24 +52,24 @@ class GTK::Builder does Associative {
 
     my %sections;
     my ($ui-data, $style-data);
-    with $pod {
+    if $pod {
       for $pod.grep( *.name eq <css ui>.any ).Array {
         # This may not always be true. Keep up with POD spec!
         %sections{ .name } //= $_.contents.map( *.contents[0] ).join("\n");
         last with %sections<ui> && %sections<css>;
       }
-      $ui-data = %sections<ui>;
+      $ui-data    = %sections<ui>;
       $style-data = %sections<css>;
     } else {
-       $ui-data    = $_ with $ui;
-       $style-data = $_ with $style-data;
+       $ui-data    = $ui         if $ui;
+       $style-data = $style-data if $style-data;
     }
-    $!css = GTK::CSSProvider.new(:$style-data) with $style-data;
+    $!css = GTK::CSSProvider.new($style-data) if $style-data;
 
-    with $ui-data {
-      self.add_from_string($_);
+    if $ui-data {
+      self.add_from_string($ui-data);
       $!window = GTK::Window.new( self.get_object($window-name) )
-        with $window-name;
+        if $window-name;
 
 # ONLY DO THIS IF BUILDER IS NOT ACTING AS A TEMPLATE!
 #
@@ -84,28 +84,47 @@ class GTK::Builder does Associative {
 
   }
 
-  method GTK::Raw::Types::GtkBuilder is also<Builder> { $!b }
+  method GTK::Raw::Definitions::GtkBuilder
+    is also<
+      GtkBuilder
+      Builder
+    >
+  { $!b }
 
-  method new (
+  multi method new (GtkBuilder $builder, :$ref = True) {
+    return Nil unless $builder;
+
+    my $o = self.bless(:$builder);
+    $o.ref if $ref;
+
+    # XXX - Perform analysis on builder object and fill in missing data!!
+
+    $o;
+  }
+  multi method new (
     :$pod,
     :$ui,
     :$window-name,
     :$style
   ) {
     my $builder = gtk_builder_new();
-    self.bless(:$builder, :$pod, :$ui, :$window-name, :$style);
+
+    $builder ?? self.bless(:$builder, :$pod, :$ui, :$window-name, :$style)
+             !! Nil;
   }
 
   method new_from_file (Str() $filename) is also<new-from-file> {
     my $builder = gtk_builder_new_from_file($filename);
     my $ui = $filename.IO.slurp;
-    self.bless(:$builder, :$ui);
+
+    $builder ?? self.bless(:$builder, :$ui) !! Nil;
   }
 
   method new_from_resource (Str() $resource) is also<new-from-resource> {
     my $builder = gtk_builder_new_from_resource($resource);
+
     # XXX - Get resource data and place into $ui
-    self.bless(:$builder);
+    $builder ?? self.bless(:$builder) !! Nil;
   }
 
   method new_from_string (Str() $ui, Int() $length = -1)
@@ -114,7 +133,8 @@ class GTK::Builder does Associative {
     die '$length must not be negative' unless $length > -2;
     my gssize $l = $length;
     my $builder = gtk_builder_new_from_string($ui, $l);
-    self.bless(:$builder, :$ui);
+
+    $builder ?? self.bless(:$builder, :$ui) !! Nil;
   }
 
   #  new-from-buf??
@@ -249,10 +269,15 @@ class GTK::Builder does Associative {
   }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method application is rw {
+  method application (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Application.new( gtk_builder_get_application($!b) );
+        my $app = gtk_builder_get_application($!b);
+
+        $app ??
+          ( $raw ?? $app !! GTK::Application.new($app) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkApplication() $application is copy) {
         gtk_builder_set_application($!b, $application);
@@ -420,7 +445,7 @@ class GTK::Builder does Associative {
     gtk_builder_error_quark();
   }
 
-  method expose_object (Str() $name, GObject $object)
+  method expose_object (Str() $name, GObject() $object)
     is also<expose-object>
   {
     gtk_builder_expose_object($!b, $name, $object);
@@ -451,8 +476,31 @@ class GTK::Builder does Associative {
     $o === GtkWidget ?? Nil !! $o;
   }
 
-  method get_objects is also<get-objects> {
-    GLib::GSList.new( gtk_builder_get_objects($!b) );
+  method get_objects (
+    :$glist  = False,
+    :$raw    = False,
+    :$object = False,
+    :$widget = False
+  )
+    is also<get-objects>
+  {
+    die 'Cannot use $object and $widget in the same call!'
+      unless $object ^^ $widget;
+
+    my $ol = gtk_builder_get_objects($!b);
+
+    return Nil unless $ol;
+    return $ol if $glist;
+
+    $ol = $object ?? GLib::GList.new($ol) but GLib::Roles::ListData[GObject]
+                  !! GLib::GList.new($ol) but GLib::Roles::ListData[GtkWidget];
+
+    $raw ?? $ol.Array
+         !! $ol.Array.map({
+              $object ?? GLib::Roles::Object.new-object-obj($_)
+                      !! ( $widget ?? GTK::Widget.new($_)
+                                   !! GTK::Widget.CreateObject.new($_) )
+            });
   }
 
   method get_type is also<get-type> {
@@ -477,7 +525,7 @@ class GTK::Builder does Associative {
   method value_from_string (
     GParamSpec $pspec,
     Str() $string,
-    GValue $value,
+    GValue() $value,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<value-from-string>
@@ -489,15 +537,17 @@ class GTK::Builder does Associative {
 
   # YYY - Return type?
   method value_from_string_type (
-    GType $type,
+    Int() $type,
     Str() $string,
-    GValue $value,
+    GValue() $value,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<value-from-string-type>
   {
+    my GType $t = $type;
+
     clear_error;
-    gtk_builder_value_from_string_type($!b, $type, $string, $value, $error);
+    gtk_builder_value_from_string_type($!b, $t, $string, $value, $error);
     set_error($error);
   }
 

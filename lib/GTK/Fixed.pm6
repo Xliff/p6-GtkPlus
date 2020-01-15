@@ -44,7 +44,7 @@ class GTK::Fixed is GTK::Container {
     }
   }
   
-  method GTK::Raw::Types::GtkFixed is also<Fixed> { $!f }
+  method GTK::Raw::Definitions::GtkFixed is also<Fixed> { $!f }
 
   multi method new (FixedAncestry $fixed) {
     my $o = self.bless(:$fixed);

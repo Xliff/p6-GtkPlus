@@ -44,7 +44,7 @@ class GTK::Spinner is GTK::Widget {
     }
   }
   
-  method GTK::Raw::Types::GtkSpinner is also<Spinner> { $!spin }
+  method GTK::Raw::Definitions::GtkSpinner is also<Spinner> { $!spin }
 
   multi method new (SpinnerAncestry $spin) {
     my $o = self.bless(:$spin);

@@ -52,7 +52,7 @@ class GTK::ToolItem is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  method GTK::Raw::Types::GtkToolItem is also<ToolItem> { $!ti }
+  method GTK::Raw::Definitions::GtkToolItem is also<ToolItem> { $!ti }
   
   multi method new (ToolItemAncestry $toolitem) {
     my $o = self.bless(:$toolitem);

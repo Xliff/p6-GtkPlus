@@ -47,7 +47,7 @@ class GTK::InfoBar is GTK::Box {
     self.setBox($to-parent);
   }
 
-  method GTK::Raw::Types::GtkInfoBar
+  method GTK::Raw::Definitions::GtkInfoBar
     is also<
       GtkInfoBar
       InfoBar

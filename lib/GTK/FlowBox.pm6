@@ -62,7 +62,7 @@ class GTK::FlowBox is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkFlowBox
+  method GTK::Raw::Definitions::GtkFlowBox
     is also<FlowBox>
   { $!fb }
 

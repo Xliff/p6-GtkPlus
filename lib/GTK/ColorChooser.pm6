@@ -5,7 +5,6 @@ use NativeCall;
 
 use GDK::RGBA;
 
-
 use GTK::Raw::ColorChooser;
 use GTK::Raw::Label;
 use GTK::Raw::Types;
@@ -26,7 +25,7 @@ class GTK::ColorChooser is GTK::Box {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ColorChooser');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -54,14 +53,17 @@ class GTK::ColorChooser is GTK::Box {
     }
   }
 
-  multi method new (ColorChooserAncestry $chooser) {
+  multi method new (ColorChooserAncestry $chooser, :$ref = True) {
+    return Nil unless $chooser;
+
     my $o = self.bless(:$chooser);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $chooser = gtk_color_chooser_widget_new();
-    self.bless(:$chooser);
+
+    $chooser ?? self.bless(:$chooser) !! Nil;
   }
 
 
@@ -84,7 +86,7 @@ class GTK::ColorChooser is GTK::Box {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('show-editor', $gv);
       }
     );
@@ -107,14 +109,15 @@ class GTK::ColorChooser is GTK::Box {
   )
     is also<add-palette>
   {
-    my uint32 $o = self.RESOLVE-UINT($orientation);
-    my @i = ($colors_per_line, $n_colors);
-    my gint ($cpl, $nc) = self.RESOLVE-INT(@i);
+    my uint32 $o = $orientation;
+    my gint ($cpl, $nc) = ($colors_per_line, $n_colors);
+
     gtk_color_chooser_add_palette($!cc, $o, $cpl, $nc, $colors);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_color_chooser_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

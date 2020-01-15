@@ -46,7 +46,7 @@ class GTK::Offscreen is GTK::Window {
     }
   }
   
-  method GTK::Raw::Types::GtkOffscreen is also<Offscreen> { $!ow }
+  method GTK::Raw::Definitions::GtkOffscreen is also<Offscreen> { $!ow }
 
   multi method new (OffscreenAncestry $offscreen) {
     self.bless(:$offscreen);

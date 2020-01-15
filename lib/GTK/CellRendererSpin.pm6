@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::CellRendererSpin;
 use GTK::Raw::Types;
@@ -19,7 +17,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererSpin');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -29,12 +27,12 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
       when CellRendererSpinAncestry {
         $!crs = do {
           when GtkCellRendererSpin {
-            $to-parent = nativecast(GtkCellRenderer, $_);
+            $to-parent = cast(GtkCellRenderer, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkCellRendererSpin, $_);
+            cast(GtkCellRendererSpin, $_);
           }
         }
         self.setCellRendererText($to-parent);
@@ -46,17 +44,22 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     }
   }
 
-  method GTK::Raw::Types::GtkCellRendererSpin
-    is also<CellRendererSpin>
+  method GTK::Raw::Definitions::GtkCellRendererSpin
+    is also<
+      CellRendererSpin
+      GtkCellRendererspin
+    >
   { $!crs }
 
+  multi method new (CellRendererSpinAncestry $cellspin) {
+    $cellspin ?? self.bless(:$cellspin) !! Nil
+  }
   multi method new {
     my $cellspin = gtk_cell_renderer_spin_new();
-    self.bless(:$cellspin);
+
+    $cellspin ?? self.bless(:$cellspin) !! Nil
   }
-  multi method new (CellRendererSpinAncestry $cellspin) {
-    self.bless(:$cellspin);
-  }
+
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -72,7 +75,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
     Proxy.new(
       FETCH => -> $ {
         self.prop_get('adjustment', $gv);
-        GTK::Adjustment.new( nativecast(GtkAdjustment, $gv.pointer ) );
+        GTK::Adjustment.new( cast(GtkAdjustment, $gv.pointer ) );
       },
       STORE => -> $, GtkAdjustment() $val is copy {
         $gv.pointer = $val;
@@ -105,7 +108,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.uint = self.RESOLVE-UINT($val);
+        $gv.uint = $val;
         self.prop_set('digits', $gv)
       }
     );
@@ -115,7 +118,9 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_renderer_spin_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_cell_renderer_spin_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

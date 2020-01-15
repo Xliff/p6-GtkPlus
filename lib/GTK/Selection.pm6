@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::Selection;
 use GTK::Raw::Types;
 
@@ -17,16 +16,25 @@ class GTK::Selection {
   has GtkSelectionData $!s is implementor;
 
   submethod BUILD(:$selection) {
-    self!setObject($!s = $selection);
+    $!s = $selection;
+
+    self.roleInit-Object;
   }
 
   submethod DESTROY {
     self.free;
   }
-  
-  method GTK::Raw::Types::GtkSelectionData 
-    is also<SelectionData>
-    { $!s }
+
+  method GTK::Raw::Definitions::GtkSelectionData
+    is also<
+      SelectionData
+      GtkSelectionData
+    >
+  { $!s }
+
+  method new (GtkSelectionData $selection) {
+    $selection ?? self.bless(:$selection) !! Nil;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -37,7 +45,7 @@ class GTK::Selection {
       FETCH => sub ($) {
         gtk_selection_data_get_pixbuf($!s);
       },
-      STORE => sub ($, GdkPixbuf $pixbuf is copy) {
+      STORE => sub ($, GdkPixbuf() $pixbuf is copy) {
         gtk_selection_data_set_pixbuf($!s, $pixbuf);
       }
     );
@@ -83,7 +91,8 @@ class GTK::Selection {
   )
     is also<add-target>
   {
-    my guint $i = self.RESOLVE-UINT($info);
+    my guint $i = $info;
+
     gtk_selection_add_target($widget, $selection, $target, $i);
   }
 
@@ -95,7 +104,8 @@ class GTK::Selection {
   )
     is also<add-targets>
   {
-    my guint $nt = self.RESOLVE-UINT($ntargets);
+    my guint $nt = $ntargets;
+
     gtk_selection_add_targets($widget, $selection, $targets, $nt);
   }
 
@@ -111,14 +121,16 @@ class GTK::Selection {
     GdkAtom $target,
     Int() $time
   ) {
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my guint32 $t = $time;
+
     gtk_selection_convert($widget, $selection, $target, $t);
   }
 
   method owner_set (GtkWidget() $widget, GdkAtom $selection, Int() $time)
     is also<owner-set>
   {
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my guint32 $t = $time;
+
     gtk_selection_owner_set($widget, $selection, $t);
   }
 
@@ -129,7 +141,8 @@ class GTK::Selection {
   )
     is also<owner-set-for-display>
   {
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my guint32 $t = $time;
+
     gtk_selection_owner_set_for_display($widget, $selection, $t);
   }
 
@@ -147,11 +160,11 @@ class GTK::Selection {
     gtk_selection_data_free($!s);
   }
 
-  method get_data 
+  method get_data
     is also<
-      get-data 
+      get-data
       data
-    > 
+    >
   {
     gtk_selection_data_get_data($!s);
   }
@@ -159,72 +172,73 @@ class GTK::Selection {
   method get_data_with_length (Int() $length)
     is also<get-data-with-length>
   {
-    my guint $l = self.RESOLVE-INT($length);
+    my guint $l = $length;
+
     gtk_selection_data_get_data_with_length($!s, $l);
   }
 
-  method get_data_type 
+  method get_data_type
     is also<
-      get-data-type 
-      data-type 
+      get-data-type
+      data-type
       data_type
-    > 
+    >
   {
     gtk_selection_data_get_data_type($!s);
   }
 
-  method get_display 
+  method get_display
     is also<
-      get-display 
+      get-display
       display
-    > 
+    >
   {
     gtk_selection_data_get_display($!s);
   }
 
-  method get_format 
+  method get_format
     is also<
-      get-format 
+      get-format
       format
-    > 
+    >
   {
     gtk_selection_data_get_format($!s);
   }
 
-  method get_length 
+  method get_length
     is also<
-      get-length 
+      get-length
       length
-    > 
+    >
   {
     gtk_selection_data_get_length($!s);
   }
 
-  method get_selection 
+  method get_selection
     is also<
-      get-selection 
+      get-selection
       selections
-    > 
+    >
   {
     gtk_selection_data_get_selection($!s);
   }
 
-  method get_target 
+  method get_target
     is also<
-      get-target 
+      get-target
       target
-    > 
+    >
   {
     gtk_selection_data_get_target($!s);
   }
 
   method get_targets (GdkAtom $targets, Int() $n_atoms)
     is also<
-      get-targets 
+      get-targets
       targets
     >
   {
-    my gint $na = self.RESOLVE-INT($n_atoms);
+    my gint $na = $n_atoms;
     gtk_selection_data_get_targets($!s, $targets, $na);
   }
 
@@ -233,22 +247,24 @@ class GTK::Selection {
   }
 
   method set (GdkAtom $type, Int() $format, Str() $data, Int() $length) {
-    my @i = ($format, $length);
-    my gint ($f, $l) = self.RESOLVE-INT(@i);
+    my gint ($f, $l) = ($format, $length);
+
     gtk_selection_data_set($!s, $type, $format, $data, $length);
   }
 
   method set_text (Str() $str, Int() $len)
     is also<set-text>
   {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = $len;
+
     gtk_selection_data_set_text($!s, $str, $len);
   }
 
   method targets_include_image (Int() $writeable)
     is also<targets-include-image>
   {
-    my gboolean $w = self.RESOLVE-BOOL($writeable);
+    my gboolean $w = $writeable.so.Int;
+
     gtk_selection_data_targets_include_image($!s, $w);
   }
 

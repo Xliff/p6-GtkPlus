@@ -44,7 +44,7 @@ class GTK::StyleContext {
     g_object_unref($!sc.p);
   }
 
-  method GTK::Raw::Types::GtkStyleContext
+  method GTK::Raw::Definitions::GtkStyleContext
     is also<
       GtkStyleContext
       StyleContext

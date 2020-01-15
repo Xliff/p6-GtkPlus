@@ -67,7 +67,7 @@ class GTK::DrawingArea is GTK::Widget {
     $draw ?? self.bless( :$draw ) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkDrawingArea
+  method GTK::Raw::Definitions::GtkDrawingArea
     is also<
       GtkDrawingArea
       DrawingArea

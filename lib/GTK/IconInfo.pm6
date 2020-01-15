@@ -25,7 +25,7 @@ class GTK::IconInfo {
     self!setObject($!ii = $info);             # GLib::Roles::Object
   }
 
-  method GTK::Raw::Types::GtkIconInfo
+  method GTK::Raw::Definitions::GtkIconInfo
     is also<
       IconInfo
       GtkIconInfo

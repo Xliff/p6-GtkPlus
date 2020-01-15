@@ -87,7 +87,7 @@ class GTK::Widget {
     unstable_get_type(::?CLASS.^name, &sub, $n, $t);
   }
 
-  method GTK::Raw::Types::GtkWidget
+  method GTK::Raw::Definitions::GtkWidget
     is also<
       GtkWidget
       Widget

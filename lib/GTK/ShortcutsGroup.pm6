@@ -45,7 +45,7 @@ class GTK::ShortcutsGroup is GTK::Box {
     }
   }
 
-  method GTK::Raw::Types::GtkShortcutsGroup is also<ShortcutsGroup> { $!sg }
+  method GTK::Raw::Definitions::GtkShortcutsGroup is also<ShortcutsGroup> { $!sg }
 
   method new (ShortcutsGroupAncestry $group) {
     my $o = self.bless(:$group);

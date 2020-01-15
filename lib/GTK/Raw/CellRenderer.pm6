@@ -42,8 +42,8 @@ sub gtk_cell_renderer_get_aligned_area (
 
 sub gtk_cell_renderer_get_alignment (
   GtkCellRenderer $cell,
-  gfloat $xalign,
-  gfloat $yalign
+  gfloat $xalign is rw,
+  gfloat $yalign is rw
 )
   is native(gtk)
   is export
@@ -51,8 +51,8 @@ sub gtk_cell_renderer_get_alignment (
 
 sub gtk_cell_renderer_get_fixed_size (
   GtkCellRenderer $cell,
-  gint $width,
-  gint $height
+  gint $width  is rw,
+  gint $height is rw
 )
   is native(gtk)
   is export
@@ -60,8 +60,8 @@ sub gtk_cell_renderer_get_fixed_size (
 
 sub gtk_cell_renderer_get_padding (
   GtkCellRenderer $cell,
-  gint $xpad,
-  gint $ypad
+  gint $xpad is rw,
+  gint $ypad is rw
 )
   is native(gtk)
   is export
@@ -70,8 +70,8 @@ sub gtk_cell_renderer_get_padding (
 sub gtk_cell_renderer_get_preferred_height (
   GtkCellRenderer $cell,
   GtkWidget $widget,
-  gint $minimum_size,
-  gint $natural_size
+  gint $minimum_size is rw,
+  gint $natural_size is rw
 )
   is native(gtk)
   is export
@@ -81,8 +81,8 @@ sub gtk_cell_renderer_get_preferred_height_for_width (
   GtkCellRenderer $cell,
   GtkWidget $widget,
   gint $width,
-  gint $minimum_height,
-  gint $natural_height
+  gint $minimum_height is rw,
+  gint $natural_height is rw
 )
   is native(gtk)
   is export
@@ -101,8 +101,8 @@ sub gtk_cell_renderer_get_preferred_size (
 sub gtk_cell_renderer_get_preferred_width (
   GtkCellRenderer $cell,
   GtkWidget $widget,
-  gint $minimum_size,
-  gint $natural_size
+  gint $minimum_size is rw,
+  gint $natural_size is rw
 )
   is native(gtk)
   is export
@@ -112,28 +112,15 @@ sub gtk_cell_renderer_get_preferred_width_for_height (
   GtkCellRenderer $cell,
   GtkWidget $widget,
   gint $height,
-  gint $minimum_width,
-  gint $natural_width
+  gint $minimum_width is rw,
+  gint $natural_width is rw
 )
   is native(gtk)
   is export
   { * }
 
 sub gtk_cell_renderer_get_request_mode (GtkCellRenderer $cell)
-  returns uint32 # GtkSizeRequestMode
-  is native(gtk)
-  is export
-  { * }
-
-sub gtk_cell_renderer_get_size (
-  GtkCellRenderer $cell,
-  GtkWidget $widget,
-  GdkRectangle $cell_area,
-  gint $x_offset,
-  gint $y_offset,
-  gint $width,
-  gint $height
-)
+  returns GtkSizeRequestMode
   is native(gtk)
   is export
   { * }
@@ -143,7 +130,7 @@ sub gtk_cell_renderer_get_state (
   GtkWidget $widget,
   guint $cell_state             # GtkCellRendererState $cell_state
 )
-  returns uint32 # GtkStateFlags
+  returns GtkStateFlags
   is native(gtk)
   is export
   { * }

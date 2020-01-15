@@ -44,7 +44,7 @@ class GTK::HeaderBar is GTK::Container {
     }
   }
   
-  method GTK::Raw::Types::GtkHeaderBar is also<HeaderBar> { $!hb }
+  method GTK::Raw::Definitions::GtkHeaderBar is also<HeaderBar> { $!hb }
 
   multi method new (HeaderBarAncestry $headerbar) {
     self.bless(:$headerbar);

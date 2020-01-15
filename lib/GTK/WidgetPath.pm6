@@ -21,7 +21,7 @@ class GTK::WidgetPath {
 
   # widgetpath and path should be removed once all references to them have been
   # changed to GtkWidgetPath
-  method GTK::Raw::Types::GtkWidgetPath
+  method GTK::Raw::Definitions::GtkWidgetPath
     is also<
       GtkWidgetPath
       widgetpath

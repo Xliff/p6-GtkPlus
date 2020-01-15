@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GTK::Raw::CellRendererToggle;
 use GTK::Raw::Types;
@@ -21,7 +20,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererToggle');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -31,12 +30,12 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
       when CellRendererToggleAncestry {
         $!crt = do {
           when GtkCellRendererToggle {
-            $to-parent = nativecast(GtkCellRenderer, $_);
+            $to-parent = cast(GtkCellRenderer, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkCellRendererToggle, $_);
+            cast(GtkCellRendererToggle, $_);
           }
         }
         self.setCellRenderer($to-parent);
@@ -52,18 +51,21 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     self.disconnect-all(%!signals);
   }
 
-  method GTK::Raw::Types::GtkCellRendererToggle
-    is also<CellRendererToggle>
-    { $!crt }
+  method GTK::Raw::Definitions::GtkCellRendererToggle
+    is also<
+      CellRendererToggle
+      GtkCellRendererToggle
+    >
+  { $!crt }
 
+  multi method new (CellRendererToggleAncestry $celltoggle) {
+    $celltoggle ?? self.bless(:$celltoggle) !! Nil;
+  }
   multi method new {
     my $celltoggle = gtk_cell_renderer_toggle_new();
-    self.bless(:$celltoggle);
-  }
-  multi method new (CellRendererToggleAncestry $celltoggle) {
-    self.bless(:$celltoggle);
-  }
 
+    $celltoggle ?? self.bless(:$celltoggle) !! Nil;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -152,7 +154,9 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_renderer_toggle_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_cell_renderer_toggle_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -23,7 +23,7 @@ class GTK::WindowGroup {
     self.downref;
   }
 
-  method GTK::Raw::Types::GtkWindowGroup
+  method GTK::Raw::Definitions::GtkWindowGroup
     is also<WindowGroup>
     { $!wg }
 

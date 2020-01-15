@@ -20,7 +20,7 @@ class GTK::TextMark {
     self!setObject($!tm = $textmark);
   }
 
-  method GTK::Raw::Types::GtkTextMark
+  method GTK::Raw::Definitions::GtkTextMark
     is also<TextMark>
   { $!tm; }
 

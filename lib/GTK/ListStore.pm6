@@ -38,7 +38,7 @@ class GTK::ListStore {
     $!tm = nativecast(GtkTreeModel, $!ls);      # GTK::Roles::TreeSortable
   }
 
-  method GTK::Raw::Types::GtkListStore
+  method GTK::Raw::Definitions::GtkListStore
     is also<
       ListStore
       GtkListStore

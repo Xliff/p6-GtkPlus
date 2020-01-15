@@ -24,7 +24,7 @@ class GTK::FileFilter {
     self!setObject($filter);                      # GLib::Roles::Object
   }
 
-  method GTK::Raw::Types::GtkFileFilter
+  method GTK::Raw::Definitions::GtkFileFilter
     is also<
       FileFilter
       GtkFileFilter

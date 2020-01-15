@@ -45,7 +45,7 @@ class GTK::Expander is GTK::Bin {
     }
   }
   
-  method GTK::Raw::Types::GtkExpander is also<Expander> { $!e }
+  method GTK::Raw::Definitions::GtkExpander is also<Expander> { $!e }
 
   multi method new (ExpanderAncestry $expander) {
     my $o = self.bless(:$expander);

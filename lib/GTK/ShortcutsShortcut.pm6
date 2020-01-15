@@ -44,7 +44,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
     }
   }
 
-  method GTK::Raw::Types::GtkShortcutsShortcut
+  method GTK::Raw::Definitions::GtkShortcutsShortcut
     is also<ShortcutsShortcut>
   { $!s }
 

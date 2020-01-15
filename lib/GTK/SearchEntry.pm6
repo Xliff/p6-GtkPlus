@@ -45,7 +45,7 @@ class GTK::SearchEntry is GTK::Entry {
     }
   }
   
-  method GTK::Raw::Types::GtkSearchEntry is also<SearchEntry> { $!se }
+  method GTK::Raw::Definitions::GtkSearchEntry is also<SearchEntry> { $!se }
 
   multi method new (SearchEntryAncestry $searchentry) {
     my $o = self.bless(:$searchentry);

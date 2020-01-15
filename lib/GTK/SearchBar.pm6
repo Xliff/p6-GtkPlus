@@ -44,7 +44,7 @@ class GTK::SearchBar is GTK::Bin {
     }
   }
   
-  method GTK::Raw::Types::GtkSearchBar is also<SearchBar> { $!sb }
+  method GTK::Raw::Definitions::GtkSearchBar is also<SearchBar> { $!sb }
 
   multi method new (SearchBarAncestry $searchbar) {
     my $o = self.bless(:$searchbar);

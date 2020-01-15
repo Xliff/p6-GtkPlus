@@ -43,7 +43,7 @@ class GTK::LinkButton is GTK::Button {
     }
   }
   
-  method GTK::Raw::Types::GtkLinkButton is also<LinkButton> { $!lb }
+  method GTK::Raw::Definitions::GtkLinkButton is also<LinkButton> { $!lb }
 
   multi method new (LinkButtonAncestry $button) {
     my $o = self.bless(:$button);

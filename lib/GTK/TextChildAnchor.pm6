@@ -19,7 +19,7 @@ class GTK::TextChildAnchor {
     self!setObject($!ta = $anchor);
   }
   
-  method GTK::Raw::Types::GtkTextChildAnchor 
+  method GTK::Raw::Definitions::GtkTextChildAnchor 
     is also<TextChildAnchor>
     { $!ta }
 

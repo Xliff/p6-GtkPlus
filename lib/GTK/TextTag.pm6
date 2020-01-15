@@ -44,7 +44,7 @@ class GTK::TextTag  {
     self.bless(:$tag);
   }
 
-  method GTK::Raw::Types::GtkTextTag
+  method GTK::Raw::Definitions::GtkTextTag
     is also<TextTag>
     { $!tt }
 

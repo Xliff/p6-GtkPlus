@@ -51,7 +51,7 @@ class GTK::Overlay is GTK::Bin {
     self.disconnect-all($_) for %!signals-o;
   }
   
-  method GTK::Raw::Types::GtkOverlay is also<Overlay> { $!o }
+  method GTK::Raw::Definitions::GtkOverlay is also<Overlay> { $!o }
 
   multi method new (OverlayAncestry $overlay) {
     my $o = self.bless(:$overlay);

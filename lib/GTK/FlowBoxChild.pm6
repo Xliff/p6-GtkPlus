@@ -57,7 +57,7 @@ class GTK::FlowBoxChild is GTK::Bin {
     self.bless(:$flowboxchild);
   }
 
-  method GTK::Raw::Types::GtkFlowBoxChild
+  method GTK::Raw::Definitions::GtkFlowBoxChild
     is also<
       GtkFlowBoxChild
       FlowBoxChild

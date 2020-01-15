@@ -54,7 +54,7 @@ class GTK::Switch is GTK::Widget {
     $!action //= nativecast(GtkActionable, $!s);      # GTK::Roles::Actionable
   }
   
-  method GTK::Raw::Types::GtkSwitch is also<Switch> { $!s }
+  method GTK::Raw::Definitions::GtkSwitch is also<Switch> { $!s }
 
   multi method new(SwitchAncestry $switch) {
     my $o = self.bless(:$switch);

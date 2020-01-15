@@ -19,7 +19,7 @@ class GTK::PaperSize {
     self!setObject($!ps = $size);
   }
 
-  method GTK::Raw::Types::GtkPaperSize 
+  method GTK::Raw::Definitions::GtkPaperSize 
     is also<PaperSize> 
     { $!ps }
 

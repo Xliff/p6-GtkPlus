@@ -59,13 +59,19 @@ class GTK::ApplicationWindow is GTK::Window {
     self.setWindow($to-parent);
   }
 
-  method GTK::Raw::Types::GtkApplicationWindow
-    is also<ApplicationWindow>
+  method GTK::Raw::Definitions::GtkApplicationWindow
+    is also<
+      ApplicationWindow
+      GtkApplicationWindow
+    >
   { $!aw }
 
-  multi method new (GtkApplicationWindow $appwindow) {
+  multi method new (GtkApplicationWindow $appwindow, :$ref = True) {
+    return unless $appwindow;
+    
     my $o = self.bless(:$appwindow);
-    $o.upref;
+    $o.ref if $ref;
+    $o;
   }
   multi method new (GtkApplication() $app) {
     self.bless( appwindow => gtk_application_window_new($app) );

@@ -14,7 +14,7 @@ class GTK::TargetEntry {
     $!te = $entry;
   }
   
-  method GTK::Raw::Types::GtkTargetEntry 
+  method GTK::Raw::Definitions::GtkTargetEntry 
     is also<TargetEntry>
     { $!te }
 

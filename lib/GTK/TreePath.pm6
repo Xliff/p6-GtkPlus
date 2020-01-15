@@ -20,7 +20,7 @@ class GTK::TreePath {
     $!tp = $path;
   }
   
-  method GTK::Raw::Types::GtkTreePath is also<TreePath> { $!tp }
+  method GTK::Raw::Definitions::GtkTreePath is also<TreePath> { $!tp }
 
   multi method new {
     my $path = gtk_tree_path_new();

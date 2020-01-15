@@ -38,7 +38,7 @@ class GTK::Layout is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkLayout is also<Layout> { $!l }
+  method GTK::Raw::Definitions::GtkLayout is also<Layout> { $!l }
 
   method setLayout(LayoutAncestry $layout) {
     my $to-parent;

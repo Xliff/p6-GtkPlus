@@ -28,7 +28,7 @@ class GTK::TreeSelection {
     self.disconnect-all($_) for %!signals;
   }
 
-  method GTK::Raw::Types::GtkTreeSelection
+  method GTK::Raw::Definitions::GtkTreeSelection
     is also<TreeSelection>
     { $!ts }
 

@@ -32,7 +32,7 @@ class GTK::Popover is GTK::Bin {
     }
   }
   
-  method GTK::Raw::Types::GtkPopover is also<Popover> { $!p }
+  method GTK::Raw::Definitions::GtkPopover is also<Popover> { $!p }
 
   method setPopover($popover) {
     my $to-parent;

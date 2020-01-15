@@ -58,7 +58,7 @@ class GTK::ToolItemGroup is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkToolItemGroup
+  method GTK::Raw::Definitions::GtkToolItemGroup
     is also<
       ToolItemGroup
       GtkToolItemGroup
