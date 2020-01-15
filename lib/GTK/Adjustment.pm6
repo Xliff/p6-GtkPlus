@@ -40,7 +40,8 @@ class GTK::Adjustment {
       $value, $lower, $upper, $step_increment, $page_increment, $page_size
     );
     my $adjustment = gtk_adjustment_new($v, $l, $u, $si, $pi, $ps);
-    self.bless(:$adjustment);
+
+    $adjustment ?? self.bless(:$adjustment) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -67,6 +68,7 @@ class GTK::Adjustment {
       },
       STORE => sub ($, Num() $lower is copy) {
         my gdouble $l = $lower;
+
         gtk_adjustment_set_lower($!adj, $l);
       }
     );
@@ -79,6 +81,7 @@ class GTK::Adjustment {
       },
       STORE => sub ($, Num() $page_increment is copy) {
         my gdouble $pi = $page_increment;
+
         gtk_adjustment_set_page_increment($!adj, $pi);
       }
     );
@@ -91,6 +94,7 @@ class GTK::Adjustment {
       },
       STORE => sub ($, Num() $page_size is copy) {
         my gdouble $ps = $page_size;
+
         gtk_adjustment_set_page_size($!adj, $ps);
       }
     );
@@ -103,6 +107,7 @@ class GTK::Adjustment {
       },
       STORE => sub ($, Num() $step_increment is copy) {
         my gdouble $si = $step_increment;
+
         gtk_adjustment_set_step_increment($!adj, $si);
       }
     );
@@ -115,6 +120,7 @@ class GTK::Adjustment {
       },
       STORE => sub ($, Num() $upper is copy) {
         my gdouble $u = $upper;
+
         gtk_adjustment_set_upper($!adj, $u);
       }
     );
@@ -127,6 +133,7 @@ class GTK::Adjustment {
       },
       STORE => sub ($, Num() $value is copy) {
         my gdouble $v = $value;
+
         gtk_adjustment_set_value($!adj, $v);
       }
     );
@@ -141,6 +148,7 @@ class GTK::Adjustment {
 
   method clamp_page (Num() $lower, Num() $upper) is also<clamp-page> {
     my gdouble ($l, $u) = ($lower, $upper);
+
     gtk_adjustment_clamp_page($!adj, $l, $u);
   }
 
@@ -155,6 +163,7 @@ class GTK::Adjustment {
     my gdouble ($v, $l, $u, $si, $pi, $ps) = (
       $value, $lower, $upper, $step_increment, $page_increment, $page_size
     );
+
     gtk_adjustment_configure($!adj, $v, $l, $u, $si, $pi, $ps);
   }
 
@@ -163,7 +172,9 @@ class GTK::Adjustment {
   }
 
   method get_type is also<get-type> {
-    gtk_adjustment_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_adjustment_get_type, $n, $t );
   }
 
   # method value_changed () {

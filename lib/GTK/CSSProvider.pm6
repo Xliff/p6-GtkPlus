@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GDK::Screen;
 use GTK::Raw::CSSProvider;
 use GTK::Raw::StyleContext;
@@ -42,7 +41,7 @@ class GTK::CSSProvider {
     # GLib::Roles::Object
     self!setObject($provider);
 
-    my uint32 $p = self.RESOLVE-UINT($priority);
+    my uint32 $p = $priority;
     my $screen = GDK::Screen.get_default.screen;
     gtk_style_context_add_provider_for_screen($screen, $!sp, $p);
 
@@ -63,13 +62,19 @@ class GTK::CSSProvider {
     self.disconnect-all($_)  for %!signals-css;
   }
 
-  method new(:$style, :$priority, :$pod) {
+  multi method new (GtkCSSProvider $provider) {
+    $provider ?? self.bless(:$provider) !! Nil;
+  }
+  multi method new(:$style, :$priority, :$pod) {
     my $provider = gtk_css_provider_new();
-    self.bless(:$provider, :$priority, :$pod, :$style);
+
+    $provider ?? self.bless(:$provider, :$priority, :$pod, :$style) !! Nil;
   }
 
   method get_named (Str() $name, Str() $variant) is also<get-named> {
-    GTK::CSSProvider.new( gtk_css_provider_get_named($name, $variant) );
+    my $provider = gtk_css_provider_get_named($name, $variant);
+
+    $provider ?? GTK::CSSProvider.new($provider) !! Nil;
   }
 
 
@@ -97,7 +102,9 @@ class GTK::CSSProvider {
   # }
 
   method get_type is also<get-type> {
-    gtk_css_provider_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_css_provider_get_type, $n, $t );
   }
 
   method load_from_data (
@@ -107,22 +114,22 @@ class GTK::CSSProvider {
   )
     is also<load-from-data>
   {
-    $ERROR = Nil;
+    clear_error;
     my gssize $l = $length;
     my $rc = gtk_css_provider_load_from_data($!css, $data, $l, $error);
-    $ERROR = $error[0].deref with $error[0];
+    set_error($error);
     $rc;
   }
 
   method load_from_file (
-    GFile $file,
+    GFile() $file,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-file>
   {
-    $ERROR = Nil;
-    my $rc = gtk_css_provider_load_from_file($!css, $file, $error);
-    $ERROR = $error[0].deref with $error[0];
+    clear_error;
+    my $rc = so gtk_css_provider_load_from_file($!css, $file, $error);
+    set_error($error);
     $rc;
   }
 
@@ -132,19 +139,24 @@ class GTK::CSSProvider {
   )
     is also<load-from-path>
   {
-    $ERROR = Nil;
-    my $rc = gtk_css_provider_load_from_path($!css, $path, $error);
-    $ERROR = $error[0].deref with $error[0];
+    clear_error;
+    my $rc = so gtk_css_provider_load_from_path($!css, $path, $error);
+    set_error($error);
     $rc;
   }
 
   method load_from_resource (Str() $resource_path)
     is also<load-from-resource>
   {
-    gtk_css_provider_load_from_resource($!css, $resource_path);
+    so gtk_css_provider_load_from_resource($!css, $resource_path);
   }
 
-  method to_string is also<to-string> {
+  method to_string
+    is also<
+      to-string
+      Str
+    >
+  {
     gtk_css_provider_to_string($!css);
   }
 

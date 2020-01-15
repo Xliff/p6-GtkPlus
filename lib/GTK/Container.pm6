@@ -132,19 +132,22 @@ D
   }
 
   # For child attributes.
-  proto method child-get-string (|) is also<child_get_string> { * }
+  proto method child-get-string (|)
+    is also<child_get_string>
+  { * }
 
   multi method child-get-string(GtkWidget() $child, Str() $prop) {
-    my Str $a = '';
-    samewith($child, $prop, $a);
-    $a
+    samewith($child, $prop, $);
   }
   multi method child-get-string (
     GtkWidget() $child,
     Str() $prop,
-    Str $val is rw
+    $val is rw
   ) {
-    gtk_container_child_get_str($!c, $child, $prop, $val, Str);
+    my Str $a = '';
+
+    gtk_container_child_get_str($!c, $child, $prop, $a, Str);
+    $val = $a;
   }
 
   method child-set-string(
@@ -157,19 +160,19 @@ D
     gtk_container_child_set_str($!c, $child, $prop, $v, Str);
   }
 
-  proto method child-get-bool (|) is also<child_get_bool> { * }
+  proto method child-get-bool (|)
+    is also<child_get_bool>
+  { * }
 
   multi method child-get-bool(GtkWidget() $child, Str() $prop) {
-    my uint32 $b = 0;
-    samewith($child, $prop, $b);
-    $b;
+    samewith($child, $prop, $);
   }
   multi method child-get-bool (
     GtkWidget() $child,
     Str() $prop,
-    Int $val is rw
+    $val is rw
   ) {
-    my guint $v = $val;
+    my guint $v = 0;
 
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
@@ -188,20 +191,20 @@ D
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
 
-  proto method child-get-int (|) is also<child_get_int> { * }
+  proto method child-get-int (|)
+    is also<child_get_int>
+  { * }
 
   multi method child-get-int (GtkWidget() $child, Str() $prop) {
-    my gint $i = 0;
-    samewith($child, $prop, $i);
-    $i;
+    samewith($child, $prop, $);
   }
 
   multi method child-get-int (
     GtkWidget() $child,
     Str() $prop,
-    Int $val is rw
+    $val is rw
   ) {
-    my guint $v = $val;
+    my guint $v = 0;
 
     # CArray[guint]?
     gtk_container_child_get_int($!c, $child, $prop, $v, Str);
@@ -220,20 +223,20 @@ D
     gtk_container_child_set_int($!c, $child, $prop, $v, Str);
   }
 
-  proto method child-get-uint (|) is also<child_get_uint> { * }
+  proto method child-get-uint (|)
+    is also<child_get_uint>
+  { * }
 
   multi method child-get-uint (GtkWidget() $child, Str() $prop) {
-    my guint $i = 0;
-    samewith($child, $prop, $i);
-    $i;
+    samewith($child, $prop, $);
   }
 
   multi method child-get-uint (
     GtkWidget() $child,
     Str() $prop,
-    Int $val is rw
+    $val is rw
   ) {
-    my guint $v = $val;
+    my guint $v = 0;
 
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
@@ -274,11 +277,15 @@ D
   #   );
   # }
 
-  method focus_vadjustment is rw is also<focus-vadjustment> {
+  method focus_vadjustment (:$raw = False) is rw is also<focus-vadjustment> {
     Proxy.new(
       FETCH => sub ($) {
-        my $adjustment = gtk_container_get_focus_vadjustment($!c);
-        GTK::Adjustment.new(:$adjustment);
+        my $a = gtk_container_get_focus_vadjustment($!c);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_container_set_focus_vadjustment($!c, $adjustment);
@@ -286,22 +293,34 @@ D
     );
   }
 
-  method focus_child is rw is also<focus-child> {
+  method focus_child (:$raw = False, :$widget = False)
+    is rw
+    is also<focus-child>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_container_get_focus_child($!c);
+        my $w = gtk_container_get_focus_child($!c);
+
+        $w ?? ( $raw ?? $w
+                     !! ($widget ?? GTK::Widget.new($w)
+                               !! GTK::Widget.CreateObject($w) ) )
+           !! Nil
       },
-      STORE => sub ($, $child is copy) {
+      STORE => sub ($, GtkWidget() $child is copy) {
         gtk_container_set_focus_child($!c, $child);
       }
     );
   }
 
-  method focus_hadjustment is rw is also<focus-hadjustment> {
+  method focus_hadjustment (:$raw = False) is rw is also<focus-hadjustment> {
     Proxy.new(
       FETCH => sub ($) {
-        my $adjustment = gtk_container_get_focus_hadjustment($!c);
-        GTK::Adjustment.new(:$adjustment);
+        my $a = gtk_container_get_focus_hadjustment($!c);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_container_set_focus_hadjustment($!c, $adjustment);
