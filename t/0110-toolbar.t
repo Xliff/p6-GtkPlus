@@ -4,14 +4,13 @@ use lib <t .>;
 
 use GTK::Raw::Types;
 
+use GDK::Screen;
 use GTK::Application;
 use GTK::Grid;
 use GTK::Image;
 use GTK::Toolbar;
 use GTK::ToolButton;
 use GTK::ToolItem;
-
-use toolbar_example;
 
 constant icon_size := GTK_ICON_SIZE_LARGE_TOOLBAR;
 
@@ -28,12 +27,9 @@ $a.activate.tap({
   my $window = $a.window.window;
   my $full = False;
   my (@win_size, @screen_size);
-  my $screen = gdk_screen_get_default();
+  my $screen = GDK::Screen.get-default;
 
-  @screen_size = (
-    gdk_screen_get_width($screen),
-    gdk_screen_get_height($screen)
-  );
+  @screen_size = $screen.size;
   @win_size = $a.window.get_size;
   sprintf("Screen: %d x %d", @screen_size.List).say;
   sprintf("Window: %d x %d", @win_size.List).say;

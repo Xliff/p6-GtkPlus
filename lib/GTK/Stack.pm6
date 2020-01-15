@@ -1,11 +1,9 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-
-use GTK::Raw::Stack;
 use GTK::Raw::Types;
+use GTK::Raw::Stack;
 
 use GTK::Container;
 use GTK::StackSwitcher;
@@ -22,7 +20,7 @@ class GTK::Stack is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -32,12 +30,12 @@ class GTK::Stack is GTK::Container {
       when StackAncestry {
         $!s = do {
           when GtkStack  {
-            $to-parent = nativecast(GtkContainer, $_);
+            $to-parent = cast(GtkContainer, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkStack, $_);
+            cast(GtkStack, $_);
           }
         }
         self.setContainer($to-parent);
@@ -49,22 +47,29 @@ class GTK::Stack is GTK::Container {
     }
 
     with $switcher {
-      my $s = $switcher ?? 
+      my $s = $switcher ??
         ($!ss = GTK::StackSwitcher.new) !! ($!sb = GTK::StackSidebar.new);
       $s.stack = $!s;
     }
   }
-  
-  method GTK::Raw::Definitions::GtkStack is also<Stack> { $!s }
 
-  multi method new (StackAncestry $stack) {
+  method GTK::Raw::Definitions::GtkStack
+    is also<
+      Stack
+      GtkStack
+    >
+  { $!s }
+
+  multi method new (StackAncestry $stack, :$ref = True) {
+    return Nil unless $stack;
+
     my $o = self.bless(:$stack);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   #
-  # Until we can get types directly from the pointer without something like 
-  # GTK::Widget.setType, then we cannot reliably determine what control to 
+  # Until we can get types directly from the pointer without something like
+  # GTK::Widget.setType, then we cannot reliably determine what control to
   # use when pulling a GtkStack from its pointer form.
   #
   # multi method new (GtkStack $stack) {
@@ -74,9 +79,10 @@ class GTK::Stack is GTK::Container {
   #
   multi method new(:$switcher is copy = True, :$sidebar is copy = False) {
     $switcher = $sidebar.not with $sidebar;
-    
+
     my $stack = gtk_stack_new();
-    self.bless(:$stack, :$switcher);
+
+    $stack ?? self.bless(:$stack, :$switcher) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -90,6 +96,7 @@ class GTK::Stack is GTK::Container {
       },
       STORE => sub ($, Int() $hhomogeneous is copy) {
         my uint32 $hh = $hhomogeneous;
+
         gtk_stack_set_hhomogeneous($!s, $hh);
       }
     );
@@ -102,6 +109,7 @@ class GTK::Stack is GTK::Container {
       },
       STORE => sub ($, Int() $homogeneous is copy) {
         my uint32 $h = $homogeneous;
+
         gtk_stack_set_homogeneous($!s, $h);
       }
     );
@@ -113,7 +121,8 @@ class GTK::Stack is GTK::Container {
         gtk_stack_get_interpolate_size($!s);
       },
       STORE => sub ($, Int() $interpolate_size is copy) {
-        my uint32 $is = self.RESOLVE-UINT($interpolate_size);
+        my uint32 $is = $interpolate_size;
+
         gtk_stack_set_interpolate_size($!s, $is);
       }
     );
@@ -125,7 +134,8 @@ class GTK::Stack is GTK::Container {
         gtk_stack_get_transition_duration($!s);
       },
       STORE => sub ($, Int() $duration is copy) {
-        my uint32 $d = self.RESOLVE-UINT($duration);
+        my uint32 $d = $duration;
+
         gtk_stack_set_transition_duration($!s, $d);
       }
     );
@@ -137,7 +147,8 @@ class GTK::Stack is GTK::Container {
         GtkStackTransitionTypeEnum( gtk_stack_get_transition_type($!s) );
       },
       STORE => sub ($, Int() $transition is copy) {
-        my uint32 $t = self.RESOLVE-UINT($transition);
+        my uint32 $t = $transition;
+
         gtk_stack_set_transition_type($!s, $t);
       }
     );
@@ -149,16 +160,25 @@ class GTK::Stack is GTK::Container {
         gtk_stack_get_vhomogeneous($!s);
       },
       STORE => sub ($, Int() $vhomogeneous is copy) {
-        my uint32 $vh = self.RESOLVE-UINT($vhomogeneous);
+        my uint32 $vh = $vhomogeneous;
+
         gtk_stack_set_vhomogeneous($!s, $vh);
       }
     );
   }
 
-  method visible_child is rw is also<visible-child> {
+  method visible_child (:$raw = False, :$widget = False)
+    is rw
+    is also<visible-child>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Widget.new( gtk_stack_get_visible_child($!s) );
+        my $w = gtk_stack_get_visible_child($!s);
+
+        $w ?? ( $raw ?? $w
+                     !! ( $widget ?? GTK::Widget.new($w)
+                                  !! GTK::Widget.CreateObject($w) ) )
+           !! Nil;
       },
       STORE => sub ($, GtkWidget() $child is copy) {
         gtk_stack_set_visible_child($!s, $child);
@@ -179,7 +199,7 @@ class GTK::Stack is GTK::Container {
 
   # YYY - Add attribute for 'control' to add either GtkStackSwitcher or
   #       GtkStackSidebar
-  #       For now...control will return either the sidebar or the stack 
+  #       For now...control will return either the sidebar or the stack
   #       switcher object.
   method control {
     $!sb // $!ss
@@ -246,6 +266,7 @@ class GTK::Stack is GTK::Container {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_stack_get_type, $n, $t );
   }
 
@@ -255,7 +276,8 @@ class GTK::Stack is GTK::Container {
   )
     is also<set-visible-child-full>
   {
-    my uint32 $t = self.RESOLVE-UINT($transition);
+    my uint32 $t = $transition;
+
     gtk_stack_set_visible_child_full($!s, $name, $t);
   }
 
@@ -269,7 +291,7 @@ class GTK::Stack is GTK::Container {
   method sidebar {
     $!sb;
   }
-  
+
   # ↑↑↑↑ METHODS ↑↑↑↑
   method child-set(GtkWidget() $c, *@propval) {
     my @notfound;
@@ -288,5 +310,5 @@ class GTK::Stack is GTK::Container {
     }
     nextwith($c, @notfound) if +@notfound;
   }
-  
+
 }

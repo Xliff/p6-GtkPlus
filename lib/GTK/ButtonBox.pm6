@@ -94,7 +94,7 @@ class GTK::ButtonBox is GTK::Box {
         GtkButtonBoxStyleEnum( gtk_button_box_get_layout($!bb) );
       },
       STORE => sub ($, Int() $layout_style is copy) {
-        my uint32 $l = self.$layout_style;
+        my uint32 $l = $layout_style;
 
         gtk_button_box_set_layout($!bb, $l);
       }

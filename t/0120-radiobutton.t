@@ -16,7 +16,11 @@ $a.activate.tap({
     'Radio Button 2',
     'Radio Button 3'
   );
-  $_.clicked.tap({ say "{ $_.label } set active." if $_.active }) for @group;
+
+  # It's better to use a loop variable, not $_, in closures!
+  for @group -> $r {
+    $r.clicked.tap({ say "{ $r.label } set active." if $r.active })
+  }
 
   # This will cause a MoarVM panic in current rakudo.
   # die 'Will this crash?';
