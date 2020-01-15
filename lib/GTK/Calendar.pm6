@@ -166,11 +166,11 @@ class GTK::Calendar is GTK::Widget {
     samewith($, $, $);
   }
   multi method get_date (
-    $year is rw,
+    $year  is rw,
     $month is rw,
-    $day is rw
+    $day   is rw
   ) {
-    my uint32 ($y, $m, $d) = ($year, $month, $day);
+    my uint32 ($y, $m, $d) = 0 xx 3;
 
     gtk_calendar_get_date($!cal, $y, $m, $d);
     ($year, $month, $day) = ($y, ++$m, $d);
