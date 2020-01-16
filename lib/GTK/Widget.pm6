@@ -2322,6 +2322,14 @@ class GTK::Widget {
     gtk_drag_get_data($!w, $context, $target, $t);
   }
 
+  method drag_highlight is also<drag-highlight> {
+    gtk_drag_highlight($!w);
+  }
+
+  method gtk_drag_unhighlight is also<drag-unhighlight> {
+    gtk_drag_unhighlight($!w);
+  }
+
   # Convenience function.
   method get_allocated_wh
     is also<
@@ -2333,4 +2341,11 @@ class GTK::Widget {
     (self.get_allocated_width, self.get_allocated_height);
   }
 
+}
+
+sub ReturnWidget ($w, $raw, $widget) is export {
+  $w ?? ( $raw ?? $w
+               !! ( $widget ?? GTK::Widget.new($w)
+                            !! GTK::Widget.CreateObject($w) ) )
+     !! Nil;
 }

@@ -24,7 +24,6 @@ class GTK::FileChooserWidget is GTK::Box {
   }
 
   submethod BUILD (:$filechooserwidget) {
-    say "B: { $filechooserwidget.^name }";
     given $filechooserwidget {
       when    FileChooserWidgetAncestry { self.setFileChooserWidget($_) }
       when    GTK::FileChooserWidget    { }
@@ -63,7 +62,7 @@ class GTK::FileChooserWidget is GTK::Box {
   { * }
 
   multi method new (GtkFileChooserWidget $filechooserwidget, :$ref = True) {
-    return unless $filechooserwidget;
+    return Nil unless $filechooserwidget;
 
     my $o = self.bless(:$filechooserwidget);
     $o.ref if $ref;

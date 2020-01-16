@@ -104,7 +104,7 @@ class GTK::ToolItemGroup is GTK::Container {
       },
       STORE => sub ($, Int() $ellipsize is copy) {
         my uint32 $e = $ellipsize;
-        
+
         gtk_tool_item_group_set_ellipsize($!tig, $e);
       }
     );
@@ -144,14 +144,7 @@ class GTK::ToolItemGroup is GTK::Container {
       FETCH => sub ($) {
         my $w = gtk_tool_item_group_get_label_widget($!tig);
 
-        $w ??
-          ( $raw
-            ?? $w
-            !! ( $widget ?? GTK::Widget.new($w)
-                         !! GTK::Widget.CreateObject($w) )
-          )
-          !!
-          Nil;
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_tool_item_group_set_label_widget($!tig, $label_widget);

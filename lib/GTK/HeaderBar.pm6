@@ -1,13 +1,12 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::HeaderBar;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::Widget;
 
 our subset HeaderBarAncestry is export
   where GtkHeaderBar | ContainerAncestry;
@@ -17,7 +16,7 @@ class GTK::HeaderBar is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -27,12 +26,12 @@ class GTK::HeaderBar is GTK::Container {
       when HeaderBarAncestry {
         $!hb = do {
           when GtkHeaderBar {
-            $to-parent = nativecast(GtkContainer, $_);
+            $to-parent = cast(GtkContainer, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkHeaderBar, $_);
+            cast(GtkHeaderBar, $_);
           }
         };
         self.setContainer($to-parent);
@@ -43,25 +42,36 @@ class GTK::HeaderBar is GTK::Container {
       }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkHeaderBar is also<HeaderBar> { $!hb }
+
+  method GTK::Raw::Definitions::GtkHeaderBar
+    is also<
+      HeaderBar
+      GtkHeaderBar
+    >
+  { $!hb }
 
   multi method new (HeaderBarAncestry $headerbar) {
-    self.bless(:$headerbar);
+    $headerbar ?? self.bless(:$headerbar) !! Nil;
   }
   multi method new {
     my $headerbar = gtk_header_bar_new();
-    self.bless(:$headerbar);
+
+    $headerbar ?? self.bless(:$headerbar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method custom_title is rw is also<custom-title> {
+  method custom_title (:$raw = False, :$widget = False)
+    is rw
+    is also<custom-title>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_header_bar_get_custom_title($!hb);
+        my $w = gtk_header_bar_get_custom_title($!hb);
+
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $title_widget is copy) {
         gtk_header_bar_set_custom_title($!hb, $title_widget);
@@ -86,7 +96,8 @@ class GTK::HeaderBar is GTK::Container {
         gtk_header_bar_get_has_subtitle($!hb);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_header_bar_set_has_subtitle($!hb, $s);
       }
     );
@@ -98,7 +109,8 @@ class GTK::HeaderBar is GTK::Container {
         Bool( gtk_header_bar_get_show_close_button($!hb) );
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_header_bar_set_show_close_button($!hb, $s);
       }
     );
@@ -130,6 +142,7 @@ class GTK::HeaderBar is GTK::Container {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_header_bar_get_type, $n, $t );
   }
 

@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GLib::GList;
 
@@ -39,20 +38,20 @@ class GTK::FlowBox is GTK::Container {
       when FlowBoxAncestry {
         $!fb = do {
           when GtkFlowBox {
-            $to-parent = nativecast(GtkContainer, $_);
+            $to-parent = cast(GtkContainer, $_);
             $_;
           }
           when GtkOrientable {
             $!or = $_;
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkFlowBox, $_);
+            $to-parent = cast(GtkContainer, $_);
+            cast(GtkFlowBox, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkFlowBox, $_);
+            cast(GtkFlowBox, $_);
           }
         };
-        $!or //= nativecast(GtkOrientable, $flowbox);
+        $!or //= cast(GtkOrientable, $flowbox);
         self.setContainer($flowbox);
       }
       when GTK::FlowBox {
@@ -63,7 +62,10 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method GTK::Raw::Definitions::GtkFlowBox
-    is also<FlowBox>
+    is also<
+      FlowBox
+      GtkFlowBox
+    >
   { $!fb }
 
   multi method new (FlowBoxAncestry $flowbox) {
@@ -380,13 +382,13 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method set_filter_func (
-    GtkFlowBoxFilterFunc $filter_func,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    &filter_func,
+    gpointer $user_data     = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-filter-func>
   {
-    gtk_flow_box_set_filter_func($!fb, $filter_func, $user_data, $destroy);
+    gtk_flow_box_set_filter_func($!fb, &filter_func, $user_data, $destroy);
   }
 
   method set_hadjustment (GtkAdjustment() $adjustment)
@@ -397,8 +399,8 @@ class GTK::FlowBox is GTK::Container {
 
   multi method set_sort_func (
     &sort_func,
-    gpointer $user_data = Pointer,
-    GDestroyNotify $destroy = Pointer
+    gpointer $user_data     = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-sort-func>
   {
@@ -415,7 +417,7 @@ class GTK::FlowBox is GTK::Container {
 
   method remove_all(:$keep) is also<remove-all> {
     for %!child-manifest.values {
-      .upref if $keep;
+      .ref if $keep;
       self.remove($_);
     }
   }

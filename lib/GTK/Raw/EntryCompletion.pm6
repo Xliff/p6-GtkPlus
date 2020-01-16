@@ -68,7 +68,12 @@ sub gtk_entry_completion_new_with_area (GtkCellArea $area)
   is export
   { * }
 
-sub gtk_entry_completion_set_match_func (GtkEntryCompletion $completion, OpaquePointer $func, gpointer $func_data, GDestroyNotify $func_notify)
+sub gtk_entry_completion_set_match_func (
+  GtkEntryCompletion $completion,
+  &func (GtkEntryCompletion, Str, GtkTreeIter, Pointer --> gboolean),
+  gpointer $func_data,
+  GDestroyNotify $func_notify
+)
   is native(gtk)
   is export
   { * }

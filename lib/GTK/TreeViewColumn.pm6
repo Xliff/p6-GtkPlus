@@ -8,6 +8,7 @@ use GTK::Raw::Types;
 
 use GLib::Value;
 use GTK::CellArea;
+use GTK::Widget;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::CellLayout;
@@ -264,10 +265,7 @@ class GTK::TreeViewColumn {
       FETCH => sub ($) {
         my $w = gtk_tree_view_column_get_widget($!tvc);
 
-        $w ?? ($raw ?? $w
-                    !! ($widget ?? GTK::Widget($w)
-                                !! GTK::Widget.CreateObject($w) ) )
-           !! Nil;
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $widget is copy) {
         gtk_tree_view_column_set_widget($!tvc, $widget);
@@ -441,7 +439,7 @@ class GTK::TreeViewColumn {
     is also<pack-start>
   {
     my gboolean $e = $expand.so.Int;
-    
+
     gtk_tree_view_column_pack_start($!tvc, $cell, $e);
   }
 

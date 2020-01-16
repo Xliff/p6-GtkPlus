@@ -8,8 +8,10 @@ use GTK::Raw::Stack;
 use GTK::Container;
 use GTK::StackSwitcher;
 use GTK::StackSidebar;
+use GTK::Widget;
 
-our subset StackAncestry is export where GtkStack | ContainerAncestry;
+our subset StackAncestry is export
+  where GtkStack | ContainerAncestry;
 
 class GTK::Stack is GTK::Container {
   has GtkStack $!s is implementor;
@@ -175,10 +177,7 @@ class GTK::Stack is GTK::Container {
       FETCH => sub ($) {
         my $w = gtk_stack_get_visible_child($!s);
 
-        $w ?? ( $raw ?? $w
-                     !! ( $widget ?? GTK::Widget.new($w)
-                                  !! GTK::Widget.CreateObject($w) ) )
-           !! Nil;
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $child is copy) {
         gtk_stack_set_visible_child($!s, $child);

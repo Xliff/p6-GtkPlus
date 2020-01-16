@@ -6,6 +6,8 @@ use NativeCall;
 use GTK::Raw::FileFilter;
 use GTK::Raw::Types;
 
+use GLib::Variant;
+
 use GTK::Roles::Buildable;
 use GTK::Roles::Types;
 use GLib::Roles::Object;
@@ -25,10 +27,7 @@ class GTK::FileFilter {
   }
 
   method GTK::Raw::Definitions::GtkFileFilter
-    is also<
-      FileFilter
-      GtkFileFilter
-    >
+    is also<FileFilter>
   { $!ff }
 
   multi method new {
@@ -44,11 +43,7 @@ class GTK::FileFilter {
     $o;
   }
 
-  method new_from_gvariant (
-    Pointer $v                  # GVariant $v
-  )
-    is also<new-from-gvariant>
-  {
+  method new_from_gvariant (GVariant() $v) is also<new-from-gvariant> {
     my $filter = gtk_file_filter_new_from_gvariant($v);
 
     $filter ?? self.bless(:$filter) !! Nil;
@@ -74,8 +69,8 @@ class GTK::FileFilter {
   multi method add_custom (
     Int() $needed,              # GtkFileFilterFlags $needed,
     GtkFileFilterFunc $func,
-    gpointer $data,
-    GDestroyNotify $notify
+    gpointer $data         = gpointer,
+    GDestroyNotify $notify = GDestroyNotify
   )
     is also<add-custom>
   {
@@ -110,8 +105,13 @@ class GTK::FileFilter {
     unstable_get_type( self.^name, &gtk_file_filter_get_type, $n, $t );
   }
 
-  method to_gvariant is also<to-gvariant> {
-    gtk_file_filter_to_gvariant($!ff);
+  method to_gvariant (:$raw = False) is also<to-gvariant> {
+    my $v = gtk_file_filter_to_gvariant($!ff);
+
+    $v ??
+      ( $raw ?? $v !! GLib::Variant.new($v) )
+      !!
+      Nil;
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑

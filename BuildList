@@ -1,6 +1,7 @@
 Cairo
 Data::Dump::Tree
 GDK::Display
+GDK::Event
 GDK::Pixbuf
 GDK::RGBA
 GDK::Raw::Definitions
@@ -35,6 +36,7 @@ GLib::Roles::Properties
 GLib::Roles::Signals::Generic
 GLib::Roles::StaticClass
 GLib::Value
+GLib::Variant
 Method::Also
 Pango::AttrList
 Pango::Context

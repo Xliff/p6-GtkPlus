@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Grid;
 use GTK::Raw::Types;
@@ -25,7 +23,7 @@ class GTK::Grid is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -47,42 +45,50 @@ class GTK::Grid is GTK::Container {
     my $to-parent;
     $!g = do {
       when GtkGrid  {
-        $to-parent = nativecast(GtkContainer, $_);
+        $to-parent = cast(GtkContainer, $_);
         $_;
       }
       when GtkOrientable {
         $!or = $_;                                # GTK::Roles::Orientable
-        $to-parent = nativecast(GtkContainer, $_);
-        nativecast(GtkGrid, $_);
+        $to-parent = cast(GtkContainer, $_);
+        cast(GtkGrid, $_);
       }
       default {
         $to-parent = $_;
-        nativecast(GtkGrid, $_);
+        cast(GtkGrid, $_);
       }
     }
-    $!or //= nativecast(GtkOrientable, $!g);      # GTK::Roles::Orientable
+    $!or //= cast(GtkOrientable, $!g);      # GTK::Roles::Orientable
     self.setContainer($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkGrid
-    is also<Grid>
-    { $!g }
+    is also<
+      Grid
+      GtkGrid
+    >
+  { $!g }
 
   proto method new(|)
-    { * }
+  { * }
 
-  multi method new (GridAncestry $grid) {
+  multi method new (GridAncestry $grid, :$ref = False) {
+    return Nil unless $grid;
     my $o = self.bless(:$grid);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $grid = gtk_grid_new();
-    self.bless(:$grid);
+
+    $grid ?? self.bless(:$grid) !! Nil;
   }
 
   method new-vgrid (Int() $spacing = 2) {
     my $o = GTK::Grid.new;
+
+    return Nil unless $o;
+
     $o.orientation = GTK_ORIENTATION_VERTICAL;
     $o.spacing = $spacing;
     $o;
@@ -90,6 +96,9 @@ class GTK::Grid is GTK::Container {
 
   method new-hgrid (Int() $spacing = 2) {
     my $o = GTK::Grid.new;
+
+    return Nil unless $o;
+
     $o.orientation = GTK_ORIENTATION_HORIZONTAL;
     $o.spacing = $spacing;
     $o;
@@ -121,8 +130,8 @@ class GTK::Grid is GTK::Container {
     };
 
     for $top..$top+$height -> $row {
+      # @!grid[$row] //= [];
       for $left..$left+$width -> $col {
-        @!grid[$row] //= [];
         @!grid[$row][$col] = %!obj-track{$child}
       }
     }
@@ -246,7 +255,8 @@ class GTK::Grid is GTK::Container {
         gtk_grid_get_baseline_row($!g);
       },
       STORE => sub ($, Int() $row is copy) {
-        my gint $r = self.RESOLVE-INT($row);
+        my gint $r = $row;
+
         gtk_grid_set_baseline_row($!g, $r);
       }
     );
@@ -258,7 +268,8 @@ class GTK::Grid is GTK::Container {
         gtk_grid_get_column_homogeneous($!g);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = self.RESOLVE-BOOL($homogeneous);
+        my gboolean $h = $homogeneous.so.Int;
+
         gtk_grid_set_column_homogeneous($!g, $h);
       }
     );
@@ -270,7 +281,8 @@ class GTK::Grid is GTK::Container {
         gtk_grid_get_column_spacing($!g);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = self.RESOLVE-INT($spacing);
+        my gint $s = $spacing;
+
         gtk_grid_set_column_spacing($!g, $s);
       }
     );
@@ -282,7 +294,8 @@ class GTK::Grid is GTK::Container {
         Bool( gtk_grid_get_row_homogeneous($!g) );
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = self.RESOLVE-BOOL($homogeneous);
+        my gboolean $h = $homogeneous.so.Int;
+
         gtk_grid_set_row_homogeneous($!g, $h);
       }
     );
@@ -294,7 +307,8 @@ class GTK::Grid is GTK::Container {
         gtk_grid_get_row_spacing($!g);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = self.RESOLVE-INT($spacing);
+        my gint $s = $spacing;
+
         gtk_grid_set_row_spacing($!g, $s);
       }
     );
@@ -328,8 +342,7 @@ class GTK::Grid is GTK::Container {
     Int() $width,
     Int() $height
   ) {
-    my @i = ($left, $top, $width, $height);
-    my gint ($l, $t, $w, $h) = self.RESOLVE-INT(@i);
+    my gint ($l, $t, $w, $h) = ($left, $top, $width, $height);
     self!add-child-at($child.Widget, $left, $top, $width, $height)
       unless self.IS-LATCHED;
     self.UNSET-LATCH;
@@ -360,9 +373,8 @@ class GTK::Grid is GTK::Container {
     Int() $width,
     Int() $height
   ) {
-    my $s = self.RESOLVE-UINT($side);
-    my @i = ($width, $height);
-    my gint ($ww, $hh) = self.RESOLVE-INT(@i);
+    my $s = $side;
+    my gint ($ww, $hh) = ($width, $height);
     self!add-child-at-with-sib($child, $sibling, $side, $width, $height)
       unless self.IS-LATCHED;
     self.UNSET-LATCH;
@@ -401,25 +413,27 @@ class GTK::Grid is GTK::Container {
   method get_child_at (Int() $left, Int() $top)
     is also<get-child-at>
   {
-    my @i = ($left, $top);
-    my gint ($l, $t) = self.RESOLVE-INT(@i);
+    my gint ($l, $t) = ($left, $top);
+
     gtk_grid_get_child_at($!g, $l, $t);
   }
 
   method get_row_baseline_position (Int() $row)
     is also<get-row-baseline-position>
   {
-    my gint $r = self.RESOLVE-INT($row);
+    my gint $r = $row;
+
     gtk_grid_get_row_baseline_position($!g, $row);
   }
 
   method get_type () is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_grid_get_type, $n, $t );
   }
 
   method insert_column (Int() $position) is also<insert-column> {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
     #self!grid-add-col($position);
     gtk_grid_insert_column($!g, $p);
   }
@@ -430,7 +444,7 @@ class GTK::Grid is GTK::Container {
   )
     is also<insert-next-to>
   {
-    my uint32 $s = self.RESOLVE-UINT($side);
+    my uint32 $s = $side;
     die '$sibling not found in grid!'
       unless %!obj-manifest{+$sibling.p}:exists;
     # my ($l, $t) = %!obj-track{+$sibling.p}<l t>;
@@ -445,19 +459,19 @@ class GTK::Grid is GTK::Container {
   }
 
   method insert_row (Int() $position) is also<insert-row> {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
     #self!grid-add-row($position);
     gtk_grid_insert_row($!g, $p);
   }
 
   method remove_column (Int() $position) is also<remove-column> {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
     #self!grid-remove-col($position);
     gtk_grid_remove_column($!g, $p);
   }
 
   method remove_row (Int() $position) is also<remove-row> {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
     #self!grid-remove-row($position);
     gtk_grid_remove_row($!g, $p);
   }
@@ -468,8 +482,9 @@ class GTK::Grid is GTK::Container {
   )
     is also<set-row-baseline-position>
   {
-    my gint $r =  self.RESOLVE-INT($row);
-    my uint32 $p = self.RESOLVE-UINT($pos);
+    my gint $r =  $row;
+    my uint32 $p = $pos;
+
     gtk_grid_set_row_baseline_position($!g, $r, $p);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

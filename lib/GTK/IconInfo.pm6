@@ -3,21 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GDK::RGBA;
-
 use GTK::Raw::IconTheme;
 use GTK::Raw::Types;
 
+use GDK::RGBA;
 use GDK::Pixbuf;
 
 use GLib::Roles::Object;
-use GTK::Roles::Types;
 
 # Opaque struct
 
 class GTK::IconInfo {
   also does GLib::Roles::Object;
-  also does GTK::Roles::Types;
 
   has GtkIconInfo $!ii is implementor;
 
@@ -64,25 +61,32 @@ class GTK::IconInfo {
   { * }
 
   multi method size_lookup (Int() $size) {
-    my Int ($w, $h);
-    samewith($size, $w, $h);
-    ($w, $h);
+    my @r = samewith($size, $, $, :all);
+
+    @r[0] ?? @r[1, 2] !! Nil;
   }
   multi method size_lookup (
     Int() $size,
-    Int() $width is rw,
-    Int() $height is rw
+    $width is rw,
+    $height is rw,
+    :$all = False
   ) {
-    my gint ($w, $h);
+    my gint ($w, $h) = 0 xx 2;
     my guint32 $s = $size;
+    my $rv = gtk_icon_size_lookup($s, $w, $h);
 
-    my $rc = gtk_icon_size_lookup($s, $w, $h);
-    ($width, $height) = ($rc ?? $w !! Nil, $rc ?? $h !! Nil);
+    ($width, $height) = ($w, $h);
+    $all.not ?? $rv !! ($rv, $width, $height);
   }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method copy {
-    gtk_icon_info_copy($!ii);
+  method copy (:$raw = False) {
+    my $ii = gtk_icon_info_copy($!ii);
+
+    $ii ??
+      ( $raw ?? $ii !! GTK::IconInfo.new($ii) )
+      !!
+      Nil;
   }
 
   method free {
@@ -142,7 +146,7 @@ class GTK::IconInfo {
     gtk_icon_info_get_display_name($!ii);
   }
 
-  method get_embedded_rect (GdkRectangle $rectangle)
+  method get_embedded_rect (GdkRectangle() $rectangle)
     is also<get-embedded-rect>
   {
     gtk_icon_info_get_embedded_rect($!ii, $rectangle);
@@ -358,14 +362,23 @@ class GTK::IconInfo {
     $all.not ?? $p !! ($p, $was_symbolic);
   }
 
-  method load_symbolic_for_context_async (
+  proto method load_symbolic_for_context_async (|)
+    is also<load-symbolic-for-context-async>
+  { * }
+
+  multi method load_symbolic_for_context_async (
+    GtkStyleContext() $context,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith($context, GCancellable, $callback, $user_data)
+  }
+  multi method load_symbolic_for_context_async (
     GtkStyleContext() $context,
     GCancellable() $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data = gpointer
-  )
-    is also<load-symbolic-for-context-async>
-  {
+  ) {
     gtk_icon_info_load_symbolic_for_context_async(
       $!ii,
       $context,

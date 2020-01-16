@@ -7,6 +7,13 @@ use GTK::Raw::Definitions;
 
 unit package GTK::Raw::Subs;
 
+sub ReturnWidget ($w, $raw, $widget) {
+  $w ?? ( $raw ?? $w
+               !! ( $widget ?? GTK::Widget.new($w)
+                            !! GTK::Widget.CreateObject($w) ) )
+     !! Nil;
+ }
+
 # For signal handlers -- Didn't work because of missing closure, but it was
 # a nice idea.
 #

@@ -31,14 +31,13 @@ class GTK::EntryBuffer {
   { $!b }
 
   multi method new (GtkEntryBuffer $buffer) {
-    self.bless(:$buffer);
+    $buffer ?? self.bless(:$buffer) !! Nil;
   }
   multi method new (Str $text, Int() $text_len) {
-    # Move resolve functions to utilities package.
     my gint $tl = $text_len;
-
     my $buffer = gtk_entry_buffer_new($text, $tl);
-    self.bless(:$buffer);
+
+    $buffer ?? self.bless(:$buffer) !! Nil;
   }
 
 
@@ -146,7 +145,7 @@ class GTK::EntryBuffer {
 
   method set_text (Str() $chars, Int() $n_chars) is also<set-text> {
     my gint $nc = $n_chars;
-    
+
     gtk_entry_buffer_set_text($!b, $chars, $nc);
   }
 

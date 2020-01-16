@@ -1,22 +1,16 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::EventBox;
 use GTK::Raw::Types;
 
 use GTK::Bin;
 
-use GTK::Roles::Types;
-
-our subset EventBoxAncestry is export 
+our subset EventBoxAncestry is export
   where GtkEventBox | BinAncestry;
 
 class GTK::EventBox is GTK::Bin {
-  also does GTK::Roles::Types;
-
   has GtkEventBox $!eb is implementor;
 
   method bless(*%attrinit) {
@@ -25,18 +19,18 @@ class GTK::EventBox is GTK::Bin {
     $o;
   }
 
-  submethod BUILD(:$box) {
+  submethod BUILD(:$event-box) {
     my $to-parent;
-    given $box {
+    given $event-box {
       when EventBoxAncestry {
         $!eb = do {
           when GtkEventBox  {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkEventBox, $_);
+            cast(GtkEventBox, $_);
           }
         }
         self.setBin($to-parent);
@@ -47,15 +41,21 @@ class GTK::EventBox is GTK::Bin {
       }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkEventBox is also<EventBox> { $!eb }
 
-  multi method new (EventBoxAncestry $box) {
-    self.bless(:$box);
+  method GTK::Raw::Definitions::GtkEventBox
+    is also<
+      EventBox
+      GtkEventBox
+    >
+  { $!eb }
+
+  multi method new (EventBoxAncestry $event-box) {
+    $event-box ?? self.bless(:$event-box) !! Nil;
   }
   multi method new {
-    my $box = gtk_event_box_new();
-    self.bless(:$box);
+    my $event-box = gtk_event_box_new();
+
+    $event-box ?? self.bless(:$event-box) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -68,7 +68,8 @@ class GTK::EventBox is GTK::Bin {
         so gtk_event_box_get_above_child($!eb);
       },
       STORE => sub ($, Int() $above_child is copy) {
-        my gboolean $ab = self.RESOLVE-BOOL($above_child);
+        my gboolean $ab = $above_child.so.Int;
+
         gtk_event_box_set_above_child($!eb, $ab);
       }
     );
@@ -80,7 +81,8 @@ class GTK::EventBox is GTK::Bin {
         so gtk_event_box_get_visible_window($!eb);
       },
       STORE => sub ($, Int() $visible_window is copy) {
-        my gboolean $vw = self.RESOLVE-BOOL($visible_window);
+        my gboolean $vw = $visible_window.so.Int;
+
         gtk_event_box_set_visible_window($!eb, $vw);
       }
     );
@@ -94,6 +96,7 @@ class GTK::EventBox is GTK::Bin {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_event_box_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

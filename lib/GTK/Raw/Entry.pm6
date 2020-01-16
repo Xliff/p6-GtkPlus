@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-
 use GTK::Raw::Types;
 use Pango::Raw::Types;
 
@@ -101,7 +100,7 @@ sub gtk_entry_get_layout (GtkEntry $entry)
   is export
   { * }
 
-sub gtk_entry_get_layout_offsets (GtkEntry $entry, gint $x, gint $y)
+sub gtk_entry_get_layout_offsets (GtkEntry $entry, gint $x is rw, gint $y is rw)
   is native(gtk)
   is export
   { * }

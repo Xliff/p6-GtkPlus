@@ -5,6 +5,9 @@ use Method::Also;
 use GTK::Raw::Types;
 use GTK::Raw::Main;
 
+use GDK::Event;
+use GTK::Widget;
+
 use GLib::Roles::StaticClass;
 
 class GTK::Get {
@@ -26,8 +29,13 @@ class GTK::Get {
     gtk_check_version($mj, $mn, $mc);
   }
 
-  method current_event is also<current-event> {
-    gtk_get_current_event();
+  method current_event (:$raw = False) is also<current-event> {
+    my $e = gtk_get_current_event();
+
+    $e ??
+      ( $raw ?? $e !! GDK::Event.new($e) )
+      !!
+      Nil;
   }
 
   method current_event_device is also<current-event-device> {
@@ -44,12 +52,21 @@ class GTK::Get {
     gtk_get_current_event_time();
   }
 
-  method default_language is also<default-language> {
-    gtk_get_default_language();
+  method default_language (:$raw = False) is also<default-language> {
+    my $l = gtk_get_default_language();
+
+    $l ??
+      ( $raw ?? $l !! Pango::Language.new($l) )
+      !!
+      Nil;
   }
 
-  method event_widget (GdkEvent $e) is also<event-widget> {
-    gtk_get_event_widget($e);
+  method event_widget (GdkEvent() $e, :$raw = False, :$widget = False)
+    is also<event-widget>
+  {
+    my $w = gtk_get_event_widget($e);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
   method interface_age is also<interface-age> {

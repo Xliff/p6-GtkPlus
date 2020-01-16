@@ -3,13 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::Fixed;
 use GTK::Raw::Types;
 
 use GTK::Container;
 
-our subset FixedAncestry is export 
+our subset FixedAncestry is export
   where GtkFixed | ContainerAncestry;
 
 class GTK::Fixed is GTK::Container {
@@ -43,17 +42,25 @@ class GTK::Fixed is GTK::Container {
       }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkFixed is also<Fixed> { $!f }
 
-  multi method new (FixedAncestry $fixed) {
+  method GTK::Raw::Definitions::GtkFixed
+    is also<
+      Fixed
+      GtkFixed
+    >
+  { $!f }
+
+  multi method new (FixedAncestry $fixed, :$ref = False) {
+    return Nil unless $fixed;
+
     my $o = self.bless(:$fixed);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $fixed = gtk_fixed_new();
-    self.bless(:$fixed);
+
+    $fixed ?? self.bless(:$fixed) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -65,18 +72,19 @@ class GTK::Fixed is GTK::Container {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_fixed_get_type, $n, $t );
   }
 
   multi method move (GtkWidget() $widget, Int() $x, Int() $y) {
-    my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy) = ($x, $y);
+
     gtk_fixed_move($!f, $widget, $xx, $yy);
   }
 
   multi method put (GtkWidget() $widget, Int() $x, Int() $y) {
-    my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy) = ($x, $y);
+    
     gtk_fixed_put($!f, $widget, $xx, $yy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

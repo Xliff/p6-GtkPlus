@@ -301,10 +301,7 @@ D
       FETCH => sub ($) {
         my $w = gtk_container_get_focus_child($!c);
 
-        $w ?? ( $raw ?? $w
-                     !! ($widget ?? GTK::Widget.new($w)
-                               !! GTK::Widget.CreateObject($w) ) )
-           !! Nil
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $child is copy) {
         gtk_container_set_focus_child($!c, $child);

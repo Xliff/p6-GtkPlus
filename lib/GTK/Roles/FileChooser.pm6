@@ -3,11 +3,11 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::FileChooser;
 use GTK::Raw::Types;
 
 use GTK::FileFilter;
+use GTK::Widget;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
@@ -190,10 +190,7 @@ role GTK::Roles::FileChooser {
       FETCH => sub ($) {
         my $pw = gtk_file_chooser_get_preview_widget($!fc);
 
-        $pw ?? ( $raw ?? $pw
-                      !! ( $widget ?? GTK::Widget.CreateObject($pw)
-                                   !! GTK::Widget.new($pw) ) )
-            !! Nil
+        ReturnWidget($pw, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $preview_widget is copy) {
         gtk_file_chooser_set_preview_widget($!fc, $preview_widget);

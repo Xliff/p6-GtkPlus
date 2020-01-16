@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::FlowBox;
 use GTK::Raw::Types;
@@ -27,13 +25,13 @@ class GTK::FlowBoxChild is GTK::Bin {
       when FlowBoxChildAncestry {
         $!fbc = do {
           when GtkFlowBoxChild {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
 
           default {
             $to-parent = $_;
-            nativecast(GtkFlowBoxChild, $_);
+            cast(GtkFlowBoxChild, $_);
           }
         };
         self.setBin($to-parent);
@@ -47,14 +45,17 @@ class GTK::FlowBoxChild is GTK::Bin {
     }
   }
 
-  multi method new (FlowBoxChildAncestry $flowboxchild) {
+  multi method new (FlowBoxChildAncestry $flowboxchild, :$ref = True) {
+    return Nil unless $flowboxchild;
+
     my $o = self.bless(:$flowboxchild);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $flowboxchild = gtk_flow_box_child_new();
-    self.bless(:$flowboxchild);
+
+    $flowboxchild ?? self.bless(:$flowboxchild) !! Nil;
   }
 
   method GTK::Raw::Definitions::GtkFlowBoxChild
@@ -75,7 +76,7 @@ class GTK::FlowBoxChild is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method changed {
-    gtk_flow_box_child_changed($!fbc);
+    so gtk_flow_box_child_changed($!fbc);
   }
 
   method get_index is also<get-index> {

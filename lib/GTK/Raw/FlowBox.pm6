@@ -107,7 +107,7 @@ sub gtk_flow_box_selected_foreach (
 
 sub gtk_flow_box_set_filter_func (
   GtkFlowBox $box,
-  GtkFlowBoxFilterFunc $filter_func,
+  &filter_func (GtkFlowBoxChild, Pointer --> gboolean),
   gpointer $user_data,
   GDestroyNotify $destroy
 )
