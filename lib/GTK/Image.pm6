@@ -59,10 +59,11 @@ class GTK::Image is GTK::Widget {
     >
   { $!i }
 
-  multi method new (ImageAncestry $image) {
+  multi method new (ImageAncestry $image, :$ref = True) {
     return Nil unless $image;
+
     my $o = self.bless(:$image);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
@@ -71,7 +72,7 @@ class GTK::Image is GTK::Widget {
     $image ?? self.bless(:$image) !! Nil;
   }
 
-  method new_from_animation (GdkPixbufAnimation $animation)
+  method new_from_animation (GdkPixbufAnimation() $animation)
     is also<new-from-animation>
   {
     my $image = gtk_image_new_from_animation($animation);
@@ -79,14 +80,14 @@ class GTK::Image is GTK::Widget {
     $image ?? self.bless(:$image) !! Nil;
   }
 
-  method new_from_file (Str $file) is also<new-from-file> {
+  method new_from_file (Str() $file) is also<new-from-file> {
     my $image = gtk_image_new_from_file($file);
 
     $image ?? self.bless(:$image) !! Nil;
   }
 
   method new_from_gicon (
-    GIcon $icon,
+    GIcon() $icon,
     Int() $size                  # GtkIconSize $size
   )
     is also<new-from-gicon>
@@ -98,27 +99,13 @@ class GTK::Image is GTK::Widget {
   }
 
   method new_from_icon_name (
-    Str $name,
+    Str() $name,
     Int() $size                  # GtkIconSize $size
   )
     is also<new-from-icon-name>
   {
     my guint32 $s = $size;
     my $image = gtk_image_new_from_icon_name($name, $s);
-
-    $image ?? self.bless(:$image) !! Nil;
-  }
-
-  method new_from_icon_set (
-    GtkIconSet $set,
-    Int() $size                  # GtkIconSize $size
-
-  )
-    is DEPRECATED('new_from_icon_name')
-    is also<new-from-icon-set>
-  {
-    my guint32 $s = $size;
-    my $image = gtk_image_new_from_icon_set($set, $s);
 
     $image ?? self.bless(:$image) !! Nil;
   }
@@ -199,26 +186,6 @@ class GTK::Image is GTK::Widget {
       STORE => -> $, Str() $val is copy {
         $gv.string = $val;
         self.prop_set('icon-name', $gv);
-      }
-    );
-  }
-
-  # Type: GtkIconSet
-  method icon-set is rw
-    is DEPRECATED('GTK::Image.icon-name')
-    is also<icon_set>
-  {
-    my GLib::Value $gv .= new( G_TYPE_OBJECT );
-    Proxy.new(
-      FETCH => -> $ {
-        $gv = GLib::Value.new(
-          self.prop_get('icon-set', $gv)
-        );
-        nativecast(GtkIconSet, $gv.object);
-      },
-      STORE => -> $, GtkIconTheme() $val is copy {
-        $gv.object = $val;
-        self.prop_set('icon-set', $gv);
       }
     );
   }
@@ -395,18 +362,27 @@ class GTK::Image is GTK::Widget {
   { * }
 
   multi method get_gicon {
-    my GIcon $gi = GIcon.new;
-    my Int $s;
-    samewith($gi, $s);
-    ($gi, $s);
+    samewith($, $);
   }
   multi method get_gicon (
-    GIcon $gicon is rw,
-    Int() $size is rw             # GtkIconSize $size
+    $gicon is rw,
+    $size  is rw,             # GtkIconSize $size
+    :$raw = False
   ) {
     my guint32 $s = $size;
-    gtk_image_get_gicon($!i, $gicon, $s);
+    my $gi = CArray[Pointer[GIcon]].new;
+
+    $gi[0] = Pointer[GIcon];
+    gtk_image_get_gicon($!i, $gi, $s);
+
     $size = $s;
+    $gicon = do {
+      my $ret = $gi[0] ?? $gi[0] !! Nil;
+      $ret = GLib::GIcon.new($ret) unless !$ret || $raw;
+      $ret;
+    }
+
+    ($gicon, $size);
   }
 
   proto method get_icon_name (|)
@@ -414,9 +390,7 @@ class GTK::Image is GTK::Widget {
   { * }
 
   multi method get_icon_name {
-    my Str $name = '';
-    my Int $size = 0;
-    samewith($name, $size);
+    samewith($, $);
   }
   multi method get_icon_name (
     Str() $icon_name is rw,
@@ -424,27 +398,29 @@ class GTK::Image is GTK::Widget {
   ) {
     my guint32 $s = $size;
     my $n = CArray[Str].new;
+
     $n[0] = $icon_name;
     gtk_image_get_icon_name($!i, $n, $s);
-    ($icon_name, $size) = ( $n[0], GtkIconSizeEnum($s) );
+    ($icon_name, $size) = ( $n[0] ?? $n[0] !! Nil, GtkIconSizeEnum($s) );
   }
 
+  # Still relevant when most of GtkIconSet is deprecated?
   proto method get_icon_set (|)
     is also<get-icon-set>
   { * }
 
   multi method get_icon_set {
-    my GtkIconSet $is = GtkIconSet.new;
-    my Int $s;
-    samewith($is, $s);
-    ($is, $s);
+    samewith($, $);
   }
   multi method get_icon_set (
-    GtkIconSet $icon_set is rw,
-    Int() $size is rw             # GtkIconSize $size
+    $icon_set is rw,
+    $size is rw             # GtkIconSize $size
   ) {
     my guint32 $s = $size;
-    gtk_image_get_icon_set($!i, $icon_set, $s);
+    my $is = GtkIconSet.new;
+
+    gtk_image_get_icon_set($!i, $is, $s);
+    ($icon_set, $size) = ($is, $s);
   }
 
   method get_pixbuf (:$raw = False) is also<get-pixbuf> {

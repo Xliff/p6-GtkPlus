@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GTK::Raw::InfoBar;
 use GTK::Raw::Types;
@@ -36,12 +35,12 @@ class GTK::InfoBar is GTK::Box {
     my $to-parent;
     $!ib = do {
       when GtkInfoBar {
-        $to-parent = nativecast(GtkBox, $_);
+        $to-parent = cast(GtkBox, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkInfoBar, $_);
+        cast(GtkInfoBar, $_);
       }
     };
     self.setBox($to-parent);
@@ -54,9 +53,9 @@ class GTK::InfoBar is GTK::Box {
     >
   { $!ib }
 
-  multi method new (InfoBarAncestry $infobar) {
+  multi method new (InfoBarAncestry $infobar, :$ref = True) {
     my $o = self.bless(:$infobar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
