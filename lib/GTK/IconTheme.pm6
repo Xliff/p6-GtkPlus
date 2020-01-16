@@ -37,10 +37,10 @@ class GTK::IconTheme {
     >
   { $!it }
 
-  multi method new (GtkIconTheme $theme) {
-    return unless $theme;
+  multi method new (GtkIconTheme $theme, :$ref = True) {
+    return Nil unless $theme;
     my $o = self.bless(:$theme);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {

@@ -307,10 +307,9 @@ class GTK::Clipboard {
   multi method wait_for_rich_text (
     GtkTextBuffer() $buffer,
     GdkAtom $format,
-    :$all = True,
     :$raw = False
   ) {
-    my @r = samewith($buffer, $format, $, :$all, :$raw);
+    my @r = callwith($buffer, $format, $, :all, :$raw);
 
     $raw.not ?? @r[0] !! @r;
   }
