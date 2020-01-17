@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::MenuButton;
 use GTK::Raw::Types;
@@ -22,7 +20,7 @@ class GTK::MenuButton is GTK::ToggleButton {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -32,13 +30,13 @@ class GTK::MenuButton is GTK::ToggleButton {
       when MenuButtonAncestry {
         $!mb = do {
           when GtkMenuButton {
-            $to-parent = nativecast(GtkToggleButton, $_);
+            $to-parent = cast(GtkToggleButton, $_);
             $_;
           }
 
           default {
             $to-parent = $_;
-            nativecast(GtkMenuButton, $_);
+            cast(GtkMenuButton, $_);
           }
         };
         self.setToggleButton($to-parent);
@@ -55,13 +53,16 @@ class GTK::MenuButton is GTK::ToggleButton {
   { $!mb }
 
   multi method new (MenuButtonAncestry $menubutton, :$ref = True) {
+    return Nil unless $menubutton;
+
     my $o = self.bless(:$menubutton);
     $o.ref if $ref;
     $o;
   }
   multi method new {
     my $menubutton = gtk_menu_button_new();
-    self.bless(:$menubutton);
+
+    $menubutton ?? self.bless(:$menubutton) !! Nil;
   }
 
 
@@ -91,7 +92,7 @@ class GTK::MenuButton is GTK::ToggleButton {
         GtkArrowTypeEnum( gtk_menu_button_get_direction($!mb) );
       },
       STORE => sub ($, Int() $direction is copy) {
-        my guint $d = self.RESOLVE-UINT($direction);
+        my GtkArrowType $d = $direction;
 
         gtk_menu_button_set_direction($!mb, $d);
       }
@@ -153,7 +154,8 @@ class GTK::MenuButton is GTK::ToggleButton {
         so gtk_menu_button_get_use_popover($!mb);
       },
       STORE => sub ($, Int() $use_popover is copy) {
-        my gboolean $up = self.RESOLVE-BOOL($use_popover);
+        my gboolean $up = $use_popover.so.Int;
+
         gtk_menu_button_set_use_popover($!mb, $up);
       }
     );

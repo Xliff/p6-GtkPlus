@@ -10,7 +10,7 @@ unit package GTK::Raw::ListBox;
 sub gtk_list_box_bind_model (
   GtkListBox $box,
   GListModel $model,
-  GtkListBoxCreateWidgetFunc $create_widget_func,
+  &create_widget_func (Pointer, Pointer --> GtkWidget),
   gpointer $user_data,
   GDestroyNotify $user_data_free_func
 )
@@ -124,7 +124,7 @@ sub gtk_list_box_select_row (GtkListBox $box, GtkListBoxRow $row)
 
 sub gtk_list_box_selected_foreach (
   GtkListBox $box,
-  GtkListBoxForeachFunc $func,
+  &func (GtkListBox, GtkListBoxRow, gpointer),
   gpointer $data
 )
   is native(gtk)
@@ -133,7 +133,7 @@ sub gtk_list_box_selected_foreach (
 
 sub gtk_list_box_set_filter_func (
   GtkListBox $box,
-  GtkListBoxFilterFunc $filter_func,
+  &filter_func (GtkListBoxRow, gpointer --> gboolean),
   gpointer $user_data,
   GDestroyNotify $destroy
 )
@@ -143,7 +143,7 @@ sub gtk_list_box_set_filter_func (
 
 sub gtk_list_box_set_header_func (
   GtkListBox $box,
-  GtkListBoxUpdateHeaderFunc $update_header,
+  &update_header (GtkListBoxRow, GtkListBoxRow, Pointer),
   gpointer $user_data,
   GDestroyNotify $destroy
 )

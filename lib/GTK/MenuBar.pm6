@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::MenuBar;
 use GTK::Raw::Types;
 
@@ -23,15 +22,11 @@ class GTK::MenuBar is GTK::MenuShell {
 
   submethod BUILD(:$menubar, :@items) {
     given $menubar {
-      when MenuBarAncestry {
-        self.setMenuBar($menubar, :@items);
-      }
-      when GTK::MenuBar {
-      }
-      default {
-      }
+      when MenuBarAncestry { self.setMenuBar($menubar, :@items) }
+      when GTK::MenuBar    { }
+      default              { }
     }
-    
+
     # Cannot be done until after self.setMenuShell()
     self.append-widgets(|@items) if @items;
   }
@@ -42,36 +37,46 @@ class GTK::MenuBar is GTK::MenuShell {
     my $to-parent;
     $!mb = do given $menubar {
       when GtkMenuBar {
-        $to-parent = nativecast(GtkMenuShell, $_);
+        $to-parent = cast(GtkMenuShell, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkMenuBar, $_);
+        cast(GtkMenuBar, $_);
       }
     }
     self.setMenuShell($to-parent);
   }
 
-  method GTK::Raw::Definitions::GtkMenuBar is also<MenuBar> { $!mb }
+  method GTK::Raw::Definitions::GtkMenuBar
+    is also<
+      MenuBar
+      GtkMenuBar
+    >
+  { $!mb }
 
-  multi method new (MenuBarAncestry $menubar) {
+  multi method new (MenuBarAncestry $menubar, :$ref = True) {
+    return Nil unless $menubar;
+
     my $o = self.bless(:$menubar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $menubar = gtk_menu_bar_new();
-    self.bless(:$menubar);
+
+    $menubar ?? self.bless(:$menubar) !! Nil;
   }
   multi method new (*@items) {
     my $menubar = gtk_menu_bar_new();
-    self.bless(:$menubar, :@items);
+
+    $menubar ?? self.bless(:$menubar, :@items) !! Nil;
   }
 
   method new_from_model (GMenuModel() $model) is also<new-from-model> {
     my $menubar = gtk_menu_bar_new_from_model($model);
-    self.bless(:$menubar);
+
+    $menubar ?? self.bless(:$menubar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -84,7 +89,8 @@ class GTK::MenuBar is GTK::MenuShell {
         GtkPackDirectionEnum( gtk_menu_bar_get_child_pack_direction($!mb) );
       },
       STORE => sub ($, Int() $child_pack_dir is copy) {
-        my $cpd = self.RESOLVE-UINT($child_pack_dir);
+        my GtkPackDirection $cpd = $child_pack_dir;
+
         gtk_menu_bar_set_child_pack_direction($!mb, $cpd);
       }
     );
@@ -96,7 +102,8 @@ class GTK::MenuBar is GTK::MenuShell {
         GtkPackDirectionEnum( gtk_menu_bar_get_pack_direction($!mb) );
       },
       STORE => sub ($, Int() $pack_dir is copy) {
-        my uint32 $pd = self.RESOLVE-UINT($pack_dir);
+        my uint32 $pd = $pack_dir;
+
         gtk_menu_bar_set_pack_direction($!mb, $pd);
       }
     );
@@ -106,6 +113,7 @@ class GTK::MenuBar is GTK::MenuShell {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_menu_bar_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

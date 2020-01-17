@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Overlay;
 use GTK::Raw::Types;
@@ -30,12 +28,12 @@ class GTK::Overlay is GTK::Bin {
       when OverlayAncestry {
         $!o = do {
           when GtkOverlay  {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkOverlay, $_);
+            cast(GtkOverlay, $_);
           }
         }
         self.setBin($to-parent);
@@ -50,17 +48,25 @@ class GTK::Overlay is GTK::Bin {
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-o;
   }
-  
-  method GTK::Raw::Definitions::GtkOverlay is also<Overlay> { $!o }
 
-  multi method new (OverlayAncestry $overlay) {
+  method GTK::Raw::Definitions::GtkOverlay
+    is also<
+      Overlay
+      GtkOverlay
+    >
+  { $!o }
+
+  multi method new (OverlayAncestry $overlay, :$ref = True) {
+    return Nil unless $overlay;
+
     my $o = self.bless(:$overlay);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $overlay = gtk_overlay_new();
-    self.bless(:$overlay);
+
+    $overlay ?? self.bless(:$overlay) !! Nil;
   }
 
 
@@ -112,13 +118,15 @@ class GTK::Overlay is GTK::Bin {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_overlay_get_type, $n, $t );
   }
 
   method reorder_overlay (GtkWidget() $child, Int() $position)
     is also<reorder-overlay>
   {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     gtk_overlay_reorder_overlay($!o, $child, $p);
   }
 
@@ -132,7 +140,8 @@ class GTK::Overlay is GTK::Bin {
       set-overlay-passthrough
     >
   {
-    my gboolean $pt = self.RESOLVE-BOOL($pass_through);
+    my gboolean $pt = $pass_through.so.Int;
+    
     gtk_overlay_set_overlay_pass_through($!o, $widget, $pt);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
@@ -149,5 +158,5 @@ class GTK::Overlay is GTK::Bin {
     }
     nextwith($c, @notfound) if +@notfound;
   }
-  
+
 }

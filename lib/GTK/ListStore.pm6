@@ -55,7 +55,7 @@ class GTK::ListStore {
     $t[$_] = @types[$_] for @types.keys;
     my gint $columns = @types.elems;
     my $liststore = gtk_list_store_newv($columns, $t);
-    die 'GtkListStore not created!' unless $liststore.defined;
+    die 'GtkListStore not created!' unless $liststore;
 
     $liststore ?? self.bless(:$liststore, :$columns) !! Nil;
   }
@@ -230,7 +230,7 @@ class GTK::ListStore {
     is also<set-value>
   {
     my gint $c = $column;
-    
+
     gtk_list_store_set_value($!ls, $iter, $c, $value);
   }
 

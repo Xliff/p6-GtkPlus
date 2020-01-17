@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Offscreen;
 use GTK::Raw::Types;
@@ -29,12 +27,12 @@ class GTK::Offscreen is GTK::Window {
       when OffscreenAncestry {
         $!ow = do {
           when GtkOffscreen  {
-            $to-parent = nativecast(GtkWindow, $_);
+            $to-parent = cast(GtkWindow, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkOffscreen, $_);
+            cast(GtkOffscreen, $_);
           }
         }
         self.setWindow($to-parent);
@@ -45,15 +43,21 @@ class GTK::Offscreen is GTK::Window {
       }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkOffscreen is also<Offscreen> { $!ow }
+
+  method GTK::Raw::Definitions::GtkOffscreen
+    is also<
+      Offscreen
+      GtkOffscreen
+    >
+  { $!ow }
 
   multi method new (OffscreenAncestry $offscreen) {
-    self.bless(:$offscreen);
+    $offscreen ?? self.bless(:$offscreen) !! Nil;
   }
   multi method new {
     my $offscreen = gtk_offscreen_window_new();
-    self.bless(:$offscreen);
+
+    $offscreen ?? self.bless(:$offscreen) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -63,26 +67,32 @@ class GTK::Offscreen is GTK::Window {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_pixbuf 
+  method get_pixbuf (:$raw = False)
     is also<
       get-pixbuf
       pixbuf
     >
- {
-    GDK::Pixbuf.new( gtk_offscreen_window_get_pixbuf($!ow) );
+  {
+    my $p = gtk_offscreen_window_get_pixbuf($!ow);
+
+    $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil;
   }
 
-  method get_surface 
+  method get_surface
     is also<
       get-surface
       surface
-    > 
+    >
   {
     gtk_offscreen_window_get_surface($!ow);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_offscreen_window_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

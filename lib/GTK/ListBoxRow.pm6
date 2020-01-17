@@ -1,13 +1,12 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::ListBox;
 use GTK::Raw::Types;
 
 use GTK::Bin;
+use GTK::Widget;
 
 use GTK::Roles::Actionable;
 
@@ -31,21 +30,21 @@ class GTK::ListBoxRow is GTK::Bin {
       when ListBoxRowAncestry {
         $!lbr = do {
           when GtkListBoxRow {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           when GtkActionable {
             $!action = $_;                          # GTK::Roles::Actionable
-            $to-parent = nativecast(GtkBin, $_);
-            nativecast(GtkListBoxRow, $_);
+            $to-parent = cast(GtkBin, $_);
+            cast(GtkListBoxRow, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkListBoxRow, $_);
+            cast(GtkListBoxRow, $_);
           }
 
         }
-        $!action //= nativecast(GtkActionable, $_); # GTK::Roles::Actionable
+        $!action //= cast(GtkActionable, $_); # GTK::Roles::Actionable
         self.setBin($to-parent);
       }
       when GTK::ListBoxRow {
@@ -55,16 +54,24 @@ class GTK::ListBoxRow is GTK::Bin {
     }
   }
 
-  method GTK::Raw::Definitions::GtkListBoxRow is also<ListBoxRow> { $!lbr }
+  method GTK::Raw::Definitions::GtkListBoxRow
+    is also<
+      ListBoxRow
+      GtkListBoxRow
+    >
+  { $!lbr }
 
-  multi method new (ListBoxRowAncestry $row) {
+  multi method new (ListBoxRowAncestry $row, :$ref = True) {
+    return Nil unless $row;
+
     my $o = self.bless(:$row);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $row = gtk_list_box_row_new();
-    self.bless(:$row);
+
+    $row ?? self.bless(:$row) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -83,16 +90,19 @@ class GTK::ListBoxRow is GTK::Bin {
         so gtk_list_box_row_get_activatable($!lbr);
       },
       STORE => sub ($, Int() $activatable is copy) {
-        my gboolean $a = self.RESOLVE-BOOL($activatable);
+        my gboolean $a = $activatable.so.Int;
+
         gtk_list_box_row_set_activatable($!lbr, $a);
       }
     );
   }
 
-  method header is rw {
+  method header (:$raw = False, :$widget = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Widget.new( gtk_list_box_row_get_header($!lbr) );
+        my $w = gtk_list_box_row_get_header($!lbr);
+
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $header is copy) {
         gtk_list_box_row_set_header($!lbr, $header);
@@ -106,7 +116,8 @@ class GTK::ListBoxRow is GTK::Bin {
         so gtk_list_box_row_get_selectable($!lbr);
       },
       STORE => sub ($, Int() $selectable is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($selectable);
+        my gboolean $s = $selectable.so.Int;
+
         gtk_list_box_row_set_selectable($!lbr, $s);
       }
     );
@@ -121,22 +132,22 @@ class GTK::ListBoxRow is GTK::Bin {
     gtk_list_box_row_changed($!lbr);
   }
 
-  method get_index 
+  method get_index
     is also<
       get-index
       index
-    > 
+    >
   {
     gtk_list_box_row_get_index($!lbr);
   }
 
-  method is_selected 
+  method is_selected
     is also<
       is-selected
       selected
-    > 
+    >
   {
-    gtk_list_box_row_is_selected($!lbr);
+    so gtk_list_box_row_is_selected($!lbr);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

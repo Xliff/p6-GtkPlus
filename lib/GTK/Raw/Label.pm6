@@ -20,7 +20,7 @@ sub gtk_label_get_layout (GtkLabel $l)
  is export
  { * }
 
-sub gtk_label_get_layout_offsets (GtkLabel $l, gint $x, gint $y)
+sub gtk_label_get_layout_offsets (GtkLabel $l, gint $x is rw, gint $y is rw)
   is native(gtk)
   is export
   { * }
@@ -31,7 +31,11 @@ sub gtk_label_get_mnemonic_keyval (GtkLabel $l)
   is export
   { * }
 
-sub gtk_label_get_selection_bounds (GtkLabel $l, gint $start, gint $end)
+sub gtk_label_get_selection_bounds (
+  GtkLabel $l,
+  gint $start is rw, 
+  gint $end   is rw
+)
   returns uint32
   is native(gtk)
   is export

@@ -1,18 +1,18 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::MenuShell;
 use GTK::Raw::Types;
 
 use GTK::Container;
 use GTK::MenuItem;
+use GTK::Widget;
 
 use GTK::Roles::Signals::MenuShell;
 
-our subset MenuShellAncestry is export where GtkMenuShell | ContainerAncestry;
+our subset MenuShellAncestry is export
+  where GtkMenuShell | ContainerAncestry;
 
 class GTK::MenuShell is GTK::Container {
   also does GTK::Roles::Signals::MenuShell;
@@ -23,7 +23,12 @@ class GTK::MenuShell is GTK::Container {
     self.disconnect-all($_) for %!signals-ms;
   }
 
-  method GTK::Raw::Definitions::GtkMenuShell is also<MenuShell> { $!ms }
+  method GTK::Raw::Definitions::GtkMenuShell
+    is also<
+      MenuShell
+      GtkMenuShell
+    >
+  { $!ms }
 
   method new {
     die 'Cannot instantiate a GTK::MenuShell object.';
@@ -35,12 +40,12 @@ class GTK::MenuShell is GTK::Container {
     my $to-parent;
     $!ms = do given $menushell {
       when GtkMenuShell {
-        $to-parent = nativecast(GtkContainer, $_);
+        $to-parent = cast(GtkContainer, $_);
         $menushell;
       }
       when GtkWidget {
         $to-parent = $_;
-        nativecast(GtkMenuShell, $_);
+        cast(GtkMenuShell, $_);
       }
     }
     self.setContainer($to-parent);
@@ -105,7 +110,8 @@ class GTK::MenuShell is GTK::Container {
         so gtk_menu_shell_get_take_focus($!ms);
       },
       STORE => sub ($, Int() $take_focus is copy) {
-        my $tf = self.RESOLVE-BOOL($take_focus);
+        my gboolean $tf = $take_focus.so.Int;
+
         gtk_menu_shell_set_take_focus($!ms, $tf);
       }
     );
@@ -119,7 +125,8 @@ class GTK::MenuShell is GTK::Container {
   )
     is also<activate-item>
   {
-    my gboolean $fd = self.RESOLVE-BOOL($force_deactivate);
+    my gboolean $fd = $force_deactivate.so.Int;
+
     gtk_menu_shell_activate_item($!ms, $menu_item, $fd);
   }
 
@@ -147,7 +154,8 @@ class GTK::MenuShell is GTK::Container {
   )
     is also<bind-model>
   {
-    my gboolean $ws = self.RESOLVE-BOOL($with_separators);
+    my gboolean $ws = $with_separators.so.Int;
+
     gtk_menu_shell_bind_model($!ms, $model, $action_namespace, $ws);
   }
 
@@ -163,23 +171,33 @@ class GTK::MenuShell is GTK::Container {
     gtk_menu_shell_deselect($!ms);
   }
 
-  method get_parent_shell is also<get-parent-shell> {
-    gtk_menu_shell_get_parent_shell($!ms);
+  method get_parent_shell (:$raw = False, :$widget = False)
+    is also<get-parent-shell>
+  {
+    my $w = gtk_menu_shell_get_parent_shell($!ms);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
-  method get_selected_item is also<get-selected-item> {
-    gtk_menu_shell_get_selected_item($!ms);
+  method get_selected_item (:$raw = False, :$widget = False)
+    is also<get-selected-item>
+  {
+    my $w = gtk_menu_shell_get_selected_item($!ms);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_menu_shell_get_type, $n, $t );
   }
 
   multi method insert (GtkWidget $child, Int() $position) {
     self.INSERT-START($child, $position) unless self.IS-LATCHED;
     self.UNSET-LATCH;
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     gtk_menu_shell_insert($!ms, $child, $p);
   }
   multi method insert (GTK::MenuItem $child, Int() $position) {
@@ -200,7 +218,8 @@ class GTK::MenuShell is GTK::Container {
   }
 
   method select_first (Int() $search_sensitive) is also<select-first> {
-    my gboolean $ss = self.RESOLVE-BOOL($search_sensitive);
+    my gboolean $ss = $search_sensitive.so.Int;
+
     gtk_menu_shell_select_first($!ms, $ss);
   }
 

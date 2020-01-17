@@ -32,16 +32,12 @@ class GTK::MenuItem is GTK::Bin {
     :$right
   ) {
     given $menuitem {
-      when MenuItemAncestry {
-        self.setMenuItem($menuitem);
-      }
-      when GTK::MenuItem {
-      }
-      default {
-      }
+      when MenuItemAncestry { self.setMenuItem($menuitem) }
+      when GTK::MenuItem    { }
+      default               { }
     }
 
-    if $submenu.defined {
+    if $submenu {
       # Error checking for a GTK::Menu without a circular dependency?
       # Otherwise, GtkWidget is the best we can do.
       self.submenu = $submenu if $submenu ~~ (GtkWidget, GTK::Widget).any;
@@ -84,13 +80,16 @@ class GTK::MenuItem is GTK::Bin {
   { $!mi }
 
   multi method new (MenuItemAncestry $menuitem, :$ref = True) {
+    return Nil unless $menuitem;
+
     my $o = self.bless(:$menuitem);
     $o.ref if $ref;
     $o;
   }
   multi method new {
     my $menuitem = gtk_menu_item_new();
-    self.bless(:$menuitem);
+
+    $menuitem ?? self.bless(:$menuitem) !! Nil;
   }
 
   multi method new(
@@ -105,6 +104,8 @@ class GTK::MenuItem is GTK::Bin {
       gtk_menu_item_new_with_mnemonic($label)
       !!
       gtk_menu_item_new_with_label($label);
+
+    return Nil unless $menuitem;
 
     self.bless(
       :$menuitem,
@@ -130,12 +131,14 @@ class GTK::MenuItem is GTK::Bin {
 
   method new_with_label (Str() $label) is also<new-with-label> {
     my $menuitem = gtk_menu_item_new_with_label($label);
-    self.bless(:$menuitem);
+
+    $menuitem ?? self.bless(:$menuitem) !! Nil;
   }
 
   method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $menuitem = gtk_menu_item_new_with_mnemonic($label);
-    self.bless(:$menuitem);
+
+    $menuitem ?? self.bless(:$menuitem) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -206,7 +209,8 @@ class GTK::MenuItem is GTK::Bin {
         so gtk_menu_item_get_reserve_indicator($!mi);
       },
       STORE => sub ($, Int() $reserve is copy) {
-        my $r = self.RESOLVE-BOOL($reserve);
+        my gboolean $r = $reserve.so.Int;
+
         gtk_menu_item_set_reserve_indicator($!mi, $r);
       }
     );
@@ -218,13 +222,14 @@ class GTK::MenuItem is GTK::Bin {
         so gtk_menu_item_get_right_justified($!mi);
       },
       STORE => sub ($, Int() $right_justified is copy) {
-        my gboolean $rj = self.RESOLVE-BOOL($right_justified);
+        my gboolean $rj = $right_justified.so.Int;
+
         gtk_menu_item_set_right_justified($!mi, $rj);
       }
     );
   }
 
-  method submenu is rw {
+  method submenu (:$raw = False, :$widget = False) is rw {
     # We can't bring in MenuShellAncestry without causing all kinds of bad,
     # so we reproduce it here. In a set of bad options, it's the one that's
     # the least bad.
@@ -233,7 +238,9 @@ class GTK::MenuItem is GTK::Bin {
 
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Widget.new( gtk_menu_item_get_submenu($!mi) );
+        my $w = gtk_menu_item_get_submenu($!mi);
+
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, WidgetOrObject $submenu is copy) {
         self.set_end($submenu);
@@ -249,7 +256,8 @@ class GTK::MenuItem is GTK::Bin {
         so gtk_menu_item_get_use_underline($!mi);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_menu_item_set_use_underline($!mi, $s);
       }
     );
@@ -271,20 +279,23 @@ class GTK::MenuItem is GTK::Bin {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_menu_item_get_type, $n, $t );
   }
 
   method emit_toggle_size_allocate (Int() $allocation)
     is also<emit-toggle-size-allocate>
   {
-    my gint $a = self.RESOLVE-INT($allocation);
+    my gint $a = $allocation;
+
     gtk_menu_item_toggle_size_allocate($!mi, $a);
   }
 
   method emit_toggle_size_request (Int() $requisition)
     is also<emit-toggle-size-request>
   {
-    my gint $r = self.RESOLVE-INT($requisition);
+    my gint $r = $requisition;
+
     gtk_menu_item_toggle_size_request($!mi, $r);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
