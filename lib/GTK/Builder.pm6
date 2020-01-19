@@ -258,6 +258,9 @@ class GTK::Builder does Associative {
           ::( $at ).new($o, $args.pairs);
         }
         default {
+          CATCH {
+            default { note($_) }
+          }
           say "Requiring { $at }..." if ::( $at ) ~~ Failure;
           require ::($ = $at);
           ::($ = $at).new($o);

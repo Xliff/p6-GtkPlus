@@ -3,8 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
-
 use GTK::Bin;
 use GTK::Widget;
 
