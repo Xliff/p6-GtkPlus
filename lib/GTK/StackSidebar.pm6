@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::StackSidebar;
 use GTK::Raw::Types;
@@ -27,12 +25,12 @@ class GTK::StackSidebar is GTK::Bin {
       when StackSidebarAncestry {
         $!ss = do {
           when GtkStackSidebar {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkStackSidebar, $_);
+            cast(GtkStackSidebar, $_);
           }
         }
         self.setBin($to-parent);
@@ -44,29 +42,42 @@ class GTK::StackSidebar is GTK::Bin {
     }
   }
 
-  method GTK::Raw::Definitions::GtkStackSidebar is also<StackSidebar> { $!ss }
+  method GTK::Raw::Definitions::GtkStackSidebar
+    is also<
+      StackSidebar
+      GtkStackSidebar
+    >
+  { $!ss }
 
-  multi method new (StackSidebarAncestry $sidebar) {
+  multi method new (StackSidebarAncestry $sidebar, :$ref = True) {
+    return Nil unless $sidebar;
+
     my $o = self.bless(:$sidebar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $sidebar = gtk_stack_sidebar_new();
-    self.bless(:$sidebar);
+
+    $sidebar ?? self.bless(:$sidebar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method stack is rw {
+  method stack (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
         # Late binding to prevent possibility of circular dependency.
         # It might be possible to incorporate this object into
         # GTK::Stack, since it is so small.
-        ::('GTK::Stack').new( gtk_stack_sidebar_get_stack($!ss) );
+        my $s = gtk_stack_sidebar_get_stack($!ss);
+
+        $s ??
+          ( $raw ?? $s !! ::('GTK::Stack').new($s) )
+          !!
+          Nil
       },
       STORE => sub ($, GtkStack() $stack is copy) {
         gtk_stack_sidebar_set_stack($!ss, $stack);
@@ -78,6 +89,7 @@ class GTK::StackSidebar is GTK::Bin {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_stack_sidebar_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

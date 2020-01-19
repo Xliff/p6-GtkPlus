@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::Statusbar;
 use GTK::Raw::Types;
 
@@ -47,7 +46,7 @@ class GTK::Statusbar is GTK::Box {
       }
     }
   }
-  
+
   method GTK::Raw::Definitions::GtkStatusbar is also<Statusbar> { $!sb }
 
   submethod DESTROY {

@@ -69,6 +69,7 @@ class GTK::Stack is GTK::Container {
     $o.ref if $ref;
     $o;
   }
+
   #
   # Until we can get types directly from the pointer without something like
   # GTK::Widget.setType, then we cannot reliably determine what control to
@@ -79,6 +80,9 @@ class GTK::Stack is GTK::Container {
   #   self.bless(:$stack, :$switcher);
   # }
   #
+  # Use setType, and default to Widget with a warning on creating if
+  # setType gives us nothing.
+
   multi method new(:$switcher is copy = True, :$sidebar is copy = False) {
     $switcher = $sidebar.not with $sidebar;
 
@@ -94,10 +98,10 @@ class GTK::Stack is GTK::Container {
   method hhomogeneous is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_stack_get_hhomogeneous($!s);
+        so gtk_stack_get_hhomogeneous($!s);
       },
       STORE => sub ($, Int() $hhomogeneous is copy) {
-        my uint32 $hh = $hhomogeneous;
+        my gboolean $hh = $hhomogeneous.so.Int;
 
         gtk_stack_set_hhomogeneous($!s, $hh);
       }
@@ -110,7 +114,7 @@ class GTK::Stack is GTK::Container {
         gtk_stack_get_homogeneous($!s);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my uint32 $h = $homogeneous;
+        my gboolean $h = $homogeneous.so.Int;
 
         gtk_stack_set_homogeneous($!s, $h);
       }
@@ -120,10 +124,10 @@ class GTK::Stack is GTK::Container {
   method interpolate_size is rw is also<interpolate-size> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_stack_get_interpolate_size($!s);
+        so gtk_stack_get_interpolate_size($!s);
       },
       STORE => sub ($, Int() $interpolate_size is copy) {
-        my uint32 $is = $interpolate_size;
+        my gboolean $is = $interpolate_size.so.Int;
 
         gtk_stack_set_interpolate_size($!s, $is);
       }
@@ -149,7 +153,7 @@ class GTK::Stack is GTK::Container {
         GtkStackTransitionTypeEnum( gtk_stack_get_transition_type($!s) );
       },
       STORE => sub ($, Int() $transition is copy) {
-        my uint32 $t = $transition;
+        my GtkStackTransitionType $t = $transition;
 
         gtk_stack_set_transition_type($!s, $t);
       }
@@ -159,10 +163,10 @@ class GTK::Stack is GTK::Container {
   method vhomogeneous is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_stack_get_vhomogeneous($!s);
+        so gtk_stack_get_vhomogeneous($!s);
       },
       STORE => sub ($, Int() $vhomogeneous is copy) {
-        my uint32 $vh = $vhomogeneous;
+        my gboolean $vh = $vhomogeneous.so.Int;
 
         gtk_stack_set_vhomogeneous($!s, $vh);
       }

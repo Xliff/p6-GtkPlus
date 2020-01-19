@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Types;
 use GTK::Raw::Separator;
@@ -31,20 +29,20 @@ class GTK::Separator is GTK::Widget {
       when SeparatorAncestry {
         $!s = do {
           when GtkSeparator {
-            $to-parent = nativecast(GtkWidget, $_);
+            $to-parent = cast(GtkWidget, $_);
             $_;
           }
           when GtkOrientable {
             $!or = $_;                                    # GTK::Roles::Orientable
-            $to-parent = nativecast(GtkWidget, $_);
-            nativecast(GtkSeparator, $_);
+            $to-parent = cast(GtkWidget, $_);
+            cast(GtkSeparator, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkSeparator, $_);
+            cast(GtkSeparator, $_);
           }
         };
-        $!or //= nativecast(GtkOrientable, $separator);   # GTK::Roles::Orientable
+        $!or //= cast(GtkOrientable, $separator);   # GTK::Roles::Orientable
         self.setWidget($to-parent);
       }
       when GTK::Separator {
@@ -53,40 +51,48 @@ class GTK::Separator is GTK::Widget {
       }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkSeparator is also<Separator> { $!s }
 
-  multi method new (SeparatorAncestry $separator) {
+  method GTK::Raw::Definitions::GtkSeparator
+    is also<
+      Separator
+      GtkSeparatore
+    >
+  { $!s }
+
+  multi method new (SeparatorAncestry $separator, :$ref = True) {
+    return Nil unless $separator;
+
     my $o = self.bless(:$separator);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new(:$horizontal, :$vertical)  {
-    # Single line HEREDOC that spans more than one in the source!
     die qq:to/D/ unless $horizontal ^^ $vertical;
-Please specify only ONE of \$horizontal and \$vertical when creating a {
-}GTK::Separator"
-D
+      Please specify only ONE of \$horizontal and \$vertical when { ''
+      }creating a GTK::Separator"
+      D
 
     my guint $o = do {
       when $horizontal { GTK_ORIENTATION_HORIZONTAL.Int; }
       when $vertical   {   GTK_ORIENTATION_VERTICAL.Int; }
     };
-
     my $separator = gtk_separator_new($o);
-    self.bless(:$separator);
+
+    $separator ?? self.bless(:$separator) !! Nil;
   }
 
   method new-h-separator(GTK::Separator:U: ) is also<new_h_separator> {
     my guint $o = GTK_ORIENTATION_HORIZONTAL.Int;
     my $separator = gtk_separator_new($o);
-    self.bless(:$separator);
+
+    $separator ?? self.bless(:$separator) !! Nil;
   }
 
   method new-v-separator(GTK::Separator:U: ) is also<new_v_separator> {
     my gint $o = GTK_ORIENTATION_VERTICAL.Int;
     my $separator = gtk_separator_new($o);
-    self.bless(:$separator);
+    
+    $separator ?? self.bless(:$separator) !! Nil;
   }
 
   method get_type is also<get-type> {

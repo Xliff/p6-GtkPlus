@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Types;
 
@@ -27,12 +25,12 @@ class GTK::ShortcutsShortcut is GTK::Box {
       when ShortcutsShortcutAncestry {
         $!s = do {
           when GtkShortcutsShortcut  {
-            $to-parent = nativecast(GtkBox, $_);
+            $to-parent = cast(GtkBox, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkShortcutsShortcut, $_);
+            cast(GtkShortcutsShortcut, $_);
           }
         }
         self.setBox($to-parent);
@@ -45,12 +43,17 @@ class GTK::ShortcutsShortcut is GTK::Box {
   }
 
   method GTK::Raw::Definitions::GtkShortcutsShortcut
-    is also<ShortcutsShortcut>
+    is also<
+      ShortcutsShortcut
+      GtkShortcutsShortcut
+    >
   { $!s }
 
-  method new (ShortcutsShortcutAncestry $shortcut) {
+  method new (ShortcutsShortcutAncestry $shortcut, :$ref = True) {
+    return Nil unless $shortcut;
+
     my $o = self.bless(:$shortcut);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
 
@@ -116,7 +119,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
         GtkTextDirectionEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = self.RESOLVE-UINT($val);
+        $gv.enum = $val;
         self.prop_set('direction', $gv);
       }
     );
@@ -128,7 +131,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new( self.prop_get('icon', $gv) );
-        nativecast(GIcon, $gv.pointer);
+        cast(GIcon, $gv.pointer);
       },
       STORE => -> $, GIcon $val is copy {
         $gv.pointer = $val;
@@ -146,7 +149,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
         $gv.boolean;
       },
       STORE => -> $, $val is copy {
-        $gv.boolean = self.RESOLVE-BOOLEAN($val);
+        $gv.boolean = $val;
         self.prop_set('icon-set', $gv);
       }
     );
@@ -161,7 +164,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
         GtkShortcutTypeEnum( $gv.enum );
       },
       STORE => -> $, $val is copy {
-        $gv.enum = self.RESOLVE-UINT($val);
+        $gv.enum = $val;
         self.prop_set('shortcut-type', $gv);
       }
     );
@@ -191,7 +194,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('subtitle-set', $gv);
       }
     );

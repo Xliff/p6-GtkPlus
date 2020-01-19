@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Types;
 
@@ -28,12 +26,12 @@ class GTK::ShortcutsGroup is GTK::Box {
       when ShortcutsGroupAncestry {
         $!sg = do {
           when GtkShortcutsGroup {
-            $to-parent = nativecast(GtkBox, $_);
+            $to-parent = cast(GtkBox, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkShortcutsGroup, $_);
+            cast(GtkShortcutsGroup, $_);
           }
         }
         self.setBox($to-parent);
@@ -45,11 +43,18 @@ class GTK::ShortcutsGroup is GTK::Box {
     }
   }
 
-  method GTK::Raw::Definitions::GtkShortcutsGroup is also<ShortcutsGroup> { $!sg }
+  method GTK::Raw::Definitions::GtkShortcutsGroup
+    is also<
+      ShortcutsGroup
+      GtkShortcutsGroup
+    >
+  { $!sg }
 
-  method new (ShortcutsGroupAncestry $group) {
+  method new (ShortcutsGroupAncestry $group, :$ref = True) {
+    return Nil unless $group;
+
     my $o = self.bless(:$group);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
 

@@ -1,15 +1,14 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Types;
 
 use GLib::Value;
 use GTK::Window;
 
-our subset ShortcutsWindowAncestry when GtkShortcutsWindow | WindowAncestry;
+our subset ShortcutsWindowAncestry is export
+  when GtkShortcutsWindow | WindowAncestry;
 
 class GTK::ShortcutsWindow is GTK::Window {
   has GtkShortcutsWindow $!sw is implementor;
@@ -26,12 +25,12 @@ class GTK::ShortcutsWindow is GTK::Window {
       when ShortcutsWindowAncestry {
         $!sw = do {
           when GtkShortcutsWindow {
-            $to-parent = nativecast(GtkWindow, $_);
+            $to-parent = cast(GtkWindow, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkShortcutsWindow, $_);
+            cast(GtkShortcutsWindow, $_);
           }
         }
         self.setWindow($to-parent);
@@ -43,8 +42,12 @@ class GTK::ShortcutsWindow is GTK::Window {
     }
   }
 
-  method new (ShortcutsWindowAncestry $shortcuts) {
-    self.bless(:$shortcuts);
+  method new (ShortcutsWindowAncestry $shortcuts, :$ref = True) {
+    return Nil unless $shortcuts;
+
+    my $o = self.bless(:$shortcuts);
+    $o.ref if $ref;
+    $o;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

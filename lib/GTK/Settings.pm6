@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-
 use GTK::Raw::Settings;
 use GTK::Raw::Types;
 
@@ -1426,16 +1425,20 @@ class GTK::Settings {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_default {
     my $settings = gtk_settings_get_default();
-    self.bless(:$settings);
+
+    $settings ?? self.bless(:$settings) !! Nil;
   }
 
   method get_for_screen(GdkScreen() $screen) {
     my $settings = gtk_settings_get_for_screen($screen);
-    self.bless(:$settings);
+
+    $settings ?? self.bless(:$settings) !! Nil;
   }
 
   method get_type {
-    gtk_settings_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_settings_get_type, $n, $t );
   }
 
   method gtk_rc_property_parse_border (

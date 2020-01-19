@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Spinner;
 use GTK::Raw::Types;
@@ -27,12 +25,12 @@ class GTK::Spinner is GTK::Widget {
       when SpinnerAncestry {
         $!spin = do {
           when GtkSpinner {
-            $to-parent = nativecast(GtkWidget, $_);
+            $to-parent = cast(GtkWidget, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkSpinner, $_);
+            cast(GtkSpinner, $_);
           }
         };
         self.setWidget($to-parent);
@@ -43,17 +41,25 @@ class GTK::Spinner is GTK::Widget {
       }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkSpinner is also<Spinner> { $!spin }
 
-  multi method new (SpinnerAncestry $spin) {
+  method GTK::Raw::Definitions::GtkSpinner
+    is also<
+      Spinner
+      GtkSpinner
+    >
+  { $!spin }
+
+  multi method new (SpinnerAncestry $spin, :$ref = True) {
+    return Nil unless $spin;
+
     my $o = self.bless(:$spin);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $spin = gtk_spinner_new();
-    self.bless(:$spin);
+
+    $spin ?? self.bless(:$spin) !! Nil;
   }
 
 
@@ -66,6 +72,7 @@ class GTK::Spinner is GTK::Widget {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_spinner_get_type, $n, $t );
   }
 

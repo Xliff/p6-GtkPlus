@@ -22,8 +22,8 @@ class GTK::SizeGroup {
 
   method GTK::Raw::Definitions::GtkSizeGroup
     is also<
-      GtkSizeGroup
       SizeGroup
+      GtkSizeGroup
     >
   { $!sg }
 

@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GTK::Raw::SpinButton;
 use GTK::Raw::Types;
@@ -36,17 +35,17 @@ class GTK::SpinButton is GTK::Entry {
       when Ancestry {
         $!sp = do {
           when GtkSpinButton {
-            $to-parent = nativecast(GtkEntry, $_);
+            $to-parent = cast(GtkEntry, $_);
             $_;
           }
           when GtkOrientable {
             $!or = $_;                                  # GTK::Roles::Orientable
-            $to-parent = nativecast(GtkEntry, $_);
-            nativecast(GtkSpinButton, $_);
+            $to-parent = cast(GtkEntry, $_);
+            cast(GtkSpinButton, $_);
           }
           when GtkWidget {
             $to-parent = $_;
-            nativecast(GtkSpinButton, $_);
+            cast(GtkSpinButton, $_);
           }
         };
         self.setEntry($_);
@@ -56,7 +55,7 @@ class GTK::SpinButton is GTK::Entry {
       default {
       }
     }
-    $!or //= nativecast(GtkOrientable, $!sp)            # GTK::Roles::Orientable
+    $!or //= cast(GtkOrientable, $!sp)            # GTK::Roles::Orientable
   }
 
   submethod DESTROY {
@@ -128,10 +127,15 @@ class GTK::SpinButton is GTK::Entry {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method adjustment is rw {
+  method adjustment (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Adjustment.new( gtk_spin_button_get_adjustment($!sp) );
+        my $a = gtk_spin_button_get_adjustment($!sp);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_spin_button_set_adjustment($!sp, $adjustment);
@@ -187,7 +191,7 @@ class GTK::SpinButton is GTK::Entry {
         );
       },
       STORE => sub ($, Int() $policy is copy) {
-        my gboolean $p = $policy.so.Int;
+        my GtkSpinButtonUpdatePolicy $p = $policy;
 
         gtk_spin_button_set_update_policy($!sp, $p);
       }
@@ -233,16 +237,32 @@ class GTK::SpinButton is GTK::Entry {
     gtk_spin_button_configure($!sp, $adjustment, $cr, $d);
   }
 
-  method get_increments (Num() $step, Num() $page) is also<get-increments> {
-    my gdouble ($s, $p) = ($step, $page);
+  proto method get_increments (|)
+    is also<get-increments>
+  { * }
+
+  multi method get_increments {
+    samewith($, $);
+  }
+  multi method get_increments ($step is rw, $page is rw)  {
+    my gdouble ($s, $p) = 0x0 xx 2;
 
     gtk_spin_button_get_increments($!sp, $s, $p);
+    ($step, $page) = ($s, $p);
   }
 
-  method get_range (Num() $min, Num() $max) is also<get-range> {
-    my gdouble ($mn, $mx) = ($min, $max);
+  proto method get_range (|)
+    is also<get-range>
+  {  }
+
+  multi method get_range {
+    samewith($, $);
+  }
+  multi method get_range ($min is rw, $max is rw) {
+    my gdouble ($mn, $mx) = 0e0 xx 2;
 
     gtk_spin_button_get_range($!sp, $mn, $mx);
+    ($min, $max) = ($mn, $mx);
   }
 
   method get_type is also<get-type> {

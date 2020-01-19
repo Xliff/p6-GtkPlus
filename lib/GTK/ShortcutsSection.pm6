@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Types;
 
@@ -27,12 +25,12 @@ class GTK::ShortcutsSection is GTK::Box {
       when ShortcutsSectionAncestry {
         $!ss = do {
           when GtkShortcutsSection  {
-            $to-parent = nativecast(GtkBox, $_);
+            $to-parent = cast(GtkBox, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkShortcutsSection, $_);
+            cast(GtkShortcutsSection, $_);
           }
         }
         self.setBox($to-parent);
@@ -44,9 +42,15 @@ class GTK::ShortcutsSection is GTK::Box {
     }
   }
 
-  method new (ShortcutsSectionAncestry $section) {
+  method GTK::Raw::Definitions::GtkShortcutsSection
+    is also<GtkShortcutsSection>
+  { $!ss }
+
+  method new (ShortcutsSectionAncestry $section, :$ref = True) {
+    return Nil unless $section;
+
     my $o = self.bless(:$section);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
 
@@ -74,7 +78,7 @@ class GTK::ShortcutsSection is GTK::Box {
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.uint = self.RESOLVE-UINT($val);
+        $gv.uint = $val;
         self.prop_set('max-height', $gv);
       }
     );
