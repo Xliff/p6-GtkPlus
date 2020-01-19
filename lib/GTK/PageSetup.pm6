@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::PageSetup;
 use GTK::Raw::Types;
 
@@ -18,14 +17,20 @@ class GTK::PageSetup {
     $!ps = $page;
   }
 
-  method GTK::Raw::Definitions::GtkPageSetup is also<PageSetup> { $!ps }
+  method GTK::Raw::Definitions::GtkPageSetup
+    is also<
+      PageSetup
+      GtkPageSetup
+    >
+  { $!ps }
 
   multi method new (GtkPageSetup $page) {
-    self.bless(:$page);
+    $page ?? self.bless(:$page) !! Nil;
   }
   multi method new {
     my $page = gtk_page_setup_new();
-    self.bless(:$page);
+
+    $page ?? self.bless(:$page) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -37,8 +42,9 @@ class GTK::PageSetup {
       FETCH => sub ($) {
         GtkPageOrientationEnum( gtk_page_setup_get_orientation($!ps) );
       },
-      STORE => sub ($, uint32 $orientation is copy) {
-        my guint $o = self.RESOLVE-UINT($orientation);
+      STORE => sub ($, Int() $orientation is copy) {
+        my guint $o = $orientation;
+
         gtk_page_setup_set_orientation($!ps, $o);
       }
     );
@@ -60,8 +66,13 @@ class GTK::PageSetup {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method copy {
-    gtk_page_setup_copy($!ps);
+  method copy (:$raw = False) {
+    my $ps = gtk_page_setup_copy($!ps);
+
+    $ps ??
+      ( $raw ?? $ps !! GTK::PageSetup.new($ps, :!ref) )
+      !!
+      Nil;
   }
 
   method get_bottom_margin (Int() $unit) is also<get-bottom-margin> {
@@ -97,7 +108,9 @@ class GTK::PageSetup {
   }
 
   method get_type is also<get-type> {
-    gtk_page_setup_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, gtk_page_setup_get_type, $n, $t );
   }
 
   method load_file (
@@ -108,29 +121,32 @@ class GTK::PageSetup {
   {
     clear_error;
     my $rc = gtk_page_setup_load_file($!ps, $file_name, $error);
-    $ERROR = $error[0] with $error[0];
+    set_error($error);
     $rc;
   }
 
   method load_key_file (
-    GKeyFile $key_file,
+    GKeyFile() $key_file,
     Str() $group_name,
-    CArray[Pointer[GError]] $error = gerror();
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<load-key-file>
   {
     clear_error;
     my $rc = gtk_page_setup_load_key_file(
-      $!ps, 
-      $key_file, 
-      $group_name, 
+      $!ps,
+      $key_file,
+      $group_name,
       $error
     );
-    $ERROR = $error[0] with $error[0];
+    set_error($error);
     $rc;
   }
 
-  method new_from_file (Str() $filename, GError $error = GError)
+  method new_from_file (
+    Str() $filename,
+    CArray[Pointer[GError]] $error = gerror
+  )
     is also<new-from-file>
   {
     gtk_page_setup_new_from_file($filename, $error);
@@ -149,11 +165,11 @@ class GTK::PageSetup {
   {
     clear_error;
     my $rc = gtk_page_setup_new_from_key_file(
-      $filename, 
-      $group_name, 
+      $filename,
+      $group_name,
       $error
     );
-    $ERROR = $error[0] with $error[0];
+    set_error($error);
     $rc;
   }
 
@@ -161,6 +177,7 @@ class GTK::PageSetup {
     is also<set-bottom-margin>
   {
     my gdouble $m = $margin;
+
     gtk_page_setup_set_bottom_margin($!ps, $margin, $unit);
   }
 
@@ -168,6 +185,7 @@ class GTK::PageSetup {
     is also<set-left-margin>
   {
     my gdouble $m = $margin;
+
     gtk_page_setup_set_left_margin($!ps, $margin, $unit);
   }
 
@@ -181,6 +199,7 @@ class GTK::PageSetup {
     is also<set-right-margin>
   {
     my gdouble $m = $margin;
+
     gtk_page_setup_set_right_margin($!ps, $margin, $unit);
   }
 
@@ -188,10 +207,16 @@ class GTK::PageSetup {
     is also<set-top-margin>
   {
     my gdouble $m = $margin;
+
     gtk_page_setup_set_top_margin($!ps, $margin, $unit);
   }
 
-  method to_file (Str() $file_name, GError $error) is also<to-file> {
+  method to_file (
+    Str() $file_name,
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<to-file>
+  {
     gtk_page_setup_to_file($!ps, $file_name, $error);
   }
 

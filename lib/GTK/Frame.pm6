@@ -8,7 +8,6 @@ use GTK::Raw::Types;
 
 use GLib::Value;
 use GTK::Bin;
-use GTK::Widget;
 
 our subset FrameAncestry is export where GtkFrame | BinAncestry;
 
@@ -114,7 +113,7 @@ class GTK::Frame is GTK::Bin {
       FETCH => sub ($) {
         my $w = gtk_frame_get_label_widget($!f);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_frame_set_label_widget($!f, $label_widget);

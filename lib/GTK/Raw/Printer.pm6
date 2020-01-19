@@ -98,7 +98,7 @@ sub gtk_printer_get_type ()
   { * }
 
 sub gtk_enumerate_printers (
-  GtkPrinterFunc $func,
+  &func (GtkPrinter, gpointer --> gboolean),
   gpointer $data,
   GDestroyNotify $destroy,
   gboolean $wait

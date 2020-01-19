@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::PrintSettings;
 use GTK::Raw::Types;
 
@@ -20,8 +19,8 @@ class GTK::PrintSettings {
     self!setObject($!prnset = $settings);
   }
 
-  method GTK::Raw::Definitions::GtkPrintSettings 
-    is also<PrintSettings> 
+  method GTK::Raw::Definitions::GtkPrintSettings
+    is also<PrintSettings>
     { $!prnset }
 
   multi method new (GtkPrintSettings $settings) {
@@ -35,8 +34,8 @@ class GTK::PrintSettings {
   method new_from_file (
     Str() $filename,
     CArray[Pointer[GError]] $error = gerror()
-  ) 
-    is also<new-from-file> 
+  )
+    is also<new-from-file>
   {
     $ERROR = Nil;
     my $rc = gtk_print_settings_new_from_file($filename, $error);
@@ -53,8 +52,8 @@ class GTK::PrintSettings {
     Str() $keyfile,
     Str() $group_name,
     CArray[Pointer[GError]] $error = gerror()
-  ) 
-    is also<new-from-key-file> 
+  )
+    is also<new-from-key-file>
   {
     $ERROR = Nil;
     my $settings = gtk_print_settings_new_from_key_file(
@@ -474,7 +473,7 @@ class GTK::PrintSettings {
   #        does not yet support arrays of structs.
   # TODO - NEED ARRAY OF CSTRUCTS
   method set_page_ranges (
-    GtkPageRange $page_ranges, 
+    GtkPageRange $page_ranges,
     Int() $num_ranges
   )
     is also<set-page-ranges>
@@ -511,8 +510,8 @@ class GTK::PrintSettings {
     my @i = ($resolution_x, $resolution_y);
     my gint ($rx, $ry) = self.RESOLVE-INT(@i);
     gtk_print_settings_set_resolution_xy(
-      $!prnset, 
-      $resolution_x, 
+      $!prnset,
+      $resolution_x,
       $resolution_y
     );
   }

@@ -256,7 +256,7 @@ class GTK::Label is GTK::Widget {
       FETCH => sub ($) {
         my $w = gtk_label_get_mnemonic_widget($!l);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $widget is copy) {
         gtk_label_set_mnemonic_widget($!l, $widget);

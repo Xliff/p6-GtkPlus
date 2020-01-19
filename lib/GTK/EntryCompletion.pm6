@@ -5,8 +5,6 @@ use Method::Also;
 use GTK::Raw::EntryCompletion;
 use GTK::Raw::Types;
 
-use GTK::Widget;
-
 use GLib::Roles::Object;
 use GTK::Roles::CellLayout;
 use GTK::Roles::Signals::Generic;
@@ -224,7 +222,7 @@ class GTK::EntryCompletion {
   method get_entry (:$raw = False, :$widget = False) is also<get-entry> {
     my $w = gtk_entry_completion_get_entry($!ec);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_type is also<get-type> {

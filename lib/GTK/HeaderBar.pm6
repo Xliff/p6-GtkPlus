@@ -6,7 +6,6 @@ use GTK::Raw::HeaderBar;
 use GTK::Raw::Types;
 
 use GTK::Container;
-use GTK::Widget;
 
 our subset HeaderBarAncestry is export
   where GtkHeaderBar | ContainerAncestry;
@@ -71,7 +70,7 @@ class GTK::HeaderBar is GTK::Container {
       FETCH => sub ($) {
         my $w = gtk_header_bar_get_custom_title($!hb);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $title_widget is copy) {
         gtk_header_bar_set_custom_title($!hb, $title_widget);

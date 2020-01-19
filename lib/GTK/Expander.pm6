@@ -6,7 +6,6 @@ use GTK::Raw::Expander;
 use GTK::Raw::Types;
 
 use GTK::Bin;
-use GTK::Widget;
 
 our subset ExpanderAncestry is export where GtkExpander | BinAncestry;
 
@@ -141,7 +140,7 @@ class GTK::Expander is GTK::Bin {
       FETCH => sub ($) {
         my $w = gtk_expander_get_label_widget($!e);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_expander_set_label_widget($!e, $label_widget);

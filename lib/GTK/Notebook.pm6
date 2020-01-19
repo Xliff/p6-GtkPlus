@@ -7,7 +7,6 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 use GTK::Label;
-use GTK::Widget;
 
 use GTK::Roles::Signals::Notebook;
 
@@ -287,7 +286,7 @@ class GTK::Notebook is GTK::Container {
     my uint32 $pt = $pack_type;
     my $w = gtk_notebook_get_action_widget($!n, $pt);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_menu_label (GtkWidget() $child, :$raw = False, :$widget = False)
@@ -295,7 +294,7 @@ class GTK::Notebook is GTK::Container {
   {
     my $w = gtk_notebook_get_menu_label($!n, $child);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_menu_label_text (GtkWidget() $child)
@@ -321,7 +320,7 @@ class GTK::Notebook is GTK::Container {
     my gint $pn = $page_num;
     my $w = gtk_notebook_get_nth_page($!n, $pn);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_tab_detachable (GtkWidget() $child)
@@ -339,7 +338,7 @@ class GTK::Notebook is GTK::Container {
   {
     my $w = gtk_notebook_get_tab_label($!n, $child);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_tab_label_text (GtkWidget() $child)

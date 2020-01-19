@@ -2341,6 +2341,10 @@ class GTK::Widget {
     (self.get_allocated_width, self.get_allocated_height);
   }
 
+  method ReturnWidget ($w, $raw, $widget) {
+    ReturnWidget($w, $raw, $widget);
+  }
+  
 }
 
 sub ReturnWidget ($w, $raw, $widget) is export {

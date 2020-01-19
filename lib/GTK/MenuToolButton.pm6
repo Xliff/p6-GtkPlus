@@ -6,7 +6,6 @@ use GTK::Raw::MenuToolButton;
 use GTK::Raw::Types;
 
 use GTK::ToolButton;
-use GTK::Widget;
 
 our subset MenuToolButtonAncestry is export
   where GtkMenuToolButton | ToolButtonAncestry;
@@ -72,7 +71,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
       FETCH => sub ($) {
         my $w = gtk_menu_tool_button_get_menu($!mtb);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $menu is copy) {
         gtk_menu_tool_button_set_menu($!mtb, $menu);

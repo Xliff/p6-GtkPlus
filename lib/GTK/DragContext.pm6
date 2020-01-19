@@ -5,8 +5,6 @@ use Method::Also;
 use GTK::Raw::DnD;
 use GTK::Raw::Types;
 
-use GTK::Widget;
-
 use GLib::Roles::Object;
 
 # TO BE USED WITH GDK::DragContext.
@@ -65,7 +63,7 @@ class GTK::DragContext {
     # up to the caller.
     my $w = gtk_drag_get_source_widget($!dc);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method set_icon_default is also<set-icon-default> {

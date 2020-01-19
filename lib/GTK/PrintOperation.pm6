@@ -127,12 +127,15 @@ class GTK::PrintOperation {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method default_page_setup is rw is also<default-page-setup> {
+  method default_page_setup (:$raw = False) is rw is also<default-page-setup> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::PageSetup.new(
-          gtk_print_operation_get_default_page_setup($!po)
-        );
+        my $ps = gtk_print_operation_get_default_page_setup($!po);
+
+        $ps ??
+          ( $raw ?? $ps !! GTK::PageSetup.new($ps) )
+          !!
+          Nil
       },
       STORE => sub ($, GtkPageSetup() $default_page_setup is copy) {
         gtk_print_operation_set_default_page_setup(
@@ -169,12 +172,15 @@ class GTK::PrintOperation {
     );
   }
 
-  method print_settings is rw is also<print-settings> {
+  method print_settings (:$raw = False) is rw is also<print-settings> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::PrintSettings.new(
-          gtk_print_operation_get_print_settings($!po)
-        );
+        my $ps = gtk_print_operation_get_print_settings($!po);
+
+        $ps ??
+          ( $raw ?? $ps !! GTK::PrintSettings.new($ps) )
+          !!
+          Nil
       },
       STORE => sub ($, GtkPrintSettings() $print_settings is copy) {
         gtk_print_operation_set_print_settings(
@@ -436,7 +442,7 @@ class GTK::PrintOperation {
     GtkWindow() $parent,
     GtkPageSetup() $page_setup,
     GtkPrintSettings() $settings,
-    GtkPageSetupDoneFunc $done_cb,
+    &done_cb,
     gpointer $data = gpointer
   )
     is also<run-page-setup-dialog-async>
@@ -445,7 +451,7 @@ class GTK::PrintOperation {
       $parent,
       $page_setup,
       $settings,
-      $done_cb,
+      &done_cb,
       $data
     );
   }
@@ -513,12 +519,13 @@ class GTK::PrintOperation {
   }
 
   method set_allow_async (Int() $allow_async) is also<set-allow-async> {
-    my gboolean $aa = $allow_async;
+    my gboolean $aa = $allow_async.so.Int;
+
     gtk_print_operation_set_allow_async($!po, $aa);
   }
 
   method set_current_page (Int() $current_page) is also<set-current-page> {
-    my gint $cp = $current_page.so.Int;
+    my gint $cp = $current_page;
 
     gtk_print_operation_set_current_page($!po, $cp);
   }

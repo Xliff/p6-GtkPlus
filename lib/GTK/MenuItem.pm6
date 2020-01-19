@@ -8,7 +8,6 @@ use GTK::Raw::Types;
 use GTK::Roles::Actionable;
 
 use GTK::Bin;
-use GTK::Widget;
 
 our subset MenuItemAncestry is export
   where GtkMenuItem | GtkActionable | BinAncestry;
@@ -240,7 +239,7 @@ class GTK::MenuItem is GTK::Bin {
       FETCH => sub ($) {
         my $w = gtk_menu_item_get_submenu($!mi);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, WidgetOrObject $submenu is copy) {
         self.set_end($submenu);

@@ -7,7 +7,6 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 use GTK::MenuItem;
-use GTK::Widget;
 
 use GTK::Roles::Signals::MenuShell;
 
@@ -176,7 +175,7 @@ class GTK::MenuShell is GTK::Container {
   {
     my $w = gtk_menu_shell_get_parent_shell($!ms);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_selected_item (:$raw = False, :$widget = False)
@@ -184,7 +183,7 @@ class GTK::MenuShell is GTK::Container {
   {
     my $w = gtk_menu_shell_get_selected_item($!ms);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_type is also<get-type> {

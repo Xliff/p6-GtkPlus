@@ -6,7 +6,6 @@ use GTK::Raw::ListBox;
 use GTK::Raw::Types;
 
 use GTK::Bin;
-use GTK::Widget;
 
 use GTK::Roles::Actionable;
 
@@ -102,7 +101,7 @@ class GTK::ListBoxRow is GTK::Bin {
       FETCH => sub ($) {
         my $w = gtk_list_box_row_get_header($!lbr);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $header is copy) {
         gtk_list_box_row_set_header($!lbr, $header);

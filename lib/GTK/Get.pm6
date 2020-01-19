@@ -6,7 +6,6 @@ use GTK::Raw::Types;
 use GTK::Raw::Main;
 
 use GDK::Event;
-use GTK::Widget;
 
 use GLib::Roles::StaticClass;
 
@@ -66,7 +65,7 @@ class GTK::Get {
   {
     my $w = gtk_get_event_widget($e);
 
-    ReturnWidget($w, $raw, $widget);
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method interface_age is also<interface-age> {
