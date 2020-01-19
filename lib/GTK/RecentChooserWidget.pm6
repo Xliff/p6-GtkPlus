@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-
 use GTK::Raw::Types;
 
 use GTK::Roles::RecentChooser;
@@ -19,7 +18,7 @@ class GTK::RecentChooserWidget is GTK::Box {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -52,18 +51,29 @@ class GTK::RecentChooserWidget is GTK::Box {
     }
   }
 
-  method new {
-    self.bless( recentwidget => gtk_recent_chooser_widget_new() );
+  multi method new (RecentChooserWidgetAncestry $recentwidget, :$ref = True) {
+    return Nil unless $recentwidget;
+
+    my $o = self.bless( :$recentwidget );
+    $o.ref if $ref;
+    $o;
   }
 
-  method new_for_manager (GtkRecentManager() $manager) {
-    self.bless(
-      recentwidget => gtk_recent_chooser_widget_new_for_manager($manager)
-    );
+  multi method new {
+    my $recentwidget = gtk_recent_chooser_widget_new();
+
+    $recentwidget ?? self.bless( :$recentwidget ) !! Nil;
+  }
+
+  multi method new_for_manager (GtkRecentManager() $manager) {
+    my $recentwidget = gtk_recent_chooser_widget_new_for_manager($manager);
+
+    $recentwidget ?? self.bless( :$recentwidget ) !! Nil;
   }
 
   method get_type {
     state ($n, $t);
+
     unstable_get_type(
       self.^name,
       &gtk_recent_chooser_widget_get_type,

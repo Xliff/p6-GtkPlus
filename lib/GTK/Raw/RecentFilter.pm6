@@ -23,7 +23,7 @@ sub gtk_recent_filter_add_application (
 sub gtk_recent_filter_add_custom (
   GtkRecentFilter $filter,
   uint32 $needed,               # GtkRecentFilterFlags $needed,
-  GtkRecentFilterFunc $func,
+  &func (GtkRecentFilterInfo, Pointer --> gboolean),
   gpointer $data,
   GDestroyNotify $data_destroy
 )
@@ -55,7 +55,7 @@ sub gtk_recent_filter_add_pixbuf_formats (GtkRecentFilter $filter)
   { * }
 
 sub gtk_recent_filter_filter (
-  GtkRecentFilter $filter, 
+  GtkRecentFilter $filter,
   GtkRecentFilterInfo $filter_info
 )
   returns uint32

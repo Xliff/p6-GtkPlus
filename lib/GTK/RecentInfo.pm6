@@ -4,10 +4,10 @@ use Method::Also;
 use NativeCall;
 
 use GTK::Raw::Types;
-
 use GTK::Raw::RecentInfo;
 
 use GLib::Roles::Object;
+use GIO::Roles::Icon;
 
 # STRUCT
 class GTK::RecentInfo {
@@ -17,16 +17,25 @@ class GTK::RecentInfo {
     $!ri = $info;
   }
 
+  method new (GtkRecentInfo $info) {
+    $info ?? self.bless( :$info ) !! Nil;
+  }
+
   method create_app_info (
     Str() $app_name,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror(),
+    :$raw = False
   )
     is also<create-app-info>
   {
     clear_error;
     my $rc = gtk_recent_info_create_app_info($!ri, $app_name, $error);
     set_error($error);
-    $rc;
+
+    $rc ??
+      ( $raw ?? $rc !! GLib::AppInfo.new($rc) )
+      !!
+      Nil;
   }
 
   method exists {
@@ -61,6 +70,7 @@ class GTK::RecentInfo {
   {
     my guint $c = $count;
     my uint64 $t = $time;
+
     gtk_recent_info_get_application_info($!ri, $app_name, $app_exec, $c, $t);
   }
 
@@ -69,15 +79,13 @@ class GTK::RecentInfo {
   { * }
 
   multi method get_applications is also<applications> {
-    my $l = 0;
-    samewith($l);
+    samewith($);
   }
-  multi method get_applications (Int() $length is rw) {
-    my uint64 $l;
+  multi method get_applications ($length is rw) {
+    my uint64 $l = 0;
     my CArray[Str] $apps = gtk_recent_info_get_applications($!ri, $l);
-    my @apps;
-    @apps[$_] = $apps[$_] for ^($length = $l);
-    @apps;
+
+    CArrayToArray($apps, $length = $l)
   }
 
   method get_description
@@ -99,13 +107,18 @@ class GTK::RecentInfo {
     gtk_recent_info_get_display_name($!ri);
   }
 
-  method get_gicon
+  method get_gicon (:$raw = False)
     is also<
       get-gicon
       gicon
     >
   {
-    gtk_recent_info_get_gicon($!ri);
+    my $icon = gtk_recent_info_get_gicon($!ri);
+
+    $icon ??
+      ( $raw ?? $icon !! GLib::Roles::Icon.new-icon-obj($icon) )
+      !!
+      Nil;
   }
 
   proto method get_groups (|)
@@ -113,20 +126,23 @@ class GTK::RecentInfo {
   { * }
 
   multi method get_groups is also<groups> {
-    my $i = 0;
-    samewith($i);
+    samewith($);
   }
   multi method get_groups (Int() $length is rw)  {
-    my gsize $l = $length;
+    my gsize $l = 0;
     my CArray[Str] $g = gtk_recent_info_get_groups($!ri, $l);
-    my @g;
-    @g[$_] = $g[$_] for ^($length = $l);
-    @g;
+
+    CStringArrayToArray($g, $length = $l);
   }
 
-  method get_icon (Int() $size) is also<get-icon> {
+  method get_icon (Int() $size, :$raw = False) is also<get-icon> {
     my gint $s = $size;
-    GDK::Pixbuf.new( gtk_recent_info_get_icon($!ri, $s) );
+    my $p = gtk_recent_info_get_icon($!ri, $s);
+
+    $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil;
   }
 
   method get_mime_type
@@ -170,6 +186,7 @@ class GTK::RecentInfo {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &gtk_recent_info_get_type, $n, $t );
   }
 

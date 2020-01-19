@@ -21,6 +21,7 @@ GIO::Raw::Structs
 GIO::Raw::Subs
 GIO::Roles::ActionMap
 GIO::Roles::GFile
+GIO::Roles::Icon
 GLib::GList
 GLib::GSList
 GLib::Raw::Definitions

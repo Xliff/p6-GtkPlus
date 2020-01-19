@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::RecentFilter;
 use GTK::Raw::Types;
@@ -18,16 +16,20 @@ class GTK::RecentFilter {
 
   submethod BUILD(:$filter) {
     self!setObject($!rf = $filter);           # GLib::Roles::Object
-    $!b  = nativecast(GtkBuildable, $!rf);    # GTK::Roles::Buildable
+    $!b  = cast(GtkBuildable, $!rf);    # GTK::Roles::Buildable
   }
-  
+
   method GTK::Raw::Definitions::GtkRecentFilter
-    is also<RecentFilter>
-    { $!rf }
+    is also<
+      RecentFilter
+      GtkRecentFilter
+    >
+  { $!rf }
 
   method new {
     my $filter = gtk_recent_filter_new();
-    self.bless(:$filter);
+
+    $filter ?? self.bless(:$filter) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -41,7 +43,8 @@ class GTK::RecentFilter {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_age (Int() $days) is also<add-age> {
-    my gint $d = self.RESOLVE-INT($days);
+    my gint $d = $days;
+
     gtk_recent_filter_add_age($!rf, $d);
   }
 
@@ -51,14 +54,15 @@ class GTK::RecentFilter {
 
   method add_custom (
     Int() $needed,
-    GtkRecentFilterFunc $func,
-    gpointer $data = gpointer,
+    &func,
+    gpointer $data               = gpointer,
     GDestroyNotify $data_destroy = GDestroyNotify
-  ) 
-    is also<add-custom> 
+  )
+    is also<add-custom>
   {
-    my guint $n = self.RESOLVE-UINT($needed);
-    gtk_recent_filter_add_custom($!rf, $n, $func, $data, $data_destroy);
+    my guint $n = $needed;
+
+    gtk_recent_filter_add_custom($!rf, $n, &func, $data, $data_destroy);
   }
 
   method add_group (Str() $group) is also<add-group> {
@@ -77,7 +81,7 @@ class GTK::RecentFilter {
     gtk_recent_filter_add_pixbuf_formats($!rf);
   }
 
-  method filter (GtkRecentFilterInfo $filter_info) {
+  method filter (GtkRecentFilterInfo() $filter_info) {
     gtk_recent_filter_filter($!rf, $filter_info);
   }
 
@@ -86,7 +90,9 @@ class GTK::RecentFilter {
   }
 
   method get_type is also<get-type> {
-    gtk_recent_filter_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_recent_filter_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

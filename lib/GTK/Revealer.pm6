@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::Revealer;
 use GTK::Raw::Types;
@@ -18,7 +16,7 @@ class GTK::Revealer is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -28,12 +26,12 @@ class GTK::Revealer is GTK::Bin {
       when RevealerAncestry {
         $!r = do {
           when GtkRevealer {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkRevealer, $_);
+            cast(GtkRevealer, $_);
           }
         }
         self.setBin($to-parent);
@@ -45,14 +43,15 @@ class GTK::Revealer is GTK::Bin {
     }
   }
 
-  multi method new (RevealerAncestry $revealer) {
+  multi method new (RevealerAncestry $revealer, :$ref = True) {
     my $o = self.bless(:$revealer);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $revealer = gtk_revealer_new();
-    self.bless(:$revealer);
+
+    $revealer ?? self.bless(:$revealer) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -82,7 +81,8 @@ class GTK::Revealer is GTK::Bin {
         so gtk_revealer_get_reveal_child($!r);
       },
       STORE => sub ($, $reveal_child is copy) {
-        my gboolean $rc = self.RESOLVE-BOOL($reveal_child);
+        my gboolean $rc = $reveal_child.so.Int;
+
         gtk_revealer_set_reveal_child($!r, $rc);
       }
     );
@@ -94,7 +94,8 @@ class GTK::Revealer is GTK::Bin {
         gtk_revealer_get_transition_duration($!r);
       },
       STORE => sub ($, Int() $duration is copy) {
-        my guint $d = self.RESOLVE-UINT($duration);
+        my guint $d = $duration;
+
         gtk_revealer_set_transition_duration($!r, $d);
       }
     );
@@ -106,7 +107,8 @@ class GTK::Revealer is GTK::Bin {
         GtkRevealerTransitionTypeEnum( gtk_revealer_get_transition_type($!r) );
       },
       STORE => sub ($, Int() $transition is copy) {
-        my uint32 $t = self.RESOLVE-UINT($transition);
+        my uint32 $t = $transition;
+
         gtk_revealer_set_transition_type($!r, $t);
       }
     );
@@ -115,11 +117,12 @@ class GTK::Revealer is GTK::Bin {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_child_revealed is also<get-child-revealed> {
-    gtk_revealer_get_child_revealed($!r);
+    so gtk_revealer_get_child_revealed($!r);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_revealer_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

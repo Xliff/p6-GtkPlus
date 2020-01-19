@@ -1,14 +1,16 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GLib::GSList;
+use GLib::GList;
 
 use GTK::Raw::RadioButton;
 use GTK::Raw::Types;
 
+use GLib::GList;
+
 use GTK::CheckButton;
+use GLib::Roles::ListData;
 
 our subset RadioButtonAncestry is export
   where GtkRadioButton | CheckButtonAncestry;
@@ -24,20 +26,17 @@ class GTK::RadioButton is GTK::CheckButton {
 
   submethod BUILD(:$radiobutton) {
     given $radiobutton {
-      when RadioButtonAncestry {
-        self.setRadioButton($radiobutton);
-      }
-
-      when GTK::RadioButton {
-      }
-
-      default {
-      }
+      when RadioButtonAncestry { self.setRadioButton($radiobutton) }
+      when GTK::RadioButton    { }
+      default                  { }
     }
   }
 
   method GTK::Raw::Definitions::GtkRadioButton
-    is also<RadioButton>
+    is also<
+      RadioButton
+      GtkRadioButton
+    >
   { $!rb }
 
   method setRadioButton(RadioButtonAncestry $radiobutton) {
@@ -45,23 +44,23 @@ class GTK::RadioButton is GTK::CheckButton {
 
     $!rb = do given $radiobutton {
       when GtkRadioButton {
-        $to-parent = nativecast(GtkCheckButton, $_);
+        $to-parent = cast(GtkCheckButton, $_);
         $_;
       }
 
       default {
         $to-parent = $_;
-        nativecast(GtkRadioButton, $_);
+        cast(GtkRadioButton, $_);
       }
     }
     self.setCheckButton($to-parent);
   }
 
-  multi method new (RadioButtonAncestry $radiobutton) {
+  multi method new (RadioButtonAncestry $radiobutton, :$ref = True) {
     return unless $radiobutton;
 
     my $o = self.bless(:$radiobutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new(GSList() $group) {
@@ -99,7 +98,8 @@ class GTK::RadioButton is GTK::CheckButton {
     is also<new-with-label>
   {
     my $radiobutton = gtk_radio_button_new_with_label($group, $label);
-    self.bless(:$radiobutton);
+
+    $radiobutton ?? self.bless(:$radiobutton) !! Nil;
   }
 
   method new_with_label_from_widget (GtkRadioButton() $member, Str() $label)
@@ -153,7 +153,7 @@ class GTK::RadioButton is GTK::CheckButton {
         return Nil unless $rl;
         return $rl if     $glist;
 
-        $rl = GLib::GSList.new($rl) but GDK::ListData[GtkRadioButton];
+        $rl = GLib::GList.new($rl) but GLib::Roless::ListData[GtkRadioButton];
 
         $raw ?? $rl.Array !! $rl.Array.map({ GTK::RadioButton.new($rl) });
       },
