@@ -3,14 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Selection;
 use GTK::Raw::Types;
+use GTK::Raw::Selection;
 
-use GTK::Roles::Types;
+use GDK::Display;
+use GDK::Pixbuf;
+
 use GLib::Roles::Object;
 
 class GTK::Selection {
-  also does GTK::Roles::Types;
   also does GLib::Roles::Object;
 
   has GtkSelectionData $!s is implementor;
@@ -40,10 +41,15 @@ class GTK::Selection {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method pixbuf is rw {
+  method pixbuf (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_selection_data_get_pixbuf($!s);
+        my $p = gtk_selection_data_get_pixbuf($!s);
+
+        $p ??
+          ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkPixbuf() $pixbuf is copy) {
         gtk_selection_data_set_pixbuf($!s, $pixbuf);
@@ -54,18 +60,13 @@ class GTK::Selection {
   method uris is rw {
     Proxy.new(
       FETCH => sub ($) {
-        my @ret;
-        my CArray[Str] $u;
-        $u = gtk_selection_data_get_uris($!s);
-        @ret.push($_) for $u.list;
-        @ret;
+        my $u = gtk_selection_data_get_uris($!s);
+
+        CStringArrayToArray($u);
       },
       STORE => sub ($, *@uris is copy) {
         @uris .= map( *.Str );
-        my CArray[Str] $u = CArray[Str].new;
-        my $i = 0;
-        $u[$i++] = $_ for @uris;
-        gtk_selection_data_set_uris($!s, $u);
+        gtk_selection_data_set_uris( $!s, ArrayToCArray(Str, @uris) );
       }
     );
   }
@@ -169,12 +170,21 @@ class GTK::Selection {
     gtk_selection_data_get_data($!s);
   }
 
-  method get_data_with_length (Int() $length)
+  proto method get_data_with_length (|)
     is also<get-data-with-length>
-  {
-    my guint $l = $length;
+  { * }
 
-    gtk_selection_data_get_data_with_length($!s, $l);
+  multi method get_data_with_length {
+    samewith($, :all);
+  }
+  multi method get_data_with_length ($length is rw, :$all = False)
+  {
+    my guint $l = 0;
+
+    my $s = gtk_selection_data_get_data_with_length($!s, $l);
+    $length = $l;
+
+    $all.not ?? $s !! ($s, $length)
   }
 
   method get_data_type
@@ -187,13 +197,18 @@ class GTK::Selection {
     gtk_selection_data_get_data_type($!s);
   }
 
-  method get_display
+  method get_display (:$raw = False)
     is also<
       get-display
       display
     >
   {
-    gtk_selection_data_get_display($!s);
+    my $d = gtk_selection_data_get_display($!s);
+
+    $d ??
+      ( $raw ?? $d !! GDK::Display.new($d) )
+      !!
+      Nil;
   }
 
   method get_format
@@ -232,14 +247,25 @@ class GTK::Selection {
     gtk_selection_data_get_target($!s);
   }
 
-  method get_targets (GdkAtom $targets, Int() $n_atoms)
-    is also<
-      get-targets
-      targets
-    >
-  {
-    my gint $na = $n_atoms;
-    gtk_selection_data_get_targets($!s, $targets, $na);
+  proto method get_targets (|)
+    is also<get-targets>
+  { * }
+
+  multi method get_targets (:$raw = False) is also<targets> {
+    samewith($, $, :$raw);
+  }
+  multi method get_targets ($targets is rw, $n_atoms is rw, :$raw = False) {
+    my $t = CArray[CArray[GdkAtom]].new;
+    my gint $na = 0;
+
+    $t[0] = CArray[GdkAtom];
+    gtk_selection_data_get_targets($!s, $t, $na);
+    $n_atoms = $na;
+
+    return Nil unless $t[0];
+    return $t[0] if $raw;
+
+    CArrayToArray($t[0], $n_atoms);
   }
 
   method get_text is also<get-text> {
@@ -265,21 +291,21 @@ class GTK::Selection {
   {
     my gboolean $w = $writeable.so.Int;
 
-    gtk_selection_data_targets_include_image($!s, $w);
+    so gtk_selection_data_targets_include_image($!s, $w);
   }
 
   multi method targets_include_rich_text (GtkTextBuffer() $buffer)
     is also<targets-include-rich-text>
   {
-    gtk_selection_data_targets_include_rich_text($!s, $buffer);
+    so gtk_selection_data_targets_include_rich_text($!s, $buffer);
   }
 
   method targets_include_text is also<targets-include-text> {
-    gtk_selection_data_targets_include_text($!s);
+    so gtk_selection_data_targets_include_text($!s);
   }
 
   method targets_include_uri is also<targets-include-uri> {
-    gtk_selection_data_targets_include_uri($!s);
+    so gtk_selection_data_targets_include_uri($!s);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

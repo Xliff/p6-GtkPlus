@@ -44,7 +44,7 @@ sub gtk_scale_button_new (
   is export
   { * }
 
-sub gtk_scale_button_set_icons (GtkScaleButton $button, gchar $icons)
+sub gtk_scale_button_set_icons (GtkScaleButton $button, CArray[Str] $icons)
   is native(gtk)
   is export
   { * }

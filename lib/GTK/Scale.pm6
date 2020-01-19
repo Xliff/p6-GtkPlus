@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GTK::Raw::Scale;
 use GTK::Raw::Types;
@@ -32,12 +31,12 @@ class GTK::Scale is GTK::Range {
       when ScaleAncestry {
         $!s = do {
           when GtkScale {
-            $to-parent = nativecast(GtkRange, $_);
+            $to-parent = cast(GtkRange, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkScale, $_);
+            cast(GtkScale, $_);
           }
         };
         self.setRange($to-parent);
@@ -60,11 +59,11 @@ class GTK::Scale is GTK::Range {
     >
   { $!s }
 
-  multi method new (ScaleAncestry $scale) {
+  multi method new (ScaleAncestry $scale, :$ref = True) {
     return Nil unless $scale;
 
     my $o = self.bless(:$scale);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (

@@ -1,15 +1,13 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::SearchBar;
 use GTK::Raw::Types;
 
 use GTK::Bin;
 
-our subset SearchBarAncestry is export 
+our subset SearchBarAncestry is export
   where GtkSearchBar | BinAncestry;
 
 class GTK::SearchBar is GTK::Bin {
@@ -27,12 +25,12 @@ class GTK::SearchBar is GTK::Bin {
       when SearchBarAncestry {
         $!sb = do {
           when GtkSearchBar {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkSearchBar, $_);
+            cast(GtkSearchBar, $_);
           }
         }
         self.setBin($to-parent);
@@ -43,17 +41,25 @@ class GTK::SearchBar is GTK::Bin {
       }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkSearchBar is also<SearchBar> { $!sb }
 
-  multi method new (SearchBarAncestry $searchbar) {
+  method GTK::Raw::Definitions::GtkSearchBar
+    is also<
+      SearchBar
+      GtkSearchBar
+    >
+  { $!sb }
+
+  multi method new (SearchBarAncestry $searchbar, :$ref = True) {
+    return Nil unless $searchbar;
+
     my $o = self.bless(:$searchbar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $searchbar = gtk_search_bar_new();
-    self.bless(:$searchbar);
+
+    $searchbar ?? self.bless(:$searchbar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -66,7 +72,8 @@ class GTK::SearchBar is GTK::Bin {
         so gtk_search_bar_get_search_mode($!sb);
       },
       STORE => sub ($, Int() $search_mode is copy) {
-        my gboolean $sm = self.RESOLVE-BOOL($search_mode);
+        my gboolean $sm = $search_mode.so.Int;
+
         gtk_search_bar_set_search_mode($!sb, $sm);
       }
     );
@@ -78,7 +85,8 @@ class GTK::SearchBar is GTK::Bin {
         so gtk_search_bar_get_show_close_button($!sb);
       },
       STORE => sub ($, Int() $visible is copy) {
-        my gboolean $v = self.RESOLVE-BOOL($visible);
+        my gboolean $v = $visible.so.Int;
+
         gtk_search_bar_set_show_close_button($!sb, $v);
       }
     );
@@ -92,11 +100,12 @@ class GTK::SearchBar is GTK::Bin {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_search_bar_get_type, $n, $t );
   }
 
-  method handle_event (GdkEvent $event) is also<handle-event> {
-    gtk_search_bar_handle_event($!sb, $event);
+  method handle_event (GdkEvent() $event) is also<handle-event> {
+    so gtk_search_bar_handle_event($!sb, $event);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -9,41 +9,6 @@ use GTK::Raw::Definitions;
 
 unit package GTK::Raw::Utils;
 
-sub ArrayToCArray(\T, @a) is export {
-  my $ca =  CArray[T].new;
-  $ca[$_] = @a[$_] for ^@a.elems;
-  $ca;
-}
-
-multi sub CStringArrayToArray(CArray[Str] $sa, Int(Cool) $len) {
-  CArrayToArray($sa, $len);
-}
-multi sub CStringArrayToArray (CArray[Str] $sa) is export {
-  CArrayToArray($sa)
-}
-
-multi sub CArrayToArray(CArray $ca) is export {
-  return Nil unless $ca;
-  my ($i, @a) = (0);
-  while $ca[$i] {
-    @a.push: $ca[$i++];
-  }
-  @a;
-}
-multi sub CArrayToArray(CArray $ca, Int(Cool) $len) is export {
-  return Nil unless $ca;
-  my @a;
-  @a[$_] = $ca[$_] for ^$len;
-  @a;
-}
-
-sub get_flags($t, $s) is export {
-  $t.enums
-    .map({ $s +& .value ?? .key !! '' })
-    .grep(* ne '')
-    .join(', ');
-}
-
 multi sub resolve-bool(@rb) is export {
   samewith(|@rb);
 }
