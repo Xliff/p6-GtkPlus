@@ -1,9 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
-
 
 use GTK::Raw::Types;
 use GTK::Raw::TreeModel;
@@ -18,7 +15,7 @@ class GTK::TreeIter is export {
   }
 
   method new (GtkTreeIter $iter) {
-    self.bless(:$iter);
+    $iter ?? self.bless(:$iter) !! Nil;
   }
 
   method GTK::Raw::Definitions::GtkTreeIter

@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-
 use GTK::Raw::Types;
 
 unit package GTK::Raw::TreeModelFilter;
@@ -75,8 +74,8 @@ sub gtk_tree_model_filter_refilter (GtkTreeModelFilter $filter)
 sub gtk_tree_model_filter_set_modify_func (
   GtkTreeModelFilter $filter,
   gint $n_columns,
-  GType $types,
-  GtkTreeModelFilterModifyFunc $func,
+  CArray[GType] $types,
+  &func (GtkTreeModel, GtkTreeIter, GValue, gint, gpointer),
   gpointer $data,
   GDestroyNotify $destroy
 )
@@ -94,7 +93,7 @@ sub gtk_tree_model_filter_set_visible_column (
 
 sub gtk_tree_model_filter_set_visible_func (
   GtkTreeModelFilter $filter,
-  GtkTreeModelFilterVisibleFunc $func,
+  &func (GtkTreeModel, GtkTreeIter, gpointer --> gboolean),
   gpointer $data,
   GDestroyNotify $destroy
 )

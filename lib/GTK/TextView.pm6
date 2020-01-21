@@ -1,23 +1,18 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use Pango::Raw::Types;
-
 
 use GTK::Raw::TextView;
 use GTK::Raw::Types;
 
-
+use Pango::Tabs;
 use GTK::Container;
 use GTK::TextBuffer;
 
 use GTK::Roles::Scrollable;
-
 use GTK::Roles::Signals::TextView;
-
-use Pango::Tabs;
 
 our subset TextViewAncestry is export of Mu
   where GtkTextView  | GtkScrollable | ContainerAncestry;
@@ -31,44 +26,43 @@ class GTK::TextView is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$textview) {
     given $textview {
-      when TextViewAncestry {
-        self.setTextView($textview);
-      }
-      when GTK::TextView {
-      }
-      default {
-      }
+      when TextViewAncestry { self.setTextView($textview) }
+      when GTK::TextView    { }
+      default               { }
     }
   }
 
   method GTK::Raw::Definitions::GtkTextView
-    is also<TextView>
-    { $!tv }
+    is also<
+      TextView
+      GtkTextView
+    >
+  { $!tv }
 
   method setTextView($view) {
     my $to-parent;
     $!tv = do given $view {
       when GtkTextView {
-        $to-parent = nativecast(GtkContainer, $_);
+        $to-parent = cast(GtkContainer, $_);
         $_;
       }
       when GtkScrollable {
         $!s = $_;                                   # GTK::Roles::Scrollable
-        $to-parent = nativecast(GtkContainer, $_);
-        nativecast(GtkTextView, $_);
+        $to-parent = cast(GtkContainer, $_);
+        cast(GtkTextView, $_);
       }
       when GtkWidget {
         $to-parent = $_;
-        nativecast(GtkTextView, $_);
+        cast(GtkTextView, $_);
       }
     }
-    $!s //= nativecast(GtkScrollable, $view);   # GTK::Roles::Scrollable
+    $!s //= cast(GtkScrollable, $view);   # GTK::Roles::Scrollable
     self.setContainer($to-parent);
   }
 
@@ -76,25 +70,31 @@ class GTK::TextView is GTK::Container {
     self.disconnect-all($_) for %!signals-tv;
   }
 
-  multi method new (TextViewAncestry $textview) {
+  multi method new (TextViewAncestry $textview, :$ref = False) {
+    return unless $textview;
+
     my $o = self.bless(:$textview);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
-  # Should probably be doing this for ALL objects!
+
   multi method new (GtkTextBuffer() $buffer) {
+    return Nil unless $buffer;
+
     GTK::TextView.new_with_buffer($buffer);
   }
   multi method new {
     my $textview = gtk_text_view_new();
-    self.bless(:$textview);
+
+    $textview ??self.bless(:$textview) !! Nil;
   }
 
   method new_with_buffer (GtkTextBuffer() $buffer)
     is also<new-with-buffer>
   {
     my $textview = gtk_text_view_new_with_buffer($buffer);
-    self.bless(:$textview);
+
+    $textview ?? self.bless(:$textview) !! Nil;
   }
 
 
@@ -199,7 +199,8 @@ class GTK::TextView is GTK::Container {
         so gtk_text_view_get_accepts_tab($!tv);
       },
       STORE => sub ($, Int() $accepts_tab is copy) {
-        my gboolean $at = self.RESOLVE-BOOL($accepts_tab);
+        my gboolean $at = $accepts_tab;
+
         gtk_text_view_set_accepts_tab($!tv, $at);
       }
     );
@@ -211,7 +212,8 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_bottom_margin($!tv);
       },
       STORE => sub ($, Int() $bottom_margin is copy) {
-        my gint $bm = self.RESOLVE-INT($bottom_margin);
+        my gint $bm = $bottom_margin;
+
         gtk_text_view_set_bottom_margin($!tv, $bm);
       }
     );
@@ -234,7 +236,8 @@ class GTK::TextView is GTK::Container {
         so gtk_text_view_get_cursor_visible($!tv);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting;
+
         gtk_text_view_set_cursor_visible($!tv, $s);
       }
     );
@@ -246,7 +249,8 @@ class GTK::TextView is GTK::Container {
         so gtk_text_view_get_editable($!tv);
       },
       STORE => sub ($, $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting;
+
         gtk_text_view_set_editable($!tv, $s);
       }
     );
@@ -258,7 +262,8 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_indent($!tv);
       },
       STORE => sub ($, Int() $indent is copy) {
-        my $i = self.RESOLVE-INT($indent);
+        my gint $i = $indent;
+        
         gtk_text_view_set_indent($!tv, $i);
       }
     );
@@ -270,7 +275,8 @@ class GTK::TextView is GTK::Container {
         GtkInputHintsEnum( gtk_text_view_get_input_hints($!tv) );
       },
       STORE => sub ($, Int() $hints is copy) {
-        my uint32 $h = self.RESOLVE-UINT($hints);
+        my uint32 $h = $hints;
+
         gtk_text_view_set_input_hints($!tv, $h);
       }
     );
@@ -282,7 +288,8 @@ class GTK::TextView is GTK::Container {
         GtkInputPurposeEnum( gtk_text_view_get_input_purpose($!tv) );
       },
       STORE => sub ($, Int() $purpose is copy) {
-        my uint32 $p = self.RESOLVE-UINT($purpose);
+        my uint32 $p = $purpose;
+
         gtk_text_view_set_input_purpose($!tv, $p);
       }
     );
@@ -294,7 +301,8 @@ class GTK::TextView is GTK::Container {
         GtkJustificationEnum( gtk_text_view_get_justification($!tv) );
       },
       STORE => sub ($, Int() $justification is copy) {
-        my uint32 $j = self.RESOLVE-UINT($justification);
+        my uint32 $j = $justification;
+
         gtk_text_view_set_justification($!tv, $j);
       }
     );
@@ -306,7 +314,8 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_left_margin($!tv);
       },
       STORE => sub ($, Int() $left_margin is copy) {
-        my gint $lm = self.RESOLVE-INT($left_margin);
+        my gint $lm = $left_margin;
+
         gtk_text_view_set_left_margin($!tv, $lm);
       }
     );
@@ -318,7 +327,8 @@ class GTK::TextView is GTK::Container {
         so gtk_text_view_get_monospace($!tv);
       },
       STORE => sub ($, Int() $monospace is copy) {
-        my gboolean $m = self.RESOLVE-BOOL($monospace);
+        my gboolean $m = $monospace;
+
         gtk_text_view_set_monospace($!tv, $m);
       }
     );
@@ -330,7 +340,8 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_overwrite($!tv) ?? True !! False;
       },
       STORE => sub ($, Int() $overwrite is copy) {
-        my gboolean $o = self.RESOLVE-BOOL($overwrite);
+        my gboolean $o = $overwrite;
+
         gtk_text_view_set_overwrite($!tv, $o);
       }
     );
@@ -342,7 +353,8 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_pixels_above_lines($!tv);
       },
       STORE => sub ($, Int() $pixels_above_lines is copy) {
-        my gint $pal = self.RESOLVE-INT($pixels_above_lines);
+        my gint $pal = $pixels_above_lines;
+
         gtk_text_view_set_pixels_above_lines($!tv, $pal);
       }
     );
@@ -354,7 +366,8 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_pixels_below_lines($!tv);
       },
       STORE => sub ($, Int() $pixels_below_lines is copy) {
-        my gint $pbl = self.RESOLVE-INT($pixels_below_lines);
+        my gint $pbl = $pixels_below_lines;
+
         gtk_text_view_set_pixels_below_lines($!tv, $pbl);
       }
     );
@@ -366,7 +379,8 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_pixels_inside_wrap($!tv);
       },
       STORE => sub ($, Int() $pixels_inside_wrap is copy) {
-        my gint $piw = self.RESOLVE-INT($pixels_inside_wrap);
+        my gint $piw = $pixels_inside_wrap;
+
         gtk_text_view_set_pixels_inside_wrap($!tv, $piw);
       }
     );
@@ -378,16 +392,21 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_right_margin($!tv);
       },
       STORE => sub ($, Int() $right_margin is copy) {
-        my gint $rm = self.RESOLVE-INT($right_margin);
+        my gint $rm = $right_margin;
         gtk_text_view_set_right_margin($!tv, $rm);
       }
     );
   }
 
-  method tabs is rw {
+  method tabs (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Pango::Tabs.new( gtk_text_view_get_tabs($!tv) );
+        my $t = gtk_text_view_get_tabs($!tv);
+
+        $t ??
+          ( $raw ?? $t !! Pango::Tabs.new($t) )
+          !!
+          Nil;
       },
       STORE => sub ($, PangoTabArray() $tabs is copy) {
         gtk_text_view_set_tabs($!tv, $tabs);
@@ -401,7 +420,7 @@ class GTK::TextView is GTK::Container {
         gtk_text_view_get_top_margin($!tv);
       },
       STORE => sub ($, Int() $top_margin is copy) {
-        my gint $tm = self.RESOLVE-INT($top_margin);
+        my gint $tm = $top_margin;
         gtk_text_view_set_top_margin($!tv, $tm);
       }
     );
@@ -413,7 +432,7 @@ class GTK::TextView is GTK::Container {
         GtkWrapModeEnum( gtk_text_view_get_wrap_mode($!tv) );
       },
       STORE => sub ($, Int() $wrap_mode is copy) {
-        my uint32 $wm = self.RESOLVE-UINT($wrap_mode);
+        my uint32 $wm = $wrap_mode;
         gtk_text_view_set_wrap_mode($!tv, $wm);
       }
     );
@@ -430,7 +449,7 @@ class GTK::TextView is GTK::Container {
       },
       STORE => -> $, Str() $t {
         my $tb = self.buffer;
-        
+
         $tb.set_text($t);
       }
     );
@@ -448,7 +467,7 @@ class GTK::TextView is GTK::Container {
           $tap = self.size-allocate.tap({
             .value = .upper - .page_size given self.vadjustment;
           });
-        } else {
+        } elsif $tap {
           $tap.close;
           $tap = Nil;
         }
@@ -468,9 +487,8 @@ class GTK::TextView is GTK::Container {
   )
     is also<add-child-in-window>
   {
-    my guint $ww = self.RESOLVE-UINT($which_window);
-    my @i = ($xpos, $ypos);
-    my gint ($xp, $yp) = self.RESOLVE-INT(@i);
+    my guint $ww = $which_window;
+    my gint ($xp, $yp) = ($xpos, $ypos);
     gtk_text_view_add_child_in_window($!tv, $child, $ww, $xp, $yp);
   }
 
@@ -481,8 +499,7 @@ class GTK::TextView is GTK::Container {
   )
     is also<move-child>
   {
-    my @i = ($xpos, $ypos);
-    my gint ($xp, $yp) = self.RESOLVE-INT(@i);
+    my gint ($xp, $yp) = ($xpos, $ypos);
     gtk_text_view_add_child_in_window($!tv, $child, $xp, $yp);
   }
 
@@ -516,9 +533,8 @@ class GTK::TextView is GTK::Container {
   )
     is also<buffer-to-window-coords>
   {
-    my @u = ($buffer_x, $buffer_y, $window_x, $window_y);
-    my gint ($bx, $by,$wx, $wy) = self.RESOLVE-INT(@u);
-    my uint32 $w = self.RESOLVE-UINT($win);
+    my gint ($bx, $by,$wx, $wy) = ($buffer_x, $buffer_y, $window_x, $window_y);
+    my uint32 $w = $win;
     gtk_text_view_buffer_to_window_coords($!tv, $w, $bx, $by, $wx, $wy);
   }
 
@@ -565,8 +581,7 @@ class GTK::TextView is GTK::Container {
   )
     is also<get-iter-at-location>
   {
-    my @u = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@u);
+    my gint ($xx, $yy) = ($x, $y);
     gtk_text_view_get_iter_at_location($!tv, $iter, $xx, $yy);
   }
 
@@ -578,8 +593,7 @@ class GTK::TextView is GTK::Container {
   )
     is also<get-iter-at-position>
   {
-    my @u = ($trailing, $x, $y);
-    my gint ($t, $xx, $yy) = self.RESOLVE-INT(@u);
+    my gint ($t, $xx, $yy) = ($trailing, $x, $y);
     gtk_text_view_get_iter_at_position($!tv, $iter, $t, $xx, $yy);
   }
 
@@ -596,16 +610,14 @@ class GTK::TextView is GTK::Container {
   )
     is also<get-line-at-y>
   {
-    my @u = ($y, $line_top);
-    my gint ($yy, $lt) = self.RESOLVE-INT(@u);
+    my gint ($yy, $lt) = ($y, $line_top);
     gtk_text_view_get_line_at_y($!tv, $target_iter, $yy, $lt);
   }
 
   method get_line_yrange (GtkTextIter() $iter, Int() $y, Int() $height)
     is also<get-line-yrange>
   {
-    my @u = ($y, $height);
-    my gint ($yy, $h) = self.RESOLVE-INT(@u);
+    my gint ($yy, $h) = ($y, $height);
     gtk_text_view_get_line_yrange($!tv, $iter, $yy, $h);
   }
 
@@ -629,11 +641,11 @@ class GTK::TextView is GTK::Container {
   )
     is also<get-window>
   {
-    my uint32 $w = self.RESOLVE-UINT($win);
+    my uint32 $w = $win;
     gtk_text_view_get_window($!tv, $w);
   }
 
-  method get_window_type (GdkWindow $window) is also<get-window-type> {
+  method get_window_type (GdkWindow() $window) is also<get-window-type> {
     gtk_text_view_get_window_type($!tv, $window);
   }
 
@@ -652,7 +664,7 @@ class GTK::TextView is GTK::Container {
   method move_visually (GtkTextIter() $iter, Int() $count)
     is also<move-visually>
   {
-    my gint $c = self.RESOLVE-INT($count);
+    my gint $c = $count;
     gtk_text_view_move_visually($!tv, $iter, $c);
   }
 
@@ -676,15 +688,16 @@ class GTK::TextView is GTK::Container {
 
   method scroll_to_iter (
     GtkTextIter() $iter,
-    Num()  $within_margin,
+    Num() $within_margin,
     Int() $use_align,
-    Num()  $xalign,
-    Num()  $yalign
+    Num() $xalign,
+    Num() $yalign
   )
     is also<scroll-to-iter>
   {
     my gdouble ($wm, $xa, $ya) = ($within_margin, $xalign, $yalign);
-    my gboolean $ua = $use_align.Int;
+    my gboolean $ua = $use_align.so.Int;
+
     gtk_text_view_scroll_to_iter($!tv, $iter, $wm, $ua, $xa, $ya);
   }
 
@@ -708,8 +721,8 @@ class GTK::TextView is GTK::Container {
     is also<scroll-to-mark>
   {
     my gdouble ($wm, $xa, $ya) = ($within_margin, $xalign, $yalign);
-    # Was it really this simple?
-    my gboolean $ua = $use_align.Int;
+    my gboolean $ua = $use_align.so.Int;
+
     gtk_text_view_scroll_to_mark($!tv, $mark, $wm, $ua, $xa, $ya);
   }
 
@@ -719,8 +732,9 @@ class GTK::TextView is GTK::Container {
   )
     is also<set-border-window-size>
   {
-    my uint32 $t = self.RESOLVE-UINT($type);
-    my gint $s = self.RESOLVE-INT($size);
+    my uint32 $t = $type;
+    my gint $s = $size;
+
     gtk_text_view_set_border_window_size($!tv, $t, $s);
   }
 
@@ -739,9 +753,9 @@ class GTK::TextView is GTK::Container {
   )
     is also<window-to-buffer-coords>
   {
-    my @u = ($window_x, $window_y, $buffer_x, $buffer_y);
-    my gint ($wx, $wy, $bx, $by) = self.RESOLVE-INT(@u);
-    my uint32 $w = self.RESOLVE-UINT($win);
+    my gint ($wx, $wy, $bx, $by) = ($window_x, $window_y, $buffer_x, $buffer_y);
+    my uint32 $w = $win;
+
     gtk_text_view_window_to_buffer_coords($!tv, $w, $wx, $wy, $bx, $by);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

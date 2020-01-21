@@ -1,10 +1,8 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use Pango::Raw::Types;
-
 
 use GTK::Raw::ToolItem;
 use GTK::Raw::Types;
@@ -26,13 +24,9 @@ class GTK::ToolItem is GTK::Bin {
 
   submethod BUILD(:$toolitem) {
     given $toolitem {
-      when ToolItemAncestry {
-        self.setToolItem($toolitem);
-      }
-      when GTK::ToolItem {
-      }
-      default {
-      }
+      when ToolItemAncestry { self.setToolItem($toolitem) }
+      when GTK::ToolItem    { }
+      default               { }
     }
   }
 
@@ -40,28 +34,36 @@ class GTK::ToolItem is GTK::Bin {
     my $to-parent;
     $!ti = do given $toolitem {
       when GtkToolItem {
-        $to-parent = nativecast(GtkBin, $_);
+        $to-parent = cast(GtkBin, $_);
         $_;
       }
 
       default {
         $to-parent = $_;
-        nativecast(GtkToolItem, $_);
+        cast(GtkToolItem, $_);
       }
     }
     self.setBin($to-parent);
   }
 
-  method GTK::Raw::Definitions::GtkToolItem is also<ToolItem> { $!ti }
-  
-  multi method new (ToolItemAncestry $toolitem) {
+  method GTK::Raw::Definitions::GtkToolItem
+    is also<
+      ToolItem
+      GtkToolItem
+    >
+  { $!ti }
+
+  multi method new (ToolItemAncestry $toolitem, :$ref = True) {
+    return unless $toolitem;
+
     my $o = self.bless(:$toolitem);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $toolitem = gtk_tool_item_new();
-    self.bless(:$toolitem);
+
+    $toolitem ?? self.bless(:$toolitem) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -86,7 +88,8 @@ class GTK::ToolItem is GTK::Bin {
         so gtk_tool_item_get_expand($!ti);
       },
       STORE => sub ($, Int() $expand is copy) {
-        my gboolean $e = self.RESOLVE-BOOL($expand);
+        my gboolean $e = $expand;
+
         gtk_tool_item_set_expand($!ti, $e);
       }
     );
@@ -98,7 +101,8 @@ class GTK::ToolItem is GTK::Bin {
         so gtk_tool_item_get_homogeneous($!ti);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = self.RESOLVE-BOOL($homogeneous);
+        my gboolean $h = $homogeneous;
+
         gtk_tool_item_set_homogeneous($!ti, $h);
       }
     );
@@ -110,7 +114,8 @@ class GTK::ToolItem is GTK::Bin {
         so gtk_tool_item_get_is_important($!ti);
       },
       STORE => sub ($, Int() $is_important is copy) {
-        my gboolean $ii = self.RESOLVE-BOOL($is_important);
+        my gboolean $ii = $is_important;
+
         gtk_tool_item_set_is_important($!ti, $ii);
       }
     );
@@ -122,7 +127,8 @@ class GTK::ToolItem is GTK::Bin {
         so gtk_tool_item_get_use_drag_window($!ti);
       },
       STORE => sub ($, Int() $use_drag_window is copy) {
-        my gboolean $udw = self.RESOLVE-BOOL($use_drag_window);
+        my gboolean $udw = $use_drag_window;
+
         gtk_tool_item_set_use_drag_window($!ti, $udw);
       }
     );
@@ -134,7 +140,8 @@ class GTK::ToolItem is GTK::Bin {
         so gtk_tool_item_get_visible_horizontal($!ti);
       },
       STORE => sub ($, Int() $visible_horizontal is copy) {
-        my gboolean $vh = self.RESOLVE-BOOL($visible_horizontal);
+        my gboolean $vh = $visible_horizontal;
+
         gtk_tool_item_set_visible_horizontal($!ti, $vh);
       }
     );
@@ -146,7 +153,8 @@ class GTK::ToolItem is GTK::Bin {
         so gtk_tool_item_get_visible_vertical($!ti);
       },
       STORE => sub ($, Int() $visible_vertical is copy) {
-        my gboolean $vv = self.RESOLVE-BOOL($visible_vertical);
+        my gboolean $vv = $visible_vertical;
+
         gtk_tool_item_set_visible_vertical($!ti, $vv);
       }
     );
@@ -154,102 +162,111 @@ class GTK::ToolItem is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_ellipsize_mode 
+  method get_ellipsize_mode
     is also<
       get-ellipsize-mode
       ellipsize_mode
       ellipsize-mode
-    > 
+    >
   {
-    PangoEllipsizeMode( gtk_tool_item_get_ellipsize_mode($!ti) );
+    PangoEllipsizeModeEnum( gtk_tool_item_get_ellipsize_mode($!ti) );
   }
 
-  method get_icon_size 
+  method get_icon_size
     is also<
       get-icon-size
       icon_size
       icon-size
-    > 
+    >
   {
     GtkIconSizeEnum( gtk_tool_item_get_icon_size($!ti) );
   }
 
-  method get_orientation 
+  method get_orientation
     is also<
       get-orientation
       orientation
-    > 
+    >
   {
     GtkOrientationEnum( gtk_tool_item_get_orientation($!ti) );
   }
 
-  # EXample mechanism to return widget pointer for MenuItem subclases
-  method get_proxy_menu_item (Str() $menu_item_id, :$object = True)
+  method get_proxy_menu_item (
+    Str() $menu_item_id,
+    :$raw = False,
+    :$widget = False
+  )
     is also<
       get-proxy-menu-item
       proxy_menu_item
       proxy-menu-item
     >
   {
-    my $widget = gtk_tool_item_get_proxy_menu_item($!ti, $menu_item_id);
-    return $widget unless $object;
-    GTK::MenuItem.new($widget);
+    my $w = gtk_tool_item_get_proxy_menu_item($!ti, $menu_item_id);
+
+    self.ReturnWidget($w, $raw, $widget);
   }
 
-  method get_relief_style 
+  method get_relief_style
     is also<
       get-relief-style
       relief_style
       relief-style
-    > 
+    >
   {
     GtkReliefStyleEnum( gtk_tool_item_get_relief_style($!ti) );
   }
 
-  method get_text_alignment 
+  method get_text_alignment
     is also<
       get-text-alignment
       text_alignment
       text-alignment
-    > 
+    >
   {
     gtk_tool_item_get_text_alignment($!ti);
   }
 
-  method get_text_orientation 
+  method get_text_orientation
     is also<
       get-text-orientation
       text_orientation
       text-orientation
-    > 
+    >
   {
     GtkOrientationEnum( gtk_tool_item_get_text_orientation($!ti) );
   }
 
-  method get_text_size_group 
+  method get_text_size_group (:$raw = False)
     is also<
       get-text-size-group
       text_size_group
       text-size-group
       text_sizegroup
       text-sizegroup
-    > 
+    >
   {
-    GTK::SizeGroup.new( gtk_tool_item_get_text_size_group($!ti) );
+    my $s = gtk_tool_item_get_text_size_group($!ti);
+
+    $s ??
+      ( $raw ?? $s !! GTK::SizeGroup.new($s) )
+      !!
+      Nil;
   }
 
-  method get_toolbar_style 
+  method get_toolbar_style
     is also<
       get-toolbar-style
       toolbar_style
       toolbar-style
-    > 
+    >
   {
     GtkToolbarStyleEnum( gtk_tool_item_get_toolbar_style($!ti) );
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_tool_item_get_type, $n, $t );
   }
 
@@ -257,8 +274,15 @@ class GTK::ToolItem is GTK::Bin {
     gtk_tool_item_rebuild_menu($!ti);
   }
 
-  method retrieve_proxy_menu_item is also<retrieve-proxy-menu-item> {
-    GTK::MenuItem.new( gtk_tool_item_retrieve_proxy_menu_item($!ti) );
+  method retrieve_proxy_menu_item (:$raw = False)
+    is also<retrieve-proxy-menu-item>
+  {
+    my $mi = gtk_tool_item_retrieve_proxy_menu_item($!ti);
+
+    $mi ??
+      ( $raw ?? $mi !! GTK::MenuItem.new($mi) )
+      !!
+      Nil;
   }
 
   method set_proxy_menu_item (

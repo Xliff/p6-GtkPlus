@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GTK::Raw::ToolPalette;
 use GTK::Raw::Types;
@@ -32,17 +31,17 @@ class GTK::ToolPalette is GTK::Container {
       when ToolPaletteAncestry {
         $!tp = do {
           when GtkToolPalette  {
-            $to-parent = nativecast(GtkContainer, $palette);
+            $to-parent = cast(GtkContainer, $palette);
             $palette;
           }
           when GtkOrientable {
             $!or = $_;
-            $to-parent = nativecast(GtkContainer, $palette);
-            nativecast(GtkToolPalette, $palette);
+            $to-parent = cast(GtkContainer, $palette);
+            cast(GtkToolPalette, $palette);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkToolPalette, $palette);
+            cast(GtkToolPalette, $palette);
           }
         }
         self.setContainer($to-parent);
@@ -52,14 +51,14 @@ class GTK::ToolPalette is GTK::Container {
       default {
       }
     }
-    $!or //= nativecast(GtkOrientable, $palette); # GTK::Roles::Orientable
+    $!or //= cast(GtkOrientable, $palette); # GTK::Roles::Orientable
   }
 
-  multi method new (ToolPaletteAncestry $palette) {
+  multi method new (ToolPaletteAncestry $palette, :$ref = True) {
     return unless $palette;
 
     my $o = self.bless(:$palette);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
@@ -132,7 +131,7 @@ class GTK::ToolPalette is GTK::Container {
 
   method get_drop_item (Int() $x, Int() $y, :$raw = False)
     is also<get-drop-item>
-  {  
+  {
     my gint ($xx, $yy) = ($x, $y);
     my $ti = gtk_tool_palette_get_drop_item($!tp, $xx, $yy);
 

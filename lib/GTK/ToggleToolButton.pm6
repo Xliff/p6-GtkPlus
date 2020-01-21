@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::ToggleToolButton;
 use GTK::Raw::Types;
@@ -39,29 +37,35 @@ class GTK::ToggleToolButton is GTK::ToolButton {
     my $to-parent;
     $!ttb = do given $toggletoolbutton {
       when GtkToggleToolButton {
-        $to-parent = nativecast(GtkToolButton, $_);
+        $to-parent = cast(GtkToolButton, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkToggleToolButton, $_);
+        cast(GtkToggleToolButton, $_);
       }
     }
     self.setToolButton($to-parent);
   }
 
-  multi method new (ToggleToolButtonAncestry $toggletoolbutton) {
+  multi method new (ToggleToolButtonAncestry $toggletoolbutton, :$ref = True) {
+    return Nil unless $toggletoolbutton;
+
     my $o = self.bless(:$toggletoolbutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $toggletoolbutton = gtk_toggle_tool_button_new();
-    self.bless(:$toggletoolbutton);
+
+    $toggletoolbutton ?? self.bless(:$toggletoolbutton) !! Nil;
   }
 
-  method GTK::Raw::Definitions::GtkToggleToolButton 
-    is also<ToggleToolButton> 
+  method GTK::Raw::Definitions::GtkToggleToolButton
+    is also<
+      ToggleToolButton
+      GtkToggleToolButton
+    >
   { $!ttb }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -79,7 +83,8 @@ class GTK::ToggleToolButton is GTK::ToolButton {
         so gtk_toggle_tool_button_get_active($!ttb);
       },
       STORE => sub ($, Int() $is_active is copy) {
-        my gboolean $ia = $is_active == 0 ?? 0 !! 1;
+        my gboolean $ia = $is_active;
+
         gtk_toggle_tool_button_set_active($!ttb, $ia);
       }
     );
@@ -89,6 +94,7 @@ class GTK::ToggleToolButton is GTK::ToolButton {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_toggle_tool_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::ToolButton;
 use GTK::Raw::Types;
@@ -21,23 +19,24 @@ class GTK::ToolButton is GTK::ToolItem {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$toolbutton) {
     given $toolbutton {
-      when ToolButtonAncestry {
-        self.setToolButton($toolbutton);
-      }
-      when GTK::ToolButton {
-      }
-      default {
-      }
+      when ToolButtonAncestry { self.setToolButton($toolbutton) }
+      when GTK::ToolButton    { }
+      default                 { }
     }
   }
-  
-  method GTK::Raw::Definitions::GtkToolButton is also<ToolButton> { $!tb }
+
+  method GTK::Raw::Definitions::GtkToolButton
+    is also<
+      ToolButton
+      GtkToolButton
+    >
+  { $!tb }
 
   method setToolButton(ToolButtonAncestry $toolbutton) {
     self.IS-PROTECTED;
@@ -45,43 +44,49 @@ class GTK::ToolButton is GTK::ToolItem {
     my $to-parent;
     $!tb = do given $toolbutton {
       when GtkToolButton {
-        $to-parent = nativecast(GtkToolItem, $toolbutton);
+        $to-parent = cast(GtkToolItem, $toolbutton);
         $toolbutton;
       }
       when GtkActionable {
         $!action = $_;
-        $to-parent = nativecast(GtkToolItem, $toolbutton);
-        nativecast(GtkToolButton, $toolbutton);
+        $to-parent = cast(GtkToolItem, $toolbutton);
+        cast(GtkToolButton, $toolbutton);
       }
       default {
         $to-parent = $toolbutton;
-        nativecast(GtkToolButton, $toolbutton);
+        cast(GtkToolButton, $toolbutton);
       }
-      
+
     }
-    $!action //= nativecast(GtkActionable, $!tb);   # GTK::Roles::Actionable
+    $!action //= cast(GtkActionable, $!tb);   # GTK::Roles::Actionable
     self.setToolItem($to-parent);
   }
 
-  multi method new (ToolButtonAncestry $toolbutton) {
+  multi method new (ToolButtonAncestry $toolbutton, :$ref = True) {
+    return unless $toolbutton;
+
     my $o = self.bless(:$toolbutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $toolbutton = gtk_tool_button_new(GtkWidget, Str);
-    self.bless(:$toolbutton);
+
+    $toolbutton ?? self.bless(:$toolbutton) !! Nil;
   }
   multi method new (GtkWidget() $widget, Str() $label) {
     my $toolbutton = gtk_tool_button_new($widget, $label);
-    self.bless(:$toolbutton);
+
+    $toolbutton ?? self.bless(:$toolbutton) !! Nil;
   }
 
   method new_from_stock (Str() $stock_id)
     is DEPRECATED('GTK::ToolButton.new( GTK::Image.new_from_icon_name() )')
-  is also<new-from-stock> {
+    is also<new-from-stock>
+  {
     my $toolbutton = gtk_tool_button_new_from_stock($stock_id);
-    self.bless(:$toolbutton);
+
+    $toolbutton ?? self.bless(:$toolbutton) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -105,10 +110,14 @@ class GTK::ToolButton is GTK::ToolItem {
     );
   }
 
-  method icon_widget is rw is also<icon-widget> {
+  method icon_widget (:$raw = False, :$widget = False)
+    is rw is also<icon-widget>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Widget.new( gtk_tool_button_get_icon_widget($!tb) );
+        my $w = gtk_tool_button_get_icon_widget($!tb);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $icon_widget is copy) {
         gtk_tool_button_set_icon_widget($!tb, $icon_widget);
@@ -127,10 +136,14 @@ class GTK::ToolButton is GTK::ToolItem {
     );
   }
 
-  method label_widget is rw is also<label-widget> {
+  method label_widget (:$raw = False, :$widget = False) is rw
+    is also<label-widget>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_tool_button_get_label_widget($!tb);
+        my $w = gtk_tool_button_get_label_widget($!tb);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_tool_button_set_label_widget($!tb, $label_widget);
@@ -155,7 +168,7 @@ class GTK::ToolButton is GTK::ToolItem {
         so gtk_tool_button_get_use_underline($!tb);
       },
       STORE => sub ($, Int() $use_underline is copy) {
-        my $uu = self.RESOLVE-BOOL($use_underline);
+        my $uu = $use_underline;
         gtk_tool_button_set_use_underline($!tb, $uu);
       }
     );
@@ -165,6 +178,7 @@ class GTK::ToolButton is GTK::ToolItem {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_tool_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

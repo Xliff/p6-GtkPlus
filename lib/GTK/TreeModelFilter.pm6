@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::TreeModelFilter;
 use GTK::Raw::Types;
 
@@ -28,7 +27,18 @@ class GTK::TreeModelFilter {
     $!ds = nativecast(GtkTreeDragSource, $!tmf);    # GTK::Roles::TreeDragSource
   }
 
-  method GTK::Raw::Definitions::GtkTreeModelFilter is also<TreeModelFilter> { $!tmf }
+  method GTK::Raw::Definitions::GtkTreeModelFilter
+    is also<
+      TreeModelFilter
+      GtkTreeModelFilter
+    >
+  { $!tmf }
+
+  method new (GtkTreeModel() $model, GtkTreePath() $root) {
+    my $treefilter = gtk_tree_model_filter_new($model, $root);
+
+    $treefilter ?? self.bless( :$treefilter ) !! Nil;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -113,55 +123,70 @@ class GTK::TreeModelFilter {
     gtk_tree_model_filter_convert_path_to_child_path($!tmf, $filter_path);
   }
 
-  method get_model is also<get-model> {
-    gtk_tree_model_filter_get_model($!tmf);
+  method get_model (:$raw = False) is also<get-model> {
+    my $tmf = gtk_tree_model_filter_get_model($!tmf);
+
+    $tmf ??
+      ( $raw ?? $tmf !! GTK::Roles::TreeModel.new-treemodel-obj($tmf) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
-    gtk_tree_model_filter_get_type();
-  }
+    state ($n, $t);
 
-  method new (GtkTreeModel() $model, GtkTreePath() $root) {
-    gtk_tree_model_filter_new($model, $root);
+    unstable_get_type( self.^name, &gtk_tree_model_filter_get_type, $n, $t );
   }
 
   method refilter {
     gtk_tree_model_filter_refilter($!tmf);
   }
 
-  method set_modify_func (
-    Int() $n_columns,
-    GType $types,
-    GtkTreeModelFilterModifyFunc $func,
+  proto method set_modify_func (|)
+    is also<set-modify-func>
+  { * }
+
+  multi method set_modify_func (
+    @types,
+    &func,
     gpointer $data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
-  )
-    is also<set-modify-func>
-  {
-    my gint $nc = self.RESOLVE-INT($n_columns);
+  ) {
+    samewith( ArrayToCArray(GType, @types), &func, $data, $destroy );
+  }
+  multi method set_modify_func (
+    Int() $n_columns,
+    CArray[GType] $types,
+    &func,
+    gpointer $data = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
+  ) {
+    my gint $nc = $n_columns;
+
     gtk_tree_model_filter_set_modify_func(
       $!tmf,
       $nc,
       $types,
-      $func,
+      &func,
       $data,
       $destroy
     );
   }
 
   method set_visible_column (Int() $column) is also<set-visible-column> {
-    my gint $c = self.RESOLVE-INT($column);
+    my gint $c = $column;
+
     gtk_tree_model_filter_set_visible_column($!tmf, $c);
   }
 
   method set_visible_func (
-    GtkTreeModelFilterVisibleFunc $func,
+    &func,
     gpointer $data = gpointer,
     GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-visible-func>
   {
-    gtk_tree_model_filter_set_visible_func($!tmf, $func, $data, $destroy);
+    gtk_tree_model_filter_set_visible_func($!tmf, &func, $data, $destroy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

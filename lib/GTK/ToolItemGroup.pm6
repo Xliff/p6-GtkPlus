@@ -9,7 +9,6 @@ use GTK::Raw::ToolItemGroup;
 use GTK::Raw::Types;
 
 use GTK::Container;
-use GTK::Widget;
 
 our subset ToolItemGroupAncestry is export
   where GtkToolItemGroup | GtkToolShell | ContainerAncestry;
@@ -63,13 +62,13 @@ class GTK::ToolItemGroup is GTK::Container {
       ToolItemGroup
       GtkToolItemGroup
     >
-    { $!tig }
+  { $!tig }
 
-  multi method new (ToolItemGroupAncestry $toolgroup) {
+  multi method new (ToolItemGroupAncestry $toolgroup, :$ref = True) {
     return Nil unless $toolgroup;
 
     my $o = self.bless(:$toolgroup);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new(Str() $label = '') {
@@ -98,7 +97,7 @@ class GTK::ToolItemGroup is GTK::Container {
   method ellipsize is rw {
     Proxy.new(
       FETCH => sub ($) {
-        PangoEllipsizeMode(
+        PangoEllipsizeModeEnum(
           gtk_tool_item_group_get_ellipsize($!tig)
         );
       },
@@ -144,7 +143,7 @@ class GTK::ToolItemGroup is GTK::Container {
       FETCH => sub ($) {
         my $w = gtk_tool_item_group_get_label_widget($!tig);
 
-        ReturnWidget($w, $raw, $widget);
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_tool_item_group_set_label_widget($!tig, $label_widget);
@@ -175,7 +174,7 @@ class GTK::ToolItemGroup is GTK::Container {
     gtk_tool_item_group_get_n_items($!tig);
   }
 
-  method get_nth_item (Int() $index)
+  method get_nth_item (Int() $index, :$raw = False)
     is also<
       get-nth-item
       nth_item
@@ -183,8 +182,12 @@ class GTK::ToolItemGroup is GTK::Container {
     >
   {
     my guint $i = $index;
+    my $ti = gtk_tool_item_group_get_nth_item($!tig, $i);
 
-    GTK::ToolItem.new( gtk_tool_item_group_get_nth_item($!tig, $i) );
+    $ti ??
+      ( $raw ?? $ti !! GTK::ToolItem.new($ti)  )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
