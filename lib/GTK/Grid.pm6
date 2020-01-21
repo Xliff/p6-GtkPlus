@@ -6,6 +6,7 @@ use GTK::Raw::Grid;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::Widget;
 
 use GTK::Roles::Orientable;
 

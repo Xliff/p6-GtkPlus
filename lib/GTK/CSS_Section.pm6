@@ -67,7 +67,7 @@ class GTK::CSS_Section {
     my $p = gtk_css_section_get_parent($!css_s);
 
     $p ??
-      ( $raw ?? $p !! GTK::CssSection.new($p) )
+      ( $raw ?? $p !! GTK::CSS_Section.new($p) )
       !!
       Nil;
   }

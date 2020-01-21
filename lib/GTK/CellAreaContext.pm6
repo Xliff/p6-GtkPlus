@@ -6,6 +6,7 @@ use GTK::Raw::CellAreaContext;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GTK::CellArea;
 
 use GLib::Roles::Properties;
 

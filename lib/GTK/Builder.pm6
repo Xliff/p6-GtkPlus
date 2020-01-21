@@ -13,8 +13,10 @@ use GTK::Raw::Subs;
 
 use GTK;
 use GTK::Adjustment;
+use GTK::Application;
 use GTK::CSSProvider;
 use GTK::Widget;
+use GTK::Window;
 
 use GLib::Roles::Object;
 

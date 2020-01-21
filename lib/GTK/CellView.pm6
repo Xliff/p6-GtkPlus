@@ -9,6 +9,8 @@ use GTK::Raw::CellView;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GTK::CellArea;
+use GTK::CellAreaContext;
 use GTK::TreePath;
 use GTK::Widget;
 

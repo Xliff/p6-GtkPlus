@@ -7,6 +7,9 @@ use GTK::Raw::PrintJob;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GTK::PageSetup;
+use GTK::PrintSettings;
+use GTK::Printer;
 
 use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;

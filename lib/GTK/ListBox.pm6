@@ -6,6 +6,7 @@ use GTK::Raw::ListBox;
 use GTK::Raw::Types;
 
 use GLib::GList;
+use GTK::Adjustment;
 use GTK::Container;
 use GTK::ListBoxRow;
 

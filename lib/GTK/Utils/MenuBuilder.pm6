@@ -3,6 +3,7 @@ use v6.c;
 use GTK::CheckMenuItem;
 use GTK::Menu;
 use GTK::MenuBar;
+use GTK::MenuButton;
 use GTK::MenuItem;
 use GTK::RadioMenuItem;
 use GTK::SeparatorMenuItem;

@@ -8,6 +8,7 @@ use GTK::Raw::ApplicationWindow;
 
 use GIO::Roles::ActionMap;
 
+use GTK::ShortcutsWindow;
 use GTK::Window;
 
 our subset ApplicationWindowAncestry is export
@@ -20,19 +21,15 @@ class GTK::ApplicationWindow is GTK::Window {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD (:$appwindow) {
     given $appwindow {
-      when ApplicationWindowAncestry {
-        self.setApplicationWindow($appwindow);
-      }
-      when GTK::ApplicationWindow {
-      }
-      default {
-      }
+      when ApplicationWindowAncestry { self.setApplicationWindow($appwindow) }
+      when GTK::ApplicationWindow    { }
+      default                        { }
     }
   }
 
@@ -67,22 +64,27 @@ class GTK::ApplicationWindow is GTK::Window {
   { $!aw }
 
   multi method new (GtkApplicationWindow $appwindow, :$ref = True) {
-    return unless $appwindow;
-    
+    return Nil unless $appwindow;
+
     my $o = self.bless(:$appwindow);
     $o.ref if $ref;
     $o;
   }
   multi method new (GtkApplication() $app) {
-    self.bless( appwindow => gtk_application_window_new($app) );
+    my $appwindow = gtk_application_window_new($app);
+
+    $appwindow ?? self.bless(:$appwindow) !! Nil;
   }
 
-  method help_overlay is rw {
+  method help_overlay (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::ShortcutsWindow.new(
-          gtk_application_window_get_help_overlay($!aw)
-        );
+        my $aw = gtk_application_window_get_help_overlay($!aw);
+
+        $aw ??
+          ( $raw ?? $aw !! GTK::ShortcutsWindow.new($aw) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkShortcutsWindow() $help_overlay is copy) {
         gtk_application_window_set_help_overlay($!aw, $help_overlay);
@@ -96,7 +98,8 @@ class GTK::ApplicationWindow is GTK::Window {
         so gtk_application_window_get_show_menubar($!aw);
       },
       STORE => sub ($, Int() $show_menubar is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($show_menubar);
+        my gboolean $s = $show_menubar;
+
         gtk_application_window_set_show_menubar($!aw, $s);
       }
     );
@@ -109,6 +112,7 @@ class GTK::ApplicationWindow is GTK::Window {
 
   method get_type {
     state ($n, $t);
+
     unstable_get_type( self.^name, &gtk_application_window_get_type, $n, $t );
   }
 

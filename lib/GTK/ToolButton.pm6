@@ -5,6 +5,7 @@ use Method::Also;
 use GTK::Raw::ToolButton;
 use GTK::Raw::Types;
 
+use GTK::Image;
 use GTK::ToolItem;
 
 use GTK::Roles::Actionable;

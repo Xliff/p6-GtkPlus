@@ -5,7 +5,6 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-
 use GTK::Raw::ToolShell;
 use GTK::Raw::Types;
 
@@ -31,7 +30,7 @@ role GTK::Roles::ToolShell {
       ellipsize_mode
     >
   {
-    PangoEllipsizeMode( gtk_tool_shell_get_ellipsize_mode($!shell) );
+    PangoEllipsizeModeEnum( gtk_tool_shell_get_ellipsize_mode($!shell) );
   }
 
   method get_icon_size
@@ -77,14 +76,19 @@ role GTK::Roles::ToolShell {
     gtk_tool_shell_get_text_orientation($!shell);
   }
 
-  method get_text_size_group
+  method get_text_size_group (:$raw = False)
     is also<
       get-text-size-group
       text-size-group
       text_size_group
     >
   {
-    GTK::TextSize.new( gtk_tool_shell_get_text_size_group($!shell) );
+    my $sg = gtk_tool_shell_get_text_size_group($!shell);
+
+    $sg ??
+      ( $raw ?? $sg !! GTK::SizeGroup.new($sg) )
+      !!
+      Nil;
   }
 
   method get_toolshell_type is also<get-toolshell-type > {

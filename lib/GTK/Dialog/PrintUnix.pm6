@@ -3,29 +3,30 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Dialog::Raw::PrintUnix;
 use GTK::Raw::Types;
 
 use GTK::Dialog;
+use GTK::PageSetup;
+use GTK::Printer;
+use GTK::PrintSettings;
 
-my subset Ancestry
-  where GtkPrintUnixDialog | GtkDialog | GtkWindow | GtkBin | GtkContainer |
-        GtkBuildable       | GtkWidget;
+my subset PrintUnixDialogAncestry is export
+  where GtkPrintUnixDialog | DialogAncestry
 
 class GTK::Dialog::PrintUnix is GTK::Dialog {
   has GtkPrintUnixDialog $!pud is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Dialog::PrintUnix');
+    $o.setType($o.^name);
     $o;
   }
 
-  submethod BUILD(:$dialog) {
+  submethod BUILD(:$print-dialog) {
     my $to-parent;
     given $dialog {
-      when Ancestry {
+      when PrintUnixDialogAncestry {
         $!pud = do {
           when GtkPrintUnixDialog {
             $to-parent = nativecast(GtkDialog, $_);
@@ -45,14 +46,17 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
     }
   }
 
-  multi method new (Ancestry $dialog) {
-    my $o = self.bless(:$dialog);
-    $o.upref;
+  multi method new (PrintUnixDialogAncestry $print-dialog, :$ref = True) {
+    return Nil unless $print-dialog;
+
+    my $o = self.bless(:$print-dialog);
+    $o.ref if $ref;
     $o;
   }
   multi method new (Str() $title, GtkWindow() $parent) {
-    my $dialog = gtk_print_unix_dialog_new($title, $parent);
-    self.bless(:$dialog);
+    my $print-dialog = gtk_print_unix_dialog_new($title, $parent);
+
+    $print-dialog ?? self.bless(:$print-dialog) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -65,7 +69,8 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
         gtk_print_unix_dialog_get_current_page($!pud);
       },
       STORE => sub ($, Int() $current_page is copy) {
-        my gint $cp = self.RESOLVE-INT($current_page);
+        my gint $cp = $current_page;
+
         gtk_print_unix_dialog_set_current_page($!pud, $cp);
       }
     );
@@ -77,7 +82,8 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
         so gtk_print_unix_dialog_get_embed_page_setup($!pud);
       },
       STORE => sub ($, Int() $embed is copy) {
-        my gboolean $e = self.RESOLVE-BOOL($embed);
+        my gboolean $e = $embed;
+
         gtk_print_unix_dialog_set_embed_page_setup($!pud, $e);
       }
     );
@@ -89,7 +95,8 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
         so gtk_print_unix_dialog_get_has_selection($!pud);
       },
       STORE => sub ($, Int() $has_selection is copy) {
-        my gboolean $hs = self.RESOLVE-BOOLEAN($has_selection);
+        my gboolean $hs = $has_selection;
+
         gtk_print_unix_dialog_set_has_selection($!pud, $hs);
       }
     );
@@ -103,16 +110,22 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
         );
       },
       STORE => sub ($, Int() $capabilities is copy) {
-        my guint $c = self.RESOLVE-UINT($capabilities);
+        my guint $c = $capabilities;
+
         gtk_print_unix_dialog_set_manual_capabilities($!pud, $c);
       }
     );
   }
 
-  method page_setup is rw is also<page-setup> {
+  method page_setup (:$raw = False) is rw is also<page-setup> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::PageSetup.new( gtk_print_unix_dialog_get_page_setup($!pud) );
+        my $ps = gtk_print_unix_dialog_get_page_setup($!pud);
+
+        $ps ??
+          ( $raw ?? $ps !! GTK::PageSetup.new($ps) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkPageSetup() $page_setup is copy) {
         gtk_print_unix_dialog_set_page_setup($!pud, $page_setup);
@@ -120,12 +133,15 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
     );
   }
 
-  method settings is rw {
+  method settings (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::PrintSettings.new(
-          gtk_print_unix_dialog_get_settings($!pud)
-        );
+        my $ps = gtk_print_unix_dialog_get_settings($!pud)
+
+        $ps ??
+          ( $raw ?? $ps !! GTK::PrintSettings.new($ps) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkPrintSettings() $settings is copy) {
         gtk_print_unix_dialog_set_settings($!pud, $settings);
@@ -136,10 +152,11 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
   method support_selection is rw is also<support-selection> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_print_unix_dialog_get_support_selection($!pud);
+        so gtk_print_unix_dialog_get_support_selection($!pud);
       },
       STORE => sub ($, Int() $support_selection is copy) {
-        my gboolean $ss = self.RESOLVE-BOOL($support_selection);
+        my gboolean $ss = $support_selection;
+
         gtk_print_unix_dialog_set_support_selection($!pud, $ss);
       }
     );
@@ -154,20 +171,29 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
   method add_custom_tab (
     GtkWidget() $child,
     GtkWidget() $tab_label
-  ) is also<add-custom-tab> {
+  )
+    is also<add-custom-tab>
+  {
     gtk_print_unix_dialog_add_custom_tab($!pud, $child, $tab_label);
   }
 
   method get_page_setup_set is also<get-page-setup-set> {
-    gtk_print_unix_dialog_get_page_setup_set($!pud);
+    so gtk_print_unix_dialog_get_page_setup_set($!pud);
   }
 
-  method get_selected_printer is also<get-selected-printer> {
-    gtk_print_unix_dialog_get_selected_printer($!pud);
+  method get_selected_printer (:$raw = False) is also<get-selected-printer> {
+    my $p = gtk_print_unix_dialog_get_selected_printer($!pud);
+
+    $p ??
+      ( $raw ?? $p !! GTK::Printer.new($p) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
-    gtk_print_unix_dialog_get_type();
+    state ($n, $t) ;
+
+    unstable_get_type( self.^name, &gtk_print_unix_dialog_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

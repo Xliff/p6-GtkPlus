@@ -179,7 +179,7 @@ class GTK::TreeStore  {
   )
     is also<is-ancestor>
   {
-    gtk_tree_store_is_ancestor($!tree, $iter, $descendant);
+    so gtk_tree_store_is_ancestor($!tree, $iter, $descendant);
   }
 
   method iter_depth (GtkTreeIter() $iter) is also<iter-depth> {
@@ -187,7 +187,7 @@ class GTK::TreeStore  {
   }
 
   method iter_is_valid (GtkTreeIter() $iter) is also<iter-is-valid> {
-    gtk_tree_store_iter_is_valid($!tree, $iter);
+    so gtk_tree_store_iter_is_valid($!tree, $iter);
   }
 
   method move_after (
@@ -216,20 +216,31 @@ class GTK::TreeStore  {
   }
 
   method remove (GtkTreeIter() $iter) {
-    gtk_tree_store_remove($!tree, $iter);
+    so gtk_tree_store_remove($!tree, $iter);
   }
 
   method reorder (GtkTreeIter() $parent, @new_order) {
-    die '@new_order must consist of integers'
-      unless @new_order.all ~~ (Int, IntStr).any;
-    my $no = CArray[int32].new( @new_order.map( *.Int ) );
-    gtk_tree_store_reorder($!tree, $parent, $no);
+    my $no = CArray[gint].new( @new_order.map({
+      die '@new_order must only consist of Int-compatible objects!'
+        unless .^can('Int').elems;
+      .Int;
+    });
+    samewith($parent, $no);
+  }
+  multi method reorder GtkTreeIter() $parent, CArray[gint] $new_order) {
+    gtk_tree_store_reorder($!tree, $parent, $new_order);
   }
 
   method set_column_types (*@types) is also<set-column-types> {
-    die '@types must consist of integers'
-      unless @types.all ~~ (Int, IntStr).any;
-    my $t = CArray[uint64].new( @types.map( *.Int ) );
+    my $t = CArray[GType].new( @types.map({
+      die '@new_order must only consist of GType values!'
+        # GType resolves to Int
+        unless .^can('Int').elems;
+      .Int;
+    });
+    samewith($t.elems, $t);
+  }
+  multi method set_column_types(Int() $n_columns, CArray[GType] $types) {
     gtk_tree_store_set_column_types($!tree, $t.elems, $t);
   }
 

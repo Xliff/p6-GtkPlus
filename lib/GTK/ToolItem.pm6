@@ -8,6 +8,7 @@ use GTK::Raw::ToolItem;
 use GTK::Raw::Types;
 
 use GTK::Bin;
+use GTK::MenuItem;
 use GTK::SizeGroup;
 
 our subset ToolItemAncestry is export

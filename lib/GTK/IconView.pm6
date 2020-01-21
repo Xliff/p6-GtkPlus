@@ -11,6 +11,7 @@ use GTK::CellArea;
 use GTK::CellRenderer;
 use GTK::Container;
 use GTK::TreePath;
+use GTK::TreeIter;
 
 use GTK::Roles::CellLayout;
 use GTK::Roles::Scrollable;
@@ -708,7 +709,8 @@ class GTK::IconView is GTK::Container {
     if $rv {
       $model = do {
         my $ret = $cmodel[0] ?? $cmodel[0] !! Nil;
-        $ret = GTK::TreeModel.new($ret) unless !$ret || $raw;
+        $ret = GTK::Roles::TreeModel.new-treemodel-obj($ret)
+          unless !$ret || $raw;
         $ret
       };
 

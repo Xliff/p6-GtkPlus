@@ -6,6 +6,7 @@ use NativeCall;
 use GTK::Raw::Types;
 use GTK::Raw::ScaleButton;
 
+use GTK::Adjustment;
 use GTK::Button;
 
 use GTK::Roles::Orientable;

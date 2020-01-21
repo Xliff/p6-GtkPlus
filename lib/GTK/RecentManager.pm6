@@ -9,6 +9,7 @@ use GTK::Raw::RecentInfo;   # Contains Raw calls for ::RecentManager
 
 use GLib::GList;
 use GLib::Value;
+use GTK::RecentInfo;
 
 use GLib::Roles::ListData;
 use GLib::Roles::Properties;

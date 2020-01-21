@@ -3,13 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::TreeSelection;
 use GTK::Raw::Types;
+
+use GTK::TreeIter;
+use GTK::TreePath;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 use GLib::Roles::Object;
+use GTK::Roles::TreeModel;
 
 # BOXED TYPE
 
@@ -29,11 +32,14 @@ class GTK::TreeSelection {
   }
 
   method GTK::Raw::Definitions::GtkTreeSelection
-    is also<TreeSelection>
-    { $!ts }
+    is also<
+      TreeSelection
+      GtkTreeSelection
+    >
+  { $!ts }
 
   method new (GtkTreeSelection $selection) {
-    self.bless(:$selection);
+    $selection ?? self.bless(:$selection) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -53,7 +59,8 @@ class GTK::TreeSelection {
         GtkSelectionModeEnum( gtk_tree_selection_get_mode($!ts) );
       },
       STORE => sub ($, $type is copy) {
-        my uint32 $t = self.RESOLVE-UINT($type);
+        my uint32 $t = $type;
+
         gtk_tree_selection_set_mode($!ts, $t);
       }
     );
@@ -72,33 +79,81 @@ class GTK::TreeSelection {
     gtk_tree_selection_get_select_function($!ts);
   }
 
-  proto method get_selected(|) is also<get-selected selected> { * }
+  proto method get_selected(|)
+    is also<get-selected selected>
+  { * }
 
-  multi method get_selected {
-    my GtkTreeModel $model = GtkTreeModel.new;
-    my GtkTreeIter $iter = GtkTreeIter.new;
-    ($model, $iter) if samewith($model, $iter);
+  multi method get_selected (:$raw = False) {
+    my @r = callwith($model, $iter, :all, :$raw);
+
+    @r[0] ?? @[1..*] !! Nil;
   }
   # Insure we have a proper r/w container by forcing the type.
   multi method get_selected (
-    GtkTreeModel $model is rw,
-    GtkTreeIter() $iter
+    $model is rw,
+    $iter is rw
   ) {
-    gtk_tree_selection_get_selected($!ts, $model, $iter);
+    my $m = CArray[Pointer[GtkTreeSelection]].new;
+    my $i = GtkTreeIter.new;
+
+    $m[0] = Pointer[GtkTreeSelection];
+    my $rv = gtk_tree_selection_get_selected($!ts, $m, $iter);
+
+    if $rv {
+      $model = $m[0] ??
+        ( $raw ?? $m[0] !! GTK::Roles::TreeModel.new-treemodel-obj($m[0]) )
+        !!
+        Nil;
+
+      $iter = $i ??
+        ($raw ?? $i !! GTK::TreeIter.new($i)
+        !!
+        Nil;
+    } else {
+      ($model, $iter) = Nil xx 2;
+    }
+
+    $all.not ?? $rv !! ($rv, $model, $iter);
   }
 
-  method get_selected_rows (Pointer[GtkTreeModel] $model)
+  proto method get_selected_rows
     is also<get-selected-rows>
-  {
-    gtk_tree_selection_get_selected_rows($!ts, $model);
+  { * }
+
+  method get_selected_rows (:$glist = False, :$raw = False) {
+    samewith($model, :$glist, :$raw);
+  }
+  method get_selected_rows ($model is rw, :$glist = False, :$raw = False) {
+    my $m = CArray[Pointer[GtkTreeModel]].new;
+
+    $m[0] = Pointer[GtkTreeModel];
+    my $srl = gtk_tree_selection_get_selected_rows($!ts, $m);
+
+    $model = $m[0] ??
+      ( $raw ?? $m[0] !! GTK::Roles::TreeModel.new($m[0]) )
+      !!
+      Nil;
+
+    return Nil unless $srl;
+    return $srl if $glist;
+
+    $srl = GLib::GList.new($srl) but GLib::Roles::ListData[GtkTreePath];
+    $raw ?? $srl.Array !! $srl.Array.map({ GTK::TreePath.new($srl) });
   }
 
-  method get_tree_view is also<get-tree-view> {
-    gtk_tree_selection_get_tree_view($!ts);
+  method get_tree_view (:$raw = False) is also<get-tree-view> {
+    my $tv = gtk_tree_selection_get_tree_view($!ts);
+
+    $tv ??
+      ( $raw ?? $tv !! ::('GTK::TreeView').new($tv) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
-    gtk_tree_selection_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_tree_selection_get_type, $n, $t );
   }
 
   method get_user_data is also<get-user-data> {
@@ -108,11 +163,11 @@ class GTK::TreeSelection {
   method iter_is_selected (GtkTreeIter() $iter)
     is also<iter-is-selected>
   {
-    gtk_tree_selection_iter_is_selected($!ts, $iter);
+    so gtk_tree_selection_iter_is_selected($!ts, $iter);
   }
 
   method path_is_selected (GtkTreePath() $path) is also<path-is-selected> {
-    gtk_tree_selection_path_is_selected($!ts, $path);
+    so gtk_tree_selection_path_is_selected($!ts, $path);
   }
 
   method select_all is also<select-all> {

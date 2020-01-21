@@ -9,6 +9,7 @@ use GTK::Raw::ToolItemGroup;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::ToolItem;
 
 our subset ToolItemGroupAncestry is export
   where GtkToolItemGroup | GtkToolShell | ContainerAncestry;

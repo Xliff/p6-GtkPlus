@@ -311,15 +311,12 @@ GTK::TextTagTable
 GTK::Tooltip
 GTK::TreeIter
 GTK::TreePath
-GTK::TreeRowReference
-GTK::TreeSelection
 GTK::Widget
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
 GTK::CSS_Section
 GTK::Calendar
-GTK::CellAreaContext
 GTK::CellRenderer
 GTK::CellRendererPixbuf
 GTK::CellRendererProgress
@@ -338,9 +335,7 @@ GTK::Image
 GTK::Label
 GTK::LevelBar
 GTK::PaperSize
-GTK::PrintJob
 GTK::PrintSettings
-GTK::Printer
 GTK::ProgressBar
 GTK::Range
 GTK::RecentFilter
@@ -359,12 +354,13 @@ GTK::TextChildAnchor
 GTK::TextIter
 GTK::TreeModelFilter
 GTK::TreeModelSort
+GTK::TreeRowReference
+GTK::TreeSelection
 GTK::TreeStore
 GTK::AccelLabel
 GTK::CellRendererAccel
 GTK::CellRendererSpin
 GTK::Container
-GTK::Entry
 GTK::Fixed
 GTK::Grid
 GTK::HeaderBar
@@ -375,12 +371,10 @@ GTK::PageSetup
 GTK::Pane
 GTK::PrintContext
 GTK::PrintOperation
+GTK::Printer
 GTK::Roles::CellLayout
-GTK::SearchEntry
-GTK::SpinButton
 GTK::TextBuffer
 GTK::TextView
-GTK::ToolItemGroup
 GTK::Toolbar
 GTK::Bin
 GTK::Box
@@ -388,6 +382,7 @@ GTK::Button
 GTK::ButtonBox
 GTK::CellArea
 GTK::CellAreaBox
+GTK::CellAreaContext
 GTK::CellView
 GTK::ColorButton
 GTK::ColorChooser
@@ -410,6 +405,7 @@ GTK::MenuItem
 GTK::MenuShell
 GTK::Overlay
 GTK::Popover
+GTK::PrintJob
 GTK::RecentChooserWidget
 GTK::Revealer
 GTK::ScaleButton
@@ -424,6 +420,7 @@ GTK::StackSwitcher
 GTK::Statusbar
 GTK::ToggleButton
 GTK::ToolItem
+GTK::ToolItemGroup
 GTK::ToolPalette
 GTK::TreeViewColumn
 GTK::Viewport
@@ -447,6 +444,7 @@ GTK::Dialog::Message
 GTK::Dialog::PageSetupUnix
 GTK::Dialog::PrintUnix
 GTK::Dialog::RecentChooser
+GTK::Entry
 GTK::FlowBox
 GTK::ListBox
 GTK::Menu
@@ -457,8 +455,10 @@ GTK::Places
 GTK::RadioButton
 GTK::RadioMenuItem
 GTK::RecentChooserMenu
+GTK::SearchEntry
 GTK::SeparatorToolItem
 GTK::ShortcutsWindow
+GTK::SpinButton
 GTK::Stack
 GTK::ToolButton
 GTK::TreeView

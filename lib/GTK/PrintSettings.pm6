@@ -6,6 +6,8 @@ use NativeCall;
 use GTK::Raw::PrintSettings;
 use GTK::Raw::Types;
 
+use GTK::PaperSize;
+
 use GTK::Roles::Types;
 use GLib::Roles::Object;
 

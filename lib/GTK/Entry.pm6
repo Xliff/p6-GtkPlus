@@ -9,8 +9,10 @@ use GTK::Raw::Entry;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GTK::Adjustment;
 use GTK::Widget;
 use GTK::EntryBuffer;
+use GTK::EntryCompletion;
 
 use GTK::Roles::Editable;
 use GTK::Roles::Signals::Entry;

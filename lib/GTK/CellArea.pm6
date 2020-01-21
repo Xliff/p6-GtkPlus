@@ -373,7 +373,7 @@ class GTK::CellArea {
     my $ew = gtk_cell_area_get_edit_widget($!ca);
 
     $ew ??
-      ( $raw ?? $ew !! GTK::CellEditable.new-celleditable-obj($ew) )
+      ( $raw ?? $ew !! GTK::Roles::CellEditable.new-celleditable-obj($ew) )
       !!
       Nil;
   }

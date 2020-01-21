@@ -7,6 +7,7 @@ use GTK::Raw::Types;
 
 use GTK::Roles::Orientable;
 
+use GTK::Adjustment;
 use GTK::Container;
 use GTK::ToolItemGroup;
 use GTK::ToolItem;
