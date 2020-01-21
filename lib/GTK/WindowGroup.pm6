@@ -6,6 +6,7 @@ use GTK::Raw::WindowGroup;
 use GTK::Raw::Types;
 
 use GLib::GList;
+use GLib::Roles::ListData;
 use GTK::Widget;
 
 use GLib::Roles::Object;
@@ -90,7 +91,7 @@ class GTK::WindowGroup {
     return $wl if $glist;
 
     $wl = GLib::GList.new($wl) but GLib::Roles::ListData[GtkWindow];
-    $raw ?? $wl.Array !! $wl.Array.map({ GTK::Window.new($_) });
+    $raw ?? $wl.Array !! $wl.Array.map({ ::('GTK::Window').new($_) });
   }
 
   method remove_window (GtkWindow() $window) is also<remove-window> {
