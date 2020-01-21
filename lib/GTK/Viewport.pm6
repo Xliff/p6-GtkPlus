@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GTK::Raw::Types;
 use GTK::Raw::Viewport;
@@ -31,20 +30,20 @@ class GTK::Viewport is GTK::Bin {
       when ViewPortAncestry {
         $!v = do {
           when GtkViewport {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           when GtkScrollable {
             $!s = $_;                             # GTK::Roles::Scrollable
-            $to-parent = nativecast(GtkBin, $_);
-            nativecast(GtkViewport, $_);
+            $to-parent = cast(GtkBin, $_);
+            cast(GtkViewport, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkViewport, $_);
+            cast(GtkViewport, $_);
           }
         }
-        $!s //= nativecast(GtkScrollable, $!v);   # GTK::Roles::Scrollable
+        $!s //= cast(GtkScrollable, $!v);   # GTK::Roles::Scrollable
         self.setBin($to-parent);
       }
       when GTK::Viewport {
@@ -62,8 +61,10 @@ class GTK::Viewport is GTK::Bin {
   { $!v }
 
   multi method new (ViewPortAncestry $viewport, :$ref = True) {
+    return Nil unless $viewport;
+
     my $o = self.bless(:$viewport);
-    $o.upref if $ref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (

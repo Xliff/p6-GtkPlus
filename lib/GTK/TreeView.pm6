@@ -11,6 +11,7 @@ use GTK::Adjustment;
 use GTK::Container;
 use GTK::Entry;
 use GTK::TreeIter;
+use GTK::TreePath;
 use GTK::TreeSelection;
 use GTK::TreeStore;
 use GTK::TreeViewColumn;
@@ -82,19 +83,23 @@ class GTK::TreeView is GTK::Container {
 
   method GTK::Raw::Definitions::GtkTreeView is also<TreeView> { $!tv }
 
-  multi method new (TreeViewAncestry $treeview) {
+  multi method new (TreeViewAncestry $treeview, :$ref = True) {
+    return Nil unless $treeview;
+
     my $o = self.bless(:$treeview);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $treeview = gtk_tree_view_new();
-    self.bless(:$treeview);
+
+    $treeview ?? self.bless(:$treeview) !! Nil;
   }
 
   method new_with_model(GtkTreeModel() $model) is also<new-with-model> {
     my $treeview = gtk_tree_view_new_with_model($model);
-    self.bless(:$treeview);
+
+    $treeview ?? self.bless(:$treeview) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -199,7 +204,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_activate_on_single_click($!tv);
       },
       STORE => sub ($, Int() $single is copy) {
-        my guint $s = self.RESOLVE-BOOL($single);
+        my guint $s = $single;
+
         gtk_tree_view_set_activate_on_single_click($!tv, $s);
       }
     );
@@ -211,7 +217,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_enable_search($!tv);
       },
       STORE => sub ($, Int() $enable_search is copy) {
-        my guint $es = self.RESOLVE-BOOL($enable_search);
+        my guint $es = $enable_search;
+
         gtk_tree_view_set_enable_search($!tv, $es);
       }
     );
@@ -223,16 +230,22 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_enable_tree_lines($!tv);
       },
       STORE => sub ($, Int() $enabled is copy) {
-        my guint $e = self.RESOLVE-BOOL($enabled);
+        my guint $e = $enabled;
+
         gtk_tree_view_set_enable_tree_lines($!tv, $e);
       }
     );
   }
 
-  method expander_column is rw is also<expander-column> {
+  method expander_column (:$raw = False) is rw is also<expander-column> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::TreeViewColumn.new( gtk_tree_view_get_expander_column($!tv) );
+        my $tvc = gtk_tree_view_get_expander_column($!tv);
+
+        $tvc ??
+          ( $raw ?? $tvc !! GTK::TreeViewColumn.new($tvc) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkTreeViewColumn() $column is copy) {
         gtk_tree_view_set_expander_column($!tv, $column);
@@ -246,7 +259,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_fixed_height_mode($!tv);
       },
       STORE => sub ($, Int() $enable is copy) {
-        my guint $e = self.RESOLVE-BOOL($enable);
+        my guint $e = $enable;
+
         gtk_tree_view_set_fixed_height_mode($!tv, $e);
       }
     );
@@ -259,16 +273,22 @@ class GTK::TreeView is GTK::Container {
         GtkTreeViewGridLinesEnum( gtk_tree_view_get_grid_lines($!tv) );
       },
       STORE => sub ($, Int() $grid_lines is copy) {
-        my guint $gl = self.RESOLVE-UINT($grid_lines);
+        my guint $gl = $grid_lines;
+
         gtk_tree_view_set_grid_lines($!tv, $gl);
       }
     );
   }
 
-  method hadjustment is rw {
+  method hadjustment (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Adjustment.new( gtk_tree_view_get_hadjustment($!tv) );
+        my $a = gtk_tree_view_get_hadjustment($!tv);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_tree_view_set_hadjustment($!tv, $adjustment);
@@ -282,7 +302,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_headers_clickable($!tv);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my guint $s = self.RESOLVE-BOOL($setting);
+        my guint $s = $setting;
+
         gtk_tree_view_set_headers_clickable($!tv, $s);
       }
     );
@@ -294,7 +315,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_headers_visible($!tv);
       },
       STORE => sub ($, Int() $headers_visible is copy) {
-        my guint $hv = self.RESOLVE-BOOL($headers_visible);
+        my guint $hv = $headers_visible;
+
         gtk_tree_view_set_headers_visible($!tv, $hv);
       }
     );
@@ -306,7 +328,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_hover_expand($!tv);
       },
       STORE => sub ($, Int() $expand is copy) {
-        my guint $e = self.RESOLVE-BOOL($expand);
+        my guint $e = $expand;
+
         gtk_tree_view_set_hover_expand($!tv, $e);
       }
     );
@@ -318,7 +341,8 @@ class GTK::TreeView is GTK::Container {
         gtk_tree_view_get_hover_selection($!tv);
       },
       STORE => sub ($, Int() $hover is copy) {
-        my guint $h = self.RESOLVE-BOOL($hover);
+        my guint $h = $hover;
+
         gtk_tree_view_set_hover_selection($!tv, $h);
       }
     );
@@ -330,7 +354,8 @@ class GTK::TreeView is GTK::Container {
         gtk_tree_view_get_level_indentation($!tv);
       },
       STORE => sub ($, Int() $indentation is copy) {
-        my gint $i = self.RESOLVE-INT($indentation);
+        my gint $i = $indentation;
+
         gtk_tree_view_set_level_indentation($!tv, $i);
       }
     );
@@ -353,7 +378,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_reorderable($!tv);
       },
       STORE => sub ($, Int() $reorderable is copy) {
-        my guint $r = self.RESOLVE-BOOL($reorderable);
+        my guint $r = $reorderable;
+
         gtk_tree_view_set_reorderable($!tv, $r);
       }
     );
@@ -365,7 +391,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_rubber_banding($!tv);
       },
       STORE => sub ($, Int() $enable is copy) {
-        my guint $e = self.RESOLVE-BOOL($enable);
+        my guint $e = $enable;
+
         gtk_tree_view_set_rubber_banding($!tv, $e);
       }
     );
@@ -377,7 +404,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_rules_hint($!tv);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my guint $s = self.RESOLVE-BOOL($setting);
+        my guint $s = $setting;
+
         gtk_tree_view_set_rules_hint($!tv, $s);
       }
     );
@@ -389,16 +417,22 @@ class GTK::TreeView is GTK::Container {
         gtk_tree_view_get_search_column($!tv);
       },
       STORE => sub ($, Int() $column is copy) {
-        my gint $c = self.RESOLVE-INT($column);
+        my gint $c = $column;
+
         gtk_tree_view_set_search_column($!tv, $c);
       }
     );
   }
 
-  method search_entry is rw is also<search-entry> {
+  method search_entry (:$raw = False) is rw is also<search-entry> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Entry.new( gtk_tree_view_get_search_entry($!tv) );
+        my $e = gtk_tree_view_get_search_entry($!tv);
+
+        $e ??
+          ( $raw ?? $e !! GTK::Entry.new($e) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkEntry() $entry is copy) {
         gtk_tree_view_set_search_entry($!tv, $entry);
@@ -412,7 +446,8 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_show_expanders($!tv);
       },
       STORE => sub ($, Int() $enabled is copy) {
-        my guint $e = self.RESOLVE-BOOL($enabled);
+        my guint $e = $enabled;
+
         gtk_tree_view_set_show_expanders($!tv, $e);
       }
     );
@@ -424,16 +459,22 @@ class GTK::TreeView is GTK::Container {
         gtk_tree_view_get_tooltip_column($!tv);
       },
       STORE => sub ($, Int() $column is copy) {
-        my gint $c = self.RESOLVE-INT($column);
+        my gint $c = $column;
+
         gtk_tree_view_set_tooltip_column($!tv, $c);
       }
     );
   }
 
-  method vadjustment is rw {
+  method vadjustment (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Adjustment.new( gtk_tree_view_get_vadjustment($!tv) );
+        my $a = gtk_tree_view_get_vadjustment($!tv);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_tree_view_set_vadjustment($!tv, $adjustment);
@@ -470,25 +511,23 @@ class GTK::TreeView is GTK::Container {
   { * }
 
   multi method convert_bin_window_to_tree_coords (Int() $bx, Int() $by) {
-    my gint ($bxx, $byy, $txx, $tyy) = ($bx, $by);
-    samewith($bxx, $byy, $txx, $tyy);
-    ($txx, $tyy);
+    samewith($bx, $by, $, $);
   }
   multi method convert_bin_window_to_tree_coords (
     Int() $bx,
     Int() $by,
-    Int $tx is rw,
-    Int $ty is rw
+    $tx is rw,
+    $ty is rw
   ) {
-    my @i = ($bx, $by);
-    my gint ($bxx, $byy) = self.RESOLVE-INT(@i);
+    my gint ($bxx, $byy, $txx, $tyy) = ($bx, $by, 0, 0);
     gtk_tree_view_convert_bin_window_to_tree_coords(
       $!tv,
       $bxx,
       $byy,
-      $tx,
-      $ty
+      $txx,
+      $tyy
     );
+    ($tx, $ty) = ($txx, $tyy);
   }
 
   proto method convert_bin_window_to_widget_coords (|)
@@ -496,35 +535,31 @@ class GTK::TreeView is GTK::Container {
   { * }
 
   multi method convert_bin_window_to_widget_coords (Int() $bx, Int() $by) {
-    my gint ($bxx, $byy, $wxx, $wyy) = ($bx, $by);
-    samewith($bxx, $byy, $wxx, $wyy);
-    ($wxx, $wyy);
+    samewith($bx, $by, $, $);
   }
   multi method convert_bin_window_to_widget_coords (
     Int() $bx,
     Int() $by,
-    Int $wx is rw,
-    Int $wy is rw
+    $wx is rw,
+    $wy is rw
   ) {
-    my @i = ($bx, $by);
-    my gint ($bxx, $byy) = self.RESOLVE-INT(@i);
+    my @i =
+    my gint ($bxx, $byy, $wxx, $wyy) = ($bx, $by, 0, 0);
     gtk_tree_view_convert_bin_window_to_widget_coords(
       $!tv,
       $bxx,
       $byy,
-      $wx,
-      $wy
+      $wxx,
+      $wyy
     );
+    ($wx, $wy) = ($wxx, $wyy);
   }
 
   proto method convert_tree_to_bin_window_coords (|)
     is also<convert-tree-to-bin-window-coords>
   { * }
   multi method convert_tree_to_bin_window_coords (Int() $tx, Int() $ty) {
-    my @i = ($tx, $ty);
-    my gint ($txx, $tyy, $bxx, $byy) = self.RESOLVE-INT(@i);
-    samewith($txx, $tyy, $bxx, $byy);
-    ($bxx, $byy);
+    samewith($tx, $ty, $, $);
   }
   multi method convert_tree_to_bin_window_coords (
     Int() $tx,
@@ -532,9 +567,15 @@ class GTK::TreeView is GTK::Container {
     Int $bx is rw,
     Int $by is rw
   ) {
-    my @i = ($tx, $ty);
-    my gint ($txx, $tyy) =  self.RESOLVE-INT(@i);
-    gtk_tree_view_convert_tree_to_bin_window_coords($!tv, $tx, $ty, $bx, $by);
+    my gint ($txx, $tyy, $bxx, $byy) =  ($tx, $ty, $bx, $by);
+    gtk_tree_view_convert_tree_to_bin_window_coords(
+      $!tv,
+      $txx,
+      $tyy,
+      $bxx,
+      $byy
+    );
+    ($bx, $by) = ($bxx, $byy);
   }
 
   proto method convert_widget_to_bin_window_coords (|)
@@ -545,9 +586,7 @@ class GTK::TreeView is GTK::Container {
     Int() $wx,
     Int() $wy
   ) {
-    my gint ($wxx, $wyy, $bxx, $byy) = ($wx, $wy);
-    samewith($wxx, $wyy, $bxx, $byy);
-    ($bxx, $byy);
+    samewith($wx, $wy, $, $);
   }
   multi method convert_widget_to_bin_window_coords (
     Int() $wx,
@@ -556,7 +595,7 @@ class GTK::TreeView is GTK::Container {
     Int $by is rw
   ) {
     my @i = ($wx, $wy);
-    my gint ($wxx, $wyy) =  self.RESOLVE-INT(@i);
+    my gint ($wxx, $wyy) =  @i;
     gtk_tree_view_convert_widget_to_bin_window_coords(
       $!tv,
       $wxx,
@@ -574,19 +613,23 @@ class GTK::TreeView is GTK::Container {
     Int() $wx,
     Int() $wy
   ) {
-    my gint ($wxx, $wyy, $txx, $tyy) = ($wx, $wy);
-    samewith($wxx, $wyy, $txx, $tyy);
-    ($txx, $tyy);
+    samewith($wx, $wy, $, $);
   }
   multi method convert_widget_to_tree_coords (
     Int() $wx,
     Int() $wy,
-    Int $tx is rw,
-    Int $ty is rw
+    $ty is rw,
+    $tx is rw
   ) {
-    my @i = ($wx, $wy);
-    my ($wxx, $wyy) = self.RESOLVE-INT(@i);
-    gtk_tree_view_convert_widget_to_tree_coords($!tv, $wxx, $wyy, $tx, $ty);
+    my ($wxx, $wyy, $txx, $tyy) = ($wx, $wy, 0, 0);
+    gtk_tree_view_convert_widget_to_tree_coords(
+      $!tv,
+      $wxx,
+      $wyy,
+      $txx,
+      $tyy
+    );
+    ($tx, $ty) = ($txx, $tyy);
   }
 
   method create_row_drag_icon (GtkTreePath() $path)
@@ -595,15 +638,28 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_create_row_drag_icon($!tv, $path);
   }
 
-  method enable_model_drag_dest (
-    GtkTargetEntry() $targets,
-    Int() $n_targets,
-    uint32 $actions             # GdkDragAction $actions
-  )
+  proto method enable_model_drag_dest (|)
     is also<enable-model-drag-dest>
-  {
-    my gint $nt = self.RESOLVE-INT($n_targets);
-    my guint $a = self.RESOLVE-UINT($actions);
+  { * }
+
+  multi method enable_model_drag_dest (
+    @targets,
+    Int() $actions             # GdkDragAction $actions
+  ) {
+    samewith(
+      GLib::Roles::TypedBuffer[GdkDragAction].new(@targets).p,
+      @targets.elems,
+      $actions
+    );
+  }
+  multi method enable_model_drag_dest (
+    Pointer $targets,
+    Int() $n_targets,
+    Int $actions             # GdkDragAction $actions
+  ) {
+    my gint $nt = $n_targets;
+    my guint $a = $actions;
+
     gtk_tree_view_enable_model_drag_dest($!tv, $targets, $nt, $a);
   }
 
@@ -615,9 +671,9 @@ class GTK::TreeView is GTK::Container {
   )
     is also<enable-model-drag-source>
   {
-    my uint64 $sbm = self.RESOLVE-ULONG($start_button_mask);
-    my gint $nt = self.RESOLVE-INT($n_targets);
-    my guint $a = self.RESOLVE-UINT($actions);
+    my uint64 $sbm = $start_button_mask;
+    my gint $nt = $n_targets;
+    my guint $a = $actions;
     gtk_tree_view_enable_model_drag_source($!tv, $sbm, $targets, $nt, $a);
   }
 
@@ -628,7 +684,7 @@ class GTK::TreeView is GTK::Container {
   method expand_row (GtkTreePath() $path, Int() $open_all)
     is also<expand-row>
   {
-    my gboolean $o = self.RESOLVE-BOOL($open_all);
+    my gboolean $o = $open_all;
     gtk_tree_view_expand_row($!tv, $path, $o);
   }
 
@@ -661,7 +717,7 @@ class GTK::TreeView is GTK::Container {
   }
 
   method get_column (Int() $n) is also<get-column> {
-    my gint $nn = self.RESOLVE-INT($n);
+    my gint $nn = $n;
     gtk_tree_view_get_column($!tv, $nn);
   }
 
@@ -736,8 +792,8 @@ class GTK::TreeView is GTK::Container {
     is also<get-dest-row-at-pos>
   {
     my @i = ($drag_x, $drag_y);
-    my gint ($dx, $dy) = self.RESOLVE-INT(@i);
-    my guint $p = self.RESOLVE-UINT($pos);
+    my gint ($dx, $dy) = @i;
+    my guint $p = $pos;
     gtk_tree_view_get_dest_row_at_pos($!tv, $dx, $dy, $path, $p);
   }
 
@@ -751,7 +807,7 @@ class GTK::TreeView is GTK::Container {
       unless $path ~~ (GTK::TreePath, GtkTreePath).any;
     $path .= TreePath if $path ~~ GTK::TreePath;
 
-    my guint $p = self.RESOLVE-UINT($pos);
+    my guint $p = $pos;
     my $cpath = CArray[Pointer[GtkTreePath]].new;
     $cpath[0] = cast(Pointer[GtkTreePath], $path);
 
@@ -795,7 +851,7 @@ class GTK::TreeView is GTK::Container {
     $column .= TreeViewColumn if $column ~~ GTK::TreeViewColumn;
 
     my @i = ($x, $y, $cell_x, $cell_y);
-    my gint ($xx, $yy, $cx, $cy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy, $cx, $cy) = @i;
 
     my $rv;
     my $cpath = CArray[Pointer[GtkTreePath]].new;
@@ -870,8 +926,8 @@ class GTK::TreeView is GTK::Container {
     my $rv;
     my $cmodel = CArray[Pointer[GtkTreeModel]].new;
     my $cpath  = CArray[Pointer[GtkTreePath]].new;
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
-    my gboolean $kt = self.RESOLVE-BOOL($keyboard_tip);
+    my gint ($xx, $yy) = $x, $y;
+    my gboolean $kt = $keyboard_tip;
     my $rc = gtk_tree_view_get_tooltip_context(
       $!tv,
       $xx,
@@ -942,7 +998,7 @@ class GTK::TreeView is GTK::Container {
   method insert_column (GtkTreeViewColumn() $column, Int() $position)
     is also<insert-column>
   {
-    my guint $p = self.RESOLVE-UINT($position);
+    my guint $p = $position;
     gtk_tree_view_insert_column($!tv, $column, $p);
   }
 
@@ -953,8 +1009,8 @@ class GTK::TreeView is GTK::Container {
     Str()             $attr,
     Int()             $value
   ) {
-    my gint  $p = self.RESOLVE-INT($position);
-    my guint $v = self.RESOLVE-UINT($value);
+    my gint  $p = $position;
+    my guint $v = $value;
     gtk_tree_view_insert_column_with_attributes(
       $!tv, $p, $title, $cell, $attr, $v, Str
     );
@@ -982,7 +1038,7 @@ class GTK::TreeView is GTK::Container {
   )
     is also<insert-column-with-data-func>
   {
-    my guint $p = self.RESOLVE-UINT($position);
+    my guint $p = $position;
     gtk_tree_view_insert_column_with_data_func(
       $!tv,
       $p,
@@ -1013,7 +1069,7 @@ class GTK::TreeView is GTK::Container {
 
     my $rv;
     my @i = ($x, $y, $cell_x, $cell_y);
-    my gint ($xx, $yy, $cx, $cy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy, $cx, $cy) = @i;
     my $cpath = CArray[Pointer[GtkTreePath]].new;
     my $ccol  = CArray[Pointer[GtkTreeViewColumn]].new;
     my $rc = gtk_tree_view_is_blank_at_pos(
@@ -1092,7 +1148,7 @@ class GTK::TreeView is GTK::Container {
   )
     is also<scroll-to-cell>
   {
-    my gboolean $ua = self.RESOLVE-BOOL($use_align);
+    my gboolean $ua = $use_align;
     my gfloat ($ra, $ca) = ($row_align, $col_align);
     gtk_tree_view_scroll_to_cell($!tv, $path, $column, $ua, $ra, $ca);
   }
@@ -1101,7 +1157,7 @@ class GTK::TreeView is GTK::Container {
     is also<scroll-to-point>
   {
     my @i = ($tree_x, $tree_y);
-    my gint ($tx, $ty) = self.RESOLVE-INT(@i);
+    my gint ($tx, $ty) = @i;
     gtk_tree_view_scroll_to_point($!tv, $tx, $ty);
   }
 
@@ -1122,7 +1178,7 @@ class GTK::TreeView is GTK::Container {
   )
     is also<set-cursor>
   {
-    my gboolean $se = self.RESOLVE-BOOL($start_editing);
+    my gboolean $se = $start_editing;
     gtk_tree_view_set_cursor($!tv, $path, $focus_column, $se);
   }
 
@@ -1134,7 +1190,7 @@ class GTK::TreeView is GTK::Container {
   )
     is also<set-cursor-on-cell>
   {
-    my gboolean $se = self.RESOLVE-BOOL($start_editing);
+    my gboolean $se = $start_editing;
     gtk_tree_view_set_cursor_on_cell(
       $!tv,
       $path,
@@ -1160,7 +1216,7 @@ class GTK::TreeView is GTK::Container {
   )
     is also<set-drag-dest-row>
   {
-    my guint $p = self.RESOLVE-UINT($pos);
+    my guint $p = $pos;
     gtk_tree_view_set_drag_dest_row($!tv, $path, $p);
   }
 

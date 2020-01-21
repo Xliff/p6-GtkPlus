@@ -122,7 +122,6 @@ GTK::Roles::Signals::Widget
 GTK::Roles::StyleProvider
 GTK::Roles::Types
 GTK::WidgetPath
-GTK::WindowGroup
 GTK::Builder::Actionable
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
@@ -312,6 +311,7 @@ GTK::Tooltip
 GTK::TreeIter
 GTK::TreePath
 GTK::Widget
+GTK::WindowGroup
 GTK::AccelGroup
 GTK::Adjustment
 GTK::CSSProvider
@@ -428,7 +428,6 @@ GTK::VolumeButton
 GTK::Window
 GTK::ActionBar
 GTK::AppButton
-GTK::ApplicationWindow
 GTK::AspectFrame
 GTK::Assistant
 GTK::CellRendererCombo
@@ -463,9 +462,10 @@ GTK::Stack
 GTK::ToolButton
 GTK::TreeView
 GTK::Utils::MenuBuilder
-GTK::Application
+GTK::ApplicationWindow
 GTK::MenuToolButton
 GTK::ToggleToolButton
+GTK::Application
 GTK::RadioToolButton
 GTK
 GTK::Builder

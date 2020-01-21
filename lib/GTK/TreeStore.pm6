@@ -219,29 +219,37 @@ class GTK::TreeStore  {
     so gtk_tree_store_remove($!tree, $iter);
   }
 
-  method reorder (GtkTreeIter() $parent, @new_order) {
-    my $no = CArray[gint].new( @new_order.map({
-      die '@new_order must only consist of Int-compatible objects!'
-        unless .^can('Int').elems;
-      .Int;
-    });
+  multi method reorder (GtkTreeIter() $parent, @new_order) {
+    my $no = CArray[gint].new(
+      @new_order.map({
+        die '@new_order must only consist of Int-compatible objects!'
+          unless .^can('Int').elems;
+        .Int;
+      })
+    );
     samewith($parent, $no);
   }
-  multi method reorder GtkTreeIter() $parent, CArray[gint] $new_order) {
+  multi method reorder (GtkTreeIter() $parent, CArray[gint] $new_order) {
     gtk_tree_store_reorder($!tree, $parent, $new_order);
   }
 
-  method set_column_types (*@types) is also<set-column-types> {
-    my $t = CArray[GType].new( @types.map({
-      die '@new_order must only consist of GType values!'
-        # GType resolves to Int
-        unless .^can('Int').elems;
-      .Int;
-    });
+  proto method set_column_types (|)
+    is also<set-column-types>
+  { * }
+
+  multi method set_column_types (*@types) {
+    my $t = CArray[GType].new(
+      @types.map({
+        die '@new_order must only consist of GType values!'
+          # GType resolves to Int
+          unless .^can('Int').elems;
+        .Int;
+      })
+    );
     samewith($t.elems, $t);
   }
   multi method set_column_types(Int() $n_columns, CArray[GType] $types) {
-    gtk_tree_store_set_column_types($!tree, $t.elems, $t);
+    gtk_tree_store_set_column_types($!tree, $n_columns, $types);
   }
 
   # method set_valist (GtkTreeIter $iter, va_list $var_args) {

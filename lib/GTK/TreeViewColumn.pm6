@@ -1,7 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GTK::Raw::TreeViewColumn;
 use GTK::Raw::Types;
@@ -28,8 +27,8 @@ class GTK::TreeViewColumn {
   submethod BUILD(:$treeview) {
     self!setObject($!tvc = $treeview);
 
-    $!b   = nativecast(GtkBuildable,  $!tvc);   # GTK::Roles::Buildable
-    $!cl  = nativecast(GtkCellLayout, $!tvc);   # GTK::Roles::CellLayout
+    $!b   = cast(GtkBuildable,  $!tvc);   # GTK::Roles::Buildable
+    $!cl  = cast(GtkCellLayout, $!tvc);   # GTK::Roles::CellLayout
   }
 
   method GTK::Raw::Definitions::GtkTreeViewColumn
@@ -85,7 +84,7 @@ class GTK::TreeViewColumn {
         so GTK::CellArea.new( gtk_tree_view_column_get_clickable($!tvc) );
       },
       STORE => sub ($, Int() $clickable is copy) {
-        my gboolean $c = $clickable.so.Int;
+        my gboolean $c = $clickable;
 
         gtk_tree_view_column_set_clickable($!tvc, $c);
       }
@@ -98,7 +97,7 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_expand($!tvc);
       },
       STORE => sub ($, Int() $expand is copy) {
-        my gboolean $e = $expand.so.Int;
+        my gboolean $e = $expand;
 
         gtk_tree_view_column_set_expand($!tvc, $e);
       }
@@ -150,7 +149,7 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_reorderable($!tvc);
       },
       STORE => sub ($, Int() $reorderable is copy) {
-        my gboolean $r = $reorderable.so.Int;
+        my gboolean $r = $reorderable;
 
         gtk_tree_view_column_set_reorderable($!tvc, $r);
       }
@@ -163,7 +162,7 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_resizable($!tvc);
       },
       STORE => sub ($, Int() $resizable is copy) {
-        my gboolean $r = $resizable.so.Int;
+        my gboolean $r = $resizable;
 
         gtk_tree_view_column_set_resizable($!tvc, $r);
       }
@@ -202,7 +201,7 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_sort_indicator($!tvc);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = $setting.so.Int;
+        my gboolean $s = $setting;
 
         gtk_tree_view_column_set_sort_indicator($!tvc, $s);
       }
@@ -252,7 +251,7 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_visible($!tvc);
       },
       STORE => sub ($, $visible is copy) {
-        my gboolean $v = $visible.so.Int;
+        my gboolean $v = $visible;
 
         gtk_tree_view_column_set_visible($!tvc, $v);
       }
@@ -405,12 +404,19 @@ class GTK::TreeViewColumn {
     gtk_tree_view_column_focus_cell($!tvc, $cell);
   }
 
-  method get_button is also<get-button> {
-    gtk_tree_view_column_get_button($!tvc);
+  method get_button (:$raw = False, :$widget = False) is also<get-button> {
+    my $w = gtk_tree_view_column_get_button($!tvc);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
-  method get_tree_view is also<get-tree-view> {
-    gtk_tree_view_column_get_tree_view($!tvc);
+  method get_tree_view (:$raw = False) is also<get-tree-view> {
+    my $tv = gtk_tree_view_column_get_tree_view($!tvc);
+
+    $tv ??
+      ( $raw ?? $tv !! ::('GTK::TreeView').new($tv) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {

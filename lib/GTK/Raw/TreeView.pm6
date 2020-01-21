@@ -112,7 +112,7 @@ sub gtk_tree_view_create_row_drag_icon (
 
 sub gtk_tree_view_enable_model_drag_dest (
   GtkTreeView $tree_view,
-  GtkTargetEntry $targets,
+  Pointer $targets,             # Array of GtkTargetEntry ($targets),
   gint $n_targets,
   uint32 $actions               # GdkDragAction $actions
 )
@@ -123,7 +123,7 @@ sub gtk_tree_view_enable_model_drag_dest (
 sub gtk_tree_view_enable_model_drag_source (
   GtkTreeView $tree_view,
   uint64 $start_button_mask,    # GdkModifierType $start_button_mask,
-  GtkTargetEntry $targets,
+  Pointer $targets,             # Array of GtkTargetEntry ($targets),
   gint $n_targets,
   uint32                        # GdkDragAction $actions
 )

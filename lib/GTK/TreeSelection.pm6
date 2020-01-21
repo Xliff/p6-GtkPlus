@@ -80,18 +80,23 @@ class GTK::TreeSelection {
   }
 
   proto method get_selected(|)
-    is also<get-selected selected>
+    is also<
+      get-selected
+      selected
+    >
   { * }
 
   multi method get_selected (:$raw = False) {
-    my @r = callwith($model, $iter, :all, :$raw);
+    my @r = callwith($, $, :all, :$raw);
 
     @r[0] ?? @[1..*] !! Nil;
   }
   # Insure we have a proper r/w container by forcing the type.
   multi method get_selected (
     $model is rw,
-    $iter is rw
+    $iter is rw,
+    :$all = False,
+    :$raw = False
   ) {
     my $m = CArray[Pointer[GtkTreeSelection]].new;
     my $i = GtkTreeIter.new;
@@ -106,7 +111,7 @@ class GTK::TreeSelection {
         Nil;
 
       $iter = $i ??
-        ($raw ?? $i !! GTK::TreeIter.new($i)
+        ( $raw ?? $i !! GTK::TreeIter.new($i) )
         !!
         Nil;
     } else {
@@ -120,10 +125,10 @@ class GTK::TreeSelection {
     is also<get-selected-rows>
   { * }
 
-  method get_selected_rows (:$glist = False, :$raw = False) {
-    samewith($model, :$glist, :$raw);
+  multi method get_selected_rows (:$glist = False, :$raw = False) {
+    samewith($, :$glist, :$raw);
   }
-  method get_selected_rows ($model is rw, :$glist = False, :$raw = False) {
+  multi method get_selected_rows ($model is rw, :$glist = False, :$raw = False) {
     my $m = CArray[Pointer[GtkTreeModel]].new;
 
     $m[0] = Pointer[GtkTreeModel];
