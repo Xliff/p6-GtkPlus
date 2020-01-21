@@ -36,17 +36,21 @@ class GTK::TextTag  {
     self.disconnect-all($_) for %!signals-tt;
   }
 
+  multi method new (GtkTextTag $tag) {
+    $tag ?? self.bless(:$tag) !! Nil;
+  }
   multi method new (Str() $name) {
     my $tag = gtk_text_tag_new($name);
-    self.bless(:$tag);
-  }
-  multi method new (GtkTextTag $tag) {
-    self.bless(:$tag);
+
+    $tag ?? self.bless(:$tag) !! Nil;
   }
 
   method GTK::Raw::Definitions::GtkTextTag
-    is also<TextTag>
-    { $!tt }
+    is also<
+      TextTag
+      GtkTextTag
+    >
+  { $!tt }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -67,7 +71,8 @@ class GTK::TextTag  {
         gtk_text_tag_get_priority($!tt);
       },
       STORE => sub ($, Int() $priority is copy) {
-        my gint $p = self.RESOLVE-INT($priority);
+        my gint $p = $priority;
+
         gtk_text_tag_set_priority($!tt, $p);
       }
     );
@@ -76,20 +81,23 @@ class GTK::TextTag  {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method changed (Int() $size_changed) {
-    my gboolean $sc = self.RESOLVE-BOOL($size_changed);
+    my gboolean $sc = $size_changed.so.Int;
+
     gtk_text_tag_changed($!tt, $sc);
   }
 
   multi method event (
-    GObject $event_object,
-    GdkEvent $event,
+    GObject() $event_object,
+    GdkEvent() $event,
     GtkTextIter() $iter
   ) {
     gtk_text_tag_event($!tt, $event_object, $event, $iter);
   }
 
   method get_type is also<get-type> {
-    gtk_text_tag_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_text_tag_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
@@ -346,16 +354,19 @@ class GTK::TextTag  {
   }
 
   # Type: PangoFontDescription
-  method font-desc is rw  {
+  method font-desc (:$raw = False) is rw  {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('font-desc', $gv)
         );
-        Pango::FontDescription.new(
-          nativecast(PangoFontDescription, $gv.pointer)
-        );
+
+        return Nil unless $gv.pointer;
+
+        my $fd = nativecast(PangoFontDescription, $gv.pointer);
+
+        $raw ?? $fd !! Pango::FontDescription.new($fd);
       },
       STORE => -> $, PangoFontDescription() $val is copy {
         $gv.pointer = $val;
@@ -1012,7 +1023,7 @@ class GTK::TextTag  {
         $gv = GLib::Value.new(
           self.prop_get('stretch', $gv)
         );
-        PangoStretch( $gv.uint );
+        PangoStretchEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
@@ -1114,7 +1125,7 @@ class GTK::TextTag  {
         $gv = GLib::Value.new(
           self.prop_get('style', $gv)
         );
-        PangoStyle( $gv.uint );
+        PangoStyleEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
@@ -1141,22 +1152,22 @@ class GTK::TextTag  {
   }
 
   # Type: PangoTabArray
-  method tabs is rw  {
+  method tabs (:$raw = False) is rw  {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => -> $ {
         $gv = GLib::Value.new(
           self.prop_get('tabs', $gv)
         );
-        Pango::TabArray.new( nativecast(PangoTabArray, $gv.pointer) );
+
       },
       STORE => -> $, $val is copy {
         $gv.pointer = do given $val {
-          when Pango::Tabs    { .array }
-          when PangoTabArray  { $_ }
-          when Pointer        { $_ }
-          when CArray[int32]  { $_ }
-          when CArray[gint]   { $_ }
+          when Pango::Tabs     { .array }
+          when PangoTabArray |
+               Pointer       |
+               CArray[int32] |
+               CArray[gint]    { $_ }
         };
         self.prop_set('tabs', $gv);
       }
@@ -1188,7 +1199,7 @@ class GTK::TextTag  {
         $gv = GLib::Value.new(
           self.prop_get('underline', $gv)
         );
-        PangoUnderline( $gv.uint );
+        PangoUnderlineEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;
@@ -1256,7 +1267,7 @@ class GTK::TextTag  {
         $gv = GLib::Value.new(
           self.prop_get('variant', $gv)
         );
-        PangoVariant( $gv.uint );
+        PangoVariantEnum( $gv.uint );
       },
       STORE => -> $, Int() $val is copy {
         $gv.uint = $val;

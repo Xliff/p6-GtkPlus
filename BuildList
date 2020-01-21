@@ -305,7 +305,6 @@ GTK::SizeGroup
 GTK::StyleContext
 GTK::TargetEntry
 GTK::TargetList
-GTK::TextChildAnchor
 GTK::TextMark
 GTK::TextTag
 GTK::TextTagTable
@@ -356,6 +355,7 @@ GTK::Scrollbar
 GTK::Separator
 GTK::Spinner
 GTK::Switch
+GTK::TextChildAnchor
 GTK::TextIter
 GTK::TreeModelFilter
 GTK::TreeModelSort

@@ -1,36 +1,42 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::TextChildAnchor;
 use GTK::Raw::Types;
+
+use GTK::Widget;
 
 use GLib::Roles::Object;
 use GLib::Roles::ListData;
 
 class GTK::TextChildAnchor {
   also does GLib::Roles::Object;
-  
+
   has GtkTextChildAnchor $!ta is implementor;
 
   submethod BUILD(:$anchor) {
     self!setObject($!ta = $anchor);
   }
-  
-  method GTK::Raw::Definitions::GtkTextChildAnchor 
-    is also<TextChildAnchor>
-    { $!ta }
+
+  method GTK::Raw::Definitions::GtkTextChildAnchor
+    is also<
+      TextChildAnchor
+      GtkTextChildAnchor
+    >
+  { $!ta }
 
   multi method new (GtkTextChildAnchor $anchor) {
+    return Nil unless $anchor;
+
     my $o = self.bless(:$anchor);
     #o.upref;
     $o;
   }
   multi method new {
     my $anchor = gtk_text_child_anchor_new();
-    self.bless(:$anchor);
+
+    $anchor ?? self.bless(:$anchor) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -44,19 +50,26 @@ class GTK::TextChildAnchor {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_deleted is also<get-deleted> {
-    gtk_text_child_anchor_get_deleted($!ta);
+    so gtk_text_child_anchor_get_deleted($!ta);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &gtk_text_child_anchor_get_type, $n, $t );
   }
 
   # Create a new GLib::GList when working.
-  method get_widgets is also<get-widgets> {
-    my $l = GLib::GList.new( gtk_text_child_anchor_get_widgets($!ta) )
-      but GLib::Roles::ListData[GtkWidget];
-    $l.Array.map({ GTK::Widget.new($_) with $_ });
+  method get_widgets (:$glist = False, :$raw = False, :$widget = False)
+    is also<get-widgets>
+  {
+    my $wl = gtk_text_child_anchor_get_widgets($!ta);
+
+    return Nil unless $wl;
+    return $wl if $glist;
+
+    $wl = GLib::GList.new($wl) but GLib::Roles::ListData[GtkWidget];
+    $wl.Array.map({ ReturnWidget($_, $raw, $widget) });
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

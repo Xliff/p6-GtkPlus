@@ -2,9 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-use Pango::Raw::Types;
-
-
 use GTK::Raw::Types;
 
 unit package GTK::Raw::TextIter;
@@ -40,7 +37,7 @@ sub gtk_text_iter_backward_cursor_positions (GtkTextIter $iter, gint $count)
 
 sub gtk_text_iter_backward_find_char (
   GtkTextIter $iter,
-  GtkTextCharPredicate $pred,
+  &pred (gunichar, gpointer --> gboolean),
   gpointer $user_data,
   GtkTextIter $limit
 )
@@ -229,7 +226,7 @@ sub gtk_text_iter_forward_cursor_positions (GtkTextIter $iter, gint $count)
 
 sub gtk_text_iter_forward_find_char (
   GtkTextIter $iter,
-  GtkTextCharPredicate $pred,
+  &pred,
   gpointer $user_data,
   GtkTextIter $limit
 )

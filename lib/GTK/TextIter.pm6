@@ -11,10 +11,8 @@ use GLib::Roles::ListData;
 use GTK::Roles::Types;
 
 use Pango::Language;
-
-use GLib::GSList;
+use GLib::GList;
 use GDK::Pixbuf;
-
 
 use GTK::TextChildAnchor;
 use GTK::TextMark;
@@ -40,7 +38,7 @@ class GTK::TextIter {
   multi method new (GtkTextIter $textiter) {
     return unless $textiter;
 
-    self.bless(:$textiter);
+    $textiter ?? self.bless(:$textiter) !! Nil;
   }
   multi method new {
     my $textiter = GtkTextIter.new;
@@ -161,13 +159,13 @@ class GTK::TextIter {
   }
 
   multi method backward_find_char (
-    GtkTextCharPredicate $pred,                 # Function Pointer
+    &pred,                 # Function Pointer
     gpointer $user_data  = Pointer,
     GtkTextIter $limit = GtkTextIter
   )
     is also<backward-find-char>
   {
-    so gtk_text_iter_backward_find_char($!ti, $pred, $user_data, $limit);
+    so gtk_text_iter_backward_find_char($!ti, &pred, $user_data, $limit);
   }
 
   method backward_line is also<backward-line> {
@@ -272,7 +270,7 @@ class GTK::TextIter {
   }
 
   method can_insert (Int() $default_editability) is also<can-insert> {
-    my gboolean $de = $default_editability;
+    my gboolean $de = $default_editability.so.Int;
 
     so gtk_text_iter_can_insert($!ti, $de);
   }
@@ -281,12 +279,17 @@ class GTK::TextIter {
     gtk_text_iter_compare($!ti, $rhs);
   }
 
-  method copy {
-    GTK::TextIter.new( gtk_text_iter_copy($!ti) );
+  method copy (:$raw = False) {
+    my $ti = gtk_text_iter_copy($!ti);
+
+    $ti ??
+      ( $raw ?? $ti !! GTK::TextIter.new($ti) )
+      !!
+      Nil;
   }
 
   method editable (Int() $default_setting) {
-    my gboolean $ds = $default_setting;
+    my gboolean $ds = $default_setting.so.Int;
 
     so gtk_text_iter_editable($!ti, $ds);
   }
@@ -334,11 +337,11 @@ class GTK::TextIter {
   }
 
   multi method forward_find_char (
-    GtkTextCharPredicate $pred,               # Function Pointer
+    &pred,               # Function Pointer
     gpointer $user_data = Pointer,
-    GtkTextIter $limit = GtkTextIter
+    GtkTextIter() $limit = GtkTextIter
   ) {
-    so gtk_text_iter_forward_find_char($!ti, $pred, $user_data, $limit);
+    so gtk_text_iter_forward_find_char($!ti, &pred, $user_data, $limit);
   }
 
   method forward_line is also<forward-line> {
@@ -440,8 +443,10 @@ class GTK::TextIter {
     so gtk_text_iter_forward_word_end($!ti);
   }
 
-  method forward_word_ends (gint $count) is also<forward-word-ends> {
-    so gtk_text_iter_forward_word_ends($!ti, $count);
+  method forward_word_ends (Int() $count) is also<forward-word-ends> {
+    my gint $c = $count;
+
+    so gtk_text_iter_forward_word_ends($!ti, $c);
   }
 
   method free {
@@ -450,25 +455,30 @@ class GTK::TextIter {
 
   proto method get_attributes (|)
     is also<get-attributes>
-    { * }
+  { * }
 
   multi method get_attributes {
     my $v = GtkTextAttributes.new;
-    samewith($v);
+    callwith($v);
     $v;
   }
   multi method get_attributes (GtkTextAttributes $values) {
     so gtk_text_iter_get_attributes($!ti, $values);
   }
 
-  method get_buffer
+  method get_buffer ( :$raw = False )
     is also<
       get-buffer
       buffer
     >
   {
     # Late binding to prevent circular dependency.
-    ::('GTK::TextBuffer').new( gtk_text_iter_get_buffer($!ti) );
+    my $b = gtk_text_iter_get_buffer($!ti);
+
+    $b ??
+      ( $raw ?? $b !! ::('GTK::TextBuffer').new($b) )
+      !!
+      Nil;
   }
 
   method get_bytes_in_line
@@ -500,7 +510,7 @@ class GTK::TextIter {
     gtk_text_iter_get_chars_in_line($!ti);
   }
 
-  method get_child_anchor
+  method get_child_anchor (:$raw = False)
     is also<
       get-child-anchor
       child_anchor
@@ -509,18 +519,24 @@ class GTK::TextIter {
   {
     my $ta = gtk_text_iter_get_child_anchor($!ti);
 
-    $ta ?? GTK::TextChildAnchor.new($ta) !! Nil;
+    $ta ??
+      ( $raw ?? $ta !! GTK::TextChildAnchor.new($ta) )
+      !!
+      Nil;
   }
 
-  method get_language
+  method get_language (:$raw = False)
     is also<
       get-language
       language
     >
   {
-    my $ti = gtk_text_iter_get_language($!ti);
+    my $l = gtk_text_iter_get_language($!ti);
 
-    $ti ?? Pango::Language.new($ti) !! Nil;
+    $l ??
+      ( $raw ?? $l !! Pango::Language.new($l) )
+      !!
+      Nil;
   }
 
   method get_marks (:$glist = False, :$raw = False)
@@ -534,12 +550,12 @@ class GTK::TextIter {
     return Nil unless $ll;
     return $ll if     $glist;
 
-    $ll = GLib::GSList.new($ll) but GLib::Roles::ListData[GtkTextMark];
+    $ll = GLib::GList.new($ll) but GLib::Roles::ListData[GtkTextMark];
 
     $raw ?? $ll.Array !! $ll.Array.map({ GTK::TextMark.new($_) });
   }
 
-  method get_pixbuf
+  method get_pixbuf (:$raw = False)
     is also<
       get-pixbuf
       pixbuf
@@ -547,7 +563,10 @@ class GTK::TextIter {
   {
     my $p = gtk_text_iter_get_pixbuf($!ti);
 
-    $p ?? GDK::Pixbuf.new($p) !! Nil;
+    $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil;
   }
 
   proto method get_slice(|)
@@ -561,7 +580,7 @@ class GTK::TextIter {
     gtk_text_iter_get_slice($start, $end);
   }
   multi method get_slice (GtkTextIter() $end)  {
-    gtk_text_iter_get_slice($!ti, $end);
+    GTK::TextIter.get_slice($!ti, $end);
   }
 
   method get_tags (:$glist = False, :$raw = False) is also<get-tags> {
@@ -570,7 +589,7 @@ class GTK::TextIter {
     return Nil unless $tl;
     return $tl if     $glist;
 
-    $tl = GLib::GSList($tl) but GDK::Raw::ListData[GtkTextTag];
+    $tl = GLib::GList($tl) but GLib::Roles::ListData[GtkTextTag];
 
     $raw ?? $tl.Array !! $tl.Array.map({ GTK::TextTag.new($_) });
   }
@@ -586,13 +605,13 @@ class GTK::TextIter {
     gtk_text_iter_get_text($start, $end);
   }
   multi method get_text (GtkTextIter() $end)  {
-    gtk_text_iter_get_text($!ti, $end);
+    GTK::TextIter.get_text($!ti, $end);
   }
 
   method get_toggled_tags (Int() $toggled_on)
     is also<get-toggled-tags>
   {
-    my gboolean $t = $toggled_on;
+    my gboolean $t = $toggled_on.so.Int;
 
     gtk_text_iter_get_toggled_tags($!ti, $t);
   }
@@ -614,7 +633,7 @@ class GTK::TextIter {
     gtk_text_iter_get_visible_slice($start, $end);
   }
   multi method get_visible_slice (GtkTextIter() $end)  {
-    gtk_text_iter_get_visible_slice($!ti, $end);
+    GTK::TextIter.get_visible_slice($!ti, $end);
   }
 
   proto method get_visible_text (|)
@@ -628,7 +647,7 @@ class GTK::TextIter {
     gtk_text_iter_get_visible_text($start, $end);
   }
   multi method get_visible_text (GtkTextIter() $end) {
-    gtk_text_iter_get_visible_text($!ti, $end);
+    GTK::TextIter.get_visible_text($!ti, $end);
   }
 
   method has_tag (GtkTextTag() $tag) is also<has-tag> {

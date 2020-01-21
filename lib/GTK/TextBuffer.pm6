@@ -382,7 +382,10 @@ D
     my gboolean $lg = $left_gravity.so.Int;
     my $tm = gtk_text_buffer_create_mark($!tb, $mark_name, $where, $lg);
 
-    $raw ?? $tm !! GTK::TextMark.new($tm);
+    $tm ??
+      ( $raw ?? $tm !! GTK::TextMark.new($tm) )
+      !!
+      Nil;
   }
 
   # method create_tag omitted due to '...' parameter.

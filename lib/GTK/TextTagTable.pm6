@@ -1,8 +1,6 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
-
 
 use GTK::Raw::TextTagTable;
 use GTK::Raw::Types;
@@ -22,12 +20,12 @@ class GTK::TextTagTable {
 
   submethod BUILD(:$table) {
     self!setObject($!ttt = $table);           # GLib::Roles::Object
-    $!b = nativecast(GtkBuildable, $!ttt);    # GTK::Roles::Buildable
+    $!b = cast(GtkBuildable, $!ttt);    # GTK::Roles::Buildable
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-ttt;
-    self.downref;
+    self.unref;
   }
 
   method GTK::Raw::Definitions::GtkTextTagTable
@@ -39,11 +37,14 @@ class GTK::TextTagTable {
 
   multi method new {
     my $table = gtk_text_tag_table_new();
-    self.bless(:$table);
+
+    $table ??self.bless(:$table) !! Nil;
   }
-  multi method new (GtkTextTagTable $table) {
+  multi method new (GtkTextTagTable $table, :$ref = True) {
+    return Nil unless $table;
+
     my $o = self.bless(:$table);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
 
@@ -82,10 +83,10 @@ class GTK::TextTagTable {
   }
 
   method foreach (
-    GtkTextTagTableForeach $func,
+    &func,
     gpointer $data = gpointer
   ) {
-    gtk_text_tag_table_foreach($!ttt, $func, $data);
+    gtk_text_tag_table_foreach($!ttt, &func, $data);
   }
 
   method get_size is also<get-size> {
