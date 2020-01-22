@@ -95,6 +95,7 @@ class GtkTextIter is repr('CStruct') does GLib::Roles::Pointers is export {
   has gint     $.dummy13;
   has gpointer $.dummy14;
 }
+
 class GtkRequisition is repr('CStruct') does GLib::Roles::Pointers is export {
   has uint32 $.width  is rw;
   has uint32 $.height is rw;

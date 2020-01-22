@@ -35,7 +35,7 @@ sub gtk_drag_dest_find_target (
 sub gtk_drag_dest_set (
   GtkWidget $widget,
   uint32 $flags,                  # GtkDestDefaults $flags,
-  GtkTargetEntry $targets,
+  Pointer $targets,
   gint $n_targets,
   uint32 $actions                 # GdkDragAction $actions
 )

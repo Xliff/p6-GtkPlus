@@ -25,7 +25,7 @@ sub gtk_drag_source_add_uri_targets (GtkWidget $widget)
 sub gtk_drag_source_set (
   GtkWidget $widget,
   uint32 $sbm,                    # GdkModifierType $start_button_mask,
-  GtkTargetEntry $targets,
+  Pointer $targets,
   gint $n_targets,
   uint32 $actions                 # GdkDragAction $actions
 )

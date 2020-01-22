@@ -57,18 +57,20 @@ class GTK::Container is GTK::Widget {
     self.setWidget($to-parent);
   }
 
-  method new (ContainerAncestry $container, :$ref = True) {
-    my $o = self.bless(:$container);
-    $o.ref if $ref;
-    $o;
-  }
-
   method GTK::Raw::Definition::GtkContainer
     is also<
       Container
       GtkContainer
     >
   { $!c }
+
+  method new (ContainerAncestry $container, :$ref = True) {
+    return Nil unless $container;
+
+    my $o = self.bless(:$container);
+    $o.ref if $ref;
+    $o;
+  }
 
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)

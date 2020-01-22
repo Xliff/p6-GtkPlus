@@ -10,5 +10,6 @@ BEGIN {
     GTK::Raw::Enums
     GTK::Raw::Structs
     GTK::Raw::Subs
+    GTK::Raw::Requisition
   >;
 }

@@ -34,6 +34,7 @@ need GTK::Raw::Definitions;
 need GTK::Raw::Enums;
 need GTK::Raw::Structs;
 need GTK::Raw::Subs;
+need GTK::Raw::Requisition;
 
 BEGIN {
   re-export($_) for

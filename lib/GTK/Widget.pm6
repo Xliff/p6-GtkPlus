@@ -26,11 +26,11 @@ use GTK::Roles::Data;
 use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
-use GTK::Roles::Types;
 
 use GTK::StyleContext;
 
-our subset WidgetAncestry is export where GtkBuildable | GtkWidget;
+our subset WidgetAncestry is export where
+  GtkBuildable | GtkWidget;
 
 class GTK::Widget {
   also does GTK::Roles::Buildable;
@@ -38,7 +38,6 @@ class GTK::Widget {
   also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
-  also does GTK::Roles::Types;
 
   has GtkWidget $!w is implementor;
 
@@ -48,11 +47,8 @@ class GTK::Widget {
 
   submethod BUILD (:$widget) {
     given $widget {
-      when WidgetAncestry {
-        self.setWidget($widget);
-      }
-      default {
-      }
+      when WidgetAncestry { self.setWidget($widget) }
+      default             { }
     }
   }
 
@@ -62,7 +58,7 @@ class GTK::Widget {
     warn "DESTROYING -- { self.getType }" if $DEBUG;
     self.unref;
     # All widget-dependents may need a variation of this.
-    my $w_cheat = nativecast(GObjectStruct, $!w);
+    my $w_cheat = cast(GObjectStruct, $!w);
     self.cleanup unless $w_cheat.ref_count;
   }
 
@@ -76,15 +72,18 @@ class GTK::Widget {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
   }
   multi method new(WidgetAncestry $widget, :$ref = True) {
+    return unless $widget;
+
     my $o = self.bless(:$widget);
     $o.ref if $ref;
     $o;
   }
 
-  method unstable_get_type(&sub, $n is rw, $t is rw)
+  # Remove all $n, $t from instances!
+  method unstable_get_type(&sub, *@a)
     is also<unstable-get-type>
   {
-    unstable_get_type(::?CLASS.^name, &sub, $n, $t);
+    unstable_get_type(::?CLASS.^name, &sub, $!n, $!t);
   }
 
   method GTK::Raw::Definitions::GtkWidget
@@ -101,7 +100,7 @@ class GTK::Widget {
     $!w = do given $widget {
       when GtkBuildable {
         $!b = $_;
-        nativecast(GtkWidget, $_);
+        cast(GtkWidget, $_);
       }
       when GtkWidget {
         $_;
@@ -112,8 +111,8 @@ class GTK::Widget {
          die "GTK::Widget initialized from unexpected source!";
       }
     };
-    $!prop = nativecast(GObject, $!w);    # GLib::Roles::Properties
-    $!b = nativecast(GtkBuildable, $!w);  # GTK::Roles::Buildable
+    $!prop = cast(GObject, $!w);    # GLib::Roles::Properties
+    $!b = cast(GtkBuildable, $!w);  # GTK::Roles::Buildable
     $!data = $!w.p;                       # GTK::Roles::Data
   }
 
@@ -151,38 +150,30 @@ class GTK::Widget {
     gtk_cairo_transform_to_window($cr, $!w, $window);
   }
 
-  method get_default_direction(GTK::Widget:U: )
+  method get_default_direction (GTK::Widget:U: )
     is also<get-default-direction>
   {
-    gtk_widget_get_default_direction();
+    GtkTextDirectionEnum( gtk_widget_get_default_direction() );
   }
 
-  method pop_composite_child(GTK::Widget:U: )
-    is also<pop-composite-child>
-  {
-    gtk_widget_pop_composite_child();
-  }
+  # method pop_composite_child (GTK::Widget:U: )
+  #   is also<pop-composite-child>
+  # {
+  #   gtk_widget_pop_composite_child();
+  # }
+  #
+  # method push_composite_child (GTK::Widget:U: )
+  #   is also<push-composite-child>
+  # {
+  #   gtk_widget_push_composite_child();
+  # }
 
-  method push_composite_child(GTK::Widget:U: )
-    is also<push-composite-child>
-  {
-    gtk_widget_push_composite_child();
-  }
-
-  method set_default_direction (GTK::Widget:U: GtkTextDirection $dir)
+  method set_default_direction (GTK::Widget:U: Int() $dir)
     is also<set-default-direction>
   {
-    gtk_widget_set_default_direction($dir);
-  }
+    my GtkTextDirection $d = $dir;
 
-  method requisition_get_type(GTK::Widget:U: )
-    is also<requisition-get-type>
-  {
-    gtk_requisition_get_type();
-  }
-
-  method requisition_new(GTK::Widget:U: ) is also<requisition-new> {
-    gtk_requisition_new();
+    gtk_widget_set_default_direction($d);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -661,10 +652,12 @@ class GTK::Widget {
   method receives_default is rw is also<receives-default> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_receives_default($!w);
+        so gtk_widget_get_receives_default($!w);
       },
-      STORE => sub ($, $receives_default is copy) {
-        gtk_widget_set_receives_default($!w, $receives_default);
+      STORE => sub ($, Int() $receives_default is copy) {
+        my gboolean $r = $receives_default.so.Int;
+
+        gtk_widget_set_receives_default($!w, $r);
       }
     );
   }
@@ -683,20 +676,27 @@ class GTK::Widget {
   method app_paintable is rw is also<app-paintable> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_app_paintable($!w);
+        so gtk_widget_get_app_paintable($!w);
       },
-      STORE => sub ($, $app_paintable is copy) {
-        gtk_widget_set_app_paintable($!w, $app_paintable);
+      STORE => sub ($, Int() $app_paintable is copy) {
+        my gboolean $a = $app_paintable.so.Int;
+
+        gtk_widget_set_app_paintable($!w, $a);
       }
     );
   }
 
-  method font_map is rw is also<font-map> {
+  method font_map (:$raw = False) is rw is also<font-map> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_font_map($!w);
+        my $pfm = gtk_widget_get_font_map($!w);
+
+        $pfm ??
+          ( $raw ?? $pfm !! Pango::FontMap.new($pfm) )
+          !!
+          Nil;
       },
-      STORE => sub ($, $font_map is copy) {
+      STORE => sub ($, PangoFontMap() $font_map is copy) {
         gtk_widget_set_font_map($!w, $font_map);
       }
     );
@@ -707,7 +707,7 @@ class GTK::Widget {
       FETCH => sub ($) {
         gtk_widget_get_tooltip_markup($!w);
       },
-      STORE => sub ($, $markup is copy) {
+      STORE => sub ($, Str() $markup is copy) {
         gtk_widget_set_tooltip_markup($!w, $markup);
       }
     );
@@ -718,7 +718,7 @@ class GTK::Widget {
       FETCH => sub ($) {
         gtk_widget_get_tooltip_text($!w);
       },
-      STORE => sub ($, $text is copy) {
+      STORE => sub ($, Str() $text is copy) {
         gtk_widget_set_tooltip_text($!w, $text);
       }
     );
@@ -727,10 +727,12 @@ class GTK::Widget {
   method direction is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_direction($!w);
+        GtkTextDirectionEnum( gtk_widget_get_direction($!w) );
       },
-      STORE => sub ($, $dir is copy) {
-        gtk_widget_set_direction($!w, $dir);
+      STORE => sub ($, Int() $dir is copy) {
+        my GtkTextDirection $d = $dir;
+
+        gtk_widget_set_direction($!w, $d);
       }
     );
   }
@@ -749,10 +751,12 @@ class GTK::Widget {
   method focus_on_click is rw is also<focus-on-click> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_focus_on_click($!w);
+        so gtk_widget_get_focus_on_click($!w);
       },
-      STORE => sub ($, $focus_on_click is copy) {
-        gtk_widget_set_focus_on_click($!w, $focus_on_click);
+      STORE => sub ($, Int() $focus_on_click is copy) {
+        my gboolean $f = $focus_on_click.so.Int;
+
+        gtk_widget_set_focus_on_click($!w, $f);
       }
     );
   }
@@ -760,10 +764,12 @@ class GTK::Widget {
   method child_visible is rw is also<child-visible> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_child_visible($!w);
+        so gtk_widget_get_child_visible($!w);
       },
-      STORE => sub ($, $is_visible is copy) {
-        gtk_widget_set_child_visible($!w, $is_visible);
+      STORE => sub ($, Int() $is_visible is copy) {
+        my gboolean $i = $is_visible.so.Int;
+
+        gtk_widget_set_child_visible($!w, $i);
       }
     );
   }
@@ -773,8 +779,10 @@ class GTK::Widget {
       FETCH => sub ($) {
         so gtk_widget_get_hexpand($!w);
       },
-      STORE => sub ($, $expand is copy) {
-        gtk_widget_set_hexpand($!w, $expand);
+      STORE => sub ($, Int() $expand is copy) {
+        my gboolean $e = $expand.so.Int;
+
+        gtk_widget_set_hexpand($!w, $e);
       }
     );
   }
@@ -801,12 +809,17 @@ class GTK::Widget {
     );
   }
 
-  method parent_window is rw is also<parent-window> {
+  method parent_window (:$raw = False) is rw is also<parent-window> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_parent_window($!w);
+        my $gw = gtk_widget_get_parent_window($!w);
+
+        $gw ??
+          ( $raw ?? $gw !! GDK::Window.new($gw) )
+          !!
+          Nil;
       },
-      STORE => sub ($, $parent_window is copy) {
+      STORE => sub ($, GdkWindow() $parent_window is copy) {
         gtk_widget_set_parent_window($!w, $parent_window);
       }
     );
@@ -815,10 +828,13 @@ class GTK::Widget {
   method state_flags is rw is also<state-flags> {
     Proxy.new(
       FETCH => sub ($) {
+        # YYY - Write a method to enumerate flags for a given enum!
         gtk_widget_get_state_flags($!w);
       },
-      STORE => sub ($, $flags is copy) {
-        gtk_widget_unset_state_flags($!w, $flags);
+      STORE => sub ($, Int() $flags is copy) {
+        my GtkStateFlags $f = $flags;
+
+        gtk_widget_unset_state_flags($!w, $f);
       }
     );
   }
@@ -826,10 +842,12 @@ class GTK::Widget {
   method sensitive is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_sensitive($!w);
+        so gtk_widget_get_sensitive($!w);
       },
-      STORE => sub ($, $sensitive is copy) {
-        gtk_widget_set_sensitive($!w, $sensitive);
+      STORE => sub ($, Int() $sensitive is copy) {
+        my gboolean $s = $sensitive.so.Int;
+
+        gtk_widget_set_sensitive($!w, $s);
       }
     );
   }
@@ -840,15 +858,22 @@ class GTK::Widget {
         so gtk_widget_get_visible($!w);
       },
       STORE => sub ($, $visible is copy) {
-        gtk_widget_set_visible($!w, $visible);
+        my gboolean $v = $visible.so.Int;
+
+        gtk_widget_set_visible($!w, $v);
       }
     );
   }
 
-  method window is rw {
+  method window (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GDK::Window.new( gtk_widget_get_window($!w) );
+        my $gw = gtk_widget_get_window($!w);
+
+        $gw ??
+          ( $raw ?? $gw !! GDK::Window.new($gw) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkWindow() $window is copy) {
         gtk_widget_set_window($!w, $window);
@@ -876,17 +901,23 @@ class GTK::Widget {
       },
       STORE => sub ($, Num() $opacity is copy) {
         my gdouble $o = $opacity;
+
         gtk_widget_set_opacity($!w, $o);
       }
     );
   }
 
-  method tooltip_window is rw is also<tooltip-window> {
+  method tooltip_window (:$raw = False) is rw is also<tooltip-window> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_tooltip_window($!w);
+        my $w = gtk_widget_get_tooltip_window($!w);
+
+        $w ??
+          ( $raw ?? $w !! GTK::Window.new($w) )
+          !!
+          Nil;
       },
-      STORE => sub ($, $custom_window is copy) {
+      STORE => sub ($, GtkWindow() $custom_window is copy) {
         gtk_widget_set_tooltip_window($!w, $custom_window);
       }
     );
@@ -897,7 +928,7 @@ class GTK::Widget {
       FETCH => sub ($) {
         gtk_widget_get_font_options($!w);
       },
-      STORE => sub ($, $options is copy) {
+      STORE => sub ($, cairo_font_options_t $options is copy) {
         gtk_widget_set_font_options($!w, $options);
       }
     );
@@ -928,20 +959,27 @@ class GTK::Widget {
   method realized is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_realized($!w);
+        so gtk_widget_get_realized($!w);
       },
-      STORE => sub ($, $realized is copy) {
-        gtk_widget_set_realized($!w, $realized);
+      STORE => sub ($, Int() $realized is copy) {
+        my gboolean $r = $realized.so.Int;
+
+        gtk_widget_set_realized($!w, $r);
       }
     );
   }
 
-  method visual is rw {
+  method visual (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_visual($!w);
+        my $v = gtk_widget_get_visual($!w);
+
+        $v ??
+          ( $raw ?? $v !! GDK::Visual.new($v) )
+          !!
+          Nil;
       },
-      STORE => sub ($, $visual is copy) {
+      STORE => sub ($, GdkVisual() $visual is copy) {
         gtk_widget_set_visual($!w, $visual);
       }
     );
@@ -953,7 +991,8 @@ class GTK::Widget {
         so gtk_widget_get_vexpand($!w);
       },
       STORE => sub ($, Int() $expand is copy) {
-        my gboolean $e = self.RESOLVE-BOOL($expand);
+        my gboolean $e = $expand.so.Int;
+
         gtk_widget_set_vexpand($!w, $e);
       }
     );
@@ -984,10 +1023,12 @@ class GTK::Widget {
   method valign is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_valign($!w);
+        GtkAlignEnum( gtk_widget_get_valign($!w) );
       },
-      STORE => sub ($, $align is copy) {
-        gtk_widget_set_valign($!w, $align);
+      STORE => sub ($, Int() $align is copy) {
+        my GtkAlign $a = $align;
+
+        gtk_widget_set_valign($!w, $a);
       }
     );
   }
@@ -995,9 +1036,11 @@ class GTK::Widget {
   method has_window is rw is also<has-window> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_has_window($!w);
+        so gtk_widget_get_has_window($!w);
       },
-      STORE => sub ($, $has_window is copy) {
+      STORE => sub ($, Int() $has_window is copy) {
+        my gboolean $h = $has_window.so.Int;
+
         gtk_widget_set_has_window($!w, $has_window);
       }
     );
@@ -1006,21 +1049,27 @@ class GTK::Widget {
   method double_buffered is rw is also<double-buffered> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_double_buffered($!w);
+        so gtk_widget_get_double_buffered($!w);
       },
-      STORE => sub ($, $double_buffered is copy) {
+      STORE => sub ($, Int() $double_buffered is copy) {
+        my gboolean $d = $double_buffered.so.Int;
+
         gtk_widget_set_double_buffered($!w, $double_buffered);
       }
     );
   }
 
-  method parent is rw {
+  method parent (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        my $w = gtk_widget_get_parent($!w);
-        $w.DEFINITE ?? GTK::Widget.new($w) !! Nil;
+        my $c = gtk_widget_get_parent($!w);
+
+        $c ??
+          ( $raw ?? $c !! GTK::Container.new($c) )
+          !!
+          Nil;
       },
-      STORE => sub ($, GtkWidget() $parent is copy) {
+      STORE => sub ($, GtkContainer() $parent is copy) {
         gtk_widget_set_parent($!w, $parent);
       }
     );
@@ -1029,10 +1078,12 @@ class GTK::Widget {
   method has_tooltip is rw is also<has-tooltip> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_has_tooltip($!w);
+        so gtk_widget_get_has_tooltip($!w);
       },
-      STORE => sub ($, $has_tooltip is copy) {
-        gtk_widget_set_has_tooltip($!w, $has_tooltip);
+      STORE => sub ($, Int() $has_tooltip is copy) {
+        my gboolean $h = $has_tooltip.so.Int;
+
+        gtk_widget_set_has_tooltip($!w, $h);
       }
     );
   }
@@ -1040,10 +1091,12 @@ class GTK::Widget {
   method halign is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_halign($!w);
+        so gtk_widget_get_halign($!w);
       },
-      STORE => sub ($, $align is copy) {
-        gtk_widget_set_halign($!w, $align);
+      STORE => sub ($, Int() $align is copy) {
+        my gboolean $a = $align.so.Int;
+
+        gtk_widget_set_halign($!w, $a);
       }
     );
   }
@@ -1062,10 +1115,12 @@ class GTK::Widget {
   method state is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_state($!w);
+        so gtk_widget_get_state($!w);
       },
-      STORE => sub ($, $state is copy) {
-        gtk_widget_set_state($!w, $state);
+      STORE => sub ($, Int() $state is copy) {
+        my gboolean $s = $state.so.Int;
+
+        gtk_widget_set_state($!w, $s);
       }
     );
   }
@@ -1076,7 +1131,8 @@ class GTK::Widget {
         so gtk_widget_get_can_default($!w);
       },
       STORE => sub ($, Int() $can_default is copy) {
-        my gboolean $c = self.RESOLVE-BOOL($can_default);
+        my gboolean $c = $can_default.so.Int;
+
         gtk_widget_set_can_default($!w, $c);
       }
     );
@@ -1087,8 +1143,10 @@ class GTK::Widget {
       FETCH => sub ($) {
         so gtk_widget_get_vexpand_set($!w);
       },
-      STORE => sub ($, $set is copy) {
-        gtk_widget_set_vexpand_set($!w, $set);
+      STORE => sub ($, Int() $set is copy) {
+        my gboolean $s = $set.so.Int;
+
+        gtk_widget_set_vexpand_set($!w, $s);
       }
     );
   }
@@ -1098,7 +1156,9 @@ class GTK::Widget {
       FETCH => sub ($) {
         so gtk_widget_get_hexpand_set($!w);
       },
-      STORE => sub ($, $set is copy) {
+      STORE => sub ($, Int() $set is copy) {
+        my gboolean $s = $set.so.Int;
+
         gtk_widget_set_hexpand_set($!w, $set);
       }
     );
@@ -1107,10 +1167,12 @@ class GTK::Widget {
   method mapped is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_mapped($!w);
+        so gtk_widget_get_mapped($!w);
       },
-      STORE => sub ($, $mapped is copy) {
-        gtk_widget_set_mapped($!w, $mapped);
+      STORE => sub ($, Int() $mapped is copy) {
+        my gboolean $m = $mapped.so.Int;
+
+        gtk_widget_set_mapped($!w, $m);
       }
     );
   }
@@ -1131,8 +1193,10 @@ class GTK::Widget {
       FETCH => sub ($) {
         so gtk_widget_get_can_focus($!w);
       },
-      STORE => sub ($, $can_focus is copy) {
-        gtk_widget_set_can_focus($!w, $can_focus);
+      STORE => sub ($, Int() $can_focus is copy) {
+        my gboolean $c = $can_focus.so.Int;
+
+        gtk_widget_set_can_focus($!w, $c);
       }
     );
   }
@@ -1140,10 +1204,12 @@ class GTK::Widget {
   method support_multidevice is rw is also<support-multidevice> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_widget_get_support_multidevice($!w);
+        so gtk_widget_get_support_multidevice($!w);
       },
-      STORE => sub ($, $support_multidevice is copy) {
-        gtk_widget_set_support_multidevice($!w, $support_multidevice);
+      STORE => sub ($, Int() $support_multidevice is copy) {
+        my gboolean $s = $support_multidevice.so.Int;
+
+        gtk_widget_set_support_multidevice($!w, $s);
       }
     );
   }
@@ -1163,7 +1229,7 @@ class GTK::Widget {
         die 'GTK::Widget.margins will only accept numeric values'
           unless @margins.grep( *.^can('Int').elems ) == @margins.elems;
         if +@margins == 1 {
-          my $m = self.RESOLVE-UINT(@margins[0]);
+          my $m = @margins[0];
           self.margins = $m xx 4;
         } elsif +@margins <= 4 {
           my $i = 0;
@@ -1190,7 +1256,7 @@ class GTK::Widget {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         warn "composite-child does not allow writing"
       }
     );
@@ -1207,7 +1273,7 @@ class GTK::Widget {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('expand', $gv);
       }
     );
@@ -1224,7 +1290,7 @@ class GTK::Widget {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('has-focus', $gv);
       }
     );
@@ -1241,7 +1307,7 @@ class GTK::Widget {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('height-request', $gv);
       }
     );
@@ -1256,7 +1322,7 @@ class GTK::Widget {
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('is-focus', $gv);
       }
     );
@@ -1271,7 +1337,7 @@ class GTK::Widget {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('margin', $gv);
       }
     );
@@ -1320,7 +1386,7 @@ class GTK::Widget {
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('width-request', $gv);
       }
     );
@@ -1328,8 +1394,10 @@ class GTK::Widget {
 
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
-  method add_events (gint $events) is also<add-events> {
-    gtk_widget_add_events($!w, $events);
+  method add_events (Int() $events) is also<add-events> {
+    my gint $e = $events;
+
+    gtk_widget_add_events($!w, $e);
   }
 
   #method class_set_accessible_role (GtkWidgetClass $widget_class, AtkRole $role) {
@@ -1347,7 +1415,7 @@ class GTK::Widget {
     gtk_widget_draw($!w, $cr);
   }
 
-  method remove_mnemonic_label (GtkWidget $label)
+  method remove_mnemonic_label (GtkWidget() $label)
     is also<remove-mnemonic-label>
   {
     gtk_widget_remove_mnemonic_label($!w, $label);
@@ -1360,7 +1428,7 @@ class GTK::Widget {
   }
 
   method in_destruction is also<in-destruction> {
-    gtk_widget_in_destruction($!w);
+    so gtk_widget_in_destruction($!w);
   }
 
   method get_valign_with_baseline is also<get-valign-with-baseline> {
@@ -1368,58 +1436,58 @@ class GTK::Widget {
   }
 
   method has_visible_focus is also<has-visible-focus> {
-    gtk_widget_has_visible_focus($!w);
+    so gtk_widget_has_visible_focus($!w);
   }
 
   method has_screen is also<has-screen> {
-    gtk_widget_has_screen($!w);
+    so gtk_widget_has_screen($!w);
   }
 
   method override_background_color (
-    GtkStateFlags $state,
+    Int() $state,
     GDK::RGBA $color
   )
     is also<override-background-color>
   {
-    gtk_widget_override_background_color($!w, $state, $color);
+    my GtkStateFlags $s = $state;
+
+    gtk_widget_override_background_color($!w, $s, $color);
   }
 
   method trigger_tooltip_query is also<trigger-tooltip-query> {
     gtk_widget_trigger_tooltip_query($!w);
   }
 
-  method get_size_request (Int() $width, Int() $height)
-    is also<get-size-request>
-  {
-    my @i = ($width, $height);
-    my gint ($w, $h) = self.RESOLVE-INT(@i);
-    gtk_widget_get_size_request($!w, $width, $height);
-  }
-
   method has_default is also<has-default> {
-    gtk_widget_has_default($!w);
+    so gtk_widget_has_default($!w);
   }
 
-  method get_root_window is also<
-    get-root-window
-    root-window
-    root_window
-  > {
-    gtk_widget_get_root_window($!w);
+  method get_frame_clock (:$raw = False)
+    is also<
+      get-frame-clock
+      frame-clock
+      frame_clock
+    >
+  {
+    my $fc = gtk_widget_get_frame_clock($!w);
+
+    $fc ??
+      ( $raw ?? $fc !! GDK::FrameClock.new($fc) )
+      !!
+      Nil;
   }
 
-  method get_frame_clock is also<
-    get-frame-clock
-    frame-clock
-    frame_clock
-  > {
-    gtk_widget_get_frame_clock($!w);
-  }
-
-  proto method get_preferred_size(|) is also<get-preferred-size> { * }
+  proto method get_preferred_size(|)
+    is also<get-preferred-size>
+  { * }
 
   # Only use the shortened name for the no parameter variant.
-  multi method get_preferred_size is also<preferred_size preferred-size> {
+  multi method get_preferred_size
+    is also<
+      preferred_size
+      preferred-size
+    >
+  {
     my ($ms, $ns) = (GtkRequisition.new xx 2);
     samewith($ms, $ns);
   }
@@ -1434,7 +1502,7 @@ class GTK::Widget {
   method device_is_shadowed (GdkDevice $device)
     is also<device-is-shadowed>
   {
-    gtk_widget_device_is_shadowed($!w, $device);
+    so gtk_widget_device_is_shadowed($!w, $device);
   }
 
   method send_focus_change (GdkEvent $event)
@@ -1443,51 +1511,28 @@ class GTK::Widget {
     gtk_widget_send_focus_change($!w, $event);
   }
 
-  method size_request (GtkRequisition $requisition) is also<size-request> {
-    gtk_widget_size_request($!w, $requisition);
-  }
-
-  method override_cursor (
-    GDK::RGBA $cursor,
-    GDK::RGBA $secondary_cursor
-  )
-    is also<override-cursor>
-  {
-    gtk_widget_override_cursor($!w, $cursor, $secondary_cursor);
-  }
-
   method list_action_prefixes is also<list-action-prefixes> {
-    gtk_widget_list_action_prefixes($!w);
+    CStringArrayToArray( gtk_widget_list_action_prefixes($!w) )
   }
 
-  method set_device_enabled (GdkDevice $device, gboolean $enabled)
+  method set_device_enabled (GdkDevice() $device, Int() $enabled)
     is also<set-device-enabled>
   {
-    gtk_widget_set_device_enabled($!w, $device, $enabled);
+    my gboolean $e = $enabled.so.Int;
+
+    gtk_widget_set_device_enabled($!w, $device, $e);
   }
 
-  proto method get_pointer(|)
-    is also<get-pointer>
-    { * }
-
-  multi method get_pointer {
-    my ($x, $y) = (0, 0);
-    samewith($x, $y)
-  }
-  multi method get_pointer (Int() $x is rw, Int() $y is rw)  {
-    my gint ($xx, $yy) = self.RESOLVE-INT($x, $y);
-    gtk_widget_get_pointer($!w, $xx, $yy);
-    ($x, $y) = ($xx, $yy);
-  }
-
-  method grab_default  is also<grab-default> {
+  method grab_default is also<grab-default> {
     gtk_widget_grab_default($!w);
   }
 
-  method emit_can_activate_accel (guint $signal_id)
+  method emit_can_activate_accel (Int() $signal_id)
     is also<emit-can-activate-accel>
   {
-    gtk_widget_can_activate_accel($!w, $signal_id);
+    my guint $s = $signal_id;
+
+    gtk_widget_can_activate_accel($!w, $s);
   }
 
   method hide {
@@ -1500,31 +1545,37 @@ class GTK::Widget {
     gtk_widget_shape_combine_region($!w, $region);
   }
 
-  method unregister_window (GdkWindow $window)
+  method unregister_window (GdkWindow() $window)
     is also<unregister-window>
   {
     gtk_widget_unregister_window($!w, $window);
   }
 
-  method send_expose (GdkEvent $event) is also<send-expose> {
+  method send_expose (GdkEvent() $event) is also<send-expose> {
     gtk_widget_send_expose($!w, $event);
   }
 
-  method override_symbolic_color (Str() $name, GDK::RGBA $color)
-    is also<override-symbolic-color>
+  method create_pango_context (:$raw = False) is also<create-pango-context> {
+    my $pc = gtk_widget_create_pango_context($!w);
+
+    $pc ??
+      ( $raw ?? $pc !! Pango::Context.new($pc) )
+      !!
+      Nil;
+  }
+
+  method create_pango_layout(Str() $text, :$raw = False)
+    is also<create-pango-layout>
   {
-    gtk_widget_override_symbolic_color($!w, $name, $color);
+    my $pl = gtk_widget_create_pango_layout($!w, $text);
+
+    $pl ??
+      ( $raw ?? $pl !! Pango::Layout.new($pl) )
+      !!
+      Nil;
   }
 
-  method create_pango_context is also<create-pango-context> {
-    gtk_widget_create_pango_context($!w);
-  }
-
-  method create_pango_layout(Str() $text) is also<create-pango-layout> {
-    gtk_widget_create_pango_layout($!w, $text);
-  }
-
-  method get_device_events (GdkDevice $device) is also<get-device-events> {
+  method get_device_events (GdkDevice() $device) is also<get-device-events> {
     gtk_widget_get_device_events($!w, $device);
   }
 
@@ -1534,8 +1585,9 @@ class GTK::Widget {
   #   gtk_widget_style_get_valist($!w, $first_property_name, $var_args);
   # }
 
+  # Conflict with signal<is-focus>!
   method toplevel_is_focus is also<toplevel-is-focus> {
-    gtk_widget_is_focus($!w);
+    so gtk_widget_is_focus($!w);
   }
 
   method freeze_child_notify is also<freeze-child-notify> {
@@ -1562,7 +1614,7 @@ class GTK::Widget {
   }
 
   method is_visible (GtkWidget $!w) is also<is-visible> {
-    gtk_widget_is_visible($!w);
+    so gtk_widget_is_visible($!w);
   }
 
   method emit-mnemonic_activate (gboolean $group_cycling)
@@ -1584,39 +1636,52 @@ class GTK::Widget {
   }
 
   method is_ancestor (GtkWidget() $ancestor) is also<is-ancestor> {
-    gtk_widget_is_ancestor($!w, $ancestor);
-  }
-
-  method override_color (GtkStateFlags $state, GDK::RGBA $color)
-    is also<override-color>
-  {
-    gtk_widget_override_color($!w, $state, $color);
+    so gtk_widget_is_ancestor($!w, $ancestor);
   }
 
   method get_allocated_height is also<get-allocated-height> {
     gtk_widget_get_allocated_height($!w);
   }
 
-  proto method get_allocation (|) is also<get-allocation> { * }
+  proto method get_allocation (|)
+    is also<get-allocation>
+  { * }
 
   multi method get_allocation {
     my GtkAllocation $a .= new;
     samewith($a);
-    $a;
   }
   multi method get_allocation (GtkAllocation $allocation) {
     gtk_widget_get_allocation($!w, $allocation);
   }
 
-  method get_style_context is also<
-    get-style-context
-    style-context
-    style_context
-  > {
-    GTK::StyleContext.new( gtk_widget_get_style_context($!w) );
+  method get_style_context (:$raw = False)
+    is also<
+      get-style-context
+      style-context
+      style_context
+    >
+  {
+    my $sc = gtk_widget_get_style_context($!w);
+
+    $sc ??
+      ( $raw ?? $sc !! GTK::StyleContext.new($sc) )
+      !!
+      Nil;
   }
 
-  method get_clip (GtkAllocation $clip) is also<get-clip> {
+  proto method get_clip (|)
+    is also<get-clip>
+  { * }
+
+  multi method get_clip {
+    my $a = GtkAllocation.new;
+
+    die 'Could not create GtkAllocation!' unless $a;
+
+    samewith($a);
+  }
+  multi method get_clip (GtkAllocation $clip) {
     gtk_widget_get_clip($!w, $clip);
   }
 
@@ -1624,16 +1689,20 @@ class GTK::Widget {
 #    gtk_widget_class_find_style_property($klass, $property_name);
 #  }
 
-  method get_device_enabled (GdkDevice $device) is also<get-device-enabled> {
+  method get_device_enabled (GdkDevice() $device) is also<get-device-enabled> {
     gtk_widget_get_device_enabled($!w, $device);
   }
 
-  method get_ancestor (GType $widget_type) is also<get-ancestor> {
-    gtk_widget_get_ancestor($!w, $widget_type);
+  method get_ancestor (GType $widget_type, :$raw = False, :$widget = False)
+    is also<get-ancestor>
+  {
+    my $w = gtk_widget_get_ancestor($!w, $widget_type);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
   method get_request_mode is also<get-request-mode> {
-    gtk_widget_get_request_mode($!w);
+    GtkSizeRequestModeEnum( gtk_widget_get_request_mode($!w) );
   }
 
   method intersect (GdkRectangle() $area, GdkRectangle() $intersection) {
@@ -1648,30 +1717,30 @@ class GTK::Widget {
     gtk_widget_set_clip($!w, $clip);
   }
 
+  # conflicts with signal<grab-focus>!
   method focus_grab is also<focus-grab> {
     gtk_widget_grab_focus($!w);
   }
 
   proto method get_preferred_height_and_baseline_for_width (|)
     is also<get-preferred-height-and-baseline-for-width>
-    { * }
+  { * }
 
   multi method get_preferred_height_and_baseline_for_width (Int() $width) {
-    my ($mh, $nh, $mb, $nb) = (0 xx 4);
-    samewith($width, $mh, $nh, $mb, $nb);
+    samewith($width, $, $, $, $);
   }
   multi method get_preferred_height_and_baseline_for_width (
     Int() $width,
-    Int() $minimum_height   is rw,
-    Int() $natural_height   is rw,
-    Int() $minimum_baseline is rw,
-    Int() $natural_baseline is rw
+    $minimum_height   is rw,
+    $natural_height   is rw,
+    $minimum_baseline is rw,
+    $natural_baseline is rw
   ) {
     my @i = (
       $width, $minimum_height, $natural_height,
       $minimum_baseline, $natural_baseline
     );
-    my gint ($ww, $mh, $nh, $mb, $nb) = self.RESOLVE-INT(@i);
+    my gint ($ww, $mh, $nh, $mb, $nb) = ($width, 0, 0, 0, 0);
     gtk_widget_get_preferred_height_and_baseline_for_width(
       $!w, $ww, $mh, $nh, $mb, $nb
     );
@@ -1680,71 +1749,63 @@ class GTK::Widget {
   }
 
   method activate {
-    gtk_widget_activate($!w);
+    so gtk_widget_activate($!w);
   }
 
-  method add_device_events (GdkDevice $device, GdkEventMask $events)
+  method add_device_events (GdkDevice() $device, Int() $events)
     is also<add-device-events>
   {
-    gtk_widget_add_device_events($!w, $device, $events);
+    my GdkEventMask $e = $events;
+
+    gtk_widget_add_device_events($!w, $device, $e);
   }
 
-  method remove_tick_callback (guint $id)
+  method remove_tick_callback (Int() $id)
     is also<remove-tick-callback>
   {
-    gtk_widget_remove_tick_callback($!w, $id);
-  }
+    my guint $i = $id;
 
-  #method class_bind_template_callback_full (GtkWidgetClass $widget_class, Str() $callback_name, GCallback $callback_symbol) {
-  #  gtk_widget_class_bind_template_callback_full($widget_class, $callback_name, $callback_symbol);
-  #}
-
-  method get_requisition (GtkRequisition $requisition)
-    is also<get-requisition>
-  {
-    gtk_widget_get_requisition($!w, $requisition);
+    gtk_widget_remove_tick_callback($!w, $i);
   }
 
   method queue_draw_area (Int() $x, Int() $y, Int() $width, Int() $height)
     is also<queue-draw-area>
   {
-    my @i = ($x, $y, $width, $height);
-    my gint ($xx, $yy, $w, $h) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy, $w, $h) = ($x, $y, $width, $height);
+
     gtk_widget_queue_draw_area($!w, $xx, $yy, $w, $h);
   }
 
-  method compute_expand (GtkOrientation $orientation)
+  method compute_expand (Int() $orientation)
     is also<compute-expand>
   {
+    my GtkOrientation $o = $orientation;
+
     gtk_widget_compute_expand($!w, $orientation);
   }
 
-  method override_font (PangoFontDescription() $font_desc)
-    is also<override-font>
-  {
-    gtk_widget_override_font($!w, $font_desc);
-  }
-
-  method set_redraw_on_allocate (gboolean $redraw_on_allocate)
+  method set_redraw_on_allocate (Int() $redraw_on_allocate)
     is also<set-redraw-on-allocate>
   {
-    gtk_widget_set_redraw_on_allocate($!w, $redraw_on_allocate);
+    my gboolean $r = $redraw_on_allocate.so.Int;
+
+    gtk_widget_set_redraw_on_allocate($!w, $r);
   }
 
   proto method get_preferred_height (|)
     is also<get-preferred-height>
-    { * }
+  { * }
 
   multi method get_preferred_height {
-    my ($mh, $nh) = (0, 0);
-    samewith($mh, $nh);
+    samewith($, $);
   }
   multi method get_preferred_height (
-    Int() $minimum_height is rw,
-    Int() $natural_height is rw
+    $minimum_height is rw,
+    $natural_height is rw
   ) {
-    my gint ($mh, $nh) = self.RESOLVE-INT($minimum_height, $natural_height);
+    my gint ($mh, $nh) = 0 xx 2;
     gtk_widget_get_preferred_height($!w, $mh, $nh);
+
     ($minimum_height, $natural_height) = ($mh, $nh);
   }
 
@@ -1758,7 +1819,7 @@ class GTK::Widget {
 
   proto method translate_coordinates(|)
     is also<translate-coordinates>
-    { * }
+  { * }
 
   # Must not use samewith in a situations where the work is done by a
   # class method!
@@ -1768,7 +1829,6 @@ class GTK::Widget {
     Int() $src_x,
     Int() $src_y
   ) {
-    my ($dx, $dy) = (0, 0);
     GTK::Widget.translate_coordinates($!w, $dest_widget, $src_x, $src_y);
   }
   multi method translate_coordinates (
@@ -1776,24 +1836,38 @@ class GTK::Widget {
     GtkWidget() $src_widget,
     GtkWidget() $dest_widget,
     Int() $src_x,
-    Int() $src_y
+    Int() $src_y,
   ) {
     my ($dx, $dy) = (0, 0);
-    my $rc = GTK::Widget.translate_coordinates(
-      $src_widget, $dest_widget, $src_x, $src_y, $dx, $dy
+    my @r = GTK::Widget.translate_coordinates(
+      $src_widget,
+      $dest_widget,
+      $src_x,
+      $src_y,
+      $,
+      $,
+      :all
     );
-    ($dx, $dy, $rc);
+
+    @r[0] ?? @r[1..*] !! Nil;
   }
   multi method translate_coordinates (
     GTK::Widget:D:
     GtkWidget() $dest_widget,
     Int() $src_x,
     Int() $src_y,
-    Int() $dest_x is rw,
-    Int() $dest_y is rw
+    $dest_x is rw,
+    $dest_y is rw,
+    :$all = False
   ) {
     GTK::Widget.translate_coordinates(
-      $!w, $dest_widget, $src_x, $src_y, $dest_x, $dest_y
+      $!w,
+      $dest_widget,
+      $src_x,
+      $src_y,
+      $dest_x,
+      $dest_y,
+      :$all
     );
   }
   multi method translate_coordinates (
@@ -1802,15 +1876,16 @@ class GTK::Widget {
     GtkWidget() $dest_widget,
     Int() $src_x,
     Int() $src_y,
-    Int() $dest_x is rw,
-    Int() $dest_y is rw
+    $dest_x is rw,
+    $dest_y is rw,
+    :$all = False
   ) {
-    my ($sx, $sy, $dx, $dy) = ($src_x, $src_y, $dest_x, $dest_y);
-    my $rc = gtk_widget_translate_coordinates(
+    my ($sx, $sy, $dx, $dy) = ($src_x, $src_y, 0, 0);
+    my $rv = gtk_widget_translate_coordinates(
       $src_widget, $dest_widget, $sx, $sy, $dx, $dy
     );
     ($dest_x, $dest_y) = ($dx, $dy);
-    $rc
+    $all.not ?? $rv !! ($rv, $dest_x, $dest_y);
   }
 
   method style_get_property (Str() $property_name, GValue() $value)
@@ -1824,11 +1899,16 @@ class GTK::Widget {
   }
 
   method is_composited is also<is-composited> {
-    gtk_widget_is_composited($!w);
+    so gtk_widget_is_composited($!w);
   }
 
-  method get_pango_context is also<get-pango-context> {
-    Pango::Context.new( gtk_widget_get_pango_context($!w) );
+  method get_pango_context (:$raw = False) is also<get-pango-context> {
+    my $pc = gtk_widget_get_pango_context($!w);
+
+    $pc ??
+      ( $raw ?? $pc !! Pango::Context.new($pc) )
+      !!
+      Nil;
   }
 
   #method class_set_template (GtkWidgetClass $widget_class, GBytes $template_bytes) {
@@ -1840,19 +1920,20 @@ class GTK::Widget {
   #}
 
   method is_sensitive is also<is-sensitive> {
-    gtk_widget_is_sensitive($!w);
+    so gtk_widget_is_sensitive($!w);
   }
 
   # Made multi to avoid conflict with the signal "event" handler.
-  multi method event (GdkEvent $event) {
-    gtk_widget_event($!w, $event);
+  multi method event (GdkEvent() $event) {
+    so gtk_widget_event($!w, $event);
   }
 
   method queue_resize_no_redraw is also<queue-resize-no-redraw> {
     gtk_widget_queue_resize_no_redraw($!w);
   }
 
-  method destroyed (GtkWidget() $widget_pointer) {
+  # To be used RARELY!
+  method destroyed (CArray[GtkWidget] $widget_pointer) {
     gtk_widget_destroyed($!w, $widget_pointer);
   }
 
@@ -1866,27 +1947,27 @@ class GTK::Widget {
 
   proto method get_preferred_width_for_height (|)
     is also<get-preferred-width-for-height>
-    { * }
+  { * }
 
   multi method get_preferred_width_for_height (Int() $height) {
-    my ($mw, $nw) = (0, 0);
-    samewith($height, $mw, $nw);
+    samewith($height, $, $);
   }
   multi method get_preferred_width_for_height (
     Int() $height,
-    Int() $minimum_width is rw,
-    Int() $natural_width is rw
+    $minimum_width is rw,
+    $natural_width is rw
   ) {
-    my @i = ($height, $minimum_width, $natural_width);
-    my gint ($h, $mw, $nw) = self.RESOLVE-INT(@i);
+    my gint ($h, $mw, $nw) = ($height, 0, 0);
     gtk_widget_get_preferred_width_for_height($!w, $h, $mw, $nw);
     ($minimum_width, $natural_width) = ($mw, $nw);
   }
 
-  method get_template_child (GType $widget_type, Str() $name)
+  method get_template_child (Int() $widget_type, Str() $name)
     is also<get-template-child>
   {
-    gtk_widget_get_template_child($!w, $widget_type, $name);
+    my GType $wt = $widget_type;
+
+    gtk_widget_get_template_child($!w, $wt, $name);
   }
 
   method reset_style is also<reset-style> {
@@ -1901,21 +1982,40 @@ class GTK::Widget {
     gtk_widget_get_allocated_baseline($!w);
   }
 
-  method get_display is also<get-display display> {
-    GDK::Display.new( gtk_widget_get_display($!w) );
+  method get_display (:$raw = False)
+    is also<
+      get-display
+      display
+    >
+  {
+    my $d = gtk_widget_get_display($!w);
+
+    $d ??
+      ( $raw ?? $d !! GDK::Display.new($d) )
+      !!
+      Nil;
   }
 
-  method list_accel_closures is also<list-accel-closures> {
-    gtk_widget_list_accel_closures($!w);
+  method list_accel_closures (:$glist = False, :$raw = False)
+    is also<list-accel-closures>
+  {
+    my $acl = gtk_widget_list_accel_closures($!w);
+
+    return Nil unless $acl;
+    return $acl if $glist;
+
+    $acl = GLib::GList.new($acl) but GLib::Roles::ListData[GClosure];
+    $raw ?? $acl.Array !! $acl.Array.map({ GLib::Closure.new($_) });
   }
 
   method size_allocate_with_baseline (
-    GtkAllocation $allocation,
+    GtkAllocation() $allocation,
     Int() $baseline
   )
     is also<size-allocate-with-baseline>
   {
-    my gint $b = self.RESOLVE-INT($baseline);
+    my gint $b = $baseline;
+
     gtk_widget_size_allocate_with_baseline($!w, $allocation, $b);
   }
 
@@ -1929,21 +2029,34 @@ class GTK::Widget {
     gtk_widget_insert_action_group($!w, $name, $group);
   }
 
-  method get_toplevel is also<
-    get-toplevel
-    toplevel
-  > {
-    GTK::Widget.new( gtk_widget_get_toplevel($!w) );
+  method get_toplevel (:$raw = False, :$widget = False)
+    is also<
+      get-toplevel
+      toplevel
+    >
+  {
+    my $w = gtk_widget_get_toplevel($!w);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
-  method set_device_events (GdkDevice $device, GdkEventMask $events)
+  method set_device_events (GdkDevice() $device, Int() $events)
     is also<set-device-events>
   {
-    gtk_widget_set_device_events($!w, $device, $events);
+    my GdkEventMask $e = $events;
+
+    gtk_widget_set_device_events($!w, $device, $e);
   }
 
-  method get_clipboard (GdkAtom $selection) is also<get-clipboard> {
-    gtk_widget_get_clipboard($!w, $selection);
+  method get_clipboard (GdkAtom $selection, :$raw = False)
+    is also<get-clipboard>
+  {
+    my $c = gtk_widget_get_clipboard($!w, $selection);
+
+    $c ??
+      ( $raw ?? $c !! GTK::Clipboard.new($c) )
+      !!
+      Nil;
   }
 
   method queue_draw is also<queue-draw> {
@@ -1954,13 +2067,7 @@ class GTK::Widget {
     gtk_widget_map($!w);
   }
 
-  method render_icon_pixbuf (Str() $stock_id, GtkIconSize $size)
-    is also<render-icon-pixbuf>
-  {
-    gtk_widget_render_icon_pixbuf($!w, $stock_id, $size);
-  }
-
-  method register_window (GdkWindow $window) is also<register-window> {
+  method register_window (GdkWindow() $window) is also<register-window> {
     gtk_widget_register_window($!w, $window);
   }
 
@@ -1968,16 +2075,14 @@ class GTK::Widget {
   #  gtk_widget_class_bind_template_child_full($widget_class, $name, $internal_child, $struct_offset);
   #}
 
-  method set_allocation (GtkAllocation $allocation) is also<set-allocation> {
+  method set_allocation (GtkAllocation() $allocation) is also<set-allocation> {
     gtk_widget_set_allocation($!w, $allocation);
   }
 
-  method child_focus (GtkDirectionType $direction) is also<child-focus> {
-    gtk_widget_child_focus($!w, $direction);
-  }
+  method child_focus (Int() $direction) is also<child-focus> {
+    my GtkDirectionType $d = $direction;
 
-  method reparent (GtkWidget() $new_parent) {
-    gtk_widget_reparent($!w, $new_parent);
+    gtk_widget_child_focus($!w, $d);
   }
 
   method queue_allocate is also<queue-allocate> {
@@ -1993,22 +2098,11 @@ class GTK::Widget {
     gtk_widget_destroy($!w);
   }
 
-  method requisition_free (GtkRequisition $requisition)
-    is also<requisition-free>
-  {
-    gtk_requisition_free($requisition);
-  }
-
-  method get_child_requisition (GtkRequisition $requisition)
-    is also<get-child-requisition>
-  {
-    gtk_widget_get_child_requisition($!w, $requisition);
-  }
-
   method get_allocated_size (GtkAllocation $allocation, Int() $baseline)
     is also<get-allocated-size>
   {
-    my gint $b = self.RESOLVE-INT($baseline);
+    my gint $b = $baseline;
+
     gtk_widget_get_allocated_size($!w, $allocation, $);
   }
 
@@ -2016,12 +2110,17 @@ class GTK::Widget {
   #  gtk_widget_class_set_template_from_resource($widget_class, $resource_name);
   #}
 
-  method get_path is also<get-path> {
-    gtk_widget_get_path($!w);
+  method get_path (:$raw = False) is also<get-path> {
+    my $wp = gtk_widget_get_path($!w);
+
+    $wp ??
+      ( $raw ?? $wp !! GTK::WidgetPath.new($wp) )
+      !!
+      Nil;
   }
 
   method is_toplevel is also<is-toplevel> {
-    gtk_widget_is_toplevel($!w);
+    so gtk_widget_is_toplevel($!w);
   }
 
   method emit_child_notify (Str() $child_property)
@@ -2037,8 +2136,8 @@ class GTK::Widget {
   method set_size_request (Int() $width, Int() $height)
     is also<set-size-request>
   {
-    my @i = ($width, $height);
-    my gint ($ww, $hh) = self.RESOLVE-INT(@i);
+    my gint ($ww, $hh) = ($width, $height);
+
     gtk_widget_set_size_request($!w, $ww, $hh);
   }
 
@@ -2088,31 +2187,29 @@ class GTK::Widget {
     gtk_widget_hide_on_delete($!w);
   }
 
-  method requisition_copy (GtkRequisition $requisition)
-    is also<requisition-copy>
-  {
-    gtk_requisition_copy($requisition);
-  }
-
   proto method get_preferred_width (|)
     is also<get-preferred-width>
-    { * }
+  { * }
 
   multi method get_preferred_width {
-    my ($mw, $nw) = (0, 0);
-    samewith($mw, $nw);
+    samewith($, $);
   }
   multi method get_preferred_width (
-    Int() $minimum_width is rw,
-    Int() $natural_width is rw
+    $minimum_width is rw,
+    $natural_width is rw
   ) {
-    my gint ($mw, $nw) = self.RESOLVE-INT($minimum_width, $natural_width);
+    my gint ($mw, $nw) = 0 xx 2;
     gtk_widget_get_preferred_width($!w, $mw, $nw);
     ($minimum_width, $natural_width) = ($mw, $nw);
   }
 
-  method get_screen is also<get-screen screen> {
-    GDK::Screen.new( gtk_widget_get_screen($!w) );
+  method get_screen (:$raw = False) is also<get-screen screen> {
+    my $s = gtk_widget_get_screen($!w);
+
+    $s ??
+      ( $raw ?? $s !! GDK::Screen.new($s) )
+      !!
+      Nil;
   }
 
   method queue_resize is also<queue-resize> {
@@ -2125,52 +2222,69 @@ class GTK::Widget {
 
   proto method get_preferred_height_for_width (|)
     is also<get-preferred-height-for-width>
-    { * }
+  { * }
 
   multi method get_preferred_height_for_width (Int() $w) {
-    my ($mh, $nh) = (0, 0);
-    samewith($w, $mh, $nh);
+    samewith($w, $, $);
   }
   multi method get_preferred_height_for_width (
     Int() $width,
-    Int() $minimum_height is rw,
-    Int() $natural_height is rw
+    $minimum_height is rw,
+    $natural_height is rw
   ) {
-    my gint $ww = self.RESOLVE-INT($width);
+    my gint $ww = $width;
     my gint ($mh, $nh) = (0, 0);
     gtk_widget_get_preferred_height_for_width($!w, $ww, $mh, $nh);
     ($minimum_height, $natural_height) = ($mh, $nh);
   }
 
-  method list_mnemonic_labels is also<list-mnemonic-labels> {
-    gtk_widget_list_mnemonic_labels($!w);
+  method list_mnemonic_labels (
+    :$glist = False,
+    :$raw = False,
+    :$widget = False
+  )
+    is also<list-mnemonic-labels>
+  {
+    my $ll = gtk_widget_list_mnemonic_labels($!w);
+
+    return Nil unless $ll;
+    return $ll if $glist;
+
+    $ll = GLib::GList.new($ll) but GLib::Roles::ListData[GtkWidget];
+    $ll.Array.map({ ReturnWidget($_, $raw, $widget) });
   }
 
-  method add_mnemonic_label (GtkWidget $label) is also<add-mnemonic-label> {
+  method add_mnemonic_label (GtkWidget() $label) is also<add-mnemonic-label> {
     gtk_widget_add_mnemonic_label($!w, $label);
   }
 
   #method class_set_connect_func
 
-  method set_accel_path (Str() $accel_path, GtkAccelGroup $accel_group)
+  method set_accel_path (Str() $accel_path, GtkAccelGroup() $accel_group)
     is also<set-accel-path>
   {
     gtk_widget_set_accel_path($!w, $accel_path, $accel_group);
   }
 
-  method get_settings is also<get-settings> {
-    gtk_widget_get_settings($!w);
+  method get_settings (:$raw = False) is also<get-settings> {
+    my $s = gtk_widget_get_settings($!w);
+
+    $s ??
+      ( $raw ?? $s !! GTK::Settings.new($s) )
+      !!
+      Nil;
   }
 
   method get_modifier_mask (Int() $intent)
     is also<get-modifier-mask>
   {
-    my guint $i = self.RESOLVE-UINT($intent);
+    my guint $i = $intent;
+
     gtk_widget_get_modifier_mask($!w, $i);
   }
 
   method has_grab is also<has-grab> {
-    gtk_widget_has_grab($!w);
+    so gtk_widget_has_grab($!w);
   }
 
   #method class_list_style_properties (GtkWidgetClass $klass, guint $n_properties) {
@@ -2182,11 +2296,13 @@ class GTK::Widget {
   }
 
   method is_drawable is also<is-drawable> {
-    gtk_widget_is_drawable($!w);
+    so gtk_widget_is_drawable($!w);
   }
 
+
+  # Conflicts with READ/WRITE property has-focus()
   method global_has_focus is also<global-has-focus> {
-    gtk_widget_has_focus($!w);
+    so gtk_widget_has_focus($!w);
   }
 
   method unrealize {
@@ -2195,7 +2311,7 @@ class GTK::Widget {
 
   method add_tick_callback (
     &callback,
-    gpointer $user_data = gpointer,
+    gpointer $user_data    = gpointer,
     GDestroyNotify $notify = GDestroyNotify
   )
     is also<add-tick-callback>
@@ -2219,36 +2335,53 @@ class GTK::Widget {
   }
 
   method dest_find_target (
-    GdkDragContext $context,
-    GtkTargetList $target_list = GtkTargetList
+    GdkDragContext() $context,
+    GtkTargetList() $target_list = GtkTargetList
   )
     is also<dest-find-target>
   {
     gtk_drag_dest_find_target($!w, $context, $target_list);
   }
 
-  method dest_set (
-    GtkDestDefaults $flags,
-    GtkTargetEntry $targets,
+  proto method dest_set (|)
+    is also<dest-set>
+  { * }
+
+  multi method dest_set (
+    Int() $flags,
+    Int() $actions,
+    @targets
+  ) {
+    samewith(
+      $flags,
+      GLib::Roles::TypedBuffer[GtkTargetEntry].new(@targets).p,
+      @targets.elems,
+      $actions
+    );
+  }
+  multi method dest_set (
+    Int() $flags,
+    Pointer $targets,
     Int() $n_targets,
     Int() $actions
-  )
-    is also<dest-set>
-  {
-    my gint $nt = self.RESOLVE-INT($n_targets);
-    my guint $a = self.RESOLVE-UINT($actions);
-    gtk_drag_dest_set($!w, $flags, $targets, $nt, $a);
+  ) {
+    my GtkDestDefaults $f = $flags;
+    my gint $nt = $n_targets;
+    my guint $a = $actions;
+
+    gtk_drag_dest_set($!w, $f, $targets, $nt, $a);
   }
 
   method dest_set_proxy (
-    GdkWindow $proxy_window,
+    GdkWindow() $proxy_window,
     Int() $protocol,
     Int() $use_coordinates
   )
     is also<dest-set-proxy>
   {
-    my guint $p = self.RESOLVE-UINT($protocol);
-    my gboolean $uc = self.RESOLVE-BOOL($use_coordinates);
+    my guint $p = $protocol;
+    my gboolean $uc = $use_coordinates;
+
     gtk_drag_dest_set_proxy($!w, $proxy_window, $p, $uc);
   }
 
@@ -2269,21 +2402,35 @@ class GTK::Widget {
     gtk_drag_source_add_uri_targets($!w);
   }
 
-  method source_set (
+  proto method source_set (|)
+    is also<source-set>
+  { * }
+
+  multi method source_set (
     Int() $start_button_mask,
-    GtkTargetEntry $targets,
+    Int() $actions,
+    @targets,
+  ) {
+    samewith(
+      $start_button_mask,
+      GLib::Roles::TypedBuffer[GtkTargetEntry].new(@targets).p,
+      @targets.elems,
+      $actions
+    );
+  }
+  multi method source_set (
+    Int() $start_button_mask,
+    Pointer $targets,
     Int() $n_targets,
     Int() $actions
-  )
-    is also<source-set>
-  {
-    my @u = ($start_button_mask, $actions);
-    my guint ($sbm, $a) = self.RESOLVE-UINT(@u);
-    my gint $nt = self.RESOLVE-INT($n_targets);
+  ) {
+    my guint ($sbm, $a) = ($start_button_mask, $actions);
+    my gint $nt = $n_targets;
+
     gtk_drag_source_set($!w, $sbm, $targets, $nt, $a);
   }
 
-  method source_set_icon_gicon (GIcon $icon)
+  method source_set_icon_gicon (GIcon() $icon)
     is also<source-set-icon-gicon>
   {
     gtk_drag_source_set_icon_gicon($!w, $icon);
@@ -2318,7 +2465,8 @@ class GTK::Widget {
   )
     is also<drag-get-data>
   {
-    my guint $t = self.RESOLVE-UINT($time);
+    my guint $t = $time;
+
     gtk_drag_get_data($!w, $context, $target, $t);
   }
 
@@ -2344,7 +2492,7 @@ class GTK::Widget {
   method ReturnWidget ($w, $raw, $widget) {
     ReturnWidget($w, $raw, $widget);
   }
-  
+
 }
 
 sub ReturnWidget ($w, $raw, $widget) is export {

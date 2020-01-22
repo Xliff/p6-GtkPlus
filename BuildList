@@ -77,8 +77,12 @@ GTK::Raw::Structs
 GTK::Raw::Subs
 GTK::Raw::Exports
 GTK::Raw::Enums
-GTK::Raw::Types
 GTK::Raw::Utils
+GTK::Roles::Protection
+GTK::Roles::Types
+GTK::Builder::Actionable
+GTK::Raw::Requisition
+GTK::Raw::Types
 GTK::Raw::Viewport
 GTK::Raw::VolumeButton
 GTK::Raw::Widget
@@ -86,7 +90,6 @@ GTK::Raw::WidgetPath
 GTK::Raw::Window
 GTK::Raw::WindowGroup
 GTK::Roles::Data
-GTK::Roles::Protection
 GTK::Roles::Signals::Application
 GTK::Roles::Signals::CSSProvider
 GTK::Roles::Signals::CellArea
@@ -120,9 +123,7 @@ GTK::Roles::Signals::Toolbar
 GTK::Roles::Signals::TreeView
 GTK::Roles::Signals::Widget
 GTK::Roles::StyleProvider
-GTK::Roles::Types
 GTK::WidgetPath
-GTK::Builder::Actionable
 GTK::Dialog::Raw::About
 GTK::Dialog::Raw::AppChooser
 GTK::Dialog::Raw::ColorChooser

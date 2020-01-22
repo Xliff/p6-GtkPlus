@@ -16,7 +16,7 @@ sub gtk_widget_set_device_events (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_style_get_valist (
   GtkWidget $widget,
@@ -25,7 +25,7 @@ sub gtk_widget_style_get_valist (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_allocated_size (
   GtkWidget $widget,
@@ -34,13 +34,13 @@ sub gtk_widget_get_allocated_size (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_has_grab (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_override_cursor (
   GtkWidget $widget,
@@ -49,13 +49,13 @@ sub gtk_widget_override_cursor (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_allocated_height (GtkWidget $widget)
   returns int32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_redraw_on_allocate (
   GtkWidget $widget,
@@ -63,23 +63,23 @@ sub gtk_widget_set_redraw_on_allocate (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_allocated_baseline (GtkWidget $widget)
   returns int32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_set_template_from_resource (GtkWidgetClass $widget_class, gchar $resource_name)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_queue_compute_expand (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_shape_combine_region (
   GtkWidget $widget,
@@ -87,31 +87,31 @@ sub gtk_widget_shape_combine_region (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_scale_factor (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_region_intersect (GtkWidget $widget, cairo_region_t $region)
   returns cairo_region_t
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_queue_allocate (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkDirectionType $direction
 sub gtk_widget_keynav_failed (GtkWidget $widget, uint32 $direction)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_requisition (
   GtkWidget $widget,
@@ -119,36 +119,36 @@ sub gtk_widget_get_requisition (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_has_default (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_add_events (GtkWidget $widget, gint $events)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_is_ancestor (GtkWidget $widget, GtkWidget $ancestor)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_accessible (GtkWidget $widget)
   returns Pointer # AtkObject
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_path (GtkWidget $widget)
   returns GtkWidgetPath
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_remove_accelerator (
   GtkWidget $widget,
@@ -159,13 +159,13 @@ sub gtk_widget_remove_accelerator (
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_has_screen (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_input_shape_combine_region (
   GtkWidget $widget,
@@ -173,12 +173,7 @@ sub gtk_widget_input_shape_combine_region (
 )
   is native(gtk)
   is export
-  { * }
-
-sub gtk_requisition_free (GtkRequisition $requisition)
-  is native(gtk)
-  is export
-  { * }
+{ * }
 
 sub gtk_widget_get_preferred_size (
   GtkWidget $widget,
@@ -187,7 +182,7 @@ sub gtk_widget_get_preferred_size (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_size_request (
   GtkWidget $widget,
@@ -196,13 +191,13 @@ sub gtk_widget_set_size_request (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_is_composited (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_cairo_transform_to_window (
   cairo_t $cr,
@@ -211,79 +206,75 @@ sub gtk_cairo_transform_to_window (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_pango_context (GtkWidget $widget)
   returns PangoContext
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_display (GtkWidget $widget)
   returns GdkDisplay
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_queue_draw_region (GtkWidget $widget, cairo_region_t $region)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_map (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_add_mnemonic_label (GtkWidget $widget, GtkWidget $label)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_bind_template_child_full (GtkWidgetClass $widget_class, gchar $name, gboolean $internal_child, gssize $struct_offset)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
-sub gtk_requisition_get_type ()
-  returns GType
-  is native(gtk)
-  is export
-  { * }
+
 
 sub gtk_widget_get_clipboard (GtkWidget $widget, GdkAtom $selection)
   returns GtkClipboard
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_grab_default (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_error_bell (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_install_style_property_parser (GtkWidgetClass $klass, GParamSpec $pspec, GtkRcPropertyParser $parser)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_get_allocated_width (GtkWidget $widget)
   returns int32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # --> GtkAlign
 sub gtk_widget_get_valign_with_baseline (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_preferred_width_for_height (
   GtkWidget $widget,
@@ -293,13 +284,13 @@ sub gtk_widget_get_preferred_width_for_height (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkTextDirection $dir
 sub gtk_widget_set_default_direction (uint32 $dir)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_size_allocate_with_baseline (
   GtkWidget $widget,
@@ -308,24 +299,24 @@ sub gtk_widget_size_allocate_with_baseline (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_set_template (GtkWidgetClass $widget_class, GBytes $template_bytes)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_is_visible (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_hide_on_delete (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkIconSize $size
 sub gtk_widget_render_icon_pixbuf (
@@ -336,7 +327,7 @@ sub gtk_widget_render_icon_pixbuf (
   returns GdkPixbuf
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_add_tick_callback (
   GtkWidget $widget,
@@ -347,7 +338,7 @@ sub gtk_widget_add_tick_callback (
   returns guint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_preferred_width (
   GtkWidget $widget,
@@ -356,30 +347,30 @@ sub gtk_widget_get_preferred_width (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_has_focus (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_queue_draw (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkDirectionType $direction
 sub gtk_widget_child_focus (GtkWidget $widget, uint32 $direction)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_remove_tick_callback (GtkWidget $widget, guint $id)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_preferred_height_and_baseline_for_width (
   GtkWidget $widget,
@@ -391,29 +382,29 @@ sub gtk_widget_get_preferred_height_and_baseline_for_width (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_cairo_should_draw_window (cairo_t $cr, GdkWindow $window)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_unmap (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_install_style_property (GtkWidgetClass $klass, GParamSpec $pspec)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_get_ancestor (GtkWidget $widget, GType $widget_type)
   returns GtkWidget
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_modifier_mask (
   GtkWidget $widget,
@@ -422,40 +413,40 @@ sub gtk_widget_get_modifier_mask (
   returns uint32 # GdkModifierType
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_allocation (GtkWidget $widget, GtkAllocation $allocation)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_set_accessible_type (GtkWidgetClass $widget_class, GType $type)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_get_device_enabled (GtkWidget $widget, GdkDevice $device)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_action_group (GtkWidget $widget, gchar $prefix)
   returns GActionGroup
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_list_accel_closures (GtkWidget $widget)
   returns GList
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_unparent (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_translate_coordinates (
   GtkWidget $src_widget,
@@ -468,7 +459,7 @@ sub gtk_widget_translate_coordinates (
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_style_get_property (
   GtkWidget $widget,
@@ -477,18 +468,18 @@ sub gtk_widget_style_get_property (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_settings (GtkWidget $widget)
   returns GtkSettings
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_set_accessible_role (GtkWidgetClass $widget_class, AtkRole $role)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_queue_draw_area (
   GtkWidget $widget,
@@ -499,23 +490,19 @@ sub gtk_widget_queue_draw_area (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_unrealize (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
-sub gtk_requisition_copy (GtkRequisition $requisition)
-  returns GtkRequisition
-  is native(gtk)
-  is export
-  { * }
+
 
 sub gtk_widget_init_template (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_template_child (
   GtkWidget $widget,
@@ -525,12 +512,12 @@ sub gtk_widget_get_template_child (
   returns GObject
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_reparent (GtkWidget $widget, GtkWidget $new_parent)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_mnemonic_activate (
   GtkWidget $widget,
@@ -539,36 +526,36 @@ sub gtk_widget_mnemonic_activate (
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_size_allocate (GtkWidget $widget, GtkAllocation $allocation)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_destroy (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkOrientation $orientation
 sub gtk_widget_compute_expand (GtkWidget $widget, uint32 $orientation)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_create_pango_layout (GtkWidget $widget, gchar $text)
   returns PangoLayout
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_list_action_prefixes (GtkWidget $widget)
   returns CArray[Str]
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkStateFlag $state
 sub gtk_widget_override_color (
@@ -577,38 +564,32 @@ sub gtk_widget_override_color (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_pop_composite_child ()
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_remove_mnemonic_label (GtkWidget $widget, GtkWidget $label)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_queue_resize (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_realize (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_unregister_window (GtkWidget $widget, GdkWindow $window)
   is native(gtk)
   is export
-  { * }
-
-sub gtk_requisition_new ()
-  returns GtkRequisition
-  is native(gtk)
-  is export
-  { * }
+{ * }
 
 sub gtk_widget_intersect (
   GtkWidget $widget,
@@ -618,17 +599,20 @@ sub gtk_widget_intersect (
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
-sub gtk_widget_destroyed (GtkWidget $widget, GtkWidget $widget_pointer)
+sub gtk_widget_destroyed (
+  GtkWidget $widget,
+  CArray[GtkWidget] $widget_pointer
+)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_register_window (GtkWidget $widget, GdkWindow $window)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_add_device_events (
   GtkWidget $widget,
@@ -637,51 +621,51 @@ sub gtk_widget_add_device_events (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_allocation (GtkWidget $widget, GtkAllocation $allocation)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_toplevel (GtkWidget $widget)
   returns GtkWidget
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_has_visible_focus (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_is_drawable (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_push_composite_child ()
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_in_destruction (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_bind_template_callback_full (GtkWidgetClass $widget_class, gchar $callback_name, GCallback $callback_symbol)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_set_clip (GtkWidget $widget, GtkAllocation $clip)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_device_enabled (
   GtkWidget $widget,
@@ -690,22 +674,22 @@ sub gtk_widget_set_device_enabled (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_freeze_child_notify (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_show_now (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_draw (GtkWidget $widget, cairo_t $cr)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_override_symbolic_color (
   GtkWidget $widget,
@@ -714,71 +698,71 @@ sub gtk_widget_override_symbolic_color (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_find_style_property (GtkWidgetClass $klass, gchar $property_name)
 #  returns GParamSpec
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_get_frame_clock (GtkWidget $widget)
   returns GdkFrameClock
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_is_sensitive (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_reset_style (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_device_events (GtkWidget $widget, GdkDevice $device)
   returns uint32 # GdkEventMask
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_thaw_child_notify (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_child_notify (GtkWidget $widget, gchar $child_property)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_activate (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_set_connect_func (GtkWidgetClass $widget_class, GtkBuilderConnectFunc $connect_func, gpointer $connect_data, GDestroyNotify $connect_data_destroy)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 # --> GtkStyleContext
 sub gtk_widget_get_style_context (GtkWidget $widget)
   returns GtkStyleContext
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # --> GtkSizeRequestMode
 sub gtk_widget_get_request_mode (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_accel_path (
   GtkWidget $widget,
@@ -787,25 +771,25 @@ sub gtk_widget_set_accel_path (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # --> GtkTextDirection
 sub gtk_widget_get_default_direction ()
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_hide (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_list_mnemonic_labels (GtkWidget $widget)
   returns GList
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_preferred_height_for_width (
   GtkWidget $widget,
@@ -815,18 +799,18 @@ sub gtk_widget_get_preferred_height_for_width (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_clip (GtkWidget $widget, GtkAllocation $clip)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_can_activate_accel (GtkWidget $widget, guint $signal_id)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkStateFlags $state
 sub gtk_widget_override_background_color (
@@ -836,19 +820,19 @@ sub gtk_widget_override_background_color (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_create_pango_context (GtkWidget $widget)
   returns PangoContext
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_list_style_properties (GtkWidgetClass $klass, guint $n_properties)
 #  returns CArray[GParamSpec]
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 sub gtk_widget_get_preferred_height (
   GtkWidget $widget,
@@ -857,35 +841,35 @@ sub gtk_widget_get_preferred_height (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_screen (GtkWidget $widget)
   returns GdkScreen
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_grab_focus (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_send_focus_change (GtkWidget $widget, GdkEvent $event)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_event (GtkWidget $widget, GdkEvent $event)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_trigger_tooltip_query (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_insert_action_group (
   GtkWidget $widget,
@@ -894,13 +878,13 @@ sub gtk_widget_insert_action_group (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_root_window (GtkWidget $widget)
   returns GdkWindow
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_size_request (
   GtkWidget $widget,
@@ -908,12 +892,12 @@ sub gtk_widget_size_request (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_show_all (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_child_requisition (
   GtkWidget $widget,
@@ -921,7 +905,7 @@ sub gtk_widget_get_child_requisition (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_size_request (
   GtkWidget $widget,
@@ -930,31 +914,31 @@ sub gtk_widget_get_size_request (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_is_toplevel (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_device_is_shadowed (GtkWidget $widget, GdkDevice $device)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_is_focus (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_send_expose (GtkWidget $widget, GdkEvent $event)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkAccelGroup $accel_group
 sub gtk_widget_add_accelerator (
@@ -967,12 +951,12 @@ sub gtk_widget_add_accelerator (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_show (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_override_font (
   GtkWidget $widget,
@@ -980,301 +964,301 @@ sub gtk_widget_override_font (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_queue_resize_no_redraw (GtkWidget $widget)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_pointer (GtkWidget $widget, gint $x, gint $y)
   is native(gtk)
   is export
-  { * }
+{ * }
 
   sub gtk_widget_get_child_visible (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_margin_top (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_can_focus (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_support_multidevice (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_parent_window (GtkWidget $widget)
   returns GdkWindow
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_realized (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # --> GtkAlign
 sub gtk_widget_get_halign (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # --> GtkAlign
 sub gtk_widget_get_valign (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_tooltip_text (GtkWidget $widget)
   returns Str
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # --> GtkStateFlags
 sub gtk_widget_get_state_flags (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_composite_name (GtkWidget $widget)
   returns Str
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_hexpand_set (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_margin_bottom (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_visible (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_parent (GtkWidget $widget)
   returns GtkWidget
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_margin_right (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_has_tooltip (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_can_default (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_opacity (GtkWidget $widget)
   returns num64
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_double_buffered (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_sensitive (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_hexpand (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_window (GtkWidget $widget)
   returns GdkWindow
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_app_paintable (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_visual (GtkWidget $widget)
   returns GdkVisual
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_font_map (GtkWidget $widget)
   returns PangoFontMap
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # --> GtkStateType
 sub gtk_widget_get_state (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_receives_default (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_tooltip_window (GtkWidget $widget)
   returns GtkWindow
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_name (GtkWidget $widget)
   returns Str
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_no_show_all (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_vexpand (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_has_window (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_focus_on_click (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_mapped (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_margin_start (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_events (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_vexpand_set (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_margin_left (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_get_css_name (GtkWidgetClass $widget_class)
 #  returns char
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 # --> GtkTextDirection
 sub gtk_widget_get_direction (GtkWidget $widget)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_font_options (GtkWidget $widget)
   returns cairo_font_options_t
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_tooltip_markup (GtkWidget $widget)
   returns Str
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_get_margin_end (GtkWidget $widget)
   returns gint
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_child_visible (GtkWidget $widget, gboolean $is_visible)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_margin_top (GtkWidget $widget, gint $margin)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_can_focus (GtkWidget $widget, gboolean $can_focus)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_support_multidevice (
   GtkWidget $widget,
@@ -1282,7 +1266,7 @@ sub gtk_widget_set_support_multidevice (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_parent_window (
   GtkWidget $widget,
@@ -1290,80 +1274,80 @@ sub gtk_widget_set_parent_window (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_realized (GtkWidget $widget, gboolean $realized)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkAlign $align
 sub gtk_widget_set_halign (GtkWidget $widget, uint32 $align)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkAlign $align
 sub gtk_widget_set_valign (GtkWidget $widget, uint32 $align)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_tooltip_text (GtkWidget $widget, gchar $text)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkStateFlags $flags
 sub gtk_widget_unset_state_flags (GtkWidget $widget, uint32 $flags)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_composite_name (GtkWidget $widget, gchar $name)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_hexpand_set (GtkWidget $widget, gboolean $set)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_margin_bottom (GtkWidget $widget, gint $margin)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_visible (GtkWidget $widget, gboolean $visible)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_parent (GtkWidget $widget, GtkWidget $parent)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_margin_right (GtkWidget $widget, gint $margin)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_has_tooltip (GtkWidget $widget, gboolean $has_tooltip)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_can_default (GtkWidget $widget, gboolean $can_default)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_opacity (GtkWidget $widget, num64 $opacity)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_double_buffered (
   GtkWidget $widget,
@@ -1371,22 +1355,22 @@ sub gtk_widget_set_double_buffered (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_sensitive (GtkWidget $widget, gboolean $sensitive)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_hexpand (GtkWidget $widget, gboolean $expand)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_window (GtkWidget $widget, GdkWindow $window)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_app_paintable (
   GtkWidget $widget,
@@ -1394,23 +1378,23 @@ sub gtk_widget_set_app_paintable (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_visual (GtkWidget $widget, GdkVisual $visual)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_font_map (GtkWidget $widget, PangoFontMap $font_map)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 # GtkStateType $state
 sub gtk_widget_set_state (GtkWidget $widget, uint32 $state)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_receives_default (
   GtkWidget $widget,
@@ -1418,7 +1402,7 @@ sub gtk_widget_set_receives_default (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_tooltip_window (
   GtkWidget $widget,
@@ -1426,27 +1410,27 @@ sub gtk_widget_set_tooltip_window (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_name (GtkWidget $widget, gchar $name)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_no_show_all (GtkWidget $widget, gboolean $no_show_all)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_vexpand (GtkWidget $widget, gboolean $expand)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_has_window (GtkWidget $widget, gboolean $has_window)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_focus_on_click (
   GtkWidget $widget,
@@ -1454,43 +1438,43 @@ sub gtk_widget_set_focus_on_click (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_mapped (GtkWidget $widget, gboolean $mapped)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_margin_start (GtkWidget $widget, gint $margin)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_events (GtkWidget $widget, gint $events)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_vexpand_set (GtkWidget $widget, gboolean $set)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_margin_left (GtkWidget $widget, gint $margin)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 #sub gtk_widget_class_set_css_name (GtkWidgetClass $widget_class, char $name)
 #  is native(gtk)
 #  is export
-#  { * }
+#{ * }
 
 # GtkTextDirection $dir
 sub gtk_widget_set_direction (GtkWidget $widget, uint32 $dir)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_font_options (
   GtkWidget $widget,
@@ -1498,14 +1482,14 @@ sub gtk_widget_set_font_options (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_tooltip_markup (GtkWidget $widget, gchar $markup)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_widget_set_margin_end (GtkWidget $widget, gint $margin)
   is native(gtk)
   is export
-  { * }
+{ * }

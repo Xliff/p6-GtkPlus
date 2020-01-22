@@ -30,6 +30,8 @@ sub ReturnWidget ($w, $raw, $widget) {
 #   %sig-hash{$signal-name}[0];
 # }
 
+# Coz GtkRequisition is in subs!
+
 sub g_signal_connect_wd(
   Pointer $app,
   Str $name,
