@@ -12,7 +12,7 @@ use GTK::Printer;
 use GTK::PrintSettings;
 
 my subset PrintUnixDialogAncestry is export
-  where GtkPrintUnixDialog | DialogAncestry
+  where GtkPrintUnixDialog | DialogAncestry;
 
 class GTK::Dialog::PrintUnix is GTK::Dialog {
   has GtkPrintUnixDialog $!pud is implementor;
@@ -25,7 +25,7 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
 
   submethod BUILD(:$print-dialog) {
     my $to-parent;
-    given $dialog {
+    given $print-dialog {
       when PrintUnixDialogAncestry {
         $!pud = do {
           when GtkPrintUnixDialog {
@@ -136,7 +136,7 @@ class GTK::Dialog::PrintUnix is GTK::Dialog {
   method settings (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        my $ps = gtk_print_unix_dialog_get_settings($!pud)
+        my $ps = gtk_print_unix_dialog_get_settings($!pud);
 
         $ps ??
           ( $raw ?? $ps !! GTK::PrintSettings.new($ps) )

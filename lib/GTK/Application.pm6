@@ -23,7 +23,6 @@ class GTK::Application is export {
   also does GIO::Roles::ActionMap;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Application;
-  also does GTK::Roles::Types;
 
   my $gapp;
 
