@@ -66,8 +66,11 @@ role GTK::Roles::TreeModel {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method foreach (GtkTreeModelForeachFunc $func, gpointer $user_data) {
-    gtk_tree_model_foreach($!tm, $func, $user_data);
+  method foreach (
+    &func,
+    gpointer $user_data = gpointer
+  ) {
+    gtk_tree_model_foreach($!tm, &func, $user_data);
   }
 
   multi method get(GtkTreeIter() $iter, @types, @cols) {

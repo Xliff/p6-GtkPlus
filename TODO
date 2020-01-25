@@ -29,6 +29,7 @@
 + Generate GTK::Bundle::Widgets and GTK::Bundle::NonWidgets comprised of need statements (build-mro.pl6 could do this)
   - build-mro.pl6 is now doing this (check to insure it is using ::Bundle !).
   - GTK.pm6 would then consist of all GTK::Bundle files
+- GTK::ListStore will need a comprehensive review.
 - SERIOUS CONSIDERATION: Add multis for ALL (yes EVERY) method in p6-GTK and its descendant projects that allows
   a consumer to pass NATIVE parameters. This will ALMOST CERTAINLY entail an engineered solution (ie a script).
   Said script needs include a mechanism that will extract the unit prefix from its contents.

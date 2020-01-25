@@ -68,7 +68,7 @@ sub gtk_tree_iter_free (GtkTreeIter $iter)
 
 sub gtk_tree_model_foreach (
   GtkTreeModel $model,
-  GtkTreeModelForeachFunc $func,
+  &func (GtkTreeModel, GtkTreePath, GtkTreeIter, Pointer --> gboolean),
   gpointer $user_data
 )
   is native(gtk)
