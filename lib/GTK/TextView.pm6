@@ -263,7 +263,7 @@ class GTK::TextView is GTK::Container {
       },
       STORE => sub ($, Int() $indent is copy) {
         my gint $i = $indent;
-        
+
         gtk_text_view_set_indent($!tv, $i);
       }
     );
@@ -443,12 +443,17 @@ class GTK::TextView is GTK::Container {
     Proxy.new(
       FETCH => -> $ {
         my $tb = self.buffer;
+
+        die 'Could not find a valid buffer!' unless $tb;
+        
         my ($s, $e) = $tb.get_bounds;
 
         $tb.get_text($s, $e, False);
       },
       STORE => -> $, Str() $t {
         my $tb = self.buffer;
+
+        die 'Could not find a valid buffer!' unless $tb;
 
         $tb.set_text($t);
       }

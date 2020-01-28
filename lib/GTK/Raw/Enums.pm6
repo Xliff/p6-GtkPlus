@@ -37,6 +37,16 @@ our enum GtkApplicationInhibitFlagsEnum is export <
   GTK_APPLICATION_INHIBIT_IDLE
 >;
 
+constant GtkAssistantPageType is export := guint32;
+our enum GtkAssistantPageTypeEnum is export <
+    GTK_ASSISTANT_PAGE_CONTENT
+    GTK_ASSISTANT_PAGE_INTRO
+    GTK_ASSISTANT_PAGE_CONFIRM
+    GTK_ASSISTANT_PAGE_SUMMARY
+    GTK_ASSISTANT_PAGE_PROGRESS
+    GTK_ASSISTANT_PAGE_CUSTOM
+>;
+
 constant GtkBaselinePosition is export := guint32;
 our enum GtkBaselinePositionEnum is export <
   GTK_BASELINE_POSITION_TOP
