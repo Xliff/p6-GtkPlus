@@ -68,8 +68,8 @@ class GTK::Viewport is GTK::Bin {
     $o;
   }
   multi method new (
-    GtkAdjustment() $hadjustment,
-    GtkAdjustment() $vadjustment
+    GtkAdjustment() $hadjustment = GtkAdjustment,
+    GtkAdjustment() $vadjustment = GtkAdjustment
   ) {
     my $viewport = gtk_viewport_new($hadjustment, $vadjustment);
 
