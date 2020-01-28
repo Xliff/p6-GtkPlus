@@ -49,13 +49,16 @@ class GTK::Popover is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  method new (PopoverAncestry $popover, :$ref = True) {
+  multi method new (PopoverAncestry $popover, :$ref = True) {
     my $o = self.bless(:$popover);
     $o.ref if $ref;
     $o;
   }
+  multi method new {
+    self.new_relative_to(GtkWidget);
+  }
 
-  method new-relative-to(GtkWidget() $relative) is also<new_relative_to> {
+  method new_relative_to(GtkWidget() $relative) is also<new-relative-to> {
     my $popover = gtk_popover_new($relative);
 
     $popover ?? self.bless(:$popover) !! Nil;
@@ -169,7 +172,7 @@ class GTK::Popover is GTK::Bin {
     gtk_popover_bind_model($!p, $model, $action_namespace);
   }
 
-  method get_pointing_to (GdkRectangle $rect) is also<get-pointing-to> {
+  method get_pointing_to (GdkRectangle() $rect) is also<get-pointing-to> {
     gtk_popover_get_pointing_to($!p, $rect);
   }
 

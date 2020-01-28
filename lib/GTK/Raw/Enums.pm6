@@ -54,6 +54,13 @@ our enum GtkBaselinePositionEnum is export <
   GTK_BASELINE_POSITION_BOTTOM
 >;
 
+constant GtkButtonRole is export := guint32;
+our enum GtkButtonRoleEnum is export <
+    GTK_BUTTON_ROLE_NORMAL
+    GTK_BUTTON_ROLE_CHECK
+    GTK_BUTTON_ROLE_RADIO
+>;
+
 constant GtkCalendarDisplayOptions is export := guint32;
 our enum GtkCalendarDisplayOptionsEnum is export (
   GTK_CALENDAR_SHOW_HEADING       => (1 +< 0),

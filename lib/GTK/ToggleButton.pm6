@@ -64,13 +64,13 @@ class GTK::ToggleButton is GTK::Button {
     $togglebutton ?? self.bless(:$togglebutton) !! Nil;
   }
 
-  method new_with_label (Str $label) is also<new-with-label> {
+  method new_with_label (Str() $label) is also<new-with-label> {
     my $togglebutton = gtk_toggle_button_new_with_label($label);
 
     $togglebutton ?? self.bless(:$togglebutton) !! Nil;
   }
 
-  method new_with_mnemonic (Str $label) is also<new-with-mnemonic> {
+  method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $togglebutton = gtk_toggle_button_new_with_mnemonic($label);
 
     $togglebutton ?? self.bless(:$togglebutton) !! Nil;

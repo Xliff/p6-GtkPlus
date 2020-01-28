@@ -108,7 +108,8 @@ class GTK::Button is GTK::Bin {
   )
     is also<new-from-icon-name>
   {
-    my $button = gtk_button_new_from_icon_name($icon_name, $size);
+    my GtkIconSize $s = $size;
+    my $button = gtk_button_new_from_icon_name($icon_name, $s);
 
     $button ?? self.bless(:$button) !! Nil;
   }

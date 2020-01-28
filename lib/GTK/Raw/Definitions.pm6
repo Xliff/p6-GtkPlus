@@ -154,6 +154,7 @@ class GtkMenuItem             is repr<CPointer> does GLib::Roles::Pointers is ex
 class GtkMenuShell            is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkMenuToolButton       is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkMessageDialog        is repr<CPointer> does GLib::Roles::Pointers is export { }
+class GtkModelButton          is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkNotebook             is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkOffscreen            is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkOrientable           is repr<CPointer> does GLib::Roles::Pointers is export { }
