@@ -64,9 +64,9 @@ class GTK::Builder does Associative {
       $style-data = %sections<css>;
     } else {
        $ui-data    = $ui         if $ui;
-       $style-data = $style-data if $style-data;
+       $style-data = $style-data if $style;
     }
-    $!css = GTK::CSSProvider.new($style-data) if $style-data;
+    $!css = GTK::CSSProvider.new(style => $style-data) if $style-data;
 
     if $ui-data {
       self.add_from_string($ui-data);

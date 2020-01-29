@@ -11,6 +11,7 @@ GDK::Raw::Structs
 GDK::Raw::Subs
 GDK::Screen
 GDK::Window
+GIO::Application
 GIO::DBus::Raw::Types
 GIO::MenuModel
 GIO::Raw::Application

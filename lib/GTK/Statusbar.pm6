@@ -47,20 +47,28 @@ class GTK::Statusbar is GTK::Box {
     }
   }
 
-  method GTK::Raw::Definitions::GtkStatusbar is also<Statusbar> { $!sb }
+  method GTK::Raw::Definitions::GtkStatusbar
+    is also<
+      Statusbar
+      GtkStatusbar
+    >
+  { $!sb }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-sb;
   }
 
   multi method new (StatusbarAncestry $statusbar) {
+    return Nil unless $statusbar;
+
     my $o = self.bless(:$statusbar);
-    $o.upref;
+    $o.ref;
     $o;
   }
   multi method new {
     my $statusbar = gtk_statusbar_new();
-    self.bless(:$statusbar)
+
+    $statusbar ?? self.bless(:$statusbar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -89,33 +97,41 @@ class GTK::Statusbar is GTK::Box {
     gtk_statusbar_get_context_id($!sb, $context_description);
   }
 
-  method get_message_area is also<get-message-area> {
-    gtk_statusbar_get_message_area($!sb);
+  method get_message_area (:$raw = False, :$widget = False)
+    is also<get-message-area>
+  {
+    my $w = gtk_statusbar_get_message_area($!sb);
+
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_statusbar_get_type, $n, $t );
   }
 
   method pop (Int() $context_id) {
-    my guint $ci = self.RESOLVE-UINT($context_id);
+    my guint $ci = $context_id;
+
     gtk_statusbar_pop($!sb, $ci);
   }
 
   method push (Int() $context_id, Str() $text) {
-    my guint $ci = self.RESOLVE-UINT($context_id);
+    my guint $ci = $context_id;
+
     gtk_statusbar_push($!sb, $ci, $text);
   }
 
   method remove (Int() $context_id, Int() $message_id) {
-    my @u = ($context_id, $message_id);
-    my guint ($ci, $mi) = self.RESOLVE-UINT(@u);
+    my guint ($ci, $mi) = ($context_id, $message_id);
+
     gtk_statusbar_remove($!sb, $ci, $mi);
   }
 
   method remove_all (Int() $context_id) is also<remove-all> {
-    my guint $ci = self.RESOLVE-UINT($context_id);
+    my guint $ci = $context_id;
+
     gtk_statusbar_remove_all($!sb, $ci);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

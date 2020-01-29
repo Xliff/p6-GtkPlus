@@ -55,7 +55,7 @@ class GTK::ToggleButton is GTK::Button {
     return unless $togglebutton;
 
     my $o = self.bless(:$togglebutton);
-    $o.ref if $ref = True;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
@@ -91,7 +91,7 @@ class GTK::ToggleButton is GTK::Button {
         so gtk_toggle_button_get_active($!tb);
       },
       STORE => sub ($, Int() $is_active is copy) {
-        my gboolean $ia = $is_active;
+        my gboolean $ia = $is_active.so.Int;
 
         gtk_toggle_button_set_active($!tb, $ia);
       }
@@ -117,7 +117,7 @@ class GTK::ToggleButton is GTK::Button {
         so gtk_toggle_button_get_mode($!tb);
       },
       STORE => sub ($, $draw_indicator is copy) {
-        my gboolean $di = $draw_indicator;
+        my gboolean $di = $draw_indicator.so.Int;
 
         gtk_toggle_button_set_mode($!tb, $di);
       }

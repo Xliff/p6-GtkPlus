@@ -66,7 +66,7 @@ class GTK::SpinButton is GTK::Entry {
     return Nil unless $spinbutton;
 
     my $o = self.bless(:$spinbutton);
-    $o.upref;
+    $o.ref;
     $o;
   }
   multi method new (
