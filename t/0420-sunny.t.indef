@@ -1,0 +1,49 @@
+use v6.c;
+
+# Ported from
+# https://gitlab.gnome.org/GNOME/gtk/blob/master/examples/sunny.c
+# ...as per task in TODO
+
+use GTK::Raw::Types;
+
+use GTK::Application;
+use GTK::ApplicationWindow;
+use GTK::Builder;
+use GTK::HeaderBar;
+use GTK::Overlay;
+use GTK::ScrolledWindow;
+use GTK::TextView;
+
+sub new_window ($app, $file) {
+  given ( my $w = GTK::ApplicationWindow.new($app) ) {
+    .show-menubar = False;
+    .set-default-size(640, 480);
+    .title = 'Sunny';
+    .icon-name = 'sunny';
+  }
+
+  given ( my $h = GTK::HeaderBar.new ) {
+    .title = 'Sunny';
+    .show-title-buttons = True;
+    .show;
+  }
+  $w.titlebar = $h;
+
+  my $c = GTK::Overlay.new
+  my $s = GTK::ScrolledWindow.new;
+  my $t = GTK::TextView.new;
+
+  $s.add($t);
+  $c.add($s);
+  $w.add($c);
+
+  if $file {
+    if (my @c = $f.load-contents) {
+      $v.text = @c[1].decode;
+    }
+  }
+  $w.show;
+  $w;
+}
+
+# On indefinite hold due to code in menu_button_class_init! :(
