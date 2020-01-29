@@ -639,7 +639,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_activate_key($!win, $event);
   }
 
-  method add_accel_group (GtkAccelGroup $accel_group)
+  method add_accel_group (GtkAccelGroup() $accel_group)
     is also<add-accel-group>
   {
     # Need class GTK::AccelGroup
