@@ -366,6 +366,7 @@
       "GTK::LockButton"                        :  "lib/GTK/LockButton.pm6"                      ,
       "GTK::MenuItem"                          :  "lib/GTK/MenuItem.pm6"                        ,
       "GTK::MenuShell"                         :  "lib/GTK/MenuShell.pm6"                       ,
+      "GTK::ModelButton"                       :  "lib/GTK/ModelButton.pm6"                     ,
       "GTK::Overlay"                           :  "lib/GTK/Overlay.pm6"                         ,
       "GTK::Popover"                           :  "lib/GTK/Popover.pm6"                         ,
       "GTK::PrintJob"                          :  "lib/GTK/PrintJob.pm6"                        ,

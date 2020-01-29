@@ -36,6 +36,7 @@ GLib::Roles::Pointers
 GLib::Roles::Properties
 GLib::Roles::Signals::Generic
 GLib::Roles::StaticClass
+GLib::Roles::TypedBuffer
 GLib::Value
 GLib::Variant
 Method::Also
@@ -404,6 +405,7 @@ GTK::ListBoxRow
 GTK::LockButton
 GTK::MenuItem
 GTK::MenuShell
+GTK::ModelButton
 GTK::Overlay
 GTK::Popover
 GTK::PrintJob
