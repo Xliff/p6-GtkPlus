@@ -20,7 +20,6 @@ class GTK::Settings {
 
   submethod BUILD(:$settings) {
     self!setObject($!s = $settings);              # GLib::Roles::Object
-    $!sp = nativecast(GtkSettings, $settings);    # GTK::Roles::StyleProvider
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

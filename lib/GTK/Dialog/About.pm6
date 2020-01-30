@@ -260,7 +260,9 @@ D
   }
 
   method get_type is also<get-type> {
-    gtk_about_dialog_get_type();
+    state ($n, $t);
+
+    GTK::Widget.unstable_get_type( &gtk_about_dialog_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
