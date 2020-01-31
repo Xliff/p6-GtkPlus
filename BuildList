@@ -13,6 +13,7 @@ GDK::Screen
 GDK::Window
 GIO::Application
 GIO::DBus::Raw::Types
+GIO::Menu
 GIO::MenuModel
 GIO::Raw::Application
 GIO::Raw::Definitions

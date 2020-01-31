@@ -25,7 +25,7 @@ $a.activate.tap({
   $vb.margins = 8;
   $a.window.add($vb);
 
-  for GtkMessageType.enums.sort( *.value ) {
+  for GtkMessageTypeEnum.enums.sort( *.value ) {
     my $l = .key.Str.subst(/'GTK_MESSAGE_'/, '').lc.tc;
     my $b = GTK::InfoBar.new;
     my $lw = GTK::Label.new('This is an info bar with a message type ' ~ .key);
@@ -37,7 +37,7 @@ $a.activate.tap({
       # We REQUIRE a proper event handler for this to work properly.
       $b.response.tap(-> *@a {
         # Should vary on response_id
-        my $r = GtkResponseType(@a[1]).Str;
+        my $r = GtkResponseTypeEnum(@a[1]).Str;
         say "You clicked a button in an InfoBar. The response id was: { $r }";
       });
     }

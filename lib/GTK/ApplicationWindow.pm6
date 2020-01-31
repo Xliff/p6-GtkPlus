@@ -3,13 +3,12 @@ use v6.c;
 use Method::Also;
 
 use GTK::Raw::Types;
-
 use GTK::Raw::ApplicationWindow;
-
-use GIO::Roles::ActionMap;
 
 use GTK::ShortcutsWindow;
 use GTK::Window;
+
+use GIO::Roles::ActionMap;
 
 our subset ApplicationWindowAncestry is export
   where GtkApplicationWindow | GActionMap | WindowAncestry;
@@ -76,7 +75,7 @@ class GTK::ApplicationWindow is GTK::Window {
     $appwindow ?? self.bless(:$appwindow) !! Nil;
   }
 
-  method help_overlay (:$raw = False) is rw {
+  method help_overlay (:$raw = False) is rw is also<help-overlay> {
     Proxy.new(
       FETCH => sub ($) {
         my $aw = gtk_application_window_get_help_overlay($!aw);
@@ -92,7 +91,7 @@ class GTK::ApplicationWindow is GTK::Window {
     );
   }
 
-  method show_menubar is rw {
+  method show_menubar is rw is also<show-menubar> {
     Proxy.new(
       FETCH => sub ($) {
         so gtk_application_window_get_show_menubar($!aw);
@@ -106,11 +105,11 @@ class GTK::ApplicationWindow is GTK::Window {
   }
 
 
-  method get_id {
+  method get_id is also<get-id> {
     gtk_application_window_get_id($!aw);
   }
 
-  method get_type {
+  method get_type is also<get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &gtk_application_window_get_type, $n, $t );

@@ -178,6 +178,8 @@ $a.activate.tap({
   my $msg_file = 'messages.txt';
   $msg_file = 't/messages.txt' unless $msg_file.IO.e;
   for $msg_file.IO.open.slurp.lines {
+    my $start = now;
+
     my $m = new_message($_);
     my $w = new_row;
     %messages{+$w<row>.ListBoxRow.p}<widgets> = $w;
@@ -185,6 +187,8 @@ $a.activate.tap({
     row_update($w<row>);
     $listbox.add($w<row>);
     $w<row>.show;
+
+    say "Row processing time { now - $start }s";
   }
 
 });

@@ -9,21 +9,15 @@ use GTK::Raw::Application;
 use GTK::Raw::Main;
 use GTK::Raw::Window;
 
-use GLib::Roles::Object;
-use GIO::Roles::ActionMap;
+use GIO::Application;
+use GIO::MenuModel;
+use GTK::ApplicationWindow;
+use GTK::Window;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Application;
 
-use GTK::ApplicationWindow;
-use GTK::Window;
-
-class GTK::Application is export {
-  also does GLib::Roles::Object;
-  also does GIO::Roles::ActionMap;
-  also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Signals::Application;
-
+class GTK::Application is GIO::Application {
   my $gapp;
 
   has $!app is implementor;  # GtkApplication
@@ -36,19 +30,16 @@ class GTK::Application is export {
   has $.window handles <show_all>;
 
   submethod BUILD(
-           :$app,
-    Str    :$title,
-    uint32 :$flags = 0,
-    uint32 :$width,
-    uint32 :$height,
-           :$window-type,
-           :$window_type,
-           :$window
+    GtkApplication :$app,
+    Str            :$title,
+    uint32         :$flags = 0,
+    uint32         :$width,
+    uint32         :$height,
+                   :$window-type,
+                   :$window_type,
+                   :$window
   ) {
     return unless $app;
-
-    self!setObject($!app = $app);
-    self.roleInit-ActionMap;
 
     $!title  = $title;
     $!width  = $width;
@@ -63,6 +54,9 @@ class GTK::Application is export {
 
     $DEBUG = so %*ENV<P6_GTKPLUS_DEBUG>;
 
+    $!app = $app;
+
+    self.setApplication( cast(GApplication, $app) );
     self.activate.tap({
       $!window = do given $!wtype {
         when 'application' {
@@ -87,10 +81,6 @@ class GTK::Application is export {
       $!window.destroy-signal.tap({ self.exit }) unless $!wtype eq 'custom';
       $!init.keep;
     });
-  }
-
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals, %!signals-app;
   }
 
   method GTK::Raw::Definitions::GtkApplication
@@ -175,23 +165,33 @@ class GTK::Application is export {
     $!height;
   }
 
-  method app_menu is rw is also<app-menu> {
+  method app_menu (:$raw = False) is rw is also<app-menu> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_application_get_app_menu($!app);
+        my $mm = gtk_application_get_app_menu($!app);
+
+        $mm ??
+          ( $raw ?? $mm !! GIO::MenuModel.new($mm) )
+          !!
+          Nil;
       },
-      STORE => sub ($, $app_menu is copy) {
+      STORE => sub ($, GMenuModel() $app_menu is copy) {
         gtk_application_set_app_menu($!app, $app_menu);
       }
     );
   }
 
-  method menubar is rw {
+  method menubar (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_application_get_menubar($!app);
+        my $mm = gtk_application_get_menubar($!app);
+
+        $mm ??
+          ( $raw ?? $mm !! GIO::MenuModel.new($mm) )
+          !!
+          Nil;
       },
-      STORE => sub ($, $menubar is copy) {
+      STORE => sub ($, GMenuModel() $menubar is copy) {
         gtk_application_set_menubar($!app, $menubar);
       }
     );
@@ -202,49 +202,38 @@ class GTK::Application is export {
     gtk_main();
   }
 
-  method quit (GTK::Application:U:) {
+  multi method quit (GTK::Application:U: :$gtk is required) {
     gtk_main_quit();
+  }
+  multi method quit (:$gtk is required) {
+    GTK::Application.quit(:gtk);
+  }
+  multi method quit {
+    nextsame;
   }
 
   # Non static main loop start.
-  method run {
-    # Check to see if the destroy signal has already been tapped. If not, then
-    # add the default.
-    #
-    # Cannot be done here as the activate signal has NOT occurred, yet.
-
-    # Application Startup Process
-    # Init
-    #   -- Builder init here.
-    # Application.startup
-    # Application.activate
-    #   -- Window must exist here.
-
-    my gint $z = 0;
-    g_application_run($!app, $z, Pointer);
-  }
+  # method run {
+  #   # Check to see if the destroy signal has already been tapped. If not, then
+  #   # add the default.
+  #   #
+  #   # Cannot be done here as the activate signal has NOT occurred, yet.
+  #
+  #   # Application Startup Process
+  #   # Init
+  #   #   -- Builder init here.
+  #   # Application.startup
+  #   # Application.activate
+  #   #   -- Window must exist here.
+  #
+  #   my gint $z = 0;
+  #   g_application_run($!app, $z, Pointer);
+  # }
   # multi method run(GTK::Application:U: ) {
   #   $gapp = gtk_application_new('Application', G_APPLICATION_FLAGS_NONE);
   #
   #   g_application_run($gapp, OpaquePointer, OpaquePointer);
   # }
-
-  # Non static main loop terminate.
-  method exit {
-    g_application_quit($!app);
-  }
-
-  method activate {
-    self.connect($!app, 'activate');
-  }
-
-  method startup {
-    self.connect($!app, 'startup');
-  }
-
-  method shutdown {
-    self.connect($!app, 'shutdown');
-  }
 
   # Is originally:
   # GtkApplication, GtkWindow, gpointer --> void
@@ -257,7 +246,6 @@ class GTK::Application is export {
   method window-removed is also<window_removed> {
     self.connect-application-signal($!app, 'window-removed');
   }
-
 
   method add_accelerator (
     Str() $accelerator,
@@ -281,14 +269,25 @@ class GTK::Application is export {
   method get_accels_for_action (Str() $detailed_action_name)
     is also<get-accels-for-action>
   {
-    gtk_application_get_accels_for_action($!app, $detailed_action_name);
+    my $a = gtk_application_get_accels_for_action(
+      $!app,
+      $detailed_action_name
+    );
+
+    $a[0] ?? CArrayToArray($a[0]) !! Nil;
   }
 
   method get_actions_for_accel (Str() $accel) is also<get-actions-for-accel> {
     gtk_application_get_actions_for_accel($!app, $accel);
   }
 
-  method get_active_window is also<get-active-window> {
+  method get_active_window
+    is also<
+      get-active-window
+      active_window
+      active-window
+    >
+  {
     gtk_application_get_active_window($!app);
   }
 
@@ -301,12 +300,19 @@ class GTK::Application is export {
   }
 
   method get_window_by_id (Int() $id) is also<get-window-by-id> {
-    my guint $i = self.RESOLVE-UINT($id);
+    my guint $i = $id;
+
     gtk_application_get_window_by_id($!app, $i);
   }
 
-  method get_windows is also<get-windows> {
-    gtk_application_get_windows($!app);
+  method get_windows (:$glist = False, :$raw = False) is also<get-windows> {
+    my $wl = gtk_application_get_windows($!app);
+
+    return Nil unless $wl;
+    return $wl if $glist;
+
+    $wl = GLib::GList.new($wl) but GLib::Roles::ListData[GtkWindow];
+    $raw ?? $wl.Array !! $wl.Array.map({ GTK::Window.new($_) });
   }
 
   # cw: Variant to accept a GTK::Window
@@ -315,7 +321,8 @@ class GTK::Application is export {
     Int() $flags,               # GtkApplicationInhibitFlags $flags,
     Str() $reason
   ) {
-    my guint $f = self.RESOLVE-UINT($flags);
+    my guint $f = $flags;
+
     gtk_application_inhibit($!app, $window, $f, $reason);
   }
 
@@ -324,8 +331,9 @@ class GTK::Application is export {
   )
     is also<is-inhibited>
   {
-    my guint $f = self.RESOLVE-UINT($flags);
-    gtk_application_is_inhibited($!app, $f);
+    my guint $f = $flags;
+
+    so gtk_application_is_inhibited($!app, $f);
   }
 
   method list_action_descriptions
@@ -335,7 +343,9 @@ class GTK::Application is export {
   }
 
   method prefers_app_menu is also<prefers-app-menu> {
-    gtk_application_prefers_app_menu($!app);
+    my $l = gtk_application_prefers_app_menu($!app);
+
+    $l[0] ?? CArrayToArray($l[0]) !! Nil;
   }
 
   method remove_accelerator (Str() $action_name, GVariant() $parameter)
@@ -349,7 +359,8 @@ class GTK::Application is export {
   }
 
   method uninhibit (Int() $cookie) {
-    my guint $c = self.RESOLVE-UINT($cookie);
+    my guint $c = $cookie;
+
     gtk_application_uninhibit($!app, $c);
   }
 

@@ -12,6 +12,7 @@ use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
 use GTK;
+use GIO::Menu;
 use GTK::Adjustment;
 use GTK::Application;
 use GTK::CSSProvider;
@@ -181,11 +182,21 @@ class GTK::Builder does Associative {
   ) {
     with $file {
     }
+
     with $resource {
     }
+
     with $ui_def {
-      my rule tag {
-        '<object' 'class="' $<t>=(<-["]>+) '"' 'id="' $<n>=(<-["]>+) '"' '>'
+      my token q {
+        <[ \'\" ]>
+      }
+      my regex tag {
+        ('<object') \s+ 'class='\s*(<q>){}:my $a = $1;(.+?)<?before $a><q>
+                    \s* 'id='   \s*(<q>){}:my $b = $3;(.+?)<?before $b><q> \s*
+        '>'
+        |
+        ('<menu')   \s+ 'id='   \s*(<q>){}:my $c = $1;(.+?)<?before $c><q> \s*
+        '>'
       }
       my $m = m:g/<tag>/;
 
@@ -193,30 +204,42 @@ class GTK::Builder does Associative {
         # For use in regex.
         my @p = @prefixes;
         for $m.Array -> $o {
-          (my $type = $o<tag><t>.Str) ~~
-            s/ ( @p ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
-          my $args;
-          # Last-chance special case resolution -- should probably be broken
-          # out into its own package.
-          $type = do given $type {
-            when 'GTK::Adjustment' {
-              $args = ['cast', GtkAdjustment];
-              $_;
+
+          given $o<tag>[0] {
+            when '<object' {
+              (my $type = $o<tag>[2].Str) ~~
+                s/ ( @p ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
+              my $args;
+              # Last-chance special case resolution -- should probably be broken
+              # out into its own package.
+              $type = do given $type {
+                when 'GTK::Adjustment' {
+                  $args = ['cast', GtkAdjustment];
+                  $_;
+                }
+                when 'GTK::VBox' {
+                  #$args = ['option', { vertical => 1 } ];
+                  'GTK::Box';
+                }
+                when 'GTK::HBox' {
+                  #$args = ['option', { horizontal => 1 } ];
+                  'GTK::Box';
+                }
+                default { $_; }
+              }
+              %!types{ $o<tag>[4].Str } = [ $type, $args ];
             }
-            when 'GTK::VBox' {
-              #$args = ['option', { vertical => 1 } ];
-              'GTK::Box';
+
+            when '<menu' {
+              my $args = [ 'cast', GMenuModel ];
+              %!types{ $o<tag>[2].Str } = [ 'GIO::Menu', $args ];
             }
-            when 'GTK::HBox' {
-              #$args = ['option', { horizontal => 1} ];
-              'GTK::Box';
-            }
-            default { $_; }
           }
-          %!types{ $o<tag><n>.Str } = [ $type, $args ];
+
         }
       }
     }
+
   }
 
   method !postProcess(
@@ -229,6 +252,7 @@ class GTK::Builder does Associative {
     self!getTypes(:$ui_def, :$file, :$resource);
     for %!types.keys -> $k {
       my $o = self.get_object($k);
+
       given %!types{$k}[1][0] {
         when 'cast' {
           $o = nativecast(%!types{$k}[1][1], $o);
@@ -370,6 +394,7 @@ class GTK::Builder does Associative {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     my $i = 0;
+
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     gtk_builder_add_objects_from_file($!b, $filename, $oi, $error);
@@ -388,6 +413,7 @@ class GTK::Builder does Associative {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     my $i = 0;
+
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     gtk_builder_add_objects_from_resource($!b, $resource_path, $oi, $error);
@@ -419,6 +445,7 @@ class GTK::Builder does Associative {
     my gsize $l = $length;
     my $oi = CArray[Str].new;
     my $i = 0;
+
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     my $rc = gtk_builder_add_objects_from_string(
@@ -478,6 +505,7 @@ class GTK::Builder does Associative {
 
   method get_object (Str() $name) is also<get-object> {
     my $o = gtk_builder_get_object($!b, $name);
+
     $o === GtkWidget ?? Nil !! $o;
   }
 

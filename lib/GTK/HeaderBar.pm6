@@ -105,7 +105,7 @@ class GTK::HeaderBar is GTK::Container {
   method show_close_button is rw is also<show-close-button> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_header_bar_get_show_close_button($!hb) );
+        so gtk_header_bar_get_show_close_button($!hb);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = $setting.so.Int;

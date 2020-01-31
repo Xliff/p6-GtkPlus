@@ -21,9 +21,8 @@ use GTK::Raw::Subs;
 use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
+use GLib::Roles::Object;
 use GTK::Roles::Buildable;
-use GTK::Roles::Data;
-use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 
@@ -33,9 +32,8 @@ our subset WidgetAncestry is export where
   GtkBuildable | GtkWidget;
 
 class GTK::Widget {
+  also does GLib::Roles::Object;
   also does GTK::Roles::Buildable;
-  also does GTK::Roles::Data;
-  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
 
@@ -111,15 +109,15 @@ class GTK::Widget {
          die "GTK::Widget initialized from unexpected source!";
       }
     };
-    $!prop = cast(GObject, $!w);    # GLib::Roles::Properties
-    $!b = cast(GtkBuildable, $!w);  # GTK::Roles::Buildable
-    $!data = $!w.p;                       # GTK::Roles::Data
+
+    self.roleInit-Object;
+    $!b = cast(GtkBuildable, $!w) unless $!b  # GTK::Roles::Buildable
   }
 
   # REALLY EXPERIMENTAL attempt to create a global object creation
   # factory.
   method CreateObject(GTK::Widget:U: GtkWidget $o) {
-    my $type = GTK::Widget.getType($o);
+    my $type = GTK::Widget.getType( cast(GObject, $o) );
 
     # If no type, then we fall back to GTK::Widget.
     if ($type //= 'GTK::Widget') eq 'GTK::Widget' {

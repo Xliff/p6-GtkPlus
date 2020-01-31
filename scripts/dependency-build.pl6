@@ -179,7 +179,6 @@ sub MAIN (
     }
 
     # Build code begins here.
-    @buildList.elems.say;
     my $*SKIP = $start-at ??
       ( $start-at.Int ~~ Failure ??
         do {
@@ -200,6 +199,7 @@ sub MAIN (
       )
       !!
       0;
+    my $remaining = @buildList.elems - $*SKIP;
 
     my ($*I, $start) = (0, DateTime.now);
     while +@buildList {
@@ -221,7 +221,7 @@ sub MAIN (
 
       # Start threads until we have a blocker...or we run out of threads.
       if !%nodes{$n} || %nodes{$n}<edges>.elems.not {
-        say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 }";
+        say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 } R: { --$remaining }";
         my $t = start { run-compile($n, $t); }
         @threads.push: $t;
       }
@@ -254,7 +254,7 @@ sub run-compile ($module, $thread) {
     #$thread.break if $proc.exitcode;
   }
   if %nodes{$module} {
-    say "Checking { $module }...";
+    #say "Checking { $module }...";
     for %nodes{$module}<kids>[] {
       # Mute all until we are sure there are no more Nils!
       quietly {
@@ -285,7 +285,7 @@ sub prune ($node, $module) {
   $lock2.protect({ %locks{$_} //= Lock.new });
   %locks{$_}.protect({
     # Prunning should be behind a lock as well!
-    say "Pruning {$node}...";
+    #say "Pruning {$node}...";
     %nodes{$node}<edges> .= grep({ $_ ne $module });
   });
 }
