@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GLib::Raw::Definitions;
+use GTK::Raw::Types;
 
 sub image_surface_create(Int() $format, Int() $width, Int() $height)
   is export

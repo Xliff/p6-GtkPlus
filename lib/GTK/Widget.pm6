@@ -1452,6 +1452,12 @@ class GTK::Widget {
     gtk_widget_override_background_color($!w, $s, $color);
   }
 
+  method override_font (PangoFontDescription() $font)
+    is also<override-font>
+  {
+    gtk_widget_override_font($!w, $font);
+  }
+
   method trigger_tooltip_query is also<trigger-tooltip-query> {
     gtk_widget_trigger_tooltip_query($!w);
   }

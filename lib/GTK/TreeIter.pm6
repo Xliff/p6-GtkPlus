@@ -18,7 +18,7 @@ class GTK::TreeIter is export {
     $iter ?? self.bless(:$iter) !! Nil;
   }
 
-  method GTK::Raw::Definitions::GtkTreeIter
+  method GTK::Raw::Structs::GtkTreeIter
     is also<
       GtkTreeIter
       TreeIter

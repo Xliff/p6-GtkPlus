@@ -70,7 +70,7 @@ class GTK::TextView is GTK::Container {
     self.disconnect-all($_) for %!signals-tv;
   }
 
-  multi method new (TextViewAncestry $textview, :$ref = False) {
+  multi method new (TextViewAncestry $textview, :$ref = True) {
     return unless $textview;
 
     my $o = self.bless(:$textview);
@@ -445,7 +445,7 @@ class GTK::TextView is GTK::Container {
         my $tb = self.buffer;
 
         die 'Could not find a valid buffer!' unless $tb;
-        
+
         my ($s, $e) = $tb.get_bounds;
 
         $tb.get_text($s, $e, False);
@@ -616,6 +616,7 @@ class GTK::TextView is GTK::Container {
     is also<get-line-at-y>
   {
     my gint ($yy, $lt) = ($y, $line_top);
+
     gtk_text_view_get_line_at_y($!tv, $target_iter, $yy, $lt);
   }
 
@@ -623,11 +624,13 @@ class GTK::TextView is GTK::Container {
     is also<get-line-yrange>
   {
     my gint ($yy, $h) = ($y, $height);
+
     gtk_text_view_get_line_yrange($!tv, $iter, $yy, $h);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_text_view_get_type, $n, $t );
   }
 
@@ -647,6 +650,7 @@ class GTK::TextView is GTK::Container {
     is also<get-window>
   {
     my uint32 $w = $win;
+
     gtk_text_view_get_window($!tv, $w);
   }
 
@@ -670,6 +674,7 @@ class GTK::TextView is GTK::Container {
     is also<move-visually>
   {
     my gint $c = $count;
+    
     gtk_text_view_move_visually($!tv, $iter, $c);
   }
 

@@ -1,0 +1,21 @@
+Tests performed AFTER the split
+===============================
+
+0240 - Plot overlay no longer displays. Gives the following error messages:
+  (perl6:17212): GLib-GObject-WARNING **: 08:54:40.656: instance with invalid (NULL) class pointer
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_signal_emit_valist: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_object_set_qdata: assertion 'G_IS_OBJECT (object)' failed
+
+  (perl6:17212): GLib-GObject-WARNING **: 08:54:40.656: instance with invalid (NULL) class pointer
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_signal_handlers_destroy: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+  (perl6:17212): GLib-GObject-WARNING **: 08:54:40.656: instance with invalid (NULL) class pointer
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_signal_handlers_destroy: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_object_unref: assertion 'old_ref > 0' failed
+
+  ... looks like a null is STILL getting into the works, somehow.
