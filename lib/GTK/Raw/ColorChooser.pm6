@@ -9,10 +9,16 @@ use GTK::Raw::Types;
 unit package GTK::Raw::ColorChooser;
 
 sub gtk_color_chooser_widget_new ()
-  returns GtkColorChooser
+  returns GtkColorChooserWidget
   is native(gtk)
   is export
-  { * }
+{ * }
+
+sub gtk_color_chooser_widget_get_type ()
+  returns GType
+  is native(gtk)
+  is export
+{ * }
 
 sub gtk_color_chooser_add_palette (
   GtkColorChooser $chooser,
@@ -23,7 +29,7 @@ sub gtk_color_chooser_add_palette (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_color_chooser_get_rgba (
   GtkColorChooser $chooser,
@@ -31,13 +37,13 @@ sub gtk_color_chooser_get_rgba (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_color_chooser_get_type ()
   returns GType
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_color_chooser_set_rgba (
   GtkColorChooser $chooser,
@@ -45,15 +51,15 @@ sub gtk_color_chooser_set_rgba (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_color_chooser_get_use_alpha (GtkColorChooser $chooser)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_color_chooser_set_use_alpha (GtkColorChooser $chooser, gboolean $use_alpha)
   is native(gtk)
   is export
-  { * }
+{ * }

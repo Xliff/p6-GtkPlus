@@ -189,7 +189,6 @@ GTK::Raw::EventBox
 GTK::Raw::Expander
 GTK::Raw::FileChooser
 GTK::Raw::FileChooserButton
-GTK::Raw::FileChooserWidget
 GTK::Raw::FileFilter
 GTK::Raw::Fixed
 GTK::Raw::FlowBox
@@ -395,8 +394,8 @@ GTK::ComboBoxText
 GTK::EntryCompletion
 GTK::EventBox
 GTK::Expander
+GTK::FileChooser
 GTK::FileChooserButton
-GTK::FileChooserWidget
 GTK::FlowBoxChild
 GTK::FontButton
 GTK::Frame
@@ -411,7 +410,7 @@ GTK::ModelButton
 GTK::Overlay
 GTK::Popover
 GTK::PrintJob
-GTK::RecentChooserWidget
+GTK::RecentChooser
 GTK::Revealer
 GTK::ScaleButton
 GTK::ScrolledWindow

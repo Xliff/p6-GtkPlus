@@ -11,7 +11,7 @@ use GTK::Box;
 our subset RecentChooserWidgetAncestry is export
   where GtkRecentChooserWidget | GtkRecentChooser | BoxAncestry;
 
-class GTK::RecentChooserWidget is GTK::Box {
+class GTK::RecentChooser is GTK::Box {
   also does GTK::Roles::RecentChooser;
 
   has GtkRecentChooserWidget $!rcw is implementor;
@@ -44,8 +44,10 @@ class GTK::RecentChooserWidget is GTK::Box {
         self.setBox($to-parent);
         self.roleInit-RecentChooser; # GTK::Roles::RecentChooser
       }
-      when GTK::RecentChooserWidget {
+
+      when GTK::RecentChooser {
       }
+      
       default {
       }
     }

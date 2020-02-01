@@ -64,7 +64,7 @@ class GTK::ModelButton is GTK::Button {
   method new_with_mnemonic (GTK::Button:U: Str() $label)
     is also<new-with-mnemonic>
   {
-    my $modelbutton = nextwith($label);
+    my $modelbutton = callwith($label);
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }
@@ -74,7 +74,7 @@ class GTK::ModelButton is GTK::Button {
   )
     is also<new-from-icon-name>
   {
-    my $modelbutton = nextwith($icon_name, $size);
+    my $modelbutton = callwith($icon_name, $size);
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }
@@ -84,7 +84,7 @@ class GTK::ModelButton is GTK::Button {
   )
     is also<new-from-stock>
   {
-    my $modelbutton = nextwith($stock_id);
+    my $modelbutton = callwith($stock_id);
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }
@@ -94,7 +94,7 @@ class GTK::ModelButton is GTK::Button {
   )
     is also<new-with-label>
   {
-    my $modelbutton = nextwith($label);
+    my $modelbutton = callwith($label);
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }

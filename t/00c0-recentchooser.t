@@ -1,14 +1,13 @@
 use v6.c;
 
-use GTK::Raw::Types;
-
 use GTK::Application;
 use GTK::Box;
 use GTK::Button;
-use GTK::FileChooserWidget;
+use GTK::RecentChooser;
+use GTK::Raw::Types;
 
 my $app = GTK::Application.new(
-  title  => 'org.genex.test.filechooser',
+  title  => 'org.genex.test.recentchooser.widget',
   width  => 400,
   height => 400
 );
@@ -19,14 +18,14 @@ $app.activate.tap({
 
   my $box = GTK::Box.new-vbox(6);
   my $exit = GTK::Button.new_with_label: <exit>;
-  my $chooser = GTK::FileChooserWidget.new(GTK_FILE_CHOOSER_ACTION_OPEN);
-  $chooser.^name.say;
+  my $chooser = GTK::RecentChooser.new;
 
+  # $chooser.current_uri currently unavailable due to issues with Method::Also
   $chooser.selection-changed.tap: {
-    say "Selected: { $chooser.filename // $chooser.current_folder }"
+    say "Selected: { $_ }" with $chooser.get_current_uri;
   };
 
-  $exit.clicked.tap: { $app.exit  };
+  $exit.      clicked       .tap: { $app.exit };
   $app.window.destroy-signal.tap: { $app.exit };
 
   $box.pack_start($chooser, False, True, 0);

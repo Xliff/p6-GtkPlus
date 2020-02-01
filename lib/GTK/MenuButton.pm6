@@ -67,13 +67,13 @@ class GTK::MenuButton is GTK::ToggleButton {
 
   # Exposed from GTK::ToggleButton
   method new_with_label (Str() $label) is also<new-with-label> {
-    my $menubutton = nextwith($label);
+    my $menubutton = callwith($label);
 
     $menubutton ?? self.bless(:$menubutton) !! Nil;
   }
 
   method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
-    my $menubutton = nextwith($label);
+    my $menubutton = callwith($label);
 
     $menubutton ?? self.bless(:$menubutton) !! Nil;
   }

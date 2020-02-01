@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 
 use GTK::Raw::Types;
-use GTK::Raw::FileChooserWidget;
 
 use GTK::Box;
 
@@ -12,7 +11,7 @@ use GTK::Roles::FileChooser;
 our subset FileChooserWidgetAncestry is export
   where GtkFileChooserWidget | GtkFileChooser | BoxAncestry;
 
-class GTK::FileChooserWidget is GTK::Box {
+class GTK::FileChooser is GTK::Box {
   also does GTK::Roles::FileChooser;
 
   has GtkFileChooserWidget $!fcw is implementor;
@@ -26,7 +25,7 @@ class GTK::FileChooserWidget is GTK::Box {
   submethod BUILD (:$filechooserwidget) {
     given $filechooserwidget {
       when    FileChooserWidgetAncestry { self.setFileChooserWidget($_) }
-      when    GTK::FileChooserWidget    { }
+      when    GTK::FileChooser          { }
       default                           { }
     }
   }
@@ -82,3 +81,17 @@ class GTK::FileChooserWidget is GTK::Box {
   }
 
 }
+
+### /usr/include/gtk-3.0/gtk/gtkfilechooserwidget.h
+
+sub gtk_file_chooser_widget_get_type ()
+  returns GType
+  is native(gtk)
+  is export
+{ * }
+
+sub gtk_file_chooser_widget_new (GtkFileChooserAction $action)
+  returns GtkFileChooserWidget
+  is native(gtk)
+  is export
+{ * }

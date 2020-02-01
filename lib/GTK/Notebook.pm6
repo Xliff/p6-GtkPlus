@@ -416,12 +416,15 @@ class GTK::Notebook is GTK::Container {
     is also<prepend-page>
   { * }
 
+  # This probably should be exported.
+  my subset WidgetPointerOrObject of Mu where GTK::Widget | GtkWidget;
+
   multi method prepend_page ($child, Str() $tab-label) {
     samewith( $child, GTK::Label.new($tab-label) );
   }
   multi method prepend_page (
-    $child     is copy,
-    $tab-label is copy
+    WidgetPointerOrObject $child     is copy,
+    WidgetPointerOrObject $tab-label is copy
   ) {
     X::GTK::Notebook::InvalidPageParams.new(:$child, :$tab-label).new.throw
       unless ($child, $tab-label).all ~~ (GTK::Widget, GtkWidget).any;

@@ -16,6 +16,12 @@ role GTK::Roles::ColorChooser {
 
   has GtkColorChooser $!cc;
 
+  method roleInit-ColorChooser {
+    my \i = findProperImplementor(self.^attributes);
+
+    $!cc = cast( GtkColorChooser, i.get_value(self) );
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   method color-activated is also<color_activated> {
     self.connect($!cc, 'color-activated');
@@ -49,13 +55,29 @@ role GTK::Roles::ColorChooser {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
+  method add_palette (
+    Int() $orientation,
+    Int() $colors_per_line,
+    Int() $n_colors,
+    GDK::RGBA $colors
+  )
+    is also<add-palette>
+  {
+    my uint32 $o = $orientation;
+    my gint ($cpl, $nc) = ($colors_per_line, $n_colors);
+
+    gtk_color_chooser_add_palette($!cc, $o, $cpl, $nc, $colors);
+  }
+
   method get_rgba (GDK::RGBA $color is rw) is also<get-rgba> {
     gtk_color_chooser_get_rgba($!cc, $color);
     $color;
   }
 
-  method get_colorchooser_type is also<get-colorchooser-type> {
-    warn 'There is no role type for GTK::Roles::ColorChooser';
+  method colorchooser_get_type is also<colorchooser-get-type> {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_color_chooser_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

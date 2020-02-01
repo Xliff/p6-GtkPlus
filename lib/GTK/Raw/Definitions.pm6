@@ -104,6 +104,7 @@ class GtkClipboard            is repr<CPointer> does GLib::Roles::Pointers is ex
 class GtkColorButton          is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkColorChooser         is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkColorChooserDialog   is repr<CPointer> does GLib::Roles::Pointers is export { }
+class GtkColorChooserWidget   is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkComboBox             is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkComboBoxText         is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkContainer            is repr<CPointer> does GLib::Roles::Pointers is export { }

@@ -15,10 +15,12 @@ use GTK::Box;
 use GTK::Roles::ColorChooser;
 
 our subset ColorChooserAncestry is export
-  where GtkColorChooser | BoxAncestry;
+  where GtkColorChooserWidget | GtkColorChooser | BoxAncestry;
 
 class GTK::ColorChooser is GTK::Box {
   also does GTK::Roles::ColorChooser;
+
+  has GtkColorChooserWidget $!ccw is implementor;
 
   # Note that the attribute for the widget is also the attribute provided
   # by the role. This is a special case.
@@ -31,18 +33,26 @@ class GTK::ColorChooser is GTK::Box {
 
   submethod BUILD(:$chooser) {
     my $to-parent;
+
     given $chooser {
       when ColorChooserAncestry {
-        $!cc = do {
-          when GtkColorChooser {
+        $!ccw = do {
+          when GtkColorChooserWidget {
             $to-parent = nativecast(GtkBox, $_);
             $_;
           }
+
+          when GtkColorChooser {
+            $to-parent = nativecast(GtkBox, $_);
+            nativecast(GtkColorChooserWidget, $_);
+          }
+
           when BoxAncestry {
             $to-parent = $_;
-            nativecast(GtkColorChooser, $_);
+            nativecast(GtkColorChooserWidget, $_);
           }
-        };
+        }
+        self.roleInit-ColorChooser;
         self.setBox($to-parent);
       }
       when GTK::ColorChooser {
@@ -101,24 +111,14 @@ class GTK::ColorChooser is GTK::Box {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_palette (
-    Int() $orientation,
-    Int() $colors_per_line,
-    Int() $n_colors,
-    GDK::RGBA $colors
-  )
-    is also<add-palette>
-  {
-    my uint32 $o = $orientation;
-    my gint ($cpl, $nc) = ($colors_per_line, $n_colors);
-
-    gtk_color_chooser_add_palette($!cc, $o, $cpl, $nc, $colors);
-  }
-
   method get_type is also<get-type> {
     state ($n, $t);
-    
-    GTK::Widget.unstable_get_type( &gtk_color_chooser_get_type, $n, $t );
+
+    GTK::Widget.unstable_get_type(
+      &gtk_color_chooser_widget_get_type,
+      $n,
+      $t
+    );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
