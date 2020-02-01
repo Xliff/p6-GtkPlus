@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 
 use GTK::Raw::Types;
+use GTK::Raw::Button;
 
 use GTK::Button;
 
@@ -20,9 +21,10 @@ class GTK::ModelButton is GTK::Button {
     $o;
   }
 
-  submethod BUILD(:$ModelButton) {
+  submethod BUILD(:$modelbutton) {
     my $to-parent;
-    given $ModelButton {
+
+    given $modelbutton {
       when ModelButtonAncestry {
         $!mb = do {
           when GtkModelButton {
@@ -32,13 +34,15 @@ class GTK::ModelButton is GTK::Button {
 
           default {
             $to-parent = $_;
-            cast(GtkButton, $_);
+            cast(GtkModelButton, $_);
           }
         };
         self.setButton($to-parent);
       }
+
       when GTK::ModelButton {
       }
+
       default {
       }
     }
@@ -64,37 +68,37 @@ class GTK::ModelButton is GTK::Button {
   method new_with_mnemonic (GTK::Button:U: Str() $label)
     is also<new-with-mnemonic>
   {
-    my $modelbutton = callwith($label);
+    my $modelbutton = callsame;
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }
   method new_from_icon_name (
-    GTK::Button:U: Str() $icon_name,
+    GTK::ModelButton:U: Str() $icon_name,
     Int() $size
   )
     is also<new-from-icon-name>
   {
-    my $modelbutton = callwith($icon_name, $size);
+    my $modelbutton = gtk_button_new_from_icon_name($icon_name);
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }
 
   method new_from_stock (
-    GTK::Button:U: Str() $stock_id
+    GTK::ModelButton:U: Str() $stock_id
   )
     is also<new-from-stock>
   {
-    my $modelbutton = callwith($stock_id);
+    my $modelbutton = gtk_button_new_from_stock($stock_id);
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }
 
   method new_with_label (
-    GTK::Button:U: Str() $label
+    GTK::ModelButton:U: Str() $label
   )
     is also<new-with-label>
   {
-    my $modelbutton = callwith($label);
+    my $modelbutton = gtk_button_new_with_label($label);
 
     $modelbutton ?? self.bless(:$modelbutton) !! Nil;
   }
