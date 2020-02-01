@@ -12,7 +12,7 @@ use GTK::Roles::ToolShell;
 
 use GTK::Container;
 
-our subset ToolbarAncestry is export 
+our subset ToolbarAncestry is export
   where GtkToolbar | GtkToolShell | GtkOrientable | ContainerAncestry;
 
 class GTK::Toolbar is GTK::Container {
@@ -23,24 +23,25 @@ class GTK::Toolbar is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Toolbar');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$toolbar) {
     given $toolbar {
-      when ToolbarAncestry {
-        self.setToolbar($toolbar);
-      }
-      when GTK::Toolbar {
-      }
-      default {
-      }
+      when ToolbarAncestry { self.setToolbar($toolbar) }
+      when GTK::Toolbar    { }
+      default              { }
     }
   }
-  
-  method GTK::Raw::Definitions::Toolbar is also<Toolbar> { $!tb }
-  
+
+  method GTK::Raw::Definitions::Toolbar
+    is also<
+      Toolbar
+      GtkToolbar
+    >
+  { $!tb }
+
   method setToolbar(ToolbarAncestry $toolbar) {
     my $to-parent;
     $!tb = do given $toolbar {
@@ -48,16 +49,19 @@ class GTK::Toolbar is GTK::Container {
         $to-parent = nativecast(GtkContainer, $_);
         $_;
       }
+
       when GtkOrientable {
         $!or = $_;
         $to-parent = nativecast(GtkContainer, $_);
         nativecast(GtkToolbar, $_);
       }
+
       when GtkToolShell {
         $!shell = $_;
         $to-parent = nativecast(GtkContainer, $_);
         nativecast(GtkToolbar, $_);
       }
+
       default {
         $to-parent = $_;
         nativecast(GtkToolbar, $_);
@@ -68,14 +72,17 @@ class GTK::Toolbar is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  multi method new (ToolbarAncestry $toolbar) {
+  multi method new (ToolbarAncestry $toolbar, :$ref = True) {
+    return Nil unless $toolbar;
+
     my $o = self.bless(:$toolbar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $toolbar = gtk_toolbar_new();
-    self.bless(:$toolbar);
+
+    $toolbar ?? self.bless(:$toolbar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -112,7 +119,8 @@ class GTK::Toolbar is GTK::Container {
         so gtk_toolbar_get_show_arrow($!tb);
       },
       STORE => sub ($, Int() $show_arrow is copy) {
-        my gboolean $sa = self.RESOLVE-BOOL($show_arrow);
+        my gboolean $sa = $show_arrow.so.Int;
+
         gtk_toolbar_set_show_arrow($!tb, $show_arrow);
       }
     );
@@ -120,96 +128,107 @@ class GTK::Toolbar is GTK::Container {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_drop_index (Int() $x is rw, Int() $y is rw)
+  proto method get_drop_index (|)
     is also<
       get-drop-index
       drop_index
       drop-index
     >
-  {
-    my @u = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-UINT(@u);
-    my $rc = gtk_toolbar_get_drop_index($!tb, $xx, $yy);
+  { * }
+
+  multi method get_drop_index {
+    my @r = samewith($, $, :all);
+
+    @r[0] ?? @r[1..*] !! Nil;
+  }
+  multi method get_drop_index ($x is rw, $y is rw, :$all = False) {
+    my gint ($xx, $yy) = 0 xx 2;
+    my $rv = gtk_toolbar_get_drop_index($!tb, $xx, $yy);
+
     ($x, $y) = ($xx, $yy);
-    $rc;
+    $all.not ?? $rv !! ($rv, $x, $y);
   }
   # Add a no-arg multi
 
-  method get_icon_size 
+  method get_icon_size
     is also<
       get-icon-size
       icon_size
       icon-size
-    > 
+    >
   {
     GtkIconSizeEnum( gtk_toolbar_get_icon_size($!tb) );
   }
 
-  multi method get_item_index (GtkToolItem() $item) 
+  multi method get_item_index (GtkToolItem() $item)
     is also<
       get-item-index
       item_index
       item-index
-    > 
+    >
   {
     gtk_toolbar_get_item_index($!tb, $item);
   }
 
-  method get_n_items 
+  method get_n_items
     is also<
       get-n-items
       n_items
       n-items
       elems
-    > 
+    >
   {
     gtk_toolbar_get_n_items($!tb);
   }
 
-  method get_nth_item (Int $n) 
+  method get_nth_item (Int $n)
     is also<
       get-nth-item
       nth_item
       nth-item
-    > 
+    >
   {
-    my gint $nn = self.RESOLVE-INT($n);
+    my gint $nn = $n;
+
     gtk_toolbar_get_nth_item($!tb, $nn);
   }
 
-  method get_relief_style 
+  method get_relief_style
     is also<
       get-relief-style
       relief_style
       relief-style
-    > 
+    >
   {
     GtkReliefStyleEnum( gtk_toolbar_get_relief_style($!tb) );
   }
 
-  method get_style 
+  method get_style
     is also<
       get-style
       style
-    > 
+    >
   {
     GtkToolbarStyleEnum( gtk_toolbar_get_style($!tb) );
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_toolbar_get_type, $n, $t );
   }
 
   method insert (GtkToolItem() $item, Int $pos = -1) {
-    my uint32 $p = self.RESOLVE-UINT($pos);
+    my uint32 $p = $pos;
+
     gtk_toolbar_insert($!tb, $item, $p);
   }
 
   method set_drop_highlight_item (GtkToolItem() $tool_item, Int() $index)
     is also<set-drop-highlight-item>
   {
-    my uint32 $i = self.RESOLVE-UINT($index);
+    my uint32 $i = $index;
+
     gtk_toolbar_set_drop_highlight_item($!tb, $tool_item, $i);
   }
 
@@ -234,4 +253,5 @@ class GTK::Toolbar is GTK::Container {
     }
     nextwith($c, @notfound) if +@notfound;
   }
+
 }
