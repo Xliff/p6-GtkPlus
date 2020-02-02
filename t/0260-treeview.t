@@ -2,6 +2,7 @@ use v6.c;
 
 use GTK::Raw::Types;
 
+use GLib::Value;
 use GTK::Application;
 use GTK::Box;
 use GTK::CellRendererText;
@@ -13,8 +14,10 @@ my ($ts, $sb);
 
 sub on_changed($s) {
   my ($model, $iter) = $s.get_selected;
-  if $model.defined && $iter.defined {
+
+  if $model && $iter {
     my $gv = $ts.get_value($iter, 0);
+
     $sb.push( $sb.get_context_id($gv.string), $gv.string );
   }
 }
@@ -65,10 +68,12 @@ $a.activate.tap({
   $a.window.add($vbox);
   create_view_model;
   $s = $*v.get_selection;
+
   $vbox.pack_start($*v, True, True, 1);
   $sb = GTK::Statusbar.new;
   $vbox.pack_start($sb, False, True, 1);
-  $s.changed.tap({ on_changed($s); });
+
+  $s.changed.tap({ on_changed($s) });
   $*v.expand_all;
 
   $a.window.show_all;

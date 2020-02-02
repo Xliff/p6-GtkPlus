@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-
 use GTK::Raw::TreeView;
 use GTK::Raw::Types;
 
@@ -35,6 +34,8 @@ sub EXPORT {
     GTK::TreeViewColumn::,
   );
 }
+
+# REFINEMENTS MUST BE COMPLETED. -- THIS MODULE NEEDS TO BE RE-REVIEWED!
 
 class GTK::TreeView is GTK::Container {
   also does GTK::Roles::Scrollable;
@@ -81,7 +82,12 @@ class GTK::TreeView is GTK::Container {
     self.disconnect-all($_) for %!signals-tv;
   }
 
-  method GTK::Raw::Definitions::GtkTreeView is also<TreeView> { $!tv }
+  method GTK::Raw::Definitions::GtkTreeView
+    is also<
+      GtkTreeView
+      TreeView
+    >
+  { $!tv }
 
   multi method new (TreeViewAncestry $treeview, :$ref = True) {
     return Nil unless $treeview;
@@ -204,7 +210,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_activate_on_single_click($!tv);
       },
       STORE => sub ($, Int() $single is copy) {
-        my guint $s = $single;
+        my gboolean $s = $single.so.Int;
 
         gtk_tree_view_set_activate_on_single_click($!tv, $s);
       }
@@ -217,7 +223,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_enable_search($!tv);
       },
       STORE => sub ($, Int() $enable_search is copy) {
-        my guint $es = $enable_search;
+        my gboolean $es = $enable_search.so.Int;
 
         gtk_tree_view_set_enable_search($!tv, $es);
       }
@@ -230,7 +236,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_enable_tree_lines($!tv);
       },
       STORE => sub ($, Int() $enabled is copy) {
-        my guint $e = $enabled;
+        my gboolean $e = $enabled.so.Int;
 
         gtk_tree_view_set_enable_tree_lines($!tv, $e);
       }
@@ -259,7 +265,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_fixed_height_mode($!tv);
       },
       STORE => sub ($, Int() $enable is copy) {
-        my guint $e = $enable;
+        my gboolean $e = $enable.so.Int;
 
         gtk_tree_view_set_fixed_height_mode($!tv, $e);
       }
@@ -302,7 +308,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_headers_clickable($!tv);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my guint $s = $setting;
+        my gboolean $s = $setting.so.Int;
 
         gtk_tree_view_set_headers_clickable($!tv, $s);
       }
@@ -315,7 +321,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_headers_visible($!tv);
       },
       STORE => sub ($, Int() $headers_visible is copy) {
-        my guint $hv = $headers_visible;
+        my gboolean $hv = $headers_visible.so.Int;
 
         gtk_tree_view_set_headers_visible($!tv, $hv);
       }
@@ -328,7 +334,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_hover_expand($!tv);
       },
       STORE => sub ($, Int() $expand is copy) {
-        my guint $e = $expand;
+        my gboolean $e = $expand.so.Int;
 
         gtk_tree_view_set_hover_expand($!tv, $e);
       }
@@ -338,10 +344,10 @@ class GTK::TreeView is GTK::Container {
   method hover_selection is rw is also<hover-selection> {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_tree_view_get_hover_selection($!tv);
+        so gtk_tree_view_get_hover_selection($!tv);
       },
       STORE => sub ($, Int() $hover is copy) {
-        my guint $h = $hover;
+        my gboolean $h = $hover.so.Int;
 
         gtk_tree_view_set_hover_selection($!tv, $h);
       }
@@ -361,10 +367,15 @@ class GTK::TreeView is GTK::Container {
     );
   }
 
-  method model is rw {
+  method model (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_tree_view_get_model($!tv);
+        my $tm = gtk_tree_view_get_model($!tv);
+
+        $tm ??
+          ( $raw ?? $tm !! GTK::Roles::TreeModel.new-treemodel-obj($tm) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkTreeModel() $model is copy) {
         gtk_tree_view_set_model($!tv, $model);
@@ -378,7 +389,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_reorderable($!tv);
       },
       STORE => sub ($, Int() $reorderable is copy) {
-        my guint $r = $reorderable;
+        my gboolean $r = $reorderable.so.Int;
 
         gtk_tree_view_set_reorderable($!tv, $r);
       }
@@ -391,22 +402,9 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_rubber_banding($!tv);
       },
       STORE => sub ($, Int() $enable is copy) {
-        my guint $e = $enable;
+        my gboolean $e = $enable.so.Int;
 
         gtk_tree_view_set_rubber_banding($!tv, $e);
-      }
-    );
-  }
-
-  method rules_hint is rw is also<rules-hint> {
-    Proxy.new(
-      FETCH => sub ($) {
-        so gtk_tree_view_get_rules_hint($!tv);
-      },
-      STORE => sub ($, Int() $setting is copy) {
-        my guint $s = $setting;
-
-        gtk_tree_view_set_rules_hint($!tv, $s);
       }
     );
   }
@@ -446,7 +444,7 @@ class GTK::TreeView is GTK::Container {
         so gtk_tree_view_get_show_expanders($!tv);
       },
       STORE => sub ($, Int() $enabled is copy) {
-        my guint $e = $enabled;
+        my gboolean $e = $enabled.so.Int;
 
         gtk_tree_view_set_show_expanders($!tv, $e);
       }
@@ -564,8 +562,8 @@ class GTK::TreeView is GTK::Container {
   multi method convert_tree_to_bin_window_coords (
     Int() $tx,
     Int() $ty,
-    Int $bx is rw,
-    Int $by is rw
+    $bx is rw,
+    $by is rw
   ) {
     my gint ($txx, $tyy, $bxx, $byy) =  ($tx, $ty, $bx, $by);
     gtk_tree_view_convert_tree_to_bin_window_coords(
@@ -591,8 +589,8 @@ class GTK::TreeView is GTK::Container {
   multi method convert_widget_to_bin_window_coords (
     Int() $wx,
     Int() $wy,
-    Int $bx is rw,
-    Int $by is rw
+    $bx is rw,
+    $by is rw
   ) {
     my @i = ($wx, $wy);
     my gint ($wxx, $wyy) =  @i;
@@ -667,13 +665,14 @@ class GTK::TreeView is GTK::Container {
     uint64 $start_button_mask,  # GdkModifierType $start_button_mask,
     GtkTargetEntry() $targets,
     Int() $n_targets,
-    uint32 $actions             # GdkDragAction $actions
+    Int() $actions             # GdkDragAction $actions
   )
     is also<enable-model-drag-source>
   {
     my uint64 $sbm = $start_button_mask;
     my gint $nt = $n_targets;
     my guint $a = $actions;
+
     gtk_tree_view_enable_model_drag_source($!tv, $sbm, $targets, $nt, $a);
   }
 
@@ -684,7 +683,8 @@ class GTK::TreeView is GTK::Container {
   method expand_row (GtkTreePath() $path, Int() $open_all)
     is also<expand-row>
   {
-    my gboolean $o = $open_all;
+    my gboolean $o = $open_all.so.Int;
+
     gtk_tree_view_expand_row($!tv, $path, $o);
   }
 
@@ -695,7 +695,7 @@ class GTK::TreeView is GTK::Container {
   method get_background_area (
     GtkTreePath() $path,
     GtkTreeViewColumn() $column,
-    GdkRectangle $rect
+    GdkRectangle() $rect
   )
     is also<get-background-area>
   {
@@ -718,6 +718,7 @@ class GTK::TreeView is GTK::Container {
 
   method get_column (Int() $n) is also<get-column> {
     my gint $nn = $n;
+
     gtk_tree_view_get_column($!tv, $nn);
   }
 
@@ -896,13 +897,18 @@ class GTK::TreeView is GTK::Container {
     gtk_tree_view_get_search_position_func($!tv);
   }
 
-  method get_selection
+  method get_selection (:$raw = False)
     is also<
       get-selection
       selection
     >
   {
-    GTK::TreeSelection.new( gtk_tree_view_get_selection($!tv) );
+    my $ts = gtk_tree_view_get_selection($!tv);
+
+    $ts ??
+      ( $raw ?? $ts !! GTK::TreeSelection.new($ts) )
+      !!
+      Nil;
   }
 
   method get_tooltip_context (
@@ -927,7 +933,8 @@ class GTK::TreeView is GTK::Container {
     my $cmodel = CArray[Pointer[GtkTreeModel]].new;
     my $cpath  = CArray[Pointer[GtkTreePath]].new;
     my gint ($xx, $yy) = $x, $y;
-    my gboolean $kt = $keyboard_tip;
+    my gboolean $kt = $keyboard_tip.so.Int;
+
     my $rc = gtk_tree_view_get_tooltip_context(
       $!tv,
       $xx,
@@ -957,6 +964,7 @@ class GTK::TreeView is GTK::Container {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_tree_view_get_type, $n, $t );
   }
 
@@ -1011,8 +1019,15 @@ class GTK::TreeView is GTK::Container {
   ) {
     my gint  $p = $position;
     my guint $v = $value;
+
     gtk_tree_view_insert_column_with_attributes(
-      $!tv, $p, $title, $cell, $attr, $v, Str
+      $!tv,
+      $p,
+      $title,
+      $cell,
+      $attr,
+      $v,
+      Str
     );
   }
 
@@ -1024,7 +1039,12 @@ class GTK::TreeView is GTK::Container {
     GDestroyNotify $dnotify = GDestroyNotify
   ) {
     self.insert_column_with_data_func(
-      -1, $title, $cell, &func, $data, $dnotify
+      -1,
+      $title,
+      $cell,
+      &func,
+      $data,
+      $dnotify
     );
   }
 
@@ -1039,6 +1059,7 @@ class GTK::TreeView is GTK::Container {
     is also<insert-column-with-data-func>
   {
     my guint $p = $position;
+
     gtk_tree_view_insert_column_with_data_func(
       $!tv,
       $p,
@@ -1050,16 +1071,27 @@ class GTK::TreeView is GTK::Container {
     );
   }
 
-  method is_blank_at_pos (
+  proto method is_blank_at_pos (|)
+    is also<is-blank-at-pos>
+  { * }
+
+  multi method is_blank_at_pos (
+    Int() $x,
+    Int() $y
+  ) {
+    my @r = callwith($x, $y, $, $, $, $, :all);
+
+    @r[0] ?? @r[1..*] !! Nil;
+  }
+  multi method is_blank_at_pos (
     Int() $x,
     Int() $y,
-    $path       is rw,
-    $column     is rw,
-    Int $cell_x is rw,
-    Int $cell_y is rw
-  )
-    is also<is-blank-at-pos>
-  {
+    $path   is rw,
+    $column is rw,
+    $cell_x is rw,
+    $cell_y is rw,
+    :$all = False
+  ) {
     die '$path must be GTK::TreePath or GtkTreePath'
       unless $path ~~ (GTK::TreePath, GtkTreePath).any;
     die '$column must be GTK::TreeViewColumn or GtkTreeViewColumn'
@@ -1098,14 +1130,17 @@ class GTK::TreeView is GTK::Container {
       ($path, $column) = (GtkTreePath, GtkTreeViewColumn);
     }
 
-    $rv;
+    $all.not ?? $rv !! ($rv, $path, $column, $cell_x, $cell_y);
   }
 
   method is_rubber_banding_active is also<is-rubber-banding-active> {
     gtk_tree_view_is_rubber_banding_active($!tv);
   }
 
-  method map_expanded_rows (GtkTreeViewMappingFunc $func, gpointer $data)
+  method map_expanded_rows (
+    GtkTreeViewMappingFunc $func,
+    gpointer $data = gpointer
+  )
     is also<map-expanded-rows>
   {
     gtk_tree_view_map_expanded_rows($!tv, $func, $data);
@@ -1148,23 +1183,24 @@ class GTK::TreeView is GTK::Container {
   )
     is also<scroll-to-cell>
   {
-    my gboolean $ua = $use_align;
+    my gboolean $ua = $use_align.so.Int;
     my gfloat ($ra, $ca) = ($row_align, $col_align);
+
     gtk_tree_view_scroll_to_cell($!tv, $path, $column, $ua, $ra, $ca);
   }
 
-  method scroll_to_point (gint $tree_x, gint $tree_y)
+  method scroll_to_point (Int() $tree_x, Int() $tree_y)
     is also<scroll-to-point>
   {
-    my @i = ($tree_x, $tree_y);
-    my gint ($tx, $ty) = @i;
+    my gint ($tx, $ty) = ($tree_x, $tree_y);
+
     gtk_tree_view_scroll_to_point($!tv, $tx, $ty);
   }
 
   method set_column_drag_function (
     GtkTreeViewColumnDropFunc $func,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    gpointer $user_data     = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-column-drag-function>
   {
@@ -1178,19 +1214,21 @@ class GTK::TreeView is GTK::Container {
   )
     is also<set-cursor>
   {
-    my gboolean $se = $start_editing;
+    my gboolean $se = $start_editing.so.Int;
+
     gtk_tree_view_set_cursor($!tv, $path, $focus_column, $se);
   }
 
   method set_cursor_on_cell (
-    GtkTreePath $path,
-    GtkTreeViewColumn $focus_column,
-    GtkCellRenderer $focus_cell,
-    gboolean $start_editing
+    GtkTreePath() $path,
+    GtkTreeViewColumn() $focus_column,
+    GtkCellRenderer() $focus_cell,
+    Int() $start_editing
   )
     is also<set-cursor-on-cell>
   {
-    my gboolean $se = $start_editing;
+    my gboolean $se = $start_editing.so.Int;
+
     gtk_tree_view_set_cursor_on_cell(
       $!tv,
       $path,
@@ -1202,8 +1240,8 @@ class GTK::TreeView is GTK::Container {
 
   method set_destroy_count_func (
     GtkTreeDestroyCountFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy
+    gpointer $data          = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-destroy-count-func>
   {
@@ -1211,12 +1249,13 @@ class GTK::TreeView is GTK::Container {
   }
 
   method set_drag_dest_row (
-    GtkTreePath $path,
-    uint32 $pos                 # GtkTreeViewDropPosition $pos
+    GtkTreePath() $path,
+    Int() $pos                 # GtkTreeViewDropPosition $pos
   )
     is also<set-drag-dest-row>
   {
     my guint $p = $pos;
+
     gtk_tree_view_set_drag_dest_row($!tv, $path, $p);
   }
 
@@ -1232,8 +1271,8 @@ class GTK::TreeView is GTK::Container {
 
   method set_search_equal_func (
     GtkTreeViewSearchEqualFunc $search_equal_func,
-    gpointer $search_user_data,
-    GDestroyNotify $search_destroy
+    gpointer $search_user_data     = gpointer,
+    GDestroyNotify $search_destroy = GDestroyNotify
   )
     is also<set-search-equal-func>
   {
@@ -1247,8 +1286,8 @@ class GTK::TreeView is GTK::Container {
 
   method set_search_position_func (
     GtkTreeViewSearchPositionFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy
+    gpointer $data          = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-search-position-func>
   {

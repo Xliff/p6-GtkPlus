@@ -87,9 +87,9 @@ class GTK::TreeSelection {
   { * }
 
   multi method get_selected (:$raw = False) {
-    my @r = callwith($, $, :all, :$raw);
+    my @r = samewith($, $, :all, :$raw);
 
-    @r[0] ?? @[1..*] !! Nil;
+    @r[0] ?? @r[1..*] !! Nil;
   }
   # Insure we have a proper r/w container by forcing the type.
   multi method get_selected (
@@ -98,15 +98,17 @@ class GTK::TreeSelection {
     :$all = False,
     :$raw = False
   ) {
-    my $m = CArray[Pointer[GtkTreeSelection]].new;
+    my $m = CArray[Pointer[GtkTreeModel]].new;
     my $i = GtkTreeIter.new;
 
-    $m[0] = Pointer[GtkTreeSelection];
-    my $rv = gtk_tree_selection_get_selected($!ts, $m, $iter);
+    $m[0] = Pointer[GtkTreeModel];
+    my $rv = gtk_tree_selection_get_selected($!ts, $m, $i);
 
     if $rv {
       $model = $m[0] ??
-        ( $raw ?? $m[0] !! GTK::Roles::TreeModel.new-treemodel-obj($m[0]) )
+        ( $raw ??
+            $m[0] !!
+            GTK::Roles::TreeModel.new-treemodel-obj($m[0].deref) )
         !!
         Nil;
 
@@ -135,7 +137,9 @@ class GTK::TreeSelection {
     my $srl = gtk_tree_selection_get_selected_rows($!ts, $m);
 
     $model = $m[0] ??
-      ( $raw ?? $m[0] !! GTK::Roles::TreeModel.new($m[0]) )
+      ( $raw ??
+          $m[0] !!
+          GTK::Roles::TreeModel.new($m[0].deref) )
       !!
       Nil;
 
