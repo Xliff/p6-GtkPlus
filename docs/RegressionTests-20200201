@@ -19,3 +19,12 @@ Tests performed AFTER the split
   (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_object_unref: assertion 'old_ref > 0' failed
 
   ... looks like a null is STILL getting into the works, somehow.
+
+0310 - Looks like the "Resize & Scrolling" section icons are not properly being ref/unref'd
+       as this is the section causing all of the GTK warnings from previous tests
+
+     - Also, the type set on the implementor for $a.window is getting corrupted
+       by what looks like RAKUDO! I will need a core dev to verify. Vrurg?
+
+     - Will segfault after several button pressesl, which looks like an attempt
+       to click a cursor that has already been disposed of.
