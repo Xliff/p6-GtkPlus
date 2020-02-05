@@ -23,9 +23,9 @@ class GTK::WidgetPath {
   # changed to GtkWidgetPath
   method GTK::Raw::Definitions::GtkWidgetPath
     is also<
-      GtkWidgetPath
-      widgetpath
       path
+      widgetpath
+      GtkWidgetPath
     >
   { $!wp }
 

@@ -1092,7 +1092,7 @@ class GTK::Widget {
         so gtk_widget_get_halign($!w);
       },
       STORE => sub ($, Int() $align is copy) {
-        my gboolean $a = $align.so.Int;
+        my GtkAlign $a = $align;
 
         gtk_widget_set_halign($!w, $a);
       }

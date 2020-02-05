@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Raw::Types;
 
-use GTK::Compat::Cursor;
+use GDK::Cursor;
 
 use GTK::Application;
 use GTK::Box;
@@ -29,7 +29,7 @@ sub add_section($b, $h) {
 sub add_button($s, $css) {
   my $i = GTK::Image.new_from_icon_name('image-missing', GTK_ICON_SIZE_MENU);
   my $d = $s.display;
-  my $c = GTK::Compat::Cursor.new_from_name($d, $css);
+  my $c = GDK::Cursor.new_from_name($d, $css);
   with $c {
     my $cn = "cursors/{ $css.subst('-', '_', :g) }_cursor.png";
     $cn = "t/{$cn}" unless $cn.IO.e;
