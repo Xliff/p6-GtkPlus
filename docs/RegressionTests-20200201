@@ -31,4 +31,6 @@ Tests performed AFTER the split
 
 0320 - Error: "No such method GTK::Raw::Structs::GtkTreeIter for invocant of tyoe 'List'"
        ↑ Corrected
-       
+
+       Warning: "Use of uninitialized value of type Any in numeric context"
+       ↑ Corrected
