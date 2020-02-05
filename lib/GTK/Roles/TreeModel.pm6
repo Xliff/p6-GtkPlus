@@ -104,7 +104,9 @@ role GTK::Roles::TreeModel {
   { * }
 
   multi method get_iter (GtkTreePath() $path, :$raw = False) {
-    samewith($, $path, :all, :$raw)
+    my @r = samewith($, $path, :all, :$raw);
+
+    @r[0] ?? @r[1] !! Nil;
   }
   multi method get_iter (
     $iter is rw,

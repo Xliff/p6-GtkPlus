@@ -28,3 +28,7 @@ Tests performed AFTER the split
 
      - Will segfault after several button pressesl, which looks like an attempt
        to click a cursor that has already been disposed of.
+
+0320 - Error: "No such method GTK::Raw::Structs::GtkTreeIter for invocant of tyoe 'List'"
+       ↑ Corrected
+       
