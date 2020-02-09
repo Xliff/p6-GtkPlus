@@ -77,7 +77,7 @@ class GTK::Dialog::About is GTK::Dialog {
           Cannot accept { $artists.^name } for GTK::Dialog::About.artists
           D
 
-        my $a = resolve-gstrv($artists);
+        my $a = resolve-gstrv($artists ~~ Str ?? $artists.lines !! $artists);
         gtk_about_dialog_set_artists($!ad, $a);
       }
     );
@@ -93,7 +93,7 @@ class GTK::Dialog::About is GTK::Dialog {
           Cannot accept { $authors.^name } for GTK::Dialog::About.authors
           D
 
-        my $a = resolve-gstrv($authors);
+        my $a = resolve-gstrv($authors ~~ Str ?? $authors.lines !! $authors);
         gtk_about_dialog_set_authors($!ad, $a);
       }
     );
@@ -126,13 +126,12 @@ class GTK::Dialog::About is GTK::Dialog {
       FETCH => sub ($) {
         gtk_about_dialog_get_documenters($!ad);
       },
-      STORE => sub ($, $documenters is copy) {
-        die qq:to/D/.chomp unless $documenters ~~ (Str, Array).any;
-          Cannot accept { $documenters.^name } for {''
-          }GTK::Dialog::About.documenters
+      STORE => sub ($, $docs is copy) {
+        die qq:to/D/.chomp unless $docs ~~ (Str, Array).any;
+          Cannot accept { $docs.^name } for GTK::Dialog::About.documenters
           D
 
-        my $d = resolve-gstrv($documenters);
+        my $d = resolve-gstrv($docs ~~ Str ?? $docs.lines !! $docs);
         gtk_about_dialog_set_documenters($!ad, $d);
       }
     );
