@@ -41,14 +41,16 @@ class GTK::ApplicationWindow is GTK::Window {
         $to-parent = cast(GtkWindow, $_);
         $_;
       }
+
       when GActionMap {
         $!actmap = $_;                          # GDK::Roles::ActionMap
         $to-parent = cast(GtkWindow, $_);
         cast(GtkApplication, $_);
       }
+
       default {
         $to-parent = $_;
-        cast(GtkApplication, $_);
+        cast(GtkApplicationWindow, $_);
       }
     };
     self.roleInit-ActionMap unless $!actmap;
@@ -62,6 +64,9 @@ class GTK::ApplicationWindow is GTK::Window {
     >
   { $!aw }
 
+  proto method new (|)
+  { * }
+  
   multi method new (GtkApplicationWindow $appwindow, :$ref = True) {
     return Nil unless $appwindow;
 

@@ -34,3 +34,13 @@ Tests performed AFTER the split
 
        Warning: "Use of uninitialized value of type Any in numeric context"
        ↑ Corrected
+
+0350 - Error: No such method 'x' for invocant of type 'Mu'
+                in sub palette_drag_data_received at t/0350-dnd.t line 118
+                in block <unit> at t/0350-dnd.t line 368
+              Occurs when trying to re-order icons via drag and drop
+
+0360 - Notebook part of example is not being rendered.
+       TONS of warnings like so:
+        (perl6:5062): GLib-GObject-WARNING **: 20:47:55.760: ../../../gobject/gvalue.c:180: cannot initialize GValue with type 'gint', the value has already been initialized as 'gint'
+       Related to "attributes"?

@@ -21,7 +21,7 @@ class GTK::Render {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method activity (
-    GtkStyleContext $context,
+    GtkStyleContext() $context,
     cairo_t $cr,
     Num() $x,
     Num() $y,
@@ -110,8 +110,8 @@ class GTK::Render {
     Int() $gap_side
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
-
     my guint $gs = $gap_side;
+
     gtk_render_extension($context, $cr, $xx, $yy, $ww, $hh, $gs);
   }
 
@@ -217,7 +217,7 @@ class GTK::Render {
     cairo_t $cr,
     Num() $x,
     Num() $y,
-    PangoLayout $l,
+    PangoLayout() $l,
     Int() $i,
     Int() $d                  # PangoDirection
   )
@@ -235,7 +235,7 @@ class GTK::Render {
     cairo_t $cr,
     Num() $x,
     Num() $y,
-    PangoLayout $l
+    PangoLayout() $l
   ) {
     my gdouble ($xx, $yy) = ($x, $y);
 
@@ -279,7 +279,7 @@ class GTK::Render {
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
     my guint $o = $orientation;
-    
+
     gtk_render_slider($context, $cr, $xx, $yy, $ww, $hh, $o);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

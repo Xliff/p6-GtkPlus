@@ -61,7 +61,7 @@ class GTK::IconInfo {
   { * }
 
   multi method size_lookup (Int() $size) {
-    my @r = callwith($size, $, $, :all);
+    my @r = samewith($size, $, $, :all);
 
     @r[0] ?? @r[1..*] !! Nil;
   }

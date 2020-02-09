@@ -68,11 +68,11 @@ class GTK::FlowBox is GTK::Container {
     >
   { $!fb }
 
-  multi method new (FlowBoxAncestry $flowbox) {
+  multi method new (FlowBoxAncestry $flowbox, :$ref = False) {
     return Nil unless $flowbox;
 
     my $o = self.bless(:$flowbox);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {

@@ -5,6 +5,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 use Pango::Context;
+use Pango::Layout;
 
 use GLib::Value;
 
@@ -22,6 +23,7 @@ use GTK::Raw::Types;
 use GTK::Raw::Widget;
 
 use GLib::Roles::Object;
+use GLib::Roles::Pointers;
 use GTK::Roles::Buildable;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
@@ -2424,10 +2426,14 @@ class GTK::Widget {
   }
   multi method source_set (
     Int() $start_button_mask,
-    Pointer $targets,
+    $targets is copy,
     Int() $n_targets,
     Int() $actions
   ) {
+    die unless $targets ~~ Pointer || $targets ~~ GLib::Roles::Pointers;
+
+    $targets .= p if $targets ~~ GLib::Roles::Pointers;
+
     my guint ($sbm, $a) = ($start_button_mask, $actions);
     my gint $nt = $n_targets;
 

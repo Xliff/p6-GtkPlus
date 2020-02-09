@@ -69,8 +69,11 @@ class GTK::WidgetPath {
     gtk_widget_path_append_with_siblings($!wp, $siblings, $si);
   }
 
-  method copy (:$raw = False) {
-    my $wp = gtk_widget_path_copy($!wp);
+  multi method copy (:$raw = False) {
+    GTK::WidgetPath.copy($!wp, :$raw);
+  }
+  multi method copy (GTK::WidgetPath:U: GtkWidgetPath() $path, :$raw = False) {
+    my $wp = gtk_widget_path_copy($path);
 
     $wp ??
       ( $raw ?? $wp !! GTK::WidgetPath.new($wp) )

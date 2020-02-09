@@ -390,18 +390,22 @@ class GTK::Image is GTK::Widget {
   { * }
 
   multi method get_icon_name {
-    samewith($, $);
+    samewith($, $, :all);
   }
   multi method get_icon_name (
-    Str() $icon_name is rw,
-    Int() $size is rw             # GtkIconSize $size
+    $icon_name is rw,
+    $size is rw,             # GtkIconSize $size
+    :$all = False
   ) {
-    my guint32 $s = $size;
+    my guint32 $s = 0;
     my $n = CArray[Str].new;
 
-    $n[0] = $icon_name;
+    $n[0] = Str;
     gtk_image_get_icon_name($!i, $n, $s);
-    ($icon_name, $size) = ( $n[0] ?? $n[0] !! Nil, GtkIconSizeEnum($s) );
+    ($icon_name, $size) = (
+      $n[0] ?? $n[0]               !! Nil,
+      $s    ?? GtkIconSizeEnum($s) !! Nil
+    );
   }
 
   # Still relevant when most of GtkIconSet is deprecated?
