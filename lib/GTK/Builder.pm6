@@ -460,7 +460,9 @@ class GTK::Builder does Associative {
     $rc;
   }
 
-  method connect_signals (gpointer $user_data) is also<connect-signals> {
+  method connect_signals (gpointer $user_data = gpointer)
+    is also<connect-signals>
+  {
     gtk_builder_connect_signals($!b, $user_data);
   }
 
