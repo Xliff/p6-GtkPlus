@@ -25,19 +25,15 @@ class GTK::ComboBox is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$combobox) {
     given $combobox {
-      when ComboBoxAncestry {
-        self.setComboBox($combobox);
-      }
-      when GTK::ComboBox {
-      }
-      default {
-      }
+      when ComboBoxAncestry { self.setComboBox($combobox) }
+      when GTK::ComboBox    { }
+      default               { }
     }
   }
 
@@ -54,11 +50,13 @@ class GTK::ComboBox is GTK::Bin {
         $to-parent = cast(GtkBin, $_);
         $_;
       }
+
       when GtkCellEditable {
         $!ce = $_;                                # GTK::Roles::CellEditable
         $to-parent = cast(GtkBin, $_);
         cast(GtkComboBox, $_);
       }
+
       when GtkCellLayout {
         $!cl = $_;                                # GTK::Roles::CellLayout
         $to-parent = cast(GtkBin, $_);
@@ -377,7 +375,7 @@ class GTK::ComboBox is GTK::Bin {
   # ↓↓↓↓ METHODS ↓↓↓↓
   proto method get_active_iter (|)
     is also<get-active-iter>
-    { * }
+  { * }
 
   multi method get_active_iter (:$raw = False)
     is also<
@@ -385,15 +383,20 @@ class GTK::ComboBox is GTK::Bin {
       active-iter
     >
   {
-    samewith($, :$raw);
-  }
-  multi method get_active_iter ($iter is rw, :$raw) {
-    my $i = gtk_combo_box_get_active_iter($!cb, $iter);
+    my $iter = GtkTreeIter.new;
 
-    $i ??
-      ( $raw ?? $i !! GTK::TreeIter.new($i) )
-      !!
-      Nil;
+    my @r = samewith($iter, :all, :$raw);
+
+    @r[0] ?? @r[1] !! Nil;
+  }
+  multi method get_active_iter ($iter is rw, :$all = False, :$raw = False) {
+    my $rv = so gtk_combo_box_get_active_iter($!cb, $iter);
+
+    return Nil unless $rv;
+
+    $iter = GTK::TreeIter.new($iter) unless $raw;
+
+    $all.not ?? $rv !! ($rv, $iter);
   }
 
   method get_has_entry

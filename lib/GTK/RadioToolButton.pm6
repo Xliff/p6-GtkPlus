@@ -65,7 +65,11 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     $o.ref if $ref;
     $o;
   }
-  multi method new(GSList() $group) {
+  # Needs a multi to properly handle Positional!
+  # In this case, it needs to convert Positional to GSList!
+  multi method new ($group) {
+    die "\$group is a { $group.^name }, not a GSList" unless $group ~~ GSList;
+
     my $radiotoolbutton = gtk_radio_tool_button_new($group);
 
     $radiotoolbutton ?? self.bless(:$radiotoolbutton) !! Nil;
