@@ -2,6 +2,7 @@ use v6.c;
 
 use Method::Also;
 use NativeCall;
+use XML::Actions;
 
 use Data::Dump::Tree;
 
@@ -180,66 +181,56 @@ class GTK::Builder does Associative {
     :$file,
     :$resource
   ) {
-    with $file {
-    }
+    my %parent-types := %!types;
 
-    with $resource {
-    }
+    class UI-Parser is XML::Actions::Work {
+      method object:start (Array $parent-path, :$class, :$id is copy) {
+        my $args;
+        state %collider;
 
-    with $ui_def {
-      my token q {
-        <[ \'\" ]>
-      }
-      my regex tag {
-        ('<object') \s+ 'class='\s*(<q>){}:my $a = $1;(.+?)<?before $a><q>
-                    \s* 'id='   \s*(<q>){}:my $b = $3;(.+?)<?before $b><q> \s*
-        '>'
-        |
-        ('<menu')   \s+ 'id='   \s*(<q>){}:my $c = $1;(.+?)<?before $c><q> \s*
-        '>'
-      }
-      my $m = m:g/<tag>/;
+        (my $type = $class) ~~
+          s/ ( @prefixes ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
 
-      if $m.defined {
-        # For use in regex.
-        my @p = @prefixes;
-        for $m.Array -> $o {
-
-          given $o<tag>[0] {
-            when '<object' {
-              (my $type = $o<tag>[2].Str) ~~
-                s/ ( @p ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
-              my $args;
-              # Last-chance special case resolution -- should probably be broken
-              # out into its own package.
-              $type = do given $type {
-                when 'GTK::Adjustment' {
-                  $args = ['cast', GtkAdjustment];
-                  $_;
-                }
-                when 'GTK::VBox' {
-                  #$args = ['option', { vertical => 1 } ];
-                  'GTK::Box';
-                }
-                when 'GTK::HBox' {
-                  #$args = ['option', { horizontal => 1 } ];
-                  'GTK::Box';
-                }
-                default { $_; }
-              }
-              %!types{ $o<tag>[4].Str } = [ $type, $args ];
-            }
-
-            when '<menu' {
-              my $args = [ 'cast', GMenuModel ];
-              %!types{ $o<tag>[2].Str } = [ 'GIO::Menu', $args ];
-            }
+        $type = do given $type {
+          when 'GTK::Adjustment' {
+            $args = ['cast', GtkAdjustment];
+            $_;
+          }
+          when 'GTK::VBox' {
+            #$args = ['option', { vertical => 1 } ];
+            'GTK::Box';
+          }
+          when 'GTK::HBox' {
+            #$args = ['option', { horizontal => 1 } ];
+            'GTK::Box';
           }
 
+          default { $_; }
         }
+
+        # Could make this an option, later.
+        # unless $id {
+        #   $id = $type.lc.split('::').join('');
+        #   $id ~= %collider{$id} if ++%collider{$id};
+        # }
+        %parent-types{$id} = [ $type, $args ] if $id;
+      }
+
+      method menu:start (Array $parent-path, :$id) {
+        my $args = [ 'cast', GMenuModel ];
+        %parent-types{$id} = [ 'GIO::Menu', $args ];
       }
     }
 
+    {
+      with $file     { }
+      with $resource { }
+      with $ui_def   {
+        my $a = XML::Actions.new(xml => $ui_def);
+
+        $a.process( actions => UI-Parser.new );
+      }
+    }
   }
 
   method !postProcess(

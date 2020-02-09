@@ -56,6 +56,7 @@ Pango::Raw::Subs
 Pango::Raw::Types
 Pango::Tabs
 Pluggable
+XML::Actions
 GTK::Builder::MRO
 GTK::Builder::Base
 GTK::Builder::Box

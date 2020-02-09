@@ -1,6 +1,7 @@
 {
     "depends": [
-        "p6-GDK"
+        "p6-GDK",
+	"XML::Actions"
     ],
     "description": "Perl6 library bindings for GTK+ 3.0",
     "version": "r0.2",
