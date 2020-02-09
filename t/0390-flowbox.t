@@ -42,7 +42,7 @@ $app.activate.tap({
   for @buttons -> $btn {
     @fbc.push: (my $fbc = GTK::FlowBoxChild.new);
     $fbc.add($btn);
-    $fbc.upref;
+    $fbc.ref;
     $flowbox.add: $fbc;
   }
 
@@ -55,7 +55,7 @@ $app.activate.tap({
     $flowbox.remove-all;
     @fbc = (@fbc[3..5], @fbc[0..2]).flat;
     for @fbc {
-      .upref;
+      .ref;
       $flowbox.add: $_;
     }
     $flowbox.show-all();
