@@ -30,15 +30,9 @@ class GTK::Grid is GTK::Container {
 
   submethod BUILD(:$grid) {
     given $grid {
-      when GridAncestry {
-        self.setGrid($grid);
-      }
-
-      when GTK::Grid {
-      }
-
-      default {
-      }
+      when GridAncestry { self.setGrid($grid) }
+      when GTK::Grid    { }
+      default           { }
     }
   }
 
@@ -49,11 +43,13 @@ class GTK::Grid is GTK::Container {
         $to-parent = cast(GtkContainer, $_);
         $_;
       }
+
       when GtkOrientable {
         $!or = $_;                                # GTK::Roles::Orientable
         $to-parent = cast(GtkContainer, $_);
         cast(GtkGrid, $_);
       }
+
       default {
         $to-parent = $_;
         cast(GtkGrid, $_);
@@ -75,6 +71,7 @@ class GTK::Grid is GTK::Container {
 
   multi method new (GridAncestry $grid, :$ref = False) {
     return Nil unless $grid;
+
     my $o = self.bless(:$grid);
     $o.ref if $ref;
     $o;
@@ -155,7 +152,7 @@ class GTK::Grid is GTK::Container {
       when GTK::Widget { +.Widget.p }
       when GtkWidget   { +.p        }
     }
-    my ($l, $t, $w, $h) = %!obj-track{$s}<l t w h>;
+    my ($l, $t, $w, $h) = %!obj-track{$s}<l t w h> »//» 0;
     given GtkPositionTypeEnum($side) {
       when GTK_POS_LEFT      { --$l     }
       when GTK_POS_RIGHT     { $l += $w }
@@ -350,6 +347,18 @@ class GTK::Grid is GTK::Container {
     gtk_grid_attach($!g, $child, $l, $t, $w, $h);
   }
 
+  # Alternate method with a more sensible ordering...
+  method attach_adjacent_to ($sibling, $child, $side, $width, $height)
+    is also<
+      attach-adjacent-to
+      attach_adj_to
+      attach-adj-to
+    >
+  {
+    self.attach_next_to($child, $sibling, $side, $width, $height);
+  }
+
+
   proto method attach_next_to (|)
     is also<attach-next-to>
     { * }
@@ -363,7 +372,11 @@ class GTK::Grid is GTK::Container {
   ) {
     self.SET-LATCH;
     self!add-child-at-with-sib(
-      $child, $sibling, $side, $width, $height
+      $child,
+      $sibling,
+      $side,
+      $width,
+      $height
     );
     samewith($child.Widget, $sibling.Widget, $side, $width, $height);
   }
