@@ -16,11 +16,11 @@ use GLib::Value;
 use GTK::Render;
 use GTK::WidgetPath;
 
+use GLib::Roles::Object;
 use GTK::Roles::Signals::Generic;
-use GLib::Roles::Properties;
 
 class GTK::StyleContext {
-  also does GLib::Roles::Properties;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 
   has GtkStyleContext $!sc is implementor;
