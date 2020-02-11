@@ -11,7 +11,8 @@ my (%nodes, @threads);
 sub MAIN (
   :$force,            #= Force dependency generation
   :$prefix is copy,   #= Module prefix
-  :$start-at
+  :$start-at,
+  :$log = True
 ) {
   my @build-exclude;
   my $dep_file = '.build-deps'.IO;
@@ -201,7 +202,7 @@ sub MAIN (
       0;
     my $remaining = @buildList.elems - $*SKIP;
 
-    my ($*I, $start) = (0, DateTime.now);
+    my ($*I, $*LOG, $start) = (0, '', DateTime.now);
     while +@buildList {
       my $n = @buildList.shift;
 
@@ -239,7 +240,11 @@ sub MAIN (
     await Promise.allof(@threads);
 
     # Note total compile time.
-    say "Total compile time: { DateTime.now - $start }s";
+    output("Total compile time: { DateTime.now - $start }s");
+
+    'stats'.IO.add(
+      'ParallelBuildResults-' ~ now.DateTime.yyyy-mm-dd.subst('-', '', :g)
+    ).spurt($*LOG) if $log
   }
 }
 
@@ -270,10 +275,15 @@ sub run-compile ($module, $thread) {
 }
 
 my $lock = Lock.new;
-sub output ($module, $data) {
+multi sub output ($data) {
+  output('', $data);
+}
+multi sub output ($module, $data) {
   $lock.protect({
-    say " === {$module} === ";
-    $data.say
+    say ($*LOG ~= " === {$module} === ") if $module;
+    $*LOG ~= "\n";
+    ($*LOG ~= $data).say;
+    $*LOG ~= "\n";
   });
 }
 
