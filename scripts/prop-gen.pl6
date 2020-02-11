@@ -129,8 +129,8 @@ sub MAIN (
         if $rw.any eq 'Read';
 
         %c<write> =
-          "\$gv = GLib::Value.new( $gtype );\n" ~
-          $vtype-w ~ "\n" ~
+          "\$gv = GLib::Value.new( { $gtype } );\n" ~
+          "        { $vtype-w }\n" ~
           "        self.prop_set(\'{ $mn }\', \$gv);"
         if $rw.any eq 'Write';
       }
