@@ -127,12 +127,12 @@ sub MAIN (
   # Remove extraneous, non-necessary bits!
   $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
   $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
-  $contents ~~ s:g/ ^^ \s* 'G_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
+  $contents ~~ s:g/ ^^ \s* <[A..Z]>+ '_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
   $contents ~~ s:g/'typedef' .+? ';'//;
   $contents ~~ s:g/ ^ .+? '\\' $//;
   $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
-  $contents ~~ s:g/<!after ';'>\n//;
+  $contents ~~ s:g/<!after ';'>\n/ /;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
 
   if $bland {
