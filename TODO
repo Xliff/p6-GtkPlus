@@ -278,4 +278,5 @@ Applications
   operations, since they have no .h files, however the good bits are easily
   parsable from .c
 - Consider BABL bindings
+- Consider ATK bindings
 - A Perl6 port for libsoup
