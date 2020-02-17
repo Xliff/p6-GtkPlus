@@ -4,20 +4,31 @@ use v6;
 
 enum States <CommitHash Log Header Diff>;
 
-my $a = qqx«git log -p --full-diff»;
-
 sub MAIN (
-  $needle,     #= String to search for
-  :$added,     #= Check only added lines
-  :$removed,   #= Check only removed lines
+  $needle,              #= String to search for
+  Str  :$hash,          #= Commit hash or sub-hash to start from
+  Int  :$count is copy, #= Only search x commits back
+  Bool :$added,         #= Check only added lines
+  Bool :$removed,       #= Check only removed lines
 ) {
   my @prefix = <+ ->;
+
+  # Basic check. A better one will be added.
+  unless $hash ~~ / <[a..z0..9]>+ / || $hash.starts-with('HEAD') {
+    die "Invalid commit hash { $hash }!";
+  }
+  my $head-ref = $hash.starts-with('HEAD');
+  die "Invalid commit hash { $hash }!" if $hash > 39 && $head-ref.not;
+  die "Insufficient commit hash!"      if $hash <  6 && $head-ref.not;
 
   @prefix = '+'.Array if $added;
   @prefix = '-'.Array if $removed;
 
   my (%file, $commit-hash);
   my $state = CommitHash;
+
+  my $a = qqx«git log -p --full-diff»;
+  ++$count if $count;
 
   sub getFileKey($t) {
     do given $t {
@@ -27,9 +38,16 @@ sub MAIN (
   }
 
   sub checkForLogState($l, :$no-check = False) {
+    if $count {
+      exit unless $count--;
+    }
     if $l ~~ /^'commit ' (<[a..z0..9]> ** 39) / {
       $commit-hash = $/[0];
-      $state = Log;
+      if $hash {
+        $state = Log if $commit-hash.contains($hash);
+      } else {
+        $state = Log;
+      }
     }
   }
 
