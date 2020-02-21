@@ -49,7 +49,7 @@ class GTK::Notebook is GTK::Container {
     $o;
   }
 
-  submethod BUILD(:$notebook) {
+  submethod BUILD (:$notebook) {
     my $to-parent;
     given $notebook {
       when NotebookAncestry {
@@ -58,6 +58,7 @@ class GTK::Notebook is GTK::Container {
             $to-parent = cast(GtkContainer, $_);
             $_;
           }
+
           when ContainerAncestry {
             $to-parent = $_;
             cast(GtkNotebook, $_);
@@ -65,8 +66,10 @@ class GTK::Notebook is GTK::Container {
         }
         self.setContainer($to-parent);
       }
+
       when GTK::Notebook {
       }
+
       default {
       }
     }
