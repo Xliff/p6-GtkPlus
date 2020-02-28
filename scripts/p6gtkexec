@@ -33,7 +33,8 @@ INCLUDES="-I${P6_GTK_HOME}/p6-GLib/lib \
 -I${P6_GTK_HOME}/p6-GStreamer/lib       \
 -I${P6_GTK_HOME}/p6-RSVG/lib            \
 -I${P6_GTK_HOME}/p6-GtkSheet/lib	\
--I${P6_GTK_HOME}/p6-GIMP/lib"
+-I${P6_GTK_HOME}/p6-GIMP/lib            \
+-Ilib"
 
 if [[ -z "${PARALLEL_BUILD}" ]]; then
   ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@"
