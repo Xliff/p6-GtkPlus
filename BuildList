@@ -30,6 +30,7 @@ GLib::Raw::Definitions
 GLib::Raw::Enums
 GLib::Raw::Exports
 GLib::Raw::ReturnedValue
+GLib::Raw::Struct_Subs
 GLib::Raw::Structs
 GLib::Raw::Subs
 GLib::Roles::ListData
