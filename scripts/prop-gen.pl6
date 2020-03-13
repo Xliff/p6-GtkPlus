@@ -155,7 +155,7 @@ sub MAIN (
     method $mn is rw { $deprecated } \{
       my \$gv;
       Proxy.new(
-        FETCH => -> \$ \{
+        FETCH => sub (\$) \{
           { %c<read> }
         \},
         STORE => -> \$, { $co // '' } \$val is copy \{
