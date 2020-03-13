@@ -74,7 +74,7 @@ class GTK::ToolPalette is GTK::Container {
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓\
   method style is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         GtkToolbarStyleEnum( gtk_tool_palette_get_style($!tp) );
       },
       STORE => -> $, Int() $val {

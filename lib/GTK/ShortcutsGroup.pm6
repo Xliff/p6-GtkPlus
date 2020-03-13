@@ -70,7 +70,7 @@ class GTK::ShortcutsGroup is GTK::Box {
   method accel-size-group is rw is also<accel_size_group> {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn 'accel-size-group does not allow reading' if $DEBUG;
         Nil;
       },
@@ -85,7 +85,7 @@ class GTK::ShortcutsGroup is GTK::Box {
   method height is rw {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('height', $gv) );
         $gv.uint;
       },
@@ -99,7 +99,7 @@ class GTK::ShortcutsGroup is GTK::Box {
   method title is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
@@ -114,7 +114,7 @@ class GTK::ShortcutsGroup is GTK::Box {
   method title-size-group is rw is also<title_size_group> {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn 'title-size-group does not allow reading' if $DEBUG;
         Nil;
       },
@@ -129,7 +129,7 @@ class GTK::ShortcutsGroup is GTK::Box {
   method view is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('view', $gv) );
         $gv.string;
       },

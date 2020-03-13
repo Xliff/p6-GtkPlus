@@ -441,7 +441,7 @@ class GTK::TextView is GTK::Container {
   # Custom convenience method.
   method text is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         my $tb = self.buffer;
 
         die 'Could not find a valid buffer!' unless $tb;
@@ -465,7 +465,7 @@ class GTK::TextView is GTK::Container {
   method autoscroll is rw {
     state $tap;
     Proxy.new(
-      FETCH => -> $ { $!autoscroll // False },
+      FETCH => sub ($) { $!autoscroll // False },
       STORE => -> $, Int() $as {
         $!autoscroll = $as.so;
         if $!autoscroll {

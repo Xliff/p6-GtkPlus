@@ -98,7 +98,7 @@ class GTK::Clipboard {
 
   method text is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn 'GTK::Clipboard.text does not support retrieval' if $DEBUG;
         '';
       },
@@ -110,7 +110,7 @@ class GTK::Clipboard {
 
   method image is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn 'GTK::Clipboard.image does not support retrieval' if $DEBUG;
         Nil;
       },

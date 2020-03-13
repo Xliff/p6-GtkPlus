@@ -180,7 +180,7 @@ class GTK::StyleContext {
   method paint-clock is rw is also<paint_clock> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('paint-clock', $gv)
         );

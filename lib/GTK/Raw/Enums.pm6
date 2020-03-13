@@ -974,3 +974,24 @@ our enum GtkCssSectionTypeEnum is export <
   GTK_CSS_SECTION_VALUE
   GTK_CSS_SECTION_KEYFRAMES
 >;
+
+constant GtkAnchorType is export := guint32;
+our enum GtkAnchorTypeEnum is export (
+  'GTK_ANCHOR_CENTER',
+  'GTK_ANCHOR_NORTH',
+  'GTK_ANCHOR_NORTH_WEST',
+  'GTK_ANCHOR_NORTH_EAST',
+  'GTK_ANCHOR_SOUTH',
+  'GTK_ANCHOR_SOUTH_WEST',
+  'GTK_ANCHOR_SOUTH_EAST',
+  'GTK_ANCHOR_WEST',
+  'GTK_ANCHOR_EAST',
+  GTK_ANCHOR_N          => 0,
+  GTK_ANCHOR_NW         => 1,
+  GTK_ANCHOR_NE         => 2,
+  GTK_ANCHOR_S          => 3,
+  GTK_ANCHOR_SW         => 4,
+  GTK_ANCHOR_SE         => 5,
+  GTK_ANCHOR_W          => 6,
+  GTK_ANCHOR_E          => 7
+);

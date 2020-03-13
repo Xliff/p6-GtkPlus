@@ -181,7 +181,7 @@ class GTK::CellView is GTK::Widget {
   method background is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn "background does not allow reading" if $DEBUG;
         Nil;
       },
@@ -196,7 +196,7 @@ class GTK::CellView is GTK::Widget {
   method background-gdk is rw is also<background_gdk> {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('background-gdk', $gv) );
         cast(GdkColor, $gv.pointer);
       },
@@ -211,7 +211,7 @@ class GTK::CellView is GTK::Widget {
   method background-rgba is rw is also<background_rgba> {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('background-rgba', $gv)
         );
@@ -228,7 +228,7 @@ class GTK::CellView is GTK::Widget {
   method background-set is rw is also<background_set> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('background-set', $gv)
         );
@@ -245,7 +245,7 @@ class GTK::CellView is GTK::Widget {
   method cell-area (:$raw = False) is rw is also<cell_area> {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('cell-area', $gv) );
 
         return unless $gv.pointer;
@@ -265,7 +265,7 @@ class GTK::CellView is GTK::Widget {
   method cell-area-context (:$raw = False) is rw is also<cell_area_context> {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('cell-area-context', $gv)
         );

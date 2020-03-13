@@ -81,7 +81,7 @@ class GTK::EntryBuffer {
   method length is rw {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('length', $gv);
         $gv.uint;
       },

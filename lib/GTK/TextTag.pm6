@@ -105,7 +105,7 @@ class GTK::TextTag  {
   method accumulative-margin is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('accumulative-margin', $gv)
         );
@@ -122,7 +122,7 @@ class GTK::TextTag  {
   method background is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn "background does not allow reading"
       },
       STORE => -> $, Str() $val is copy {
@@ -136,7 +136,7 @@ class GTK::TextTag  {
   method background-full-height is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('background-full-height', $gv)
         );
@@ -153,7 +153,7 @@ class GTK::TextTag  {
   method background-full-height-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('background-full-height-set', $gv)
         );
@@ -170,7 +170,7 @@ class GTK::TextTag  {
   # method background-gdk is rw  is DEPRECATED( “background-rgba” ) {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('background-gdk', $gv)
   #       );
@@ -187,7 +187,7 @@ class GTK::TextTag  {
   method background-rgba is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('background-rgba', $gv)
         );
@@ -204,7 +204,7 @@ class GTK::TextTag  {
   method background-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('background-set', $gv)
         );
@@ -221,7 +221,7 @@ class GTK::TextTag  {
   method direction is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('direction', $gv)
         );
@@ -238,7 +238,7 @@ class GTK::TextTag  {
   method editable is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('editable', $gv)
         );
@@ -255,7 +255,7 @@ class GTK::TextTag  {
   method editable-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('editable-set', $gv)
         );
@@ -272,7 +272,7 @@ class GTK::TextTag  {
   method fallback is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('fallback', $gv)
         );
@@ -289,7 +289,7 @@ class GTK::TextTag  {
   method fallback-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('fallback-set', $gv)
         );
@@ -306,7 +306,7 @@ class GTK::TextTag  {
   method family is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('family', $gv)
         );
@@ -323,7 +323,7 @@ class GTK::TextTag  {
   method family-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('family-set', $gv)
         );
@@ -340,7 +340,7 @@ class GTK::TextTag  {
   method font is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('font', $gv)
         );
@@ -357,7 +357,7 @@ class GTK::TextTag  {
   method font-desc (:$raw = False) is rw  {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('font-desc', $gv)
         );
@@ -379,7 +379,7 @@ class GTK::TextTag  {
   method font-features is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('font-features', $gv)
         );
@@ -396,7 +396,7 @@ class GTK::TextTag  {
   method font-features-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('font-features-set', $gv)
         );
@@ -413,7 +413,7 @@ class GTK::TextTag  {
   method foreground is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn 'foreground does not allow reading'
       },
       STORE => -> $, Str() $val is copy {
@@ -427,7 +427,7 @@ class GTK::TextTag  {
   # method foreground-gdk is rw  is DEPRECATED( “foreground-rgba” ) {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('foreground-gdk', $gv)
   #       );
@@ -444,7 +444,7 @@ class GTK::TextTag  {
   method foreground-rgba is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('foreground-rgba', $gv)
         );
@@ -461,7 +461,7 @@ class GTK::TextTag  {
   method foreground-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('foreground-set', $gv)
         );
@@ -478,7 +478,7 @@ class GTK::TextTag  {
   method indent is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('indent', $gv)
         );
@@ -495,7 +495,7 @@ class GTK::TextTag  {
   method indent-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('indent-set', $gv)
         );
@@ -512,7 +512,7 @@ class GTK::TextTag  {
   method invisible is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('invisible', $gv)
         );
@@ -529,7 +529,7 @@ class GTK::TextTag  {
   method invisible-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('invisible-set', $gv)
         );
@@ -546,7 +546,7 @@ class GTK::TextTag  {
   method justification is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('justification', $gv)
         );
@@ -563,7 +563,7 @@ class GTK::TextTag  {
   method justification-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('justification-set', $gv)
         );
@@ -580,7 +580,7 @@ class GTK::TextTag  {
   method language is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('language', $gv)
         );
@@ -597,7 +597,7 @@ class GTK::TextTag  {
   method language-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('language-set', $gv)
         );
@@ -614,7 +614,7 @@ class GTK::TextTag  {
   method left-margin is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('left-margin', $gv)
         );
@@ -631,7 +631,7 @@ class GTK::TextTag  {
   method left-margin-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('left-margin-set', $gv)
         );
@@ -648,7 +648,7 @@ class GTK::TextTag  {
   method letter-spacing is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('letter-spacing', $gv)
         );
@@ -665,7 +665,7 @@ class GTK::TextTag  {
   method letter-spacing-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('letter-spacing-set', $gv)
         );
@@ -682,7 +682,7 @@ class GTK::TextTag  {
   method name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('name', $gv)
         );
@@ -699,7 +699,7 @@ class GTK::TextTag  {
   method paragraph-background is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn "paragraph-background does not allow reading"
       },
       STORE => -> $, Str() $val is copy {
@@ -713,7 +713,7 @@ class GTK::TextTag  {
   # method paragraph-background-gdk is rw  is DEPRECATED( “paragraph-background-rgba” ) {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('paragraph-background-gdk', $gv)
   #       );
@@ -730,7 +730,7 @@ class GTK::TextTag  {
   method paragraph-background-rgba is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('paragraph-background-rgba', $gv)
         );
@@ -747,7 +747,7 @@ class GTK::TextTag  {
   method paragraph-background-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('paragraph-background-set', $gv)
         );
@@ -764,7 +764,7 @@ class GTK::TextTag  {
   method pixels-above-lines is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('pixels-above-lines', $gv)
         );
@@ -781,7 +781,7 @@ class GTK::TextTag  {
   method pixels-above-lines-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('pixels-above-lines-set', $gv)
         );
@@ -798,7 +798,7 @@ class GTK::TextTag  {
   method pixels-below-lines is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('pixels-below-lines', $gv)
         );
@@ -815,7 +815,7 @@ class GTK::TextTag  {
   method pixels-below-lines-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('pixels-below-lines-set', $gv)
         );
@@ -832,7 +832,7 @@ class GTK::TextTag  {
   method pixels-inside-wrap is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('pixels-inside-wrap', $gv)
         );
@@ -849,7 +849,7 @@ class GTK::TextTag  {
   method pixels-inside-wrap-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('pixels-inside-wrap-set', $gv)
         );
@@ -866,7 +866,7 @@ class GTK::TextTag  {
   method right-margin is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('right-margin', $gv)
         );
@@ -883,7 +883,7 @@ class GTK::TextTag  {
   method right-margin-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('right-margin-set', $gv)
         );
@@ -900,7 +900,7 @@ class GTK::TextTag  {
   method rise is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('rise', $gv)
         );
@@ -917,7 +917,7 @@ class GTK::TextTag  {
   method rise-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('rise-set', $gv)
         );
@@ -934,7 +934,7 @@ class GTK::TextTag  {
   method scale is rw  {
     my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('scale', $gv)
         );
@@ -951,7 +951,7 @@ class GTK::TextTag  {
   method scale-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('scale-set', $gv)
         );
@@ -968,7 +968,7 @@ class GTK::TextTag  {
   method size is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('size', $gv)
         );
@@ -985,7 +985,7 @@ class GTK::TextTag  {
   method size-points is rw  {
     my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('size-points', $gv)
         );
@@ -1002,7 +1002,7 @@ class GTK::TextTag  {
   method size-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('size-set', $gv)
         );
@@ -1019,7 +1019,7 @@ class GTK::TextTag  {
   method stretch is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('stretch', $gv)
         );
@@ -1036,7 +1036,7 @@ class GTK::TextTag  {
   method stretch-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('stretch-set', $gv)
         );
@@ -1053,7 +1053,7 @@ class GTK::TextTag  {
   method strikethrough is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('strikethrough', $gv)
         );
@@ -1070,7 +1070,7 @@ class GTK::TextTag  {
   method strikethrough-rgba is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('strikethrough-rgba', $gv)
         );
@@ -1087,7 +1087,7 @@ class GTK::TextTag  {
   method strikethrough-rgba-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('strikethrough-rgba-set', $gv)
         );
@@ -1104,7 +1104,7 @@ class GTK::TextTag  {
   method strikethrough-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('strikethrough-set', $gv)
         );
@@ -1121,7 +1121,7 @@ class GTK::TextTag  {
   method style is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('style', $gv)
         );
@@ -1138,7 +1138,7 @@ class GTK::TextTag  {
   method style-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('style-set', $gv)
         );
@@ -1155,7 +1155,7 @@ class GTK::TextTag  {
   method tabs (:$raw = False) is rw  {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('tabs', $gv)
         );
@@ -1178,7 +1178,7 @@ class GTK::TextTag  {
   method tabs-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('tabs-set', $gv)
         );
@@ -1195,7 +1195,7 @@ class GTK::TextTag  {
   method underline is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('underline', $gv)
         );
@@ -1212,7 +1212,7 @@ class GTK::TextTag  {
   method underline-rgba is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('underline-rgba', $gv)
         );
@@ -1229,7 +1229,7 @@ class GTK::TextTag  {
   method underline-rgba-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('underline-rgba-set', $gv)
         );
@@ -1246,7 +1246,7 @@ class GTK::TextTag  {
   method underline-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('underline-set', $gv)
         );
@@ -1263,7 +1263,7 @@ class GTK::TextTag  {
   method variant is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('variant', $gv)
         );
@@ -1280,7 +1280,7 @@ class GTK::TextTag  {
   method variant-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('variant-set', $gv)
         );
@@ -1297,7 +1297,7 @@ class GTK::TextTag  {
   method weight is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('weight', $gv)
         );
@@ -1314,7 +1314,7 @@ class GTK::TextTag  {
   method weight-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('weight-set', $gv)
         );
@@ -1331,7 +1331,7 @@ class GTK::TextTag  {
   method wrap-mode is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('wrap-mode', $gv)
         );
@@ -1348,7 +1348,7 @@ class GTK::TextTag  {
   method wrap-mode-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('wrap-mode-set', $gv)
         );

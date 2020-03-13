@@ -92,7 +92,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method accel-key is rw is also<accel_key> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('accel-key', $gv);
         $gv.int;
       },
@@ -107,7 +107,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method accel-mode is rw is also<accel_mode> {
     my GLib::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('accel-mode', $gv);
         GtkCellRendererAccelModeEnum( $gv.enum );
       },
@@ -122,7 +122,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method accel-mods is rw is also<accel_mods> {
     my GLib::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('accel-mods', $gv);
         GdkModifierTypeEnum( $gv.enum );
       },
@@ -137,7 +137,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method keycode is rw {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('keycode', $gv);
         $gv.int;
       },

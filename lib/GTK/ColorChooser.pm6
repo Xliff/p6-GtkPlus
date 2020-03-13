@@ -89,7 +89,7 @@ class GTK::ColorChooser is GTK::Box {
   method show-editor is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('show-editor', $gv)
         );

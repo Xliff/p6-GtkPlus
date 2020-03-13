@@ -73,7 +73,7 @@ class GTK::ShortcutsSection is GTK::Box {
   method max-height is rw is also<max_height> {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('max-height', $gv) );
         $gv.uint;
       },
@@ -88,7 +88,7 @@ class GTK::ShortcutsSection is GTK::Box {
   method section-name is rw is also<section_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('section-name', $gv) );
         $gv.string
       },
@@ -103,7 +103,7 @@ class GTK::ShortcutsSection is GTK::Box {
   method title is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
@@ -118,7 +118,7 @@ class GTK::ShortcutsSection is GTK::Box {
   method view-name is rw is also<view_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('view-name', $gv) );
         $gv.string;
       },

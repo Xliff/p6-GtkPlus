@@ -61,7 +61,7 @@ class GTK::Revealer is GTK::Bin {
   method child-revealed is rw is also<child_revealed> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('child-revealed', $gv)
         );

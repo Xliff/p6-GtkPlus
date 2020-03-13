@@ -314,7 +314,7 @@ class GTK::Grid is GTK::Container {
 
   method spacing is rw {
     Proxy.new:
-      FETCH => -> $ { (self.row_spacing, self.column_spacing).max },
+      FETCH => sub ($) { (self.row_spacing, self.column_spacing).max },
       STORE => -> $, Int() $val {
         (self.row_spacing, self.column_spacing) = $val xx 2;
       };

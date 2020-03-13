@@ -74,7 +74,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
   method has-entry is rw is also<has_entry> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('has-entry', $gv);
         $gv.boolean;
       },
@@ -89,7 +89,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
   method model (:$raw = False) is rw {
     my GLib::Value $gv .= new(G_TYPE_OBJECT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('model', $gv);
 
         my $v = $gv.object;
@@ -110,7 +110,7 @@ class GTK::CellRendererCombo is GTK::CellRendererText {
   method text-column is rw is also<text_column> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('text-column', $gv);
         $gv.int;
       },

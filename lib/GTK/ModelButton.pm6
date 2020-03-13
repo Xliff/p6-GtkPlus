@@ -107,7 +107,7 @@ class GTK::ModelButton is GTK::Button {
   method active is rw  {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('active', $gv)
         );
@@ -125,7 +125,7 @@ class GTK::ModelButton is GTK::Button {
   method centered is rw  {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('centered', $gv)
         );
@@ -143,7 +143,7 @@ class GTK::ModelButton is GTK::Button {
   method icon (:$raw = False) is rw  {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('icon', $gv)
         );
@@ -166,7 +166,7 @@ class GTK::ModelButton is GTK::Button {
   method iconic is rw  {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('iconic', $gv)
         );
@@ -184,7 +184,7 @@ class GTK::ModelButton is GTK::Button {
   method inverted is rw  {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('inverted', $gv)
         );
@@ -202,7 +202,7 @@ class GTK::ModelButton is GTK::Button {
   method menu-name is rw  is also<menu_name> {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('menu-name', $gv)
         );
@@ -220,7 +220,7 @@ class GTK::ModelButton is GTK::Button {
   method role is rw  {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('role', $gv)
         );
@@ -240,7 +240,7 @@ class GTK::ModelButton is GTK::Button {
   method text is rw  {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('text', $gv)
         );
@@ -258,7 +258,7 @@ class GTK::ModelButton is GTK::Button {
   method use-markup is rw  is also<use_markup> {
     my $gv;
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('use-markup', $gv)
         );

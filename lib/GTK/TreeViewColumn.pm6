@@ -279,7 +279,7 @@ class GTK::TreeViewColumn {
   method cell-area (:$raw = False) is rw is also<cell_area> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('cell-area', $gv) );
 
         return Nil unless $gv.object;
@@ -298,7 +298,7 @@ class GTK::TreeViewColumn {
   method width is rw {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('width', $gv) );
         $gv.int;
       },
@@ -312,7 +312,7 @@ class GTK::TreeViewColumn {
   method x-offset is rw is also<x_offset> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('x-offset', $gv) );
         $gv.int;
       },

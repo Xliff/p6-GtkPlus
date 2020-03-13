@@ -75,7 +75,7 @@ class GTK::ShortcutsWindow is GTK::Window {
   method section-name is rw is also<section_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('section-name', $gv);
         $gv.string;
       },
@@ -90,7 +90,7 @@ class GTK::ShortcutsWindow is GTK::Window {
   method view-name is rw is also<view_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('view-name', $gv);
         $gv.string;
       },

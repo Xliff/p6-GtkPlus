@@ -82,7 +82,7 @@ class GTK::AspectFrame is GTK::Frame {
   method obey-child is rw is also<obey_child> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('obey-child', $gv);
         $gv.boolean;
       },
@@ -97,7 +97,7 @@ class GTK::AspectFrame is GTK::Frame {
   method ratio is rw {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('ratio', $gv);
         $gv.float
       },
@@ -112,7 +112,7 @@ class GTK::AspectFrame is GTK::Frame {
   method xalign is rw {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('xalign', $gv);
         $gv.float;
       },
@@ -127,7 +127,7 @@ class GTK::AspectFrame is GTK::Frame {
   method yalign is rw {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('yalign', $gv);
         $gv.float;
       },

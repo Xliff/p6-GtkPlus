@@ -73,7 +73,7 @@ class GTK::Selection {
 
   method text is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.get_text;
       },
       STORE => -> $, Str() $val {

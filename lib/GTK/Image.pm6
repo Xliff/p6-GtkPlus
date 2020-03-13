@@ -143,7 +143,7 @@ class GTK::Image is GTK::Widget {
   method file is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('file', $gv)
         );
@@ -160,7 +160,7 @@ class GTK::Image is GTK::Widget {
   method gicon is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gicon', $gv)
         );
@@ -177,7 +177,7 @@ class GTK::Image is GTK::Widget {
   method icon-name is rw is also<icon_name> {
     my $gv = GLib::Value.new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('icon-name', $gv)
         );
@@ -194,7 +194,7 @@ class GTK::Image is GTK::Widget {
   method icon-size is rw is also<icon_size> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('icon-size', $gv)
         );
@@ -212,7 +212,7 @@ class GTK::Image is GTK::Widget {
   method pixbuf (:$raw = False) is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         # $gv = GLib::Value.new(
         #   self.prop_get('pixbuf', $gv)
         # );
@@ -235,7 +235,7 @@ class GTK::Image is GTK::Widget {
   method pixbuf-animation is rw is also<pixbuf_animation> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('pixbuf-animation', $gv)
         );
@@ -252,7 +252,7 @@ class GTK::Image is GTK::Widget {
   method resource is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('resource', $gv)
         );
@@ -269,7 +269,7 @@ class GTK::Image is GTK::Widget {
   method stock is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('stock', $gv)
         );
@@ -286,7 +286,7 @@ class GTK::Image is GTK::Widget {
   method storage-type is rw is also<storage_type> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('storage-type', $gv)
         );
@@ -302,7 +302,7 @@ class GTK::Image is GTK::Widget {
   method surface is rw {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('surface', $gv)
         );
@@ -319,7 +319,7 @@ class GTK::Image is GTK::Widget {
   method use-fallback is rw is also<use_fallback> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('use-fallback', $gv)
         );

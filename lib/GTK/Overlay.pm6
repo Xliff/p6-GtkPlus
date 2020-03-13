@@ -89,7 +89,7 @@ class GTK::Overlay is GTK::Bin {
     >
   {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.get_overlay_passthrough;
       },
       STORE => -> $, *@list {

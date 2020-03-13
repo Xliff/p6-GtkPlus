@@ -73,7 +73,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   method inverted is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('inverted', $gv);
         $gv.boolean;
       },
@@ -88,7 +88,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   method pulse is rw {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('pulse', $gv);
         $gv.int;
       },
@@ -103,7 +103,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   method text is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('text', $gv);
         $gv.string;
       },
@@ -118,7 +118,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   method text-xalign is rw is also<text_xalign> {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('text-xalign', $gv);
         $gv.float;
       },
@@ -133,7 +133,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   method text-yalign is rw is also<text_yalign> {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('text-yalign', $gv);
         $gv.float;
       },
@@ -148,7 +148,7 @@ class GTK::CellRendererProgress is GTK::CellRenderer {
   method value is rw {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('value', $gv);
         $gv.int;
       },

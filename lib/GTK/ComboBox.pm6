@@ -157,7 +157,7 @@ class GTK::ComboBox is GTK::Bin {
   method has-frame is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('has-frame', $gv)
         );
@@ -174,7 +174,7 @@ class GTK::ComboBox is GTK::Bin {
    method popup-shown is rw  {
      my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
      Proxy.new(
-       FETCH => -> $ {
+       FETCH => sub ($) {
          $gv = GLib::Value.new(
            self.prop_get('popup-shown', $gv)
          );
@@ -346,7 +346,7 @@ class GTK::ComboBox is GTK::Bin {
   method tearoff-title is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('tearoff-title', $gv)
         );

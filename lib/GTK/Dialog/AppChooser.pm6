@@ -97,7 +97,7 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
   method gfile is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('gfile', $gv) );
         nativecast(GFile, $gv.object);
       },
@@ -112,7 +112,7 @@ class GTK::Dialog::AppChooser is GTK::Dialog {
   method heading is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('heading', $gv) );
         $gv.string;
       },

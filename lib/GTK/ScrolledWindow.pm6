@@ -154,7 +154,7 @@ class GTK::ScrolledWindow is GTK::Bin {
 
   method adjustment (:$raw = False) is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         ( self.hadjustment(:$raw) , self.vadjustment(:$raw) );
       },
       STORE => -> $, *@a {

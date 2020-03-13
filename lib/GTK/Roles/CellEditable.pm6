@@ -37,7 +37,7 @@ role GTK::Roles::CellEditable {
   method editing-canceled is rw is also<editing_canceled> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('editing-canceled', $gv) );
         $gv.boolean;
       },

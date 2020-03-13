@@ -73,7 +73,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   method active is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('active', $gv);
         $gv.boolean;
       },
@@ -88,7 +88,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   method pulse is rw {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('pulse', $gv);
         $gv.uint;
       },
@@ -103,7 +103,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   method size is rw {
     my GLib::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('size', $gv);
         GtkIconSizeEnum( $gv.enum );
       },

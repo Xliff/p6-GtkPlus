@@ -9,6 +9,8 @@ use GIO::Raw::Exports;
 use GDK::Raw::Exports;
 use GTK::Raw::Exports;
 
+constant forced = 0;
+
 unit package GTK::Raw::Types;
 
 need Cairo;

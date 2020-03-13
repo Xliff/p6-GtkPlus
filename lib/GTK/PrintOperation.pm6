@@ -211,7 +211,7 @@ class GTK::PrintOperation {
   method allow-async is rw is also<allow_async> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('allow-async', $gv)
         );
@@ -228,7 +228,7 @@ class GTK::PrintOperation {
   method current-page is rw is also<current_page> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('current-page', $gv)
         );
@@ -246,7 +246,7 @@ class GTK::PrintOperation {
   method custom-tab-label is rw is also<custom_tab_label> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('custom-tab-label', $gv)
         );
@@ -263,7 +263,7 @@ class GTK::PrintOperation {
   method export-filename is rw is also<export_filename> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('export-filename', $gv)
         );
@@ -280,7 +280,7 @@ class GTK::PrintOperation {
   method job-name is rw is also<job_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('job-name', $gv)
         );
@@ -297,7 +297,7 @@ class GTK::PrintOperation {
   method n-pages is rw is also<n_pages> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('n-pages', $gv)
         );
@@ -314,7 +314,7 @@ class GTK::PrintOperation {
   method n-pages-to-print is rw is also<n_pages_to_print> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('n-pages-to-print', $gv)
         );
@@ -330,7 +330,7 @@ class GTK::PrintOperation {
   method show-progress is rw is also<show_progress> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('show-progress', $gv)
         );
@@ -347,7 +347,7 @@ class GTK::PrintOperation {
   method status is rw {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('status', $gv)
         );
@@ -363,7 +363,7 @@ class GTK::PrintOperation {
   method status-string is rw is also<status_string> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('status-string', $gv)
         );
@@ -379,7 +379,7 @@ class GTK::PrintOperation {
   method track-print-status is rw is also<track_print_status> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('track-print-status', $gv)
         );
@@ -396,7 +396,7 @@ class GTK::PrintOperation {
   method unit is rw {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('unit', $gv)
         );
@@ -413,7 +413,7 @@ class GTK::PrintOperation {
   method use-full-page is rw is also<use_full_page> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('use-full-page', $gv)
         );

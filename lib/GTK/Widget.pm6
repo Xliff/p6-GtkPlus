@@ -1217,7 +1217,7 @@ class GTK::Widget {
   # Convenience attribute.
   method margins is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         (
           self.margin_left,
           self.margin_right,
@@ -1249,7 +1249,7 @@ class GTK::Widget {
   method composite-child is rw is also<composite_child> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('composite-child', $gv)
         );
@@ -1266,7 +1266,7 @@ class GTK::Widget {
   method expand is rw {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('expand', $gv)
         );
@@ -1283,7 +1283,7 @@ class GTK::Widget {
   method has-focus is rw is also<has_focus> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('has-focus', $gv)
         );
@@ -1300,7 +1300,7 @@ class GTK::Widget {
   method height-request is rw is also<height_request> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('height-request', $gv)
         );
@@ -1317,7 +1317,7 @@ class GTK::Widget {
   method is-focus is rw is also<is_focus> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('is-focus', $gv) );
         $gv.boolean;
       },
@@ -1332,7 +1332,7 @@ class GTK::Widget {
   method margin is rw {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('margin', $gv) );
         $gv.int;
       },
@@ -1347,7 +1347,7 @@ class GTK::Widget {
   method scale-factor is rw is also<scale_factor> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get(
           $!w, 'scale-factor', $gv)
         );
@@ -1364,7 +1364,7 @@ class GTK::Widget {
   # method style is rw {
   #   my GValue $gv .= new;
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new( self.prop_get('style', $gv) );
   # #        $gv.get_TYPE;
   #     },
@@ -1379,7 +1379,7 @@ class GTK::Widget {
   method width-request is rw is also<width_request> {
     my GValue $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get(
           $!w, 'width-request', $gv)
         );

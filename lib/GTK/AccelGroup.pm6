@@ -60,7 +60,7 @@ class GTK::AccelGroup {
   method is-locked is rw is also<is_locked> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('is-locked', $gv)
          );
@@ -76,7 +76,7 @@ class GTK::AccelGroup {
   method modifier-mask is rw is also<modifier_mask> {
     my GLib::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('modifier-mask', $gv)
         );

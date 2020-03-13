@@ -47,7 +47,7 @@ class GTK::CellAreaContext {
   method area is rw {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('area', $gv);
         GTK::CellArea.new( cast(GtkCellArea, $gv.pointer) );
       },
@@ -62,7 +62,7 @@ class GTK::CellAreaContext {
   method minimum-height is rw is also<minimum_height> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('minimum-height', $gv);
         $gv.int;
       },
@@ -76,7 +76,7 @@ class GTK::CellAreaContext {
   method minimum-width is rw is also<minimum_width> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('minimum-width', $gv);
         $gv.int;
       },
@@ -90,7 +90,7 @@ class GTK::CellAreaContext {
   method natural-height is rw is also<natural_height> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('natural-height', $gv);
         $gv.int;
       },
@@ -104,7 +104,7 @@ class GTK::CellAreaContext {
   method natural-width is rw is also<natural_width> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('natural-width', $gv);
         $gv.int;
       },

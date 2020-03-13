@@ -199,7 +199,7 @@ class GTK::PrintJob {
   method page-setup is rw is also<page_setup> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('page-setup', $gv)
         );
@@ -216,7 +216,7 @@ class GTK::PrintJob {
   method printer is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('printer', $gv)
         );
@@ -233,7 +233,7 @@ class GTK::PrintJob {
   method settings (:$raw = False) is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('settings', $gv)
         );
@@ -256,7 +256,7 @@ class GTK::PrintJob {
   method title is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('title', $gv)
         );

@@ -63,7 +63,7 @@ class GTK::Frame is GTK::Bin {
   method label-xalign is rw is also<label_xalign> {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('label-xalign', $gv)
         );
@@ -80,7 +80,7 @@ class GTK::Frame is GTK::Bin {
   method label-yalign is rw is also<label_yalign> {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('label-yalign', $gv)
         );

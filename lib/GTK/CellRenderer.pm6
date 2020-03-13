@@ -87,7 +87,7 @@ class GTK::CellRenderer {
   method cell-background is rw is also<cell_background> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn "cell-background does not allow reading"
       },
       STORE => -> $, Str() $val is copy {
@@ -101,7 +101,7 @@ class GTK::CellRenderer {
   # method cell-background-gdk is rw  is DEPRECATED( “cell-background-rgba” ) {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('cell-background-gdk', $gv)
   #       );
@@ -118,7 +118,7 @@ class GTK::CellRenderer {
   method cell-background-rgba is rw is also<cell_background_rgba> {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('cell-background-rgba', $gv)
         );
@@ -135,7 +135,7 @@ class GTK::CellRenderer {
   method cell-background-set is rw is also<cell_background_set> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('cell-background-set', $gv)
         );
@@ -152,7 +152,7 @@ class GTK::CellRenderer {
   method editing is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('editing', $gv)
         );
@@ -168,7 +168,7 @@ class GTK::CellRenderer {
   method height is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('height', $gv)
         );
@@ -185,7 +185,7 @@ class GTK::CellRenderer {
   method is-expanded is rw is also<is_expanded> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('is-expanded', $gv)
         );
@@ -203,7 +203,7 @@ class GTK::CellRenderer {
   method is-expander is rw is also<is_expander> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('is-expander', $gv)
         );
@@ -221,7 +221,7 @@ class GTK::CellRenderer {
   method mode is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('mode', $gv)
         );
@@ -238,7 +238,7 @@ class GTK::CellRenderer {
   # method sensitive is rw  {
   #   my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('sensitive', $gv)
   #       );
@@ -255,7 +255,7 @@ class GTK::CellRenderer {
   # method visible is rw  {
   #   my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('visible', $gv)
   #       );
@@ -272,7 +272,7 @@ class GTK::CellRenderer {
   method width is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('width', $gv)
         );
@@ -289,7 +289,7 @@ class GTK::CellRenderer {
   method xalign is rw  {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('xalign', $gv)
         );
@@ -306,7 +306,7 @@ class GTK::CellRenderer {
   method xpad is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('xpad', $gv)
         );
@@ -323,7 +323,7 @@ class GTK::CellRenderer {
   method yalign is rw  {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('yalign', $gv)
         );
@@ -340,7 +340,7 @@ class GTK::CellRenderer {
   method ypad is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('ypad', $gv)
         );

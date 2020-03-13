@@ -460,7 +460,7 @@ class GTK::Entry is GTK::Widget {
   method cursor-position is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('cursor-position', $gv)
         );
@@ -476,7 +476,7 @@ class GTK::Entry is GTK::Widget {
   method editable is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('editable', $gv)
         );
@@ -493,7 +493,7 @@ class GTK::Entry is GTK::Widget {
   method enable-emoji-completion is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('enable-emoji-completion', $gv)
         );
@@ -510,7 +510,7 @@ class GTK::Entry is GTK::Widget {
   method im-module is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('im-module', $gv)
         );
@@ -527,7 +527,7 @@ class GTK::Entry is GTK::Widget {
   method invisible-char is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('invisible-char', $gv)
         );
@@ -544,7 +544,7 @@ class GTK::Entry is GTK::Widget {
   method invisible-char-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('invisible-char-set', $gv)
         );
@@ -561,7 +561,7 @@ class GTK::Entry is GTK::Widget {
   method populate-all is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('populate-all', $gv)
         );
@@ -578,7 +578,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-activatable is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-activatable', $gv)
         );
@@ -596,7 +596,7 @@ class GTK::Entry is GTK::Widget {
   # method primary-icon-gicon is rw  {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('primary-icon-gicon', $gv)
   #       );
@@ -613,7 +613,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-name', $gv)
         );
@@ -630,7 +630,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-pixbuf is rw  {
     my GLib::Value $gv .= new( GDK::Pixbuf.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-pixbuf', $gv)
         );
@@ -649,7 +649,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-sensitive is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-sensitive', $gv)
         );
@@ -666,7 +666,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-stock is rw  is DEPRECATED( “primary-icon-name” ) {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-stock', $gv)
         );
@@ -683,7 +683,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-storage-type is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-storage-type', $gv)
         );
@@ -699,7 +699,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-tooltip-markup is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-tooltip-markup', $gv)
         );
@@ -716,7 +716,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-tooltip-text is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-tooltip-text', $gv)
         );
@@ -733,7 +733,7 @@ class GTK::Entry is GTK::Widget {
   method scroll-offset is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('scroll-offset', $gv)
         );
@@ -749,7 +749,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-activatable is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-activatable', $gv)
         );
@@ -767,7 +767,7 @@ class GTK::Entry is GTK::Widget {
   # method secondary-icon-gicon is rw  {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('secondary-icon-gicon', $gv)
   #       );
@@ -784,7 +784,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-name', $gv)
         );
@@ -801,7 +801,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-pixbuf (:$raw = False)  is rw  {
     my GLib::Value $gv .= new( GDK::Pixbuf.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-pixbuf', $gv)
         );
@@ -822,7 +822,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-sensitive is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-sensitive', $gv)
         );
@@ -839,7 +839,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-stock is rw  is DEPRECATED( “secondary-icon-name” ) {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-stock', $gv)
         );
@@ -856,7 +856,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-storage-type is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-storage-type', $gv)
         );
@@ -872,7 +872,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-tooltip-markup is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-tooltip-markup', $gv)
         );
@@ -889,7 +889,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-tooltip-text is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-tooltip-text', $gv)
         );
@@ -906,7 +906,7 @@ class GTK::Entry is GTK::Widget {
   method selection-bound is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('selection-bound', $gv)
         );
@@ -922,7 +922,7 @@ class GTK::Entry is GTK::Widget {
   method show-emoji-icon is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('show-emoji-icon', $gv)
         );
@@ -939,7 +939,7 @@ class GTK::Entry is GTK::Widget {
   method text-length is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('text-length', $gv)
         );
@@ -955,7 +955,7 @@ class GTK::Entry is GTK::Widget {
   method truncate-multiline is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('truncate-multiline', $gv)
         );
@@ -972,7 +972,7 @@ class GTK::Entry is GTK::Widget {
   method xalign is rw  {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('xalign', $gv)
         );

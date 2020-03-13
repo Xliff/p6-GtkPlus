@@ -73,7 +73,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   method adjustment is rw {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('adjustment', $gv);
         GTK::Adjustment.new( cast(GtkAdjustment, $gv.pointer ) );
       },
@@ -88,7 +88,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   method climb-rate is rw is also<climb_rate> {
     my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('climb-rate', $gv);
         $gv.double;
       },
@@ -103,7 +103,7 @@ class GTK::CellRendererSpin is GTK::CellRendererText {
   method digits is rw {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('digits', $gv);
         $gv.uint;
       },

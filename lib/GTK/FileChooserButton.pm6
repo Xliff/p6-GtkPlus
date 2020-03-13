@@ -112,7 +112,7 @@ class GTK::FileChooserButton is GTK::Box {
   method dialog is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn 'GTK::FileChooserButton.dialog does not allow reading'
           if $DEBUG;
         Nil;

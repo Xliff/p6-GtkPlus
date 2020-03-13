@@ -124,7 +124,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   method inconsistent is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('inconsistent', $gv);
         $gv.boolean;
       },
@@ -139,7 +139,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   method indicator-size is rw is also<indicator_size> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('indicator-size', $gv);
         $gv.int;
       },

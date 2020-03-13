@@ -31,7 +31,7 @@ role GTK::Roles::ColorChooser {
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method rgba is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         my $c = GDK::RGBA.new;
         self.get_rgba($c);
         $c;

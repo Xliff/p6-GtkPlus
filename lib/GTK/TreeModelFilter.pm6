@@ -52,7 +52,7 @@ class GTK::TreeModelFilter {
   method child-model is rw is also<child_model> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('child-model', $gv);
         $gv.object;
       },
@@ -67,7 +67,7 @@ class GTK::TreeModelFilter {
   method virtual-root is rw is also<virtual_root> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('virtual-root', $gv) ;
         $gv.object;
       },

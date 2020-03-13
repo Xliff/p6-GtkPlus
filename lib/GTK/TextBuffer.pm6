@@ -181,7 +181,7 @@ D
   {
     my GLib::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('copy-target-list', $gv)
         );
@@ -204,7 +204,7 @@ D
   {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('cursor-position', $gv)
         );
@@ -223,7 +223,7 @@ D
   {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('has-selection', $gv)
         );
@@ -242,7 +242,7 @@ D
   {
     my GLib::Value $gv .= new( GTK::TargetList.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('paste-target-list', $gv)
         );
@@ -265,7 +265,7 @@ D
   {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('tag-table', $gv)
         );
@@ -286,7 +286,7 @@ D
   method text is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('text', $gv)
         );

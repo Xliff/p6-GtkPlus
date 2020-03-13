@@ -164,7 +164,7 @@ class GTK::IconView is GTK::Container {
   method cell-area (:$raw = False) is rw  {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('cell-area', $gv)
         );

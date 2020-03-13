@@ -91,7 +91,7 @@ class GTK::Layout is GTK::Container {
   method height is rw {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('height', $gv) );
         $gv.int;
       },
@@ -106,7 +106,7 @@ class GTK::Layout is GTK::Container {
   method width is rw {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('width', $gv) );
         $gv.int;
       },
