@@ -32,14 +32,13 @@ class GTK::MenuBar is GTK::MenuShell {
   }
 
   method setMenuBar($menubar) {
-    self.IS-PROTECTED;
-
     my $to-parent;
     $!mb = do given $menubar {
       when GtkMenuBar {
         $to-parent = cast(GtkMenuShell, $_);
         $_;
       }
+
       default {
         $to-parent = $_;
         cast(GtkMenuBar, $_);
@@ -113,7 +112,7 @@ class GTK::MenuBar is GTK::MenuShell {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
-    
+
     GTK::Widget.unstable_get_type( &gtk_menu_bar_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
