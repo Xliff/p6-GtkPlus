@@ -20,11 +20,11 @@ role GTK::Roles::Signals::CSSProvider {
     %!signals-css{$signal} //= do {
       my $s = Supplier.new;
       $hid = g-connect-parsing-error($obj, $signal,
-        -> $, $s, $err, $ud {
+        -> $, $s1, $err, $ud {
           CATCH {
             default { $s.quit($_) }
           }
-          $s.emit( [self, $s, $err, $ud] );
+          $s.emit( [self, $s1, $err, $ud] );
         },
         Pointer, 0
       );
