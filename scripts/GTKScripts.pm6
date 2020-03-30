@@ -16,6 +16,7 @@ sub parse-file ($filename) is export {
     backups
     modules
   >;
+  %config<libdirs> //= 'lib';
 
   %config;
 }
@@ -68,7 +69,9 @@ sub find-files(
 }
 
 sub get-module-files is export {
-  find-files('lib', extension => 'pm6');
+  (do gather for %config<libdirs>.split(',') {
+    take find-files($_, extension => 'pm6');
+  }).flat
 }
 
 sub levenshtein-nqp ($a, $b) is export {

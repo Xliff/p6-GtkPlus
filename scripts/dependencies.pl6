@@ -19,7 +19,7 @@ sub MAIN (
     @build-exclude = %config<build_exclude> // ();
   }
 
-  my @files = get-module-files.sort( *.IO.modified );
+  my @files = get-module-files.sort( *.modified );
   unless $force {
     if $dep_file.e && $dep_file.modified >= @files[*-1].modified {
       say 'No change in dependencies.';
@@ -30,10 +30,14 @@ sub MAIN (
   my @modules = @files
     .map( *.path )
     .map({
-      my $mn = $_;
+      my ($u, $m) = $_ xx 2;
+      for %config<libdirs>.split(',') -> $d is copy {
+        $d ~= '/' unless $d.ends-with('/');
+        $m .= subst($d, '');
+      }
       my $a = [
-        $mn,
-        .subst('.pm6', '').split('/').Array[1..*].join('::')
+        $u,
+        $m.subst('.pm6', '').split('/').Array.join('::')
       ];
       $a;
     })
