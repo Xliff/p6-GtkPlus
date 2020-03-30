@@ -1,6 +1,10 @@
 #!/usr/bin/env perl6
 use v6.c;
 
+use lib 'scripts';
+
+use GTKScripts;
+
 my $p = run q[scripts/dependencies.pl6], :out;
 exit if $p.exitcode;
 
@@ -34,9 +38,16 @@ sub MAIN( $rev = 'HEAD' ) {
     my $tf = ".touch/{ $rel }/{ $_[0].IO.basename }";
     next unless ! $tf.IO.e || $_[0].IO.modified > $tf.IO.modified;
 
+    my @extradirs;
+    parse-file(CONFIG-NAME);
+    if %config<libdirs> {
+	@extradirs.push( "-I $_" ) for %config<libdirs>.split(',');
+    }
+
     say "===== $_[1] =====";
     my $proc = Proc::Async.new(
       './p6gtkexec',
+      |@extradirs,
       '-e',
       'use '~ $_[1]
     );
