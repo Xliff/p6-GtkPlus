@@ -21,7 +21,7 @@ sub MAIN (
 
   my @files = get-module-files.sort( *.modified );
   unless $force {
-    if $dep_file.e && $dep_file.modified >= @files[*-1].modified {
+    if $dep_file.e && $dep_file.modified >= @files[* - 1].modified {
       say 'No change in dependencies.';
       exit;
     }
@@ -108,6 +108,8 @@ sub MAIN (
     @module-order.push( $_<name> => $++ ) for $s.result;
   }
   my %module-order = @module-order.Hash;
+
+  @others.append: %nodes.values.grep( *<edges>.elems.not ).map( *<name> );
   @others = @others.unique.sort.grep( * ne <NativeCall nqp>.any );
   my $list = @others.join("\n") ~ "\n";
   $list ~= @module-order.map({ $_.key }).join("\n");
