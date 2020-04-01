@@ -16,7 +16,7 @@ sub parse-file ($filename) is export {
     backups
     modules
   >;
-  %config<libdirs> //= 'lib';
+  %config<libdir> //= 'lib';
 
   %config;
 }

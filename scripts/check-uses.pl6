@@ -27,6 +27,8 @@ sub mq($s) {
 
 sub MAIN (:$filename, :$prefix is required) {
 
+  parse-file(CONFIG-NAME);
+
   my @files = $filename ??
     $filename.Array
     !!
