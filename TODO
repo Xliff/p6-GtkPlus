@@ -280,3 +280,4 @@ Applications
 - Consider BABL bindings
 - Consider ATK bindings
 - A Perl6 port for libsoup
+- Consider a Perl6 port of SVOX (See files in libttspico-dev, start with /usr/include/picoapi.h)
