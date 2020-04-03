@@ -36,6 +36,12 @@ INCLUDES="-I${P6_GTK_HOME}/p6-GLib/lib \
 -I${P6_GTK_HOME}/p6-GIMP/lib            \
 -Ilib"
 
+# Handle any extra directories in project file.
+MOREI=`grep libdir .p6-gtk-project | \
+cut -d= -f 2 | \
+perl6 -ne '.say for .lines.split(",")'`
+for a in $MOREI; do INCLUDES="-I$a $INCLUDES"; done
+
 if [[ -z "${PARALLEL_BUILD}" ]]; then
   ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@"
 else

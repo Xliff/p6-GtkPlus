@@ -38,11 +38,12 @@ sub MAIN( $rev = 'HEAD' ) {
     my $tf = ".touch/{ $rel }/{ $_[0].IO.basename }";
     next unless ! $tf.IO.e || $_[0].IO.modified > $tf.IO.modified;
 
-    my @extradirs;
-    parse-file(CONFIG-NAME);
-    if %config<libdirs> {
-	@extradirs.push( "-I $_" ) for %config<libdirs>.split(',');
-    }
+  # Deprecated
+  #   my @extradirs;
+  #   parse-file(CONFIG-NAME);
+  #   if %config<libdirs> {
+	# @extradirs.push( "-I $_" ) for %config<libdirs>.split(',');
+  #   }
 
     say "===== $_[1] =====";
     my $proc = Proc::Async.new(
