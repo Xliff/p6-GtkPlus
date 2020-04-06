@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GTK::Widget;
@@ -14,12 +13,12 @@ our subset DrawingAreaAncestry is export of Mu
 sub gtk_drawing_area_get_type ()
   returns GType
   is native(gtk)
-  { * }
+{ * }
 
 sub gtk_drawing_area_new ()
   returns GtkDrawingArea
   is native(gtk)
-  { * }
+{ * }
 
 class GTK::DrawingArea is GTK::Widget {
   has GtkDrawingArea $!da is implementor;
@@ -54,11 +53,11 @@ class GTK::DrawingArea is GTK::Widget {
     self.setWidget($to-parent);
   }
 
-  multi method new (DrawingAreaAncestry $draw) {
-    return unless $draw;
+  multi method new (DrawingAreaAncestry $draw, :$ref = True) {
+    return Nil unless $draw;
 
     my $o = self.bless(:$draw);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
@@ -67,7 +66,7 @@ class GTK::DrawingArea is GTK::Widget {
     $draw ?? self.bless( :$draw ) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkDrawingArea
+  method GTK::Raw::Definitions::GtkDrawingArea
     is also<
       GtkDrawingArea
       DrawingArea
@@ -75,7 +74,7 @@ class GTK::DrawingArea is GTK::Widget {
   { $!da }
 
   # cw: Is this true?!?
-  method GTK::Compat::Types::cairo_t is also<cairo_t> {
+  method GDK::Types::cairo_t is also<cairo_t> {
     nativecast(cairo_t, $!da);
   }
 
@@ -88,7 +87,7 @@ class GTK::DrawingArea is GTK::Widget {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
-    
+
     GTK::Widget.unstable_get_type( &gtk_drawing_area_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

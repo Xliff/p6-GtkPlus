@@ -3,35 +3,34 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
 use GTK::Raw::IconTheme;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
-use GTK::Compat::Pixbuf;
+use GDK::RGBA;
+use GDK::Pixbuf;
 
 use GLib::Roles::Object;
-use GTK::Roles::Types;
 
 # Opaque struct
 
 class GTK::IconInfo {
   also does GLib::Roles::Object;
-  also does GTK::Roles::Types;
 
   has GtkIconInfo $!ii is implementor;
 
   submethod BUILD(:$info) {
     self!setObject($!ii = $info);             # GLib::Roles::Object
   }
-  
-  method GTK::Raw::Types::GtkIconInfo
-    is also<IconInfo>
-    { $!ii }
+
+  method GTK::Raw::Definitions::GtkIconInfo
+    is also<
+      IconInfo
+      GtkIconInfo
+    >
+  { $!ii }
 
   method new (GtkIconInfo $info) {
-    self.bless(:$info);
+    $info ?? self.bless(:$info) !! Nil;
   }
 
   method new_for_pixbuf (
@@ -41,7 +40,8 @@ class GTK::IconInfo {
     is also<new-for-pixbuf>
   {
     my $info = gtk_icon_info_new_for_pixbuf($theme, $pixbuf);
-    self.bless(:$info);
+
+    $info ?? self.bless(:$info) !! Nil;
   }
 
 
@@ -56,27 +56,37 @@ class GTK::IconInfo {
 
   # From gtkiconfactory.h which is now deprecated. This was the best fit.
   # It is a static method.
-  proto method size_lookup (|) is also<size-lookup> { * }
+  proto method size_lookup (|)
+    is also<size-lookup>
+  { * }
 
   multi method size_lookup (Int() $size) {
-    my Int ($w, $h);
-    samewith($size, $w, $h);
-    ($w, $h);
+    my @r = samewith($size, $, $, :all);
+
+    @r[0] ?? @r[1..*] !! Nil;
   }
   multi method size_lookup (
     Int() $size,
-    Int() $width is rw,
-    Int() $height is rw
+    $width  is rw,
+    $height is rw,
+    :$all = False
   ) {
-    my gint ($w, $h);
-    my guint32 $s = resolve-uint($size);
-    my $rc = gtk_icon_size_lookup($s, $w, $h);
-    ($width, $height) = ($rc ?? $w !! Nil, $rc ?? $h !! Nil);
+    my gint ($w, $h) = 0 xx 2;
+    my guint32 $s = $size;
+    my $rv = gtk_icon_size_lookup($s, $w, $h);
+
+    ($width, $height) = ($w, $h);
+    $all.not ?? $rv !! ($rv, $width, $height);
   }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method copy {
-    gtk_icon_info_copy($!ii);
+  method copy (:$raw = False) {
+    my $ii = gtk_icon_info_copy($!ii);
+
+    $ii ??
+      ( $raw ?? $ii !! GTK::IconInfo.new($ii) )
+      !!
+      Nil;
   }
 
   method free {
@@ -86,89 +96,112 @@ class GTK::IconInfo {
   method get_attach_points (GdkPoint $points, Int() $n_points)
     is also<get-attach-points>
   {
-    my gint $np = self.RESOLVE-INT($n_points);
+    my gint $np = $n_points;
+
     gtk_icon_info_get_attach_points($!ii, $points, $np);
   }
 
-  method get_base_scale 
+  method get_base_scale
     is also<
       get-base-scale
       base_scale
       base-scale
-    > 
+    >
   {
     gtk_icon_info_get_base_scale($!ii);
   }
 
-  method get_base_size 
+  method get_base_size
     is also<
       get-base-size
       base_size
       base-size
-    > 
+    >
   {
     gtk_icon_info_get_base_size($!ii);
   }
 
-  method get_builtin_pixbuf 
+  method get_builtin_pixbuf (:$raw = False)
     is also<
       get-builtin-pixbuf
       builtin_pixbuf
       builtin-pixbuf
-    > 
+    >
   {
-    GTK::Compat::Pixbuf.new( gtk_icon_info_get_builtin_pixbuf($!ii) );
+    my $p = gtk_icon_info_get_builtin_pixbuf($!ii);
+
+    $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil
   }
 
-  method get_display_name 
+  method get_display_name
     is also<
       get-display-name
       display_name
       display-name
-    > 
+    >
   {
     gtk_icon_info_get_display_name($!ii);
   }
 
-  method get_embedded_rect (GdkRectangle $rectangle)
+  method get_embedded_rect (GdkRectangle() $rectangle)
     is also<get-embedded-rect>
   {
     gtk_icon_info_get_embedded_rect($!ii, $rectangle);
   }
 
-  method get_filename 
+  method get_filename
     is also<
       get-filename
       filename
-    > 
+    >
   {
     gtk_icon_info_get_filename($!ii);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &gtk_icon_info_get_type, $n, $t );
   }
 
   method is_symbolic is also<is-symbolic> {
-    gtk_icon_info_is_symbolic($!ii);
+    so gtk_icon_info_is_symbolic($!ii);
   }
 
   method load_icon (
-    CArray[Pointer[GError]] $error = gerror
+    CArray[Pointer[GError]] $error = gerror,
+    :$raw = False
   )
     is also<load-icon>
   {
-    GTK::Compat::Pixbuf.new( gtk_icon_info_load_icon($!ii, $error) );
+    clear_error;
+    my $p = gtk_icon_info_load_icon($!ii, $error);
+    set_error($error);
+
+    $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil
   }
 
-  method load_icon_async (
-    GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
+  proto method load_icon_async (|)
     is also<load-icon-async>
-  {
+  { * }
+
+  multi method load_icon_async (
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith(GCancellable, $callback, $user_data);
+  }
+  multi method load_icon_async (
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
     gtk_icon_info_load_icon_async(
       $!ii,
       $cancellable,
@@ -178,16 +211,21 @@ class GTK::IconInfo {
   }
 
   method load_icon_finish (
-    GAsyncResult $res,
-    CArray[Pointer[GError]] $error = gerror
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror,
+    :$raw = False
   )
     is also<load-icon-finish>
   {
     clear_error;
-    my $o = gtk_icon_info_load_icon_finish($!ii, $res, $error);
+    my $p = gtk_icon_info_load_icon_finish($!ii, $res, $error);
     set_error($error);
     # Throw exception if error.
-    GTK::Compat::Pixbuf.new($o) without $ERROR;
+
+    $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil
   }
 
   method load_surface (
@@ -199,8 +237,8 @@ class GTK::IconInfo {
     clear_error;
     my $s = gtk_icon_info_load_surface($!ii, $for_window, $error);
     set_error($error);
-    # Throw exception if $ERROR
-    $s without $ERROR;
+
+    $s;
   }
 
   method load_symbolic (
@@ -208,22 +246,26 @@ class GTK::IconInfo {
     GdkRGBA $s_color,
     GdkRGBA $w_color,
     GdkRGBA $e_color,
-    Int() $was_symbolic = False,
-    CArray[Pointer[GError]] $error = gerror()
+    $was_symbolic is rw,
+    CArray[Pointer[GError]] $error = gerror(),
+    :$raw = False
   )
     is also<load-symbolic>
   {
     my $ws = CArray[uint32].new;
-    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
-    $ws = self.RESOLVE-BOOL($was_symbolic) with $was_symbolic;
+    $ws[0] = $was_symbolic;
+    $ws = $was_symbolic with $was_symbolic;
     clear_error;
     # Note use of CArray to provide initializable pointer to an uint32.
-    my $s = gtk_icon_info_load_symbolic(
+    my $p = gtk_icon_info_load_symbolic(
       $!ii, $fg, $s_color, $w_color, $e_color, $ws, $error
     );
     set_error($error);
-    # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+
+    $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil
   }
 
   method load_symbolic_async (
@@ -231,7 +273,7 @@ class GTK::IconInfo {
     GdkRGBA $success_color,
     GdkRGBA $warning_color,
     GdkRGBA $error_color,
-    GCancellable $cancellable,
+    GCancellable() $cancellable,
     GAsyncReadyCallback $callback,
     gpointer $user_data
   )
@@ -249,53 +291,94 @@ class GTK::IconInfo {
     );
   }
 
-  method load_symbolic_finish (
-    GAsyncResult $res,
-    $was_symbolic  is copy = False,
-    CArray[Pointer[GError]] $error = gerror()
-  )
+  proto method load_symbolic_finish (|)
     is also<load-symbolic-finish>
-  {
-    $was_symbolic = $was_symbolic.defined ?? $was_symbolic.so !! False;
-    
+  { * }
+
+  multi method load_symbolic_finish (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror(),
+    :$all = False,
+    :$raw = False
+  ) {
+    samewith($res, $, $error, :$all, :$raw);
+  }
+  multi method load_symbolic_finish (
+    GAsyncResult() $res,
+    $was_symbolic is rw,
+    CArray[Pointer[GError]] $error = gerror(),
+    :$all = False,
+    :$raw = False
+  ) {
     my $ws = CArray[uint32].new;
-    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
+    $ws[0] = 0;
     clear_error;
     # Note use of CArray to provide initializable pointer to an uint32.
-    my $s = gtk_icon_info_load_symbolic_finish($!ii, $res, $ws, $error);
+    my $p = gtk_icon_info_load_symbolic_finish($!ii, $res, $ws, $error);
     set_error($error);
-    # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+    $was_symbolic = $ws[0].so;
+
+    $p = $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil;
+
+    $all.not ?? $p !! ($p, $was_symbolic);
   }
 
-  method load_symbolic_for_context (
-    GtkStyleContext() $context,
-    $was_symbolic  is copy = False,
-    CArray[Pointer[GError]] $error = gerror
-  )
+  proto method load_symbolic_for_context (|)
     is also<load-symbolic-for-context>
-  {
-    $was_symbolic = $was_symbolic.defined ?? $was_symbolic.so !! False;
-    
+  { * }
+
+  multi method load_symbolic_for_context (
+    GtkStyleContext() $context,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False,
+    :$raw = False
+  ) {
+    samewith($context, $, $error, :$all, :$raw);
+  }
+  multi method load_symbolic_for_context (
+    GtkStyleContext() $context,
+    $was_symbolic is rw,
+    CArray[Pointer[GError]] $error = gerror,
+    :$all = False,
+    :$raw = False
+  ) {
     my $ws = CArray[uint32].new;
-    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
+    $ws[0] = 0;
     clear_error;
-    my $s = gtk_icon_info_load_symbolic_for_context(
+    my $p = gtk_icon_info_load_symbolic_for_context(
       $!ii, $context, $ws, $error
     );
     set_error($error);
-    # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+    $was_symbolic = $ws[0].so;
+
+    $p = $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil;
+
+    $all.not ?? $p !! ($p, $was_symbolic);
   }
 
-  method load_symbolic_for_context_async (
-    GtkStyleContext() $context,
-    GCancellable $cancellable,
-    GAsyncReadyCallback $callback,
-    gpointer $user_data
-  )
+  proto method load_symbolic_for_context_async (|)
     is also<load-symbolic-for-context-async>
-  {
+  { * }
+
+  multi method load_symbolic_for_context_async (
+    GtkStyleContext() $context,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
+    samewith($context, GCancellable, $callback, $user_data)
+  }
+  multi method load_symbolic_for_context_async (
+    GtkStyleContext() $context,
+    GCancellable() $cancellable,
+    GAsyncReadyCallback $callback,
+    gpointer $user_data = gpointer
+  ) {
     gtk_icon_info_load_symbolic_for_context_async(
       $!ii,
       $context,
@@ -305,50 +388,87 @@ class GTK::IconInfo {
     );
   }
 
-  method load_symbolic_for_context_finish (
-    GAsyncResult $res,
-    $was_symbolic  is copy = False,
-    CArray[Pointer[GError]] $error = gerror()
-  )
+  proto method load_symbolic_for_context_finish (|)
     is also<load-symbolic-for-context-finish>
-  {
-    $was_symbolic = $was_symbolic.defined ?? $was_symbolic.so !! False;
-    
+  { * }
+
+  multi method load_symbolic_for_context_finish (
+    GAsyncResult() $res,
+    CArray[Pointer[GError]] $error = gerror(),
+    :$all = False,
+    :$raw = False
+  ) {
+    samewith($res, $, $error, :$all, :$raw);
+  }
+  multi method load_symbolic_for_context_finish (
+    GAsyncResult() $res,
+    $was_symbolic is rw,
+    CArray[Pointer[GError]] $error = gerror(),
+    :$all = False,
+    :$raw = False
+  ) {
     my $ws = CArray[uint32].new;
-    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
+    $ws[0] = 0;
     clear_error;
-    my $s = gtk_icon_info_load_symbolic_for_context_finish(
+    my $p = gtk_icon_info_load_symbolic_for_context_finish(
       $!ii, $res, $ws, $error
     );
     set_error($error);
-    # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($s) without $ERROR;
+    $was_symbolic = $ws[0].so;
+
+    $p = $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil;
+
+    $all.not ?? $p !! ($p, $was_symbolic);
   }
 
-  method load_symbolic_for_style (
+  proto method load_symbolic_for_style (|)
+    is also<load-symbolic-for-style>
+  { * }
+
+  multi method load_symbolic_for_style (
     GtkStyle() $style,
     Int() $state,               # GtkStateType $state,
-    Int() $was_symbolic,
-    CArray[Pointer[GError]] $error = gerror()
-  )
-    is also<load-symbolic-for-style>
-  {
+    CArray[Pointer[GError]] $error = gerror(),
+    :$all = False,
+    :$raw = False
+  ) {
+    samewith($style, $state, $, $error, :$all, :$raw);
+  }
+  multi method load_symbolic_for_style (
+    GtkStyle() $style,
+    Int() $state,               # GtkStateType $state,
+    $was_symbolic is rw,
+    CArray[Pointer[GError]] $error = gerror(),
+    :$all = False,
+    :$raw = False
+  ) {
+    my guint $s = $state;
     my $ws = CArray[uint32].new;
-    $ws[0] = self.RESOLVE-BOOL($was_symbolic);
-    my guint $s = self.RESOLVE-UINT($state);
+
+    $ws[0] = 0;
     clear_error;
-    my $o = gtk_icon_info_load_symbolic_for_style(
+    my $p = gtk_icon_info_load_symbolic_for_style(
       $!ii, $style, $s, $ws, $error
     );
     set_error($error);
-    # Throw exception if $ERROR
-    GTK::Compat::Pixbuf.new($o) without $ERROR;
+    $was_symbolic = $ws[0].so;
+
+    $p = $p ??
+      ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+      !!
+      Nil;
+
+    $all.not ?? $p !! ($p, $was_symbolic);
   }
 
   method set_raw_coordinates (Int() $raw_coordinates)
     is also<set-raw-coordinates>
   {
-    my gboolean $rc = self.RESOLVE-BOOL($raw_coordinates);
+    my gboolean $rc = $raw_coordinates.so.Int;
+
     gtk_icon_info_set_raw_coordinates($!ii, $rc);
   }
 

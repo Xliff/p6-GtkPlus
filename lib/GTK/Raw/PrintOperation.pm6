@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::PrintOperation;
@@ -69,7 +69,7 @@ sub gtk_print_run_page_setup_dialog_async (
   GtkWindow $parent,
   GtkPageSetup $page_setup,
   GtkPrintSettings $settings,
-  GtkPageSetupDoneFunc $done_cb,
+  &done_cb (GtkPageSetup, gpointer),
   gpointer $data
 )
   is native(gtk)

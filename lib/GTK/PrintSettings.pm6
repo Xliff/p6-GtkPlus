@@ -3,9 +3,10 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::PrintSettings;
 use GTK::Raw::Types;
+
+use GTK::PaperSize;
 
 use GTK::Roles::Types;
 use GLib::Roles::Object;
@@ -20,8 +21,8 @@ class GTK::PrintSettings {
     self!setObject($!prnset = $settings);
   }
 
-  method GTK::Raw::Types::GtkPrintSettings 
-    is also<PrintSettings> 
+  method GTK::Raw::Definitions::GtkPrintSettings
+    is also<PrintSettings>
     { $!prnset }
 
   multi method new (GtkPrintSettings $settings) {
@@ -35,8 +36,8 @@ class GTK::PrintSettings {
   method new_from_file (
     Str() $filename,
     CArray[Pointer[GError]] $error = gerror()
-  ) 
-    is also<new-from-file> 
+  )
+    is also<new-from-file>
   {
     $ERROR = Nil;
     my $rc = gtk_print_settings_new_from_file($filename, $error);
@@ -53,8 +54,8 @@ class GTK::PrintSettings {
     Str() $keyfile,
     Str() $group_name,
     CArray[Pointer[GError]] $error = gerror()
-  ) 
-    is also<new-from-key-file> 
+  )
+    is also<new-from-key-file>
   {
     $ERROR = Nil;
     my $settings = gtk_print_settings_new_from_key_file(
@@ -108,7 +109,7 @@ class GTK::PrintSettings {
   method duplex is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintDuplex( gtk_print_settings_get_duplex($!prnset) );
+        GtkPrintDuplexEnum( gtk_print_settings_get_duplex($!prnset) );
       },
       STORE => sub ($, Int() $duplex is copy) {
         my guint $d = self.RESOLVE-UINT($duplex);
@@ -166,7 +167,7 @@ class GTK::PrintSettings {
   method number_up_layout is rw is also<number-up-layout> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkNumberUpLayout(
+        GtkNumberUpLayoutEnum(
           gtk_print_settings_get_number_up_layout($!prnset)
         );
       },
@@ -180,7 +181,7 @@ class GTK::PrintSettings {
   method orientation is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPageOrientation( gtk_print_settings_get_orientation($!prnset) );
+        GtkPageOrientationEnum( gtk_print_settings_get_orientation($!prnset) );
       },
       STORE => sub ($, Int() $orientation is copy) {
         my guint $o = self.RESOLVE-UINT($orientation);
@@ -203,7 +204,7 @@ class GTK::PrintSettings {
   method page_set is rw is also<page-set> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPageSet( gtk_print_settings_get_page_set($!prnset) );
+        GtkPageSetEnum( gtk_print_settings_get_page_set($!prnset) );
       },
       STORE => sub ($, $page_set is copy) {
         my guint $ps = self.RESOLVE-UINT($page_set);
@@ -226,7 +227,7 @@ class GTK::PrintSettings {
   method print_pages is rw is also<print-pages> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintPages( gtk_print_settings_get_print_pages($!prnset) );
+        GtkPrintPagesEnum( gtk_print_settings_get_print_pages($!prnset) );
       },
       STORE => sub ($, Int() $pages is copy) {
         my guint $p = self.RESOLVE-UINT($pages);
@@ -260,7 +261,7 @@ class GTK::PrintSettings {
   method quality is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintQuality( gtk_print_settings_get_quality($!prnset) );
+        GtkPrintQualityEnum( gtk_print_settings_get_quality($!prnset) );
       },
       STORE => sub ($, $quality is copy) {
         my guint $q = self.RESOLVE-UINT($quality);
@@ -474,7 +475,7 @@ class GTK::PrintSettings {
   #        does not yet support arrays of structs.
   # TODO - NEED ARRAY OF CSTRUCTS
   method set_page_ranges (
-    GtkPageRange $page_ranges, 
+    GtkPageRange $page_ranges,
     Int() $num_ranges
   )
     is also<set-page-ranges>
@@ -511,8 +512,8 @@ class GTK::PrintSettings {
     my @i = ($resolution_x, $resolution_y);
     my gint ($rx, $ry) = self.RESOLVE-INT(@i);
     gtk_print_settings_set_resolution_xy(
-      $!prnset, 
-      $resolution_x, 
+      $!prnset,
+      $resolution_x,
       $resolution_y
     );
   }

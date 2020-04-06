@@ -4,8 +4,8 @@ use GTK::Application;
 use GTK::Builder;
 use GTK::Statusbar;
 
+use GDK::RGBA;
 use GIO::Permission;
-use GTK::Compat::RGBA;
 
 # HOPEFULLY FOR NOW!
 # Use of GTK::Builder requires a whole new paradigm for

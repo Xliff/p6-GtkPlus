@@ -1,6 +1,5 @@
 use v6.c;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GLib::Value;
@@ -138,7 +137,7 @@ sub add_columns($v, $mi, $mn) {
       # This is NOT supposed to be a 1-based array, but somehow that's what
       # we are given. This still might be an issue with CArray, and the
       # valgrind tests may happen sooner, rather than later.
-      my $idx = ($p.get_indices())[1];
+      my $idx = $p.get_indices()[1] // 0;
       $p.free;
       ($idx == 5).Int;
     })

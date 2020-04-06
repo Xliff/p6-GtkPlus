@@ -2,10 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
-use GTK::Raw::ReturnedValue;
+use GLib::Raw::ReturnedValue;
 
 role GTK::Roles::Signals::Widget {
   has %!signals-widget;

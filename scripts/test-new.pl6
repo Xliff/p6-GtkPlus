@@ -1,6 +1,10 @@
 #!/usr/bin/env perl6
 use v6.c;
 
+use lib 'scripts';
+
+use GTKScripts;
+
 my $p = run q[scripts/dependencies.pl6], :out;
 exit if $p.exitcode;
 
@@ -28,13 +32,18 @@ sub MAIN( $rev = 'HEAD' ) {
     }
 
     next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
-    # Temporary cheat.
-    next if $_[0].ends-with('GFile.pm6');
 
     my $rel = $_[0].IO.dirname.split('/')[1..*].join('/');
     mkdir ".touch/{ $rel }";
     my $tf = ".touch/{ $rel }/{ $_[0].IO.basename }";
     next unless ! $tf.IO.e || $_[0].IO.modified > $tf.IO.modified;
+
+  # Deprecated
+  #   my @extradirs;
+  #   parse-file(CONFIG-NAME);
+  #   if %config<libdirs> {
+	# @extradirs.push( "-I $_" ) for %config<libdirs>.split(',');
+  #   }
 
     say "===== $_[1] =====";
     my $proc = Proc::Async.new(

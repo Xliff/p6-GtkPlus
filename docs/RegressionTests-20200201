@@ -1,0 +1,46 @@
+Tests performed AFTER the split
+===============================
+
+0240 - Plot overlay no longer displays. Gives the following error messages:
+  (perl6:17212): GLib-GObject-WARNING **: 08:54:40.656: instance with invalid (NULL) class pointer
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_signal_emit_valist: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_object_set_qdata: assertion 'G_IS_OBJECT (object)' failed
+
+  (perl6:17212): GLib-GObject-WARNING **: 08:54:40.656: instance with invalid (NULL) class pointer
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_signal_handlers_destroy: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+  (perl6:17212): GLib-GObject-WARNING **: 08:54:40.656: instance with invalid (NULL) class pointer
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_signal_handlers_destroy: assertion 'G_TYPE_CHECK_INSTANCE (instance)' failed
+
+  (perl6:17212): GLib-GObject-CRITICAL **: 08:54:40.656: g_object_unref: assertion 'old_ref > 0' failed
+
+  ... looks like a null is STILL getting into the works, somehow.
+
+0310 - Looks like the "Resize & Scrolling" section icons are not properly being ref/unref'd
+       as this is the section causing all of the GTK warnings from previous tests
+
+     - Also, the type set on the implementor for $a.window is getting corrupted
+       by what looks like RAKUDO! I will need a core dev to verify. Vrurg?
+
+     - Will segfault after several button pressesl, which looks like an attempt
+       to click a cursor that has already been disposed of.
+
+0320 - Error: "No such method GTK::Raw::Structs::GtkTreeIter for invocant of tyoe 'List'"
+       ↑ Corrected
+
+       Warning: "Use of uninitialized value of type Any in numeric context"
+       ↑ Corrected
+
+0350 - Error: No such method 'x' for invocant of type 'Mu'
+                in sub palette_drag_data_received at t/0350-dnd.t line 118
+                in block <unit> at t/0350-dnd.t line 368
+              Occurs when trying to re-order icons via drag and drop
+
+0360 - Notebook part of example is not being rendered.
+       TONS of warnings like so:
+        (perl6:5062): GLib-GObject-WARNING **: 20:47:55.760: ../../../gobject/gvalue.c:180: cannot initialize GValue with type 'gint', the value has already been initialized as 'gint'
+       Related to "attributes"?

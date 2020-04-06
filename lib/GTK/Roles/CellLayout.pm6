@@ -2,10 +2,8 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::CellLayout;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GTK::Roles::LatchedContents;
 
@@ -28,7 +26,7 @@ role GTK::Roles::CellLayout {
     gchar $attribute,
     Int() $column
   ) {
-    my gint $c = resolve-int($column);
+    my gint $c = $column;
     gtk_cell_layout_add_attribute($!cl, $cell, $attribute, $c);
   }
 
@@ -66,7 +64,8 @@ role GTK::Roles::CellLayout {
   ) {
     self.unshift-end: $cell unless self.IS-LATCHED;
     self.UNSET-LATCH;
-    my gboolean $e = resolve-bool($expand);
+    my gboolean $e = $expand.so.Int;
+
     gtk_cell_layout_pack_end($!cl, $cell, $e);
   }
 
@@ -84,12 +83,14 @@ role GTK::Roles::CellLayout {
   ) {
     self.push-start: $cell unless self.IS-LATCHED;
     self.UNSET-LATCH;
-    my gboolean $e = resolve-bool($expand);
+    my gboolean $e = $expand.so.Int;
+
     gtk_cell_layout_pack_start($!cl, $cell, $e);
   }
 
   method reorder (GtkCellRenderer() $cell, Int() $position) {
-    my gint $p = resolve-int($position);
+    my gint $p = $position;
+
     gtk_cell_layout_reorder($!cl, $cell, $p);
   }
 
@@ -98,7 +99,8 @@ role GTK::Roles::CellLayout {
     Str $attribute,
     Int() $column
   ) {
-    my gint $c = resolve-int($column);
+    my gint $c = $column;
+    
     gtk_cell_layout_set_attributes($!cl, $cell, $attribute, $c, Str);
   }
 

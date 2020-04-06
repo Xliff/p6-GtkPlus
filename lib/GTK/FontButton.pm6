@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::FontButton;
 use GTK::Raw::Types;
 
@@ -11,7 +9,7 @@ use GTK::Button;
 
 use GTK::Roles::FontChooser;
 
-my subset FontButtonAncestry is export 
+my subset FontButtonAncestry is export
   where GtkFontButton | GtkFontChooser | ButtonAncestry;
 
 class GTK::FontButton is GTK::Button {
@@ -21,7 +19,7 @@ class GTK::FontButton is GTK::Button {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::FontButton');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -31,43 +29,50 @@ class GTK::FontButton is GTK::Button {
       when FontButtonAncestry {
         $!fb = do {
           when GtkFontButton {
-            $to-parent = nativecast(GtkButton, $_);
+            $to-parent = cast(GtkButton, $_);
             $_;
           }
           when GtkFontChooser {
             $!fc = $_;                            # GTK::Roles::FontChooser
-            $to-parent = nativecast(GtkButton, $_);
-            nativecast(GtkFontButton, $_);
+            $to-parent = cast(GtkButton, $_);
+            cast(GtkFontButton, $_);
           }
           when ButtonAncestry {
             $to-parent = $_;
-            nativecast(GtkFontButton, $_);
+            cast(GtkFontButton, $_);
           }
         };
         self.setButton($to-parent);
+        $!fc //= cast(GtkFontChooser, $!fb);    # GTK::Roles::FontChooser
       }
       when GTK::Button {
       }
       default {
       }
     }
-    $!fc //= nativecast(GtkFontChooser, $!fb);    # GTK::Roles::FontChooser
   }
 
-  multi method new (FontButtonAncestry $button) {
+  method GTK::Raw::Definitions::GtkFontButton
+    is also<GtkFontButton>
+  { $!fb }
+
+  multi method new (FontButtonAncestry $button, :$ref = False) {
+    return Nil unless $button;
+
     my $o = self.bless(:$button);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $button = gtk_font_button_new();
-    self.bless(:$button);
-  }
 
+    $button ?? self.bless(:$button) !! Nil;
+  }
 
   method new_with_font (Str $font) is also<new-with-font> {
     my $button = gtk_font_button_new_with_font($font);
-    self.bless(:$button);
+
+    $button ?? self.bless(:$button) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -98,7 +103,8 @@ class GTK::FontButton is GTK::Button {
         so gtk_font_button_get_show_size($!fb);
       },
       STORE => sub ($, Int() $show_size is copy) {
-        my gboolean $ss = self.RESOLVE-BOOL($show_size);
+        my gboolean $ss = $show_size.so.Int;
+
         gtk_font_button_set_show_size($!fb, $ss);
       }
     );
@@ -110,7 +116,8 @@ class GTK::FontButton is GTK::Button {
         so gtk_font_button_get_show_style($!fb);
       },
       STORE => sub ($, Int() $show_style is copy) {
-        my gboolean $ss = self.RESOLVE-BOOL($show_style);
+        my gboolean $ss = $show_style.so.Int;
+
         gtk_font_button_set_show_style($!fb, $ss);
       }
     );
@@ -133,7 +140,8 @@ class GTK::FontButton is GTK::Button {
         so gtk_font_button_get_use_font($!fb);
       },
       STORE => sub ($, Int() $use_font is copy) {
-        my gboolean $uf = self.RESOLVE-BOOL($use_font);
+        my gboolean $uf = $use_font.so.Int;
+
         gtk_font_button_set_use_font($!fb, $uf);
       }
     );
@@ -145,7 +153,8 @@ class GTK::FontButton is GTK::Button {
         so gtk_font_button_get_use_size($!fb);
       },
       STORE => sub ($, Int() $use_size is copy) {
-        my gboolean $us = self.RESOLVE-BOOL($use_size);
+        my gboolean $us = $use_size.so.Int;
+
         gtk_font_button_set_use_size($!fb, $us);
       }
     );
@@ -155,6 +164,7 @@ class GTK::FontButton is GTK::Button {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_font_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

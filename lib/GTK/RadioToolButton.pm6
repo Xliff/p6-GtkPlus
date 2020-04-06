@@ -3,8 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GLib::GSList;
-use GTK::Compat::Types;
+use GLib::GList;
+
 use GTK::Raw::RadioToolButton;
 use GTK::Raw::Types;
 
@@ -31,13 +31,13 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
         my $to-parent;
         $!rtb = do {
           when GtkRadioToolButton {
-            $to-parent = nativecast(GtkToggleToolButton, $_);
+            $to-parent = cast(GtkToggleToolButton, $_);
             $_;
           }
 
           default {
             $to-parent = $_;
-            nativecast(GtkRadioToolButton, $_);
+            cast(GtkRadioToolButton, $_);
           }
         }
         self.setToggleToolButton($to-parent);
@@ -51,18 +51,25 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
     }
   }
 
-  method GTK::Raw::Types::GtkRadioToolButton
-    is also<RadioToolButton>
+  method GTK::Raw::Definitions::GtkRadioToolButton
+    is also<
+      RadioToolButton
+      GtkRadioToolButton
+    >
   { $!rtb }
 
-  multi method new (RadioToolButtonAncestry $radiotoolbutton) {
+  multi method new (RadioToolButtonAncestry $radiotoolbutton, :$ref = True) {
     return unless $radiotoolbutton;
 
     my $o = self.bless(:$radiotoolbutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
-  multi method new(GSList() $group) {
+  # Needs a multi to properly handle Positional!
+  # In this case, it needs to convert Positional to GSList!
+  multi method new ($group) {
+    die "\$group is a { $group.^name }, not a GSList" unless $group ~~ GSList;
+
     my $radiotoolbutton = gtk_radio_tool_button_new($group);
 
     $radiotoolbutton ?? self.bless(:$radiotoolbutton) !! Nil;
@@ -113,7 +120,7 @@ class GTK::RadioToolButton is GTK::ToggleToolButton {
         return Nil unless $gl;
         return $gl if     $glist;
 
-        $gl = GLib::GSList.new($gl)
+        $gl = GLib::GList.new($gl)
           but GLib::Roles::ListData[GtkRadioButton];
 
         $raw ?? $gl.Array !! $gl.Array.map({ GTK::RadioButton.new($_) });

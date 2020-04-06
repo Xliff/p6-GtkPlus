@@ -122,14 +122,15 @@ sub MAIN (
       }
       with $rw {
         %c<read> =
-        '$gv = GLib::Value.new(' ~
-        "\n\t  " ~ "self.prop_get('{ $mn }', \$gv)\n" ~
-        "\t);\n" ~
-        $vtype-r
+          '$gv = GLib::Value.new(' ~
+          "\n\t  " ~ "self.prop_get('{ $mn }', \$gv)\n" ~
+          "\t);\n" ~
+          $vtype-r
         if $rw.any eq 'Read';
+
         %c<write> =
-          $vtype-w ~
-          "\n" ~
+          "\$gv = GLib::Value.new( { $gtype } );\n" ~
+          "        { $vtype-w }\n" ~
           "        self.prop_set(\'{ $mn }\', \$gv);"
         if $rw.any eq 'Write';
       }
@@ -152,9 +153,9 @@ sub MAIN (
       %methods{$mn} = qq:to/METH/;
     # Type: { $types }
     method $mn is rw { $deprecated } \{
-      my GLib::Value \$gv .= new( $gtype );
+      my \$gv;
       Proxy.new(
-        FETCH => -> \$ \{
+        FETCH => sub (\$) \{
           { %c<read> }
         \},
         STORE => -> \$, { $co // '' } \$val is copy \{

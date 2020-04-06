@@ -1,14 +1,14 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GTK::Raw::WidgetPath;
 
-use GLib::GSList;
+use GLib::GList;
+
+use GLib::Roles::ListData;
 
 # Opaque struct.
 
@@ -21,18 +21,16 @@ class GTK::WidgetPath {
 
   # widgetpath and path should be removed once all references to them have been
   # changed to GtkWidgetPath
-  method GTK::Raw::Types::GtkWidgetPath
+  method GTK::Raw::Definitions::GtkWidgetPath
     is also<
-      GtkWidgetPath
-      widgetpath
       path
+      widgetpath
+      GtkWidgetPath
     >
   { $!wp }
 
   multi method new(GtkWidgetPath $path) {
-    return unless $path;
-
-    self.bless( :$path );
+    $path ?? self.bless( :$path ) !! Nil;
   }
   multi method new {
     my $path = gtk_widget_path_new();
@@ -71,8 +69,16 @@ class GTK::WidgetPath {
     gtk_widget_path_append_with_siblings($!wp, $siblings, $si);
   }
 
-  method copy (GTK::WidgetPath:U: GtkWidgetPath() $path) {
-    GTK::WidgetPath.new( gtk_widget_path_copy($path) );
+  multi method copy (:$raw = False) {
+    GTK::WidgetPath.copy($!wp, :$raw);
+  }
+  multi method copy (GTK::WidgetPath:U: GtkWidgetPath() $path, :$raw = False) {
+    my $wp = gtk_widget_path_copy($path);
+
+    $wp ??
+      ( $raw ?? $wp !! GTK::WidgetPath.new($wp) )
+      !!
+      Nil;
   }
 
   method free {
@@ -152,10 +158,17 @@ class GTK::WidgetPath {
     gtk_widget_path_iter_get_sibling_index($!wp, $p);
   }
 
-  method iter_get_siblings (Int() $pos) is also<iter-get-siblings> {
+  method iter_get_siblings (Int() $pos, :$raw = False)
+    is also<iter-get-siblings>
+  {
     my gint $p = $pos;
 
-    GTK::WidgetPath.new( gtk_widget_path_iter_get_siblings($!wp, $p) );
+    my $wp = gtk_widget_path_iter_get_siblings($!wp, $p);
+
+    $wp ??
+      ( $raw ?? $wp !! GTK::WidgetPath.new($wp) )
+      !!
+      Nil;
   }
 
   method iter_get_state (Int() $pos) is also<iter-get-state> {
@@ -221,10 +234,18 @@ class GTK::WidgetPath {
   #   so gtk_widget_path_iter_has_region($!wp, $p, $name, $f);
   # }
 
-  method iter_list_classes (Int() $pos) is also<iter-list-classes> {
+  method iter_list_classes (Int() $pos, :$glist = False)
+    is also<iter-list-classes>
+  {
     my gint $p = $pos;
 
-    gtk_widget_path_iter_list_classes($!wp, $p);
+    my $cl = gtk_widget_path_iter_list_classes($!wp, $p);
+
+    return Nil unless $cl;
+    return $cl if $glist;
+
+    $cl = GLib::GList.new($cl) does GLib::Roles::ListData[Str];
+    $cl.Array;
   }
 
   # Deprecated.
@@ -289,8 +310,10 @@ class GTK::WidgetPath {
     gtk_widget_path_length($!wp);
   }
 
-  method prepend_type (GType $type) is also<prepend-type> {
-    gtk_widget_path_prepend_type($!wp, $type);
+  method prepend_type (Int() $type) is also<prepend-type> {
+    my GType $t = $type;
+
+    gtk_widget_path_prepend_type($!wp, $t);
   }
 
   method ref is also<upref> {

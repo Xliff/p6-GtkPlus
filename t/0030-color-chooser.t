@@ -2,8 +2,8 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GTK::Raw::Types;
+use GDK::RGBA;
 
 use GTK::Application;
 use GTK::Button;
@@ -15,21 +15,31 @@ my $a = GTK::Application.new( :title('org.genex.color_choose_test') );
 $a.activate.tap({
   my $cc = GTK::ColorChooser.new;
   my $vbox = GTK::Box.new-vbox(10);
-  my $button = GTK::Button.new_with_label('Switch');
+  my $sel-b = GTK::Button.new_with_label('Select');
+  my $sw-b = GTK::Button.new_with_label('Switch');
   # Needed for CSS.
   $vbox.name = 'box';
+  $sel-b.no-show-all = True;
+
+  sub change-color ($color) {
+    state $css = GTK::CSSProvider.new;
+    $css.load_from_data("#box \{ background-color: { $color.to_string }; \}");
+  }
 
   $cc.color-activated.tap({
-    my $color = $cc.rgba;
-    my $css = GTK::CSSProvider.new;
-    my $css-s = "#box \{ background-color: { $color.to_string }; \}";
-
-    $css.load_from_data($css-s);
+    change-color($cc.rgba);
   });
-  $button.clicked.tap({ $cc.show-editor = $cc.show-editor.not });
+  $sw-b.clicked.tap({
+    ($cc.show-editor = $cc.show-editor.not) ?? $sel-b.show !! $sel-b.hide;
+  });
+  $sel-b.clicked.tap({
+    # Add to the palette.
+    change-color($cc.rgba = $cc.rgba);
+    $cc.show-editor = False;
+    $sel-b.hide;
+  });
 
-  $vbox.pack_start($cc, False, True, 2);
-  $vbox.pack_start($button, False, True, 2);
+  $vbox.pack_start($_, False, True, 2) for $cc, $sel-b, $sw-b;
 
   $a.window.add($vbox);
   $a.window.destroy-signal.tap({ $a.exit });

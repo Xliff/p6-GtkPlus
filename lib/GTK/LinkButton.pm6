@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::LinkButton;
 use GTK::Raw::Types;
 
@@ -16,7 +14,7 @@ class GTK::LinkButton is GTK::Button {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -26,12 +24,12 @@ class GTK::LinkButton is GTK::Button {
       when LinkButtonAncestry {
         $!lb = do {
           when GtkLinkButton {
-            $to-parent = nativecast(GtkButton, $_);
+            $to-parent = cast(GtkButton, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkLinkButton, $_);
+            cast(GtkLinkButton, $_);
           }
         };
         self.setButton($to-parent);
@@ -42,24 +40,33 @@ class GTK::LinkButton is GTK::Button {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkLinkButton is also<LinkButton> { $!lb }
 
-  multi method new (LinkButtonAncestry $button) {
+  method GTK::Raw::Definitions::GtkLinkButton
+    is also<
+      LinkButton
+      GtkLinkButton
+    >
+  { $!lb }
+
+  multi method new (LinkButtonAncestry $button, :$ref = True) {
+    return Nil unless $button;
+
     my $o = self.bless(:$button);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (Str() $uri) {
     my $button = gtk_link_button_new($uri);
-    self.bless(:$button);
+
+    $button ?? self.bless(:$button) !! Nil;
   }
 
   method new_with_label (Str() $uri, Str() $label)
     is also<new-with-label>
   {
     my $button = gtk_link_button_new_with_label($uri, $label);
-    self.bless(:$button);
+
+    $button ?? self.bless(:$button) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -86,7 +93,8 @@ class GTK::LinkButton is GTK::Button {
         so gtk_link_button_get_visited($!lb);
       },
       STORE => sub ($, $visited is copy) {
-        my gboolean $v = self.RESOLVE-BOOL($visited);
+        my gboolean $v = $visited.so.Int;
+
         gtk_link_button_set_visited($!lb, $v);
       }
     );
@@ -96,6 +104,7 @@ class GTK::LinkButton is GTK::Button {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_link_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

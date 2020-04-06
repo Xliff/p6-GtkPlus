@@ -2,7 +2,6 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GTK::Raw::RecentChooserMenu;
@@ -12,7 +11,7 @@ use GTK::Roles::RecentChooser;
 use GTK::Menu;
 
 our subset RecentChooserMenuAncestry
-  where GtkRecentChooserMenu | MenuAncestry;
+  where GtkRecentChooserMenu | GtkRecentChooser | MenuAncestry;
 
 class GTK::RecentChooserMenu is GTK::Menu {
   also does GTK::Roles::RecentChooser;
@@ -21,7 +20,7 @@ class GTK::RecentChooserMenu is GTK::Menu {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -34,34 +33,53 @@ class GTK::RecentChooserMenu is GTK::Menu {
             $to-parent = cast(GtkMenu, $_);
             $_;
           }
+          when GtkRecentChooser {
+            $to-parent = cast(GtkMenu, $_);
+            $!rc = $_;
+            cast(GtkRecentChooserMenu, $_);
+          }
           default {
             $to-parent = $_;
             cast(GtkRecentChooserMenu, $_);
           }
         }
         self.setMenu($to-parent);
+        self.roleInit-RecentChooser unless $!rc;
       }
       when GTK::RecentChooserMenu {
       }
       default {
       }
     }
+
   }
 
-  method new {
-    self.bless( recentmenu => gtk_recent_chooser_menu_new() );
+  multi method new (RecentChooserMenuAncestry $recentmenu, :$ref = True) {
+    return Nil unless $recentmenu;
+
+    my $o = self.bless(:$recentmenu);
+    $o.ref if $ref;
+    $o;
+  }
+  multi method new {
+    my $recentmenu = gtk_recent_chooser_menu_new();
+
+    $recentmenu ?? self.bless( :$recentmenu ) !! Nil;
   }
 
   method new_for_manager (GtkRecentManager() $manager)
     is also<new-for-manager>
   {
-    self.bless(
-      recentmenu => gtk_recent_chooser_menu_new_for_manager($manager)
-    );
+    my $recentmenu = gtk_recent_chooser_menu_new_for_manager($manager);
+
+    $recentmenu ?? self.bless( :$recentmenu ) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkRecentChooserMenu
-    is also<RecentChooserMenu>
+  method GTK::Raw::Definitions::GtkRecentChooserMenu
+    is also<
+      RecentChooserMenu
+      GtkRecentChooserMenu
+    >
   { $!rcm }
 
   method show_numbers is rw is also<show-numbers> {
@@ -70,7 +88,7 @@ class GTK::RecentChooserMenu is GTK::Menu {
         gtk_recent_chooser_menu_get_show_numbers($!rcm);
       },
       STORE => sub ($, Int() $show_numbers is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($show_numbers);
+        my gboolean $s = $show_numbers.so.Int;
         gtk_recent_chooser_menu_set_show_numbers($!rcm, $s);
       }
     );
@@ -78,6 +96,7 @@ class GTK::RecentChooserMenu is GTK::Menu {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &gtk_recent_chooser_menu_get_type, $n, $t );
   }
 

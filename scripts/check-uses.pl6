@@ -27,12 +27,16 @@ sub mq($s) {
 
 sub MAIN (:$filename, :$prefix is required) {
 
+  parse-file(CONFIG-NAME);
+
   my @files = $filename ??
     $filename.Array
     !!
     get-module-files.grep({ ! / '.touch' | 'Raw' / });
 
   for @files {
+    next if 'Builder' ∈ $*SPEC.splitdir(.dirname);
+    
     my $contents = .IO.slurp;
     my $uses  = $contents ~~ m:g/ <uses>     /;
     my $m-new = $contents ~~ m:g/ <m-new>    /;

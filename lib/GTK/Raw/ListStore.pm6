@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::ListStore;
@@ -55,7 +55,7 @@ sub gtk_list_store_insert_with_valuesv (
   GtkTreeIter $iter,
   gint $position,
   CArray[gint] $columns,
-  CArray[GValue] $values,
+  Pointer $values,
   gint $n_values
 )
   is native(gtk)

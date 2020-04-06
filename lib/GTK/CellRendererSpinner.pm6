@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::CellRendererSpinner;
 use GTK::Raw::Types;
 
@@ -18,7 +16,7 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererSpinner');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -28,12 +26,12 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
       when CellRendererSpinnerAncestry {
         $!crs = do {
           when GtkCellRendererSpinner {
-            $to-parent = nativecast(GtkCellRenderer, $_);
+            $to-parent = cast(GtkCellRenderer, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkCellRendererSpinner, $_);
+            cast(GtkCellRendererSpinner, $_);
           }
         }
         self.setCellRenderer($to-parent);
@@ -45,17 +43,22 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
     }
   }
 
-  method GTK::Raw::Types::CellRendererSpinner
-    is also<CellRendererSpinner>
+  method GTK::Raw::Definitions::CellRendererSpinner
+    is also<
+      CellRendererSpinner
+      GtkCellRendererSpinner
+    >
   { $!crs }
 
+  multi method new (CellRendererSpinnerAncestry $cellspin) {
+    $cellspin ?? self.bless(:$cellspin) !! Nil;
+  }
   multi method new {
     my $cellspin = gtk_cell_renderer_spinner_new();
-    self.bless(:$cellspin);
+
+    $cellspin ?? self.bless(:$cellspin) !! Nil;
   }
-  multi method new (CellRendererSpinnerAncestry $cellspin) {
-    self.bless(:$cellspin);
-  }
+
 
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -70,12 +73,12 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   method active is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('active', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('active', $gv)
       }
     );
@@ -85,12 +88,12 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   method pulse is rw {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('pulse', $gv);
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.uint = self.RESOLVE.UINT($val);
+        $gv.uint = $val;
         self.prop_set('pulse', $gv)
       }
     );
@@ -100,12 +103,12 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
   method size is rw {
     my GLib::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('size', $gv);
-        GtkIconSize( $gv.enum );
+        GtkIconSizeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = self.RESOLVE-UINT($val);
+        $gv.enum = $val;
         self.prop_set('size', $gv)
       }
     );
@@ -115,7 +118,14 @@ class GTK::CellRendererSpinner is GTK::CellRenderer {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_renderer_spinner_get_type();
+    state ($n, $t);
+
+    unstable_get_type(
+      self.^name,
+      &gtk_cell_renderer_spinner_get_type,
+      $n,
+      $t
+    );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

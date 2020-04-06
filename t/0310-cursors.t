@@ -2,7 +2,7 @@ use v6.c;
 
 use GTK::Raw::Types;
 
-use GTK::Compat::Cursor;
+use GDK::Cursor;
 
 use GTK::Application;
 use GTK::Box;
@@ -11,6 +11,8 @@ use GTK::FlowBox;
 use GTK::Image;
 use GTK::Label;
 use GTK::ScrolledWindow;
+
+my $app;
 
 sub add_section($b, $h) {
   my $l = GTK::Label.new($h);
@@ -29,7 +31,7 @@ sub add_section($b, $h) {
 sub add_button($s, $css) {
   my $i = GTK::Image.new_from_icon_name('image-missing', GTK_ICON_SIZE_MENU);
   my $d = $s.display;
-  my $c = GTK::Compat::Cursor.new_from_name($d, $css);
+  my $c = GDK::Cursor.new_from_name($d, $css);
   with $c {
     my $cn = "cursors/{ $css.subst('-', '_', :g) }_cursor.png";
     $cn = "t/{$cn}" unless $cn.IO.e;
@@ -45,21 +47,26 @@ sub add_button($s, $css) {
   $b.add($i);
   $b.style_context.add_class('image-button');
   $b.clicked.tap({
+    say "A: { $app.window.getType }";
+    say "W: { GTK::Widget.getType( cast( GObject, $b.toplevel(:raw) ) ) }";
+    say "B: { $b.getType }";
+    say "W0: { GTK::Window.new.getType }";
+    say "A0: { GTK::ApplicationWindow.new($app).getType }";
     $b.toplevel.window.cursor = $c;
   });
   $b.tooltip_text = $css;
   $s.add($b);
 }
 
-my $a = GTK::Application.new( title => 'org.genex.cursors' );
+$app = GTK::Application.new( title => 'org.genex.cursors', window => 'window' );
 
-$a.activate.tap({
-  $a.window.title = 'Cursors';
-  $a.window.set_default_size(500, 500);
+$app.activate.tap({
+  $app.window.title = 'Cursors';
+  $app.window.set_default_size(500, 500);
 
   my $sw = GTK::ScrolledWindow.new;
   $sw.set_policy(GTK_POLICY_NEVER, GTK_POLICY_AUTOMATIC);
-  $a.window.add($sw);
+  $app.window.add($sw);
 
   my $b = GTK::Box.new-vbox(0);
   ($b.margin_start, $b.margin_end, $b.margin_bottom) = (20, 20, 10);
@@ -82,12 +89,12 @@ $a.activate.tap({
     'Zoom'               => <zoom-in zoom-out>
   );
 
-  for @h -> $p {
+  for @h.grep( *.key ne 'Resize & Scrolling' ) -> $p {
     @sections.push: add_section($b, $p.key);
     add_button(@sections[*-1], $_) for $p.value.List;
   }
 
-  $a.window.show_all;
+  $app.window.show_all;
 });
 
-$a.run;
+$app.run;

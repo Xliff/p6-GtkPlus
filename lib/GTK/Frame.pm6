@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Frame;
 use GTK::Raw::Types;
 
@@ -17,7 +16,7 @@ class GTK::Frame is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -44,14 +43,17 @@ class GTK::Frame is GTK::Bin {
     }
   }
 
-  multi method new (FrameAncestry $frame) {
+  multi method new (FrameAncestry $frame, :$ref = True) {
+    return Nil unless $frame;
+
     my $o = self.bless(:$frame);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new(Str() $label = '') {
     my $frame = gtk_frame_new($label);
-    self.bless(:$frame);
+
+    $frame ?? self.bless(:$frame) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -61,7 +63,7 @@ class GTK::Frame is GTK::Bin {
   method label-xalign is rw is also<label_xalign> {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('label-xalign', $gv)
         );
@@ -78,7 +80,7 @@ class GTK::Frame is GTK::Bin {
   method label-yalign is rw is also<label_yalign> {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('label-yalign', $gv)
         );
@@ -103,10 +105,15 @@ class GTK::Frame is GTK::Bin {
     );
   }
 
-  method label_widget is rw is also<label-widget> {
+  method label_widget (:$raw = False, :$widget = False)
+    is rw
+    is also<label-widget>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_frame_get_label_widget($!f);
+        my $w = gtk_frame_get_label_widget($!f);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_frame_set_label_widget($!f, $label_widget);
@@ -117,10 +124,11 @@ class GTK::Frame is GTK::Bin {
   method shadow_type is rw is also<shadow-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkShadowType( gtk_frame_get_shadow_type($!f) );
+        GtkShadowTypeEnum( gtk_frame_get_shadow_type($!f) );
       },
       STORE => sub ($, Int() $type is copy) {
-        my uint32 $t = self.RESOLVE-UINT($type);
+        my uint32 $t = $type;
+
         gtk_frame_set_shadow_type($!f, $t);
       }
     );
@@ -128,25 +136,30 @@ class GTK::Frame is GTK::Bin {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_label_align (Num() $xalign, Num() $yalign)
+  proto method get_label_align (|)
     is also<get-label-align>
-  {
-    my num32 $x = $xalign;
-    my num32 $y = $yalign;
+  { * }
+
+  multi method get_label_align {
+    samewith($, $);
+  }
+  multi method get_label_align ($xalign is rw, $yalign is rw) {
+    my num32 ($x, $y) = 0e0 xx 2;
 
     gtk_frame_get_label_align($!f, $x, $y);
+    ($xalign, $yalign) = ($x, $y);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_frame_get_type, $n, $t );
   }
 
   method set_label_align (Num() $xalign, Num() $yalign)
     is also<set-label-align>
   {
-    my num32 $x = $xalign;
-    my num32 $y = $yalign;
+    my num32 ($x, $y) = ($xalign, $yalign);
 
     gtk_frame_set_label_align($!f, $x, $y);
   }

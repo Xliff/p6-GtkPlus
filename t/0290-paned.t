@@ -38,23 +38,23 @@ sub create_pane_options($pane, $flabel, $l1, $l2) {
     $cbutton1.active = so $num == 2;
 
     $cbutton1.toggled.tap(-> *@a {
-      $child.upref();
+      $child.ref;
       $pane.remove($child);
       $num == 1 ??
         $pane.pack1($child, $cbutton1.active, $cbutton2.active)
         !!
         $pane.pack2($child, $cbutton1.active, $cbutton2.active);
-      $child.downref();
+      $child.unref;
     });
 
     $cbutton2.toggled.tap(-> *@a {
-      $child.upref();
+      $child.ref;
       $pane.remove($child);
       $num == 1 ??
         $pane.pack1($child, $cbutton1.active, $cbutton2.active)
         !!
         $pane.pack2($child, $cbutton1.active, $cbutton2.active);
-      $child.downref();
+      $child.unref;
     });
 
     %widgets<table>.attach(%widgets{"label{$num}"}, $_, 0, 1, 1);

@@ -1,15 +1,13 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::ToggleButton;
 use GTK::Raw::Types;
 
 use GTK::Button;
 
-our subset ToggleButtonAncestry is export 
+our subset ToggleButtonAncestry is export
   where GtkToggleButton | ButtonAncestry;
 
 class GTK::ToggleButton is GTK::Button {
@@ -17,59 +15,65 @@ class GTK::ToggleButton is GTK::Button {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ToggleButton');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$togglebutton) {
     do given $togglebutton {
-      when ToggleButtonAncestry {
-        self.setToggleButton($togglebutton);
-      }
-      when GTK::ToggleButton {
-      }
-      default {
-      }
+      when ToggleButtonAncestry { self.setToggleButton($togglebutton) }
+      when GTK::ToggleButton    { }
+      default                   { }
     }
   }
-  
-  method GTK::Raw::Types::GtkToggleButton is also<ToggleButton> { $!tb }
-  
+
+  method GTK::Raw::Definitions::GtkToggleButton
+    is also<
+      ToggleButton
+      GtkToggleButton
+    >
+  { $!tb }
+
   method setToggleButton(ToggleButtonAncestry $togglebutton) {
     self.IS-PROTECTED;
-    
+
     my $to-parent;
     $!tb = do given $togglebutton {
       when GtkToggleButton {
-        $to-parent = nativecast(GtkButton, $_);
+        $to-parent = cast(GtkButton, $_);
         $_;
       }
       when ButtonAncestry {
         $to-parent = $_;
-        nativecast(GtkToggleButton, $_);
+        cast(GtkToggleButton, $_);
       }
     }
     self.setButton($to-parent);
   }
 
-  multi method new (ToggleButtonAncestry $togglebutton) {
+  multi method new (ToggleButtonAncestry $togglebutton, :$ref = True) {
+    return unless $togglebutton;
+
     my $o = self.bless(:$togglebutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $togglebutton = gtk_toggle_button_new();
-    self.bless(:$togglebutton);
+
+    $togglebutton ?? self.bless(:$togglebutton) !! Nil;
   }
 
-  method new_with_label (Str $label) is also<new-with-label> {
+  method new_with_label (Str() $label) is also<new-with-label> {
     my $togglebutton = gtk_toggle_button_new_with_label($label);
-    self.bless(:$togglebutton);
+
+    $togglebutton ?? self.bless(:$togglebutton) !! Nil;
   }
 
-  method new_with_mnemonic (Str $label) is also<new-with-mnemonic> {
+  method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $togglebutton = gtk_toggle_button_new_with_mnemonic($label);
-    self.bless(:$togglebutton);
+
+    $togglebutton ?? self.bless(:$togglebutton) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -87,7 +91,8 @@ class GTK::ToggleButton is GTK::Button {
         so gtk_toggle_button_get_active($!tb);
       },
       STORE => sub ($, Int() $is_active is copy) {
-        my gboolean $ia = self.RESOLVE-BOOL($is_active);
+        my gboolean $ia = $is_active.so.Int;
+
         gtk_toggle_button_set_active($!tb, $ia);
       }
     );
@@ -99,7 +104,8 @@ class GTK::ToggleButton is GTK::Button {
         so gtk_toggle_button_get_inconsistent($!tb);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting;
+
         gtk_toggle_button_set_inconsistent($!tb, $s);
       }
     );
@@ -111,7 +117,8 @@ class GTK::ToggleButton is GTK::Button {
         so gtk_toggle_button_get_mode($!tb);
       },
       STORE => sub ($, $draw_indicator is copy) {
-        my gboolean $di = self.RESOLVE-BOOL($draw_indicator);
+        my gboolean $di = $draw_indicator.so.Int;
+
         gtk_toggle_button_set_mode($!tb, $di);
       }
     );
@@ -121,6 +128,7 @@ class GTK::ToggleButton is GTK::Button {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_toggle_button_get_type, $n, $t );
   }
 

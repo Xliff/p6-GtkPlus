@@ -1,13 +1,9 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::CellRendererToggle;
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GLib::Value;
 use GTK::CellRenderer;
@@ -24,7 +20,7 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererToggle');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -34,12 +30,12 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
       when CellRendererToggleAncestry {
         $!crt = do {
           when GtkCellRendererToggle {
-            $to-parent = nativecast(GtkCellRenderer, $_);
+            $to-parent = cast(GtkCellRenderer, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkCellRendererToggle, $_);
+            cast(GtkCellRendererToggle, $_);
           }
         }
         self.setCellRenderer($to-parent);
@@ -55,18 +51,21 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
     self.disconnect-all(%!signals);
   }
 
-  method GTK::Raw::Types::GtkCellRendererToggle
-    is also<CellRendererToggle>
-    { $!crt }
+  method GTK::Raw::Definitions::GtkCellRendererToggle
+    is also<
+      CellRendererToggle
+      GtkCellRendererToggle
+    >
+  { $!crt }
 
+  multi method new (CellRendererToggleAncestry $celltoggle) {
+    $celltoggle ?? self.bless(:$celltoggle) !! Nil;
+  }
   multi method new {
     my $celltoggle = gtk_cell_renderer_toggle_new();
-    self.bless(:$celltoggle);
-  }
-  multi method new (CellRendererToggleAncestry $celltoggle) {
-    self.bless(:$celltoggle);
-  }
 
+    $celltoggle ?? self.bless(:$celltoggle) !! Nil;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -85,7 +84,8 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         so gtk_cell_renderer_toggle_get_activatable($!crt);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = resolve-bool($setting);
+        my gboolean $s = $setting.Int.so;
+
         gtk_cell_renderer_toggle_set_activatable($!crt, $s);
       }
     );
@@ -97,7 +97,8 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         gtk_cell_renderer_toggle_get_active($!crt);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = resolve-bool($setting);
+        my gboolean $s = $setting.Int.so;
+
         gtk_cell_renderer_toggle_set_active($!crt, $s);
       }
     );
@@ -109,7 +110,8 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
         so gtk_cell_renderer_toggle_get_radio($!crt);
       },
       STORE => sub ($, Int() $radio is copy) {
-        my gboolean $r = resolve-bool($radio);
+        my gboolean $r = $radio.Int.so;
+
         gtk_cell_renderer_toggle_set_radio($!crt, $r);
       }
     );
@@ -122,12 +124,12 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   method inconsistent is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('inconsistent', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('inconsistent', $gv)
       }
     );
@@ -137,12 +139,12 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
   method indicator-size is rw is also<indicator_size> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('indicator-size', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = resolve-int($val);
+        $gv.int = $val;
         self.prop_set('indicator-size', $gv)
       }
     );
@@ -152,7 +154,9 @@ class GTK::CellRendererToggle is GTK::CellRenderer {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_renderer_toggle_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_cell_renderer_toggle_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

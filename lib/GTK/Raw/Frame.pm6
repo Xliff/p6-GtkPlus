@@ -2,12 +2,16 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::Frame;
 
-sub gtk_frame_get_label_align (GtkFrame $frame, gfloat $xalign, gfloat $yalign)
+sub gtk_frame_get_label_align (
+  GtkFrame $frame,
+  gfloat $xalign is rw,
+  gfloat $yalign is rw
+)
   is native(gtk)
   is export
   { * }

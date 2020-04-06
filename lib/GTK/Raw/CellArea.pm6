@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::CellArea;
@@ -279,8 +279,8 @@ sub gtk_cell_area_get_preferred_height (
   GtkCellArea $area,
   GtkCellAreaContext $context,
   GtkWidget $widget,
-  gint $minimum_height,
-  gint $natural_height
+  gint $minimum_height is rw,
+  gint $natural_height is rw
 )
   is native(gtk)
   is export
@@ -291,8 +291,8 @@ sub gtk_cell_area_get_preferred_height_for_width (
   GtkCellAreaContext $context,
   GtkWidget $widget,
   gint $width,
-  gint $minimum_height,
-  gint $natural_height
+  gint $minimum_height is rw,
+  gint $natural_height is rw
 )
   is native(gtk)
   is export
@@ -302,8 +302,8 @@ sub gtk_cell_area_get_preferred_width (
   GtkCellArea $area,
   GtkCellAreaContext $context,
   GtkWidget $widget,
-  gint $minimum_width,
-  gint $natural_width
+  gint $minimum  is rw,
+  gint $natural_width is rw
 )
   is native(gtk)
   is export
@@ -314,8 +314,8 @@ sub gtk_cell_area_get_preferred_width_for_height (
   GtkCellAreaContext $context,
   GtkWidget $widget,
   gint $height,
-  gint $minimum_width,
-  gint $natural_width
+  gint $minimum_width is rw,
+  gint $natural_width is rw
 )
   is native(gtk)
   is export
@@ -402,8 +402,8 @@ sub gtk_cell_area_request_renderer (
   uint32 $orientation,          # GtkOrientation $orientation,
   GtkWidget $widget,
   gint $for_size,
-  gint $minimum_size,
-  gint $natural_size
+  gint $minimum_size is rw,
+  gint $natural_size is rw
 )
   is native(gtk)
   is export

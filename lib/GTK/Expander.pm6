@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Expander;
 use GTK::Raw::Types;
 
@@ -17,7 +15,7 @@ class GTK::Expander is GTK::Bin {
   method bless(*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -27,13 +25,13 @@ class GTK::Expander is GTK::Bin {
       when ExpanderAncestry {
         $!e = do {
           when GtkExpander {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
 
           default {
             $to-parent = $_;
-            nativecast(GtkExpander, $_);
+            cast(GtkExpander, $_);
           }
         }
         self.setBin($to-parent);
@@ -44,24 +42,33 @@ class GTK::Expander is GTK::Bin {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkExpander is also<Expander> { $!e }
+
+  method GTK::Raw::Definitions::GtkExpander
+    is also<
+      Expander
+      GtkExpander
+    >
+  { $!e }
 
   multi method new (ExpanderAncestry $expander) {
+    return Nil unless $expander;
+
     my $o = self.bless(:$expander);
     $o.upref;
     $o;
   }
   multi method new (Str $label) {
     my $expander = gtk_expander_new($label);
-    self.bless(:$expander);
+
+    $expander ?? self.bless(:$expander) !! Nil;
   }
   multi method new (Str $label, :$mnemonic) {
     my $expander = do {
       with $mnemonic { gtk_expander_new_with_mnemonic($label); }
       else           { gtk_expander_new($label); }
     };
-    self.bless(:$expander);
+
+    $expander ?? self.bless(:$expander) !! Nil;
   }
   multi method new(|c) {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
@@ -69,7 +76,8 @@ class GTK::Expander is GTK::Bin {
 
   method new_with_mnemonic (Str() $label) is also<new-with-mnemonic> {
     my $expander = gtk_expander_new_with_mnemonic($label);
-    self.bless(:$expander);
+
+    $expander ?? self.bless(:$expander) !! Nil;
   }
 
 
@@ -93,7 +101,8 @@ class GTK::Expander is GTK::Bin {
         so gtk_expander_get_expanded($!e);
       },
       STORE => sub ($, Int() $expanded is copy) {
-        my gboolean $e = self.RESOLVE-BOOL($expanded);
+        my gboolean $e = $expanded.so.Int;
+
         gtk_expander_set_expanded($!e, $e);
       }
     );
@@ -116,16 +125,22 @@ class GTK::Expander is GTK::Bin {
         so gtk_expander_get_label_fill($!e);
       },
       STORE => sub ($, Int() $label_fill is copy) {
-        my gboolean $lf = self.RESOLVE-BOOL($label_fill);
+        my gboolean $lf = $label_fill.so.Int;
+
         gtk_expander_set_label_fill($!e, $lf);
       }
     );
   }
 
-  method label_widget is rw is also<label-widget> {
+  method label_widget (:$raw = False, :$widget = False)
+    is rw
+    is also<label-widget>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Widget.new( gtk_expander_get_label_widget($!e) );
+        my $w = gtk_expander_get_label_widget($!e);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $label_widget is copy) {
         gtk_expander_set_label_widget($!e, $label_widget);
@@ -139,7 +154,8 @@ class GTK::Expander is GTK::Bin {
         so gtk_expander_get_resize_toplevel($!e);
       },
       STORE => sub ($, Int() $resize_toplevel is copy) {
-        my gboolean $rt = self.RESOLVE-BOOL($resize_toplevel);
+        my gboolean $rt = $resize_toplevel.so.Int;
+
         gtk_expander_set_resize_toplevel($!e, $rt);
       }
     );
@@ -164,7 +180,8 @@ class GTK::Expander is GTK::Bin {
         so gtk_expander_get_use_markup($!e);
       },
       STORE => sub ($, Int() $use_markup is copy) {
-        my gboolean $um = self.RESOLVE-BOOL($use_markup);
+        my gboolean $um = $use_markup.so.Int;
+
         gtk_expander_set_use_markup($!e, $um);
       }
     );
@@ -176,7 +193,8 @@ class GTK::Expander is GTK::Bin {
         so gtk_expander_get_use_underline($!e);
       },
       STORE => sub ($, Int() $use_underline is copy) {
-        my gboolean $uu = self.RESOLVE-BOOL($use_underline);
+        my gboolean $uu = $use_underline.so.Int;
+
         gtk_expander_set_use_underline($!e, $uu);
       }
     );
@@ -186,6 +204,7 @@ class GTK::Expander is GTK::Bin {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_expander_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

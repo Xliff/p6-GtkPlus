@@ -1,6 +1,5 @@
 use v6.c;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GTK::Application;
@@ -17,7 +16,7 @@ use GTK::Label;
 use GTK::Menu;
 use GTK::MenuItem;
 
-sub get_image_pixbuf($i) {
+sub get_image_pixbuf ($i) {
   my ($in, $s, $it, $w);
 
   do given $i.get-storage-type {
@@ -69,17 +68,17 @@ $a.activate.tap({
   my ($entry1, $entry2) = (GTK::Entry.new xx 2);
   my $button1 = GTK::Button.new_with_mnemonic('_Copy');
   my $button2 = GTK::Button.new_with_mnemonic('_Paste');
-  my $clippy = GTK::Clipboard.new(gdkMakeAtom(GDK_SELECTION_CLIPBOARD));
+  my $clippy = GTK::Clipboard.get_a( gdkMakeAtom(GDK_SELECTION_CLIPBOARD) );
   my $label1 = GTK::Label.new(qq:to/L/.chomp);
-  "Copy" will copy the text
-  in the entry to the clipboard
-  L
+    "Copy" will copy the text
+    in the entry to the clipboard
+    L
   my $label2 = GTK::Label.new(q:to/L/.chomp);
-  "Paste" will paste the text from the clipboard to the entry
-  L
+    "Paste" will paste the text from the clipboard to the entry
+    L
   my $label3 = GTK::Label.new(q:to/L/.chomp);
-  Images can be transferred via the clipboard, too
-  L
+    Images can be transferred via the clipboard, too
+    L
   my $image = GTK::Image.new_from_icon_name(
     'dialog-warning', GTK_ICON_SIZE_BUTTON
   );

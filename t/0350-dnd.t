@@ -2,11 +2,11 @@ use v6.c;
 
 use Cairo;
 
-use GTK::Compat::Cairo;
-use GTK::Compat::DragContext;
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GLib::Value;
+use GDK::Cairo;
+use GDK::DragContext;
 use GTK::Application;
 use GTK::Box;
 use GTK::Button;
@@ -45,7 +45,7 @@ sub canvas_item_draw($i, $cr, $pre) {
   return unless $i<pixbuf>;
   my ($cx, $cy) = $i<pixbuf>.size;
   # GDK::Cairo
-  GTK::Compat::Cairo.set_source_pixbuf(
+  GDK::Cairo.set_source_pixbuf(
     $cr, $i<pixbuf>, $i<x> - $cx * 0.5, $i<y> - $cy * 0.5
   );
   $pre ?? $cr.paint_with_alpha( (0.6).Num ) !! $cr.paint;
@@ -120,7 +120,7 @@ sub palette_drag_data_received ($p, $w, $c, $x, $y, $sel, $i, $t, $d) {
 }
 
 sub canvas_drag_motion($can, $c, $x, $y, $t, $d, $r) {
-  my $dc = GTK::Compat::DragContext.new($c);
+  my $dc = GDK::DragContext.new($c);
   if $drop_item.defined {
     $drop_item<x> = $x;
     $drop_item<y> = $y;
@@ -159,7 +159,7 @@ sub canvas_ddr2($pal, $can, $c, $x, $y, $sel, $i, $t, $d) {
     GTK::DragContext.new($c).finish(True, False, $t);
   } else {
     $drop_item = $ci;
-    GTK::Compat::DragContext.new($c).status(GDK_ACTION_COPY, $t);
+    GDK::DragContext.new($c).status(GDK_ACTION_COPY, $t);
   }
   $can.queue_draw;
 }
@@ -211,7 +211,7 @@ sub load_icon_items ($p) {
     next if $ctx eq 'Animations';
     say "Got context: '{$ctx}'";
     $in = $it.list_icons($ctx);
-    for $in.p6sort -> $id {
+    for $in.sort -> $id {
       next if $id eq 'emblem-desktop' || $id.ends-with('-symbolic');
       say "Got id '{ $id }'";
       my $item = GTK::ToolButton.new;
@@ -234,7 +234,7 @@ sub load_toggle_items ($p) {
     @special_items.push: ( my $rtb = GTK::RadioToolButton.new($tg) );
     $rtb.label = "#{ $i + 1 }";
     $g.insert($rtb, -1);
-    $tg = $rtb.group;
+    $tg = $rtb.group(:glist);
   }
 }
 

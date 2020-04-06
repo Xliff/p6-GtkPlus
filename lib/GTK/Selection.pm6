@@ -3,41 +3,55 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
-use GTK::Raw::Selection;
 use GTK::Raw::Types;
+use GTK::Raw::Selection;
 
-use GTK::Roles::Types;
+use GDK::Display;
+use GDK::Pixbuf;
+
 use GLib::Roles::Object;
 
 class GTK::Selection {
-  also does GTK::Roles::Types;
   also does GLib::Roles::Object;
 
   has GtkSelectionData $!s is implementor;
 
   submethod BUILD(:$selection) {
-    self!setObject($!s = $selection);
+    $!s = $selection;
+
+    self.roleInit-Object;
   }
 
   submethod DESTROY {
     self.free;
   }
-  
-  method GTK::Raw::Types::GtkSelectionData 
-    is also<SelectionData>
-    { $!s }
+
+  method GTK::Raw::Definitions::GtkSelectionData
+    is also<
+      SelectionData
+      GtkSelectionData
+    >
+  { $!s }
+
+  method new (GtkSelectionData $selection) {
+    $selection ?? self.bless(:$selection) !! Nil;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method pixbuf is rw {
+  method pixbuf (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_selection_data_get_pixbuf($!s);
+        my $p = gtk_selection_data_get_pixbuf($!s);
+
+        $p ??
+          ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+          !!
+          Nil;
       },
-      STORE => sub ($, GdkPixbuf $pixbuf is copy) {
+      STORE => sub ($, GdkPixbuf() $pixbuf is copy) {
         gtk_selection_data_set_pixbuf($!s, $pixbuf);
       }
     );
@@ -46,25 +60,20 @@ class GTK::Selection {
   method uris is rw {
     Proxy.new(
       FETCH => sub ($) {
-        my @ret;
-        my CArray[Str] $u;
-        $u = gtk_selection_data_get_uris($!s);
-        @ret.push($_) for $u.list;
-        @ret;
+        my $u = gtk_selection_data_get_uris($!s);
+
+        CStringArrayToArray($u);
       },
       STORE => sub ($, *@uris is copy) {
         @uris .= map( *.Str );
-        my CArray[Str] $u = CArray[Str].new;
-        my $i = 0;
-        $u[$i++] = $_ for @uris;
-        gtk_selection_data_set_uris($!s, $u);
+        gtk_selection_data_set_uris( $!s, ArrayToCArray(Str, @uris) );
       }
     );
   }
 
   method text is rw {
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.get_text;
       },
       STORE => -> $, Str() $val {
@@ -83,7 +92,8 @@ class GTK::Selection {
   )
     is also<add-target>
   {
-    my guint $i = self.RESOLVE-UINT($info);
+    my guint $i = $info;
+
     gtk_selection_add_target($widget, $selection, $target, $i);
   }
 
@@ -95,7 +105,8 @@ class GTK::Selection {
   )
     is also<add-targets>
   {
-    my guint $nt = self.RESOLVE-UINT($ntargets);
+    my guint $nt = $ntargets;
+
     gtk_selection_add_targets($widget, $selection, $targets, $nt);
   }
 
@@ -111,14 +122,16 @@ class GTK::Selection {
     GdkAtom $target,
     Int() $time
   ) {
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my guint32 $t = $time;
+
     gtk_selection_convert($widget, $selection, $target, $t);
   }
 
   method owner_set (GtkWidget() $widget, GdkAtom $selection, Int() $time)
     is also<owner-set>
   {
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my guint32 $t = $time;
+
     gtk_selection_owner_set($widget, $selection, $t);
   }
 
@@ -129,7 +142,8 @@ class GTK::Selection {
   )
     is also<owner-set-for-display>
   {
-    my guint32 $t = self.RESOLVE-UINT($time);
+    my guint32 $t = $time;
+
     gtk_selection_owner_set_for_display($widget, $selection, $t);
   }
 
@@ -147,85 +161,111 @@ class GTK::Selection {
     gtk_selection_data_free($!s);
   }
 
-  method get_data 
+  method get_data
     is also<
-      get-data 
+      get-data
       data
-    > 
+    >
   {
     gtk_selection_data_get_data($!s);
   }
 
-  method get_data_with_length (Int() $length)
+  proto method get_data_with_length (|)
     is also<get-data-with-length>
+  { * }
+
+  multi method get_data_with_length {
+    samewith($, :all);
+  }
+  multi method get_data_with_length ($length is rw, :$all = False)
   {
-    my guint $l = self.RESOLVE-INT($length);
-    gtk_selection_data_get_data_with_length($!s, $l);
+    my guint $l = 0;
+
+    my $s = gtk_selection_data_get_data_with_length($!s, $l);
+    $length = $l;
+
+    $all.not ?? $s !! ($s, $length)
   }
 
-  method get_data_type 
+  method get_data_type
     is also<
-      get-data-type 
-      data-type 
+      get-data-type
+      data-type
       data_type
-    > 
+    >
   {
     gtk_selection_data_get_data_type($!s);
   }
 
-  method get_display 
+  method get_display (:$raw = False)
     is also<
-      get-display 
+      get-display
       display
-    > 
+    >
   {
-    gtk_selection_data_get_display($!s);
+    my $d = gtk_selection_data_get_display($!s);
+
+    $d ??
+      ( $raw ?? $d !! GDK::Display.new($d) )
+      !!
+      Nil;
   }
 
-  method get_format 
+  method get_format
     is also<
-      get-format 
+      get-format
       format
-    > 
+    >
   {
     gtk_selection_data_get_format($!s);
   }
 
-  method get_length 
+  method get_length
     is also<
-      get-length 
+      get-length
       length
-    > 
+    >
   {
     gtk_selection_data_get_length($!s);
   }
 
-  method get_selection 
+  method get_selection
     is also<
-      get-selection 
+      get-selection
       selections
-    > 
+    >
   {
     gtk_selection_data_get_selection($!s);
   }
 
-  method get_target 
+  method get_target
     is also<
-      get-target 
+      get-target
       target
-    > 
+    >
   {
     gtk_selection_data_get_target($!s);
   }
 
-  method get_targets (GdkAtom $targets, Int() $n_atoms)
-    is also<
-      get-targets 
-      targets
-    >
-  {
-    my gint $na = self.RESOLVE-INT($n_atoms);
-    gtk_selection_data_get_targets($!s, $targets, $na);
+  proto method get_targets (|)
+    is also<get-targets>
+  { * }
+
+  multi method get_targets (:$raw = False) is also<targets> {
+    samewith($, $, :$raw);
+  }
+  multi method get_targets ($targets is rw, $n_atoms is rw, :$raw = False) {
+    my $t = CArray[CArray[GdkAtom]].new;
+    my gint $na = 0;
+
+    $t[0] = CArray[GdkAtom];
+    gtk_selection_data_get_targets($!s, $t, $na);
+    $n_atoms = $na;
+
+    return Nil unless $t[0];
+    return $t[0] if $raw;
+
+    CArrayToArray($t[0], $n_atoms);
   }
 
   method get_text is also<get-text> {
@@ -233,37 +273,39 @@ class GTK::Selection {
   }
 
   method set (GdkAtom $type, Int() $format, Str() $data, Int() $length) {
-    my @i = ($format, $length);
-    my gint ($f, $l) = self.RESOLVE-INT(@i);
+    my gint ($f, $l) = ($format, $length);
+
     gtk_selection_data_set($!s, $type, $format, $data, $length);
   }
 
   method set_text (Str() $str, Int() $len)
     is also<set-text>
   {
-    my gint $l = self.RESOLVE-INT($len);
+    my gint $l = $len;
+
     gtk_selection_data_set_text($!s, $str, $len);
   }
 
   method targets_include_image (Int() $writeable)
     is also<targets-include-image>
   {
-    my gboolean $w = self.RESOLVE-BOOL($writeable);
-    gtk_selection_data_targets_include_image($!s, $w);
+    my gboolean $w = $writeable.so.Int;
+
+    so gtk_selection_data_targets_include_image($!s, $w);
   }
 
   multi method targets_include_rich_text (GtkTextBuffer() $buffer)
     is also<targets-include-rich-text>
   {
-    gtk_selection_data_targets_include_rich_text($!s, $buffer);
+    so gtk_selection_data_targets_include_rich_text($!s, $buffer);
   }
 
   method targets_include_text is also<targets-include-text> {
-    gtk_selection_data_targets_include_text($!s);
+    so gtk_selection_data_targets_include_text($!s);
   }
 
   method targets_include_uri is also<targets-include-uri> {
-    gtk_selection_data_targets_include_uri($!s);
+    so gtk_selection_data_targets_include_uri($!s);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

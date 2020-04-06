@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
 
@@ -19,33 +17,42 @@ class GTK::TreePath {
   submethod BUILD(:$path) {
     $!tp = $path;
   }
-  
-  method GTK::Raw::Types::GtkTreePath is also<TreePath> { $!tp }
 
+  method GTK::Raw::Definitions::GtkTreePath
+    is also<
+      TreePath
+      GtkTreePath
+    >
+  { $!tp }
+
+  multi method new (GtkTreePath $path) {
+    $path ?? self.bless(:$path) !! Nil;
+  }
   multi method new {
     my $path = gtk_tree_path_new();
-    self.bless(:$path);
-  }
-  multi method new (GtkTreePath $path) {
-    self.bless(:$path);
+
+    $path ?? self.bless(:$path) !! Nil;
   }
 
   method new_first is also<new-first> {
     my $path = gtk_tree_path_new_first();
-    self.bless(:$path);
+
+    $path ?? self.bless(:$path) !! Nil;
   }
 
   method new_from_indicesv (Int @indicies) is also<new-from-indicesv> {
-    my CArray[gint] $i = CArray[gint].new;
-    my $ii = 0;
-    $i[$ii++] = self.RESOLVE-INT($_) for @indicies;
-    my $path = gtk_tree_path_new_from_indicesv($i, $i.elems);
-    self.bless(:$path);
+    my $path = gtk_tree_path_new_from_indicesv(
+      ArrayToCArray(gint, @indicies),
+      @indicies.elems
+    );
+
+    $path ?? self.bless(:$path) !! Nil;
   }
 
   method new_from_string (Str() $newpath) is also<new-from-string> {
     my $path = gtk_tree_path_new_from_string($newpath);
-    self.bless(:$path);
+
+    $path ?? self.bless(:$path) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -56,7 +63,8 @@ class GTK::TreePath {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method append_index (Int() $index) is also<append-index> {
-    my gint $i = self.RESOLVE-INT($index);
+    my gint $i = $index;
+
     gtk_tree_path_append_index($!tp, $i);
   }
 
@@ -81,21 +89,16 @@ class GTK::TreePath {
   }
 
   method get_indices is also<get-indices> {
-    my CArray[gint] $r := gtk_tree_path_get_indices($!tp);
-    my @r;
-    my $i = 0;
-    @r[$i] = $r[$i++] for ^self.get_depth;
-    @r;
+    CArrayToArray( gtk_tree_path_get_indices($!tp), self.get_depth );
   }
 
   method get_indices_with_depth (Int() $depth)
     is also<get-indices-with-depth>
   {
-    my gint $d = self.RESOLVE-INT($depth);
-    my CArray[gint] $r := gtk_tree_path_get_indices_with_depth($!tp, $depth);
-    my @r;
-    my $i = 0;
-    @r[$i] = $r[$i++] for (^self.get_depth);
+    CArrayToArray(
+      gtk_tree_path_get_indices_with_depth($!tp, $depth),
+      self.get_depth
+    );
   }
 
   method is_ancestor (GtkTreePath() $descendant) is also<is-ancestor> {
@@ -111,7 +114,8 @@ class GTK::TreePath {
   }
 
   method prepend_index (Int() $index) is also<prepend-index> {
-    my gint $i = self.RESOLVE-INT($index);
+    my gint $i = $index;
+
     gtk_tree_path_prepend_index($!tp, $i);
   }
 

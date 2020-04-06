@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::CellEditable;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
 
@@ -39,12 +37,12 @@ role GTK::Roles::CellEditable {
   method editing-canceled is rw is also<editing_canceled> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('editing-canceled', $gv) );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = resolve-bool($val);
+        $gv.boolean = $val;
         self.prop_set('editing-canceled', $gv)
       }
     );

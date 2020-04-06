@@ -1,25 +1,23 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::TreeViewColumn;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
 use GTK::CellArea;
+use GTK::Widget;
 
 use GTK::Roles::Buildable;
 use GTK::Roles::CellLayout;
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Types;
 
 class GTK::TreeViewColumn {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
 
   # Using GTK::Raw::Utils to prevent circular role dependency between
   # CellLayout and Types
@@ -29,23 +27,30 @@ class GTK::TreeViewColumn {
   submethod BUILD(:$treeview) {
     self!setObject($!tvc = $treeview);
 
-    $!b   = nativecast(GtkBuildable,  $!tvc);   # GTK::Roles::Buildable
-    $!cl  = nativecast(GtkCellLayout, $!tvc);   # GTK::Roles::CellLayout
+    $!b   = cast(GtkBuildable,  $!tvc);   # GTK::Roles::Buildable
+    $!cl  = cast(GtkCellLayout, $!tvc);   # GTK::Roles::CellLayout
   }
 
-  method GTK::Raw::Types::GtkTreeViewColumn is also<TreeViewColumn> { $!tvc }
+  method GTK::Raw::Definitions::GtkTreeViewColumn
+    is also<
+      TreeViewColumn
+      GtkTreeViewColumn
+    >
+  { $!tvc }
 
   multi method new (GtkTreeViewColumn $treeview) {
-    self.bless(:$treeview);
+    $treeview ?? self.bless(:$treeview) !! Nil;
   }
   multi method new {
     my $treeview = gtk_tree_view_column_new();
-    self.bless(:$treeview);
+
+    $treeview ?? self.bless(:$treeview) !! Nil;
   }
 
-  method new_with_area(GtkCellArea $area) is also<new-with-area> {
+  method new_with_area(GtkCellArea() $area) is also<new-with-area> {
     my $treeview = gtk_tree_view_column_new_with_area($area);
-    self.bless(:$treeview);
+
+    $treeview ?? self.bless(:$treeview) !! Nil;
   }
 
 
@@ -67,6 +72,7 @@ class GTK::TreeViewColumn {
       },
       STORE => sub ($, Num() $xalign is copy) {
         my num32 $xa = $xalign;
+
         gtk_tree_view_column_set_alignment($!tvc, $xa);
       }
     );
@@ -77,8 +83,9 @@ class GTK::TreeViewColumn {
       FETCH => sub ($) {
         so GTK::CellArea.new( gtk_tree_view_column_get_clickable($!tvc) );
       },
-      STORE => sub ($, GtkCellArea() $clickable is copy) {
-        my gboolean $c = resolve-bool($clickable);
+      STORE => sub ($, Int() $clickable is copy) {
+        my gboolean $c = $clickable;
+
         gtk_tree_view_column_set_clickable($!tvc, $c);
       }
     );
@@ -90,7 +97,8 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_expand($!tvc);
       },
       STORE => sub ($, Int() $expand is copy) {
-        my gboolean $e = resolve-bool($expand);
+        my gboolean $e = $expand;
+
         gtk_tree_view_column_set_expand($!tvc, $e);
       }
     );
@@ -102,7 +110,8 @@ class GTK::TreeViewColumn {
         gtk_tree_view_column_get_fixed_width($!tvc);
       },
       STORE => sub ($, Int() $fixed_width is copy) {
-        my gint $fw = resolve-int($fixed_width);
+        my gint $fw = $fixed_width;
+
         gtk_tree_view_column_set_fixed_width($!tvc, $fw);
       }
     );
@@ -114,7 +123,8 @@ class GTK::TreeViewColumn {
         gtk_tree_view_column_get_max_width($!tvc);
       },
       STORE => sub ($, Int() $max_width is copy) {
-        my gint $mw = resolve-bool($max_width);
+        my gint $mw = $max_width;
+
         gtk_tree_view_column_set_max_width($!tvc, $mw);
       }
     );
@@ -126,7 +136,8 @@ class GTK::TreeViewColumn {
         gtk_tree_view_column_get_min_width($!tvc);
       },
       STORE => sub ($, Int() $min_width is copy) {
-        my gint $mw = resolve-bool($min_width);
+        my gint $mw = $min_width;
+
         gtk_tree_view_column_set_min_width($!tvc, $mw);
       }
     );
@@ -138,7 +149,8 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_reorderable($!tvc);
       },
       STORE => sub ($, Int() $reorderable is copy) {
-        my gboolean $r = resolve-bool($reorderable);
+        my gboolean $r = $reorderable;
+
         gtk_tree_view_column_set_reorderable($!tvc, $r);
       }
     );
@@ -150,7 +162,8 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_resizable($!tvc);
       },
       STORE => sub ($, Int() $resizable is copy) {
-        my gboolean $r = resolve-bool($resizable);
+        my gboolean $r = $resizable;
+
         gtk_tree_view_column_set_resizable($!tvc, $r);
       }
     );
@@ -162,7 +175,8 @@ class GTK::TreeViewColumn {
         gtk_tree_view_column_get_sizing($!tvc);
       },
       STORE => sub ($, Int() $type is copy) {
-        my uint32 $t = resolve-uint($type);
+        my uint32 $t = $type;
+
         gtk_tree_view_column_set_sizing($!tvc, $t);
       }
     );
@@ -174,7 +188,8 @@ class GTK::TreeViewColumn {
         gtk_tree_view_column_get_sort_column_id($!tvc);
       },
       STORE => sub ($, Int() $sort_column_id is copy) {
-        my gint $s = resolve-int($sort_column_id);
+        my gint $s = $sort_column_id;
+
         gtk_tree_view_column_set_sort_column_id($!tvc, $s);
       }
     );
@@ -186,7 +201,8 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_sort_indicator($!tvc);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = resolve-bool($setting);
+        my gboolean $s = $setting;
+
         gtk_tree_view_column_set_sort_indicator($!tvc, $s);
       }
     );
@@ -195,10 +211,11 @@ class GTK::TreeViewColumn {
   method sort_order is rw is also<sort-order> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSortType( gtk_tree_view_column_get_sort_order($!tvc) );
+        GtkSortTypeEnum( gtk_tree_view_column_get_sort_order($!tvc) );
       },
       STORE => sub ($, Int() $order is copy) {
-        my uint32 $o = resolve-uint($order);
+        my uint32 $o = $order;
+
         gtk_tree_view_column_set_sort_order($!tvc, $o);
       }
     );
@@ -210,7 +227,8 @@ class GTK::TreeViewColumn {
         gtk_tree_view_column_get_spacing($!tvc);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = resolve-int($spacing);
+        my gint $s = $spacing;
+
         gtk_tree_view_column_set_spacing($!tvc, $s);
       }
     );
@@ -233,17 +251,20 @@ class GTK::TreeViewColumn {
         so gtk_tree_view_column_get_visible($!tvc);
       },
       STORE => sub ($, $visible is copy) {
-        my gboolean $v = resolve-bool($visible);
+        my gboolean $v = $visible;
+
         gtk_tree_view_column_set_visible($!tvc, $v);
       }
     );
   }
 
   # Not to be confused with GTK::Widget.Widget, hence the case difference.
-  method widget is rw {
+  method widget (:$raw = False, :$widget = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_tree_view_column_get_widget($!tvc);
+        my $w = gtk_tree_view_column_get_widget($!tvc);
+
+        ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $widget is copy) {
         gtk_tree_view_column_set_widget($!tvc, $widget);
@@ -255,12 +276,16 @@ class GTK::TreeViewColumn {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
 
   # Type: GtkCellArea
-  method cell-area is rw is also<cell_area> {
+  method cell-area (:$raw = False) is rw is also<cell_area> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('cell-area', $gv) );
-        GTK::CellArea.new( nativecast(GtkCellArea, $gv.object) );
+
+        return Nil unless $gv.object;
+
+        my $ca = cast(GtkCellArea, $gv.object);
+        $raw ?? $ca !! GTK::CellArea.new($ca);
       },
       STORE => -> $, GtkCellArea() $val is copy {
         $gv.object = $val;
@@ -273,12 +298,12 @@ class GTK::TreeViewColumn {
   method width is rw {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('width', $gv) );
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        warn "width does not allow writing"
+        warn 'width does not allow writing';
       }
     );
   }
@@ -287,12 +312,12 @@ class GTK::TreeViewColumn {
   method x-offset is rw is also<x_offset> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('x-offset', $gv) );
         $gv.int;
       },
       STORE => -> $, $val is copy {
-        warn "x-offset does not allow writing"
+        warn 'x-offset does not allow writing'
       }
     );
   }
@@ -307,7 +332,8 @@ class GTK::TreeViewColumn {
   )
     is also<add-attribute>
   {
-    my gint $c = resolve-int($column);
+    my gint $c = $column;
+
     gtk_tree_view_column_add_attribute($!tvc, $cell_renderer, $attribute, $c);
   }
 
@@ -318,13 +344,13 @@ class GTK::TreeViewColumn {
   )
     is also<cell-get-position>
   {
-    my @i = ($x_offset, $width);
-    my gint ($xo, $w) = resolve-int(@i);
+    my gint ($xo, $w) = ($x_offset, $width);
+
     gtk_tree_view_column_cell_get_position($!tvc, $cell_renderer, $xo, $w);
   }
 
   method cell_get_size (
-    GdkRectangle $cell_area,
+    GdkRectangle() $cell_area,
     Int() $x_offset,
     Int() $y_offset,
     Int() $width,
@@ -332,13 +358,13 @@ class GTK::TreeViewColumn {
   )
     is also<cell-get-size>
   {
-    my @i = ($x_offset, $y_offset, $width, $height);
-    my gint ($xo, $yo, $w, $h) = resolve-int(@i);
+    my gint ($xo, $yo, $w, $h) = ($x_offset, $y_offset, $width, $height);
+
     gtk_tree_view_column_cell_get_size($!tvc, $cell_area, $xo, $yo, $w, $h);
   }
 
   method cell_is_visible is also<cell-is-visible> {
-    gtk_tree_view_column_cell_is_visible($!tvc);
+    so gtk_tree_view_column_cell_is_visible($!tvc);
   }
 
   method cell_set_cell_data (
@@ -349,8 +375,8 @@ class GTK::TreeViewColumn {
   )
     is also<cell-set-cell-data>
   {
-    my @b = ($is_expander, $is_expanded);
-    my ($er, $ed) = resolve-bool(@b);
+    my ($er, $ed) = ($is_expander, $is_expanded);
+
     gtk_tree_view_column_cell_set_cell_data(
       $!tvc,
       $tree_model,
@@ -378,16 +404,25 @@ class GTK::TreeViewColumn {
     gtk_tree_view_column_focus_cell($!tvc, $cell);
   }
 
-  method get_button is also<get-button> {
-    gtk_tree_view_column_get_button($!tvc);
+  method get_button (:$raw = False, :$widget = False) is also<get-button> {
+    my $w = gtk_tree_view_column_get_button($!tvc);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
-  method get_tree_view is also<get-tree-view> {
-    gtk_tree_view_column_get_tree_view($!tvc);
+  method get_tree_view (:$raw = False) is also<get-tree-view> {
+    my $tv = gtk_tree_view_column_get_tree_view($!tvc);
+
+    $tv ??
+      ( $raw ?? $tv !! ::('GTK::TreeView').new($tv) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
-    gtk_tree_view_column_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_tree_view_column_get_type, $n, $t );
   }
 
   method get_width is also<get-width> {
@@ -401,14 +436,16 @@ class GTK::TreeViewColumn {
   method pack_end (GtkCellRenderer() $cell, Int() $expand = 0)
     is also<pack-end>
   {
-    my gboolean $e = resolve-bool($expand);
+    my gboolean $e = $expand.so.Int;
+
     gtk_tree_view_column_pack_end($!tvc, $cell, $e);
   }
 
   method pack_start (GtkCellRenderer() $cell, Int() $expand = 0)
     is also<pack-start>
   {
-    my gboolean $e = resolve-bool($expand);
+    my gboolean $e = $expand.so.Int;
+
     gtk_tree_view_column_pack_start($!tvc, $cell, $e);
   }
 

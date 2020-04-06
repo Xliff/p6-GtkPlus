@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::CellRendererAccel;
 use GTK::Raw::Types;
 
@@ -24,7 +22,7 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::CellRendererAccel');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -34,12 +32,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
       when CellRendererAccelAncestry {
         $!cra = do {
           when GtkCellRendererAccel  {
-            $to-parent = nativecast(GtkCellRendererText, $_);
+            $to-parent = cast(GtkCellRendererText, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkCellRendererAccel, $_);
+            cast(GtkCellRendererAccel, $_);
           }
         }
         self.setCellRendererText($to-parent);
@@ -55,17 +53,19 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
     self.disconnect-all(%!signals-cra);
   }
 
+  multi method new (CellRendererAccelAncestry $cellaccel) {
+    $cellaccel ?? self.bless(:$cellaccel) !! Nil;
+  }
   multi method new {
     my $cellaccel = gtk_cell_renderer_accel_new();
-    self.bless(:$cellaccel);
-  }
-  multi method new (CellRendererAccelAncestry $cellaccel) {
-    self.bless(:$cellaccel);
+
+    $cellaccel ?? self.bless(:$cellaccel) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkCelRendererAccel {
-    $!cra;
-  }
+
+  method GTK::Raw::Definitions::GtkCellRendererAccel
+    is also<GtkCellRendererAccel>
+  { $!cra }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -92,12 +92,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method accel-key is rw is also<accel_key> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('accel-key', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('accel-key', $gv);
       }
     );
@@ -107,12 +107,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method accel-mode is rw is also<accel_mode> {
     my GLib::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('accel-mode', $gv);
-        GtkCellRendererAccelMode( $gv.enum );
+        GtkCellRendererAccelModeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = self.RESOLVE-UINT($val);
+        $gv.enum = $val;
         self.prop_set('accel-mode', $gv);
       }
     );
@@ -122,13 +122,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method accel-mods is rw is also<accel_mods> {
     my GLib::Value $gv .= new(G_TYPE_ENUM);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('accel-mods', $gv);
-        
         GdkModifierTypeEnum( $gv.enum );
       },
       STORE => -> $, Int() $val is copy {
-        $gv.enum = self.RESOLVE-UINT($val);
+        $gv.enum = $val;
         self.prop_set('accel-mods', $gv);
       }
     );
@@ -138,12 +137,12 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
   method keycode is rw {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         self.prop_get('keycode', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.int = self.RESOLVE-INT($val);
+        $gv.int = $val;
         self.prop_set('keycode', $gv);
       }
     );
@@ -154,7 +153,9 @@ class GTK::CellRendererAccel is GTK::CellRendererText {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
-    gtk_cell_renderer_accel_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_cell_renderer_accel_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -3,16 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
-
 use GTK::Raw::Container;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
+use GLib::GList;
 use GTK::Adjustment;
 use GTK::Widget;
 
+use GLib::Roles::ListData;
 use GTK::Roles::LatchedContents;
 
 our subset ContainerAncestry is export
@@ -58,13 +57,20 @@ class GTK::Container is GTK::Widget {
     self.setWidget($to-parent);
   }
 
-  method new (ContainerAncestry $container) {
+  method GTK::Raw::Definition::GtkContainer
+    is also<
+      Container
+      GtkContainer
+    >
+  { $!c }
+
+  method new (ContainerAncestry $container, :$ref = True) {
+    return Nil unless $container;
+
     my $o = self.bless(:$container);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
-
-  method GTK::Raw::Types::GtkContainer is also<Container> { $!c }
 
   # Signal - First
   # Made multi to prevent a conflict with method add (GtkWidget)
@@ -128,19 +134,22 @@ D
   }
 
   # For child attributes.
-  proto method child-get-string (|) is also<child_get_string> { * }
+  proto method child-get-string (|)
+    is also<child_get_string>
+  { * }
 
   multi method child-get-string(GtkWidget() $child, Str() $prop) {
-    my Str $a = '';
-    samewith($child, $prop, $a);
-    $a
+    samewith($child, $prop, $);
   }
   multi method child-get-string (
     GtkWidget() $child,
     Str() $prop,
-    Str $val is rw
+    $val is rw
   ) {
-    gtk_container_child_get_str($!c, $child, $prop, $val, Str);
+    my Str $a = '';
+
+    gtk_container_child_get_str($!c, $child, $prop, $a, Str);
+    $val = $a;
   }
 
   method child-set-string(
@@ -153,19 +162,19 @@ D
     gtk_container_child_set_str($!c, $child, $prop, $v, Str);
   }
 
-  proto method child-get-bool (|) is also<child_get_bool> { * }
+  proto method child-get-bool (|)
+    is also<child_get_bool>
+  { * }
 
   multi method child-get-bool(GtkWidget() $child, Str() $prop) {
-    my uint32 $b = 0;
-    samewith($child, $prop, $b);
-    $b;
+    samewith($child, $prop, $);
   }
   multi method child-get-bool (
     GtkWidget() $child,
     Str() $prop,
-    Int $val is rw
+    $val is rw
   ) {
-    my guint $v = resolve-bool($val);
+    my guint $v = 0;
 
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
@@ -179,25 +188,25 @@ D
   )
     is also<child_set_bool>
   {
-    my guint $v = resolve-bool($val);
+    my guint $v = $val;
 
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
 
-  proto method child-get-int (|) is also<child_get_int> { * }
+  proto method child-get-int (|)
+    is also<child_get_int>
+  { * }
 
   multi method child-get-int (GtkWidget() $child, Str() $prop) {
-    my gint $i = 0;
-    samewith($child, $prop, $i);
-    $i;
+    samewith($child, $prop, $);
   }
 
   multi method child-get-int (
     GtkWidget() $child,
     Str() $prop,
-    Int $val is rw
+    $val is rw
   ) {
-    my guint $v = resolve-int($val);
+    my guint $v = 0;
 
     # CArray[guint]?
     gtk_container_child_get_int($!c, $child, $prop, $v, Str);
@@ -211,25 +220,25 @@ D
   )
     is also<child_set_int>
   {
-    my gint $v = resolve-int($val);
+    my gint $v = $val;
 
     gtk_container_child_set_int($!c, $child, $prop, $v, Str);
   }
 
-  proto method child-get-uint (|) is also<child_get_uint> { * }
+  proto method child-get-uint (|)
+    is also<child_get_uint>
+  { * }
 
   multi method child-get-uint (GtkWidget() $child, Str() $prop) {
-    my guint $i = 0;
-    samewith($child, $prop, $i);
-    $i;
+    samewith($child, $prop, $);
   }
 
   multi method child-get-uint (
     GtkWidget() $child,
     Str() $prop,
-    Int $val is rw
+    $val is rw
   ) {
-    my guint $v = resolve-uint($val);
+    my guint $v = 0;
 
     # CArray[guint]?
     gtk_container_child_get_uint($!c, $child, $prop, $v, Str);
@@ -243,7 +252,7 @@ D
   )
     is also<child_set_uint>
   {
-    my gint $v = resolve-uint($val);
+    my gint $v = $val;
 
     gtk_container_child_set_uint($!c, $child, $prop, $v, Str);
   }
@@ -270,11 +279,15 @@ D
   #   );
   # }
 
-  method focus_vadjustment is rw is also<focus-vadjustment> {
+  method focus_vadjustment (:$raw = False) is rw is also<focus-vadjustment> {
     Proxy.new(
       FETCH => sub ($) {
-        my $adjustment = gtk_container_get_focus_vadjustment($!c);
-        GTK::Adjustment.new(:$adjustment);
+        my $a = gtk_container_get_focus_vadjustment($!c);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_container_set_focus_vadjustment($!c, $adjustment);
@@ -282,22 +295,31 @@ D
     );
   }
 
-  method focus_child is rw is also<focus-child> {
+  method focus_child (:$raw = False, :$widget = False)
+    is rw
+    is also<focus-child>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_container_get_focus_child($!c);
+        my $w = gtk_container_get_focus_child($!c);
+
+        ReturnWidget($w, $raw, $widget);
       },
-      STORE => sub ($, $child is copy) {
+      STORE => sub ($, GtkWidget() $child is copy) {
         gtk_container_set_focus_child($!c, $child);
       }
     );
   }
 
-  method focus_hadjustment is rw is also<focus-hadjustment> {
+  method focus_hadjustment (:$raw = False) is rw is also<focus-hadjustment> {
     Proxy.new(
       FETCH => sub ($) {
-        my $adjustment = gtk_container_get_focus_hadjustment($!c);
-        GTK::Adjustment.new(:$adjustment);
+        my $a = gtk_container_get_focus_hadjustment($!c);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_container_set_focus_hadjustment($!c, $adjustment);
@@ -311,7 +333,7 @@ D
         gtk_container_get_border_width($!c);
       },
       STORE => sub ($, Int() $border_width is copy) {
-        my $bw = resolve-uint($border_width);
+        my $bw = $border_width;
 
         gtk_container_set_border_width($!c, $bw);
       }
@@ -422,7 +444,12 @@ D
     gtk_container_foreach($!c, $callback, $callback_data);
   }
 
-  method get_children(:$obj = True) is also<get-children> {
+  method get_children(
+    :$internal = False,
+    :$glist    = False,
+    :$raw      = False,
+    :$widget   = False
+  ) is also<get-children> {
     # my @children;
     # my $list = gtk_container_get_children($!c);
     # say "List start: { $list }";
@@ -432,7 +459,18 @@ D
     #   say "List next: { $list }";
     # }
     # @children;
-    (@!start, @!end).flat;
+
+    return (@!start, @!end).flat unless $internal;
+
+    my $cl = gtk_container_get_children($!c);
+
+    return Nil unless $cl;
+    return $cl if $glist;
+
+    $cl = GLib::GList.new($cl) but GLib::Roles::ListData[GtkWidget];
+    $raw ?? $cl.Array
+         !! ( $widget ?? $cl.Array.new({ GTK::Widget.new($_) })
+                      !! $cl.Array.new({ GTK::Widget.CreateObject($_) }) );
   }
 
   method get_focus_chain (GList $focusable_widgets)
@@ -449,6 +487,7 @@ D
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_container_get_type, $n, $t);
   }
 
@@ -477,7 +516,7 @@ D
   method set_reallocate_redraws (Int() $needs_redraws)
     is also<set-reallocate-redraws>
   {
-    my gboolean $nr = resolve-bool($needs_redraws);
+    my gboolean $nr = $needs_redraws.so.Int;
 
     gtk_container_set_reallocate_redraws($!c, $nr);
   }

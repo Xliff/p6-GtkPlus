@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Calendar;
 use GTK::Raw::Types;
 
@@ -16,7 +15,7 @@ class GTK::Calendar is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Calendar');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -42,17 +41,25 @@ class GTK::Calendar is GTK::Widget {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkCalendar is also<Calendar> { $!cal }
 
-  multi method new (CalendarAncestry $calendar) {
+  method GTK::Raw::Definitions::GtkCalendar
+    is also<
+      Calendar
+      GtkCalendar
+    >
+  { $!cal }
+
+  multi method new (CalendarAncestry $calendar, :$ref = True) {
+    return Nil unless $calendar;
+
     my $o = self.bless(:$calendar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $calendar = gtk_calendar_new();
-    self.bless(:$calendar);
+
+    $calendar ?? self.bless(:$calendar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -108,7 +115,7 @@ class GTK::Calendar is GTK::Widget {
         gtk_calendar_get_detail_height_rows($!cal);
       },
       STORE => sub ($, Int() $rows is copy) {
-        my gint $r = self.RESOLVE-INT($rows);
+        my gint $r = $rows;
         gtk_calendar_set_detail_height_rows($!cal, $r);
       }
     );
@@ -120,7 +127,8 @@ class GTK::Calendar is GTK::Widget {
         gtk_calendar_get_detail_width_chars($!cal);
       },
       STORE => sub ($, Int() $chars is copy) {
-        my gint $c = self.RESOLVE-INT($chars);
+        my gint $c = $chars;
+
         gtk_calendar_set_detail_width_chars($!cal, $c);
       }
     );
@@ -129,12 +137,13 @@ class GTK::Calendar is GTK::Widget {
   method display_options is rw is also<display-options> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkCalendarDisplayOptions(
+        GtkCalendarDisplayOptionsEnum(
           gtk_calendar_get_display_options($!cal)
         );
       },
       STORE => sub ($, Int() $flags is copy) {
-        my uint32 $f = self.RESOLVE-UINT($flags);
+        my uint32 $f = $flags;
+
         gtk_calendar_set_display_options($!cal, $f);
       }
     );
@@ -145,53 +154,55 @@ class GTK::Calendar is GTK::Widget {
   method clear_marks is also<clear-marks> {
     gtk_calendar_clear_marks($!cal);
   }
-  
+
   proto method get_date (|)
     is also<
       get-date
       date
     >
   { * }
-  
+
   multi method get_date {
-    my ($y, $m, $d) = (0 xx 3);
-    samewith($y, $m, $d);
+    samewith($, $, $);
   }
   multi method get_date (
-    Int() $year is rw,
-    Int() $month is rw,
-    Int() $day is rw
+    $year  is rw,
+    $month is rw,
+    $day   is rw
   ) {
-    my @u = ($year, $month, $day);
-    my uint32 ($y, $m, $d) = self.RESOLVE-UINT(@u);
+    my uint32 ($y, $m, $d) = 0 xx 3;
+
     gtk_calendar_get_date($!cal, $y, $m, $d);
-    $m++;
-    ($year, $month, $day) = ($y, $m, $d);
+    ($year, $month, $day) = ($y, ++$m, $d);
   }
 
   method get_day_is_marked (Int() $day) is also<get-day-is-marked> {
-    my guint $d = self.RESOLVE-UINT($day);
-    Bool( gtk_calendar_get_day_is_marked($!cal, $d) );
+    my guint $d = $day;
+
+    so gtk_calendar_get_day_is_marked($!cal, $d);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_calendar_get_type, $n, $t );
   }
 
   method mark_day (Int() $day) is also<mark-day> {
-    my guint $d = self.RESOLVE-UINT($day);
+    my guint $d = $day;
+
     gtk_calendar_mark_day($!cal, $d);
   }
 
   method select_day (Int() $day) is also<select-day> {
-    my guint $d = self.RESOLVE-UINT($day);
+    my guint $d = $day;
+
     gtk_calendar_select_day($!cal, $d);
   }
 
   method select_month (Int() $month, Int() $year) is also<select-month> {
-    my @u = ($month, $year);
-    my guint ($m, $y) = self.RESOLVE-UINT(@u);
+    my guint ($m, $y) = ($month, $year);
+
     gtk_calendar_select_month($!cal, $m, $y);
   }
 
@@ -206,7 +217,8 @@ class GTK::Calendar is GTK::Widget {
   }
 
   method unmark_day (Int() $day) is also<unmark-day> {
-    my guint $d = self.RESOLVE-UINT($day);
+    my guint $d = $day;
+
     gtk_calendar_unmark_day($!cal, $d);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

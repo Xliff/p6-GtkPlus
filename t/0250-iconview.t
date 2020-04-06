@@ -3,10 +3,10 @@ use v6.c;
 # Shamelessly ripped off from:
 # https://github.com/davidt/gtk/blob/master/demos/gtk-demo/iconview.c
 
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
+use GLib::Value;
+use GDK::Pixbuf;
 use GTK::Application;
 use GTK::Box;
 use GTK::IconView;
@@ -49,6 +49,8 @@ sub fill_store {
 
   $store.clear;
   for dir($parent.path) {
+    my $pix = .d ?? %pixbufs<folder>.get_pixbuf !! %pixbufs<file>.get_pixbuf;
+
     my %data = (
       0 => GLib::Value.new(G_TYPE_STRING) ,
       1 => GLib::Value.new(G_TYPE_STRING) ,
@@ -58,8 +60,7 @@ sub fill_store {
     );
     %data<0>.string  = .path;
     %data<1>.string  = .basename;
-    %data<2>.object  = .d ??
-      %pixbufs<folder>.get_pixbuf !! %pixbufs<file>.get_pixbuf;
+    %data<2>.object  = $pix.GdkPixbuf;
     %data<3>.boolean = .d;
 
     $store.append($iter);
@@ -84,7 +85,7 @@ sub create_store {
   my @types = (
     G_TYPE_STRING,
     G_TYPE_STRING,
-    GTK::Compat::Pixbuf.get_type(),
+    GDK::Pixbuf.get_type(),
     G_TYPE_BOOLEAN
   );
 

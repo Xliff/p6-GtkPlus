@@ -1,29 +1,26 @@
 v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use Pango::Raw::Types;
 use Pango::FontDescription;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Screen;
-use GTK::Compat::Types;
+use GDK::RGBA;
+use GDK::Screen;
 
 use GTK::Raw::StyleContext;
 use GTK::Raw::Subs;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
 use GTK::Render;
 use GTK::WidgetPath;
 
+use GLib::Roles::Object;
 use GTK::Roles::Signals::Generic;
-use GTK::Roles::Properties;
 
 class GTK::StyleContext {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 
   has GtkStyleContext $!sc is implementor;
@@ -36,15 +33,7 @@ class GTK::StyleContext {
     self.disconnect-all($_) for %!signals;
   }
 
-  method upref {
-    g_object_ref($!sc.p);
-  }
-
-  method downref {
-    g_object_unref($!sc.p);
-  }
-
-  method GTK::Raw::Types::GtkStyleContext
+  method GTK::Raw::Definitions::GtkStyleContext
     is also<
       GtkStyleContext
       StyleContext
@@ -52,7 +41,7 @@ class GTK::StyleContext {
   { $!sc }
 
   multi method new (GtkStyleContext $context) {
-    self.bless(:$context);
+    $context ?? self.bless(:$context) !! Nil;
   }
   multi method new {
     my $context = gtk_style_context_new();
@@ -74,10 +63,10 @@ class GTK::StyleContext {
   method direction is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkTextDirection( gtk_style_context_get_direction($!sc) );
+        GtkTextDirectionEnum( gtk_style_context_get_direction($!sc) );
       },
       STORE => sub ($, Int() $direction is copy) {
-        my guint $d = $direction;
+        my GtkTextDirection $d = $direction;
 
         gtk_style_context_set_direction($!sc, $d);
       }
@@ -98,20 +87,25 @@ class GTK::StyleContext {
   method junction_sides is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkJunctionSides( gtk_style_context_get_junction_sides($!sc) );
+        GtkJunctionSidesEnum( gtk_style_context_get_junction_sides($!sc) );
       },
       STORE => sub ($, Int() $sides is copy) {
-        my guint $s = $sides;
+        my GtkJunctionSides $s = $sides;
 
         gtk_style_context_set_junction_sides($!sc, $s);
       }
     );
   }
 
-  method parent is rw {
+  method parent (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::StyleContext.new( gtk_style_context_get_parent($!sc) );
+        my $sc = gtk_style_context_get_parent($!sc);
+
+        $sc ??
+          ( $raw ?? $sc !! GTK::StyleContext.new($sc) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkStyleContext() $parent is copy) {
         gtk_style_context_set_parent($!sc, $parent);
@@ -119,10 +113,15 @@ class GTK::StyleContext {
     );
   }
 
-  method path is rw {
+  method path (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::WidgetPath.new( gtk_style_context_get_path($!sc) );
+        my $wp = gtk_style_context_get_path($!sc);
+
+        $wp ??
+          ( $raw ?? $wp !! GTK::WidgetPath.new($wp) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkWidgetPath() $path is copy) {
         gtk_style_context_set_path($!sc, $path);
@@ -143,10 +142,15 @@ class GTK::StyleContext {
     );
   }
 
-  method screen is rw {
+  method screen (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Screen.new( gtk_style_context_get_screen($!sc) );
+        my $s = gtk_style_context_get_screen($!sc);
+
+        $s ??
+          ( $raw ?? $s !! GDK::Screen.new($s) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkScreen() $screen is copy) {
         gtk_style_context_set_screen($!sc, $screen);
@@ -176,11 +180,11 @@ class GTK::StyleContext {
   method paint-clock is rw is also<paint_clock> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('paint-clock', $gv)
         );
-        nativecast(GdkFrameClock, $gv.object);
+        cast(GdkFrameClock, $gv.object);
       },
       STORE => -> $, GdkFrameClock() $val is copy {
         $gv.object = $val;
@@ -715,11 +719,13 @@ class GTK::StyleContext {
 
   method add_region (
     Str() $region_name,
-    GtkRegionFlags $flags
+    Int() $flags
   )
     is also<add-region>
   {
-    gtk_style_context_add_region($!sc, $region_name, $flags);
+    my GtkRegionFlags $f = $flags;
+
+    gtk_style_context_add_region($!sc, $region_name, $f);
   }
 
   method cancel_animations (gpointer $region_id) is also<cancel-animations> {
@@ -944,7 +950,7 @@ class GTK::StyleContext {
     gtk_style_context_remove_class($!sc, $class_name);
   }
 
-  method remove_provider (GtkStyleProvider $provider)
+  method remove_provider (GtkStyleProvider() $provider)
     is also<remove-provider>
   {
     gtk_style_context_remove_provider($!sc, $provider);
@@ -952,7 +958,7 @@ class GTK::StyleContext {
 
   method remove_provider_for_screen (
     GdkScreen() $screen,
-    GtkStyleProvider $provider
+    GtkStyleProvider() $provider
   )
     is also<remove-provider-for-screen>
   {

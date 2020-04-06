@@ -1,15 +1,13 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::SearchEntry;
 use GTK::Raw::Types;
 
 use GTK::Entry;
 
-our subset SearchEntryAncestry is export 
+our subset SearchEntryAncestry is export
   where GtkSearchEntry | EntryAncestry;
 
 class GTK::SearchEntry is GTK::Entry {
@@ -27,12 +25,12 @@ class GTK::SearchEntry is GTK::Entry {
       when SearchEntryAncestry {
         $!se = do {
           when GtkSearchEntry {
-            $to-parent = nativecast(GtkEntry, $_);
+            $to-parent = cast(GtkEntry, $_);
             $searchentry;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkSearchEntry, $_);
+            cast(GtkSearchEntry, $_);
 
           }
         };
@@ -44,17 +42,25 @@ class GTK::SearchEntry is GTK::Entry {
       }
     }
   }
-  
-  method GTK::Raw::Types::GtkSearchEntry is also<SearchEntry> { $!se }
 
-  multi method new (SearchEntryAncestry $searchentry) {
+  method GTK::Raw::Definitions::GtkSearchEntry
+    is also<
+      SearchEntry
+      GtkSearchEntry
+    >
+  { $!se }
+
+  multi method new (SearchEntryAncestry $searchentry, :$ref = True) {
+    return Nil unless $searchentry;
+
     my $o = self.bless(:$searchentry);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $searchentry = gtk_search_entry_new();
-    self.bless(:$searchentry);
+
+    $searchentry ?? self.bless(:$searchentry) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -91,10 +97,11 @@ class GTK::SearchEntry is GTK::Entry {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_search_entry_get_type, $n, $t );
   }
 
-  method handle_event (GdkEvent $event) is also<handle-event> {
+  method handle_event (GdkEvent() $event) is also<handle-event> {
     gtk_search_entry_handle_event($!se, $event);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

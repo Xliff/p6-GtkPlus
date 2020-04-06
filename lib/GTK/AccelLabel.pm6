@@ -3,7 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::AccelLabel;
 use GTK::Raw::Types;
 
@@ -16,7 +16,7 @@ class GTK::AccelLabel is GTK::Label {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -43,14 +43,17 @@ class GTK::AccelLabel is GTK::Label {
     }
   }
 
-  multi method new (AccelLabelAncestry $alabel) {
+  multi method new (AccelLabelAncestry $alabel, :$ref = True) {
+    return Nil unless $alabel;
+
     my $o = self.bless(:$alabel);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (Str $label) {
     my $alabel = gtk_accel_label_new($label);
-    self.bless(:$alabel);
+
+    $alabel ?? self.bless(:$alabel) !! Nil;
   }
 
 

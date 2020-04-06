@@ -10,7 +10,8 @@ grammar C-Function-Def {
   rule top-bland  { <function-bland>+ }
 
   rule function-normal {
-    <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def>
+    <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def> |
+    <availability><func_def>
   }
 
   rule function-bland {
@@ -34,7 +35,7 @@ grammar C-Function-Def {
     ] [ <postdec>+ % \s* ]?';'
   }
 
-  token       p { '*'+ }
+  token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
   token       t { <[\w _]>+ }
   rule     type { 'const'? $<n>=\w+ <p>? }
   rule      var { <t>'[]'? }
@@ -47,7 +48,12 @@ grammar C-Function-Def {
       ( <[A..Z]>+'_' )+?
       <ad> [
         '_'
-        ( <[A..Z 0..9]>+ )+ %% '_'
+        ( <[A..Z]>+ )+ %% '_'
+        [
+          'ALL'
+          |
+          <[0..9]>+ %% '_'
+        ]
       ]?
       |
       <[A..Z]>+'_API'
@@ -58,6 +64,20 @@ grammar C-Function-Def {
 
 grammar C-Function-Internal-Def is C-Function-Def {
   token ad { 'INTERNAL' }
+}
+
+# Reuse?? Why the need to redefine this when I have it in the grammar?
+my token ad { 'AVAILABLE' | 'DEPRECATED' }
+my token availability {
+  [
+      ( <[A..Z]>+'_' )+?
+      <ad> [
+        '_'
+        ( <[A..Z 0..9]>+ )+ %% '_'
+      ]?
+      |
+      <[A..Z]>+'_API'
+  ]
 }
 
 sub MAIN (
@@ -107,13 +127,17 @@ sub MAIN (
   # Remove extraneous, non-necessary bits!
   $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
   $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
-  $contents ~~ s:g/ ^^ \s* 'G_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
+  $contents ~~ s:g/ ^^ \s* <[A..Z]>+ '_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
   $contents ~~ s:g/'typedef' .+? ';'//;
   $contents ~~ s:g/ ^ .+? '\\' $//;
   $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
-  $contents ~~ s:g/<!after ';'>\n//;
+  $contents ~~ s:g/<!after ';'>\n/ /;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
+
+  if $bland {
+    $contents ~~ s:g/<availability>//;
+  }
 
   $contents = $contents.lines.skip($trim-start).join("\n")
     if $trim-start & $trim-start ~~ Int;
@@ -160,9 +184,12 @@ sub MAIN (
       $t ~~ s/^double/gdouble/;
       $t ~~ s/void/Pointer/;
       $t ~~ s/GError/CArray[Pointer[GError]]/;
-      if (my $np = (.[0]<p> // '').Str.chars) {
+
+      # By testing time, $np should only contain the count of '*' in the Match
+      my $np = (.[0]<p> // '').Str;
+      if $np = ( ($np ~~ m:g/'*'/).Array.elems ) {
         if $np > 1 {
-          $t = "CArray[{ $t }]" for ^($np.Str.trim.chars - 1);
+          $t = "CArray[{ $t }]" for ^($np - 1);
         }
       }
 
@@ -256,7 +283,11 @@ sub MAIN (
     }
 
     if $h<returns><p> {
-      $p6r = "CArray[{ $p6r }]" for ^($h<returns><p>.Str.trim.chars - 1);
+      # Again, by loop time, $np should be the number of '*' characters found.
+      my $np = ($h<returns><p> // '').Str;
+      $np = ( ($np ~~ m:g/'*'/).Array.elems );
+      $np-- if $p6r eq 'Str'; # Already counts for a '*'
+      $p6r = "CArray[{ $p6r }]" for ^$np - 1;
     }
     $h<p6_return> = $p6r;
 

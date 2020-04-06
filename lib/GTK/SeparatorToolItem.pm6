@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::SeparatorToolItem;
 use GTK::Raw::Types;
 
@@ -27,12 +25,12 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
       when SeparatorToolItemAncestry {
         $!sti = do {
           when GtkSeparatorToolItem {
-            $to-parent = nativecast(GtkToolItem, $_);
+            $to-parent = cast(GtkToolItem, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkSeparatorToolItem, $_);
+            cast(GtkSeparatorToolItem, $_);
           }
         };
         self.setToolItem($to-parent);
@@ -44,12 +42,17 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
     }
   }
 
-  multi method new (SeparatorToolItemAncestry $separator) {
-    self.bless(:$separator);
+  multi method new (SeparatorToolItemAncestry $separator, :$ref = True) {
+    return Nil unless $separator;
+
+    my $o = self.bless(:$separator);
+    $o.ref if $ref;
+    $o;
   }
   multi method new {
     my $separator = gtk_separator_tool_item_new();
-    self.bless(:$separator);
+
+    $separator ?? self.bless(:$separator) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -59,10 +62,11 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
   method draw is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_separator_tool_item_get_draw($!sti) );
+        so gtk_separator_tool_item_get_draw($!sti);
       },
       STORE => sub ($, Int() $draw is copy) {
-        my gboolean $d = $draw == 0 ?? 0 !! 1;
+        my gboolean $d = $draw.so.Int;
+        
         gtk_separator_tool_item_set_draw($!sti, $d);
       }
     );
@@ -72,6 +76,7 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_separator_tool_item_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::PrintJob;
@@ -75,7 +75,7 @@ sub gtk_print_job_send (
 
 sub gtk_print_job_set_page_ranges (
   GtkPrintJob $job,
-  GtkPageRange $ranges,
+  Pointer $ranges,
   gint $n_ranges
 )
   is native(gtk)

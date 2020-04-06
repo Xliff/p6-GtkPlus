@@ -1,13 +1,11 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GLib::GList;
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
-use GTK::Raw::Utils;
 use GTK::Raw::FlowBox;
 
 use GTK::FlowBoxChild;
@@ -40,20 +38,20 @@ class GTK::FlowBox is GTK::Container {
       when FlowBoxAncestry {
         $!fb = do {
           when GtkFlowBox {
-            $to-parent = nativecast(GtkContainer, $_);
+            $to-parent = cast(GtkContainer, $_);
             $_;
           }
           when GtkOrientable {
             $!or = $_;
-            $to-parent = nativecast(GtkContainer, $_);
-            nativecast(GtkFlowBox, $_);
+            $to-parent = cast(GtkContainer, $_);
+            cast(GtkFlowBox, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkFlowBox, $_);
+            cast(GtkFlowBox, $_);
           }
         };
-        $!or //= nativecast(GtkOrientable, $flowbox);
+        $!or //= cast(GtkOrientable, $flowbox);
         self.setContainer($flowbox);
       }
       when GTK::FlowBox {
@@ -63,18 +61,24 @@ class GTK::FlowBox is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkFlowBox
-    is also<FlowBox>
+  method GTK::Raw::Definitions::GtkFlowBox
+    is also<
+      FlowBox
+      GtkFlowBox
+    >
   { $!fb }
 
-  multi method new (FlowBoxAncestry $flowbox) {
+  multi method new (FlowBoxAncestry $flowbox, :$ref = False) {
+    return Nil unless $flowbox;
+
     my $o = self.bless(:$flowbox);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $flowbox = gtk_flow_box_new();
-    self.bless(:$flowbox);
+
+    $flowbox ?? self.bless(:$flowbox) !! Nil;
   }
 
   method !resolve-selected-child($child) {
@@ -128,7 +132,7 @@ class GTK::FlowBox is GTK::Container {
         so gtk_flow_box_get_activate_on_single_click($!fb);
       },
       STORE => sub ($, Int() $single is copy) {
-        my gboolean $s = resolve-bool($single);
+        my gboolean $s = $single.Int.so;
 
         gtk_flow_box_set_activate_on_single_click($!fb, $s);
       }
@@ -141,7 +145,7 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_column_spacing($!fb);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = resolve-int($spacing);
+        my gint $s = $spacing;
 
         gtk_flow_box_set_column_spacing($!fb, $s);
       }
@@ -154,7 +158,7 @@ class GTK::FlowBox is GTK::Container {
         so gtk_flow_box_get_homogeneous($!fb);
       },
       STORE => sub ($, Int() $homogeneous is copy) {
-        my gboolean $h = resolve-bool($homogeneous);
+        my gboolean $h = $homogeneous.Int.so;
 
         gtk_flow_box_set_homogeneous($!fb, $h);
       }
@@ -167,7 +171,7 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_max_children_per_line($!fb);
       },
       STORE => sub ($, Int() $n_children is copy) {
-        my gint $n = resolve-int($n_children);
+        my gint $n = $n_children;
 
         gtk_flow_box_set_max_children_per_line($!fb, $n);
       }
@@ -180,7 +184,7 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_min_children_per_line($!fb);
       },
       STORE => sub ($, Int() $n_children is copy) {
-        my gint $n = resolve-int($n_children);
+        my gint $n = $n_children;
 
         gtk_flow_box_set_min_children_per_line($!fb, $n);
       }
@@ -193,7 +197,7 @@ class GTK::FlowBox is GTK::Container {
         gtk_flow_box_get_row_spacing($!fb);
       },
       STORE => sub ($, Int() $spacing is copy) {
-        my gint $s = resolve-int($spacing);
+        my gint $s = $spacing;
 
         gtk_flow_box_set_row_spacing($!fb, $s);
       }
@@ -203,10 +207,10 @@ class GTK::FlowBox is GTK::Container {
   method selection_mode is rw is also<selection-mode> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkSelectionMode( gtk_flow_box_get_selection_mode($!fb) );
+        GtkSelectionModeEnum( gtk_flow_box_get_selection_mode($!fb) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = resolve-uint($mode);
+        my uint32 $m = $mode;
 
         gtk_flow_box_set_selection_mode($!fb, $m);
       }
@@ -291,7 +295,7 @@ class GTK::FlowBox is GTK::Container {
   method get_child_at_index (Int() $idx, :$raw = False)
     is also<get-child-at-index>
   {
-    my gint $i = resolve-int($idx);
+    my gint $i = $idx;
 
     my $fbc = self.end[$idx];
 
@@ -310,7 +314,7 @@ class GTK::FlowBox is GTK::Container {
   method get_child_at_pos (Int() $x, Int() $y, :$raw = False)
     is also<get-child-at-pos>
   {
-    my gint ($xx, $yy) = resolve-int($x, $y);
+    my gint ($xx, $yy) = $x, $y;
     my $fbc = gtk_flow_box_get_child_at_pos($!fb, $xx, $yy);
 
     $fbc ??
@@ -331,7 +335,7 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method insert ($widget, Int() $position) {
-    my gint $p = resolve-int($position);
+    my gint $p = $position;
     my $inserting = do given $widget {
       when GTK::FlowBoxChild { $_ }
 
@@ -378,13 +382,13 @@ class GTK::FlowBox is GTK::Container {
   }
 
   method set_filter_func (
-    GtkFlowBoxFilterFunc $filter_func,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    &filter_func,
+    gpointer $user_data     = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-filter-func>
   {
-    gtk_flow_box_set_filter_func($!fb, $filter_func, $user_data, $destroy);
+    gtk_flow_box_set_filter_func($!fb, &filter_func, $user_data, $destroy);
   }
 
   method set_hadjustment (GtkAdjustment() $adjustment)
@@ -395,8 +399,8 @@ class GTK::FlowBox is GTK::Container {
 
   multi method set_sort_func (
     &sort_func,
-    gpointer $user_data = Pointer,
-    GDestroyNotify $destroy = Pointer
+    gpointer $user_data     = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify
   )
     is also<set-sort-func>
   {
@@ -413,7 +417,7 @@ class GTK::FlowBox is GTK::Container {
 
   method remove_all(:$keep) is also<remove-all> {
     for %!child-manifest.values {
-      .upref if $keep;
+      .ref if $keep;
       self.remove($_);
     }
   }

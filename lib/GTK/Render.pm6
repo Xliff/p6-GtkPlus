@@ -5,10 +5,8 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Render;
-use GTK::Raw::Utils;
 
 class GTK::Render {
 
@@ -23,7 +21,7 @@ class GTK::Render {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method activity (
-    GtkStyleContext $context,
+    GtkStyleContext() $context,
     cairo_t $cr,
     Num() $x,
     Num() $y,
@@ -31,6 +29,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_activity($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -43,6 +42,7 @@ class GTK::Render {
     Num() $size
   ) {
     my gdouble ($a, $xx, $yy, $ss) = ($angle, $x, $y, $size);
+
     gtk_render_arrow($context, $cr, $a, $xx, $yy, $ss);
   }
 
@@ -55,6 +55,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_background($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -69,6 +70,7 @@ class GTK::Render {
     is also<background-get-clip>
   {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_background_get_clip($context,$xx, $yy, $ww, $hh, $out_clip);
   }
 
@@ -81,6 +83,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_check($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -93,6 +96,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_expander($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -106,7 +110,8 @@ class GTK::Render {
     Int() $gap_side
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
-    my guint $gs = resolve-uint($gap_side);
+    my guint $gs = $gap_side;
+
     gtk_render_extension($context, $cr, $xx, $yy, $ww, $hh, $gs);
   }
 
@@ -119,6 +124,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_focus($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -131,6 +137,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_frame($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -149,7 +156,8 @@ class GTK::Render {
   {
     my gdouble ($xx, $yy, $ww, $hh, $g0, $g1) =
       ($x, $y, $width, $height, $xy0_gap, $xy1_gap);
-    my guint $gs = self.resolve-uint($gap_side);
+    my guint $gs = self.$gap_side;
+
     gtk_render_frame_gap($context, $cr, $xx, $yy, $ww, $hh, $gs, $g0, $g1);
   }
 
@@ -162,6 +170,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_handle($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -173,6 +182,7 @@ class GTK::Render {
     Num() $y
   ) {
     my gdouble ($xx, $yy) = ($x, $y);
+
     gtk_render_icon($context, $cr, $pixbuf, $xx, $yy);
   }
 
@@ -183,7 +193,8 @@ class GTK::Render {
   )
     is also<icon-pixbuf>
   {
-    my guint $s = self.resolve-uint($size);
+    my guint $s = $size;
+
     gtk_render_icon_pixbuf($context, $source, $s);
   }
 
@@ -197,6 +208,7 @@ class GTK::Render {
     is also<icon-surface>
   {
     my gdouble ($xx, $yy) = ($x, $y);
+
     gtk_render_icon_surface($context, $cr, $surface, $xx, $yy);
   }
 
@@ -205,15 +217,16 @@ class GTK::Render {
     cairo_t $cr,
     Num() $x,
     Num() $y,
-    PangoLayout $l,
+    PangoLayout() $l,
     Int() $i,
     Int() $d                  # PangoDirection
   )
     is also<insertion-cursor>
   {
     my gdouble ($xx, $yy) = ($x, $y);
-    my guint $dd = resolve-uint($d);
-    my gint $ii = resolve-int($i);
+    my guint $dd = $d;
+    my gint $ii = $i;
+
     gtk_render_insertion_cursor($context, $cr, $xx, $yy, $l, $ii, $dd);
   }
 
@@ -222,9 +235,10 @@ class GTK::Render {
     cairo_t $cr,
     Num() $x,
     Num() $y,
-    PangoLayout $l
+    PangoLayout() $l
   ) {
     my gdouble ($xx, $yy) = ($x, $y);
+
     gtk_render_layout($context, $cr, $xx, $yy, $l);
   }
 
@@ -237,6 +251,7 @@ class GTK::Render {
     Num() $y1
   ) {
     my gdouble ($xx0, $yy0, $xx1, $yy1) = ($x0, $y0, $x1, $y1);
+
     gtk_render_line($context, $cr, $xx0, $yy0, $xx1, $yy1);
   }
 
@@ -249,6 +264,7 @@ class GTK::Render {
     Num() $height
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
+
     gtk_render_option($context, $cr, $xx, $yy, $ww, $hh);
   }
 
@@ -262,7 +278,8 @@ class GTK::Render {
     Int() $orientation
   ) {
     my gdouble ($xx, $yy, $ww, $hh) = ($x, $y, $width, $height);
-    my guint $o = resolve-uint($orientation);
+    my guint $o = $orientation;
+
     gtk_render_slider($context, $cr, $xx, $yy, $ww, $hh, $o);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

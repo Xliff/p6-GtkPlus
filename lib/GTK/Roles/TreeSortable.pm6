@@ -3,9 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Utils;
-
-use GTK::Compat::Types;
 use GTK::Raw::TreeSortable;
 use GTK::Raw::Types;
 
@@ -35,13 +32,16 @@ role GTK::Roles::TreeSortable {
   )
     is also<get-sort-column-id>
   {
-    my gint $s = resolve-int($sort_column_id);
-    my uint32 $o = resolve-uint($order);
+    my gint $s = $sort_column_id;
+    my uint32 $o = $order;
+
     so gtk_tree_sortable_get_sort_column_id($!ts, $s, $o);
   }
 
   method get_treesortable_type is also<get-treesortable-type> {
-    gtk_tree_sortable_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_tree_sortable_get_type, $n, $t );
   }
 
   method has_default_sort_func is also<has-default-sort-func> {
@@ -64,8 +64,9 @@ role GTK::Roles::TreeSortable {
   )
     is also<set-sort-column-id>
   {
-    my gint $s = resolve-int($sort_column_id);
-    my uint32 $o = resolve-uint($order);
+    my gint $s = $sort_column_id;
+    my uint32 $o = $order;
+
     gtk_tree_sortable_set_sort_column_id($!ts, $s, $o);
   }
 
@@ -77,7 +78,8 @@ role GTK::Roles::TreeSortable {
   )
     is also<set-sort-func>
   {
-    my gint $s = resolve-int($sort_column_id);
+    my gint $s = $sort_column_id;
+
     gtk_tree_sortable_set_sort_func(
       $!ts,
       $s,

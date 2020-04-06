@@ -103,6 +103,8 @@ METH
       VOID
     }
 
+    # We use 𝒮 as opposed to 's' to prevent a naming collision.
+    # between the Supplier and the parameters in the pointy block.
     say qq:to/METH/;
   # { .[1].join(', ') }{ $rt }
   method connect-{ .[0] } (
@@ -112,7 +114,7 @@ METH
   ) \{
     my \$hid;
     \%!signals-{ $name }\{\$signal\} //= do \{
-      my \$s = Supplier.new;
+      my \\𝒮 = Supplier.new;
       \$hid = g-connect-{ .[0] }(\$obj, \$signal,
         -> \$, { $pp }, \$ud{ $rt } \{
           CATCH \{
@@ -123,7 +125,7 @@ METH
         \},
         Pointer, 0
       );
-      [ \$s.Supply, \$obj, \$hid ];
+      [ 𝒮.Supply, \$obj, \$hid ];
     \};
     \%!signals-{ $name }\{\$signal\}[0].tap(\&handler) with \&handler;
     \%!signals-{ $name }\{\$signal\}[0];

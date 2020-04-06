@@ -1,0 +1,39 @@
+use v6.g;
+
+use GTK::Application;
+use GTK::Box;
+use GTK::Button;
+use GTK::Entry;
+use GTK::EntryCompletion;
+use GTK::Notebook;
+use GTK::ToggleButton;
+use GTK::Separator;
+use GTK:Viewport;
+
+my $a = GTK::Application.new( title => 'org.genex.viewport' );
+
+$a.activate.tap({
+  my $alternate-view = False;
+  my $last-search-text = '';
+  my @tab-counter;
+
+  my $v = GTK::Viewport.new;
+  my $av = GTK::Viewport.new;
+
+  ($v.shadow-type, $av.shadow_type) = GTK_SHADOW_NONE xx 2;
+
+  my $filter-vbox = GTK::Box.new-vbox;
+  $filter-vbox.border-width = 0;
+
+  given (my $filter-button = GTK::ToggleButton.new) {
+    .use-underline = True;
+    .label = '&Filters';
+    .relief = GTK_RELIEF_NONE;
+    .set-alignment(0, 0.5);
+    .toggled.tap(
+
+
+
+});
+
+$a.run;

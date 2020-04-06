@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Menu;
 use GTK::Raw::Types;
 
@@ -12,6 +10,7 @@ use GTK::Roles::Signals::Menu;
 
 use GTK::AccelGroup;
 use GTK::MenuShell;
+use GTK::Widget;
 
 our subset MenuAncestry is export where GtkMenu | MenuShellAncestry;
 
@@ -28,13 +27,9 @@ class GTK::Menu is GTK::MenuShell {
 
   submethod BUILD(:$menu, :@items) {
     given $menu {
-      when MenuAncestry {
-        self.setMenu($_);
-      }
-      when GTK::Menu {
-      }
-      default {
-      }
+      when MenuAncestry { self.setMenu($_) }
+      when GTK::Menu    { }
+      default           { }
     }
 
     # Type check is done inside.
@@ -45,12 +40,12 @@ class GTK::Menu is GTK::MenuShell {
     my $to-parent;
     $!m = do given $menu {
       when GtkMenu {
-        $to-parent = nativecast(GtkMenuShell, $_);
+        $to-parent = cast(GtkMenuShell, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkMenu, $_);
+        cast(GtkMenu, $_);
       }
     };
     self.setMenuShell($to-parent);
@@ -60,25 +55,35 @@ class GTK::Menu is GTK::MenuShell {
     self.disconnect-all($_) for %!signals-menu;
   }
 
-  method GTK::Raw::Types::GtkMenu is also<Menu> { $!m }
+  method GTK::Raw::Definitions::GtkMenu
+    is also<
+      Menu
+      GtkMenu
+    >
+  { $!m }
 
-  multi method new (MenuAncestry $menu) {
+  multi method new (MenuAncestry $menu, :$ref = True) {
+    return Nil unless $menu;
+
     my $o = self.bless(:$menu);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $menu = gtk_menu_new();
-    self.bless(:$menu);
+
+    $menu ?? self.bless(:$menu) !! Nil;
   }
   multi method new (*@items) {
     my $menu = gtk_menu_new();
-    self.bless(:$menu, :@items);
+
+    $menu ?? self.bless(:$menu, :@items) !! Nil;
   }
 
   method new_from_model (GMenuModel() $model) is also<new-from-model> {
     my $menu = gtk_menu_new_from_model($model);
-    self.bless(:$menu);
+
+    $menu ?? self.bless(:$menu) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -97,10 +102,15 @@ class GTK::Menu is GTK::MenuShell {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method accel_group is rw is also<accel-group> {
+  method accel_group (:$raw = False) is rw is also<accel-group> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::AccelGroup.new( gtk_menu_get_accel_group($!m) );
+        my $ag = gtk_menu_get_accel_group($!m);
+
+        $ag ??
+          ( $raw ?? $ag !! GTK::AccelGroup.new($ag) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAccelGroup() $accel_group is copy) {
         gtk_menu_set_accel_group($!m, $accel_group);
@@ -125,7 +135,8 @@ class GTK::Menu is GTK::MenuShell {
         gtk_menu_get_active($!m);
       },
       STORE => sub ($, Int() $index is copy) {
-        my gint $i = self.RESOLVE-INT($index);
+        my gint $i = $index;
+
         gtk_menu_set_active($!m, $i);
       }
     );
@@ -137,7 +148,8 @@ class GTK::Menu is GTK::MenuShell {
         gtk_menu_get_monitor($!m);
       },
       STORE => sub ($, Int() $monitor_num is copy) {
-        my gint $mn = self.RESOLVE-INT($monitor_num);
+        my gint $mn = $monitor_num;
+
         gtk_menu_set_monitor($!m, $mn);
       }
     );
@@ -149,7 +161,8 @@ class GTK::Menu is GTK::MenuShell {
         so gtk_menu_get_reserve_toggle_size($!m);
       },
       STORE => sub ($, Int() $reserve_toggle_size is copy) {
-        my $rts = self.RESOLVE-BOOL($reserve_toggle_size);
+        my gboolean $rts = $reserve_toggle_size.so.Int;
+
         gtk_menu_set_reserve_toggle_size($!m, $rts);
       }
     );
@@ -160,8 +173,9 @@ class GTK::Menu is GTK::MenuShell {
       FETCH => sub ($) {
         so gtk_menu_get_tearoff_state($!m);
       },
-      STORE => sub ($, $torn_off is copy) {
-        my $to = self.RESOLVE-BOOL($torn_off);
+      STORE => sub ($, Int() $torn_off is copy) {
+        my gboolean $to = $torn_off.so.Int;
+
         gtk_menu_set_tearoff_state($!m, $to);
       }
     );
@@ -187,8 +201,9 @@ class GTK::Menu is GTK::MenuShell {
     Int() $top_attach,
     Int() $bottom_attach
   ) {
-    my @u = ($left_attach, $right_attach, $top_attach, $bottom_attach);
-    my guint ($la, $ra, $ta, $ba) = self.RESOLVE-UINT(@u);
+    my guint ($la, $ra, $ta, $ba) =
+      ($left_attach, $right_attach, $top_attach, $bottom_attach);
+
     gtk_menu_attach($!m, $child, $la, $ra, $ta, $ba);
   }
 
@@ -205,22 +220,39 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_detach($!m);
   }
 
-  method get_attach_widget
+  method get_attach_widget (:$raw = False, :$widget = False)
     is also<
       get-attach-widget
       attach_widget
       attach-widget
     >
   {
-    GTK::Widget.new( gtk_menu_get_attach_widget($!m) );
+    my $w = gtk_menu_get_attach_widget($!m);
+
+    ReturnWidget($w, $raw, $widget);
   }
 
-  method get_for_attach_widget is also<get-for-attach-widget> {
-    gtk_menu_get_for_attach_widget($!m.Widget);
+  method get_for_attach_widget (
+    GTK::Menu:U:
+    GtkWidget() $w,
+    :$glist  = False,
+    :$raw    = False,
+    :$widget = False
+  )
+    is also<get-for-attach-widget>
+  {
+    my $wl = gtk_menu_get_for_attach_widget($w);
+
+    return Nil unless $wl;
+    return $wl if $glist;
+
+    $wl = GLib::GList.new($wl) but GLib::Roles::ListData[GtkWidget];
+    $wl.Array.map({ ReturnWidget($_, $raw, $widget) });
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_menu_get_type, $n, $t );
   }
 
@@ -234,24 +266,7 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_popdown($!m);
   }
 
-  multi method popup (
-    GtkWidget() $parent_menu_shell,
-    GtkWidget() $parent_menu_item,
-    GtkMenuPositionFunc $func,
-    gpointer $data,
-    Int() $button,
-    Int() $activate_time
-  )
-    is DEPRECATED
-  {
-    my @u = ($button, $activate_time);
-    my guint32 ($b, $at) = self.RESOLVE-UINT(@u);
-    gtk_menu_popup(
-      $!m, $parent_menu_shell, $parent_menu_item, $func, $data, $b, $at
-    );
-  }
-
-  method popup_at_pointer (GdkEvent $trigger_event)
+  method popup_at_pointer (GdkEvent() $trigger_event)
     is also<popup-at-pointer>
   {
     gtk_menu_popup_at_pointer($!m, $trigger_event);
@@ -259,14 +274,15 @@ class GTK::Menu is GTK::MenuShell {
 
   method popup_at_rect (
     GdkWindow() $rect_window,
-    GdkRectangle $rect,
+    GdkRectangle() $rect,
     Int() $rect_anchor,
     Int() $menu_anchor,
-    GdkEvent $trigger_event
+    GdkEvent() $trigger_event
   )
     is also<popup-at-rect>
   {
-    my guint ($ra, $ma) = self.RESOLVE-UINT($rect_anchor, $menu_anchor);
+    my guint ($ra, $ma) = $rect_anchor, $menu_anchor;
+
     gtk_menu_popup_at_rect(
       $!m,
       $rect_window,
@@ -281,46 +297,20 @@ class GTK::Menu is GTK::MenuShell {
     GtkWidget() $widget,
     Int() $widget_anchor,
     Int() $menu_anchor,
-    GdkEvent $trigger_event
+    GdkEvent() $trigger_event
   )
     is also<popup-at-widget>
   {
-    my guint ($wa, $ma) = self.RESOLVE-UINT($widget_anchor, $menu_anchor);
-    gtk_menu_popup_at_widget($!m, $widget, $wa, $ma, $trigger_event);
-  }
+    my guint ($wa, $ma) = ($widget_anchor, $menu_anchor);
 
-  method popup_for_device (
-    GdkDevice() $device,
-    GtkWidget() $parent_menu_shell,
-    GtkWidget() $parent_menu_item,
-    GtkMenuPositionFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy,
-    Int() $button,
-    Int() $activate_time
-  )
-    is DEPRECATED
-    is also<popup-for-device>
-  {
-    my @u = ($button, $activate_time);
-    my guint32 ($b, $at) = self.RESOLVE-UINT(@u);
-    gtk_menu_popup_for_device(
-      $!m,
-      $device,
-      $parent_menu_shell,
-      $parent_menu_item,
-      $func,
-      $data,
-      $destroy,
-      $b,
-      $at
-    );
+    gtk_menu_popup_at_widget($!m, $widget, $wa, $ma, $trigger_event);
   }
 
   method reorder_child (GtkWidget() $child, Int() $position)
     is also<reorder-child>
   {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     gtk_menu_reorder_child($!m, $child, $p);
   }
 

@@ -7,11 +7,8 @@ use Pango::Raw::Types;
 
 use Pango::FontDescription;
 
-use GTK::Compat::Types;
 use GTK::Raw::FontChooser;
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GTK::Roles::Signals::Generic;
 
@@ -20,7 +17,7 @@ role GTK::Roles::FontChooser {
 
   has GtkFontChooser $!fc;
 
-  method GTK::Raw::Types::GtkFontChooser
+  method GTK::Raw::Definitions::GtkFontChooser
     is also<GtkFontChooser>
   { $!fc }
 
@@ -95,7 +92,7 @@ role GTK::Roles::FontChooser {
         so gtk_font_chooser_get_show_preview_entry($!fc);
       },
       STORE => sub ($, Int() $show_preview_entry is copy) {
-        my gboolean $spe = resolve-bool($show_preview_entry);
+        my gboolean $spe = $show_preview_entry.so.Int;
 
         gtk_font_chooser_set_show_preview_entry($!fc, $spe);
       }

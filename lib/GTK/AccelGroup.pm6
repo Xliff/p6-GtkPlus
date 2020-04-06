@@ -3,10 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Utils;
-
 use GLib::Value;
-use GTK::Compat::Types;
+
 use GTK::Raw::AccelGroup;
 use GTK::Raw::Types;
 
@@ -19,7 +17,18 @@ class GTK::AccelGroup {
     $!ag = $group;
   }
 
-  method new {
+  method GTK::Raw::Definitions::GtkAccelGroup
+    is also<GtkAccelGroup>
+  { $!ag }
+
+  multi method new (GtkAccelGroup $group, :$ref = True) {
+    return Nil unless $group;
+
+    my $o = self.bless(:$group);
+    $o.ref if $ref;
+    $o;
+  }
+  multi method new {
     my $group = gtk_accel_group_new();
 
     $group ?? self.bless(:$group) !! Nil;
@@ -51,7 +60,7 @@ class GTK::AccelGroup {
   method is-locked is rw is also<is_locked> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('is-locked', $gv)
          );
@@ -67,7 +76,7 @@ class GTK::AccelGroup {
   method modifier-mask is rw is also<modifier_mask> {
     my GLib::Value $gv .= new( G_TYPE_ENUM );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('modifier-mask', $gv)
         );

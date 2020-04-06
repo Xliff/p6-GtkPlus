@@ -3,18 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::PrintJob;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GTK::PageSetup;
+use GTK::PrintSettings;
+use GTK::Printer;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 class GTK::PrintJob {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
@@ -28,10 +30,15 @@ class GTK::PrintJob {
     self.disconnect-all($_) for %!signals;
   }
 
-  method GTK::Raw::Types::GtkPrintJob is also<PrintJob> { $!prnjob }
+  method GTK::Raw::Definitions::GtkPrintJob
+    is also<
+      PrintJob
+      GtkPrintJob
+    >
+  { $!prnjob }
 
   multi method new(GtkPrintJob() $job) {
-    self.bless(:$job);
+    $job ?? self.bless(:$job) !! Nil;
   }
   multi method new (
     Str() $title,
@@ -40,7 +47,8 @@ class GTK::PrintJob {
     GtkPageSetup() $page_setup
   ) {
     my $job = gtk_print_job_new($title, $printer, $settings, $page_setup);
-    self.bless(:$job);
+
+    $job ?? self.bless(:$job) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -61,7 +69,8 @@ class GTK::PrintJob {
         so gtk_print_job_get_collate($!prnjob);
       },
       STORE => sub ($, $collate is copy) {
-        my gboolean $c = self.RESOLVE-BOOL($collate);
+        my gboolean $c = $collate.so.Int;
+
         gtk_print_job_set_collate($!prnjob, $c);
       }
     );
@@ -73,7 +82,8 @@ class GTK::PrintJob {
         gtk_print_job_get_n_up($!prnjob);
       },
       STORE => sub ($, Int() $n_up is copy) {
-        my guint $nu = self.RESOLVE-UINT($n_up);
+        my guint $nu = $n_up;
+
         gtk_print_job_set_n_up($!prnjob, $nu);
       }
     );
@@ -82,10 +92,11 @@ class GTK::PrintJob {
   method n_up_layout is rw is also<n-up-layout> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkNumberUpLayout( gtk_print_job_get_n_up_layout($!prnjob) );
+        GtkNumberUpLayoutEnum( gtk_print_job_get_n_up_layout($!prnjob) );
       },
       STORE => sub ($, Int() $layout is copy) {
-        my guint $l = self.RESOLVE-UINT($layout);
+        my guint $l = $layout;
+
         gtk_print_job_set_n_up_layout($!prnjob, $l);
       }
     );
@@ -97,7 +108,8 @@ class GTK::PrintJob {
         gtk_print_job_get_num_copies($!prnjob);
       },
       STORE => sub ($, Int() $num_copies is copy) {
-        my gint $nc = self.RESOLVE-INT($num_copies);
+        my gint $nc = $num_copies;
+
         gtk_print_job_set_num_copies($!prnjob, $nc);
       }
     );
@@ -106,10 +118,11 @@ class GTK::PrintJob {
   method page_set is rw is also<page-set> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPageSet( gtk_print_job_get_page_set($!prnjob) );
+        GtkPageSetEnum( gtk_print_job_get_page_set($!prnjob) );
       },
       STORE => sub ($, Int() $page_set is copy) {
-        my guint $ps = self.RESOLVE-UINT($page_set);
+        my guint $ps = $page_set;
+
         gtk_print_job_set_page_set($!prnjob, $ps);
       }
     );
@@ -118,10 +131,11 @@ class GTK::PrintJob {
   method pages is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPrintPages( gtk_print_job_get_pages($!prnjob) );
+        GtkPrintPagesEnum( gtk_print_job_get_pages($!prnjob) );
       },
       STORE => sub ($, $pages is copy) {
-        my guint $p = self.RESOLVE-UINT($pages);
+        my guint $p = $pages;
+
         gtk_print_job_set_pages($!prnjob, $p);
       }
     );
@@ -133,7 +147,8 @@ class GTK::PrintJob {
         so gtk_print_job_get_reverse($!prnjob);
       },
       STORE => sub ($, $reverse is copy) {
-        my gboolean $r = self.RESOLVE-BOOL($reverse);
+        my gboolean $r = $reverse.so.Int;
+
         gtk_print_job_set_reverse($!prnjob, $r);
       }
     );
@@ -145,7 +160,8 @@ class GTK::PrintJob {
         so gtk_print_job_get_rotate($!prnjob);
       },
       STORE => sub ($, $rotate is copy) {
-        my gboolean $r = self.RESOLVE-BOOL($rotate);
+        my gboolean $r = $rotate.so.Int;
+
         gtk_print_job_set_rotate($!prnjob, $r);
       }
     );
@@ -168,7 +184,8 @@ class GTK::PrintJob {
         so gtk_print_job_get_track_print_status($!prnjob);
       },
       STORE => sub ($, $track_status is copy) {
-        my gboolean $ts = self.RESOLVE-BOOL($track_status);
+        my gboolean $ts = $track_status.so.Int;
+
         gtk_print_job_set_track_print_status($!prnjob, $ts);
       }
     );
@@ -182,7 +199,7 @@ class GTK::PrintJob {
   method page-setup is rw is also<page_setup> {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('page-setup', $gv)
         );
@@ -199,7 +216,7 @@ class GTK::PrintJob {
   method printer is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('printer', $gv)
         );
@@ -213,14 +230,20 @@ class GTK::PrintJob {
   }
 
   # Type: GtkPrintSettings
-  method settings is rw {
+  method settings (:$raw = False) is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('settings', $gv)
         );
-        GTK::PrintSettings.new( nativecast(GtkPrintSettings, $gv.object) );
+
+        my $ps = nativecast(GtkPrintSettings, $gv.object);
+
+        $ps ??
+          ( $raw ?? $ps !! GTK::PrintSettings.new($ps) )
+          !!
+          Nil;
       },
       STORE => -> $, GtkPrintSettings() $val is copy {
         $gv.object = $val;
@@ -233,7 +256,7 @@ class GTK::PrintJob {
   method title is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('title', $gv)
         );
@@ -250,19 +273,33 @@ class GTK::PrintJob {
   # ↓↓↓↓ METHODS ↓↓↓↓
 
   method get_page_ranges (Int() $n_ranges) is also<get-page-ranges> {
-    my gint $nr = self.RESOLVE-INT($n_ranges);
+    my gint $nr = $n_ranges;
+
     gtk_print_job_get_page_ranges($!prnjob, $nr);
   }
 
-  method get_printer is also<get-printer> {
+  method get_printer
+    is also<
+      get-printer
+    >
+  {
     gtk_print_job_get_printer($!prnjob);
   }
 
-  method get_settings is also<get-settings> {
+  method get_settings
+    is also<
+      get-settings
+    >
+  {
     gtk_print_job_get_settings($!prnjob);
   }
 
-  method get_status is also<get-status> {
+  method get_status
+    is also<
+      get-status
+      status
+    >
+  {
     gtk_print_job_get_status($!prnjob);
   }
 
@@ -273,33 +310,48 @@ class GTK::PrintJob {
   {
     clear_error;
     my $rc = gtk_print_job_get_surface($!prnjob, $error);
-    $ERROR = $error with $error[0];
+    set_error($error);
     $rc;
   }
 
-  method get_title is also<get-title> {
+  method get_title
+    is also<
+      get-title
+    >
+  {
     gtk_print_job_get_title($!prnjob);
   }
 
   method get_type is also<get-type> {
-    gtk_print_job_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_print_job_get_type, $n, $t );
   }
 
   method send (
-    GtkPrintJobCompleteFunc $callback,
+    &callback,
     gpointer $user_data = gpointer,
     GDestroyNotify $dnotify = GDestroyNotify
   ) {
-    gtk_print_job_send($!prnjob, $callback, $user_data, $dnotify);
+    gtk_print_job_send($!prnjob, &callback, $user_data, $dnotify);
   }
 
-  method set_page_ranges (
-    GtkPageRange $ranges,
-    Int() $n_ranges
-  )
+  proto method set_page_ranges (|)
     is also<set-page-ranges>
-  {
-    my gint $nr = self.RESOLVE-INT($n_ranges);
+  { * }
+
+  multi method set_page_ranges (@ranges) {
+    samewith(
+      GLib::Roles::TypedBuffer[GtkPageRange].new(@ranges).p,
+      @ranges.elems
+    );
+  }
+  multi method set_page_ranges (
+    Pointer $ranges,
+    Int() $n_ranges
+  ) {
+    my gint $nr = $n_ranges;
+
     gtk_print_job_set_page_ranges($!prnjob, $ranges, $nr);
   }
 
@@ -310,9 +362,9 @@ class GTK::PrintJob {
     is also<set-source-fd>
   {
     clear_error;
-    my int32 $f = self.RESOLVE-INT($fd);
+    my int32 $f = $fd;
     my $rc = gtk_print_job_set_source_fd($!prnjob, $f, $error);
-    $ERROR = $error with $error[0];
+    set_error($error);
     $rc;
   }
 
@@ -324,7 +376,7 @@ class GTK::PrintJob {
   {
     clear_error;
     my $rc = gtk_print_job_set_source_file($!prnjob, $filename, $error);
-    $ERROR = $error with $error[0];
+    set_error($error);
     $rc;
   }
 

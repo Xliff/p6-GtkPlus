@@ -3,9 +3,8 @@ use v6.c;
 use Cairo;
 
 #use GLib::GList;
-use GTK::Compat::Types;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
+#use GTK::Raw::Utils;
 
 use GTK::Application;
 use GTK::Box;
@@ -95,7 +94,9 @@ multi sub draw_style_common-ro ($c, $w, $h) {
 }
 multi sub draw_style_common-ro ($c, $x, $y, $w, $h) {
   my %*b = (
-    margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
+    border  => GtkBorder.new,
+    margin  => GtkBorder.new,
+    padding => GtkBorder.new
   );
   my $*cax = $x // $*x;
   my $*cay = $y // $*y;
@@ -121,7 +122,9 @@ multi sub draw_style_common (
   my $*caw = $w // $*w;
   my $*cah = $h // $*h;
   my %*b = (
-    margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
+    border  => GtkBorder.new,
+    margin  => GtkBorder.new,
+    padding => GtkBorder.new
   );
   common_draw($c, $*cax, $*cay, $*caw, $*cah);
   common_adjust($cx // $*cx, $cy // $*cy, $cw // $*cw, $ch // $*ch);
@@ -129,7 +132,9 @@ multi sub draw_style_common (
 
 multi sub query_size($cc, $w is rw, $h is rw) {
   my %*b = (
-    margin => GtkBorder.new, border => GtkBorder.new, padding => GtkBorder.new
+    border  => GtkBorder.new,
+    margin  => GtkBorder.new,
+    padding => GtkBorder.new
   );
   # Warning: dynamic method call.
   $cc."get_{ $_ }"($cc.state, %*b{$_}) for %*b.keys;
@@ -149,8 +154,7 @@ multi sub query_size($cc, $w is rw, $h is rw) {
 }
 
 sub get_style($pp, $s) {
-  my $p = $pp.defined ??
-    GTK::WidgetPath.copy( $pp.path ) !! GTK::WidgetPath.new;
+  my $p = $pp ?? GTK::WidgetPath.copy( $pp.path ) !! GTK::WidgetPath.new;
 
   append_element($p, $s);
   create_context_for_path($p, $pp);
@@ -163,7 +167,7 @@ sub get_style_with_siblings ($pp, $s, @sibs, $pos) {
   my $sp = GTK::WidgetPath.new;
   append_element($sp, $_) for @sibs;
   $p.append_with_siblings($sp, $pos);
-  $sp.downref;
+  $sp.unref;
   create_context_for_path($p, $pp);
 }
 
@@ -249,8 +253,8 @@ sub draw_menu($w) {
                     $tx, $ty, $tw, $th);
   GTK::Render.check($drc, $*cr, $tx, $ty, $tw, $th);
 
-  .downref for  $mc, $mic, $hmc, $hac, $amc, $cmc, $dac, $dcc, $rmc, $dmc,
-               $drc, $smc;
+  .unref for  $mc, $mic, $hmc, $hac, $amc, $cmc, $dac, $dcc, $rmc, $dmc,
+              $drc, $smc;
 }
 
 sub draw_menubar ($w) {
@@ -273,7 +277,7 @@ sub draw_menubar ($w) {
   draw_style_common-ro( $hc,           $*cx, $*cy, $iw, $*ch);
   draw_style_common-ro($mic, $*cw + $iw * 2, $*cy, $iw, $*ch);
 
-  .downref for $mic, $hc, $mc, $bc, $fc;
+  .unref for $mic, $hc, $mc, $bc, $fc;
 }
 
 sub draw_notebook($w, $h) {
@@ -295,7 +299,7 @@ sub draw_notebook($w, $h) {
   draw_style_common-ro($t2c,  $*x + $w/2,          $, $w/2,       $hh);
   draw_style_common-ro( $sc,         $*x,  $*y + $hh,   $w, $*h - $hh);
 
-  .downref for $sc, $tc, $t1c, $t2c, $hc, $nc;
+  .unref for $sc, $tc, $t1c, $t2c, $hc, $nc;
 }
 
 sub draw_horizontal_scrollbar($w, $p, $s) {
@@ -319,7 +323,7 @@ sub draw_horizontal_scrollbar($w, $p, $s) {
   my $xp = $*x + $p;
   draw_style_common-ro($slc, $xp, $, $sw, $);
 
-  .downref for $sc, $tc, $cc, $slc;
+  .unref for $sc, $tc, $cc, $slc;
 }
 
 sub draw_text($w, $h, $t, $s) {
@@ -334,7 +338,7 @@ sub draw_text($w, $h, $t, $s) {
   GTK::Render.frame($c, $*cr, $*x, $*y, $w, $h);
   GTK::Render.layout($c, $*cr, $*x, $*y, $l);
 
-  .downref for $sc, $lc;
+  .unref for $sc, $lc;
 }
 
 sub _draw_checkradio($s, $t) {
@@ -350,7 +354,7 @@ sub _draw_checkradio($s, $t) {
   draw_style_common-ro($bc, $w, $h);
   draw_style_common($cc, $w, $h);
   GTK::Render.check($cc, $*cr, $*cx, $*cy, $*cw, $*ch);
-  .downref for $cc, $bc;
+  .unref for $cc, $bc;
 }
 
 sub draw_check($s) {
@@ -372,7 +376,7 @@ sub draw_progress($w, $p) {
   query_size($_, $, $*y) for $bc, $tc, $pc;
   draw_style_common-ro($_, $, $, $_ =:= $pc ?? $p !! $w, $)
     for $bc, $tc, $pc;
-  .downref for $bc, $tc, $pc;
+  .unref for $bc, $tc, $pc;
 }
 
 sub draw_scale($w, $p) {
@@ -401,7 +405,7 @@ sub draw_scale($w, $p) {
   draw_style_common-ro( $hc,      $*cx, $*cy, $*cw / 2, $*ch);
   draw_style_common-ro($slc, $*cx + $p, $*cy,     $*ch, $*ch);
 
-  .downref for $sc, $cc, $tc, $slc,  $hc
+  .unref for $sc, $cc, $tc, $slc,  $hc
 }
 
 sub draw_combobox($xx, $w, $he) {
@@ -447,7 +451,7 @@ sub draw_combobox($xx, $w, $he) {
   );
 
   @c = $he ?? ($ac, $ec, $bc, $cc) !! ($ac, $bc, $cc);
-  .downref for @c;
+  .unref for @c;
 }
 
 sub draw_spinbutton($w) {
@@ -482,7 +486,7 @@ sub draw_spinbutton($w) {
     GTK::Render.icon($ctx, $*cr, $p, $*cx, $*cy + ($*ch - $is) / 2);
   }
 
-  .downref for $dc, $uc, $ec, $sc;
+  .unref for $dc, $uc, $ec, $sc;
 }
 
 sub do_draw($ct) {

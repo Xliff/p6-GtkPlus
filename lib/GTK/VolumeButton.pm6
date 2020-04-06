@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::VolumeButton;
 
@@ -25,18 +23,18 @@ class GTK::VolumeButton is GTK::ScaleButton {
     $o;
   }
 
-  submethod BUILD(:$button) {
-    given $button {
+  submethod BUILD(:$volume-button) {
+    given $volume-button {
       my $to-parent;
       when VolumeButtonAncestry {
         $!vb = do {
           when GtkVolumeButton {
-            $to-parent = nativecast(GtkScaleButton, $_);
+            $to-parent = cast(GtkScaleButton, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkVolumeButton, $_);
+            cast(GtkVolumeButton, $_);
           }
         }
         self.setScaleButton($to-parent);
@@ -48,14 +46,17 @@ class GTK::VolumeButton is GTK::ScaleButton {
     }
   }
 
-  multi method new (VolumeButtonAncestry $button) {
-    my $o = self.bless(:$button);
-    $o.upref;
+  multi method new (VolumeButtonAncestry $volume-button, $ref = True) {
+    return Nil unless $volume-button;
+
+    my $o = self.bless(:$volume-button);
+    $o.ref if $ref;
     $o;
   }
   multi method new {
-    my $button = gtk_volume_button_new();
-    self.bless(:$button);
+    my $volume-button = gtk_volume_button_new();
+
+    $volume-button ?? self.bless(:$volume-button) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -67,6 +68,7 @@ class GTK::VolumeButton is GTK::ScaleButton {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+    
     GTK::Widget.unstable_get_type( &gtk_volume_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

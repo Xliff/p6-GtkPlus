@@ -3,13 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Button;
 use GTK::Raw::Types;
 
 use GTK::Roles::Actionable;
 
-use GTK::Compat::Window;
+use GDK::Window;
 
 use GTK::Bin;
 use GTK::Widget;
@@ -24,7 +23,7 @@ class GTK::Button is GTK::Bin {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -45,8 +44,11 @@ class GTK::Button is GTK::Bin {
     }
   }
 
-  method GTK::Raw::Types::GtkButton
-    is also<Button>
+  method GTK::Raw::Definitions::GtkButton
+    is also<
+      Button
+      GtkButton
+    >
   { $!b }
 
   method setButton(ButtonAncestry $_) {
@@ -75,11 +77,12 @@ class GTK::Button is GTK::Bin {
   proto method new (|)
   { * }
 
-  multi method new(ButtonAncestry $button) {
+  multi method new(ButtonAncestry $button, :$ref = True) {
     return Nil unless $button;
 
     my $o = self.bless(:$button);
-    $o.ref;
+    $o.ref if $ref;
+    $o;
   }
   multi method new {
     my $button = gtk_button_new();
@@ -95,7 +98,8 @@ class GTK::Button is GTK::Bin {
     is also<new-with-mnemonic>
   {
     my $button = gtk_button_new_with_mnemonic($label);
-    self.bless(:$button)
+
+    $button ?? self.bless(:$button) !! Nil;
   }
 
   method new_from_icon_name (
@@ -104,7 +108,8 @@ class GTK::Button is GTK::Bin {
   )
     is also<new-from-icon-name>
   {
-    my $button = gtk_button_new_from_icon_name($icon_name, $size);
+    my GtkIconSize $s = $size;
+    my $button = gtk_button_new_from_icon_name($icon_name, $s);
 
     $button ?? self.bless(:$button) !! Nil;
   }
@@ -132,10 +137,10 @@ class GTK::Button is GTK::Bin {
   method always_show_image is rw is also<always-show-image> {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_button_get_always_show_image($!b) );
+        so gtk_button_get_always_show_image($!b);
       },
       STORE => sub ($, Int() $always_show is copy) {
-        my gboolean $as = (so $always_show).Int;
+        my gboolean $as = $always_show.so.Int;
 
         gtk_button_set_always_show_image($!b, $as);
       }
@@ -148,7 +153,7 @@ class GTK::Button is GTK::Bin {
         Bool( gtk_button_get_focus_on_click($!b) );
       },
       STORE => sub ($, Int() $focus_on_click is copy) {
-        my gboolean $fc = (so $focus_on_click).Int;
+        my gboolean $fc = $focus_on_click.so.Int;
 
         gtk_button_set_focus_on_click($!b, $fc);
       }
@@ -176,7 +181,7 @@ class GTK::Button is GTK::Bin {
   method image_position is rw is also<image-position> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkPositionType( gtk_button_get_image_position($!b) );
+        GtkPositionTypeEnum( gtk_button_get_image_position($!b) );
       },
       STORE => sub ($, Int() $position is copy) {
         my uint32 $p = $position;
@@ -200,7 +205,7 @@ class GTK::Button is GTK::Bin {
   method relief is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkReliefStyle( gtk_button_get_relief($!b) );
+        GtkReliefStyleEnum( gtk_button_get_relief($!b) );
       },
       STORE => sub ($, Int() $relief is copy) {
         my uint32 $r = $relief;
@@ -216,7 +221,7 @@ class GTK::Button is GTK::Bin {
         so gtk_button_get_use_stock($!b);
       },
       STORE => sub ($, Int() $use_stock is copy) {
-        my gboolean $us = (so $use_stock).Int;
+        my gboolean $us = $use_stock.so.Int;
 
         gtk_button_set_use_stock($!b, $us);
       }
@@ -229,7 +234,7 @@ class GTK::Button is GTK::Bin {
         so gtk_button_get_use_underline($!b);
       },
       STORE => sub ($, $use_underline is copy) {
-        my gboolean $uu = (so $use_underline).Int;
+        my gboolean $uu = $use_underline.so.Int;
 
         gtk_button_set_use_underline($!b, $use_underline);
       }
@@ -304,7 +309,7 @@ class GTK::Button is GTK::Bin {
     my $w = gtk_button_get_event_window($!b);
 
     $w ??
-      ( $raw ?? $w !! GTK::Compat::Window.new($w) )
+      ( $raw ?? $w !! GDK::Window.new($w) )
       !!
       Nil;
   }

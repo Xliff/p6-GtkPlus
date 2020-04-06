@@ -3,10 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GTK::Raw::RecentChooser;
 
@@ -19,6 +16,12 @@ role GTK::Roles::RecentChooser {
   also does GTK::Roles::Signals::Generic;
 
   has GtkRecentChooser $!rc;
+
+  method roleInit-RecentChooser {
+    my \i = findProperImplementor(self.^attributes);
+
+    $!rc = cast( GtkRecentChooser, i.get_value(self) );
+  }
 
   method filter is rw {
     Proxy.new(
@@ -37,7 +40,8 @@ role GTK::Roles::RecentChooser {
         gtk_recent_chooser_get_limit($!rc);
       },
       STORE => sub ($, Int() $limit is copy) {
-        my gint $l = resolve-int($limit);
+        my gint $l = $limit;
+
         gtk_recent_chooser_set_limit($!rc, $l);
       }
     );
@@ -49,7 +53,8 @@ role GTK::Roles::RecentChooser {
         so gtk_recent_chooser_get_local_only($!rc);
       },
       STORE => sub ($, Int() $local_only is copy) {
-        my gboolean $l = resolve-bool($local_only);
+        my gboolean $l = $local_only.so.Int;
+
         gtk_recent_chooser_set_local_only($!rc, $local_only);
       }
     );
@@ -61,7 +66,8 @@ role GTK::Roles::RecentChooser {
         so gtk_recent_chooser_get_select_multiple($!rc);
       },
       STORE => sub ($, $select_multiple is copy) {
-        my gboolean $s = resolve-bool($select_multiple);
+        my gboolean $s = $select_multiple.so.Int;
+
         gtk_recent_chooser_set_select_multiple($!rc, $s);
       }
     );
@@ -73,7 +79,8 @@ role GTK::Roles::RecentChooser {
         so gtk_recent_chooser_get_show_icons($!rc);
       },
       STORE => sub ($, Int() $show_icons is copy) {
-        my gboolean $s = resolve-bool($show_icons);
+        my gboolean $s = $show_icons.so.Int;
+
         gtk_recent_chooser_set_show_icons($!rc, $s);
       }
     );
@@ -85,7 +92,8 @@ role GTK::Roles::RecentChooser {
         so gtk_recent_chooser_get_show_not_found($!rc);
       },
       STORE => sub ($, Int() $show_not_found is copy) {
-        my gboolean $s = resolve-bool($show_not_found);
+        my gboolean $s = $show_not_found.so.Int;
+
         gtk_recent_chooser_set_show_not_found($!rc, $s);
       }
     );
@@ -97,7 +105,8 @@ role GTK::Roles::RecentChooser {
         so gtk_recent_chooser_get_show_private($!rc);
       },
       STORE => sub ($, Int() $show_private is copy) {
-        my gboolean $s = resolve-bool($show_private);
+        my gboolean $s = $show_private.so.Int;
+
         gtk_recent_chooser_set_show_private($!rc, $s);
       }
     );
@@ -109,7 +118,8 @@ role GTK::Roles::RecentChooser {
         so gtk_recent_chooser_get_show_tips($!rc);
       },
       STORE => sub ($, Int() $show_tips is copy) {
-        my gboolean $s = resolve-bool($show_tips);
+        my gboolean $s = $show_tips.so.Int;
+
         gtk_recent_chooser_set_show_tips($!rc, $s);
       }
     );
@@ -118,10 +128,11 @@ role GTK::Roles::RecentChooser {
   method sort_type is rw is also<sort-type> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkRecentSortType( gtk_recent_chooser_get_sort_type($!rc) );
+        GtkRecentSortTypeEnum( gtk_recent_chooser_get_sort_type($!rc) );
       },
       STORE => sub ($, Int() $sort_type is copy) {
-        my gint $s = resolve-uint($sort_type);
+        my gint $s = $sort_type;
+
         gtk_recent_chooser_set_sort_type($!rc, $s);
       }
     );
@@ -139,7 +150,7 @@ role GTK::Roles::RecentChooser {
     self.connect($!rc, 'selection-changed');
   }
 
-  method add_filter (GtkRecentFilter $filter) is also<add-filter> {
+  method add_filter (GtkRecentFilter() $filter) is also<add-filter> {
     gtk_recent_chooser_add_filter($!rc, $filter);
   }
 
@@ -147,14 +158,19 @@ role GTK::Roles::RecentChooser {
     gtk_recent_chooser_error_quark();
   }
 
-  method get_current_item
+  method get_current_item (:$raw = False)
     is also<
       get-current-item
       current_item
       current-item
     >
   {
-    GTK::RecentInfo.new( gtk_recent_chooser_get_current_item($!rc) );
+    my $info = gtk_recent_chooser_get_current_item($!rc);
+
+    $info ??
+      ( $raw ?? $info !! GTK::RecentInfo.new($info) )
+      !!
+      Nil;
   }
 
   method get_current_uri
@@ -167,34 +183,43 @@ role GTK::Roles::RecentChooser {
     gtk_recent_chooser_get_current_uri($!rc);
   }
 
-  method get_items (:$raw)
+  method get_items (:$glist = False, :$raw = False)
     is also<
       get-items
       items
     >
   {
-    my $i = GTK::Compat::List.new( gtk_recent_chooser_get_items($!rc) )
-      but GLib::Roles::ListData[GtkRecentInfo];
+    my $i = gtk_recent_chooser_get_items($!rc);
+
+    return Nil unless $i;
+    return $i if $glist;
+
+    $i = GLib::List.new($i) but GLib::Roles::ListData[GtkRecentInfo];
     $raw ?? $i.Array !! $i.Array.map({ GTK::RecentInfo.new($_) });
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     unstable_get_type( self.^name, &gtk_recent_chooser_get_type, $n, $t);
   }
 
-  method get_uris (Int() $length) is also<get-uris> {
-    my ($i, @u) = (0);
-    my gint $l = resolve-int($length);
+  method get_uris ($length is rw) is also<get-uris> {
+    my gint $l = 0;
     my CArray[Str] $u = gtk_recent_chooser_get_uris($!rc, $l);
-    @u[$i] = $u[$i++] while $u[$i].defined;
-    @u;
+    $length = $l;
+
+    CStringArrayToArray($u, $l);
   }
 
-  method list_filters (:$raw) is also<list-filters> {
-    my $f = GTK::Compat::SList.new( gtk_recent_chooser_list_filters($!rc) )
-      but GLib::Roles::ListData[GtkRecentFilter];
-    $raw ?? $f.Array !! $f.Array.map({ GTK::RecentFilter.new($_) });
+  method list_filters (:$glist = False, :$raw = False) is also<list-filters> {
+    my $fl = gtk_recent_chooser_list_filters($!rc);
+
+    return Nil unless $fl;
+    return $fl if $glist;
+
+    $fl = GDK::GList.new($fl) but GLib::Roles::ListData[GtkRecentFilter];
+    $raw ?? $fl.Array !! $fl.Array.map({ GTK::RecentFilter.new($_) });
   }
 
   method remove_filter (GtkRecentFilter() $filter) is also<remove-filter> {

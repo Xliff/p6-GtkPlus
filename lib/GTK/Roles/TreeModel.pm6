@@ -3,29 +3,30 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::TreeModel;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
 use GTK::TreeIter;
 use GTK::TreePath;
 
 role GTK::Roles::TreeModel {
-
   has GtkTreeModel $!tm;
 
   submethod BUILD(:$tree) {
     $!tm = $tree;
   }
 
-  method GTK::Raw::Types::GtkTreeModel
+  method GTK::Raw::Definitions::GtkTreeModel
     is also<
       GtkTreeModel
       TreeModel
     >
   { $!tm }
+
+  method new-treemodel-obj (GtkTreeModel $tree) {
+    $tree ?? self.bless(:$tree) !! Nil;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -65,8 +66,11 @@ role GTK::Roles::TreeModel {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method foreach (GtkTreeModelForeachFunc $func, gpointer $user_data) {
-    gtk_tree_model_foreach($!tm, $func, $user_data);
+  method foreach (
+    &func,
+    gpointer $user_data = gpointer
+  ) {
+    gtk_tree_model_foreach($!tm, &func, $user_data);
   }
 
   multi method get(GtkTreeIter() $iter, @types, @cols) {
@@ -86,50 +90,92 @@ role GTK::Roles::TreeModel {
   }
 
   method get_column_type (Int() $index) is also<get-column-type> {
-    my gint $i = resolve-int($index);
+    my gint $i = $index;
+
     gtk_tree_model_get_column_type($!tm, $i);
   }
 
   method get_flags is also<get-flags> {
-    GtkTreeModelFlags( gtk_tree_model_get_flags($!tm) );
+    gtk_tree_model_get_flags($!tm);
   }
 
-  proto method get_iter (|) is also<get-iter> { * }
-  multi method get_iter (GtkTreePath() $path) {
-    my $iter = GtkTreeIter.new;
-    samewith($iter, $path) ?? GTK::TreeIter.new($iter) !! Nil;
+  proto method get_iter (|)
+    is also<get-iter>
+  { * }
+
+  multi method get_iter (GtkTreePath() $path, :$raw = False) {
+    my @r = samewith($, $path, :all, :$raw);
+
+    @r[0] ?? @r[1] !! Nil;
   }
-  multi method get_iter (GtkTreeIter() $iter, GtkTreePath() $path) {
-    so gtk_tree_model_get_iter($!tm, $iter, $path);
+  multi method get_iter (
+    $iter is rw,
+    GtkTreePath() $path,
+    :$all = False,
+    :$raw = False
+  ) {
+    $iter = GtkTreeIter.new;
+
+    die 'Could not allocate GtkTreeIter!' unless $iter;
+
+    my $rv = so gtk_tree_model_get_iter($!tm, $iter, $path);
+
+    $iter = $raw ?? $iter !! GTK::TreeIter.new($iter);
+    $all.not ?? $rv !! ($rv, $iter);
   }
 
-  proto method get_iter_first(|) is also<get-iter-first> { * }
-  multi method get_iter_first {
-    my $iter = GtkTreeIter.new;
-    samewith($iter) ?? GTK::TreeIter.new($iter) !! Nil;
+  proto method get_iter_first(|)
+    is also<get-iter-first>
+  { * }
+
+  multi method get_iter_first (:$raw = False) {
+    samewith($, :all, :$raw)
   }
-  multi method get_iter_first (GtkTreeIter() $iter) {
-    so gtk_tree_model_get_iter_first($!tm, $iter);
+  multi method get_iter_first ($iter is rw, :$all = False, :$raw = False) {
+    $iter = GtkTreeIter.new;
+
+    die 'Could not allocate GtkTreeIter!' unless $iter;
+
+    my $rv = so gtk_tree_model_get_iter_first($!tm, $iter);
+
+    $iter = $raw ?? $iter !! GTK::TreeIter.new($iter);
+    $all.not ?? $rv !! ($rv, $iter);
   }
 
-  proto method get_iter_from_string(|) is also<get-iter-from-string> { * }
-  multi method get_iter_from_string (Str() $path_string) {
-    my $iter = GtkTreeIter.new;
-    samewith($iter, $path_string) ?? GTK::TreeIter.new($iter) !! Nil;
+  proto method get_iter_from_string(|)
+    is also<get-iter-from-string>
+  { * }
+
+  multi method get_iter_from_string (Str() $path_string, :$raw = False) {
+    samewith($, $path_string, :all, :$raw);
   }
   multi method get_iter_from_string (
-    GtkTreeIter() $iter,
-    Str() $path_string
+    $iter is rw,
+    Str() $path_string,
+    :$all = False,
+    :$raw = False
   ) {
-    so gtk_tree_model_get_iter_from_string($!tm, $iter, $path_string);
+    $iter = GtkTreeIter.new;
+
+    die 'Could not allocate GtkTreeIter!' unless $iter;
+
+    my $rv = so gtk_tree_model_get_iter_from_string($!tm, $iter, $path_string);
+
+    $iter = $raw ?? $iter !! GTK::TreeIter.new($iter);
+    $all.not ?? $rv !! ($rv, $iter);
   }
 
   method get_n_columns is also<get-n-columns> {
     gtk_tree_model_get_n_columns($!tm);
   }
 
-  method get_path (GtkTreeIter() $iter) is also<get-path> {
-    GTK::TreePath.new( gtk_tree_model_get_path($!tm, $iter) );
+  method get_path (GtkTreeIter() $iter, :$raw = False) is also<get-path> {
+    my $tp = gtk_tree_model_get_path($!tm, $iter);
+
+    $tp ??
+      ( $raw ?? $tp !! GTK::TreePath.new($tp) )
+      !!
+      Nil;
   }
 
   method get_string_from_iter (GtkTreeIter() $iter)
@@ -139,27 +185,37 @@ role GTK::Roles::TreeModel {
   }
 
   method get_treemodel_type is also<get-treemodel-type> {
-    gtk_tree_model_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_tree_model_get_type, $n, $t );
   }
 
   # method get_valist (GtkTreeIter $iter, va_list $var_args) {
   #   gtk_tree_model_get_valist($!tm, $iter, $var_args);
   # }
 
-  proto method get_value(|) is also<get-value> { * }
+  proto method get_value(|)
+    is also<get-value>
+  { * }
 
-  multi method get_value(GtkTreeIter() $iter, Int() $column) {
-    my gint $c = resolve-int($column);
+  multi method get_value(GtkTreeIter() $iter, Int() $column, :$raw = False) {
+    my gint $c = $column;
     my $value = GValue.new;
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
-    GLib::Value.new($value);
+
+    $value ??
+      ( $raw ?? $value !! GLib::Value.new($value) )
+      !!
+      Nil;
   }
   multi method get_value (
-    GtkTreeIter() $iter, Int() $column,
+    GtkTreeIter() $iter,
+    Int() $column,
     GValue() $value
   )  {
     # TODO: Check iter for path.
-    my gint $c = resolve-int($column);
+    my gint $c = $column;
+
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
   }
 
@@ -188,7 +244,7 @@ role GTK::Roles::TreeModel {
   )
     is also<iter-nth-child>
   {
-    my gint $nn = resolve-int($n);
+    my gint $nn = $n;
     so gtk_tree_model_iter_nth_child($!tm, $iter, $parent, $nn);
   }
 
@@ -235,7 +291,8 @@ role GTK::Roles::TreeModel {
   )
     is also<emit-rows-reordered>
   {
-    my gint $no = resolve-int($new_order);
+    my gint $no = $new_order;
+
     gtk_tree_model_rows_reordered($!tm, $path, $iter, $no);
   }
 
@@ -247,8 +304,8 @@ role GTK::Roles::TreeModel {
   )
     is also<emit-rows-reordered-with-length>
   {
-    my @i = ($new_order, $length);
-    my gint ($no, $l) = resolve-int(@i);
+    my gint ($no, $l) = ($new_order, $length);
+
     gtk_tree_model_rows_reordered_with_length($!tm, $path, $iter, $no, $l);
   }
 

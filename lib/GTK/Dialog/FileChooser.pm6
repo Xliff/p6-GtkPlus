@@ -3,10 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GTK::Dialog;
 
@@ -22,7 +19,7 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -69,8 +66,8 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
     Str() $text,
     Int() $response
   ) {
-    my uint32 $a = resolve-uint($action);
-    my gint $r = resolve-int($response);
+    my uint32 $a = $action;
+    my gint $r = $response;
     my $dialog = gtk_file_chooser_dialog_new(
       $title, $parent, $a, $text, $r, Str
     );
@@ -96,8 +93,8 @@ class GTK::Dialog::FileChooser is GTK::Dialog {
     die '\@buttons is not an array of Pair objects!'
       unless @buttons.all ~~ Pair;
     my $f = @buttons.shift;
-    my uint32 $a = resolve-uint($action);
-    my gint $r = resolve-int($f.value);
+    my uint32 $a = $action;
+    my gint $r = $f.value;
     my $dialog = gtk_file_chooser_dialog_new(
       $title, $parent, $a, $f.key, $r, Str
     );

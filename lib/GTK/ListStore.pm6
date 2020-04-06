@@ -3,21 +3,22 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::ListStore;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GLib::Value;
+use GTK::TreeIter;
 
 use GLib::Roles::Object;
+use GLib::Roles::TypedBuffer;
 use GTK::Roles::Buildable;
 use GTK::Roles::TreeModel;
 use GTK::Roles::TreeSortable;
 
-use GTK::TreeIter;
 
 my subset GValues where GLib::Value | GValue;
+
+# YYY - This compunit needs another review! cw - 2019 01 24
 
 class GTK::ListStore {
   also does GLib::Roles::Object;
@@ -40,30 +41,49 @@ class GTK::ListStore {
     $!tm = nativecast(GtkTreeModel, $!ls);      # GTK::Roles::TreeSortable
   }
 
-  method GTK::Raw::Types::GtkListStore is also<ListStore> { $!ls }
+  method GTK::Raw::Definitions::GtkListStore
+    is also<
+      ListStore
+      GtkListStore
+    >
+  { $!ls }
 
   method new (*@types) {
     for @types {
       next if $_ ~~ (Int, IntStr).any || .^can('Int').elems;
-      die '@types must consist of Integers or objects that will convert to Integer';
+      my $v = .Int;
+      die '@types must consist of Integers or objects that will convert to Integer'
+        unless $v ~~ Int;
     }
 
     my $t = CArray[uint64].new;
     $t[$_] = @types[$_] for @types.keys;
     my gint $columns = @types.elems;
     my $liststore = gtk_list_store_newv($columns, $t);
-    die 'GtkListStore not created!' unless $liststore.defined;
-    self.bless(:$liststore, :$columns);
+    die 'GtkListStore not created!' unless $liststore;
+
+    $liststore ?? self.bless(:$liststore, :$columns) !! Nil;
   }
 
   multi method append {
-    my $iter = GtkTreeIter.new;
-    self.append($iter);
-    GTK::TreeIter.new($iter);
+    samewith($);
   }
-  multi method append (GtkTreeIter() $iter) {
+  multi method append ($iter is rw) {
     $!accessed = True;
+    $iter = GtkTreeIter.new;
     gtk_list_store_append($!ls, $iter);
+    $iter;
+  }
+
+  proto method append_with_values (|)
+    is also<append-with-values>
+  { * }
+
+  multi method append_with_values (%values) {
+    samewith(|%values)
+  }
+  multi method append_with_values (*%values) {
+    self.insert_with_values($, -1, %values)
   }
 
   method clear {
@@ -72,12 +92,15 @@ class GTK::ListStore {
   }
 
   method get_type is also<get-type> {
-    gtk_list_store_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_list_store_get_type, $n, $t );
   }
 
   method insert (GtkTreeIter() $iter, Int() $position) {
+    my gint $p = $position;
+
     $!accessed = True;
-    my gint $p = resolve-int($position);
     gtk_list_store_insert($!ls, $iter, $position);
   }
 
@@ -95,16 +118,23 @@ class GTK::ListStore {
     gtk_list_store_insert_before($!ls, $iter, $sibling);
   }
 
+  # This is rapidly becoming a right fucking mess!
   method insert_with_valuesv (
-    GtkTreeIter() $iter,
+    $iter is rw,
     Int() $position,
-    Int @columns,
+    @columns,
     @values,
     Int() $n_values
   )
     is also<insert-with-valuesv>
   {
     die '$position cannot be less than -1 (append)' unless $position >= -1;
+    my @col_keys = @columns.map({
+      die '@columns values must be integers.' unless .^can('Int');
+      my $v = .Int;
+      die 'Integer conversion failure!' unless $v ~~ Int;
+      $v;
+    });
     die '@columns must consist of Integers.'
       unless @columns.all ~~ (Int, IntStr).any;
     die '@values must contain GLib::Value or GValue elements'
@@ -115,54 +145,59 @@ class GTK::ListStore {
     }
 
     $!accessed = True;
+
     # Throw exception if columns mismatch?
     my $c_columns = CArray[gint].new;
-    $c_columns[$_] = @columns[$_] for @columns.keys;
-    my $c_values = CArray[GValue].new;
-    $c_columns[$_] = @columns[$_] for ^$n_values;
-    for ^$n_values {
-      $c_values[$_] = do given @values[$_] {
-        # NOTE! $_ is now the current element of @value
-        when GValue { $_ }
-        default     { $_.gvalue }
-      }
-    }
+    $c_columns[$_] = @columns[$_] for @col_keys;
+    my $c_values = GLib::Roles::TypedBuffer[GValue].new(
+      @values.map({
+        die 'Cannot convert element to GValue!'
+          unless $_ ~~ GValue || .^can('GValue').elems;
+        $_ ~~ GValue ?? $_ !! .GValue;
+      })
+    );
+    $iter = GtkTreeIter.new;
+    die 'Could not create GtkTreeIter!' unless $iter;
     gtk_list_store_insert_with_valuesv(
       $!ls,
       $iter,
       $position,
       $c_columns,
-      $c_values,
+      $c_values.p,
       $n_values
     );
   }
 
   multi method insert_with_values (
-    GtkTreeIter() $iter,
+    $iter is rw,
     Int() $position,
     %values
   )
     is also<insert-with-values>
   {
-    die 'Keys used %values must be integers.'
-      unless %values.keys.all ~~ (Int, IntStr).any;
-    die 'Values used in %values must be GLib::Value or GValue.'
-      unless %values.values.all ~~ GValues;
+    my (@columns, @values);
 
-    my CArray[gint] $c_columns;
-    my CArray[GValue] $c_values;
-    my $c = 0;
-    for %values.keys.sort {
-      $c_columns[$c] = $_.Int;
-      $c_values[$c++] = %values{$_};
+    for %values.pairs {
+      die 'Keys used %values must be integers.' unless .key.^can('Int');
+      my $v = .key.Int;
+      die 'Integer conversion failure!' unless $v ~~ Int;
+      @columns.push: $v;
+
+      die 'Values used in %values must be GLib::Value or GValue.'
+        unless .value ~~ GValue || .value.can('GValue');
+      $v = .value ~~ GValue ?? .value !! .value.GValue;
+      @values.push: $v;
     }
+
+    $iter = GtkTreeIter.new;
+    die 'Could not create GtkTreeIter!' unless $iter;
+
     self.insert_with_valuesv(
-      $!ls,
       $iter,
       $position,
-      $c_columns,
-      $c_values,
-      $c_columns.elems
+      @columns,
+      @values,
+      @columns.elems
     );
   }
 
@@ -203,10 +238,14 @@ class GTK::ListStore {
   method set_column_types (*@types) is also<set-column-types> {
     die 'Cannot use GTK::ListStore.set_column_types after store has been accessed.'
       if $!accessed;
-    die 'Elements of @types must be integers, and must not exceeed column size'
-      unless @types.all ~~ (Int, IntStr).any;
+    my @t_keys = @types.map({
+      die 'Elements of @types must be integers, and must not exceeed column size'
+        unless @types.all ~~ (Int, IntStr).any || .^can('Int');
+      my $v = .Int;
+      die 'Integer conversion failure!' unless $v ~~ Int;
+    });
     my $c_types = CArray[uint64].new;
-    $c_types[$_] = @types[$_] for @types.keys;
+    $c_types[$_] = @types[$_] for @t_keys.keys;
     $!columns = @types.elems;
     gtk_list_store_set_column_types($!ls, @types.elems, $c_types);
   }
@@ -222,7 +261,8 @@ class GTK::ListStore {
   )
     is also<set-value>
   {
-    my gint $c = resolve-int($column);
+    my gint $c = $column;
+
     gtk_list_store_set_value($!ls, $iter, $c, $value);
   }
 
@@ -233,11 +273,14 @@ class GTK::ListStore {
     is also<set-values>
   {
     $!accessed = True;
-    for %values.keys {
-      unless $_ ~~ (Int, IntStr).any {
-        die 'Keys used %values must be integers.' unless .^can('Int').elems;
-      }
-    }
+
+    my @val_keys = %values.keys.map({
+      die 'Keys used %values must be integers.'
+        unless $_ ~~ (Int, IntStr).any || .^can('Int').elems;
+      my $v = .Int;
+      die 'Integer conversion failure!' unless $v ~~ Int;
+      $v;
+    });
     die 'Values used in %values must be GLib::Value or GValue.'
       unless %values.values.all ~~ GValues;
 
@@ -245,9 +288,9 @@ class GTK::ListStore {
 
     self.set_valuesv(
       $iter,
-      %values.keys.sort,
-      %values.keys.sort.map({ %values{$_} }),
-      %values.keys.elems
+      @val_keys.sort,
+      @val_keys.sort.map({ %values{$_} }),
+      @val_keys.elems
     );
 
   }
@@ -279,7 +322,7 @@ class GTK::ListStore {
     $!accessed = True;
     my $c_columns = CArray[gint].new;
     my $c_values = CArray[GValue].new;
-    $c_columns[$_] = @columns[$_].Int for (^$n_values);
+    $c_columns[$_] = @columns[$_].Int for ^$n_values;
     for (^$n_values) {
       $c_values[$_]  = do given @values[$_] {
         when GLib::Value { .gvalue }

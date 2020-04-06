@@ -3,10 +3,10 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 use GTK::Raw::ScaleButton;
 
+use GTK::Adjustment;
 use GTK::Button;
 
 use GTK::Roles::Orientable;
@@ -25,44 +25,47 @@ class GTK::ScaleButton is GTK::Button {
     $o;
   }
 
-  submethod BUILD(:$button) {
-    given $button {
-      when ScaleButtonAncestry {
-        self.setScaleButton($button);
-      }
-      when GTK::ScaleButton {
-      }
-      default {
-      }
+  submethod BUILD(:$scale-button) {
+    given $scale-button {
+      when ScaleButtonAncestry { self.setScaleButton($scale-button) }
+      when GTK::ScaleButton    { }
+      default                  { }
     }
   }
-  
-  method GTK::Raw::Types::GtkScaleButton is also<ScaleButton> { $!sb }
 
-  method setScaleButton(ScaleButtonAncestry $button) {
+  method GTK::Raw::Definitions::GtkScaleButton
+    is also<
+      ScaleButton
+      GtkScaleButton
+    >
+  { $!sb }
+
+  method setScaleButton(ScaleButtonAncestry $scale-button) {
     my $to-parent;
-    $!sb = do given $button {
+    $!sb = do given $scale-button {
       when GtkScaleButton {
-        $to-parent = nativecast(GtkButton, $_);
+        $to-parent = cast(GtkButton, $_);
         $_;
       }
       when GtkOrientable {
         $!or = $_;
-        $to-parent = nativecast(GtkButton, $_);   # GTK:::Roles::Orientable
-        nativecast(GtkScaleButton, $_);
+        $to-parent = cast(GtkButton, $_);   # GTK:::Roles::Orientable
+        cast(GtkScaleButton, $_);
       }
       default {
         $to-parent = $_;
-        nativecast(GtkScaleButton, $_);
+        cast(GtkScaleButton, $_);
       }
     };
     self.setButton($to-parent);
-    $!or //= nativecast(GtkOrientable, $!sb);     # GTK::Roles::Orientable
+    $!or //= cast(GtkOrientable, $!sb);     # GTK::Roles::Orientable
   }
 
-  multi method new (ScaleButtonAncestry $button) {
-    my $o = self.bless(:$button);
-    $o.upref;
+  multi method new (ScaleButtonAncestry $scale-button, :$ref = True) {
+    return Nil unless $scale-button;
+
+    my $o = self.bless(:$scale-button);
+    $o.ref if $ref;
     $o;
   }
   multi method new (
@@ -72,11 +75,12 @@ class GTK::ScaleButton is GTK::Button {
     Num() $step,
     Str @icons
   ) {
-    my uint32 $s = self.RESOLVE-UINT($size);
+    my uint32 $s = $size;
     my gdouble ($mn, $mx, $st) = ($min, $max, $step);
-    my GStrv $i = self.RESOLVE-GSTRV(@icons);
-    my $button = gtk_scale_button_new($s, $mn, $mx, $st, $i);
-    self.bless(:$button);
+    my $i = resolve-gstrv( |@icons );
+    my $scale-button = gtk_scale_button_new($s, $mn, $mx, $st, $i);
+
+    $scale-button ?? self.bless(:$scale-button) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -102,12 +106,15 @@ class GTK::ScaleButton is GTK::Button {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method adjustment is rw {
+  method adjustment (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Adjustment.new(
-          gtk_scale_button_get_adjustment($!sb)
-        );
+        my $a = gtk_scale_button_get_adjustment($!sb);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_scale_button_set_adjustment($!sb, $adjustment);
@@ -122,6 +129,7 @@ class GTK::ScaleButton is GTK::Button {
       },
       STORE => sub ($, Num() $value is copy) {
         my gdouble $v = $value;
+
         gtk_scale_button_set_value($!sb, $v);
       }
     );
@@ -129,12 +137,20 @@ class GTK::ScaleButton is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_minus_button is also<get-minus-button> {
-    GTK::Widget.new( gtk_scale_button_get_minus_button($!sb) );
+  method get_minus_button (:$raw = False, :$widget = False)
+    is also<get-minus-button>
+  {
+    my $w = gtk_scale_button_get_minus_button($!sb);
+
+    self.ReturnWidget($w, $raw, $widget);
   }
 
-  method get_plus_button is also<get-plus-button> {
-    GTK::Widget.new( gtk_scale_button_get_plus_button($!sb) );
+  method get_plus_button (:$raw = False, :$widget = False)
+    is also<get-plus-button>
+  {
+    my $w = gtk_scale_button_get_plus_button($!sb);
+
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method get_popup is also<get-popup> {
@@ -143,10 +159,18 @@ class GTK::ScaleButton is GTK::Button {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_scale_button_get_type, $n, $t );
   }
 
-  method set_icons (Str() $icons) is also<set-icons> {
+  proto method set_icons (|)
+    is also<set-icons>
+  { * }
+
+  multi method set_icons (@icons) {
+    samewith( ArrayToCArray(Str, @icons) );
+  }
+  multi method set_icons (CArray[Str] $icons)  {
     gtk_scale_button_set_icons($!sb, $icons);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

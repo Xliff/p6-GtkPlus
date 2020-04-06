@@ -24,16 +24,13 @@ $a.activate.tap({
 	$d.copyright = 'Copyright © 2018 by Xliff';
 	$d.version = 'Version ε';
 
-	$d.license = qq:to/L/;
-Why would this piece of 💩 need a license? Why would this piece of 💩 need a license? Why would this piece of 💩 need a license?'
-L
+	$d.license = ' 💩 ' x (^99).pick;
 
 	$d.wrap_license = True;
 	$d.website = "http://github.com/Xliff/p6-GtkPlus/";
 	$d.website_label = "Perl6 GtkPlus";
-  say "HI!";
-
   $d.run;
+
   $a.exit;
 });
 

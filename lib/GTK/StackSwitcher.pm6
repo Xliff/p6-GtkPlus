@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 
 use GTK::Raw::Types;
 use GTK::Raw::StackSwitcher;
@@ -24,17 +22,18 @@ class GTK::StackSwitcher is GTK::Box {
 
   submethod BUILD (:$switcher) {
     given $switcher {
-      when StackSwitcherAncestry {
-        self.setStackSwitcher($switcher);
-      }
-      when GTK::StackSwitcher {
-      }
-      default {
-      }
+      when StackSwitcherAncestry { self.setStackSwitcher($switcher) }
+      when GTK::StackSwitcher    { }
+      default                    { }
     }
   }
 
-  method GTK::Raw::Types::GtkStackSwitcher is also<StackSwitcher> { $!ss }
+  method GTK::Raw::Definitions::GtkStackSwitcher
+    is also<
+      StackSwitcher
+      GtkStackSwitcher
+    >
+  { $!ss }
 
   method setStackSwitcher (StackSwitcherAncestry $switcher) {
     self.IS-PROTECTED;
@@ -42,28 +41,39 @@ class GTK::StackSwitcher is GTK::Box {
     my $to-parent;
     $!ss = do given $switcher {
       when GtkStackSwitcher {
-        $to-parent = nativecast(GtkBox, $_);
+        $to-parent = cast(GtkBox, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkStackSwitcher, $_);
+        cast(GtkStackSwitcher, $_);
       }
     }
     self.setBox($to-parent);
   }
 
-  multi method new (StackSwitcherAncestry $switcher) {
-    self.bless(:$switcher);
+  multi method new (StackSwitcherAncestry $switcher, :$ref = True) {
+    return Nil unless $switcher;
+
+    my $o = self.bless(:$switcher);
+    $o.ref if $ref;
+    $o;
   }
   multi method new {
-    self.bless( switcher => gtk_stack_switcher_new() );
+    my $switcher = gtk_stack_switcher_new();
+
+    $switcher ?? self.bless( :$switcher ) !! Nil;
   }
 
-  method stack is rw {
+  method stack (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        ::('GTK::Stack').new( gtk_stack_switcher_get_stack($!ss) );
+        my $s = gtk_stack_switcher_get_stack($!ss);
+
+        $s ??
+          ( $raw ?? $s !! ::('GTK::Stack').new($s) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkStack() $stack is copy) {
         gtk_stack_switcher_set_stack($!ss, $stack);
@@ -72,7 +82,9 @@ class GTK::StackSwitcher is GTK::Box {
   }
 
   method get_type is also<get-type> {
-    gtk_stack_switcher_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_stack_switcher_get_type, $n, $t );
   }
 
 }

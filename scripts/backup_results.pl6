@@ -7,7 +7,8 @@ use GTKScripts;
 my @files = find-files(
   '.',
   pattern    => "{$*CWD}/LastBuildResults",
-  exclude    => rx/ '.json' $/
+  exclude    => rx/ '.json' $/,
+  depth      => 1
 );
 
 @files .= map({

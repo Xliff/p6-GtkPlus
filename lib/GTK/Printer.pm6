@@ -1,21 +1,21 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use GLib::GList;
-use GTK::Compat::Types;
+
 use GTK::Raw::Printer;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GTK::PageSetup;
 
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Types;
 
 class GTK::Printer {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 
@@ -29,19 +29,26 @@ class GTK::Printer {
     self.disconnect-all($_) for %!signals;
   }
 
-  method GTK::Raw::Types::GtkPrinter is also<Printer> { $!prn }
+  method GTK::Raw::Definitions::GtkPrinter
+    is also<
+      Printer
+      GtkPrinter
+    >
+  { $!prn }
 
   multi method new (GtkPrinter $printer) {
-    self.bless(:$printer);
+    $printer ?? self.bless(:$printer) !! Nil;
   }
   multi method new (
     Str $name,
     GtkPrintBackend() $backend,
     Int() $virtual
   ) {
-    my gboolean $v = self.RESOLVE-BOOL($virtual);
+    my gboolean $v = $virtual.so.Int;
+
     my $printer = gtk_printer_new($name, $backend, $v);
-    self.bless(:$printer);
+
+    $printer ?? self.bless(:$printer) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -63,7 +70,7 @@ class GTK::Printer {
   method accepting-jobs is rw is also<accepting_jobs> {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'accepting-jobs', $gv)
         );
@@ -79,11 +86,11 @@ class GTK::Printer {
   method backend is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'backend', $gv)
         );
-        nativecast(GtkPrintBackend, $gv.object);
+        cast(GtkPrintBackend, $gv.object);
       },
       STORE => -> $, GtkPrintBackend() $val is copy {
         $gv.object = $val;
@@ -96,7 +103,7 @@ class GTK::Printer {
   method icon-name is rw is also<icon_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'icon-name', $gv)
         );
@@ -112,7 +119,7 @@ class GTK::Printer {
   method job-count is rw is also<job_count> {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'job-count', $gv)
         );
@@ -128,7 +135,7 @@ class GTK::Printer {
   method location is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'location', $gv)
         );
@@ -144,7 +151,7 @@ class GTK::Printer {
   method name is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'name', $gv)
         );
@@ -161,7 +168,7 @@ class GTK::Printer {
   method paused is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'paused', $gv)
         );
@@ -177,7 +184,7 @@ class GTK::Printer {
   method state-message is rw is also<state_message> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get( $!prn, 'state-message', $gv)
         );
@@ -192,19 +199,31 @@ class GTK::Printer {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   method compare (GtkPrinter() $a, GtkPrinter() $b) {
-    gtk_printer_compare($a, $b);
+    so gtk_printer_compare($a, $b);
   }
 
-  method enumerate_printers (
-    GtkPrinterFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy,
-    Int() $wait
-  )
+  proto method enumerate_printers (|)
     is also<enumerate-printers>
-  {
-    my gboolean $w = self.RESOLVE-BOOL($wait);
-    gtk_enumerate_printers($func, $data, $destroy, $w);
+  { * }
+
+  multi method enumerate_printers (
+    &func,
+    gpointer $data = gpointer
+  ) {
+    samewith(&func, $data);
+  }
+  multi method enumerate_printers (&func, Int() $wait) {
+    samewith(&func, gpointer, GDestroyNotify, $wait);
+  }
+  multi method enumerate_printers (
+    &func,
+    gpointer $data          = gpointer,
+    GDestroyNotify $destroy = GDestroyNotify,
+    Int() $wait             = True.Int
+  ) {
+    my gboolean $w = $wait.so.Int;
+
+    gtk_enumerate_printers(&func, $data, $destroy, $w);
   }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
@@ -216,56 +235,106 @@ class GTK::Printer {
     so gtk_printer_accepts_ps($!prn);
   }
 
-  method get_backend is also<get-backend> {
+  method get_backend
+    is also<
+      get-backend
+    >
+  {
     gtk_printer_get_backend($!prn);
   }
 
-  method get_capabilities is also<get-capabilities> {
-    GtkPrintCapabilities( gtk_printer_get_capabilities($!prn) );
+  method get_capabilities
+    is also<
+      get-capabilities
+      capabilities
+    >
+  {
+    # cw: Need a way to enumerate flag enums!
+    gtk_printer_get_capabilities($!prn);
   }
 
-  method get_default_page_size is also<get-default-page-size> {
+  method get_default_page_size
+    is also<
+      get-default-page-size
+      default-page-size
+      default_page_size
+    >
+  {
     gtk_printer_get_default_page_size($!prn);
   }
 
-  method get_description is also<get-description> {
+  method get_description
+    is also<
+      get-description
+      description
+    >
+  {
     gtk_printer_get_description($!prn);
   }
 
-  method get_hard_margins (
-    Num() $top,
-    Num() $bottom,
-    Num() $left,
-    Num() $right
-  )
+  proto method get_hard_margins (|)
     is also<get-hard-margins>
-  {
-    my gdouble ($t, $b, $l, $r) = ($top, $bottom, $left, $right);
+  { * }
+
+  multi method get_hard_margins is also<hard-margins> {
+    samewith($, $, $, $)
+  }
+  multi method get_hard_margins (
+    $top    is rw,
+    $bottom is rw,
+    $left   is rw,
+    $right  is rw
+  ) {
+    my gdouble ($t, $b, $l, $r) = 0x0 xx 4;
+
     gtk_printer_get_hard_margins($!prn, $t, $b, $l, $r);
+    ($top, $bottom, $left, $right) = ($t, $b, $l, $r);
   }
 
-  method get_icon_name is also<get-icon-name> {
+  method get_icon_name
+    is also<
+      get-icon-name
+    >
+  {
     gtk_printer_get_icon_name($!prn);
   }
 
-  method get_job_count is also<get-job-count> {
+  method get_job_count
+    is also<
+      get-job-count
+    >
+  {
     gtk_printer_get_job_count($!prn);
   }
 
-  method get_location is also<get-location> {
+  method get_location
+    is also<
+      get-location
+    >
+  {
     gtk_printer_get_location($!prn);
   }
 
-  method get_name is also<get-name> {
+  method get_name
+    is also<
+      get-name
+    >
+  {
     gtk_printer_get_name($!prn);
   }
 
-  method get_state_message is also<get-state-message> {
+  method get_state_message
+    is also<
+      get-state-message
+    >
+  {
     gtk_printer_get_state_message($!prn);
   }
 
   method get_type is also<get-type> {
-    gtk_printer_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_printer_get_type, $n, $t );
   }
 
   method has_details is also<has-details> {
@@ -292,8 +361,14 @@ class GTK::Printer {
     so gtk_printer_is_virtual($!prn);
   }
 
-  method list_papers is also<list-papers> {
-    GLib::GList.new( GtkPageSetup, gtk_printer_list_papers($!prn) );
+  method list_papers (:$glist = False, :$raw = False) is also<list-papers> {
+    my $pl = gtk_printer_list_papers($!prn);
+
+    return Nil unless $pl;
+    return $pl if $glist;
+
+    $pl = GLib::GList.new($pl) but GLib::Roles::ListData[GtkPageSetup];
+    $raw ?? $pl.Array !! $pl.Array.map({ GTK::PageSetup.new($_) });
   }
 
   method request_details is also<request-details> {

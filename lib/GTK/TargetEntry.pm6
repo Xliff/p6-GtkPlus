@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::TargetEntry;
 use GTK::Raw::Types;
 
@@ -13,23 +11,29 @@ class GTK::TargetEntry {
   submethod BUILD(:$entry) {
     $!te = $entry;
   }
-  
-  method GTK::Raw::Types::GtkTargetEntry 
-    is also<TargetEntry>
-    { $!te }
+
+  method GTK::Raw::Definitions::GtkTargetEntry
+    is also<
+      TargetEntry
+      GtkTargetEntry
+    >
+  { $!te }
 
   multi method new {
     my $entry = GtkTargetEntry.new;
+
+     die 'Could not create a GtkTargetEntry structure!' unless $entry;
+
     self.bless($entry);
   }
   multi method new (GtkTargetEntry $entry) {
-    self.bless(:$entry);
+    $entry ?? self.bless(:$entry) !! Nil;
   }
   multi method new (gchar $target, Int() $flags, Int() $info) {
-    my @u = ($flags, $info);
-    my guint ($f, $i) = self.RESOLVE-UINT(@u);
+    my guint ($f, $i) = ($flags, $info);
     my $entry = gtk_target_entry_new($target, $f, $i);
-    self.bless(:$entry);
+
+    $entry ?? self.bless(:$entry) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -39,8 +43,13 @@ class GTK::TargetEntry {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method copy {
-    GTK::TargetEntry.new( gtk_target_entry_copy($!te) );
+  method copy (:$raw = False) {
+    my $te = gtk_target_entry_copy($!te);
+
+    $te ??
+      ( $raw ?? $te !! GTK::TargetEntry.new($te) )
+      !!
+      Nil;
   }
 
   method free {
@@ -48,7 +57,9 @@ class GTK::TargetEntry {
   }
 
   method get_type is also<get-type> {
-    gtk_target_entry_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_target_entry_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::LockButton;
 use GTK::Raw::Types;
 
@@ -16,35 +14,35 @@ my subset LockButtonAncestry is export
 
 class GTK::LockButton is GTK::Button {
   also does GTK::Roles::Actionable;
-  
+
   has GtkLockButton $!lb is implementor;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::LockButton');
+    $o.setType($o.^name);
     $o;
   }
 
-  submethod BUILD(:$button) {
+  submethod BUILD(:$lock-button) {
     my $to-parent;
-    given $button {
+    given $lock-button {
       when LockButtonAncestry {
         $!lb = do {
           when GtkLockButton {
-            $to-parent = nativecast(GtkButton, $_);
+            $to-parent = cast(GtkButton, $_);
             $_;
           }
           when GtkActionable {
             $!action = $_;
-            $to-parent = nativecast(GtkButton, $_);
-            nativecast(GtkLockButton, $button);
+            $to-parent = cast(GtkButton, $_);
+            cast(GtkLockButton, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkLockButton, $button);
+            cast(GtkLockButton, $_);
           }
         };
-        $!action //= nativecast(GtkActionable, $button);
+        $!action //= cast(GtkActionable, $_);
         self.setButton($to-parent);
       }
       when GTK::Button {
@@ -54,14 +52,17 @@ class GTK::LockButton is GTK::Button {
     }
   }
 
-  multi method new (LockButtonAncestry $button) {
-    my $o = self.bless(:$button);
-    $o.upref;
+  multi method new (LockButtonAncestry $lock-button, :$ref = True) {
+    return Nil unless $lock-button;
+
+    my $o = self.bless(:$lock-button);
+    $o.ref if $ref;
     $o;
   }
   multi method new (GPermission() $p) {
-    my $button = gtk_lock_button_new($p);
-    self.bless(:$button);
+    my $lock-button = gtk_lock_button_new($p);
+
+    $lock-button ?? self.bless(:$lock-button) !! Nil;
   }
 
 
@@ -69,13 +70,16 @@ class GTK::LockButton is GTK::Button {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method permission is rw {
+  method permission (:$raw = False) is rw {
     # GPermission
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Permission.new(
-          gtk_lock_button_get_permission($!lb)
-        )
+        my $p = gtk_lock_button_get_permission($!lb);
+
+        $p ??
+          ( $raw ?? $p !! GDK::Permission.new($p) )
+          !!
+          Nil;
       },
       STORE => sub ($, GPermission() $permission is copy) {
         gtk_lock_button_set_permission($!lb, $permission);
@@ -87,6 +91,7 @@ class GTK::LockButton is GTK::Button {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_lock_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -2,18 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Compat::Types;
-
-use GTK::Raw::Utils;
-
+use GTK::Raw::Types;
 use GTK::Raw::Main;
 
+use GDK::Event;
+
+use GLib::Roles::StaticClass;
+
 class GTK::Get {
-  
-  method new (|) {
-    warn 'GTK::Get is a static class and does not need to be instantiated!';
-    GTK::Get;
-  }
+  also does GLib::Roles::StaticClass;
 
   method binary_age is also<binary-age> {
     gtk_get_binary_age();
@@ -26,12 +23,18 @@ class GTK::Get {
   )
     is also<check-version>
   {
-    my guint ($mj, $mn ,$mc) = resolve-int($major, $minor, $micro);
+    my guint ($mj, $mn ,$mc) = ($major, $minor, $micro);
+
     gtk_check_version($mj, $mn, $mc);
   }
 
-  method current_event is also<current-event> {
-    gtk_get_current_event();
+  method current_event (:$raw = False) is also<current-event> {
+    my $e = gtk_get_current_event();
+
+    $e ??
+      ( $raw ?? $e !! GDK::Event.new($e) )
+      !!
+      Nil;
   }
 
   method current_event_device is also<current-event-device> {
@@ -39,7 +42,8 @@ class GTK::Get {
   }
 
   method current_event_state (Int() $state) is also<current-event-state> {
-    my guint $s = resolve-uint($state);
+    my guint $s = $state;
+
     gtk_get_current_event_state($s);
   }
 
@@ -47,12 +51,21 @@ class GTK::Get {
     gtk_get_current_event_time();
   }
 
-  method default_language is also<default-language> {
-    gtk_get_default_language();
+  method default_language (:$raw = False) is also<default-language> {
+    my $l = gtk_get_default_language();
+
+    $l ??
+      ( $raw ?? $l !! Pango::Language.new($l) )
+      !!
+      Nil;
   }
 
-  method event_widget (GdkEvent $e) is also<event-widget> {
-    gtk_get_event_widget($e);
+  method event_widget (GdkEvent() $e, :$raw = False, :$widget = False)
+    is also<event-widget>
+  {
+    my $w = gtk_get_event_widget($e);
+
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method interface_age is also<interface-age> {
@@ -76,7 +89,8 @@ class GTK::Get {
   }
 
   method option_group (Int() $open_default_display) is also<option-group> {
-    my gboolean $odd = resolve-bool($open_default_display);
+    my gboolean $odd = $open_default_display.so.Int;
+
     gtk_get_option_group($odd);
   }
 

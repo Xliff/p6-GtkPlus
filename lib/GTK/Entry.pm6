@@ -1,18 +1,18 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use Pango::Raw::Types;
 use Pango::AttrList;
 
-use GTK::Compat::Types;
 use GTK::Raw::Entry;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GTK::Adjustment;
 use GTK::Widget;
 use GTK::EntryBuffer;
+use GTK::EntryCompletion;
 
 use GTK::Roles::Editable;
 use GTK::Roles::Signals::Entry;
@@ -48,47 +48,54 @@ class GTK::Entry is GTK::Widget {
     my $to-parent;
     $!e = do given $entry {
       when GtkEntry {
-        $to-parent = nativecast(GtkWidget, $_);
+        $to-parent = cast(GtkWidget, $_);
         $_;
       }
       when GtkEditable {
         $!er = $_;                              # GTK::Roles::Editable
-        $to-parent = nativecast(GtkWidget, $_);
-        nativecast(GtkEntry, $_);
+        $to-parent = cast(GtkWidget, $_);
+        cast(GtkEntry, $_);
       }
       when WidgetAncestry {
         $to-parent = $_;
-        nativecast(GtkEntry, $_);
+        cast(GtkEntry, $_);
       }
     };
     self.setWidget($to-parent);
-    $!er //= nativecast(GtkEditable, $!e);      # GTK::Roles::Editable
+    $!er //= cast(GtkEditable, $!e);      # GTK::Roles::Editable
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-e;
   }
 
-  multi method new (EntryAncestry $entry) {
+  multi method new (EntryAncestry $entry, :$ref = True) {\
+    return Nil unless $entry;
+
     my $o = self.bless(:$entry);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $entry = gtk_entry_new();
-    self.bless(:$entry);
+
+    $entry ?? self.bless(:$entry) !! Nil;
   }
 
   multi method new_with_buffer (GtkEntryBuffer() $b)
     is also<new-with-buffer>
   {
     my $entry = gtk_entry_new_with_buffer($b);
-    self.bless(:$entry);
+
+    $entry ?? self.bless(:$entry) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkEntry is also<entry> {
-    $!e;
-  }
+  method GTK::Raw::Definitions::GtkEntry
+    is also<
+      entry
+      GtkEntry
+    >
+  { $!e }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
@@ -188,7 +195,8 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_activates_default($!e);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_entry_set_activates_default($!e, $s);
       }
     );
@@ -201,15 +209,21 @@ class GTK::Entry is GTK::Widget {
       },
       STORE => sub ($, Num() $align is copy) {
         my gfloat $a = $align;
+
         gtk_entry_set_alignment($!e, $a);
       }
     );
   }
 
-  method attributes is rw {
+  method attributes (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Pango::AttrList.new( gtk_entry_get_attributes($!e) );
+        my $al = gtk_entry_get_attributes($!e);
+
+        $al ??
+          ( $raw ?? $al !! Pango::AttrList.new($al) )
+          !!
+          Nil;
       },
       STORE => sub ($, PangoAttrList() $attrs is copy) {
         gtk_entry_set_attributes($!e, $attrs);
@@ -217,10 +231,15 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method buffer is rw {
+  method buffer (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::EntryBuffer.new( gtk_entry_get_buffer($!e) );
+        my $eb = gtk_entry_get_buffer($!e);
+
+        $eb ??
+          ( $raw ?? $eb !! GTK::EntryBuffer.new($eb) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkEntryBuffer() $buffer is copy) {
         gtk_entry_set_buffer($!e, $buffer);
@@ -228,10 +247,15 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method completion is rw {
+  method completion (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::EntryCompletion.new( gtk_entry_get_completion($!e) );
+        my $ec = gtk_entry_get_completion($!e);
+
+        $ec ??
+          ( $raw ?? $ec !! GTK::EntryCompletion.new($ec) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkEntryCompletion() $completion is copy) {
         gtk_entry_set_completion($!e, $completion);
@@ -239,10 +263,18 @@ class GTK::Entry is GTK::Widget {
     );
   }
 
-  method cursor_hadjustment is rw is also<cursor-hadjustment> {
+  method cursor_hadjustment (:$raw = False)
+    is rw
+    is also<cursor-hadjustment>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Adjustment.new( gtk_entry_get_cursor_hadjustment($!e) );
+        my $a = gtk_entry_get_cursor_hadjustment($!e);
+
+        $a ??
+          ( $raw ?? $a !! GTK::Adjustment.new($a) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkAdjustment() $adjustment is copy) {
         gtk_entry_set_cursor_hadjustment($!e, $adjustment);
@@ -256,7 +288,8 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_has_frame($!e);
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_entry_set_has_frame($!e, $s);
       }
     );
@@ -276,10 +309,11 @@ class GTK::Entry is GTK::Widget {
   method input_hints is rw is also<input-hints> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkInputHints( gtk_entry_get_input_hints($!e) );
+        GtkInputHintsEnum( gtk_entry_get_input_hints($!e) );
       },
       STORE => sub ($, Int() $hints is copy) {
-        my guint $h = self.RESOLVE-UINT($hints);
+        my guint $h = $hints;
+
         gtk_entry_set_input_hints($!e, $h);
       }
     );
@@ -288,10 +322,11 @@ class GTK::Entry is GTK::Widget {
   method input_purpose is rw is also<input-purpose> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkInputPurpose( gtk_entry_get_input_purpose($!e) );
+        GtkInputPurposeEnum( gtk_entry_get_input_purpose($!e) );
       },
       STORE => sub ($, Int() $purpose is copy) {
-        my uint32 $p = self.RESOLVE-UINT($purpose);
+        my uint32 $p = $purpose;
+
         gtk_entry_set_input_purpose($!e, $p);
       }
     );
@@ -325,7 +360,8 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_overwrite_mode($!e);
       },
       STORE => sub ($, Int() $overwrite is copy) {
-        my guint $o = self.RESOLVE-UINT($overwrite);
+        my guint $o = $overwrite;
+
         gtk_entry_set_overwrite_mode($!e, $o);
       }
     );
@@ -349,6 +385,7 @@ class GTK::Entry is GTK::Widget {
       },
       STORE => sub ($, Num() $fraction is copy) {
         my gdouble $f = $fraction;
+
         gtk_entry_set_progress_fraction($!e, $f);
       }
     );
@@ -361,15 +398,21 @@ class GTK::Entry is GTK::Widget {
       },
       STORE => sub ($, Num() $fraction is copy) {
         my gdouble $f = $fraction;
+
         gtk_entry_set_progress_pulse_step($!e, $f);
       }
     );
   }
 
-  method tabs is rw {
+  method tabs (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Pango::Tabs.new( gtk_entry_get_tabs($!e) );
+        my $pt = gtk_entry_get_tabs($!e);
+
+        $pt ??
+          ( $raw ?? $pt !! Pango::Tabs.new($pt) )
+          !!
+          Nil;
       },
       STORE => sub ($, PangoTabArray() $tabs is copy) {
         gtk_entry_set_tabs($!e, $tabs);
@@ -394,7 +437,8 @@ class GTK::Entry is GTK::Widget {
         so gtk_entry_get_visibility($!e);
       },
       STORE => sub ($, Int() $visible is copy) {
-        my gboolean $v = self.RESOLVE-BOOL($visible);
+        my gboolean $v = $visible.so.Int;
+
         gtk_entry_set_visibility($!e, $v);
       }
     );
@@ -416,7 +460,7 @@ class GTK::Entry is GTK::Widget {
   method cursor-position is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('cursor-position', $gv)
         );
@@ -432,7 +476,7 @@ class GTK::Entry is GTK::Widget {
   method editable is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('editable', $gv)
         );
@@ -449,7 +493,7 @@ class GTK::Entry is GTK::Widget {
   method enable-emoji-completion is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('enable-emoji-completion', $gv)
         );
@@ -466,7 +510,7 @@ class GTK::Entry is GTK::Widget {
   method im-module is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('im-module', $gv)
         );
@@ -483,7 +527,7 @@ class GTK::Entry is GTK::Widget {
   method invisible-char is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('invisible-char', $gv)
         );
@@ -500,7 +544,7 @@ class GTK::Entry is GTK::Widget {
   method invisible-char-set is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('invisible-char-set', $gv)
         );
@@ -517,7 +561,7 @@ class GTK::Entry is GTK::Widget {
   method populate-all is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('populate-all', $gv)
         );
@@ -534,7 +578,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-activatable is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-activatable', $gv)
         );
@@ -552,7 +596,7 @@ class GTK::Entry is GTK::Widget {
   # method primary-icon-gicon is rw  {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('primary-icon-gicon', $gv)
   #       );
@@ -569,7 +613,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-name', $gv)
         );
@@ -584,14 +628,14 @@ class GTK::Entry is GTK::Widget {
 
   # Type: GdkPixbuf
   method primary-icon-pixbuf is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+    my GLib::Value $gv .= new( GDK::Pixbuf.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-pixbuf', $gv)
         );
-        GTK::Compat::Pixbuf.new(
-          nativecast(GdkPixbuf, $gv.object)
+        GDK::Pixbuf.new(
+          cast(GdkPixbuf, $gv.object)
         );
       },
       STORE => -> $, GdkPixbuf() $val is copy {
@@ -605,7 +649,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-sensitive is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-sensitive', $gv)
         );
@@ -622,7 +666,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-stock is rw  is DEPRECATED( “primary-icon-name” ) {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-stock', $gv)
         );
@@ -639,11 +683,11 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-storage-type is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-storage-type', $gv)
         );
-        GtkImageType( $gv.uint);
+        GtkImageTypeEnum( $gv.uint);
       },
       STORE => -> $,  $val is copy {
         warn "primary-icon-storage-type does not allow writing"
@@ -655,7 +699,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-tooltip-markup is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-tooltip-markup', $gv)
         );
@@ -672,7 +716,7 @@ class GTK::Entry is GTK::Widget {
   method primary-icon-tooltip-text is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('primary-icon-tooltip-text', $gv)
         );
@@ -689,7 +733,7 @@ class GTK::Entry is GTK::Widget {
   method scroll-offset is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('scroll-offset', $gv)
         );
@@ -705,7 +749,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-activatable is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-activatable', $gv)
         );
@@ -723,7 +767,7 @@ class GTK::Entry is GTK::Widget {
   # method secondary-icon-gicon is rw  {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
-  #     FETCH => -> $ {
+  #     FETCH => sub ($) {
   #       $gv = GLib::Value.new(
   #         self.prop_get('secondary-icon-gicon', $gv)
   #       );
@@ -740,7 +784,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-name', $gv)
         );
@@ -754,16 +798,18 @@ class GTK::Entry is GTK::Widget {
   }
 
   # Type: GdkPixbuf
-  method secondary-icon-pixbuf is rw  {
-    my GLib::Value $gv .= new( GTK::Compat::Pixbuf.get_type );
+  method secondary-icon-pixbuf (:$raw = False)  is rw  {
+    my GLib::Value $gv .= new( GDK::Pixbuf.get_type );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-pixbuf', $gv)
         );
-        GTK::Compat::Pixbuf.new(
-          nativecast(GdkPixbuf, $gv.objecty)
-        );
+        return Nil unless $gv.object;
+
+        my $p = cast(GdkPixbuf, $gv.object);
+
+        $raw ?? $p !! GDK::Pixbuf.new($p);
       },
       STORE => -> $, GdkPixbuf() $val is copy {
         $gv.object = $val;
@@ -776,7 +822,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-sensitive is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-sensitive', $gv)
         );
@@ -793,7 +839,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-stock is rw  is DEPRECATED( “secondary-icon-name” ) {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-stock', $gv)
         );
@@ -810,11 +856,11 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-storage-type is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-storage-type', $gv)
         );
-        GtkImageType( $gv.uint );
+        GtkImageTypeEnum( $gv.uint );
       },
       STORE => -> $,  $val is copy {
         warn "secondary-icon-storage-type does not allow writing"
@@ -826,7 +872,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-tooltip-markup is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-tooltip-markup', $gv)
         );
@@ -843,7 +889,7 @@ class GTK::Entry is GTK::Widget {
   method secondary-icon-tooltip-text is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('secondary-icon-tooltip-text', $gv)
         );
@@ -860,7 +906,7 @@ class GTK::Entry is GTK::Widget {
   method selection-bound is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('selection-bound', $gv)
         );
@@ -876,7 +922,7 @@ class GTK::Entry is GTK::Widget {
   method show-emoji-icon is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('show-emoji-icon', $gv)
         );
@@ -893,7 +939,7 @@ class GTK::Entry is GTK::Widget {
   method text-length is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('text-length', $gv)
         );
@@ -909,7 +955,7 @@ class GTK::Entry is GTK::Widget {
   method truncate-multiline is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('truncate-multiline', $gv)
         );
@@ -926,7 +972,7 @@ class GTK::Entry is GTK::Widget {
   method xalign is rw  {
     my GLib::Value $gv .= new( G_TYPE_FLOAT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('xalign', $gv)
         );
@@ -950,23 +996,25 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-activatable>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_activatable($!e, $ip);
   }
 
   method get_icon_area (
     Int() $icon_pos,          # GtkEntryIconPosition $icon_pos,
-    GdkRectangle $icon_area
+    GdkRectangle() $icon_area
   )
     is also<get-icon-area>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_area($!e, $ip, $icon_area);
   }
 
   method get_icon_at_pos (Int() $x, Int() $y) is also<get-icon-at-pos> {
-    my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+    my gint ($xx, $yy) = ($x, $y);
+
     gtk_entry_get_icon_at_pos($!e, $x, $y);
   }
 
@@ -975,7 +1023,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-gicon>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_gicon($!e, $ip);
   }
 
@@ -984,7 +1033,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-name>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_name($!e, $ip);
   }
 
@@ -993,7 +1043,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-pixbuf>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_pixbuf($!e, $ip);
   }
 
@@ -1002,7 +1053,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-sensitive>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_sensitive($!e, $ip);
   }
 
@@ -1011,7 +1063,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-stock>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_stock($!e, $ip);
   }
 
@@ -1020,8 +1073,9 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-storage-type>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
-    GtkImageType( gtk_entry_get_icon_storage_type($!e, $ip) );
+    my uint32 $ip = $icon_pos;
+
+    GtkImageTypeEnum( gtk_entry_get_icon_storage_type($!e, $ip) );
   }
 
   method get_icon_tooltip_markup (
@@ -1029,7 +1083,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-tooltip-markup>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_tooltip_markup($!e, $ip);
   }
 
@@ -1038,7 +1093,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<get-icon-tooltip-text>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_get_icon_tooltip_text($!e, $icon_pos);
   }
 
@@ -1050,12 +1106,18 @@ class GTK::Entry is GTK::Widget {
     gtk_entry_get_layout($!e);
   }
 
-  method get_layout_offsets (Int() $x, Int() $y)
+  proto method get_layout_offsets (|)
     is also<get-layout-offsets>
-  {
-    my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+  { * }
+
+  multi method get_layout_offsets {
+    samewith($, $);
+  }
+  multi method get_layout_offsets ($x is rw, $y is rw) {
+    my gint ($xx, $yy) = 0 xx 2;
+
     gtk_entry_get_layout_offsets($!e, $xx, $yy);
+    ($x, $y) = ($xx, $yy);
   }
 
   method get_text_area (GdkRectangle() $text_area) is also<get-text-area> {
@@ -1068,6 +1130,7 @@ class GTK::Entry is GTK::Widget {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_entry_get_type, $n, $t );
   }
 
@@ -1086,7 +1149,8 @@ class GTK::Entry is GTK::Widget {
   method layout_index_to_text_index (Int() $layout_index)
     is also<layout-index-to-text-index>
   {
-    my gint $li = self.RESOLVE-INT($layout_index);
+    my gint $li = $layout_index;
+
     gtk_entry_layout_index_to_text_index($!e, $li);
   }
 
@@ -1104,8 +1168,9 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-activatable>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
-    my gboolean $a = self.RESOLVE-BOOL($activatable);
+    my uint32 $ip = $icon_pos;
+    my gboolean $a = $activatable.so.Int;
+
     gtk_entry_set_icon_activatable($!e, $ip, $a);
   }
 
@@ -1116,8 +1181,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-drag-source>
   {
-    my @u = ($icon_pos, $actions);
-    my uint32 ($ip, $a) = self.RESOLVE-INT(@u);
+    my uint32 ($ip, $a) = ($icon_pos, $actions);
+
     gtk_entry_set_icon_drag_source($!e, $ip, $target_list, $a);
   }
 
@@ -1127,7 +1192,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-gicon>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_set_icon_from_gicon($!e, $ip, $icon);
   }
 
@@ -1137,7 +1203,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-icon-name>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_set_icon_from_icon_name($!e, $ip, $icon_name);
   }
 
@@ -1147,7 +1214,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-pixbuf>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_set_icon_from_pixbuf($!e, $ip, $pixbuf);
   }
 
@@ -1157,7 +1225,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-from-stock>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_set_icon_from_stock($!e, $ip, $stock_id);
   }
 
@@ -1167,8 +1236,9 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-sensitive>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
-    my gboolean $s = self.RESOLVE-BOOL($sensitive);
+    my uint32 $ip = $icon_pos;
+    my gboolean $s = $sensitive.so.Int;
+
     gtk_entry_set_icon_sensitive($!e, $ip, $s);
   }
 
@@ -1178,7 +1248,8 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-tooltip-markup>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_set_icon_tooltip_markup($!e, $ip, $tooltip);
   }
 
@@ -1188,14 +1259,16 @@ class GTK::Entry is GTK::Widget {
   )
     is also<set-icon-tooltip-text>
   {
-    my uint32 $ip = self.RESOLVE-INT($icon_pos);
+    my uint32 $ip = $icon_pos;
+
     gtk_entry_set_icon_tooltip_text($!e, $ip, $tooltip);
   }
 
   method text_index_to_layout_index (Int() $text_index)
     is also<text-index-to-layout-index>
   {
-    my gint $ti = self.RESOLVE-INT($text_index);
+    my gint $ti = $text_index;
+
     gtk_entry_text_index_to_layout_index($!e, $text_index);
   }
 

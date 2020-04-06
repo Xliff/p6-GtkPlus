@@ -3,11 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
-
 use GTK::Raw::Box;
 use GTK::Raw::Types;
-use GTK::Raw::Utils;
 
 use GTK::Roles::Orientable;
 
@@ -44,7 +41,7 @@ class GTK::Box is GTK::Container {
     }
   }
 
-  method GTK::Raw::Types::GtkBox
+  method GTK::Raw::Definitions::GtkBox
     is also<
       GtkBox
       Box
@@ -74,11 +71,11 @@ class GTK::Box is GTK::Container {
     $!or //= nativecast(GtkOrientable, $!b);    # For GTK::Roles::Orientable
   }
 
-  multi method new (BoxAncestry $box) {
+  multi method new (BoxAncestry $box, :$ref = True) {
     return unless $box;
 
     my $o = self.bless( :$box );
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (
@@ -111,7 +108,7 @@ class GTK::Box is GTK::Container {
   method baseline_position is rw is also<baseline-position> {
     Proxy.new(
       FETCH => sub ($) {
-        GtkBaselinePosition( gtk_box_get_baseline_position($!b) );
+        GtkBaselinePositionEnum( gtk_box_get_baseline_position($!b) );
       },
       STORE => sub ($, Int() $position is copy) {
         my uint32 $p = $position;

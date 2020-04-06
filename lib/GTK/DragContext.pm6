@@ -1,19 +1,15 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::DnD;
 use GTK::Raw::Types;
 
-use GTK::Roles::Types;
 use GLib::Roles::Object;
 
-# TO BE USED WITH GTK::Compat::DragContext.
+# TO BE USED WITH GDK::DragContext.
 
 class GTK::DragContext {
-  also does GTK::Roles::Types;
   also does GLib::Roles::Object;
 
   has GdkDragContext $!dc is implementor;
@@ -21,13 +17,17 @@ class GTK::DragContext {
   submethod BUILD(:$context) {
     self!setObject($!dc = $context);
   }
-  
-  method GTK::Compat::Types::GdkDragContext
-    is also<DragContext>
-    { $!dc }
+
+  method GDK::Raw::Definitions::GdkDragContext
+    is also<
+      GdkDragContext
+      GTK::Raw::Definitions::GtkDragContext
+      GtkDragContext
+    >
+  { $!dc }
 
   method new (GdkDragContext() $context) {
-    self.bless(:$context);
+    $context ?? self.bless(:$context) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -45,13 +45,13 @@ class GTK::DragContext {
   }
 
   method finish (Int() $success, Int() $del, Int() $time) {
-    my @b = ($success, $del);
-    my ($s, $d) = self.RESOLVE-BOOL(@b);
-    my guint $t = self.RESOLVE-UINT($time);
+    my ($s, $d) = ($success, $del);
+    my guint $t = $time;
+
     gtk_drag_finish($!dc, $s, $d, $t);
   }
 
-  method get_source_widget
+  method get_source_widget (:$raw = False, :$widget = False)
     is also<
       get-source-widget
       source-widget
@@ -61,34 +61,36 @@ class GTK::DragContext {
     # Returns GtkWidget.
     # May need to use GTK::Widget.CreateObject for this. For now, leave
     # up to the caller.
-    gtk_drag_get_source_widget($!dc);
+    my $w = gtk_drag_get_source_widget($!dc);
+
+    self.ReturnWidget($w, $raw, $widget);
   }
 
   method set_icon_default is also<set-icon-default> {
     gtk_drag_set_icon_default($!dc);
   }
 
-  method set_icon_gicon (GIcon $icon, Int() $hot_x, Int() $hot_y)
+  method set_icon_gicon (GIcon() $icon, Int() $hot_x, Int() $hot_y)
     is also<set-icon-gicon>
   {
-    my @i = ($hot_x, $hot_y);
-    my gint ($hx, $hy) = self.RESOLVE-INT(@i);
+    my gint ($hx, $hy) = ($hot_x, $hot_y);
+
     gtk_drag_set_icon_gicon($!dc, $icon, $hx, $hy);
   }
 
   method set_icon_name (Str() $icon_name, Int() $hot_x, Int() $hot_y)
     is also<set-icon-name>
   {
-    my @i = ($hot_x, $hot_y);
-    my gint ($hx, $hy) = self.RESOLVE-INT(@i);
+    my gint ($hx, $hy) = ($hot_x, $hot_y);
+
     gtk_drag_set_icon_name($!dc, $icon_name, $hx, $hy);
   }
 
   method set_icon_pixbuf (GdkPixbuf() $pixbuf, Int() $hot_x, Int() $hot_y)
     is also<set-icon-pixbuf>
   {
-    my @i = ($hot_x, $hot_y);
-    my gint ($hx, $hy) = self.RESOLVE-INT(@i);
+    my gint ($hx, $hy) = ($hot_x, $hot_y);
+
     gtk_drag_set_icon_pixbuf($!dc, $pixbuf, $hx, $hy);
   }
 
@@ -105,8 +107,8 @@ class GTK::DragContext {
   method set_icon_widget (GtkWidget() $widget, Int() $hot_x, Int() $hot_y)
     is also<set-icon-widget>
   {
-    my @i = ($hot_x, $hot_y);
-    my gint ($hx, $hy) = self.RESOLVE-INT(@i);
+    my gint ($hx, $hy) = ($hot_x, $hot_y);
+
     gtk_drag_set_icon_widget($!dc, $widget, $hx, $hy);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

@@ -1,15 +1,13 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::MenuToolButton;
 use GTK::Raw::Types;
 
 use GTK::ToolButton;
 
-our subset MenuToolButtonAncestry is export 
+our subset MenuToolButtonAncestry is export
   where GtkMenuToolButton | ToolButtonAncestry;
 
 class GTK::MenuToolButton is GTK::ToolButton {
@@ -27,12 +25,12 @@ class GTK::MenuToolButton is GTK::ToolButton {
       when MenuToolButtonAncestry {
         $!mtb = do {
           when GtkMenuToolButton {
-            $to-parent = nativecast(GtkToolButton, $_);
+            $to-parent = cast(GtkToolButton, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkMenuToolButton, $_);
+            cast(GtkMenuToolButton, $_);
           }
         }
         self.setToolButton($to-parent);
@@ -44,14 +42,17 @@ class GTK::MenuToolButton is GTK::ToolButton {
     }
   }
 
-  multi method new (MenuToolButtonAncestry $menutoolbutton) {
+  multi method new (MenuToolButtonAncestry $menutoolbutton, :$ref = True) {
+    return Nil unless $menutoolbutton;
+
     my $o = self.bless(:$menutoolbutton);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (GtkWidget() $widget, Str() $label) {
     my $menutoolbutton = gtk_menu_tool_button_new($widget, $label);
-    self.bless(:$menutoolbutton);
+
+    $menutoolbutton ?? self.bless(:$menutoolbutton) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -65,10 +66,12 @@ class GTK::MenuToolButton is GTK::ToolButton {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method menu is rw {
+  method menu (:$raw = False, :$widget = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Widget.new( gtk_menu_tool_button_get_menu($!mtb) );
+        my $w = gtk_menu_tool_button_get_menu($!mtb);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $menu is copy) {
         gtk_menu_tool_button_set_menu($!mtb, $menu);
@@ -80,6 +83,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_menu_tool_button_get_type, $n, $t );
   }
 

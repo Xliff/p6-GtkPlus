@@ -3,35 +3,33 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
-use GTK::Dialog::Raw::About;
 use GTK::Raw::Types;
+use GTK::Dialog::Raw::About;
 
 use GTK::Dialog;
 
-my subset Ancestry
-  where GtkAboutDialog | GtkDialog | GtkWindow | GtkBin | GtkContainer |
-        GtkBuilder     | GtkWidget;
+my subset AboutDialogAncestry is export of Mu
+  where GtkAboutDialog | DialogAncestry;
 
 class GTK::Dialog::About is GTK::Dialog {
   has GtkAboutDialog $!ad is implementor;
 
   method bless(*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Dialog::About');
+    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$about) {
     my $to-parent;
     given $about {
-      when Ancestry {
+      when AboutDialogAncestry {
         $!ad = do {
           when GtkAboutDialog  {
             $to-parent = nativecast(GtkDialog, $_);
             $_;
           }
+
           default {
             $to-parent = $_;
             nativecast(GtkAboutDialog, $_);
@@ -46,14 +44,17 @@ class GTK::Dialog::About is GTK::Dialog {
     }
   }
 
-  multi method new (Ancestry $about) {
+  multi method new (AboutDialogAncestry $about, :$ref = True) {
+    return Nil unless $about;
+
     my $o = self.bless(:$about);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $about = gtk_about_dialog_new();
-    self.bless(:$about);
+
+    $about ?? self.bless(:$about) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -73,10 +74,10 @@ class GTK::Dialog::About is GTK::Dialog {
       },
       STORE => sub ($, $artists is copy) {
         die qq:to/D/ unless $artists ~~ (Str, Array).any;
-Cannot accept { $artists.^name } for GTK::Dialog::About.artists
-D
+          Cannot accept { $artists.^name } for GTK::Dialog::About.artists
+          D
 
-        my $a = self.RESOLVE-GSTRV($artists);
+        my $a = resolve-gstrv($artists ~~ Str ?? $artists.lines !! $artists);
         gtk_about_dialog_set_artists($!ad, $a);
       }
     );
@@ -89,10 +90,10 @@ D
       },
       STORE => sub ($, $authors is copy) {
         die qq:to/D/ unless $authors ~~ (Str, Array).any;
-Cannot accept { $authors.^name } for GTK::Dialog::About.authors
-D
+          Cannot accept { $authors.^name } for GTK::Dialog::About.authors
+          D
 
-        my $a = self.RESOLVE-GSTRV($authors);
+        my $a = resolve-gstrv($authors ~~ Str ?? $authors.lines !! $authors);
         gtk_about_dialog_set_authors($!ad, $a);
       }
     );
@@ -125,12 +126,12 @@ D
       FETCH => sub ($) {
         gtk_about_dialog_get_documenters($!ad);
       },
-      STORE => sub ($, $documenters is copy) {
-        die qq:to/D/.chomp unless $documenters ~~ (Str, Array).any;
-Cannot accept { $documenters.^name } for GTK::Dialog::About.documenters
-D
+      STORE => sub ($, $docs is copy) {
+        die qq:to/D/.chomp unless $docs ~~ (Str, Array).any;
+          Cannot accept { $docs.^name } for GTK::Dialog::About.documenters
+          D
 
-        my $d = self.RESOLVE-GSTRV($documenters);
+        my $d = resolve-gstrv($docs ~~ Str ?? $docs.lines !! $docs);
         gtk_about_dialog_set_documenters($!ad, $d);
       }
     );
@@ -153,7 +154,8 @@ D
         gtk_about_dialog_get_license_type($!ad);
       },
       STORE => sub ($, Int() $license_type is copy) {
-        my uint32 $lt = self.RESOLVE-UINT($license_type);
+        my uint32 $lt = $license_type;
+
         gtk_about_dialog_set_license_type($!ad, $lt);
       }
     );
@@ -244,7 +246,8 @@ D
         gtk_about_dialog_get_wrap_license($!ad);
       },
       STORE => sub ($, Bool() $wrap_license is copy) {
-        my gboolean $wl = self.RESOLVE-BOOL($wrap_license);
+        my gboolean $wl = $wrap_license.so.Int;
+
         gtk_about_dialog_set_wrap_license($!ad, $wl);
       }
     );
@@ -255,12 +258,15 @@ D
   method add_credit_section (Str() $section_name, @people)
     is also<add-credit-section>
   {
-    my $ac = self.RESOLVE-GSTR(@people);
+    my $ac = resolve-gstrv(@people);
+
     gtk_about_dialog_add_credit_section($!ad, $section_name, $ac);
   }
 
   method get_type is also<get-type> {
-    gtk_about_dialog_get_type();
+    state ($n, $t);
+
+    GTK::Widget.unstable_get_type( &gtk_about_dialog_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

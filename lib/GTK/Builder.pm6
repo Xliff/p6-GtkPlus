@@ -2,19 +2,23 @@ use v6.c;
 
 use Method::Also;
 use NativeCall;
+use XML::Actions;
 
 use Data::Dump::Tree;
 
 use GLib::GSList;
-use GTK::Compat::Types;
+
 use GTK::Raw::Builder;
 use GTK::Raw::Types;
 use GTK::Raw::Subs;
 
 use GTK;
+use GIO::Menu;
 use GTK::Adjustment;
+use GTK::Application;
 use GTK::CSSProvider;
 use GTK::Widget;
+use GTK::Window;
 
 use GLib::Roles::Object;
 
@@ -52,24 +56,24 @@ class GTK::Builder does Associative {
 
     my %sections;
     my ($ui-data, $style-data);
-    with $pod {
+    if $pod {
       for $pod.grep( *.name eq <css ui>.any ).Array {
         # This may not always be true. Keep up with POD spec!
         %sections{ .name } //= $_.contents.map( *.contents[0] ).join("\n");
         last with %sections<ui> && %sections<css>;
       }
-      $ui-data = %sections<ui>;
+      $ui-data    = %sections<ui>;
       $style-data = %sections<css>;
     } else {
-       $ui-data    = $_ with $ui;
-       $style-data = $_ with $style-data;
+       $ui-data    = $ui         if $ui;
+       $style-data = $style-data if $style;
     }
-    $!css = GTK::CSSProvider.new(:$style-data) with $style-data;
+    $!css = GTK::CSSProvider.new(style => $style-data) if $style-data;
 
-    with $ui-data {
-      self.add_from_string($_);
+    if $ui-data {
+      self.add_from_string($ui-data);
       $!window = GTK::Window.new( self.get_object($window-name) )
-        with $window-name;
+        if $window-name;
 
 # ONLY DO THIS IF BUILDER IS NOT ACTING AS A TEMPLATE!
 #
@@ -84,28 +88,47 @@ class GTK::Builder does Associative {
 
   }
 
-  method GTK::Raw::Types::GtkBuilder is also<Builder> { $!b }
+  method GTK::Raw::Definitions::GtkBuilder
+    is also<
+      GtkBuilder
+      Builder
+    >
+  { $!b }
 
-  method new (
+  multi method new (GtkBuilder $builder, :$ref = True) {
+    return Nil unless $builder;
+
+    my $o = self.bless(:$builder);
+    $o.ref if $ref;
+
+    # XXX - Perform analysis on builder object and fill in missing data!!
+
+    $o;
+  }
+  multi method new (
     :$pod,
     :$ui,
     :$window-name,
     :$style
   ) {
     my $builder = gtk_builder_new();
-    self.bless(:$builder, :$pod, :$ui, :$window-name, :$style);
+
+    $builder ?? self.bless(:$builder, :$pod, :$ui, :$window-name, :$style)
+             !! Nil;
   }
 
   method new_from_file (Str() $filename) is also<new-from-file> {
     my $builder = gtk_builder_new_from_file($filename);
     my $ui = $filename.IO.slurp;
-    self.bless(:$builder, :$ui);
+
+    $builder ?? self.bless(:$builder, :$ui) !! Nil;
   }
 
   method new_from_resource (Str() $resource) is also<new-from-resource> {
     my $builder = gtk_builder_new_from_resource($resource);
+
     # XXX - Get resource data and place into $ui
-    self.bless(:$builder);
+    $builder ?? self.bless(:$builder) !! Nil;
   }
 
   method new_from_string (Str() $ui, Int() $length = -1)
@@ -114,7 +137,8 @@ class GTK::Builder does Associative {
     die '$length must not be negative' unless $length > -2;
     my gssize $l = $length;
     my $builder = gtk_builder_new_from_string($ui, $l);
-    self.bless(:$builder, :$ui);
+
+    $builder ?? self.bless(:$builder, :$ui) !! Nil;
   }
 
   #  new-from-buf??
@@ -157,42 +181,54 @@ class GTK::Builder does Associative {
     :$file,
     :$resource
   ) {
-    with $file {
-    }
-    with $resource {
-    }
-    with $ui_def {
-      my rule tag {
-        '<object' 'class="' $<t>=(<-["]>+) '"' 'id="' $<n>=(<-["]>+) '"' '>'
-      }
-      my $m = m:g/<tag>/;
+    my %parent-types := %!types;
 
-      if $m.defined {
-        # For use in regex.
-        my @p = @prefixes;
-        for $m.Array -> $o {
-          (my $type = $o<tag><t>.Str) ~~
-            s/ ( @p ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
-          my $args;
-          # Last-chance special case resolution -- should probably be broken
-          # out into its own package.
-          $type = do given $type {
-            when 'GTK::Adjustment' {
-              $args = ['cast', GtkAdjustment];
-              $_;
-            }
-            when 'GTK::VBox' {
-              #$args = ['option', { vertical => 1 } ];
-              'GTK::Box';
-            }
-            when 'GTK::HBox' {
-              #$args = ['option', { horizontal => 1} ];
-              'GTK::Box';
-            }
-            default { $_; }
+    class UI-Parser is XML::Actions::Work {
+      method object:start (Array $parent-path, :$class, :$id is copy) {
+        my $args;
+        state %collider;
+
+        (my $type = $class) ~~
+          s/ ( @prefixes ) ( <[A..Za..z]>+ )/{ $0.uc }::{ $1 }/;
+
+        $type = do given $type {
+          when 'GTK::Adjustment' {
+            $args = ['cast', GtkAdjustment];
+            $_;
           }
-          %!types{ $o<tag><n>.Str } = [ $type, $args ];
+          when 'GTK::VBox' {
+            #$args = ['option', { vertical => 1 } ];
+            'GTK::Box';
+          }
+          when 'GTK::HBox' {
+            #$args = ['option', { horizontal => 1 } ];
+            'GTK::Box';
+          }
+
+          default { $_; }
         }
+
+        # Could make this an option, later.
+        # unless $id {
+        #   $id = $type.lc.split('::').join('');
+        #   $id ~= %collider{$id} if ++%collider{$id};
+        # }
+        %parent-types{$id} = [ $type, $args ] if $id;
+      }
+
+      method menu:start (Array $parent-path, :$id) {
+        my $args = [ 'cast', GMenuModel ];
+        %parent-types{$id} = [ 'GIO::Menu', $args ];
+      }
+    }
+
+    {
+      with $file     { }
+      with $resource { }
+      with $ui_def   {
+        my $a = XML::Actions.new(xml => $ui_def);
+
+        $a.process( actions => UI-Parser.new );
       }
     }
   }
@@ -207,6 +243,7 @@ class GTK::Builder does Associative {
     self!getTypes(:$ui_def, :$file, :$resource);
     for %!types.keys -> $k {
       my $o = self.get_object($k);
+
       given %!types{$k}[1][0] {
         when 'cast' {
           $o = nativecast(%!types{$k}[1][1], $o);
@@ -238,6 +275,9 @@ class GTK::Builder does Associative {
           ::( $at ).new($o, $args.pairs);
         }
         default {
+          CATCH {
+            default { note($_) }
+          }
           say "Requiring { $at }..." if ::( $at ) ~~ Failure;
           require ::($ = $at);
           ::($ = $at).new($o);
@@ -249,10 +289,15 @@ class GTK::Builder does Associative {
   }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method application is rw {
+  method application (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Application.new( gtk_builder_get_application($!b) );
+        my $app = gtk_builder_get_application($!b);
+
+        $app ??
+          ( $raw ?? $app !! GTK::Application.new($app) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkApplication() $application is copy) {
         gtk_builder_set_application($!b, $application);
@@ -340,6 +385,7 @@ class GTK::Builder does Associative {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     my $i = 0;
+
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     gtk_builder_add_objects_from_file($!b, $filename, $oi, $error);
@@ -358,6 +404,7 @@ class GTK::Builder does Associative {
     die '@objects must be a list of strings'unless @object_ids.all ~~ Str;
     my $oi = CArray[Str].new;
     my $i = 0;
+
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     gtk_builder_add_objects_from_resource($!b, $resource_path, $oi, $error);
@@ -389,6 +436,7 @@ class GTK::Builder does Associative {
     my gsize $l = $length;
     my $oi = CArray[Str].new;
     my $i = 0;
+
     $oi[$i++] = $_ for @object_ids;
     clear_error;
     my $rc = gtk_builder_add_objects_from_string(
@@ -403,7 +451,9 @@ class GTK::Builder does Associative {
     $rc;
   }
 
-  method connect_signals (gpointer $user_data) is also<connect-signals> {
+  method connect_signals (gpointer $user_data = gpointer)
+    is also<connect-signals>
+  {
     gtk_builder_connect_signals($!b, $user_data);
   }
 
@@ -420,7 +470,7 @@ class GTK::Builder does Associative {
     gtk_builder_error_quark();
   }
 
-  method expose_object (Str() $name, GObject $object)
+  method expose_object (Str() $name, GObject() $object)
     is also<expose-object>
   {
     gtk_builder_expose_object($!b, $name, $object);
@@ -448,11 +498,35 @@ class GTK::Builder does Associative {
 
   method get_object (Str() $name) is also<get-object> {
     my $o = gtk_builder_get_object($!b, $name);
+
     $o === GtkWidget ?? Nil !! $o;
   }
 
-  method get_objects is also<get-objects> {
-    GLib::GSList.new( gtk_builder_get_objects($!b) );
+  method get_objects (
+    :$glist  = False,
+    :$raw    = False,
+    :$object = False,
+    :$widget = False
+  )
+    is also<get-objects>
+  {
+    die 'Cannot use $object and $widget in the same call!'
+      unless $object ^^ $widget;
+
+    my $ol = gtk_builder_get_objects($!b);
+
+    return Nil unless $ol;
+    return $ol if $glist;
+
+    $ol = $object ?? GLib::GList.new($ol) but GLib::Roles::ListData[GObject]
+                  !! GLib::GList.new($ol) but GLib::Roles::ListData[GtkWidget];
+
+    $raw ?? $ol.Array
+         !! $ol.Array.map({
+              $object ?? GLib::Roles::Object.new-object-obj($_)
+                      !! ( $widget ?? GTK::Widget.new($_)
+                                   !! GTK::Widget.CreateObject.new($_) )
+            });
   }
 
   method get_type is also<get-type> {
@@ -477,7 +551,7 @@ class GTK::Builder does Associative {
   method value_from_string (
     GParamSpec $pspec,
     Str() $string,
-    GValue $value,
+    GValue() $value,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<value-from-string>
@@ -489,15 +563,17 @@ class GTK::Builder does Associative {
 
   # YYY - Return type?
   method value_from_string_type (
-    GType $type,
+    Int() $type,
     Str() $string,
-    GValue $value,
+    GValue() $value,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<value-from-string-type>
   {
+    my GType $t = $type;
+
     clear_error;
-    gtk_builder_value_from_string_type($!b, $type, $string, $value, $error);
+    gtk_builder_value_from_string_type($!b, $t, $string, $value, $error);
     set_error($error);
   }
 

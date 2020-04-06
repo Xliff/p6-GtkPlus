@@ -4,7 +4,7 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::Main;
@@ -110,7 +110,7 @@ sub gtk_grab_remove (GtkWidget $widget)
   is export
 { * }
 
-sub gtk_init (gint $argc, Str $argv)
+sub gtk_init (gint $argc, CArray[Str] $argv)
   is native(gtk)
   is export
 { * }

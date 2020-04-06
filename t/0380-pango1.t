@@ -12,12 +12,16 @@ use GTK::DrawingArea;
 sub draw_text($da, $cr, $ud, $r) {
   $cr.save;
 
-  # Will eventually be baked into GTK, once Pango is released.
   my $layout = Pango::Layout.new(
-    $da.create_pango_layout( ("Pango Power" xx 3).join("\n") )
+    $da.create_pango_layout(
+      ("Pango Power" xx 3).join("\n"),
+      :raw
+    )
   );
   my $desc = Pango::FontDescription.new_from_string('sans bold 34');
   $layout.font_description = $desc;
+  # Note that $cr is plumbing and will need proper types calling its
+  # methods!
   $cr.move_to(30.Num, 20.Num);
   Pango::Cairo.new($cr, :!update).layout_path($layout);
 

@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::TextTagTable;
@@ -13,7 +13,11 @@ sub gtk_text_tag_table_add (GtkTextTagTable $table, GtkTextTag $tag)
   is export
   { * }
 
-sub gtk_text_tag_table_foreach (GtkTextTagTable $table, GtkTextTagTableForeach $func, gpointer $data)
+sub gtk_text_tag_table_foreach (
+  GtkTextTagTable $table,
+  &func (GtkTextTag, Pointer), 
+  gpointer $data
+)
   is native(gtk)
   is export
   { * }

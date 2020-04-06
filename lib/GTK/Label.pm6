@@ -1,11 +1,9 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
 use GTK::Raw::Label;
 use GTK::Raw::Types;
 
@@ -21,7 +19,7 @@ class GTK::Label is GTK::Widget {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Label');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -37,36 +35,44 @@ class GTK::Label is GTK::Widget {
     }
   }
 
-  method GTK::Raw::Types::GtkLabel is also<Label> { $!l }
+  method GTK::Raw::Definitions::GtkLabel
+    is also<
+      Label
+      GtkLabel
+    >
+  { $!l }
 
   multi method new (GTK::Widget $label) {
     samewith($label.Widget);
   }
-  multi method new (LabelAncestry $label) {
+  multi method new (LabelAncestry $label, :$ref = True) {
+    return Nil unless $label;
+
     my $o = self.bless(:$label);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new ($text is copy = Str) {
-    $text .= Str if $text.^can('Str').elems;
+    $text .= Str if $text && $text.^can('Str').elems;
 
     die "Cannot create a label from a { $text.^name } object."
       unless $text ~~ Str;
 
     my $label = gtk_label_new($text);
-    self.bless(:$label);
+
+    $label ?? self.bless(:$label) !! Nil;
   }
 
   method setLabel(LabelAncestry $label) {
     my $to-parent;
     $!l = do given $label {
       when GtkLabel  {
-        $to-parent = nativecast(GtkWidget, $_);
+        $to-parent = cast(GtkWidget, $_);
         $_;
       }
       default {
         $to-parent = $_;
-        nativecast(GtkLabel, $label);
+        cast(GtkLabel, $label);
       }
     };
     self.setWidget($to-parent);
@@ -74,7 +80,8 @@ class GTK::Label is GTK::Widget {
 
   method new_with_mnemonic ($text) is also<new-with-mnemonic> {
     my $label = gtk_label_new_with_mnemonic($text);
-    self.bless(:$label);
+
+    $label ?? self.bless(:$label) !! Nil;
   }
 
   # Signals
@@ -118,16 +125,22 @@ class GTK::Label is GTK::Widget {
       },
       STORE => sub ($, Num() $angle is copy) {
         my gdouble $a = $angle;
+
         gtk_label_set_angle($!l, $a);
       }
     );
   }
 
   # PangoAttrList
-  method attributes is rw {
+  method attributes (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Pango::AttrList.new( gtk_label_get_attributes($!l) );
+        my $al = gtk_label_get_attributes($!l);
+
+        $al ??
+          ( $raw ?? $al !! Pango::AttrList.new($al) )
+          !!
+          Nil;
       },
       STORE => sub ($, PangoAttrList() $attrs is copy) {
         gtk_label_set_attributes($!l, $attrs);
@@ -141,8 +154,9 @@ class GTK::Label is GTK::Widget {
         PangoEllipsizeMode( gtk_label_get_ellipsize($!l) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = self.RESOLVE-UINT($mode);
-        gtk_label_set_ellipsize($!l, $mode);
+        my uint32 $m = $mode;
+
+        gtk_label_set_ellipsize($!l, $m);
       }
     );
   }
@@ -150,10 +164,11 @@ class GTK::Label is GTK::Widget {
   method justify is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GtkJustification( gtk_label_get_justify($!l) );
+        GtkJustificationEnum( gtk_label_get_justify($!l) );
       },
       STORE => sub ($, Int() $jtype is copy) {
-        my uint32 $jt = self.RESOLVE-UINT($jtype);
+        my uint32 $jt = $jtype;
+
         gtk_label_set_justify($!l, $jt);
       }
     );
@@ -181,7 +196,8 @@ class GTK::Label is GTK::Widget {
         Bool( gtk_label_get_line_wrap($!l) );
       },
       STORE => sub ($, Int() $wrap is copy) {
-        my gboolean $w = self.RESOLVE-BOOL($wrap);
+        my gboolean $w = $wrap.so.Int;
+
         gtk_label_set_line_wrap($!l, $w);
       }
     );
@@ -199,7 +215,8 @@ class GTK::Label is GTK::Widget {
         PangoWrapMode( gtk_label_get_line_wrap_mode($!l) );
       },
       STORE => sub ($, Int() $wrap_mode is copy) {
-        my uint32 $wm = self.RESOLVE-UINT($wrap_mode);
+        my uint32 $wm = $wrap_mode;
+
         gtk_label_set_line_wrap_mode($!l, $wm);
       }
     );
@@ -211,7 +228,8 @@ class GTK::Label is GTK::Widget {
         gtk_label_get_lines($!l);
       },
       STORE => sub ($, Int() $lines is copy) {
-        my gint $l = self.RESOLVE-INT($lines);
+        my gint $l = $lines;
+
         gtk_label_set_lines($!l, $l);
       }
     );
@@ -223,17 +241,22 @@ class GTK::Label is GTK::Widget {
         gtk_label_get_max_width_chars($!l);
       },
       STORE => sub ($, Int() $n_chars is copy) {
-        my gint $nc = self.RESOLVE-INT($n_chars);
+        my gint $nc = $n_chars;
+
         gtk_label_set_max_width_chars($!l, $n_chars);
       }
     );
   }
 
-  method mnemonic_widget is rw is also<mnemonic-widget> {
+  method mnemonic_widget (:$raw = False, :$widget = False)
+    is rw
+    is also<mnemonic-widget>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        # Needs widget resolution.
-        gtk_label_get_mnemonic_widget($!l);
+        my $w = gtk_label_get_mnemonic_widget($!l);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $widget is copy) {
         gtk_label_set_mnemonic_widget($!l, $widget);
@@ -247,7 +270,8 @@ class GTK::Label is GTK::Widget {
         Bool( gtk_label_get_selectable($!l) );
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_label_set_selectable($!l, $s);
       }
     );
@@ -259,7 +283,8 @@ class GTK::Label is GTK::Widget {
         Bool( gtk_label_get_single_line_mode($!l) );
       },
       STORE => sub ($, Int() $single_line_mode is copy) {
-        my gboolean $sl = self.RESOLVE-BOOL($single_line_mode);
+        my gboolean $sl = $single_line_mode.so.Int;
+
         gtk_label_set_single_line_mode($!l, $sl);
       }
     );
@@ -282,7 +307,8 @@ class GTK::Label is GTK::Widget {
         Bool( gtk_label_get_track_visited_links($!l) );
       },
       STORE => sub ($, Int() $track_links is copy) {
-        my gboolean $tl = self.RESOLVE-BOOL($track_links);
+        my gboolean $tl = $track_links.so.Int;
+
         gtk_label_set_track_visited_links($!l, $tl);
       }
     );
@@ -294,7 +320,8 @@ class GTK::Label is GTK::Widget {
         Bool( gtk_label_get_use_markup($!l) );
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_label_set_use_markup($!l, $s);
       }
     );
@@ -306,7 +333,8 @@ class GTK::Label is GTK::Widget {
         Bool( gtk_label_get_use_underline($!l) );
       },
       STORE => sub ($, Int() $setting is copy) {
-        my gboolean $s = self.RESOLVE-BOOL($setting);
+        my gboolean $s = $setting.so.Int;
+
         gtk_label_set_use_underline($!l, $s);
       }
     );
@@ -318,7 +346,8 @@ class GTK::Label is GTK::Widget {
         gtk_label_get_width_chars($!l);
       },
       STORE => sub ($, Int() $n_chars is copy) {
-        my gint $nc = self.RESOLVE-INT($n_chars);
+        my gint $nc = $n_chars;
+
         gtk_label_set_width_chars($!l, $nc);
       }
     );
@@ -331,6 +360,7 @@ class GTK::Label is GTK::Widget {
       },
       STORE => sub ($, Num() $xalign is copy) {
         my gfloat $xa = $xalign;
+
         gtk_label_set_xalign($!l, $xa);
       }
     );
@@ -343,6 +373,7 @@ class GTK::Label is GTK::Widget {
       },
       STORE => sub ($, Num() $yalign is copy) {
         my gfloat $ya = $yalign;
+
         gtk_label_set_yalign($!l, $ya);
       }
     );
@@ -352,45 +383,63 @@ class GTK::Label is GTK::Widget {
     gtk_label_get_current_uri($!l);
   }
 
-  method get_layout
+  method get_layout (:$raw = False)
     is also<
       get-layout
       layout
     >
   {
-    Pango::Layout.new( gtk_label_get_layout($!l) );
+    my $pl = gtk_label_get_layout($!l);
+
+    $pl ??
+      ( $raw ?? $pl !! Pango::Layout.new($pl) )
+      !!
+      Nil;
   }
 
-  method get_layout_offsets (Int() $x, Int() $y)
+  proto method get_layout_offsets (|)
     is also<get-layout-offsets>
-  {
-    my @i = ($x, $y);
-    my gint ($xx, $yy) = self.RESOLVE-INT(@i);
+  { * }
+
+  multi method get_layout_offsets {
+    samewith($, $);
+  }
+  multi method get_layout_offsets ($x is rw, $y is rw) {
+    my gint ($xx, $yy) = 0 xx 2;
+
     gtk_label_get_layout_offsets($!l, $xx, $yy);
+    ($x, $y) = ($xx, $yy);
   }
 
   method get_mnemonic_keyval is also<get-mnemonic-keyval> {
     gtk_label_get_mnemonic_keyval($!l);
   }
 
-  method get_selection_bounds (Int() $start, Int() $end)
+  proto method get_selection_bounds (|)
     is also<get-selection-bounds>
-  {
-    my @i = ($start, $end);
-    my gint ($s, $e) = self.RESOLVE-INT(@i);
-    gtk_label_get_selection_bounds($!l, $start, $end);
+  { * }
+
+  multi method get_selection_bounds {
+    samewith($, $);
+  }
+  multi method get_selection_bounds ($start is rw, $end is rw) {
+    my gint ($s, $e) = 0 xx 2;
+
+    gtk_label_get_selection_bounds($!l, $s, $e);
+    ($start, $end) = ($s, $e);
   }
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_label_get_type, $n, $t);
   }
 
   method select_region (Int() $start_offset, Int() $end_offset)
     is also<select-region>
   {
-    my @i = ($start_offset, $end_offset);
-    my gint ($so, $eo) = self.RESOLVE-INT(@i);
+    my gint ($so, $eo) = ($start_offset, $end_offset);
+
     gtk_label_select_region($!l, $so, $eo);
   }
 

@@ -3,9 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Utils;
-
-use GTK::Compat::Types;
 use GTK::Raw::Dialog;
 use GTK::Raw::Types;
 
@@ -21,7 +18,7 @@ class GTK::Dialog is GTK::Window {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -48,43 +45,15 @@ class GTK::Dialog is GTK::Window {
     self.setWindow($to-parent);
   }
 
-  multi method new (DialogAncestry $dialog) {
-    return unless $dialog;
+  multi method new (DialogAncestry $dialog, :$ref = True) {
+    return Nil unless $dialog;
 
     my $o = self.bless(:$dialog);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $dialog = gtk_dialog_new();
-
-    $dialog ?? self.bless( :$dialog ) !! Nil;
-  }
-
-
-  # Yes, I'm poking fun at the '...' limitation, at this point.
-  # This method can be pulled (or better yet ignored) if you lack
-  # a funny bone.
-  method new_with_button(
-   Str()       $title,
-   GtkWindow() $parent,
-   Int()       $flags,          # GtkDialogFlags $flags
-   Str()       $button_text,
-   Int()       $button_response_id
-  )
-    is also<new-with-button>
-  {
-    my gint $br = $button_response_id;
-    my GtkDialogFlags $f = $flags;
-
-    my $dialog = gtk_dialog_new_with_buttons(
-      $title,
-      $parent,
-      $f,
-      $button_text,
-      $br,
-      Str
-    );
 
     $dialog ?? self.bless( :$dialog ) !! Nil;
   }
@@ -123,6 +92,33 @@ class GTK::Dialog is GTK::Window {
     $o;
   }
 
+  # Yes, I'm poking fun at the '...' limitation, at this point.
+  # This method can be pulled (or better yet ignored) if you lack
+  # a funny bone.
+  method new_with_button(
+   Str()       $title,
+   GtkWindow() $parent,
+   Int()       $flags,          # GtkDialogFlags $flags
+   Str()       $button_text,
+   Int()       $button_response_id
+  )
+    is also<new-with-button>
+  {
+    my gint $br = $button_response_id;
+    my GtkDialogFlags $f = $flags;
+
+    my $dialog = gtk_dialog_new_with_buttons(
+      $title,
+      $parent,
+      $f,
+      $button_text,
+      $br,
+      Str
+    );
+
+    $dialog ?? self.bless( :$dialog ) !! Nil;
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # Is originally:
 
@@ -148,6 +144,7 @@ class GTK::Dialog is GTK::Window {
     is also<add-action-widget>
   {
     my gint $ri = $response_id;
+
     gtk_dialog_add_action_widget($!d, $child, $ri);
   }
 
@@ -235,8 +232,10 @@ class GTK::Dialog is GTK::Window {
 
   method run {
     self.response.tap({ self.hide }) unless self.is-connected('response');
+
     my gint $rc = gtk_dialog_run($!d);
-    GtkResponseType( $rc );
+
+    GtkResponseTypeEnum( $rc );
   }
 
   method set_alternative_button_order_from_array (
@@ -266,7 +265,7 @@ class GTK::Dialog is GTK::Window {
     is also<set-response-sensitive>
   {
     my gint $ri = $response_id;
-    my gboolean $s = $setting;
+    my gboolean $s = $setting.so.Int;
 
     gtk_dialog_set_response_sensitive($!d, $ri, $s);
   }

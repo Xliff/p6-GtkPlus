@@ -1,11 +1,9 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Compat::Types;
 use GTK::Raw::Label;
 use GTK::Raw::ProgressBar;
 use GTK::Raw::Types;
@@ -34,20 +32,20 @@ class GTK::ProgressBar is GTK::Widget {
       when ProgressBarAncestry {
         $!bar = do {
           when GtkProgressBar {
-            $to-parent = nativecast(GtkProgressBar, $_);
+            $to-parent = cast(GtkProgressBar, $_);
             $_;
           }
           when GtkOrientable {
             $!or = $_;                                # GTK::Roles::Orientable
-            $to-parent = nativecast(GtkProgressBar, $_);
-            nativecast(GtkProgressBar, $_);
+            $to-parent = cast(GtkProgressBar, $_);
+            cast(GtkProgressBar, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkProgressBar, $_);
+            cast(GtkProgressBar, $_);
           }
         };
-        $!or //= nativecast(GtkOrientable, $!bar);    # GTK::Roles::Orientable
+        $!or //= cast(GtkOrientable, $!bar);    # GTK::Roles::Orientable
         self.setWidget($to-parent);
       }
       when GTK::ProgressBar {
@@ -57,14 +55,15 @@ class GTK::ProgressBar is GTK::Widget {
     }
   }
 
-  multi method new (ProgressBarAncestry $bar) {
+  multi method new (ProgressBarAncestry $bar, :$ref = True) {
     my $o = self.bless(:$bar);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $bar = gtk_progress_bar_new();
-    self.bless(:$bar);
+
+    $bar ?? self.bless(:$bar) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -77,7 +76,8 @@ class GTK::ProgressBar is GTK::Widget {
         PangoEllipsizeMode( gtk_progress_bar_get_ellipsize($!bar) );
       },
       STORE => sub ($, Int() $mode is copy) {
-        my uint32 $m = self.RESOLVE-UINT($mode);
+        my uint32 $m = $mode;
+
         gtk_progress_bar_set_ellipsize($!bar, $m);
       }
     );
@@ -90,6 +90,7 @@ class GTK::ProgressBar is GTK::Widget {
       },
       STORE => sub ($, Num() $fraction is copy) {
         my gdouble $f = $fraction;
+
         gtk_progress_bar_set_fraction($!bar, $f);
       }
     );
@@ -101,7 +102,8 @@ class GTK::ProgressBar is GTK::Widget {
         so gtk_progress_bar_get_inverted($!bar);
       },
       STORE => sub ($, Int() $inverted is copy) {
-        my gboolean $i = self.RESOLVE-BOOL($inverted);
+        my gboolean $i = $inverted.so.Int;
+
         gtk_progress_bar_set_inverted($!bar, $i);
       }
     );
@@ -114,6 +116,7 @@ class GTK::ProgressBar is GTK::Widget {
       },
       STORE => sub ($, Num() $fraction is copy) {
         my gdouble $f = $fraction;
+
         gtk_progress_bar_set_pulse_step($!bar, $f);
       }
     );
@@ -125,7 +128,8 @@ class GTK::ProgressBar is GTK::Widget {
         so gtk_progress_bar_get_show_text($!bar);
       },
       STORE => sub ($, Int() $show_text is copy) {
-        my gboolean $st = self.RESOLVE-BOOL($show_text);
+        my gboolean $st = $show_text.so.Int;
+
         gtk_progress_bar_set_show_text($!bar, $st);
       }
     );

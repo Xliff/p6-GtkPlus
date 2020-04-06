@@ -1,0 +1,128 @@
+use v6.c;
+
+# Ported from
+# https://gitlab.gnome.org/GNOME/gtk/blob/master/examples/sunny.c
+# ...as per task in TODO
+
+use GTK::Raw::Types;
+
+use GTK::Application;
+use GTK::ApplicationWindow;
+use GTK::Builder;
+use GTK::HeaderBar;
+use GTK::Overlay;
+use GTK::Settings;
+use GTK::ScrolledWindow;
+use GTK::TextView;
+
+sub new_window ($app, $file) {
+  given ( my $w = GTK::ApplicationWindow.new($app) ) {
+    .show-menubar = False;
+    .set-default-size(640, 480);
+    .title = 'Sunny';
+    .icon-name = 'sunny';
+  }
+
+  given ( my $h = GTK::HeaderBar.new ) {
+    .title = 'Sunny';
+    # GTK 4
+    #.show-title-buttons = True;
+    .show;
+  }
+  $w.titlebar = $h;
+
+  my $c = GTK::Overlay.new;
+  my $s = GTK::ScrolledWindow.new;
+  my $t = GTK::TextView.new;
+
+  $s.add($t);
+  $c.add($s);
+  $w.add($c);
+
+  if $file {
+    if (my @c = $file.load-contents) {
+      $t.text = @c[1].decode;
+    }
+  }
+  $w.show;
+  $w;
+}
+
+my $a = GTK::Application.new(
+  title => 'org.genex.sunny',
+  flags => G_APPLICATION_HANDLES_OPEN
+);
+
+sub new-activated ($app, $param, $user) {
+  $a.emit-activate;
+};
+
+sub show-about ($app, $param, $user) {
+  given (my $a = GTK::Dialog::About.new) {
+    .program-name = 'Sunny';
+    .title = 'About Sunny';
+    .logo-icon-name = 'sunny';
+    .comments = 'A cheap Bloatpad clone.';
+    .run;
+  }
+}
+
+sub quit-app ($app, $param, $user) {
+  for $a.get_windows {
+    .hide && .destroy;
+  }
+}
+
+$a.activate.tap({
+    say 'Activating...';
+    
+    new_window($a, $)
+});
+
+$a.open.tap(-> *@a {
+  say 'Opening...';
+
+  new_window( $a, @a[1][$_] ) for ^@a[2]
+});
+
+$a.startup.tap({
+  say 'Starting...';
+
+  my @entries = (
+    GActionEntry.new('about', &show-about );
+    GActionEntry.new('quit',  &quit-app );
+    GActionEntry.new('new',   &new-activated );
+  );
+  $a.add_action_entries(@entries);
+
+  my $s = GTK::Settings.get_default;
+  $s.set-data-bool('gtk-shell-shows-app-menu', False)
+    if %*ENV<APP_MENU_FALLBACK>;
+
+  my $b = GTK::Builder.new;
+  $b.add-from-string(q:to/INTERFACE/);
+    <interface>
+     <menu id='app-menu'>
+       <section>
+         <item>
+           <attribute name='label' translatable='yes'>_New Window</attribute>
+           <attribute name='action'>app.new</attribute>
+         </item>
+         <item>
+           <attribute name='label' translatable='yes'>_About Sunny</attribute>
+           <attribute name='action'>app.about</attribute>
+         </item>
+         <item>
+           <attribute name='label' translatable='yes'>_Quit</attribute>
+           <attribute name='action'>app.quit</attribute>
+           <attribute name='accel'>&lt;Primary&gt;q</attribute>
+         </item>
+       </section>
+     </menu>
+    </interface>
+    INTERFACE
+
+  $a.app-menu = $b<app-menu>;
+});
+
+$a.run;

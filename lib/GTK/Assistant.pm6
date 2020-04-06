@@ -3,11 +3,11 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Assistant;
 use GTK::Raw::Types;
 
 use GLib::Value;
+use GDK::Pixbuf;
 use GTK::Window;
 
 our subset AssistantAncestry is export where GtkAssistant | WindowAncestry;
@@ -17,7 +17,7 @@ class GTK::Assistant is GTK::Window {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Assistant');
+    $o.setType($o.^name);
     $o;
   }
 
@@ -44,14 +44,21 @@ class GTK::Assistant is GTK::Window {
     }
   }
 
-  multi method new (AssistantAncestry $assistant) {
+  method GTK::Raw::Definitions::GtkAssistant
+    is also<GtkAssistant>
+  { $!asst }
+
+  multi method new (AssistantAncestry $assistant, :$ref = True) {
+    return Nil unless $assistant;
+
     my $o = self.bless(:$assistant);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $assistant = gtk_assistant_new();
-    self.bless(:$assistant);
+
+    $assistant ?? self.bless(:$assistant) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -94,7 +101,8 @@ class GTK::Assistant is GTK::Window {
         gtk_assistant_get_current_page($!asst);
       },
       STORE => sub ($, Int() $page_num is copy) {
-        my gint $pn = self.RESOLVE-INT($page_num);
+        my gint $pn = $page_num;
+
         gtk_assistant_set_current_page($!asst, $page_num);
       }
     );
@@ -119,7 +127,8 @@ class GTK::Assistant is GTK::Window {
   }
 
   method get_nth_page (Int() $page_num) is also<get-nth-page> {
-    my gint $pn = self.RESOLVE-INT($page_num);
+    my gint $pn = $page_num;
+
     gtk_assistant_get_nth_page($!asst, $pn);
   }
 
@@ -157,13 +166,15 @@ class GTK::Assistant is GTK::Window {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_assistant_get_type, $n, $t );
   }
 
   method insert_page (GtkWidget() $page, Int() $position)
     is also<insert-page>
   {
-    my gint $p = self.RESOLVE-INT($position);
+    my gint $p = $position;
+
     gtk_assistant_insert_page($!asst, $page, $position);
   }
 
@@ -186,7 +197,8 @@ class GTK::Assistant is GTK::Window {
   }
 
   method remove_page (Int() $page_num) is also<remove-page> {
-    my gint $pn = self.RESOLVE-INT($page_num);
+    my gint $pn = $page_num;
+
     gtk_assistant_remove_page($!asst, $page_num);
   }
 
@@ -203,14 +215,16 @@ class GTK::Assistant is GTK::Window {
   method set_page_complete (GtkWidget() $page, Int() $complete)
     is also<set-page-complete>
   {
-    my gboolean $c = self.RESOLVE-BOOLEAN($complete);
+    my gboolean $c = $complete.so.Int;
+
     gtk_assistant_set_page_complete($!asst, $page, $complete);
   }
 
   method set_page_has_padding (GtkWidget() $page, Int() $has_padding)
     is also<set-page-has-padding>
   {
-    my gboolean $hp = self.RESOLVE-BOOLEAN($has_padding);
+    my gboolean $hp = $has_padding.so.Int;
+
     gtk_assistant_set_page_has_padding($!asst, $page, $hp);
   }
 
@@ -220,16 +234,23 @@ class GTK::Assistant is GTK::Window {
     gtk_assistant_set_page_header_image($!asst, $page, $pixbuf);
   }
 
-  method set_page_side_image (GtkWidget() $page, GdkPixbuf $pixbuf) is also<set-page-side-image> {
+  method set_page_side_image (GtkWidget() $page, GdkPixbuf() $pixbuf)
+    is also<set-page-side-image>
+  {
     gtk_assistant_set_page_side_image($!asst, $page, $pixbuf);
   }
 
-  method set_page_title (GtkWidget() $page, gchar $title) is also<set-page-title> {
+  method set_page_title (GtkWidget() $page, Str $title)
+    is also<set-page-title>
+  {
     gtk_assistant_set_page_title($!asst, $page, $title);
   }
 
-  method set_page_type (GtkWidget() $page, Int() $type) is also<set-page-type> {
-    my uint32 $t = self.RESOLVE-UINT($type);
+  method set_page_type (GtkWidget() $page, Int() $type)
+    is also<set-page-type>
+  {
+    my uint32 $t = $type;
+
     gtk_assistant_set_page_type($!asst, $page, $t);
   }
 
@@ -251,10 +272,10 @@ class GTK::Assistant is GTK::Window {
 
         when 'header-image'  |
              'sidebar-image' { my $gv = GLib::Value.new(
-                                 GTK::Compat::Pixbuf.get_type()
+                                 GDK::Pixbuf.get_type()
                                );
                                $gv.object = do given $v {
-                                 when GTK::Compat::Pixbuf { $v.pixbuf }
+                                 when GDK::Pixbuf { $v.pixbuf }
                                  when GdkPixbuf           { $_ }
 
                                  default {

@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Pane;
 use GTK::Raw::Types;
 
@@ -24,7 +22,7 @@ class GTK::Pane is GTK::Container {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
+    $o.setType($o.^name);
     $o;
   }
 
@@ -40,32 +38,36 @@ class GTK::Pane is GTK::Container {
     my $to-parent;
     $!p = do {
       when GtkPaned {
-        $to-parent = nativecast(GtkContainer, $_);
+        $to-parent = cast(GtkContainer, $_);
         $_;
       }
       when GtkOrientable {
         $!or = $_;                              # GTK::Roles::GtkOrientable
-        $to-parent = nativecast(GtkContainer, $_);
-        nativecast(GtkPaned, $_);
+        $to-parent = cast(GtkContainer, $_);
+        cast(GtkPaned, $_);
       }
       default {
         $to-parent = $_;
-        nativecast(GtkPaned, $_);
+        cast(GtkPaned, $_);
       }
     }
-    $!or //= nativecast(GtkOrientable, $_);     # GTK::Roles::Orientable
+    $!or //= cast(GtkOrientable, $_);     # GTK::Roles::Orientable
     self.setContainer($to-parent);
   }
 
-  method GTK::Raw::Types::GtkPaned
-    is also<Pane>
+  method GTK::Raw::Definitions::GtkPaned
+    is also<
+      Pane
+      GtkPane
+      GtkPaned
+    >
   { $!p }
 
-  multi method new (PaneAncestry $pane) {
+  multi method new (PaneAncestry $pane, :$ref = True) {
     return Nil unless $pane;
 
     my $o = self.bless(:$pane);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (:$horizontal = False, :$vertical = False) {
@@ -159,7 +161,7 @@ class GTK::Pane is GTK::Container {
         so gtk_paned_get_wide_handle($!p);
       },
       STORE => sub ($, Int() $wide is copy) {
-        my gboolean $w = $wide;
+        my gboolean $w = $wide.so.Int;
 
         gtk_paned_set_wide_handle($!p, $w);
       }

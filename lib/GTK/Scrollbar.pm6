@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Scrollbar;
 use GTK::Raw::Types;
 
@@ -27,12 +25,12 @@ class GTK::Scrollbar is GTK::Range {
       when ScrollbarAncestry {
         $!sb = do {
           when GtkScrollbar {
-            $to-parent = nativecast(GtkRange, $_);
+            $to-parent = cast(GtkRange, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkScrollbar, $_);
+            cast(GtkScrollbar, $_);
           }
         };
         self.setRange($to-parent);
@@ -43,18 +41,26 @@ class GTK::Scrollbar is GTK::Range {
       }
     }
   }
-  
-  multi method GTK::Raw::Types::Scrollbar is also<Scrollbar> { $!sb }
 
-  multi method new (ScrollbarAncestry $scroll) {
+  multi method GTK::Raw::Definitions::Scrollbar
+    is also<
+      Scrollbar
+      GtkScrollbar
+    >
+  { $!sb }
+
+  multi method new (ScrollbarAncestry $scroll, :$ref = True) {
+    return Nil unless $scroll;
+
     my $o = self.bless(:$scroll);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (Int() $orientation, GtkAdjustment() $adjustment) {
-    my uint32 $or = self.RESOLVE-UINT($orientation);
+    my uint32 $or = $orientation;
     my $scroll = gtk_scrollbar_new($or, $adjustment);
-    self.bless(:$scroll);
+
+    $scroll ?? self.bless(:$scroll) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -69,6 +75,7 @@ class GTK::Scrollbar is GTK::Range {
 
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_scrollbar_get_type, $n, $t);
   }
 

@@ -10,15 +10,22 @@ use GTK::Grid;
 use GTK::Label;
 use GTK::Notebook;
 
+use GTK::Box;
+
 # Ported from https://developer.gnome.org/gtk-tutorial/stable/x1450.html
 
-my $a = GTK::Application.new( :title<org.genex.textview_example> );
+my $a = GTK::Application.new(
+  title => 'org.genex.textview_example',
+  window-type => 'window'
+);
 
 $a.activate.tap({
+  $a.wait-for-init;
   $a.window.border_width = 10;
 
   my $g = GTK::Grid.new;
   my $n = GTK::Notebook.new;
+  my $bx = GTK::Box.new-hbox;
 
   $g.attach($n, 1, 1, 6, 1);
   $a.window.add($g);

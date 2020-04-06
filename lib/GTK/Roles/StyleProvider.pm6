@@ -1,34 +1,8 @@
 use v6.c;
 
-use NativeCall;
+use Method::Also;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
-
-sub gtk_style_provider_get_style (GtkStyleProvider $provider, GtkWidgetPath $path)
-  returns GtkStyleProperties
-  is native(gtk)
-  is export
-  { * }
-
-sub gtk_style_provider_get_style_property (
-  GtkStyleProvider $provider,
-  GtkWidgetPath $path,
-  uint32 $state, 
-  GParamSpec $pspec,
-  GValue $value
-)
-  returns uint32
-  is native(gtk)
-  is export
-  { * }
-
-sub gtk_style_provider_get_type ()
-  returns GType
-  is native(gtk)
-  is export
-  { * }
-
 
 role GTK::Roles::StyleProvider {
   has GtkStyleProvider $!sp;
@@ -46,6 +20,14 @@ role GTK::Roles::StyleProvider {
   # ↓↓↓↓ PROPERTIES ↓↓↓↓
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
+  method GTK::Raw::Definitions::GtkStyleProvider
+    is also<GtkStyleProvider>
+  { $!sp }
+
+  method new-styleprovider-obj (GtkStyleProvider $style) {
+    $style ?? self.bless( :$style ) !! Nil;
+  }
+
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_style (GtkWidgetPath() $path)
     is DEPRECATED('GTK::StyleProvider.get_style_property')
@@ -56,15 +38,18 @@ role GTK::Roles::StyleProvider {
   method get_style_property (
     GtkWidgetPath() $path,
     Int() $state,
-    GParamSpec $pspec,
+    GParamSpec() $pspec,
     GValue() $value
   ) {
-    my guint $s = self.RESOLVE-UINT($state);
+    my guint $s = $state;
+
     gtk_style_provider_get_style_property($!sp, $path, $s, $pspec, $value);
   }
 
-  method get_type {
-    gtk_style_provider_get_type();
+  method get_styleprovider_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_style_provider_get_type, $n, $t );
   }
 
   method get_icon_factory {
@@ -73,3 +58,31 @@ role GTK::Roles::StyleProvider {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
+
+
+sub gtk_style_provider_get_style (
+  GtkStyleProvider $provider,
+  GtkWidgetPath $path
+)
+  returns GtkStyleProperties
+  is native(gtk)
+  is export
+{ * }
+
+sub gtk_style_provider_get_style_property (
+  GtkStyleProvider $provider,
+  GtkWidgetPath $path,
+  uint32 $state,
+  GParamSpec $pspec,
+  GValue $value
+)
+  returns uint32
+  is native(gtk)
+  is export
+{ * }
+
+sub gtk_style_provider_get_type ()
+  returns GType
+  is native(gtk)
+  is export
+{ * }

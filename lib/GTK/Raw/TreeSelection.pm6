@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::TreeSelection;
@@ -21,7 +21,7 @@ sub gtk_tree_selection_get_select_function (GtkTreeSelection $selection)
 
 sub gtk_tree_selection_get_selected (
   GtkTreeSelection $selection,
-  GtkTreeModel $model is rw,
+  CArray[Pointer[GtkTreeModel]] $model,
   GtkTreeIter $iter
 )
   returns uint32
@@ -31,7 +31,7 @@ sub gtk_tree_selection_get_selected (
 
 sub gtk_tree_selection_get_selected_rows (
   GtkTreeSelection $selection,
-  GtkTreeModel $model is rw
+  CArray[Pointer[GtkTreeModel]] $model
 )
   returns GList
   is native(gtk)

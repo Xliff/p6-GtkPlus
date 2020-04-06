@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::Printer;
@@ -98,7 +98,7 @@ sub gtk_printer_get_type ()
   { * }
 
 sub gtk_enumerate_printers (
-  GtkPrinterFunc $func,
+  &func (GtkPrinter, gpointer --> gboolean),
   gpointer $data,
   GDestroyNotify $destroy,
   gboolean $wait

@@ -3,19 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GTK::Raw::RecentInfo;   # Contains Raw calls for ::RecentManager
 
+use GLib::GList;
 use GLib::Value;
+use GTK::RecentInfo;
 
 use GLib::Roles::ListData;
-use GTK::Roles::Properties;
+use GLib::Roles::Properties;
 use GTK::Roles::Signals::Generic;
 
 class GTK::RecentManager {
-  also does GTK::Roles::Properties;
+  also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
 
   has GtkRecentManager $!rm is implementor;
@@ -24,23 +25,33 @@ class GTK::RecentManager {
     self!setObject($!rm = $manager);
   };
 
-  method GTK::Raw::Types::GtkRecentManager
-    is also<RecentManager>
+  method GTK::Raw::Definitions::GtkRecentManager
+    is also<
+      RecentManager
+      GtkRecentManagers
+    >
   { * }
 
-  method new {
-    self.bless( manager => gtk_recent_manager_new() );
+  multi method new (GtkRecentManager $manager) {
+    $manager ?? self.bless( :$manager ) !! Nil;
+  }
+  multi method new {
+    my $manager = gtk_recent_manager_new();
+
+    $manager ?? self.bless( :$manager ) !! Nil;
   }
 
   method get_default {
-    self.bless( manager => gtk_recent_manager_get_default() );
+    my $manager = gtk_recent_manager_get_default();
+
+    $manager ?? self.bless( :$manager ) !! Nil;
   }
 
   # Type: gint
   method size is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('size', $gv)
         );
@@ -71,10 +82,14 @@ class GTK::RecentManager {
     gtk_recent_manager_error_quark();
   }
 
-  method get_items (:$raw) {
-    my $l = GTK::Compat::List.new( gtk_recent_manager_get_items($!rm) )
-      but GLib::Roles::ListData[GtkRecentInfo];
-    $raw ?? $l.Array !! $l.Array.map({ GTK::RecentInfo.new($_) });
+  method get_items (:$glist = False, :$raw = False) {
+    my $il = gtk_recent_manager_get_items($!rm);
+
+    return Nil unless $il;
+    return $il if $glist;
+
+    $il = GLib::GList.new($il) but GLib::Roles::ListData[GtkRecentInfo];
+    $raw ?? $il.Array !! $il.Array.map({ GTK::RecentInfo.new($_) });
   }
 
   method get_type {
@@ -88,12 +103,17 @@ class GTK::RecentManager {
 
   method lookup_item (
     Str() $uri,
-    CArray[Pointer[GError]] $error = gerror()
+    CArray[Pointer[GError]] $error = gerror(),
+    :$raw = False
   ) {
     clear_error
     my $rc = gtk_recent_manager_lookup_item($!rm, $uri, $error);
     set_error($error);
-    GTK::RecentInfo.new($rc);
+
+    $rc ??
+      ( $raw ?? $rc !! GTK::RecentInfo.new($rc) )
+      !!
+      Nil;
   }
 
   method move_item (
@@ -102,7 +122,7 @@ class GTK::RecentManager {
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error;
-    my $rc = gtk_recent_manager_move_item($!rm, $uri, $new_uri, $error);
+    my $rc = so gtk_recent_manager_move_item($!rm, $uri, $new_uri, $error);
     set_error($error);
     $rc;
   }
@@ -121,7 +141,7 @@ class GTK::RecentManager {
     CArray[Pointer[GError]] $error = gerror()
   ) {
     clear_error;
-    my $rc = gtk_recent_manager_remove_item($!rm, $uri, $error);
+    my $rc = so gtk_recent_manager_remove_item($!rm, $uri, $error);
     set_error($error);
     $rc;
   }

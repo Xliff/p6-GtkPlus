@@ -1,3 +1,5 @@
+use v6.c;
+
 use GTK::Widget;
 use GTK::WidgetPath;
 use GTK::StyleContext;
@@ -8,7 +10,7 @@ use GTK::Bin;
 die "Can't find 'BuildList' file!\n" unless 'BuildList'.IO.e;
 
 my (%ns, $w-mro, $nw-mro);
-for 'BuildList'.IO.open.slurp.lines {
+for 'BuildList'.IO.slurp.lines {
   # First with the specialcasing!
   next unless .starts-with('GTK::');
   next if .starts-with('GTK::Builder::');
@@ -22,17 +24,17 @@ for 'BuildList'.IO.open.slurp.lines {
 
   my @r;
   my @special-cases = <
+    GTK::Adjustment
     GTK::Widget
     GTK::WidgetPath
     GTK::StyleContext
-    GTK::Adjustment
     GTK::Container
     GTK::Bin
     GTK::Window
     GTK::ShortcutsWindow
   >;
   if $_ ne @special-cases.any {
-    require ::($_);
+    require ::("$_");
   }
   # Next with another special case. We only want classes.
   next unless ::($_).HOW.^name.ends-with('ClassHOW');
@@ -51,9 +53,9 @@ for 'BuildList'.IO.open.slurp.lines {
     when 'GTK::WidgetPath'      { $mro := $nw-mro; GTK::WidgetPath.^mro   }
     when 'GTK::StyleContext'    { $mro := $nw-mro; GTK::StyleContext.^mro }
 
-    when @special-cases.any     { $mro := $w-mro; proceed;  }
-    when 'GTK::Widget'          { GTK::Widget.^mro      ;   }
-    when 'GTK::Container'       { GTK::Container.^mro;      }
+    when @special-cases.any     { $mro := $w-mro; proceed   }
+    when 'GTK::Widget'          { GTK::Widget.^mro          }
+    when 'GTK::Container'       { GTK::Container.^mro       }
     when 'GTK::Bin'             { GTK::Bin.^mro             }
     when 'GTK::Window'          { GTK::Window.^mro          }
     when 'GTK::ShortcutsWindow' { GTK::ShortcutsWindow.^mro }
@@ -113,14 +115,11 @@ T
 
   }
 
-  my $f = $fp.open.slurp;
+  $_ = $fp.slurp;
   # Regex with balanced syntax: s[S] = "R"
-  $_ = $f;
   s❰ { $mro_pre } \s* '(' ~ ')' <-[)]>+ ❱ = "{ $mro_pre } (\n{ $mro }\n);";
   $fp.rename("{ $filename }.bak");
-  my $fh = $filename.IO.open(:w);
-  $fh.say($_);
-  $fh.close;
+  my $fh = $filename.IO.spurt($_);
 
   say "{ $filename } was updated successfully";
 
@@ -128,6 +127,6 @@ T
     when $w     { 'lib/GTKWidgets.pm6'    }
     when $w.not { 'lib/GTKNonWidgets.pm6' }
   }
-  $f.IO.spurt( $mro.keys.map({ "need { $_ };" }).join("\n") )
+  $f.IO.spurt( $mro.keys.map({ "need { $_ };" }).join("\n") );
   say "{ $f } was updated successfully";
 }

@@ -2,7 +2,7 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::Types;
 
 unit package GTK::Raw::DragDest;
@@ -35,7 +35,7 @@ sub gtk_drag_dest_find_target (
 sub gtk_drag_dest_set (
   GtkWidget $widget,
   uint32 $flags,                  # GtkDestDefaults $flags,
-  GtkTargetEntry $targets,
+  Pointer $targets,
   gint $n_targets,
   uint32 $actions                 # GdkDragAction $actions
 )

@@ -1,10 +1,9 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GLib::GSList;
-use GTK::Compat::Types;
+use GLib::GList;
+
 use GTK::Raw::RadioMenuItem;
 use GTK::Raw::Types;
 
@@ -30,12 +29,12 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
       when RadioMenuItemAncestry {
         $!rmi = do {
           when GtkRadioMenuItem {
-            $to-parent = nativecast(GtkMenuItem, $_);
+            $to-parent = cast(GtkMenuItem, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkRadioMenuItem, $_);
+            cast(GtkRadioMenuItem, $_);
           }
         }
         self.setMenuItem($to-parent);
@@ -47,8 +46,10 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
     }
   }
 
-  my sub postconf($o, %opts) {
-    return Nil unless $o;
+  method !postconf($radiomenu, %opts) {
+    return Nil unless $radiomenu;
+
+    my $o = self.bless( :$radiomenu );
 
     $o.toggled.tap({ %opts<clicked>() }) with %opts<clicked>;
     $o.toggled.tap({ %opts<toggled>() }) with %opts<toggled>;
@@ -59,10 +60,11 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
     $o;
   }
 
-  multi method new (RadioMenuItemAncestry $radiomenu) {
-    return unless $radiomenu;
+  multi method new (RadioMenuItemAncestry $radiomenu, :$ref = True) {
+    return Nil unless $radiomenu;
+
     my $o = self.bless(:$radiomenu);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new(Str() $label, :$mnemonic = False, :$group, *%opts) {
@@ -89,7 +91,8 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
     } else {
       $radiomenu = gtk_radio_menu_item_new($group);
     }
-    postconf( self.bless(:$radiomenu), %opts );
+
+    self!postconf( $radiomenu, %opts );
   }
   multi method new(
     GtkRadioMenuItem() $group,
@@ -106,7 +109,8 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
     } else {
       $radiomenu = gtk_radio_menu_item_new($group);
     }
-    postconf( self.bless(:$radiomenu), %opts );
+
+    self!postconf( $radiomenu, %opts );
   }
 
   method new_from_widget (GtkRadioMenuItem() $group)
@@ -180,7 +184,7 @@ class GTK::RadioMenuItem is GTK::CheckMenuItem {
         return Nil unless $gl;
         return $gl if     $glist;
 
-        $gl = GLib::GSList.new($gl) but GLib::Roles::ListData;
+        $gl = GLib::GList.new($gl) but GLib::Roles::ListData;
 
         $raw ?? $gl.Array !! $gl.Array.map({ GTK::RadioMenuItem.new($_) });
       },

@@ -3,19 +3,19 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Utils;
-
 use GTK::Bin;
 use GTK::Widget;
 
 use GLib::GList;
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Types;
-use GTK::Compat::Screen;
+use GDK::Pixbuf;
+use GTK::WindowGroup;
+
+use GDK::Screen;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
-our subset WindowAncestry is export where GtkWindow | BinAncestry;
+our subset WindowAncestry is export
+  where GtkWindow | BinAncestry;
 
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
@@ -58,9 +58,11 @@ class GTK::Window is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (WindowAncestry $window) {
+  multi method new (WindowAncestry $window, :$ref = True) {
+    return Nil unless $window;
+
     my $o = self.bless(:$window);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (
@@ -93,7 +95,7 @@ class GTK::Window is GTK::Bin {
     $window ?? self.bless(:$window, :$title, :$width, :$height) !! Nil;
   }
 
-  method GTK::Raw::Types::GtkWindow
+  method GTK::Raw::Definitions::GtkWindow
     is also<
       window
       GtkWindow
@@ -155,16 +157,24 @@ class GTK::Window is GTK::Bin {
 
   method set_default_icon_from_file (
     GTK::Window:U: Str() $filename,
-    CArray[Pointer[GError]] $err = gerror
+    CArray[Pointer[GError]] $error = gerror
   )
     is also<set-default-icon-from-file>
   {
-    gtk_window_set_default_icon_from_file($filename, $err);
+    clear_error;
+    my $rv = so gtk_window_set_default_icon_from_file($filename, $error);
+    set_error($error);
+    $rv;
   }
 
-  method set_default_icon_list (GTK::Window:U: GList() $list)
+  proto method set_default_icon_list (|)
     is also<set-default-icon-list>
-  {
+  { * }
+
+  multi method set_default_icon_list (GTK::Window:U: @list) {
+    samewith( GLib::GList.new(@list) );
+  }
+  multi method set_default_icon_list (GTK::Window:U: GList() $list) {
     gtk_window_set_default_icon_list($list);
   }
 
@@ -199,10 +209,15 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method application is rw {
+  method application (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_application($!win);
+        my $app = gtk_window_get_application($!win);
+
+        $app ??
+          ( $raw ?? $app !! ::('GTK::Application').new($app) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkApplication() $application is copy) {
         gtk_window_set_application($!win, $application);
@@ -210,10 +225,14 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method attached_to is rw is also<attached-to> {
+  method attached_to (:$raw = False, :$widget = False)
+    is rw is also<attached-to>
+  {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_attached_to($!win);
+        my $w = gtk_window_get_attached_to($!win);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $attach_widget is copy) {
         gtk_window_set_attached_to($!win, $attach_widget);
@@ -224,7 +243,7 @@ class GTK::Window is GTK::Bin {
   method decorated is rw {
     Proxy.new(
       FETCH => sub ($) {
-        Bool( gtk_window_get_decorated($!win) );
+        so gtk_window_get_decorated($!win);
       },
       STORE => sub ($, Int() $setting is copy) {
         my gboolean $s = $setting.so.Int;
@@ -260,10 +279,12 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method focus is rw {
+  method focus (:$raw = False, :$widget = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        gtk_window_get_focus($!win);
+        my $w = gtk_window_get_focus($!win);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $focus is copy) {
         gtk_window_set_focus($!win, $focus);
@@ -300,7 +321,7 @@ class GTK::Window is GTK::Bin {
   method gravity is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GdkGravity( gtk_window_get_gravity($!win) );
+        GdkGravityEnum( gtk_window_get_gravity($!win) );
       },
       STORE => sub ($, Int() $gravity is copy) {
         my uint32 $g = $gravity;
@@ -339,10 +360,15 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method icon is rw {
+  method icon (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Pixbuf( gtk_window_get_icon($!win) );
+        my $p = gtk_window_get_icon($!win);
+
+        $p ??
+          ( $raw ?? $p !! GDK::Pixbuf.new($p) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkPixbuf() $icon is copy) {
         gtk_window_set_icon($!win, $icon);
@@ -350,12 +376,46 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method icon_list is rw is also<icon-list> {
+  method icon_list (:$glist = False, :$raw = False) is rw is also<icon-list> {
     Proxy.new(
       FETCH => sub ($) {
-        GLib::GList.new( GdkPixbuf, gtk_window_get_icon_list($!win) );
+        my $il = gtk_window_get_icon_list($!win);
+
+        return Nil unless $il;
+        return $il if $glist;
+
+        $il = GLib::GList.new($il) but GLib::Roles::ListData[GdkPixbuf];
+        $raw ?? $il.Array !! $il.Array.map({ GDK::Pixbuf.new($_) });
       },
-      STORE => sub ($, GList() $list is copy) {
+      STORE => sub ($, $list is copy) {
+        die "icon_list can only take a GList or a Positional of{''
+            }GDK::Pixbuf-compatible values"
+        unless $list ~~ (Positional, GLib::GList, GList).any;
+
+        # Warning!! -- Passing a GList-compatible will currently BYPASS
+        #              any further checking.
+        $list = do given $list {
+          when GLib::GList { .GList }
+          when GList       { $_ }
+
+          when Positional  {
+            # YYY - Is this too much magic to abstract?
+            .map({
+              # do if $_ ~~ T {
+              do if $_ ~~ GdkPixbuf {
+                $_;
+              # } elseif .^can(T.name).elems {
+              } elsif .^can('GdkPixbuf').elems {
+                # ."{ T.^name }"()
+                .GdkPixbuf;
+              } else {
+                # die "Value passed to {&?ROUTINE.name} must be {T.^name} compatible"
+                die 'Value passed to icon_list must be GDK::Pixbuf compatible';
+              }
+            });
+          }
+        }
+
         gtk_window_set_icon_list($!win, $list);
       }
     );
@@ -450,10 +510,15 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method screen is rw {
+  method screen (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Compat::Screen.new( gtk_window_get_screen($!win) );
+        my $s = gtk_window_get_screen($!win);
+
+        $s ??
+          ( $raw ?? $s !! GDK::Screen.new($s) )
+          !!
+          Nil;
       },
       STORE => sub ($, GdkScreen() $screen is copy) {
         gtk_window_set_screen($!win, $screen);
@@ -498,7 +563,7 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method titlebar is rw {
+  method titlebar (:$raw = False, :$widget = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
         # Would use CreateObject, but there are questions regarding the
@@ -507,7 +572,11 @@ class GTK::Window is GTK::Bin {
         # induced. It's safer to create the Widget, and let the caller
         # make the call to CreateObject via:
         #     GTK::Widget.CreateObject($returned.Widget)
-        GTK::Widget.new( gtk_window_get_titlebar($!win) );
+
+        # Yes, and with ReturnWidget, we can now find out in testing.
+        my $w = gtk_window_get_titlebar($!win);
+
+        self.ReturnWidget($w, $raw, $widget);
       },
       STORE => sub ($, GtkWidget() $titlebar is copy) {
         gtk_window_set_titlebar($!win, $titlebar);
@@ -515,10 +584,15 @@ class GTK::Window is GTK::Bin {
     );
   }
 
-  method transient_for is rw is also<transient-for> {
+  method transient_for (:$raw = False) is rw is also<transient-for> {
     Proxy.new(
       FETCH => sub ($) {
-        GTK::Window.new( gtk_window_get_transient_for($!win) );
+        my $win = gtk_window_get_transient_for($!win);
+
+        $win ??
+          ( $raw ?? $win !! GTK::Window.new($win) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkWindow() $parent is copy) {
         gtk_window_set_transient_for($!win, $parent);
@@ -529,7 +603,7 @@ class GTK::Window is GTK::Bin {
   method type_hint is rw is also<type-hint> {
     Proxy.new(
       FETCH => sub ($) {
-        GdkWindowTypeHint( gtk_window_get_type_hint($!win) );
+        GdkWindowTypeHintEnum( gtk_window_get_type_hint($!win) );
       },
       STORE => sub ($, Int() $hint is copy) {
         my uint32 $h = $hint;
@@ -565,7 +639,7 @@ class GTK::Window is GTK::Bin {
     gtk_window_activate_key($!win, $event);
   }
 
-  method add_accel_group (GtkAccelGroup $accel_group)
+  method add_accel_group (GtkAccelGroup() $accel_group)
     is also<add-accel-group>
   {
     # Need class GTK::AccelGroup
@@ -654,8 +728,13 @@ class GTK::Window is GTK::Bin {
     gtk_window_get_default_widget($!win);
   }
 
-  method get_group is also<get-group> {
-    gtk_window_get_group($!win);
+  method get_group (:$raw = False) is also<get-group> {
+    my $wg = gtk_window_get_group($!win);
+
+    $wg ??
+      ( $raw ?? $wg !! GTK::WindowGroup.new($wg) )
+      !!
+      Nil;
   }
 
   method get_position (Int() $root_x, Int() $root_y) is also<get-position> {
@@ -670,23 +749,18 @@ class GTK::Window is GTK::Bin {
     gtk_window_get_resize_grip_area($!win, $rect);
   }
 
-  multi method get-size {
-    self.get_size;
-  }
-  multi method get_size {
-    my ($width, $height) = (0, 0);
-    samewith($width, $height);
-    ($width, $height);
-  }
-  multi method get-size (Int() $width is rw, Int() $height is rw) {
-    self.get_size($width, $height);
-  }
-  multi method get_size (Int() $width is rw, Int() $height is rw) {
-    my gint ($w, $h) = ($width, $height);
-    my $rc = gtk_window_get_size($!win, $w, $h);
+  proto method get_size (|)
+    is also<get-size>
+  { * }
 
+  multi method get_size {
+    samewith($, $);
+  }
+  multi method get_size ($width is rw, $height is rw) {
+    my gint ($w, $h) = 0 xx 2;
+
+    gtk_window_get_size($!win, $w, $h);
     ($width, $height) = ($w, $h);
-    $rc;
   }
 
   method get_type is also<get-type> {
@@ -696,15 +770,15 @@ class GTK::Window is GTK::Bin {
   }
 
   method get_window_type is also<get-window-type> {
-    gtk_window_get_window_type($!win);
+    GtkWindowTypeEnum( gtk_window_get_window_type($!win) );
   }
 
   method has_group is also<has-group> {
-    gtk_window_has_group($!win);
+    so gtk_window_has_group($!win);
   }
 
   method has_toplevel_focus is also<has-toplevel-focus> {
-    gtk_window_has_toplevel_focus($!win);
+    so gtk_window_has_toplevel_focus($!win);
   }
 
   method iconify {
@@ -712,15 +786,23 @@ class GTK::Window is GTK::Bin {
   }
 
   method is_active is also<is-active> {
-    gtk_window_is_active($!win);
+    so gtk_window_is_active($!win);
   }
 
   method is_maximized is also<is-maximized> {
-    gtk_window_is_maximized($!win);
+    so gtk_window_is_maximized($!win);
   }
 
-  method list_toplevels is also<list-toplevels> {
-    GList.new( GtkWidget, gtk_window_list_toplevels() );
+  method list_toplevels (:$glist = False, :$raw = False, :$widget = False)
+    is also<list-toplevels>
+  {
+    my $tlw = gtk_window_list_toplevels();
+
+    return Nil unless $tlw;
+    return $tlw if $glist;
+
+    $tlw = GLib::GList.new($tlw) but GLib::Roles::ListData[GtkWidget];
+    $tlw.Array.map({ self.ReturnWidget($_, $raw, $widget) });
   }
 
   method maximize {
@@ -735,7 +817,7 @@ class GTK::Window is GTK::Bin {
   {
     my guint ($kv, $m) = ($keyval, $modifier);
 
-    gtk_window_mnemonic_activate($!win, $kv, $m);
+    so gtk_window_mnemonic_activate($!win, $kv, $m);
   }
 
   method move (Int() $x, Int() $y) {
@@ -761,10 +843,10 @@ class GTK::Window is GTK::Bin {
   method propagate_key_event (GdkEventKey $event)
     is also<propagate-key-event>
   {
-    Bool( gtk_window_propagate_key_event($!win, $event) );
+    so gtk_window_propagate_key_event($!win, $event);
   }
 
-  method remove_accel_group (GtkAccelGroup $accel_group)
+  method remove_accel_group (GtkAccelGroup() $accel_group)
     is also<remove-accel-group>
   {
     gtk_window_remove_accel_group($!win, $accel_group);
@@ -781,11 +863,11 @@ class GTK::Window is GTK::Bin {
     gtk_window_remove_mnemonic($!win, $kv, $target);
   }
 
-  method reshow_with_initial_size
-    is also<reshow-with-initial-size>
-  {
-    gtk_window_reshow_with_initial_size($!win);
-  }
+  # method reshow_with_initial_size
+  #   is also<reshow-with-initial-size>
+  # {
+  #   gtk_window_reshow_with_initial_size($!win);
+  # }
 
   method resize (Int() $width, Int() $height) {
     my gint ($w, $h) = ($width, $height);
@@ -799,13 +881,13 @@ class GTK::Window is GTK::Bin {
     gtk_window_resize_grip_is_visible($!win);
   }
 
-  method resize_to_geometry (Int() $width, Int() $height)
-    is also<resize-to-geometry>
-  {
-    my gint ($w, $h) = ($width, $height);
-
-    gtk_window_resize_to_geometry($!win, $w, $h);
-  }
+  # method resize_to_geometry (Int() $width, Int() $height)
+  #   is also<resize-to-geometry>
+  # {
+  #   my gint ($w, $h) = ($width, $height);
+  #
+  #   gtk_window_resize_to_geometry($!win, $w, $h);
+  # }
 
   method set_default (GtkWidget() $default_widget)
     is also<set-default>
@@ -813,13 +895,13 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_default($!win, $default_widget);
   }
 
-  method set_default_geometry (Int() $width, Int() $height)
-    is also<set-default-geometry>
-  {
-    my gint ($w, $h) = ($width, $height);
-
-    gtk_window_set_default_geometry($!win, $w, $h);
-  }
+  # method set_default_geometry (Int() $width, Int() $height)
+  #   is also<set-default-geometry>
+  # {
+  #   my gint ($w, $h) = ($width, $height);
+  #
+  #   gtk_window_set_default_geometry($!win, $w, $h);
+  # }
 
   method set_default_size (Int() $width, Int() $height)
     is also<set-default-size>
@@ -856,7 +938,7 @@ class GTK::Window is GTK::Bin {
     is also<set-icon-from-file>
   {
     clear_error;
-    my $rv = gtk_window_set_icon_from_file($!win, $filename, $error);
+    my $rv = so gtk_window_set_icon_from_file($!win, $filename, $error);
     set_error($error);
     $rv;
   }

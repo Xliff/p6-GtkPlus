@@ -1,13 +1,9 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::FileChooserButton;
 use GTK::Raw::Types;
-
-use GTK::Raw::Utils;
 
 use GLib::Value;
 use GTK::Box;
@@ -34,17 +30,17 @@ class GTK::FileChooserButton is GTK::Box {
       when FileChooserButtonAncestry {
         $!fcb = do {
           when GtkFileChooserButton {
-            $to-parent = nativecast(GtkBin, $_);
+            $to-parent = cast(GtkBin, $_);
             $_;
           }
           when GtkFileChooser {
             $!fc = $_;                            # GTK::Roles::FileChooser
-            $to-parent = nativecast(GtkBin, $_);
-            nativecast(GtkFileChooserButton, $_);
+            $to-parent = cast(GtkBin, $_);
+            cast(GtkFileChooserButton, $_);
           }
           default {
             $to-parent = $_;
-            nativecast(GtkFileChooserButton, $_);
+            cast(GtkFileChooserButton, $_);
           }
         }
         self.setBox($to-parent);
@@ -54,21 +50,24 @@ class GTK::FileChooserButton is GTK::Box {
       default {
       }
     }
-    $!fc //= nativecast(GtkFileChooser, $!fcb);   # GTK::Roles::FileChooser
+    $!fc //= cast(GtkFileChooser, $!fcb);   # GTK::Roles::FileChooser
   }
 
-  multi method new (FileChooserButtonAncestry $chooser) {
+  multi method new (FileChooserButtonAncestry $chooser, :$ref = True) {
+    return Nil unless $chooser;
+
     my $o = self.bless(:$chooser);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (
     Str() $title,
     Int() $action                 # GtkFileChooserAction $action
   ) {
-    my uint32 $a = resolve-uint($action);
+    my uint32 $a = $action;
     my $chooser = gtk_file_chooser_button_new($title, $a);
-    self.bless(:$chooser);
+
+    $chooser ?? self.bless(:$chooser) !! Nil;
   }
   multi method new {
     die "Please use GTK::FileChooserButton.new(<title>, <action>)";
@@ -76,7 +75,8 @@ class GTK::FileChooserButton is GTK::Box {
 
   method new_with_dialog (GtkWidget() $dialog) is also<new-with-dialog> {
     my $chooser = gtk_file_chooser_button_new_with_dialog($dialog);
-    self.bless(:$chooser);
+
+    $chooser ?? self.bless(:$chooser) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -100,7 +100,8 @@ class GTK::FileChooserButton is GTK::Box {
         gtk_file_chooser_button_get_width_chars($!fcb);
       },
       STORE => sub ($, Int() $n_chars is copy) {
-        my int32 $nc = resolve-int($n_chars);
+        my int32 $nc = $n_chars;
+
         gtk_file_chooser_button_set_width_chars($!fcb, $nc);
       }
     );
@@ -111,7 +112,7 @@ class GTK::FileChooserButton is GTK::Box {
   method dialog is rw {
     my GLib::Value $gv .= new( G_TYPE_OBJECT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         warn 'GTK::FileChooserButton.dialog does not allow reading'
           if $DEBUG;
         Nil;
@@ -126,6 +127,7 @@ class GTK::FileChooserButton is GTK::Box {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
+
     GTK::Widget.unstable_get_type( &gtk_file_chooser_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑

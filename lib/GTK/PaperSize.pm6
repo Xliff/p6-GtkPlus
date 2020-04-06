@@ -3,7 +3,6 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::Types;
 use GLib::Roles::Object;
 use GTK::Raw::PaperSize;
 use GTK::Raw::Types;
@@ -12,20 +11,24 @@ use GTK::Raw::Types;
 
 class GTK::PaperSize {
   also does GLib::Roles::Object;
-  
+
   has GtkPaperSize $!ps is implementor;
 
   submethod BUILD(:$size) {
     self!setObject($!ps = $size);
   }
 
-  method GTK::Raw::Types::GtkPaperSize 
-    is also<PaperSize> 
-    { $!ps }
+  method GTK::Raw::Definitions::GtkPaperSize
+    is also<
+      PaperSize
+      GtkPaperSize
+    >
+  { $!ps }
 
   method new(Str() $name) {
     my $size = gtk_paper_size_new($name);
-    self.bless(:$size);
+
+    $size ?? self.bless(:$size) !! Nil;
   }
 
   method new_custom (
@@ -34,10 +37,10 @@ class GTK::PaperSize {
     Num() $width,
     Num() $height,
     Int() $unit
-  ) 
-    is also<new-custom> 
+  )
+    is also<new-custom>
   {
-    my guint $u = self.RESOLVE-UINT($unit);			# GtkUnit
+    my guint $u = $unit;			# GtkUnit
     my $size = gtk_paper_size_new_custom(
       $name,
       $display_name,
@@ -45,16 +48,18 @@ class GTK::PaperSize {
       $height,
       $u
     );
-    self.bless(:$size);
+
+    $size ?? self.bless(:$size) !! Nil;
   }
 
   method new_from_gvariant(GVariant $v) is also<new-from-gvariant> {
     my $size = gtk_paper_size_new_from_gvariant($v);
-    self.bless(:$size);
+
+    $size ?? self.bless(:$size) !! Nil;
   }
 
-  method new_from_ipp (Str() $name, Num() $width, Num() $height) 
-    is also<new-from-ipp> 
+  method new_from_ipp (Str() $name, Num() $width, Num() $height)
+    is also<new-from-ipp>
   {
     gtk_paper_size_new_from_ipp($name, $width, $height);
   }
@@ -62,17 +67,17 @@ class GTK::PaperSize {
   method new_from_key_file (
     GKeyFile() $key_file,
     Str() $group_name,
-    CArray[Pointer[GError]] $error = gerror()
-  ) 
-    is also<new-from-key-file> 
+    CArray[Pointer[GError]] $error = gerror
+  )
+    is also<new-from-key-file>
   {
-    $ERROR = Nil;
+    clear_error;
     my $rc = gtk_paper_size_new_from_key_file(
-      $key_file, 
-      $group_name, 
+      $key_file,
+      $group_name,
       $error
     );
-    $ERROR = $error[0] with $error[0];
+    set_error($error);
     $rc;
   }
 
@@ -81,16 +86,17 @@ class GTK::PaperSize {
     Str() $ppd_display_name,
     Num() $width,
     Num() $height
-  ) 
-    is also<new-from-ppd> 
+  )
+    is also<new-from-ppd>
   {
     gtk_paper_size_new_from_ppd($name, $ppd_display_name, $width, $height);
   }
 
-  method set_size (Num() $width, Num() $height, Int() $unit) 
-    is also<set-size> 
+  method set_size (Num() $width, Num() $height, Int() $unit)
+    is also<set-size>
   {
-    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
+    my guint $u = $unit;			          # GtkUnit
+
     gtk_paper_size_set_size($!ps, $width, $height, $u);
   }
 
@@ -104,8 +110,13 @@ class GTK::PaperSize {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method copy {
-    gtk_paper_size_copy($!ps);
+  method copy (:$raw = False) {
+    my $ps = gtk_paper_size_copy($!ps);
+
+    $ps ??
+      ( $raw ?? $ps !! GTK::PaperSize.new($ps) )
+      !!
+      Nil;
   }
 
   method free {
@@ -116,31 +127,35 @@ class GTK::PaperSize {
     gtk_paper_size_get_default();
   }
 
-  method get_default_bottom_margin (Int() $unit) 
-    is also<get-default-bottom-margin> 
+  method get_default_bottom_margin (Int() $unit)
+    is also<get-default-bottom-margin>
   {
-    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
+    my guint $u = $unit;			          # GtkUnit
+
     gtk_paper_size_get_default_bottom_margin($!ps, $u);
   }
 
-  method get_default_left_margin (Int() $unit) 
-    is also<get-default-left-margin> 
+  method get_default_left_margin (Int() $unit)
+    is also<get-default-left-margin>
   {
-    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
+    my guint $u = $unit;			          # GtkUnit
+
     gtk_paper_size_get_default_left_margin($!ps, $u);
   }
 
-  method get_default_right_margin (Int() $unit) 
-    is also<get-default-right-margin> 
+  method get_default_right_margin (Int() $unit)
+    is also<get-default-right-margin>
   {
-    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
+    my guint $u = $unit;			          # GtkUnit
+
     gtk_paper_size_get_default_right_margin($!ps, $u);
   }
 
-  method get_default_top_margin (Int() $unit) 
-    is also<get-default-top-margin> 
+  method get_default_top_margin (Int() $unit)
+    is also<get-default-top-margin>
   {
-    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
+    my guint $u = $unit;			          # GtkUnit
+
     gtk_paper_size_get_default_top_margin($!ps, $u);
   }
 
@@ -149,7 +164,8 @@ class GTK::PaperSize {
   }
 
   method get_height (Int() $unit) is also<get-height> {
-    my guint $u = self.RESOLVE-UINT($unit);		           	# GtkUnit
+    my guint $u = $unit;		           	# GtkUnit
+
     gtk_paper_size_get_height($!ps, $u);
   }
 
@@ -157,8 +173,14 @@ class GTK::PaperSize {
     gtk_paper_size_get_name($!ps);
   }
 
-  method get_paper_sizes is also<get-paper-sizes> {
-    gtk_paper_size_get_paper_sizes($!ps);
+  method get_paper_sizes (:$glist = False) is also<get-paper-sizes> {
+    my $psl = gtk_paper_size_get_paper_sizes($!ps);
+
+    return Nil unless $psl;
+    return $psl if $glist;
+
+    $psl = GLib::GList.new($psl) but GLib::Roles::ListData[GtkPaperSize];
+    $psl.Array;
   }
 
   method get_ppd_name is also<get-ppd-name> {
@@ -166,34 +188,47 @@ class GTK::PaperSize {
   }
 
   method get_type is also<get-type> {
-    gtk_paper_size_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_paper_size_get_type, $n, $t );
   }
 
   method get_width (Int() $unit) is also<get-width> {
-    my guint $u = self.RESOLVE-UINT($unit);			          # GtkUnit
+    my guint $u = $unit;			          # GtkUnit
+
     gtk_paper_size_get_width($!ps, $u);
   }
 
   method is_custom is also<is-custom> {
-    gtk_paper_size_is_custom($!ps);
+    so gtk_paper_size_is_custom($!ps);
   }
 
   method is_equal (GtkPaperSize() $size2) is also<is-equal> {
-    gtk_paper_size_is_equal($!ps, $size2);
+    so gtk_paper_size_is_equal($!ps, $size2);
   }
 
   method is_ipp is also<is-ipp> {
-    gtk_paper_size_is_ipp($!ps);
+    so gtk_paper_size_is_ipp($!ps);
   }
 
-  method to_gvariant is also<to-gvariant> {
-    gtk_paper_size_to_gvariant($!ps);
+  method to_gvariant (:$raw = False) is also<to-gvariant> {
+    my $v = gtk_paper_size_to_gvariant($!ps);
+
+    $v ??
+      ( $raw ?? $v !! GLib::Variant.new($v) )
+      !!
+      Nil;
   }
 
-  method to_key_file (GKeyFile() $key_file, Str() $group_name) 
-    is also<to-key-file> 
+  method to_key_file (GKeyFile() $key_file, Str() $group_name, :$raw = False)
+    is also<to-key-file>
   {
-    gtk_paper_size_to_key_file($!ps, $key_file, $group_name);
+    my $kf = gtk_paper_size_to_key_file($!ps, $key_file, $group_name);
+
+    $kf ??
+      ( $raw ?? $kf !! GLib::KeyFile.new($kf) )
+      !!
+      Nil;
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑

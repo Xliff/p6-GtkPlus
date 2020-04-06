@@ -72,7 +72,7 @@ $a.activate.tap({
   add_row($g2, 1, $sg, '_Line ends', @ends);
 
   my $cb = GTK::CheckButton.new_with_mnemonic('_Enable groupping');
-  $cb.active = True;
+  $cb.active = False;
   $cb.toggled.tap({ toggle_grouping($cb, $sg) });
   $vb.pack_start($cb);
 

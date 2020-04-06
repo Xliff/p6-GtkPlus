@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 unit package GTK::Raw::IconView;
@@ -26,7 +25,7 @@ sub gtk_icon_view_create_drag_icon (GtkIconView $icon_view, GtkTreePath $path)
 
 sub gtk_icon_view_enable_model_drag_dest (
   GtkIconView $icon_view,
-  GtkTargetEntry $targets,
+  Pointer $targets,             # Array of GtkTargetEntry $targets,
   gint $n_targets,
   guint $actions                # GdkDragAction $actions
 )
@@ -37,7 +36,7 @@ sub gtk_icon_view_enable_model_drag_dest (
 sub gtk_icon_view_enable_model_drag_source (
   GtkIconView $icon_view,
   guint $sbm,                   # GdkModifierType $start_button_mask,
-  GtkTargetEntry $targets,
+  Pointer $targets,             # Array of GtkTargetEntry $targets,
   gint $n_targets,
   guint $actions                # GdkDragAction $actions
 )
@@ -70,7 +69,7 @@ sub gtk_icon_view_get_dest_item_at_pos (
   GtkIconView $icon_view,
   gint $drag_x,
   gint $drag_y,
-  GtkTreePath $path,
+  CArray[Pointer[GtkTreePath]] $path,
   guint $pos                    # GtkIconViewDropPosition $pos
 )
   returns uint32
@@ -80,7 +79,7 @@ sub gtk_icon_view_get_dest_item_at_pos (
 
 sub gtk_icon_view_get_drag_dest_item (
   GtkIconView $icon_view,
-  GtkTreePath $path,
+  CArray[Pointer[GtkTreePath]] $path,
   guint $pos                    # GtkIconViewDropPosition $pos
 )
   is native(gtk)
@@ -208,7 +207,7 @@ sub gtk_icon_view_select_path (GtkIconView $icon_view, GtkTreePath $path)
 
 sub gtk_icon_view_selected_foreach (
   GtkIconView $icon_view,
-  GtkIconViewForeachFunc $func,
+  &func (GtkIconView, GtkTreePath, gpointer),
   gpointer $data
 )
   is native(gtk)

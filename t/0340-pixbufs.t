@@ -2,15 +2,15 @@ use v6.c;
 
 use Cairo;
 
+use GTK::Raw::Types;
+
+use GDK::Cairo;
+use GDK::FrameClock;
+use GDK::Pixbuf;
+use GDK::Rectangle;
 use GTK::Application;
-use GTK::Compat::Cairo;
-use GTK::Compat::FrameClock;
-use GTK::Compat::Pixbuf;
-use GTK::Compat::Rectangle;
-use GTK::Compat::Types;
 use GTK::Dialog::Message;
 use GTK::DrawingArea;
-use GTK::Raw::Types;
 
 constant CYCLE_TIME = 3000000;
 subset Odd of Int where * % 2;
@@ -31,7 +31,7 @@ sub load_pix {
   return True if %pix<background>;
 
   for %pix_files.keys {
-    %pix{$_} = GTK::Compat::Pixbuf.new_from_file(%pix_files{$_});
+    %pix{$_} = GDK::Pixbuf.new_from_file(%pix_files{$_});
     unless %pix{$_}  {
       $err = "Could not load image '{ %pix_files{$_} }'";
       return False;
@@ -46,7 +46,7 @@ sub do_tick($da, $frame, $fc) {
   my ($ct, $f, $i, $clk, $ni, $xmid, $ymid, $r);
 
   %pix<background>.copy_area(0, 0, $bw, $bh, $frame, 0, 0);
-  $clk = GTK::Compat::FrameClock.new($fc);
+  $clk = GDK::FrameClock.new($fc);
   $start = $clk.get_frame_time without $start;
   $ct = $clk.get_frame_time;
   $f = (($ct - $start) % CYCLE_TIME) / CYCLE_TIME;
@@ -101,13 +101,13 @@ $a.activate.tap({
   } else {
     $a.window.set_size_request($bw, $bh);
     my $da = GTK::DrawingArea.new;
-    my $frame = GTK::Compat::Pixbuf.new(
+    my $frame = GDK::Pixbuf.new(
       GDK_COLORSPACE_RGB, False, 8, $bw, $bh
     );
 
     $da.draw.tap(-> *@a {
       my $cr = Cairo::Context.new( cast(Cairo::cairo_t, @a[1]) );
-      GTK::Compat::Cairo.set_source_pixbuf(@a[1], $frame, 0, 0);
+      GDK::Cairo.set_source_pixbuf(@a[1], $frame, 0, 0);
       $cr.paint;
       @a[*-1].r = 1;
     });

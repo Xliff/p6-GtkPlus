@@ -2,12 +2,11 @@ use v6.c;
 
 use Cairo;
 use Method::Also;
-use NativeCall;
 
 use Pango::FontMap;
 use Pango::Layout;
 
-use GTK::Compat::Types;
+
 use GTK::Raw::PrintContext;
 use GTK::Raw::Types;
 
@@ -25,11 +24,16 @@ class GTK::PrintContext {
   submethod BUILD(:$context) {
     self!setObject($!pc = $context);
   }
-  
-  method GTK::Raw::Types::GtkPrintContext is also<PrintContext> { $!pc }
+
+  method GTK::Raw::Definitions::GtkPrintContext
+    is also<
+      PrintContext
+      GtkPrintContext
+    >
+  { $!pc }
 
   method new (GtkPrintContext $context) {
-    self.bless(:$context);
+    $context ?? self.bless(:$context) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -42,55 +46,124 @@ class GTK::PrintContext {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method create_pango_context is also<create-pango-context> {
-    Cairo::Context.new( gtk_print_context_create_pango_context($!pc); )
+  method create_pango_context (:$raw = False) is also<create-pango-context> {
+    my $cc = gtk_print_context_create_pango_context($!pc);
+
+    $cc ??
+      ( $raw ?? $cc !! Cairo::Context.new($cc) )
+      !!
+      Nil;
   }
 
-  method create_pango_layout is also<create-pango-layout> {
-    Pango::Layout.new( gtk_print_context_create_pango_layout($!pc) );
+  method create_pango_layout (:$raw = False)
+    is also<create-pango-layout>
+  {
+    my $pl = gtk_print_context_create_pango_layout($!pc);
+
+    $pl ??
+      ( $raw ?? $pl !! Pango::Layout.new($pl) )
+      !!
+      Nil;
   }
 
-  method get_cairo_context is also<get-cairo-context> {
-    Cairo::Context.new( gtk_print_context_get_cairo_context($!pc) );
+  method get_cairo_context (:$raw = False)
+    is also<
+      get-cairo-context
+      cairo_context
+      cairo-context
+    >
+  {
+    my $cc = gtk_print_context_get_cairo_context($!pc);
+
+    $cc ??
+      ( $raw ?? $cc !! Cairo::Context.new($cc) )
+      !!
+      Nil;
   }
 
-  method get_dpi_x is also<get-dpi-x> {
+  method get_dpi_x
+    is also<
+      get-dpi-x
+      dpi-x
+      dpi_x
+    >
+  {
     gtk_print_context_get_dpi_x($!pc);
   }
 
-  method get_dpi_y is also<get-dpi-y> {
+  method get_dpi_y
+    is also<
+      get-dpi-y
+      dpi-y
+      dpi_y
+    >
+  {
     gtk_print_context_get_dpi_y($!pc);
   }
 
-  method get_hard_margins (
-    Num() $top,
-    Num() $bottom,
-    Num() $left,
-    Num() $right
-  )
+  proto method get_hard_margins (|)
     is also<get-hard-margins>
+  { * }
+
+  multi method get_hard_margins
+    is also<
+      hard-margins
+      hard_margins
+    >
   {
-    my gdouble ($t, $b, $l, $r) = ($top, $bottom, $left, $right);
+    samewith($, $, $, $);
+  }
+  multi method get_hard_margins (
+    $top    is rw,
+    $bottom is rw,
+    $left   is rw,
+    $right  is rw
+  ) {
+    my gdouble ($t, $b, $l, $r) = 0e0 xx 4;
+
     gtk_print_context_get_hard_margins($!pc, $t, $b, $l, $r);
+    ($top, $bottom, $left, $right) = ($t, $b, $l, $r);
   }
 
-  method get_height is also<get-height height> {
+  method get_height
+    is also<
+      get-height
+      height
+    >
+  {
     gtk_print_context_get_height($!pc);
   }
 
-  method get_page_setup is also<get-page-setup> {
-    GTK::PageSetup.new( gtk_print_context_get_page_setup($!pc) );
+  method get_page_setup (:$raw = False) is also<get-page-setup> {
+    my $ps = gtk_print_context_get_page_setup($!pc);
+
+    $ps ??
+      ( $raw ?? $ps !! GTK::PageSetup.new($ps) )
+      !!
+      Nil;
   }
 
-  method get_pango_fontmap is also<get-pango-fontmap> {
-    Pango::FontMap.new( gtk_print_context_get_pango_fontmap($!pc) );
+  method get_pango_fontmap (:$raw = False) is also<get-pango-fontmap> {
+    my $ps = gtk_print_context_get_pango_fontmap($!pc);
+
+    $ps ??
+      ( $raw ?? $ps !! Pango::FontMap.new($ps) )
+      !!
+      Nil;
   }
 
   method get_type is also<get-type> {
-    gtk_print_context_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_print_context_get_type, $n, $t );
   }
 
-  method get_width is also<get-width width> {
+  method get_width
+    is also<
+      get-width
+      width
+    >
+  {
     gtk_print_context_get_width($!pc);
   }
 
@@ -98,6 +171,7 @@ class GTK::PrintContext {
     is also<set-cairo-context>
   {
     my gdouble ($dx, $dy) = ($dpi_x, $dpi_y);
+
     gtk_print_context_set_cairo_context($!pc, $cr, $dx, $dy);
   }
 

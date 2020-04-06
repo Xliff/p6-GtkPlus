@@ -1,9 +1,7 @@
 use v6.c;
 
 use Method::Also;
-use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Types;
 
 use GLib::Value;
@@ -27,12 +25,12 @@ class GTK::ShortcutsSection is GTK::Box {
       when ShortcutsSectionAncestry {
         $!ss = do {
           when GtkShortcutsSection  {
-            $to-parent = nativecast(GtkBox, $_);
+            $to-parent = cast(GtkBox, $_);
             $_;
           }
           default {
             $to-parent = $_;
-            nativecast(GtkShortcutsSection, $_);
+            cast(GtkShortcutsSection, $_);
           }
         }
         self.setBox($to-parent);
@@ -44,9 +42,15 @@ class GTK::ShortcutsSection is GTK::Box {
     }
   }
 
-  method new (ShortcutsSectionAncestry $section) {
+  method GTK::Raw::Definitions::GtkShortcutsSection
+    is also<GtkShortcutsSection>
+  { $!ss }
+
+  method new (ShortcutsSectionAncestry $section, :$ref = True) {
+    return Nil unless $section;
+
     my $o = self.bless(:$section);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
 
@@ -69,12 +73,12 @@ class GTK::ShortcutsSection is GTK::Box {
   method max-height is rw is also<max_height> {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('max-height', $gv) );
         $gv.uint;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.uint = self.RESOLVE-UINT($val);
+        $gv.uint = $val;
         self.prop_set('max-height', $gv);
       }
     );
@@ -84,7 +88,7 @@ class GTK::ShortcutsSection is GTK::Box {
   method section-name is rw is also<section_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('section-name', $gv) );
         $gv.string
       },
@@ -99,7 +103,7 @@ class GTK::ShortcutsSection is GTK::Box {
   method title is rw {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('title', $gv) );
         $gv.string;
       },
@@ -114,7 +118,7 @@ class GTK::ShortcutsSection is GTK::Box {
   method view-name is rw is also<view_name> {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new( self.prop_get('view-name', $gv) );
         $gv.string;
       },

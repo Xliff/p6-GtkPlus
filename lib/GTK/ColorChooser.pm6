@@ -3,8 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Compat::RGBA;
-use GTK::Compat::Types;
+use GDK::RGBA;
 
 use GTK::Raw::ColorChooser;
 use GTK::Raw::Label;
@@ -16,34 +15,44 @@ use GTK::Box;
 use GTK::Roles::ColorChooser;
 
 our subset ColorChooserAncestry is export
-  where GtkColorChooser | BoxAncestry;
+  where GtkColorChooserWidget | GtkColorChooser | BoxAncestry;
 
 class GTK::ColorChooser is GTK::Box {
   also does GTK::Roles::ColorChooser;
+
+  has GtkColorChooserWidget $!ccw is implementor;
 
   # Note that the attribute for the widget is also the attribute provided
   # by the role. This is a special case.
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::ColorChooser');
+    $o.setType($o.^name);
     $o;
   }
 
   submethod BUILD(:$chooser) {
     my $to-parent;
+
     given $chooser {
       when ColorChooserAncestry {
-        $!cc = do {
-          when GtkColorChooser {
+        $!ccw = do {
+          when GtkColorChooserWidget {
             $to-parent = nativecast(GtkBox, $_);
             $_;
           }
+
+          when GtkColorChooser {
+            $to-parent = nativecast(GtkBox, $_);
+            nativecast(GtkColorChooserWidget, $_);
+          }
+
           when BoxAncestry {
             $to-parent = $_;
-            nativecast(GtkColorChooser, $_);
+            nativecast(GtkColorChooserWidget, $_);
           }
-        };
+        }
+        self.roleInit-ColorChooser;
         self.setBox($to-parent);
       }
       when GTK::ColorChooser {
@@ -54,14 +63,17 @@ class GTK::ColorChooser is GTK::Box {
     }
   }
 
-  multi method new (ColorChooserAncestry $chooser) {
+  multi method new (ColorChooserAncestry $chooser, :$ref = True) {
+    return Nil unless $chooser;
+
     my $o = self.bless(:$chooser);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
     my $chooser = gtk_color_chooser_widget_new();
-    self.bless(:$chooser);
+
+    $chooser ?? self.bless(:$chooser) !! Nil;
   }
 
 
@@ -77,14 +89,14 @@ class GTK::ColorChooser is GTK::Box {
   method show-editor is rw {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('show-editor', $gv)
         );
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
-        $gv.boolean = self.RESOLVE-BOOL($val);
+        $gv.boolean = $val;
         self.prop_set('show-editor', $gv);
       }
     );
@@ -99,23 +111,14 @@ class GTK::ColorChooser is GTK::Box {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_palette (
-    Int() $orientation,
-    Int() $colors_per_line,
-    Int() $n_colors,
-    GTK::Compat::RGBA $colors
-  )
-    is also<add-palette>
-  {
-    my uint32 $o = self.RESOLVE-UINT($orientation);
-    my @i = ($colors_per_line, $n_colors);
-    my gint ($cpl, $nc) = self.RESOLVE-INT(@i);
-    gtk_color_chooser_add_palette($!cc, $o, $cpl, $nc, $colors);
-  }
-
   method get_type is also<get-type> {
     state ($n, $t);
-    GTK::Widget.unstable_get_type( &gtk_color_chooser_get_type, $n, $t );
+
+    GTK::Widget.unstable_get_type(
+      &gtk_color_chooser_widget_get_type,
+      $n,
+      $t
+    );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

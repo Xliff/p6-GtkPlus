@@ -2,7 +2,6 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Compat::Types;
 use GTK::Raw::Settings;
 use GTK::Raw::Types;
 
@@ -21,7 +20,6 @@ class GTK::Settings {
 
   submethod BUILD(:$settings) {
     self!setObject($!s = $settings);              # GLib::Roles::Object
-    $!sp = nativecast(GtkSettings, $settings);    # GTK::Roles::StyleProvider
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -34,7 +32,7 @@ class GTK::Settings {
   method color-hash is rw  is DEPRECATED {
     # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
-    #   FETCH => -> $ {
+    #   FETCH => sub ($) {
     #     $gv = GLib::Value.new(
     #       self.prop_get('color-hash', $gv)
     #     );
@@ -50,7 +48,7 @@ class GTK::Settings {
   method gtk-alternative-button-order is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-alternative-button-order', $gv)
         );
@@ -67,7 +65,7 @@ class GTK::Settings {
   method gtk-alternative-sort-arrows is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-alternative-sort-arrows', $gv)
         );
@@ -84,7 +82,7 @@ class GTK::Settings {
   method gtk-application-prefer-dark-theme is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-application-prefer-dark-theme', $gv)
         );
@@ -101,7 +99,7 @@ class GTK::Settings {
   method gtk-auto-mnemonics is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-auto-mnemonics', $gv)
         );
@@ -118,7 +116,7 @@ class GTK::Settings {
   method gtk-button-images is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-button-images', $gv)
         );
@@ -135,7 +133,7 @@ class GTK::Settings {
   method gtk-can-change-accels is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-can-change-accels', $gv)
         );
@@ -152,7 +150,7 @@ class GTK::Settings {
   method gtk-color-palette is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-color-palette', $gv)
         );
@@ -169,7 +167,7 @@ class GTK::Settings {
   method gtk-cursor-blink is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-blink', $gv)
         );
@@ -186,7 +184,7 @@ class GTK::Settings {
   method gtk-cursor-blink-time is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-blink-time', $gv)
         );
@@ -203,7 +201,7 @@ class GTK::Settings {
   method gtk-cursor-blink-timeout is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-blink-timeout', $gv)
         );
@@ -220,7 +218,7 @@ class GTK::Settings {
   method gtk-cursor-theme-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-theme-name', $gv)
         );
@@ -237,7 +235,7 @@ class GTK::Settings {
   method gtk-cursor-theme-size is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-cursor-theme-size', $gv)
         );
@@ -254,7 +252,7 @@ class GTK::Settings {
   method gtk-decoration-layout is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-decoration-layout', $gv)
         );
@@ -271,7 +269,7 @@ class GTK::Settings {
   method gtk-dialogs-use-header is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-dialogs-use-header', $gv)
         );
@@ -288,7 +286,7 @@ class GTK::Settings {
   method gtk-dnd-drag-threshold is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-dnd-drag-threshold', $gv)
         );
@@ -305,7 +303,7 @@ class GTK::Settings {
   method gtk-double-click-distance is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-double-click-distance', $gv)
         );
@@ -322,7 +320,7 @@ class GTK::Settings {
   method gtk-double-click-time is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-double-click-time', $gv)
         );
@@ -339,7 +337,7 @@ class GTK::Settings {
   method gtk-enable-accels is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-enable-accels', $gv)
         );
@@ -356,7 +354,7 @@ class GTK::Settings {
   method gtk-enable-animations is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-enable-animations', $gv)
         );
@@ -373,7 +371,7 @@ class GTK::Settings {
   method gtk-enable-event-sounds is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-enable-event-sounds', $gv)
         );
@@ -390,7 +388,7 @@ class GTK::Settings {
   method gtk-enable-input-feedback-sounds is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-enable-input-feedback-sounds', $gv)
         );
@@ -407,7 +405,7 @@ class GTK::Settings {
   method gtk-enable-mnemonics is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-enable-mnemonics', $gv)
         );
@@ -424,7 +422,7 @@ class GTK::Settings {
   method gtk-enable-primary-paste is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-enable-primary-paste', $gv)
         );
@@ -441,7 +439,7 @@ class GTK::Settings {
   method gtk-enable-tooltips is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-enable-tooltips', $gv)
         );
@@ -458,7 +456,7 @@ class GTK::Settings {
   method gtk-entry-password-hint-timeout is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-entry-password-hint-timeout', $gv)
         );
@@ -475,7 +473,7 @@ class GTK::Settings {
   method gtk-entry-select-on-focus is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-entry-select-on-focus', $gv)
         );
@@ -492,7 +490,7 @@ class GTK::Settings {
   method gtk-error-bell is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-error-bell', $gv)
         );
@@ -509,7 +507,7 @@ class GTK::Settings {
   method gtk-fallback-icon-theme is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-fallback-icon-theme', $gv)
         );
@@ -526,7 +524,7 @@ class GTK::Settings {
   method gtk-file-chooser-backend is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-file-chooser-backend', $gv)
         );
@@ -543,7 +541,7 @@ class GTK::Settings {
   method gtk-font-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-font-name', $gv)
         );
@@ -560,7 +558,7 @@ class GTK::Settings {
   method gtk-fontconfig-timestamp is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-fontconfig-timestamp', $gv)
         );
@@ -577,7 +575,7 @@ class GTK::Settings {
   method gtk-icon-sizes is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-icon-sizes', $gv)
         );
@@ -594,7 +592,7 @@ class GTK::Settings {
   method gtk-icon-theme-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-icon-theme-name', $gv)
         );
@@ -611,7 +609,7 @@ class GTK::Settings {
   method gtk-im-module is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-im-module', $gv)
         );
@@ -628,7 +626,7 @@ class GTK::Settings {
   method gtk-im-preedit-style is rw  is DEPRECATED {
     # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
-    #   FETCH => -> $ {
+    #   FETCH => sub ($) {
     #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-im-preedit-style', $gv)
     #     );
@@ -645,7 +643,7 @@ class GTK::Settings {
   method gtk-im-status-style is rw  is DEPRECATED {
     # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
-    #   FETCH => -> $ {
+    #   FETCH => sub ($) {
     #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-im-status-style', $gv)
     #     );
@@ -662,7 +660,7 @@ class GTK::Settings {
   method gtk-key-theme-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-key-theme-name', $gv)
         );
@@ -679,7 +677,7 @@ class GTK::Settings {
   method gtk-keynav-cursor-only is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-keynav-cursor-only', $gv)
         );
@@ -696,7 +694,7 @@ class GTK::Settings {
   method gtk-keynav-use-caret is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-keynav-use-caret', $gv)
         );
@@ -713,7 +711,7 @@ class GTK::Settings {
   method gtk-keynav-wrap-around is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-keynav-wrap-around', $gv)
         );
@@ -730,7 +728,7 @@ class GTK::Settings {
   method gtk-label-select-on-focus is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-label-select-on-focus', $gv)
         );
@@ -747,7 +745,7 @@ class GTK::Settings {
   method gtk-long-press-time is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-long-press-time', $gv)
         );
@@ -764,7 +762,7 @@ class GTK::Settings {
   method gtk-menu-bar-accel is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-menu-bar-accel', $gv)
         );
@@ -781,7 +779,7 @@ class GTK::Settings {
   method gtk-menu-bar-popup-delay is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-menu-bar-popup-delay', $gv)
         );
@@ -798,7 +796,7 @@ class GTK::Settings {
   method gtk-menu-images is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-menu-images', $gv)
         );
@@ -815,7 +813,7 @@ class GTK::Settings {
   method gtk-menu-popdown-delay is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-menu-popdown-delay', $gv)
         );
@@ -832,7 +830,7 @@ class GTK::Settings {
   method gtk-menu-popup-delay is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-menu-popup-delay', $gv)
         );
@@ -849,7 +847,7 @@ class GTK::Settings {
   method gtk-modules is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-modules', $gv)
         );
@@ -866,7 +864,7 @@ class GTK::Settings {
   method gtk-primary-button-warps-slider is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-primary-button-warps-slider', $gv)
         );
@@ -883,7 +881,7 @@ class GTK::Settings {
   method gtk-print-backends is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-print-backends', $gv)
         );
@@ -900,7 +898,7 @@ class GTK::Settings {
   method gtk-print-preview-command is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-print-preview-command', $gv)
         );
@@ -917,7 +915,7 @@ class GTK::Settings {
   method gtk-recent-files-enabled is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-recent-files-enabled', $gv)
         );
@@ -934,7 +932,7 @@ class GTK::Settings {
   method gtk-recent-files-limit is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-recent-files-limit', $gv)
         );
@@ -951,7 +949,7 @@ class GTK::Settings {
   method gtk-recent-files-max-age is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-recent-files-max-age', $gv)
         );
@@ -968,7 +966,7 @@ class GTK::Settings {
   method gtk-scrolled-window-placement is rw  is DEPRECATED {
     # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
-    #   FETCH => -> $ {
+    #   FETCH => sub ($) {
     #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-scrolled-window-placement', $gv)
     #     );
@@ -985,7 +983,7 @@ class GTK::Settings {
   method gtk-shell-shows-app-menu is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-shell-shows-app-menu', $gv)
         );
@@ -1002,7 +1000,7 @@ class GTK::Settings {
   method gtk-shell-shows-desktop is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-shell-shows-desktop', $gv)
         );
@@ -1019,7 +1017,7 @@ class GTK::Settings {
   method gtk-shell-shows-menubar is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-shell-shows-menubar', $gv)
         );
@@ -1036,7 +1034,7 @@ class GTK::Settings {
   method gtk-show-input-method-menu is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-show-input-method-menu', $gv)
         );
@@ -1053,7 +1051,7 @@ class GTK::Settings {
   method gtk-show-unicode-menu is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-show-unicode-menu', $gv)
         );
@@ -1070,7 +1068,7 @@ class GTK::Settings {
   method gtk-sound-theme-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-sound-theme-name', $gv)
         );
@@ -1087,7 +1085,7 @@ class GTK::Settings {
   method gtk-split-cursor is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-split-cursor', $gv)
         );
@@ -1104,7 +1102,7 @@ class GTK::Settings {
   method gtk-theme-name is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-theme-name', $gv)
         );
@@ -1121,7 +1119,7 @@ class GTK::Settings {
   method gtk-timeout-expand is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-timeout-expand', $gv)
         );
@@ -1138,7 +1136,7 @@ class GTK::Settings {
   method gtk-timeout-initial is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-timeout-initial', $gv)
         );
@@ -1155,7 +1153,7 @@ class GTK::Settings {
   method gtk-timeout-repeat is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-timeout-repeat', $gv)
         );
@@ -1172,7 +1170,7 @@ class GTK::Settings {
   method gtk-titlebar-double-click is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-titlebar-double-click', $gv)
         );
@@ -1189,7 +1187,7 @@ class GTK::Settings {
   method gtk-titlebar-middle-click is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-titlebar-middle-click', $gv)
         );
@@ -1206,7 +1204,7 @@ class GTK::Settings {
   method gtk-titlebar-right-click is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-titlebar-right-click', $gv)
         );
@@ -1223,7 +1221,7 @@ class GTK::Settings {
   method gtk-toolbar-icon-size is rw  is DEPRECATED {
     # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
-    #   FETCH => -> $ {
+    #   FETCH => sub ($) {
     #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-toolbar-icon-size', $gv)
     #     );
@@ -1240,7 +1238,7 @@ class GTK::Settings {
   method gtk-toolbar-style is rw  is DEPRECATED {
     # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
-    #   FETCH => -> $ {
+    #   FETCH => sub ($) {
     #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-toolbar-style', $gv)
     #     );
@@ -1257,7 +1255,7 @@ class GTK::Settings {
   method gtk-tooltip-browse-mode-timeout is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-tooltip-browse-mode-timeout', $gv)
         );
@@ -1274,7 +1272,7 @@ class GTK::Settings {
   method gtk-tooltip-browse-timeout is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-tooltip-browse-timeout', $gv)
         );
@@ -1291,7 +1289,7 @@ class GTK::Settings {
   method gtk-tooltip-timeout is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-tooltip-timeout', $gv)
         );
@@ -1308,7 +1306,7 @@ class GTK::Settings {
   method gtk-touchscreen-mode is rw  is DEPRECATED {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-touchscreen-mode', $gv)
         );
@@ -1325,7 +1323,7 @@ class GTK::Settings {
   method gtk-visible-focus is rw  is DEPRECATED {
     # my GLib::Value $gv .= new( -type- );
     # Proxy.new(
-    #   FETCH => -> $ {
+    #   FETCH => sub ($) {
     #     $gv = GLib::Value.new(
     #       self.prop_get('gtk-visible-focus', $gv)
     #     );
@@ -1342,7 +1340,7 @@ class GTK::Settings {
   method gtk-xft-antialias is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-xft-antialias', $gv)
         );
@@ -1359,7 +1357,7 @@ class GTK::Settings {
   method gtk-xft-dpi is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-xft-dpi', $gv)
         );
@@ -1376,7 +1374,7 @@ class GTK::Settings {
   method gtk-xft-hinting is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-xft-hinting', $gv)
         );
@@ -1393,7 +1391,7 @@ class GTK::Settings {
   method gtk-xft-hintstyle is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-xft-hintstyle', $gv)
         );
@@ -1410,7 +1408,7 @@ class GTK::Settings {
   method gtk-xft-rgba is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
-      FETCH => -> $ {
+      FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('gtk-xft-rgba', $gv)
         );
@@ -1426,16 +1424,20 @@ class GTK::Settings {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_default {
     my $settings = gtk_settings_get_default();
-    self.bless(:$settings);
+
+    $settings ?? self.bless(:$settings) !! Nil;
   }
 
   method get_for_screen(GdkScreen() $screen) {
     my $settings = gtk_settings_get_for_screen($screen);
-    self.bless(:$settings);
+
+    $settings ?? self.bless(:$settings) !! Nil;
   }
 
   method get_type {
-    gtk_settings_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_settings_get_type, $n, $t );
   }
 
   method gtk_rc_property_parse_border (
