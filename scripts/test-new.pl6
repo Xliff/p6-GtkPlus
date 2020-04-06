@@ -48,7 +48,6 @@ sub MAIN( $rev = 'HEAD' ) {
     say "===== $_[1] =====";
     my $proc = Proc::Async.new(
       './p6gtkexec',
-      |@extradirs,
       '-e',
       'use '~ $_[1]
     );
