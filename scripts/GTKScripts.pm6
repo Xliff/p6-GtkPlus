@@ -16,7 +16,7 @@ sub parse-file ($filename) is export {
     backups
     modules
   >;
-  %config<libdir> //= 'lib';
+  %config<libdirs> //= 'lib';
 
   %config;
 }
@@ -69,7 +69,7 @@ sub find-files(
 }
 
 sub get-module-files is export {
-  (do gather for %config<libdirs>.split(',') {
+  (do gather for (%config<libdirs>).split(',') {
     take find-files($_, extension => 'pm6');
   }).flat
 }
