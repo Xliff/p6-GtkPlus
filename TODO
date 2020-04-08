@@ -271,7 +271,7 @@ Applications
 + Using Azawawi's libzip bindings, extract XLSX files to memory (grab only
   *.xml, for now), parse the required files using XML::Actions, and then
   display resulting data in a GtkSheet -- This is now in a Jupyter Notebook.
-+ Perl6 GIMP Library bindings!
+x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - Port JSON-glib to Perl6
   https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
 - DEFINITELY consider GEGL bindings. Use generated data structures for
@@ -279,5 +279,6 @@ Applications
   parsable from .c
 - Consider BABL bindings
 - Consider ATK bindings
+- Consider Togra bindings (http://togra.sourceforge.net/screenshots.html)
 - A Perl6 port for libsoup
 - Consider a Perl6 port of SVOX (See files in libttspico-dev, start with /usr/include/picoapi.h)
