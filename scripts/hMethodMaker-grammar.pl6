@@ -81,18 +81,20 @@ my token availability {
 }
 
 sub MAIN (
-  $filename,          #= Filename to process
-  :$remove,           #= Prefix to remove from method names
-  :$var,              #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
-  :$output = 'all',   #= Type of output: 'method', 'attributes', 'subs' or 'all'
-  :$lib = 'gtk',      #= Library name to use
-  :$internal = 0,     #= Add checking for INTERNAL methods
-  :$bland = 0,        #= Do NOT attempt to process preprocessor prefixes to subroutines
-  :$output-only,      #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
-  :$no-headers,       #= Do not display section headers.
-  :$get-set = False,  #= Convert simple get/set routine to "attribute" code.
-  :$trim-start,       #= Trim lines from the beginning of the post-processed file
-  :$trim-end          #= Trim lines from the end of the post-processed file
+        $filename,          #= Filename to process
+  Str  :$remove,            #= Prefix to remove from method names
+  Str  :$var,               #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
+  Str  :$output-only,       #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
+  Bool :$no-headers,        #= Do not display section headers.
+  Int  :$trim-start,        #= Trim lines from the beginning of the post-processed file
+  Int  :$trim-end,          #= Trim lines from the end of the post-processed file
+  Str  :$remove-from-line,  #= Remove prefix string from all lines
+  Str  :$delete,            #= Comma separated list of lines to delete
+  Str  :$output   = 'all',  #= Type of output: 'method', 'attributes', 'subs' or 'all'
+  Str  :$lib      = 'gtk',  #= Library name to use
+  Bool :$internal = False,  #= Add checking for INTERNAL methods
+  Bool :$bland    = False,  #= Do NOT attempt to process preprocessor prefixes to subroutines
+  Bool :$get-set  = False   #= Convert simple get/set routine to "attribute" code.
 ) {
   my $fn = $filename;
 
@@ -135,14 +137,23 @@ sub MAIN (
   $contents ~~ s:g/<!after ';'>\n/ /;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
 
-  if $bland {
-    $contents ~~ s:g/<availability>//;
-  }
+  $contents ~~ s:g/<availability>// if $bland;
+  $contents ~~ s:g/ ^^ \s* $remove-from-line // if $remove-from-line;
 
   $contents = $contents.lines.skip($trim-start).join("\n")
     if $trim-start & $trim-start ~~ Int;
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
     if $trim-end && $trim-end ~~ Int;
+
+  if $delete {
+    my @d = $delete.split(',').map({
+      die 'All elements in $delete must be an integer!' unless .^lookup('Int');
+      .Int
+    });
+    my @c = $contents.lines;
+    @c.splice($_ - 1, 1) for @d.reverse;
+    $contents = @c.join("\n");
+  }
 
   my \grammar := $internal ??
     C-Function-Internal-Def
@@ -155,7 +166,9 @@ sub MAIN (
   unless $matched {
     say 'Could not find any functions!';
     say '-----------------------------';
-    say $contents;
+    for $contents.lines.kv -> $k, $v {
+      say "{ $k + 1 }: { $v }";
+    }
     exit 1;
   }
 
