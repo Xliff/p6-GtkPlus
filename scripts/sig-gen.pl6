@@ -94,12 +94,12 @@ METH
     if $rt.defined && $rt.trim && $rt.trim ne 'void' {
       $emission = qq:to/NONVOID/.chomp;
                 my \$r = ReturnedValue.new;
-                \$s.emit( [self, { $pp }, \$ud, \$r] );
+                𝒮.emit( [self, { $pp }, \$ud, \$r] );
                 \$r.r;
       NONVOID
     } else {
       $emission = qq:to/VOID/.chomp;
-                \$s.emit( [self, { $pp }, \$ud ] );
+                𝒮.emit( [self, { $pp }, \$ud ] );
       VOID
     }
 
@@ -118,7 +118,7 @@ METH
       \$hid = g-connect-{ .[0] }(\$obj, \$signal,
         -> \$, { $pp }, \$ud{ $rt } \{
           CATCH \{
-            default \{ \$s.note(\$_) \}
+            default \{ 𝒮.note(\$_) \}
           \}
 
 { $emission }
