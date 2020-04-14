@@ -141,9 +141,9 @@ sub MAIN (
   $contents ~~ s:g/ ^^ \s* $remove-from-line // if $remove-from-line;
 
   $contents = $contents.lines.skip($trim-start).join("\n")
-    if $trim-start & $trim-start ~~ Int;
+    if $trim-start;
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
-    if $trim-end && $trim-end ~~ Int;
+    if $trim-end;
 
   if $delete {
     my @d = $delete.split(',').map({
