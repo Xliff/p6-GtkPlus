@@ -109,8 +109,12 @@ sub MAIN (
   }
   my %module-order = @module-order.Hash;
 
-  @others.append: %nodes.values.grep( *<edges>.elems.not ).map( *<name> );
-  @others = @others.unique.sort.grep( * ne <NativeCall nqp>.any );
+  @others.append: %nodes.values.grep({
+    .<name>.starts-with( %config<prefix> ).not &&
+    .<name> ne <NativeCall nqp>.any            &&
+    .<edges>.elems.not
+  }).map( *<name> );
+  @others = @others.unique.sort;
   my $list = @others.join("\n") ~ "\n";
   $list ~= @module-order.map({ $_.key }).join("\n");
   "BuildList".IO.open(:w).say($list);
