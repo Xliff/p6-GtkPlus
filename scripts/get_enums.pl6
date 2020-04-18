@@ -23,13 +23,14 @@ my rule comment {
 
 my rule enum_entry {
   \s* ( <[_ A..Z]>+ ) (
-    [ '='
+    [ '=' '('?
       [
         <m>?<d>+<L>?
         |
         <w>+
       ]
       [ '<<' ( [<d>+ | <w>+] ) ]?
+      ')'?
     ]?
   ) ','?
   <comment>?
