@@ -38,7 +38,7 @@ grammar C-Function-Def {
   token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
   token       t { <[\w _]>+ }
   rule     type { 'const'? $<n>=\w+ <p>? }
-  rule      var { <t>'[]'? }
+  rule      var { <t> [ '[' .+? ']' ]? }
   token returns { 'const'? <.ws> <t> \s* <p>? }
   token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
   token      ad { 'AVAILABLE' | 'DEPRECATED' }
@@ -136,9 +136,17 @@ sub MAIN (
   $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
   $contents ~~ s:g/<!after ';'>\n/ /;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
+  $contents ~~ s:g/ 'gst_byte_reader_' [
+                       'dup' | 'peek' | 'skip' | 'get'
+                     ]'_string_utf8(reader' ',str'? ')'//;
+  $contents ~~ s:g/ ^^ \s* 'static' \s* 'inline'? .+? $$ //;
 
   $contents ~~ s:g/<availability>// if $bland;
-  $contents ~~ s:g/ ^^ \s* $remove-from-line // if $remove-from-line;
+
+  for $remove-from-line.split(':') -> $r {
+    say $r;
+    $contents ~~ s:g/ ^^ \s* $r \s* //;
+  }
 
   $contents = $contents.lines.skip($trim-start).join("\n")
     if $trim-start;
@@ -200,7 +208,7 @@ sub MAIN (
 
       # By testing time, $np should only contain the count of '*' in the Match
       my $np = (.[0]<p> // '').Str;
-      if $np = ( ($np ~~ m:g/'*'/).Array.elems ) {
+      if $np = ( ($np ~~ m:g/'*'/).Array.elems ) {;
         if $np > 1 {
           $t = "CArray[{ $t }]" for ^($np - 1);
         }
@@ -300,7 +308,9 @@ sub MAIN (
       my $np = ($h<returns><p> // '').Str;
       $np = ( ($np ~~ m:g/'*'/).Array.elems );
       $np-- if $p6r eq 'Str'; # Already counts for a '*'
-      $p6r = "CArray[{ $p6r }]" for ^$np - 1;
+      if $np > 1 {
+        $p6r = "CArray[{ $p6r }]" for ^$np - 1;
+      }
     }
     $h<p6_return> = $p6r;
 

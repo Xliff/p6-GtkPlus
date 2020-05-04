@@ -24,10 +24,12 @@ sub MAIN (
   }
 
   my $uri = "{ $prefix }{ $control }{ $ext }";
-  say "Retrieving: $uri";
+  print "Retrieving: $uri...";
   my $dom = Mojo::DOM.new(
     LWP::Simple.new.get($uri);
   );
+  say 'done!';
+
 
   my $v = "\$\!$var";
 
@@ -35,60 +37,42 @@ sub MAIN (
   #  *.attr('name') eq "{ $control }.signal-details"
   #)[0].parent;
   my %methods;
-  for '.property-details', '.style-properties', '#properties' -> $pd {
-    my $found = False;
-    quietly {
-      for @( $dom.find('div.refsect1 a').to_array ) -> $e {
-        #say "Searching for: { $control }{ $pd }...";
-        if $e && $e.attr('name') eq "{ $control }{ $pd }" {
-          $found = $e.parent;
-          last;
-        }
-      }
-    }
+  my $symbol_sections = $dom.find('h3.symbol_section');
 
-    unless $found {
-      say "Could not find { $pd } section for { $control }";
-      next;
+  my $found;
+  for $symbol_sections.to_array.List -> $e {
+    if $e.text eq 'Properties' {
+      $found = $e;
+      last;
     }
-    if $found && $pd eq '.style-properties' {
-      say 'Retrieval of style properties NYI';
-      next;
-    }
+  }
+  exit unless $found;
 
-    for $found.find('div h3 code').to_array.List -> $e {
+  my %collision;
+  my $pd = $found.next;
+  while $pd {
+    last unless $pd.matches('div.base_symbol_container');
+
+    for $pd.find('i').to_array.List -> $e {
       (my $mn = $e.text) ~~ s:g/<[“”"]>//;
+      next if %collision{$mn}                   ||
+              %collision{ $mn.subst('-', '_') } ||
+              %collision{ $mn.subst('_', '-') };
+      say "Processing { $mn }...";
+      %collision{$mn} = True;
 
-      my $pre = $e.parent.parent.find('pre').last;
-      my @t = $pre.find('span.type').to_array.List;
-      my @i = $pre.parent.find('p').to_array.List;
-      my @w = $pre.parent.find('div.warning').to_array.List;
+      my $types = $e.parent.parent.find('pre.property_signature span a').to_array[0].text;
       my ($dep, $rw);
+      my @flags = $e.parent.parent.find('p').to_array.List;
 
-      for @i {
-        if .text ~~ /'Flags'? ': ' ('Read' | 'Write')+ % ' / '/ {
+      for @flags -> $f {
+        if $f.text ~~ /\s* 'Flags'? \s* ':' \s* ('Read' | 'Write')+ % [ \s* '/' \s* ]/ {
           $rw = $/[0].Array;
-        }
-      }
-      # Due to the variety of types, this isn't the only place to look...
-      unless $rw.defined {
-        if $pre.text ~~ /'Flags'? ': ' ('Read' | 'Write')+ % ' / '/ {
-          $rw = $/[0].Array;
-        }
-      }
-
-      for @w {
-        $dep = so .all_text ~~ /'deprecated'/;
-        if $dep {
-          .all_text ~~ /'Use' (.+?) 'instead'/;
-          with $/ {
-            $dep = $/[0] with $/[0];
-          }
+          last;
         }
       }
 
       my (%c, $co);
-      my $types = @t.map(*.text.trim).join(', ');
       my $gtype = do given $types {
         when 'gboolean' { $co = 'Int()'; 'G_TYPE_BOOLEAN' }
         when 'gint'     { $co = 'Int()'; 'G_TYPE_INT'     }
@@ -166,6 +150,8 @@ sub MAIN (
   METH
 
     }
+
+    $pd = $pd.next;
   }
 
   .value.say for %methods.pairs.sort( *.key );

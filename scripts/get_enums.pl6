@@ -85,7 +85,7 @@ sub MAIN ($dir?, :$file) {
       for $l<enum><enum_entry> -> $el {
         for $el -> $e {
           # Handle 32 vs 64 bit by literal.
-          if $e[1][0].Numeric !~~ Failure {
+          if $e[1][0] && $e[1][0].Numeric !~~ Failure {
             $long = True if $e[1]<L> || $e[1][0].Int > 31;
           }
           # Handle signed vs unsigned.
@@ -111,20 +111,24 @@ sub MAIN ($dir?, :$file) {
     my $m = %enums{$k}.map( *.map( *.elems ) ).max;
     my $etype = %etype{$k};
 
-    say "  constant {$k} is export := g{ $etype > 1 ?? 'u' !! '' }int{$etype.abs};";
-    say "  our enum {$k}Enum is export { $m == 2 ?? '(' !! '<' }";
+    say "constant {$k} is export := g{ $etype > 1 ?? 'u' !! '' }int{$etype.abs};";
+    say "our enum {$k}Enum is export { $m == 2 ?? '(' !! '<' }";
     for %enums{$k} -> $ek {
       for $ek -> $el {
+        my $max = $el.map( *[0].chars ).max;
+        my $mv = $el.map( *[1].trim.chars ).max;
         for $el.List -> $eel {
+          my $s = $max - $eel[0].chars;
           given $m {
             when 1 {
-              say "      { $eel[0] }{ $m == 2 ?? ',' !! '' }";
+              say "  { $eel[0] }{ $m == 2 ?? ',' !! '' }";
             }
             when 2 {
               with $eel[1] {
-                say "      { $eel[0] } => { $eel[1] },";
+                say "  { $eel[0] }{ ' ' x $s } => {
+                             $eel[1].trim.fmt("%{ $mv }s") },";
               } else {
-                say "      '{ $eel[0] }{ ($eel eqv $el.Array[*-1]).not ??
+                say "  '{ $eel[0] }{ ($eel eqv $el.Array[*-1]).not ??
                   "'," !! "'" }";
               }
             }
@@ -132,6 +136,6 @@ sub MAIN ($dir?, :$file) {
         }
       }
     }
-    say "  { $m == 2 ?? ')' !! '>' };\n";
+    say "{ $m == 2 ?? ')' !! '>' };\n";
   }
 }
