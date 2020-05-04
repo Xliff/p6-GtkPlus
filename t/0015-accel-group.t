@@ -5,6 +5,7 @@ use GDK::KeySyms;
 
 use GTK::Application;
 use GTK::AccelGroup;
+use GTK::Label;
 
 use GLib::Object::Closure;
 
@@ -16,8 +17,11 @@ $a.activate.tap({
   );
   my $ag = GTK::AccelGroup.new;
 
+  my $l = GTK::Label.new('Type Ctrl-A');
+
   $ag.connect(GDK_KEY_A, GDK_CONTROL_MASK, 0, $closure);
   $a.window.add-accel-group($ag);
+  $a.window.add($l);
   $a.window.show-all;
 });
 
