@@ -103,7 +103,21 @@ sub MAIN (
 
   my @module-order;
   if !$s.serialise {
-    die $s.error_message;
+    #say "#N: { @nodes.elems }";
+    #say "N: { @nodes[205].gist }";
+    given $s.error_message {
+      when .contains('circular reference found') {
+        .say;
+        for %nodes.values {
+          say .<name> if .<name> ∈ .<edges>;
+        }
+        exit;
+      }
+
+      default {
+        .say && .exit
+      }
+    }
   } else {
     @module-order.push( $_<name> => $++ ) for $s.result;
   }

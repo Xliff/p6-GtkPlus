@@ -153,13 +153,32 @@ sub MAIN (
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
     if $trim-end;
 
+  $contents = (gather for $contents.lines.kv -> $k, $v {
+    take "{ $k + 1 }: { $v }" }
+  ).join("\n");
+  my regex range { (\d+) '-' (\d+) }
   if $delete {
     my @d = $delete.split(',').map({
-      die 'All elements in $delete must be an integer!' unless .^lookup('Int');
-      .Int
+      my &meth;
+      die 'All elements in $delete must be an integer or an integer range!'
+        unless $_ ~~ &range || ( &meth = .^lookup('Int') );
+      my $r;
+      $r = &meth($_) if &meth;
+      $r = $_ unless $r;
+      $r;
     });
+
+    my @d-ranges;
+    for @d {
+      if $_ ~~ &range {
+        @d-ranges.append: $/[0].Int ... $/[1].Int;
+      } else {
+        @d-ranges.push: .Int;
+      }
+    }
+
     my @c = $contents.lines;
-    @c.splice($_ - 1, 1) for @d.reverse;
+    @c.splice($_ - 1, 1) for @d-ranges.reverse;
     $contents = @c.join("\n");
   }
 
@@ -169,14 +188,13 @@ sub MAIN (
     C-Function-Def;
   my $top-rule  = $bland ?? 'top-bland'      !! 'top-normal';
   my $func-rule = $bland ?? 'function-bland' !! 'function-normal';
-  my $matched = grammar.parse($contents, rule => $top-rule);
+  (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
+  my $matched = grammar.parse($stripped-contents, rule => $top-rule);
 
   unless $matched {
     say 'Could not find any functions!';
     say '-----------------------------';
-    for $contents.lines.kv -> $k, $v {
-      say "{ $k + 1 }: { $v }";
-    }
+    $contents.say;
     exit 1;
   }
 

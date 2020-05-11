@@ -116,7 +116,7 @@ sub MAIN ($dir?, :$file) {
     for %enums{$k} -> $ek {
       for $ek -> $el {
         my $max = $el.map( *[0].chars ).max;
-        my $mv = $el.map( *[1].trim.chars ).max;
+        my $mv = $el.map({ ( $_[1] // '' ).trim.chars }).max;
         for $el.List -> $eel {
           my $s = $max - $eel[0].chars;
           given $m {
