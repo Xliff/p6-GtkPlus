@@ -38,7 +38,7 @@ grammar C-Function-Def {
   token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
   token       t { <[\w _]>+ }
   rule     type { 'const'? $<n>=\w+ <p>? }
-  rule      var { <t> [ '[' .+? ']' ]? }
+  rule      var { <t> [ '[' (.+?)? ']' ]? }
   token returns { 'const'? <.ws> <t> \s* <p>? }
   token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
   token      ad { 'AVAILABLE' | 'DEPRECATED' }
@@ -143,7 +143,7 @@ sub MAIN (
 
   $contents ~~ s:g/<availability>// if $bland;
 
-  for $remove-from-line.split(':') -> $r {
+  for ( $remove-from-line // () ).split(':') -> $r {
     say $r;
     $contents ~~ s:g/ ^^ \s* $r \s* //;
   }
