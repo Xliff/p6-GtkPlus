@@ -12,7 +12,8 @@ sub MAIN (
   :$force,            #= Force dependency generation
   :$prefix is copy,   #= Module prefix
   :$start-at,
-  :$log = True
+  :$log = True,
+  :$variant is copy = '' 
 ) {
   my @build-exclude;
   my $dep_file = '.build-deps'.IO;
@@ -242,9 +243,20 @@ sub MAIN (
     # Note total compile time.
     output("Total compile time: { DateTime.now - $start }s");
 
-    'stats'.IO.add(
-      'ParallelBuildResults-' ~ now.DateTime.yyyy-mm-dd.subst('-', '', :g)
-    ).spurt($*LOG) if $log
+    sub getName {
+      'ParallelBuildResults-' ~ ( $variant ?? "{ $variant }-" !! '' )
+                              ~ now.DateTime.yyyy-mm-dd.subst('-', '', :g);
+    }
+
+    my $name = getName;
+    if $name.IO.e {
+      if $name ~~ /'ParallelBuildResults-' [ ( \w ) + '-' ]? \d+/ {
+        $variant = $0 ?? $0.Str.succ !! 'a';
+      }
+      $name = getName;
+    }
+
+    'stats'.IO.add($name).spurt($*LOG) if $log
   }
 }
 
