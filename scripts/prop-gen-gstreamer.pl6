@@ -72,6 +72,7 @@ sub MAIN (
       }
 
       my (%c, $co);
+      my @really-strings = <char chararray gchar gchararray>;
       my $gtype = do given $types {
         when 'gboolean' { $co = 'Int()'; 'G_TYPE_BOOLEAN' }
         when 'gint'     { $co = 'Int()'; 'G_TYPE_INT'     }
@@ -83,7 +84,7 @@ sub MAIN (
         when 'gdouble'  { $co = 'Num()'; 'G_TYPE_DOUBLE'  }
         when 'gfloat'   { $co = 'Num()'; 'G_TYPE_FLOAT'   }
 
-        when 'gchar' | 'char' {
+        when @really-strings.any {
           $co = 'Str()'; 'G_TYPE_STRING';
         }
         default {
@@ -94,7 +95,7 @@ sub MAIN (
       if $gtype ne '-type-' {
         $_ = $types;
         my $u = S/^ 'g'//;
-        if $u eq 'char' {
+        if $u eq @really-strings.any {
           $u = 'string';
         }
         $vtype-r = '        $gv.' ~ $u ~ ';';
