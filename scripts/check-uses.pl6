@@ -4,6 +4,10 @@ use lib 'scripts';
 
 use GTKScripts;
 
+my %interior-classes = (
+  'GStreamer::StaticCaps' => 'GStreamer::Caps',
+);
+
 my token q             { <["'“”‘’«»「」‹›]>         }
 my token mod           { [\w+]+ %% '::'            }
 my rule  uses          { 'use' <mod>               }
@@ -53,6 +57,9 @@ sub MAIN (:$filename, :$prefix is required) {
     for %mn.keys.sort -> $k {
       next unless $k.starts-with($prefix);
       next if %c{$k}:exists;
+      if %interior-classes{$k}:exists {
+        next if %interior-classes{$k} eq %mn.keys.any;
+      }
       unless [||]( %u{$k}:exists, %lb{$k}:exists ) {
         @missing.push: "use $k;";
       }
