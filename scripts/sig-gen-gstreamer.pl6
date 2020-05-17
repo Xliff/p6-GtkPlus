@@ -38,7 +38,7 @@ sub MAIN (
   my $found = False;
   quietly {
     for $dom.find('h3.symbol_section').to_array.List -> $e {
-      say $e.to_string;
+      #say $e.to_string;
       if $e && $e.text eq 'Signals' {
         $found = $e;
         last;

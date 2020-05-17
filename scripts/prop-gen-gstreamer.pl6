@@ -30,14 +30,13 @@ sub MAIN (
   );
   say 'done!';
 
-
   my $v = "\$\!$var";
 
   #my $sig-div = $dom.find('div.refsect1 a').to_array.List.grep(
   #  *.attr('name') eq "{ $control }.signal-details"
   #)[0].parent;
   my %methods;
-  my $symbol_sections = $dom.find('h3.symbol_section');
+  my $symbol_sections = $dom.find('h3.symbol_section,h2.symbol_section');
 
   my $found;
   for $symbol_sections.to_array.List -> $e {
