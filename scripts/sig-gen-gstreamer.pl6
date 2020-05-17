@@ -37,7 +37,7 @@ sub MAIN (
   #)[0].parent;
   my $found = False;
   quietly {
-    for $dom.find('h3.symbol_section').to_array.List -> $e {
+    for $dom.find('h3.symbol_section,h2.symbol_section').to_array.List -> $e {
       #say $e.to_string;
       if $e && $e.text eq 'Signals' {
         $found = $e;
@@ -70,13 +70,14 @@ sub MAIN (
     last if $class eq 'symbol_section';
     last if $pd.tag ne 'div';
 
-    my $mn = ($pd.find('div h4 code,i').to_array.List)[0].text;
+    my $mn = ($pd.find('div h3,h4 code,i').to_array.List)[0].text;
     # say "MN0: '{ $mn // '»NO METHOD NAME«' }'";
-    $mn = ($pd.find('div h4 i').to_array.List)[0].text unless $mn;
+    $mn = ($pd.find('div h3,h4 i').to_array.List)[0].text unless $mn;
     # say "MN1: { $mn // '»NO METHOD NAME«' }";
     say $pd.to_string unless $mn;
 
-    my $typeList = ($pd.find('div pre').to_array.List)[0];
+    #my $typeList = ($pd.find('div pre').to_array.List)[0];
+    my $typeList = ($pd.find('.c-prototype').to_array.List)[0];
     unless $typeList {
       say "PD: { $pd.to_string }";
     }
@@ -124,8 +125,8 @@ sub MAIN (
 
       # WTF?
       default {
-        say 'Not supposed to be here!';
-        say "G: { .to_string }";
+        #say 'Not supposed to be here!';
+        #say "G: { .to_string }";
       }
     }
 
