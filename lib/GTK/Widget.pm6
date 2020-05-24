@@ -1659,6 +1659,7 @@ class GTK::Widget {
   }
   multi method get_allocation (GtkAllocation $allocation) {
     gtk_widget_get_allocation($!w, $allocation);
+    $allocation;
   }
 
   method get_style_context (:$raw = False)
