@@ -66,13 +66,19 @@ sub MAIN (
       my ($dep, $rw);
 
       for @i {
-        if .text ~~ /'Flags'? ': ' ('Read' | 'Write')+ % ' / '/ {
+        if .text ~~ /
+          'Flags'? ': '
+          ('Read' | 'Write' | 'Construct')+ % ' / '
+        / {
           $rw = $/[0].Array;
         }
       }
       # Due to the variety of types, this isn't the only place to look...
       unless $rw.defined {
-        if $pre.text ~~ /'Flags'? ': ' ('Read' | 'Write')+ % ' / '/ {
+        if $pre.text ~~ /
+          'Flags'? ': '
+          ('Read' | 'Write' | 'Construct')+ % ' / '
+        / {
           $rw = $/[0].Array;
         }
       }
@@ -130,10 +136,12 @@ sub MAIN (
         if $rw.any eq 'Read';
 
         %c<write> =
-          "\$gv = GLib::Value.new( { $gtype } );\n" ~
           "        { $vtype-w }\n" ~
           "        self.prop_set(\'{ $mn }\', \$gv);"
         if $rw.any eq 'Write';
+
+        %c<write> = "warn '{ $mn } is a construct-only attribute'"
+          if $rw.any eq 'Construct';
       }
 
       %c<write> //= "warn '{ $mn } does not allow writing'";
@@ -154,7 +162,7 @@ sub MAIN (
       %methods{$mn} = qq:to/METH/;
     # Type: { $types }
     method $mn is rw { $deprecated } \{
-      my \$gv;
+      my \$gv = GLib::Value.new( { $gtype } );
       Proxy.new(
         FETCH => sub (\$) \{
           { %c<read> }

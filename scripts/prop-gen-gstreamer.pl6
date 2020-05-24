@@ -65,7 +65,12 @@ sub MAIN (
       my @flags = $e.parent.parent.find('p').to_array.List;
 
       for @flags -> $f {
-        if $f.text ~~ /\s* 'Flags'? \s* ':' \s* ('Read' | 'Write')+ % [ \s* '/' \s* ]/ {
+        if $f.text ~~ /
+          \s*
+          'Flags'? \s* ':' \s*
+          ('Read' | 'Write' | 'Construct')+ %
+          [ \s* '/' \s* ]
+        / {
           $rw = $/[0].Array;
           last;
         }
@@ -113,10 +118,12 @@ sub MAIN (
         if $rw.any eq 'Read';
 
         %c<write> =
-          "\$gv = GLib::Value.new( { $gtype } );\n" ~
-          "        { $vtype-w }\n" ~
+          "{ $vtype-w }\n" ~
           "        self.prop_set(\'{ $mn }\', \$gv);"
         if $rw.any eq 'Write';
+
+        %c<write> = "warn '{ $mn } is a construct-only attribute'"
+          if $rw.any eq 'Construct';
       }
 
       %c<write> //= "warn '{ $mn } does not allow writing'";
@@ -137,7 +144,7 @@ sub MAIN (
       %methods{$mn} = qq:to/METH/;
     # Type: { $types }
     method $mn is rw { $deprecated } \{
-      my \$gv;
+      my \$gv = GLib::Value.new( { $gtype } );
       Proxy.new(
         FETCH => sub (\$) \{
           { %c<read> }
