@@ -7,19 +7,20 @@ use GTKScripts;
 
 my $p = run q[scripts/dependencies.pl6], :out;
 if $p.exitcode {
-  $p.exitcode.say;
-  my $depcontents = $p.out.slurp;
-
-  given $depcontents {
-    when .contains('circular reference found!') {
-      .say;
-    }
-
-    default {
-      .say;
-      exit;
-    }
-  }
+  # $p.exitcode.say;
+  # my $depcontents = $p.out.slurp;
+  #
+  # given $depcontents {
+  #   when .contains('circular reference found!') {
+  #     .say;
+  #   }
+  #
+  #   default {
+  #     .say;
+  #     exit;
+  #   }
+  # }
+  exit;
 }
 
 die 'Cannot find BuildList file in current directory.'
