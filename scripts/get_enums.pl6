@@ -22,7 +22,7 @@ my rule comment {
 }
 
 my rule enum_entry {
-  \s* ( <[_ A..Z]>+ ) (
+  \s* ( <[_ A..Z0..9 ]>+ ) (
     [ '=' '('?
       [
         <m>?<d>+<L>?
