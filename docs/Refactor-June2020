@@ -1,0 +1,2 @@
+- Check all occurences of GLib::Roles::TypedBuffer and remove all casts involving the .p method. Those casts are no longer necessary.
+  If a cast is to a different type than the role parameter then the call becomes ".p( :!typed )"
