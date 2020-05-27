@@ -5,3 +5,4 @@
 - There is still a bit of confusion between setting properties and setting data in GLib::Roles::Object. Please resolve this.
 - All methods that return the results of a .map should have that value coerced to an array. This WILL have unforseen consequences,
   but let's hope they are minor. It's either that or have a :$seq var on all routines that defaults to TRUE.
+- Complete objects and definitions for GHookList and GHook if not already completed.
