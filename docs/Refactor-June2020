@@ -1,2 +1,7 @@
 - Check all occurences of GLib::Roles::TypedBuffer and remove all casts involving the .p method. Those casts are no longer necessary.
   If a cast is to a different type than the role parameter then the call becomes ".p( :!typed )"
+- Anywhere where the .Array method is used, consider adding the ability to use ".List" which will return an iterator object and
+  may need to be created in the referenced class! .List should be its own method.
+- There is still a bit of confusion between setting properties and setting data in GLib::Roles::Object. Please resolve this.
+- All methods that return the results of a .map should have that value coerced to an array. This WILL have unforseen consequences,
+  but let's hope they are minor. It's either that or have a :$seq var on all routines that defaults to TRUE.
