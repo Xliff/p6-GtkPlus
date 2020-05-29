@@ -128,6 +128,8 @@ sub MAIN (
 
   # Remove extraneous, non-necessary bits!
   $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
+  $contents ~~ s:g/ 'G_STMT_START {' .+? '} G_STMT_END'//;
+  $contents ~~ s:g/ '\\' $$ \s+ .+? $$//;  # Multi line defines;
   $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
   $contents ~~ s:g/ ^^ \s* <[A..Z]>+ '_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
