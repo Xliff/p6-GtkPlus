@@ -58,7 +58,7 @@ class GTK::Widget {
     warn "DESTROYING -- { self.getType }" if $DEBUG;
     self.unref;
     # All widget-dependents may need a variation of this.
-    my $w_cheat = cast(GObjectStruct, $!w);
+    my $w_cheat = cast(GObject, $!w);
     self.cleanup unless $w_cheat.ref_count;
   }
 
