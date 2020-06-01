@@ -44,11 +44,12 @@ class GtkTextAppearance is repr('CStruct') does GLib::Roles::Pointers is export 
   HAS GdkColor $.bg_color;
   HAS GdkColor $.fg_color;
   has gint     $.rise;
-  has guint    $.underline;        # :4
-  has guint    $.strikethru;       # :1
-  has guint    $.draw_bg;          # :1
-  has guint    $.inside_selection; # :1
-  has guint    $.is_text;          # :1
+  # has guint    $.underline;        # :4
+  # has guint    $.strikethru;       # :1
+  # has guint    $.draw_bg;          # :1
+  # has guint    $.inside_selection; # :1
+  # has guint    $.is_text;          # :1
+  has guint    $.flags;
   has GdkRGBA  $.rgba1;
   has GdkRGBA  $.rgba2;
 }
