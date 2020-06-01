@@ -1,8 +1,35 @@
 - Check all occurences of GLib::Roles::TypedBuffer and remove all casts involving the .p method. Those casts are no longer necessary.
   If a cast is to a different type than the role parameter then the call becomes ".p( :!typed )"
-- Anywhere method that offers the :glist option, should return ensure they return an Array, not a Seq. If the caller wants a Seq, 
+- Anywhere method that offers the :glist option, should return ensure they return an Array, not a Seq. If the caller wants a Seq,
   they should be able to set :$seq, which is the current behavior as of 20200530
 - There is still a bit of confusion between setting properties and setting data in GLib::Roles::Object. Please resolve this.
 - All methods that return the results of a .map should have that value coerced to an array. This WILL have unforseen consequences,
   but let's hope they are minor. It's either that or have a :$seq var on all routines that defaults to TRUE.
 - Complete objects and definitions for GHookList and GHook if not already completed.
+
+++ Dealing with structure sizes:
+  - The current scheme of t/00-struct-sizes will continue until fill line
+    coverage is complete....
+  * HOWEVER!
+  - Moving forward, the shared libraries should be moved to %*RESOURCES with
+    an attached built-script. NativeCall defs should then refer to this library
+    using the name resorces/libs/libstruct-sizes-<PROJNAME>.so --
+    <PROJNAME> can extracted from $?PACKAGE, ::?CLASS, or ::?ROLE
+    via *.split('::')[0]
+  - Structs marked as "|# Opaque" should then be moved from structs to
+    CPointer.
+  - GLib::Roles::Pointer should then implement the following method (as already
+    exibited in 00-struct-sizes.t:
+
+      method sizeof {
+
+        sub sizeof ()
+          returns int64
+          is native(
+            %*RESOURCES{"lib/struct-sizes-{ ::?CLASS.^name.split('::')[0] }"}
+          )
+          is symbol('sizeof_' ~ ::?CLASS.^shortname)
+        { * }
+
+        sizeof();
+      }
