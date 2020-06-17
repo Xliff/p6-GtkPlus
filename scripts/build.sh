@@ -31,5 +31,5 @@ fi
   done;
   echo;
 )' 2>&1 | tee -a LastBuildResults
-cp LastBuildResults stats/LastBuildResults-`date +%Y%m%d`
+cp LastBuildResults stats/LastBuildResults-`date --utc +%Y%m%d`
 rm BuildList.now
