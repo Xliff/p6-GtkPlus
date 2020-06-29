@@ -200,7 +200,7 @@ sub MAIN (
     exit 1;
   }
 
-  for $matched{$func-rule}[] -> $m is rw {
+  for $matched{$func-rule}[] -> $m {
     my $av = $bland ??
       { pre-definitions => ($m<pre-definitions> // '').Str } !!
       $m<availability>;
