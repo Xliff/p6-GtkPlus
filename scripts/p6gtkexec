@@ -34,7 +34,7 @@ INCLUDES="-I${P6_GTK_HOME}/p6-GLib/lib \
 -I${P6_GTK_HOME}/p6-RSVG/lib            \
 -I${P6_GTK_HOME}/p6-GtkSheet/lib	\
 -I${P6_GTK_HOME}/p6-GIMP/lib            \
--Ilib"
+-Ilib -Ibin"
 
 # Handle any extra directories in project file.
 MOREI=`grep libdir .p6-gtk-project | \
