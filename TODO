@@ -279,6 +279,8 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
   parsable from .c
 - Consider BABL bindings
 - Consider ATK bindings
-- Consider Togra bindings (http://togra.sourceforge.net/screenshots.html)
+- Consider Togra bindings (http://togra.sourceforge.net/screenshots.html),
+  however this may be more of a port from Python, rather than a set of bindings.
 - A Perl6 port for libsoup
 - Consider a Perl6 port of SVOX (See files in libttspico-dev, start with /usr/include/picoapi.h)
+- The GTK CSS Inspector
