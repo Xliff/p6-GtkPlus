@@ -88,7 +88,8 @@ sub MAIN (
   Bool :$no-headers,        #= Do not display section headers.
   Int  :$trim-start,        #= Trim lines from the beginning of the post-processed file
   Int  :$trim-end,          #= Trim lines from the end of the post-processed file
-  Str  :$remove-from-line,  #= Remove prefix string from all lines
+  Str  :$remove-from-start, #= Remove colon separated prefix strings from all lines
+  Str  :$remove-from-end,   #= Remove colon separate suffix strings from all lines
   Str  :$delete,            #= Comma separated list of lines to delete
   Str  :$output   = 'all',  #= Type of output: 'method', 'attributes', 'subs' or 'all'
   Str  :$lib      = 'gtk',  #= Library name to use
@@ -145,9 +146,16 @@ sub MAIN (
 
   $contents ~~ s:g/<availability>// if $bland;
 
-  for ( $remove-from-line // () ).split(':') -> $r {
-    say $r;
-    $contents ~~ s:g/ ^^ \s* $r \s* //;
+  if $remove-from-start {
+    for ( $remove-from-start // () ).split(':') -> $r {
+      $contents ~~ s:g/ ^^ \s* $r \s* //;
+    }
+  }
+
+  if $remove-from-end {
+    for ( $remove-from-end // () ).split(':') -> $r {
+      $contents ~~ s:g/ \s* $r \s* ';'? $$ /;/;
+    }
   }
 
   $contents = $contents.lines.skip($trim-start).join("\n")
