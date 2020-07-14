@@ -108,10 +108,10 @@ class GTK::Application is GIO::Application {
     await $!init;
   }
 
-  multi method new (GtkApplication $app, :$ref = True) {
+  multi method new (GtkApplication $app, :$ref = True, *%others) {
     return Nil unless $app;
 
-    my $o = self.bless(:$app);
+    my $o = self.bless(:$app, |%others);
     $o.ref if $ref;
     $o;
   }
@@ -125,7 +125,8 @@ class GTK::Application is GIO::Application {
     :$window-type,
     :$window_type,
     :$window,
-    :$style
+    :$style,
+    *%others
   ) {
     my uint32 $f = $flags;
     my uint32 $w = $width;
@@ -149,7 +150,8 @@ class GTK::Application is GIO::Application {
       :$window,
       :$window-type,
       :$window_type,
-      :$style
+      :$style,
+      |%others
     );
   }
 
