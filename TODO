@@ -241,6 +241,8 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
 - Add a script (or two) that:
   1) Prepares a legend file mapping perl version to LOCAL PROJECT commit date.
   2) Creates a horizontal graph of date (x) vs total compile time (y)
+- Add *%others to ALL GOBJECT DESCENDANT new-based methods
+- Add version tags to classes
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
