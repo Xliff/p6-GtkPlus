@@ -120,7 +120,7 @@
 - For all widgets: Replace all static strings in self.setType() with self.^name.
 - Investigate all async *_finish routines to see if a multi with a simpler
   interface is possible.
-- Consider separating enums from GTK::Raw::Types into GTK::Raw::Enums
++ Consider separating enums from GTK::Raw::Types into GTK::Raw::Enums
   - If that goes well, then do the same for GTK::Compat::Raw::Types
 - Consider altering scripts/dirty_typing.pl6 to only go through files later the
   latest date amongst the stubs in in .dirty_typing
@@ -140,7 +140,7 @@
   that to the signal name. This will prevent the need for specific handling through
   GTK::Compat::Signals. This particularly applies to 'notify'. This is another
   initiative.
-- Move relevant methods from GTK::Roles::Data to GTK::Compat::Roles::Data.
++ Move relevant methods from GTK::Roles::Data to GTK::Compat::Roles::Data.
   The only GTK-Specific methods in that compunit are getType and setType and
   there's even argument that those aren't needed, either.
 - WINDOWS SUPPORT!
@@ -165,8 +165,8 @@
     - If Int then Int64, unless $short is specified then Int32
     - If Num then Num64, unless $short is specified then Num32
     - If GObject, then G_TYPE_OBJECT
-- Add as another scripts for t/, gtk/examples/sunny.c
-- Revisit the interface for GTK::Roles::Properties, there are potential conflicts
++ Add as another scripts for t/, gtk/examples/sunny.c
++ Revisit the interface for GTK::Roles::Properties, there are potential conflicts
   that can be removed/resolved, and it's clunky. Think about looking into a
   set method design that hides the type complexity behind a single method. The
   get method may not be so easy to simplify.
@@ -277,10 +277,13 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - DEFINITELY consider GEGL bindings. Use generated data structures for
   operations, since they have no .h files, however the good bits are easily
   parsable from .c
-- Consider BABL bindings
++ Consider BABL bindings
 - Consider ATK bindings
 - Consider Togra bindings (http://togra.sourceforge.net/screenshots.html),
   however this may be more of a port from Python, rather than a set of bindings.
+  + Aand.... it is. The C-lib, rather than being a generic resource, is there
+    specifically to bind with Python. Might be easier to write something similar
+    based on COGL.
 - A Perl6 port for libsoup
 - Consider a Perl6 port of SVOX (See files in libttspico-dev, start with /usr/include/picoapi.h)
 - The GTK CSS Inspector
