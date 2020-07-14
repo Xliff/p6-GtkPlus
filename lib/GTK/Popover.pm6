@@ -49,27 +49,29 @@ class GTK::Popover is GTK::Bin {
     self.setBin($to-parent);
   }
 
-  multi method new (PopoverAncestry $popover, :$ref = True) {
-    my $o = self.bless(:$popover);
+  multi method new (PopoverAncestry $popover, :$ref = True, *%others) {
+    my $o = self.bless( :$popover, |%others );
     $o.ref if $ref;
     $o;
   }
-  multi method new {
-    self.new_relative_to(GtkWidget);
+  multi method new (*%others) {
+    self.new_relative_to(GtkWidget, |%others);
   }
 
-  method new_relative_to(GtkWidget() $relative) is also<new-relative-to> {
+  method new_relative_to(GtkWidget() $relative, *%others)
+    is also<new-relative-to>
+  {
     my $popover = gtk_popover_new($relative);
 
-    $popover ?? self.bless(:$popover) !! Nil;
+    $popover ?? self.bless(:$popover, |%others) !! Nil;
   }
 
-  method new_from_model (GtkWidget() $relative, GMenuModel $model)
+  method new_from_model (GtkWidget() $relative, GMenuModel $model, *%others)
     is also<new-from-model>
   {
     my $popover = gtk_popover_new_from_model($relative, $model);
 
-    $popover ?? self.bless(:$popover) !! Nil;
+    $popover ?? self.bless(:$popover, |%others) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
