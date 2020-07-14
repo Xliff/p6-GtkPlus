@@ -47,7 +47,7 @@ class GTK::Widget {
 
   submethod BUILD (:$widget) {
     given $widget {
-      when WidgetAncestry { self.setWidget($widget) }
+      when WidgetAncestry { self.setWidget($widget) if $widget }
       default             { }
     }
   }
@@ -66,33 +66,6 @@ class GTK::Widget {
   method cleanup {
     self.disconnect-all($_) for %!signals, %!signals-widget
   }
-
-  # proto new(|) { * }
-  multi method new(|c) {
-    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
-  }
-  multi method new(WidgetAncestry $widget, :$ref = True) {
-    return unless $widget;
-
-    my $o = self.bless(:$widget);
-    $o.ref if $ref;
-    $o;
-  }
-
-  # Remove all $n, $t from instances!
-  method unstable_get_type(&sub, *@a)
-    is also<unstable-get-type>
-  {
-    unstable_get_type(::?CLASS.^name, &sub, $!n, $!t);
-  }
-
-  method GTK::Raw::Definitions::GtkWidget
-    is also<
-      GtkWidget
-      Widget
-      widget
-    >
-  { $!w }
 
   method setWidget($widget) {
 #    "setWidget".say;
@@ -114,6 +87,26 @@ class GTK::Widget {
 
     self.roleInit-Object;
     $!b = cast(GtkBuildable, $!w) unless $!b  # GTK::Roles::Buildable
+  }
+
+  method GTK::Raw::Definitions::GtkWidget
+    is also<
+      GtkWidget
+      Widget
+      widget
+    >
+  { $!w }
+
+  # proto new(|) { * }
+  multi method new(|c) {
+    die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
+  }
+  multi method new (WidgetAncestry $widget, :$ref = True, *%others) {
+    return unless $widget;
+
+    my $o = self.bless(:$widget, |%others);
+    $o.ref if $ref;
+    $o;
   }
 
   # REALLY EXPERIMENTAL attempt to create a global object creation
@@ -2502,6 +2495,13 @@ class GTK::Widget {
 
   method ReturnWidget ($w, $raw, $widget) {
     ReturnWidget($w, $raw, $widget);
+  }
+
+  # Remove all $n, $t from instances!
+  method unstable_get_type(&sub, *@a)
+    is also<unstable-get-type>
+  {
+    unstable_get_type(::?CLASS.^name, &sub, $!n, $!t);
   }
 
 }
