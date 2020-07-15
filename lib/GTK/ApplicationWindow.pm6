@@ -66,18 +66,18 @@ class GTK::ApplicationWindow is GTK::Window {
 
   proto method new (|)
   { * }
-  
-  multi method new (GtkApplicationWindow $appwindow, :$ref = True) {
+
+  multi method new (GtkApplicationWindow $appwindow, :$ref = True, *%others) {
     return Nil unless $appwindow;
 
-    my $o = self.bless(:$appwindow);
+    my $o = self.bless(:$appwindow, |%others);
     $o.ref if $ref;
     $o;
   }
-  multi method new (GtkApplication() $app) {
+  multi method new (GtkApplication() $app, *%others) {
     my $appwindow = gtk_application_window_new($app);
 
-    $appwindow ?? self.bless(:$appwindow) !! Nil;
+    $appwindow ?? self.bless( :$appwindow, |%others ) !! Nil;
   }
 
   method help_overlay (:$raw = False) is rw is also<help-overlay> {
