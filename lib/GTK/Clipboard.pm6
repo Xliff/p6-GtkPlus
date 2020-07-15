@@ -57,18 +57,18 @@ class GTK::Clipboard {
   }
   # Static methods used in multi new(). Should these just be eliminated
   # for the default object accessors?
-  method get_a(GdkAtom $sel) {
+  method get_a (GdkAtom $sel) {
     my $clipboard = gtk_clipboard_get_a($sel);
 
-    $clipboard ?? self.bless(:$clipboard) !! Nil;
+    $clipboard ?? self.bless( :$clipboard ) !! Nil;
   }
-  method get(int64 $sel) {
-    my $clipboard = gtk_clipboard_get($sel);
+  method get (Int() $sel) {
+    my GdkAtom $clipboard = gtk_clipboard_get($sel);
 
-    $clipboard ?? self.bless(:$clipboard) !! Nil;
+    $clipboard ?? self.bless( :$clipboard ) !! Nil;
   }
 
-  method get_default(GdkDisplay() $display) is also<get-default> {
+  method get_default (GdkDisplay() $display) is also<get-default> {
     my $clipboard = gtk_clipboard_get_default($display);
 
     $clipboard ?? self.bless(:$clipboard) !! Nil;
