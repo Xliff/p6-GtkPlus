@@ -216,7 +216,9 @@ class GTK::MenuShell is GTK::Container {
     samewith($child.Widget);
   }
 
-  method select_first (Int() $search_sensitive) is also<select-first> {
+  method select_first (Int() $search_sensitive = True)
+    is also<select-first>
+  {
     my gboolean $ss = $search_sensitive.so.Int;
 
     gtk_menu_shell_select_first($!ms, $ss);
