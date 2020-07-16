@@ -80,6 +80,9 @@ class GTK::Menu is GTK::MenuShell {
     $menu ?? self.bless(:$menu, :@items) !! Nil;
   }
 
+  multi method new (GMenuModel $m, :$model is required) {
+    self.new_from_model($m);
+  }
   method new_from_model (GMenuModel() $model) is also<new-from-model> {
     my $menu = gtk_menu_new_from_model($model);
 
@@ -209,11 +212,11 @@ class GTK::Menu is GTK::MenuShell {
 
   method attach_to_widget (
     GtkWidget() $attach_widget,
-    GtkMenuDetachFunc $detacher
+    &detacher = Callable
   )
     is also<attach-to-widget>
   {
-    gtk_menu_attach_to_widget($!m, $attach_widget, $detacher);
+    gtk_menu_attach_to_widget($!m, $attach_widget, &detacher);
   }
 
   method detach {
@@ -266,7 +269,7 @@ class GTK::Menu is GTK::MenuShell {
     gtk_menu_popdown($!m);
   }
 
-  method popup_at_pointer (GdkEvent() $trigger_event)
+  method popup_at_pointer (GdkEvent() $trigger_event = GdkEvent)
     is also<popup-at-pointer>
   {
     gtk_menu_popup_at_pointer($!m, $trigger_event);
@@ -277,7 +280,7 @@ class GTK::Menu is GTK::MenuShell {
     GdkRectangle() $rect,
     Int() $rect_anchor,
     Int() $menu_anchor,
-    GdkEvent() $trigger_event
+    GdkEvent() $trigger_event = GdkEvent
   )
     is also<popup-at-rect>
   {
@@ -297,7 +300,7 @@ class GTK::Menu is GTK::MenuShell {
     GtkWidget() $widget,
     Int() $widget_anchor,
     Int() $menu_anchor,
-    GdkEvent() $trigger_event
+    GdkEvent() $trigger_event = GdkEvent
   )
     is also<popup-at-widget>
   {

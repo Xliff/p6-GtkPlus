@@ -22,7 +22,7 @@ sub gtk_menu_attach (
 sub gtk_menu_attach_to_widget (
   GtkMenu $menu,
   GtkWidget $attach_widget,
-  GtkMenuDetachFunc $detacher
+  &detacher (GtkWidget, GtkMenu)
 )
   is native(gtk)
   is export
@@ -77,11 +77,12 @@ sub gtk_menu_popup (
   GtkMenu $menu,
   GtkWidget $parent_menu_shell,
   GtkWidget $parent_menu_item,
-  GtkMenuPositionFunc $func,
+  &func (GtkMenu, gint is rw, gint is rw, gboolean is rw, gpointer),
   gpointer $data,
   guint $button,
   guint32 $activate_time
 )
+  is DEPRECATED
   is native(gtk)
   is export
   { * }
@@ -119,12 +120,13 @@ sub gtk_menu_popup_for_device (
   GdkDevice $device,
   GtkWidget $parent_menu_shell,
   GtkWidget $parent_menu_item,
-  GtkMenuPositionFunc $func,
+  &func (GtkMenu, gint is rw, gint is rw, gboolean is rw, gpointer),
   gpointer $data,
   GDestroyNotify $destroy,
   guint $button,
   guint32 $activate_time
 )
+  is DEPRECATED
   is native(gtk)
   is export
   { * }
