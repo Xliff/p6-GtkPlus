@@ -93,7 +93,11 @@ sub gtk_window_get_default_icon_name ()
   is export
   { * }
 
-sub gtk_window_get_default_size (GtkWindow $window, gint $width, gint $height)
+sub gtk_window_get_default_size (
+  GtkWindow $window,
+  gint $width  is rw,
+  gint $height is rw
+)
   is native(gtk)
   is export
   { * }
