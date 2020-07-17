@@ -716,12 +716,18 @@ class GTK::Window is GTK::Bin {
     gtk_window_get_default_icon_name();
   }
 
-  method get_default_size (Int() $width, Int() $height)
+  proto method get_default_size (|)
     is also<get-default-size>
-  {
-    my gint ($w, $h) = ($width, $height);
+  { * }
+
+  multi method get_default_size {
+    samewith($, $);
+  }
+  multi method get_default_size ($width is rw, $height is rw) {
+    my gint ($w, $h) = 0 xx 2;
 
     gtk_window_get_default_size($!win, $w, $h);
+    ($width, $height) = ($w, $h);
   }
 
   method get_default_widget is also<get-default-widget> {
@@ -911,13 +917,22 @@ class GTK::Window is GTK::Bin {
     gtk_window_set_default_size($!win, $w, $h);
   }
 
-  method set_geometry_hints (
+
+  proto method set_geometry_hints (|)
+    is also<set-geometry-hints>
+  { * }
+
+  multi method set_geometry_hints (
+    GtkWidget() $geometry_widget,
+    Int() $geom_mask
+  ) {
+    samewith($geometry_widget, GdkGeometry, $geom_mask);
+  }
+  multi method set_geometry_hints (
     GtkWidget() $geometry_widget,
     GdkGeometry $geometry,
     Int() $geom_mask                # GdkWindowHints
-  )
-    is also<set-geometry-hints>
-  {
+  ) {
     my uint32 $gm = $geom_mask;
 
     gtk_window_set_geometry_hints($!win, $geometry_widget, $geometry, $gm);
