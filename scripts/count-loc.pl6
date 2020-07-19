@@ -5,8 +5,7 @@ use lib '.';
 use GTKScripts;
 
 my $tot = gather for get-module-files -> $m {
-  my $contents = $m.slurp;
-  my $lines = 0;
+  my ($contents, $lines) = ($m.slurp, 0);
   for $contents.lines.kv -> $k, $v {
     ++$lines if .ends-with(';' | '{')
     if .ends-with('}') {
@@ -14,7 +13,7 @@ my $tot = gather for get-module-files -> $m {
       ++$lines unless $k == 0 || $contents.lines[$k - 1].ends-with(';' | '{')
     }
   }
-  say "{ $m.basename } -- { $lines }"
+  say "{ $m.basename } -- { $lines }";
   take $lines;
 }).sum;
 
