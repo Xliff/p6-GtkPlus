@@ -5,6 +5,8 @@ use Method::Also;
 use GTK::Raw::Types;
 use GTK::Raw::Main;
 
+#use GLib::OptionGroup
+use GDK::Device;
 use GDK::Event;
 
 use GLib::Roles::StaticClass;
@@ -37,14 +39,31 @@ class GTK::Get {
       Nil;
   }
 
-  method current_event_device is also<current-event-device> {
-    gtk_get_current_event_device();
+  method current_event_device (:$raw = False) is also<current-event-device> {
+    my $d = gtk_get_current_event_device();
+
+    $d ??
+      ( $raw ?? $d !! GDK::Device.new($d) )
+      !!
+      Nil;
   }
 
-  method current_event_state (Int() $state) is also<current-event-state> {
-    my guint $s = $state;
+  proto method current_event_staten (|)
+    is also<current-event-state>
+  { * }
 
-    gtk_get_current_event_state($s);
+  multi method current_event_state {
+    my $rv = samewith($, :all);
+    
+    $rv[0] ?? $rv.skip(1) !! Nil;
+  }
+  multi method current_event_state ($modifiers is rw, :$all = False)
+  {
+    my guint $m = $modifiers;
+
+    my $rv = so gtk_get_current_event_state($m);
+    $modifiers = $m;
+    $all.not ?? $rv !! ($rv, $modifiers);
   }
 
   method current_event_time is also<current-event-time> {
@@ -73,7 +92,7 @@ class GTK::Get {
   }
 
   method locale_direction is also<locale-direction> {
-    gtk_get_locale_direction();
+    GtkTextDirectionEnum( gtk_get_locale_direction() );
   }
 
   method major_version is also<major-version> {
@@ -88,10 +107,17 @@ class GTK::Get {
     gtk_get_minor_version();
   }
 
-  method option_group (Int() $open_default_display) is also<option-group> {
+  method option_group (Int() $open_default_display, :$raw = False)
+    is also<option-group>
+  {
     my gboolean $odd = $open_default_display.so.Int;
 
-    gtk_get_option_group($odd);
+    my $og = gtk_get_option_group($odd);
+
+    $og ??
+      ( $raw ?? $og !! GLib::OptionGroup.new($og) )
+      !!
+      Nil;
   }
 
 }
