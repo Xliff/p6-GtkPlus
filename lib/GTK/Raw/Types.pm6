@@ -9,7 +9,7 @@ use GIO::Raw::Exports;
 use GDK::Raw::Exports;
 use GTK::Raw::Exports;
 
-my constant forced = 7;
+my constant forced = 11;
 
 unit package GTK::Raw::Types;
 

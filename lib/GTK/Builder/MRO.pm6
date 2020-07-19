@@ -3,7 +3,7 @@ use v6.c;
 unit package GTK::Builder::MRO;
 
 # Number of times I've had to force THIS to recompile.
-my constant forced = 32;
+my constant forced = 36;
 
 our %mro is export = (
 'GTK::Render' => ('Any', 'Mu'),
