@@ -91,7 +91,7 @@ sub MAIN (
   Str  :$remove-from-start, #= Remove colon separated prefix strings from all lines
   Str  :$remove-from-end,   #= Remove colon separate suffix strings from all lines
   Str  :$delete,            #= Comma separated list of lines to delete
-  Str  :$output   = 'all',  #= Type of output: 'method', 'attributes', 'subs' or 'all'
+  Str  :$output   = 'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
   Str  :$lib      = 'gtk',  #= Library name to use
   Bool :$internal = False,  #= Add checking for INTERNAL methods
   Bool :$bland    = False,  #= Do NOT attempt to process preprocessor prefixes to subroutines

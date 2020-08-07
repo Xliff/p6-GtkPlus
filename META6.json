@@ -433,7 +433,7 @@
       "GTK::Application"                       :  "lib/GTK/Application.pm6"                     ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
       "GTK"                                    :  "lib/GTK.pm6"                                 ,
-      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"
+      "GTK::Builder"                           :  "lib/GTK/Builder.pm6"                         
     },
     "name": "Perl6-GtkPlus",
     "perl": "6.c",

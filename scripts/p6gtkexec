@@ -4,6 +4,10 @@ if [ "$1" = "--debug" ]; then
   echo "Running perl6 script in debug mode..."
   EXEC=perl6-gdb-m
   shift
+elif [ "$1" = "--valgrind" ]; then 
+  echo "Running perl6 script in valgrind mode..."
+  EXEC=perl6-valgrind-m
+  shift
 elif [ "$1" = "--pbuild" ]; then
   PARALLEL_BUILD=1
   EXEC=perl6
