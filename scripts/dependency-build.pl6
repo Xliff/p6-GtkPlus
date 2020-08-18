@@ -13,7 +13,8 @@ sub MAIN (
   :$prefix is copy,   #= Module prefix
   :$start-at,
   :$log = True,
-  :$variant is copy = '' 
+  :$no-save = False,
+  :$variant is copy = ''
 ) {
   my @build-exclude;
   my $dep_file = '.build-deps'.IO;
@@ -256,7 +257,7 @@ sub MAIN (
       $name = getName;
     }
 
-    'stats'.IO.add($name).spurt($*LOG) if $log
+    'stats'.IO.add($name).spurt($*LOG) if $log && $no-save.not;
   }
 }
 
