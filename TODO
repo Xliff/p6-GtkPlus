@@ -243,6 +243,8 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   2) Creates a horizontal graph of date (x) vs total compile time (y)
 - Add *%others to ALL GOBJECT DESCENDANT new-based methods
 - Add version tags to classes
+- Currently all ::Roles::Signals::* compunits export PUBLIC methods that are used 
+  to create signal handlers. This SHOULD NOT be so. Make them all private!
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
