@@ -14,8 +14,12 @@ grammar C-Function-Def {
     <availability><func_def>
   }
 
+  rule parenthetical {
+    '(' .+? ')'
+  }
+
   rule function-bland {
-    \s* <pre-definitions>? <func_def>
+    \s* [ <pre-definitions> | <parenthetical> ]* <func_def>
   }
 
   token pre-definitions {
@@ -25,6 +29,10 @@ grammar C-Function-Def {
       '_FOR' \s* '(' <[\w _]>+ ')'
   }
 
+  token postdefs {
+    <[A..Z_]>+ [ '(' .+? ')' ]?
+  }
+
   rule func_def {
     <returns>
     $<sub>=[ \w+ ]
@@ -32,12 +40,13 @@ grammar C-Function-Def {
       '(void)'
       |
       '(' [ <type> <var> | $<va>='...' ]+ % [ \s* ',' \s* ] ')'
-    ] [ <postdec>+ % \s* ]?';'
+    ] [ <postdec>+ % \s* ]? <postdefs>* ';'
   }
 
   token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
   token       t { <[\w _]>+ }
-  rule     type { 'const'? $<n>=\w+ <p>? }
+  token     mod { 'unsigned' | 'long' }
+  rule     type { 'const'? [ <mod>+ ]? $<n>=\w+ <p>? }
   rule      var { <t> [ '[' (.+?)? ']' ]? }
   token returns { 'const'? <.ws> <t> \s* <p>? }
   token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
