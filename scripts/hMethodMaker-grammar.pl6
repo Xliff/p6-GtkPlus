@@ -30,7 +30,7 @@ grammar C-Function-Def {
   }
 
   token postdefs {
-    <[A..Z_]>+ [ '(' .+? ')' ]?
+    <[A..Z_]>+ \s* [ '(' .+? ')' ]?
   }
 
   rule func_def {
