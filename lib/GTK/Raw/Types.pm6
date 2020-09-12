@@ -8,7 +8,7 @@ use GIO::Raw::Exports;
 use GDK::Raw::Exports;
 use GTK::Raw::Exports;
 
-my constant forced = 25;
+my constant forced = 30;
 
 unit package GTK::Raw::Types;
 
@@ -26,6 +26,7 @@ need Pango::Raw::Subs;
 need GIO::DBus::Raw::Types;
 need GIO::Raw::Definitions;
 need GIO::Raw::Enums;
+need GIO::Raw::Quarks;
 need GIO::Raw::Structs;
 need GIO::Raw::Subs;
 need GDK::Raw::Definitions;
