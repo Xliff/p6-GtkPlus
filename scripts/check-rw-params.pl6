@@ -18,8 +18,11 @@ try {
   $raw-loaded = True;
 }
 unless $raw-loaded {
-  say "Sorry! No raw definitions found for '{$n}::{$cu}'";
-  exit;
+  $r := ::("%RAW-DEFS");
+  unless $r.keys {
+    say "Sorry! No raw definitions found for '{$n}::{$cu}'";
+    exit;
+  }
 }
 
 my @methods = do gather for $o.^methods(:local) {
@@ -43,20 +46,24 @@ my @methods = do gather for $o.^methods(:local) {
 
 my %raw-subs := $r.WHO;
 my $prefix = get-longest-prefix(%raw-subs.keys);
-for @methods -> ($m, @rw) {
-  my $sub-name = "{ $prefix }_{ $m.name }";
-  my $raw-sub = %raw-subs{$sub-name};
+if @methods {
+  for @methods -> ($m, @rw) {
+    my $sub-name = "{ $prefix }_{ $m.name }";
+    my $raw-sub = %raw-subs{$sub-name};
 
-  for @rw {
-    my $sp = $raw-sub.signature.params[ .[0] - 1 ];
+    for @rw {
+      my $sp = $raw-sub.signature.params[ .[0] - 1 ];
 
-    unless .[1].name eq $sp.name {
-      say "Potential parameter mismatch, since '{ .[1].name }' != '{
-           $sp.name }'";
-    }
-    unless $raw-sub.signature.params[ .[0] - 1 ].rw {
-      say "{ $m.name } -- '{ $sub-name }' parameter '{
-           .[ 1 ].name }' should be rw!'"
+      unless .[1].name eq $sp.name {
+        say "Potential parameter mismatch, since '{ .[1].name }' != '{
+             $sp.name }'";
+      }
+      unless $raw-sub.signature.params[ .[0] - 1 ].rw {
+        say "{ $m.name } -- '{ $sub-name }' parameter '{
+             .[ 1 ].name }' should be rw!'"
+      }
     }
   }
+} else {
+  say 'No rw parameters to check';
 }
