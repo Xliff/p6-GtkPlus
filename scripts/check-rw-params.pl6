@@ -6,9 +6,21 @@ use GLib::Raw::Definitions;
 
 my ($n, $cu) = @*ARGS[0,1];
 require ::(my $o = "{$n}::{$cu}");
-require ::(my $r = "{$n}::Raw::{$cu}");
 $o = ::("$o");
-$r = ::("{ $r }::EXPORT::DEFAULT");
+
+my $r = "{$n}::Raw::{$cu}";
+my $raw-loaded = False;
+try {
+  CATCH { default { } }
+
+  require ::($r);
+  $r = ::("{ $r }::EXPORT::DEFAULT");
+  $raw-loaded = True;
+}
+unless $raw-loaded {
+  say "Sorry! No raw definitions found for '{$n}::{$cu}'";
+  exit;
+}
 
 my @methods = do gather for $o.^methods(:local) {
   my @rw-params;
@@ -28,9 +40,9 @@ my @methods = do gather for $o.^methods(:local) {
 
   take [ $m, @c[0][1] ] if @c[0][1]
 }
+
 my %raw-subs := $r.WHO;
 my $prefix = get-longest-prefix(%raw-subs.keys);
-
 for @methods -> ($m, @rw) {
   my $sub-name = "{ $prefix }_{ $m.name }";
   my $raw-sub = %raw-subs{$sub-name};
