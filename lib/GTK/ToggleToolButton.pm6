@@ -45,7 +45,7 @@ class GTK::ToggleToolButton is GTK::ToolButton {
         cast(GtkToggleToolButton, $_);
       }
     }
-    self.setToolButton($to-parent);
+    self.setGtkToolButton($to-parent);
   }
 
   multi method new (ToggleToolButtonAncestry $toggletoolbutton, :$ref = True) {
@@ -94,7 +94,7 @@ class GTK::ToggleToolButton is GTK::ToolButton {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
-    
+
     GTK::Widget.unstable_get_type( &gtk_toggle_tool_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
