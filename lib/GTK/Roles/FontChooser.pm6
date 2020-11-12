@@ -3,12 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use Pango::Raw::Types;
-
-use Pango::FontDescription;
-
-use GTK::Raw::FontChooser;
 use GTK::Raw::Types;
+use GTK::Raw::FontChooser;
+
+use Pango::FontFace;
+use Pango::FontFamily;
+use Pango::FontDescription;
 
 use GTK::Roles::Signals::Generic;
 
@@ -101,24 +101,34 @@ role GTK::Roles::FontChooser {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_font_face
+  method get_font_face ( :$raw = False )
     is also<
       get-font-face
       font_face
       font-face
     >
   {
-    gtk_font_chooser_get_font_face($!fc);
+    my $ff = gtk_font_chooser_get_font_face($!fc);
+
+    $ff ??
+      ( $raw ?? $ff !! Pango::FontFace.new($ff) )
+      !!
+      Nil;
   }
 
-  method get_font_family
+  method get_font_family ( :$raw = False )
     is also<
       get-font-family
       font_family
       font-family
     >
   {
-    gtk_font_chooser_get_font_family($!fc);
+    my $f = gtk_font_chooser_get_font_family($!fc);
+
+    $f ??
+      ( $raw ?? $f !! Pango::FontFamily.new($f, :!ref) )
+      !!
+      Nil;
   }
 
   method get_font_size
