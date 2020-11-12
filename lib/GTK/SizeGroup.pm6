@@ -46,8 +46,15 @@ class GTK::SizeGroup {
 
     $sizegroup ?? self.bless(:$sizegroup) !! Nil;
   }
-  multi method new(GtkSizeGroup $sizegroup) {
+  multi method new (GtkSizeGroup $sizegroup) {
     $sizegroup ?? self.bless(:$sizegroup) !! Nil;
+  }
+
+  method new-hgroup {
+    self.new(:h);
+  }
+  method new-vgroup {
+    self.new(:v);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -82,7 +89,12 @@ class GTK::SizeGroup {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method add_widget (GtkWidget() $widget) is also<add-widget> {
+  method add_widget (GtkWidget() $widget)
+    is also<
+      add-widget
+      add
+    >
+  {
     gtk_size_group_add_widget($!sg, $widget);
   }
 
@@ -103,7 +115,12 @@ class GTK::SizeGroup {
     $raw ?? $wl.Array !! $wl.Array.map({ GTK::Widget.new($_) });
   }
 
-  method remove_widget (GtkWidget() $widget) is also<remove-widget> {
+  method remove_widget (GtkWidget() $widget)
+    is also<
+      remove-widget
+      remove
+    >
+  {
     gtk_size_group_remove_widget($!sg, $widget);
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
