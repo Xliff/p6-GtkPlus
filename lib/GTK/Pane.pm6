@@ -70,7 +70,7 @@ class GTK::Pane is GTK::Container {
     $o.ref if $ref;
     $o;
   }
-  multi method new (:$horizontal = False, :$vertical = False) {
+  multi method new (:h(:$horizontal) = False, :v(:$vertical) = False) {
     die "Must specify either :horizontal or :vertical when creating GTK::Pane"
       unless $horizontal ^^ $vertical;
 
@@ -218,8 +218,8 @@ class GTK::Pane is GTK::Container {
 
   multi method pack1 (
     GtkWidget $child,
-    Int() $resize,                # gboolean $resize,
-    Int() $shrink                 # gboolean $shrink
+    Int()     $resize = False,                # gboolean $resize,
+    Int()     $shrink = False                 # gboolean $shrink
   ) {
     my gboolean ($r, $s) = ($resize, $shrink).map( *.so.Int );
     @!child1.push($child) unless self.IS-LATCHED;
@@ -228,8 +228,8 @@ class GTK::Pane is GTK::Container {
   }
   multi method pack1 (
     GTK::Widget $child,
-    Int() $resize,
-    Int() $shrink
+    Int()       $resize = False,
+    Int()       $shrink = False
   )  {
     @!child1.push($child);
     self.SET-LATCH;
@@ -238,8 +238,8 @@ class GTK::Pane is GTK::Container {
 
   multi method pack2 (
     GtkWidget $child,
-    Int() $resize,
-    Int() $shrink
+    Int()     $resize = False,
+    Int()     $shrink = False
   ) {
     my gboolean ($r, $s) = ($resize, $shrink).map( *.so.Int );
     @!child2.push($child) unless self.IS-LATCHED;
@@ -248,8 +248,8 @@ class GTK::Pane is GTK::Container {
   }
   multi method pack2 (
     GTK::Widget $child,
-    Int() $resize,
-    Int() $shrink
+    Int()       $resize = False,
+    Int()       $shrink = False
   )  {
     @!child2.push($child);
     self.SET-LATCH;
