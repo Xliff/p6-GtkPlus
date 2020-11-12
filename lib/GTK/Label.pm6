@@ -16,6 +16,7 @@ our subset LabelAncestry is export where GtkLabel | WidgetAncestry;
 
 class GTK::Label is GTK::Widget {
   has GtkLabel $!l is implementor;
+  has $!markup;
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -235,6 +236,12 @@ class GTK::Label is GTK::Widget {
     );
   }
 
+  method markup is rw {
+    Proxy.new:
+      FETCH => -> $           { $!markup },
+      STORE => -> $, Str() \m { self.set_markup(m) };
+  }
+
   method max_width_chars is rw is also<max-width-chars> {
     Proxy.new(
       FETCH => sub ($) {
@@ -444,7 +451,7 @@ class GTK::Label is GTK::Widget {
   }
 
   method set_markup (Str() $str) is also<set-markup> {
-    gtk_label_set_markup($!l, $str);
+    gtk_label_set_markup($!l, $!markup = $str);
   }
 
   method set_markup_with_mnemonic (Str() $str)
