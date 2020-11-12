@@ -3,31 +3,29 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GTK::Raw::Types;
+
 use GDK::Screen;
 use GTK::Raw::CSSProvider;
 use GTK::Raw::StyleContext;
-use GTK::Raw::Types;
 
 use GLib::Roles::Object;
 
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::CSSProvider;
 use GTK::Roles::StyleProvider;
-use GTK::Roles::Types;
 
 class GTK::CSSProvider {
   also does GLib::Roles::Object;
-
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;
   also does GTK::Roles::StyleProvider;
-  also does GTK::Roles::Types;
 
   has GtkCSSProvider $!css is implementor;
 
-  submethod BUILD(
+  submethod BUILD (
     :$provider,
-    :$priority is copy,
+    :$priority  is copy,
     :$pod,
     :$style
   ) {
@@ -62,10 +60,14 @@ class GTK::CSSProvider {
     self.disconnect-all($_)  for %!signals-css;
   }
 
-  multi method new (GtkCSSProvider $provider) {
-    $provider ?? self.bless(:$provider) !! Nil;
+  multi method new (GtkCSSProvider $provider, :$ref = True) {
+    return Nil unless $provider;
+
+    my $o = self.bless( :$provider );
+    $o.ref if $ref;
+    $o;
   }
-  multi method new(:$style, :$priority, :$pod) {
+  multi method new (:$style, :$priority, :$pod) {
     my $provider = gtk_css_provider_new();
 
     $provider ?? self.bless(:$provider, :$priority, :$pod, :$style) !! Nil;
@@ -108,9 +110,9 @@ class GTK::CSSProvider {
   }
 
   method load_from_data (
-    Str() $data,
-    Int() $length = -1,
-    CArray[Pointer[GError]] $error = gerror
+    Str()                   $data,
+    Int()                   $length = -1,
+    CArray[Pointer[GError]] $error  = gerror
   )
     is also<load-from-data>
   {
@@ -122,7 +124,7 @@ class GTK::CSSProvider {
   }
 
   method load_from_file (
-    GFile() $file,
+    GFile()                 $file,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-file>
@@ -134,7 +136,7 @@ class GTK::CSSProvider {
   }
 
   method load_from_path (
-    Str() $path,
+    Str()                   $path,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<load-from-path>
