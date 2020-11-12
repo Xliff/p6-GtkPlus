@@ -181,6 +181,7 @@ sub MAIN (
       @threads .= grep({ .status ~~ Planned });
     }
 
+    my $*ERROR = False;
     # Build code begins here.
     my $*SKIP = $start-at ??
       ( $start-at.Int ~~ Failure ??
@@ -205,7 +206,7 @@ sub MAIN (
     my $remaining = @buildList.elems - $*SKIP;
 
     my ($*I, $*LOG, $start) = (0, '', DateTime.now);
-    while +@buildList {
+    while +@buildList && $*ERROR.not {
       my $n = @buildList.shift;
 
       # Wait out jobs until the next set of dependencies are cleared.
@@ -242,6 +243,7 @@ sub MAIN (
     await Promise.allof(@threads);
 
     # Note total compile time.
+    output("Errors detected!") if $*ERROR;
     output("Total compile time: { DateTime.now - $start }s");
 
     sub getName {
@@ -257,7 +259,11 @@ sub MAIN (
       $name = getName;
     }
 
-    'stats'.IO.add($name).spurt($*LOG) if $log && $no-save.not;
+    if $log && $no-save.not {
+      'stats'.IO.add($name).spurt($*LOG);
+      # Also write to the historical default for error checking purposes!
+      $*CWD.add('LastBuildResults').spurt($*LOG);
+    }
   }
 }
 
@@ -265,11 +271,12 @@ sub run-compile ($module, $thread) {
   if ++$*I > $*SKIP {
     my $cs = DateTime.now;
     my $proc = run './p6gtkexec', '-e',  "use $module", :out, :err;
+
+    $*ERROR = True if $proc.exitcode;
     output(
       $module,
       $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
-    );
-    #$thread.break if $proc.exitcode;
+    ) if $*ERROR.not or $proc.exitcode;
   }
   if %nodes{$module} {
     #say "Checking { $module }...";
