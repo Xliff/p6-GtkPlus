@@ -207,13 +207,13 @@ class GTK::Calendar is GTK::Widget {
   }
 
   multi method set_detail_func (
-    GtkCalendarDetailFunc $func,
-    gpointer $data,
-    GDestroyNotify $destroy
+             &func,
+    gpointer $data    = gpointer,
+             &destroy = Callable
   )
     is also<set-detail-func>
   {
-    gtk_calendar_set_detail_func($!cal, $func, $data, $destroy);
+    gtk_calendar_set_detail_func($!cal, &func, $data, &destroy);
   }
 
   method unmark_day (Int() $day) is also<unmark-day> {

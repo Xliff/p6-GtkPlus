@@ -14,9 +14,9 @@ sub gtk_calendar_clear_marks (GtkCalendar $calendar)
 
 sub gtk_calendar_get_date (
   GtkCalendar $calendar,
-  guint $year is rw,
-  guint $month is rw,
-  guint $day is rw
+  guint       $year      is rw,
+  guint       $month     is rw,
+  guint       $day       is rw
 )
   is native(gtk)
   is export
@@ -55,7 +55,12 @@ sub gtk_calendar_select_month (GtkCalendar $calendar, guint $month, guint $year)
   is export
   { * }
 
-sub gtk_calendar_set_detail_func (GtkCalendar $calendar, GtkCalendarDetailFunc $func, gpointer $data, GDestroyNotify $destroy)
+sub gtk_calendar_set_detail_func (
+  GtkCalendar $calendar,
+              &func (GtkCalendar, gint, gint, gint, gpointer --> Str),
+  gpointer    $data,
+              &destroy (gpointer)
+)
   is native(gtk)
   is export
   { * }
