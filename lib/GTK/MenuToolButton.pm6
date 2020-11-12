@@ -33,7 +33,7 @@ class GTK::MenuToolButton is GTK::ToolButton {
             cast(GtkMenuToolButton, $_);
           }
         }
-        self.setToolButton($to-parent);
+        self.setGtkToolButton($to-parent);
       }
       when GTK::MenuToolButton {
       }
