@@ -143,6 +143,12 @@ class GTK::Widget {
     gtk_cairo_transform_to_window($cr, $!w, $window);
   }
 
+  method default_direction is rw is also<default-direction> {
+    Proxy.new:
+      FETCH => -> $           { GTK::Widget.get_default_direction    },
+      STORE => -> $, Int() \d { GTK::Widget.set_default_direction(d) }
+  }
+
   method get_default_direction (GTK::Widget:U: )
     is also<get-default-direction>
   {
