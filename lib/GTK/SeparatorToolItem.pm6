@@ -7,8 +7,8 @@ use GTK::Raw::Types;
 
 use GTK::ToolItem;
 
-our subset SeparatorToolItemAncestry is export
-  where GtkSeparatorToolItem | ToolItemAncestry;
+our subset GtkSeparatorToolItemAncestry is export
+  where GtkSeparatorToolItem | GtkToolItemAncestry;
 
 class GTK::SeparatorToolItem is GTK::ToolItem {
   has GtkSeparatorToolItem $!sti is implementor;
@@ -20,29 +20,26 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
   }
 
   submethod BUILD(:$separator) {
-    my $to-parent;
-    given $separator {
-      when SeparatorToolItemAncestry {
-        $!sti = do {
-          when GtkSeparatorToolItem {
-            $to-parent = cast(GtkToolItem, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkSeparatorToolItem, $_);
-          }
-        };
-        self.setToolItem($to-parent);
-      }
-      when GTK::SeparatorToolItem {
-      }
-      default {
-      }
-    }
+    self.setGtkSeparatorToolItem($separator) if $separator;
   }
 
-  multi method new (SeparatorToolItemAncestry $separator, :$ref = True) {
+  method setGtkSeparatorToolItem (GtkSeparatorToolItemAncestry $_) {
+    my $to-parent;
+
+    $!sti = do {
+      when GtkSeparatorToolItem {
+        $to-parent = cast(GtkToolItem, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        cast(GtkSeparatorToolItem, $_);
+      }
+    };
+    self.setGtkToolItem($to-parent);
+  }
+
+  multi method new (GtkSeparatorToolItemAncestry $separator, :$ref = True) {
     return Nil unless $separator;
 
     my $o = self.bless(:$separator);
@@ -66,7 +63,7 @@ class GTK::SeparatorToolItem is GTK::ToolItem {
       },
       STORE => sub ($, Int() $draw is copy) {
         my gboolean $d = $draw.so.Int;
-        
+
         gtk_separator_tool_item_set_draw($!sti, $d);
       }
     );
