@@ -14,11 +14,11 @@ our subset BinAncestry is export of Mu
 class GTK::Bin is GTK::Container {
   has GtkBin $!bin;   # Implementor in GTK::Widget
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
 
   submethod BUILD(:$bin) {
     given $bin {
@@ -86,7 +86,12 @@ class GTK::Bin is GTK::Container {
     nextwith($widget);
   }
 
-  method get_child is also<get-child> {
+  method get_child
+    is also<
+      get-child
+      child
+    >
+  {
     self.end[0] ~~ GTK::Widget ??
       self.end[0] !! gtk_bin_get_child($!bin);
   }
