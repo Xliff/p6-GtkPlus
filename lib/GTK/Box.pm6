@@ -13,6 +13,8 @@ use GTK::Container;
 our subset BoxAncestry is export
   where GtkBox | GtkOrientable | ContainerAncestry;
 
+my $default-spacing = 0;
+
 class GTK::Box is GTK::Container {
   also does GTK::Roles::Orientable;
 
@@ -27,18 +29,8 @@ class GTK::Box is GTK::Container {
     $o;
   }
 
-  submethod BUILD(:$box) {
-    given $box {
-      when BoxAncestry {
-        self.setBox($_);
-      }
-      when GTK::Box {
-        my $class = ::?CLASS.^name;
-        warn "To copy a { $class }, use { $class }.clone.";
-      }
-      default {
-      }
-    }
+  submethod BUILD (:$box) {
+    self.setBox($box) if $box;
   }
 
   method GTK::Raw::Definitions::GtkBox
@@ -81,28 +73,34 @@ class GTK::Box is GTK::Container {
   multi method new (
     # Default orientation established from Glade.
     Int() $orientation = GTK_ORIENTATION_HORIZONTAL,  # GtkOrientation,
-    Int() $spacing = 0
+    Int() $spacing     = $default-spacing;
   ) {
     # This works because it is NOT the array version.
     my guint $o = $orientation;
-    my gint $s = $spacing;
+    my gint  $s = $spacing;
     my $box = gtk_box_new($o, $s);
 
     $box ?? self.bless( :$box ) !! Nil;
   }
 
-  method new-hbox(Int $spacing = 0) is also<new_hbox> {
+  method new-hbox(Int $spacing = $default-spacing) is also<new_hbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $s);
 
     $box ?? self.bless( :$box ) !! Nil;
   }
 
-  method new-vbox(Int $spacing = 0) is also<new_vbox> {
+  method new-vbox(Int $spacing = $default-spacing) is also<new_vbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $s);
 
     $box ?? self.bless( :$box ) !! Nil;
+  }
+
+  method default_spacing (GTK::Box:U: ) is rw is also<default-spacing> {
+    Proxy.new:
+      FETCH => -> $           { $default-spacing     },
+      STORE => -> $, Int() \i { $default-spacing = i }
   }
 
   method baseline_position is rw is also<baseline-position> {
