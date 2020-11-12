@@ -11,11 +11,11 @@ use GTK::TextIter;
 use GTK::TextMark;
 use GTK::TextTagTable;
 
-use GLib::Roles::Properties;
+use GLib::Roles::Object;
 use GTK::Roles::Signals::TextBuffer;
 
 class GTK::TextBuffer {
-  also does GLib::Roles::Properties;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::TextBuffer;
 
   has GtkTextBuffer $!tb is implementor;
@@ -350,7 +350,7 @@ D
     Int() $interactive,           # gboolean $interactive,
     Int() $default_editable       # gboolean $default_editable
   ) {
-    my gboolean ($i, $de) = ($interactive, $default_editable);
+    my gboolean ($i, $de) = ($interactive, $default_editable).map( *.so.Int );
 
     gtk_text_buffer_backspace($!tb, $iter, $i, $de);
   }
@@ -372,10 +372,10 @@ D
   }
 
   method create_mark (
-    Str() $mark_name,
+    Str()         $mark_name,
     GtkTextIter() $where,
-    Int() $left_gravity,           # gboolean $left_gravity
-    :$raw = False
+    Int()         $left_gravity,           # gboolean $left_gravity
+                  :$raw = False
   )
     is also<create-mark>
   {
@@ -535,6 +535,7 @@ D
       get-end-iter
       end_iter
       end-iter
+      end
     >
   { * }
 
@@ -800,6 +801,7 @@ D
       get-start-iter
       start_iter
       start-iter
+      start
     >
   { * }
 
@@ -832,7 +834,7 @@ D
   multi method get_text (
     GtkTextIter() $start,
     GtkTextIter() $end,
-    Int() $include_hidden_chars   # gboolean $include_hidden_chars
+    Int()         $include_hidden_chars = False   # gboolean $include_hidden_chars
   ) {
     my gboolean $ih = $include_hidden_chars.so.Int;
 
@@ -953,10 +955,15 @@ D
     Int() $default_editable       # gboolean $default_editable
   ) {
     $len //= $text.chars;
-    my gint $l = $len;
-    my gboolean $de = $default_editable;
+    my gint     $l  = $len;
+    my gboolean $de = $default_editable.so.Int;
 
     gtk_text_buffer_insert_interactive_at_cursor($!tb, $text, $l, $de);
+  }
+
+  # Convenience method
+  method append_markup (Str() $markup) is also<append-markup> {
+    self.insert_markup(self.end, $markup);
   }
 
   proto method insert_markup(|)
@@ -965,15 +972,15 @@ D
 
   multi method insert_markup (
     GtkTextIter() $iter,
-    Buf $markup
+    Buf           $markup
   ) {
     my $t = $markup.decode;
     samewith($iter, $t, $t.chars);
   }
   multi method insert_markup (
     GtkTextIter() $iter,
-    Str() $markup,
-    Int() $len = $markup.chars
+    Str()         $markup is copy,
+    Int()         $len    =  $markup.chars
   ) {
     my gint $l = $len;
 
