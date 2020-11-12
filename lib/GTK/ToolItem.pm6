@@ -11,27 +11,23 @@ use GTK::Bin;
 use GTK::MenuItem;
 use GTK::SizeGroup;
 
-our subset ToolItemAncestry is export
+our subset GtkToolItemAncestry is export
   where GtkToolItem | BinAncestry;
 
 class GTK::ToolItem is GTK::Bin {
   has GtkToolItem $!ti is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
 
   submethod BUILD(:$toolitem) {
-    given $toolitem {
-      when ToolItemAncestry { self.setToolItem($toolitem) }
-      when GTK::ToolItem    { }
-      default               { }
-    }
+    self.setGtkToolItem($toolitem) if $toolitem;
   }
 
-  method setToolItem(ToolItemAncestry $toolitem) {
+  method setGtkToolItem(GtkToolItemAncestry $toolitem) {
     my $to-parent;
     $!ti = do given $toolitem {
       when GtkToolItem {
@@ -54,7 +50,7 @@ class GTK::ToolItem is GTK::Bin {
     >
   { $!ti }
 
-  multi method new (ToolItemAncestry $toolitem, :$ref = True) {
+  multi method new (GtkToolItemAncestry $toolitem, :$ref = True) {
     return unless $toolitem;
 
     my $o = self.bless(:$toolitem);
