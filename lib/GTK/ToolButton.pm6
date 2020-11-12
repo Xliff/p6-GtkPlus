@@ -10,8 +10,8 @@ use GTK::ToolItem;
 
 use GTK::Roles::Actionable;
 
-our subset ToolButtonAncestry
-  where GtkToolButton | ToolItemAncestry;
+our subset ToolButtonAncestry is export of Mu
+  where GtkToolButton | GtkToolItemAncestry;
 
 class GTK::ToolButton is GTK::ToolItem {
   also does GTK::Roles::Actionable;
@@ -25,11 +25,7 @@ class GTK::ToolButton is GTK::ToolItem {
   }
 
   submethod BUILD(:$toolbutton) {
-    given $toolbutton {
-      when ToolButtonAncestry { self.setToolButton($toolbutton) }
-      when GTK::ToolButton    { }
-      default                 { }
-    }
+    self.setGtkToolButton($toolbutton) if $toolbutton;
   }
 
   method GTK::Raw::Definitions::GtkToolButton
@@ -39,28 +35,28 @@ class GTK::ToolButton is GTK::ToolItem {
     >
   { $!tb }
 
-  method setToolButton(ToolButtonAncestry $toolbutton) {
-    self.IS-PROTECTED;
-
+  method setGtkToolButton(ToolButtonAncestry $_) {
     my $to-parent;
-    $!tb = do given $toolbutton {
+    $!tb = do {
       when GtkToolButton {
-        $to-parent = cast(GtkToolItem, $toolbutton);
-        $toolbutton;
+        $to-parent = cast(GtkToolItem, $_);
+        $_;
       }
+
       when GtkActionable {
         $!action = $_;
-        $to-parent = cast(GtkToolItem, $toolbutton);
-        cast(GtkToolButton, $toolbutton);
+        $to-parent = cast(GtkToolItem, $_);
+        cast(GtkToolButton, $_);
       }
+
       default {
-        $to-parent = $toolbutton;
-        cast(GtkToolButton, $toolbutton);
+        $to-parent = $_;
+        cast(GtkToolButton, $_);
       }
 
     }
     $!action //= cast(GtkActionable, $!tb);   # GTK::Roles::Actionable
-    self.setToolItem($to-parent);
+    self.setGtkToolItem($to-parent);
   }
 
   multi method new (ToolButtonAncestry $toolbutton, :$ref = True) {
@@ -74,6 +70,9 @@ class GTK::ToolButton is GTK::ToolItem {
     my $toolbutton = gtk_tool_button_new(GtkWidget, Str);
 
     $toolbutton ?? self.bless(:$toolbutton) !! Nil;
+  }
+  multi method new (Str() $label) {
+    samewith(GtkWidget, $label);
   }
   multi method new (GtkWidget() $widget, Str() $label) {
     my $toolbutton = gtk_tool_button_new($widget, $label);
