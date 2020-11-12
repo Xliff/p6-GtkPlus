@@ -86,7 +86,7 @@
   -- hMethodMaker should be adjusted to emit such code so that new projects will not have this discrepancy.
 - Consider: Any UINT parameter should have a "where * > 0" placed on it.
   LARGE initiative. Subject to review.
-- PERFORM REFINEMENT REVIEW ON GIO!
++ PERFORM REFINEMENT REVIEW ON GIO!
 - For refactoring: the code in the "attributes" (not "properties") routines
   should have the getter and setter routines broken out into their own methods.
   The existing "attribute" methods should then call the corresponding methods.
@@ -96,12 +96,67 @@
   places in the code that use it for CStructs AND CPointers. If this change
   is made, then there are places in the code that will need to be refactored,
   since a Pointer should take a CPointer without modification.
-- Write wrappers for the eventual GLib::Object object that will wrap the
-  "GObject-invocant" methods from GTK::Compat::Signal
 - Insure all method-level gchar paramters are converted to Str()
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will
   become a dependency. GDK::Pixbuf is available.
-- Move signals to %Object.signal<name> to fix issue with method name conflicts
+  
+- Write wrappers for the eventual GLib::Object object that will wrap the
+  "GObject-invocant" methods from GLib::Signal
+- Move signals to %Object.signal<name> to fix issue with method name conflicts.
+  The easiest way to do this is when the final move to GLib::Object is made. 
+  The best way I can think about it is this:
+  
+    has %!signals;
+    method signal {
+      $!signal-container //= class :: {
+        also does Associative;
+        
+        method AT-KEY (\key) is rw {
+          Proxy.new: 
+            FETCH => $, {
+              return Nil unless %!signals<key>;
+              
+              %!signals{key}<supplyish> //= class :: {
+                  # Provide backward compatibility (cannot alias this to 'connect' due
+                  # to collisions... yes, GLib has downline objects that define
+                  # functions that end in _connect. Whee....
+                  method tap (Callable &c) {
+                    %!signals{key}{callable} = c;
+                  }
+                  
+                  # cw: Same here with 'disconnect'. This provides a Raku-ish way that
+                  #     provides some symmetry.
+                  method untap {
+                   self.signal-disconnect( %!signals{key}{id} );
+                   %!signals{key}:delete;
+                  }
+                  
+                }
+              }
+            },
+            
+            STORE => $, Callable \c { 
+              %!signals{key}{callable} = c;
+            }
+        }
+        
+        method EXISTS-KEY (\k) {
+          %!signals{k}:exists;
+        }
+
+      }
+    }
+    
+  So now, any call to $obj.signal will return a instance-level persistent 
+  wrapper that will contain any defined signals. The advantage of this is 
+  now:
+    1) ALL signals are now stored in a unified location. Individual hashes in 
+       ALL ::Roles::Signals objects can be removed
+    2) A unified disconnect method can now be provided.
+    
+  NOTE: Please do not interpret the above code as design gospel, it was only
+        intended as pseudo code.
+        
 - Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher
   or GtkStackSidebar
 - Inhibit pass-through to Mu constructor in all widget-based objects!
@@ -288,7 +343,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - Consider the potential for libav bindings
 - Consider Apache C-API bindings, along with a potential module creation script from Raku sources.
 - Consider Mutter bindings (https://developer.gnome.org/meta/stable/)
-- Consider ATK bindings
+- ATK bindings!
 - Consider Togra bindings (http://togra.sourceforge.net/screenshots.html),
   however this may be more of a port from Python, rather than a set of bindings.
   + Aand.... it is. The C-lib, rather than being a generic resource, is there
