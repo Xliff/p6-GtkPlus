@@ -244,8 +244,9 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   2) Creates a horizontal graph of date (x) vs total compile time (y)
 - Add *%others to ALL GOBJECT DESCENDANT new-based methods
 - Add version tags to classes
-- Currently all ::Roles::Signals::* compunits export PUBLIC methods that are used 
+- Currently all ::Roles::Signals::* compunits export PUBLIC methods that are used
   to create signal handlers. This SHOULD NOT be so. Make them all private!
+- Future refactor or script: "$s.note($_);" => "$s.note($_); .backtrace.summary.say"
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
@@ -277,18 +278,21 @@ Applications
   *.xml, for now), parse the required files using XML::Actions, and then
   display resulting data in a GtkSheet -- This is now in a Jupyter Notebook.
 x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
-- Port JSON-glib to Perl6
++ Port JSON-glib to Perl6
   https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
++ A Perl6 port for libsoup
++ Consider BABL bindings
 - DEFINITELY consider GEGL bindings. Use generated data structures for
   operations, since they have no .h files, however the good bits are easily
   parsable from .c
-+ Consider BABL bindings
+- Consider the potential for libav bindings
+- Consider Apache C-API bindings, along with a potential module creation script from Raku sources.
+- Consider Mutter bindings (https://developer.gnome.org/meta/stable/)
 - Consider ATK bindings
 - Consider Togra bindings (http://togra.sourceforge.net/screenshots.html),
   however this may be more of a port from Python, rather than a set of bindings.
   + Aand.... it is. The C-lib, rather than being a generic resource, is there
     specifically to bind with Python. Might be easier to write something similar
     based on COGL.
-- A Perl6 port for libsoup
 - Consider a Perl6 port of SVOX (See files in libttspico-dev, start with /usr/include/picoapi.h)
 - The GTK CSS Inspector
