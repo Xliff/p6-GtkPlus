@@ -46,9 +46,10 @@ grammar C-Function-Def {
   token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
   token       t { <[\w _]>+ }
   token     mod { 'unsigned' | 'long' }
-  rule     type { 'const'? [ <mod>+ ]? $<n>=\w+ <p>? }
+  token    mod2 { 'const' | 'struct' }
+  rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
   rule      var { <t> [ '[' (.+?)? ']' ]? }
-  token returns { 'const'? <.ws> <t> \s* <p>? }
+  token returns { <mod2>? <.ws> <t> \s* <p>? }
   token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
   token      ad { 'AVAILABLE' | 'DEPRECATED' }
 
