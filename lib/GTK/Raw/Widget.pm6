@@ -333,7 +333,7 @@ sub gtk_widget_add_tick_callback (
   GtkWidget $widget,
   &callback (GtkWidget, GdkFrameClock, gpointer --> gboolean),
   gpointer $user_data,
-  GDestroyNotify $notify
+  &notify (gpointer) 
 )
   returns guint
   is native(gtk)

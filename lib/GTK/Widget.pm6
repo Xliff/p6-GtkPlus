@@ -1279,7 +1279,12 @@ class GTK::Widget {
   }
 
   # Type: gboolean
-  method has-focus is rw is also<has_focus> {
+  proto method has_focus (|)
+    is also<has-focus>
+  { * }
+
+  # cw: Made multi so as to work with gtk_widget_has_focus, below
+  multi method has_focus (GTK::Widget:D: ) is rw {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
@@ -2305,9 +2310,7 @@ class GTK::Widget {
     so gtk_widget_is_drawable($!w);
   }
 
-
-  # Conflicts with READ/WRITE property has-focus()
-  method global_has_focus is also<global-has-focus> {
+  multi method has_focus (GTK::Widget:U: ) {
     so gtk_widget_has_focus($!w);
   }
 
@@ -2316,13 +2319,13 @@ class GTK::Widget {
   }
 
   method add_tick_callback (
-    &callback,
-    gpointer $user_data    = gpointer,
-    GDestroyNotify $notify = GDestroyNotify
+             &callback,
+    gpointer $user_data = gpointer,
+             &notify    = Callable
   )
     is also<add-tick-callback>
   {
-    gtk_widget_add_tick_callback($!w, &callback, $user_data, $notify);
+    gtk_widget_add_tick_callback($!w, &callback, $user_data, &notify);
   }
 
 
