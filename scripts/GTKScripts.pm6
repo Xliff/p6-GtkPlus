@@ -5,9 +5,10 @@ use File::Find;
 
 unit package GTKScripts;
 
-constant CONFIG-NAME is export = '.p6-gtk-project';
+constant CONFIG-NAME is export = %*ENV<P6_PROJECT_FILE> // '.p6-gtk-project';
 
 our %config is export;
+our $GTK-SCRIPT-DEBUG is export;
 
 sub parse-file ($filename) is export {
   %config = Config::INI::parse_file($filename)<_>;
@@ -23,55 +24,81 @@ sub parse-file ($filename) is export {
 
 sub find-files(
   $dir,
-  :$pattern is copy,
-  :$extension,
+  :$pattern   is copy,
+  :$extension is copy,
   :$exclude,
   :$depth
 ) is export {
   my @pattern-arg;
-
-  if $pattern {
-    $pattern .= trans( [ '/', '-' ] => [ '\\/', '\\-' ] );
-    @pattern-arg.push( rx/     <{ $pattern   }>   / );
-  }
-  @pattern-arg.push( rx/ '.' <{ $extension }> $ / ) if $extension;
-
-
   my @targets = dir($dir);
-  gather while @targets {
-    my $elem = @targets.shift;
 
-    if $elem.f && $exclude.defined {
-      given $exclude {
-        when Array { next if $elem.absolute ~~ .any        }
-        when Str   { next if $elem.absolute ~~ / <{ $_ }> /}
-        when Regex { next if $elem.absolute ~~ $_          }
+  with $pattern {
+    when Regex { @pattern-arg.push: $_}
+
+    when Str   {
+      $pattern .= trans( [ '/', '-' ] => [ '\\/', '\\-' ] );
+      @pattern-arg.push( rx/     <{ $pattern   }>   / );
+    }
+  }
+  $extension .= substr(1) if $extension && $extension.starts-with('.');
+  @pattern-arg.push: rx/ '.' <{ $extension }> $/ if $extension;
+
+  gather {
+    WHILE: while @targets {
+      say "T: { @targets.gist }" if $GTK-SCRIPT-DEBUG;
+
+      my $elem = @targets.shift;
+      say "E: $elem" if $GTK-SCRIPT-DEBUG;
+      do given $elem {
+        when .d {
+          if $depth {
+            next unless $*SPEC.splitdir($elem).grep( * ).elems < max($depth - 1, 0)
+          }
+          @targets.append: $elem.dir;
+          next;
+        }
+
+        when .f {
+          if $exclude.defined {
+            given $exclude {
+              when Array { next if $elem.absolute ~~ .any        }
+              when Str   { next if $elem.absolute ~~ / <{ $_ }> /}
+              when Regex { next if $elem.absolute ~~ $_          }
+
+              default {
+                die "Don't know how to handle { .^name } as an exclude!";
+              }
+            }
+          }
+
+          for @pattern-arg -> $p {
+            say "Testing: { $elem.absolute } / P: { $p.gist }"
+              if $GTK-SCRIPT-DEBUG;
+            next WHILE unless $elem.absolute ~~ $p
+          }
+          say "Valid: { $elem.absolute }" if $GTK-SCRIPT-DEBUG;
+          take $elem;
+        }
 
         default {
-          die "Don't know how to handle { .^name } as an exclude!";
+          say "Skupping non-directory, non-file path element { .absolute }!";
         }
       }
-    }
-    for @pattern-arg -> $p {
-      if $elem.absolute ~~ $p {
-        take $elem;
-        next;
-      }
-    }
-
-    if $elem.d {
-      if $depth {
-        next unless $*SPEC.splitdir($elem).grep( * ).elems < max($depth - 1, 0)
-      }
-      @targets.append: $elem.dir;
     }
   }
 }
 
+sub get-lib-files (:$pattern, :$extension) is export {
+  die 'get-lib-files() must be called with a :$pattern and/or an :$extension'
+    unless $pattern.defined || $extension.defined;
+
+  (do gather for %config<libdirs>.split(',') {
+    take find-files($_, :$pattern, :$extension);
+  }).flat;
+}
+
 sub get-module-files is export {
-  (do gather for (%config<libdirs>).split(',') {
-    take find-files($_, extension => 'pm6');
-  }).flat
+  get-lib-files( extension => 'pm6' );
 }
 
 sub levenshtein-nqp ($a, $b) is export {
@@ -95,7 +122,7 @@ sub levenshtein-nqp ($a, $b) is export {
     }
 
     sub levenshtein_impl($apos, $bpos, $estimate) {
-        my $key := join(":", ($apos, $bpos));
+        my $key := join(':', ($apos, $bpos));
 
         return %memo{$key} if nqp::existskey(%memo, $key);
 
@@ -155,17 +182,37 @@ sub levenshtein ( Str $s, Str $t --> Int ) is export {
     my @t = *, |$t.comb;
 
     my @d;
-    @d[$_;  0] = $_ for ^@s.end;
-    @d[ 0; $_] = $_ for ^@t.end;
+    @d[ $_; 0  ] = $_ for ^@s.end;
+    @d[ 0 ; $_ ] = $_ for ^@t.end;
 
-    for 1..@s.end X 1..@t.end -> ($i, $j) {
-        @d[$i; $j] = @s[$i] eq @t[$j]
-            ??   @d[$i-1; $j-1]    # No operation required when eq
-            !! ( @d[$i-1; $j  ],   # Deletion
-                 @d[$i  ; $j-1],   # Insertion
-                 @d[$i-1; $j-1],   # Substitution
+    for 1..@s.end X 1..@t.end -> ( $i, $j ) {
+        @d[ $i; $j ] = @s[$i] eq @t[$j]
+            ??   @d[ $i - 1; $j - 1 ]    # No operation required when eq
+            !! ( @d[ $i - 1; $j     ],   # Deletion
+                 @d[ $i    ; $j - 1 ],   # Insertion
+                 @d[ $i - 1; $j - 1 ],   # Substitution
                ).min + 1;
     }
 
-    return @d[*-1][*-1];
+    return @d[ * - 1 ][ * - 1 ];
+}
+
+# EXPORTED from p6-GLib
+
+# "Exhaustive" maximal...
+multi max (:&by = {$_}, :$all!, *@list) is export {
+    # Find the maximal value...
+    my $max = max my @values = @list.map: &by;
+
+    # Extract and return all values matching the maximal...
+    @list[ @values.kv.map: {$^index unless $^value cmp $max} ];
+}
+
+sub get-longest-prefix (@words) is export {
+  max :all, :by{.chars}, keys [∩] @words».match(/.+/, :ex)».Str;
+}
+
+INIT {
+  $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
+  parse-file(CONFIG-NAME) if CONFIG-NAME.IO.e;
 }

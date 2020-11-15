@@ -6,6 +6,8 @@ use lib 'scripts';
 use GTKScripts;
 use Dependency::Sort;
 
+# cw: %prefix lives in GTKScripts and is initialized during INIT
+
 sub MAIN (
   :$force,           #= Force dependency generation
   :$prefix is copy   #= Module prefix
@@ -13,11 +15,8 @@ sub MAIN (
   my (%nodes, @build-exclude);
   my $dep_file = '.build-deps'.IO;
 
-  if CONFIG-NAME.IO.e {
-    parse-file(CONFIG-NAME);
-    $prefix //= %config<prefix>;
-    @build-exclude = %config<build_exclude> // ();
-  }
+  $prefix        //= %config<prefix>;
+  @build-exclude   = %config<build_exclude> // ();
 
   my @files = get-module-files.sort( *.modified );
   unless $force {
