@@ -99,64 +99,89 @@
 - Insure all method-level gchar paramters are converted to Str()
 - Separate all GTK::Compat::Pixbuf files into it's own project, that will
   become a dependency. GDK::Pixbuf is available.
-  
+
 - Write wrappers for the eventual GLib::Object object that will wrap the
   "GObject-invocant" methods from GLib::Signal
 - Move signals to %Object.signal<name> to fix issue with method name conflicts.
-  The easiest way to do this is when the final move to GLib::Object is made. 
+  The easiest way to do this is when the final move to GLib::Object is made.
   The best way I can think about it is this:
-  
-    has %!signals;
+
+    my $signal-data     = $!signals;
+    my $signals-wrapper = $!signals-wrapper;
+    my $lex-object      = self;
     method signal {
       $!signal-container //= class :: {
         also does Associative;
-        
+
         method AT-KEY (\key) is rw {
-          Proxy.new: 
+          Proxy.new:
             FETCH => $, {
-              return Nil unless %!signals<key>;
-              
-              %!signals{key}<supplyish> //= class :: {
-                  # Provide backward compatibility (cannot alias this to 'connect' due
-                  # to collisions... yes, GLib has downline objects that define
-                  # functions that end in _connect. Whee....
-                  method tap (Callable &c) {
-                    %!signals{key}{callable} = c;
+              $signals-wrapper{key} //= (class :: {
+                  has Supply $!s   handles *.grep({ $_ ne 'tap' });
+
+                  has        $!obj;
+                  has Int    $!id;
+
+                  submethod BUILD (:$!supply, :$!obj, :$!id) { }
+
+                  method new ($supply, $obj, $id) {
+                    self.bless( :$supply, :$obj, :$id );
                   }
-                  
-                  # cw: Same here with 'disconnect'. This provides a Raku-ish way that
-                  #     provides some symmetry.
-                  method untap {
-                   self.signal-disconnect( %!signals{key}{id} );
-                   %!signals{key}:delete;
+
+                  method tap (|c) {
+                    nextwith(c);
+
+                    # ...
                   }
-                  
+
+                  # cw: This is the last troublesome bastard, because how can
+                  #     we offer this without having called the ::Roles::Signal
+                  #     variant, first?
+                  method connect (Callable &c) {
+                    $!s.tap(&c);
+                  }
+
+                  method untap is also<disconnect> {
+                    self.disconnect( $!id );
+                  }
+
+                  method block      {  }
+                  method unblock    {  }
+                  method disconnect {  }
+
                 }
-              }
+              }).new( |$signals-data{key} );
             },
-            
-            STORE => $, Callable \c { 
-              %!signals{key}{callable} = c;
+
+            STORE => $, Callable \c {
+              $signals-wrapper{key}.tap(c);
             }
         }
-        
+
         method EXISTS-KEY (\k) {
-          %!signals{k}:exists;
+          # cw: Will the semantics on this be:
+          #  - Does the signal data exists (because, more than likely... it will!)
+          #  ...or...
+          #  - Has this signal been tapped?
+
+          $signals-wrapper{key}:exists;
         }
 
       }
+
+
     }
-    
-  So now, any call to $obj.signal will return a instance-level persistent 
-  wrapper that will contain any defined signals. The advantage of this is 
+
+  So now, any call to $obj.signal will return a instance-level persistent
+  wrapper that will contain any defined signals. The advantage of this is
   now:
-    1) ALL signals are now stored in a unified location. Individual hashes in 
+    1) ALL signals are now stored in a unified location. Individual hashes in
        ALL ::Roles::Signals objects can be removed
     2) A unified disconnect method can now be provided.
-    
+
   NOTE: Please do not interpret the above code as design gospel, it was only
         intended as pseudo code.
-        
+
 - Add attribute 'control' to GTK::Stack to allow adding either GtkStackSwitcher
   or GtkStackSidebar
 - Inhibit pass-through to Mu constructor in all widget-based objects!
