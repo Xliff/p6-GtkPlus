@@ -110,7 +110,11 @@ class GTK::Image is GTK::Widget {
     $image ?? self.bless(:$image) !! Nil;
   }
 
-  method new_from_pixbuf (GdkPixbuf() $pixbuf) is also<new-from-pixbuf> {
+  method new_from_pixbuf (
+    GdkPixbuf() $pixbuf = GdkPixbuf
+  )
+    is also<new-from-pixbuf>
+  {
     my $image = gtk_image_new_from_pixbuf($pixbuf);
 
     $image ?? self.bless(:$image) !! Nil;
@@ -126,7 +130,7 @@ class GTK::Image is GTK::Widget {
   #  gtk_image_new_from_stock($stock_id, $size);
   #}
 
-  method new_from_surface (cairo_surface_t $surface)
+  method new_from_surface (cairo_surface_t $surface = cairo_surface_t)
     is also<new-from-surface>
   {
     my $image = gtk_image_new_from_surface($surface);
@@ -497,7 +501,7 @@ class GTK::Image is GTK::Widget {
     gtk_image_set_from_icon_set($!i, $icon_set, $s);
   }
 
-  method set_from_pixbuf (GdkPixbuf() $pixbuf)
+  method set_from_pixbuf (GdkPixbuf() $pixbuf = GdkPixbuf)
     is also<set-from-pixbuf>
   {
     gtk_image_set_from_pixbuf($!i, $pixbuf);
@@ -520,7 +524,7 @@ class GTK::Image is GTK::Widget {
     gtk_image_set_from_stock($!i, $stock_id, $s);
   }
 
-  method set_from_surface (cairo_surface_t $surface)
+  method set_from_surface (cairo_surface_t $surface = cairo_surface_t)
     is also<set-from-surface>
   {
     gtk_image_set_from_surface($!i, $surface);
