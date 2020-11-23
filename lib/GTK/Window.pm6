@@ -29,17 +29,11 @@ class GTK::Window is GTK::Bin {
   }
 
   submethod BUILD(:$window, :$title, :$width, :$height) {
-    given $window {
-      when WindowAncestry {
-        self.setWindow($window);
-        # This still isn't working!
-        self.title = $title if $title;
-        self.set-default-size($width, $height) if $width && $height;
-      }
-      when GTK::Window {
-      }
-      default {
-      }
+    if $window {
+      self.setWindow($window);
+      # This still isn't working!
+      self.title = $title if $title;
+      self.set-default-size($width, $height) if $width && $height;
     }
   }
 
@@ -66,7 +60,7 @@ class GTK::Window is GTK::Bin {
     $o;
   }
   multi method new (
-    Str $title   = 'Window',
+    Str $title,
     Int :$type   = GTK_WINDOW_TOPLEVEL,           # GtkWindowType $type,
     Int :$width  = 200,
     Int :$height = 200
@@ -77,7 +71,7 @@ class GTK::Window is GTK::Bin {
   }
   # This multi could be deprecated.
   multi method new (
-    Int $type    = GTK_WINDOW_TOPLEVEL,           # GtkWindowType $type,
+    Int $type,                # GtkWindowType $type,
     Str :$title  = 'Window',
     Int :$width  = 200,
     Int :$height = 200
@@ -88,11 +82,14 @@ class GTK::Window is GTK::Bin {
   }
   multi method new (
     GtkWindow $window,
-    Str :$title = 'Window',
-    Int :$width  = 200,
-    Int :$height = 200
+    Str       :$title = 'Window',
+    Int       :$width  = 200,
+    Int       :$height = 200
   ) {
     $window ?? self.bless(:$window, :$title, :$width, :$height) !! Nil;
+  }
+  multi method new {
+    GTK::Window.new(GTK_WINDOW_TOPLEVEL);
   }
 
   method GTK::Raw::Definitions::GtkWindow
