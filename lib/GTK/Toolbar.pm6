@@ -11,6 +11,7 @@ use GTK::Roles::Orientable;
 use GTK::Roles::ToolShell;
 
 use GTK::Container;
+use GTK::ToolItem;
 
 our subset ToolbarAncestry is export
   where GtkToolbar | GtkToolShell | GtkOrientable | ContainerAncestry;
@@ -21,18 +22,14 @@ class GTK::Toolbar is GTK::Container {
 
   has GtkToolbar $!tb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
 
   submethod BUILD(:$toolbar) {
-    given $toolbar {
-      when ToolbarAncestry { self.setToolbar($toolbar) }
-      when GTK::Toolbar    { }
-      default              { }
-    }
+    self.setToolbar($toolbar) if $toolbar;
   }
 
   method GTK::Raw::Definitions::Toolbar
@@ -42,9 +39,10 @@ class GTK::Toolbar is GTK::Container {
     >
   { $!tb }
 
-  method setToolbar(ToolbarAncestry $toolbar) {
+  method setToolbar(ToolbarAncestry $_) {
     my $to-parent;
-    $!tb = do given $toolbar {
+
+    $!tb = do {
       when GtkToolbar {
         $to-parent = nativecast(GtkContainer, $_);
         $_;
@@ -67,8 +65,8 @@ class GTK::Toolbar is GTK::Container {
         nativecast(GtkToolbar, $_);
       }
     }
-    $!or    //= nativecast(GtkOrientable, $toolbar);  # GTK::Roles::Orientable
-    $!shell //= nativecast(GtkToolShell, $toolbar);   # GTK::Roles::ToolShell
+    $!or    = nativecast(GtkOrientable, $_) unless $!or;      # GTK::Roles::Orientable
+    $!shell = nativecast(GtkToolShell, $_)  unless $!shell;   # GTK::Roles::ToolShell
     self.setContainer($to-parent);
   }
 
@@ -181,7 +179,7 @@ class GTK::Toolbar is GTK::Container {
     gtk_toolbar_get_n_items($!tb);
   }
 
-  method get_nth_item (Int $n)
+  method get_nth_item (Int() $n, :$raw = False, :$widget = False)
     is also<
       get-nth-item
       nth_item
@@ -190,7 +188,19 @@ class GTK::Toolbar is GTK::Container {
   {
     my gint $nn = $n;
 
-    gtk_toolbar_get_nth_item($!tb, $nn);
+    say "Getting item $n";
+
+    my $ti = gtk_toolbar_get_nth_item($!tb, $nn);
+
+    # Transfer none!
+    $ti = $ti ??
+      ( $raw ?? $ti !! GTK::ToolItem.new($ti) )
+      !!
+      Nil;
+
+    $ti = cast(GtkWidget, $ti) if $ti ~~ GtkToolItem && $widget;
+
+    $ti;
   }
 
   method get_relief_style
