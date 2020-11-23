@@ -11,7 +11,7 @@ use GTK::Box;
 use GTK::Dialog;
 use GTK::Image;
 
-my subset Ancestry
+my subset GtkMessageDialogAncestry
   where GtkMessageDialog | GtkDialog | GtkWindow | GtkBin | GtkContainer |
         GtkBuilder       | GtkWidget;
 
@@ -20,46 +20,44 @@ class GTK::Dialog::Message is GTK::Dialog {
 
   method bless(*%attrinit) {
     my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType('GTK::Dialog::Message');
+    $o.setType($o.^name);
     $o;
   }
 
-  submethod BUILD(:$dialog) {
-    my $to-parent;
-    given $dialog {
-      when Ancestry {
-        $!md = do {
-          when GtkMessageDialog {
-            $to-parent = nativecast(GtkDialog, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkMessageDialog, $_);
-          }
-        }
-        self.setDialog($to-parent);
-      }
-      when GTK::Dialog::Message {
-      }
-      default {
-      }
-    }
+  submethod BUILD(:$message-dialog) {
+    self.setGtkMessageDialog($message-dialog) if $message-dialog;
   }
 
-  multi method new (Ancestry $dialog) {
+  method setGtkMessageDialog (GtkMessageDialogAncestry $_) {
+    my $to-parent;
+    $!md = do {
+      when GtkMessageDialog {
+        $to-parent = nativecast(GtkDialog, $_);
+        $_;
+      }
+      default {
+        $to-parent = $_;
+        nativecast(GtkMessageDialog, $_);
+      }
+    }
+    self.setDialog($to-parent);
+  }
+
+  multi method new (GtkMessageDialogAncestry $dialog, :$ref = True) {
+    return Nil unless $dialog;
+
     my $o = self.bless(:$dialog);
-    $o.upref;
+    $o.ref if $ref;
     $o;
   }
   multi method new (
     GtkWindow() $parent,
-    Str $message_format,
-    Int() $flags = GTK_DIALOG_DESTROY_WITH_PARENT,
-    Int() $type = GTK_MESSAGE_INFO,
-    Int() $buttons = GTK_BUTTONS_CLOSE
+    Str         $message,
+    Int()       :$flags    = GTK_DIALOG_DESTROY_WITH_PARENT,
+    Int()       :$type     = GTK_MESSAGE_INFO,
+    Int()       :$buttons  = GTK_BUTTONS_CLOSE
   ) {
-    samewith($parent, $flags, $type, $buttons, $message_format);
+    samewith($parent, $flags, $type, $buttons, $message);
   }
   multi method new (
     GtkWindow() $parent,
@@ -71,14 +69,15 @@ class GTK::Dialog::Message is GTK::Dialog {
     #my @u = ($flags, $type, $buttons);
     # Can't use type resolution since it's the constructor.
     #my guint ($f, $t, $b) = @u >>+&<< (0xffff xx @u.elems);
-    my $dialog = gtk_message_dialog_new(
+    my $message-dialog = gtk_message_dialog_new(
       $parent,
       $flags,
       $type,
       $buttons,
       $message_format
     );
-    self.bless(:$dialog);
+
+    $message-dialog ?? self.bless(:$message-dialog) !! Nil;
   }
 
   method new_with_markup (
@@ -87,51 +86,159 @@ class GTK::Dialog::Message is GTK::Dialog {
     Int()       $type,              # GtkMessageType type
     Int()       $buttons,           # GtkButtonsType buttons
     Str         $message_format
-  ) is also<new-with-markup> {
-    #my @u = ($flags, $type, $buttons);
-    #my guint ($f, $t, $b) = self.RESOLVE-UINT(@u);
-    my $dialog = gtk_message_dialog_new(
+  )
+    is also<new-with-markup>
+  {
+    my $message-dialog = gtk_message_dialog_new(
       $parent,
       $flags,
       $type,
       $buttons,
       $message_format
     );
-    self.bless(:$dialog);
+
+    $message-dialog ?? self.bless(:$message-dialog) !! Nil;
   }
 
+  # Type: GtkWidget
+  method image (:$raw = False) is rw is DEPRECATED {
+    Proxy.new:
+      FETCH => -> $                { self.get-image($raw) },
+      STORE => -> $, GtkImage() \i { self.set_image(i)    };
+  }
+
+  # Type: GtkMessageType
+  method message-type is rw  {
+    my $gv = GLib::Value.new( GLib::Value.gtypeFromType(GtkMessageType) );
+    Proxy.new(
+      FETCH => sub ($) {
+        $gv = GLib::Value.new(
+          self.prop_get('message-type', $gv)
+        );
+        GtkMessageTypeEnum( $gv.enum )
+      },
+      STORE => -> $,  $val is copy {
+        warn 'message-type is a construct-only attribute'
+      }
+    );
+  }
+
+  # Type: char
+  method secondary-text is rw  {
+    my $gv = GLib::Value.new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => sub ($) {
+        $gv = GLib::Value.new(
+          self.prop_get('secondary-text', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('secondary-text', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method secondary-use-markup is rw  {
+    my $gv = GLib::Value.new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => sub ($) {
+        $gv = GLib::Value.new(
+          self.prop_get('secondary-use-markup', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('secondary-use-markup', $gv);
+      }
+    );
+  }
+
+  # Type: char
+  method text is rw  {
+    my $gv = GLib::Value.new( G_TYPE_STRING );
+    Proxy.new(
+      FETCH => sub ($) {
+        $gv = GLib::Value.new(
+          self.prop_get('text', $gv)
+        );
+        $gv.string;
+      },
+      STORE => -> $, Str() $val is copy {
+        $gv.string = $val;
+        self.prop_set('text', $gv);
+      }
+    );
+  }
+
+  # Type: gboolean
+  method use-markup is rw  {
+    my $gv = GLib::Value.new( G_TYPE_BOOLEAN );
+    Proxy.new(
+      FETCH => sub ($) {
+        $gv = GLib::Value.new(
+          self.prop_get('use-markup', $gv)
+        );
+        $gv.boolean;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.boolean = $val;
+        self.prop_set('use-markup', $gv);
+      }
+    );
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
-  # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method image is rw is DEPRECATED {
-    Proxy.new(
-      FETCH => sub ($) {
-        GTK::Image.new( gtk_message_dialog_get_image($!md) );
-      },
-      STORE => sub ($, GtkImage() $image is copy) {
-        gtk_message_dialog_set_image($!md, $image);
-      }
-    );
-  }
-  # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
-
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_message_area is also<get-message-area> {
-    GTK::Box( gtk_message_dialog_get_message_area($!md) );
+  method get_image (:$raw = False) is also<get-image> {
+    my $i = gtk_message_dialog_get_image($!md);
+
+    $i ??
+      ( $raw ?? $i !! GTK::Image.new($i, :!ref) )
+      !!
+      Nil;
   }
 
-  method format_secondary_markup (Str() $message_format) is also<format-secondary-markup> {
+  method get_message_area (:$raw = False)
+    is also<
+      get-message-area
+      message_area
+      message-area
+    >
+  {
+    my $ma = gtk_message_dialog_get_message_area($!md);
+
+    $ma ??
+      ( $raw ?? $ma !! GTK::Box.new($ma, :!ref) )
+      !!
+      Nil;
+  }
+
+  method format_secondary_markup (Str() $message_format)
+    is also<format-secondary-markup>
+  {
     gtk_message_dialog_format_secondary_markup($!md, $message_format);
   }
 
-  method format_secondary_text (Str() $message_format) is also<format-secondary-text> {
+  method format_secondary_text (Str() $message_format)
+    is also<format-secondary-text>
+  {
     gtk_message_dialog_format_secondary_text($!md, $message_format);
   }
 
   method get_type is also<get-type> {
-    gtk_message_dialog_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_message_dialog_get_type, $n, $t );
+  }
+
+  method set_image (GtkImage() $image) {
+    gtk_message_dialog_set_image($!md, $image);
   }
 
   method set_markup (Str() $str) is also<set-markup> {
