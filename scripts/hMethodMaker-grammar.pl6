@@ -91,21 +91,22 @@ my token availability {
 }
 
 sub MAIN (
-        $filename,          #= Filename to process
-  Str  :$remove,            #= Prefix to remove from method names
-  Str  :$var,               #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
-  Str  :$output-only,       #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
-  Bool :$no-headers,        #= Do not display section headers.
-  Int  :$trim-start,        #= Trim lines from the beginning of the post-processed file
-  Int  :$trim-end,          #= Trim lines from the end of the post-processed file
-  Str  :$remove-from-start, #= Remove colon separated prefix strings from all lines
-  Str  :$remove-from-end,   #= Remove colon separate suffix strings from all lines
-  Str  :$delete,            #= Comma separated list of lines to delete
-  Str  :$output   = 'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
-  Str  :$lib      = 'gtk',  #= Library name to use
-  Bool :$internal = False,  #= Add checking for INTERNAL methods
-  Bool :$bland    = False,  #= Do NOT attempt to process preprocessor prefixes to subroutines
-  Bool :$get-set  = False   #= Convert simple get/set routine to "attribute" code.
+        $filename,                    #= Filename to process
+  Str  :$remove,                      #= Prefix to remove from method names
+  Str  :$var,                         #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
+  Str  :$output-only,                 #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
+  Bool :$no-headers,                  #= Do not display section headers.
+  Int  :$trim-start,                  #= Trim lines from the beginning of the post-processed file
+  Int  :$trim-end,                    #= Trim lines from the end of the post-processed file
+  Str  :$remove-from-start,           #= Remove colon separated prefix strings from all lines
+  Str  :$remove-from-end,             #= Remove colon separate suffix strings from all lines
+  Str  :$delete,                      #= Comma separated list of lines to delete
+  Str  :$output             = 'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
+  Str  :$lib                = 'gtk',  #= Library name to use
+  Bool :$internal           = False,  #= Add checking for INTERNAL methods
+  Bool :$bland              = False,  #= Do NOT attempt to process preprocessor prefixes to subroutines
+  Bool :$get-set            = False,  #= Convert simple get/set routine to "attribute" code.
+  Bool :$raw-methods        = False   #= Use method format for raw invocations (NFYI)
 ) {
   my $fn = $filename;
 
@@ -419,51 +420,29 @@ sub MAIN (
     }
   }
 
-  sub outputSub($m) {
-    my @p = $m<params>;
+  sub outputSub ($m, $method = False) {
     my $subcall = "sub $m<original> ({ $m<o_call> })";
 
-    if $m<p6_return> && $m<p6_return> ne 'void' {
+    # if $method {
+    #   # This should be done, above.
+    #   my @p = $m<params>;
+    #   @p.shift if @p[0][1] eq $var;
+    #
+    # }
 
-      if $m<avail> {
-        say qq:to/SUB/;
-          $subcall
-            returns $m<p6_return>
-            is native({ $lib })
-            is export
-          \{ * \}
-          SUB
-      } else {
-        say qq:to/SUB/;
-          $subcall
-            is DEPRECATED
-            returns $m<p6_return>
-            is native({ $lib })
-            is export
-          \{ * \}
-          SUB
-      }
+    my $r = '';
+    $r ~= "\n  is DEPRECATED"                 if $m<avail>.not;
+    $r ~= "\n  returns { $m<p6_return> }"     if $m<p6_return> &&
+                                                 $m<p6_return> ne 'void';
+    $r ~= "\n  is symbol('{ $m<original> }')" if $method;
 
-    }  else {
-
-      if $m<avail> {
-        say qq:to/SUB/;
-          $subcall
-            is native({ $lib })
-            is export
-          \{ * \}
-          SUB
-      } else {
-        say qq:to/SUB/;
-          $subcall
-            is DEPRECATED
-            is native({ $lib })
-            is export
-          \{ * \}
-          SUB
-      }
-
-    }
+    say qq:to/SUB/;
+      $subcall {
+      $r }
+        is native({ $lib })
+        is export
+      \{ * \}
+      SUB
   }
 
   say "\nMETHODS\n-------" unless $no-headers;
@@ -525,9 +504,9 @@ sub MAIN (
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
     say "\n\n### $filename\n";
-    outputSub( %methods{$_} )     for %methods.keys.sort;
-    outputSub( %getset{$_}<get> ) for  %getset.keys.sort;
-    outputSub( %getset{$_}<set> ) for  %getset.keys.sort;
+    outputSub( %methods{$_}    , $raw-methods) for %methods.keys.sort;
+    outputSub( %getset{$_}<get>, $raw-methods) for  %getset.keys.sort;
+    outputSub( %getset{$_}<set>, $raw-methods) for  %getset.keys.sort;
   }
 
   for %collider.pairs.grep( *.value > 1 ) -> $d {
