@@ -24,17 +24,19 @@ use GTK::Raw::Widget;
 
 use GLib::Roles::Object;
 use GLib::Roles::Pointers;
+use ATK::Roles::Implementor;
 use GTK::Roles::Buildable;
 use GTK::Roles::Signals::Generic;
 use GTK::Roles::Signals::Widget;
 
 use GTK::StyleContext;
 
-our subset WidgetAncestry is export where
-  GtkBuildable | GtkWidget;
+our subset GtkWidgetAncestry is export where
+  GtkWidget | GtkBuildable | AtkImplementorIface | GObject;
 
 class GTK::Widget {
   also does GLib::Roles::Object;
+  also does ATK::Roles::Implementor;
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Widget;
@@ -46,10 +48,7 @@ class GTK::Widget {
   has $!n;
 
   submethod BUILD (:$widget) {
-    given $widget {
-      when WidgetAncestry { self.setWidget($widget) if $widget }
-      default             { }
-    }
+    self.setWidget($widget) if $widget
   }
 
   # Check all widgets to insure that %!signals is left for THIS object
@@ -70,14 +69,26 @@ class GTK::Widget {
   method setWidget($widget) {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
-    $!w = do given $widget {
+    $!w = do {
+      when AtkImplementorIface {
+        $!ai = $_;
+        cast(GtkWidget, $_);
+      }
+
       when GtkBuildable {
         $!b = $_;
         cast(GtkWidget, $_);
       }
+
+      when GObject {
+        $!o = $_;
+        cast(GtkWidget, $_);
+      }
+
       when GtkWidget {
         $_;
       }
+
       # This will go away once proper pass-down rules have been established.
       default {
 #        say "Setting from { .^name }";
@@ -86,7 +97,8 @@ class GTK::Widget {
     };
 
     self.roleInit-Object;
-    $!b = cast(GtkBuildable, $!w) unless $!b  # GTK::Roles::Buildable
+    self.roleInit-AtkImplementor;
+    self.roleInit-GtkBuildable;
   }
 
   method GTK::Raw::Definitions::GtkWidget
@@ -101,7 +113,7 @@ class GTK::Widget {
   multi method new(|c) {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
   }
-  multi method new (WidgetAncestry $widget, :$ref = True, *%others) {
+  multi method new (GtkWidgetAncestry $widget, :$ref = True, *%others) {
     return unless $widget;
 
     my $o = self.bless(:$widget, |%others);
