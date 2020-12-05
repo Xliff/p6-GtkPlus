@@ -1,4 +1,8 @@
 #!/bin/bash
+if [ "z$1" == "z" ]; then
+  echo "First parameter must be a directory!";
+	exit 1;
+fi
 
 if [ "$1" == "--clean" ]; then
 	find . -name \*.ref-bak -exec rm {} \;
