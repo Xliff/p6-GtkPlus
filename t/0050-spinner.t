@@ -33,6 +33,7 @@ MARK
         $spin.start;
         $button.label = 'Stop';
       }
+      
       when 'Stop' {
         $spin.stop;
         $button.label = 'Start';
