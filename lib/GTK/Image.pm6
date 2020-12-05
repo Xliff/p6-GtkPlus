@@ -11,7 +11,7 @@ use GTK::Raw::Image;
 use GLib::Value;
 use GTK::Widget;
 
-our subset ImageAncestry is export where GtkImage | WidgetAncestry;
+our subset ImageAncestry is export where GtkImage | GtkWidgetAncestry;
 
 class GTK::Image is GTK::Widget {
   has GtkImage $!i is implementor;

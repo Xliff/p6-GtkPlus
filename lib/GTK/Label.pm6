@@ -12,7 +12,7 @@ use Pango::Layout;
 
 use GTK::Widget;
 
-our subset LabelAncestry is export where GtkLabel | WidgetAncestry;
+our subset LabelAncestry is export where GtkLabel | GtkWidgetAncestry;
 
 class GTK::Label is GTK::Widget {
   has GtkLabel $!l is implementor;

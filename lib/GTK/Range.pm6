@@ -12,7 +12,7 @@ use GTK::Roles::Orientable;
 use GTK::Roles::Signals::Range;
 
 our subset RangeAncestry is export
-  where GtkRange | GtkOrientable | WidgetAncestry;
+  where GtkRange | GtkOrientable | GtkWidgetAncestry;
 
 class GTK::Range is GTK::Widget {
   also does GTK::Roles::Orientable;

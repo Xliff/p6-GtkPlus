@@ -10,7 +10,7 @@ use GTK::Widget;
 use GTK::Roles::Orientable;
 
 our subset LevelBarAncestry is export
-  where GtkLevelBar | GtkOrientable | WidgetAncestry;
+  where GtkLevelBar | GtkOrientable | GtkWidgetAncestry;
 
 class GTK::LevelBar is GTK::Widget {
   also does GTK::Roles::Orientable;

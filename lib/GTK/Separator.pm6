@@ -10,7 +10,7 @@ use GTK::Widget;
 use GTK::Roles::Orientable;
 
 our subset SeparatorAncestry
-  where GtkSeparator | GtkOrientable | WidgetAncestry;
+  where GtkSeparator | GtkOrientable | GtkWidgetAncestry;
 
 class GTK::Separator is GTK::Widget {
   also does GTK::Roles::Orientable;

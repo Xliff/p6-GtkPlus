@@ -19,7 +19,7 @@ use GTK::Roles::Orientable;
 use GTK::Roles::TreeModel;
 
 our subset CellViewAncestry is export
-  where GtkCellView | GtkCellLayout | GtkOrientable | WidgetAncestry;
+  where GtkCellView | GtkCellLayout | GtkOrientable | GtkWidgetAncestry;
 
 class GTK::CellView is GTK::Widget {
   also does GTK::Roles::CellLayout;
@@ -52,7 +52,7 @@ class GTK::CellView is GTK::Widget {
             $to-parent = cast(GtkWidget, $_);
             cast(GtkCellView, $_);
           }
-          when WidgetAncestry {
+          when GtkWidgetAncestry {
             $to-parent = $_;
             cast(GtkCellView, $_);
           }

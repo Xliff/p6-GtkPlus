@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-our subset CalendarAncestry is export where GtkCalendar | WidgetAncestry;
+our subset CalendarAncestry is export where GtkCalendar | GtkWidgetAncestry;
 
 class GTK::Calendar is GTK::Widget {
   has GtkCalendar $!cal is implementor;
@@ -28,7 +28,7 @@ class GTK::Calendar is GTK::Widget {
             $to-parent = nativecast(GtkWidget, $calendar);
             $_;
           }
-          when WidgetAncestry {
+          when GtkWidgetAncestry {
             $to-parent = $_;
             nativecast(GtkCalendar, $calendar);
           }

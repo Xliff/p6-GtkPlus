@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 our subset SpinnerAncestry is export
-  where GtkSpinner | WidgetAncestry;
+  where GtkSpinner | GtkWidgetAncestry;
 
 class GTK::Spinner is GTK::Widget {
   has GtkSpinner $!spin is implementor;

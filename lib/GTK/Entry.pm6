@@ -18,7 +18,7 @@ use GTK::Roles::Editable;
 use GTK::Roles::Signals::Entry;
 
 our subset EntryAncestry is export
-  where GtkEntry | GtkEditable | WidgetAncestry;
+  where GtkEntry | GtkEditable | GtkWidgetAncestry;
 
 class GTK::Entry is GTK::Widget {
   also does GTK::Roles::Editable;
@@ -56,7 +56,7 @@ class GTK::Entry is GTK::Widget {
         $to-parent = cast(GtkWidget, $_);
         cast(GtkEntry, $_);
       }
-      when WidgetAncestry {
+      when GtkWidgetAncestry {
         $to-parent = $_;
         cast(GtkEntry, $_);
       }

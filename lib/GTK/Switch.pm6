@@ -10,7 +10,7 @@ use GTK::Widget;
 use GTK::Roles::Actionable;
 
 our subset SwitchAncestry is export
-  where GtkSwitch | GtkActionable | WidgetAncestry;
+  where GtkSwitch | GtkActionable | GtkWidgetAncestry;
 
 class GTK::Switch is GTK::Widget {
   also does GTK::Roles::Actionable;

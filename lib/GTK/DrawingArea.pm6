@@ -8,7 +8,7 @@ use GTK::Raw::Types;
 use GTK::Widget;
 
 our subset DrawingAreaAncestry is export of Mu
-  where GtkDrawingArea | WidgetAncestry;
+  where GtkDrawingArea | GtkWidgetAncestry;
 
 sub gtk_drawing_area_get_type ()
   returns GType

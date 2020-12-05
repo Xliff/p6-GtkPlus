@@ -15,7 +15,7 @@ use GLib::Roles::ListData;
 use GTK::Roles::LatchedContents;
 
 our subset ContainerAncestry is export
-  where GtkContainer | WidgetAncestry;
+  where GtkContainer | GtkWidgetAncestry;
 
 class GTK::Container is GTK::Widget {
   also does GTK::Roles::LatchedContents;

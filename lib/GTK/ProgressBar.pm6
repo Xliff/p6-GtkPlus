@@ -13,7 +13,7 @@ use GTK::Widget;
 use GTK::Roles::Orientable;
 
 our subset ProgressBarAncestry is export
-  where GtkProgressBar | GtkOrientable | WidgetAncestry;
+  where GtkProgressBar | GtkOrientable | GtkWidgetAncestry;
 
 class GTK::ProgressBar is GTK::Widget {
   also does GTK::Roles::Orientable;
