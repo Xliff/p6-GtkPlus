@@ -87,6 +87,7 @@
 - Consider: Any UINT parameter should have a "where * > 0" placed on it.
   LARGE initiative. Subject to review.
 + PERFORM REFINEMENT REVIEW ON GIO!
+- VERSIONING ON GTK OBJECTS!
 - For refactoring: the code in the "attributes" (not "properties") routines
   should have the getter and setter routines broken out into their own methods.
   The existing "attribute" methods should then call the corresponding methods.
