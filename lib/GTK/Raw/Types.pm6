@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GLib::Raw::Exports;
+use ATK::Raw::Exports;
 use Pango::Raw::Exports;
 use GIO::Raw::Exports;
 use GDK::Raw::Exports;
@@ -19,6 +20,9 @@ need GLib::Raw::Object;
 need GLib::Raw::Structs;
 need GLib::Raw::Struct_Subs;
 need GLib::Raw::Subs;
+need ATK::Raw::Definitions;
+need ATK::Raw::Enums;
+need ATK::Raw::Structs;
 need Pango::Raw::Definitions;
 need Pango::Raw::Enums;
 need Pango::Raw::Structs;
@@ -41,6 +45,7 @@ need GTK::Raw::Requisition;
 
 BEGIN {
   glib-re-export($_) for |@glib-exports,
+                         |@atk-exports,
                          |@pango-exports,
                          |@gio-exports,
                          |@gdk-exports,
