@@ -2,12 +2,19 @@ use v6.c;
 
 use NativeCall;
 
-
 use GTK::Raw::Buildable;
 use GTK::Raw::Types;
 
 role GTK::Roles::Buildable {
   has GtkBuildable $!b;
+
+  method roleInit-GtkBuildable {
+    my \i = findProperImplementor(self.^attributes);
+    $!b   = cast( GtkBuildable, i.get_values(self) );
+  }
+
+  method GTK::Raw::Definitions::GtkBuildable
+  { $!b }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -27,40 +34,49 @@ role GTK::Roles::Buildable {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method add_child (GtkBuilder() $builder, GObject $child, Str() $type) {
+  method add_child (
+    GtkBuilder() $builder,
+    GObject()    $child,
+    Str()        $type
+  ) {
     gtk_buildable_add_child($!b, $builder, $child, $type);
   }
 
-  method construct_child (GtkBuilder() $builder, Str() $name) {
-    gtk_buildable_construct_child($!b, $builder, $name);
+  method construct_child (GtkBuilder() $builder, Str() $name, :$raw = False) {
+    my $o = gtk_buildable_construct_child($!b, $builder, $name);
+
+    $o ??
+      ( $raw ?? $o !! GLib::Roles::Object.new-object-obj($o, :!ref) )
+      !!
+      Nil;
   }
 
   method custom_finished (
     GtkBuilder() $builder,
-    GObject $child,
-    Str() $tagname,
-    gpointer $data
+    GObject()    $child,
+    Str()        $tagname,
+    gpointer     $data
   ) {
     gtk_buildable_custom_finished($!b, $builder, $child, $tagname, $data);
   }
 
   method custom_tag_end (
     GtkBuilder() $builder,
-    GObject $child,
-    Str() $tagname,
-    gpointer $data
+    GObject()    $child,
+    Str()        $tagname,
+    gpointer     $data
   ) {
     gtk_buildable_custom_tag_end($!b, $builder, $child, $tagname, $data);
   }
 
   method custom_tag_start (
-    GtkBuilder() $builder,
-    GObject $child,
-    Str() $tagname,
-    GMarkupParser $parser,
-    gpointer $data
+    GtkBuilder()    $builder,
+    GObject()       $child,
+    Str()           $tagname,
+    GMarkupParser() $parser,
+    gpointer        $data
   ) {
-    gtk_buildable_custom_tag_start(
+    so gtk_buildable_custom_tag_start(
       $!b,
       $builder,
       $child,
@@ -70,12 +86,23 @@ role GTK::Roles::Buildable {
     );
   }
 
-  method get_internal_child (GtkBuilder() $builder, Str() $childname) {
-    gtk_buildable_get_internal_child($!b, $builder, $childname);
+  method get_internal_child (
+    GtkBuilder() $builder,
+    Str()        $childname,
+                 :$raw       = False
+  ) {
+    my $o = gtk_buildable_get_internal_child($!b, $builder, $childname);
+
+    $o ??
+      ( $raw ?? $o !! GLib::Roles::Object.new-object-obj($o, :!ref) )
+      !!
+      Nil;
   }
 
-  method get_buildable_type {
-    gtk_buildable_get_type();
+  method buildable_get_type (::?CLASS:U: ) {
+    state ($n, $t);
+
+    unstable_get_type( ::?CLASS.^name, &gtk_buildable_get_type, $n, $t );
   }
 
   method parser_finished (GtkBuilder() $builder) {
@@ -84,8 +111,8 @@ role GTK::Roles::Buildable {
 
   method set_buildable_property (
     GtkBuilder() $builder,
-    Str() $name,
-    GValue $value
+    Str()        $name,
+    GValue()     $value
   ) {
     gtk_buildable_set_buildable_property($!b, $builder, $name, $value);
   }
