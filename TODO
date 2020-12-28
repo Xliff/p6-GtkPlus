@@ -363,13 +363,15 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
   https://gitlab.gnome.org/GNOME/json-glib/tree/master/json-glib
 + A Perl6 port for libsoup
 + Consider BABL bindings
+- Consider Apache Arrow (needs template support!)
+- Consider gUPnP!
 - DEFINITELY consider GEGL bindings. Use generated data structures for
   operations, since they have no .h files, however the good bits are easily
   parsable from .c
 - Consider the potential for libav bindings
 - Consider Apache C-API bindings, along with a potential module creation script from Raku sources.
 - Consider Mutter bindings (https://developer.gnome.org/meta/stable/)
-- ATK bindings!
++ ATK bindings!
 - Consider Togra bindings (http://togra.sourceforge.net/screenshots.html),
   however this may be more of a port from Python, rather than a set of bindings.
   + Aand.... it is. The C-lib, rather than being a generic resource, is there
