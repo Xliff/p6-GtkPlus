@@ -378,4 +378,5 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
     specifically to bind with Python. Might be easier to write something similar
     based on COGL.
 - Consider a Perl6 port of SVOX (See files in libttspico-dev, start with /usr/include/picoapi.h)
+- Tensorflow? (https://github.com/tensorflow/tensorflow/tree/v2.4.0/tensorflow/c)
 - The GTK CSS Inspector
