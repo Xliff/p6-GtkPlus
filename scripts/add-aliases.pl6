@@ -51,7 +51,7 @@ sub MAIN($filename) {
     $full_line ~= $_;
 
     given $full_line {
-      when $full_line ~~ /^ 'use v6' [ '.' <[c..z]> ]? / {
+      when $full_line ~~ /^ 'use v6.c;' / {
         $full_line ~= "\n\nuse Method::Also;";
         $add = True;
       }
