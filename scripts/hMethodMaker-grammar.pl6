@@ -203,6 +203,32 @@ sub MAIN (
     $contents = @c.join("\n");
   }
 
+  # Check for multiple semi-colons on a line and split that line.
+  # This is a pain in the ass, as we have to re-perform operations that
+  # have been already done to preserve correctness!
+  if $contents.lines.map({ +.comb(';') }).grep( * > 1) {
+    $contents = (do {
+      (my $sc = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
+      my $count = 1;
+      gather for $sc.lines {
+        for .chop.split(';') {
+          my $s = $_;
+          if $remove-from-start {
+            for ( $remove-from-start // () ).split(':') -> $r {
+              $s ~~ s:g/ ^^ \s* $r \s* //;
+            }
+          }
+          if $remove-from-end {
+            for ( $remove-from-end // () ).split(':') -> $r {
+              $s ~~ s:g/ \s* $r \s* ';'? $$ /;/;
+            }
+          }
+          take "{ $count++ }: { $s };";
+        }
+      }
+    }).join("\n");
+  }
+
   my \grammar := $internal ??
     C-Function-Internal-Def
     !!
@@ -332,7 +358,7 @@ sub MAIN (
       when 'gboolean' {
         'uint32';
       }
-      when 'gchar' | 'guchar' {
+      when 'gchar' | 'guchar' | 'char' {
         # This logic may no longer be necessary.
         #$p++;
         'Str';
