@@ -4,7 +4,7 @@ if [ "$1" = "--debug" ]; then
   echo "Running perl6 script in debug mode..."
   EXEC=perl6-gdb-m
   shift
-elif [ "$1" = "--valgrind" ]; then 
+elif [ "$1" = "--valgrind" ]; then
   echo "Running perl6 script in valgrind mode..."
   EXEC=perl6-valgrind-m
   shift
@@ -23,6 +23,9 @@ INCLUDES="-I${P6_GTK_HOME}/p6-GLib/lib \
 -I${P6_GTK_HOME}/p6-ATK/lib \
 -I${P6_GTK_HOME}/p6-JSON-GLib/lib \
 -I${P6_GTK_HOME}/p6-GIR/lib \
+-I${P6_GTK_HOME}/p6-SOUP/lib \
+-I${P6_GTK_HOME}/p6-GSSDP/lib \
+-I${P6_GTK_HOME}/p6-GUPnP/lib \
 -I${P6_GTK_HOME}/p6-Pango/lib \
 -I${P6_GTK_HOME}/p6-GIO/lib \
 -I${P6_GTK_HOME}/p6-GDK/lib \
