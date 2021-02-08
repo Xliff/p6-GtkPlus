@@ -381,3 +381,4 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - Consider libchamplain - Maps + Clutter = MINE!
 - Tensorflow? (https://github.com/tensorflow/tensorflow/tree/v2.4.0/tensorflow/c)
 - The GTK CSS Inspector
+- Evolution Data Server (https://developer.gnome.org/eds/stable/EDataCal.html)
