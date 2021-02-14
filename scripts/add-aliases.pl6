@@ -10,18 +10,18 @@ class X::WithoutLineNumber is X::AdHoc {
   }
 }
 
-sub MAIN($filename) {
+sub MAIN($filename, :$test) {
   CATCH { default { .payload.say; exit } }
 
-  die X::WithoutLineNumber.new(payload => "'$filename' cannot be opened.\n")
+  die X::WithoutLineNumber.new(message => "'$filename' cannot be opened.\n")
     unless $filename.IO.e;
 
   my $contents = $filename.IO.open.slurp;
 
-  die X::WithoutLineNumber.new(payloar => "'$filename' has already been aliased!\n")
+  die X::WithoutLineNumber.new(message => "'$filename' has already been aliased!\n")
     if $contents.lines[^5].join('') ~~ /'Method::Also'/;
 
-  $filename.IO.rename("{ $filename }.bak");
+  $filename.IO.rename("{ $filename }.alias-bak") unless $test;
 
   my token method_name {
     <-[\s(]>+
@@ -50,37 +50,47 @@ sub MAIN($filename) {
     $full_line ~= "\n" if $method;
     $full_line ~= $_;
 
+    my ($msm, $mpm, $cr);
+    $cr = True;
     given $full_line {
       when $full_line ~~ /^ 'use v6.c;' / {
         $full_line ~= "\n\nuse Method::Also;";
         $add = True;
       }
       when $full_line ~~ &method_start {
-        $method = True;
+        ($method, $msm) = ( True, $/ );
         proceed;
       }
       when $full_line ~~ &method_proto {
-        $proto = True;
+        ($proto, $mpm) = ( True, $/ );
         proceed;
       }
+
+      my token replaceables { ( <[\-_]>) }
       when $proto {
         my $fm = $/;
-        my $mn = $/<method_name>;
+        my $mn = $mpm<method_name>;
         # Better version of this logic would put delimeter checking
         # in get-alias instead of passing it as a parameter.
-        if $mn ~~ /(<[\-_]>)/ {
+        if $mn ~~ &replaceables {
           my $al = get-alias($mn, $/[0]);
-          my $tbr = $fm.Str;
+          my $tbr = $mpm.Str;
 
           $full_line ~~ s/$tbr/{$tbr}\n      is also<{$al}>/;
           %proto{$mn} = True;
         }
         ($add, $proto) = (True, False);
       }
+      when $method && ($msm<method_name> // '').Str.contains('::') {
+        my $al = $msm<method_name>.split('::').tail;
+        $full_line.substr-rw($msm.from, $msm.to) =
+          "{ $msm }\n    is also<{$al}>";;
+        ($add, $cr) = (True, False);
+      }
       when $method && $full_line ~~ &method_def {
         my $fm = $/[0];
         my $mn = $fm<method_start><method_name>;
-        if $mn ~~ /(<[\-_>]>)/ {
+        if $mn ~~ &replaceables {
           if %proto{$mn}:exists {
             $method = False;
             proceed;
@@ -99,12 +109,22 @@ sub MAIN($filename) {
         $add = True;
       }
     }
+
+    my $d = ++$;
+
     if $add {
-      @lines.push("{ $full_line }\n");
+      @lines.push( "{ $full_line }" ~ ($cr ?? "\n" !! '') );
       $full_line = '';
       $add = False;
     }
   }
+  say $full_line // '<NO LINE DATA>';
+  @lines.push($full_line) if $full_line;
 
-  $filename.IO.spurt: @lines.join('');
+  if $test {
+    @lines.join('').say;
+  } else {
+    $filename.IO.spurt: @lines.join('');
+  }
+
 }
