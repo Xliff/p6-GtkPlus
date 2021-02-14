@@ -5,9 +5,9 @@ use LWP::Simple;
 use Mojo::DOM:from<Perl5>;
 
 sub MAIN (
-  $control is copy,
-  :$var    is copy = 'w',
-  :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
+  $control           is copy,
+  :$var              is copy = 'w',
+  :$prefix           is copy = "https://developer.gnome.org/gtk3/stable/"
 ) {
   # If it's a URL, then try to pick it apart
   my $ext = '';
@@ -95,6 +95,7 @@ sub MAIN (
 
       my (%c, $co);
       my $types = @t.map(*.text.trim).join(', ');
+
       my @really-strings = <char chararray gchar gchararray>;
       my $gtype = do given $types {
         when 'gboolean' { $co = 'Int()'; 'G_TYPE_BOOLEAN' }
@@ -115,16 +116,18 @@ sub MAIN (
         }
       }
       my ($vtype-r, $vtype-w);
+      my $i = ' ' x 8;
       if $gtype ne '-type-' {
         $_ = $types;
         my $u = S/^ 'g'//;
         if $u eq @really-strings.any {
           $u = 'string';
         }
-        $vtype-r = '        $gv.' ~ $u ~ ';';
+
+        $vtype-r = $i ~ '$gv.' ~ $u ~ ';';
         $vtype-w = '$gv.' ~ $u ~ ' = $val;';
       } else {
-        $vtype-r = '        #$gv.TYPE';
+        $vtype-r = $i ~ '#$gv.TYPE';
         $vtype-w = '#$gv.TYPE = $val;';
       }
       with $rw {
@@ -136,7 +139,7 @@ sub MAIN (
         if $rw.any eq 'Read';
 
         %c<write> =
-          "        { $vtype-w }\n" ~
+          "{ $vtype-w }\n" ~
           "        self.prop_set(\'{ $mn }\', \$gv);"
         if $rw.any eq 'Write';
 
