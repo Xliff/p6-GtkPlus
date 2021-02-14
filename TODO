@@ -328,6 +328,11 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
 - Currently all ::Roles::Signals::* compunits export PUBLIC methods that are used
   to create signal handlers. This SHOULD NOT be so. Make them all private!
 - Future refactor or script: "$s.note($_);" => "$s.note($_); .backtrace.summary.say"
+- Add trait "glib-property" to ALL PROPERTIES. This should not be as difficult as
+  it sounds. Using scripts/get-properties, get a list of all property names.
+  Then retrieve the line of the property definition from .^lookup($method-name).line.
+  Write a script using this information to append "is glib-property".
+
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
