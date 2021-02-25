@@ -10,12 +10,10 @@ use GLib::Value;
 use GTK::TreeIter;
 use GTK::TreePath;
 
+my %typeData;
+
 role GTK::Roles::TreeModel {
   has GtkTreeModel $!tm;
-
-  submethod BUILD(:$tree) {
-    $!tm = $tree;
-  }
 
   method GTK::Raw::Definitions::GtkTreeModel
     is also<
@@ -26,6 +24,14 @@ role GTK::Roles::TreeModel {
 
   method new-treemodel-obj (GtkTreeModel $tree) {
     $tree ?? self.bless(:$tree) !! Nil;
+  }
+
+  method setTypeData (@types) {
+    %typeData{ +$!tm.p } = @types;
+  }
+
+  method getTypeData {
+    %typeData{ +$!tm.p };
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -73,17 +79,21 @@ role GTK::Roles::TreeModel {
     gtk_tree_model_foreach($!tm, &func, $user_data);
   }
 
-  multi method get(GtkTreeIter() $iter, @types, @cols) {
+  multi method get (GtkTreeIter() $iter, @types, @cols) {
     samewith($iter, @types, |@cols);
   }
-  multi method get(GtkTreeIter() $iter, @types, *@cols) {
+  multi method get (GtkTreeIter() $iter, *@cols) {
     my @r;
     my $t = 0;
     @r.push(
       do {
-        my $v = GValue.new;
-        self.get_value($iter, $_, $v);
-        GLib::Value.new($v);
+        my ($v, $c) = (GValue.new, .Int);
+        self.get_value($iter, $c, $v);
+
+        say "Get-T: { self.getTypeData.gist }";
+        say "Get-C: { $c }";
+
+        GLib::Value.new($v).valueFromGType( self.getTypeData[$c] );
       }
     ) for @cols;
     @r;
@@ -314,5 +324,45 @@ role GTK::Roles::TreeModel {
   }
 
   # ↑↑↑↑ METHODS ↑↑↑↑
+
+}
+
+use GLib::Roles::Object;
+
+our subset GtkTreeModelAncestry is export of Mu
+  where GtkTreeModel | GObject;
+
+class GTK::TreeModel {
+  also does GLib::Roles::Object;
+  also does GTK::Roles::TreeModel;
+
+  submethod BUILD(:$tree) {
+    self.setGtkTreeModel($tree) if $tree;
+  }
+
+  method setGtkTreeModel (GtkTreeModelAncestry $_) {
+    my $to-parent;
+
+    $!tm = do {
+      when GtkTreeModel {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkTreeModel, $_);
+      }
+    }
+    self!setObject($to-parent);
+  }
+
+  method new (GtkTreeModelAncestry $tree, :$ref = True) {
+    return Nil unless $tree;
+
+    my $o = self.bless( :$tree );
+    $o.ref if $ref;
+    $o;
+  }
 
 }
