@@ -53,6 +53,25 @@ class GTK::TreeViewColumn {
     $treeview ?? self.bless(:$treeview) !! Nil;
   }
 
+  proto method new_with_attributes (|)
+    is also<new-with-attributes>
+  { * }
+
+  multi method new_with_attributes (GtkCellRenderer() $cell, *%attrs) {
+    samewith(Str, $cell, |%attrs);
+  }
+  multi method new_with_attributes (
+    Str()             $title,
+    GtkCellRenderer() $cell,
+                      *%attrs
+  ) {
+    my $o = self.new;
+    return Nil unless $o;
+
+    $o.title = $title if $title;
+    $o.add-attribute($cell, .key, .value) for %attrs.pairs;
+    $o;
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
