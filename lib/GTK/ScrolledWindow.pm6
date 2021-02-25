@@ -376,6 +376,10 @@ class GTK::ScrolledWindow is GTK::Bin {
     gtk_scrolled_window_set_policy($!sw, $hp, $vp);
   }
 
+  method setAutomaticPolicy {
+    self.set_policy(GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  }
+
   method unset_placement is also<unset-placement> {
     gtk_scrolled_window_unset_placement($!sw);
   }
