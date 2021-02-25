@@ -8,20 +8,20 @@ use GTK::Raw::Types;
 
 use GDK::RGBA;
 use GLib::Value;
-use GLib::Roles::Properties;
-use GTK::Roles::Data;
+
+use GLib::Roles::Object;
 use GTK::Roles::Signals::CellRenderer;
 
 class GTK::CellRenderer {
-  also does GLib::Roles::Properties;
-  also does GTK::Roles::Data;
+  also does GLib::Roles::Object;
+  #also does GTK::Roles::Data;
   also does GTK::Roles::Signals::CellRenderer;
 
   has GtkCellRenderer $!cr is implementor;
 
   method setCellRenderer(GtkCellRenderer $renderer) {
-    self!setObject($!cr = $renderer);       # GLib::Roles::Properties
-    $!data = $!cr;                          # GTK::Roles::Data
+    self!setObject($!cr = $renderer);  # GLib::Roles::Properties
+    #$!data = self.GObject;             # GTK::Roles::Data
   }
 
   method GTK::Raw::Definitions::GtkCellRenderer
