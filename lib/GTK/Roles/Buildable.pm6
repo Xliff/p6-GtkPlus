@@ -10,7 +10,7 @@ role GTK::Roles::Buildable {
 
   method roleInit-GtkBuildable {
     my \i = findProperImplementor(self.^attributes);
-    $!b   = cast( GtkBuildable, i.get_values(self) );
+    $!b   = cast( GtkBuildable, i.get_value(self) );
   }
 
   method GTK::Raw::Definitions::GtkBuildable
