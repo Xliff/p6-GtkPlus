@@ -26,16 +26,19 @@ class GTK::TreeStore  {
   also does GTK::Roles::TreeSortable;
 
   has GtkTreeStore $!tree is implementor;
-  has @!types;
 
-  submethod BUILD(:$treestore, :@!types) {
-    self!setObject($!tree = $treestore);           # GLib::Roles::Object
+  submethod BUILD(:$treestore, :@types) {
+    if $treestore {
+      self!setObject($!tree = $treestore);           # GLib::Roles::Object
 
-    $!b  = nativecast(GtkBuildable,      $!tree);  # GTK::Roles::Buildable
-    $!tm = nativecast(GtkTreeModel,      $!tree);  # GTK::Roles::TreeModel
-    $!ts = nativecast(GtkTreeSortable,   $!tree);  # GTK::Roles::TreeSortable
-    $!dd = nativecast(GtkTreeDragDest,   $!tree);  # GTK::Roles::TreeDragDest
-    $!ds = nativecast(GtkTreeDragSource, $!tree);  # GTK::Roles::TreeDragSource
+      $!b  = nativecast(GtkBuildable,      $!tree);  # GTK::Roles::Buildable
+      $!tm = nativecast(GtkTreeModel,      $!tree);  # GTK::Roles::TreeModel
+      $!ts = nativecast(GtkTreeSortable,   $!tree);  # GTK::Roles::TreeSortable
+      $!dd = nativecast(GtkTreeDragDest,   $!tree);  # GTK::Roles::TreeDragDest
+      $!ds = nativecast(GtkTreeDragSource, $!tree);  # GTK::Roles::TreeDragSource
+
+      self.setTypeData(@types);
+    }
   }
 
   method GTK::Raw::Definitions::GtkTreeStore
@@ -283,8 +286,8 @@ class GTK::TreeStore  {
       my $val = %nv{$_};
       unless $val ~~ (GLib::Value, GValue).any {
         # cw: -XXX- Check to insure right types being used!
-        my $v = GLib::Value.new( @!types[$col] );
-        $v.valueFromGType( @!types[$col] ) = $val;
+        my $v = GLib::Value.new( self.getTypeData[$col] );
+        $v.valueFromGType( self.getTypeData[$col] ) = $val;
         $val = $v;
       }
       @columns[$col] = $val.GValue;
