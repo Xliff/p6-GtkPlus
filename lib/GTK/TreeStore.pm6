@@ -6,8 +6,11 @@ use NativeCall;
 use GTK::Raw::TreeStore;
 use GTK::Raw::Types;
 
-use GLib::Roles::Object;
+use GLib::Value;
+use GTK::TreeIter;
 
+use GLib::Roles::Object;
+use GLib::Roles::TypedBuffer;
 use GTK::Roles::Buildable;
 use GTK::Roles::TreeDnD;
 use GTK::Roles::TreeModel;
@@ -23,8 +26,9 @@ class GTK::TreeStore  {
   also does GTK::Roles::TreeSortable;
 
   has GtkTreeStore $!tree is implementor;
+  has @!types;
 
-  submethod BUILD(:$treestore) {
+  submethod BUILD(:$treestore, :@!types) {
     self!setObject($!tree = $treestore);           # GLib::Roles::Object
 
     $!b  = nativecast(GtkBuildable,      $!tree);  # GTK::Roles::Buildable
@@ -42,23 +46,15 @@ class GTK::TreeStore  {
     $treestore ?? self.bless(:$treestore) !! Nil;
   }
   multi method new (*@types) {
-    # self does NOT exist yet, so can't use GTK::Roles::Types methods.
-    #
-    # Really should check into macros for these for this EXACT situation.
-    for (@types) {
-      die "{ $_ } is not a valid GType value"
-        unless $_.Int (elem) GTypeEnum.enums.values;
-    }
-    my $t = CArray[GType].new;
-    my $i = 0;
-    $t[$i++] = $_ for @types;
-    my gint $c = @types.elems;
-    my $treestore = gtk_tree_store_newv($c, $t);
+    my $treestore = gtk_tree_store_newv(
+      @types.elems,
+      ArrayToCArray(GType, @types)
+    );
 
-    $treestore ?? self.bless(:$treestore) !! Nil;
+    $treestore ?? self.bless(:$treestore, :@types) !! Nil;
   }
 
-  method !checkCV(@columns, @values) {
+  method !checkCV (@columns, @values) {
     die 'Contents of @columns must be integers.'
       unless @columns.all ~~ (Int, IntStr).any;
     warn '@columns exceeds the number of @values'
@@ -67,15 +63,12 @@ class GTK::TreeStore  {
       if +@values > +@columns;
     my $max = max(+@columns, +@values);
 
-    my $c = CArray[int32].new(@columns[^$max]);
-    my $v = CArray[GValue].new;
-    for (^$max) {
-      $v[$_] = do given @values[$_] {
-        # NOTE! $_ is now the current element of @value
-        when GValue { $_ }
-        default     { $_.GValue }
-      }
-    }
+    say "Columns: { @columns.gist }";
+    say "Values:  { @values.gist }";
+
+    my $c = ArrayToCArray( uint32, @columns[^$max] );
+    my $v = GLib::Roles::TypedBuffer[GValue].new( @values[^$max] ).p;
+
     ($c, $v);
   }
 
@@ -89,11 +82,15 @@ class GTK::TreeStore  {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method append (
-    GtkTreeIter() $iter,
-    GtkTreeIter() $parent = GtkTreeIter
+  multi method append (
+    GtkTreeIter() $parent =  GtkTreeIter,
+                  :$raw   =  False
   ) {
+    my $iter = GtkTreeIter.new;
+
     gtk_tree_store_append($!tree, $iter, $parent);
+
+    $iter = $raw ?? $iter !! GTK::TreeIter.new($iter);
   }
 
   method clear {
@@ -264,21 +261,84 @@ class GTK::TreeStore  {
     gtk_tree_store_set_value($!tree, $iter, $c, $value);
   }
 
+  method set (GtkTreeIter() $iter, *%values) {
+    say 'Setting values...';
+
+    # Values here MUST be GValues
+    my %nv = %values.clone;
+
+    # cw: Put extra work to bypass the next multi, but that's difficult.
+    #     Could just leave as is and use the next multi, but that's inefficient.
+    my (@columns);
+    for %nv.keys {
+      my $col = do if .Int -> $i {
+        $i
+      } elsif .Int.defined {
+        # Handle 0
+        .Int;
+      } else {
+        ::("$_").Int
+      }
+
+      my $val = %nv{$_};
+      unless $val ~~ (GLib::Value, GValue).any {
+        # cw: -XXX- Check to insure right types being used!
+        my $v = GLib::Value.new( @!types[$col] );
+        $v.valueFromGType( @!types[$col] ) = $val;
+        $val = $v;
+      }
+      @columns[$col] = $val.GValue;
+    }
+    @columns = @columns.kv.rotor(2).grep( *[1] );
+
+    self.set_valuesv(
+      $iter,
+      @columns.map( *[0] ).Array,
+      @columns.map( *[1] ).Array
+    )
+  }
+
+  # This is for when the .values in %values contain GLib::Value or GValues!
   method set_values(GtkTreeIter() $iter, %values) is also<set-values> {
-    my @c = %values.keys.map( *.Int ).sort;
-    my @v;
-    @v.push(%values{$_}) for @c;
+    my (@c, @v);
+    for %values.keys {
+      my $col = do if .Int -> $i {
+        $i
+      } else {
+        ::("$_").Int
+      }
+
+      my $v = %values{$_};
+      if $v !~~ GValue {
+        if $v.^lookup('GValue') -> $cm {
+          @v.push: $cm($v);
+        } else {
+          die '.values in %values must contain GValue-compatible items!';
+        }
+      } else {
+        @v.push: $v;
+      }
+      @c.push: $col;
+    }
     self.set_valuesv($iter, @c, @v);
   }
 
+  # @values must be GValue!
   method set_valuesv (
     GtkTreeIter() $iter,
-    @columns,
-    @values,
+                  @columns,
+                  @values,
   )
     is also<set-valuesv>
   {
     my ($c, $v) = self!checkCV(@columns, @values);
+
+    say 'Cols';
+    say "\tC: { $_ }" for $c;
+
+    say 'Vals';
+    say "\tV: { $_ }" for $v;
+
     gtk_tree_store_set_valuesv($!tree, $iter, $c, $v, $c.elems);
   }
 
