@@ -11,6 +11,8 @@ use GTK::TreeIter;
 
 use GTK::Roles::CellEditable;
 use GTK::Roles::CellLayout;
+use GTK::Roles::TreeModel;
+
 use GTK::Roles::Signals::ComboBox;
 
 our subset ComboBoxAncestry is export
@@ -292,12 +294,16 @@ class GTK::ComboBox is GTK::Bin {
     );
   }
 
-  method model is rw {
+  method model (:$raw = False) is rw {
     Proxy.new(
       FETCH => sub ($) {
-        # This needs a placeholder object so that pointers can be properly
-        # set. Until that has been designed, leave it as a pointer.
-        gtk_combo_box_get_model($!cb);
+        my $tm = gtk_combo_box_get_model($!cb);
+
+        # Transfer: none
+        $tm ??
+          ( $raw ?? $tm !! GTK::TreeModel.new($tm) )
+          !!
+          Nil;
       },
       STORE => sub ($, GtkTreeModel() $model is copy) {
         gtk_combo_box_set_model($!cb, $model);
