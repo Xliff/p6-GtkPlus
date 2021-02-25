@@ -66,7 +66,7 @@ class GTK::Widget {
     self.disconnect-all($_) for %!signals, %!signals-widget
   }
 
-  method setWidget($widget) {
+  method setWidget (GtkWidgetAncestry $_) {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
     $!w = do {
@@ -92,7 +92,7 @@ class GTK::Widget {
       # This will go away once proper pass-down rules have been established.
       default {
 #        say "Setting from { .^name }";
-         die "GTK::Widget initialized from unexpected source!";
+         die "GTK::Widget initialized from unexpected source: { .^name }!";
       }
     };
 
