@@ -197,11 +197,11 @@ sub gtk_tree_store_set_value (
   { * }
 
 sub gtk_tree_store_set_valuesv (
-  GtkTreeStore $tree_store,
-  GtkTreeIter $iter,
-  CArray[int32] $columns,
-  CArray[GValue] $values,
-  gint $n_values
+  GtkTreeStore   $tree_store,
+  GtkTreeIter    $iter,
+  CArray[uint32] $columns,
+  Pointer        $values,     # GValue *
+  gint           $n_values
 )
   is native(gtk)
   is export
