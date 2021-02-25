@@ -21,21 +21,7 @@ class GTK::Bin is GTK::Container {
   # }
 
   submethod BUILD(:$bin) {
-    given $bin {
-      when BinAncestry {
-        self.setBin($bin);
-      }
-
-      when GTK::Bin {
-        my $c = ::?CLASS.^name;
-        warn "To copy a { $c } object, use { $c }.clone.";
-      }
-
-      default {
-        # DO NOT throw exception here due to BUILD path logic and descendant
-        # creation!
-      }
-    }
+    self.setBin($bin) if $bin;
   }
 
   method GTK::Raw::Definitions::GtkBin
@@ -45,7 +31,7 @@ class GTK::Bin is GTK::Container {
     >
   { $!bin }
 
-  method setBin(BinAncestry $_) {
+  method setBin (BinAncestry $_) {
     return unless $_;
 
     my $to-parent;
@@ -59,6 +45,8 @@ class GTK::Bin is GTK::Container {
         cast(GtkBin, $_);
       }
     };
+    say "BIN: { $!bin // 'NIL' }";
+    say "BIN-TP: { $to-parent // 'NIL' }";
     self.setContainer($to-parent);
   }
 
