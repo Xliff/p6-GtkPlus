@@ -20,6 +20,9 @@ class GTK::CellRenderer {
   has GtkCellRenderer $!cr is implementor;
 
   method setCellRenderer(GtkCellRenderer $renderer) {
+    return unless $renderer;
+    
+    say "CR: { $renderer // 'NIL' }";
     self!setObject($!cr = $renderer);  # GLib::Roles::Properties
     #$!data = self.GObject;             # GTK::Roles::Data
   }
