@@ -174,6 +174,7 @@ sub MAIN (
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
     if $trim-end;
 
+  my $stripped-contents = $contents;
   $contents = (gather for $contents.lines.kv -> $k, $v {
     take "{ $k + 1 }: { $v }" }
   ).join("\n");
@@ -227,6 +228,9 @@ sub MAIN (
         }
       }
     }).join("\n");
+    # $contents may change in this block, so $stripped-contents needs to be
+    # updated
+    (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
   }
 
   my \grammar := $internal ??
@@ -235,7 +239,6 @@ sub MAIN (
     C-Function-Def;
   my $top-rule  = $bland ?? 'top-bland'      !! 'top-normal';
   my $func-rule = $bland ?? 'function-bland' !! 'function-normal';
-  (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
   my $matched = grammar.parse($stripped-contents, rule => $top-rule);
 
   unless $matched {
