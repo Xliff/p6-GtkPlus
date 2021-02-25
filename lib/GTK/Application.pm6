@@ -199,18 +199,16 @@ class GTK::Application is GIO::Application {
     );
   }
 
-  # Static methods for main loop invocation and termination
-  method main (GTK::Application:U:) {
+  method main {
     gtk_main();
   }
 
-  multi method quit (GTK::Application:U: :$gtk is required) {
+  # Static methods for main loop termination
+  multi method quit {
     gtk_main_quit();
   }
-  multi method quit (:$gtk is required) {
-    GTK::Application.quit(:gtk);
-  }
-  multi method quit {
+  # To use g_application_quit, you must have an invocant!
+  multi method quit (GTK::Application:D: :$gio is required ) {
     nextsame;
   }
 
