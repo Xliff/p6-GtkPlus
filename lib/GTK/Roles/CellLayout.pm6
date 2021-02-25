@@ -94,13 +94,13 @@ role GTK::Roles::CellLayout {
     gtk_cell_layout_reorder($!cl, $cell, $p);
   }
 
-  method set_attributes(
+  method set_attribute (
     GtkCellRenderer() $cell,
-    Str $attribute,
-    Int() $column
+    Str()             $attribute,
+    Int()             $column
   ) {
     my gint $c = $column;
-    
+
     gtk_cell_layout_set_attributes($!cl, $cell, $attribute, $c, Str);
   }
 
