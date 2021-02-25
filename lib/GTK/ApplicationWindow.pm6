@@ -25,11 +25,8 @@ class GTK::ApplicationWindow is GTK::Window {
   }
 
   submethod BUILD (:$appwindow) {
-    given $appwindow {
-      when ApplicationWindowAncestry { self.setApplicationWindow($appwindow) }
-      when GTK::ApplicationWindow    { }
-      default                        { }
-    }
+    say "AW: { $appwindow // 'NIL' }";
+    self.setApplicationWindow($appwindow) if $appwindow;
   }
 
   method setApplicationWindow(ApplicationWindowAncestry $appwindow) {
@@ -53,6 +50,7 @@ class GTK::ApplicationWindow is GTK::Window {
         cast(GtkApplicationWindow, $_);
       }
     };
+    say "TP: { $to-parent // 'NIL' }";
     self.roleInit-ActionMap unless $!actmap;
     self.setWindow($to-parent);
   }
