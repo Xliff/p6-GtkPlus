@@ -21,27 +21,21 @@ class GTK::CellRendererText is GTK::CellRenderer {
 
   has GtkCellRendererText $!crt is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
+
+  submethod BUILD ( :$celltext ) {
+    say "CRT: { $celltext // 'NIL' }";
+
+    self.setCellRendererText($celltext) if $celltext;
   }
 
-  submethod BUILD(:$celltext) {
-    given $celltext {
-      when CellRendererTextAncestry {
-        self.setCellRendererText($celltext);
-      }
-      when GTK::CellRendererText {
-      }
-      default {
-      }
-    }
-  }
-
-  method setCellRendererText($celltext) {
+  method setCellRendererText (CellRendererTextAncestry $_) {
     my $to-parent;
-    $!crt = do given $celltext {
+    $!crt = do {
       when GtkCellRendererText  {
         $to-parent = cast(GtkCellRenderer, $_);
         $_;
@@ -66,12 +60,14 @@ class GTK::CellRendererText is GTK::CellRenderer {
   { $!crt }
 
   multi method new (CellRendererTextAncestry $celltext) {
-    $celltext ?? self.bless(:$celltext) !! Nil;
+    $celltext ?? self.bless( :$celltext ) !! Nil;
   }
   multi method new {
     my $celltext = gtk_cell_renderer_text_new();
 
-    $celltext ?? self.bless(:$celltext) !! Nil;
+    say "CT-new: { $celltext // 'NIL' }";
+
+    $celltext ?? self.bless( :$celltext ) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
