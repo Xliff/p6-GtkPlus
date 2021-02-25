@@ -89,12 +89,12 @@ class GTK::TreeSelection {
   multi method get_selected (:$raw = False) {
     my @r = samewith($, $, :all, :$raw);
 
-    @r[0] ?? @r[1..*] !! Nil;
+    @r[0] ?? @r.skip(1) !! Nil;
   }
   # Insure we have a proper r/w container by forcing the type.
   multi method get_selected (
     $model is rw,
-    $iter is rw,
+    $iter  is rw,
     :$all = False,
     :$raw = False
   ) {
