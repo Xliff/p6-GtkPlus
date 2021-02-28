@@ -9,6 +9,7 @@ use Dependency::Sort;
 # cw: %prefix lives in GTKScripts and is initialized during INIT
 
 sub MAIN (
+  :$exclude,         #= Comma separated list of modules to exclude from processing
   :$force,           #= Force dependency generation
   :$prefix is copy   #= Module prefix
 ) {
@@ -17,6 +18,8 @@ sub MAIN (
 
   $prefix        //= %config<prefix>;
   @build-exclude   = %config<build_exclude> // ();
+
+  @build-exclude.append: $exclude.split(',') if $exclude;
 
   my @files = get-module-files.sort( *.modified );
   unless $force {
