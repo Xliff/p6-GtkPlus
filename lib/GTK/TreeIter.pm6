@@ -33,7 +33,7 @@ class GTK::TreeIter is export {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
-  method copy (:$raw = False ) {
+  method copy ( :$raw = False ) {
     my $iter = gtk_tree_iter_copy($!ti);
 
     $iter ??
