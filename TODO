@@ -332,7 +332,8 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   it sounds. Using scripts/get-properties, get a list of all property names.
   Then retrieve the line of the property definition from .^lookup($method-name).line.
   Write a script using this information to append "is glib-property".
-
+- For GTK::TreeModel, make the need for a position in .get optinal IF AND ONLY
+  IF the model contains only one column. Then $position = 0;
 
 * PERL6 NOTES
 	- It is faster to use 'if $a.defined' rather than 'with $a' if you DO NOT
