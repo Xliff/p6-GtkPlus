@@ -22,7 +22,7 @@ my rule comment {
   '/*' .+? '*/'
 }
 
-my rule enum_entry {
+my rule enum-entry {
   \s* ( <[_ A..Za..z0..9 ]>+ ) (
     [ '=' '('?
       [
@@ -38,10 +38,14 @@ my rule enum_entry {
   \v*
 }
 
+my rule solo-enum {
+  'enum' <n=name>? \v* '{'
+  <comment>? \v* [ <comment> | <enum-entry> ]+ \v*
+  '}'
+}
+
 my rule enum {
-  'typedef enum' <n=name>? \v* '{'
-  <comment>? \v* [ <comment> | <enum_entry> ]+ \v*
-  '}' <rn=name>?
+  'typedef' <solo-enum> <rn=name> | <solo-enum>
 }
 
 sub MAIN ($dir?, :$file) {
@@ -83,7 +87,7 @@ sub MAIN ($dir?, :$file) {
     for $m.Array -> $l {
       my @e;
       my ($etype, $neg, $long) = (32, False, False);
-      for $l<enum><enum_entry> -> $el {
+      for $l<enum><solo-enum><enum-entry> -> $el {
         for $el -> $e {
           # Handle 32 vs 64 bit by literal.
           if $e[1][0] && $e[1][0].Numeric !~~ Failure {
