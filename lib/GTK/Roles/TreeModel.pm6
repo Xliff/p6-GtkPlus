@@ -73,7 +73,7 @@ role GTK::Roles::TreeModel {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method foreach (
-    &func,
+             &func,
     gpointer $user_data = gpointer
   ) {
     gtk_tree_model_foreach($!tm, &func, $user_data);
@@ -96,7 +96,8 @@ role GTK::Roles::TreeModel {
         GLib::Value.new($v).valueFromGType( self.getTypeData[$c] );
       }
     ) for @cols;
-    @r;
+
+    @r.elems > 1 ?? @r !! @r[0];
   }
 
   method get_column_type (Int() $index) is also<get-column-type> {
@@ -119,10 +120,10 @@ role GTK::Roles::TreeModel {
     @r[0] ?? @r[1] !! Nil;
   }
   multi method get_iter (
-    $iter is rw,
+                  $iter is rw,
     GtkTreePath() $path,
-    :$all = False,
-    :$raw = False
+                  :$all = False,
+                  :$raw = False
   ) {
     $iter = GtkTreeIter.new;
 
@@ -160,10 +161,10 @@ role GTK::Roles::TreeModel {
     samewith($, $path_string, :all, :$raw);
   }
   multi method get_iter_from_string (
-    $iter is rw,
+          $iter        is rw,
     Str() $path_string,
-    :$all = False,
-    :$raw = False
+          :$all        = False,
+          :$raw        = False
   ) {
     $iter = GtkTreeIter.new;
 
@@ -204,13 +205,18 @@ role GTK::Roles::TreeModel {
   #   gtk_tree_model_get_valist($!tm, $iter, $var_args);
   # }
 
-  proto method get_value(|)
+  proto method get_value (|)
     is also<get-value>
   { * }
 
-  multi method get_value(GtkTreeIter() $iter, Int() $column, :$raw = False) {
-    my gint $c = $column;
-    my $value = GValue.new;
+  multi method get_value (GtkTreeIter() $iter, Int() $column, :$raw = False) {
+    my gint $c     = $column;
+    my      $value = GValue.new;
+
+    say '0';
+    say "Iter: $iter";
+    say "Column: $column";
+
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
 
     $value ??
@@ -220,9 +226,10 @@ role GTK::Roles::TreeModel {
   }
   multi method get_value (
     GtkTreeIter() $iter,
-    Int() $column,
-    GValue() $value
+    Int()         $column,
+    GValue()      $value
   )  {
+    say '1';
     # TODO: Check iter for path.
     my gint $c = $column;
 
@@ -250,7 +257,7 @@ role GTK::Roles::TreeModel {
   method iter_nth_child (
     GtkTreeIter() $iter,
     GtkTreeIter() $parent,
-    Int() $n
+    Int()         $n
   )
     is also<iter-nth-child>
   {
@@ -297,7 +304,7 @@ role GTK::Roles::TreeModel {
   method emit_rows_reordered (
     GtkTreePath() $path,
     GtkTreeIter() $iter,
-    Int() $new_order
+    Int()         $new_order
   )
     is also<emit-rows-reordered>
   {
@@ -309,8 +316,8 @@ role GTK::Roles::TreeModel {
   method emit_rows_reordered_with_length (
     GtkTreePath() $path,
     GtkTreeIter() $iter,
-    Int() $new_order,
-    Int() $length
+    Int()         $new_order,
+    Int()         $length
   )
     is also<emit-rows-reordered-with-length>
   {
