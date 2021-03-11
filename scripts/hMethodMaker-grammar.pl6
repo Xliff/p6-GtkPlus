@@ -6,69 +6,63 @@ use v6.c;
 my %do_output;
 
 grammar C-Function-Def {
-  rule top-normal { <function-normal>+ }
-  rule top-bland  { <function-bland>+ }
+    regex TOP { <top-bland> }
 
-  rule function-normal {
-    <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def> |
-    <availability><func_def>
+    rule top-normal { <function-normal>+ }
+    rule top-bland  { <function-bland>+ }
+
+    rule function-normal {
+        <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def> |
+        <availability><func_def>
   }
 
-  rule parenthetical {
-    '(' .+? ')'
+    rule function-bland {
+        \s* <pre-definitions>? <func_def>
   }
 
-  rule function-bland {
-    \s* [ <pre-definitions> | <parenthetical> ]* <func_def>
-  }
+    token pre-definitions {
+        'G_GNUC_WARN_UNUSED_RESULT'                            |
+        'G_GNUC_INTERNAL'                                      |
+        <[A..Z]>+ '_DEPRECATED' [ '_IN_' (\d+)+ % '_' ]?
+        '_FOR' \s* '(' <[\w _]>+ ')'
+    }
 
-  token pre-definitions {
-    'G_GNUC_WARN_UNUSED_RESULT'                            |
-    'G_GNUC_INTERNAL'                                      |
-    <[A..Z]>+ '_DEPRECATED' [ '_IN_' (\d+)+ % '_' ]?
-      '_FOR' \s* '(' <[\w _]>+ ')'
-  }
+    rule func_def {
+          <returns>
+      $<sub>=[ \w+ ]
+          [
+          '(void)'
+        |
+          '(' [ <type> <var>? | $<va>='...' ]+ % [ \s* ',' \s* ] ')'
+      ] [ <postdec>+ % \s* ]?';'
+    }
 
-  token postdefs {
-    <[A..Z_]>+ \s* [ '(' .+? ')' ]?
-  }
+    token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
+    token       n { <[\w _]>+ }
+    token       t { <n> | '(' '*' <n> ')' }
+    token     mod { 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
+    rule     type { [ <mod>+ %% \s ]? $<n>=\w+ <p>? }
+    rule      var { <t> [ '[' (.+?)? ']' ]? }
+    token returns { [ <mod>+ %% \s]? <.ws> <t> \s* <p>? }
+    token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
+    token      ad { 'AVAILABLE' | 'DEPRECATED' }
 
-  rule func_def {
-    <returns>
-    $<sub>=[ \w+ ]
-    [
-      '(void)'
-      |
-      '(' [ <type> <var> | $<va>='...' ]+ % [ \s* ',' \s* ] ')'
-    ] [ <postdec>+ % \s* ]? <postdefs>* ';'
-  }
-
-  token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
-  token       t { <[\w _]>+ }
-  token     mod { 'unsigned' | 'long' }
-  token    mod2 { 'const' | 'struct' }
-  rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
-  rule      var { <t> [ '[' (.+?)? ']' ]? }
-  token returns { <mod2>? <.ws> <t> \s* <p>? }
-  token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
-  token      ad { 'AVAILABLE' | 'DEPRECATED' }
-
-  token availability {
-    [
-      ( <[A..Z]>+'_' )+?
-      <ad> [
+    token availability {
+        [
+        ( <[A..Z]>+'_' )+?
+        <ad> [
         '_'
         ( <[A..Z]>+ )+ %% '_'
         [
-          'ALL'
-          |
-          <[0..9]>+ %% '_'
+        'ALL'
+        |
+        <[0..9]>+ %% '_'
         ]
-      ]?
-      |
-      <[A..Z]>+'_API'
-    ]
-  }
+        ]?
+        |
+        <[A..Z]>+'_API'
+        ]
+    }
 
 }
 
@@ -174,11 +168,10 @@ sub MAIN (
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
     if $trim-end;
 
-  my $stripped-contents = $contents;
+  my $s-fmt = '%0' ~ $contents.lines.log(10).Int + 1 ~ 'd';
   $contents = (gather for $contents.lines.kv -> $k, $v {
-    take "{ $k + 1 }: { $v }" }
-  ).join("\n");
-  my regex range { (\d+) '-' (\d+) }
+    take "{ ($k + 1).fmt($s-fmt) }: { $v }"
+  }).join("\n");
   if $delete {
     my @d = $delete.split(',').map({
       my &meth;
@@ -203,6 +196,8 @@ sub MAIN (
     @c.splice($_ - 1, 1) for @d-ranges.reverse;
     $contents = @c.join("\n");
   }
+  (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
+  my regex range { (\d+) '-' (\d+) }
 
   # Check for multiple semi-colons on a line and split that line.
   # This is a pain in the ass, as we have to re-perform operations that
@@ -242,6 +237,9 @@ sub MAIN (
   my $matched = grammar.parse($stripped-contents, rule => $top-rule);
 
   unless $matched {
+    say '============';
+    say $stripped-contents;
+    say '------------';
     say 'Could not find any functions!';
     say '-----------------------------';
     $contents.say;
