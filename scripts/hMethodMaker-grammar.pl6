@@ -14,11 +14,11 @@ grammar C-Function-Def {
     rule function-normal {
         <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def> |
         <availability><func_def>
-  }
+    }
 
     rule function-bland {
         \s* <pre-definitions>? <func_def>
-  }
+    }
 
     token pre-definitions {
         'G_GNUC_WARN_UNUSED_RESULT'                            |
@@ -27,21 +27,24 @@ grammar C-Function-Def {
         '_FOR' \s* '(' <[\w _]>+ ')'
     }
 
+    rule parameters {
+      '(void)'
+      |
+      '(' [ <type> <var>? ]+ % [ \s* ',' \s* ] [','? $<va>='...' ]? ')'
+    }
+
     rule func_def {
-          <returns>
+      <returns>
       $<sub>=[ \w+ ]
-          [
-          '(void)'
-        |
-          '(' [ <type> <var>? | $<va>='...' ]+ % [ \s* ',' \s* ] ')'
-      ] [ <postdec>+ % \s* ]?';'
+      <parameters>
+      [ <postdec>+ % \s* ]?';'
     }
 
     token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
     token       n { <[\w _]>+ }
-    token       t { <n> | '(' '*' <n> ')' }
-    token     mod { 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
-    rule     type { [ <mod>+ %% \s ]? $<n>=\w+ <p>? }
+    token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
+    token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
+    rule     type { [ <mod>+ %% \s ]? <n>? <p>? }
     rule      var { <t> [ '[' (.+?)? ']' ]? }
     token returns { [ <mod>+ %% \s]? <.ws> <t> \s* <p>? }
     token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
@@ -236,6 +239,8 @@ sub MAIN (
   my $func-rule = $bland ?? 'function-bland' !! 'function-normal';
   my $matched = grammar.parse($stripped-contents, rule => $top-rule);
 
+
+
   unless $matched {
     say '============';
     say $stripped-contents;
@@ -258,7 +263,7 @@ sub MAIN (
 
     my @p;
     my $orig = $m<func_def><sub>.Str.trim;
-    my @tv = ($m<func_def><type> [Z] $m<func_def><var>);
+    my @tv = ($m<func_def><parameters><type> [Z] $m<func_def><parameters><var>);
 
     @p.push: [ .[0], .[1] ] for @tv;
 
