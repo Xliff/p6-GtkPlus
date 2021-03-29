@@ -5,30 +5,35 @@ use lib 'scripts';
 
 use GTKScripts;
 
-my $p = run q[scripts/dependencies.pl6], :out;
-if $p.exitcode {
-  # $p.exitcode.say;
-  # my $depcontents = $p.out.slurp;
-  #
-  # given $depcontents {
-  #   when .contains('circular reference found!') {
-  #     .say;
-  #   }
-  #
-  #   default {
-  #     .say;
-  #     exit;
-  #   }
-  # }
-  exit;
-}
+
 
 die 'Cannot find BuildList file in current directory.'
   unless 'BuildList'.IO.e;
 
 my @buildlist = 'BuildList'.IO.open.slurp-rest.split(/\r?\n/).map( *.chomp );
 
-sub MAIN( $rev = 'HEAD' ) {
+sub MAIN( $rev = 'HEAD', :$deps-output = False ) {
+  my $p = run q[scripts/dependencies.pl6], :out;
+  if $p.exitcode {
+    # $p.exitcode.say;
+    # my $depcontents = $p.out.slurp;
+    #
+    # given $depcontents {
+    #   when .contains('circular reference found!') {
+    #     .say;
+    #   }
+    #
+    #   default {
+    #     .say;
+    #     exit;
+    #   }
+    # }
+    exit;
+  }
+  if $deps-output {
+    .say for $p.out.lines;
+  }
+
   #chdir '/home/cbwood/Projects/p6-GtkPlus';
   mkdir '.touch' unless '.touch'.IO.d;
   my @files = qqx{git diff --name-only $rev}.chomp;
@@ -46,6 +51,7 @@ sub MAIN( $rev = 'HEAD' ) {
       next;
     }
 
+    # Move out to project specific settings file.
     next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
 
     my $rel = $_[0].IO.dirname.split('/')[1..*].join('/');
