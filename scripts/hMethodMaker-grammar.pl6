@@ -171,36 +171,14 @@ sub MAIN (
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
     if $trim-end;
 
+  my regex range { (\d+) '-' (\d+) }
   my $s-fmt = '%0' ~ $contents.lines.log(10).Int + 1 ~ 'd';
   $contents = (gather for $contents.lines.kv -> $k, $v {
+    # Last chance removal by line prefix.
+    next if $v.starts-with('extern');
+
     take "{ ($k + 1).fmt($s-fmt) }: { $v }"
-  }).join("\n");
-  if $delete {
-    my @d = $delete.split(',').map({
-      my &meth;
-      die 'All elements in $delete must be an integer or an integer range!'
-        unless $_ ~~ &range || ( &meth = .^lookup('Int') );
-      my $r;
-      $r = &meth($_) if &meth;
-      $r = $_ unless $r;
-      $r;
-    });
-
-    my @d-ranges;
-    for @d {
-      if $_ ~~ &range {
-        @d-ranges.append: $/[0].Int ... $/[1].Int;
-      } else {
-        @d-ranges.push: .Int;
-      }
-    }
-
-    my @c = $contents.lines;
-    @c.splice($_ - 1, 1) for @d-ranges.reverse;
-    $contents = @c.join("\n");
-  }
-  (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
-  my regex range { (\d+) '-' (\d+) }
+  }).join("\n");\
 
   # Check for multiple semi-colons on a line and split that line.
   # This is a pain in the ass, as we have to re-perform operations that
@@ -228,8 +206,35 @@ sub MAIN (
     }).join("\n");
     # $contents may change in this block, so $stripped-contents needs to be
     # updated
-    (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
+    # (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
   }
+
+  if $delete {
+    my @d = $delete.split(',').map({
+      my &meth;
+      die 'All elements in $delete must be an integer or an integer range!'
+        unless $_ ~~ &range || ( &meth = .^lookup('Int') );
+      my $r;
+      $r = &meth($_) if &meth;
+      $r = $_ unless $r;
+      $r;
+    });
+
+    my @d-ranges;
+    for @d {
+      if $_ ~~ &range {
+        @d-ranges.append: $/[0].Int ... $/[1].Int;
+      } else {
+        @d-ranges.push: .Int;
+      }
+    }
+
+    my @c = $contents.lines;
+    #say "C:------\n{ @c.join("\n") }------";
+    @c.splice($_ - 1, 1) for @d-ranges.reverse;
+    $contents = @c.join("\n");
+  }
+  (my $stripped-contents = $contents) ~~ s:g/^^ (\d+) ':' \s*//;
 
   my \grammar := $internal ??
     C-Function-Internal-Def
@@ -238,8 +243,6 @@ sub MAIN (
   my $top-rule  = $bland ?? 'top-bland'      !! 'top-normal';
   my $func-rule = $bland ?? 'function-bland' !! 'function-normal';
   my $matched = grammar.parse($stripped-contents, rule => $top-rule);
-
-
 
   unless $matched {
     say '============';
