@@ -11,6 +11,8 @@ our %config is export;
 our $GTK-SCRIPT-DEBUG is export;
 
 sub parse-file ($filename) is export {
+  return Nil unless $filename && $filename.IO.r;
+  
   %config = Config::INI::parse_file($filename)<_>;
   # Handle comma separated
   %config{$_} = (%config{$_} // '').split(',').Array for <

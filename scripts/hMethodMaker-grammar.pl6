@@ -5,6 +5,10 @@ use v6.c;
 
 my %do_output;
 
+use lib <. scripts>;
+
+use GTKScripts;
+
 grammar C-Function-Def {
     regex TOP { <top-bland> }
 
@@ -88,23 +92,37 @@ my token availability {
 }
 
 sub MAIN (
-        $filename,                    #= Filename to process
-  Str  :$remove,                      #= Prefix to remove from method names
-  Str  :$var,                         #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
-  Str  :$output-only,                 #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
-  Bool :$no-headers,                  #= Do not display section headers.
-  Int  :$trim-start,                  #= Trim lines from the beginning of the post-processed file
-  Int  :$trim-end,                    #= Trim lines from the end of the post-processed file
-  Str  :$remove-from-start,           #= Remove colon separated prefix strings from all lines
-  Str  :$remove-from-end,             #= Remove colon separate suffix strings from all lines
-  Str  :$delete,                      #= Comma separated list of lines to delete
-  Str  :$output             = 'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
-  Str  :$lib                = 'gtk',  #= Library name to use
-  Bool :$internal           = False,  #= Add checking for INTERNAL methods
-  Bool :$bland              = False,  #= Do NOT attempt to process preprocessor prefixes to subroutines
-  Bool :$get-set            = False,  #= Convert simple get/set routine to "attribute" code.
-  Bool :$raw-methods        = False   #= Use method format for raw invocations (NFYI)
+        $filename,                     #= Filename to process
+  Str  :$remove,                       #= Prefix to remove from method names
+  Str  :$var,                          #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
+  Str  :$output-only,                  #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
+  Bool :$no-headers,                   #= Do not display section headers.
+  Int  :$trim-start,                   #= Trim lines from the beginning of the post-processed file
+  Int  :$trim-end,                     #= Trim lines from the end of the post-processed file
+  Str  :$remove-from-start  is copy,   #= Remove colon separated prefix strings from all lines
+  Str  :$remove-from-end    is copy,   #= Remove colon separate suffix strings from all lines
+  Str  :$delete,                       #= Comma separated list of lines to delete
+  Str  :$output             =  'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
+  Str  :$lib                =  'gtk',  #= Library name to use
+  Bool :$internal           =  False,  #= Add checking for INTERNAL methods
+  Bool :$bland              =  False,  #= Do NOT attempt to process preprocessor prefixes to subroutines
+  Bool :$get-set            =  False,  #= Convert simple get/set routine to "attribute" code.
+  Bool :$raw-methods        =  False   #= Use method format for raw invocations (NFYI)
 ) {
+  parse-file(CONFIG-NAME);
+
+  # Get specific option values from configuration file, if it exists,
+  # and those keys are defined.
+  if %config<hfile-prefix> -> $pre {
+    $remove-from-start ~= ':' if $remove-from-start;
+    $remove-from-start ~= $pre;
+  }
+
+  if %config<hfile-suffix> -> $suf {
+    $remove-from-end ~= ':' if $remove-from-end;
+    $remove-from-end ~= $suf;
+  }
+
   my $fn = $filename;
 
   $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn.starts-with('/');
