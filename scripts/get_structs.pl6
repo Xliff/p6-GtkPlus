@@ -74,7 +74,7 @@ sub MAIN ($dir?, :$file, :$rw = False) {
 
   my %new-classes;
   for @files -> $file {
-    $*ERR.say "Checking { $file } ...";
+    $*ERR.say: "Checking { $file } ...";
     my $contents = $file.IO.slurp;
 
     # Remove preprocessor directives.
@@ -96,7 +96,9 @@ sub MAIN ($dir?, :$file, :$rw = False) {
           .Str
         ] for $se<var>.map( *.<t><n> );
       }
-      %new-classes{ $l<struct><solo-struct><sn> } = @s-entries;
+      my $struct-name = $l<struct><solo-struct><sn>;
+      $struct-name = $struct-name.substr(1) if $struct-name.starts-with('_');
+      %new-classes{ $struct-name } = @s-entries;
     }
   }
 
@@ -104,7 +106,7 @@ sub MAIN ($dir?, :$file, :$rw = False) {
     my $sigil = $rw ?? '$.'     !! '$!';
     my $trait = $rw ?? ' is rw' !! '';
     my $max-member-size = .value.map({ .[1].chars }).max;
-    say qq:to/CLASS/;
+    say qq:to/CLASS/.chomp;
       class { .key } is repr<CStruct> is export \{
       \t{
         .value.map({
