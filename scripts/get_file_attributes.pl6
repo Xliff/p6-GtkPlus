@@ -15,5 +15,13 @@ sub MAIN ($filename) {
     take .Str if $_ eq @set.any
   };
 
-  say "  method { $_ } is rw \{\n  \}\n" for @getset.sort
+  for @getset.sort {
+    say qq:to/ATTRIB/ ;
+      method { $_ } is rw \{
+        Proxy.new:
+          FETCH => \$     \{ self.get_{ $_ }           \},
+          STORE => \$, \\v \{ self.set_{ $_ }(\$!att, v) \}
+      \}
+      ATTRIB
+  }
 }
