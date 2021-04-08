@@ -44,7 +44,7 @@ grammar C-Function-Def {
       [ <postdec>+ % \s* ]?';'
     }
 
-    token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
+    regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ }
     token       n { <[\w _]>+ }
     token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
     token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
@@ -173,12 +173,22 @@ sub MAIN (
   $contents ~~ s:g/<availability>// if $bland;
 
   if $remove-from-start {
+    # Remove unnecessary whitespace
+    $remove-from-start .= trim;
+    # cw: Treat each section separated by spaces as a different item, otherwise
+    # it might not work.
+    $remove-from-start ~~ s:g/\s+/:/;
     for ( $remove-from-start // () ).split(':') -> $r {
       $contents ~~ s:g/ ^^ \s* $r \s* //;
     }
   }
 
   if $remove-from-end {
+    # Remove unnecessary whitespace
+    $remove-from-end .= trim;
+    # cw: Treat each section separated by spaces as a different item, otherwise
+    # it might not work.
+    $remove-from-end ~~ s:g/\s+/:/;
     for ( $remove-from-end // () ).split(':') -> $r {
       $contents ~~ s:g/ \s* $r \s* ';'? $$ /;/;
     }
