@@ -49,7 +49,7 @@ sub MAIN(
     [ $_, $a, @buildlist.first(* eq $a, :k) // Inf ];
   });
 
-  my @to-be-skipped = $skip.split(/','\s*/);
+  my @to-be-skipped = ($skip // '').split(/','\s*/);
   for @files.grep({ .[2] !~~ Inf }).sort( *[2] ) {
     unless .[2] {
       say "{ $_[0] } is not in the BuildList.";
