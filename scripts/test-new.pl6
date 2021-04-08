@@ -12,7 +12,11 @@ die 'Cannot find BuildList file in current directory.'
 
 my @buildlist = 'BuildList'.IO.open.slurp-rest.split(/\r?\n/).map( *.chomp );
 
-sub MAIN( $rev = 'HEAD', :$deps-output = False ) {
+sub MAIN(
+  $rev = 'HEAD',          #= Revision to test against
+  :$deps-output = False,  #= Display output of dependency calculation
+  :$skip                  #= Comma separated list of CompUnits to be skipped
+) {
   my $p = run q[scripts/dependencies.pl6], :out;
   if $p.exitcode {
     # $p.exitcode.say;
@@ -45,19 +49,24 @@ sub MAIN( $rev = 'HEAD', :$deps-output = False ) {
     [ $_, $a, @buildlist.first(* eq $a, :k) // Inf ];
   });
 
+  my @to-be-skipped = $skip.split(/','\s*/);
   for @files.grep({ .[2] !~~ Inf }).sort( *[2] ) {
     unless .[2] {
       say "{ $_[0] } is not in the BuildList.";
       next;
     }
+    if .[1] eq @to-be-skipped.any {
+      say "Skipping { .[1] } by request...";
+      next;
+    }
 
     # Move out to project specific settings file.
-    next if $_[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
+    next if .[1] ~~ /^ 'BuilderWidgets' | 'GTK::Builder::' /;
 
     my $rel = $_[0].IO.dirname.split('/')[1..*].join('/');
     mkdir ".touch/{ $rel }";
     my $tf = ".touch/{ $rel }/{ $_[0].IO.basename }";
-    next unless ! $tf.IO.e || $_[0].IO.modified > $tf.IO.modified;
+    next unless ! $tf.IO.e || .[0].IO.modified > $tf.IO.modified;
 
   # Deprecated
   #   my @extradirs;
@@ -66,9 +75,9 @@ sub MAIN( $rev = 'HEAD', :$deps-output = False ) {
 	# @extradirs.push( "-I $_" ) for %config<libdirs>.split(',');
   #   }
 
-    say "===== $_[1] =====";
+    say "===== { .[1] } =====";
     my $proc = Proc::Async.new(
-      './p6gtkexec',
+      "./{ %config<exec> // 'p6gtkexec' }",
       '-e',
       'use '~ $_[1]
     );
