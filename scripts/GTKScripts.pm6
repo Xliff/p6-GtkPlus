@@ -10,9 +10,13 @@ constant CONFIG-NAME is export = %*ENV<P6_PROJECT_FILE> // '.p6-gtk-project';
 our %config is export;
 our $GTK-SCRIPT-DEBUG is export;
 
+sub getLibDirs is export {
+  %config<libdirs> // 'lib'
+}
+
 sub parse-file ($filename) is export {
   return Nil unless $filename && $filename.IO.r;
-  
+
   %config = Config::INI::parse_file($filename)<_>;
   # Handle comma separated
   %config{$_} = (%config{$_} // '').split(',').Array for <
@@ -63,9 +67,10 @@ sub find-files(
         when .f {
           if $exclude.defined {
             given $exclude {
-              when Array { next if $elem.absolute ~~ .any        }
-              when Str   { next if $elem.absolute ~~ / <{ $_ }> /}
-              when Regex { next if $elem.absolute ~~ $_          }
+              when Array    { next if $elem.absolute ~~ .any         }
+              when Str      { next if $elem.absolute ~~ / <{ $_ }> / }
+              when Regex    { next if $elem.absolute ~~ $_           }
+              when Callable { next if $_($elem)                      }
 
               default {
                 die "Don't know how to handle { .^name } as an exclude!";
@@ -94,7 +99,7 @@ sub get-lib-files (:$pattern, :$extension) is export {
   die 'get-lib-files() must be called with a :$pattern and/or an :$extension'
     unless $pattern.defined || $extension.defined;
 
-  (do gather for %config<libdirs>.split(',') {
+  (do gather for getLibDirs().split(',') {
     take find-files($_, :$pattern, :$extension);
   }).flat;
 }

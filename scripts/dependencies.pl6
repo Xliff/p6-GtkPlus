@@ -33,7 +33,7 @@ sub MAIN (
     .map( *.path )
     .map({
       my ($u, $m) = $_ xx 2;
-      for %config<libdirs>.split(',') -> $d is copy {
+      for getLibDirs().split(',') -> $d is copy {
         $d ~= '/' unless $d.ends-with('/');
         $m .= subst($d, '');
       }
@@ -126,8 +126,8 @@ sub MAIN (
   my %module-order = @module-order.Hash;
 
   @others.append: %nodes.values.grep({
-    .<name>.starts-with( %config<prefix> ).not &&
-    .<name> ne <NativeCall nqp>.any            &&
+    .<name>.starts-with( $prefix ).not &&
+    .<name> ne <NativeCall nqp>.any    &&
     .<edges>.elems.not
   }).map( *<name> );
   @others = @others.unique.sort;
