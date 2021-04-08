@@ -19,8 +19,8 @@ sub MAIN ($filename) {
     say qq:to/ATTRIB/ ;
       method { $_ } is rw \{
         Proxy.new:
-          FETCH => \$     \{ self.get_{ $_ }           \},
-          STORE => \$, \\v \{ self.set_{ $_ }(\$!att, v) \}
+          FETCH => -> \$     \{ self.get_{ $_ }    \},
+          STORE => -> \$, \\v \{ self.set_{ $_ }(v) \}
       \}
       ATTRIB
   }
