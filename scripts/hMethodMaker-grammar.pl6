@@ -122,6 +122,7 @@ sub MAIN (
     $remove-from-end ~= ':' if $remove-from-end;
     $remove-from-end ~= $suf;
   }
+  $remove-from-end ~= $remove-from-end ?? ':' !! '' ~ 'G_GNUC_CONST';
 
   my $fn = $filename;
 
@@ -169,6 +170,12 @@ sub MAIN (
                        'dup' | 'peek' | 'skip' | 'get'
                      ]'_string_utf8(reader' ',str'? ')'//;
   $contents ~~ s:g/ ^^ \s* 'static' \s* 'inline'? .+? $$ //;
+  # GObject creation boilerplate
+  $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
+  $contents ~~ s:g/ '((cls), ' .+? ',' .+? '))'//;
+  $contents ~~ s:g/ '((obj), ' .+? '))'//;
+  $contents ~~ s:g/ '((cls), ' .+? '))'//;
+  $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
 
   $contents ~~ s:g/<availability>// if $bland;
 
