@@ -7,6 +7,8 @@ my %do_output;
 
 use lib <. scripts>;
 
+use IO::Capture::Simple;
+
 use GTKScripts;
 
 grammar C-Function-Def {
@@ -107,7 +109,8 @@ sub MAIN (
   Bool :$internal           =  False,  #= Add checking for INTERNAL methods
   Bool :$bland              =  False,  #= Do NOT attempt to process preprocessor prefixes to subroutines
   Bool :$get-set            =  False,  #= Convert simple get/set routine to "attribute" code.
-  Bool :$raw-methods        =  False   #= Use method format for raw invocations (NFYI)
+  Bool :$raw-methods        =  False,  #= Use method format for raw invocations (NFYI)
+  Bool :x11(:$X11)          =  False   #= Use GUI mode (must have a valid DISPLAY)
 ) {
   parse-file(CONFIG-NAME);
 
@@ -176,6 +179,7 @@ sub MAIN (
   $contents ~~ s:g/ '((obj), ' .+? '))'//;
   $contents ~~ s:g/ '((cls), ' .+? '))'//;
   $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
+  $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC (' .+? ', g_object_unref)' //;
 
   $contents ~~ s:g/<availability>// if $bland;
 
@@ -571,6 +575,26 @@ sub MAIN (
     }
   }
 
+  my ($redir-output, $use-X11);
+  if $X11 {
+    for <
+      GTK::Application
+      SourceView::View
+    > {
+      my $mod-failed = try require ::($_);
+
+      unless (
+        $use-X11 = $use-X11.defined ?? $use-X11 && $mod-failed.not
+                                    !! $mod-failed.not;
+      ) {
+        warn "Cannot switch to GUI mode: $_ load failure";
+        last
+      }
+    }
+
+    capture_stdout_on($redir-output);
+  }
+
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
     say "\n\n### $filename\n";
@@ -582,6 +606,26 @@ sub MAIN (
   for %collider.pairs.grep( *.value > 1 ) -> $d {
     $*ERR.say: "DUPLICATES\n----------" if !$++ ;
     $*ERR.say: "$d";
+  }
+
+  if $use-X11 {
+    my \app  = ::('GTK::Application');
+    my \view = ::('SourceView::View');
+
+    my $a = app.new;
+    $a.activate.tap({
+      my $a =  app.new( title => 'org.genex.hMethodMaker' );
+      my $v = view.new;
+
+      $v.text = $redir-output;
+
+      $a.window.add($v);
+      $a.window.show_all;
+    });
+
+    $a.run;
+  } else {
+    $redir-output.say;
   }
 
 }
