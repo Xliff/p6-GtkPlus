@@ -12,66 +12,66 @@ use IO::Capture::Simple;
 use GTKScripts;
 
 grammar C-Function-Def {
-    regex TOP { <top-bland> }
+  regex TOP { <top-bland> }
 
-    rule top-normal { <function-normal>+ }
-    rule top-bland  { <function-bland>+ }
+  rule top-normal { <function-normal>+ }
+  rule top-bland  { <function-bland>+ }
 
-    rule function-normal {
-        <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def> |
-        <availability><func_def>
-    }
+  rule function-normal {
+      <availability> 'G_GNUC_WARN_UNUSED_RESULT'? <func_def> |
+      <availability><func_def>
+  }
 
-    rule function-bland {
-        \s* <pre-definitions>? <func_def>
-    }
+  rule function-bland {
+      \s* <pre-definitions>? <func_def>
+  }
 
-    token pre-definitions {
-        'G_GNUC_WARN_UNUSED_RESULT'                            |
-        'G_GNUC_INTERNAL'                                      |
-        <[A..Z]>+ '_DEPRECATED' [ '_IN_' (\d+)+ % '_' ]?
-        '_FOR' \s* '(' <[\w _]>+ ')'
-    }
+  token pre-definitions {
+      'G_GNUC_WARN_UNUSED_RESULT'                            |
+      'G_GNUC_INTERNAL'                                      |
+      <[A..Z]>+ '_DEPRECATED' [ '_IN_' (\d+)+ % '_' ]?
+      '_FOR' \s* '(' <[\w _]>+ ')'
+  }
 
-    rule parameters {
-      '(void)'
+  rule parameters {
+    '(void)'
+    |
+    '(' [ <type> <var>? ]+ % [ \s* ',' \s* ] [','? $<va>='...' ]? ')'
+  }
+
+  rule func_def {
+    <returns>
+    $<sub>=[ \w+ ]
+    <parameters>
+    [ <postdec>+ % \s* ]?';'
+  }
+
+  regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ }
+  token       n { <[\w _]>+ }
+  token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
+  token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
+  rule     type { [ <mod>+ %% \s ]? <n>? <p>? }
+  rule      var { <t> [ '[' (.+?)? ']' ]? }
+  token returns { [ <mod>+ %% \s]? <.ws> <t> \s* <p>? }
+  token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
+  token      ad { 'AVAILABLE' | 'DEPRECATED' }
+
+  token availability {
+      [
+      ( <[A..Z]>+'_' )+?
+      <ad> [
+      '_'
+      ( <[A..Z]>+ )+ %% '_'
+      [
+      'ALL'
       |
-      '(' [ <type> <var>? ]+ % [ \s* ',' \s* ] [','? $<va>='...' ]? ')'
-    }
-
-    rule func_def {
-      <returns>
-      $<sub>=[ \w+ ]
-      <parameters>
-      [ <postdec>+ % \s* ]?';'
-    }
-
-    regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ }
-    token       n { <[\w _]>+ }
-    token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
-    token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
-    rule     type { [ <mod>+ %% \s ]? <n>? <p>? }
-    rule      var { <t> [ '[' (.+?)? ']' ]? }
-    token returns { [ <mod>+ %% \s]? <.ws> <t> \s* <p>? }
-    token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
-    token      ad { 'AVAILABLE' | 'DEPRECATED' }
-
-    token availability {
-        [
-        ( <[A..Z]>+'_' )+?
-        <ad> [
-        '_'
-        ( <[A..Z]>+ )+ %% '_'
-        [
-        'ALL'
-        |
-        <[0..9]>+ %% '_'
-        ]
-        ]?
-        |
-        <[A..Z]>+'_API'
-        ]
-    }
+      <[0..9]>+ %% '_'
+      ]
+      ]?
+      |
+      <[A..Z]>+'_API'
+      ]
+  }
 
 }
 
@@ -188,7 +188,7 @@ sub MAIN (
     $remove-from-start .= trim;
     # cw: Treat each section separated by spaces as a different item, otherwise
     # it might not work.
-    $remove-from-start ~~ s:g/\s+/:/;
+    $remove-from-start ~~ s:g/\s\s+/:/;
     for ( $remove-from-start // () ).split(':') -> $r {
       $contents ~~ s:g/ ^^ \s* $r \s* //;
     }
@@ -199,10 +199,11 @@ sub MAIN (
     $remove-from-end .= trim;
     # cw: Treat each section separated by spaces as a different item, otherwise
     # it might not work.
-    $remove-from-end ~~ s:g/\s+/:/;
+    $remove-from-end ~~ s:g/\s\s+/:/;
     for ( $remove-from-end // () ).split(':') -> $r {
-      $contents ~~ s:g/ \s* $r \s* ';'? $$ /;/;
+      $contents ~~ s:g/ \s* $r \s* ';' $$ //;
     }
+    $contents ~~ s:g/ <!before ';'> <?{ $/.Str.chars }> $$ /;/;
   }
 
   $contents = $contents.lines.skip($trim-start).join("\n")
@@ -519,69 +520,75 @@ sub MAIN (
       SUB
   }
 
-  say "\nMETHODS\n-------" unless $no-headers;
-  if %do_output<all> || %do_output<methods> {
-    for %methods.keys.sort -> $m {
-      if $output-only.defined {
-        next unless $m ~~ /<{ $output-only }>/;
-      }
-
-      my @sig_list = %methods{$m}<sig>.split(/\, /);
-
-      my rule replacer { «[ 'Gtk'<[A..Z]>\w+ | 'GtkWindow' ]» };
-      my $sig = %methods{$m}<sig>;
-      my $call = %methods{$m}<call>;
-      my $mult = '';
-
-      # $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! ''
-      #   if
-      #     %methods{$m}<call_types> &&
-      #     %methods{$m}<call_types>[0] eq <
-      #       GtkEntryIconPosition
-      #       GtkTreeIter
-      #     >.none;
-
-      my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
-      say qq:to/METHOD/.chomp;
-        { $mult }method { %methods{$m}<sub> } ({ $sig }) { $dep }\{
-          { %methods{$m}<original> }({ $call });
-        \}
-      METHOD
-
-      if $mult {
-        my $o_call = %methods{$m}<call_vars>.clone;
-        my $o_types = %methods{$m}<call_types>.clone;
-        for (^$o_types) -> $oidx {
-          given $oidx {
-            when s/GtkWindow/GTK::Window/ {
-              $o_call[$oidx] ~~ s/\$(\w+)/\$$0.window/;
-            }
-            when s/'Gtk' <!before 'Window'> (<[A..Z]> \w+)/GTK::$0/ {
-              $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
-            }
-          }
+  sub outputMethods {
+    say "\nMETHODS\n-------" unless $no-headers;
+    if %do_output<all> || %do_output<methods> {
+      for %methods.keys.sort -> $m {
+        if $output-only.defined {
+          next unless $m ~~ /<{ $output-only }>/;
         }
-        my $oc = $o_call.join(', ');
-        my $os = ($o_types.Array [Z] %methods{$m}<call_vars>.Array).join(', ');
 
+        my @sig_list = %methods{$m}<sig>.split(/\, /);
+
+        my rule replacer { «[ 'Gtk'<[A..Z]>\w+ | 'GtkWindow' ]» };
+        my $sig = %methods{$m}<sig>;
+        my $call = %methods{$m}<call>;
+        my $mult = '';
+
+        # $mult = %methods{$m}<call_types>.grep(/<replacer>/) ?? 'multi ' !! ''
+        #   if
+        #     %methods{$m}<call_types> &&
+        #     %methods{$m}<call_types>[0] eq <
+        #       GtkEntryIconPosition
+        #       GtkTreeIter
+        #     >.none;
+
+        my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
         say qq:to/METHOD/.chomp;
-          { $mult }method { %methods{$m}<sub> } ({ $os })  \{
-            samewith({ $oc });
+          { $mult }method { %methods{$m}<sub> } ({ $sig }) { $dep }\{
+            { %methods{$m}<original> }({ $call });
           \}
         METHOD
 
+        if $mult {
+          my $o_call = %methods{$m}<call_vars>.clone;
+          my $o_types = %methods{$m}<call_types>.clone;
+          for (^$o_types) -> $oidx {
+            given $oidx {
+              when s/GtkWindow/GTK::Window/ {
+                $o_call[$oidx] ~~ s/\$(\w+)/\$$0.window/;
+              }
+              when s/'Gtk' <!before 'Window'> (<[A..Z]> \w+)/GTK::$0/ {
+                $o_call[$oidx] ~~ s/\$(\w+)/\$$0.widget/;
+              }
+            }
+          }
+          my $oc = $o_call.join(', ');
+          my $os = ($o_types.Array [Z] %methods{$m}<call_vars>.Array).join(', ');
+
+          say qq:to/METHOD/.chomp;
+            { $mult }method { %methods{$m}<sub> } ({ $os })  \{
+              samewith({ $oc });
+            \}
+          METHOD
+
+        }
+        say '';
       }
-      say '';
     }
   }
 
-  my ($redir-output, $use-X11);
+  my ($redir-output, $use-X11, %class);
   if $X11 {
     for <
       GTK::Application
-      SourceView::View
+      SourceViewGTK::View
     > {
-      my $mod-failed = try require ::($_);
+      my $cu = $_;
+      say "Loading { $cu } ...";
+      %class{$cu} = try require ::($cu);
+      my $mod-failed = ::($cu) ~~ Failure;
+      say "Failed to load $cu" if $mod-failed;
 
       unless (
         $use-X11 = $use-X11.defined ?? $use-X11 && $mod-failed.not
@@ -595,6 +602,7 @@ sub MAIN (
     capture_stdout_on($redir-output);
   }
 
+  outputMethods;
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
     say "\n\n### $filename\n";
@@ -605,27 +613,23 @@ sub MAIN (
 
   for %collider.pairs.grep( *.value > 1 ) -> $d {
     $*ERR.say: "DUPLICATES\n----------" if !$++ ;
-    $*ERR.say: "$d";
+    $*ERR.say: ~$d;
   }
 
   if $use-X11 {
-    my \app  = ::('GTK::Application');
-    my \view = ::('SourceView::View');
+    my \app  = %class<GTK::Application>;
+    my \view = %class<SourceViewGTK::View>;
 
-    my $a = app.new;
+    my $a = app.new( title => 'org.genex.hMethodMaker' );
     $a.activate.tap({
-      my $a =  app.new( title => 'org.genex.hMethodMaker' );
       my $v = view.new;
 
-      $v.text = $redir-output;
-
+      $v.buffer.text = $redir-output;
       $a.window.add($v);
       $a.window.show_all;
     });
 
     $a.run;
-  } else {
-    $redir-output.say;
   }
 
 }
