@@ -201,9 +201,9 @@ sub MAIN (
     # it might not work.
     $remove-from-end ~~ s:g/\s\s+/:/;
     for ( $remove-from-end // () ).split(':') -> $r {
-      $contents ~~ s:g/ \s* $r \s* ';' $$ //;
+      $contents ~~ s:g/ \s* $r \s* ';' $$ /;/;
     }
-    $contents ~~ s:g/ <!before ';'> <?{ $/.Str.chars }> $$ /;/;
+    $contents ~~ s:g/ <!before ';'> <?{ $/.Str.chars }> $$/;/;
   }
 
   $contents = $contents.lines.skip($trim-start).join("\n")
