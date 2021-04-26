@@ -13,11 +13,11 @@ sub add-new ($d) {
   my $b    = GTK::Builder.new-from-string(qq:to/UIDEF/);
     <?xml version="1.0" encoding="UTF-8"?>
     <interface>
-    { (~$d).sprintf($count++) }
+    { (~$d).sprintf($count) }
     </interface>
     UIDEF
 
-  my $bc = $b{ $name.sprintf($count - 1) };
+  my $bc = $b{ $name.sprintf($count++) };
   $bc.show-all;
   $bc;
 }
@@ -29,7 +29,7 @@ $app.activate.tap({
   ).root.find('//*[@id="area"]')[0];
 
   # Must convert to "template" so that top-level ID can be assured unique.
-  $def.setAttribute('id', 'area%d');
+  $def.setAttribute('id', 'area%s');
 
   my $vbox   = GTK::Box.new-vbox;
   my $vbox-i = GTK::Box.new-vbox;
