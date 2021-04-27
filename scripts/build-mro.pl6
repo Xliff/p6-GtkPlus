@@ -8,7 +8,7 @@ use GTKAll;
 
 die "Can't find 'BuildList' file!\n" unless 'BuildList'.IO.e;
 
-my (%ns, $w-mro, $nw-mro, %type-class);
+my (%ns, $w-mro, $nw-mro, %type-class, @widgets, @non-widgets);
 for 'BuildList'.IO.slurp.lines {
   # First with the specialcasing!
   next unless .starts-with('GTK::');
@@ -41,8 +41,12 @@ for 'BuildList'.IO.slurp.lines {
   # Next with another special case. We only want classes.
 
   next unless ::($_).HOW ~~ Metamodel::ClassHOW;
-  my $mro := ( ::($_) ~~ GTK::Widget ) ?? $w-mro !! $nw-mro;
+  my $mro := (
+    (my $is-widget = ::($_) ~~ GTK::Widget)
+  ) ?? $w-mro !! $nw-mro;
   my $k = 0;
+
+  ($is-widget ?? @widgets !! @non-widgets).push: $_;
 
   # Last chance for special casing!
   #
@@ -81,17 +85,16 @@ for 'BuildList'.IO.slurp.lines {
       .reverse.unique.reverse
       .join(', ')
   }),\n");
-  $newline.chomp.say;
 
   %type-class{ (obj.^name) } = obj.^attributes[0].type.^shortname
     unless obj ~~ GLib::Roles::StaticClass;
 }
 
-say '»' x 40;
-$w-mro.gist.say;
-say '»' x 40;
-$nw-mro.gist.say;
-say '»' x 40;
+# say '»' x 40;
+# $w-mro.gist.say;
+# say '»' x 40;
+# $nw-mro.gist.say;
+# say '»' x 40;
 
 my $widget-filename = 'lib/GTK/Builder/WidgetMRO.pm6';
 my $nonwidget-filename = 'lib/GTK/Builder/MRO.pm6';
@@ -108,34 +111,27 @@ for $widget-filename, $nonwidget-filename -> $filename {
   $mro_pre = "our { $mro_pre } is export";
 
   my $fp = $filename.IO;
-  unless $fp.e {
-    $filename.IO.spurt: qq:to/T/;
-      use v6.c;
+  # cw: Should we go further? We have code to add a serial to .bak.
+  # That should be abstracted so that we can use it here, as well.
+  $fp.rename("{ $filename }.bak") if $fp.e;
+  $filename.IO.spurt: qq:to/T/;
+    use v6.c;
 
-      unit package GTK::Builder::{ $w ?? 'Widget' !! ''}MRO;
+    unit package GTK::Builder::{ $w ?? 'Widget' !! ''}MRO;
 
-      # Number of times I've had to force THIS to recompile.
-      constant forced = 0;
+    # Number of times I've had to force THIS to recompile.
+    constant forced = 0;
 
-      { $mro_pre } = (
-        { $mro }
-      );
-      T
-  }
-
-  $_ = $fp.slurp;
-  # Regex with balanced syntax: s[S] = "R"
-  #s❰ { $mro_pre } \s* '(' ~ ')' <-[)]>+ ❱ = "{ $mro_pre } (\n{ $mro }\n);";
-  $fp.rename("{ $filename }.bak");
-  my $fh = $filename.IO.spurt($_);
+    { $mro_pre } = (
+      { $mro }
+    );
+    T
 
   say "{ $filename } was updated successfully";
 
-  my $f = do {
-    when $w     { 'lib/GTKWidgets.pm6'    }
-    when $w.not { 'lib/GTKNonWidgets.pm6' }
-  }
-  $f.IO.spurt( $mro.keys.map({ "need { $_ };" }).join("\n") );
+  my $f = "lib/GTK{ $w ?? '' !! 'Non'}Widgets.pm6";
+  $f.IO.spurt: ($w ?? @widgets !! @non-widgets).map({ "need { $_ };" })
+                                               .join("\n");
   say "{ $f } was updated successfully";
 }
 
@@ -147,7 +143,7 @@ my $tsm = %type-class.keys.map( *.chars ).max;
     { %type-class.pairs
                  .sort( *.key )
                  .map({ "{ .key.fmt("%-{ $tsm }s") } => '{ .value }'" })
-                 .join(",\n  ")
+                 .join(",\n\t")
     }
   );
   TYPECLASS
