@@ -134,9 +134,12 @@ class GTK::Builder does Associative {
   method new_from_string (Str() $ui, Int() $length = -1)
     is also<new-from-string>
   {
+    # cw: Consider parsing this using a proper XML parser so
+    #     we can use a subset of the passed XML.
+
     die '$length must not be negative' unless $length > -2;
     my gssize $l = $length;
-    my $builder = gtk_builder_new_from_string($ui, $l);
+    my        $builder = gtk_builder_new_from_string($ui, $l);
 
     $builder ?? self.bless(:$builder, :$ui) !! Nil;
   }
@@ -183,6 +186,13 @@ class GTK::Builder does Associative {
   ) {
     my %parent-types := %!types;
 
+    # cw: Can replace with LibXML and a one-liner at the expense of a heavy
+    #     but tested (and native!) dependency:
+    #
+    #       use LibXML;
+    #       my $dom = LibXML.parse(location => "cursor-slot.ui")
+    #                       .root
+    #                       .find("//object")
     class UI-Parser is XML::Actions::Work {
       method object:start (Array $parent-path, :$class, :$id is copy) {
         my $args;
@@ -201,7 +211,7 @@ class GTK::Builder does Associative {
             'GTK::Box';
           }
           when 'GTK::HBox' {
-            #$args = ['option', { horizontal => 1 } ];
+            #$args = ['option', { horizonrtal => 1 } ];
             'GTK::Box';
           }
 
@@ -226,6 +236,8 @@ class GTK::Builder does Associative {
       with $file     { }
       with $resource { }
       with $ui_def   {
+        # cw: LibXML replacement code would then go here.
+        #     If this is to proceed, then BRANCH, FIRST!
         my $a = XML::Actions.new(xml => $ui_def);
 
         $a.process( actions => UI-Parser.new );
