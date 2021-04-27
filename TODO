@@ -352,6 +352,8 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
 - SERIOUSLY CONSIDER breaking GTK::Builder and GTK::BuilderWidgets into its own project, as
   moving from XML::Actions to LibXML looks to be a winning thing to do!
 
+- Consider Parameter::Also - is also trait for Parameters (have to hack $!named_names via nqp)
+
 Applications
 ============
 √ A text editor in Perl6. Think about using it as a visual Regex tester
