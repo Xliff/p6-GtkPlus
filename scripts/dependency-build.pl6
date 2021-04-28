@@ -21,8 +21,8 @@ sub MAIN (
 
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);
-    $prefix //= %config<prefix>;
-    @build-exclude = %config<build_exclude> // ();
+    $prefix //= %config<prefix> // '';
+    @build-exclude = %config<build_exclude>.split(',') // ();
   }
 
   my @files = get-module-files.sort( *.IO.modified );
@@ -33,19 +33,18 @@ sub MAIN (
     }
   }
 
-  my @modules = @files
-    .map( *.path )
-    .map({
-      my $mn = $_;
-      my $a = [
-        $mn,
-        .subst('.pm6', '').split('/').Array[1..*].join('::')
-      ];
-      $a;
-    })
-    # Remove modules excluded via project file.
-    .grep( *[1] ne @build-exclude.any )
-    .sort( *[1] );
+  my @modules = @files.map( *.path )
+                      .map({
+                        my $mn = $_;
+                        my $a = [
+                          $mn,
+                          .subst('.pm6', '').split('/').Array[1..*].join('::')
+                        ];
+                        $a;
+                      })
+                      # Remove modules excluded via project file.
+                      .grep( *.[1] ne @build-exclude.any )
+                      .sort( *[1] );
 
   for @modules {
     %nodes{$_[1]} = (
@@ -58,6 +57,7 @@ sub MAIN (
 
   my $s = Dependency::Sort.new;
   my @others;
+  my @other-provided = (%config<other_provided> // '').split(',');
   for %nodes.pairs.sort( *.key ) -> $p {
     say "Processing requirements for module { $p.key }...";
 
@@ -70,20 +70,24 @@ sub MAIN (
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
       $mn .= trim;
-      unless $mn.starts-with( $prefix.split(',').any ) {
+      unless $mn.starts-with( ($prefix // '').split(',').any ) {
         next if $mn ~~ / 'v6''.'? (.+)? /;
         @others.push: $mn;
         next;
       }
 
-      %nodes{$p.key}<edges>.push: $mn;
+      %nodes{$p.key}<edges>.push: $mn unless $mn eq @other-provided.any;
       %nodes{$mn}<kids>.push: $p.key;
 
-      die qq:to/DIE/ unless %nodes{$mn}:exists;
-        { $mn }, used by { $p.key }, does not exist!
-        DIE
+      if $mn eq @other-provided.any {
+        @others.push: $mn;
+      } else {
+        die qq:to/DIE/ unless %nodes{$mn}:exists;
+          { $mn }, used by { $p.key }, does not exist!
+          DIE
 
-      $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
+        $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
+      }
     }
     #say "P: {$p.key} / { %nodes{$p.key}.gist }";
   }
@@ -270,9 +274,16 @@ sub MAIN (
 sub run-compile ($module, $thread) {
   if ++$*I > $*SKIP {
     my $cs = DateTime.now;
-    my $proc = run './p6gtkexec', '-e',  "use $module", :out, :err;
+    my $exec = qqx{scripts/get-config.pl6 exec}.chomp;
+    my $proc = run "./{ $exec }", '-e',  "use $module", :out, :err;
+    #my $proc = run "./p6gtkexec", '-e',  "use $module", :out, :err;
 
-    $*ERROR = True if $proc.exitcode;
+    if $proc.exitcode {
+      say $proc.out;
+      say $proc.err;
+      $*ERROR = True;
+    }
+
     output(
       $module,
       $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"

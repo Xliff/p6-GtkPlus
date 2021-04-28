@@ -8,7 +8,10 @@ use Pango::Raw::Types;
 use GTK::Raw::Types;
 use GTK::Raw::Render;
 
+use GLib::Roles::StaticClass;
+
 class GTK::Render {
+  also does GLib::Roles::StaticClass;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑

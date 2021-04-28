@@ -349,6 +349,11 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
    ::Klass package to add subclassing ability. These will include the hacks
    required to set function pointers.
 
+- SERIOUSLY CONSIDER breaking GTK::Builder and GTK::BuilderWidgets into its own project, as
+  moving from XML::Actions to LibXML looks to be a winning thing to do!
+
+- Consider Parameter::Also - is also trait for Parameters (have to hack $!named_names via nqp)
+
 Applications
 ============
 √ A text editor in Perl6. Think about using it as a visual Regex tester
@@ -370,7 +375,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 + A Perl6 port for libsoup
 + Consider BABL bindings
 - Consider Apache Arrow (needs template support!)
-- Consider gUPnP!
++ Consider gUPnP!
 - DEFINITELY consider GEGL bindings. Use generated data structures for
   operations, since they have no .h files, however the good bits are easily
   parsable from .c
@@ -384,7 +389,8 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
     specifically to bind with Python. Might be easier to write something similar
     based on COGL.
 - Consider a Perl6 port of SVOX (See files in libttspico-dev, start with /usr/include/picoapi.h)
-- Consider libchamplain - Maps + Clutter = MINE!
++ Consider libchamplain - Maps + Clutter = MINE!
 - Tensorflow? (https://github.com/tensorflow/tensorflow/tree/v2.4.0/tensorflow/c)
 - The GTK CSS Inspector
-- Evolution Data Server (https://developer.gnome.org/eds/stable/EDataCal.html)
++ Evolution Data Server (https://developer.gnome.org/eds/stable/EDataCal.html)
++ GOA (GNOME Online Accounts) (https://developer.gnome.org/goa/stable/index.html)

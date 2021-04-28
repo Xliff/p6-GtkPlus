@@ -39,7 +39,7 @@ my rule enum-entry {
 }
 
 my rule solo-enum {
-  'enum' <n=name>? \v* '{'
+  'enum' <n=name>? <comment>? \v* '{'
   <comment>? \v* [ <comment> | <enum-entry> ]+ \v*
   '}'
 }

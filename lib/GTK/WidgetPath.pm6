@@ -321,7 +321,7 @@ class GTK::WidgetPath {
     self;
   }
 
-  method to_string
+  method to_string (GTK::WidgetPath:D: )
     is also<
       to-string
       Str

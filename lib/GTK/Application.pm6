@@ -20,12 +20,12 @@ use GTK::Roles::Signals::Application;
 class GTK::Application is GIO::Application {
   my $gapp;
 
-  has $!app is implementor;  # GtkApplication
-  has $!title;               # GtkWindow OR GtkApplicationWindow;
-  has $!width;
-  has $!height;
-  has $!init;
-  has $!wtype;
+  has GtkApplication $!app     is implementor; # GtkApplication
+  has                $!title;                  # GtkWindow OR GtkApplicationWindow;
+  has                $!width;
+  has                $!height;
+  has                $!init;
+  has                $!wtype;
 
   has $.window handles <show_all>;
 
