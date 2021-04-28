@@ -58,6 +58,7 @@ sub MAIN (
 
   my $s = Dependency::Sort.new;
   my @others;
+  my @other-provided = (%config<other_provided> // '').split(',');
   for %nodes.pairs.sort( *.key ) -> $p {
     say "Processing requirements for module { $p.key }...";
 
@@ -78,11 +79,15 @@ sub MAIN (
 
       %nodes{$p.key}<edges>.push: $mn;
 
-      die qq:to/DIE/ unless %nodes{$mn}:exists;
-        { $mn }, used by { $p.key }, does not exist!
-        DIE
+      if $mn eq @other-provided.any {
+        @others.push: $mn;
+      } else {
+        die qq:to/DIE/ unless %nodes{$mn}:exists;
+          { $mn }, used by { $p.key }, does not exist!
+          DIE
 
-      $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
+        $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
+      }
     }
     #say "P: {$p.key} / { %nodes{$p.key}.gist }";
   }
