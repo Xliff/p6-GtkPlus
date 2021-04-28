@@ -21,8 +21,8 @@ sub MAIN (
 
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);
-    $prefix //= %config<prefix>;
-    @build-exclude = %config<build_exclude> // ();
+    $prefix //= %config<prefix> // '';
+    @build-exclude = %config<build_exclude>.split(',') // ();
   }
 
   my @files = get-module-files.sort( *.IO.modified );
@@ -33,20 +33,19 @@ sub MAIN (
     }
   }
 
-  my @modules = @files
-    .map( *.path )
-    .map({
-      my $mn = $_;
-      my $a = [
-        $mn,
-        .subst('.pm6', '').split('/').Array[1..*].join('::')
-      ];
-      $a;
-    })
-    # Remove modules excluded via project file.
-    .grep( *[1] ne @build-exclude.any )
-    .sort( *[1] );
-
+  my @modules = @files.map( *.path )
+                      .map({
+                        my $mn = $_;
+                        my $a = [
+                          $mn,
+                          .subst('.pm6', '').split('/').Array[1..*].join('::')
+                        ];
+                        $a;
+                      })
+                      # Remove modules excluded via project file.
+                      .grep( *.[1] ne @build-exclude.any )
+                      .sort( *[1] );
+                      
   for @modules {
     %nodes{$_[1]} = (
       itemid   => $++,
@@ -270,9 +269,16 @@ sub MAIN (
 sub run-compile ($module, $thread) {
   if ++$*I > $*SKIP {
     my $cs = DateTime.now;
-    my $proc = run './p6gtkexec', '-e',  "use $module", :out, :err;
+    my $exec = qqx{scripts/get-config.pl6 exec}.chomp;
+    my $proc = run "./{ $exec }", '-e',  "use $module", :out, :err;
+    #my $proc = run "./p6gtkexec", '-e',  "use $module", :out, :err;
 
-    $*ERROR = True if $proc.exitcode;
+    if $proc.exitcode {
+      say $proc.out;
+      say $proc.err;
+      $*ERROR = True;
+    }
+
     output(
       $module,
       $proc.err.slurp ~ "\n{ $module } compile time: { DateTime.now - $cs }"
