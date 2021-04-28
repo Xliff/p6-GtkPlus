@@ -45,7 +45,7 @@ sub MAIN (
                       # Remove modules excluded via project file.
                       .grep( *.[1] ne @build-exclude.any )
                       .sort( *[1] );
-                      
+
   for @modules {
     %nodes{$_[1]} = (
       itemid   => $++,
@@ -57,6 +57,7 @@ sub MAIN (
 
   my $s = Dependency::Sort.new;
   my @others;
+  my @other-provided = (%config<other_provided> // '').split(',');
   for %nodes.pairs.sort( *.key ) -> $p {
     say "Processing requirements for module { $p.key }...";
 
@@ -75,14 +76,18 @@ sub MAIN (
         next;
       }
 
-      %nodes{$p.key}<edges>.push: $mn;
+      %nodes{$p.key}<edges>.push: $mn unless $mn eq @other-provided.any;
       %nodes{$mn}<kids>.push: $p.key;
 
-      die qq:to/DIE/ unless %nodes{$mn}:exists;
-        { $mn }, used by { $p.key }, does not exist!
-        DIE
+      if $mn eq @other-provided.any {
+        @others.push: $mn;
+      } else {
+        die qq:to/DIE/ unless %nodes{$mn}:exists;
+          { $mn }, used by { $p.key }, does not exist!
+          DIE
 
-      $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
+        $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
+      }
     }
     #say "P: {$p.key} / { %nodes{$p.key}.gist }";
   }
