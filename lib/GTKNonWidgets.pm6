@@ -58,4 +58,3 @@ need GTK::PrintJob;
 need GTK::TreeViewColumn;
 need GTK::CellRendererCombo;
 need GTK::Application;
-need GTK::Builder;
