@@ -1,4 +1,4 @@
 prefix=GTK
 modules=GTK::Raw::Types
 backups=backup,bitbucket,google-backup,azure-backupm,hut
-build_exclude=GTKAll
+build_exclude=GTKAll,GTKNonWidgets,GTKWidgets
