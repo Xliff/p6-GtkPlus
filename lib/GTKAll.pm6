@@ -166,4 +166,3 @@ need GTK::MenuToolButton;
 need GTK::ToggleToolButton;
 need GTK::Application;
 need GTK::RadioToolButton;
-need GTK::Builder;
