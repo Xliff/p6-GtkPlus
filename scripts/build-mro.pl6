@@ -1,5 +1,6 @@
 use v6.c;
 
+use GLib::Raw::Subs;
 use GLib::Roles::StaticClass;
 
 use GTK::Widget;
@@ -96,8 +97,8 @@ for 'BuildList'.IO.slurp.lines {
 # $nw-mro.gist.say;
 # say '»' x 40;
 
-my $widget-filename = 'lib/GTK/Builder/WidgetMRO.pm6';
-my $nonwidget-filename = 'lib/GTK/Builder/MRO.pm6';
+my $widget-filename = 'lib/GTK/WidgetMRO.pm6';
+my $nonwidget-filename = 'lib/GTK/MRO.pm6';
 for $widget-filename, $nonwidget-filename -> $filename {
   my ($mro, $mro_pre);
   my $w = so $filename.IO.basename.starts-with('Widget');
@@ -113,11 +114,11 @@ for $widget-filename, $nonwidget-filename -> $filename {
   my $fp = $filename.IO;
   # cw: Should we go further? We have code to add a serial to .bak.
   # That should be abstracted so that we can use it here, as well.
-  $fp.rename("{ $filename }.bak") if $fp.e;
+  $fp.rename( getBackupPath($fp) ) if $fp.e;
   $filename.IO.spurt: qq:to/T/;
     use v6.c;
 
-    unit package GTK::Builder::{ $w ?? 'Widget' !! ''}MRO;
+    unit package GTK::{ $w ?? 'Widget' !! ''}MRO;
 
     # Number of times I've had to force THIS to recompile.
     constant forced = 0;
@@ -130,20 +131,30 @@ for $widget-filename, $nonwidget-filename -> $filename {
   say "{ $filename } was updated successfully";
 
   my $f = "lib/GTK{ $w ?? '' !! 'Non'}Widgets.pm6";
+  $fp = $f.IO;
+  $fp.rename( getBackupPath($fp) ) if $fp.e;
   $f.IO.spurt: ($w ?? @widgets !! @non-widgets).map({ "need { $_ };" })
                                                .join("\n");
   say "{ $f } was updated successfully";
 }
 
-my $tsm = %type-class.keys.map( *.chars ).max;
-"lib/GTK/TypeClass.pm6".IO.spurt: qq:to/TYPECLASS/;
-  use v6.c;
+{
+  my $tsm = %type-class.values.map( *.chars ).max;
+  my $tcfh = (my $tcf = "lib/GTK/TypeClass.pm6").IO;
+  # cw: Yes. abstracting the .bak extension is something that's desperately
+  #     needed. It goes in ::Raw::Subs
+  $tcfh.rename( getBackupPath($tcfh) ) if $tcfh.e;
+  $tcfh.spurt: qq:to/TYPECLASS/;
+    use v6.c;
 
-  our %typeClass = (
-    { %type-class.pairs
-                 .sort( *.key )
-                 .map({ "{ .key.fmt("%-{ $tsm }s") } => '{ .value }'" })
-                 .join(",\n\t")
-    }
-  );
-  TYPECLASS
+    our %typeClass = (
+      { %type-class.antipairs
+                   .sort( *.key )
+                   .map({ "{ .key.fmt("%-{ $tsm }s") } => '{ .value }'" })
+                   .join(",\n  ")
+      }
+    );
+    TYPECLASS
+
+  say "{ $tcf } was updated successfully";
+}
