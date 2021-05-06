@@ -30,6 +30,7 @@ INCLUDES="-I${P6_GTK_HOME}/p6-GLib/lib \
 -I${P6_GTK_HOME}/p6-GIO/lib \
 -I${P6_GTK_HOME}/p6-GDK/lib \
 -I${P6_GTK_HOME}/p6-GtkPlus/lib         \
+-I${P6_GTK_HOME}/p6-GtkBuilder/lib      \
 -I${P6_GTK_HOME}/p6-WebkitGTK/lib       \
 -I${P6_GTK_HOME}/p6-SourceViewGTK/lib   \
 -I${P6_GTK_HOME}/p6-AMTK/lib            \
