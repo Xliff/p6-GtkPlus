@@ -14,9 +14,11 @@
       "lib/windows/treehelper.dll"
     ],
     "provides": {
+      "GTK::MRO"                               :  "lib/GTK/MRO.pm6"                             ,
       "GTK::Raw::Definitions"                  :  "lib/GTK/Raw/Definitions.pm6"                 ,
       "GTK::Roles::StructArray"                :  "lib/GTK/Roles/StructArray.pm6"               ,
       "GTK::TypeClass"                         :  "lib/GTK/TypeClass.pm6"                       ,
+      "GTK::WidgetMRO"                         :  "lib/GTK/WidgetMRO.pm6"                       ,
       "GTK::Raw::Structs"                      :  "lib/GTK/Raw/Structs.pm6"                     ,
       "GTK::Raw::Subs"                         :  "lib/GTK/Raw/Subs.pm6"                        ,
       "GTK::Raw::Exports"                      :  "lib/GTK/Raw/Exports.pm6"                     ,
