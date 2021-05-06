@@ -1,6 +1,8 @@
 use v6.c;
 
-our %typeClass = (
+unit package GTK::TypeClass;
+
+our %typeClass is export = (
   GdkDragContext          => 'GTK::DragContext',
   GtkAboutDialog          => 'GTK::Dialog::About',
   GtkAccelGroup           => 'GTK::AccelGroup',
