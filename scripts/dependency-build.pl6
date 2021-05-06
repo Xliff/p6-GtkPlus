@@ -22,7 +22,7 @@ sub MAIN (
   if CONFIG-NAME.IO.e {
     parse-file(CONFIG-NAME);
     $prefix //= %config<prefix> // '';
-    @build-exclude = %config<build_exclude>.split(',') // ();
+    @build-exclude = (%config<build_exclude> // '').split(',') // ();
   }
 
   my @files = get-module-files.sort( *.IO.modified );
