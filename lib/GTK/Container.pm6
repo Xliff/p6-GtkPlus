@@ -14,8 +14,11 @@ use GTK::Widget;
 use GLib::Roles::ListData;
 use GTK::Roles::LatchedContents;
 
-our subset ContainerAncestry is export
+our subset GtkContainerAncestry is export
   where GtkContainer | GtkWidgetAncestry;
+
+# Allow backwards compatibility for a bit
+constant ContainerAncestry is export = GtkContainerAncestry;
 
 class GTK::Container is GTK::Widget {
   also does GTK::Roles::LatchedContents;
