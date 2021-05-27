@@ -10,6 +10,13 @@ use GTK::Adjustment;
 role GTK::Roles::Scrollable {
   has GtkScrollable $!s;
 
+  method roleInit-GtkScrollable {
+    return if $!s;
+
+    my \i = findProperImplementor(self.^attributes);
+    $!s   = cast( GtkScrollable, i.get_value(self) )
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
