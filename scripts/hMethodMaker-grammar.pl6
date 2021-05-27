@@ -34,15 +34,15 @@ grammar C-Function-Def {
   }
 
   rule parameters {
-    '(void)'
+      '(void)'
     |
-    '(' [ <type> <var>? ]+ % [ \s* ',' \s* ] [','? $<va>='...' ]? ')'
+      '(' [ <type> <var>? ]+ % [ \s* ',' \s* ] [','? $<va>='...' ]? ')'
   }
 
   rule func_def {
-    <returns>
+      <returns>
     $<sub>=[ \w+ ]
-    <parameters>
+      <parameters>
     [ <postdec>+ % \s* ]?';'
   }
 
@@ -169,6 +169,10 @@ sub MAIN (
   $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
   $contents ~~ s:g/<!after ';'>\n/ /;
   $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
+
+  # cw: Too permissive, but will work for most things. Needs an anchor to $$!
+  $contents ~~ s:g/ 'G_GNUC_' <[A..Z]>+ //;
+
   $contents ~~ s:g/ 'gst_byte_reader_' [
                        'dup' | 'peek' | 'skip' | 'get'
                      ]'_string_utf8(reader' ',str'? ')'//;
@@ -217,7 +221,11 @@ sub MAIN (
     # Last chance removal by line prefix.
     next if $v.starts-with('extern');
 
-    take "{ ($k + 1).fmt($s-fmt) }: { $v }"
+    # Last chance to clean up artifacts left by processing:
+    my $val = $v;
+    $val .= subst( /\s*';'/ , ';' );
+
+    take "{ ($k + 1).fmt($s-fmt) }: { $val }"
   }).join("\n");\
 
   # Check for multiple semi-colons on a line and split that line.
