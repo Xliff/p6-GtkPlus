@@ -19,7 +19,7 @@ fi
 
 EXTRAS='-I/home/cbwood/Other_Projects/Method-Also/lib'
 
-INCLUDES="-I${P6_GTK_HOME}/p6-GLib/lib \
+INCLUDES="-I${P6_GTK_HOME}/p6-ICal/lib -I${P6_GTK_HOME}/p6-GLib/lib \
 -I${P6_GTK_HOME}/p6-ATK/lib \
 -I${P6_GTK_HOME}/p6-JSON-GLib/lib \
 -I${P6_GTK_HOME}/p6-GIR/lib \
