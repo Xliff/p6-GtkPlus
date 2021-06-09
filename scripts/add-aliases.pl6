@@ -70,6 +70,21 @@ sub MAIN($filename, :$test) {
       when $proto {
         my $fm = $/;
         my $mn = $mpm<method_name>;
+
+        # DO NOT replace these names (covering the user-replacable parts of
+        # Positional and Associative roles.
+        next if $mn eq <
+          AT-POS
+          ASSIGN-POS
+          BIND-POS
+          DELETE-POS
+          STORE
+          BIND-KEY
+          AT-KEY
+          ASSIGN-KEY
+          DELETE-KEY
+        >.any;
+
         # Better version of this logic would put delimeter checking
         # in get-alias instead of passing it as a parameter.
         if $mn ~~ &replaceables {
