@@ -2,14 +2,14 @@
 use v6.c;
 
 #use Data::Dump::Tree;
-
-my %do_output;
+use P5quotemeta;
+use IO::Capture::Simple;
 
 use lib <. scripts>;
 
-use IO::Capture::Simple;
-
 use GTKScripts;
+
+my %do_output;
 
 grammar C-Function-Def {
   regex TOP { <top-bland> }
@@ -119,6 +119,7 @@ sub MAIN (
   if %config<hfile-prefix> -> $pre {
     $remove-from-start ~= ':' if $remove-from-start;
     $remove-from-start ~= $pre;
+    #$*ERR.say: "<hfile-perfix> = { $pre }";
   }
 
   if %config<hfile-suffix> -> $suf {
@@ -194,7 +195,8 @@ sub MAIN (
     # it might not work.
     $remove-from-start ~~ s:g/\s\s+/:/;
     for ( $remove-from-start // () ).split(':') -> $r {
-      $contents ~~ s:g/ ^^ \s* $r \s* //;
+      #$*ERR.say: "Removing { $r } from start of line...";
+      $contents ~~ s:g/ ^^ \s* <{ quotemeta($r) }> <[\s\r\n]>* //;
     }
   }
 
@@ -552,8 +554,9 @@ sub MAIN (
         #     >.none;
 
         my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
+        my $params = %methods{$m}<call_types>.elems ?? " ({ $sig })" !! '';
         say qq:to/METHOD/.chomp;
-          { $mult }method { %methods{$m}<sub> } ({ $sig }) { $dep }\{
+          { $mult }method { %methods{$m}<sub> }{ $params } { $dep }\{
             { %methods{$m}<original> }({ $call });
           \}
         METHOD
@@ -572,10 +575,13 @@ sub MAIN (
             }
           }
           my $oc = $o_call.join(', ');
-          my $os = ($o_types.Array [Z] %methods{$m}<call_vars>.Array).join(', ');
+          my @pa = $o_types.Array [Z] %methods{$m}<call_vars>.Array;
+          my $os = @pa.join(', ');
+          my $params = @pa.grep( * ).elems ?? " ({ $os })" !! '';
 
+          # { @pa.elems }
           say qq:to/METHOD/.chomp;
-            { $mult }method { %methods{$m}<sub> } ({ $os })  \{
+            { $mult }method { %methods{$m}<sub> }{ $params }  \{
               samewith({ $oc });
             \}
           METHOD
