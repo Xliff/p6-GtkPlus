@@ -196,7 +196,7 @@ sub MAIN (
     $remove-from-start ~~ s:g/\s\s+/:/;
     for ( $remove-from-start // () ).split(':') -> $r {
       #$*ERR.say: "Removing { $r } from start of line...";
-      $contents ~~ s:g/ ^^ \s* <{ quotemeta($r) }> <[\s\r\n]>* //;
+      $contents ~~ s:g/ ^^ \s* <{ $r }> <[\s\r\n]>* //;
     }
   }
 
