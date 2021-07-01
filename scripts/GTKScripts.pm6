@@ -29,7 +29,7 @@ sub parse-file ($filename) is export {
 }
 
 sub find-files(
-  $dir,
+  $dir        =  '.',
   :$pattern   is copy,
   :$extension is copy,
   :$exclude,
