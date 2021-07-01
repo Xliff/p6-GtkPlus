@@ -16,14 +16,14 @@ my regex name {
 my token d { <[0..9 x]> }
 my token m { '-' }
 my token L { 'L' }
-my token w { <[A..Za..z _]> }
+my token w { <[A..Za..z0..9 _]> }
 
 my rule comment {
   '/*' .+? '*/'
 }
 
 my rule enum-entry {
-  \s* ( <[_ A..Za..z0..9 ]>+ ) (
+  \s* ( <w>+ ) (
     [ '=' '('?
       [
         <m>?<d>+<L>?
