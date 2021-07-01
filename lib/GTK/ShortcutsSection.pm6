@@ -59,7 +59,7 @@ class GTK::ShortcutsSection is GTK::Box {
   # Is originally:
   # GtkShortcutsSection, gint, gpointer --> gboolean
   method change-current-page is also<change_current_page> {
-    self.connect-int-ruint($!ss);
+    self.connect-int-ruint($!ss, 'change-current-page');
   }
 
   # ↑↑↑↑ SIGNALS ↑↑↑↑
