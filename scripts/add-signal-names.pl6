@@ -91,73 +91,74 @@ sub MAIN ( :file(:$filename), :out(:$stdout) ) {
       my $sig-name-padding = %signal-data.keys.map( *.chars ).max;
       my $objData = 'self.GLib::Roles::Object::signal-data';
       my $append-to = $alsoDoes ?? $objData !! 'callsame';
+      my $signal-list = %signal-data.pairs.sort( *.key ).map({
+        "{ .key.fmt("%-{ $sig-name-padding }s") } => {.value }"
+      }).join(",\n        ");
 
       # cw: Why all of the complexity? You must remember that %signal-data
       #     is not the entire piece of the puzzle. ANCESTRY MUST BE CONSIDERED!
       #     Therefore we have to use an anonymous class to provide said
       #     consideration
-      (my $replace-contents = $class-contents.Str) ~= qq:to/CODE/;
-            method signal-data \{
-              state ( \%signal-data, \%signal-object );
-              my \$self = self;
-              unless \%signal-data\{ self.WHERE \} \{
-                \%signal-data\{ self.WHERE \} = (
-                  {
-                    %signal-data.pairs.sort( *.key ).map({
-                      "{ .key.fmt("%-{ $sig-name-padding }s") } => { .value }"
-                    }).join(",\n        ");
-                  }
-                ).Hash;
-              \}
+      (my $replace = q:to/CODE/) ~~ s:g/'[% ' (.+?) ' %]'/{ ::('$' ~ $0) }/;
+        method signal-data {
+          state ( %signal-data, %signal-object );
+          my $self = self;
+          unless %signal-data{ self.WHERE } {
+            %signal-data{ self.WHERE } = (
+              [% signal-list %]
+            ).Hash;
+          }
 
-              unless \%signal-object\{ self.WHERE \} \{
-                state { '@' }keys;
+          unless %signal-object{ self.WHERE } {
+            state @keys;
 
-                unless { '@' }keys \{
-                  { '@' }keys = { $append-to }.keys;
-                  { '@' }keys.append: \%signal-data\{ self.WHERE \}.keys;
-                \}
+            unless @keys {
+              @keys = [% append-to %].keys;
+              @keys.append: %signal-data{ self.WHERE }.keys;
+            }
 
-                \%signal-object\{ self.WHERE\ } = (class :: does Associative \{
+            %signal-object{ self.WHERE } = (class :: does Associative {
 
-                  method !getData (\\k) \{
-                    \%signal-data\{ { '$' }self.WHERE \}\{k\}
-                      ?? %signal-data\{ { '$' }self.WHERE \}\{k\}
-                      !! \${ $objData }\{k\};
-                  \}
+              method !getData (\k) {
+                %signal-data{ $self.WHERE }{k}
+                  ?? %signal-data{ $self.WHERE }{k}
+                  !! $[% objData %]{k};
+              }
 
-                  method AT-KEY (\\k) \{
-                    self!getData(k);
-                  \}
+              method AT-KEY (\k) {
+                self!getData(k);
+              }
 
-                  method EXISTS-KEY (\\k) \{
-                    self!getData(k).defined;
-                  \}
+              method EXISTS-KEY (\\k) {
+                self!getData(k).defined;
+              }
 
-                  method keys \{
-                    \@keys;
-                  \}
+              method keys {
+                @keys;
+              }
 
-                \}).new;
-              \}
+            }).new;
+          }
 
-              \%signal-object\{ self.WHERE \};
-            \}
+          %signal-object{ self.WHERE };
+        }
 
-            method signal-names \{
-              state \@signal-names = self.signal-data.keys;
+        method signal-names {
+          state @signal-names = self.signal-data.keys;
 
-              { '@' }signal-names;
-            \}
-          CODE
+          @signal-names;
+        }
+      CODE
+
+      (my $replace-contents = $class-contents.Str) ~= $replace;
 
       # cw: OPTION #2
       # (my $replace-contents = $class-contents.Str) ~= qq:to/CODE/;
-      #   method signal-data \{
+      #   method signal-data {
       #     state ( \%signal-data, \%signal-object );
       #     my \$self = self;
-      #     unless \%signal-data\{ self.WHERE \} \{
-      #       \%signal-data\{ self.WHERE \} = (
+      #     unless \%signal-data{ self.WHERE } {
+      #       \%signal-data{ self.WHERE } = (
       #         {
       #           %signal-data.pairs.sort( *.key ).map({
       #             "{ .key.fmt("%-{ $sig-name-padding }s") } => { .value }"
@@ -166,14 +167,14 @@ sub MAIN ( :file(:$filename), :out(:$stdout) ) {
       #       ).Hash;
       #     }
       #
-      #     \%signal-data\{ self.WHERE \}.clone;
-      #   \}
+      #     \%signal-data{ self.WHERE }.clone;
+      #   }
       #
-      #   method signal-names \{
+      #   method signal-names {
       #     state \@signal-names = self.signal-data.keys;
       #
       #     { '@' }signal-names;
-      #   \}
+      #   }
       # CODE
 
       #say "Range: { $match.from } - { $match.to }";
