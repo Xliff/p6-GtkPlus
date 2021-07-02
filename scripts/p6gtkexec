@@ -48,6 +48,7 @@ INCLUDES="\
 -I${P6_GTK_HOME}/p6-RSVG/lib            \
 -I${P6_GTK_HOME}/p6-GtkSheet/lib	\
 -I${P6_GTK_HOME}/p6-VTE/lib             \
+-I${P6_GTK_HOME}/p6-ICal-GLib/lib       \
 -Ilib -Ibin"
 
 # Handle any extra directories in project file.
