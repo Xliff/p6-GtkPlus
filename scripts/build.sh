@@ -23,11 +23,12 @@ else
 fi
 
 /usr/bin/time -p /bin/bash -c '(
-  for a in `cat BuildList.now`; do
+  i=1; n=`wc -l BuildList | cut -f1 -d\ `; for a in `cat BuildList.now`; do
     (
-    	echo " === $a ==="
-	./p6gtkexec -e "use $a" 2>&1
+    	echo " === $a === ($i/$n)"
+	    ./p6gtkexec -e "use $a" 2>&1
     )
+    i=$((i+1))
   done;
   echo;
 )' 2>&1 | tee -a LastBuildResults
