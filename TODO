@@ -397,5 +397,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - LibGWeather
 - LibGDA
 - Gnome Keyring
+- LibRest
+- LibCanberra
 + Evolution Data Server (https://developer.gnome.org/eds/stable/EDataCal.html)
 + GOA (GNOME Online Accounts) (https://developer.gnome.org/goa/stable/index.html)
