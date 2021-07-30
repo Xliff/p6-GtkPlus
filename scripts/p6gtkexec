@@ -18,19 +18,19 @@ else
 fi
 
 INCLUDES="\
--I{$P6_GTK_HOME}/Method-Also/lib'
--I${P6_GTK_HOME}/p6-ICal/lib
--I${P6_GTK_HOME}/p6-GLib/lib \
+-I${P6_GTK_HOME}/Method-Also/lib  \
+-I${P6_GTK_HOME}/p6-ICal/lib      \
+-I${P6_GTK_HOME}/p6-GLib/lib      \
 -I${P6_GTK_HOME}/p6-ICal-GLib/lib \
--I${P6_GTK_HOME}/p6-ATK/lib \
+-I${P6_GTK_HOME}/p6-ATK/lib       \
 -I${P6_GTK_HOME}/p6-JSON-GLib/lib \
--I${P6_GTK_HOME}/p6-GIR/lib \
--I${P6_GTK_HOME}/p6-SOUP/lib \
--I${P6_GTK_HOME}/p6-GSSDP/lib \
--I${P6_GTK_HOME}/p6-GUPnP/lib \
--I${P6_GTK_HOME}/p6-Pango/lib \
--I${P6_GTK_HOME}/p6-GIO/lib \
--I${P6_GTK_HOME}/p6-GDK/lib \
+-I${P6_GTK_HOME}/p6-GIR/lib       \
+-I${P6_GTK_HOME}/p6-SOUP/lib      \
+-I${P6_GTK_HOME}/p6-GSSDP/lib     \
+-I${P6_GTK_HOME}/p6-GUPnP/lib     \
+-I${P6_GTK_HOME}/p6-Pango/lib     \
+-I${P6_GTK_HOME}/p6-GIO/lib       \
+-I${P6_GTK_HOME}/p6-GDK/lib       \
 -I${P6_GTK_HOME}/p6-GtkPlus/lib         \
 -I${P6_GTK_HOME}/p6-GtkBuilder/lib      \
 -I${P6_GTK_HOME}/p6-WebkitGTK/lib       \
