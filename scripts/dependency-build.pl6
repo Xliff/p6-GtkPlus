@@ -14,13 +14,14 @@ sub MAIN (
   :$start-at,
   :$log = True,
   :$no-save = False,
-  :$variant is copy = ''
+  :$variant is copy = '',
+  :$max-concurrency = $*KERNEL.cpu-cores
 ) {
   my @build-exclude;
   my $dep_file = '.build-deps'.IO;
 
-  if CONFIG-NAME.IO.e {
-    parse-file(CONFIG-NAME);
+  if $CONFIG-NAME.IO.e {
+    parse-file;
     $prefix //= %config<prefix> // '';
     @build-exclude = (%config<build_exclude> // '').split(',') // ();
   }
@@ -235,7 +236,7 @@ sub MAIN (
       }
 
       # Wait until we free up some threads.
-      if +@threads >= $*KERNEL.cpu-cores {
+      if +@threads >= $max-concurrency {
         await Promise.anyof(@threads);
         @threads .= grep({ .status ~~ Planned });
         say "C: »»»»»»»»»»»»»» { @threads.elems }";
