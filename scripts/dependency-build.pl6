@@ -15,7 +15,7 @@ sub MAIN (
   :$log = True,
   :$no-save = False,
   :$variant is copy = '',
-  :$max-concurrency = $*ENV<P6_GLIB_CONCURRENCY_LEVEL> // $*KERNEL.cpu-cores
+  :$max-concurrency = %*ENV<P6_GLIB_CONCURRENCY_LEVEL> // $*KERNEL.cpu-cores
 ) {
   my @build-exclude;
   my $dep_file = '.build-deps'.IO;
