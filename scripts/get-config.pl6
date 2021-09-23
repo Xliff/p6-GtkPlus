@@ -9,9 +9,9 @@ my %defaults = (
 );
 
 sub MAIN ($entry) {
-  die "Project configuration file '{ CONFIG-NAME }' doesn't exist!"
-    unless CONFIG-NAME.IO.e;
-  parse-file(CONFIG-NAME);
+  die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
+    unless $CONFIG-NAME.IO.e;
+  parse-file;
 
   say %config{$entry} // %defaults{$entry} // '';
 }
