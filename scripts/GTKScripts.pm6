@@ -5,16 +5,15 @@ use File::Find;
 
 unit package GTKScripts;
 
-constant CONFIG-NAME is export = %*ENV<P6_PROJECT_FILE> // '.p6-gtk-project';
-
-our %config is export;
+our $CONFIG-NAME      is export;
+our %config           is export;
 our $GTK-SCRIPT-DEBUG is export;
 
 sub getLibDirs is export {
   %config<libdirs> // 'lib'
 }
 
-sub parse-file ($filename) is export {
+sub parse-file ($filename = $CONFIG-NAME) is export {
   return Nil unless $filename && $filename.IO.r;
 
   %config = Config::INI::parse_file($filename)<_>;
@@ -58,7 +57,8 @@ sub find-files(
       do given $elem {
         when .d {
           if $depth {
-            next unless $*SPEC.splitdir($elem).grep( * ).elems < max($depth - 1, 0)
+            next unless
+              $*SPEC.splitdir($elem).grep( * ).elems < max($depth - 1, 0)
           }
           @targets.append: $elem.dir;
           next;
@@ -231,5 +231,13 @@ sub get-longest-prefix (@words) is export {
 
 INIT {
   $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
-  parse-file(CONFIG-NAME) if CONFIG-NAME.IO.e;
+  $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
+                 $*ENV<X11_PROJECT_FILE> //
+                 do {
+                   ".".IO.dir.grep({
+                     .starts-with('.') &&
+                     .ends-with('-project')
+                   })[0].absolute
+                 }
+  parse-file if $CONFIG-NAME.IO.e;
 }
