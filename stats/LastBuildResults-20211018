@@ -1,0 +1,651 @@
+Dependency Generation
+=====================
+real 3.22
+user 3.88
+sys 0.10
+ === ATK::Raw::Definitions === (1/466)
+Stage start      :   0.000
+
+    precomp ../p6-ATK/lib/ATK/Raw/Definitions.pm6
+    Stage start      :   0.000
+    
+        precomp ../p6-GLib/lib/GLib/Raw/Definitions.pm6
+        Stage start      :   0.000
+        
+            precomp ../p6-GLib/lib/GLib/Compat/Definitions.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GLib/lib/GLib/Roles/Pointers.pm6
+                Stage start      :   0.000
+                
+                    precomp ../p6-GLib/lib/GLib/Roles/Implementor.pm6
+                    Stage start      :   0.000
+                    Stage parse      :   0.149
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.004
+                    Stage mast       :   0.007
+                    Stage mbc        :   0.002
+                Stage parse      :   1.872
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.007
+                Stage mast       :   0.014
+                Stage mbc        :   0.002
+            Stage parse      :   3.821
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.016
+            Stage mast       :   0.040
+            Stage mbc        :   0.003
+        Stage parse      :   5.902
+        Stage syntaxcheck:   0.000
+        Stage ast        :   0.000
+        Stage optimize   :   0.018
+        Stage mast       :   0.040
+        Stage mbc        :   0.005
+    
+        precomp ../p6-GLib/lib/GLib/Raw/Structs.pm6
+        Stage start      :   0.000
+        
+            precomp ../Method-Also/lib/Method/Also.pm6
+            Stage start      :   0.000
+            Stage parse      :   0.368
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.015
+            Stage mast       :   0.034
+            Stage mbc        :   0.004
+        
+            precomp ../p6-GLib/lib/GLib/Raw/Enums.pm6
+            Stage start      :   0.000
+            Stage parse      :   2.924
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.067
+            Stage mast       :   0.101
+            Stage mbc        :   0.032
+        
+            precomp ../p6-GLib/lib/GLib/Raw/Exceptions.pm6
+            Stage start      :   0.000
+            Stage parse      :   0.153
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.007
+            Stage mast       :   0.025
+            Stage mbc        :   0.002
+        
+            precomp ../p6-GLib/lib/GLib/Raw/Object.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GLib/lib/GLib/Roles/TypeInstance.pm6
+                Stage start      :   0.000
+                Stage parse      :   1.567
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.007
+                Stage mast       :   0.010
+                Stage mbc        :   0.005
+            Stage parse      :   3.552
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.019
+            Stage mast       :   0.029
+            Stage mbc        :   0.005
+        
+            precomp ../p6-GLib/lib/GLib/Raw/Subs.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GLib/lib/GLib/Object/Supplyish.pm6
+                Stage start      :   0.000
+                Stage parse      :   1.504
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.015
+                Stage mast       :   0.022
+                Stage mbc        :   0.001
+            Stage parse      :   5.225
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.097
+            Stage mast       :   0.230
+            Stage mbc        :   0.117
+        
+            precomp ../p6-GLib/lib/GLib/Raw/Struct_Subs.pm6
+            Stage start      :   0.000
+            Stage parse      :   1.884
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.025
+            Stage mast       :   0.041
+            Stage mbc        :   0.006
+        Stage parse      :  18.306
+        Stage syntaxcheck:   0.000
+        Stage ast        :   0.000
+        Stage optimize   :   0.100
+        Stage mast       :   0.264
+        Stage mbc        :   0.018
+    Stage parse      :  26.391
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.005
+    Stage mast       :   0.017
+    Stage mbc        :   0.002
+R: GLib::Roles::Pointers
+Stage parse      :  27.951
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.004
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === ATK::Raw::Enums === (2/466)
+Stage start      :   0.000
+
+    precomp ../p6-ATK/lib/ATK/Raw/Enums.pm6
+    Stage start      :   0.000
+    Stage parse      :   1.722
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.021
+    Stage mast       :   0.019
+    Stage mbc        :   0.008
+Stage parse      :   3.236
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.008
+Stage mast       :   0.009
+Stage mbc        :   0.002
+Stage moar       :   0.000
+ === ATK::Raw::Exports === (3/466)
+Stage start      :   0.000
+
+    precomp ../p6-ATK/lib/ATK/Raw/Exports.pm6
+    Stage start      :   0.000
+    Stage parse      :   0.132
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.003
+    Stage mast       :   0.005
+    Stage mbc        :   0.002
+Stage parse      :   1.571
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.007
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === ATK::Raw::Structs === (4/466)
+Stage start      :   0.000
+
+    precomp ../p6-ATK/lib/ATK/Raw/Structs.pm6
+    Stage start      :   0.000
+    Stage parse      :   2.008
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.022
+    Stage mast       :   0.047
+    Stage mbc        :   0.004
+R: GLib::Roles::Pointers
+Stage parse      :   3.619
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.004
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === ATK::Roles::Implementor === (5/466)
+Stage start      :   0.000
+
+    precomp ../p6-ATK/lib/ATK/Roles/Implementor.pm6
+    Stage start      :   0.000
+    
+        precomp ../p6-ATK/lib/ATK/Raw/Types.pm6
+        Stage start      :   0.000
+        
+            precomp ../p6-GLib/lib/GLib/Raw/Exports.pm6
+            Stage start      :   0.000
+            Stage parse      :   1.517
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.005
+            Stage mast       :   0.011
+            Stage mbc        :   0.003
+        Stage parse      :   3.320
+        Stage syntaxcheck:   0.000
+        Stage ast        :   0.000
+        Stage optimize   :   0.004
+        Stage mast       :   0.011
+        Stage mbc        :   0.002
+    Stage parse      :   5.196
+    Stage syntaxcheck:   0.000
+    Stage ast        :   0.000
+    Stage optimize   :   0.011
+    Stage mast       :   0.044
+    Stage mbc        :   0.008
+Stage parse      :   6.771
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.004
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === Cairo === (6/466)
+Stage start      :   0.000
+Stage parse      :   1.506
+Stage syntaxcheck:   0.000
+Stage ast        :   0.000
+Stage optimize   :   0.002
+Stage mast       :   0.003
+Stage mbc        :   0.001
+Stage moar       :   0.000
+ === GDK::Device === (7/466)
+Stage start      :   0.000
+
+    precomp ../p6-GDK/lib/GDK/Device.pm6
+    Stage start      :   0.000
+    
+        precomp ../p6-GDK/lib/GDK/Raw/Types.pm6
+        Stage start      :   0.000
+        
+            precomp ../p6-Pango/lib/Pango/Raw/Exports.pm6
+            Stage start      :   0.000
+            Stage parse      :   0.133
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.003
+            Stage mast       :   0.005
+            Stage mbc        :   0.002
+        
+            precomp ../p6-GIO/lib/GIO/Raw/Exports.pm6
+            Stage start      :   0.000
+            Stage parse      :   0.132
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.003
+            Stage mast       :   0.005
+            Stage mbc        :   0.002
+        
+            precomp ../p6-GDK/lib/GDK/Raw/Exports.pm6
+            Stage start      :   0.000
+            Stage parse      :   0.133
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.003
+            Stage mast       :   0.006
+            Stage mbc        :   0.001
+        
+            precomp ../p6-Pango/lib/Pango/Raw/Definitions.pm6
+            Stage start      :   0.000
+            Stage parse      :   1.899
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.008
+            Stage mast       :   0.018
+            Stage mbc        :   0.011
+        
+            precomp ../p6-Pango/lib/Pango/Raw/Enums.pm6
+            Stage start      :   0.000
+            Stage parse      :   1.768
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.012
+            Stage mast       :   0.020
+            Stage mbc        :   0.009
+        
+            precomp ../p6-Pango/lib/Pango/Raw/Structs.pm6
+            Stage start      :   0.000
+            Stage parse      :   2.112
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.034
+            Stage mast       :   0.061
+            Stage mbc        :   0.009
+        
+            precomp ../p6-Pango/lib/Pango/Raw/Subs.pm6
+            Stage start      :   0.000
+            Stage parse      :   1.844
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.007
+            Stage mast       :   0.019
+            Stage mbc        :   0.002
+        
+            precomp ../p6-GIO/lib/GIO/DBus/Raw/Types.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GIO/lib/GIO/Raw/Definitions.pm6
+                Stage start      :   0.000
+                
+                    precomp ../p6-GLib/lib/GLib/Raw/Pointers.pm6
+                    Stage start      :   0.000
+                    Stage parse      :   1.599
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.002
+                    Stage mast       :   0.008
+                    Stage mbc        :   0.001
+                Stage parse      :   3.706
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.017
+                Stage mast       :   0.059
+                Stage mbc        :   0.006
+            
+                precomp ../p6-GLib/lib/GLib/Memory.pm6
+                Stage start      :   0.000
+                
+                    precomp ../p6-GLib/lib/GLib/Raw/Types.pm6
+                    Stage start      :   0.000
+                    Stage parse      :   1.663
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.003
+                    Stage mast       :   0.011
+                    Stage mbc        :   0.002
+                
+                    precomp ../p6-GLib/lib/GLib/Raw/Memory.pm6
+                    Stage start      :   0.000
+                    Stage parse      :   2.082
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.014
+                    Stage mast       :   0.033
+                    Stage mbc        :   0.013
+                
+                    precomp ../p6-GLib/lib/GLib/Roles/StaticClass.pm6
+                    Stage start      :   0.000
+                    Stage parse      :   1.648
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.010
+                    Stage mast       :   0.012
+                    Stage mbc        :   0.006
+                Stage parse      :   7.529
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.089
+                Stage mast       :   0.037
+                Stage mbc        :   0.007
+            Stage parse      :  15.206
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.092
+            Stage mast       :   0.203
+            Stage mbc        :   0.051
+        
+            precomp ../p6-GIO/lib/GIO/Raw/Enums.pm6
+            Stage start      :   0.000
+            Stage parse      :   2.247
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.026
+            Stage mast       :   0.054
+            Stage mbc        :   0.023
+        
+            precomp ../p6-GIO/lib/GIO/Raw/Quarks.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GIO/lib/GIO/Raw/Subs.pm6
+                Stage start      :   0.000
+                Stage parse      :   1.907
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.011
+                Stage mast       :   0.034
+                Stage mbc        :   0.006
+            Stage parse      :   3.625
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.029
+            Stage mast       :   0.011
+            Stage mbc        :   0.003
+        
+            precomp ../p6-GIO/lib/GIO/Raw/Structs.pm6
+            Stage start      :   0.000
+            Stage parse      :   2.031
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.041
+            Stage mast       :   0.065
+            Stage mbc        :   0.008
+        
+            precomp ../p6-GDK/lib/GDK/Raw/Definitions.pm6
+            Stage start      :   0.000
+            Stage parse      :   1.820
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.007
+            Stage mast       :   0.016
+            Stage mbc        :   0.007
+        
+            precomp ../p6-GDK/lib/GDK/Raw/Enums.pm6
+            Stage start      :   0.000
+            Stage parse      :   2.487
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.054
+            Stage mast       :   0.061
+            Stage mbc        :   0.027
+        
+            precomp ../p6-GDK/lib/GDK/Raw/Structs.pm6
+            Stage start      :   0.000
+            Stage parse      :   2.368
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.055
+            Stage mast       :   0.124
+            Stage mbc        :   0.017
+        
+            precomp ../p6-GDK/lib/GDK/Raw/Subs.pm6
+            Stage start      :   0.000
+            Stage parse      :   1.723
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.004
+            Stage mast       :   0.020
+            Stage mbc        :   0.002
+        Stage parse      :  44.187
+        Stage syntaxcheck:   0.000
+        Stage ast        :   0.000
+        Stage optimize   :   0.003
+        Stage mast       :   0.020
+        Stage mbc        :   0.002
+    
+        precomp ../p6-GDK/lib/GDK/Raw/Device.pm6
+        Stage start      :   0.000
+        Stage parse      :   3.025
+        Stage syntaxcheck:   0.000
+        Stage ast        :   0.000
+        Stage optimize   :   0.041
+        Stage mast       :   0.075
+        Stage mbc        :   0.054
+    
+        precomp ../p6-GLib/lib/GLib/Value.pm6
+        Stage start      :   0.000
+        
+            precomp ../p6-GLib/lib/GLib/Raw/Value.pm6
+            Stage start      :   0.000
+            Stage parse      :   2.807
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.044
+            Stage mast       :   0.099
+            Stage mbc        :   0.043
+        Stage parse      :   5.269
+        Stage syntaxcheck:   0.000
+        Stage ast        :   0.000
+        Stage optimize   :   0.063
+        Stage mast       :   0.185
+        Stage mbc        :   0.008
+    
+        precomp ../p6-GDK/lib/GDK/Display.pm6
+        Stage start      :   0.000
+        
+            precomp ../p6-GDK/lib/GDK/Raw/Display.pm6
+            Stage start      :   0.000
+            Stage parse      :   3.482
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.045
+            Stage mast       :   0.086
+            Stage mbc        :   0.144
+        
+            precomp ../p6-GDK/lib/GDK/Raw/X11_Display.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GDK/lib/GDK/Raw/X11_Types.pm6
+                Stage start      :   0.000
+                Stage parse      :   1.646
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.002
+                Stage mast       :   0.009
+                Stage mbc        :   0.001
+            Stage parse      :   3.655
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.015
+            Stage mast       :   0.029
+            Stage mbc        :   0.009
+        
+            precomp ../p6-GLib/lib/GLib/Roles/Signals/Generic.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GLib/lib/GLib/Raw/ReturnedValue.pm6
+                Stage start      :   0.000
+                Stage parse      :   0.095
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.013
+                Stage mast       :   0.009
+                Stage mbc        :   0.001
+            
+                precomp ../p6-GLib/lib/GLib/Raw/Signal.pm6
+                Stage start      :   0.000
+                Stage parse      :   2.425
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.040
+                Stage mast       :   0.089
+                Stage mbc        :   0.027
+            Stage parse      :   6.337
+            Stage syntaxcheck:   0.000
+            Stage ast        :   0.000
+            Stage optimize   :   0.109
+            Stage mast       :   0.193
+            Stage mbc        :   0.060
+        
+            precomp ../p6-GDK/lib/GDK/Screen.pm6
+            Stage start      :   0.000
+            
+                precomp ../p6-GDK/lib/GDK/Raw/Screen.pm6
+                Stage start      :   0.000
+                Stage parse      :   2.938
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.031
+                Stage mast       :   0.078
+                Stage mbc        :   0.050
+            
+                precomp ../p6-GDK/lib/GDK/Raw/X11_Screen.pm6
+                Stage start      :   0.000
+                Stage parse      :   2.236
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.023
+                Stage mast       :   0.030
+                Stage mbc        :   0.019
+            
+                precomp ../p6-GLib/lib/GLib/Roles/Object.pm6
+                Stage start      :   0.000
+                
+                    precomp ../p6-GLib/lib/GLib/Object/IsType.pm6
+                    Stage start      :   0.000
+                    Stage parse      :   1.810
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.008
+                    Stage mast       :   0.019
+                    Stage mbc        :   0.007
+                
+                    precomp ../p6-GLib/lib/GLib/Object/Type.pm6
+                    Stage start      :   0.000
+                    
+                        precomp ../p6-GLib/lib/GLib/Raw/Type.pm6
+                        Stage start      :   0.000
+                        Stage parse      :   3.031
+                        Stage syntaxcheck:   0.000
+                        Stage ast        :   0.000
+                        Stage optimize   :   0.046
+                        Stage mast       :   0.184
+                        Stage mbc        :   0.051
+                    Stage parse      :   5.254
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.046
+                    Stage mast       :   0.078
+                    Stage mbc        :   0.005
+                
+                    precomp ../p6-GLib/lib/GLib/Class/Object.pm6
+                    Stage start      :   0.000
+                    
+                        precomp ../p6-GLib/lib/GLib/Object/ParamSpec.pm6
+                        Stage start      :   0.000
+                        
+                            precomp ../p6-GLib/lib/GLib/Object/Raw/ParamSpec.pm6
+                            Stage start      :   0.000
+                            Stage parse      :   2.801
+                            Stage syntaxcheck:   0.000
+                            Stage ast        :   0.000
+                            Stage optimize   :   0.061
+                            Stage mast       :   0.133
+                            Stage mbc        :   0.049
+                        Stage parse      :   5.561
+                        Stage syntaxcheck:   0.000
+                        Stage ast        :   0.000
+                        Stage optimize   :   0.087
+                        Stage mast       :   0.146
+                        Stage mbc        :   0.095
+                    
+                        precomp ../p6-GLib/lib/GLib/Roles/TypedBuffer.pm6
+                        Stage start      :   0.000
+                        Stage parse      :   1.971
+                        Stage syntaxcheck:   0.000
+                        Stage ast        :   0.000
+                        Stage optimize   :   0.032
+                        Stage mast       :   0.032
+                        Stage mbc        :   0.005
+                    Stage parse      :  10.273
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.025
+                    Stage mast       :   0.052
+                    Stage mbc        :   0.013
+                
+                    precomp ../p6-GLib/lib/GLib/Roles/Bindable.pm6
+                    Stage start      :   0.000
+                    
+                        precomp ../p6-GLib/lib/GLib/Object/Raw/Binding.pm6
+                        Stage start      :   0.000
+                        Stage parse      :   1.967
+                        Stage syntaxcheck:   0.000
+                        Stage ast        :   0.000
+                        Stage optimize   :   0.014
+                        Stage mast       :   0.031
+                        Stage mbc        :   0.010
+                    Stage parse      :   3.832
+                    Stage syntaxcheck:   0.000
+                    Stage ast        :   0.000
+                    Stage optimize   :   0.026
+                    Stage mast       :   0.021
+                    Stage mbc        :   0.007
+                Stage parse      :  24.632
+                Stage syntaxcheck:   0.000
+                Stage ast        :   0.000
+                Stage optimize   :   0.093
+                Stage mast       :   0.161
+                Stage mbc        :   0.016
+            
+                precomp ../p6-GLib/lib/GLib/Roles/ListData.pm6
+                Stage start      :   0.000
