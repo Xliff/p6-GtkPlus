@@ -73,7 +73,7 @@ class GTK::Box is GTK::Container {
   multi method new (
     # Default orientation established from Glade.
     Int() $orientation = GTK_ORIENTATION_HORIZONTAL,  # GtkOrientation,
-    Int() $spacing     = $default-spacing;
+    Int() $spacing     = $default-spacing
   ) {
     # This works because it is NOT the array version.
     my guint $o = $orientation;
@@ -83,14 +83,14 @@ class GTK::Box is GTK::Container {
     $box ?? self.bless( :$box ) !! Nil;
   }
 
-  method new-hbox(Int $spacing = $default-spacing) is also<new_hbox> {
+  method new-hbox (Int $spacing = $default-spacing) is also<new_hbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $s);
 
     $box ?? self.bless( :$box ) !! Nil;
   }
 
-  method new-vbox(Int $spacing = $default-spacing) is also<new_vbox> {
+  method new-vbox (Int $spacing = $default-spacing) is also<new_vbox> {
     my gint $s = $spacing;
     my $box = gtk_box_new(GTK_ORIENTATION_VERTICAL, $s);
 
