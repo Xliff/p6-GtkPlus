@@ -26,11 +26,7 @@ class GTK::ScaleButton is GTK::Button {
   }
 
   submethod BUILD(:$scale-button) {
-    given $scale-button {
-      when ScaleButtonAncestry { self.setScaleButton($scale-button) }
-      when GTK::ScaleButton    { }
-      default                  { }
-    }
+    self.setScaleButton($scale-button) if $scale-button;
   }
 
   method GTK::Raw::Definitions::GtkScaleButton
