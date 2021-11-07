@@ -48,11 +48,11 @@ sub MAIN (
     .sort( *[1] );
 
   for @modules {
-    %nodes{$_[1]} = (
+    %nodes{ .[1] } = (
       itemid   => $++,
-      filename => $_[0],
+      filename => .[0],
       edges    => [],
-      name     => $_[1]
+      name     => .[1]
     ).Hash;
   }
 
@@ -89,7 +89,7 @@ sub MAIN (
         $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
       }
     }
-    #say "P: {$p.key} / { %nodes{$p.key}.gist }";
+    #say "P: { $p.key } / { %nodes{$p.key}.gist }";
   }
 
   if %*ENV<P6_GTK_DEBUG> {
@@ -135,6 +135,7 @@ sub MAIN (
     .<name> ne <NativeCall nqp>.any    &&
     .<edges>.elems.not
   }).map( *<name> );
+
   @others = @others.unique.sort;
   my $list = @others.join("\n") ~ "\n";
   $list ~= @module-order.map({ $_.key }).join("\n");

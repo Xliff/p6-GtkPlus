@@ -7,8 +7,10 @@ use GTK::Raw::Types;
 
 use GTK::Bin;
 
-our subset EventBoxAncestry is export
+our subset GtkEventBoxAncestry is export of Mu
   where GtkEventBox | BinAncestry;
+
+our constant EventBoxAncestry is export := GtkEventBoxAncestry;
 
 class GTK::EventBox is GTK::Bin {
   has GtkEventBox $!eb is implementor;
@@ -20,26 +22,24 @@ class GTK::EventBox is GTK::Bin {
   }
 
   submethod BUILD(:$event-box) {
+    self.setGtkEventBox($event-box) if $event-box;
+  }
+
+  method setGtkEventBox (GtkEventBoxAncestry $_) {
     my $to-parent;
-    given $event-box {
-      when EventBoxAncestry {
-        $!eb = do {
-          when GtkEventBox  {
-            $to-parent = cast(GtkBin, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkEventBox, $_);
-          }
-        }
-        self.setBin($to-parent);
+    
+    $!eb = do {
+      when GtkEventBox  {
+        $to-parent = cast(GtkBin, $_);
+        $_;
       }
-      when GTK::EventBox {
-      }
+
       default {
+        $to-parent = $_;
+        cast(GtkEventBox, $_);
       }
     }
+    self.setBin($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkEventBox
@@ -49,8 +49,12 @@ class GTK::EventBox is GTK::Bin {
     >
   { $!eb }
 
-  multi method new (EventBoxAncestry $event-box) {
-    $event-box ?? self.bless(:$event-box) !! Nil;
+  multi method new (EventBoxAncestry $event-box, :$ref = True) {
+    return Nil unless $event-box;
+
+    my $o = self.bless(:$event-box);
+    $o.ref if $ref;
+    $o;
   }
   multi method new {
     my $event-box = gtk_event_box_new();

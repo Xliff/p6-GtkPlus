@@ -8,8 +8,10 @@ use GTK::Raw::Types;
 
 use GTK::Container;
 
-our subset BinAncestry is export of Mu
+our subset GtkBinAncestry is export of Mu
   where GtkBin | ContainerAncestry;
+
+constant BinAncestry is export := GtkBinAncestry;
 
 class GTK::Bin is GTK::Container {
   has GtkBin $!bin;   # Implementor in GTK::Widget
@@ -31,7 +33,7 @@ class GTK::Bin is GTK::Container {
     >
   { $!bin }
 
-  method setBin (BinAncestry $_) {
+  method setBin (GtkBinAncestry $_) {
     return unless $_;
 
     my $to-parent;
@@ -50,7 +52,7 @@ class GTK::Bin is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  method new (BinAncestry $bin, :$ref = True) {
+  method new (GtkBinAncestry $bin, :$ref = True) {
     return unless $bin;
 
     my $o = self.bless(:$bin);

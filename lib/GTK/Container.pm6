@@ -29,7 +29,7 @@ class GTK::Container is GTK::Widget {
   # Even though an abstract class, we have to be able to instantiate from
   # a lowest common denominator amongst descendants.
   submethod BUILD(:$container) {
-    self.setContainer($container) if $container;
+    self.setGtkContainer($container) if $container;
   }
 
   #submethod DESTROY {
@@ -37,17 +37,19 @@ class GTK::Container is GTK::Widget {
   #  g_object_unref(self.Widget);
   #}
 
-  method setContainer (ContainerAncestry $_) {
+  method setGtkContainer (GtkContainerAncestry $_)
+    is also<setContainer>
+  {
     my $to-parent;
     $!c = do {
       when GtkContainer {
-        $to-parent = nativecast(GtkWidget, $_);
+        $to-parent = cast(GtkWidget, $_);
         $_;
       }
 
       default {
         $to-parent = $_;
-        nativecast(GtkContainer, $_);
+        cast(GtkContainer, $_);
       }
     }
     say "CONTAINER: { $!c }";

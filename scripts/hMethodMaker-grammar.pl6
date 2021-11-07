@@ -2,7 +2,6 @@
 use v6.c;
 
 #use Data::Dump::Tree;
-use P5quotemeta;
 use IO::Capture::Simple;
 
 use lib <. scripts>;
@@ -57,7 +56,7 @@ grammar C-Function-Def {
   token      ad { 'AVAILABLE' | 'DEPRECATED' }
 
   token availability {
-      [
+    [
       ( <[A..Z]>+'_' )+?
       <ad> [
       '_'
@@ -70,7 +69,7 @@ grammar C-Function-Def {
       ]?
       |
       <[A..Z]>+'_API'
-      ]
+    ]
   }
 
 }
@@ -112,11 +111,11 @@ sub MAIN (
   Bool :$raw-methods        =  False,  #= Use method format for raw invocations (NFYI)
   Bool :x11(:$X11)          =  False   #= Use GUI mode (must have a valid DISPLAY)
 ) {
-  parse-file(CONFIG-NAME);
+  parse-file($CONFIG-NAME);
 
   # Get specific option values from configuration file, if it exists,
   # and those keys are defined.
-  if %config<hfile-prefix> -> $pre {
+  if %config<hfile-prefix> -> $pre is copy {
     $remove-from-start ~= ':' if $remove-from-start;
     $remove-from-start ~= $pre;
     #$*ERR.say: "<hfile-perfix> = { $pre }";
@@ -185,6 +184,7 @@ sub MAIN (
   $contents ~~ s:g/ '((cls), ' .+? '))'//;
   $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
   $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC (' .+? ', g_object_unref)' //;
+  $contents ~~ s:g/ 'G_DECLARE_' [ <[A..Z]>+ ]+ % '_' ' (' <-[)]>+ ')' //;
 
   $contents ~~ s:g/<availability>// if $bland;
 
@@ -196,6 +196,7 @@ sub MAIN (
     $remove-from-start ~~ s:g/\s\s+/:/;
     for ( $remove-from-start // () ).split(':') -> $r {
       #$*ERR.say: "Removing { $r } from start of line...";
+      say: "Removing { $r } from start of line...";
       $contents ~~ s:g/ ^^ \s* <{ $r }> <[\s\r\n]>* //;
     }
   }
