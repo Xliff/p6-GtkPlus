@@ -83,7 +83,12 @@ sub MAIN(
     );
 
     $proc.stdout.tap(-> $o { $o.say; });
-    await $proc.start;
+    try {
+      CATCH {
+        default { $proc.stderr.tap( -> $err { $err.say }) }
+      }
+      await $proc.start;
+    }
     qqx{touch $tf};
   }
 }
