@@ -9,7 +9,7 @@ use GTK::Bin;
 
 use GTK::Roles::Actionable;
 
-our subset ListBoxRowAncestry
+our subset GtkListBoxRowAncestry is export of Mu
   where GtkListBoxRow | GtkActionable | BinAncestry;
 
 class GTK::ListBoxRow is GTK::Bin {
@@ -23,34 +23,31 @@ class GTK::ListBoxRow is GTK::Bin {
     $o;
   }
 
-  submethod BUILD(:$row) {
-    my $to-parent;
-    given $row {
-      when ListBoxRowAncestry {
-        $!lbr = do {
-          when GtkListBoxRow {
-            $to-parent = cast(GtkBin, $_);
-            $_;
-          }
-          when GtkActionable {
-            $!action = $_;                          # GTK::Roles::Actionable
-            $to-parent = cast(GtkBin, $_);
-            cast(GtkListBoxRow, $_);
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkListBoxRow, $_);
-          }
+  submethod BUILD( :$row ) {
+    self.setGtkListBoxRow($row) if $row;
+  }
 
-        }
-        $!action //= cast(GtkActionable, $_); # GTK::Roles::Actionable
-        self.setBin($to-parent);
+  method setGtkListBoxRow (GtkListBoxRowAncestry $_) {
+    my $to-parent;
+
+    $!lbr = do {
+      when GtkListBoxRow {
+        $to-parent = cast(GtkBin, $_);
+        $_;
       }
-      when GTK::ListBoxRow {
+      when GtkActionable {
+        $!action = $_;                          # GTK::Roles::Actionable
+        $to-parent = cast(GtkBin, $_);
+        cast(GtkListBoxRow, $_);
       }
       default {
+        $to-parent = $_;
+        cast(GtkListBoxRow, $_);
       }
+
     }
+    $!action //= cast(GtkActionable, $_); # GTK::Roles::Actionable
+    self.setBin($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkListBoxRow
@@ -60,7 +57,7 @@ class GTK::ListBoxRow is GTK::Bin {
     >
   { $!lbr }
 
-  multi method new (ListBoxRowAncestry $row, :$ref = True) {
+  multi method new (GtkListBoxRowAncestry $row, :$ref = True) {
     return Nil unless $row;
 
     my $o = self.bless(:$row);
