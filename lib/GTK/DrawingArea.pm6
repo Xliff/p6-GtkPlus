@@ -1,5 +1,6 @@
 use v6.c;
 
+use Cairo;
 use Method::Also;
 use NativeCall;
 
@@ -7,8 +8,10 @@ use GTK::Raw::Types;
 
 use GTK::Widget;
 
-our subset DrawingAreaAncestry is export of Mu
+our subset GtkDrawingAreaAncestry is export of Mu
   where GtkDrawingArea | GtkWidgetAncestry;
+
+constant DrawingAreaAncestry is export := GtkDrawingAreaAncestry;
 
 sub gtk_drawing_area_get_type ()
   returns GType
@@ -29,15 +32,13 @@ class GTK::DrawingArea is GTK::Widget {
     $o;
   }
 
-  submethod BUILD(:$draw) {
-    given $draw {
-      when DrawingAreaAncestry { self.setDrawingArea($draw) }
-      when GTK::DrawingArea    { }
-      default                  { }
-    }
+  submethod BUILD( :$draw ) {
+    self.setGtkDrawingArea($draw) if $draw;
   }
 
-  method setDrawingArea (DrawingAreaAncestry $_) {
+  method setGtkDrawingArea (GtkDrawingAreaAncestry $_)
+    is also<setDrawingArea>
+  {
     my $to-parent;
     $!da = do {
       when GtkDrawingArea {
@@ -53,7 +54,7 @@ class GTK::DrawingArea is GTK::Widget {
     self.setWidget($to-parent);
   }
 
-  multi method new (DrawingAreaAncestry $draw, :$ref = True) {
+  multi method new (GtkDrawingAreaAncestry $draw, :$ref = True) {
     return Nil unless $draw;
 
     my $o = self.bless(:$draw);
@@ -73,8 +74,7 @@ class GTK::DrawingArea is GTK::Widget {
     >
   { $!da }
 
-  # cw: Is this true?!?
-  method GDK::Types::cairo_t is also<cairo_t> {
+  method Cairo::cairo_t is also<cairo_t> {
     nativecast(cairo_t, $!da);
   }
 
