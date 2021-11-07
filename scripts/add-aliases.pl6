@@ -91,7 +91,7 @@ sub MAIN($filename, :$test) {
           my $al = get-alias($mn, $/[0]);
           my $tbr = $mpm.Str;
 
-          $full_line ~~ s/$tbr/{$tbr}\n      is also<{$al}>/;
+          $full_line ~~ s/$tbr/{$tbr}\n    is also<{$al}>/;
           %proto{$mn} = True;
         }
         ($add, $proto) = (True, False);
@@ -113,7 +113,11 @@ sub MAIN($filename, :$test) {
           my $al = get-alias($mn, $/[0]);
           my $tbr = $fm.Str;
           $full_line .= chomp;
-          $full_line ~~ s/$tbr/{$tbr}is also<{$al}> /;
+          if $tbr.comb("\n") {
+            $full_line ~~ s/$tbr/{$tbr}\n    is also<{$al}>\n  /;
+          } else {
+            $full_line ~~ s/$tbr/{$tbr}is also<{$al}> /;
+          }
         }
         ($add, $method) = (True, False);
       }
