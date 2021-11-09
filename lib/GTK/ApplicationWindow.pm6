@@ -10,8 +10,10 @@ use GTK::Window;
 
 use GIO::Roles::ActionMap;
 
-our subset ApplicationWindowAncestry is export
+our subset GtkApplicationWindowAncestry is export
   where GtkApplicationWindow | GActionMap | WindowAncestry;
+
+constant ApplicationWindowAncestry is export := GtkApplicationWindowAncestry;
 
 class GTK::ApplicationWindow is GTK::Window {
   also does GIO::Roles::ActionMap;
@@ -29,7 +31,7 @@ class GTK::ApplicationWindow is GTK::Window {
     self.setApplicationWindow($appwindow) if $appwindow;
   }
 
-  method setApplicationWindow(ApplicationWindowAncestry $appwindow) {
+  method setApplicationWindow(GtkApplicationWindowAncestry $appwindow) {
     self.IS-PROTECTED;
 
     my $to-parent;
@@ -65,7 +67,11 @@ class GTK::ApplicationWindow is GTK::Window {
   proto method new (|)
   { * }
 
-  multi method new (GtkApplicationWindow $appwindow, :$ref = True, *%others) {
+  multi method new (
+    GtkApplicationWindowAncestry $appwindow,
+                                 :$ref       = True, 
+                                 *%others
+  ) {
     return Nil unless $appwindow;
 
     my $o = self.bless(:$appwindow, |%others);
