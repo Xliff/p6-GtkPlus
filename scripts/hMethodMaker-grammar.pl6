@@ -102,16 +102,18 @@ sub MAIN (
   Int  :$trim-end,                     #= Trim lines from the end of the post-processed file
   Str  :$remove-from-start  is copy,   #= Remove colon separated prefix strings from all lines
   Str  :$remove-from-end    is copy,   #= Remove colon separate suffix strings from all lines
+  Str  :$lib                is copy,   #= Library name to use
   Str  :$delete,                       #= Comma separated list of lines to delete
   Str  :$output             =  'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
-  Str  :$lib                =  'gtk',  #= Library name to use
   Bool :$internal           =  False,  #= Add checking for INTERNAL methods
-  Bool :$bland              =  False,  #= Do NOT attempt to process preprocessor prefixes to subroutines
+  Bool :$bland              =  True,   #= Do NOT attempt to process preprocessor prefixes to subroutines
   Bool :$get-set            =  False,  #= Convert simple get/set routine to "attribute" code.
   Bool :$raw-methods        =  False,  #= Use method format for raw invocations (NFYI)
   Bool :x11(:$X11)          =  False   #= Use GUI mode (must have a valid DISPLAY)
 ) {
   parse-file($CONFIG-NAME);
+
+  $lib = %config<library> // %config<lib> // 'gtk' unless $lib;
 
   # Get specific option values from configuration file, if it exists,
   # and those keys are defined.
@@ -129,7 +131,8 @@ sub MAIN (
 
   my $fn = $filename;
 
-  $fn = "/usr/include/gtk-3.0/gtk/$fn" unless $fn.starts-with('/');
+  $fn = "{ %config<include-directory> // '/usr/include/gtk-3.0/gtk' }/$fn"
+    unless $fn.starts-with('/');
   die "Cannot find '$fn'\n" unless $fn.IO.e;
 
   if $internal.not {
@@ -620,7 +623,7 @@ sub MAIN (
   outputMethods;
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
-    say "\n\n### $filename\n";
+    say "\n\n### { $fn }\n";
     outputSub( %methods{$_}    , $raw-methods) for %methods.keys.sort;
     outputSub( %getset{$_}<get>, $raw-methods) for  %getset.keys.sort;
     outputSub( %getset{$_}<set>, $raw-methods) for  %getset.keys.sort;
