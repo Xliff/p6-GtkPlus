@@ -14,8 +14,10 @@ use GDK::Screen;
 use GTK::Raw::Types;
 use GTK::Raw::Window;
 
-our subset WindowAncestry is export
-  where GtkWindow | BinAncestry;
+our subset GtkWindowAncestry is export
+  where GtkWindow | GtkBinAncestry;
+
+constant WindowAncestry is export := GtkWindowAncestry;
 
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 

@@ -58,6 +58,7 @@ sub MAIN($filename, :$test) {
         $add = True;
       }
       when $full_line ~~ &method_start {
+        next if $/.Str ~~ /'is'<.ws>'also'/;
         ($method, $msm) = ( True, $/ );
         proceed;
       }
