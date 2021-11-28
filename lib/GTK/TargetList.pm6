@@ -10,13 +10,34 @@ use GTK::TargetEntry;
 
 use GLib::Roles::Object;
 
+our subset GtkTargetListAncestry is export of Mu
+  where GtkTargetList | GObject;
+
 class GTK::TargetList {
   also does GLib::Roles::Object;
 
   has GtkTargetList $!tl is implementor;
 
-  submethod BUILD(:$targetlist) {
-    self!setObject($!tl = $targetlist)
+  submethod BUILD( :$targetlist ) {
+    self.setGtkTargetList($targetlist) if $targetlist;
+
+  }
+
+  method setGtkTargetEntry (GtkTargetEntryAncestry $_) {
+    my $to-parent;
+
+    $!tl = do given {
+      when GtkTargetList {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkTargetList, $_)
+      }
+    }
+    self!setObject($to-parent)
   }
 
   method GTK::Raw::Definitions::GtkTargetList
@@ -28,20 +49,18 @@ class GTK::TargetList {
 
   method new (@target_entries) {
     my $te_list = CArray[GtkTargetEntry].new;
-    my $c = 0;
     for @target_entries.kv -> $i, $te {
-      $c++;
       given $te {
         when GTK::TargetEntry {
-          # Note: Eliminate the need for multi's. Have an Object to Type conversion
-          #       method for EVERYTHING!
-          $te_list[$c++] = $_.GtkTargetEntry;
+          $te_list[$i] = .GtkTargetEntry;
         }
+
         when GtkTargetEntry   {
-          $te_list[$c++] = $_;
+          $te_list[$i] = $_;
         }
+
         default {
-          warn qq:to/WARN/;
+          warn qq:to/WARN/
             Ignored element #{ $i } of the target entries due to invalid{
             } type: { .^name }
             WARN
@@ -49,8 +68,7 @@ class GTK::TargetList {
       }
     }
 
-    my guint $nt = $te_list.elems;
-    my $targetlist = gtk_target_list_new($te_list, $nt);
+    my $targetlist = gtk_target_list_new($te_list, $te_list.elems);
 
     $targetlist ?? self.bless(:$targetlist) !! Nil;
   }
