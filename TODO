@@ -353,6 +353,9 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   moving from XML::Actions to LibXML looks to be a winning thing to do!
 
 - Consider Parameter::Also - is also trait for Parameters (have to hack $!named_names via nqp)
+- For all routines returning an int64 representing DateTime, add a :$raw that allows the
+  return of the int64 value and return a DateTime if $raw.not -- also consider a :$both
+  that will return both values if specified.
 
 Applications
 ============
@@ -379,6 +382,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - DEFINITELY consider GEGL bindings. Use generated data structures for
   operations, since they have no .h files, however the good bits are easily
   parsable from .c
+  * Also - http://getfr.org/pub/dragonfly-release/usr-local-share/doc/gegl/api.html#The_GEGL_API
 - Consider the potential for libav bindings
 - Consider Apache C-API bindings, along with a potential module creation script from Raku sources.
 - Consider Mutter bindings (https://developer.gnome.org/meta/stable/)
@@ -393,7 +397,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - Tensorflow? (https://github.com/tensorflow/tensorflow/tree/v2.4.0/tensorflow/c)
 - The GTK CSS Inspector
 - GVFS (both daemon and common)
-- LibSecret
++ LibSecret
 - LibGWeather
 - LibGDA
 - Gnome Keyring
@@ -401,3 +405,6 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - LibCanberra
 + Evolution Data Server (https://developer.gnome.org/eds/stable/EDataCal.html)
 + GOA (GNOME Online Accounts) (https://developer.gnome.org/goa/stable/index.html)
++ Handy
+- Adwaita (GTK v4 port of Handy)
+- GTK Layer Shell
