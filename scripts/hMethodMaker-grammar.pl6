@@ -38,11 +38,13 @@ grammar C-Function-Def {
       '(' [ <type> <var>? ]+ % [ \s* ',' \s* ] [','? $<va>='...' ]? ')'
   }
 
+  # cw: Double semi-colon sometimes occurs during processing, so it is acccounted
+  # for, here.
   rule func_def {
       <returns>
     $<sub>=[ \w+ ]
       <parameters>
-    [ <postdec>+ % \s* ]?';'
+    [ <postdec>+ % \s* ]?';'';'?
   }
 
   regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ }
@@ -324,7 +326,12 @@ sub MAIN (
 
     @p.push: [ .[0], .[1] ] for @tv;
 
-    sub resolve-type($t is copy) {
+    sub resolve-type($match is copy) {
+      say "M: { $match.gist }";
+
+      my $t         = $match ~~ Match ?? $match<n> !! $match;
+      my $orig-type = $t;
+
       # cw: FINALLY got around to doing something that should have been
       #     done from the start.
       $t ~~ s/^g?u?[ 'char' | 'Str' ]/Str/;
@@ -335,18 +342,17 @@ sub MAIN (
       $t ~~ s/GError/CArray[Pointer[GError]]/;
 
       # By testing time, $np should only contain the count of '*' in the Match
-      my $np = (.[0]<p> // '').Str;
-      if $np = ( ($np ~~ m:g/'*'/).Array.elems ) {;
-        if $np > 1 {
-          $t = "CArray[{ $t }]" for ^($np - 1);
-        }
-      }
+      my $np = do given $match {
+        when Match { ( $match<p>.Str // '').Str.comb('*').elems }
 
+        default    { 0 }
+      }
+      $t = "{ 'CArray[' x ($np - 1) }{ $t }{ ']' x ($np - 1) }" if $np > 1;
       $t;
     }
 
     my @v = @p.map({
-      my $t = resolve-type(.[0]<n>.Str.trim);
+      my $t = resolve-type( .[0] );
       '$' ~ .[1]<t>.Str.trim ~ do if (my $np = (.[0]<p> // '').Str.chars) {
         if $np == 1 &&
            ($t eq <gfloat gdouble>.any || $t.starts-with(<gint guint>.any).so)
@@ -355,7 +361,7 @@ sub MAIN (
         }
       }
     });
-    my @t = @p.map({ resolve-type(.[0]<n>.Str.trim) });
+    my @t = @p.map({ resolve-type(.[0] ) });
     my $o_call = (@t [Z] @v).join(', ');
     my $sub = $m<func_def><sub>.Str.trim;
     $o_call ~= ', ...' if $m<func_def><va>;
