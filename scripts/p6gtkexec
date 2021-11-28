@@ -8,6 +8,9 @@ elif [ "$1" = "--valgrind" ]; then
   echo "Running perl6 script in valgrind mode..."
   EXEC=perl6-valgrind-m
   shift
+elif [ "$1" = "--rr" ]; then
+  EXEC=rr
+  shift
 elif [ "$1" = "--pbuild" ]; then
   PARALLEL_BUILD=1
   EXEC=perl6
@@ -57,7 +60,11 @@ perl6 -ne '.say for .lines.split(",")'`
 for a in $MOREI; do INCLUDES="-I$a $INCLUDES"; done
 
 if [[ -z "${PARALLEL_BUILD}" ]]; then
-  ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@"
+  if [ "$EXEC" = "rr" ]; then
+    rr record -M -- raku --stagestats ${EXTRAS} ${INCLUDES} "$@"
+  else 
+    ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@"
+  fi
 else
   ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@" 2>&1 | perl -pe 's/^/$$ /'
 fi
