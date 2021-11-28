@@ -20,7 +20,7 @@ role GTK::Roles::Orientable {
   }
 
   method GIO::Raw::Definitions::GtkOrientable
-    is also<GtkOrientaore>
+    is also<GtkOrientable>
   { $!or }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
