@@ -62,22 +62,28 @@ sub MAIN (
   for %nodes.pairs.sort( *.key ) -> $p {
     say "Processing requirements for module { $p.key }...";
 
-    my token useneed { 'use' | 'need' }
+    my token useneed    { 'use' | 'need'  }
+    my token modulename { ((\w+)+ % '::') }
     my $f = $p.value<filename>;
 
-    my $m = $f.IO.open.slurp-rest ~~ m:g/^^<useneed>  \s+ $<m>=((\w+)+ % '::') \s* ';'/;
+    my $m = $f.IO.open.slurp-rest ~~
+      m:g/^^<useneed> \s+ <modulename>[\s+.+\s*]?';'/;
     for $m.list -> $mm {
       my $mn = $mm;
+
+      #say "MN: { $mn.gist }";
+
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
-      $mn .= trim;
-      unless $mn.starts-with( ($prefix // '').split(',').any ) {
-        next if $mn ~~ / 'v6''.'? (.+)? /;
-        @others.push: $mn;
-        next;
+      if $mn ~~ /<modulename>/ {
+        $mn = $/.Str;
+        unless $mn.starts-with( ($prefix // '').split(',').any ) {
+          next if $mn ~~ / 'v6''.'? (.+)? /;
+          @others.push: $mn;
+          next;
+        }
+        %nodes{$p.key}<edges>.push: $mn;
       }
-
-      %nodes{$p.key}<edges>.push: $mn;
 
       if $mn eq @other-provided.any {
         @others.push: $mn;
