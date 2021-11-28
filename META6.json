@@ -412,6 +412,9 @@
       "GTK::ToggleToolButton"                  :  "lib/GTK/ToggleToolButton.pm6"                ,
       "GTK::Application"                       :  "lib/GTK/Application.pm6"                     ,
       "GTK::RadioToolButton"                   :  "lib/GTK/RadioToolButton.pm6"                 ,
+      "GTKAll"                                 :  "lib/GTKAll.pm6"                              ,
+      "GTKNonWidgets"                          :  "lib/GTKNonWidgets.pm6"                       ,
+      "GTKWidgets"                             :  "lib/GTKWidgets.pm6"                          ,
       "GTK"                                    :  "lib/GTK.pm6"                                 
     },
     "name": "Perl6-GtkPlus",
