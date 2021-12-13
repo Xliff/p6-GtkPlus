@@ -8,13 +8,13 @@ my %interior-classes = (
   'GStreamer::StaticCaps' => 'GStreamer::Caps',
 );
 
-my token q             { <["'“”‘’«»「」‹›]>         }
-my token mod           { [\w+]+ %% '::'            }
-my rule  uses          { 'use' <mod>               }
-my token m-new         { <mod> '.new'              }
-my token class-or-role { 'class' | 'role'          }
-my rule identity       { <class-or-role> <mod>     }
-my token lateb         { '::(' <q> ~ <q> <mod> ')' }
+my token q              { <["'“”‘’«»「」‹›]>        }
+my token mod            { [\w+]+ %% '::'            }
+my rule  uses           { 'use' <mod>               }
+my token m-new          { <mod> '.new'              }
+my token class-or-role  { 'class' | 'role'          }
+my rule  identity       { <class-or-role> <mod>     }
+my token lateb          { '::(' <q> ~ <q> <mod> ')' }
 
 sub get-list ($match, $token) {
   do {
@@ -31,7 +31,7 @@ sub mq($s) {
 
 sub MAIN (:$filename, :$prefix is required) {
 
-  parse-file(CONFIG-NAME);
+  parse-file($CONFIG-NAME);
 
   my @files = $filename ??
     $filename.Array
