@@ -339,7 +339,7 @@ sub MAIN (
       $t ~~ s/^float/gfloat/;
       $t ~~ s/^double/gdouble/;
       $t ~~ s/void/Pointer/;
-      $t ~~ s/GError/CArray[Pointer[GError]]/;
+      $t ~~ s/GError/Pointer[GError]/;
 
       # By testing time, $np should only contain the count of '*' in the Match
       my $np = do given $match {
