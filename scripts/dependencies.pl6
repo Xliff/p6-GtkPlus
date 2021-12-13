@@ -67,7 +67,7 @@ sub MAIN (
     my $f = $p.value<filename>;
 
     my $m = $f.IO.open.slurp-rest ~~
-      m:g/^^<useneed> \s+ <modulename>[\s+.+\s*]?';'/;
+      m:g/^^ \s* <useneed> \s+ <modulename>[\s+.+\s*]?';'/;
     for $m.list -> $mm {
       my $mn = $mm;
 
