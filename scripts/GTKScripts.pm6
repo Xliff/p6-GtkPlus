@@ -215,16 +215,6 @@ multi max (:&by = {$_}, :$all!, *@list) is export {
     @list[ @values.kv.map: {$^index unless $^value cmp $max} ];
 }
 
-sub getBackupPath ($p is copy, $pre = 'bak') is export {
-  $p .= IO if $p ~~ Str;
-  my ($safe-fh, $serial);
-  my $fhp = $p;
-  repeat {
-    $safe-fh = $fhp.extension("{ $pre }{ $serial++ }", parts => 0);
-  } until $safe-fh.e.not;
-  $safe-fh;
-}
-
 sub get-longest-prefix (@words) is export {
   max :all, :by{.chars}, keys [∩] @words».match(/.+/, :ex)».Str;
 }
