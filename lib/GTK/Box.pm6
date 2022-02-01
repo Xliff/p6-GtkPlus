@@ -10,7 +10,7 @@ use GTK::Roles::Orientable;
 
 use GTK::Container;
 
-our subset BoxAncestry is export
+our subset GtkBoxAncestry is export
   where GtkBox | GtkOrientable | ContainerAncestry;
 
 my $default-spacing = 0;
@@ -30,7 +30,7 @@ class GTK::Box is GTK::Container {
   }
 
   submethod BUILD (:$box) {
-    self.setBox($box) if $box;
+    self.setGtkBox($box) if $box;
   }
 
   method GTK::Raw::Definitions::GtkBox
@@ -40,7 +40,7 @@ class GTK::Box is GTK::Container {
     >
   { $!b }
 
-  method setBox(BoxAncestry $_) {
+  method setGtkBox(GtkBoxAncestry $_) is also<setBox> {
     my $to-parent;
     $!b = do {
       when GtkBox {
@@ -63,7 +63,7 @@ class GTK::Box is GTK::Container {
     $!or //= nativecast(GtkOrientable, $!b);    # For GTK::Roles::Orientable
   }
 
-  multi method new (BoxAncestry $box, :$ref = True) {
+  multi method new (GtkBoxAncestry $box, :$ref = True) {
     return unless $box;
 
     my $o = self.bless( :$box );
