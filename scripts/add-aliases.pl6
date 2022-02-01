@@ -10,7 +10,17 @@ class X::WithoutLineNumber is X::AdHoc {
   }
 }
 
-sub MAIN($filename, :$test) {
+multi sub MAIN (:$clean is required) {
+  use File::Find;
+
+  .unlink for (
+    my @a = find(dir => ".", name => *.ends-with(".alias-bak") )
+  );
+
+  say "{ @a.elems } backup files deleted.";
+}
+
+multi sub MAIN ($filename, :$test) {
   CATCH { default { .payload.say; exit } }
 
   die X::WithoutLineNumber.new(message => "'$filename' cannot be opened.\n")
