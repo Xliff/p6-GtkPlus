@@ -14,8 +14,8 @@ use GTK::Box;
 
 use GTK::Roles::ColorChooser;
 
-our subset ColorChooserAncestry is export
-  where GtkColorChooserWidget | GtkColorChooser | BoxAncestry;
+our subset GtkColorChooserAncestry is export
+  where GtkColorChooserWidget | GtkColorChooser | GtkBoxAncestry;
 
 class GTK::ColorChooser is GTK::Box {
   also does GTK::Roles::ColorChooser;
@@ -31,39 +31,34 @@ class GTK::ColorChooser is GTK::Box {
     $o;
   }
 
-  submethod BUILD(:$chooser) {
-    my $to-parent;
-
-    given $chooser {
-      when ColorChooserAncestry {
-        $!ccw = do {
-          when GtkColorChooserWidget {
-            $to-parent = nativecast(GtkBox, $_);
-            $_;
-          }
-
-          when GtkColorChooser {
-            $to-parent = nativecast(GtkBox, $_);
-            nativecast(GtkColorChooserWidget, $_);
-          }
-
-          when BoxAncestry {
-            $to-parent = $_;
-            nativecast(GtkColorChooserWidget, $_);
-          }
-        }
-        self.roleInit-ColorChooser;
-        self.setBox($to-parent);
-      }
-      when GTK::ColorChooser {
-      }
-      default {
-        # DO NOT throw an exception here.
-      }
-    }
+  submethod BUILD (:$chooser) {
+    self.setGtkColorChooser($chooser) if $chooser;
   }
 
-  multi method new (ColorChooserAncestry $chooser, :$ref = True) {
+  method setGtkColorChooser (GtkColorChooserAncestry $_) {
+    my $to-parent;
+
+    $!ccw = do {
+      when GtkColorChooserWidget {
+        $to-parent = nativecast(GtkBox, $_);
+        $_;
+      }
+
+      when GtkColorChooser {
+        $to-parent = nativecast(GtkBox, $_);
+        nativecast(GtkColorChooserWidget, $_);
+      }
+
+      when GtkBoxAncestry {
+        $to-parent = $_;
+        nativecast(GtkColorChooserWidget, $_);
+      }
+    }
+    self.roleInit-GtkColorChooser;
+    self.setBox($to-parent);
+ }
+
+  multi method new (GtkColorChooserAncestry $chooser, :$ref = True) {
     return Nil unless $chooser;
 
     my $o = self.bless(:$chooser);
