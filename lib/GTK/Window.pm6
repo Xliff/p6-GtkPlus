@@ -39,7 +39,9 @@ class GTK::Window is GTK::Bin {
     }
   }
 
-  method setWindow(WindowAncestry $window) {
+  method setGtkWindow(WindowAncestry $window)
+    is also<setWindow>
+  {
     my $to-parent;
     $!win = do given $window {
       when GtkWindow {
@@ -53,6 +55,13 @@ class GTK::Window is GTK::Bin {
     }
     self.setBin($to-parent);
   }
+
+  method GTK::Raw::Definitions::GtkWindow
+    is also<
+      window
+      GtkWindow
+    >
+  { $!win }
 
   multi method new (WindowAncestry $window, :$ref = True) {
     return Nil unless $window;
@@ -93,13 +102,6 @@ class GTK::Window is GTK::Bin {
   multi method new {
     GTK::Window.new(GTK_WINDOW_TOPLEVEL);
   }
-
-  method GTK::Raw::Definitions::GtkWindow
-    is also<
-      window
-      GtkWindow
-    >
-  { $!win }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
