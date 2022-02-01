@@ -10,8 +10,10 @@ use GTK::Box;
 
 use GTK::Roles::Signals::Statusbar;
 
-our subset StatusbarAncestry is export
-  where GtkStatusbar | BoxAncestry;
+our subset GtkStatusbarAncestry is export
+  where GtkStatusbar | GtkBoxAncestry;
+
+our constant StatusbarAncestry is export := GtkStatusbarAncestry;
 
 class GTK::Statusbar is GTK::Box {
   also does GTK::Roles::Signals::Statusbar;
@@ -25,26 +27,22 @@ class GTK::Statusbar is GTK::Box {
   }
 
   submethod BUILD(:$statusbar) {
+    self.setGtkStatusbar( $statusbar ) if $statusbar;
+  }
+
+  method setGtkStatusbar (GtkStatusbarAncestry $_) {
     my $to-parent;
-    given $statusbar {
-      when StatusbarAncestry {
-        $!sb = do {
-          when GtkStatusbar {
-            $to-parent = nativecast(GtkBin, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkStatusbar, $_);
-          }
-        };
-        self.setBox($to-parent);
-      }
-      when GTK::Statusbar {
+    $!sb = do {
+      when GtkStatusbar {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
       }
       default {
-      }
-    }
+        $to-parent = $_;
+        nativecast(GtkStatusbar, $_);
+       }
+    };
+    self.setBox($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkStatusbar
@@ -58,11 +56,11 @@ class GTK::Statusbar is GTK::Box {
     self.disconnect-all($_) for %!signals-sb;
   }
 
-  multi method new (StatusbarAncestry $statusbar) {
+  multi method new (GtkStatusbarAncestry $statusbar, :$ref = True) {
     return Nil unless $statusbar;
 
     my $o = self.bless(:$statusbar);
-    $o.ref;
+    $o.ref if $ref;
     $o;
   }
   multi method new {
