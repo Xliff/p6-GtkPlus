@@ -7,18 +7,31 @@ use GTK::Raw::Types;
 
 unit package GTK::Raw::EntryBuffer;
 
-sub gtk_entry_buffer_delete_text (GtkEntryBuffer $buffer, guint $position, gint $n_chars)
+sub gtk_entry_buffer_delete_text (
+  GtkEntryBuffer $buffer,
+  guint          $position,
+  gint           $n_chars
+)
   returns guint
   is native(gtk)
   is export
   { * }
 
-sub gtk_entry_buffer_emit_deleted_text (GtkEntryBuffer $buffer, guint $position, guint $n_chars)
+sub gtk_entry_buffer_emit_deleted_text (
+  GtkEntryBuffer $buffer,
+  guint          $position,
+  guint          $n_chars
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_entry_buffer_emit_inserted_text (GtkEntryBuffer $buffer, guint $position, gchar $chars, guint $n_chars)
+sub gtk_entry_buffer_emit_inserted_text (
+  GtkEntryBuffer $buffer,
+  guint          $position,
+  gchar          $chars,
+  guint          $n_chars
+)
   is native(gtk)
   is export
   { * }
@@ -47,7 +60,12 @@ sub gtk_entry_buffer_get_type ()
   is export
   { * }
 
-sub gtk_entry_buffer_insert_text (GtkEntryBuffer $buffer, guint $position, gchar $chars, gint $n_chars)
+sub gtk_entry_buffer_insert_text (
+  GtkEntryBuffer $buffer,
+  guint          $position,
+  gchar          $chars,
+  gint           $n_chars
+)
   returns guint
   is native(gtk)
   is export
@@ -59,7 +77,11 @@ sub gtk_entry_buffer_new (gchar $initial_chars, gint $n_initial_chars)
   is export
   { * }
 
-sub gtk_entry_buffer_set_text (GtkEntryBuffer $buffer, gchar $chars, gint $n_chars)
+sub gtk_entry_buffer_set_text (
+  GtkEntryBuffer $buffer,
+  gchar          $chars,
+  gint           $n_chars
+)
   is native(gtk)
   is export
   { * }
@@ -70,7 +92,10 @@ sub gtk_entry_buffer_get_max_length (GtkEntryBuffer $buffer)
   is export
   { * }
 
-sub gtk_entry_buffer_set_max_length (GtkEntryBuffer $buffer, gint $max_length)
+  sub gtk_entry_buffer_set_max_length (
+    GtkEntryBuffer $buffer,
+    guint          $max_length
+  )
   is native(gtk)
   is export
   { * }
