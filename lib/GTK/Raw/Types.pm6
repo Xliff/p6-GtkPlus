@@ -1,7 +1,5 @@
 use v6.c;
 
-use NativeCall;
-
 use GLib::Raw::Exports;
 use ATK::Raw::Exports;
 use Pango::Raw::Exports;
@@ -9,7 +7,7 @@ use GIO::Raw::Exports;
 use GDK::Raw::Exports;
 use GTK::Raw::Exports;
 
-my constant forced = 65;
+my constant forced = 121;
 
 unit package GTK::Raw::Types;
 
