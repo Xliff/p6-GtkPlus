@@ -85,15 +85,14 @@ class GTK::TreeStore  {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method append (
-    GtkTreeIter() $parent =  GtkTreeIter,
-                  :$raw   =  False
+  method append (
+    GtkTreeIter()  $child,
+    GtkTreeIter()  $parent  = GtkTreeIter,
+                  :$raw     = False
   ) {
-    my $iter = GtkTreeIter.new;
+    gtk_tree_store_append($!tree, $child, $parent);
 
-    gtk_tree_store_append($!tree, $iter, $parent);
-
-    $iter = $raw ?? $iter !! GTK::TreeIter.new($iter);
+    $raw ?? $child !! GTK::TreeIter.new($child);
   }
 
   method clear {
