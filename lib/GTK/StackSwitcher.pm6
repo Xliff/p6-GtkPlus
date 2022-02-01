@@ -9,7 +9,7 @@ use GTK::Raw::StackSwitcher;
 use GTK::Box;
 
 our subset StackSwitcherAncestry is export
-  where GtkStackSwitcher | BoxAncestry;
+  where GtkStackSwitcher | GtkBoxAncestry;
 
 class GTK::StackSwitcher is GTK::Box {
   has GtkStackSwitcher $!ss;
