@@ -9,7 +9,7 @@ use GTK::Roles::RecentChooser;
 use GTK::Box;
 
 our subset RecentChooserWidgetAncestry is export
-  where GtkRecentChooserWidget | GtkRecentChooser | BoxAncestry;
+  where GtkRecentChooserWidget | GtkRecentChooser | GtkBoxAncestry;
 
 class GTK::RecentChooser is GTK::Box {
   also does GTK::Roles::RecentChooser;
@@ -47,7 +47,7 @@ class GTK::RecentChooser is GTK::Box {
 
       when GTK::RecentChooser {
       }
-      
+
       default {
       }
     }
