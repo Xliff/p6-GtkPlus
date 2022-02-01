@@ -9,7 +9,10 @@ use GTK::Raw::Types;
 
 use GTK::Label;
 
-our subset AccelLabelAncestry is export where GtkAccelLabel | LabelAncestry;
+our subset GtkAccelLabelAncestry is export
+  where GtkAccelLabel | GtkLabelAncestry;
+
+constant AccelLabelAncestry is export = GtkAccelLabelAncestry;
 
 class GTK::AccelLabel is GTK::Label {
   has GtkAccelLabel $!al is implementor;
@@ -21,26 +24,24 @@ class GTK::AccelLabel is GTK::Label {
   }
 
   submethod BUILD(:$alabel) {
+    self.setGtkAccelLabel($alabel) if $alabel;
+  }
+
+  method setGtkAccelLabel (GtkAccelLabelAncestry $_) {
     my $to-parent;
-    given $alabel {
-      when AccelLabelAncestry {
-        $!al = do {
-          when GtkAccelLabel {
-            $to-parent = nativecast(GtkLabel, $_);
-            $_;
-          }
-          when LabelAncestry {
-            $to-parent = $_;
-            nativecast(GtkAccelLabel, $_);
-          }
-        };
-        self.setLabel($to-parent);
+
+    $!al = do {
+      when GtkAccelLabel {
+        $to-parent = nativecast(GtkLabel, $_);
+        $_;
       }
-      when GTK::AccelLabel {
-      }
+
       default {
+        $to-parent = $_;
+        nativecast(GtkAccelLabel, $_);
       }
-    }
+    };
+    self.setGtkLabel($to-parent);
   }
 
   multi method new (AccelLabelAncestry $alabel, :$ref = True) {
