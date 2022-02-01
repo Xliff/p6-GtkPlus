@@ -15,8 +15,10 @@ use GTK::Roles::TreeModel;
 
 use GTK::Roles::Signals::ComboBox;
 
-our subset ComboBoxAncestry is export
+our subset GtkComboBoxAncestry is export
   where GtkComboBox  | GtkCellEditable | GtkCellLayout | BinAncestry;
+
+our constant ComboBoxAncestry is export = GtkComboBoxAncestry;
 
 class GTK::ComboBox is GTK::Bin {
   also does GTK::Roles::CellEditable;
@@ -32,21 +34,16 @@ class GTK::ComboBox is GTK::Bin {
   }
 
   submethod BUILD(:$combobox) {
-    given $combobox {
-      when ComboBoxAncestry { self.setComboBox($combobox) }
-      when GTK::ComboBox    { }
-      default               { }
-    }
+    self.setComboBox($combobox) if $combobox;
   }
 
   submethod DESTROY {
     self.disconnect-all(%!signals-cb);
   }
 
-  method setComboBox($combobox) {
-    self.IS-PROTECTED;
-
+  method setGtkComboBox($combobox) is also<setComboBox> {
     my $to-parent;
+
     $!cb = do given $combobox {
       when GtkComboBox  {
         $to-parent = cast(GtkBin, $_);
