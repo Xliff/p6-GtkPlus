@@ -7,8 +7,8 @@ use GTK::Raw::Types;
 use GLib::Value;
 use GTK::Box;
 
-our subset ShortcutsShortcutAncestry is export
-  where GtkShortcutsShortcut | BoxAncestry;
+our subset GtkShortcutsShortcutAncestry is export
+  where GtkShortcutsShortcut | GtkBoxAncestry;
 
 class GTK::ShortcutsShortcut is GTK::Box {
   has GtkShortcutsShortcut $!s is implementor;
@@ -19,27 +19,25 @@ class GTK::ShortcutsShortcut is GTK::Box {
     $o;
   }
 
-  submethod BUILD(:$shortcut) {
+  submethod BUILD (:$shortcut) {
+    self.GtkShortcutsGroup($shortcut) if $shortcut;
+  }
+
+  method setGtkShortcutsGroup (GtkShortcutsShortcutAncestry $_) {
     my $to-parent;
-    given $shortcut {
-      when ShortcutsShortcutAncestry {
-        $!s = do {
-          when GtkShortcutsShortcut  {
-            $to-parent = cast(GtkBox, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkShortcutsShortcut, $_);
-          }
-        }
-        self.setBox($to-parent);
+
+    $!s = do {
+      when GtkShortcutsShortcut  {
+        $to-parent = cast(GtkBox, $_);
+        $_;
       }
-      when GTK::ShortcutsShortcut {
-      }
+
       default {
+        $to-parent = $_;
+        cast(GtkShortcutsShortcut, $_);
       }
     }
+    self.setBox($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkShortcutsShortcut
@@ -49,7 +47,7 @@ class GTK::ShortcutsShortcut is GTK::Box {
     >
   { $!s }
 
-  method new (ShortcutsShortcutAncestry $shortcut, :$ref = True) {
+  method new (GtkShortcutsShortcutAncestry $shortcut, :$ref = True) {
     return Nil unless $shortcut;
 
     my $o = self.bless(:$shortcut);
