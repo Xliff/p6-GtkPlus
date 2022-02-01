@@ -29,7 +29,7 @@ sub MAIN ($filename) {
 
   for @getset.sort {
     say qq:to/ATTRIB/ ;
-      method { $_ } is rw \{
+      method { $_ } is rw is g-property \{
         Proxy.new:
           FETCH => -> \$     \{ self.get_{ $_ }    \},
           STORE => -> \$, \\v \{ self.set_{ $_ }(v) \}
