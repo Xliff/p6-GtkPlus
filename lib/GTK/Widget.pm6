@@ -1618,13 +1618,13 @@ class GTK::Widget {
 
   method remove_accelerator (
     GtkAccelGroup() $accel_group,
-    Int() $accel_key,
-    Int() $accel_mods
+    Int()           $accel_key,
+    Int()           $accel_mods
   )
     is also<remove-accelerator>
   {
-    my guint $ak = $accel_key;
-    my GdkModifierType $am  = $accel_mods;
+    my guint           $ak = $accel_key;
+    my GdkModifierType $am = $accel_mods;
 
     gtk_widget_remove_accelerator($!w, $accel_group, $ak, $am);
   }
