@@ -15,16 +15,19 @@ my %typeData;
 role GTK::Roles::TreeModel {
   has GtkTreeModel $!tm;
 
+  method !roleInit-GtkTreeModel {
+    return if $!tm;
+
+    my \i = findProperImplementor(self.^attributes);
+    $!tm  = cast( GtkTreeModel, i.get_value(self) );
+  }
+
   method GTK::Raw::Definitions::GtkTreeModel
     is also<
       GtkTreeModel
       TreeModel
     >
   { $!tm }
-
-  method new-treemodel-obj (GtkTreeModel $tree) {
-    $tree ?? self.bless(:$tree) !! Nil;
-  }
 
   method setTypeData (@types) {
     %typeData{ +$!tm.p } = @types;
@@ -195,7 +198,7 @@ role GTK::Roles::TreeModel {
     gtk_tree_model_get_string_from_iter($!tm, $iter);
   }
 
-  method get_treemodel_type is also<get-treemodel-type> {
+  method gtktreemodel_get_type is also<gtktreemodel-get-type> {
     state ($n, $t);
 
     unstable_get_type( self.^name, &gtk_tree_model_get_type, $n, $t );
@@ -213,9 +216,8 @@ role GTK::Roles::TreeModel {
     my gint $c     = $column;
     my      $value = GValue.new;
 
-    say '0';
-    say "Iter: $iter";
-    say "Column: $column";
+    #say "Iter: $iter";
+    #say "Column: $column";
 
     gtk_tree_model_get_value($!tm, $iter, $c, $value);
 
@@ -229,7 +231,6 @@ role GTK::Roles::TreeModel {
     Int()         $column,
     GValue()      $value
   )  {
-    say '1';
     # TODO: Check iter for path.
     my gint $c = $column;
 
@@ -370,6 +371,10 @@ class GTK::TreeModel {
     my $o = self.bless( :$tree );
     $o.ref if $ref;
     $o;
+  }
+
+  method get_type {
+    self.gtktreemodel_get_type;
   }
 
 }
