@@ -18,8 +18,10 @@ use GTK::TreeViewColumn;
 use GTK::Roles::Scrollable;
 use GTK::Roles::Signals::TreeView;
 
-our subset TreeViewAncestry is export
+our subset GtkTreeViewAncestry is export
   where GtkTreeView | GtkScrollable | ContainerAncestry;
+
+constant TreeViewAncestry is export = GtkTreeViewAncestry;
 
 # Are we still doing this, or not. I think it might be better to just do
 # "use GTK".
@@ -49,33 +51,31 @@ class GTK::TreeView is GTK::Container {
     $o;
   }
 
-  submethod BUILD(:$treeview) {
+  submethod BUILD ( :$treeview ) {
+    self.setGtkTreeViewAncestry($treeview) if $treeview;
+  }
+
+  method setGtkTreeViewAncestry (GtkTreeViewAncestry $_) {
     my $to-parent;
-    given $treeview {
-      when TreeViewAncestry {
-        $!tv = do {
-          when GtkTreeView {
-            $to-parent = cast(GtkContainer, $_);
-            $_;
-          }
-          when GtkScrollable {
-            $!s = $_;                               # GTK::Roles::Scrollable
-            $to-parent = cast(GtkContainer, $_);
-            cast(GtkTreeView, $_);
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkTreeView, $_);
-          }
-        }
-        $!s //= cast(GtkScrollable, $!tv);    # GTK::Roles::Scrollable
-        self.setContainer($to-parent);
+    $!tv = do {
+      when GtkTreeView {
+        $to-parent = cast(GtkContainer, $_);
+        $_;
       }
-      when GTK::TreeView {
+
+      when GtkScrollable {
+        $!s = $_;                               # GTK::Roles::Scrollable
+        $to-parent = cast(GtkContainer, $_);
+        cast(GtkTreeView, $_);
       }
+
       default {
+        $to-parent = $_;
+        cast(GtkTreeView, $_);
       }
     }
+    $!s //= cast(GtkScrollable, $!tv);    # GTK::Roles::Scrollable
+    self.setContainer($to-parent);
   }
 
   submethod DESTROY {
