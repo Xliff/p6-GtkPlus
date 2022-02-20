@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::FileChooser;
-use GTK::Raw::Types;
+use GTK::Raw::FileChooser:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::FileFilter;
-use GTK::Widget;
+use GTK::FileFilter:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-role GTK::Roles::FileChooser {
+role GTK::Roles::FileChooser:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
 

@@ -4,17 +4,17 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::AppButton;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::AppButton:ver<3.0.1146>;
 
-use GTK::ComboBox;
+use GTK::ComboBox:ver<3.0.1146>;
 
-use GTK::Roles::AppChooser;
+use GTK::Roles::AppChooser:ver<3.0.1146>;
 
 our subset AppButtonAncestry is export
   where GtkAppChooserButton | GtkAppChooser | ComboBoxAncestry;
 
-class GTK::AppButton is GTK::ComboBox {
+class GTK::AppButton:ver<3.0.1146> is GTK::ComboBox {
   also does GTK::Roles::AppChooser;
 
   has GtkAppChooserButton $!acb is implementor;

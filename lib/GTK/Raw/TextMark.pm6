@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TextMark;
+unit package GTK::Raw::TextMark:ver<3.0.1146>;
 
 sub gtk_text_mark_get_buffer (GtkTextMark $mark)
   returns GtkTextBuffer

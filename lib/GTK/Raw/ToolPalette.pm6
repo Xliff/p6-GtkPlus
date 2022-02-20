@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ToolPalette;
+unit package GTK::Raw::ToolPalette:ver<3.0.1146>;
 
 sub gtk_tool_palette_add_drag_dest (
   GtkToolPalette $palette,

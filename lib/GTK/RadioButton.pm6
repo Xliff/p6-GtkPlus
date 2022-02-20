@@ -4,18 +4,18 @@ use Method::Also;
 
 use GLib::GList;
 
-use GTK::Raw::RadioButton;
-use GTK::Raw::Types;
+use GTK::Raw::RadioButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
 
-use GTK::CheckButton;
+use GTK::CheckButton:ver<3.0.1146>;
 use GLib::Roles::ListData;
 
 our subset RadioButtonAncestry is export
   where GtkRadioButton | CheckButtonAncestry;
 
-class GTK::RadioButton is GTK::CheckButton {
+class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
   has GtkRadioButton $!rb is implementor;
 
   method bless(*%attrinit) {

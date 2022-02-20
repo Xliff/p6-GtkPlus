@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TreeViewColumn;
+unit package GTK::Raw::TreeViewColumn:ver<3.0.1146>;
 
 sub gtk_tree_view_column_add_attribute (
   GtkTreeViewColumn $tree_column,

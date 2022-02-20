@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::PaperSize;
+unit package GTK::Raw::PaperSize:ver<3.0.1146>;
 
 sub gtk_paper_size_copy (GtkPaperSize $other)
   returns GtkPaperSize

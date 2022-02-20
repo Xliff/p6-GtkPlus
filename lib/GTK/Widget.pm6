@@ -15,26 +15,26 @@ use GDK::Screen;
 
 use GDK::Window;
 
-use GTK::Raw::DnD;
-use GTK::Raw::DragDest;
-use GTK::Raw::DragSource;
-use GTK::Raw::Subs;
-use GTK::Raw::Types;
-use GTK::Raw::Widget;
+use GTK::Raw::DnD:ver<3.0.1146>;
+use GTK::Raw::DragDest:ver<3.0.1146>;
+use GTK::Raw::DragSource:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Widget:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 use GLib::Roles::Pointers;
 use ATK::Roles::Implementor;
-use GTK::Roles::Buildable;
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::Widget;
+use GTK::Roles::Buildable:ver<3.0.1146>;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::Widget:ver<3.0.1146>;
 
-use GTK::StyleContext;
+use GTK::StyleContext:ver<3.0.1146>;
 
 our subset GtkWidgetAncestry is export where
   GtkWidget | GtkBuildable | AtkImplementorIface | GObject;
 
-class GTK::Widget {
+class GTK::Widget:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does ATK::Roles::Implementor;
   also does GTK::Roles::Buildable;

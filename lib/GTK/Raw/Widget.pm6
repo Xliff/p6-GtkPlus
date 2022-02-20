@@ -4,10 +4,10 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 use Pango::Raw::Types;
 
-unit package GTK::Raw::Widget;
+unit package GTK::Raw::Widget:ver<3.0.1146>;
 
 sub gtk_widget_set_device_events (
   GtkWidget $widget,

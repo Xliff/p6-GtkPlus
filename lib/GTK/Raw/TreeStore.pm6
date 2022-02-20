@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TreeStore;
+unit package GTK::Raw::TreeStore:ver<3.0.1146>;
 
 # GtkTreeStore *gtk_tree_store_new (
 #   gint          n_columns,

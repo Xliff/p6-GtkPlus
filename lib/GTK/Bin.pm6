@@ -3,17 +3,17 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Bin;
-use GTK::Raw::Types;
+use GTK::Raw::Bin:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
+use GTK::Container:ver<3.0.1146>;
 
 our subset GtkBinAncestry is export of Mu
   where GtkBin | ContainerAncestry;
 
 constant BinAncestry is export := GtkBinAncestry;
 
-class GTK::Bin is GTK::Container {
+class GTK::Bin:ver<3.0.1146> is GTK::Container {
   has GtkBin $!bin;   # Implementor in GTK::Widget
 
   # method bless(*%attrinit) {

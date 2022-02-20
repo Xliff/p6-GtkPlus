@@ -2,13 +2,13 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::RecentFilter;
-use GTK::Raw::Types;
+use GTK::Raw::RecentFilter:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Buildable;
+use GTK::Roles::Buildable:ver<3.0.1146>;
 use GLib::Roles::Object;
 
-class GTK::RecentFilter {
+class GTK::RecentFilter:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Buildable;
 

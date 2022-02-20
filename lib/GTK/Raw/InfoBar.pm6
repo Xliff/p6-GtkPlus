@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::InfoBar;
+unit package GTK::Raw::InfoBar:ver<3.0.1146>;
 
 sub gtk_info_bar_add_action_widget (GtkInfoBar $info_bar, GtkWidget $child, gint $response_id)
   is native(gtk)

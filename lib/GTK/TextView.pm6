@@ -4,20 +4,20 @@ use Method::Also;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::TextView;
-use GTK::Raw::Types;
+use GTK::Raw::TextView:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use Pango::Tabs;
-use GTK::Container;
-use GTK::TextBuffer;
+use GTK::Container:ver<3.0.1146>;
+use GTK::TextBuffer:ver<3.0.1146>;
 
-use GTK::Roles::Scrollable;
-use GTK::Roles::Signals::TextView;
+use GTK::Roles::Scrollable:ver<3.0.1146>;
+use GTK::Roles::Signals::TextView:ver<3.0.1146>;
 
 our subset TextViewAncestry is export of Mu
   where GtkTextView  | GtkScrollable | ContainerAncestry;
 
-class GTK::TextView is GTK::Container {
+class GTK::TextView:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::TextView;
 

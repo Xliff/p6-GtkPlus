@@ -5,12 +5,12 @@ use NativeCall;
 
 use GLib::Value;
 
-use GTK::Raw::AccelGroup;
-use GTK::Raw::Types;
+use GTK::Raw::AccelGroup:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::StaticClass;
 
-class GTK::AccelGroup {
+class GTK::AccelGroup:ver<3.0.1146> {
   has GtkAccelGroup $!ag is implementor;
 
   submethod BUILD(:$group) {
@@ -183,7 +183,7 @@ class GTK::AccelGroup {
 
 }
 
-class GTK::AccelGroups {
+class GTK::AccelGroups:ver<3.0.1146> {
   also does GLib::Roles::StaticClass;
 
   method activate (
@@ -205,7 +205,7 @@ class GTK::AccelGroups {
 
 }
 
-class GTK::Accelerator {
+class GTK::Accelerator:ver<3.0.1146> {
   also does GLib::Roles::StaticClass;
 
   method get_default_mod_mask is also<get-default-mod-mask> {

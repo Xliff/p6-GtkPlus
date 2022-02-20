@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::StackSwitcher;
+unit package GTK::Raw::StackSwitcher:ver<3.0.1146>;
 
 sub gtk_stack_switcher_get_type ()
   returns GType

@@ -2,14 +2,14 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::LinkButton;
-use GTK::Raw::Types;
+use GTK::Raw::LinkButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Button;
+use GTK::Button:ver<3.0.1146>;
 
 our subset LinkButtonAncestry where GtkLinkButton | ButtonAncestry;
 
-class GTK::LinkButton is GTK::Button {
+class GTK::LinkButton:ver<3.0.1146> is GTK::Button {
   has GtkLinkButton $!lb is implementor;
 
   method bless(*%attrinit) {

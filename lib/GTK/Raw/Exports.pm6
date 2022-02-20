@@ -1,6 +1,6 @@
 use v6.c;
 
-unit package GTK::Raw::Exports;
+unit package GTK::Raw::Exports:ver<3.0.1146>;
 
 our @gtk-exports is export;
 

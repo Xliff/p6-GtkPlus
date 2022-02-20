@@ -3,26 +3,26 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TextIter;
-use GTK::Raw::Types;
+use GTK::Raw::TextIter:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
 
-use GTK::Roles::Types;
+use GTK::Roles::Types:ver<3.0.1146>;
 
 use Pango::Language;
 use GLib::GList;
 use GDK::Pixbuf;
 
-use GTK::TextChildAnchor;
-use GTK::TextMark;
-use GTK::TextTag;
+use GTK::TextChildAnchor:ver<3.0.1146>;
+use GTK::TextMark:ver<3.0.1146>;
+use GTK::TextTag:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
 
 # BOXED TYPE
 
-class GTK::TextIter {
+class GTK::TextIter:ver<3.0.1146> {
   also does GTK::Roles::Types;
 
   has GtkTextIter $!ti is implementor;

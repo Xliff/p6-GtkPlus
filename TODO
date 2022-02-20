@@ -379,7 +379,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 + Consider BABL bindings
 - Consider Apache Arrow (needs template support!)
 + Consider gUPnP!
-- DEFINITELY consider GEGL bindings. Use generated data structures for
++ DEFINITELY consider GEGL bindings. Use generated data structures for
   operations, since they have no .h files, however the good bits are easily
   parsable from .c
   * Also - http://getfr.org/pub/dragonfly-release/usr-local-share/doc/gegl/api.html#The_GEGL_API
@@ -408,5 +408,11 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 + Evolution Data Server (https://developer.gnome.org/eds/stable/EDataCal.html)
 + GOA (GNOME Online Accounts) (https://developer.gnome.org/goa/stable/index.html)
 + Handy
+- LibFolks
+- Libnm
+- libportal (XDP)
+- LibUpower
 - Adwaita (GTK v4 port of Handy)
 - GTK Layer Shell
+- Consider Avahi. Be prepared to write another code-generator for another coding paradigm
+

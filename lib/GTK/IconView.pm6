@@ -3,25 +3,25 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::IconView;
-use GTK::Raw::Types;
+use GTK::Raw::IconView:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellArea;
-use GTK::CellRenderer;
-use GTK::Container;
-use GTK::TreePath;
-use GTK::TreeIter;
+use GTK::CellArea:ver<3.0.1146>;
+use GTK::CellRenderer:ver<3.0.1146>;
+use GTK::Container:ver<3.0.1146>;
+use GTK::TreePath:ver<3.0.1146>;
+use GTK::TreeIter:ver<3.0.1146>;
 
-use GTK::Roles::CellLayout;
-use GTK::Roles::Scrollable;
-use GTK::Roles::Signals::IconView;
-use GTK::Roles::TreeModel;
+use GTK::Roles::CellLayout:ver<3.0.1146>;
+use GTK::Roles::Scrollable:ver<3.0.1146>;
+use GTK::Roles::Signals::IconView:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
 
 our subset IconViewAncestry
   where GtkIconView | GtkCellLayout | GtkScrollable | ContainerAncestry;
 
-class GTK::IconView is GTK::Container {
+class GTK::IconView:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::IconView;

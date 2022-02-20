@@ -2,13 +2,13 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellRendererPixbuf;
-use GTK::Raw::Types;
+use GTK::Raw::CellRendererPixbuf:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellRenderer;
+use GTK::CellRenderer:ver<3.0.1146>;
 
-class GTK::CellRendererPixbuf is GTK::CellRenderer {
+class GTK::CellRendererPixbuf:ver<3.0.1146> is GTK::CellRenderer {
   has GtkCellRendererPixbuf $!crp is implementor;
 
   method bless(*%attrinit) {

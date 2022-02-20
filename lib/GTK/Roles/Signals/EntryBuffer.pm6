@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::Signals::EntryBuffer {
+role GTK::Roles::Signals::EntryBuffer:ver<3.0.1146> {
   has %!signals-eb;
 
   # Copy for each signal.

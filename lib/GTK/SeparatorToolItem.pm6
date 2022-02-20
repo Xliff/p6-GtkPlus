@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::SeparatorToolItem;
-use GTK::Raw::Types;
+use GTK::Raw::SeparatorToolItem:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::ToolItem;
+use GTK::ToolItem:ver<3.0.1146>;
 
 our subset GtkSeparatorToolItemAncestry is export
   where GtkSeparatorToolItem | GtkToolItemAncestry;
 
-class GTK::SeparatorToolItem is GTK::ToolItem {
+class GTK::SeparatorToolItem:ver<3.0.1146> is GTK::ToolItem {
   has GtkSeparatorToolItem $!sti is implementor;
 
   method bless(*%attrinit) {

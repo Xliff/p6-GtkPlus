@@ -2,19 +2,19 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TextBuffer;
-use GTK::Raw::Types;
+use GTK::Raw::TextBuffer:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::TargetList;
-use GTK::TextIter;
-use GTK::TextMark;
-use GTK::TextTagTable;
+use GTK::TargetList:ver<3.0.1146>;
+use GTK::TextIter:ver<3.0.1146>;
+use GTK::TextMark:ver<3.0.1146>;
+use GTK::TextTagTable:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::Signals::TextBuffer;
+use GTK::Roles::Signals::TextBuffer:ver<3.0.1146>;
 
-class GTK::TextBuffer {
+class GTK::TextBuffer:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Signals::TextBuffer;
 

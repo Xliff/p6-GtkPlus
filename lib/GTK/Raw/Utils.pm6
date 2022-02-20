@@ -5,9 +5,9 @@ use NativeCall;
 use GLib::Raw::Definitions;
 use GLib::Raw::Enums;
 use GLib::Raw::Subs;
-use GTK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
 
-unit package GTK::Raw::Utils;
+unit package GTK::Raw::Utils:ver<3.0.1146>;
 
 multi sub resolve-bool(@rb) is export {
   samewith(|@rb);

@@ -3,19 +3,19 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GDK::Screen;
-use GTK::Raw::CSSProvider;
-use GTK::Raw::StyleContext;
+use GTK::Raw::CSSProvider:ver<3.0.1146>;
+use GTK::Raw::StyleContext:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::CSSProvider;
-use GTK::Roles::StyleProvider;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::CSSProvider:ver<3.0.1146>;
+use GTK::Roles::StyleProvider:ver<3.0.1146>;
 
-class GTK::CSSProvider {
+class GTK::CSSProvider:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;

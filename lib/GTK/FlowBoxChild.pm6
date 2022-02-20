@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::FlowBox;
-use GTK::Raw::Types;
+use GTK::Raw::FlowBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset FlowBoxChildAncestry is export of Mu
   where GtkFlowBoxChild | BinAncestry;
 
-class GTK::FlowBoxChild is GTK::Bin {
+class GTK::FlowBoxChild:ver<3.0.1146> is GTK::Bin {
   has GtkFlowBoxChild $!fbc is implementor;
 
   method bless(*%attrinit) {

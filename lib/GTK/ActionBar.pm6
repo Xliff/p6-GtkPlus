@@ -4,14 +4,14 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Raw::ActionBar;
-use GTK::Raw::Types;
+use GTK::Raw::ActionBar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset ActionBarAncestry is export where GtkActionBar | BinAncestry;
 
-class GTK::ActionBar is GTK::Bin {
+class GTK::ActionBar:ver<3.0.1146> is GTK::Bin {
   has GtkActionBar $!ab is implementor;
 
   method bless(*%attrinit) {

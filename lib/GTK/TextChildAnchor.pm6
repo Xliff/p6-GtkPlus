@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TextChildAnchor;
-use GTK::Raw::Types;
+use GTK::Raw::TextChildAnchor:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 use GLib::Roles::ListData;
 
-class GTK::TextChildAnchor {
+class GTK::TextChildAnchor:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkTextChildAnchor $!ta is implementor;

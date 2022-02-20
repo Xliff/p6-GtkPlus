@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TreeModel;
-use GTK::Raw::Types;
+use GTK::Raw::TreeModel:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::TreeIter;
-use GTK::TreePath;
+use GTK::TreeIter:ver<3.0.1146>;
+use GTK::TreePath:ver<3.0.1146>;
 
 my %typeData;
 
-role GTK::Roles::TreeModel {
+role GTK::Roles::TreeModel:ver<3.0.1146> {
   has GtkTreeModel $!tm;
 
   method !roleInit-GtkTreeModel {
@@ -340,7 +340,7 @@ use GLib::Roles::Object;
 our subset GtkTreeModelAncestry is export of Mu
   where GtkTreeModel | GObject;
 
-class GTK::TreeModel {
+class GTK::TreeModel:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::TreeModel;
 

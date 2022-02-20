@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::StackSwitcher;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::StackSwitcher:ver<3.0.1146>;
 
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
 our subset StackSwitcherAncestry is export
   where GtkStackSwitcher | GtkBoxAncestry;
 
-class GTK::StackSwitcher is GTK::Box {
+class GTK::StackSwitcher:ver<3.0.1146> is GTK::Box {
   has GtkStackSwitcher $!ss;
 
   method bless(*%attrinit) {

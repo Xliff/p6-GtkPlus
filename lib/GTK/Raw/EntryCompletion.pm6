@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::EntryCompletion;
+unit package GTK::Raw::EntryCompletion:ver<3.0.1146>;
 
 sub gtk_entry_completion_complete (GtkEntryCompletion $completion)
   is native(gtk)

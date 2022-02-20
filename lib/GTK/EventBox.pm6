@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::EventBox;
-use GTK::Raw::Types;
+use GTK::Raw::EventBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset GtkEventBoxAncestry is export of Mu
   where GtkEventBox | BinAncestry;
 
 our constant EventBoxAncestry is export := GtkEventBoxAncestry;
 
-class GTK::EventBox is GTK::Bin {
+class GTK::EventBox:ver<3.0.1146> is GTK::Bin {
   has GtkEventBox $!eb is implementor;
 
   method bless(*%attrinit) {

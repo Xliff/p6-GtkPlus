@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::RecentInfo;
+unit package GTK::Raw::RecentInfo:ver<3.0.1146>;
 
 sub gtk_recent_info_create_app_info (
   GtkRecentInfo $info, 

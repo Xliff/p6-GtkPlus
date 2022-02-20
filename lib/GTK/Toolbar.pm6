@@ -4,19 +4,19 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Raw::Toolbar;
-use GTK::Raw::Types;
+use GTK::Raw::Toolbar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
-use GTK::Roles::ToolShell;
+use GTK::Roles::Orientable:ver<3.0.1146>;
+use GTK::Roles::ToolShell:ver<3.0.1146>;
 
-use GTK::Container;
-use GTK::ToolItem;
+use GTK::Container:ver<3.0.1146>;
+use GTK::ToolItem:ver<3.0.1146>;
 
 our subset ToolbarAncestry is export
   where GtkToolbar | GtkToolShell | GtkOrientable | ContainerAncestry;
 
-class GTK::Toolbar is GTK::Container {
+class GTK::Toolbar:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::ToolShell;
 

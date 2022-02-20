@@ -3,11 +3,11 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::Subs;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
 use GLib::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::EntryCompletion {
+role GTK::Roles::Signals::EntryCompletion:ver<3.0.1146> {
   has %!signals-ec;
 
   # Copy for each signal.

@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Assistant;
-use GTK::Raw::Types;
+use GTK::Raw::Assistant:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 use GDK::Pixbuf;
-use GTK::Window;
+use GTK::Window:ver<3.0.1146>;
 
 our subset AssistantAncestry is export where GtkAssistant | WindowAncestry;
 
-class GTK::Assistant is GTK::Window {
+class GTK::Assistant:ver<3.0.1146> is GTK::Window {
   has GtkAssistant $!asst is implementor;
 
   method bless(*%attrinit) {

@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TextTag;
+unit package GTK::Raw::TextTag:ver<3.0.1146>;
 
 sub gtk_text_tag_changed (GtkTextTag $tag, gboolean $size_changed)
   is native(gtk)

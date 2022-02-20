@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Places;
+unit package GTK::Raw::Places:ver<3.0.1146>;
 
 sub gtk_places_sidebar_add_shortcut (
   GtkPlacesSidebar $sidebar,

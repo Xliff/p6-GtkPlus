@@ -5,9 +5,9 @@ use NativeCall;
 use Pango::Raw::Types;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Main;
+unit package GTK::Raw::Main:ver<3.0.1146>;
 
 sub gtk_get_binary_age ()
   returns guint

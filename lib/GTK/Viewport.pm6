@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::Viewport;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Viewport:ver<3.0.1146>;
 
 use GDK::Window;
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
-use GTK::Roles::Scrollable;
+use GTK::Roles::Scrollable:ver<3.0.1146>;
 
 our subset ViewPortAncestry is export
   where GtkViewport | GtkScrollable | BinAncestry;
 
-class GTK::Viewport is GTK::Bin {
+class GTK::Viewport:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Scrollable;
 
   has GtkViewport $!v is implementor;

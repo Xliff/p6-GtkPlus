@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Fixed;
-use GTK::Raw::Types;
+use GTK::Raw::Fixed:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
+use GTK::Container:ver<3.0.1146>;
 
 our subset FixedAncestry is export
   where GtkFixed | ContainerAncestry;
 
-class GTK::Fixed is GTK::Container {
+class GTK::Fixed:ver<3.0.1146> is GTK::Container {
   has GtkFixed $!f is implementor;
 
   method bless(*%attrinit) {

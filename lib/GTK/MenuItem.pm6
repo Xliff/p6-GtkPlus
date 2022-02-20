@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::MenuItem;
-use GTK::Raw::Types;
+use GTK::Raw::MenuItem:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Actionable;
+use GTK::Roles::Actionable:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset MenuItemAncestry is export
   where GtkMenuItem | GtkActionable | BinAncestry;
 
-class GTK::MenuItem is GTK::Bin {
+class GTK::MenuItem:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Actionable;
 
   has GtkMenuItem $!mi is implementor;

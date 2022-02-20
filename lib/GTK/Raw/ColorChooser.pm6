@@ -4,9 +4,9 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ColorChooser;
+unit package GTK::Raw::ColorChooser:ver<3.0.1146>;
 
 sub gtk_color_chooser_widget_new ()
   returns GtkColorChooserWidget

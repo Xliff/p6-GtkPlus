@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 use Pango::Raw::Types;
 
-unit package GTK::Raw::PrintContext;
+unit package GTK::Raw::PrintContext:ver<3.0.1146>;
 
 sub gtk_print_context_create_pango_context (GtkPrintContext $context)
   returns PangoContext

@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::Separator;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Separator:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset SeparatorAncestry
   where GtkSeparator | GtkOrientable | GtkWidgetAncestry;
 
-class GTK::Separator is GTK::Widget {
+class GTK::Separator:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Orientable;
 
   has GtkSeparator $!s is implementor;

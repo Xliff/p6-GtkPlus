@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Dialog::Raw::PrintUnix;
+unit package GTK::Dialog::Raw::PrintUnix:ver<3.0.1146>;
 
 sub gtk_print_unix_dialog_add_custom_tab (
   GtkPrintUnixDialog $dialog,

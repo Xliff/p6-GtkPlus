@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
 our subset GtkShortcutsShortcutAncestry is export
   where GtkShortcutsShortcut | GtkBoxAncestry;
 
-class GTK::ShortcutsShortcut is GTK::Box {
+class GTK::ShortcutsShortcut:ver<3.0.1146> is GTK::Box {
   has GtkShortcutsShortcut $!s is implementor;
 
   method bless(*%attrinit) {

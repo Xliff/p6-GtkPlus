@@ -2,19 +2,19 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Scale;
-use GTK::Raw::Types;
+use GTK::Raw::Scale:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Scale;
+use GTK::Roles::Signals::Scale:ver<3.0.1146>;
 
 use Pango::Layout;
 
-use GTK::Range;
+use GTK::Range:ver<3.0.1146>;
 
 our subset ScaleAncestry is export
   where GtkScale | RangeAncestry;
 
-class GTK::Scale is GTK::Range {
+class GTK::Scale:ver<3.0.1146> is GTK::Range {
   also does GTK::Roles::Signals::Scale;
 
   has GtkScale $!s is implementor;

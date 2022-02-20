@@ -3,20 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TreeView;
-use GTK::Raw::Types;
+use GTK::Raw::TreeView:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Adjustment;
-use GTK::Container;
-use GTK::Entry;
-use GTK::TreeIter;
-use GTK::TreePath;
-use GTK::TreeSelection;
-use GTK::TreeStore;
-use GTK::TreeViewColumn;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Container:ver<3.0.1146>;
+use GTK::Entry:ver<3.0.1146>;
+use GTK::TreeIter:ver<3.0.1146>;
+use GTK::TreePath:ver<3.0.1146>;
+use GTK::TreeSelection:ver<3.0.1146>;
+use GTK::TreeStore:ver<3.0.1146>;
+use GTK::TreeViewColumn:ver<3.0.1146>;
 
-use GTK::Roles::Scrollable;
-use GTK::Roles::Signals::TreeView;
+use GTK::Roles::Scrollable:ver<3.0.1146>;
+use GTK::Roles::Signals::TreeView:ver<3.0.1146>;
 
 our subset GtkTreeViewAncestry is export
   where GtkTreeView | GtkScrollable | ContainerAncestry;
@@ -24,7 +24,7 @@ our subset GtkTreeViewAncestry is export
 constant TreeViewAncestry is export = GtkTreeViewAncestry;
 
 # Are we still doing this, or not. I think it might be better to just do
-# "use GTK".
+# "use GTK:ver<3.0.1146>".
 sub EXPORT {
   %(
     GTK::Adjustment::,
@@ -39,7 +39,7 @@ sub EXPORT {
 
 # REFINEMENTS MUST BE COMPLETED. -- THIS MODULE NEEDS TO BE RE-REVIEWED!
 
-class GTK::TreeView is GTK::Container {
+class GTK::TreeView:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::TreeView;
 

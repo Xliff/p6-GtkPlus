@@ -3,18 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
-use GTK::Raw::ScaleButton;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::ScaleButton:ver<3.0.1146>;
 
-use GTK::Adjustment;
-use GTK::Button;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Button:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset ScaleButtonAncestry is export
   where GtkScaleButton | GtkOrientable | ButtonAncestry;
 
-class GTK::ScaleButton is GTK::Button {
+class GTK::ScaleButton:ver<3.0.1146> is GTK::Button {
   also does GTK::Roles::Orientable;
 
   has GtkScaleButton $!sb is implementor;

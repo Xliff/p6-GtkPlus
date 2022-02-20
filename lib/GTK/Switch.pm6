@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Switch;
-use GTK::Raw::Types;
+use GTK::Raw::Switch:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Actionable;
+use GTK::Roles::Actionable:ver<3.0.1146>;
 
 our subset SwitchAncestry is export
   where GtkSwitch | GtkActionable | GtkWidgetAncestry;
 
-class GTK::Switch is GTK::Widget {
+class GTK::Switch:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Actionable;
 
   has GtkSwitch $!s is implementor;

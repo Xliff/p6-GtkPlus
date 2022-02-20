@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::AccelLabel;
+unit package GTK::Raw::AccelLabel:ver<3.0.1146>;
 
 sub gtk_accel_label_get_accel (
   GtkAccelLabel $accel_label,

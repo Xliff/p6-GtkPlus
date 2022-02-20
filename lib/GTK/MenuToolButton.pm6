@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::MenuToolButton;
-use GTK::Raw::Types;
+use GTK::Raw::MenuToolButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::ToolButton;
+use GTK::ToolButton:ver<3.0.1146>;
 
 our subset MenuToolButtonAncestry is export
   where GtkMenuToolButton | ToolButtonAncestry;
 
-class GTK::MenuToolButton is GTK::ToolButton {
+class GTK::MenuToolButton:ver<3.0.1146> is GTK::ToolButton {
   has GtkMenuToolButton $!mtb is implementor;
 
   method bless(*%attrinit) {

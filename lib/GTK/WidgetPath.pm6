@@ -2,9 +2,9 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Raw::WidgetPath;
+use GTK::Raw::WidgetPath:ver<3.0.1146>;
 
 use GLib::GList;
 
@@ -12,7 +12,7 @@ use GLib::Roles::ListData;
 
 # Opaque struct.
 
-class GTK::WidgetPath {
+class GTK::WidgetPath:ver<3.0.1146> {
   has GtkWidgetPath $!wp is implementor;
 
   submethod BUILD(:$path) {

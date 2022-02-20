@@ -2,19 +2,19 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Range;
-use GTK::Raw::Types;
+use GTK::Raw::Range:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Adjustment;
-use GTK::Widget;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
-use GTK::Roles::Signals::Range;
+use GTK::Roles::Orientable:ver<3.0.1146>;
+use GTK::Roles::Signals::Range:ver<3.0.1146>;
 
 our subset RangeAncestry is export
   where GtkRange | GtkOrientable | GtkWidgetAncestry;
 
-class GTK::Range is GTK::Widget {
+class GTK::Range:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::Range;
 

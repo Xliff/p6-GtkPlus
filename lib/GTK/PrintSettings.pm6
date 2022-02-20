@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::PrintSettings;
-use GTK::Raw::Types;
+use GTK::Raw::PrintSettings:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::PaperSize;
+use GTK::PaperSize:ver<3.0.1146>;
 
-use GTK::Roles::Types;
+use GTK::Roles::Types:ver<3.0.1146>;
 use GLib::Roles::Object;
 
-class GTK::PrintSettings {
+class GTK::PrintSettings:ver<3.0.1146> {
   also does GTK::Roles::Types;
   also does GLib::Roles::Object;
 

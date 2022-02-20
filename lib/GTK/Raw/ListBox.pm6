@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ListBox;
+unit package GTK::Raw::ListBox:ver<3.0.1146>;
 
 sub gtk_list_box_bind_model (
   GtkListBox $box,

@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Raw::RecentChooser;
+use GTK::Raw::RecentChooser:ver<3.0.1146>;
 
-use GTK::RecentFilter;
-use GTK::RecentInfo;
+use GTK::RecentFilter:ver<3.0.1146>;
+use GTK::RecentInfo:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-role GTK::Roles::RecentChooser {
+role GTK::Roles::RecentChooser:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
 
   has GtkRecentChooser $!rc;

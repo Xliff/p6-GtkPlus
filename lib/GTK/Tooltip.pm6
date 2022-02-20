@@ -3,12 +3,12 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Tooltip;
-use GTK::Raw::Types;
+use GTK::Raw::Tooltip:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
-class GTK::Tooltip {
+class GTK::Tooltip:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkTooltip $!tt is implementor;

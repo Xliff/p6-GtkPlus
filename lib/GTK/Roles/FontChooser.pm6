@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
-use GTK::Raw::FontChooser;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::FontChooser:ver<3.0.1146>;
 
 use Pango::FontFace;
 use Pango::FontFamily;
 use Pango::FontDescription;
 
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-role GTK::Roles::FontChooser {
+role GTK::Roles::FontChooser:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
 
   has GtkFontChooser $!fc;

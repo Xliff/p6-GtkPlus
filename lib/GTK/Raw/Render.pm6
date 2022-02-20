@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 use Pango::Raw::Types;
 
-unit package GTK::Raw::Render;
+unit package GTK::Raw::Render:ver<3.0.1146>;
 
 sub gtk_render_activity (
   GtkStyleContext $context,

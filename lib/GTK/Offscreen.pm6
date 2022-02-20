@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Offscreen;
-use GTK::Raw::Types;
+use GTK::Raw::Offscreen:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GDK::Pixbuf;
 
-use GTK::Window;
+use GTK::Window:ver<3.0.1146>;
 
 our subset OffscreenAncestry is export
   where GtkOffscreen | WindowAncestry;
 
-class GTK::Offscreen is GTK::Window {
+class GTK::Offscreen:ver<3.0.1146> is GTK::Window {
   has GtkOffscreen $!ow is implementor;
 
   method bless(*%attrinit) {

@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TextTagTable;
+unit package GTK::Raw::TextTagTable:ver<3.0.1146>;
 
 sub gtk_text_tag_table_add (GtkTextTagTable $table, GtkTextTag $tag)
   returns uint32

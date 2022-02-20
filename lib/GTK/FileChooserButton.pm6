@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::FileChooserButton;
-use GTK::Raw::Types;
+use GTK::Raw::FileChooserButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
-use GTK::Roles::FileChooser;
+use GTK::Roles::FileChooser:ver<3.0.1146>;
 
 our subset GtkFileChooserButtonAncestry is export of Mu
   where GtkFileChooserButton | GtkFileChooser | GtkBoxAncestry;
 
-class GTK::FileChooserButton is GTK::Box {
+class GTK::FileChooserButton:ver<3.0.1146> is GTK::Box {
   also does GTK::Roles::FileChooser;
 
   has GtkFileChooserButton $!fcb is implementor;
@@ -67,7 +67,7 @@ class GTK::FileChooserButton is GTK::Box {
     $chooser ?? self.bless(:$chooser) !! Nil;
   }
   multi method new {
-    die "Please use GTK::FileChooserButton.new(<title>, <action>)";
+    die "Please use GTK::FileChooserButton:ver<3.0.1146>.new(<title>, <action>)";
   }
 
   method new_with_dialog (GtkWidget() $dialog) is also<new-with-dialog> {

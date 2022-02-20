@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::InfoBar;
-use GTK::Raw::Types;
+use GTK::Raw::InfoBar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
 our subset GtkInfoBarAncestry is export of Mu
   where GtkInfoBar | GtkBoxAncestry;
 
-class GTK::InfoBar is GTK::Box {
+class GTK::InfoBar:ver<3.0.1146> is GTK::Box {
   has GtkInfoBar $!ib is implementor;
 
   method bless(*%attrinit) {

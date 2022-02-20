@@ -4,16 +4,16 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Raw::AspectFrame;
-use GTK::Raw::Types;
+use GTK::Raw::AspectFrame:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Frame;
+use GTK::Frame:ver<3.0.1146>;
 
 our subset AspectFrameAncestry is export
   where GtkAspectFrame | FrameAncestry;
 
-class GTK::AspectFrame is GTK::Frame {
+class GTK::AspectFrame:ver<3.0.1146> is GTK::Frame {
   has GtkAspectFrame $!af is implementor;
 
   method bless(*%attrinit) {

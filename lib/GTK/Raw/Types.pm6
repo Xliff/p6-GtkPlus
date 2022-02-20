@@ -5,11 +5,11 @@ use ATK::Raw::Exports;
 use Pango::Raw::Exports;
 use GIO::Raw::Exports;
 use GDK::Raw::Exports;
-use GTK::Raw::Exports;
+use GTK::Raw::Exports:ver<3.0.1146>;
 
-my constant forced = 121;
+my constant forced = 124;
 
-unit package GTK::Raw::Types;
+unit package GTK::Raw::Types:ver<3.0.1146>;
 
 need Cairo;
 need GLib::Raw::Definitions;

@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellAreaContext;
-use GTK::Raw::Types;
+use GTK::Raw::CellAreaContext:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellArea;
+use GTK::CellArea:ver<3.0.1146>;
 
 use GLib::Roles::Properties;
 
-class GTK::CellAreaContext {
+class GTK::CellAreaContext:ver<3.0.1146> {
   also does GLib::Roles::Properties;
 
   has GtkCellAreaContext $!cac is implementor;

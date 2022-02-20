@@ -4,20 +4,20 @@ use Method::Also;
 
 use GLib::GSList;
 
-use GTK::Raw::Places;
-use GTK::Raw::Types;
+use GTK::Raw::Places:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GSList;
 
-use GTK::ScrolledWindow;
+use GTK::ScrolledWindow:ver<3.0.1146>;
 
 use GIO::Roles::GFile;
-use GTK::Roles::Signals::Places;
+use GTK::Roles::Signals::Places:ver<3.0.1146>;
 
 our subset PlacesAncestry is export
   where GtkPlacesSidebar | ScrolledWindowAncestry;
 
-class GTK::Places is GTK::ScrolledWindow {
+class GTK::Places:ver<3.0.1146> is GTK::ScrolledWindow {
   also does GTK::Roles::Signals::Places;
 
   has GtkPlacesSidebar $!ps is implementor;

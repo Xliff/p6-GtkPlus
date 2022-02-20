@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TreeModelSort;
-use GTK::Raw::Types;
+use GTK::Raw::TreeModelSort:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
-use GTK::Roles::TreeDnD;
-use GTK::Roles::TreeModel;
-use GTK::Roles::TreeSortable;
+use GTK::Roles::TreeDnD:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
+use GTK::Roles::TreeSortable:ver<3.0.1146>;
 
-class GTK::TreeModelSort {
+class GTK::TreeModelSort:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   also does GTK::Roles::TreeDragSource;

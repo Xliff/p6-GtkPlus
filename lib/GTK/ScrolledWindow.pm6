@@ -2,20 +2,20 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ScrolledWindow;
-use GTK::Raw::Types;
+use GTK::Raw::ScrolledWindow:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Adjustment;
-use GTK::Bin;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Bin:ver<3.0.1146>;
 
-use GTK::Roles::Signals::ScrolledWindow;
+use GTK::Roles::Signals::ScrolledWindow:ver<3.0.1146>;
 
-use GTK::Scrollbar;
+use GTK::Scrollbar:ver<3.0.1146>;
 
 our subset ScrolledWindowAncestry is export
   where GtkScrolledWindow | BinAncestry;
 
-class GTK::ScrolledWindow is GTK::Bin {
+class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Signals::ScrolledWindow;
 
   has GtkScrolledWindow $!sw is implementor;

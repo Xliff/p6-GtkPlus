@@ -5,15 +5,15 @@ use NativeCall;
 
 use GDK::Pixbuf;
 
-use GTK::Raw::Types;
-use GTK::Raw::Image;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Image:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset ImageAncestry is export where GtkImage | GtkWidgetAncestry;
 
-class GTK::Image is GTK::Widget {
+class GTK::Image:ver<3.0.1146> is GTK::Widget {
   has GtkImage $!i is implementor;
 
   method bless(*%attrinit) {

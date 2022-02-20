@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Raw::RecentChooserMenu;
+use GTK::Raw::RecentChooserMenu:ver<3.0.1146>;
 
-use GTK::Roles::RecentChooser;
+use GTK::Roles::RecentChooser:ver<3.0.1146>;
 
-use GTK::Menu;
+use GTK::Menu:ver<3.0.1146>;
 
 our subset RecentChooserMenuAncestry
   where GtkRecentChooserMenu | GtkRecentChooser | MenuAncestry;
 
-class GTK::RecentChooserMenu is GTK::Menu {
+class GTK::RecentChooserMenu:ver<3.0.1146> is GTK::Menu {
   also does GTK::Roles::RecentChooser;
 
   has GtkRecentChooserMenu $!rcm is implementor;

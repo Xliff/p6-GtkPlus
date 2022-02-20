@@ -2,14 +2,14 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::CSS_Section;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::CSS_Section:ver<3.0.1146>;
 
-use GTK::CSSProvider;
+use GTK::CSSProvider:ver<3.0.1146>;
 
 # BOXED TYPE
 
-class GTK::CSS_Section {
+class GTK::CSS_Section:ver<3.0.1146> {
   has GtkCssSection $!css_s;
 
   submethod BUILD (:$section) {

@@ -3,20 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Button;
-use GTK::Raw::Types;
+use GTK::Raw::Button:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Actionable;
+use GTK::Roles::Actionable:ver<3.0.1146>;
 
 use GDK::Window;
 
-use GTK::Bin;
-use GTK::Widget;
+use GTK::Bin:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset ButtonAncestry is export of Mu
   where GtkButton | BinAncestry;
 
-class GTK::Button is GTK::Bin {
+class GTK::Button:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Actionable;
 
   has GtkButton $!b is implementor;

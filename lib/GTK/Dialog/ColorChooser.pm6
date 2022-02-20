@@ -4,17 +4,17 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Dialog::Raw::ColorChooser;
-use GTK::Raw::Types;
+use GTK::Dialog::Raw::ColorChooser:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Dialog;
+use GTK::Dialog:ver<3.0.1146>;
 
-use GTK::Roles::ColorChooser;
+use GTK::Roles::ColorChooser:ver<3.0.1146>;
 
 our subset ColorChooserDialogAncestry
   where GtkColorChooserDialog | GtkColorChooser | DialogAncestry;
 
-class GTK::Dialog::ColorChooser is GTK::Dialog {
+class GTK::Dialog::ColorChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::ColorChooser;
 
   has GtkColorChooserDialog $!ccd is implementor;

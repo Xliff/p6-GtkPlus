@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::SeparatorToolItem;
+unit package GTK::Raw::SeparatorToolItem:ver<3.0.1146>;
 
 sub gtk_separator_tool_item_get_type ()
   returns GType

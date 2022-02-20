@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::VolumeButton;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::VolumeButton:ver<3.0.1146>;
 
-use GTK::ScaleButton;
+use GTK::ScaleButton:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset VolumeButtonAncestry is export
   where GtkVolumeButton | ScaleButtonAncestry;
 
-class GTK::VolumeButton is GTK::ScaleButton {
+class GTK::VolumeButton:ver<3.0.1146> is GTK::ScaleButton {
   also does GTK::Roles::Orientable;
 
   has GtkVolumeButton $!vb is implementor;

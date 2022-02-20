@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::Stack;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Stack:ver<3.0.1146>;
 
-use GTK::Container;
-use GTK::StackSwitcher;
-use GTK::StackSidebar;
-use GTK::Widget;
+use GTK::Container:ver<3.0.1146>;
+use GTK::StackSwitcher:ver<3.0.1146>;
+use GTK::StackSidebar:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset StackAncestry is export
   where GtkStack | ContainerAncestry;
 
-class GTK::Stack is GTK::Container {
+class GTK::Stack:ver<3.0.1146> is GTK::Container {
   has GtkStack $!s is implementor;
   has GTK::StackSwitcher $!ss;
   has GTK::StackSidebar $!sb;

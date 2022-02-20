@@ -2,14 +2,14 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Popover;
-use GTK::Raw::Types;
+use GTK::Raw::Popover:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset PopoverAncestry is export when GtkPopover | BinAncestry;
 
-class GTK::Popover is GTK::Bin {
+class GTK::Popover:ver<3.0.1146> is GTK::Bin {
   has GtkPopover $!p is implementor;
 
   method bless(*%attrinit) {

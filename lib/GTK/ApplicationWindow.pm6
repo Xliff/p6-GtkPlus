@@ -2,11 +2,11 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::ApplicationWindow;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::ApplicationWindow:ver<3.0.1146>;
 
-use GTK::ShortcutsWindow;
-use GTK::Window;
+use GTK::ShortcutsWindow:ver<3.0.1146>;
+use GTK::Window:ver<3.0.1146>;
 
 use GIO::Roles::ActionMap;
 
@@ -15,7 +15,7 @@ our subset GtkApplicationWindowAncestry is export
 
 constant ApplicationWindowAncestry is export := GtkApplicationWindowAncestry;
 
-class GTK::ApplicationWindow is GTK::Window {
+class GTK::ApplicationWindow:ver<3.0.1146> is GTK::Window {
   also does GIO::Roles::ActionMap;
 
   has GtkApplicationWindow $!aw is implementor;

@@ -4,18 +4,18 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Dialog::Raw::Message;
-use GTK::Raw::Types;
+use GTK::Dialog::Raw::Message:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Box;
-use GTK::Dialog;
-use GTK::Image;
+use GTK::Box:ver<3.0.1146>;
+use GTK::Dialog:ver<3.0.1146>;
+use GTK::Image:ver<3.0.1146>;
 
 my subset GtkMessageDialogAncestry
   where GtkMessageDialog | GtkDialog | GtkWindow | GtkBin | GtkContainer |
         GtkBuilder       | GtkWidget;
 
-class GTK::Dialog::Message is GTK::Dialog {
+class GTK::Dialog::Message:ver<3.0.1146> is GTK::Dialog {
   has GtkMessageDialog $!md is implementor;
 
   method bless(*%attrinit) {

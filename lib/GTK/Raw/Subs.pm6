@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 use GLib::Raw::Definitions;
-use GTK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
 
-unit package GTK::Raw::Subs;
+unit package GTK::Raw::Subs:ver<3.0.1146>;
 
 sub ReturnWidget ($w, $raw, $widget) {
   $w ?? ( $raw ?? $w

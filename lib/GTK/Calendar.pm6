@@ -3,14 +3,14 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Calendar;
-use GTK::Raw::Types;
+use GTK::Raw::Calendar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset CalendarAncestry is export where GtkCalendar | GtkWidgetAncestry;
 
-class GTK::Calendar is GTK::Widget {
+class GTK::Calendar:ver<3.0.1146> is GTK::Widget {
   has GtkCalendar $!cal is implementor;
 
   method bless(*%attrinit) {

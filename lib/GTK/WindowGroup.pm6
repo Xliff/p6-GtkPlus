@@ -2,16 +2,16 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::WindowGroup;
-use GTK::Raw::Types;
+use GTK::Raw::WindowGroup:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
 use GLib::Roles::ListData;
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
-class GTK::WindowGroup {
+class GTK::WindowGroup:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkWindowGroup $!wg is implementor;

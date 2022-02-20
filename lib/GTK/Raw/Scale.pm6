@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 use Pango::Raw::Types;
 
-unit package GTK::Raw::Scale;
+unit package GTK::Raw::Scale:ver<3.0.1146>;
 
 # (GtkScale $scale, gdouble $value, GtkPositionType $position, gchar $markup)
 sub gtk_scale_add_mark (GtkScale $scale, gdouble $value, uint32 $position, gchar $markup)

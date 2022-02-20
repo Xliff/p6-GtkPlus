@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ComboBoxText;
+unit package GTK::Raw::ComboBoxText:ver<3.0.1146>;
 
 sub gtk_combo_box_text_append (
   GtkComboBoxText $combo_box,

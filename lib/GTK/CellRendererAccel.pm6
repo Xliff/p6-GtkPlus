@@ -2,19 +2,19 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellRendererAccel;
-use GTK::Raw::Types;
+use GTK::Raw::CellRendererAccel:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellRendererText;
+use GTK::CellRendererText:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::CellRendererAccel;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::CellRendererAccel:ver<3.0.1146>;
 
 our subset CellRendererAccelAncestry is export
   where GtkCellRendererAccel | CellRendererTextAncestry;
 
-class GTK::CellRendererAccel is GTK::CellRendererText {
+class GTK::CellRendererAccel:ver<3.0.1146> is GTK::CellRendererText {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CellRendererAccel;
 

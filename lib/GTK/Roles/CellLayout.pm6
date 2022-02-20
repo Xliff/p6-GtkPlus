@@ -2,14 +2,14 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::CellLayout;
-use GTK::Raw::Types;
+use GTK::Raw::CellLayout:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::LatchedContents;
+use GTK::Roles::LatchedContents:ver<3.0.1146>;
 
-use GTK::CellRenderer;
+use GTK::CellRenderer:ver<3.0.1146>;
 
-role GTK::Roles::CellLayout {
+role GTK::Roles::CellLayout:ver<3.0.1146> {
   also does GTK::Roles::LatchedContents;
 
   has GtkCellLayout $!cl;

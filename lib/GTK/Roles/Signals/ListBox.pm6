@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::Subs;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
 
-role GTK::Roles::Signals::ListBox {
+role GTK::Roles::Signals::ListBox:ver<3.0.1146> {
   has %!signals-lb;
 
   # Copy for each signal.

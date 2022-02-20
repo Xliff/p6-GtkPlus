@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::WidgetPath;
+unit package GTK::Raw::WidgetPath:ver<3.0.1146>;
 
 sub gtk_widget_path_append_for_widget (
   GtkWidgetPath $path,
