@@ -26,7 +26,7 @@ sub MAIN (
   my $uri = "{ $prefix }{ $control }{ $ext }";
   say "Retrieving: $uri";
   my $dom = Mojo::DOM.new(
-    LWP::Simple.new.get($uri);
+    LWP::Simple.new.get($uri)
   );
 
   my $v = "\$\!$var";
@@ -35,11 +35,14 @@ sub MAIN (
   #  *.attr('name') eq "{ $control }.signal-details"
   #)[0].parent;
   my %methods;
-  for '.property-details', '.style-properties', '#properties' -> $pd {
+  for <.properties .property-details .style-properties #properties> -> $pd {
     my $found = False;
+    #say "Searching for: { $control }{ $pd }...";
     quietly {
-      for @( $dom.find('div.refsect1 a').to_array ) -> $e {
-        #say "Searching for: { $control }{ $pd }...";
+      my @haystack = $dom.find('div.refsect1 a').to_array;
+      next unless @haystack;
+      #say "Haystack ({ $control }{ $pd }): { @haystack.elems }";
+      for @haystack -> $e {
         if $e && $e.attr('name') eq "{ $control }{ $pd }" {
           $found = $e.parent;
           last;

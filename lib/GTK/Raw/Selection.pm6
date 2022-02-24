@@ -71,7 +71,7 @@ sub gtk_selection_data_get_data_type (GtkSelectionData $selection_data)
 
 sub gtk_selection_data_get_data_with_length (
   GtkSelectionData $selection_data,
-  gint $length
+  guint            $length
 )
   returns guchar
   is native(gtk)

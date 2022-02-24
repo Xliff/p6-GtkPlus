@@ -9,7 +9,7 @@ use GTK::Box;
 use GTK::Roles::FileChooser;
 
 our subset FileChooserWidgetAncestry is export
-  where GtkFileChooserWidget | GtkFileChooser | BoxAncestry;
+  where GtkFileChooserWidget | GtkFileChooser | GtkBoxAncestry;
 
 class GTK::FileChooser is GTK::Box {
   also does GTK::Roles::FileChooser;

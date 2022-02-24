@@ -23,7 +23,7 @@ grammar ParseBuildResults {
   #   <summary_type> \s* $<min>=(\d+) 'm' <sec=num> 's' \s*
   # }
   regex summary {
-    <summary_type> \s+ <num> \s+
+    '#'? <summary_type> \s+ <num> \s+
   }
   regex header {
     ^^ \s* '=== ' <module> ' ===' $$

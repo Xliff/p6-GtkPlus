@@ -64,6 +64,7 @@ class GTK::Application is GIO::Application {
           $w.set_size_request($width, $height) if $width && $height;
           $w;
         }
+
         when 'window' {
           GTK::Window.new(
             :$title,
@@ -71,6 +72,7 @@ class GTK::Application is GIO::Application {
             :$height
           );
         }
+        
         when 'custom' {
           die "Invalid \$window of type '{ $window.^name }' specified!"
             unless $window.^can('GTK::Raw::Definitions::GtkWindow').elems;

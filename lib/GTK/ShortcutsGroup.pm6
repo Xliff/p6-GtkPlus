@@ -8,8 +8,8 @@ use GLib::Value;
 use GTK::Box;
 use GTK::SizeGroup;
 
-our subset ShortcutsGroupAncestry is export
-  where GtkShortcutsGroup | BoxAncestry;
+our subset GtkShortcutsGroupAncestry is export
+  where GtkShortcutsGroup | GtkBoxAncestry;
 
 class GTK::ShortcutsGroup is GTK::Box {
   has GtkShortcutsGroup $!sg is implementor;
@@ -20,27 +20,25 @@ class GTK::ShortcutsGroup is GTK::Box {
     $o;
   }
 
-  submethod BUILD(:$group) {
+  submethod BUILD (:$group) {
+    self.setGtkShortcutsGroup($group) if $group;
+  }
+
+  method setGtkShortcutsGroup (GtkShortcutsGroupAncestry $_) {
     my $to-parent;
-    given $group {
-      when ShortcutsGroupAncestry {
-        $!sg = do {
-          when GtkShortcutsGroup {
-            $to-parent = cast(GtkBox, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkShortcutsGroup, $_);
-          }
-        }
-        self.setBox($to-parent);
+
+    $!sg = do {
+      when GtkShortcutsGroup {
+        $to-parent = cast(GtkBox, $_);
+        $_;
       }
-      when GTK::ShortcutsGroup {
-      }
+
       default {
+        $to-parent = $_;
+        cast(GtkShortcutsGroup, $_);
       }
     }
+    self.setGtkBox($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkShortcutsGroup
@@ -50,7 +48,7 @@ class GTK::ShortcutsGroup is GTK::Box {
     >
   { $!sg }
 
-  method new (ShortcutsGroupAncestry $group, :$ref = True) {
+  method new (GtkShortcutsGroupAncestry $group, :$ref = True) {
     return Nil unless $group;
 
     my $o = self.bless(:$group);

@@ -12,7 +12,10 @@ use Pango::Layout;
 
 use GTK::Widget;
 
-our subset LabelAncestry is export where GtkLabel | GtkWidgetAncestry;
+our subset GtkLabelAncestry is export of Mu
+  where GtkLabel | GtkWidgetAncestry;
+
+constant LabelAncestry is export = GtkLabelAncestry;
 
 class GTK::Label is GTK::Widget {
   has GtkLabel $!l is implementor;
@@ -24,16 +27,8 @@ class GTK::Label is GTK::Widget {
     $o;
   }
 
-  submethod BUILD(:$label) {
-    given $label {
-      when LabelAncestry {
-        self.setLabel($label);
-      }
-      when GTK::Label {
-      }
-      default {
-      }
-    }
+  submethod BUILD (:$label) {
+    self.setGtkLabel($label) if $label;
   }
 
   method GTK::Raw::Definitions::GtkLabel
@@ -43,13 +38,27 @@ class GTK::Label is GTK::Widget {
     >
   { $!l }
 
-  multi method new (GTK::Widget $label) {
-    samewith($label.Widget);
+  method setGtkLabel(GtkLabelAncestry $_) {
+    my $to-parent;
+
+    $!l = do {
+      when GtkLabel  {
+        $to-parent = cast(GtkWidget, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkLabel, $_);
+      }
+    };
+    self.setWidget($to-parent);
   }
-  multi method new (LabelAncestry $label, :$ref = True) {
+
+  multi method new (GtkLabelAncestry $label, :$ref = True) {
     return Nil unless $label;
 
-    my $o = self.bless(:$label);
+    my $o = self.bless( :$label );
     $o.ref if $ref;
     $o;
   }
@@ -62,21 +71,6 @@ class GTK::Label is GTK::Widget {
     my $label = gtk_label_new($text);
 
     $label ?? self.bless(:$label) !! Nil;
-  }
-
-  method setLabel(LabelAncestry $label) {
-    my $to-parent;
-    $!l = do given $label {
-      when GtkLabel  {
-        $to-parent = cast(GtkWidget, $_);
-        $_;
-      }
-      default {
-        $to-parent = $_;
-        cast(GtkLabel, $label);
-      }
-    };
-    self.setWidget($to-parent);
   }
 
   method new_with_mnemonic ($text) is also<new-with-mnemonic> {

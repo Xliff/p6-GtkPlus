@@ -5,10 +5,11 @@ use LWP::Simple;
 use Mojo::DOM:from<Perl5>;
 
 sub MAIN (
-  $control is copy,
-  :$var    is copy = 'w',
-  :$lib    is copy = 'gobject',
-  :$prefix is copy = "https://developer.gnome.org/gtk3/stable/"
+  $control    is copy,
+  :$var       is copy = 'w',
+  :$lib       is copy = 'gobject',
+  :$prefix    is copy = "https://developer.gnome.org/gtk3/stable/",
+  :$user-data         = True
 ) {
   # If it's a URL, then try to pick it apart
   my $ext = '';
@@ -116,7 +117,7 @@ METH
     \%!signals-{ $name }\{\$signal\} //= do \{
       my \\𝒮 = Supplier.new;
       \$hid = g-connect-{ .[0] }(\$obj, \$signal,
-        -> \$, { $pp }, \$ud{ $rt } \{
+        -> \$, { $pp }{ $user-data ?? ', $ud' !! '' }{ $rt } \{
           CATCH \{
             default \{ 𝒮.note(\$_) \}
           \}
@@ -138,12 +139,16 @@ METH
   for @signals {
     my $rt = .[* - 1] ne 'void' ?? " --> { .[* - 1] }" !! '';
 
+    my $handler = '\&handler (Pointer, { .[1][1 .. * - 2].join(', ') }';
+    $handler ~= ', Pointer' if $user-data;
+    $handler ~= "{ $rt })";
+
     say qq:to/NC/;
 # { .[1].join(', ') }{ $rt }
 sub g-connect-{ .[0] }(
   Pointer \$app,
   Str \$name,
-  \&handler (Pointer, { .[1][1 .. * - 2].join(', ') }, Pointer{ $rt }),
+  { $handler },
   Pointer \$data,
   uint32 \$flags
 )

@@ -12,25 +12,26 @@ unit package GTK::Raw::Widget;
 sub gtk_widget_set_device_events (
   GtkWidget $widget,
   GdkDevice $device,
-  guint $events                 # GdkEventMask $events
+  guint     $events                 # GdkEventMask $events
 )
   is native(gtk)
   is export
 { * }
 
-sub gtk_widget_style_get_valist (
-  GtkWidget $widget,
-  gchar $first_property_name,
-  va_list $var_args
-)
-  is native(gtk)
-  is export
-{ * }
+# cw: var_args is out of scope!
+# sub gtk_widget_style_get_valist (
+#   GtkWidget $widget,
+#   gchar     $first_property_name,
+#   va_list   $var_args
+# )
+#   is native(gtk)
+#   is export
+# { * }
 
 sub gtk_widget_get_allocated_size (
-  GtkWidget $widget,
+  GtkWidget     $widget,
   GtkAllocation $allocation,
-  int32 $baseline
+  int32         $baseline
 )
   is native(gtk)
   is export
@@ -59,7 +60,7 @@ sub gtk_widget_get_allocated_height (GtkWidget $widget)
 
 sub gtk_widget_set_redraw_on_allocate (
   GtkWidget $widget,
-  gboolean $redraw_on_allocate
+  gboolean  $redraw_on_allocate
 )
   is native(gtk)
   is export
@@ -82,7 +83,7 @@ sub gtk_widget_queue_compute_expand (GtkWidget $widget)
 { * }
 
 sub gtk_widget_shape_combine_region (
-  GtkWidget $widget,
+  GtkWidget      $widget,
   cairo_region_t $region
 )
   is native(gtk)
@@ -114,7 +115,7 @@ sub gtk_widget_keynav_failed (GtkWidget $widget, uint32 $direction)
 { * }
 
 sub gtk_widget_get_requisition (
-  GtkWidget $widget,
+  GtkWidget      $widget,
   GtkRequisition $requisition
 )
   is native(gtk)
@@ -151,10 +152,10 @@ sub gtk_widget_get_path (GtkWidget $widget)
 { * }
 
 sub gtk_widget_remove_accelerator (
-  GtkWidget $widget,
+  GtkWidget     $widget,
   GtkAccelGroup $accel_group,
-  guint $accel_key,
-  uint32 $accel_mods            # GdkModifierType $accel_mods
+  guint         $accel_key,
+  uint32        $accel_mods            # GdkModifierType $accel_mods
 )
   returns uint32
   is native(gtk)
@@ -168,7 +169,7 @@ sub gtk_widget_has_screen (GtkWidget $widget)
 { * }
 
 sub gtk_widget_input_shape_combine_region (
-  GtkWidget $widget,
+  GtkWidget      $widget,
   cairo_region_t $region
 )
   is native(gtk)
@@ -176,7 +177,7 @@ sub gtk_widget_input_shape_combine_region (
 { * }
 
 sub gtk_widget_get_preferred_size (
-  GtkWidget $widget,
+  GtkWidget      $widget,
   GtkRequisition $minimum_size,
   GtkRequisition $natural_size
 )
@@ -186,8 +187,8 @@ sub gtk_widget_get_preferred_size (
 
 sub gtk_widget_set_size_request (
   GtkWidget $widget,
-  gint $width,
-  gint $height
+  gint      $width,
+  gint      $height
 )
   is native(gtk)
   is export
@@ -200,7 +201,7 @@ sub gtk_widget_is_composited (GtkWidget $widget)
 { * }
 
 sub gtk_cairo_transform_to_window (
-  cairo_t $cr,
+  cairo_t   $cr,
   GtkWidget $widget,
   GdkWindow $window
 )
@@ -333,7 +334,7 @@ sub gtk_widget_add_tick_callback (
   GtkWidget $widget,
   &callback (GtkWidget, GdkFrameClock, gpointer --> gboolean),
   gpointer $user_data,
-  &notify (gpointer) 
+  &notify (gpointer)
 )
   returns guint
   is native(gtk)
@@ -1450,7 +1451,7 @@ sub gtk_widget_set_margin_start (GtkWidget $widget, gint $margin)
   is export
 { * }
 
-sub gtk_widget_set_events (GtkWidget $widget, gint $events)
+sub gtk_widget_set_events (GtkWidget $widget, guint $events)
   is native(gtk)
   is export
 { * }

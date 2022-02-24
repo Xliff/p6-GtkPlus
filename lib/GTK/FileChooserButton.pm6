@@ -10,8 +10,8 @@ use GTK::Box;
 
 use GTK::Roles::FileChooser;
 
-our subset FileChooserButtonAncestry
-  where GtkFileChooserButton | GtkFileChooser | BoxAncestry;
+our subset GtkFileChooserButtonAncestry is export of Mu
+  where GtkFileChooserButton | GtkFileChooser | GtkBoxAncestry;
 
 class GTK::FileChooserButton is GTK::Box {
   also does GTK::Roles::FileChooser;
@@ -24,36 +24,33 @@ class GTK::FileChooserButton is GTK::Box {
     $o;
   }
 
-  submethod BUILD(:$chooser) {
+  submethod BUILD (:$chooser) {
+    self.setGtkFileChooserButton($chooser) if $chooser;
+  }
+
+  method setGtkFileChooserButton (GtkFileChooserButtonAncestry $_) {
     my $to-parent;
-    given $chooser {
-      when FileChooserButtonAncestry {
-        $!fcb = do {
-          when GtkFileChooserButton {
-            $to-parent = cast(GtkBin, $_);
-            $_;
-          }
-          when GtkFileChooser {
-            $!fc = $_;                            # GTK::Roles::FileChooser
-            $to-parent = cast(GtkBin, $_);
-            cast(GtkFileChooserButton, $_);
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkFileChooserButton, $_);
-          }
-        }
-        self.setBox($to-parent);
+
+    $!fcb = do {
+      when GtkFileChooserButton {
+        $to-parent = cast(GtkBin, $_);
+        $_;
       }
-      when GTK::FileChooserButton {
+      when GtkFileChooser {
+        $!fc = $_;                            # GTK::Roles::FileChooser
+        $to-parent = cast(GtkBin, $_);
+        cast(GtkFileChooserButton, $_);
       }
       default {
+        $to-parent = $_;
+        cast(GtkFileChooserButton, $_);
       }
     }
+    self.setGtkBox($to-parent);
     $!fc //= cast(GtkFileChooser, $!fcb);   # GTK::Roles::FileChooser
   }
 
-  multi method new (FileChooserButtonAncestry $chooser, :$ref = True) {
+  multi method new (GtkFileChooserButtonAncestry $chooser, :$ref = True) {
     return Nil unless $chooser;
 
     my $o = self.bless(:$chooser);

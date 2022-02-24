@@ -129,6 +129,14 @@ sub MAIN (
   say "\nOther dependencies are:\n";
   say @others.unique.sort.join("\n");
 
+  sub writeLog {
+    if $log && $no-save.not {
+      'stats'.IO.add($name).spurt($*LOG);
+      # Also write to the historical default for error checking purposes!
+      $*CWD.add('LastBuildResults').spurt($*LOG);
+    }
+  }
+
   sub space($a) {
     ' ' x ($a.chars % 8);
   }
@@ -186,6 +194,8 @@ sub MAIN (
       @threads .= grep({ .status ~~ Planned });
     }
 
+    signal($_).tap({ writeLog; exit }) for SIGINT, SIGTERM;
+
     my $*ERROR = False;
     # Build code begins here.
     my $*SKIP = $start-at ??
@@ -224,8 +234,17 @@ sub MAIN (
       # If no more compile jobs and still dependencies, then something is
       # very wrong!
       if %nodes{$n} && %nodes{$n}<edges>.elems && !@threads {
-        die "Cannot start $n due to missed dependencies {
-             %nodes{$n}<edges>.join(', ') }";
+        @buildList.unshift: $_ for %nodes{$n}<edges>[];
+        %nodes{$n}<recompiles>++;
+        my $remaining-nodes = %nodes{$n}<edges>.join(', ');
+        if (%nodes{$n}<recompiles> // 0) < 5 {
+          say "Attempting to recompole missed dependencies for $n:\n{
+                $remaining-nodes }";
+        } else {
+          die "Could not satisfy dependencies for {
+               $n }. The following compunits would not compile {
+               $remaining-nodes }";
+        }
       }
 
       # Start threads until we have a blocker...or we run out of threads.
@@ -264,11 +283,7 @@ sub MAIN (
       $name = getName;
     }
 
-    if $log && $no-save.not {
-      'stats'.IO.add($name).spurt($*LOG);
-      # Also write to the historical default for error checking purposes!
-      $*CWD.add('LastBuildResults').spurt($*LOG);
-    }
+    LEAVE writeLog;
   }
 }
 
@@ -281,8 +296,10 @@ sub run-compile ($module, $thread) {
 
     if $proc.exitcode {
       say $proc.out;
-      say $proc.err;
-      $*ERROR = True;
+      say (my $err = $proc.err);
+
+      # cw: Do not consider this fucking error fatal!
+      $*ERROR = True unless $err.contains('SET-SELF');
     }
 
     output(

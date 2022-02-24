@@ -2,76 +2,76 @@ use v6.c;
 
 #use lib <t .>;
 #use ui_to_code;
-#use Grammar::Tracer;
+use Grammar::Tracer;
 #use Data::Dump::Tree;
 
 grammar BuilderGrammar {
-  rule TOP {
-    '<?xml version="1.0" encoding="UTF-8"?>'
+    rule TOP {
+        '<?xml version="1.0" encoding="UTF-8"?>'
     <comment>?
     '<interface>' <pieces>+ '</interface>'
     <comment>?
   }
-  rule pieces {
-    <object> || <template> || <comment> || <requires>
+    rule pieces {
+        <object> || <template> || <comment> || <requires>
   }
-  rule comment {
-    '<!--' .+ '-->'
+    rule comment {
+        '<!--' .+ '-->'
   }
-  rule requires {
-    '<requires'  <attr>+ %% \s+ '/>'
+    rule requires {
+        '<requires'  <attr>+ %% \s+ '/>'
   }
-  rule object {
-    '<object' <attr>+ %% \s+ '>'
+    rule object {
+        '<object' <attr>+ %% \s+ '>'
     [
-      <child>      |
-      <property>   |
-      <packing>    |
-      <signal>     |
-      <attributes> |
-      <style>
+        <child>      |
+        <property>   |
+        <packing>    |
+        <signal>     |
+        <attributes> |
+        <style>
     ]+
     '</object>'
   }
-  rule template {
-    '<template' <attr>+ %% \s+ '>'
+    rule template {
+        '<template' <attr>+ %% \s+ '>'
     <child>*
     '</template>'
   }
-  rule child {
-    '<child'(\s+ <attr>+ %% \s+)?'>'
+    rule child {
+        '<child'(\s+ <attr>+ %% \s+)?'>'
     [ <object> | <packing> | '<placeholder'\s*'/>' ]*
     '</child>'
     |
-    '<child' <attr>+ %% \s+ '/>'
+        '<child' <attr>+ %% \s+ '/>'
   }
-  rule style {
-    '<style>' '<class' <attr>'/>' '</style>'
+    rule style {
+        '<style>' '<class' <attr>'/>' '</style>'
   }
-  rule attributes {
-    '<attributes>' <attribute>+ '</attributes>'
+    rule attributes {
+        '<attributes>' <attribute>+ '</attributes>'
   }
-  rule attribute {
-    '<attribute' <attr>+ %% \s+ '/>'
+    rule attribute {
+        '<attribute' <attr>+ %% \s+ '/>'
   }
-  rule signal {
-    '<signal' <attr>+ %% \s+ '/>'
+    rule signal {
+        '<signal' <attr>+ %% \s+ '/>'
   }
-  rule packing {
-    '<packing>' <property>+ '</packing>'
+    rule packing {
+        '<packing>' <property>+ '</packing>'
   }
-  rule property {
-    '<property' <attr>+ %% \s+ '>'<value>'</property>'
+    rule property {
+        '<property' <attr>+ %% \s+ '>'<value>'</property>'
   }
   token attr {
-    # Double or single quotes
-    <name=ident>'="'<val=ident>'"'
+      # Double or single quotes
+      <name=ident>'="' $<val>=[ <-[\"]>+ '"' ]
   }
   token ident {
-    <[A..Za..z0..9_\-\+\.]>+
+      <[A..Za..z0..9_\-\+\.]>+
   }
   token value {
-    <[A..Za..z0..9_:\-\.\@\/\&\;] + :space>+
+      <[A..Za..z0..9_\:\-\.\@\/\&\;]+ :space>+
   }
 }
 
@@ -207,5 +207,8 @@ sub MAIN($filename) {
   }
   my $bw = GTK::BuilderWidgets.new(var => 'b');
   my $p = BuilderGrammar.parse($contents, actions => BuilderActions);
-  say $bw.get-code-list($p.made).join("\n");
+
+  dd $p;
+
+  #say $bw.get-code-list($p.made).join("\n");
 }

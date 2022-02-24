@@ -7,8 +7,8 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-our subset InfoBarAncestry is export of Mu
-  where GtkInfoBar | BoxAncestry;
+our subset GtkInfoBarAncestry is export of Mu
+  where GtkInfoBar | GtkBoxAncestry;
 
 class GTK::InfoBar is GTK::Box {
   has GtkInfoBar $!ib is implementor;
@@ -20,30 +20,24 @@ class GTK::InfoBar is GTK::Box {
   }
 
   submethod BUILD(:$infobar) {
-    given $infobar {
-      when InfoBarAncestry {
-        self.setInfoBar($infobar);
-      }
-      when GTK::InfoBar {
-      }
-      default {
-      }
-    }
+    self.setGtkInfoBar($infobar);
   }
 
-  method setInfoBar (InfoBarAncestry $_) {
+  method setGtkInfoBar (GtkInfoBarAncestry $_) {
     my $to-parent;
+
     $!ib = do {
       when GtkInfoBar {
         $to-parent = cast(GtkBox, $_);
         $_;
       }
+
       default {
         $to-parent = $_;
         cast(GtkInfoBar, $_);
       }
     };
-    self.setBox($to-parent);
+    self.setGtkBox($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkInfoBar
@@ -53,7 +47,7 @@ class GTK::InfoBar is GTK::Box {
     >
   { $!ib }
 
-  multi method new (InfoBarAncestry $infobar, :$ref = True) {
+  multi method new (GtkInfoBarAncestry $infobar, :$ref = True) {
     my $o = self.bless(:$infobar);
     $o.ref if $ref;
     $o;

@@ -400,6 +400,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 + LibSecret
 - LibGWeather
 + LibGDA
+- LibGVC
 - LibGOM
 - Gnome Keyring
 - LibRest

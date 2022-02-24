@@ -23,10 +23,10 @@ class GTK::TargetList {
 
   }
 
-  method setGtkTargetEntry (GtkTargetEntryAncestry $_) {
+  method setGtkTargetEntry (GtkTargetListAncestry $_) {
     my $to-parent;
 
-    $!tl = do given {
+    $!tl = do {
       when GtkTargetList {
         $to-parent = cast(GObject, $_);
         $_;

@@ -8,8 +8,8 @@ use GTK::Raw::Types;
 
 use GTK::Box;
 
-our subset ButtonBoxAncestry is export
-  where GtkButtonBox | BoxAncestry;
+our subset GtkButtonBoxAncestry is export
+  where GtkButtonBox | GtkBoxAncestry;
 
 class GTK::ButtonBox is GTK::Box {
   has GtkButtonBox $!bb is implementor;
@@ -20,27 +20,25 @@ class GTK::ButtonBox is GTK::Box {
     $o;
   }
 
-  submethod BUILD(:$buttonbox) {
+  submethod BUILD( :$buttonbox ) {
+    self.setGtkButtonBox($buttonbox) if $buttonbox;
+  }
+
+  method setGtkButtonBox (GtkButtonBoxAncestry $_) {
     my $to-parent;
-    given $buttonbox {
-      when ButtonBoxAncestry {
-        $!bb = do {
-          when GtkButtonBox {
-            $to-parent = nativecast(GtkBox, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkButtonBox, $_);
-          }
-        }
-        self.setBox($to-parent);
+
+    $!bb = do {
+      when GtkButtonBox {
+        $to-parent = nativecast(GtkBox, $_);
+        $_;
       }
-      when GTK::ButtonBox {
-      }
+
       default {
+        $to-parent = $_;
+        nativecast(GtkButtonBox, $_);
       }
     }
+    self.setBox($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkButtonBox
@@ -50,7 +48,7 @@ class GTK::ButtonBox is GTK::Box {
     >
   { $!bb }
 
-  multi method new (ButtonBoxAncestry $buttonbox, :$ref = True) {
+  multi method new (GtkButtonBoxAncestry $buttonbox, :$ref = True) {
     return Nil unless $buttonbox;
 
     my $o = self.bless(:$buttonbox);

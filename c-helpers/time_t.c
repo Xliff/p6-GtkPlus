@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <time.h>
 #include <glib.h>
+#include <stdbool.h>
 
 #include "gio/gio.h"
 
@@ -59,4 +60,5 @@ void main(int argc, char **argv) {
 
 	printf ("%ld %ld\n", sizeof(GClosure), sizeof(GCClosure) );
   printf ("%ld\n", sizeof(TestClosure) );
+  printf ("bool: %ld\n", sizeof(bool) );
 }

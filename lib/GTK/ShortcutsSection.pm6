@@ -8,7 +8,7 @@ use GLib::Value;
 use GTK::Box;
 
 our subset ShortcutsSectionAncestry is export
-  where GtkShortcutsSection | BoxAncestry;
+  where GtkShortcutsSection | GtkBoxAncestry;
 
 class GTK::ShortcutsSection is GTK::Box {
   has GtkShortcutsSection $!ss is implementor;
