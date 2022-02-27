@@ -4,12 +4,12 @@ use Method::Also;
 use NativeCall;
 
 use GLib::Roles::Object;
-use GTK::Raw::PaperSize;
-use GTK::Raw::Types;
+use GTK::Raw::PaperSize:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 # BOXED TYPE
 
-class GTK::PaperSize {
+class GTK::PaperSize:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkPaperSize $!ps is implementor;

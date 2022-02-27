@@ -3,19 +3,19 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Box;
-use GTK::Raw::Types;
+use GTK::Raw::Box:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
-use GTK::Container;
+use GTK::Container:ver<3.0.1146>;
 
 our subset GtkBoxAncestry is export
   where GtkBox | GtkOrientable | ContainerAncestry;
 
 my $default-spacing = 0;
 
-class GTK::Box is GTK::Container {
+class GTK::Box:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
 
   # Maybe make Widget a role that has $.w and all variants assign to it,

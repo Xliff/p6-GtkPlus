@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Overlay;
+unit package GTK::Raw::Overlay:ver<3.0.1146>;
 
 sub gtk_overlay_add_overlay (GtkOverlay $overlay, GtkWidget $widget)
   is native(gtk)

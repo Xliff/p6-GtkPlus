@@ -4,19 +4,19 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Dialog::Raw::AppChooser;
-use GTK::Raw::Types;
+use GTK::Dialog::Raw::AppChooser:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Dialog;
+use GTK::Dialog:ver<3.0.1146>;
 
-use GTK::Roles::AppChooser;
+use GTK::Roles::AppChooser:ver<3.0.1146>;
 
 my subset Ancestry
   where GtkAppChooserDialog | GtkAppChooser | GtkDialog | GtkWindow |
         GtkContainer        | GtkBuilder    | GtkWidget;
 
-class GTK::Dialog::AppChooser is GTK::Dialog {
+class GTK::Dialog::AppChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::AppChooser;
 
   has GtkAppChooserDialog $!acd is implementor;

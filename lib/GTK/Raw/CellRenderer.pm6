@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::CellRenderer;
+unit package GTK::Raw::CellRenderer:ver<3.0.1146>;
 
 sub gtk_cell_renderer_activate (
   GtkCellRenderer $cell,

@@ -2,22 +2,22 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::SpinButton;
-use GTK::Raw::Types;
+use GTK::Raw::SpinButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Adjustment;
-use GTK::Entry;
-use GTK::Widget;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Entry:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
-use GTK::Roles::Signals::SpinButton;
+use GTK::Roles::Signals::SpinButton:ver<3.0.1146>;
 
 my subset Ancestry
   where GtkSpinButton | GtkOrientable | GtkEntry  | GtkCellEditable |
         GtkEditable   | GtkBuildable  | GtkWidget;
 
-class GTK::SpinButton is GTK::Entry {
+class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::SpinButton;
 

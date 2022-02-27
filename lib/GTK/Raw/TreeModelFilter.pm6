@@ -2,9 +2,9 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TreeModelFilter;
+unit package GTK::Raw::TreeModelFilter:ver<3.0.1146>;
 
 sub gtk_tree_model_filter_clear_cache (GtkTreeModelFilter $filter)
   is native(gtk)

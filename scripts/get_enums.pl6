@@ -78,6 +78,10 @@ sub MAIN ($dir?, :$file) {
   my %etype;
   for @files -> $file {
     say "Checking { $file } ...";
+    
+    # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error
+    next if $file.ends-with('Xge.h');
+
     my $contents = $file.IO.slurp;
 
     # Remove preprocessor directives.

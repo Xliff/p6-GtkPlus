@@ -1,6 +1,6 @@
 use v6.c;
 
-role GTK::Roles::Protection {
+role GTK::Roles::Protection:ver<3.0.1146> {
   has @!prefixes;
 
   # cw: This is a HACK, but it should work with careful use.

@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::AppButton;
+unit package GTK::Raw::AppButton:ver<3.0.1146>;
 
 sub gtk_app_chooser_button_append_custom_item (GtkAppChooserButton $self, gchar $name, gchar $label, GIcon $icon)
   is native(gtk)

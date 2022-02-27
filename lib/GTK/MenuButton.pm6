@@ -2,20 +2,20 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::MenuButton;
-use GTK::Raw::Types;
-use GTK::Raw::Widget;
+use GTK::Raw::MenuButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Widget:ver<3.0.1146>;
 
 use GIO::MenuModel;
-use GTK::Container;
-use GTK::Menu;
-use GTK::Popover;
-use GTK::ToggleButton;
+use GTK::Container:ver<3.0.1146>;
+use GTK::Menu:ver<3.0.1146>;
+use GTK::Popover:ver<3.0.1146>;
+use GTK::ToggleButton:ver<3.0.1146>;
 
 our subset MenuButtonAncestry is export
   where GtkMenuButton | ToggleButtonAncestry;
 
-class GTK::MenuButton is GTK::ToggleButton {
+class GTK::MenuButton:ver<3.0.1146> is GTK::ToggleButton {
   has GtkMenuButton $!mb is implementor;
 
   method bless(*%attrinit) {

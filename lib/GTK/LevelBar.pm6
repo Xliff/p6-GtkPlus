@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::LevelBar;
-use GTK::Raw::Types;
+use GTK::Raw::LevelBar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset LevelBarAncestry is export
   where GtkLevelBar | GtkOrientable | GtkWidgetAncestry;
 
-class GTK::LevelBar is GTK::Widget {
+class GTK::LevelBar:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Orientable;
 
   has GtkLevelBar $!lb is implementor;

@@ -4,18 +4,18 @@ use Method::Also;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::Label;
-use GTK::Raw::ProgressBar;
-use GTK::Raw::Types;
+use GTK::Raw::Label:ver<3.0.1146>;
+use GTK::Raw::ProgressBar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset ProgressBarAncestry is export
   where GtkProgressBar | GtkOrientable | GtkWidgetAncestry;
 
-class GTK::ProgressBar is GTK::Widget {
+class GTK::ProgressBar:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Orientable;
 
   has GtkProgressBar $!bar is implementor;

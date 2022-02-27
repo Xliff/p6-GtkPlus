@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::PrintJob;
+unit package GTK::Raw::PrintJob:ver<3.0.1146>;
 
 sub gtk_print_job_get_page_ranges (GtkPrintJob $job, gint $n_ranges)
   returns GtkPageRange

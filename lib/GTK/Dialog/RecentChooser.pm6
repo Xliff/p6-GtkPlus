@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Dialog;
+use GTK::Dialog:ver<3.0.1146>;
 
-use GTK::Roles::RecentChooser;
+use GTK::Roles::RecentChooser:ver<3.0.1146>;
 
 our subset RecentChooserDialogAncestry is export
   where GtkRecentChooserDialog | GtkRecentChooser | DialogAncestry;
 
-class GTK::Dialog::RecentChooser is GTK::Dialog {
+class GTK::Dialog::RecentChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::RecentChooser;
 
   has GtkRecentChooserDialog $!rcd is implementor;

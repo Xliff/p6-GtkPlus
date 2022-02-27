@@ -4,17 +4,17 @@ use Method::Also;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::ToolItem;
-use GTK::Raw::Types;
+use GTK::Raw::ToolItem:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
-use GTK::MenuItem;
-use GTK::SizeGroup;
+use GTK::Bin:ver<3.0.1146>;
+use GTK::MenuItem:ver<3.0.1146>;
+use GTK::SizeGroup:ver<3.0.1146>;
 
 our subset GtkToolItemAncestry is export
   where GtkToolItem | BinAncestry;
 
-class GTK::ToolItem is GTK::Bin {
+class GTK::ToolItem:ver<3.0.1146> is GTK::Bin {
   has GtkToolItem $!ti is implementor;
 
   # method bless(*%attrinit) {

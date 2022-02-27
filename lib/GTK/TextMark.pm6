@@ -2,13 +2,13 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TextMark;
-use GTK::Raw::Types;
+use GTK::Raw::TextMark:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::Types;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-class GTK::TextMark {
+class GTK::TextMark:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Types;
 

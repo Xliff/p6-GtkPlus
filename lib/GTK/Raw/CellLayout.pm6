@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::CellLayout;
+unit package GTK::Raw::CellLayout:ver<3.0.1146>;
 
 sub gtk_cell_layout_add_attribute (
   GtkCellLayout $cell_layout,

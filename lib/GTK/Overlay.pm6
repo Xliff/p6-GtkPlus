@@ -2,16 +2,16 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Overlay;
-use GTK::Raw::Types;
+use GTK::Raw::Overlay:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Overlay;
+use GTK::Roles::Signals::Overlay:ver<3.0.1146>;
 
 our subset OverlayAncestry where GtkOverlay | BinAncestry;
 
-class GTK::Overlay is GTK::Bin {
+class GTK::Overlay:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Signals::Overlay;
 
   has GtkOverlay $!o is implementor;

@@ -1,6 +1,6 @@
 use v6.c;
 
-unit package GTK::TypeClass;
+unit package GTK::TypeClass:ver<3.0.1146>;
 
 our %typeClass is export = (
   GdkDragContext          => 'GTK::DragContext',

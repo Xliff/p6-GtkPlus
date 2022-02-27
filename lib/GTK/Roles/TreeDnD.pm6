@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::TreeDnD;
-use GTK::Raw::Types;
+use GTK::Raw::TreeDnD:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::TreeDragSource  {
+role GTK::Roles::TreeDragSource:ver<3.0.1146>  {
   has GtkTreeDragSource $!ds;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -37,7 +37,7 @@ role GTK::Roles::TreeDragSource  {
 
 }
 
-role GTK::Roles::TreeDragDest  {
+role GTK::Roles::TreeDragDest:ver<3.0.1146>  {
   has GtkTreeDragDest $!dd;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

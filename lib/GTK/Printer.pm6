@@ -4,17 +4,17 @@ use Method::Also;
 
 use GLib::GList;
 
-use GTK::Raw::Printer;
-use GTK::Raw::Types;
+use GTK::Raw::Printer:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::PageSetup;
+use GTK::PageSetup:ver<3.0.1146>;
 
 use GLib::Roles::Properties;
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-class GTK::Printer {
+class GTK::Printer:ver<3.0.1146> {
   also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;

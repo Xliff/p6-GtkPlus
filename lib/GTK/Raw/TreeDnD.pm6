@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TreeDnD;
+unit package GTK::Raw::TreeDnD:ver<3.0.1146>;
 
 sub gtk_tree_drag_source_drag_data_delete (
   GtkTreeDragSource $drag_source,

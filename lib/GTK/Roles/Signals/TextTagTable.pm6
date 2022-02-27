@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::Subs;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
 
-role GTK::Roles::Signals::TextTagTable {
+role GTK::Roles::Signals::TextTagTable:ver<3.0.1146> {
   has %!signals-ttt;
 
   # Copy for each signal.

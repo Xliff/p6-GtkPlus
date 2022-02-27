@@ -3,19 +3,19 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Raw::RecentInfo;   # Contains Raw calls for ::RecentManager
+use GTK::Raw::RecentInfo:ver<3.0.1146>;   # Contains Raw calls for ::RecentManager
 
 use GLib::GList;
 use GLib::Value;
-use GTK::RecentInfo;
+use GTK::RecentInfo:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
 use GLib::Roles::Properties;
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-class GTK::RecentManager {
+class GTK::RecentManager:ver<3.0.1146> {
   also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
 

@@ -5,18 +5,18 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::ToolItemGroup;
-use GTK::Raw::Types;
+use GTK::Raw::ToolItemGroup:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
-use GTK::ToolItem;
+use GTK::Container:ver<3.0.1146>;
+use GTK::ToolItem:ver<3.0.1146>;
 
 our subset ToolItemGroupAncestry is export
   where GtkToolItemGroup | GtkToolShell | ContainerAncestry;
 
-use GTK::Roles::ToolShell;
+use GTK::Roles::ToolShell:ver<3.0.1146>;
 
-class GTK::ToolItemGroup is GTK::Container {
+class GTK::ToolItemGroup:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::ToolShell;
 
   has GtkToolItemGroup $!tig is implementor;

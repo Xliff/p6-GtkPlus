@@ -4,21 +4,21 @@ use Method::Also;
 
 use GLib::GList;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Raw::FlowBox;
+use GTK::Raw::FlowBox:ver<3.0.1146>;
 
-use GTK::FlowBoxChild;
-use GTK::Container;
-use GTK::Widget;
+use GTK::FlowBoxChild:ver<3.0.1146>;
+use GTK::Container:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
-use GTK::Roles::Signals::FlowBox;
+use GTK::Roles::Orientable:ver<3.0.1146>;
+use GTK::Roles::Signals::FlowBox:ver<3.0.1146>;
 
 our subset FlowBoxAncestry is export
   where GtkFlowBox | GtkOrientable | ContainerAncestry;
 
-class GTK::FlowBox is GTK::Container {
+class GTK::FlowBox:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::FlowBox;
 

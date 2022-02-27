@@ -2,9 +2,9 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::StyleProvider {
+role GTK::Roles::StyleProvider:ver<3.0.1146> {
   has GtkStyleProvider $!sp;
 
   submethod BUILD(:$style) {

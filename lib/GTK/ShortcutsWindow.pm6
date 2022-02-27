@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Window;
+use GTK::Window:ver<3.0.1146>;
 
 our subset ShortcutsWindowAncestry is export
   when GtkShortcutsWindow | WindowAncestry;
 
-class GTK::ShortcutsWindow is GTK::Window {
+class GTK::ShortcutsWindow:ver<3.0.1146> is GTK::Window {
   has GtkShortcutsWindow $!sw is implementor;
 
   method bless(*%attrinit) {

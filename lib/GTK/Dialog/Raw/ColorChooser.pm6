@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Dialog::Raw::ColorChooser;
+unit package GTK::Dialog::Raw::ColorChooser:ver<3.0.1146>;
 
 sub gtk_color_chooser_dialog_get_type ()
   returns GType

@@ -7,16 +7,16 @@ use GLib::GList;
 use GDK::Pixbuf;
 use GDK::RGBA;
 
-use GTK::Raw::IconTheme;
-use GTK::Raw::Types;
+use GTK::Raw::IconTheme:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::IconInfo;
+use GTK::IconInfo:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 use GLib::Roles::ListData;   # Not to be composed in GTK::IconTheme
 use GLib::Roles::Object;
 
-class GTK::IconTheme {
+class GTK::IconTheme:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
   also does GLib::Roles::Object;
 

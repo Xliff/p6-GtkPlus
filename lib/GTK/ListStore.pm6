@@ -3,24 +3,24 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::ListStore;
-use GTK::Raw::Types;
+use GTK::Raw::ListStore:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::TreeIter;
+use GTK::TreeIter:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 use GLib::Roles::TypedBuffer;
-use GTK::Roles::Buildable;
-use GTK::Roles::TreeModel;
-use GTK::Roles::TreeSortable;
+use GTK::Roles::Buildable:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
+use GTK::Roles::TreeSortable:ver<3.0.1146>;
 
 
 my subset GValues where GLib::Value | GValue;
 
 # YYY - This compunit needs another review! cw - 2019 01 24
 
-class GTK::ListStore {
+class GTK::ListStore:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   also does GTK::Roles::Buildable;
@@ -236,7 +236,7 @@ class GTK::ListStore {
   }
 
   method set_column_types (*@types) is also<set-column-types> {
-    die 'Cannot use GTK::ListStore.set_column_types after store has been accessed.'
+    die 'Cannot use GTK::ListStore:ver<3.0.1146>.set_column_types after store has been accessed.'
       if $!accessed;
     my @t_keys = @types.map({
       die 'Elements of @types must be integers, and must not exceeed column size'

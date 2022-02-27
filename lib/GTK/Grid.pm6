@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Grid;
-use GTK::Raw::Types;
+use GTK::Raw::Grid:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
-use GTK::Widget;
+use GTK::Container:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset GridAncestry is export
   where GtkGrid | GtkOrientable | ContainerAncestry;
 
-class GTK::Grid is GTK::Container {
+class GTK::Grid:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
 
   has GtkGrid $!g is implementor;

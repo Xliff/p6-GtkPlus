@@ -5,22 +5,22 @@ use Method::Also;
 use Pango::Raw::Types;
 use Pango::AttrList;
 
-use GTK::Raw::Entry;
-use GTK::Raw::Types;
+use GTK::Raw::Entry:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Adjustment;
-use GTK::Widget;
-use GTK::EntryBuffer;
-use GTK::EntryCompletion;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
+use GTK::EntryBuffer:ver<3.0.1146>;
+use GTK::EntryCompletion:ver<3.0.1146>;
 
-use GTK::Roles::Editable;
-use GTK::Roles::Signals::Entry;
+use GTK::Roles::Editable:ver<3.0.1146>;
+use GTK::Roles::Signals::Entry:ver<3.0.1146>;
 
 our subset EntryAncestry is export
   where GtkEntry | GtkEditable | GtkWidgetAncestry;
 
-class GTK::Entry is GTK::Widget {
+class GTK::Entry:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Editable;
   also does GTK::Roles::Signals::Entry;
 

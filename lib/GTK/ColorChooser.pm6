@@ -5,19 +5,19 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::ColorChooser;
-use GTK::Raw::Label;
-use GTK::Raw::Types;
+use GTK::Raw::ColorChooser:ver<3.0.1146>;
+use GTK::Raw::Label:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
-use GTK::Roles::ColorChooser;
+use GTK::Roles::ColorChooser:ver<3.0.1146>;
 
 our subset GtkColorChooserAncestry is export
   where GtkColorChooserWidget | GtkColorChooser | GtkBoxAncestry;
 
-class GTK::ColorChooser is GTK::Box {
+class GTK::ColorChooser:ver<3.0.1146> is GTK::Box {
   also does GTK::Roles::ColorChooser;
 
   has GtkColorChooserWidget $!ccw is implementor;

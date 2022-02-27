@@ -5,12 +5,12 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::ToolShell;
-use GTK::Raw::Types;
+use GTK::Raw::ToolShell:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::SizeGroup;
+use GTK::SizeGroup:ver<3.0.1146>;
 
-role GTK::Roles::ToolShell {
+role GTK::Roles::ToolShell:ver<3.0.1146> {
   has GtkToolShell $!shell;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

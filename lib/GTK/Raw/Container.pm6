@@ -4,9 +4,9 @@ use Cairo;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Container;
+unit package GTK::Raw::Container:ver<3.0.1146>;
 
 sub gtk_container_unset_focus_chain (GtkContainer $container)
   is native(gtk)

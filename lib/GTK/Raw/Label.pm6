@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 use Pango::Raw::Types;
 
-unit package GTK::Raw::Label;
+unit package GTK::Raw::Label:ver<3.0.1146>;
 
 sub gtk_label_get_current_uri (GtkLabel $l)
   returns Str

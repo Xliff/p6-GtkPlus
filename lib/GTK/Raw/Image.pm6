@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Image;
+unit package GTK::Raw::Image:ver<3.0.1146>;
 
 sub gtk_image_clear (GtkImage $image)
   is native(gtk)

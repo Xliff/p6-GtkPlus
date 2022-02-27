@@ -2,12 +2,12 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Adjustment;
-use GTK::Raw::Types;
+use GTK::Raw::Adjustment:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
-class GTK::Adjustment {
+class GTK::Adjustment:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkAdjustment $!adj is implementor;

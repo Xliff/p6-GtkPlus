@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ListBox;
-use GTK::Raw::Types;
+use GTK::Raw::ListBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
-use GTK::Roles::Actionable;
+use GTK::Roles::Actionable:ver<3.0.1146>;
 
 our subset GtkListBoxRowAncestry is export of Mu
   where GtkListBoxRow | GtkActionable | BinAncestry;
 
-class GTK::ListBoxRow is GTK::Bin {
+class GTK::ListBoxRow:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Actionable;
 
   has GtkListBoxRow $!lbr is implementor;

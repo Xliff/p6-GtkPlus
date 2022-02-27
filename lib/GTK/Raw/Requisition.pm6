@@ -6,11 +6,11 @@ use MONKEY-TYPING;
 
 use GLib::Raw::Definitions;
 use GLib::Raw::Subs;
-use GTK::Raw::Definitions;
-use GTK::Raw::Structs;
-use GTK::Raw::Subs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
 
-unit package GTK::Raw::Requisition;
+unit package GTK::Raw::Requisition:ver<3.0.1146>;
 
 augment class GtkRequisition {
 

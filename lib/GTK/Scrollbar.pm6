@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::Scrollbar;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Scrollbar:ver<3.0.1146>;
 
-use GTK::Range;
+use GTK::Range:ver<3.0.1146>;
 
 our subset ScrollbarAncestry is export
   where GtkScrollbar | RangeAncestry;
 
-class GTK::Scrollbar is GTK::Range {
+class GTK::Scrollbar:ver<3.0.1146> is GTK::Range {
   has GtkScrollbar $!sb is implementor;
 
   method bless(*%attrinit) {

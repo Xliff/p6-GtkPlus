@@ -2,20 +2,20 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ToolPalette;
-use GTK::Raw::Types;
+use GTK::Raw::ToolPalette:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
-use GTK::Adjustment;
-use GTK::Container;
-use GTK::ToolItemGroup;
-use GTK::ToolItem;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Container:ver<3.0.1146>;
+use GTK::ToolItemGroup:ver<3.0.1146>;
+use GTK::ToolItem:ver<3.0.1146>;
 
 our subset ToolPaletteAncestry is export
   where GtkToolPalette | GtkOrientable | ContainerAncestry;
 
-class GTK::ToolPalette is GTK::Container {
+class GTK::ToolPalette:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
 
   has GtkToolPalette $!tp is implementor;

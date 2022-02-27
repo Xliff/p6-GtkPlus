@@ -3,8 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::IconTheme;
-use GTK::Raw::Types;
+use GTK::Raw::IconTheme:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GDK::RGBA;
 use GDK::Pixbuf;
@@ -13,7 +13,7 @@ use GLib::Roles::Object;
 
 # Opaque struct
 
-class GTK::IconInfo {
+class GTK::IconInfo:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkIconInfo $!ii is implementor;

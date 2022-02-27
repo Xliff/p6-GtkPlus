@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Dialog::Raw::PageSetupUnix;
+unit package GTK::Dialog::Raw::PageSetupUnix:ver<3.0.1146>;
 
 sub gtk_page_setup_unix_dialog_get_type ()
   returns GType

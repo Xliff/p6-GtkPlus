@@ -4,17 +4,17 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Raw::AccelLabel;
-use GTK::Raw::Types;
+use GTK::Raw::AccelLabel:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Label;
+use GTK::Label:ver<3.0.1146>;
 
 our subset GtkAccelLabelAncestry is export
   where GtkAccelLabel | GtkLabelAncestry;
 
 constant AccelLabelAncestry is export = GtkAccelLabelAncestry;
 
-class GTK::AccelLabel is GTK::Label {
+class GTK::AccelLabel:ver<3.0.1146> is GTK::Label {
   has GtkAccelLabel $!al is implementor;
 
   method bless(*%attrinit) {

@@ -3,14 +3,14 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
-use GTK::Raw::RecentInfo;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::RecentInfo:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 use GIO::Roles::Icon;
 
 # STRUCT
-class GTK::RecentInfo {
+class GTK::RecentInfo:ver<3.0.1146> {
   has GtkRecentInfo $!ri is implementor;
 
   submethod BUILD (:$info) {

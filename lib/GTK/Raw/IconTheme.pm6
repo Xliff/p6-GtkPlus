@@ -4,9 +4,9 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::IconTheme;
+unit package GTK::Raw::IconTheme:ver<3.0.1146>;
 
 sub gtk_icon_theme_add_builtin_icon (
   gchar $icon_name,

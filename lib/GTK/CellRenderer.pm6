@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::CellRenderer;
-use GTK::Raw::Types;
+use GTK::Raw::CellRenderer:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GDK::RGBA;
 use GLib::Value;
 
 use GLib::Roles::Object;
-use GTK::Roles::Signals::CellRenderer;
+use GTK::Roles::Signals::CellRenderer:ver<3.0.1146>;
 
-class GTK::CellRenderer {
+class GTK::CellRenderer:ver<3.0.1146> {
   also does GLib::Roles::Object;
   #also does GTK::Roles::Data;
   also does GTK::Roles::Signals::CellRenderer;
@@ -21,8 +21,8 @@ class GTK::CellRenderer {
 
   method setCellRenderer(GtkCellRenderer $renderer) {
     return unless $renderer;
-    
-    say "CR: { $renderer // 'NIL' }";
+
+    #say "CR: { $renderer // 'NIL' }";
     self!setObject($!cr = $renderer);  # GLib::Roles::Properties
     #$!data = self.GObject;             # GTK::Roles::Data
   }

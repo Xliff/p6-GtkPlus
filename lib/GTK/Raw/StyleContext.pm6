@@ -4,10 +4,10 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 use Pango::Raw::Types;
 
-unit package GTK::Raw::StyleContext;
+unit package GTK::Raw::StyleContext:ver<3.0.1146>;
 
 sub gtk_style_context_add_class (GtkStyleContext $context, gchar $class_name)
   is native(gtk)

@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Frame;
+unit package GTK::Raw::Frame:ver<3.0.1146>;
 
 sub gtk_frame_get_label_align (
   GtkFrame $frame,

@@ -2,10 +2,10 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TargetEntry;
-use GTK::Raw::Types;
+use GTK::Raw::TargetEntry:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-class GTK::TargetEntry {
+class GTK::TargetEntry:ver<3.0.1146> {
   has GtkTargetEntry $!te is implementor;
 
   submethod BUILD(:$entry) {

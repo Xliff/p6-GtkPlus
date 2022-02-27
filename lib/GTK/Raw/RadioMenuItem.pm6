@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::RadioMenuItem;
+unit package GTK::Raw::RadioMenuItem:ver<3.0.1146>;
 
 sub gtk_radio_menu_item_get_type ()
   returns GType

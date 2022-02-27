@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::AppChooser;
-use GTK::Raw::Types;
+use GTK::Raw::AppChooser:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::AppChooser  {
+role GTK::Roles::AppChooser:ver<3.0.1146>  {
   has GtkAppChooser $!ac;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

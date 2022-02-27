@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::WindowGroup;
+unit package GTK::Raw::WindowGroup:ver<3.0.1146>;
 
 sub gtk_window_group_add_window (
   GtkWindowGroup $window_group,

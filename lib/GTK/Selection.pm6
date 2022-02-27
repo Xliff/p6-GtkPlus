@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
-use GTK::Raw::Selection;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Selection:ver<3.0.1146>;
 
 use GDK::Display;
 use GDK::Pixbuf;
 
 use GLib::Roles::Object;
 
-class GTK::Selection {
+class GTK::Selection:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkSelectionData $!s is implementor;

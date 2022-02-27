@@ -6,6 +6,7 @@ if [ "$?" -ne "0" ]; then
   exit
 fi
 
+ln=1
 if [ "$1" == "--start-at" ]; then
   shift
   re='^[0-9]+$'
@@ -23,7 +24,7 @@ else
 fi
 
 /usr/bin/time -p /bin/bash -c '(
-  i=1; n=`wc -l BuildList | cut -f1 -d\ `; for a in `cat BuildList.now`; do
+  '"i=$ln"'; n=`wc -l BuildList | cut -f1 -d\ `; for a in `cat BuildList.now`; do
     (
     	echo " === $a === ($i/$n)"
 	    ./p6gtkexec -e "use $a" 2>&1

@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::FontButton;
-use GTK::Raw::Types;
+use GTK::Raw::FontButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Button;
+use GTK::Button:ver<3.0.1146>;
 
-use GTK::Roles::FontChooser;
+use GTK::Roles::FontChooser:ver<3.0.1146>;
 
 my subset FontButtonAncestry is export
   where GtkFontButton | GtkFontChooser | ButtonAncestry;
 
-class GTK::FontButton is GTK::Button {
+class GTK::FontButton:ver<3.0.1146> is GTK::Button {
   also does GTK::Roles::FontChooser;
 
   has GtkFontButton $!fb is implementor;

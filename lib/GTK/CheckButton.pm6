@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CheckButton;
-use GTK::Raw::Types;
+use GTK::Raw::CheckButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::ToggleButton;
+use GTK::ToggleButton:ver<3.0.1146>;
 
 our subset CheckButtonAncestry is export
   where GtkCheckButton | ToggleButtonAncestry;
 
-class GTK::CheckButton is GTK::ToggleButton {
+class GTK::CheckButton:ver<3.0.1146> is GTK::ToggleButton {
   has GtkCheckButton $!cb is implementor;
 
   method bless(*%attrinit) {

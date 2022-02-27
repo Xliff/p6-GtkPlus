@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Dialog;
+use GTK::Dialog:ver<3.0.1146>;
 
-use GTK::Roles::FileChooser;
+use GTK::Roles::FileChooser:ver<3.0.1146>;
 
 our subset FileChooserDialogAncestry is export
   where GtkFileChooserDialog | GtkFileChooser | DialogAncestry;
 
-class GTK::Dialog::FileChooser is GTK::Dialog {
+class GTK::Dialog::FileChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::FileChooser;
 
   has GtkFileChooserDialog $!fcd is implementor;

@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::LockButton;
-use GTK::Raw::Types;
+use GTK::Raw::LockButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Actionable;
+use GTK::Roles::Actionable:ver<3.0.1146>;
 
-use GTK::Button;
+use GTK::Button:ver<3.0.1146>;
 
 my subset LockButtonAncestry is export
   when GtkLockButton | GtkActionable  | ButtonAncestry;
 
-class GTK::LockButton is GTK::Button {
+class GTK::LockButton:ver<3.0.1146> is GTK::Button {
   also does GTK::Roles::Actionable;
 
   has GtkLockButton $!lb is implementor;

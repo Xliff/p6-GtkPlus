@@ -2,16 +2,16 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Revealer;
-use GTK::Raw::Types;
+use GTK::Raw::Revealer:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset RevealerAncestry is export
   where GtkRevealer | BinAncestry;
 
-class GTK::Revealer is GTK::Bin {
+class GTK::Revealer:ver<3.0.1146> is GTK::Bin {
   has GtkRevealer $!r is implementor;
 
   method bless(*%attrinit) {

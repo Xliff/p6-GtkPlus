@@ -3,20 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TreeSelection;
-use GTK::Raw::Types;
+use GTK::Raw::TreeSelection:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::TreeIter;
-use GTK::TreePath;
+use GTK::TreeIter:ver<3.0.1146>;
+use GTK::TreePath:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 use GLib::Roles::Object;
-use GTK::Roles::TreeModel;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
 
 # BOXED TYPE
 
-class GTK::TreeSelection {
+class GTK::TreeSelection:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;
   also does GLib::Roles::Object;

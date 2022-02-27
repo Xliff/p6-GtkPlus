@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Offscreen;
+unit package GTK::Raw::Offscreen:ver<3.0.1146>;
 
 sub gtk_offscreen_window_get_pixbuf (GtkOffscreen $offscreen)
   returns GdkPixbuf

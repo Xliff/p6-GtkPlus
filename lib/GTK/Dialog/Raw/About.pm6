@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Dialog::Raw::About;
+unit package GTK::Dialog::Raw::About:ver<3.0.1146>;
 
 sub gtk_about_dialog_add_credit_section (
   GtkAboutDialog $about,

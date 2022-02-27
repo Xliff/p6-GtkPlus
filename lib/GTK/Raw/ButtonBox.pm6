@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ButtonBox;
+unit package GTK::Raw::ButtonBox:ver<3.0.1146>;
 
 sub gtk_button_box_get_child_non_homogeneous (
   GtkButtonBox $widget,

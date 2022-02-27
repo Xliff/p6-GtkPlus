@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::SearchBar;
-use GTK::Raw::Types;
+use GTK::Raw::SearchBar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset SearchBarAncestry is export
   where GtkSearchBar | BinAncestry;
 
-class GTK::SearchBar is GTK::Bin {
+class GTK::SearchBar:ver<3.0.1146> is GTK::Bin {
   has GtkSearchBar $!sb is implementor;
 
   method bless(*%attrinit) {

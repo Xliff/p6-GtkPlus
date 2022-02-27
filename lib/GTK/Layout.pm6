@@ -2,19 +2,19 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Layout;
-use GTK::Raw::Types;
+use GTK::Raw::Layout:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 use GDK::Window;
-use GTK::Container;
+use GTK::Container:ver<3.0.1146>;
 
-use GTK::Roles::Scrollable;
+use GTK::Roles::Scrollable:ver<3.0.1146>;
 
 our subset LayoutAncestry is export
   where GtkLayout | GtkScrollable | ContainerAncestry;
 
-class GTK::Layout is GTK::Container {
+class GTK::Layout:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Scrollable;
 
   has GtkLayout $!l is implementor;

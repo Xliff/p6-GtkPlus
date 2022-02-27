@@ -4,18 +4,18 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Dialog::Raw::PageSetupUnix;
-use GTK::Raw::Types;
+use GTK::Dialog::Raw::PageSetupUnix:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Dialog;
-use GTK::PageSetup;
-use GTK::PrintSettings;
+use GTK::Dialog:ver<3.0.1146>;
+use GTK::PageSetup:ver<3.0.1146>;
+use GTK::PrintSettings:ver<3.0.1146>;
 
 my subset Ancestry
   where GtkPageSetupUnixDialog | GtkDialog    | GtkWindow | GtkBin |
         GtkContainer           | GtkBuildable | GtkWidget;
 
-class GTK::Dialog::PageSetupUnix is GTK::Dialog {
+class GTK::Dialog::PageSetupUnix:ver<3.0.1146> is GTK::Dialog {
   has GtkPageSetupUnixDialog $!psd is implementor;
 
   method bless(*%attrinit) {

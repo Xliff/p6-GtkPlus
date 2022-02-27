@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellRendererCombo;
-use GTK::Raw::Types;
+use GTK::Raw::CellRendererCombo:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellRendererText;
-use GTK::ComboBox;
-use GTK::Roles::TreeModel;
+use GTK::CellRendererText:ver<3.0.1146>;
+use GTK::ComboBox:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
 
 our subset CellRendererComboAncestry is export
   where GtkCellRendererCombo | CellRendererTextAncestry;
 
-class GTK::CellRendererCombo is GTK::CellRendererText {
+class GTK::CellRendererCombo:ver<3.0.1146> is GTK::CellRendererText {
   has GtkCellRendererCombo $!crc is implementor;
 
   method bless(*%attrinit) {

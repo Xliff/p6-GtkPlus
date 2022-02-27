@@ -2,22 +2,22 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ListBox;
-use GTK::Raw::Types;
+use GTK::Raw::ListBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
-use GTK::Adjustment;
-use GTK::Container;
-use GTK::ListBoxRow;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Container:ver<3.0.1146>;
+use GTK::ListBoxRow:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
-use GTK::Roles::Actionable;
-use GTK::Roles::Signals::ListBox;
+use GTK::Roles::Actionable:ver<3.0.1146>;
+use GTK::Roles::Signals::ListBox:ver<3.0.1146>;
 
 our subset ListBoxAncestry is export
   where GtkListBox | GtkActionable | ContainerAncestry;
 
-class GTK::ListBox is GTK::Container {
+class GTK::ListBox:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Actionable;
   also does GTK::Roles::Signals::ListBox;
 

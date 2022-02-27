@@ -7,15 +7,15 @@ use Pango::FontMap;
 use Pango::Layout;
 
 
-use GTK::Raw::PrintContext;
-use GTK::Raw::Types;
+use GTK::Raw::PrintContext:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::Types;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-use GTK::PageSetup;
+use GTK::PageSetup:ver<3.0.1146>;
 
-class GTK::PrintContext {
+class GTK::PrintContext:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Types;
 

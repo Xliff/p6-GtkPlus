@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Actionable;
-use GTK::Raw::Types;
+use GTK::Raw::Actionable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::Actionable {
+role GTK::Roles::Actionable:ver<3.0.1146> {
   has GtkActionable $!action;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

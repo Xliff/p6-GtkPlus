@@ -4,20 +4,20 @@ use Method::Also;
 use NativeCall;
 
 use GIO::Raw::Application;
-use GTK::Raw::Types;
-use GTK::Raw::Application;
-use GTK::Raw::Main;
-use GTK::Raw::Window;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Application:ver<3.0.1146>;
+use GTK::Raw::Main:ver<3.0.1146>;
+use GTK::Raw::Window:ver<3.0.1146>;
 
 use GIO::Application;
 use GIO::MenuModel;
-use GTK::ApplicationWindow;
-use GTK::Window;
+use GTK::ApplicationWindow:ver<3.0.1146>;
+use GTK::Window:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::Application;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::Application:ver<3.0.1146>;
 
-class GTK::Application is GIO::Application {
+class GTK::Application:ver<3.0.1146> is GIO::Application {
   my $gapp;
 
   has GtkApplication $!app     is implementor; # GtkApplication

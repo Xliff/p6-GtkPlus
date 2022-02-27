@@ -8,18 +8,18 @@ use Pango::FontDescription;
 use GDK::RGBA;
 use GDK::Screen;
 
-use GTK::Raw::StyleContext;
-use GTK::Raw::Subs;
-use GTK::Raw::Types;
+use GTK::Raw::StyleContext:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Render;
-use GTK::WidgetPath;
+use GTK::Render:ver<3.0.1146>;
+use GTK::WidgetPath:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-class GTK::StyleContext {
+class GTK::StyleContext:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
 

@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::MenuShell;
+unit package GTK::Raw::MenuShell:ver<3.0.1146>;
 
 sub gtk_menu_shell_activate_item (
   GtkMenuShell $menu_shell,

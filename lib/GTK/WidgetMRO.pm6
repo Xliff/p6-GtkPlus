@@ -1,9 +1,9 @@
 use v6.c;
 
-unit package GTK::WidgetMRO;
+unit package GTK::WidgetMRO:ver<3.0.1146>;
 
 # Number of times I've had to force THIS to recompile.
-constant forced = 0;
+constant forced = 55;
 
 our %w-mro is export = (
   'GTK::Widget' => ('GTK::Roles::Signals::Widget', 'GTK::Roles::Signals::Generic', 'GTK::Roles::Buildable', 'ATK::Roles::Implementor', 'GLib::Roles::Object', 'GLib::Roles::Bindable', 'GLib::Roles::Signals::GObject', 'GLib::Roles::Signals::Generic', 'Any', 'Mu'),

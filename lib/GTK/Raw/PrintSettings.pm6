@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::PrintSettings;
+unit package GTK::Raw::PrintSettings:ver<3.0.1146>;
 
 sub gtk_print_settings_copy (GtkPrintSettings $other)
   returns GtkPrintSettings

@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::CellAreaBox;
+unit package GTK::Raw::CellAreaBox:ver<3.0.1146>;
 
 sub gtk_cell_area_box_get_type ()
   returns GType

@@ -2,16 +2,16 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
-use GTK::Roles::FileChooser;
+use GTK::Roles::FileChooser:ver<3.0.1146>;
 
 our subset FileChooserWidgetAncestry is export
   where GtkFileChooserWidget | GtkFileChooser | GtkBoxAncestry;
 
-class GTK::FileChooser is GTK::Box {
+class GTK::FileChooser:ver<3.0.1146> is GTK::Box {
   also does GTK::Roles::FileChooser;
 
   has GtkFileChooserWidget $!fcw is implementor;

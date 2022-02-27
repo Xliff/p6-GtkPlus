@@ -2,16 +2,16 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::RecentChooser;
+use GTK::Roles::RecentChooser:ver<3.0.1146>;
 
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
 our subset RecentChooserWidgetAncestry is export
   where GtkRecentChooserWidget | GtkRecentChooser | GtkBoxAncestry;
 
-class GTK::RecentChooser is GTK::Box {
+class GTK::RecentChooser:ver<3.0.1146> is GTK::Box {
   also does GTK::Roles::RecentChooser;
 
   has GtkRecentChooserWidget $!rcw is implementor;

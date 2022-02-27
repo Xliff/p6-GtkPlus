@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Application;
+unit package GTK::Raw::Application:ver<3.0.1146>;
 
 # GtkVariant $parameter
 sub gtk_application_add_accelerator (
