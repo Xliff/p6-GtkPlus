@@ -354,6 +354,16 @@ class GTK::Label:ver<3.0.1146> is GTK::Widget {
     );
   }
 
+  method align is rw {
+    Proxy.new:
+      FETCH => -> $ {
+        (self.xalign, self.yalign)
+      },
+      STORE => -> $, @v where *.elems == 2 {
+        (self.xalign, self.yalign) = @v;
+      }
+  }
+
   method xalign is rw {
     Proxy.new(
       FETCH => sub ($) {
