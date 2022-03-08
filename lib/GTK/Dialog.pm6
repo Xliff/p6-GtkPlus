@@ -178,7 +178,13 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
       Nil;
   }
 
-  method get_content_area ( :$raw = False ) is also<get-content-area> {
+  method get_content_area ( :$raw = False )
+    is also<
+      get-content-area
+      content_area
+      content-area
+    >
+  {
     my $b = gtk_dialog_get_content_area($!d);
 
     $b ??
