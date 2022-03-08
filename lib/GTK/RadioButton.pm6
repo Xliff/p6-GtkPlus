@@ -12,8 +12,10 @@ use GLib::GList;
 use GTK::CheckButton:ver<3.0.1146>;
 use GLib::Roles::ListData;
 
-our subset RadioButtonAncestry is export
+our subset GtkRadioButtonAncestry is export
   where GtkRadioButton | CheckButtonAncestry;
+
+constant RadioButtonAncestry is export = GtkRadioButtonAncestry;
 
 class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
   has GtkRadioButton $!rb is implementor;
@@ -25,11 +27,7 @@ class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
   }
 
   submethod BUILD(:$radiobutton) {
-    given $radiobutton {
-      when RadioButtonAncestry { self.setRadioButton($radiobutton) }
-      when GTK::RadioButton    { }
-      default                  { }
-    }
+    self.setRadioButton($radiobutton) if $radiobutton;
   }
 
   method GTK::Raw::Definitions::GtkRadioButton
@@ -39,7 +37,7 @@ class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
     >
   { $!rb }
 
-  method setRadioButton(RadioButtonAncestry $radiobutton) {
+  method setRadioButton (GtkRadioButtonAncestry $radiobutton) {
     my $to-parent;
 
     $!rb = do given $radiobutton {
@@ -56,14 +54,14 @@ class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
     self.setCheckButton($to-parent);
   }
 
-  multi method new (RadioButtonAncestry $radiobutton, :$ref = True) {
+  multi method new (GtkRadioButtonAncestry $radiobutton, :$ref = True) {
     return unless $radiobutton;
 
     my $o = self.bless(:$radiobutton);
     $o.ref if $ref;
     $o;
   }
-  multi method new(GSList() $group) {
+  multi method new (GSList() $group) {
     my $radiobutton = gtk_radio_button_new($group);
 
     $radiobutton ?? self.bless( :$radiobutton ) !! Nil;
@@ -78,7 +76,7 @@ class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
     for @m {
       @radiobuttons.push(
         GTK::RadioButton.new_with_label_from_widget(
-          @radiobuttons[0].RadioButton,
+          @radiobuttons[0].GtkRadioButton,
           $_
         )
       );
@@ -94,9 +92,14 @@ class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
     $radiobutton ?? self.bless( :$radiobutton ) !! Nil;
   }
 
-  method new_with_label (GSList() $group, Str() $label)
+  proto method new_with_label (|)
     is also<new-with-label>
-  {
+  { * }
+
+  multi method new_with_label (Str() $label) {
+    samewith(GSList, $label);
+  }
+  multi method new_with_label (GSList() $group, Str() $label) {
     my $radiobutton = gtk_radio_button_new_with_label($group, $label);
 
     $radiobutton ?? self.bless(:$radiobutton) !! Nil;
@@ -113,7 +116,13 @@ class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
     $radiobutton ?? self.bless( :$radiobutton ) !! Nil;
   }
 
-  method new_with_mnemonic (GSList() $group, Str() $label)
+  proto method new_with_mnemonic (|)
+  { * }
+
+  multi method new_with_mnemonic (Str() $label) {
+    samewith(GSList, $label);
+  }
+  multi method new_with_mnemonic (GSList() $group, Str() $label)
     is also<new-with-mnemonic>
   {
     my $radiobutton = gtk_radio_button_new_with_mnemonic($group, $label);
