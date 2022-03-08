@@ -29,6 +29,7 @@ sub MAIN (
     }
   }
 
+  my @modules-excluded;
   my @modules = @files
     .map( *.path )
     .map({
@@ -44,7 +45,13 @@ sub MAIN (
       $a;
     })
     # Remove modules excluded via project file.
-    .grep( *[1] ne @build-exclude.any )
+    .grep({
+      my $e = .[1] ne @build-exclude.any;
+      unless $e {
+        @modules-excluded.push: $_;
+      }
+      $e;
+    })
     .sort( *[1] );
 
   for @modules {
@@ -63,7 +70,7 @@ sub MAIN (
     say "Processing requirements for module { $p.key }...";
 
     my token useneed    { 'use' | 'need'  }
-    my token modulename { ((\w+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']? }
+    my token modulename { ((\w+)+ % '::') }
     my $f = $p.value<filename>;
 
     my $m = $f.IO.open.slurp-rest ~~
@@ -76,7 +83,7 @@ sub MAIN (
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
       if $mn ~~ /<modulename>/ {
-        $mn = $/<modulename>[0].Str;
+        $mn = $/.Str;
         unless $mn.starts-with( ($prefix // '').split(',').any ) {
           next if $mn ~~ / 'v6''.'? (.+)? /;
           @others.push: $mn;
@@ -125,7 +132,7 @@ sub MAIN (
         for %nodes.values {
           say .<name> if .<name> ∈ .<edges>;
         }
-        exit;
+        exit(1);
       }
 
       default {
@@ -136,12 +143,17 @@ sub MAIN (
     say "»»»»»» { $s.result.elems } Modules resolved";
     @module-order.push: ( .<name> => $++ ) for $s.result;
     # for %nodes.keys {
-    #   if $_ eq $s.result.none {
+    #   unless $_ eq $s.result.any {
     #     @missing.push($_);
     #     say "$_ missing from resolution results with edge-count = {
     #          %nodes{$_}<edges>.elems }";
     #   }
     # }
+    # @missing = @missing.grep( * ne <GTK GtkNonWidgets GtkWidgets>.any )
+    #                    .map({ Pair.new($_, 1) })
+    #                    .sort;
+    # @module-order = |@missing, |@module-order;
+
   }
   my %module-order = @module-order.Hash;
 
@@ -151,14 +163,21 @@ sub MAIN (
     #.<edges>.elems.not
   }).map( *<name> );
 
+  my @to-add-back = (%config<force_add> // '').split(/','\s*/);
+
+  @module-order.append:
+    |@modules-excluded.grep({ .[1] eq @to-add-back.any })
+                      .map({ Pair.new(.[1], 1) });
+  @module-order.tail(4).gist.say;
+
   @others = @others.unique.sort;
   my $list = @others.join("\n") ~ "\n";
-  $list ~= @module-order.map({ $_.key }).join("\n");
+  $list ~= @module-order.map({ .key }).join("\n");
   "BuildList".IO.open(:w).say($list);
   say $list;
 
   # Add module order to modules.
-  $_.push( %module-order{$_[1]} ) for @modules;
+  .push( %module-order{$_[1]} ) for @modules;
 
   say "\nOther dependencies are:\n";
   say @others.unique.sort.join("\n");
@@ -167,6 +186,12 @@ sub MAIN (
     ' ' x ($a.chars % 8);
   }
 
+  my @modules-list = @modules.sort({
+    ($^a[2] // 0).Int <=> ($^b[2] // 0).Int
+  }).map({
+    $_.reverse.map({ qq["{ $_ // '' }"] })[1..2]
+  });
+
   {
     # Not an optimal solution, but it will work with editing.
     # Want to take the longest of $_[0], add a number of spaces
@@ -174,11 +199,7 @@ sub MAIN (
     use Text::Table::Simple;
     say "\nProvides section:\n";
     my $table = lol2table(
-      @modules.sort({
-        ($^a[2] // 0).Int <=> ($^b[2] // 0).Int
-      }).map({
-        $_.reverse.map({ qq["{ $_ // '' }"] })[1..2]
-      }),
+      @modules-list,
       rows => {
         column_separator => ': ',
         corner_marker    => ' ',
