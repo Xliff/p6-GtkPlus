@@ -57,7 +57,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     $!app = $app;
 
     self.setApplication( cast(GApplication, $app) );
-    self.activate.tap({
+    self.activate.tap(-> *@a {
       $!window = do given $!wtype {
         when 'application' {
           my $w = GTK::ApplicationWindow.new($!app);
@@ -72,7 +72,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
             :$height
           );
         }
-        
+
         when 'custom' {
           die "Invalid \$window of type '{ $window.^name }' specified!"
             unless $window.^can('GTK::Raw::Definitions::GtkWindow').elems;
@@ -80,7 +80,9 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
         }
       };
       say "WindowType is { $!wtype }: { $!window }" if $DEBUG;
-      $!window.destroy-signal.tap({ self.exit }) unless $!wtype eq 'custom';
+      $!window.destroy-signal.tap(
+        -> *@a { self.exit }
+      ) unless $!wtype eq 'custom';
       $!init.keep;
     });
   }
