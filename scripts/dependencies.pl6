@@ -63,7 +63,7 @@ sub MAIN (
     say "Processing requirements for module { $p.key }...";
 
     my token useneed    { 'use' | 'need'  }
-    my token modulename { ((\w+)+ % '::') }
+    my token modulename { ((\w+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']? }
     my $f = $p.value<filename>;
 
     my $m = $f.IO.open.slurp-rest ~~
@@ -76,7 +76,7 @@ sub MAIN (
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
       if $mn ~~ /<modulename>/ {
-        $mn = $/.Str;
+        $mn = $/<modulename>[0].Str;
         unless $mn.starts-with( ($prefix // '').split(',').any ) {
           next if $mn ~~ / 'v6''.'? (.+)? /;
           @others.push: $mn;
@@ -114,7 +114,8 @@ sub MAIN (
 
   say "\nA resolution order is:";
 
-  my @module-order;
+  my (@module-order, @missing);
+
   if !$s.serialise {
     #say "#N: { @nodes.elems }";
     #say "N: { @nodes[205].gist }";
@@ -132,14 +133,22 @@ sub MAIN (
       }
     }
   } else {
-    @module-order.push( $_<name> => $++ ) for $s.result;
+    say "»»»»»» { $s.result.elems } Modules resolved";
+    @module-order.push: ( .<name> => $++ ) for $s.result;
+    # for %nodes.keys {
+    #   if $_ eq $s.result.none {
+    #     @missing.push($_);
+    #     say "$_ missing from resolution results with edge-count = {
+    #          %nodes{$_}<edges>.elems }";
+    #   }
+    # }
   }
   my %module-order = @module-order.Hash;
 
   @others.append: %nodes.values.grep({
     .<name>.starts-with( $prefix ).not &&
-    .<name> ne <NativeCall nqp>.any    &&
-    .<edges>.elems.not
+    .<name> ne <NativeCall nqp>.any    #&&
+    #.<edges>.elems.not
   }).map( *<name> );
 
   @others = @others.unique.sort;
