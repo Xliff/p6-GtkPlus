@@ -110,4 +110,8 @@ W
     @!end.clone;
   }
 
+  method children {
+    |@!start, |@!end;
+  }
+
 }
