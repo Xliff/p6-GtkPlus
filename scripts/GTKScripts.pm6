@@ -13,6 +13,10 @@ sub getLibDirs is export {
   %config<libdirs> // 'lib'
 }
 
+sub getConfigEntry ($k) {
+  %config{$k} // ''
+}
+
 sub parse-file ($filename = $CONFIG-NAME) is export {
   return Nil unless $filename && $filename.IO.r;
 
