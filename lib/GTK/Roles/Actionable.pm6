@@ -2,12 +2,24 @@ use v6.c;
 
 use NativeCall;
 
+use Method::Also;
 
 use GTK::Raw::Actionable:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 
 role GTK::Roles::Actionable:ver<3.0.1146> {
-  has GtkActionable $!action;
+  has GtkActionable $!action is implementor;
+
+  method roleInit-GtkActionable {
+    return if $!action;
+
+    my \i = findProperImplementor( self.^attributes );
+    i = cast( GtkActionable, i.get_value(self) );
+  }
+
+  method GTK::Raw::Definitions::GtkActionable
+    is also<GtkActionable>
+  { $!action }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
@@ -38,9 +50,9 @@ role GTK::Roles::Actionable:ver<3.0.1146> {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_actionable_type {
+  method get_gtkactionable_type {
     state ($n, $t);
-    
+
     GTK::Widget.unstable_get_type( &gtk_actionable_get_type, $n, $t );
   }
 
@@ -49,4 +61,38 @@ role GTK::Roles::Actionable:ver<3.0.1146> {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
+}
+
+use GLib::Roles::Object;
+
+our subset GtkActionableAncestry is export of Mu
+  where GtkActionable | GObject;
+
+class GTK::Actionable {
+  also does GLib::Roles::Object;
+  also does GTK::Roles::Actionable;
+
+  submethod BUILD ( :$gtk-actionable ) {
+    self.setGtkActionable($gtk-actionable) if $gtk-actionable;
+  }
+
+  method setGtkActionable(GtkActionableAncestry $_) {
+    my $to-parent;
+
+    $!action = do {
+      when GtkActionable {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkActionable, $_);
+      }
+    }
+  }
+
+  method get_type {
+    self.get_gtkactionable_type
+  }
 }
