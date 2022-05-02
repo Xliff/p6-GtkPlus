@@ -13,9 +13,13 @@ use GIO::Application;
 use GIO::MenuModel;
 use GTK::ApplicationWindow:ver<3.0.1146>;
 use GTK::Window:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
 use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 use GTK::Roles::Signals::Application:ver<3.0.1146>;
+
+our subset GtkApplicationAncestry is export of Mu
+  where GtkApplication | GApplicationAncestry;
 
 class GTK::Application:ver<3.0.1146> is GIO::Application {
   my $gapp;
@@ -25,64 +29,99 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
   has                $!width;
   has                $!height;
   has                $!init;
+  has                $!build;
   has                $!wtype;
 
   has $.window handles <show_all>;
 
+  has $!window-class;
+  has $!application-window-class;
+
   submethod BUILD(
-    GtkApplication :$app,
-    Str            :$title,
-    uint32         :$flags = 0,
-    uint32         :$width,
-    uint32         :$height,
-                   :$window-type,
-                   :$window_type,
-                   :$window
+    :$app,
+    :$title                        = Str,
+    :$flags                        = 0,
+    :$width                        = 200,
+    :$height                       = 200,
+    :window_type(:$window-type),
+    :$window,
+    :$application-window-class,
+    :$window-class
   ) {
-    return unless $app;
+    say "{ self.^name }.{ &?ROUTINE.name } - ENTER";
+    self.setGtkApplication($app, :$window) if $app;
 
-    $!title  = $title;
-    $!width  = $width;
-    $!height = $height;
-    $!init   = Promise.new;
-    $!wtype  = $window-type // $window_type // 'application';
+    $!title                      = $title;
+    $!width                      = $width;
+    $!height                     = $height;
+    $!init                       = Promise.new;
+    $!wtype                      = $window-type // 'application';
+    $!window-class               = $window-class;
+    $!application-window-class   = $application-window-class;
 
-    die qq:to/DIE/ unless $!wtype eq <application window custom>.any;
-    Invalid window type '{ $window }'. Must be either 'window', 'custom',{
-    } or 'application'
-    DIE
+    $!window = $window if $window;
+
+    # die qq:to/DIE/ unless $!wtype eq <application window custom>.any;
+    #   Invalid window type '{ $window }'. Must be either 'window', 'custom',{
+    #   } or 'application'
+    #   DIE
 
     $DEBUG = so %*ENV<P6_GTKPLUS_DEBUG>;
+    say "{ self.^name }.{ &?ROUTINE.name } - LEAVE";
+  }
 
-    $!app = $app;
+  method setGtkApplication (GtkApplicationAncestry $_, :$window) {
+    my $to-parent;
 
-    self.setApplication( cast(GApplication, $app) );
+    $!app = do {
+      when GtkApplication {
+        $to-parent = cast(GApplication, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkApplication, $_);
+      }
+    }
+    say "setGApp: { $to-parent }";
+    self.setGApplication($to-parent);
+
+    self!set-default-event($window);
+  }
+
+  method !set-default-event ($window) {
     self.activate.tap(-> *@a {
-      $!window = do given $!wtype {
-        when 'application' {
-          my $w = GTK::ApplicationWindow.new($!app);
-          $w.set_size_request($width, $height) if $width && $height;
-          $w;
-        }
+      unless $window {
+        $!window = do given $!wtype {
+          when 'application' {
+            my $w = $!application-window-class.new($!app);
+            $w.set_size_request($!width, $!height) if $!width && $!height;
+            $w;
+          }
 
-        when 'window' {
-          GTK::Window.new(
-            :$title,
-            :$width,
-            :$height
-          );
-        }
+          when 'window' {
+            $!window-class.new(
+              :$!title,
+              :$!width,
+              :$!height
+            );
+          }
 
-        when 'custom' {
-          die "Invalid \$window of type '{ $window.^name }' specified!"
-            unless $window.^can('GTK::Raw::Definitions::GtkWindow').elems;
-          $window
+          when 'custom' {
+            die "Invalid \$window of type '{ $window.^name }' specified!"
+              unless $window.^can('GTK::Raw::Definitions::GtkWindow').elems;
+            $window
+          }
+
         }
-      };
-      say "WindowType is { $!wtype }: { $!window }" if $DEBUG;
-      $!window.destroy-signal.tap(
-        -> *@a { self.exit }
-      ) unless $!wtype eq 'custom';
+      }
+
+      if $!window {
+        say "WindowType is { $!wtype }: { $!window }" if $DEBUG;
+        $!window.destroy-signal.tap( -> *@a { self.exit } )
+          unless $!wtype eq 'custom';
+      }
       $!init.keep;
     });
   }
@@ -285,14 +324,31 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     gtk_application_get_actions_for_accel($!app, $accel);
   }
 
-  method get_active_window
+  method get_active_window (
+    :$raw                  = False,
+    :$window               = False,
+    :$base-widget          = False,
+    :$base        is copy  = GTK::Window
+  )
     is also<
       get-active-window
       active_window
       active-window
     >
   {
-    gtk_application_get_active_window($!app);
+    # cw: Window overrides $base and $base-widget to return a GTK::Window
+    if $window {
+      $base-widget = True;
+      $base        = GTK::Window;
+    }
+
+    # cw: Return as close to the original object as parameters allow.
+    ReturnWidget(
+       gtk_application_get_active_window($!app),
+       $raw,
+      :$base,
+      :$base-widget
+    );
   }
 
   method get_menu_by_id (Str() $id) is also<get-menu-by-id> {
@@ -300,7 +356,9 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
   }
 
   method get_type is also<get-type> {
-    gtk_application_get_type();
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_application_get_type, $n, $t );
   }
 
   method get_window_by_id (Int() $id) is also<get-window-by-id> {
@@ -322,8 +380,8 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
   # cw: Variant to accept a GTK::Window
   method inhibit (
     GtkWindow $window,
-    Int() $flags,               # GtkApplicationInhibitFlags $flags,
-    Str() $reason
+    Int()     $flags,               # GtkApplicationInhibitFlags $flags,
+    Str()     $reason
   ) {
     my guint $f = $flags;
 
