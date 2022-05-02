@@ -3,13 +3,19 @@
 use GLib::Roles::Pointers;
 use File::Find;
 
-sub MAIN (:$prefix is required) {
+use lib <. scripts>;
+
+use GTKScripts;
+
+sub MAIN (:$prefix = %config<prefix>) {
+  die 'Must specify --prefix!' unless $prefix;
+
   my %ct;
 
-  if "lib/GIO/TypeClass.pm6".IO.e {
-    require GIO::TypeClass;
-    %ct = ::("%GIO::TypeClass::classType").clone
-  };
+  # if "lib/{ $prefix }/TypeClass.pm6".IO.e {
+  #   require ::("{ $prefix }::TypeClass");
+  #   %ct = ::("\%{ $prefix }::TypeClass::typeClass").clone
+  # };
 
   for
     find(
@@ -56,20 +62,25 @@ sub MAIN (:$prefix is required) {
 
     use GLib::Raw::Types;
 
-    unit package GIO::TypeClass;
+    unit package { $prefix }::TypeClass;
 
-    our \%typeClass is export;
-    our \%classType is export = (
-      {  %ct.pairs.map({ qq«    "{ .key }" => "{ .value }",» }).join("\n")  }
-    ).Hash");
+    our \%{ $prefix }-typeClass is export;
+
+    BEGIN \%typeClass = (
+      {
+        %ct.antipairs.map({
+          qq«    "{ .key }" => "{ .value }",»
+        }).join("\n")
+      }
+    );
     SPURT
 
-  $spurt ~= q:to/SPURT2/;
-    BEGIN {
-      %typeClass = %classType.antipairs.Hash
+  $spurt ~= qq:to/SPURT2/;
+    INIT {
+      updateTypeClass( \%{ $prefix }-typeClass )
     }
     SPURT2
 
-  "lib/GIO/TypeClass.pm6".IO.spurt($spurt);
+  "lib/{ $prefix }/TypeClass.pm6".IO.spurt($spurt);
 
 }
