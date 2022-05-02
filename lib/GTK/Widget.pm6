@@ -22,6 +22,8 @@ use GTK::Raw::Subs:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 use GTK::Raw::Widget:ver<3.0.1146>;
 
+use GTK::TypeClass:ver<3.0.1146>;
+
 use GLib::Roles::Object;
 use GLib::Roles::Pointers;
 use ATK::Roles::Implementor;
@@ -34,6 +36,7 @@ use GTK::StyleContext:ver<3.0.1146>;
 our subset GtkWidgetAncestry is export where
   GtkWidget | GtkBuildable | AtkImplementorIface | GObject;
 
+
 class GTK::Widget:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does ATK::Roles::Implementor;
@@ -44,8 +47,7 @@ class GTK::Widget:ver<3.0.1146> {
   has GtkWidget $!w is implementor;
 
   # For all widget-based *_get_type functions.
-  has $!t;
-  has $!n;
+  my ($t, $n);
 
   submethod BUILD (:$widget) {
     self.setWidget($widget) if $widget
@@ -123,8 +125,22 @@ class GTK::Widget:ver<3.0.1146> {
 
   # REALLY EXPERIMENTAL attempt to create a global object creation
   # factory.
-  method CreateObject(GTK::Widget:U: GtkWidget $o) {
-    my $type = GTK::Widget.getType( cast(GObject, $o) );
+  method CreateObject (GTK::Widget:U: $o is copy) {
+    # cw: Sanity check.
+    if $o !~~ GObject {
+      say "R: { $o.REPR }";
+      if $o.REPR eq <CPointer CStruct>.any {
+        $o = cast(GObject, $o);
+      } else {
+        if $o.^lookup('GObject') -> &m {
+          $o = &m($o);
+        } else {
+          die "{ $o.^name } must be GObject-compatible for use in CreateObject!"
+        }
+      }
+    }
+
+    my $type = %typeClass{ $o.objectType.name };
 
     # If no type, then we fall back to GTK::Widget.
     if ($type //= 'GTK::Widget') eq 'GTK::Widget' {
@@ -2514,7 +2530,7 @@ class GTK::Widget:ver<3.0.1146> {
     (self.get_allocated_width, self.get_allocated_height);
   }
 
-  method ReturnWidget ($w, $raw, $widget) {
+  method ReturnWidget ($w, $raw, $widget = False) {
     ReturnWidget($w, $raw, $widget);
   }
 
@@ -2522,14 +2538,19 @@ class GTK::Widget:ver<3.0.1146> {
   method unstable_get_type(&sub, *@a)
     is also<unstable-get-type>
   {
-    unstable_get_type(::?CLASS.^name, &sub, $!n, $!t);
+    unstable_get_type(::?CLASS.^name, &sub, $n, $t);
   }
 
 }
 
-sub ReturnWidget ($w, $raw, $widget) is export {
+sub ReturnWidget (
+   $w,
+   $raw,
+  :base-widget(:$widget) = False,
+  :$base                 = GTK::Widget
+) is export {
   $w ?? ( $raw ?? $w
-               !! ( $widget ?? GTK::Widget.new($w)
+               !! ( $widget ?? $base.new($w)
                             !! GTK::Widget.CreateObject($w) ) )
      !! Nil;
 }
