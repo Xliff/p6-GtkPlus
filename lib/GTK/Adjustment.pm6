@@ -7,13 +7,33 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
+our subset GtkAdjustmentAncestry is export of Mu
+  where GtkAdjustment | GObject;
+
 class GTK::Adjustment:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkAdjustment $!adj is implementor;
 
-  submethod BUILD(GtkAdjustment :$adjustment) {
-    self!setObject($!adj = $adjustment);
+  submethod BUILD ( :$adjustment ) {
+    self.setAdjustment($adjustment) if $adjustment;
+  }
+
+  method setGtkAdjustment (GtkAdjustmentAncestry $_) {
+    my $to-parent;
+
+    $!adj = do {
+      when GtkAdjustment {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkAdjustment, $_);
+      }
+    }
+    self!setObject($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkAdjustment
@@ -23,8 +43,12 @@ class GTK::Adjustment:ver<3.0.1146> {
     >
   { $!adj }
 
-  multi method new (GtkAdjustment $adjustment, :$ref = True) {
-    $adjustment ?? self.bless(:$adjustment) !! Nil;
+  multi method new (GtkAdjustmentAncestry $adjustment, :$ref = True) {
+    return Nil unless $adjustment;
+
+    my $o = self.bless( :$adjustment );
+    $o.ref if $ref;
+    $o;
   }
   multi method new (
     Num() $value,
@@ -140,6 +164,7 @@ class GTK::Adjustment:ver<3.0.1146> {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
 
+  # cw: Deprecated in 3.18
   # method changed {
   #   gtk_adjustment_changed($!adj);
   # }
@@ -175,6 +200,7 @@ class GTK::Adjustment:ver<3.0.1146> {
     unstable_get_type( self.^name, &gtk_adjustment_get_type, $n, $t );
   }
 
+  # cw: Deprecated in 3.18
   # method value_changed () {
   #   gtk_adjustment_value_changed($!adj);
   # }
