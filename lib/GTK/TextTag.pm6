@@ -8,41 +8,81 @@ use Pango::Tabs;
 
 use GTK::Raw::TextTag:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Traits;
 
 use GDK::RGBA;
 use GLib::Value;
 
-use GLib::Roles::Properties;
+use GLib::Roles::Object;
 use GTK::Roles::Types:ver<3.0.1146>;
 use GTK::Roles::Signals::TextTag:ver<3.0.1146>;
 
+my @gtktexttag-valid-attributes;
+
+our subset GtkTextTagAncestry is export of Mu
+  where GtkTextTag | GObject;
+
 class GTK::TextTag:ver<3.0.1146>  {
-  also does GLib::Roles::Properties;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Types;
   also does GTK::Roles::Signals::TextTag;
 
   has GtkTextTag $!tt is implementor;
 
   submethod BUILD(:$tag) {
-    self.setTextTag($tag) with $tag;
+    self.setGtkTextTag($tag) with $tag;
   }
 
   # PROTECTED
-  method setTextTag (GtkTextTag $tag) {
-    self!setObject($!tt = $tag);              # GLib::Roles::Properties (+)
+  method setGtkTextTag (GtkTextTagAncestry $_) {
+    my $to-parent;
+
+    $!tt = do {
+      when GtkTextTag {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkTextTag, $_);
+      }
+    }
+
+    self!setObject($to-parent);
+  }
+  method setTextTag ($o) {
+    self.setGtkTextTag($o);
   }
 
   submethod DESTROY {
     self.disconnect-all($_) for %!signals-tt;
   }
 
-  multi method new (GtkTextTag $tag) {
-    $tag ?? self.bless(:$tag) !! Nil;
+  multi method new (GtkTextTagAncestry $tag, :$ref = True) {
+    return Nil unless $tag;
+
+    my $o = self.bless( :$tag );
+    $o.ref if $ref;
+    $o;
   }
   multi method new (Str() $name) {
     my $tag = gtk_text_tag_new($name);
 
     $tag ?? self.bless(:$tag) !! Nil;
+  }
+  multi method new (Str() $name, *%attributes) {
+    samewith($name, %attributes);
+  }
+  multi method new (Str() $name, %attributes) {
+    my $tt = self.new($name);
+
+    for %attributes.pairs {
+      die "Invalid attribute '{ .name }' given when creating a text tag!"
+        unless .key eq @gtktexttag-valid-attributes.any;
+      $tt."{ .key }"() = .value;
+    }
+    $tt
   }
 
   method GTK::Raw::Definitions::GtkTextTag
@@ -65,7 +105,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
-  method priority is rw {
+  method priority is a-property is rw {
     Proxy.new(
       FETCH => sub ($) {
         gtk_text_tag_get_priority($!tt);
@@ -102,7 +142,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   # ↑↑↑↑ METHODS ↑↑↑↑
 
   # Type: gboolean
-  method accumulative-margin is rw  {
+  method accumulative-margin is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -119,7 +159,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method background is rw  {
+  method background is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -133,7 +173,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method background-full-height is rw  {
+  method background-full-height is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -150,7 +190,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method background-full-height-set is rw  {
+  method background-full-height-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -167,7 +207,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GdkColor
-  # method background-gdk is rw  is DEPRECATED( “background-rgba” ) {
+  # method background-gdk is a-property is rw  is DEPRECATED( “background-rgba” ) {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => sub ($) {
@@ -184,7 +224,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   # }
 
   # Type: GdkRGBA
-  method background-rgba is rw  {
+  method background-rgba is a-property is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => sub ($) {
@@ -201,7 +241,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method background-set is rw  {
+  method background-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -218,7 +258,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GtkTextDirection
-  method direction is rw  {
+  method direction is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => sub ($) {
@@ -235,7 +275,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method editable is rw  {
+  method editable is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -252,7 +292,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method editable-set is rw  {
+  method editable-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -269,7 +309,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method fallback is rw  {
+  method fallback is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -286,7 +326,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method fallback-set is rw  {
+  method fallback-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -303,7 +343,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method family is rw  {
+  method family is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -320,7 +360,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method family-set is rw  {
+  method family-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -337,7 +377,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method font is rw  {
+  method font is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -354,7 +394,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: PangoFontDescription
-  method font-desc (:$raw = False) is rw  {
+  method font-desc (:$raw = False) is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => sub ($) {
@@ -376,7 +416,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method font-features is rw  {
+  method font-features is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -393,7 +433,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method font-features-set is rw  {
+  method font-features-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -410,7 +450,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method foreground is rw  {
+  method foreground is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -424,7 +464,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GdkColor
-  # method foreground-gdk is rw  is DEPRECATED( “foreground-rgba” ) {
+  # method foreground-gdk is a-property is rw  is DEPRECATED( “foreground-rgba” ) {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => sub ($) {
@@ -441,7 +481,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   # }
 
   # Type: GdkRGBA
-  method foreground-rgba is rw  {
+  method foreground-rgba is a-property is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => sub ($) {
@@ -458,7 +498,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method foreground-set is rw  {
+  method foreground-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -475,7 +515,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method indent is rw  {
+  method indent is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -492,7 +532,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method indent-set is rw  {
+  method indent-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -509,7 +549,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method invisible is rw  {
+  method invisible is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -526,7 +566,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method invisible-set is rw  {
+  method invisible-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -543,7 +583,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GtkJustification
-  method justification is rw  {
+  method justification is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => sub ($) {
@@ -560,7 +600,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method justification-set is rw  {
+  method justification-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -577,7 +617,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method language is rw  {
+  method language is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -594,7 +634,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method language-set is rw  {
+  method language-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -611,7 +651,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method left-margin is rw  {
+  method left-margin is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -628,7 +668,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method left-margin-set is rw  {
+  method left-margin-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -645,7 +685,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method letter-spacing is rw  {
+  method letter-spacing is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -662,7 +702,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method letter-spacing-set is rw  {
+  method letter-spacing-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -679,7 +719,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method name is rw  {
+  method name is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -696,7 +736,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gchar
-  method paragraph-background is rw  {
+  method paragraph-background is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -710,7 +750,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GdkColor
-  # method paragraph-background-gdk is rw  is DEPRECATED( “paragraph-background-rgba” ) {
+  # method paragraph-background-gdk is a-property is rw  is DEPRECATED( “paragraph-background-rgba” ) {
   #   my GLib::Value $gv .= new( -type- );
   #   Proxy.new(
   #     FETCH => sub ($) {
@@ -727,7 +767,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   # }
 
   # Type: GdkRGBA
-  method paragraph-background-rgba is rw  {
+  method paragraph-background-rgba is a-property is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => sub ($) {
@@ -744,7 +784,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method paragraph-background-set is rw  {
+  method paragraph-background-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -761,7 +801,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method pixels-above-lines is rw  {
+  method pixels-above-lines is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -778,7 +818,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method pixels-above-lines-set is rw  {
+  method pixels-above-lines-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -795,7 +835,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method pixels-below-lines is rw  {
+  method pixels-below-lines is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -812,7 +852,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method pixels-below-lines-set is rw  {
+  method pixels-below-lines-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -829,7 +869,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method pixels-inside-wrap is rw  {
+  method pixels-inside-wrap is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -846,7 +886,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method pixels-inside-wrap-set is rw  {
+  method pixels-inside-wrap-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -863,7 +903,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method right-margin is rw  {
+  method right-margin is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -880,7 +920,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method right-margin-set is rw  {
+  method right-margin-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -897,7 +937,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method rise is rw  {
+  method rise is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -914,7 +954,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method rise-set is rw  {
+  method rise-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -931,7 +971,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gdouble
-  method scale is rw  {
+  method scale is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => sub ($) {
@@ -948,7 +988,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method scale-set is rw  {
+  method scale-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -965,7 +1005,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method size is rw  {
+  method size is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -982,7 +1022,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gdouble
-  method size-points is rw  {
+  method size-points is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_DOUBLE );
     Proxy.new(
       FETCH => sub ($) {
@@ -999,7 +1039,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method size-set is rw  {
+  method size-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1016,7 +1056,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: PangoStretch
-  method stretch is rw  {
+  method stretch is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => sub ($) {
@@ -1033,7 +1073,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method stretch-set is rw  {
+  method stretch-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1050,7 +1090,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method strikethrough is rw  {
+  method strikethrough is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1067,7 +1107,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GdkRGBA
-  method strikethrough-rgba is rw  {
+  method strikethrough-rgba is a-property is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => sub ($) {
@@ -1084,7 +1124,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method strikethrough-rgba-set is rw  {
+  method strikethrough-rgba-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1101,7 +1141,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method strikethrough-set is rw  {
+  method strikethrough-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1118,7 +1158,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: PangoStyle
-  method style is rw  {
+  method style is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => sub ($) {
@@ -1135,7 +1175,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method style-set is rw  {
+  method style-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1152,7 +1192,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: PangoTabArray
-  method tabs (:$raw = False) is rw  {
+  method tabs (:$raw = False) is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => sub ($) {
@@ -1175,7 +1215,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method tabs-set is rw  {
+  method tabs-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1192,7 +1232,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: PangoUnderline
-  method underline is rw  {
+  method underline is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => sub ($) {
@@ -1209,7 +1249,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GdkRGBA
-  method underline-rgba is rw  {
+  method underline-rgba is a-property is rw  {
     my GLib::Value $gv .= new( GDK::RGBA.get_type );
     Proxy.new(
       FETCH => sub ($) {
@@ -1226,7 +1266,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method underline-rgba-set is rw  {
+  method underline-rgba-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1243,7 +1283,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method underline-set is rw  {
+  method underline-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1260,7 +1300,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: PangoVariant
-  method variant is rw  {
+  method variant is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => sub ($) {
@@ -1277,7 +1317,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method variant-set is rw  {
+  method variant-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1294,7 +1334,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gint
-  method weight is rw  {
+  method weight is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_INT );
     Proxy.new(
       FETCH => sub ($) {
@@ -1311,7 +1351,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method weight-set is rw  {
+  method weight-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1328,7 +1368,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: GtkWrapMode
-  method wrap-mode is rw  {
+  method wrap-mode is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_UINT );
     Proxy.new(
       FETCH => sub ($) {
@@ -1345,7 +1385,7 @@ class GTK::TextTag:ver<3.0.1146>  {
   }
 
   # Type: gboolean
-  method wrap-mode-set is rw  {
+  method wrap-mode-set is a-property is rw  {
     my GLib::Value $gv .= new( G_TYPE_BOOLEAN );
     Proxy.new(
       FETCH => sub ($) {
@@ -1361,4 +1401,12 @@ class GTK::TextTag:ver<3.0.1146>  {
     );
   }
 
+}
+
+BEGIN {
+  @gtktexttag-valid-attributes = GTK::TextTag.getPropertyNames;
+
+  say "GTK::TextTag attributes = {
+       @gtktexttag-valid-attributes.join(', ') }"
+  if $DEBUG;
 }
