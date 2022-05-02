@@ -1,8 +1,12 @@
 use v6.c;
 
+use GLib::Raw::Types;
+
 unit package GTK::TypeClass:ver<3.0.1146>;
 
-our %typeClass is export = (
+our %GTK-typeClass is export;
+
+BEGIN %GTK-typeClass = (
   GdkDragContext          => 'GTK::DragContext',
   GtkAboutDialog          => 'GTK::Dialog::About',
   GtkAccelGroup           => 'GTK::AccelGroup',
@@ -166,5 +170,11 @@ our %typeClass is export = (
   GtkWidget               => 'GTK::Widget',
   GtkWidgetPath           => 'GTK::WidgetPath',
   GtkWindow               => 'GTK::Window',
-  GtkWindowGroup          => 'GTK::WindowGroup'
+  GtkWindowGroup          => 'GTK::WindowGroup',
+
+  # cw: For those aliases that are going to stick around, forever...
+  'GtkVBox'               => 'GTK::Box',
+  'GtkHBox'               => 'GTK::Box'
 );
+
+INIT updateTypeClass(%GTK-typeClass, :!reverse);
