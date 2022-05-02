@@ -12,8 +12,10 @@ use GTK::Menu:ver<3.0.1146>;
 use GTK::Popover:ver<3.0.1146>;
 use GTK::ToggleButton:ver<3.0.1146>;
 
-our subset MenuButtonAncestry is export
+our subset GtkMenuButtonAncestry is export of Mu
   where GtkMenuButton | ToggleButtonAncestry;
+
+constant MenuButtonAncestry is export = GtkMenuButtonAncestry;
 
 class GTK::MenuButton:ver<3.0.1146> is GTK::ToggleButton {
   has GtkMenuButton $!mb is implementor;
@@ -24,35 +26,32 @@ class GTK::MenuButton:ver<3.0.1146> is GTK::ToggleButton {
     $o;
   }
 
-  submethod BUILD(:$menubutton) {
-    my $to-parent;
-    given $menubutton {
-      when MenuButtonAncestry {
-        $!mb = do {
-          when GtkMenuButton {
-            $to-parent = cast(GtkToggleButton, $_);
-            $_;
-          }
+  submethod BUILD ( :$menubutton ) {
+    self.setGtkMenuButton($menubutton) if $menubutton;
+  }
 
-          default {
-            $to-parent = $_;
-            cast(GtkMenuButton, $_);
-          }
-        };
-        self.setToggleButton($to-parent);
+  method setGtkMenuButton (GtkMenuButtonAncestry $_) {
+    my $to-parent;
+
+    $!mb = do {
+      when GtkMenuButton {
+        $to-parent = cast(GtkToggleButton, $_);
+        $_;
       }
-      when GTK::MenuButton {
-      }
+
       default {
+        $to-parent = $_;
+        cast(GtkMenuButton, $_);
       }
-    }
+    };
+    self.setToggleButton($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkMenuButton
     is also<GtkMenuButton>
   { $!mb }
 
-  multi method new (MenuButtonAncestry $menubutton, :$ref = True) {
+  multi method new (GtkMenuButtonAncestry $menubutton, :$ref = True) {
     return Nil unless $menubutton;
 
     my $o = self.bless(:$menubutton);
@@ -62,7 +61,7 @@ class GTK::MenuButton:ver<3.0.1146> is GTK::ToggleButton {
   multi method new {
     my $menubutton = gtk_menu_button_new();
 
-    $menubutton ?? self.bless(:$menubutton) !! Nil;
+    $menubutton ?? self.bless( :$menubutton ) !! Nil;
   }
 
   # Exposed from GTK::ToggleButton
