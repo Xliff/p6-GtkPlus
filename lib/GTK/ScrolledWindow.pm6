@@ -12,27 +12,25 @@ use GTK::Roles::Signals::ScrolledWindow:ver<3.0.1146>;
 
 use GTK::Scrollbar:ver<3.0.1146>;
 
-our subset ScrolledWindowAncestry is export
+our subset GtkScrolledWindowAncestry is export
   where GtkScrolledWindow | BinAncestry;
+
+our constant ScrolledWindowAncestry is export = GtkScrolledWindowAncestry;
 
 class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Signals::ScrolledWindow;
 
   has GtkScrolledWindow $!sw is implementor;
 
-  method bless(*%attrinit) {
+  method bless (*%attrinit) {
     use nqp;
     my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
     $o.setType($o.^name);
     $o;
   }
 
-  submethod BUILD(:$scrolled) {
-    given $scrolled {
-      when ScrolledWindowAncestry { self.setScrolledWindow($scrolled) }
-      when GTK::ScrolledWindow    { }
-      default                     { }
-    }
+  submethod BUILD (:$scrolled) {
+    self.setGtkScrolledWindow($scrolled) if $scrolled;
   }
 
   submethod DESTROY {
@@ -46,13 +44,19 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
     >
   { $!sw }
 
-  method setScrolledWindow($scrolled) {
+  method setScrolledWindow ($scrolled) {
+    self.setGtkScrolledWindow($scrolled);
+  }
+
+  method setGtkScrolledWindow (GtkScrolledWindowAncestry $_) {
     my $to-parent;
-    $!sw = do given $scrolled {
+
+    $!sw = do {
       when GtkScrolledWindow {
         $to-parent = cast(GtkBin, $_);
         $_;
       }
+
       default {
         $to-parent = $_;
         cast(GtkScrolledWindow, $_);
@@ -64,7 +68,7 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
   multi method new (ScrolledWindowAncestry $scrolled, :$ref = True) {
     return Nil unless $scrolled;
 
-    my $o = self.bless(:$scrolled);
+    my $o = self.bless( :$scrolled );
     $o.ref if $ref;
     $o;
   }
@@ -75,6 +79,25 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
     my $scrolled = gtk_scrolled_window_new($hadjustment, $vadjustment);
 
     $scrolled ?? self.bless(:$scrolled) !! Nil;
+  }
+
+  # Convenience
+  method new_automatic (
+    GtkAdjustment() :$hadjustment = GtkAdjustment,
+    GtkAdjustment() :$vadjustment = GtkAdjustment
+  )
+    is also<
+      new-automatic
+      new_auto
+      new-auto
+    >
+  {
+    self.new_with_policy(
+      GTK_POLICY_AUTOMATIC,
+      GTK_POLICY_AUTOMATIC,
+      $hadjustment,
+      $vadjustment
+    );
   }
 
   # Convenience
