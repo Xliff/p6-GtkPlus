@@ -6,46 +6,49 @@ use lib 'scripts';
 use GTKScripts;
 use Data::Dump::Tree;
 
-my regex name {
-  <[_ A..Z a..z]>+
-}
+# my regex name {
+#   <[_ A..Z a..z]>+
+# }
 
 # my rule enum_entry {
 #   <[A..Z]>+ [ '=' [ \d+ | \d+ '<<' \d+ ] ]? ','
 # }
 
-my token d { <[0..9 x]> }
-my token m { '-' }
-my token L { 'L' }
-my token w { <[A..Za..z _]> }
+# my token d { <[0..9 x]> }
+# my token m { '-' }
+# my token L { 'L' }
+# my token w { <[A..Za..z _]> }
+#
+# my rule comment {
+#   '/*' .+? '*/'
+# }
 
-my rule comment {
-  '/*' .+? '*/'
-}
+# my token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
+# my token       n { <[\w _]>+ }
+# my token       t { <n> | '(' '*' <n> ')' }
+# my token     mod { 'unsigned' | 'long' }
+# my token    mod2 { 'const' | 'struct' | 'enum' }
+# my rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
+# my rule      var { <t> [ '[' (.+?)? ']' ]? }
+#
+# my rule struct-entry {
+#   <type> <var>+ %% ','
+# }
+#
+# my rule solo-struct {
+#   'struct' <sn=name>?
+#   [
+#     '{'
+#       [ <struct-entry>\s*';' ]+
+#     '}'
+#   ]?
+# }
+#
+# my rule struct {
+#   <solo-struct> | 'typedef' <solo-struct> <rn=name>?
+# }
 
-my token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
-my token       n { <[\w _]>+ }
-my token       t { <n> | '(' '*' <n> ')' }
-my token     mod { 'unsigned' | 'long' }
-my token    mod2 { 'const' | 'struct' | 'enum' }
-my rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
-my rule      var { <t> [ '[' (.+?)? ']' ]? }
-
-my rule struct-entry {
-  <type> <var>+ %% ','
-}
-
-my rule solo-struct {
-  'struct' <sn=name> '{'
-    [ <struct-entry>\s*';' ]+
-  '}'
-}
-
-my rule struct {
-  <solo-struct> | 'typedef' <solo-struct> <rn=name>
-}
-
-sub MAIN ($dir?, :$file, :$rw = False) {
+sub MAIN ($dir = %config<include-directory>, :$file, :$rw = False) {
   my (%enums, @files);
 
   unless $dir ^^ $file {
@@ -78,7 +81,7 @@ sub MAIN ($dir?, :$file, :$rw = False) {
 
     # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error
     next if $file.ends-with('Xge.h');
-    
+
     my $contents = $file.IO.slurp;
 
     # Remove preprocessor directives.
@@ -100,7 +103,13 @@ sub MAIN ($dir?, :$file, :$rw = False) {
           .Str
         ] for $se<var>.map( *.<t><n> );
       }
-      my $struct-name = $l<struct><solo-struct><sn>;
+      my $struct-name = $l<struct><rn> // $l<struct><solo-struct><sn>;
+
+      unless $struct-name {
+        $l.gist.say;
+        next;
+      }
+
       $struct-name = $struct-name.substr(1) if $struct-name.starts-with('_');
       %new-classes{ $struct-name } = @s-entries;
     }
