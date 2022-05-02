@@ -27,13 +27,13 @@ class GTK::ApplicationWindow:ver<3.0.1146> is GTK::Window {
   }
 
   submethod BUILD ( :$appwindow ) {
-    #say "AW: { $appwindow // 'NIL' }";
-    self.setApplicationWindow($appwindow) if $appwindow;
+    say "AW: { $appwindow // 'NIL' }";
+    self.setGtkApplicationWindow($appwindow) if $appwindow;
   }
 
-  method setApplicationWindow(GtkApplicationWindowAncestry $appwindow) {
-    self.IS-PROTECTED;
-
+  method setGtkApplicationWindow(GtkApplicationWindowAncestry $appwindow)
+    is also<setApplicationWindow>
+  {
     my $to-parent;
     $!aw = do given $appwindow {
       when GtkApplicationWindow {
@@ -53,8 +53,9 @@ class GTK::ApplicationWindow:ver<3.0.1146> is GTK::Window {
       }
     };
     say "TP: { $to-parent // 'NIL' }";
+    say "AW: { $!aw // 'NIL' }";
     self.roleInit-ActionMap unless $!actmap;
-    self.setWindow($to-parent);
+    self.setGtkWindow($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkApplicationWindow
