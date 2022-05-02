@@ -4,22 +4,21 @@ use v6.c;
 use lib 'scripts';
 
 use GTKScripts;
-use Dependency::Sort;
+
+use Text::Table::Simple;
 
 # cw: %prefix lives in GTKScripts and is initialized during INIT
 
 sub MAIN (
-  :$exclude,         #= Comma separated list of modules to exclude from processing
-  :$force,           #= Force dependency generation
-  :$prefix is copy   #= Module prefix
+  :$exclude,                        #= Comma separated list of modules to exclude from processing
+  :$force,                          #= Force dependency generation
+  :$prefix is copy,                 #= Module prefix
+  :$extra           = 'META6.json'  #= Name of JSON file handling the "provides" section
 ) {
   my (%nodes, @build-exclude);
   my $dep_file = '.build-deps'.IO;
 
   $prefix        //= %config<prefix>;
-  @build-exclude   = %config<build_exclude> // ();
-
-  @build-exclude.append: $exclude.split(',') if $exclude;
 
   my @files = get-module-files.sort( *.modified );
   unless $force {
@@ -29,214 +28,31 @@ sub MAIN (
     }
   }
 
-  my @modules-excluded;
-  my @modules = @files
-    .map( *.path )
-    .map({
-      my ($u, $m) = $_ xx 2;
-      for getLibDirs().split(',') -> $d is copy {
-        $d ~= '/' unless $d.ends-with('/');
-        $m .= subst($d, '');
-      }
-      my $a = [
-        $u,
-        $m.subst('.pm6', '').split('/').Array.join('::')
-      ];
-      $a;
-    })
-    # Remove modules excluded via project file.
-    .grep({
-      my $e = .[1] ne @build-exclude.any;
-      unless $e {
-        @modules-excluded.push: $_;
-      }
-      $e;
-    })
-    .sort( *[1] );
+  say "F: { @files.elems }";
+  my ($modules)   = compute-module-dependencies(@files);
+  # my $module-list = $modules.map({
+  #   ( "\"{ .<name> }\"", "\"{ .<filename> }\"" )
+  # });
 
-  for @modules {
-    %nodes{ .[1] } = (
-      itemid   => $++,
-      filename => .[0],
-      edges    => [],
-      name     => .[1]
-    ).Hash;
-  }
+  # for %nodes.keys {
+  #   unless $_ eq $s.result.any {
+  #     @missing.push($_);
+  #     say "$_ missing from resolution results with edge-count = {
+  #          %nodes{$_}<edges>.elems }";
+  #   }
+  # }
+  # @missing = @missing.grep( * ne <GTK GtkNonWidgets GtkWidgets>.any )
+  #                    .map({ Pair.new($_, 1) })
+  #                    .sort;
+  # @module-order = |@missing, |@module-order;
 
-  my $s = Dependency::Sort.new;
-  my @others;
-  my @other-provided = (%config<other_provided> // '').split(',');
-  for %nodes.pairs.sort( *.key ) -> $p {
-    say "Processing requirements for module { $p.key }...";
+  # my %module-order = $module-order.Hash;
 
-    my token useneed    { 'use' | 'need'  }
-    my token modulename { ((\w+)+ % '::') }
-    my $f = $p.value<filename>;
+  # my @to-add-back  = getConfigEntry('force_add').split(/','\s*/);
 
-    my $m = $f.IO.open.slurp-rest ~~
-      m:g/^^ \s* <useneed> \s+ <modulename>[\s+.+\s*]?';'/;
-    for $m.list -> $mm {
-      my $mn = $mm;
+  # @module-order.append:
+  #   |@modules-excluded.grep({ .[1] eq @to-add-back.any })
+  #                     .map({ Pair.new(.[1], 1) });
+  # @module-order.tail(4).gist.say;
 
-      #say "MN: { $mn.gist }";
-
-      $mn ~~ s/<useneed> \s+//;
-      $mn ~~ s/';' $//;
-      if $mn ~~ /<modulename>/ {
-        $mn = $/.Str;
-        unless $mn.starts-with( ($prefix // '').split(',').any ) {
-          next if $mn ~~ / 'v6''.'? (.+)? /;
-          @others.push: $mn;
-          next;
-        }
-        %nodes{$p.key}<edges>.push: $mn;
-      }
-
-      if $mn eq @other-provided.any {
-        @others.push: $mn;
-      } else {
-        die qq:to/DIE/ unless %nodes{$mn}:exists;
-          { $mn }, used by { $p.key }, does not exist!
-          DIE
-
-        $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
-      }
-    }
-    #say "P: { $p.key } / { %nodes{$p.key}.gist }";
-  }
-
-  if %*ENV<P6_GTK_DEBUG> {
-    for %nodes.keys.sort -> $k {
-      for %nodes{$k}<edges> -> $e {
-        say "{$k}:";
-        for $e.list {
-          my $p = $_;
-          s:g/'::'/\//;
-          $_ = "lib/{$_}.pm6";
-          say "\t{$_} -- { .IO.e } -- { %nodes{$p}:exists }";
-        }
-      }
-    }
-  }
-
-  say "\nA resolution order is:";
-
-  my (@module-order, @missing);
-
-  if !$s.serialise {
-    #say "#N: { @nodes.elems }";
-    #say "N: { @nodes[205].gist }";
-    given $s.error_message {
-      when .contains('circular reference found') {
-        .say;
-        for %nodes.values {
-          say .<name> if .<name> ∈ .<edges>;
-        }
-        exit(1);
-      }
-
-      default {
-        .say && .exit
-      }
-    }
-  } else {
-    say "»»»»»» { $s.result.elems } Modules resolved";
-    @module-order.push: ( .<name> => $++ ) for $s.result;
-    # for %nodes.keys {
-    #   unless $_ eq $s.result.any {
-    #     @missing.push($_);
-    #     say "$_ missing from resolution results with edge-count = {
-    #          %nodes{$_}<edges>.elems }";
-    #   }
-    # }
-    # @missing = @missing.grep( * ne <GTK GtkNonWidgets GtkWidgets>.any )
-    #                    .map({ Pair.new($_, 1) })
-    #                    .sort;
-    # @module-order = |@missing, |@module-order;
-
-  }
-  my %module-order = @module-order.Hash;
-
-  @others.append: %nodes.values.grep({
-    .<name>.starts-with( $prefix ).not &&
-    .<name> ne <NativeCall nqp>.any    #&&
-    #.<edges>.elems.not
-  }).map( *<name> );
-
-  my @to-add-back = (%config<force_add> // '').split(/','\s*/);
-
-  @module-order.append:
-    |@modules-excluded.grep({ .[1] eq @to-add-back.any })
-                      .map({ Pair.new(.[1], 1) });
-  @module-order.tail(4).gist.say;
-
-  @others = @others.unique.sort;
-  my $list = @others.join("\n") ~ "\n";
-  $list ~= @module-order.map({ .key }).join("\n");
-  "BuildList".IO.open(:w).say($list);
-  say $list;
-
-  # Add module order to modules.
-  .push( %module-order{$_[1]} ) for @modules;
-
-  say "\nOther dependencies are:\n";
-  say @others.unique.sort.join("\n");
-
-  sub space($a) {
-    ' ' x ($a.chars % 8);
-  }
-
-  my @modules-list = @modules.sort({
-    ($^a[2] // 0).Int <=> ($^b[2] // 0).Int
-  }).map({
-    $_.reverse.map({ qq["{ $_ // '' }"] })[1..2]
-  });
-
-  {
-    # Not an optimal solution, but it will work with editing.
-    # Want to take the longest of $_[0], add a number of spaces
-    # equal the difference between the size plus the previous number modulo 8
-    use Text::Table::Simple;
-    say "\nProvides section:\n";
-    my $table = lol2table(
-      @modules-list,
-      rows => {
-        column_separator => ': ',
-        corner_marker    => ' ',
-        bottom_border    => ''
-      },
-      headers => {
-        top_border       => '',
-        column_separator => '',
-        corner_marker    => '',
-        bottom_border    => ''
-      },
-      footers => {
-        column_separator => '',
-        corner_marker    => '',
-        bottom_border    => ''
-      }
-    ).join("\n");
-    $table ~~ s:g/^^':'/    /;
-    $table ~~ s:g/':' \s* $$/,/;
-    $table ~~ s/',' \s* $//;
-
-    my $extra = 'META6.json';
-    if $extra.IO.e {
-      my $meta = $extra.IO.slurp;
-      $meta ~~ s/ '"provides": ' '{' ~ '}' <-[\}]>+ /"provides": \{\n{$table}\n    }/;
-      $extra.IO.rename("{ $extra }.bak");
-      my $fh = $extra.IO.open(:w);
-      $fh.printf: $meta;
-      $fh.close;
-
-      say 'New provides section written to META6.json.';
-    } else {
-      say $table;
-    }
-  }
-
-  # my $fh = $dep_file.open( :w );
-  # $fh.put;
-  # $fh.close;
 }
