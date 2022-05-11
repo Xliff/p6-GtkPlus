@@ -7,19 +7,38 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 
-use GLib::Roles::Properties;
+use GLib::Roles::Object;
 use GTK::Roles::Signals::EntryBuffer:ver<3.0.1146>;
 use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
+our subset GtkEntryBufferAncestry is export of Mu
+  where GtkEntryBuffer | GObject;
+
 class GTK::EntryBuffer:ver<3.0.1146> {
-  also does GLib::Roles::Properties;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::EntryBuffer;
-  also does GTK::Roles::Signals::Generic;
 
   has GtkEntryBuffer $!b is implementor;
 
-  submethod BUILD (:$buffer) {
-    self!setObject($!b = $buffer);
+  submethod BUILD ( :$gtk-entry-buffer) {
+    self.setGtkEntryBuffer($gtk-entry-buffer) if $gtk-entry-buffer;
+  }
+
+  method setGtkEntryBuffer (GtkEntryBufferAncestry $_) {
+    my $to-parent;
+
+    $!b = do {
+      when GtkEntryBuffer {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkEntryBuffer, $_);
+      }
+    }
+    self!setObject($to-parent);
   }
 
   submethod DESTROY {
@@ -34,8 +53,8 @@ class GTK::EntryBuffer:ver<3.0.1146> {
     $buffer ?? self.bless(:$buffer) !! Nil;
   }
   multi method new (Str $text, Int() $text_len) {
-    my gint $tl = $text_len;
-    my $buffer = gtk_entry_buffer_new($text, $tl);
+    my gint $tl     = $text_len;
+    my      $buffer = gtk_entry_buffer_new($text, $tl);
 
     $buffer ?? self.bless(:$buffer) !! Nil;
   }
