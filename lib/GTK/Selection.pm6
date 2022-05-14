@@ -86,9 +86,9 @@ class GTK::Selection:ver<3.0.1146> {
   # ↓↓↓↓ STATIC (non GtkSelectionData) METHODS ↓↓↓↓
   method add_target (
     GtkWidget() $widget,
-    GdkAtom $selection,
-    GdkAtom $target,
-    Int() $info
+    GdkAtom     $selection,
+    GdkAtom     $target,
+    Int()       $info
   )
     is also<add-target>
   {
@@ -98,10 +98,10 @@ class GTK::Selection:ver<3.0.1146> {
   }
 
   method add_targets (
-    GtkWidget() $widget,
-    GdkAtom $selection,
+    GtkWidget()      $widget,
+    GdkAtom          $selection,
     GtkTargetEntry() $targets,
-    Int() $ntargets
+    Int()            $ntargets
   )
     is also<add-targets>
   {
@@ -118,9 +118,9 @@ class GTK::Selection:ver<3.0.1146> {
 
   method convert (
     GtkWidget() $widget,
-    GdkAtom $selection,
-    GdkAtom $target,
-    Int() $time
+    GdkAtom     $selection,
+    GdkAtom     $target,
+    Int()       $time
   ) {
     my guint32 $t = $time;
 
@@ -137,8 +137,8 @@ class GTK::Selection:ver<3.0.1146> {
 
   multi method owner_set_for_display (
     GtkWidget() $widget,
-    GdkAtom $selection,
-    Int() $time
+    GdkAtom     $selection,
+    Int()       $time
   )
     is also<owner-set-for-display>
   {
@@ -177,8 +177,7 @@ class GTK::Selection:ver<3.0.1146> {
   multi method get_data_with_length {
     samewith($, :all);
   }
-  multi method get_data_with_length ($length is rw, :$all = False)
-  {
+  multi method get_data_with_length ($length is rw, :$all = False) {
     my guint $l = 0;
 
     my $s = gtk_selection_data_get_data_with_length($!s, $l);
@@ -255,21 +254,25 @@ class GTK::Selection:ver<3.0.1146> {
     samewith($, $, :$raw);
   }
   multi method get_targets ($targets is rw, $n_atoms is rw, :$raw = False) {
-    my $t = CArray[CArray[GdkAtom]].new;
+    my      $t  = CArray[CArray[GdkAtom]].new;
     my gint $na = 0;
 
     $t[0] = CArray[GdkAtom];
     gtk_selection_data_get_targets($!s, $t, $na);
     $n_atoms = $na;
 
-    return Nil unless $t[0];
-    return $t[0] if $raw;
+    return Nil   unless $t[0];
+    return $t[0] if     $raw;
 
     CArrayToArray($t[0], $n_atoms);
   }
 
   method get_text is also<get-text> {
     gtk_selection_data_get_text($!s);
+  }
+
+  method get_uris is also<get-urls> {
+    CArrayToArray( gtk_selection_data_get_uris($!s) );
   }
 
   method set (GdkAtom $type, Int() $format, Str() $data, Int() $length) {
