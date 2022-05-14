@@ -14,11 +14,14 @@ use GTK::Widget:ver<3.0.1146>;
 use GTK::EntryBuffer:ver<3.0.1146>;
 use GTK::EntryCompletion:ver<3.0.1146>;
 
+use GIO::Roles::Icon;
 use GTK::Roles::Editable:ver<3.0.1146>;
 use GTK::Roles::Signals::Entry:ver<3.0.1146>;
 
-our subset EntryAncestry is export
+our subset GtkEntryAncestry is export
   where GtkEntry | GtkEditable | GtkWidgetAncestry;
+
+constant EntryAncestry is export := GtkEntryAncestry;
 
 class GTK::Entry:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Editable;
@@ -32,35 +35,30 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
     $o;
   }
 
-  submethod BUILD(:$entry) {
-    given $entry {
-      when EntryAncestry {
-        self.setEntry($entry);
-      }
-      when GTK::Entry {
-      }
-      default {
-      }
-    }
+  submethod BUILD( :$gtk-entry ) {
+    self.setGtkEntry($gtk-entry) if $gtk-entry;
   }
 
-  method setEntry($entry) {
+  method setGtkEntry (GtkEntryAncestry $_) is also<setEntry> {
     my $to-parent;
-    $!e = do given $entry {
+    $!e = do {
       when GtkEntry {
         $to-parent = cast(GtkWidget, $_);
         $_;
       }
+
       when GtkEditable {
         $!er = $_;                              # GTK::Roles::Editable
         $to-parent = cast(GtkWidget, $_);
         cast(GtkEntry, $_);
       }
+
       when GtkWidgetAncestry {
         $to-parent = $_;
         cast(GtkEntry, $_);
       }
-    };
+    }
+
     self.setWidget($to-parent);
     $!er //= cast(GtkEditable, $!e);      # GTK::Roles::Editable
   }
@@ -69,25 +67,25 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
     self.disconnect-all($_) for %!signals-e;
   }
 
-  multi method new (EntryAncestry $entry, :$ref = True) {\
-    return Nil unless $entry;
+  multi method new (GtkEntryAncestry $gtk-entry, :$ref = True) {
+    return Nil unless $gtk-entry;
 
-    my $o = self.bless(:$entry);
+    my $o = self.bless(:$gtk-entry);
     $o.ref if $ref;
     $o;
   }
   multi method new {
-    my $entry = gtk_entry_new();
+    my $gtk-entry = gtk_entry_new();
 
-    $entry ?? self.bless(:$entry) !! Nil;
+    $gtk-entry ?? self.bless( :$gtk-entry ) !! Nil;
   }
 
   multi method new_with_buffer (GtkEntryBuffer() $b)
     is also<new-with-buffer>
   {
-    my $entry = gtk_entry_new_with_buffer($b);
+    my $gtk-entry = gtk_entry_new_with_buffer($b);
 
-    $entry ?? self.bless(:$entry) !! Nil;
+    $gtk-entry ?? self.bless( :$gtk-entry) !! Nil;
   }
 
   method GTK::Raw::Definitions::GtkEntry
@@ -591,23 +589,26 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
     );
   }
 
-  # GIcon us supposedly
-  # # Type: GIcon
-  # method primary-icon-gicon is rw  {
-  #   my GLib::Value $gv .= new( -type- );
-  #   Proxy.new(
-  #     FETCH => sub ($) {
-  #       $gv = GLib::Value.new(
-  #         self.prop_get('primary-icon-gicon', $gv)
-  #       );
-  #       #$gv.TYPE
-  #     },
-  #     STORE => -> $,  $val is copy {
-  #       #$gv.TYPE = $val;
-  #       self.prop_set('primary-icon-gicon', $gv);
-  #     }
-  #   );
-  # }
+  # Type: GIcon
+  method primary-icon-gicon ( :$raw = False ) is rw  {
+    my GLib::Value $gv .= new( GIO::Icon.get_type );
+    Proxy.new(
+      FETCH => sub ($) {
+        $gv = GLib::Value.new(
+          self.prop_get('primary-icon-gicon', $gv)
+        );
+        propReturnObject(
+          $gv.object,
+          $raw,
+          |GIO::Icon.getTypePair
+        );
+      },
+      STORE => -> $, GIcon() $val is copy {
+        $gv.object = $val;
+        self.prop_set('primary-icon-gicon', $gv);
+      }
+    );
+  }
 
   # Type: gchar
   method primary-icon-name is rw  {
@@ -762,23 +763,26 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
     );
   }
 
-  # GIcon is supposedly deprecated.
-  # # Type: GIcon
-  # method secondary-icon-gicon is rw  {
-  #   my GLib::Value $gv .= new( -type- );
-  #   Proxy.new(
-  #     FETCH => sub ($) {
-  #       $gv = GLib::Value.new(
-  #         self.prop_get('secondary-icon-gicon', $gv)
-  #       );
-  #       #$gv.TYPE
-  #     },
-  #     STORE => -> $,  $val is copy {
-  #       #$gv.TYPE = $val;
-  #       self.prop_set('secondary-icon-gicon', $gv);
-  #     }
-  #   );
-  # }
+  # Type: GIcon
+  method secondary-icon-gicon ( :$raw = False ) is rw  {
+    my GLib::Value $gv .= new( GIO::Icon.get_type );
+    Proxy.new(
+      FETCH => sub ($) {
+        $gv = GLib::Value.new(
+          self.prop_get('secondary-icon-gicon', $gv)
+        );
+        propReturnObject(
+          $gv.object,
+          $raw,
+          |GIO::Icon.getTypePair
+        );
+      },
+      STORE => -> $, GIcon() $val is copy {
+        $gv.object = $val;
+        self.prop_set('secondary-icon-gicon', $gv);
+      }
+    );
+  }
 
   # Type: gchar
   method secondary-icon-name is rw  {
