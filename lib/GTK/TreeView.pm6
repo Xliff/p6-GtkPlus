@@ -25,17 +25,17 @@ constant TreeViewAncestry is export = GtkTreeViewAncestry;
 
 # Are we still doing this, or not. I think it might be better to just do
 # "use GTK:ver<3.0.1146>".
-sub EXPORT {
-  %(
-    GTK::Adjustment::,
-    GTK::Container::,
-    GTK::Entry::,
-    GTK::TreeIter::,
-    GTK::TreeSelection::,
-    GTK::TreeStore::,
-    GTK::TreeViewColumn::,
-  );
-}
+# sub EXPORT {
+#   %(
+#     GTK::Adjustment::,
+#     GTK::Container::,
+#     GTK::Entry::,
+#     GTK::TreeIter::,
+#     GTK::TreeSelection::,
+#     GTK::TreeStore::,
+#     GTK::TreeViewColumn::,
+#   );
+# }
 
 # REFINEMENTS MUST BE COMPLETED. -- THIS MODULE NEEDS TO BE RE-REVIEWED!
 
