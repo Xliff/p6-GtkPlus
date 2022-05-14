@@ -8,7 +8,9 @@ use GTK::Raw::TreeModel:ver<3.0.1146>;
 # BOXED TYPE
 
 class GTK::TreeIter:ver<3.0.1146> is export {
-  has GtkTreeIter $!ti;
+  also does GLib::Roles::Implementor;
+
+  has GtkTreeIter $!ti is implementor;
 
   submethod BUILD(:$iter) {
     $!ti = $iter;
