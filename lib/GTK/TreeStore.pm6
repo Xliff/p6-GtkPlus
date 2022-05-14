@@ -27,26 +27,77 @@ class GTK::TreeStore:ver<3.0.1146>  {
 
   has GtkTreeStore $!tree is implementor;
 
+  our subset GtkTreeStoreAncestry is export of Mu
+    where GtkTreeStore | GtkTreeDragSource | GtkTreeDragDest | GtkTreeSortable |
+          GtkTreeModel | GtkBuildable      | GObject;
+
   submethod BUILD(:$treestore, :@types) {
-    if $treestore {
-      self!setObject($!tree = $treestore);           # GLib::Roles::Object
+    self.setGtkTreeStore($treestore, @types) if $treestore;
+  }
 
-      $!b  = nativecast(GtkBuildable,      $!tree);  # GTK::Roles::Buildable
-      $!tm = nativecast(GtkTreeModel,      $!tree);  # GTK::Roles::TreeModel
-      $!ts = nativecast(GtkTreeSortable,   $!tree);  # GTK::Roles::TreeSortable
-      $!dd = nativecast(GtkTreeDragDest,   $!tree);  # GTK::Roles::TreeDragDest
-      $!ds = nativecast(GtkTreeDragSource, $!tree);  # GTK::Roles::TreeDragSource
+  method setGtkTreeStore (GtkTreeStoreAncestry $_, @types) {
+    my $to-parent;
 
-      self.setTypeData(@types);
+    $!tree = do {
+      when GtkTreeStore {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      when GtkTreeDragSource {
+        $to-parent = cast(GObject, $_);
+        $!ds       = $_;
+        cast(GtkTreeStore, $_);
+      }
+
+      when GtkTreeDragDest {
+        $to-parent = cast(GObject, $_);
+        $!dd       = $_;
+        cast(GtkTreeStore, $_);
+      }
+
+      when GtkTreeSortable {
+        $to-parent = cast(GObject, $_);
+        $!ts       = $_;
+        cast(GtkTreeStore, $_);
+      }
+
+      when GtkTreeModel {
+        $to-parent = cast(GObject, $_);
+        $!tm       = $_;
+        cast(GtkTreeStore, $_);
+      }
+
+      when GtkBuildable {
+        $to-parent = cast(GObject, $_);
+        $!b        = $_;
+        cast(GtkTreeStore, $_);
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkTreeStore, $_);
+      }
     }
+
+    self!setObject($to-parent);
+    self.roleInitGtkTreeDragSource;
+    self.roleInitGtkTreeDragDest;
+    self.roleInitGtkTreeSortable;
+    self.roleInitGtkTreeModel;
+    self.roleInitGtkBuildable;
   }
 
   method GTK::Raw::Definitions::GtkTreeStore
     is also<GtkTreeStore>
   { $!tree }
 
-  multi method new (GtkTreeStore $treestore) {
-    $treestore ?? self.bless(:$treestore) !! Nil;
+  multi method new (GtkTreeStoreAncestry $treestore, :$ref = True) {
+    return Nil unless $treestore;
+
+    my $o = self.bless(:$treestore);
+    $o.ref if $ref;
+    $o;
   }
   multi method new (*@types) {
     my $treestore = gtk_tree_store_newv(
