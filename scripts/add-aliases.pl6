@@ -45,7 +45,7 @@ multi sub MAIN ($filename, :$test) {
     ^^ \s* ('multi' \s+)? 'method' \s+ <method_name>
   }
   my regex method_def {
-    ( <method_start> \s* <-[\{]>+ ) '{'
+    ( <method_start> [ \s* <-[\{]>+ ]? ) \s* '{'
   }
 
   sub get-alias ($mn, $d) {
@@ -67,11 +67,13 @@ multi sub MAIN ($filename, :$test) {
         $full_line ~= "\n\nuse Method::Also;";
         $add = True;
       }
-      when $full_line ~~ &method_start {
+
+      when $full_line ~~ &method_def {
         next if $/.Str ~~ /'is'<.ws>'also'/;
         ($method, $msm) = ( True, $/ );
         proceed;
       }
+
       when $full_line ~~ &method_proto {
         ($proto, $mpm) = ( True, $/ );
         proceed;
@@ -107,12 +109,16 @@ multi sub MAIN ($filename, :$test) {
         }
         ($add, $proto) = (True, False);
       }
+
       when $method && ($msm<method_name> // '').Str.contains('::') {
+        say 'Coercer...';
+
         my $al = $msm<method_name>.split('::').tail;
         $full_line.substr-rw($msm.from, $msm.to) =
           "{ $msm }\n    is also<{$al}>";;
         ($add, $cr) = (True, False);
       }
+
       when $method && $full_line ~~ &method_def {
         my $fm = $/[0];
         my $mn = $fm<method_start><method_name>;
