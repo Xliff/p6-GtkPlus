@@ -78,6 +78,7 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
     # This works because it is NOT the array version.
     my guint $o = $orientation;
     my gint  $s = $spacing;
+
     my $box = gtk_box_new($o, $s);
 
     $box ?? self.bless( :$box ) !! Nil;
@@ -85,6 +86,7 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
 
   method new-hbox (Int $spacing = $default-spacing) is also<new_hbox> {
     my gint $s = $spacing;
+    
     my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $s);
 
     $box ?? self.bless( :$box ) !! Nil;
@@ -161,17 +163,17 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
 
   multi method pack-end (
     GtkWidget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    Int()     $expand  = 0,
+    Int()     $fill    = 0,
+    Int()     $padding = 0
   ) {
     self.pack_end($child, $expand, $fill, $padding);
   }
   multi method pack_end (
     GtkWidget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    Int()     $expand  = 0,
+    Int()     $fill    = 0,
+    Int()     $padding = 0
   ) {
     my ($e, $f, $p) = ($expand, $fill, $padding);
 
@@ -180,18 +182,18 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
     gtk_box_pack_end($!b, $child, $e, $f, $p);
   }
   multi method pack-end (
-    GTK::Widget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    GTK::Widget  $child,
+    Int()        $expand  = 0,
+    Int()        $fill    = 0,
+    Int()       $padding = 0
   ) {
     self.pack_end($child, $expand, $fill, $padding);
   }
   multi method pack_end (
     GTK::Widget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    Int()       $expand  = 0,
+    Int()       $fill    = 0,
+    Int()       $padding = 0
   ) {
     self.unshift-end($child);
     self.SET-LATCH;
@@ -200,17 +202,17 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
 
   multi method pack-start (
     GtkWidget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    Int()     $expand  = 0,
+    Int()     $fill    = 0,
+    Int()     $padding = 0
   ) {
     self.pack_start($child, $expand, $fill, $padding);
   }
   multi method pack_start (
     GtkWidget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    Int()     $expand  = 0,
+    Int()     $fill    = 0,
+    Int()     $padding = 0
   ) {
     my uint32 ($e, $f, $p) = ($expand, $fill, $padding);
 
@@ -220,17 +222,17 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
   }
   multi method pack-start (
     GTK::Widget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    Int()       $expand  = 0,
+    Int()       $fill    = 0,
+    Int()       $padding = 0
   ) {
     self.pack_start($child, $expand, $fill, $padding);
   }
   multi method pack_start (
     GTK::Widget $child,
-    Int() $expand  = 0,
-    Int() $fill    = 0,
-    Int() $padding = 0
+    Int()       $expand  = 0,
+    Int()       $fill    = 0,
+    Int()       $padding = 0
   ) {
     self.push-start($child);
     self.SET-LATCH;
@@ -246,15 +248,16 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
   }
   multi method query_child_packing (
     GtkWidget() $child,
-    $expand is rw,
-    $fill is rw,
-    $padding is rw,
-    $pack_type is rw,
-    :$all = False
+                $expand    is rw,
+                $fill      is rw,
+                $padding   is rw,
+                $pack_type is rw,
+               :$all               = False
   ) {
-    my gboolean ($e, $f) = 0 xx 2;
-    my guint ($p, $pt) = 0 xx 2;
-    my $rc = gtk_box_query_child_packing($!b, $child, $e, $f, $p, $pt);
+    my gboolean ($e, $f)  = 0 xx 2;
+    my guint    ($p, $pt) = 0 xx 2;
+
+    my $rc  = gtk_box_query_child_packing($!b, $child, $e, $f, $p, $pt);
 
     ($expand, $fill, $padding, $pack_type) = ($e, $f, $p, $pt);
     $all.not ?? $rc !! ($rc, $expand, $fill, $padding, $pack_type);
@@ -264,15 +267,16 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
     is also<reorder-child>
   {
     my gint $p = $position;
+
     gtk_box_reorder_child($!b, $child, $p);
   }
 
   method set_child_packing (
     GtkWidget() $child,
-    Int() $expand,
-    Int() $fill,
-    Int() $padding,
-    Int() $pack_type
+    Int()       $expand,
+    Int()       $fill,
+    Int()       $padding,
+    Int()       $pack_type
   )
     is also<set-child-packing>
   {
