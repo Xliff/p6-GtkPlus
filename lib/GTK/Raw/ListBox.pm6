@@ -2,17 +2,19 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GTK::Raw::Definitions;
 
 unit package GTK::Raw::ListBox:ver<3.0.1146>;
 
 sub gtk_list_box_bind_model (
   GtkListBox $box,
   GListModel $model,
-  &create_widget_func (Pointer, Pointer --> GtkWidget),
-  gpointer $user_data,
-  GDestroyNotify $user_data_free_func
+             &create_widget_func (Pointer, Pointer --> GtkWidget),
+  gpointer   $user_data,
+             &user_data_free_func (gpointer)
 )
   is native(gtk)
   is export
@@ -124,8 +126,8 @@ sub gtk_list_box_select_row (GtkListBox $box, GtkListBoxRow $row)
 
 sub gtk_list_box_selected_foreach (
   GtkListBox $box,
-  &func (GtkListBox, GtkListBoxRow, gpointer),
-  gpointer $data
+             &func (GtkListBox, GtkListBoxRow, gpointer),
+  gpointer   $data
 )
   is native(gtk)
   is export
@@ -133,9 +135,9 @@ sub gtk_list_box_selected_foreach (
 
 sub gtk_list_box_set_filter_func (
   GtkListBox $box,
-  &filter_func (GtkListBoxRow, gpointer --> gboolean),
-  gpointer $user_data,
-  GDestroyNotify $destroy
+             &filter_func (GtkListBoxRow, gpointer --> gboolean),
+  gpointer   $user_data,
+             &destroy
 )
   is native(gtk)
   is export
@@ -143,9 +145,9 @@ sub gtk_list_box_set_filter_func (
 
 sub gtk_list_box_set_header_func (
   GtkListBox $box,
-  &update_header (GtkListBoxRow, GtkListBoxRow, Pointer),
-  gpointer $user_data,
-  GDestroyNotify $destroy
+             &update_header (GtkListBoxRow, GtkListBoxRow, Pointer),
+  gpointer   $user_data,
+             &destroy
 )
   is native(gtk)
   is export
@@ -158,9 +160,9 @@ sub gtk_list_box_set_placeholder (GtkListBox $box, GtkWidget $placeholder)
 
 sub gtk_list_box_set_sort_func (
   GtkListBox $box,
-  &sort_func (GtkListBoxRow, GtkListBoxRow, Pointer --> gint),
-  gpointer $user_data,
-  GDestroyNotify $destroy
+             &sort_func (GtkListBoxRow, GtkListBoxRow, Pointer --> gint),
+  gpointer   $user_data,
+             &destroy
 )
   is native(gtk)
   is export
@@ -224,7 +226,7 @@ sub gtk_list_box_row_set_header (GtkListBoxRow $row, GtkWidget $header)
 
 sub gtk_list_box_row_set_activatable (
   GtkListBoxRow $row,
-  gboolean $activatable
+  gboolean      $activatable
 )
   is native(gtk)
   is export
@@ -232,7 +234,7 @@ sub gtk_list_box_row_set_activatable (
 
 sub gtk_list_box_row_set_selectable (
   GtkListBoxRow $row,
-  gboolean $selectable
+  gboolean      $selectable
 )
   is native(gtk)
   is export
@@ -240,7 +242,7 @@ sub gtk_list_box_row_set_selectable (
 
 sub gtk_list_box_set_selection_mode (
   GtkListBox $box,
-  uint32 $mode                  # GtkSelectionMode $mode
+  uint32     $mode                  # GtkSelectionMode $mode
 )
   is native(gtk)
   is export
@@ -248,7 +250,7 @@ sub gtk_list_box_set_selection_mode (
 
 sub gtk_list_box_set_activate_on_single_click (
   GtkListBox $box,
-  gboolean $single
+  gboolean   $single
 )
   is native(gtk)
   is export
