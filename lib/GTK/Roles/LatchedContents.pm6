@@ -10,6 +10,8 @@ use GTK::Raw::Types:ver<3.0.1146>;
 use GTK::Widget:ver<3.0.1146>;
 
 role GTK::Roles::LatchedContents:ver<3.0.1146> {
+  also does Positional;
+  
   # This is for GTK:: objects ONLY!
   also does GTK::Roles::Protection;
 
@@ -112,6 +114,14 @@ W
 
   method children {
     |@!start, |@!end;
+  }
+
+  method elems {
+    self.children.elems
+  }
+
+  method AT-POS (\k) {
+    self.children[k];
   }
 
 }
