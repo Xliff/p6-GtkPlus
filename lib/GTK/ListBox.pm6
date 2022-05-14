@@ -14,8 +14,10 @@ use GLib::Roles::ListData;
 use GTK::Roles::Actionable:ver<3.0.1146>;
 use GTK::Roles::Signals::ListBox:ver<3.0.1146>;
 
-our subset ListBoxAncestry is export
+our subset GtkListBoxAncestry is export
   where GtkListBox | GtkActionable | ContainerAncestry;
+
+constant ListBoxAncestry is export := GtkListBoxAncestry;
 
 class GTK::ListBox:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Actionable;
@@ -23,39 +25,36 @@ class GTK::ListBox:ver<3.0.1146> is GTK::Container {
 
   has GtkListBox $!lb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
 
   submethod BUILD(:$listbox) {
+    self.setGtkListBox($listbox) if $listbox;
+  }
+
+  method setGtkListBox (GtkListBoxAncestry $_) {
     my $to-parent;
-    given $listbox {
-      when ListBoxAncestry {
-        $!lb = do {
-          when GtkListBox {
-            $to-parent = cast(GtkContainer, $_);
-            $_;
-          }
-          when GtkActionable {
-            $!action = $_;
-            $to-parent = cast(GtkContainer, $_);
-            cast(GtkListBox, $_);
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkListBox, $_);
-          }
-        }
-        $!action //= cast(GtkActionable, $listbox);
-        self.setContainer($to-parent);
+
+    $!lb = do {
+      when GtkListBox {
+        $to-parent = cast(GtkContainer, $_);
+        $_;
       }
-      when GTK::ListBox {
+      when GtkActionable {
+        $!action = $_;
+        $to-parent = cast(GtkContainer, $_);
+        cast(GtkListBox, $_);
       }
       default {
+        $to-parent = $_;
+        cast(GtkListBox, $_);
       }
     }
+    self.setContainer($to-parent);
+    self.roleInit-GtkActionable;
   }
 
   submethod DESTROY {
@@ -256,14 +255,12 @@ class GTK::ListBox:ver<3.0.1146> is GTK::Container {
       selected-rows
     >
   {
-    my $srl = gtk_list_box_get_selected_rows($!lb);
-
-    return Nil unless $srl;
-    return $srl if $glist;
-
-    $srl = GLib::GList.new($srl) but GLib::Roles::ListData[GtkListBoxRow];
-
-    $raw ?? $srl.Array !! $srl.Array.map({ GTK::ListBoxRow.new($_) });
+    returnGList(
+      gtk_list_box_get_selected_rows($!lb),
+      $raw,
+      $glist,
+      |GTK::ListBoxRow.getTypePair
+    );
   }
 
   method get_type is also<get-type> {
@@ -305,30 +302,30 @@ class GTK::ListBox:ver<3.0.1146> is GTK::Container {
     gtk_list_box_select_row($!lb, $row);
   }
 
-  method selected_foreach (&func, gpointer $data)
+  method selected_foreach (&func, gpointer $data = gpointer)
     is also<selected-foreach>
   {
     gtk_list_box_selected_foreach($!lb, &func, $data);
   }
 
   method set_filter_func (
-    &filter_func,
-    gpointer $user_data     = gpointer,
-    GDestroyNotify $destroy = GDestroyNotify
+             &filter_func,
+    gpointer $user_data    = gpointer,
+             &destroy      = Callable
   )
     is also<set-filter-func>
   {
-    gtk_list_box_set_filter_func($!lb, &filter_func, $user_data, $destroy);
+    gtk_list_box_set_filter_func($!lb, &filter_func, $user_data, &destroy);
   }
 
   method set_header_func (
-    &update_header,
-    gpointer $user_data     = gpointer,
-    GDestroyNotify $destroy = GDestroyNotify
+             &update_header,
+    gpointer $user_data      = gpointer,
+             &destroy        = Callable
   )
     is also<set-header-func>
   {
-    gtk_list_box_set_header_func($!lb, &update_header, $user_data, $destroy);
+    gtk_list_box_set_header_func($!lb, &update_header, $user_data, &destroy);
   }
 
   method set_placeholder (GtkWidget() $placeholder)
@@ -339,9 +336,9 @@ class GTK::ListBox:ver<3.0.1146> is GTK::Container {
 
   method set_sort_func (
     #&sort_func:(GtkListBoxRow, GtkListBoxRow, gpointer --> gint),
-                   &sort_func,
-    gpointer       $user_data  = gpointer,
-    GDestroyNotify $destroy    = GDestroyNotify
+             &sort_func,
+    gpointer $user_data  = gpointer,
+             &destroy    = Callable
   )
     is also<set-sort-func>
   {
@@ -352,7 +349,7 @@ class GTK::ListBox:ver<3.0.1146> is GTK::Container {
     #   }
     # }
 
-    gtk_list_box_set_sort_func($!lb, &sort_func, $user_data, $destroy);
+    gtk_list_box_set_sort_func($!lb, &sort_func, $user_data, &destroy);
   }
 
   multi method unselect (GtkListBoxRow() $r, :$row is required) {
