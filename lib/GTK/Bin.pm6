@@ -3,10 +3,11 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Bin:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Bin:ver<3.0.1146>;
 
 use GTK::Container:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset GtkBinAncestry is export of Mu
   where GtkBin | ContainerAncestry;
@@ -14,7 +15,7 @@ our subset GtkBinAncestry is export of Mu
 constant BinAncestry is export := GtkBinAncestry;
 
 class GTK::Bin:ver<3.0.1146> is GTK::Container {
-  has GtkBin $!bin;   # Implementor in GTK::Widget
+  has GtkBin $!bin is implementor;   
 
   # method bless(*%attrinit) {
   #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -47,8 +48,8 @@ class GTK::Bin:ver<3.0.1146> is GTK::Container {
         cast(GtkBin, $_);
       }
     };
-    say "BIN: { $!bin // 'NIL' }";
-    say "BIN-TP: { $to-parent // 'NIL' }";
+    say "BIN: { $!bin // 'NIL' }"         if $DEBUG > 2;
+    say "BIN-TP: { $to-parent // 'NIL' }" if $DEBUG > 2;
     self.setContainer($to-parent);
   }
 
@@ -76,14 +77,19 @@ class GTK::Bin:ver<3.0.1146> is GTK::Container {
     nextwith($widget);
   }
 
-  method get_child
+  method get_child ( :$raw = False, :$widget = False )
     is also<
       get-child
       child
     >
   {
-    self.end[0] ~~ GTK::Widget ??
-      self.end[0] !! gtk_bin_get_child($!bin);
+    self.end[0] ~~ GTK::Widget
+      ?? self.end[0]
+      !! ReturnWidget(
+           gtk_bin_get_child($!bin),
+           $raw,
+           $widget
+         )
   }
 
   method get_type is also<get-type> {
