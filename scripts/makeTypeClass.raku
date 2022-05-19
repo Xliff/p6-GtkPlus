@@ -1,4 +1,4 @@
-#!/usr/bin/env Raku
+#!/usr/bin/env raku
 
 use GLib::Roles::Pointers;
 use File::Find;
@@ -7,7 +7,9 @@ use lib <. scripts>;
 
 use GTKScripts;
 
-sub MAIN (:$prefix = %config<prefix>) {
+sub MAIN (
+  :$prefix = %config<prefix>.subst('::', '')
+) {
   die 'Must specify --prefix!' unless $prefix;
 
   my %ct;
@@ -21,13 +23,14 @@ sub MAIN (:$prefix = %config<prefix>) {
     find(
       dir => "lib",
       exclude => {
-          / "Raw"      |
-            ".precomp" |
+          / "Raw"            |
+            ".precomp"       |
             ".ref-ba""c"?"k" |
-            "Compat" |
-            "Class" |
-            "Object" |
-            ".bak" |
+            "Compat"         |
+            "Class"          |
+            "Object"         |
+            ".bak"           |
+            ".bump"          |
             "TypeClass.pm6"
           /
       }
@@ -53,32 +56,32 @@ sub MAIN (:$prefix = %config<prefix>) {
     };
 
     my $tn = findProperImplementor(o.^attributes).type.^shortname;
-    say " -----> { $tn}"; unless o ~~ Failure { %ct{$f} = $tn; }
+    say " -----> { $tn }"; unless o ~~ Failure { %ct{$f} = $tn }
 
   }
 
   my $spurt = qq:to/SPURT/;
     use v6.c;
 
-    use GLib::Raw::Types;
+    use { $prefix }::Raw::Types;
 
     unit package { $prefix }::TypeClass;
 
     our \%{ $prefix }-typeClass is export;
 
-    BEGIN \%typeClass = (
-      {
+    BEGIN \%{ $prefix }-typeClass = (
+      \{
         %ct.antipairs.map({
-          qq«    "{ .key }" => "{ .value }",»
+          qq«    "{ .key }" => "{ .value.join } ",»
         }).join("\n")
-      }
+      \}
     );
     SPURT
 
   $spurt ~= qq:to/SPURT2/;
-    INIT {
+    INIT \{
       updateTypeClass( \%{ $prefix }-typeClass )
-    }
+    \}
     SPURT2
 
   "lib/{ $prefix }/TypeClass.pm6".IO.spurt($spurt);
