@@ -18,7 +18,6 @@ use GDK::Window;
 use GTK::Raw::DnD:ver<3.0.1146>;
 use GTK::Raw::DragDest:ver<3.0.1146>;
 use GTK::Raw::DragSource:ver<3.0.1146>;
-use GTK::Raw::Subs:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 use GTK::Raw::Widget:ver<3.0.1146>;
 
@@ -2546,9 +2545,13 @@ class GTK::Widget:ver<3.0.1146> {
 sub ReturnWidget (
    $w,
    $raw,
-  :base-widget(:$widget) = False,
+   $widget       is copy = False,
+  :$base-widget,
   :$base                 = GTK::Widget
 ) is export {
+  # cw: The reasoning behind $base-widget isn't looking so pertinent, now.
+  $widget = $base-widget if $base-widget.defined;
+
   $w ?? ( $raw ?? $w
                !! ( $widget ?? $base.new($w)
                             !! GTK::Widget.CreateObject($w) ) )
