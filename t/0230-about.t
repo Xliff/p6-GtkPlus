@@ -6,12 +6,14 @@ use GTK::Image;
 
 my $a = GTK::Application.new( title => 'org.genex.about_dialog' );
 
-$a.activate.tap({
+$a.activate.tap( -> *@a {
   my $logo = './camelia-gtk.png';
   $logo = 't/camelia-gtk.png' unless $logo.IO.e;
   warn "Can't find proper logo" unless $logo.IO.e;
   my $i = GTK::Image.new_from_file($logo);
   my $d = GTK::Dialog::About.new;
+
+  say "AppWindow = { $a.window // '»undef«' }";
 
   $d.transient_for = $a.window;
   $d.modal = True;
