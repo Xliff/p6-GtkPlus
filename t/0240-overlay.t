@@ -5,10 +5,6 @@ use v6.c;
 
 use lib <t .>;
 
-# Needs porting to the Cairo module
-
-use Cairo;
-
 use GTK::Raw::Types;
 use overlay_example;
 
@@ -25,41 +21,39 @@ use GTK::ToggleButton;
 use GTK::Window;
 
 my $packet = {
-  width => 400,
-  height => 200,
-  rad_step => 0.05,
-  scale_factor => 75,
-  y0 => 100,
-  x_step => 1,
-  rads => 0.0,
-  last_x => 0,
-  last_y => 0,
-  current_x => 0,
-  current_y => 0,
+  width            => 400,
+  height           => 200,
+  rad_step         => 0.05,
+  scale_factor     => 75,
+  y0               => 100,
+  x_step           => 1,
+  rads             => 0.0,
+  last_x           => 0,
+  last_y           => 0,
+  current_x        => 0,
+  current_y        => 0,
   current_eraser_x => 150,
 };
 
 $packet<func> = &sin;
-my $a = GTK::Application.new( title => 'org.genex.overlay' );
-my $c = GTK::CSSProvider.new( pod => $=pod );
+my $a            = GTK::Application.new( title => 'org.genex.overlay' );
+my $c            = GTK::CSSProvider.new( pod => $=pod );
 my $drawing_area = GTK::DrawingArea.new;
 
 sub do_graph($packet) {
   my ($pi_rads, $label);
 
-  $packet<rads> = 0 if $packet<rads> >= 2.0;
-  $pi_rads = pi * $packet<rads>;
-  $packet<label>.text = "Radians: { $packet<rads>.round(0.1) }pi";
-  $packet<rads> += $packet<rad_step>;
-  $packet<current_x> = 0 if $packet<current_x> > $packet<width>;
-  $packet<last_x last_y> = $packet<current_x current_y>;
-  $packet<current_x> += $packet<x_step>;
-  $packet<current_y> = $packet<y0> - (
-    $packet<scale_factor> * $packet<func>($pi_rads)
-  );
-
+  $packet<rads>              = 0 if $packet<rads> >= 2.0;
+  $pi_rads                   = pi * $packet<rads>;
+  $packet<label>.text        = "Radians: { $packet<rads>.round(0.1) }pi";
+  $packet<rads>             += $packet<rad_step>;
+  $packet<current_x>         = 0 if $packet<current_x> > $packet<width>;
+  $packet<last_x last_y>     = $packet<current_x current_y>;
+  $packet<current_x>        += $packet<x_step>;
+  $packet<current_y>         = $packet<y0> - $packet<scale_factor> *
+                                             $packet<func>($pi_rads);
   $packet<current_eraser_x> += $packet<x_step>;
-  $packet<current_eraser_x> = 0 if $packet<current_eraser_x> > $packet<width>;
+  $packet<current_eraser_x>  = 0 if $packet<current_eraser_x> > $packet<width>;
   $a.window.queue_draw;
   1;
 }
@@ -88,7 +82,7 @@ sub draw_callback($drawable, $packet) {
   1;
 }
 
-$a.activate.tap({
+$a.activate.tap( -> *@a {
   # $packet<plot_surface> = image_surface_create(
   #   CAIRO_FORMAT_ARGB32,
   #   400,
