@@ -35,8 +35,6 @@ class GTK::ToggleButton:ver<3.0.1146> is GTK::Button {
   { $!tb }
 
   method setToggleButton(ToggleButtonAncestry $togglebutton) {
-    self.IS-PROTECTED;
-
     my $to-parent;
     $!tb = do given $togglebutton {
       when GtkToggleButton {
@@ -48,7 +46,7 @@ class GTK::ToggleButton:ver<3.0.1146> is GTK::Button {
         cast(GtkToggleButton, $_);
       }
     }
-    self.setButton($to-parent);
+    self.setGtkButton($to-parent);
   }
 
   multi method new (ToggleButtonAncestry $togglebutton, :$ref = True) {
