@@ -4,11 +4,16 @@ use Method::Also;
 
 use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::StyleProvider:ver<3.0.1146> {
-  has GtkStyleProvider $!sp;
+use GLib::Roles::Object;
 
-  submethod BUILD(:$style) {
-    $!sp = $style;
+role GTK::Roles::StyleProvider:ver<3.0.1146> {
+  has GtkStyleProvider $!sp is implementor;
+
+  method roleInit-GtkStyleProvider {
+    return if $!sp;
+
+    my \i = findProperImplementor(self.^attributes);
+    $!sp  = cast( GtkStyleProvider, i.get_value(self) )
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -24,10 +29,6 @@ role GTK::Roles::StyleProvider:ver<3.0.1146> {
     is also<GtkStyleProvider>
   { $!sp }
 
-  method new-styleprovider-obj (GtkStyleProvider $style) {
-    $style ?? self.bless( :$style ) !! Nil;
-  }
-
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_style (GtkWidgetPath() $path)
     is DEPRECATED('GTK::StyleProvider.get_style_property')
@@ -37,16 +38,16 @@ role GTK::Roles::StyleProvider:ver<3.0.1146> {
 
   method get_style_property (
     GtkWidgetPath() $path,
-    Int() $state,
-    GParamSpec() $pspec,
-    GValue() $value
+    Int()           $state,
+    GParamSpec()    $pspec,
+    GValue()        $value
   ) {
     my guint $s = $state;
 
     gtk_style_provider_get_style_property($!sp, $path, $s, $pspec, $value);
   }
 
-  method get_styleprovider_type {
+  method get_gtkstyleprovider_type {
     state ($n, $t);
 
     unstable_get_type( self.^name, &gtk_style_provider_get_type, $n, $t );
@@ -59,10 +60,51 @@ role GTK::Roles::StyleProvider:ver<3.0.1146> {
 
 }
 
+our subset GtkStyleProviderAncestry is export of Mu
+  where GtkStyleProvider | GObject;
+
+class GTK::StyleProvider:ver<3.0.1146> {
+  also does GLib::Roles::Object;
+  also does GTK::Roles::StyleProvider;
+
+  submethod BUILD ( :$gtk-style-provider ) {
+    self.setGtkStyleProvider($gtk-style-provider) if $gtk-style-provider;
+  }
+
+  method setGtkStyleProvider (GtkStyleProviderAncestry $_) {
+    my $to-parent;
+
+    $!sp = do {
+      when GtkStyleProvider {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkStyleProvider, $_);
+      }
+    }
+    self!setObject($to-parent);
+  }
+
+  method new (GtkStyleProviderAncestry $gtk-style-provider, :$ref = True) {
+    return Nil unless $gtk-style-provider;
+
+    my $o = self.bless( :$gtk-style-provider );
+    $o.ref if $ref;
+    $o;
+  }
+
+  method get_type {
+    self.get_gtkstyleprovider_type;
+  }
+
+}
 
 sub gtk_style_provider_get_style (
   GtkStyleProvider $provider,
-  GtkWidgetPath $path
+  GtkWidgetPath    $path
 )
   returns GtkStyleProperties
   is native(gtk)
@@ -71,10 +113,10 @@ sub gtk_style_provider_get_style (
 
 sub gtk_style_provider_get_style_property (
   GtkStyleProvider $provider,
-  GtkWidgetPath $path,
-  uint32 $state,
-  GParamSpec $pspec,
-  GValue $value
+  GtkWidgetPath    $path,
+  uint32           $state,
+  GParamSpec       $pspec,
+  GValue           $value
 )
   returns uint32
   is native(gtk)
