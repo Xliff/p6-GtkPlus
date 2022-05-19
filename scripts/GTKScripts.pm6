@@ -157,6 +157,10 @@ sub get-module-files is export {
   get-lib-files( extension => 'pm6' );
 }
 
+sub get-raw-module-files is export {
+  get-lib-files( pattern => / '/Raw/' /, extension => 'pm6' )
+}
+
 sub levenshtein-nqp ($a, $b) is export {
     use nqp;
 
