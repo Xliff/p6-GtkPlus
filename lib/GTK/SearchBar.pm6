@@ -7,8 +7,10 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::Bin:ver<3.0.1146>;
 
-our subset SearchBarAncestry is export
-  where GtkSearchBar | BinAncestry;
+our subset GtkSearchBarAncestry is export
+  where GtkSearchBar | GtkBinAncestry;
+
+constant SearchBarAncestry is export := GtkSearchBarAncestry;
 
 class GTK::SearchBar:ver<3.0.1146> is GTK::Bin {
   has GtkSearchBar $!sb is implementor;
@@ -20,26 +22,24 @@ class GTK::SearchBar:ver<3.0.1146> is GTK::Bin {
   }
 
   submethod BUILD(:$searchbar) {
+    self.setGtkSearchBar($searchbar) if $searchbar;
+  }
+
+  method setGtkSearchBarAncestry (GtkSearchBarAncestry $_) {
     my $to-parent;
-    given $searchbar {
-      when SearchBarAncestry {
-        $!sb = do {
-          when GtkSearchBar {
-            $to-parent = cast(GtkBin, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkSearchBar, $_);
-          }
-        }
-        self.setBin($to-parent);
+
+    $!sb = do {
+      when GtkSearchBar {
+        $to-parent = cast(GtkBin, $_);
+        $_;
       }
-      when GTK::SearchBar {
-      }
+
       default {
+        $to-parent = $_;
+        cast(GtkSearchBar, $_);
       }
     }
+    self.setBin($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkSearchBar
@@ -52,7 +52,7 @@ class GTK::SearchBar:ver<3.0.1146> is GTK::Bin {
   multi method new (SearchBarAncestry $searchbar, :$ref = True) {
     return Nil unless $searchbar;
 
-    my $o = self.bless(:$searchbar);
+    my $o = self.bless( :$searchbar );
     $o.ref if $ref;
     $o;
   }
