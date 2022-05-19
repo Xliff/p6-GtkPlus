@@ -3,8 +3,9 @@ use v6.c;
 use NativeCall;
 
 use Pango::Raw::Types;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Enums;
+use GTK::Raw::Definitions:ver<3.0.1146>;
 
 unit package GTK::Raw::FontChooser:ver<3.0.1146>;
 

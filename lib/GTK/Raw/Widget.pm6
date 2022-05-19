@@ -3,9 +3,16 @@ use v6.c;
 use NativeCall;
 
 use GDK::RGBA;
-
-use GTK::Raw::Types:ver<3.0.1146>;
-use Pango::Raw::Types;
+use GLib::Raw::Definitions;
+use GLib::Raw::Enums;
+use GLib::Raw::Object;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use Pango::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Widget:ver<3.0.1146>;
 

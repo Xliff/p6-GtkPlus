@@ -2,10 +2,13 @@ use v6.c;
 
 use NativeCall;
 
-use Pango::Raw::Types;
-
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use Pango::Raw::Definitions;
+use Pango::Raw::Enums;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
 
 unit package GTK::Raw::Main:ver<3.0.1146>;
 
@@ -116,28 +119,28 @@ sub gtk_init (gint $argc, CArray[Str] $argv)
 { * }
 
 sub gtk_init_abi_check (
-  gint $argc,
-  Str $argv,
-  gint $num_checks,
-  size_t $sizeof_GtkWindow,
-  size_t $sizeof_GtkBox
+  gint        $argc,
+  CArray[Str] $argv,
+  gint        $num_checks,
+  size_t      $sizeof_GtkWindow,
+  size_t      $sizeof_GtkBox
 )
   is native(gtk)
   is export
 { * }
 
-sub gtk_init_check (gint $argc, Str $argv)
+sub gtk_init_check (gint $argc, CArray[Str] $argv)
   returns uint32
   is native(gtk)
   is export
 { * }
 
 sub gtk_init_check_abi_check (
-  gint $argc,
-  Str $argv,
-  gint $num_checks,
-  size_t $sizeof_GtkWindow,
-  size_t $sizeof_GtkBox
+  gint        $argc,
+  CArray[Str] $argv,
+  gint        $num_checks,
+  size_t      $sizeof_GtkWindow,
+  size_t      $sizeof_GtkBox
 )
   returns uint32
   is native(gtk)
@@ -145,11 +148,11 @@ sub gtk_init_check_abi_check (
 { * }
 
 sub gtk_init_with_args (
-  gint $argc,
-  Str $argv,
-  Str $parameter_string,
-  GOptionEntry $entries,
-  Str $translation_domain,
+  gint                    $argc,
+  CArray[Str]             $argv,
+  Str                     $parameter_string,
+  GOptionEntry            $entries,
+  Str                     $translation_domain,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -158,7 +161,7 @@ sub gtk_init_with_args (
 { * }
 
 sub gtk_key_snooper_install (
-  &snooper (GtkWidget, GdkEventKey, Pointer --> gint),
+           &snooper (GtkWidget, GdkEventKey, Pointer --> gint),
   gpointer $func_data
 )
   returns guint

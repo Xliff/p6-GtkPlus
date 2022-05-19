@@ -2,14 +2,15 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Enumns;
+use GTK::Raw::Definitions:ver<3.0.1146>;
 
 unit package GTK::Raw::CellRenderer:ver<3.0.1146>;
 
 sub gtk_cell_renderer_activate (
   GtkCellRenderer $cell,
-  GdkEvent $event,
+  GdkEvent $event,c
   GtkWidget $widget,
   gchar $path,
   GdkRectangle $background_area,
