@@ -3,9 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Container:ver<3.0.1146>;
-use GTK::Raw::Subs:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Container:ver<3.0.1146>;
 
 use GLib::GList;
 use GTK::Adjustment:ver<3.0.1146>;
@@ -52,8 +51,8 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
         cast(GtkContainer, $_);
       }
     }
-    say "CONTAINER: { $!c }";
-    say "CONTAINER-TP: { $to-parent }";
+    say "CONTAINER: { $!c }"           if $DEBUG > 2;
+    say "CONTAINER-TP: { $to-parent }" if $DEBUG > 2;
     self.setWidget($to-parent);
   }
 
