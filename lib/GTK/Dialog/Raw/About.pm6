@@ -9,8 +9,8 @@ unit package GTK::Dialog::Raw::About:ver<3.0.1146>;
 
 sub gtk_about_dialog_add_credit_section (
   GtkAboutDialog $about,
-  gchar $section_name,
-  CArray[Str] $people
+  Str            $section_name,
+  CArray[Str]    $people
 )
   is native(gtk)
   is export
@@ -120,7 +120,7 @@ sub gtk_about_dialog_get_copyright (GtkAboutDialog $about)
 
 sub gtk_about_dialog_set_translator_credits (
   GtkAboutDialog $about,
-  CArray[Str] $translator_credits
+  CArray[Str]    $translator_credits
 )
   is native(gtk)
   is export
@@ -128,7 +128,7 @@ sub gtk_about_dialog_set_translator_credits (
 
 sub gtk_about_dialog_set_documenters (
   GtkAboutDialog $about,
-  CArray[Str] $documenters
+  CArray[Str]    $documenters
 )
   is native(gtk)
   is export
@@ -136,7 +136,7 @@ sub gtk_about_dialog_set_documenters (
 
 sub gtk_about_dialog_set_license (
   GtkAboutDialog $about,
-  gchar $license
+  Str            $license
 )
   is native(gtk)
   is export
@@ -144,7 +144,7 @@ sub gtk_about_dialog_set_license (
 
 sub gtk_about_dialog_set_artists (
   GtkAboutDialog $about,
-  CArray[Str] $artists
+  CArray[Str]    $artists
 )
   is native(gtk)
   is export
@@ -152,7 +152,7 @@ sub gtk_about_dialog_set_artists (
 
 sub gtk_about_dialog_set_comments (
   GtkAboutDialog $about,
-  gchar $comments
+  Str            $comments
 )
   is native(gtk)
   is export
@@ -160,7 +160,7 @@ sub gtk_about_dialog_set_comments (
 
 sub gtk_about_dialog_set_version (
   GtkAboutDialog $about,
-  gchar $version
+  Str            $version
 )
   is native(gtk)
   is export
@@ -168,7 +168,7 @@ sub gtk_about_dialog_set_version (
 
 sub gtk_about_dialog_set_program_name (
   GtkAboutDialog $about,
-  gchar $name
+  Str            $name
 )
   is native(gtk)
   is export
@@ -176,7 +176,7 @@ sub gtk_about_dialog_set_program_name (
 
 sub gtk_about_dialog_set_logo (
   GtkAboutDialog $about,
-  GdkPixbuf $logo
+  GdkPixbuf      $logo
 )
   is native(gtk)
   is export
@@ -184,7 +184,7 @@ sub gtk_about_dialog_set_logo (
 
 sub gtk_about_dialog_set_logo_icon_name (
   GtkAboutDialog $about,
-  gchar $icon_name
+  Str            $icon_name
 )
   is native(gtk)
   is export
@@ -192,7 +192,7 @@ sub gtk_about_dialog_set_logo_icon_name (
 
 sub gtk_about_dialog_set_authors (
   GtkAboutDialog $about,
-  CArray[Str] $authors
+  CArray[Str]    $authors
 )
   is native(gtk)
   is export
@@ -200,7 +200,7 @@ sub gtk_about_dialog_set_authors (
 
 sub gtk_about_dialog_set_website (
   GtkAboutDialog $about,
-  gchar $website
+  Str            $website
 )
   is native(gtk)
   is export
@@ -208,7 +208,7 @@ sub gtk_about_dialog_set_website (
 
 sub gtk_about_dialog_set_website_label (
   GtkAboutDialog $about,
-  gchar $website_label
+  Str            $website_label
 )
   is native(gtk)
   is export
@@ -216,7 +216,7 @@ sub gtk_about_dialog_set_website_label (
 
 sub gtk_about_dialog_set_wrap_license (
   GtkAboutDialog $about,
-  gboolean $wrap_license
+  gboolean       $wrap_license
 )
   is native(gtk)
   is export
@@ -224,7 +224,7 @@ sub gtk_about_dialog_set_wrap_license (
 
 sub gtk_about_dialog_set_license_type (
   GtkAboutDialog $about,
-  uint32 $license_type          # GtkLicense $license_type
+  uint32         $license_type          # GtkLicense $license_type
 )
   is native(gtk)
   is export
@@ -232,7 +232,7 @@ sub gtk_about_dialog_set_license_type (
 
 sub gtk_about_dialog_set_copyright (
   GtkAboutDialog $about,
-  gchar $copyright
+  Str            $copyright
 )
   is native(gtk)
   is export
