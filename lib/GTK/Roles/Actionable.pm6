@@ -14,7 +14,7 @@ role GTK::Roles::Actionable:ver<3.0.1146> {
     return if $!action;
 
     my \i = findProperImplementor( self.^attributes );
-    i = cast( GtkActionable, i.get_value(self) );
+    $!action = cast( GtkActionable, i.get_value(self) );
   }
 
   method GTK::Raw::Definitions::GtkActionable
