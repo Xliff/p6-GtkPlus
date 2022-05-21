@@ -122,9 +122,9 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GdkScreen, gpointer --> void
-  method connect-screen-change(
+  method connect-screen-changed (
     $obj,
-    $signal = 'connect-screen-changed',
+    $signal = 'screen-changed',
     &handler?
   ) {
     %!signals-widget{$signal} //= do {
@@ -133,12 +133,8 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
         -> $, $scr, $ud {
           CATCH { default { note($_) } }
 
-          my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
-          $s.emit( [self, $scr, $ud, $r] );
-          # die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          # $r.r = .Int if $r.r ~~ @valid-types.any;
-          $r.r;
+          $s.emit( [self, $scr, $ud] );
         },
         OpaquePointer, 0
       );
@@ -148,6 +144,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
     %!signals-widget{$signal}[0];
   }
 
+  # GtkWidget, cairo_t, gpointer --> gboolean
   method connect-draw(
     $obj,
     $signal = 'draw',
