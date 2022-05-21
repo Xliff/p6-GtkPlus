@@ -4,8 +4,8 @@ use Method::Also;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::Label:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Label:ver<3.0.1146>;
 
 use Pango::AttrList;
 use Pango::Layout;
