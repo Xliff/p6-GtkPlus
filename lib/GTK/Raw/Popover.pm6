@@ -4,6 +4,8 @@ use NativeCall;
 
 use GLib::Raw::Definitions;
 use GLib::Raw::Enums;
+use GIO::Raw::Definitions;
+use GDK::Raw::Structs;
 use GTK::Raw::Definitions:ver<3.0.1146>;
 
 unit package GTK::Raw::Popover:ver<3.0.1146>;
@@ -11,7 +13,7 @@ unit package GTK::Raw::Popover:ver<3.0.1146>;
 sub gtk_popover_bind_model (
   GtkPopover $popover,
   GMenuModel $model,
-  gchar $action_namespace
+  Str        $action_namespace
 )
   is native(gtk)
   is export
@@ -30,13 +32,13 @@ sub gtk_popover_get_type ()
   { * }
 
 sub gtk_popover_new (GtkWidget $relative_to)
-  returns GtkWidget
+  returns GtkPopover
   is native(gtk)
   is export
   { * }
 
 sub gtk_popover_new_from_model (GtkWidget $relative_to, GMenuModel $model)
-  returns GtkWidget
+  returns GtkPopover
   is native(gtk)
   is export
   { * }
@@ -104,7 +106,7 @@ sub gtk_popover_set_modal (GtkPopover $popover, gboolean $modal)
 
 sub gtk_popover_set_position (
   GtkPopover $popover,
-  uint32 $position              # GtkPositionType $position
+  uint32     $position              # GtkPositionType $position
 )
   is native(gtk)
   is export
@@ -117,7 +119,7 @@ sub gtk_popover_set_relative_to (GtkPopover $popover, GtkWidget $relative_to)
 
 sub gtk_popover_set_constrain_to (
   GtkPopover $popover,
-  uint32 $constraint            # GtkPopoverConstraint $constraint
+  uint32     $constraint            # GtkPopoverConstraint $constraint
 )
   is native(gtk)
   is export
@@ -125,7 +127,7 @@ sub gtk_popover_set_constrain_to (
 
 sub gtk_popover_set_transitions_enabled (
   GtkPopover $popover,
-  gboolean $transitions_enabled
+  gboolean   $transitions_enabled
 )
   is native(gtk)
   is export
