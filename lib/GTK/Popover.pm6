@@ -7,7 +7,8 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::Bin:ver<3.0.1146>;
 
-our subset PopoverAncestry is export when GtkPopover | BinAncestry;
+our subset GtkPopoverAncestry is export of Mu
+  when GtkPopover | GtkBinAncestry;
 
 class GTK::Popover:ver<3.0.1146> is GTK::Bin {
   has GtkPopover $!p is implementor;
@@ -18,12 +19,8 @@ class GTK::Popover:ver<3.0.1146> is GTK::Bin {
     $o;
   }
 
-  submethod BUILD(:$popover) {
-    given $popover {
-      when PopoverAncestry { self.setPopover($popover) }
-      when GTK::Popover    { }
-      default              { }
-    }
+  submethod BUILD( :$gtk-popover ) {
+    self.setGtkPopover($gtk-popover) if $gtk-popover;
   }
 
   method GTK::Raw::Definitions::GtkPopover
@@ -33,24 +30,28 @@ class GTK::Popover:ver<3.0.1146> is GTK::Bin {
     >
   { $!p }
 
-  method setPopover($popover) {
+  method setGtkPopover(GtkPopoverAncestry $_) {
     my $to-parent;
-    $!p = do given $popover {
+
+    $!p = do  {
       when GtkPopover {
         $to-parent = cast(GtkBin, $_);
         $_;
       }
+
       default {
         $to-parent = $_;
         cast(GtkPopover, $_);
       }
 
     }
-    self.setBin($to-parent);
+    self.setGtkBin($to-parent);
   }
 
-  multi method new (PopoverAncestry $popover, :$ref = True, *%others) {
-    my $o = self.bless( :$popover, |%others );
+  multi method new (GtkPopoverAncestry $gtk-popover, :$ref = True, *%others) {
+    return Nil unless $gtk-popover;
+    
+    my $o = self.bless( :$gtk-popover, |%others );
     $o.ref if $ref;
     $o;
   }
@@ -61,17 +62,17 @@ class GTK::Popover:ver<3.0.1146> is GTK::Bin {
   method new_relative_to(GtkWidget() $relative, *%others)
     is also<new-relative-to>
   {
-    my $popover = gtk_popover_new($relative);
+    my $gtk-popover = gtk_popover_new($relative);
 
-    $popover ?? self.bless(:$popover, |%others) !! Nil;
+    $gtk-popover ?? self.bless(:$gtk-popover, |%others) !! Nil;
   }
 
   method new_from_model (GtkWidget() $relative, GMenuModel $model, *%others)
     is also<new-from-model>
   {
-    my $popover = gtk_popover_new_from_model($relative, $model);
+    my $gtk-popover = gtk_popover_new_from_model($relative, $model);
 
-    $popover ?? self.bless(:$popover, |%others) !! Nil;
+    $gtk-popover ?? self.bless(:$gtk-popover, |%others) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
