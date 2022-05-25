@@ -14,9 +14,10 @@ our subset StackAncestry is export
   where GtkStack | ContainerAncestry;
 
 class GTK::Stack:ver<3.0.1146> is GTK::Container {
-  has GtkStack $!s is implementor;
+  has GtkStack           $!s   is implementor;
   has GTK::StackSwitcher $!ss;
-  has GTK::StackSidebar $!sb;
+  has GTK::StackSidebar  $!sb;
+
   has %!by-name;
   has %!by-title;
 

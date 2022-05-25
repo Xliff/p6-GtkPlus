@@ -4,13 +4,15 @@ use NativeCall;
 
 use GLib::Raw::Definitions;
 use GLib::Raw::Enums;
+use GLib::Raw::Structs;
 use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::RecentChooser:ver<3.0.1146>;
 
 sub gtk_recent_chooser_add_filter (
   GtkRecentChooser $chooser,
-  GtkRecentFilter $filter
+  GtkRecentFilter  $filter
 )
   is native(gtk)
   is export
@@ -48,7 +50,7 @@ sub gtk_recent_chooser_get_type ()
 
 sub gtk_recent_chooser_get_uris (
   GtkRecentChooser $chooser,
-  gsize $length is rw
+  gsize            $length   is rw
 )
   returns CArray[Str]
   is native(gtk)
@@ -63,7 +65,7 @@ sub gtk_recent_chooser_list_filters (GtkRecentChooser $chooser)
 
 sub gtk_recent_chooser_remove_filter (
   GtkRecentChooser $chooser,
-  GtkRecentFilter $filter
+  GtkRecentFilter  $filter
 )
   is native(gtk)
   is export
@@ -75,8 +77,8 @@ sub gtk_recent_chooser_select_all (GtkRecentChooser $chooser)
   { * }
 
 sub gtk_recent_chooser_select_uri (
-  GtkRecentChooser $chooser,
-  Str $uri,
+  GtkRecentChooser        $chooser,
+  Str                     $uri,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -85,8 +87,8 @@ sub gtk_recent_chooser_select_uri (
   { * }
 
 sub gtk_recent_chooser_set_current_uri (
-  GtkRecentChooser $chooser,
-  Str $uri,
+  GtkRecentChooser        $chooser,
+  Str                     $uri,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -95,10 +97,10 @@ sub gtk_recent_chooser_set_current_uri (
   { * }
 
 sub gtk_recent_chooser_set_sort_func (
-  GtkRecentChooser $chooser,
+  GtkRecentChooser  $chooser,
   GtkRecentSortFunc $sort_func,
-  gpointer $sort_data,
-  GDestroyNotify $data_destroy
+  gpointer          $sort_data,
+  GDestroyNotify    $data_destroy
 )
   is native(gtk)
   is export
@@ -170,7 +172,7 @@ sub gtk_recent_chooser_get_sort_type (GtkRecentChooser $chooser)
 
 sub gtk_recent_chooser_set_filter (
   GtkRecentChooser $chooser,
-  GtkRecentFilter $filter
+  GtkRecentFilter  $filter
 )
   is native(gtk)
   is export
@@ -183,7 +185,7 @@ sub gtk_recent_chooser_set_limit (GtkRecentChooser $chooser, gint $limit)
 
 sub gtk_recent_chooser_set_local_only (
   GtkRecentChooser $chooser,
-  gboolean $local_only
+  gboolean         $local_only
 )
   is native(gtk)
   is export
@@ -191,7 +193,7 @@ sub gtk_recent_chooser_set_local_only (
 
 sub gtk_recent_chooser_set_select_multiple (
   GtkRecentChooser $chooser,
-  gboolean $select_multiple
+  gboolean         $select_multiple
 )
   is native(gtk)
   is export
@@ -199,7 +201,7 @@ sub gtk_recent_chooser_set_select_multiple (
 
 sub gtk_recent_chooser_set_show_icons (
   GtkRecentChooser $chooser,
-  gboolean $show_icons
+  gboolean         $show_icons
 )
   is native(gtk)
   is export
@@ -207,7 +209,7 @@ sub gtk_recent_chooser_set_show_icons (
 
 sub gtk_recent_chooser_set_show_not_found (
   GtkRecentChooser $chooser,
-  gboolean $show_not_found
+  gboolean         $show_not_found
 )
   is native(gtk)
   is export
@@ -215,7 +217,7 @@ sub gtk_recent_chooser_set_show_not_found (
 
 sub gtk_recent_chooser_set_show_private (
   GtkRecentChooser $chooser,
-  gboolean $show_private
+  gboolean         $show_private
 )
   is native(gtk)
   is export
@@ -223,7 +225,7 @@ sub gtk_recent_chooser_set_show_private (
 
 sub gtk_recent_chooser_set_show_tips (
   GtkRecentChooser $chooser,
-  gboolean $show_tips
+  gboolean         $show_tips
 )
   is native(gtk)
   is export
@@ -231,7 +233,7 @@ sub gtk_recent_chooser_set_show_tips (
 
 sub gtk_recent_chooser_set_sort_type (
   GtkRecentChooser $chooser,
-  uint32 $sort_type                         # GtkRecentSortType $sort_type
+  uint32           $sort_type                    # GtkRecentSortType $sort_type
 )
   is native(gtk)
   is export

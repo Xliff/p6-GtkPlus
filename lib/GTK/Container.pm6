@@ -23,7 +23,7 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::LatchedContents;
 
   # Maybe this should be done as the base class.
-  has GtkContainer $!c;
+  has GtkContainer $!c is implementor;
 
   # Even though an abstract class, we have to be able to instantiate from
   # a lowest common denominator amongst descendants.

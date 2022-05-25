@@ -50,7 +50,7 @@ class GTK::Popover:ver<3.0.1146> is GTK::Bin {
 
   multi method new (GtkPopoverAncestry $gtk-popover, :$ref = True, *%others) {
     return Nil unless $gtk-popover;
-    
+
     my $o = self.bless( :$gtk-popover, |%others );
     $o.ref if $ref;
     $o;

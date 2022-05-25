@@ -10,7 +10,7 @@ use GTK::Dialog:ver<3.0.1146>;
 use GTK::Roles::RecentChooser:ver<3.0.1146>;
 
 our subset RecentChooserDialogAncestry is export
-  where GtkRecentChooserDialog | GtkRecentChooser | DialogAncestry;
+  where GtkRecentChooserDialog | GtkRecentChooser | GtkDialogAncestry;
 
 class GTK::Dialog::RecentChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::RecentChooser;
@@ -42,7 +42,7 @@ class GTK::Dialog::RecentChooser:ver<3.0.1146> is GTK::Dialog {
             nativecast(GtkRecentChooserDialog, $_);
           }
         }
-        self.setDialog($to-parent);
+        self.setGtkDialog($to-parent);
       }
       when GTK::Dialog::RecentChooser {
       }

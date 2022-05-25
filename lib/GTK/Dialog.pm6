@@ -10,8 +10,10 @@ use GTK::Box:ver<3.0.1146>;
 use GTK::HeaderBar:ver<3.0.1146>;
 use GTK::Window:ver<3.0.1146>;
 
-our subset DialogAncestry is export of Mu
-  where GtkDialog | WindowAncestry;
+our subset GtkDialogAncestry is export of Mu
+  where GtkDialog | GtkWindowAncestry;
+
+constant DialogAncestry is export := GtkDialogAncestry;
 
 class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   has GtkDialog $!d is implementor;
@@ -22,15 +24,13 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     $o;
   }
 
-  submethod BUILD(:$dialog) {
-    given $dialog {
-      when DialogAncestry { self.setDialog($dialog) }
-      when GTK::Dialog    { }
-      default             { }
-    }
+  submethod BUILD( :$gtk-dialog ) {
+    self.setGtkDialog($gtk-dialog) if $gtk-dialog;
   }
 
-  method setDialog(DialogAncestry $_) {
+  method setGtkDialog(GtkDialogAncestry $_)
+    is also<setDialog>
+  {
     my $to-parent;
     $!d = do {
       when GtkDialog {
@@ -42,20 +42,20 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
         nativecast(GtkDialog, $_);
       }
     }
-    self.setWindow($to-parent);
+    self.setGtkWindow($to-parent);
   }
 
-  multi method new (DialogAncestry $dialog, :$ref = True) {
-    return Nil unless $dialog;
+  multi method new (GtkDialogAncestry $gtk-dialog, :$ref = True) {
+    return Nil unless $gtk-dialog;
 
-    my $o = self.bless(:$dialog);
+    my $o = self.bless( :$gtk-dialog );
     $o.ref if $ref;
     $o;
   }
   multi method new {
-    my $dialog = gtk_dialog_new();
+    my $gtk-dialog = gtk_dialog_new();
 
-    $dialog ?? self.bless( :$dialog ) !! Nil;
+    $gtk-dialog ?? self.bless( :$gtk-dialog ) !! Nil;
   }
 
   proto method new_with_buttons (|)

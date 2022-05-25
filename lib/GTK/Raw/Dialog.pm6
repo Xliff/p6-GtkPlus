@@ -4,6 +4,7 @@ use NativeCall;
 
 use GLib::Raw::Definitions;
 use GLib::Raw::Enums;
+use GDK::Raw::Definitions;
 use GTK::Raw::Definitions:ver<3.0.1146>;
 
 unit package GTK::Raw::Dialog:ver<3.0.1146>;

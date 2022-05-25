@@ -39,16 +39,17 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     }
   }
 
-  method setGtkWindow(WindowAncestry $window)
+  method setGtkWindow(GtkWindowAncestry $_)
     is also<setWindow>
   {
     my $to-parent;
-    $!win = do given $window {
+    $!win = do {
       when GtkWindow {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
-      when BinAncestry {
+
+      when GtkBinAncestry {
         $to-parent = $_;
         nativecast(GtkWindow, $_);
       }
