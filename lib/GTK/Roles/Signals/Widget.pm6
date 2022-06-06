@@ -2,12 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types;
-use GTK::Raw::Subs;
+use GTK::Raw::Types:ver<3.0.1146>;
 use GLib::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::Widget {
+role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   has %!signals-widget;
 
   method connect-widget-event(
@@ -122,9 +120,9 @@ role GTK::Roles::Signals::Widget {
   }
 
   # GtkWidget, GdkScreen, gpointer --> void
-  method connect-screen-change(
+  method connect-screen-changed (
     $obj,
-    $signal = 'connect-screen-changed',
+    $signal = 'screen-changed',
     &handler?
   ) {
     %!signals-widget{$signal} //= do {
@@ -133,12 +131,8 @@ role GTK::Roles::Signals::Widget {
         -> $, $scr, $ud {
           CATCH { default { note($_) } }
 
-          my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
-          $s.emit( [self, $scr, $ud, $r] );
-          # die 'Invalid return type' if $r.r ~~ @valid-types.any;
-          # $r.r = .Int if $r.r ~~ @valid-types.any;
-          $r.r;
+          $s.emit( [self, $scr, $ud] );
         },
         OpaquePointer, 0
       );
@@ -148,6 +142,7 @@ role GTK::Roles::Signals::Widget {
     %!signals-widget{$signal}[0];
   }
 
+  # GtkWidget, cairo_t, gpointer --> gboolean
   method connect-draw(
     $obj,
     $signal = 'draw',
@@ -361,91 +356,113 @@ role GTK::Roles::Signals::Widget {
 
 }
 
-
 sub g-connect-widget-event(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkEvent, Pointer --> uint32),
+  Str     $name,
+          &handler (GtkWidget, GdkEvent, Pointer --> uint32),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GdkDragContext, gint, gint, guint, gpointer --> gboolean
 sub g-connect-drag-action(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkDragContext, gint, gint, guint, Pointer --> uint32),
+  Str     $name,
+          &handler (
+            GtkWidget,
+            GdkDragContext,
+            gint,
+            gint,
+            guint,
+            Pointer
+            --> uint32
+          ),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GdkDragContext, GtkDragResult, gpointer --> gboolean
 sub g-connect-drag-failed(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkDragContext, guint, Pointer --> uint32),
+  Str     $name,
+          &handler (GtkWidget, GdkDragContext, guint, Pointer --> uint32),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, gint, gint, gboolean, GtkTooltip, gpointer --> gboolean
 sub g-connect-query-tooltip(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, gint, gint, gboolean, GtkTooltip, Pointer --> uint32),
+  Str     $name,
+          &handler (
+            GtkWidget,
+            gint,
+            gint,
+            gboolean,
+            GtkTooltip,
+            Pointer
+            --> uint32
+          ),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GdkScreen, gpointer --> void
 sub g-connect-screen-changed(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkScreen, Pointer --> uint32),
+  Str     $name,
+          &handler (GtkWidget, GdkScreen, Pointer --> uint32),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GdkDragContext, GtkDragResult, gpointer --> gboolean
 sub g-connect-drag-leave(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkDragContext, guint, Pointer),
+  Str     $name,
+          &handler (GtkWidget, GdkDragContext, guint, Pointer),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g-connect-widget-drag(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkDragContext, Pointer),
+  Str     $name,
+          &handler (GtkWidget, GdkDragContext, Pointer),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
@@ -454,98 +471,112 @@ sub g-connect-widget-drag(
 # GtkWidget, GdkDragContext, GtkSelectionData, guint, guint, gpointer --> void
 sub g-connect-drag-data-get(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkDragContext, GtkSelectionData, guint, guint, Pointer),
+  Str     $name,
+          &handler (
+            GtkWidget,
+            GdkDragContext,
+            GtkSelectionData,
+            guint,
+            guint,
+            Pointer
+          ),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GdkDragContext, gint, gint, GtkSelectionData, guint, guint, gpointer --> void
 sub g-connect-drag-data-received(
   Pointer $app,
-  Str $name,
-  &handler (
-    Pointer,
-    GdkDragContext,
-    gint,
-    gint,
-    GtkSelectionData,
-    guint,
-    guint,
-    Pointer
-  ),
+  Str     $name,
+          &handler (
+            GtkWidget,
+            GdkDragContext,
+            gint,
+            gint,
+            GtkSelectionData,
+            guint,
+            guint,
+            Pointer
+          ),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 sub g-connect-draw(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, cairo_t, Pointer --> uint32),
+  Str     $name,
+          &handler (GtkWidget, cairo_t, Pointer --> uint32),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GtkSelectionData, guint, guint, gpointer --> void
 sub g-connect-selection-get(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GtkSelectionData, guint, guint, Pointer --> uint32),
+  Str     $name,
+          &handler (GtkWidget, GtkSelectionData, guint, guint, Pointer --> uint32),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GtkSelectionData, guint, gpointer --> void
 sub g-connect-selection-received(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GtkSelectionData, guint, Pointer),
+  Str     $name,
+          &handler (GtkWidget, GtkSelectionData, guint, Pointer),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GdkRectangle, gpointer --> void
 sub g-connect-size-allocate(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GdkRectangle, Pointer),
+  Str     $name,
+          &handler (GtkWidget, GdkRectangle, Pointer),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
 
 # GtkWidget, GtkStyle, gpointer --> void
 sub g-connect-style-set(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, GtkStyle, Pointer),
+  Str     $name,
+          &handler (GtkWidget, GtkStyle, Pointer),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
+  is export
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }
