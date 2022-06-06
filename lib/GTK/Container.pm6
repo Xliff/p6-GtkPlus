@@ -24,7 +24,7 @@ class GTK::Container is GTK::Widget {
   also does GTK::Roles::LatchedContents;
 
   # Maybe this should be done as the base class.
-  has GtkContainer $!c;
+  has GtkContainer $!c is implementor;
 
   # Even though an abstract class, we have to be able to instantiate from
   # a lowest common denominator amongst descendants.
@@ -88,6 +88,8 @@ class GTK::Container is GTK::Widget {
   method check-resize is also<check_resize> {
     self.connect($!c, 'check-resize');
   }
+
+
 
   # Signal - Last
   method set-focus-child is also<set_focus_child> {
