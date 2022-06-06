@@ -3,19 +3,22 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GDK::Screen;
-use GTK::Raw::CSSProvider;
-use GTK::Raw::StyleContext;
+use GTK::Raw::CSSProvider:ver<3.0.1146>;
+use GTK::Raw::StyleContext:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::CSSProvider;
-use GTK::Roles::StyleProvider;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::CSSProvider:ver<3.0.1146>;
+use GTK::Roles::StyleProvider:ver<3.0.1146>;
 
-class GTK::CSSProvider {
+our subset GtkCSSProviderAncestry is export of Mu
+  where GtkCSSProvider | GtkStyleProvider | GObject;
+
+class GTK::CSSProvider:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::CSSProvider;
@@ -24,20 +27,58 @@ class GTK::CSSProvider {
   has GtkCSSProvider $!css is implementor;
 
   submethod BUILD (
-    :$provider,
+    :$css-provider,
     :$priority  is copy,
     :$pod,
     :$style
   ) {
+    self.setGtkCSSProvider($css-provider, :$priority, :$pod, :$style)
+      if $css-provider;
+  }
+
+  submethod DESTROY {
+    self.disconnect-all($_)  for %!signals-css;
+  }
+
+  method setGtkCSSProvider(
+    GtkCSSProviderAncestry  $_,
+                           :$priority,
+                           :$pod,
+                           :$style
+  ) {
+    say 'setting CSSProvider...';
+
+    my $to-parent;
+
+    $!css = do {
+      when GtkCSSProvider {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      when GtkStyleProvider {
+        $to-parent = cast(GObject, $_);
+        cast(GtkCSSProvider, $_);
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkCSSProvider, $_);
+      }
+    }
+
+    self!setObject($to-parent);
+    self.roleInit-GtkStyleProvider;
+    self.setCSSSupplementary( :$priority, :$pod, :$style );
+  }
+
+  method setCSSSupplementary (:$priority is copy, :$pod, :$style) {
+    say 'setting supplementary...';
+
     $priority //= GTK_STYLE_PROVIDER_PRIORITY_USER.Int;
     die q:to/D/ unless $priority.^can('Int').elems;
-  Prority must be a GtkStyleProviderPriority or an integer compatible value
-  D
-
-    # GTK::Roles::StyleProvider
-    $!sp = nativecast(GtkStyleProvider, $!css = $provider);
-    # GLib::Roles::Object
-    self!setObject($provider);
+      Prority must be a GtkStyleProviderPriority or an integer compatible value
+      D
 
     my uint32 $p = $priority;
     my $screen = GDK::Screen.get_default.screen;
@@ -53,30 +94,34 @@ class GTK::CSSProvider {
       }
       $css ~= %sections<css>;
     }
-    self.load_from_data($css) if $css.defined;
+    if $css.defined {
+      say "Using CSS: $css";
+      self.load_from_data($css)
+    }
   }
 
-  submethod DESTROY {
-    self.disconnect-all($_)  for %!signals-css;
-  }
+  multi method new (GtkCSSProvider $css-provider, :$ref = True) {
+    return Nil unless $css-provider;
 
-  multi method new (GtkCSSProvider $provider, :$ref = True) {
-    return Nil unless $provider;
-
-    my $o = self.bless( :$provider );
+    my $o = self.bless( :$css-provider );
     $o.ref if $ref;
     $o;
   }
-  multi method new (:$style, :$priority, :$pod) {
-    my $provider = gtk_css_provider_new();
+  multi method new (:$pod, :$priority, :$style) {
+    my $css-provider = gtk_css_provider_new();
 
-    $provider ?? self.bless(:$provider, :$priority, :$pod, :$style) !! Nil;
+    $css-provider ?? self.bless(:$css-provider, :$priority, :$pod, :$style) !! Nil;
   }
 
-  method get_named (Str() $name, Str() $variant) is also<get-named> {
-    my $provider = gtk_css_provider_get_named($name, $variant);
+  method get_named (
+    Str()  $name,
+    Str()  $variant
+  )
+    is also<get-named>
+  {
+    my $css-provider = gtk_css_provider_get_named($name, $variant);
 
-    $provider ?? GTK::CSSProvider.new($provider) !! Nil;
+    $css-provider ?? self.bless( :$css-provider ) !! Nil;
   }
 
 
