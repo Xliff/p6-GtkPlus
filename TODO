@@ -410,3 +410,5 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 + Handy
 - Adwaita (GTK v4 port of Handy)
 - GTK Layer Shell
+- Avahi
+
