@@ -25,16 +25,20 @@ use GTK::Raw::Main;
 
 use GTK::Roles::Signals::Widget;
 
+use GTK::Window;
+
 sub MAIN {
   gtk_init(0, CArray[Str]);
 
-  my $window = gtk_window_new(GTK_WINDOW_TOPLEVEL);
-  gtk_window_set_position($window, GTK_WIN_POS_CENTER);
-  gtk_window_set_default_size($window, 400, 400);
-  gtk_window_set_title($window, 'Alpha Demo');
-  gtk_widget_set_app_paintable($window, 1);
+  my $wo = GTK::Window.new(GTK_WINDOW_TOPLEVEL);
+  my $window = $wo.GtkWindow;
 
-  my $win-obj = cast(GObject, $window);
+  $wo.set_position(GTK_WIN_POS_CENTER);
+  $wo.set_default_size(400, 400);
+  $wo.title = 'Alpha Demo';
+  $wo.app_paintable = True;
+
+  my $win-obj = $wo.GObject;
   g-connect-draw(
     cast(Pointer, $win-obj),
     'draw',
@@ -72,9 +76,8 @@ sub MAIN {
     0
   );
 
-  my $d = 0;
-  gtk_window_set_decorated($window, $d);
-  gtk_widget_add_events($window, GDK_BUTTON_PRESS_MASK);
+  $wo.decorated = 0;
+  $wo.add_events(GDK_BUTTON_PRESS_MASK);
 
   g-connect-widget-event(
     cast(Pointer, $win-obj),
@@ -82,17 +85,17 @@ sub MAIN {
     -> *@a {
       CATCH { default { .message.say; .backtrace.concise.say } }
 
-      $d = $d.not;
-      gtk_window_set_decorated($window, $d);
+      $wo.decorated = $wo.decorated.not;
       0
     },
     gpointer,
     0
   );
 
+
   my $fc = gtk_fixed_new();
   gtk_container_add(
-    cast(GtkContainer, $window),
+    $wo.GtkContainer,
     cast(GtkWidget, $fc)
   );
   my $b = gtk_button_new_with_label('button1');
@@ -107,7 +110,7 @@ sub MAIN {
   );
 
   $screen-changed($window);
-
-  gtk_widget_show_all( cast(GtkWidget, $window) );
+  $wo.show-all;
+  
   gtk_main();
 }
