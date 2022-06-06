@@ -6,45 +6,6 @@ use lib 'scripts';
 use GTKScripts;
 use Data::Dump::Tree;
 
-my regex name {
-  <[_ A..Z a..z]>+
-}
-
-# my rule enum_entry {
-#   <[A..Z]>+ [ '=' [ \d+ | \d+ '<<' \d+ ] ]? ','
-# }
-
-my token d { <[0..9 x]> }
-my token m { '-' }
-my token L { 'L' }
-my token w { <[A..Za..z _]> }
-
-my rule comment {
-  '/*' .+? '*/'
-}
-
-my token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
-my token       n { <[\w _]>+ }
-my token       t { <n> | '(' '*' <n> ')' }
-my token     mod { 'unsigned' | 'long' }
-my token    mod2 { 'const' | 'struct' | 'enum' }
-my rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
-my rule      var { <t> [ '[' (.+?)? ']' ]? }
-
-my rule struct-entry {
-  <type> <var>+ %% ','
-}
-
-my rule solo-struct {
-  'struct' <sn=name> '{'
-    [ <struct-entry>\s*';' ]+
-  '}'
-}
-
-my rule struct {
-  <solo-struct> | 'typedef' <solo-struct> <rn=name>
-}
-
 sub MAIN ($dir?, :$file, :$rw = False) {
   my (%enums, @files);
 

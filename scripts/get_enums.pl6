@@ -5,49 +5,6 @@ use lib 'scripts';
 
 use GTKScripts;
 
-my regex name {
-  <[_ A..Z a..z]>+
-}
-
-# my rule enum_entry {
-#   <[A..Z]>+ [ '=' [ \d+ | \d+ '<<' \d+ ] ]? ','
-# }
-
-my token d { <[0..9 x]> }
-my token m { '-' }
-my token L { 'L' }
-my token w { <[A..Za..z0..9 _]> }
-
-my rule comment {
-  '/*' .+? '*/'
-}
-
-my rule enum-entry {
-  \s* ( <w>+ ) (
-    [ '=' '('?
-      [
-        <m>?<d>+<L>?
-        |
-        <w>+
-      ]
-      [ '<<' ( [<d>+ | <w>+] ) ]?
-      ')'?
-    ]?
-  ) ','?
-  <comment>?
-  \v*
-}
-
-my rule solo-enum {
-  'enum' <n=name>? <comment>? \v* '{'
-  <comment>? \v* [ <comment> | <enum-entry> ]+ \v*
-  '}'
-}
-
-my rule enum {
-  'typedef' <solo-enum> <rn=name> | <solo-enum>
-}
-
 sub MAIN ($dir?, :$file) {
   my (%enums, @files);
 
