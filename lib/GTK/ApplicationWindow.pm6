@@ -20,11 +20,11 @@ class GTK::ApplicationWindow is GTK::Window {
 
   has GtkApplicationWindow $!aw is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
 
   submethod BUILD ( :$appwindow ) {
     #say "AW: { $appwindow // 'NIL' }";
@@ -32,8 +32,6 @@ class GTK::ApplicationWindow is GTK::Window {
   }
 
   method setApplicationWindow(GtkApplicationWindowAncestry $appwindow) {
-    self.IS-PROTECTED;
-
     my $to-parent;
     $!aw = do given $appwindow {
       when GtkApplicationWindow {
