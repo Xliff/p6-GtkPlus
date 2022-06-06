@@ -49,7 +49,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
         $_;
       }
 
-      when GtkBinAncestry {
+      default {
         $to-parent = $_;
         nativecast(GtkWindow, $_);
       }
@@ -59,7 +59,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
 
   method GTK::Raw::Definitions::GtkWindow
     is also<
-      window
+      Window
       GtkWindow
     >
   { $!win }
@@ -88,12 +88,15 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     Int :$width  = 200,
     Int :$height = 200
   ) {
-    my guint $t = $type;
-    my $window = gtk_window_new($t);
+    my guint $t      = $type;
+    my       $window = gtk_window_new($t);
+
+    say "GtkWindow.new = { $window }";
+
     samewith($window, :$title, :$width, :$height);
   }
   multi method new (
-    GtkWindow $window,
+    GtkWindow  $window,
     Str       :$title = 'Window',
     Int       :$width  = 200,
     Int       :$height = 200

@@ -40,12 +40,12 @@ role GTK::Roles::Signals::Application:ver<3.0.1146> {
 # Define for each signal
 sub g_connect_application_signal(
   Pointer $app,
-  Str $name,
-  &handler (Pointer, Pointer, Pointer),
+  Str     $name,
+          &handler (Pointer, Pointer, Pointer),
   Pointer $data,
-  uint32 $flags
+  uint32  $flags
 )
   returns uint64
   is native('gobject-2.0')
   is symbol('g_signal_connect_object')
-  { * }
+{ * }

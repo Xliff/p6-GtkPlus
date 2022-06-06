@@ -88,6 +88,8 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
     self.connect($!c, 'check-resize');
   }
 
+
+
   # Signal - Last
   method set-focus-child is also<set_focus_child> {
     self.connect-widget($!c, 'set-focus-child');

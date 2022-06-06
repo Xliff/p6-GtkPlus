@@ -76,6 +76,32 @@ our rule struct is export {
   'typedef'? <solo-struct> <rn=name>? ';'
 }
 
+my rule enum-entry is export {
+  \s* ( <w>+ ) (
+    [ '=' '('?
+      [
+        <m>?<d>+<L>?
+        |
+        <w>+
+      ]
+      [ '<<' ( [<d>+ | <w>+] ) ]?
+      ')'?
+    ]?
+  ) ','?
+  <comment>?
+  \v*
+}
+
+my rule solo-enum is export {
+  'enum' <n=name>? <comment>? \v* '{'
+  <comment>? \v* [ <comment> | <enum-entry> ]+ \v*
+  '}'
+}
+
+my rule enum is export {
+  [ 'typedef' <solo-enum> <rn=name> | <solo-enum> ] ';'
+}
+
 sub find-files (
   $dir,
   :$pattern   is copy,
@@ -318,7 +344,9 @@ sub compute-module-dependencies (
   :$extra-output = True,
   :$build-list   = True,
   :$meta-file    = 'META6.json'
-) is export {
+)
+	is export
+{
   my @build-exclude = getConfigEntry('build-exclude').split( /',' \s+/ );
   my @modules = @files
     .map( *.path )

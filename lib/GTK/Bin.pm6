@@ -15,7 +15,7 @@ our subset GtkBinAncestry is export of Mu
 constant BinAncestry is export := GtkBinAncestry;
 
 class GTK::Bin:ver<3.0.1146> is GTK::Container {
-  has GtkBin $!bin is implementor;   
+  has GtkBin $!bin is implementor;
 
   # method bless(*%attrinit) {
   #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -43,13 +43,15 @@ class GTK::Bin:ver<3.0.1146> is GTK::Container {
         $to-parent = cast(GtkContainer, $_);
         $_;
       }
+
       when ContainerAncestry {
         $to-parent = $_;
         cast(GtkBin, $_);
       }
-    };
-    say "BIN: { $!bin // 'NIL' }"         if $DEBUG > 2;
-    say "BIN-TP: { $to-parent // 'NIL' }" if $DEBUG > 2;
+    }
+
+    say "BIN: { $!bin // 'NIL' }";
+    say "BIN-TP: { $to-parent // 'NIL' }";
     self.setContainer($to-parent);
   }
 

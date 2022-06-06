@@ -36,6 +36,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
 
   has $!window-class;
   has $!application-window-class;
+  has $!window-flags;
 
   submethod BUILD(
     :$app,
@@ -45,6 +46,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     :$height                       = 200,
     :window_type(:$window-type)   = 'application',
     :$window,
+    :$window-flags                = GTK_WINDOW_TOPLEVEL,
     :$application-window-class    = GTK::ApplicationWindow,
     :$window-class                = GTK::Window
   ) {
@@ -58,6 +60,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     $!wtype                      = $window-type // 'application';
     $!window-class               = $window-class;
     $!application-window-class   = $application-window-class;
+    $!window-flags               = $window-flags;
 
     $!window = $window if $window;
 
@@ -105,10 +108,13 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
           }
 
           when 'window' {
+            my $type = $!window-flags;
+
             $!window-class.new(
               :$!title,
               :$!width,
               :$!height
+              :$type
             );
           }
 
@@ -176,6 +182,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     :$ui,
     :$window-type,
     :$window_type,
+    :window_flags(:$window-flags),
     :$window,
     :$style,
     *%others
@@ -202,6 +209,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
       :$window,
       :$window-type,
       :$window_type,
+      :$window-flags,
       :$style,
       |%others
     );
