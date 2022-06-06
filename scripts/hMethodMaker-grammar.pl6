@@ -190,8 +190,10 @@ sub MAIN (
   $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
   $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC (' .+? ', g_object_unref)' //;
   $contents ~~ s:g/ 'G_DECLARE_' [ <[A..Z]>+ ]+ % '_' ' (' <-[)]>+ ')' //;
+  $contents ~~ s:g/ 'extern "C" {' //;
 
   $contents ~~ s:g/<availability>// if $bland;
+  $contents ~~ s:g/<enum>//;
 
   if $remove-from-start {
     # Remove unnecessary whitespace
