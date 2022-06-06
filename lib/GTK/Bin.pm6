@@ -7,6 +7,7 @@ use GTK::Raw::Bin;
 use GTK::Raw::Types;
 
 use GTK::Container;
+use GTK::Widget;
 
 our subset GtkBinAncestry is export of Mu
   where GtkBin | ContainerAncestry;
@@ -14,7 +15,7 @@ our subset GtkBinAncestry is export of Mu
 constant BinAncestry is export := GtkBinAncestry;
 
 class GTK::Bin is GTK::Container {
-  has GtkBin $!bin;   # Implementor in GTK::Widget
+  has GtkBin $!bin is implementor;
 
   # method bless(*%attrinit) {
   #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -42,11 +43,13 @@ class GTK::Bin is GTK::Container {
         $to-parent = cast(GtkContainer, $_);
         $_;
       }
+
       when ContainerAncestry {
         $to-parent = $_;
         cast(GtkBin, $_);
       }
-    };
+    }
+    
     say "BIN: { $!bin // 'NIL' }";
     say "BIN-TP: { $to-parent // 'NIL' }";
     self.setContainer($to-parent);
