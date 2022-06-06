@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::TreeSelection;
+unit package GTK::Raw::TreeSelection:ver<3.0.1146>;
 
 sub gtk_tree_selection_count_selected_rows (GtkTreeSelection $selection)
   returns gint

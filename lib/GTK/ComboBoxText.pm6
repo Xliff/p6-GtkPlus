@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ComboBoxText;
-use GTK::Raw::Types;
+use GTK::Raw::ComboBoxText:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::ComboBox;
+use GTK::ComboBox:ver<3.0.1146>;
 
 our subset ComboBoxTextAncestry is export
   where GtkComboBoxText | ComboBoxAncestry;
 
-class GTK::ComboBoxText is GTK::ComboBox {
+class GTK::ComboBoxText:ver<3.0.1146> is GTK::ComboBox {
   has GtkComboBoxText $!cbt is implementor;
 
   method bless(*%attrinit) {

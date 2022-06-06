@@ -2,8 +2,8 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::Main;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Main:ver<3.0.1146>;
 
 #use GLib::OptionGroup
 use GDK::Device;
@@ -11,7 +11,7 @@ use GDK::Event;
 
 use GLib::Roles::StaticClass;
 
-class GTK::Get {
+class GTK::Get:ver<3.0.1146> {
   also does GLib::Roles::StaticClass;
 
   method binary_age is also<binary-age> {

@@ -3,13 +3,13 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::Subs;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
 use GLib::Raw::ReturnedValue;
 
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-role GTK::Roles::Signals::Notebook {
+role GTK::Roles::Signals::Notebook:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
   
   has %!signals-n;

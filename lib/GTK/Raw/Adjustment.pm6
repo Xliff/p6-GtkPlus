@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Adjustment;
+unit package GTK::Raw::Adjustment:ver<3.0.1146>;
 
 sub gtk_adjustment_changed (GtkAdjustment $adjustment)
   is native(gtk)

@@ -3,19 +3,19 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Statusbar;
-use GTK::Raw::Types;
+use GTK::Raw::Statusbar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Statusbar;
+use GTK::Roles::Signals::Statusbar:ver<3.0.1146>;
 
 our subset GtkStatusbarAncestry is export
   where GtkStatusbar | GtkBoxAncestry;
 
 our constant StatusbarAncestry is export := GtkStatusbarAncestry;
 
-class GTK::Statusbar is GTK::Box {
+class GTK::Statusbar:ver<3.0.1146> is GTK::Box {
   also does GTK::Roles::Signals::Statusbar;
 
   has GtkStatusbar $!sb is implementor;

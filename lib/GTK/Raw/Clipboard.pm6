@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Clipboard;
+unit package GTK::Raw::Clipboard:ver<3.0.1146>;
 
 sub gtk_clipboard_clear (GtkClipboard $clipboard)
   is native(gtk)

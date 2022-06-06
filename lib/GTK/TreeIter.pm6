@@ -2,12 +2,12 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::TreeModel;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::TreeModel:ver<3.0.1146>;
 
 # BOXED TYPE
 
-class GTK::TreeIter is export {
+class GTK::TreeIter:ver<3.0.1146> is export {
   has GtkTreeIter $!ti;
 
   submethod BUILD(:$iter) {

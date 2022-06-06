@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellRendererSpin;
-use GTK::Raw::Types;
+use GTK::Raw::CellRendererSpin:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Adjustment;
-use GTK::CellRendererText;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::CellRendererText:ver<3.0.1146>;
 
 our subset CellRendererSpinAncestry is export
   where GtkCellRendererSpin | CellRendererTextAncestry;
 
-class GTK::CellRendererSpin is GTK::CellRendererText {
+class GTK::CellRendererSpin:ver<3.0.1146> is GTK::CellRendererText {
   has GtkCellRendererSpin $!crs is implementor;
 
   method bless(*%attrinit) {

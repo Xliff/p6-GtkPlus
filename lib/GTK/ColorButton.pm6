@@ -4,18 +4,18 @@ use Method::Also;
 
 use GDK::RGBA;
 
-use GTK::Raw::ColorButton;
-use GTK::Raw::ColorChooser;
-use GTK::Raw::Types;
+use GTK::Raw::ColorButton:ver<3.0.1146>;
+use GTK::Raw::ColorChooser:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Button;
+use GTK::Button:ver<3.0.1146>;
 
-use GTK::Roles::ColorChooser;
+use GTK::Roles::ColorChooser:ver<3.0.1146>;
 
 our subset ColorButtonAncestry is export
   where GtkColorButton | GtkColorChooser | ButtonAncestry;
 
-class GTK::ColorButton is GTK::Button {
+class GTK::ColorButton:ver<3.0.1146> is GTK::Button {
   also does GTK::Roles::ColorChooser;
 
   has GtkColorButton $!cb is implementor;

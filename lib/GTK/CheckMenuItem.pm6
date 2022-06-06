@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CheckMenuItem;
-use GTK::Raw::Types;
+use GTK::Raw::CheckMenuItem:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::MenuItem;
+use GTK::MenuItem:ver<3.0.1146>;
 
 our subset CheckMenuItemAncestry is export
   where GtkCheckMenuItem | MenuItemAncestry;
 
-class GTK::CheckMenuItem is GTK::MenuItem {
+class GTK::CheckMenuItem:ver<3.0.1146> is GTK::MenuItem {
   has GtkCheckMenuItem $!cmi is implementor;
 
   method bless(*%attrinit) {

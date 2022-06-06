@@ -2,14 +2,14 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Expander;
-use GTK::Raw::Types;
+use GTK::Raw::Expander:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset ExpanderAncestry is export where GtkExpander | BinAncestry;
 
-class GTK::Expander is GTK::Bin {
+class GTK::Expander:ver<3.0.1146> is GTK::Bin {
   has GtkExpander $!e is implementor;
 
   method bless(*%attrinit) {

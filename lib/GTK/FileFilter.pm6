@@ -3,18 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::FileFilter;
-use GTK::Raw::Types;
+use GTK::Raw::FileFilter:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Variant;
 
-use GTK::Roles::Buildable;
-use GTK::Roles::Types;
+use GTK::Roles::Buildable:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 use GLib::Roles::Object;
 
 my subset Ancestry where GtkFileFilter | GtkBuilder;
 
-class GTK::FileFilter {
+class GTK::FileFilter:ver<3.0.1146> {
   also does GTK::Roles::Types;
   also does GTK::Roles::Buildable;
   also does GLib::Roles::Object;

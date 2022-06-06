@@ -3,20 +3,20 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TreeStore;
-use GTK::Raw::Types;
+use GTK::Raw::TreeStore:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::TreeIter;
+use GTK::TreeIter:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 use GLib::Roles::TypedBuffer;
-use GTK::Roles::Buildable;
-use GTK::Roles::TreeDnD;
-use GTK::Roles::TreeModel;
-use GTK::Roles::TreeSortable;
+use GTK::Roles::Buildable:ver<3.0.1146>;
+use GTK::Roles::TreeDnD:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
+use GTK::Roles::TreeSortable:ver<3.0.1146>;
 
-class GTK::TreeStore  {
+class GTK::TreeStore:ver<3.0.1146>  {
   also does GLib::Roles::Object;
 
   also does GTK::Roles::Buildable;

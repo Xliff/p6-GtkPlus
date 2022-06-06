@@ -2,16 +2,16 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellRendererProgress;
-use GTK::Raw::Types;
+use GTK::Raw::CellRendererProgress:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellRenderer;
+use GTK::CellRenderer:ver<3.0.1146>;
 
 our subset CellRendererProgressAncestry is export
   where GtkCellRendererProgress | GtkCellRenderer;
 
-class GTK::CellRendererProgress is GTK::CellRenderer {
+class GTK::CellRendererProgress:ver<3.0.1146> is GTK::CellRenderer {
   has GtkCellRendererProgress $!crp is implementor;
 
   method bless(*%attrinit) {

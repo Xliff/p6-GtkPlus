@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ToggleButton;
-use GTK::Raw::Types;
+use GTK::Raw::ToggleButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Button;
+use GTK::Button:ver<3.0.1146>;
 
 our subset ToggleButtonAncestry is export
   where GtkToggleButton | ButtonAncestry;
 
-class GTK::ToggleButton is GTK::Button {
+class GTK::ToggleButton:ver<3.0.1146> is GTK::Button {
   has GtkToggleButton $!tb is implementor;
 
   method bless(*%attrinit) {

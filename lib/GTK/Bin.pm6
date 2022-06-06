@@ -3,8 +3,8 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Bin;
-use GTK::Raw::Types;
+use GTK::Raw::Bin:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::Container;
 use GTK::Widget;
@@ -49,7 +49,7 @@ class GTK::Bin is GTK::Container {
         cast(GtkBin, $_);
       }
     }
-    
+
     say "BIN: { $!bin // 'NIL' }";
     say "BIN-TP: { $to-parent // 'NIL' }";
     self.setContainer($to-parent);

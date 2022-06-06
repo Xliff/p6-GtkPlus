@@ -3,18 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Clipboard;
-use GTK::Raw::Types;
+use GTK::Raw::Clipboard:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GDK::Display;
 use GDK::Pixbuf;
-use GTK::Selection;
+use GTK::Selection:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-class GTK::Clipboard {
+class GTK::Clipboard:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;

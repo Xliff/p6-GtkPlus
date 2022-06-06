@@ -4,19 +4,19 @@ use Method::Also;
 
 use GDK::RGBA;
 
-use GTK::Raw::Types;
-use GTK::Raw::CellRendererText;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::CellRendererText:ver<3.0.1146>;
 
 use Pango::AttrList;
 use GLib::Value;
-use GTK::CellRenderer;
+use GTK::CellRenderer:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
 our subset CellRendererTextAncestry is export
   where GtkCellRendererText | GtkCellRenderer;
 
-class GTK::CellRendererText is GTK::CellRenderer {
+class GTK::CellRendererText:ver<3.0.1146> is GTK::CellRenderer {
   also does GTK::Roles::Signals::Generic;
 
   has GtkCellRendererText $!crt is implementor;
@@ -28,7 +28,7 @@ class GTK::CellRendererText is GTK::CellRenderer {
   # }
 
   submethod BUILD ( :$celltext ) {
-    say "CRT: { $celltext // 'NIL' }";
+    #say "CRT: { $celltext // 'NIL' }";
 
     self.setCellRendererText($celltext) if $celltext;
   }

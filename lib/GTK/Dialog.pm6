@@ -3,17 +3,17 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Dialog;
-use GTK::Raw::Types;
+use GTK::Raw::Dialog:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Box;
-use GTK::HeaderBar;
-use GTK::Window;
+use GTK::Box:ver<3.0.1146>;
+use GTK::HeaderBar:ver<3.0.1146>;
+use GTK::Window:ver<3.0.1146>;
 
 our subset DialogAncestry is export of Mu
   where GtkDialog | WindowAncestry;
 
-class GTK::Dialog is GTK::Window {
+class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   has GtkDialog $!d is implementor;
 
   method bless(*%attrinit) {
@@ -178,7 +178,13 @@ class GTK::Dialog is GTK::Window {
       Nil;
   }
 
-  method get_content_area ( :$raw = False ) is also<get-content-area> {
+  method get_content_area ( :$raw = False )
+    is also<
+      get-content-area
+      content_area
+      content-area
+    >
+  {
     my $b = gtk_dialog_get_content_area($!d);
 
     $b ??
@@ -231,7 +237,8 @@ class GTK::Dialog is GTK::Window {
   }
 
   method run {
-    self.response.tap({ self.hide }) unless self.is-connected('response');
+    self.response.tap( -> *@a { self.hide })
+      unless self.is-connected('response');
 
     my gint $rc = gtk_dialog_run($!d);
 

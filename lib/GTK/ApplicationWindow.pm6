@@ -2,11 +2,11 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::ApplicationWindow;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::ApplicationWindow:ver<3.0.1146>;
 
-use GTK::ShortcutsWindow;
-use GTK::Window;
+use GTK::ShortcutsWindow:ver<3.0.1146>;
+use GTK::Window:ver<3.0.1146>;
 
 use GIO::Roles::ActionMap;
 
@@ -15,7 +15,7 @@ our subset GtkApplicationWindowAncestry is export
 
 constant ApplicationWindowAncestry is export := GtkApplicationWindowAncestry;
 
-class GTK::ApplicationWindow is GTK::Window {
+class GTK::ApplicationWindow:ver<3.0.1146> is GTK::Window {
   also does GIO::Roles::ActionMap;
 
   has GtkApplicationWindow $!aw is implementor;
@@ -27,11 +27,13 @@ class GTK::ApplicationWindow is GTK::Window {
   # }
 
   submethod BUILD ( :$appwindow ) {
-    #say "AW: { $appwindow // 'NIL' }";
-    self.setApplicationWindow($appwindow) if $appwindow;
+    say "AW: { $appwindow // 'NIL' }";
+    self.setGtkApplicationWindow($appwindow) if $appwindow;
   }
 
-  method setApplicationWindow(GtkApplicationWindowAncestry $appwindow) {
+  method setGtkApplicationWindow(GtkApplicationWindowAncestry $appwindow)
+    is also<setApplicationWindow>
+  {
     my $to-parent;
     $!aw = do given $appwindow {
       when GtkApplicationWindow {
@@ -51,8 +53,9 @@ class GTK::ApplicationWindow is GTK::Window {
       }
     };
     say "TP: { $to-parent // 'NIL' }";
+    say "AW: { $!aw // 'NIL' }";
     self.roleInit-ActionMap unless $!actmap;
-    self.setWindow($to-parent);
+    self.setGtkWindow($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkApplicationWindow

@@ -1,9 +1,9 @@
 use v6.c;
 
-unit package GTK::MRO;
+unit package GTK::MRO:ver<3.0.1146>;
 
 # Number of times I've had to force THIS to recompile.
-constant forced = 0;
+constant forced = 59;
 
 our %mro is export = (
   'GTK::WidgetPath' => ('Any', 'Mu'),

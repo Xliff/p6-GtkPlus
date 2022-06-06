@@ -365,12 +365,12 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     }
 
     # cw: Return as close to the original object as parameters allow.
-    # ReturnWidget(
-    #    gtk_application_get_active_window($!app),
-    #    $raw,
-    #   :$base,
-    #   :$base-widget
-    # );
+    ReturnWidget(
+       gtk_application_get_active_window($!app),
+       $raw,
+      :$base,
+      :$base-widget
+    );
   }
 
   method get_menu_by_id (Str() $id) is also<get-menu-by-id> {

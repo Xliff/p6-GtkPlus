@@ -4,20 +4,20 @@ use Method::Also;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::Label;
-use GTK::Raw::Types;
+use GTK::Raw::Label:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use Pango::AttrList;
 use Pango::Layout;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset GtkLabelAncestry is export of Mu
   where GtkLabel | GtkWidgetAncestry;
 
 constant LabelAncestry is export = GtkLabelAncestry;
 
-class GTK::Label is GTK::Widget {
+class GTK::Label:ver<3.0.1146> is GTK::Widget {
   has GtkLabel $!l is implementor;
   has $!markup;
 
@@ -352,6 +352,16 @@ class GTK::Label is GTK::Widget {
         gtk_label_set_width_chars($!l, $nc);
       }
     );
+  }
+
+  method align is rw {
+    Proxy.new:
+      FETCH => -> $ {
+        (self.xalign, self.yalign)
+      },
+      STORE => -> $, @v where *.elems == 2 {
+        (self.xalign, self.yalign) = @v;
+      }
   }
 
   method xalign is rw {

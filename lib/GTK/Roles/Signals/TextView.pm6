@@ -3,11 +3,11 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::Subs;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
 use GLib::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::TextView {
+role GTK::Roles::Signals::TextView:ver<3.0.1146> {
   has %!signals-tv;
 
   # GtkTextView, GtkTextExtendSelection, GtkTextIter, GtkTextIter, GtkTextIter, gpointer --> gboolean

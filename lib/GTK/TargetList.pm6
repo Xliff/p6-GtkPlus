@@ -3,17 +3,17 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TargetList;
-use GTK::Raw::Types;
+use GTK::Raw::TargetList:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::TargetEntry;
+use GTK::TargetEntry:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
 our subset GtkTargetListAncestry is export of Mu
   where GtkTargetList | GObject;
 
-class GTK::TargetList {
+class GTK::TargetList:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkTargetList $!tl is implementor;

@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Frame;
-use GTK::Raw::Types;
+use GTK::Raw::Frame:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Bin;
+use GTK::Bin:ver<3.0.1146>;
 
 our subset FrameAncestry is export where GtkFrame | BinAncestry;
 
-class GTK::Frame is GTK::Bin {
+class GTK::Frame:ver<3.0.1146> is GTK::Bin {
   has GtkFrame $!f is implementor;
 
   method bless(*%attrinit) {

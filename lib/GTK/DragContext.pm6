@@ -2,14 +2,14 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::DnD;
-use GTK::Raw::Types;
+use GTK::Raw::DnD:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 
 # TO BE USED WITH GDK::DragContext.
 
-class GTK::DragContext {
+class GTK::DragContext:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GdkDragContext $!dc is implementor;
@@ -59,7 +59,7 @@ class GTK::DragContext {
     >
   {
     # Returns GtkWidget.
-    # May need to use GTK::Widget.CreateObject for this. For now, leave
+    # May need to use GTK::Widget:ver<3.0.1146>.CreateObject for this. For now, leave
     # up to the caller.
     my $w = gtk_drag_get_source_widget($!dc);
 

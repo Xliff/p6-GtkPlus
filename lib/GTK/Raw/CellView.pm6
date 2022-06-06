@@ -4,9 +4,9 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::CellView;
+unit package GTK::Raw::CellView:ver<3.0.1146>;
 
 sub gtk_cell_view_get_size_of_row (
   GtkCellView $cell_view,

@@ -4,14 +4,17 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Raw::AccelLabel;
-use GTK::Raw::Types;
+use GTK::Raw::AccelLabel:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Label;
+use GTK::Label:ver<3.0.1146>;
 
-our subset AccelLabelAncestry is export where GtkAccelLabel | LabelAncestry;
+our subset GtkAccelLabelAncestry is export
+  where GtkAccelLabel | GtkLabelAncestry;
 
-class GTK::AccelLabel is GTK::Label {
+constant AccelLabelAncestry is export = GtkAccelLabelAncestry;
+
+class GTK::AccelLabel:ver<3.0.1146> is GTK::Label {
   has GtkAccelLabel $!al is implementor;
 
   method bless(*%attrinit) {
@@ -21,26 +24,24 @@ class GTK::AccelLabel is GTK::Label {
   }
 
   submethod BUILD(:$alabel) {
+    self.setGtkAccelLabel($alabel) if $alabel;
+  }
+
+  method setGtkAccelLabel (GtkAccelLabelAncestry $_) {
     my $to-parent;
-    given $alabel {
-      when AccelLabelAncestry {
-        $!al = do {
-          when GtkAccelLabel {
-            $to-parent = nativecast(GtkLabel, $_);
-            $_;
-          }
-          when LabelAncestry {
-            $to-parent = $_;
-            nativecast(GtkAccelLabel, $_);
-          }
-        };
-        self.setLabel($to-parent);
+
+    $!al = do {
+      when GtkAccelLabel {
+        $to-parent = nativecast(GtkLabel, $_);
+        $_;
       }
-      when GTK::AccelLabel {
-      }
+
       default {
+        $to-parent = $_;
+        nativecast(GtkAccelLabel, $_);
       }
-    }
+    };
+    self.setGtkLabel($to-parent);
   }
 
   multi method new (AccelLabelAncestry $alabel, :$ref = True) {

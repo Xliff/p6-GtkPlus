@@ -1,14 +1,14 @@
 use v6.c;
 
-use GTK::CheckMenuItem;
-use GTK::Menu;
-use GTK::MenuBar;
-use GTK::MenuButton;
-use GTK::MenuItem;
-use GTK::RadioMenuItem;
-use GTK::SeparatorMenuItem;
+use GTK::CheckMenuItem:ver<3.0.1146>;
+use GTK::Menu:ver<3.0.1146>;
+use GTK::MenuBar:ver<3.0.1146>;
+use GTK::MenuButton:ver<3.0.1146>;
+use GTK::MenuItem:ver<3.0.1146>;
+use GTK::RadioMenuItem:ver<3.0.1146>;
+use GTK::SeparatorMenuItem:ver<3.0.1146>;
 
-class GTK::Utils::MenuBuilder {
+class GTK::Utils::MenuBuilder:ver<3.0.1146> {
   has $!menu;
   has $!items;
 

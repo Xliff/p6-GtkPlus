@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ToolItem;
+unit package GTK::Raw::ToolItem:ver<3.0.1146>;
 
 sub gtk_tool_item_get_ellipsize_mode (GtkToolItem $tool_item)
   returns uint32 # PangoEllipsizeMode

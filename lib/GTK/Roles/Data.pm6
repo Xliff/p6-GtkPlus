@@ -4,11 +4,11 @@ use Method::Also;
 
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 constant gObjectTypeKey = 'p6-GObject-Type';
 
-role GTK::Roles::Data {
+role GTK::Roles::Data:ver<3.0.1146> {
   has $!data;
 
   method get_data_string(Str() $key)

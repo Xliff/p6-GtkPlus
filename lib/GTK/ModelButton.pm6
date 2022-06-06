@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::Button;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Button:ver<3.0.1146>;
 
-use GTK::Button;
+use GTK::Button:ver<3.0.1146>;
 
 use GIO::Roles::Icon;
 
 our subset ModelButtonAncestry is export of Mu
   where GtkModelButton | ButtonAncestry;
 
-class GTK::ModelButton is GTK::Button {
+class GTK::ModelButton:ver<3.0.1146> is GTK::Button {
   has GtkModelButton $!mb is implementor;
 
     method bless(*%attrinit) {

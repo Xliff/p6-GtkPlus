@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Spinner;
-use GTK::Raw::Types;
+use GTK::Raw::Spinner:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset SpinnerAncestry is export
   where GtkSpinner | GtkWidgetAncestry;
 
-class GTK::Spinner is GTK::Widget {
+class GTK::Spinner:ver<3.0.1146> is GTK::Widget {
   has GtkSpinner $!spin is implementor;
 
   method bless(*%attrinit) {

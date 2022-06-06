@@ -3,10 +3,10 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 use Pango::Raw::Types;
 
-unit package GTK::Raw::TextView;
+unit package GTK::Raw::TextView:ver<3.0.1146>;
 
 sub gtk_text_view_add_child_at_anchor (
   GtkTextView $text_view,

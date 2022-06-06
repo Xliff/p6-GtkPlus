@@ -2,10 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Buildable;
-use GTK::Raw::Types;
+use GTK::Raw::Buildable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::Buildable {
+role GTK::Roles::Buildable:ver<3.0.1146> {
   has GtkBuildable $!b;
 
   method roleInit-GtkBuildable {

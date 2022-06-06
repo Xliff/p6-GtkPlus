@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ListStore;
+unit package GTK::Raw::ListStore:ver<3.0.1146>;
 
 sub gtk_list_store_append (GtkListStore $list_store, GtkTreeIter $iter)
   is native(gtk)

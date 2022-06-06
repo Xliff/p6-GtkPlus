@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::PageSetup;
+unit package GTK::Raw::PageSetup:ver<3.0.1146>;
 
 sub gtk_page_setup_copy (GtkPageSetup $other)
   returns GtkPageSetup

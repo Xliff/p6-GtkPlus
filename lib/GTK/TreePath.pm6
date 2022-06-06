@@ -2,14 +2,14 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TreeModel;
-use GTK::Raw::Types;
+use GTK::Raw::TreeModel:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Types;
+use GTK::Roles::Types:ver<3.0.1146>;
 
 # BOXED TYPE
 
-class GTK::TreePath {
+class GTK::TreePath:ver<3.0.1146> {
   also does GTK::Roles::Types;
 
   has GtkTreePath $!tp is implementor;

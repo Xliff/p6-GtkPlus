@@ -4,9 +4,9 @@ use Cairo;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Widget;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset GtkDrawingAreaAncestry is export of Mu
   where GtkDrawingArea | GtkWidgetAncestry;
@@ -23,7 +23,7 @@ sub gtk_drawing_area_new ()
   is native(gtk)
 { * }
 
-class GTK::DrawingArea is GTK::Widget {
+class GTK::DrawingArea:ver<3.0.1146> is GTK::Widget {
   has GtkDrawingArea $!da is implementor;
 
   method bless(*%attrinit) {

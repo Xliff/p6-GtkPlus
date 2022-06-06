@@ -5,18 +5,18 @@ use NativeCall;
 
 use GLib::GList;
 
-use GTK::Raw::RadioToolButton;
-use GTK::Raw::Types;
+use GTK::Raw::RadioToolButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::RadioButton;
-use GTK::ToggleToolButton;
+use GTK::RadioButton:ver<3.0.1146>;
+use GTK::ToggleToolButton:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
 
 our subset RadioToolButtonAncestry is export
   where GtkRadioToolButton | GtkActionable | ToggleToolButtonAncestry;
 
-class GTK::RadioToolButton is GTK::ToggleToolButton {
+class GTK::RadioToolButton:ver<3.0.1146> is GTK::ToggleToolButton {
   has GtkRadioToolButton $!rtb is implementor;
 
   method bless(*%attrinit) {

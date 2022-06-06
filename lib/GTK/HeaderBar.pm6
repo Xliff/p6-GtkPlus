@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::HeaderBar;
-use GTK::Raw::Types;
+use GTK::Raw::HeaderBar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
+use GTK::Container:ver<3.0.1146>;
 
 our subset HeaderBarAncestry is export
   where GtkHeaderBar | ContainerAncestry;
 
-class GTK::HeaderBar is GTK::Container {
+class GTK::HeaderBar:ver<3.0.1146> is GTK::Container {
   has GtkHeaderBar $!hb is implementor;
 
   method bless(*%attrinit) {

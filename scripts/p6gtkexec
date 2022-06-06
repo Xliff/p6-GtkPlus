@@ -22,6 +22,7 @@ fi
 
 INCLUDES="\
 -I${P6_GTK_HOME}/Method-Also/lib        \
+-I${P6_GTK_HOME}/P6-Data-Dump-Tree/lib  \
 -I${P6_GTK_HOME}/p6-ICal/lib            \
 -I${P6_GTK_HOME}/p6-GLib/lib            \
 -I${P6_GTK_HOME}/p6-ICal-GLib/lib       \

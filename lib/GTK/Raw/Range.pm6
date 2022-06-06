@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Range;
+unit package GTK::Raw::Range:ver<3.0.1146>;
 
 sub gtk_range_get_range_rect (GtkRange $range, GdkRectangle $range_rect)
   is native(gtk)

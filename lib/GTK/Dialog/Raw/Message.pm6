@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Dialog::Raw::Message;
+unit package GTK::Dialog::Raw::Message:ver<3.0.1146>;
 
 sub gtk_message_dialog_get_message_area (GtkMessageDialog $message_dialog)
   returns GtkWidget

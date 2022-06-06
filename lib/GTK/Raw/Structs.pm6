@@ -8,11 +8,11 @@ use GDK::Raw::Definitions;
 use GLib::Raw::Structs;
 use GDK::Raw::Structs;
 use Pango::Raw::Structs;
-use GTK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
 
 use GDK::RGBA;
 
-unit package GTK::Raw::Structs;
+unit package GTK::Raw::Structs:ver<3.0.1146>;
 
 class GtkBorder is repr('CStruct') does GLib::Roles::Pointers is export {
   has int16 $.left;

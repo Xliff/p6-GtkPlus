@@ -4,7 +4,7 @@ use NativeCall;
 
 use GLib::Roles::Pointers;
 
-unit package GTK::Raw::Definitions;
+unit package GTK::Raw::Definitions:ver<3.0.1146>;
 
 constant gtk is export := 'gtk-3',v0;
 

@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::AppChooser;
+unit package GTK::Raw::AppChooser:ver<3.0.1146>;
 
 sub gtk_app_chooser_get_app_info (GtkAppChooser $self)
   returns GAppInfo

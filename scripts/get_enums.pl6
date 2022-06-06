@@ -35,6 +35,10 @@ sub MAIN ($dir?, :$file) {
   my %etype;
   for @files -> $file {
     say "Checking { $file } ...";
+
+    # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error
+    next if $file.ends-with('Xge.h');
+
     my $contents = $file.IO.slurp;
 
     # Remove preprocessor directives.
@@ -43,8 +47,16 @@ sub MAIN ($dir?, :$file) {
     my $m = $contents ~~ m:g/<enum>/;
     for $m.Array -> $l {
       my @e;
-      my ($etype, $neg, $long) = (32, False, False);
+      my ($etype, $neg, $long, $enum-rn) =
+        (32, False, False, $l<enum><rn> // $l<enum><solo-enum><n>);
+
+      next unless $enum-rn;
+
+      $enum-rn = $enum-rn.split('_').map( *.lc.tc ).join('')
+        if $enum-rn.contains('_');
+
       for $l<enum><solo-enum><enum-entry> -> $el {
+
         for $el -> $e {
           # Handle 32 vs 64 bit by literal.
           if $e[1][0] && $e[1][0].Numeric !~~ Failure {
@@ -60,11 +72,11 @@ sub MAIN ($dir?, :$file) {
           $ee.push: $n if $n.chars;
           @e.push: $ee;
         }
-        %enums{$l<enum><rn>} = @e;
+        %enums{$enum-rn} = @e;
       }
       $etype = 64      if $long;
       $etype = -$etype if $neg;
-      %etype{$l<enum><rn>} = $etype;
+      %etype{$enum-rn} = $etype;
     }
   }
 

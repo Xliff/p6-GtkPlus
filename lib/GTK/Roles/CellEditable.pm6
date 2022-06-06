@@ -3,14 +3,14 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::CellEditable;
-use GTK::Raw::Types;
+use GTK::Raw::CellEditable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-role GTK::Roles::CellEditable {
+role GTK::Roles::CellEditable:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
 
   has GtkCellEditable $!ce;

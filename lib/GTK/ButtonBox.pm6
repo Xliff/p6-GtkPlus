@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::ButtonBox;
-use GTK::Raw::Types;
+use GTK::Raw::ButtonBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Box;
+use GTK::Box:ver<3.0.1146>;
 
 our subset GtkButtonBoxAncestry is export
   where GtkButtonBox | GtkBoxAncestry;
 
-class GTK::ButtonBox is GTK::Box {
+class GTK::ButtonBox:ver<3.0.1146> is GTK::Box {
   has GtkButtonBox $!bb is implementor;
 
   method bless(*%attrinit) {

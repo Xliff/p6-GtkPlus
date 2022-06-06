@@ -5,23 +5,23 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::CellView;
-use GTK::Raw::Types;
+use GTK::Raw::CellView:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellArea;
-use GTK::CellAreaContext;
-use GTK::TreePath;
-use GTK::Widget;
+use GTK::CellArea:ver<3.0.1146>;
+use GTK::CellAreaContext:ver<3.0.1146>;
+use GTK::TreePath:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::CellLayout;
-use GTK::Roles::Orientable;
-use GTK::Roles::TreeModel;
+use GTK::Roles::CellLayout:ver<3.0.1146>;
+use GTK::Roles::Orientable:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
 
 our subset CellViewAncestry is export
   where GtkCellView | GtkCellLayout | GtkOrientable | GtkWidgetAncestry;
 
-class GTK::CellView is GTK::Widget {
+class GTK::CellView:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Orientable;
 

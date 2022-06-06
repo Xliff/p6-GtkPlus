@@ -2,16 +2,16 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::EntryBuffer;
-use GTK::Raw::Types;
+use GTK::Raw::EntryBuffer:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 
 use GLib::Roles::Properties;
-use GTK::Roles::Signals::EntryBuffer;
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::EntryBuffer:ver<3.0.1146>;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-class GTK::EntryBuffer {
+class GTK::EntryBuffer:ver<3.0.1146> {
   also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::EntryBuffer;
   also does GTK::Roles::Signals::Generic;

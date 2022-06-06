@@ -2,12 +2,12 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Scrollable;
-use GTK::Raw::Types;
+use GTK::Raw::Scrollable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Adjustment;
+use GTK::Adjustment:ver<3.0.1146>;
 
-role GTK::Roles::Scrollable {
+role GTK::Roles::Scrollable:ver<3.0.1146> {
   has GtkScrollable $!s;
 
   method roleInit-GtkScrollable {

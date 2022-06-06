@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::HeaderBar;
+unit package GTK::Raw::HeaderBar:ver<3.0.1146>;
 
 sub gtk_header_bar_get_type ()
   returns GType

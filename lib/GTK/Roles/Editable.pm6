@@ -4,14 +4,14 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Raw::Editable;
-use GTK::Raw::Types;
+use GTK::Raw::Editable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::Editable;
-use GTK::Roles::Types;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::Editable:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-role GTK::Roles::Editable {
+role GTK::Roles::Editable:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::Editable;
   also does GTK::Roles::Types;

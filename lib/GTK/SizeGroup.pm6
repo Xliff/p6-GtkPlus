@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::SizeGroup;
-use GTK::Raw::Types;
+use GTK::Raw::SizeGroup:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
 
 use GLib::Roles::Object;
 use GLib::Roles::ListData;
 
-class GTK::SizeGroup {
+class GTK::SizeGroup:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   has GtkSizeGroup $!sg is implementor;
@@ -104,7 +104,7 @@ class GTK::SizeGroup {
     unstable_get_type( self.^name, &gtk_size_group_get_type, $n, $t );
   }
 
-  # Should this attempt to use GTK::Widget.CreateObject?
+  # Should this attempt to use GTK::Widget:ver<3.0.1146>.CreateObject?
   method get_widgets (:$glist = False, :$raw = False) is also<get-widgets> {
     my $wl = gtk_size_group_get_widgets($!sg);
 

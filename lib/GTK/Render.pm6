@@ -5,12 +5,12 @@ use NativeCall;
 
 use Pango::Raw::Types;
 
-use GTK::Raw::Types;
-use GTK::Raw::Render;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Render:ver<3.0.1146>;
 
 use GLib::Roles::StaticClass;
 
-class GTK::Render {
+class GTK::Render:ver<3.0.1146> {
   also does GLib::Roles::StaticClass;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

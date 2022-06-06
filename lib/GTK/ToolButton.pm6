@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ToolButton;
-use GTK::Raw::Types;
+use GTK::Raw::ToolButton:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Image;
-use GTK::ToolItem;
+use GTK::Image:ver<3.0.1146>;
+use GTK::ToolItem:ver<3.0.1146>;
 
-use GTK::Roles::Actionable;
+use GTK::Roles::Actionable:ver<3.0.1146>;
 
 our subset ToolButtonAncestry is export of Mu
   where GtkToolButton | GtkToolItemAncestry;
 
-class GTK::ToolButton is GTK::ToolItem {
+class GTK::ToolButton:ver<3.0.1146> is GTK::ToolItem {
   also does GTK::Roles::Actionable;
 
   has GtkToolButton $!tb is implementor;

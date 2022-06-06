@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::Scrollable;
+unit package GTK::Raw::Scrollable:ver<3.0.1146>;
 
 sub gtk_scrollable_get_border (GtkScrollable $scrollable, GtkBorder $border)
   returns uint32

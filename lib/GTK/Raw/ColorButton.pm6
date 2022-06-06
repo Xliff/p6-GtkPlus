@@ -4,9 +4,9 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ColorButton;
+unit package GTK::Raw::ColorButton:ver<3.0.1146>;
 
 sub gtk_color_button_get_color (GtkColorButton $button, GdkColor $color)
   is native(gtk)

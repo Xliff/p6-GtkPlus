@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Container;
-use GTK::Raw::Subs;
-use GTK::Raw::Types;
+use GTK::Raw::Container:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
-use GTK::Adjustment;
-use GTK::Widget;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
-use GTK::Roles::LatchedContents;
+use GTK::Roles::LatchedContents:ver<3.0.1146>;
 
 our subset GtkContainerAncestry is export
   where GtkContainer | GtkWidgetAncestry;
@@ -20,7 +20,7 @@ our subset GtkContainerAncestry is export
 # Allow backwards compatibility for a bit
 constant ContainerAncestry is export = GtkContainerAncestry;
 
-class GTK::Container is GTK::Widget {
+class GTK::Container:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::LatchedContents;
 
   # Maybe this should be done as the base class.

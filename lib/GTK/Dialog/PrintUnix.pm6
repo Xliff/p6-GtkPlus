@@ -3,18 +3,18 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Dialog::Raw::PrintUnix;
-use GTK::Raw::Types;
+use GTK::Dialog::Raw::PrintUnix:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Dialog;
-use GTK::PageSetup;
-use GTK::Printer;
-use GTK::PrintSettings;
+use GTK::Dialog:ver<3.0.1146>;
+use GTK::PageSetup:ver<3.0.1146>;
+use GTK::Printer:ver<3.0.1146>;
+use GTK::PrintSettings:ver<3.0.1146>;
 
 my subset PrintUnixDialogAncestry is export
   where GtkPrintUnixDialog | DialogAncestry;
 
-class GTK::Dialog::PrintUnix is GTK::Dialog {
+class GTK::Dialog::PrintUnix:ver<3.0.1146> is GTK::Dialog {
   has GtkPrintUnixDialog $!pud is implementor;
 
   method bless(*%attrinit) {

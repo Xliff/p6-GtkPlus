@@ -4,17 +4,17 @@ use Method::Also;
 
 use GLib::GList;
 
-use GTK::Raw::RadioMenuItem;
-use GTK::Raw::Types;
+use GTK::Raw::RadioMenuItem:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::CheckMenuItem;
+use GTK::CheckMenuItem:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
 
 our subset RadioMenuItemAncestry
   where GtkRadioMenuItem | CheckMenuItemAncestry;
 
-class GTK::RadioMenuItem is GTK::CheckMenuItem {
+class GTK::RadioMenuItem:ver<3.0.1146> is GTK::CheckMenuItem {
   has GtkRadioMenuItem $!rmi is implementor;
 
   method bless(*%attrinit) {

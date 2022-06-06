@@ -4,17 +4,17 @@ use Method::Also;
 use NativeCall;
 
 
-use GTK::Dialog::Raw::FontChooser;
-use GTK::Raw::Types;
+use GTK::Dialog::Raw::FontChooser:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Dialog;
+use GTK::Dialog:ver<3.0.1146>;
 
-use GTK::Roles::FontChooser;
+use GTK::Roles::FontChooser:ver<3.0.1146>;
 
 our subset FontChooserDialogAncestry
   where GtkFontChooserDialog | GtkFontChooser | DialogAncestry;
 
-class GTK::Dialog::FontChooser is GTK::Dialog {
+class GTK::Dialog::FontChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::FontChooser;
 
   has GtkFontChooserDialog $!fcd is implementor;

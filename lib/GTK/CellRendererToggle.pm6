@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellRendererToggle;
-use GTK::Raw::Types;
+use GTK::Raw::CellRendererToggle:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellRenderer;
+use GTK::CellRenderer:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
 our subset CellRendererToggleAncestry is export
   where GtkCellRendererToggle | GtkCellRenderer;
 
-class GTK::CellRendererToggle is GTK::CellRenderer {
+class GTK::CellRendererToggle:ver<3.0.1146> is GTK::CellRenderer {
   also does GTK::Roles::Signals::Generic;
 
   has GtkCellRendererToggle $!crt is implementor;

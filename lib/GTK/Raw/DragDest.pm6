@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::DragDest;
+unit package GTK::Raw::DragDest:ver<3.0.1146>;
 
 sub gtk_drag_dest_add_image_targets (GtkWidget $widget)
   is native(gtk)

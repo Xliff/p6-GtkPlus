@@ -2,20 +2,20 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::EntryCompletion;
-use GTK::Raw::Types;
+use GTK::Raw::EntryCompletion:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::CellLayout;
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::EntryCompletion;
-use GTK::Roles::TreeModel;
+use GTK::Roles::CellLayout:ver<3.0.1146>;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::EntryCompletion:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
 
 # THIS IS OFF OF THE TABLE UNTIL A VIABLE CONVERSION FOR GTKLISTSTORE
 # HAS BEEN DETERMINED == which has been done. Will need to circle back
 # here.
 
-class GTK::EntryCompletion {
+class GTK::EntryCompletion:ver<3.0.1146> {
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::EntryCompletion;

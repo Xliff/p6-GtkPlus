@@ -5,7 +5,7 @@ use NativeCall;
 use GTK::Raw::Types;
 use GLib::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::Application {
+role GTK::Roles::Signals::Application:ver<3.0.1146> {
   has %!signals-app;
 
   # Copy for each signal.

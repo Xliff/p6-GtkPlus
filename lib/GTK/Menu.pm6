@@ -2,19 +2,19 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Menu;
-use GTK::Raw::Types;
+use GTK::Raw::Menu:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Signals::Menu;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Signals::Menu:ver<3.0.1146>;
 
-use GTK::AccelGroup;
-use GTK::MenuShell;
-use GTK::Widget;
+use GTK::AccelGroup:ver<3.0.1146>;
+use GTK::MenuShell:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
 our subset MenuAncestry is export where GtkMenu | MenuShellAncestry;
 
-class GTK::Menu is GTK::MenuShell {
+class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
   also does GTK::Roles::Signals::Menu;
 
   has GtkMenu $!m is implementor;

@@ -5,13 +5,13 @@ use NativeCall;
 
 use GDK::RGBA;
 
-use GTK::Raw::ColorChooser;
-use GTK::Raw::Types;
+use GTK::Raw::ColorChooser:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Types;
-use GTK::Roles::Signals::Generic;
+use GTK::Roles::Types:ver<3.0.1146>;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 
-role GTK::Roles::ColorChooser {
+role GTK::Roles::ColorChooser:ver<3.0.1146> {
   also does GTK::Roles::Signals::Generic;
 
   has GtkColorChooser $!cc;

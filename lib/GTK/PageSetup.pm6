@@ -3,14 +3,14 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::PageSetup;
-use GTK::Raw::Types;
+use GTK::Raw::PageSetup:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::PaperSize;
+use GTK::PaperSize:ver<3.0.1146>;
 
 # BOXED TYPE
 
-class GTK::PageSetup {
+class GTK::PageSetup:ver<3.0.1146> {
   has GtkPageSetup $!ps is implementor;
 
   submethod BUILD(:$page) {

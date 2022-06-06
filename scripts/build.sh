@@ -1,11 +1,5 @@
 #!/bin/bash
-perl6 scripts/backup_results.pl6
-echo -e "Dependency Generation\n=====================" >> LastBuildResults
-/usr/bin/time -p -o LastBuildResults -a perl6 scripts/dependencies.pl6
-if [ "$?" -ne "0" ]; then
-  exit
-fi
-
+ln=1
 if [ "$1" == "--start-at" ]; then
   shift
   re='^[0-9]+$'
@@ -21,9 +15,22 @@ if [ "$1" == "--start-at" ]; then
 else
   cp BuildList BuildList.now
 fi
+if [ "$1" == "--log" ]; then
+  shift
+  name=$1
+  shift
+else
+  name='LastBuildResults'
+fi
+
+perl6 scripts/backup_results.pl6 $name
+
+
 
 /usr/bin/time -p /bin/bash -c '(
-  i=1; n=`wc -l BuildList | cut -f1 -d\ `; for a in `cat BuildList.now`; do
+  echo "Build started for: ";
+  ./p6gtkexec -v;
+  '"i=$ln"'; n=`wc -l BuildList | cut -f1 -d\ `; for a in `cat BuildList.now`; do
     (
     	echo " === $a === ($i/$n)"
 	    ./p6gtkexec -e "use $a" 2>&1
@@ -31,6 +38,6 @@ fi
     i=$((i+1))
   done;
   echo;
-)' 2>&1 | tee -a LastBuildResults
-cp LastBuildResults stats/LastBuildResults-`date --utc +%Y%m%d`
+)' 2>&1 | tee -a $name
+cp $name stats/$name-`date --utc +%Y%m%d`
 rm BuildList.now

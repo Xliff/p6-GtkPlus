@@ -3,17 +3,17 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TreeModelFilter;
-use GTK::Raw::Types;
+use GTK::Raw::TreeModelFilter:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 
 use GLib::Roles::Properties;
-use GTK::Roles::TreeModel;
-use GTK::Roles::TreeDnD;
-use GTK::Roles::Types;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
+use GTK::Roles::TreeDnD:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-class GTK::TreeModelFilter {
+class GTK::TreeModelFilter:ver<3.0.1146> {
   also does GLib::Roles::Properties;
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeDragSource;

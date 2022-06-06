@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::Types;
-use GTK::Dialog::Raw::About;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Dialog::Raw::About:ver<3.0.1146>;
 
-use GTK::Dialog;
+use GTK::Dialog:ver<3.0.1146>;
 
 my subset AboutDialogAncestry is export of Mu
   where GtkAboutDialog | DialogAncestry;
 
-class GTK::Dialog::About is GTK::Dialog {
+class GTK::Dialog::About:ver<3.0.1146> is GTK::Dialog {
   has GtkAboutDialog $!ad is implementor;
 
   method bless(*%attrinit) {

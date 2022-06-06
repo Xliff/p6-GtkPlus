@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::SearchEntry;
-use GTK::Raw::Types;
+use GTK::Raw::SearchEntry:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Entry;
+use GTK::Entry:ver<3.0.1146>;
 
 our subset SearchEntryAncestry is export
   where GtkSearchEntry | EntryAncestry;
 
-class GTK::SearchEntry is GTK::Entry {
+class GTK::SearchEntry:ver<3.0.1146> is GTK::Entry {
   has GtkSearchEntry $!se is implementor;
 
   method bless(*%attrinit) {

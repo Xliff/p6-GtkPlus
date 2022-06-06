@@ -3,11 +3,11 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
-use GTK::Raw::Subs;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Subs:ver<3.0.1146>;
 use GLib::Raw::ReturnedValue;
 
-role GTK::Roles::Signals::Toolbar {
+role GTK::Roles::Signals::Toolbar:ver<3.0.1146> {
   has %!signals-tb;
 
   # GtkToolbar, gint, gint, gint, gpointer --> gboolean

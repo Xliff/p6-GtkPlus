@@ -3,23 +3,23 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::CellArea;
-use GTK::Raw::Types;
+use GTK::Raw::CellArea:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
-use GTK::Roles::CellEditable;
-use GTK::CellRenderer;
+use GTK::Roles::CellEditable:ver<3.0.1146>;
+use GTK::CellRenderer:ver<3.0.1146>;
 
 use GLib::Roles::Object;
 use GLib::Roles::ListData;
-use GTK::Roles::Buildable;
-use GTK::Roles::CellLayout;
-use GTK::Roles::Signals::CellArea;
+use GTK::Roles::Buildable:ver<3.0.1146>;
+use GTK::Roles::CellLayout:ver<3.0.1146>;
+use GTK::Roles::Signals::CellArea:ver<3.0.1146>;
 
 our subset CellAreaAncestry is export
   where GtkCellArea | GtkOrientable | GtkCellLayout | GtkBuildable;
 
-class GTK::CellArea {
+class GTK::CellArea:ver<3.0.1146> {
   also does GLib::Roles::Object;
 
   also does GTK::Roles::Buildable;

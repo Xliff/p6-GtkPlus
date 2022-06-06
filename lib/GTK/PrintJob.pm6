@@ -3,19 +3,19 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::PrintJob;
-use GTK::Raw::Types;
+use GTK::Raw::PrintJob:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::PageSetup;
-use GTK::PrintSettings;
-use GTK::Printer;
+use GTK::PageSetup:ver<3.0.1146>;
+use GTK::PrintSettings:ver<3.0.1146>;
+use GTK::Printer:ver<3.0.1146>;
 
 use GLib::Roles::Properties;
-use GTK::Roles::Signals::Generic;
-use GTK::Roles::Types;
+use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-class GTK::PrintJob {
+class GTK::PrintJob:ver<3.0.1146> {
   also does GLib::Roles::Properties;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Types;

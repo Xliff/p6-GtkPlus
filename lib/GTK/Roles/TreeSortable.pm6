@@ -3,10 +3,10 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::TreeSortable;
-use GTK::Raw::Types;
+use GTK::Raw::TreeSortable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-role GTK::Roles::TreeSortable {
+role GTK::Roles::TreeSortable:ver<3.0.1146> {
   has GtkTreeSortable $!ts;
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

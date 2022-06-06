@@ -2,13 +2,13 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Notebook;
-use GTK::Raw::Types;
+use GTK::Raw::Notebook:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
-use GTK::Label;
+use GTK::Container:ver<3.0.1146>;
+use GTK::Label:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Notebook;
+use GTK::Roles::Signals::Notebook:ver<3.0.1146>;
 
 our subset NotebookAncestry is export
   where GtkNotebook | ContainerAncestry;
@@ -37,7 +37,7 @@ class X::GTK::Notebook::InvalidPageParams is Exception {
   }
 }
 
-class GTK::Notebook is GTK::Container {
+class GTK::Notebook:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Signals::Notebook;
 
   has GtkNotebook $!n is implementor;

@@ -2,16 +2,16 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TextTagTable;
-use GTK::Raw::Types;
+use GTK::Raw::TextTagTable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::TextTag;
+use GTK::TextTag:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::Buildable;
-use GTK::Roles::Signals::TextTagTable;
+use GTK::Roles::Buildable:ver<3.0.1146>;
+use GTK::Roles::Signals::TextTagTable:ver<3.0.1146>;
 
-class GTK::TextTagTable {
+class GTK::TextTagTable:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Buildable;
   also does GTK::Roles::Signals::TextTagTable;

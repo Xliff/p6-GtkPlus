@@ -2,19 +2,19 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TreeViewColumn;
-use GTK::Raw::Types;
+use GTK::Raw::TreeViewColumn:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::CellArea;
-use GTK::Widget;
+use GTK::CellArea:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Buildable;
-use GTK::Roles::CellLayout;
+use GTK::Roles::Buildable:ver<3.0.1146>;
+use GTK::Roles::CellLayout:ver<3.0.1146>;
 use GLib::Roles::Properties;
-use GTK::Roles::Types;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-class GTK::TreeViewColumn {
+class GTK::TreeViewColumn:ver<3.0.1146> {
   also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;
   also does GLib::Roles::Properties;

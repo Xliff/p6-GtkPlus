@@ -3,13 +3,13 @@ use v6.c;
 use NativeCall;
 
 use Method::Also;
-use GTK::Roles::Protection;
+use GTK::Roles::Protection:ver<3.0.1146>;
 
 # With reservations.... but...
-use GTK::Raw::Types;
-use GTK::Widget;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
-role GTK::Roles::LatchedContents {
+role GTK::Roles::LatchedContents:ver<3.0.1146> {
   # This is for GTK:: objects ONLY!
   also does GTK::Roles::Protection;
 
@@ -108,6 +108,10 @@ W
   method end {
     #self.IS-PROTECTED;
     @!end.clone;
+  }
+
+  method children {
+    |@!start, |@!end;
   }
 
 }

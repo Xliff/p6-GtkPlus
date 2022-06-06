@@ -2,18 +2,18 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::MenuShell;
-use GTK::Raw::Types;
+use GTK::Raw::MenuShell:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
-use GTK::MenuItem;
+use GTK::Container:ver<3.0.1146>;
+use GTK::MenuItem:ver<3.0.1146>;
 
-use GTK::Roles::Signals::MenuShell;
+use GTK::Roles::Signals::MenuShell:ver<3.0.1146>;
 
 our subset MenuShellAncestry is export
   where GtkMenuShell | ContainerAncestry;
 
-class GTK::MenuShell is GTK::Container {
+class GTK::MenuShell:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Signals::MenuShell;
 
   has GtkMenuShell $!ms is implementor;

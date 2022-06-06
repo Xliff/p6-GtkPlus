@@ -3,16 +3,16 @@ use v6.c;
 use NativeCall;
 use Method::Also;
 
-use GTK::Raw::Settings;
-use GTK::Raw::Types;
+use GTK::Raw::Settings:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 
 use GLib::Roles::Object;
-use GTK::Roles::Types;
-use GTK::Roles::StyleProvider;
+use GTK::Roles::Types:ver<3.0.1146>;
+use GTK::Roles::StyleProvider:ver<3.0.1146>;
 
-class GTK::Settings {
+class GTK::Settings:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Types;
   also does GTK::Roles::StyleProvider;

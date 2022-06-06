@@ -2,9 +2,9 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::IconView;
+unit package GTK::Raw::IconView:ver<3.0.1146>;
 
 sub gtk_icon_view_convert_widget_to_bin_window_coords (
   GtkIconView $icon_view,

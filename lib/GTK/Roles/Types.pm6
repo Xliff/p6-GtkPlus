@@ -2,11 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-use GTK::Raw::Utils;
+use GTK::Raw::Utils:ver<3.0.1146>;
 
-use GTK::Roles::Protection;
+use GTK::Roles::Protection:ver<3.0.1146>;
 
-role GTK::Roles::Types {
+role GTK::Roles::Types:ver<3.0.1146> {
   also does GTK::Roles::Protection;
 
   multi method RESOLVE-BOOL(*@rb) {

@@ -36,6 +36,10 @@ sub MAIN ($dir?, :$file, :$rw = False) {
   my %new-classes;
   for @files -> $file {
     $*ERR.say: "Checking { $file } ...";
+
+    # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error
+    next if $file.ends-with('Xge.h');
+
     my $contents = $file.IO.slurp;
 
     # Remove preprocessor directives.
@@ -57,7 +61,13 @@ sub MAIN ($dir?, :$file, :$rw = False) {
           .Str
         ] for $se<var>.map( *.<t><n> );
       }
-      my $struct-name = $l<struct><solo-struct><sn>;
+      my $struct-name = $l<struct><rn> // $l<struct><solo-struct><sn>;
+
+      unless $struct-name {
+        $l.gist.say;
+        next;
+      }
+
       $struct-name = $struct-name.substr(1) if $struct-name.starts-with('_');
       %new-classes{ $struct-name } = @s-entries;
     }

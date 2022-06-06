@@ -40,9 +40,14 @@ grammar C-Function-Def {
 
   # cw: Double semi-colon sometimes occurs during processing, so it is acccounted
   # for, here.
+  token func_name { <[ \w+ _ ]>+ }
   rule func_def {
       <returns>
-    $<sub>=[ \w+ ]
+    $<sub>=[
+      <func_name>
+      |
+      '(*' <func_name> ')'
+    ]
       <parameters>
     [ <postdec>+ % \s* ]?';'';'?
   }
@@ -161,6 +166,17 @@ sub MAIN (
 
   my @detected;
   my $contents = $fn.IO.open.slurp-rest;
+
+  # cw: Remove all struct definitions;
+  $contents ~~ m:g/<struct>/;
+  if $/ {
+    for $/[].reverse {
+      given .<struct> {
+        #say "Removing { .from } to { .to }...";
+        $contents.substr-rw( .from, .to - .from ) = ''
+      }
+    }
+  }
 
   # Remove extraneous, non-necessary bits!
   $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments

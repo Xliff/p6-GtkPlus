@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ScaleButton;
+unit package GTK::Raw::ScaleButton:ver<3.0.1146>;
 
 sub gtk_scale_button_get_minus_button (GtkScaleButton $button)
   returns GtkWidget

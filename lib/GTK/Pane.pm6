@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Pane;
-use GTK::Raw::Types;
+use GTK::Raw::Pane:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container;
+use GTK::Container:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset PaneAncestry is export
   where GtkPaned | GtkOrientable | ContainerAncestry;
 
-class GTK::Pane is GTK::Container {
+class GTK::Pane:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
 
   has GtkPaned $!p is implementor;

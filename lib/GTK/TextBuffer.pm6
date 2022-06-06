@@ -2,19 +2,20 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::TextBuffer;
-use GTK::Raw::Types;
+use GTK::Raw::TextBuffer:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::TargetList;
-use GTK::TextIter;
-use GTK::TextMark;
-use GTK::TextTagTable;
+use GTK::TargetList:ver<3.0.1146>;
+use GTK::TextIter:ver<3.0.1146>;
+use GTK::TextMark:ver<3.0.1146>;
+use GTK::TextTag:ver<3.0.1146>;
+use GTK::TextTagTable:ver<3.0.1146>;
 
 use GLib::Roles::Object;
-use GTK::Roles::Signals::TextBuffer;
+use GTK::Roles::Signals::TextBuffer:ver<3.0.1146>;
 
-class GTK::TextBuffer {
+class GTK::TextBuffer:ver<3.0.1146> {
   also does GLib::Roles::Object;
   also does GTK::Roles::Signals::TextBuffer;
 
@@ -389,6 +390,14 @@ D
   }
 
   # method create_tag omitted due to '...' parameter.
+  multi method createTag (Str() $name, *%attributes) {
+    samewith($name, %attributes);
+  }
+  multi method createTag (Str() $name, %attributes) {
+    my $tt = GTK::TextTag.new($name, %attributes);
+    self.get_tag_table.add_tag($tt);
+    $tt;
+  }
 
   method cut_clipboard (
     GtkClipboard() $clipboard,
@@ -1098,26 +1107,28 @@ D
   { * }
 
   multi method insert_with_tag_by_name (
-    GtkTextIter() $iter,
-    Buf $text,
-    Str() $tag_name
+    GtkTextIter()  $iter,
+    Buf            $text,
+    Str()          $tag_name,
+    Int()         :$len       = -1
   ) {
     my $t = $text.decode;
 
-    samewith($iter, $t, $t.chars, $tag_name);
+    samewith($iter, $t, $len, $tag_name);
   }
   multi method insert_with_tag_by_name (
-    GtkTextIter() $iter,
-    Str $text,
-    Str() $tag_name
+    GtkTextIter()  $iter,
+    Str            $text,
+    Str()          $tag_name,
+    Int()         :$len      = -1
   ) {
-   samewith($iter, $text, $text.chars, $tag_name);
+   samewith($iter, $text, $len, $tag_name);
   }
   multi method insert_with_tag_by_name (
     GtkTextIter() $iter,
-    Str() $text,
-    Int() $len,
-    Str() $tag_name,
+    Str()         $text,
+    Int()         $len,
+    Str()         $tag_name,
   ) {
     my gint $l = $len;
 

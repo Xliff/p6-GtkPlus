@@ -2,17 +2,17 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::CellAreaBox;
-use GTK::Raw::Types;
+use GTK::Raw::CellAreaBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::CellArea;
+use GTK::CellArea:ver<3.0.1146>;
 
-use GTK::Roles::Orientable;
+use GTK::Roles::Orientable:ver<3.0.1146>;
 
 our subset CellAreaBoxAncestry
   where GtkCellAreaBox | GtkOrientable | CellAreaAncestry;
 
-class GTK::CellAreaBox is GTK::CellArea {
+class GTK::CellAreaBox:ver<3.0.1146> is GTK::CellArea {
   also does GTK::Roles::Orientable;
 
   has GtkCellAreaBox $!cab is implementor;

@@ -3,16 +3,16 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Bin;
-use GTK::Widget;
+use GTK::Bin:ver<3.0.1146>;
+use GTK::Widget:ver<3.0.1146>;
 
 use GLib::GList;
 use GDK::Pixbuf;
-use GTK::WindowGroup;
+use GTK::WindowGroup:ver<3.0.1146>;
 
 use GDK::Screen;
-use GTK::Raw::Types;
-use GTK::Raw::Window;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::Window:ver<3.0.1146>;
 
 our subset GtkWindowAncestry is export
   where GtkWindow | GtkBinAncestry;
@@ -21,7 +21,7 @@ constant WindowAncestry is export := GtkWindowAncestry;
 
 # ALL METHODS NEED PERL6 REFINEMENTS!!
 
-class GTK::Window is GTK::Bin {
+class GTK::Window:ver<3.0.1146> is GTK::Bin {
   has GtkWindow $!win is implementor;
 
   method bless(*%attrinit) {
@@ -650,7 +650,7 @@ class GTK::Window is GTK::Bin {
   method add_accel_group (GtkAccelGroup() $accel_group)
     is also<add-accel-group>
   {
-    # Need class GTK::AccelGroup
+    # Need class GTK::AccelGroup:ver<3.0.1146>
     gtk_window_add_accel_group($!win, $accel_group);
   }
 

@@ -2,15 +2,15 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types;
-use GTK::Raw::SeparatorMenuItem;
+use GTK::Raw::Types:ver<3.0.1146>;
+use GTK::Raw::SeparatorMenuItem:ver<3.0.1146>;
 
-use GTK::MenuItem;
+use GTK::MenuItem:ver<3.0.1146>;
 
 our subset SeparatorMenuItemAncestry
   where GtkSeparatorMenuItem | MenuItemAncestry;
 
-class GTK::SeparatorMenuItem is GTK::MenuItem {
+class GTK::SeparatorMenuItem:ver<3.0.1146> is GTK::MenuItem {
   has GtkSeparatorMenuItem $!smi is implementor;
 
   method bless(*%attrinit) {

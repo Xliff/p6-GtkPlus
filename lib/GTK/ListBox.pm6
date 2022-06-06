@@ -2,22 +2,22 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ListBox;
-use GTK::Raw::Types;
+use GTK::Raw::ListBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
-use GTK::Adjustment;
-use GTK::Container;
-use GTK::ListBoxRow;
+use GTK::Adjustment:ver<3.0.1146>;
+use GTK::Container:ver<3.0.1146>;
+use GTK::ListBoxRow:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
-use GTK::Roles::Actionable;
-use GTK::Roles::Signals::ListBox;
+use GTK::Roles::Actionable:ver<3.0.1146>;
+use GTK::Roles::Signals::ListBox:ver<3.0.1146>;
 
 our subset ListBoxAncestry is export
   where GtkListBox | GtkActionable | ContainerAncestry;
 
-class GTK::ListBox is GTK::Container {
+class GTK::ListBox:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Actionable;
   also does GTK::Roles::Signals::ListBox;
 
@@ -186,9 +186,9 @@ class GTK::ListBox is GTK::Container {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method bind_model (
-    GListModel() $model,
-    &create_widget_func,
-    gpointer $user_data                 = gpointer,
+    GListModel()   $model,
+                   &create_widget_func,
+    gpointer       $user_data           = gpointer,
     GDestroyNotify $user_data_free_func = GDestroyNotify
   )
     is also<bind-model>
@@ -225,8 +225,8 @@ class GTK::ListBox is GTK::Container {
   }
 
   method get_row_at_y (Int() $y, :$raw = False) is also<get-row-at-y> {
-    my gint $yy = $y;
-    my $lbr = gtk_list_box_get_row_at_y($!lb, $yy);
+    my gint $yy  = $y;
+    my      $lbr = gtk_list_box_get_row_at_y($!lb, $yy);
 
     $lbr ??
       ( $raw ?? $lbr !! GTK::ListBoxRow.new($lbr) )
@@ -339,9 +339,9 @@ class GTK::ListBox is GTK::Container {
 
   method set_sort_func (
     #&sort_func:(GtkListBoxRow, GtkListBoxRow, gpointer --> gint),
-    &sort_func,
-    gpointer $user_data = gpointer,
-    GDestroyNotify $destroy = GDestroyNotify
+                   &sort_func,
+    gpointer       $user_data  = gpointer,
+    GDestroyNotify $destroy    = GDestroyNotify
   )
     is also<set-sort-func>
   {

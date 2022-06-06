@@ -4,12 +4,12 @@ use NativeCall;
 
 use Method::Also;
 
-use GTK::Raw::Orientable;
-use GTK::Raw::Types;
+use GTK::Raw::Orientable:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Roles::Types;
+use GTK::Roles::Types:ver<3.0.1146>;
 
-role GTK::Roles::Orientable {
+role GTK::Roles::Orientable:ver<3.0.1146> {
   has GtkOrientable $!or;
 
   method roleInit-GtkOrientable is also<roleInit_GtkOrientable> {

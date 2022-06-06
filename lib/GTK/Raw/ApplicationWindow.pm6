@@ -3,9 +3,9 @@ use v6.c;
 use NativeCall;
 
 
-use GTK::Raw::Types;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-unit package GTK::Raw::ApplicationWindow;
+unit package GTK::Raw::ApplicationWindow:ver<3.0.1146>;
 
 sub gtk_application_window_get_id (GtkApplicationWindow $window)
   returns guint

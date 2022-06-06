@@ -2,25 +2,25 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::ComboBox;
-use GTK::Raw::Types;
+use GTK::Raw::ComboBox:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
-use GTK::Bin;
-use GTK::TreeIter;
+use GTK::Bin:ver<3.0.1146>;
+use GTK::TreeIter:ver<3.0.1146>;
 
-use GTK::Roles::CellEditable;
-use GTK::Roles::CellLayout;
-use GTK::Roles::TreeModel;
+use GTK::Roles::CellEditable:ver<3.0.1146>;
+use GTK::Roles::CellLayout:ver<3.0.1146>;
+use GTK::Roles::TreeModel:ver<3.0.1146>;
 
-use GTK::Roles::Signals::ComboBox;
+use GTK::Roles::Signals::ComboBox:ver<3.0.1146>;
 
 our subset GtkComboBoxAncestry is export
   where GtkComboBox  | GtkCellEditable | GtkCellLayout | BinAncestry;
 
 our constant ComboBoxAncestry is export = GtkComboBoxAncestry;
 
-class GTK::ComboBox is GTK::Bin {
+class GTK::ComboBox:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::CellEditable;
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::ComboBox;

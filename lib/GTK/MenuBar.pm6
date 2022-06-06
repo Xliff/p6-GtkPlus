@@ -3,15 +3,15 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
-use GTK::Raw::MenuBar;
-use GTK::Raw::Types;
+use GTK::Raw::MenuBar:ver<3.0.1146>;
+use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::MenuShell;
+use GTK::MenuShell:ver<3.0.1146>;
 
 our subset MenuBarAncestry is export
   where GtkMenuBar | MenuShellAncestry;
 
-class GTK::MenuBar is GTK::MenuShell {
+class GTK::MenuBar:ver<3.0.1146> is GTK::MenuShell {
   has GtkMenuBar $!mb is implementor;
 
   method bless(*%attrinit) {
