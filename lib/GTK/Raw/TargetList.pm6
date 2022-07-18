@@ -4,7 +4,9 @@ use NativeCall;
 
 use GLib::Raw::Definitions;
 use GLib::Raw::Enums;
+use GDK::Raw::Definitions;
 use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::TargetList:ver<3.0.1146>;
 
@@ -16,7 +18,7 @@ sub gtk_target_list_add (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_add_image_targets (
   GtkTargetList $list,
@@ -25,7 +27,7 @@ sub gtk_target_list_add_image_targets (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_add_rich_text_targets (
   GtkTargetList $list,
@@ -35,7 +37,7 @@ sub gtk_target_list_add_rich_text_targets (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_add_table (
   GtkTargetList $list,
@@ -44,29 +46,29 @@ sub gtk_target_list_add_table (
 )
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_add_text_targets (GtkTargetList $list, guint $info)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_add_uri_targets (GtkTargetList $list, guint $info)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_find (GtkTargetList $list, GdkAtom $target, guint $info)
   returns uint32
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_get_type ()
   returns GType
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_new (
   CArray[GtkTargetEntry] $targets,
@@ -75,20 +77,20 @@ sub gtk_target_list_new (
   returns GtkTargetList
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_ref (GtkTargetList $list)
   returns GtkTargetList
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_remove (GtkTargetList $list, GdkAtom $target)
   is native(gtk)
   is export
-  { * }
+{ * }
 
 sub gtk_target_list_unref (GtkTargetList $list)
   is native(gtk)
   is export
-  { * }
+{ * }

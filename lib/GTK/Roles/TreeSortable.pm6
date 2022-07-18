@@ -11,7 +11,7 @@ role GTK::Roles::TreeSortable:ver<3.0.1146> {
 
   method roleInit-GtkTreeSortable {
     return if $!ts;
-    
+
     my \i = findProperImplementor(self.^attributes);
 
     $!ts = cast( GtkTreeSortable, i.get_value(self) );
@@ -40,7 +40,7 @@ role GTK::Roles::TreeSortable:ver<3.0.1146> {
   )
     is also<get-sort-column-id>
   {
-    my gint $s = $sort_column_id;
+    my gint   $s = $sort_column_id;
     my uint32 $o = $order;
 
     so gtk_tree_sortable_get_sort_column_id($!ts, $s, $o);
@@ -57,13 +57,13 @@ role GTK::Roles::TreeSortable:ver<3.0.1146> {
   }
 
   method set_default_sort_func (
-    &f,
+             &f,
     gpointer $user_data = gpointer,
-    GDestroyNotify $destroy = GDestroyNotify
+             &destroy   = Callable
   )
     is also<set-default-sort-func>
   {
-    gtk_tree_sortable_set_default_sort_func($!ts, &f, $user_data, $destroy);
+    gtk_tree_sortable_set_default_sort_func($!ts, &f, $user_data, &destroy);
   }
 
   method set_sort_column_id (
@@ -72,17 +72,17 @@ role GTK::Roles::TreeSortable:ver<3.0.1146> {
   )
     is also<set-sort-column-id>
   {
-    my gint $s = $sort_column_id;
+    my gint   $s = $sort_column_id;
     my uint32 $o = $order;
 
     gtk_tree_sortable_set_sort_column_id($!ts, $s, $o);
   }
 
   method set_sort_func (
-    Int() $sort_column_id,
+    Int()                  $sort_column_id,
     GtkTreeIterCompareFunc $sort_func,
-    gpointer $user_data,
-    GDestroyNotify $destroy
+    gpointer               $user_data  = gpointer,
+                           &destroy    = Callable
   )
     is also<set-sort-func>
   {
@@ -93,7 +93,7 @@ role GTK::Roles::TreeSortable:ver<3.0.1146> {
       $s,
       $sort_func,
       $user_data,
-      $destroy
+      &destroy
     );
   }
 
