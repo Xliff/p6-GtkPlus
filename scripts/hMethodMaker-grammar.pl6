@@ -178,21 +178,35 @@ sub MAIN (
     }
   }
 
+  my token nested-parens {
+    '(' ~ ')' [
+      || <- [()] >+
+      || <.before '('> <~~>
+    ]*
+  }
+
+  my token decl { (<[A..Z]>+)+ %% '_' <nested-parens>? }
+
   # Remove extraneous, non-necessary bits!
-  $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
-  $contents ~~ s:g/ 'G_STMT_START {' .+? '} G_STMT_END'//;
-  $contents ~~ s:g/ '\\' $$ \s+ .+? $$//;  # Multi line defines;
-  $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
-  $contents ~~ s:g/ ^^ \s* <[A..Z]>+ '_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
+
+  # Comments
+  $contents ~~ s:g/ ^^ '#define' <.ws> <decl> <.ws> <nested-parens>          //;
+  $contents ~~ s:g/ ^^ '#define' <.ws> <decl> <.ws>  .+? $$                  //;
+  $contents ~~ s:g/ ^^ '#' .+? $$                                            //;
+  $contents ~~ s:g/ <[A..Z]>+ [ '_BEGIN_DECLS' || '_END_DECLS' ]             //;
+  $contents ~~ s:g/ '/*' ~ '*/' (.+?)                                        //;
+  $contents ~~ s:g/ 'G_STMT_START'  .+? 'G_STMT_END'                         //;
+  # Multi line defines;
+  $contents ~~ s:g/ '\\' $$ \s+ .+? $$                                       //;
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
-  $contents ~~ s:g/'typedef' .+? ';'//;
-  $contents ~~ s:g/ ^ .+? '\\' $//;
-  $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
+  $contents ~~ s:g/'typedef' .+? ';'                                         //;
+  $contents ~~ s:g/ ^ .+? '\\' $                                             //;
+  $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$                                   //;
   $contents ~~ s:g/<!after ';'>\n/ /;
-  $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
+  $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$                                      //;
 
   # cw: Too permissive, but will work for most things. Needs an anchor to $$!
-  $contents ~~ s:g/ 'G_GNUC_' <[A..Z]>+ //;
+  $contents ~~ s:g/ 'G_GNUC_' (<[A..Z]>+)+ %% '_' //;
 
   $contents ~~ s:g/ 'gst_byte_reader_' [
                        'dup' | 'peek' | 'skip' | 'get'
@@ -219,7 +233,7 @@ sub MAIN (
     $remove-from-start ~~ s:g/\s\s+/:/;
     for ( $remove-from-start // () ).split(':') -> $r {
       #$*ERR.say: "Removing { $r } from start of line...";
-      say: "Removing { $r } from start of line...";
+      say "Removing { $r } from start of line...";
       $contents ~~ s:g/ ^^ \s* <{ $r }> <[\s\r\n]>* //;
     }
   }
@@ -236,23 +250,28 @@ sub MAIN (
     $contents ~~ s:g/ <!before ';'> <?{ $/.Str.chars }> $$/;/;
   }
 
+  $contents.say;
+
   $contents = $contents.lines.skip($trim-start).join("\n")
     if $trim-start;
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
     if $trim-end;
 
   my regex range { (\d+) '-' (\d+) }
-  my $s-fmt = '%0' ~ $contents.lines.log(10).Int + 1 ~ 'd';
-  $contents = (gather for $contents.lines.kv -> $k, $v {
-    # Last chance removal by line prefix.
-    next if $v.starts-with('extern');
 
-    # Last chance to clean up artifacts left by processing:
-    my $val = $v;
-    $val .= subst( /\s*';'/ , ';' );
+  if $contents.lines.elems -> $e {
+    my $s-fmt = '%0' ~ $e.log(10).Int + 1 ~ 'd';
+    $contents = (gather for $contents.lines.kv -> $k, $v {
+      # Last chance removal by line prefix.
+      next if $v.starts-with('extern');
 
-    take "{ ($k + 1).fmt($s-fmt) }: { $val }"
-  }).join("\n");\
+      # Last chance to clean up artifacts left by processing:
+      my $val = $v;
+      $val .= subst( /\s*';'/ , ';' );
+
+      take "{ ($k + 1).fmt($s-fmt) }: { $val }"
+    }).join("\n");
+  }
 
   # Check for multiple semi-colons on a line and split that line.
   # This is a pain in the ass, as we have to re-perform operations that
