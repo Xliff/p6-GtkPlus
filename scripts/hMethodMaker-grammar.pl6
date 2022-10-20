@@ -101,6 +101,7 @@ my token availability {
 
 sub MAIN (
         $filename,                     #= Filename to process
+       :$files,                        #= Send output to file
   Str  :$remove,                       #= Prefix to remove from method names
   Str  :$var,                          #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
   Str  :$output-only,                  #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
@@ -166,6 +167,17 @@ sub MAIN (
 
   my @detected;
   my $contents = $fn.IO.open.slurp-rest;
+
+  my ($out-file, $out-raw-file);
+  if $files {
+    $out-file = $filename.split('.').head.split('-').tail.tc ~ '.pm6';
+    use File::Find;
+
+
+    my $head      = find( dir => '.', type => 'dir', name => 'Raw' ).head;
+    $out-raw-file = $head.add($out-file).open(:w);
+    $out-file     = $head.parent.add($out-file).open(:w);
+  }
 
   # cw: Remove all struct definitions;
   $contents ~~ m:g/<struct>/;
@@ -398,8 +410,12 @@ sub MAIN (
         }
       }
     });
-    my @t = @p.map({ resolve-type(.[0] ) });
-    my $o_call = (@t [Z] @v).join(', ');
+    my @t     = @p.map({ resolve-type(.[0] ) });
+    my $tmax  = @t.map( *.chars ).max;
+    my @t-sd  = @t.map( *.fmt("  %-{ $tmax }s") );
+
+    my $o_call = (@t-sd [Z] @v).join(",\n");
+
     my $sub = $m<func_def><sub>.Str.trim;
     $o_call ~= ', ...' if $m<func_def><va>;
 
@@ -439,7 +455,7 @@ sub MAIN (
            'sub' => $sub,
           params => @p,
           o_call => $o_call,
-            call => $call,
+            call => $call.subst(' is rw', '', :g),
              sig => $sig,
        call_vars => @v,
       call_types => @t,
@@ -552,8 +568,33 @@ sub MAIN (
     }
   }
 
+  sub O ($str, :$file = $out-file) {
+    use nqp;
+
+    say $str;
+    $file.say: nqp::hllize($str) if $file;
+  }
+  sub O-Raw ($str, :$raw-file = $out-raw-file) {
+    O($str, file => $raw-file);
+  }
+
+  LAST {
+    if $out-raw-file {
+      $out-raw-file.close;
+      say "Sub definitions written to { $out-raw-file }";
+    }
+
+    if $out-file {
+      $out-file.close;
+      say "Methods written to { $out-file }.";
+    }
+  }
+
   sub outputSub ($m, $method = False) {
-    my $subcall = "sub $m<original> ({ $m<o_call> })";
+    my $o_call = $m<o_call> ?? "(\n{ $m<o_call> }\n)" !! '';
+    my $subcall = qq:to/CALL/.chomp;
+      sub { $m<original> } { $o_call }
+      CALL
 
     # if $method {
     #   # This should be done, above.
@@ -563,16 +604,16 @@ sub MAIN (
     # }
 
     my $r = '';
-    $r ~= "\n  is DEPRECATED"                 if $m<avail>.not;
-    $r ~= "\n  returns { $m<p6_return> }"     if $m<p6_return> &&
-                                                 $m<p6_return> ne 'void';
-    $r ~= "\n  is symbol('{ $m<original> }')" if $method;
+    $r ~= "\n  is      DEPRECATED"                 if $m<avail>.not;
+    $r ~= "\n  returns { $m<p6_return> }"          if $m<p6_return> &&
+                                                      $m<p6_return> ne 'void';
+    $r ~= "\n  is      symbol('{ $m<original> }')" if $method;
 
-    say qq:to/SUB/;
+    O-Raw( qq:to/SUB/ );
       $subcall {
       $r }
-        is native({ $lib })
-        is export
+        is      native({ $lib })
+        is      export
       \{ * \}
       SUB
   }
@@ -601,8 +642,12 @@ sub MAIN (
         #     >.none;
 
         my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
-        my $params = %methods{$m}<call_types>.elems ?? " ({ $sig })" !! '';
-        say qq:to/METHOD/.chomp;
+        my $params = %methods{$m}<call_types>.elems
+          ?? " (\n{ %methods{$m}<o_call>.lines
+                                        .map( "  " ~  * )
+                                        .join("\n") }\n  )"
+          !! '';
+        O( qq:to/METHOD/.chomp );
           { $mult }method { %methods{$m}<sub> }{ $params } { $dep }\{
             { %methods{$m}<original> }({ $call });
           \}
@@ -627,14 +672,14 @@ sub MAIN (
           my $params = @pa.grep( * ).elems ?? " ({ $os })" !! '';
 
           # { @pa.elems }
-          say qq:to/METHOD/.chomp;
+          O( qq:to/METHOD/.chomp )
             { $mult }method { %methods{$m}<sub> }{ $params }  \{
               samewith({ $oc });
             \}
           METHOD
 
         }
-        say '';
+        O( '' );
       }
     }
   }
@@ -666,7 +711,7 @@ sub MAIN (
   outputMethods;
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
-    say "\n\n### { $fn }\n";
+    O-Raw( "\n\n### { $fn }\n" );
     outputSub( %methods{$_}    , $raw-methods) for %methods.keys.sort;
     outputSub( %getset{$_}<get>, $raw-methods) for  %getset.keys.sort;
     outputSub( %getset{$_}<set>, $raw-methods) for  %getset.keys.sort;
