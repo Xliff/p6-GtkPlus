@@ -29,14 +29,27 @@ sub parse-file ($filename = $CONFIG-NAME) is export {
 
   %config = Config::INI::parse_file($filename)<_>;
 
-  # Handle comma separated
-  %config{$_} = (%config{$_} // '').split(',').Array for <
-    backups
-    modules
-    build_exclude
-  >;
+  my &searcher = sub ($_) {
+    .defined && $_ ?? .contains('-' | '_') !! False
+  };
+
+  my @keys = %config.keys.grep(&searcher);
+  for @keys {
+    my $nk = $_;
+    $nk ~~ tr<_-><-_>;
+    %config{$nk} := %config{$_};
+  }
 
   %config<libdirs> //= 'lib';
+
+  # Handle comma separated
+  %config{$_} = (%config{$_} // '').split(',').Array
+    if %config{$_}:exists
+  for <
+    backups
+    modules
+    build-exclude
+  >;
 
   %config;
 }
@@ -44,7 +57,7 @@ sub parse-file ($filename = $CONFIG-NAME) is export {
 my token d { <[0..9 x]> }
 my token m { '-' }
 my token L { 'L' }
-my token w { <[A..Za..z _]> }
+my token w { <[A..Za..z0..9 _]> }
 
 my rule comment {
   '/*' .+? '*/'
@@ -143,7 +156,7 @@ sub find-files (
           if $exclude.defined {
             given $exclude {
               when Array    { next if $elem.absolute ~~ .any         }
-              when Str      { next if $elem.absolute ~~ / <{ $_ }> / }
+              when Str      { next if $elem.absolute.contains($_)    }
               when Regex    { next if $elem.absolute ~~ $_           }
               when Callable { next if $_($elem)                      }
 
@@ -347,7 +360,9 @@ sub compute-module-dependencies (
 )
 	is export
 {
-  my @build-exclude = getConfigEntry('build-exclude').split( /',' \s+/ );
+  my @build-exclude = getConfigEntry('build-exclude').split( /',' \s*/ )
+                                                     .grep( *.chars );
+  say "BE: { @build-exclude }";
   my @modules = @files
     .map( *.path )
     .map({
@@ -366,6 +381,8 @@ sub compute-module-dependencies (
   my %nodes;
   my $item-id = 0;
   for @modules {
+    next if +@build-exclude && .[1].starts-with( @build-exclude.any );
+
     %nodes{ .[1] } = (
       itemid   => $item-id++,
       filename => .[0],
@@ -381,7 +398,9 @@ sub compute-module-dependencies (
     say "Processing requirements for module { $p.key }...";
 
     my token useneed    { 'use' | 'need'  }
-    my token modulename { ((\w+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']? }
+    my token modulename {
+      ((\w<[a..zA..Z0..9]>+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']?
+    }
     my $f = $p.value<filename>;
 
     # cw: Remove pod sections in case they have embedded use statements
@@ -402,10 +421,14 @@ sub compute-module-dependencies (
 
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
-      my @prefixes = getConfigEntry('prefix').split(',');
+      my @prefixes     = getConfigEntry('prefix').split(',');
+      my @non-prefixes = getConfigEntry('excluded-namespaces').split(',');
       if $mn ~~ /<modulename>/ {
         $mn = $/<modulename>[0].Str;
-        unless $mn.starts-with( @prefixes.any ) {
+        unless
+          $mn.starts-with( @prefixes.any )         &&
+          $mn.starts-with( @non-prefixes.any ).not
+        {
           next if $mn ~~ / 'v6''.'? (.+)? /;
           @others.push: $mn;
           next;
