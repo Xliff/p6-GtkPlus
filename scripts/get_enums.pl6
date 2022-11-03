@@ -5,7 +5,9 @@ use lib 'scripts';
 
 use GTKScripts;
 
-sub MAIN ($dir?, :$file) {
+my %values;
+
+sub MAIN ($dir = %config<include-directory>, :$file, :$exclude) {
   my (%enums, @files);
 
   unless $dir ^^ $file {
@@ -29,12 +31,12 @@ sub MAIN ($dir?, :$file) {
     die "Directory '$dir' either does not exist, or is not a directory"
       unless $dir.IO.e && $dir.IO.d;
 
-    @files = find-files($dir, extension => 'h');
+    @files = find-files( $dir, :$exclude, extension => 'h' );
   }
 
-  my %etype;
+  my (%etype, %values);
   for @files -> $file {
-    say "Checking { $file } ...";
+    $*ERR.say: "Checking { $file } ...";
 
     # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error
     next if $file.ends-with('Xge.h');
@@ -42,13 +44,16 @@ sub MAIN ($dir?, :$file) {
     my $contents = $file.IO.slurp;
 
     # Remove preprocessor directives.
-    $contents ~~ s:g/^^'#' .+? $$//;
+    $contents ~~ s:g| ^^ '#'  .+?      $$ ||;
+    # Remove comments
+    $contents ~~ s:g|    '//' .+?      $$ ||;
+    $contents ~~ s:g|    '/*' .+? '*/'    ||;
 
     my $m = $contents ~~ m:g/<enum>/;
     for $m.Array -> $l {
       my @e;
-      my ($etype, $neg, $long, $enum-rn) =
-        (32, False, False, $l<enum><rn> // $l<enum><solo-enum><n>);
+      my ($etype, $neg, $long, $enum-rn, $named) =
+        (32, False, False, $l<enum><rn> // $l<enum><solo-enum><n>, False);
 
       next unless $enum-rn;
 
@@ -56,27 +61,41 @@ sub MAIN ($dir?, :$file) {
         if $enum-rn.contains('_');
 
       for $l<enum><solo-enum><enum-entry> -> $el {
-
         for $el -> $e {
+          $named = False;
           # Handle 32 vs 64 bit by literal.
           if $e[1][0] && $e[1][0].Numeric !~~ Failure {
             $long = True if $e[1]<L> || $e[1][0].Int > 31;
+          } else {
+            # Value is a named constant.
+            $named = True;
           }
           # Handle signed vs unsigned.
           $neg  = True if $e[1]<m>;
 
           ((my $n = $e[1].Str.trim) ~~ s/'='//);
-          $n ~~ s/'<<'/+</;
+          $n ~~ s/ '<<' / +< /;
+          $n ~~ s/  '|' / +| /;
+
           my $ee;
           $ee.push: $e[0].Str.trim;
-          $ee.push: $n if $n.chars;
+
+          # if $n.chars {
+          #   if $named {
+          #     $n ~~ s:g/ ( <{ %values.keys }> ) /{ %values{ $/[0] } }/;
+          #   }
+          #   $ee.push: $n;
+          # }
+          #
+          # %values{ $ee.head } = $ee.tail;
+
           @e.push: $ee;
         }
         %enums{$enum-rn} = @e;
       }
       $etype = 64      if $long;
       $etype = -$etype if $neg;
-      %etype{$enum-rn} = $etype;
+      %etype{$enum-rn} =  $etype;
     }
   }
 
