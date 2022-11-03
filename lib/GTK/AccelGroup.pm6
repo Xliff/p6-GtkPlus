@@ -218,22 +218,22 @@ class GTK::Accelerator:ver<3.0.1146> {
   )
     is also<get-label>
   {
-    my guint $ak = $accelerator_key;
+    my guint           $ak = $accelerator_key;
     my GdkModifierType $am = $accelerator_mods;
 
     gtk_accelerator_get_label($ak, $am);
   }
 
-  method acceelerator_get_label_with_keycode (
+  method get_label_with_keycode (
     GdkDisplay() $display,
-    Int() $accelerator_key,
-    Int() $keycode,
-    Int() $accelerator_mods
+    Int()        $accelerator_key,
+    Int()        $keycode,
+    Int()        $accelerator_mods
   )
     is also<get-label-with-keycode>
   {
-    my guint ($ak, $k) = ($accelerator_key, $keycode);
-    my GdkModifierType $am = $accelerator_mods;
+    my guint           ($ak, $k) = ($accelerator_key, $keycode);
+    my GdkModifierType  $am      = $accelerator_mods;
 
     gtk_accelerator_get_label_with_keycode($display, $ak, $k, $am);
   }
@@ -244,17 +244,17 @@ class GTK::Accelerator:ver<3.0.1146> {
   )
     is also<accelerator-name>
   {
-    my guint $ak = $accel_key;
-    my GdkModifierType $am = $accelerator_mods;
+    my guint            $ak = $accel_key;
+    my GdkModifierType  $am = $accelerator_mods;
 
     gtk_accelerator_name($ak, $am);
   }
 
   method name_with_keycode (
     GdkDisplay() $display,
-    Int() $accelerator_key,
-    Int() $keycode,
-    Int() $accelerator_mods
+    Int()        $accelerator_key,
+    Int()        $keycode,
+    Int()        $accelerator_mods
   )
     is also<name-with-keycode>
   {
@@ -269,10 +269,10 @@ class GTK::Accelerator:ver<3.0.1146> {
   }
   multi method parse (
     Str() $accelerator,
-    $accelerator_key  is rw,
-    $accelerator_mods is rw
+          $accelerator_key  is rw,
+          $accelerator_mods is rw
   ) {
-    my guint $ak = 0;
+    my guint           $ak = 0;
     my GdkModifierType $am = 0;
 
     gtk_accelerator_parse($accelerator, $ak, $am);
