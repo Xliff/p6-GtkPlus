@@ -1010,4 +1010,69 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     gtk_window_unstick($!win);
   }
 
+  use GDK::Raw::Cairo;
+  use GDK::Raw::Screen;
+  use GLib::Raw::Signal;
+  use GTK::Raw::Widget;
+
+  use GTK::Roles::Signals::Widget;
+
+  method makeTransparent {
+    my $win-obj := self.GObject;
+    g-connect-draw(
+      cast(Pointer, $win-obj),
+      'draw',
+      -> *@a {
+        CATCH { default { .message.say; .backtrace.concise.say } }
+
+        my $c = gdk_cairo_create( gtk_widget_get_window( @a[0] ) );
+        $c.set_source_rgba(1.0.Num, 1.0.Num, 1.0.Num, 0.0.Num);
+        $c.set_operator(OPERATOR_SOURCE.Int);
+        $c.paint;
+        $c.destroy;
+
+        0;
+      },
+      gpointer,
+      0
+    );
+
+    my $screen-changed = -> *@a {
+      CATCH { default { .message.say; .backtrace.concise.say } }
+
+      my $s = gtk_widget_get_screen( @a[0] );
+      my $v = gdk_screen_get_rgba_visual($s);
+      $v ?? gtk_widget_set_visual( @a[0], $v)
+         !! say 'No visual!';
+    }
+
+    g-connect-screen-changed(
+      cast(Pointer, $win-obj),
+      'screen-changed',
+      -> *@a {
+        $screen-changed( |@a );
+      },
+      gpointer,
+      0
+    );
+
+    self.decorated = 0;
+    self.add_events(GDK_BUTTON_PRESS_MASK);
+
+    g-connect-widget-event(
+      cast(Pointer, $win-obj),
+      'button-press-event',
+      -> *@a {
+        CATCH { default { .message.say; .backtrace.concise.say } }
+
+        self.decorated = self.decorated.not;
+        0
+      },
+      gpointer,
+      0
+    );
+
+    $screen-changed(self.GtkWindow);
+  }
+
 }
