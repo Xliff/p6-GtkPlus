@@ -6,7 +6,7 @@ use lib 'scripts';
 use GTKScripts;
 use Data::Dump::Tree;
 
-sub MAIN ($dir?, :$file, :$rw = False) {
+sub MAIN ($dir = %config<include-directory>, :$file, :$rw = False) {
   my (%enums, @files);
 
   unless $dir ^^ $file {
