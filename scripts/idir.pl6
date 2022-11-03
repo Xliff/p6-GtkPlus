@@ -14,7 +14,7 @@ proto sub MAIN (|c) {
 	%c<size>    := %c<s>;
 	%c<reverse> := %c<r>;
 
-	my @d = %config<include-directory>.IO.dir;
+	my @d = (c<dir> || %config<include-directory>).IO.dir;
 	if %c<reverse> {
 		%c<size> ?? @d .= sort( - *.s )
 		         !! @d .= sort({ $^b.basename cmp $^a.basename })
@@ -38,6 +38,8 @@ use File::Find;
 use Terminal::ANSI::OO :t;
 
 multi sub MAIN (
+	:$dir,
+
 	:a(:$avail)              = %config<idir-avail>,
 	:d(:done(:$completed)),
 	:s(:$size),
@@ -62,17 +64,21 @@ multi sub MAIN (
 
 		$s .= map({
 			.subst("### ", '')
-			.subst('.h', '.')
+			.subst('.h', '')
 		});
 
 		take $_ for $s[];
 	}
 
 	for @*files[] -> $n {
-		next if     $n.contains('-private');
+		next if     $n.contains('private');
 		next unless $n.ends-with('.h');
-		my $colorize = @done.first({ $n.absolute.starts-with($_ // '') }, :k);
-		next if $avail && $colorize;
+
+		my $colorize = @done.first({
+			.ends-with( $n.extension('').basename )
+		}, :k);
+
+		next if $avail && $colorize.defined;
 		say [~](
 			$colorize ?? t.green      !! '',
 			$n.&list-file,
