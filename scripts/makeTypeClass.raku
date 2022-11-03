@@ -1,6 +1,7 @@
 #!p6gtkexec
+use v6.c;
 
-use GLib::Roles::Pointers;
+use GTK::Raw::Types;
 use File::Find;
 
 use lib <. scripts>;
@@ -10,8 +11,8 @@ use GTKScripts;
 my $prefix = %config<prefix>.subst('::', '');
 
 sub writeFile ($name, %ct) {
-  my $max-key = %ct.key.map( *.key.chars ).max;
-  \\
+  my $max-key = %ct.keys.map( *.chars ).max;
+
   my $spurt = qq:to/SPURT/;
     use v6.c;
 
@@ -48,25 +49,29 @@ multi sub MAIN {
 }
 
 multi sub MAIN ( :$type-origin is required ) {
-  use GTK::Raw::Types;
-
   my @a =  ::("MY").WHO
                    .values
-                   .grep({ .^name.starts-with(
-                      $prefix                |
-                      $prefix.uc             |
-                      $prefix.lc.tc          |
-                      %config<struct-prefix>
-                    ) })
+                   .grep({
+                     .^name.starts-with(%config<struct-prefix> // $prefix)
+                   })
                    .map( *.^name )
                    .unique
                    .sort
-                   .map( *.split('::').Array );
+                   .map({
+                      my $sn = .split('::').Array
+                      my $n  = $sn.tail ~~ m:g/ <[A..Z]>[ <[a..z]>+ ]?/;
+                      [ $sn, $/ ]
+                    });
+
+ # cw: Hey? ... maybe?
+ # 'say "GZlibDecompressor" ~~
+ # (｢G｣ ｢Zlib｣ ｢Decompressor｣)
 
   my (%t, $k);
   my $max-key = 0;
   for @a {
-    next unless .head eq $prefix;
+    #next unless .head eq $prefix || .elems == 1;
+    #next unless .tail.starts-with(%config<struct-prefix> // $prefix);
 
     unless .ends-with('Enum') {
       $k = .pop;
