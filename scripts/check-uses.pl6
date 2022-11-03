@@ -9,7 +9,7 @@ my %interior-classes = (
 );
 
 my token q              { <["'“”‘’«»「」‹›]>        }
-my token mod            { [\w+]+ %% '::'            }
+my token mod            { [\w+]+ %% '::' [':' [\w+ '<' .+? '>']+ %% ':' ]? }
 my rule  uses           { 'use' <mod>               }
 my token m-new          { <mod> '.new'              }
 my token class-or-role  { 'class' | 'role'          }
@@ -29,7 +29,8 @@ sub mq($s) {
   say '=' x $s.chars;
 }
 
-sub MAIN (:$filename, :$prefix is required) {
+sub MAIN (:$filename, :$prefix = %config<prefix>) {
+  die '--prefix is not configured or speficied!' unless $prefix;
 
   parse-file($CONFIG-NAME);
 
