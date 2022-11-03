@@ -5,7 +5,7 @@ use lib 'scripts';
 
 use GTKScripts;
 
-sub MAIN (:$force) {
+sub MAIN (:$force, :$all) {
   my @valid-backups = qqx{git remote}.lines;
   #if $CONFIG-NAME.IO.e {
     #parse-file;
@@ -14,6 +14,7 @@ sub MAIN (:$force) {
         next unless $_ eq @valid-backups.any;
         my @items = «git push $_»;
         @items.push: '--force' if $force;
+	@items.push: '--all'   if $all;
 
         my $proc = Proc::Async.new( |@items );
         $proc.stdout.tap(-> $o { $o.say; });
