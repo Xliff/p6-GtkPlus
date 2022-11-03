@@ -1,5 +1,6 @@
 #!/bin/bash
 ln=1
+exec=`scripts/get-config.pl6 exec`
 if [ "$1" == "--start-at" ]; then
   shift
   re='^[0-9]+$'
@@ -29,11 +30,11 @@ perl6 scripts/backup_results.pl6 $name
 
 /usr/bin/time -p /bin/bash -c '(
   echo "Build started for: ";
-  ./p6gtkexec -v;
+  ./'$exec' -v;
   '"i=$ln"'; n=`wc -l BuildList | cut -f1 -d\ `; for a in `cat BuildList.now`; do
     (
     	echo " === $a === ($i/$n)"
-	    ./p6gtkexec -e "use $a" 2>&1
+	    P6_GLIB_COMPILE_PROCESS=1 ./'$exec' -e "use $a" 2>&1
     )
     i=$((i+1))
   done;
