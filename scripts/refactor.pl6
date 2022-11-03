@@ -28,28 +28,30 @@ sub do-refactor (@replace, $delim) {
       $c.subst( .[0], .[1], :global );
     }
 
-    .rename( .extension('ref-bak') );
+    .rename( .extension('ref-bak', :0parts) );
     .spurt($c);
   }
 }
 
-sub MAIN (
+multi sub MAIN (:$clean is required) {
+  do-clean;
+}
+
+multi sub MAIN (
   :@replace,            #= A replacement pair, given as <subst><delimeter><replace>.
                         #= Can be specified more than once.
   :$delimeter = ',',    #= The delimeter used by a replacement pair.
                         #= The default is ','
-  :$clean = 0           #= Clean the backup files produced by this script
 ) {
-  my @mains = ('replace', 'clean');
+  my @mains = <replace clean>;
   my $dieMsg = qq:to/DIE/;
     Must specify ONE of { @mains.map( '--' ~ * ).head(* - 1).join(', ')
     } or --{ @mains[* - 1] }
     DIE
 
   # There can be only one.
-  die $dieMsg if     [&&](@replace, $clean);
-  die $dieMsg unless [||](@replace, $clean);
+  die $dieMsg if     [&&](+@replace, $clean);
+  die $dieMsg unless [||](+@replace, $clean);
 
-  when    $clean { do-clean                          }
-  default        { do-refactor(@replace, $delimeter) }
+  do-refactor(@replace, $delimeter);
 }
