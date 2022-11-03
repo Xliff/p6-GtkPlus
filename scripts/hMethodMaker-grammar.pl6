@@ -101,7 +101,7 @@ my token availability {
 
 sub MAIN (
         $filename,                     #= Filename to process
-       :$files,                        #= Send output to file
+       :$files,                        #= Send output to files
   Str  :$remove,                       #= Prefix to remove from method names
   Str  :$var,                          #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
   Str  :$output-only,                  #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
@@ -113,6 +113,7 @@ sub MAIN (
   Str  :$lib                is copy,   #= Library name to use
   Str  :$delete,                       #= Comma separated list of lines to delete
   Str  :$output             =  'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
+  Bool :$extreme            =  False,  #= Use extreme cleanup methods
   Bool :$internal           =  False,  #= Add checking for INTERNAL methods
   Bool :$bland              =  True,   #= Do NOT attempt to process preprocessor prefixes to subroutines
   Bool :$get-set            =  False,  #= Convert simple get/set routine to "attribute" code.
@@ -168,13 +169,13 @@ sub MAIN (
   my @detected;
   my $contents = $fn.IO.open.slurp-rest;
 
-  my ($out-file, $out-raw-file);
+  my ($out-file, $out-raw-file, $item);
   if $files {
-    $out-file = $filename.split('.').head.split('-').tail.tc ~ '.pm6';
+    $item     = $filename.split('.').head.split('-').tail.tc;
+    $out-file = $item  ~ '.pm6';
     use File::Find;
 
-
-    my $head      = find( dir => '.', type => 'dir', name => 'Raw' ).head;
+    my $head      = find( dir => 'lib', type => 'dir', name => 'Raw' ).head;
     $out-raw-file = $head.add($out-file).open(:w);
     $out-file     = $head.parent.add($out-file).open(:w);
   }
@@ -230,9 +231,16 @@ sub MAIN (
   $contents ~~ s:g/ '((obj), ' .+? '))'//;
   $contents ~~ s:g/ '((cls), ' .+? '))'//;
   $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
-  $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC (' .+? ', g_object_unref)' //;
   $contents ~~ s:g/ 'G_DECLARE_' [ <[A..Z]>+ ]+ % '_' ' (' <-[)]>+ ')' //;
   $contents ~~ s:g/ 'extern "C" {' //;
+
+  $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC' \s* '(' .+? ',' .+? ')' //;
+
+  # Should be put behind an --extreme flag
+  if $extreme {
+    $contents ~~ s:g/ '#'\w+         //;
+    $contents ~~ s:g/ ')' \s+        / );\n /;
+  }
 
   $contents ~~ s:g/<availability>// if $bland;
   $contents ~~ s:g/<enum>//;
@@ -359,6 +367,7 @@ sub MAIN (
     exit 1;
   }
 
+  my %first-params;
   for $matched{$func-rule}[] -> $m {
     my $av = $bland ??
       { pre-definitions => ($m<pre-definitions> // '').Str } !!
@@ -411,6 +420,9 @@ sub MAIN (
       }
     });
     my @t     = @p.map({ resolve-type(.[0] ) });
+
+    %first-params{ @t.head }++ if @t.head.chars;
+
     my $tmax  = @t.map( *.chars ).max;
     my @t-sd  = @t.map( *.fmt("  %-{ $tmax }s") );
 
@@ -481,7 +493,7 @@ sub MAIN (
         'uint32';
       }
       when 'gchar' | 'guchar' | 'char' {
-        # This logic may no longer be necessary.
+        # This logic may no longer be n.join('')ecessary.
         #$p++;
         'Str';
       }
@@ -578,20 +590,14 @@ sub MAIN (
     O($str, file => $raw-file);
   }
 
-  LAST {
-    if $out-raw-file {
-      $out-raw-file.close;
-      say "Sub definitions written to { $out-raw-file }";
-    }
-
-    if $out-file {
-      $out-file.close;
-      say "Methods written to { $out-file }.";
-    }
-  }
-
   sub outputSub ($m, $method = False) {
-    my $o_call = $m<o_call> ?? "(\n{ $m<o_call> }\n)" !! '';
+    my $o_call = $m<o_call>
+      ?? ( $m<o_call>.lines == 1
+        ?? "({ $m<o_call>.substr(2) })"
+        !! "(\n{ $m<o_call> }\n)"
+      )
+      !! '';
+
     my $subcall = qq:to/CALL/.chomp;
       sub { $m<original> } { $o_call }
       CALL
@@ -619,6 +625,9 @@ sub MAIN (
   }
 
   sub outputMethods {
+    my $invocant = $var ?? %first-params.pairs.sort( *.value ).head.key
+                        !! '';
+
     say "\nMETHODS\n-------" unless $no-headers;
     if %do_output<all> || %do_output<methods> {
       for %methods.keys.sort -> $m {
@@ -642,10 +651,21 @@ sub MAIN (
         #     >.none;
 
         my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
+        my @lines = %methods{$m}<o_call>.lines;
+
+        if +@lines {
+          #say "Pre-Lines: { @lines.gist }";
+
+          @lines .= skip(1) if @lines.head.trim.split(/ \s+ /).head eq
+                               $invocant;
+
+          #say "Post Invocant ({ $invocant }): { @lines.gist }";
+        }
         my $params = %methods{$m}<call_types>.elems
-          ?? " (\n{ %methods{$m}<o_call>.lines
-                                        .map( "  " ~  * )
-                                        .join("\n") }\n  )"
+          ?? ( +@lines == 1
+            ?? " ({ @lines.head.substr(2) })"
+            !! " (\n{ @lines.map( "  " ~  * ).join("\n") }\n  )"
+          )
           !! '';
         O( qq:to/METHOD/.chomp );
           { $mult }method { %methods{$m}<sub> }{ $params } { $dep }\{
@@ -738,4 +758,15 @@ sub MAIN (
     $a.run;
   }
 
+  LAST {
+    if $out-raw-file {
+      $out-raw-file.close;
+      say "Sub definitions written to { $out-raw-file }";
+    }
+
+    if $out-file {
+      $out-file.close;
+      say "Methods written to { $out-file }.";
+    }
+  }
 }
