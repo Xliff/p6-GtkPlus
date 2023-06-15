@@ -1,10 +1,18 @@
-#!p6gtkexec -Iscripts
+#!./p6gtkexec -Iscripts
 use v6;
 
 use GTKScripts;
+use File::Find;
 
 sub list-file ($_) {
 	"{ .absolute } - { .s }"
+}
+
+sub rdir ($dir, Mu :$test) {
+    gather for dir $dir -> $path {
+        if $path.basename ~~ $test { take $path }
+        if $path.d                 { .take for rdir $path, :$test };
+    }
 }
 
 proto sub MAIN (|c) {
@@ -14,7 +22,7 @@ proto sub MAIN (|c) {
 	%c<size>    := %c<s>;
 	%c<reverse> := %c<r>;
 
-	my @d = (c<dir> || %config<include-directory>).IO.dir;
+	my @d = (c<dir> || %config<include-directory>).&rdir;
 	if %c<reverse> {
 		%c<size> ?? @d .= sort( - *.s )
 		         !! @d .= sort({ $^b.basename cmp $^a.basename })
@@ -43,7 +51,9 @@ multi sub MAIN (
 	:a(:$avail)              = %config<idir-avail>,
 	:d(:done(:$completed)),
 	:s(:$size),
-	:r(:$reverse)
+	:r(:$reverse),
+	:x(:$exclude),
+        :n(:$num)
 ) {
 	die 'Cannot use --avail and --completed (or their aliases) at the same time!'
 		if $avail && $completed;
@@ -70,9 +80,12 @@ multi sub MAIN (
 		take $_ for $s[];
 	}
 
+	my @exclude = $exclude.split(',');
+
 	for @*files[] -> $n {
 		next if     $n.contains('private');
 		next unless $n.ends-with('.h');
+		next unless $n.contains( @exclude.none );
 
 		my $colorize = @done.first({
 			.ends-with( $n.extension('').basename )
@@ -80,9 +93,10 @@ multi sub MAIN (
 
 		next if $avail && $colorize.defined;
 		say [~](
-			$colorize ?? t.green      !! '',
+			$num      ?? ($++).succ ~ ') ' !! '',
+			$colorize ?? t.green           !! '',
 			$n.&list-file,
-			$colorize ?? t.text-reset !! ''
+			$colorize ?? t.text-reset      !! ''
 		);
 	}
 }
