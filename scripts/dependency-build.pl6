@@ -19,15 +19,19 @@ my atomicint $c = 1;
 
 sub MAIN (
   :$force,                                          #= Force dependency generation
-  :$prefix          is copy,                        #= Module prefix
+  :$prefix          is copy  = %config<prefix>,     #= Module prefix
   :$start-at,
   :$log                      = True,
   :$no-save                  = False,
   :$variant         is copy  = '',
-  :$max-concurrency          = DEFAULT_MAX_THREADS
+  :$max-concurrency          = DEFAULT_MAX_THREADS,
+  :$date                     = DateTime.now.yyyy-mm-dd(''),
+  :$rakuast                  = False
 ) {
   my @build-exclude;
   my $dep_file = '.build-deps'.IO;
+
+  my $*rakast = $rakuast;
 
   sub writeLog {
     if $*name && $log && $no-save.not {
@@ -37,12 +41,6 @@ sub MAIN (
         ($log ~~ Bool && $log) ?? 'LastBuildResults' !! $log
       ).spurt($*LOG);
     }
-  }
-
-  if $CONFIG-NAME.IO.e {
-    parse-file;
-    $prefix        = %config<prefix>;
-    @build-exclude = %config<build_exclude>;
   }
 
   {
@@ -138,7 +136,7 @@ sub MAIN (
 
     sub getName {
       'ParallelBuildResults-' ~ ( $variant ?? "{ $variant }-" !! '' )
-                              ~ now.DateTime.yyyy-mm-dd.subst('-', '', :g);
+                              ~ $date;
     }
 
     $*name = getName;
@@ -158,16 +156,22 @@ sub run-compile ($module, $thread, $num = 0) {
     my $cs = DateTime.now;
     # cw: get-config handles default values.
     my $exec = qqx{scripts/get-config.pl6 exec}.chomp;
-    my $proc = run "./{ $exec }", '-e',  "use $module", :out, :err;
+    my $cmd = "use $module";
+    $cmd = "use experimental :rakuast; { $cmd }" if $*rakuast;
+    my $proc = run "./{ $exec }", '-e',  $cmd, :out, :err;
     #my $proc = run "./p6gtkexec", '-e',  "use $module", :out, :err;
 
-    say (my $err = $proc.err.get).slurp if $proc.exitcode;
+    if $proc.exitcode {
+      say "ERROR!\n{ $proc.err.slurp }";
+      .break for @threads;
+      exit 1;
+    }
 
     output(
       $module,
       $num,
-      $proc.out.slurp                           ~ "\n" ~
-      $proc.err.slurp                           ~ "\n" ~
+      $proc.out.slurp( :close )                          ~ "\n" ~
+      $proc.err.slurp( :close )                          ~ "\n" ~
       "{ $module } compile time: { DateTime.now - $cs }"
     ) if $*ERROR.not or $proc.exitcode;
   }
