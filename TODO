@@ -432,4 +432,12 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - ARE YOU INSANE?! -- Consider UE5. Docs here: https://docs.unrealengine.com/5.0/en-US/API/Runtime/
   - Code generator will need to parse the docs.
   - Will need to do ALL of the structs. Then compile a C++ lib to get the mangled signature for each struct/type in iso. 
-    This is KEY, as it will open up C++ projects to NativeCall.
+    This is KEY, as it will open up C++ projects to NativeCall.o
+
+- Extract all non-GLib functions into a project explicitly for the purpose of implementing the MethodMaker pattern. This shall include:
+  - All non-GLib specific functions from GLib::Raw::Subs and all other ::Raw::Sub CompUnits from the entire suite
+  - All non-GLib structures from GLib::Raw::Structs and all other ::Raw::Struct CompUnits from the entire suite
+  - If there are any Glib-specific scripts in scripts, then they are to be made non-GLib specific via a yet-to-be-specified callback
+    mechanism
+  - If there are any GLib-specific scripts in project-scripts, then they are to be made non-GLib specific via a yet-to-be-speified callback
+    mechanism
