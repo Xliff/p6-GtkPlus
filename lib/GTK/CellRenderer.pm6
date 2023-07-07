@@ -12,6 +12,9 @@ use GLib::Value;
 use GLib::Roles::Object;
 use GTK::Roles::Signals::CellRenderer:ver<3.0.1146>;
 
+our subset GtkCellRendererAncestry of Mu is export
+  where GtkCellRenderer | GObject;
+
 class GTK::CellRenderer:ver<3.0.1146> {
   also does GLib::Roles::Object;
   #also does GTK::Roles::Data;
@@ -19,7 +22,11 @@ class GTK::CellRenderer:ver<3.0.1146> {
 
   has GtkCellRenderer $!cr is implementor;
 
-  method setCellRenderer(GtkCellRenderer $renderer) {
+  method setGtkCellRenderer (GtkCellRendererAncestry $renderer) {
+    self.setCellRenderer($renderer);  # GLib::Roles::Properties
+  }
+
+  method setCellRenderer(GtkCellRendererAncestry $renderer) {
     return unless $renderer;
 
     #say "CR: { $renderer // 'NIL' }";
