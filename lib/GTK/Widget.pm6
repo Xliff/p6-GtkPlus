@@ -15,6 +15,7 @@ use GDK::Screen;
 
 use GDK::Window;
 
+use GLib::Raw::Traits;
 use GTK::Raw::DnD:ver<3.0.1146>;
 use GTK::Raw::DragDest:ver<3.0.1146>;
 use GTK::Raw::DragSource:ver<3.0.1146>;
@@ -171,10 +172,34 @@ class GTK::Widget:ver<3.0.1146> {
     gtk_cairo_transform_to_window($cr, $!w, $window);
   }
 
-  method default_direction is rw is also<default-direction> {
+  method allocation is rw is g-property {
     Proxy.new:
-      FETCH => -> $           { GTK::Widget.get_default_direction    },
-      STORE => -> $, Int() \d { GTK::Widget.set_default_direction(d) }
+      FETCH => -> $     { self.get_allocation    },
+      STORE => -> $, \v { self.set_allocation(v) }
+  }
+
+  method clip is rw is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_clip    },
+      STORE => -> $, \v { self.set_clip(v) }
+  }
+
+  method default_direction is rw is also<default-direction> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_direction    },
+      STORE => -> $, \v { self.set_default_direction(v) }
+  }
+
+  method device_enabled is rw is also<device-enabled> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_device_enabled    },
+      STORE => -> $, \v { self.set_device_enabled(v) }
+  }
+
+  method device_events is rw is also<device-events> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_device_events    },
+      STORE => -> $, \v { self.set_device_events(v) }
   }
 
   method get_default_direction (GTK::Widget:U: )
