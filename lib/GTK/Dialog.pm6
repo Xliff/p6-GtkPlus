@@ -214,12 +214,16 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     GTK::Widget.unstable_get_type( &gtk_dialog_get_type, $n, $t );
   }
 
-  method get_widget_for_response (Int() $response_id)
+  method get_widget_for_response (Int() $response_id, :$raw = False)
     is also<get-widget-for-response>
   {
     my gint $ri = $response_id;
 
-    gtk_dialog_get_widget_for_response($!d, $ri);
+    propReturnObject(
+      gtk_dialog_get_widget_for_response($!d, $ri),
+      $raw,
+      |GTK::Widget.getTypePair
+    );
   }
 
   # Class method.. but deprecated
