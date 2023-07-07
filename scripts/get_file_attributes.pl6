@@ -2,9 +2,10 @@
 use v6;
 
 my rule  trait { 'is' .+? <[\<\(]>.+?<[\>\)]>  }
-my token params { '(' <.ws>* [ <-[\)]>+ % <.ws>*','<.ws>* ] <.ws>* ')' }
+my token params { '('
+<.ws>* [ <-[\)]>+ % <.ws>*','<.ws>* ] <.ws>* ')' }
 
-sub MAIN ($filename) {
+sub MAIN ($filename, :aliases(:$with-aliases) = False ) {
   my $c = $filename.IO.slurp;
   my (@get, @set, %param-count);
 
@@ -12,6 +13,27 @@ sub MAIN ($filename) {
     'method ' ( 'get' | 'set' ) '_' (.+?) \s* [ <trait> \s* ]?
     <[({]> <params>?
   /;
+
+  my $e = $c ~~ m:g /
+    'method ' (.+?) \s* [ <trait> \s* ]?
+    <[({]> <params>?
+  /;
+
+  my %e;
+  $e .= grep({
+    do if .<trait> {
+      my $t = .<trait>.Str;
+      do if $t.contains('is rw') && $t.contains('::').not {
+        %e{ .[0].words.head } = 1;
+        True;
+      } else {
+        False
+      }
+    } else {
+      False
+    }
+  });
+
   for $m.Array -> $me {
     given $me[0].Str {
       when 'get' { @get.push: $me[1].Str }
@@ -28,8 +50,18 @@ sub MAIN ($filename) {
   };
 
   for @getset.sort {
+    next if $_ eq %e.keys.any;
+
+    my $wa = do if $with-aliases && $_.contains('_' | '-') {
+      my $a = $_;
+      $a ~~ tr/-_/_-/;
+      " is also<{ $a }>";
+    } else {
+      ''
+    }
+
     say qq:to/ATTRIB/ ;
-      method { $_ } is rw is g-property \{
+      method { $_ } is rw{$wa} is g-property \{
         Proxy.new:
           FETCH => -> \$     \{ self.get_{ $_ }    \},
           STORE => -> \$, \\v \{ self.set_{ $_ }(v) \}
