@@ -34,14 +34,6 @@ proto sub MAIN (|c) {
 	{*}
 }
 
-multi sub MAIN (
-	*%a where *.elems == 0
-) {
-	nextsame if %config<idir-avail>;
-
-	say .&list-file for @*files;
-}
-
 use File::Find;
 use Terminal::ANSI::OO :t;
 
@@ -49,11 +41,11 @@ multi sub MAIN (
 	:$dir,
 
 	:a(:$avail)              = %config<idir-avail>,
-	:d(:done(:$completed)),
-	:s(:$size),
-	:r(:$reverse),
-	:x(:$exclude),
-        :n(:$num)
+	:d(:done(:$completed))   = %config<idir-completed>,
+	:s(:$size)               = %config<idir-size>,
+	:r(:$reverse)            = %config<idir-reverse>,
+	:x(:$exclude)            = %config<idir-exclude>,
+  :n(:$num)                = %config<idir-num>
 ) {
 	die 'Cannot use --avail and --completed (or their aliases) at the same time!'
 		if $avail && $completed;
@@ -80,18 +72,20 @@ multi sub MAIN (
 		take $_ for $s[];
 	}
 
-	my @exclude = $exclude.split(',');
+	my @exclude = ($exclude // '').split(',').grep( *.chars );
 
 	for @*files[] -> $n {
+		next unless $n.defined;
 		next if     $n.contains('private');
 		next unless $n.ends-with('.h');
-		next unless $n.contains( @exclude.none );
+		next if     [&&]( +@exclude, $n.contains( @exclude.any ) );
 
 		my $colorize = @done.first({
 			.ends-with( $n.extension('').basename )
 		}, :k);
 
 		next if $avail && $colorize.defined;
+
 		say [~](
 			$num      ?? ($++).succ ~ ') ' !! '',
 			$colorize ?? t.green           !! '',
