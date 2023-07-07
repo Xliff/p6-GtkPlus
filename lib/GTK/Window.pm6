@@ -11,6 +11,8 @@ use GDK::Pixbuf;
 use GTK::WindowGroup:ver<3.0.1146>;
 
 use GDK::Screen;
+
+use GLib::Raw::Traits;
 use GTK::Raw::Types:ver<3.0.1146>;
 use GTK::Raw::Window:ver<3.0.1146>;
 
@@ -635,6 +637,36 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
+  method default_icon_list is rw is also<default-icon-list> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_icon_list    },
+      STORE => -> $, \v { self.set_default_icon_list(v) }
+  }
+
+  method default_icon_name is rw is also<default-icon-name> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_icon_name    },
+      STORE => -> $, \v { self.set_default_icon_name(v) }
+  }
+
+  method default_size is rw is also<default-size> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_size    },
+      STORE => -> $, \v { self.set_default_size(v) }
+  }
+
+  method position is rw is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_position    },
+      STORE => -> $, \v { self.set_position(v) }
+  }
+
+  method default_widget is rw is also<default-widget> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_widget },
+      STORE => -> $, \v { self.set_default(v)     }
+  }
+
   method activate_default_widget is also<activate-default-widget> {
     gtk_window_activate_default($!win);
   }
@@ -738,8 +770,18 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     ($width, $height) = ($w, $h);
   }
 
-  method get_default_widget is also<get-default-widget> {
-    gtk_window_get_default_widget($!win);
+  method get_default_widget ( :$raw = False )
+    is also<
+      get_default
+      get-default
+      get-default-widget
+    >
+  {
+    propReturnObject(
+      gtk_window_get_default_widget($!win),
+      $raw,
+      |GTK::Widget.getTypePair
+    );
   }
 
   method get_group (:$raw = False) is also<get-group> {
@@ -904,7 +946,11 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
   # }
 
   method set_default (GtkWidget() $default_widget)
-    is also<set-default>
+    is also<
+      set-default
+      set_default_widget
+      set-default-widget
+    >
   {
     gtk_window_set_default($!win, $default_widget);
   }
@@ -1017,7 +1063,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
 
   use GTK::Roles::Signals::Widget;
 
-  method makeTransparent {
+  method makeTransparent ( :$button-press ) {
     my $win-obj := self.GObject;
     g-connect-draw(
       cast(Pointer, $win-obj),
@@ -1065,8 +1111,12 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
       -> *@a {
         CATCH { default { .message.say; .backtrace.concise.say } }
 
-        self.decorated = self.decorated.not;
-        0
+        if $button-press -> &p {
+          &p();
+        } else {
+          self.decorated = self.decorated.not;
+          0
+        }
       },
       gpointer,
       0
