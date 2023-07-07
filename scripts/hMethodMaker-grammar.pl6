@@ -236,6 +236,8 @@ sub MAIN (
 
   $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC' \s* '(' .+? ',' .+? ')' //;
 
+  $contents ~~ s:g/ 'GType' /\nGType/;
+
   # Should be put behind an --extreme flag
   if $extreme {
     $contents ~~ s:g/ '#'\w+         //;
