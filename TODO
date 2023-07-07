@@ -434,6 +434,8 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
   - Will need to do ALL of the structs. Then compile a C++ lib to get the mangled signature for each struct/type in iso. 
     This is KEY, as it will open up C++ projects to NativeCall.o
 
+- Don't consider. DO - https://gitlab.gnome.org/GNOME/template-glib/
+
 - Extract all non-GLib functions into a project explicitly for the purpose of implementing the MethodMaker pattern. This shall include:
   - All non-GLib specific functions from GLib::Raw::Subs and all other ::Raw::Sub CompUnits from the entire suite
   - All non-GLib structures from GLib::Raw::Structs and all other ::Raw::Struct CompUnits from the entire suite
