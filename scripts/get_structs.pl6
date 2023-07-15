@@ -6,8 +6,18 @@ use lib 'scripts';
 use GTKScripts;
 use Data::Dump::Tree;
 
-sub MAIN ($dir = %config<include-directory>, :$file, :$rw = False) {
+sub MAIN (
+   $dir              = %config<include-directory>,
+  :$file,
+  :$only    is copy,
+  :$exclude is copy,
+  :$rw
+) {
   my (%enums, @files);
+
+  for $only, $exclude -> $l is rw {
+    $l = $l.split(',').cache if $l;
+  }
 
   unless $dir ^^ $file {
     say qq:to/SAY/;
@@ -34,7 +44,21 @@ sub MAIN ($dir = %config<include-directory>, :$file, :$rw = False) {
   }
 
   my %new-classes;
-  for @files -> $file {
+  FILE: for @files -> $file {
+    if $exclude {
+      for $exclude[] {
+        next FILE if $file.contains($_);
+      }
+    }
+
+    if $only {
+      TOCONT: for 1 {
+        for $only[] {
+          last TOCONT if $file.contains($_);
+        }
+        next FILE;
+      }
+    }
     $*ERR.say: "Checking { $file } ...";
 
     # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error
@@ -50,14 +74,24 @@ sub MAIN ($dir = %config<include-directory>, :$file, :$rw = False) {
 
     my $m = $contents ~~ m:g/<struct>/;
 
+    sub resolveTypeName ($_) {
+      do {
+        when    .ends-with('Private') { 'gpointer' }
+        when    'gchar'               { 'Str'      }
+        default                       { $_         }
+      }
+    }
+
     for $m[] -> $l {
       my @s-entries;
-      my $max-type-size = $l<struct><solo-struct><struct-entry>.map(
-        *<type><n>.Str.chars
-      ).max;
+      my $max-type-size = $l<struct><solo-struct><struct-entry>.map({
+        # cw: This will have to be done TWICE! (1/2)
+        resolveTypeName( .<type><n> ).Str.chars
+      }).max;
+
       for $l<struct><solo-struct><struct-entry>[] -> $se {
         @s-entries.push: [
-          $se<type><n>.Str.fmt("%-{ $max-type-size }s"),
+          resolveTypeName( $se<type><n> ).Str.fmt("%-{ $max-type-size }s"),
           .Str
         ] for $se<var>.map( *.<t><n> );
       }
@@ -73,14 +107,23 @@ sub MAIN ($dir = %config<include-directory>, :$file, :$rw = False) {
     }
   }
 
+
   for %new-classes.pairs.sort( *.key ) {
-    my $sigil = $rw ?? '$.'     !! '$!';
-    my $trait = $rw ?? ' is rw' !! '';
     my $max-member-size = .value.map({ .[1].chars }).max;
     say qq:to/CLASS/.chomp;
       class { .key } is repr<CStruct> is export \{
       \t{
         .value.map({
+          my $RW = $rw;
+          unless $RW.defined {
+            $RW   = True  if .[0] ~~ / 'int' (\d+)? \s* $ /;
+            $RW   = True  if .[0] eq <gfloat gdouble>.any;
+            $RW //= False
+          }
+
+          my $sigil = $RW ?? '$.'     !! '$!';
+          my $trait = $RW ?? ' is rw' !! '';
+
           "has { .[0] } { $sigil }{ .[1].fmt("%-{ $max-member-size }s") }{
           $trait };"
         }).join("\n\t")

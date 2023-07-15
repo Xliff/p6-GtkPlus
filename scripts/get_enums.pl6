@@ -7,8 +7,15 @@ use GTKScripts;
 
 my %values;
 
-sub MAIN ($dir = %config<include-directory>, :$file, :$exclude) {
+sub MAIN (
+   $dir = %config<include-directory>,
+  :$file,
+  :$only     is copy,
+  :$exclude
+) {
   my (%enums, @files);
+
+  $only = $only.split(',').cache if $only;
 
   unless $dir ^^ $file {
     say qq:to/SAY/;
@@ -35,7 +42,15 @@ sub MAIN ($dir = %config<include-directory>, :$file, :$exclude) {
   }
 
   my (%etype, %values);
-  for @files -> $file {
+  FILE: for @files -> $file {
+    if $only {
+      TOCONT: for 1 {
+        for $only[] {
+          last TOCONT if $file.contains($_);
+        }
+        next FILE;
+      }
+    }
     $*ERR.say: "Checking { $file } ...";
 
     # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error

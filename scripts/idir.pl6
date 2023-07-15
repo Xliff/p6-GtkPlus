@@ -45,7 +45,8 @@ multi sub MAIN (
 	:s(:$size)               = %config<idir-size>,
 	:r(:$reverse)            = %config<idir-reverse>,
 	:x(:$exclude)            = %config<idir-exclude>,
-  :n(:$num)                = %config<idir-num>
+  :n(:$num)                = %config<idir-num>,
+	:o(:$only)
 ) {
 	die 'Cannot use --avail and --completed (or their aliases) at the same time!'
 		if $avail && $completed;
@@ -72,9 +73,32 @@ multi sub MAIN (
 		take $_ for $s[];
 	}
 
+	@done.gist.say;
+
 	my @exclude = ($exclude // '').split(',').grep( *.chars );
 
-	for @*files[] -> $n {
+	FILE: for @*files[] -> $n {
+
+		if $only {
+			next FILE unless $n.contains($only);
+		}
+
+		if %config<include-include> {
+			# cw: Note dummy loop construct for 'last'
+			INCLUDE_EXIT: for 1 {
+				for %config<include-include>[] -> $ii {
+					last INCLUDE_EXIT if $n.contains($ii);
+				}
+				next FILE;
+			}
+		}
+
+		if %config<include-exclude> {
+			for %config<include-exclude>[] -> $ie {
+				next FILE if $n.contains($ie);
+			}
+		}
+
 		next unless $n.defined;
 		next if     $n.contains('private');
 		next unless $n.ends-with('.h');
@@ -82,9 +106,9 @@ multi sub MAIN (
 
 		my $colorize = @done.first({
 			.ends-with( $n.extension('').basename )
-		}, :k);
+		}, :k).defined;
 
-		next if $avail && $colorize.defined;
+		next if $avail && $colorize;
 
 		say [~](
 			$num      ?? ($++).succ ~ ') ' !! '',

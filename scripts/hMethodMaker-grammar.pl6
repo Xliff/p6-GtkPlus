@@ -122,8 +122,6 @@ sub MAIN (
 ) {
   parse-file($CONFIG-NAME);
 
-  $lib = %config<library> // %config<lib> // 'gtk' unless $lib;
-
   # Get specific option values from configuration file, if it exists,
   # and those keys are defined.
   if %config<hfile-prefix> -> $pre is copy {
@@ -172,13 +170,16 @@ sub MAIN (
   my ($out-file, $out-raw-file, $item);
   if $files {
     $item     = $filename.split('.').head.split('-').tail.tc;
-    $out-file = $item  ~ '.pm6';
+    $lib      = $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;
+    $out-file = $item.subst('/', '-', :g)  ~ '.pm6';
+
     use File::Find;
 
     my $head      = find( dir => 'lib', type => 'dir', name => 'Raw' ).head;
     $out-raw-file = $head.add($out-file).open(:w);
     $out-file     = $head.parent.add($out-file).open(:w);
   }
+  $lib = %config<library> // %config<lib> // 'gtk' unless $lib;
 
   # cw: Remove all struct definitions;
   $contents ~~ m:g/<struct>/;
