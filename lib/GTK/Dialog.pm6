@@ -13,24 +13,16 @@ use GTK::Window:ver<3.0.1146>;
 our subset DialogAncestry is export of Mu
   where GtkDialog | WindowAncestry;
 
+constant GtkDialogAncestry is export = DialogAncestry;
+
 class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   has GtkDialog $!d is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD(:$dialog) {
-    given $dialog {
-      when DialogAncestry { self.setDialog($dialog) }
-      when GTK::Dialog    { }
-      default             { }
-    }
+    self.setGtkDialog($dialog) if $dialog;
   }
 
-  method setDialog(DialogAncestry $_) {
+  method setDialog(DialogAncestry $_) is also<setGtkDialog> {
     my $to-parent;
     $!d = do {
       when GtkDialog {
@@ -44,6 +36,9 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     }
     self.setWindow($to-parent);
   }
+
+  method GTK::Raw::Definitions::GtkDialog
+  { $!d }
 
   multi method new (DialogAncestry $dialog, :$ref = True) {
     return Nil unless $dialog;
