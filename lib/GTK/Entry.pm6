@@ -20,17 +20,13 @@ use GTK::Roles::Signals::Entry:ver<3.0.1146>;
 our subset EntryAncestry is export
   where GtkEntry | GtkEditable | GtkWidgetAncestry;
 
+constant GtkEntryAncestry is export = EntryAncestry;
+
 class GTK::Entry:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Editable;
   also does GTK::Roles::Signals::Entry;
 
   has GtkEntry $!e is implementor;
-
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
 
   submethod BUILD(:$entry) {
     given $entry {
@@ -44,7 +40,7 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
     }
   }
 
-  method setEntry($entry) {
+  method setEntry($entry) is also<setGtkEntry> {
     my $to-parent;
     $!e = do given $entry {
       when GtkEntry {
