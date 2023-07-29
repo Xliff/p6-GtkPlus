@@ -69,7 +69,7 @@ class GTK::Widget:ver<3.0.1146> {
     self.disconnect-all($_) for %!signals, %!signals-widget
   }
 
-  method setWidget (GtkWidgetAncestry $_) {
+  method setWidget (GtkWidgetAncestry $_) is also<setGtkWidget> {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
     $!w = do {
@@ -176,30 +176,6 @@ class GTK::Widget:ver<3.0.1146> {
     Proxy.new:
       FETCH => -> $     { self.get_allocation    },
       STORE => -> $, \v { self.set_allocation(v) }
-  }
-
-  method clip is rw is g-property {
-    Proxy.new:
-      FETCH => -> $     { self.get_clip    },
-      STORE => -> $, \v { self.set_clip(v) }
-  }
-
-  method default_direction is rw is also<default-direction> is g-property {
-    Proxy.new:
-      FETCH => -> $     { self.get_default_direction    },
-      STORE => -> $, \v { self.set_default_direction(v) }
-  }
-
-  method device_enabled is rw is also<device-enabled> is g-property {
-    Proxy.new:
-      FETCH => -> $     { self.get_device_enabled    },
-      STORE => -> $, \v { self.set_device_enabled(v) }
-  }
-
-  method device_events is rw is also<device-events> is g-property {
-    Proxy.new:
-      FETCH => -> $     { self.get_device_events    },
-      STORE => -> $, \v { self.set_device_events(v) }
   }
 
   method get_default_direction (GTK::Widget:U: )
@@ -2123,7 +2099,13 @@ class GTK::Widget:ver<3.0.1146> {
       Nil;
   }
 
-  method queue_draw is also<queue-draw> {
+  method queue_draw
+    is also<
+      queue-draw
+      redraw
+      invalidatge
+    >
+  {
     gtk_widget_queue_draw($!w);
   }
 
