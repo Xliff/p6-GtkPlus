@@ -13,6 +13,8 @@ use GTK::Roles::Orientable:ver<3.0.1146>;
 our subset GridAncestry is export
   where GtkGrid | GtkOrientable | ContainerAncestry;
 
+our constant GtkGridAncestry is export = GridAncestry;
+
 class GTK::Grid:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
 
@@ -36,7 +38,7 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
     }
   }
 
-  method setGrid (GridAncestry $_) {
+  method setGrid (GridAncestry $_) is also<setGtkGrid> {
     my $to-parent;
     $!g = do {
       when GtkGrid  {
@@ -80,6 +82,12 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
     my $grid = gtk_grid_new();
 
     $grid ?? self.bless(:$grid) !! Nil;
+  }
+  multi method new ( :v(:ver(:vert(:$vertical))) is required ) {
+    ::?CLASS.new-vgrid;
+  }
+  multi method new ( :h(:hor(:horiz(:$horizontal))) is required ) {
+    ::?CLASS.new-hgrid;
   }
 
   method new-vgrid (Int() $spacing = 2) {
@@ -326,8 +334,8 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
     GTK::Widget $child,
     Int() $left,
     Int() $top,
-    Int() $width,
-    Int() $height
+    Int() $width  = 1,
+    Int() $height = 1
   ) {
     self.SET-LATCH;
     self!add-child-at($child, $left, $top, $width, $height);
@@ -337,8 +345,8 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
     GtkWidget $child,
     Int() $left,
     Int() $top,
-    Int() $width,
-    Int() $height
+    Int() $width  = 1,
+    Int() $height = 1
   ) {
     my gint ($l, $t, $w, $h) = ($left, $top, $width, $height);
     self!add-child-at($child.Widget, $left, $top, $width, $height)
