@@ -14,6 +14,8 @@ use GTK::Roles::Signals::Range:ver<3.0.1146>;
 our subset RangeAncestry is export
   where GtkRange | GtkOrientable | GtkWidgetAncestry;
 
+our constant GtkRangeAncestry is export = RangeAncestry;
+
 class GTK::Range:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Orientable;
   also does GTK::Roles::Signals::Range;
@@ -33,7 +35,7 @@ class GTK::Range:ver<3.0.1146> is GTK::Widget {
 
   method GTK::Raw::Definitions::GtkRange is also<Range> { $!r }
 
-  method setRange(RangeAncestry $range) {
+  method setRange(RangeAncestry $range) is also<setGtkRange> {
     my $to-parent;
     $!r = do given $range {
       when GtkRange {
@@ -55,7 +57,8 @@ class GTK::Range:ver<3.0.1146> is GTK::Widget {
   }
 
   # This is an abstract class, but can have instances of it's descendants
-  method new (RangeAncestry $range) {
+  method new (GtkRangeAncestry $range) {
+    return unless $range;
     my $o = self.bless(:$range);
     $o.upref;
     $o;
