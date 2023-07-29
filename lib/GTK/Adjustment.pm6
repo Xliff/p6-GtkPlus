@@ -16,7 +16,7 @@ class GTK::Adjustment:ver<3.0.1146> {
   has GtkAdjustment $!adj is implementor;
 
   submethod BUILD ( :$adjustment ) {
-    self.setAdjustment($adjustment) if $adjustment;
+    self.setGtkAdjustment($adjustment) if $adjustment;
   }
 
   method setGtkAdjustment (GtkAdjustmentAncestry $_) {
@@ -64,6 +64,24 @@ class GTK::Adjustment:ver<3.0.1146> {
     my $adjustment = gtk_adjustment_new($v, $l, $u, $si, $pi, $ps);
 
     $adjustment ?? self.bless(:$adjustment) !! Nil;
+  }
+  multi method new (
+    # cw: Use arbitrary defaults.
+    Num() :v(:$value)                           = 0,
+    Num() :l(:min(:$lower))                     = 0,
+    Num() :u(:max(:$upper))                     = 100,
+    Num() :s(:step-increment(:$step_increment)) = 1,
+    Num() :p(:page-increment(:$page_increment)) = 10,
+    Num() :size(:page-size(:$page_size))        = 10
+  ) {
+    samewith(
+      $value,
+      $lower,
+      $upper,
+      $step_increment,
+      $page_increment,
+      $page_size
+    );
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
