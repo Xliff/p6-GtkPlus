@@ -793,10 +793,18 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
       Nil;
   }
 
-  method get_position (Int() $root_x, Int() $root_y) is also<get-position> {
-    my gint ($rx, $ry) = ($root_x, $root_y);
+  proto method get_position (|)
+    is also<get-position>
+  { * }
+
+  multi method get_position {
+    samewith($, $);
+  }
+  multi method get_position ($root_x is rw, $root_y is rw) {
+    my gint ($rx, $ry) = 0 xx 2;
 
     gtk_window_get_position($!win, $rx, $ry);
+    ($root_x, $root_y) = ($rx, $ry);
   }
 
   method get_resize_grip_area (GdkRectangle() $rect)
@@ -1112,7 +1120,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
         CATCH { default { .message.say; .backtrace.concise.say } }
 
         if $button-press -> &p {
-          &p();
+          &p( |@a );
         } else {
           self.decorated = self.decorated.not;
           0
