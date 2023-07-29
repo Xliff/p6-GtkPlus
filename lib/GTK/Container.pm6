@@ -471,8 +471,8 @@ D
 
     $cl = GLib::GList.new($cl) but GLib::Roles::ListData[GtkWidget];
     $raw ?? $cl.Array
-         !! ( $widget ?? $cl.Array.new({ GTK::Widget.new($_) })
-                      !! $cl.Array.new({ GTK::Widget.CreateObject($_) }) );
+         !! ( $widget ?? $cl.Array.map({ GTK::Widget.new($_) })
+                      !! $cl.Array.map({ GTK::Widget.CreateObject($_) }) );
   }
 
   method get_focus_chain (GList $focusable_widgets)
