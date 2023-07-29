@@ -16,6 +16,8 @@ use GTK::Widget:ver<3.0.1146>;
 our subset ButtonAncestry is export of Mu
   where GtkButton | BinAncestry;
 
+constant GtkButtonAncestry is export = ButtonAncestry;
+
 class GTK::Button:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Actionable;
 
