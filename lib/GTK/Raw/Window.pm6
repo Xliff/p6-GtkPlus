@@ -115,7 +115,11 @@ sub gtk_window_get_group (GtkWindow $window)
   is export
 { * }
 
-sub gtk_window_get_position (GtkWindow $window, gint $root_x, gint $root_y)
+sub gtk_window_get_position (
+  GtkWindow $window,
+  gint      $root_x  is rw,
+  gint      $root_y  is rw
+)
   is native(gtk)
   is export
 { * }
@@ -128,8 +132,8 @@ sub gtk_window_get_resize_grip_area (GtkWindow $window, GdkRectangle $rect)
 
 sub gtk_window_get_size (
   GtkWindow $window,
-  gint $width is rw,
-  gint $height is rw
+  gint      $width   is rw,
+  gint      $height  is rw
 )
   is native(gtk)
   is export
