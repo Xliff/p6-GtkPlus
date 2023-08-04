@@ -54,8 +54,13 @@ sub MAIN (
 
     signal($_).tap({ writeLog; exit }) for SIGINT, SIGTERM;
 
-    my ($buildList) = compute-module-dependencies(get-module-files);
-    $buildList      = $buildList.map( *<name> ).cache.Array;
+    my @files = get-module-files.sort( *.modified );
+
+    my $buildList   = |compute-module-dependencies(@files).map( |* );
+    $buildList      = $buildList.cache.Array;
+
+    say "BuildList: { $buildList.gist }";
+
     my $build-count = $buildList.elems;
     my $*ERROR      = False;
     my $*SKIP       = $start-at ??
@@ -85,6 +90,9 @@ sub MAIN (
       "Parallel build started for Raku { $*RAKU.compiler.version } on MoarVM {
        $*VM.version }"
     );
+
+    say "B: { $buildList.gist }";
+
     while +$buildList && $*ERROR.not {
       my $n = $buildList.shift;
 
