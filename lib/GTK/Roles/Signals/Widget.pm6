@@ -8,7 +8,7 @@ use GLib::Raw::ReturnedValue;
 role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   has %!signals-widget;
 
-  method connect-widget-event(
+  method connect-widget-event (
     $obj,
     $signal,
     &handler?
@@ -36,7 +36,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GdkDragContext, gint, gint, guint, gpointer --> gboolean
-  method connect-drag-action(
+  method connect-drag-action (
     $obj,
     $signal,
     &handler?
@@ -64,7 +64,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GdkDragContext, GtkDragResult, gpointer --> gboolean
-  method connect-drag-failed(
+  method connect-drag-failed (
     $obj,
     $signal = 'drag-failed',
     &handler?
@@ -92,7 +92,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, gint, gint, gboolean, GtkTooltip, gpointer --> gboolean
-  method connect-query-tooltip(
+  method connect-query-tooltip (
     $obj,
     $signal = 'query-tooltip',
     &handler?
@@ -143,7 +143,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, cairo_t, gpointer --> gboolean
-  method connect-draw(
+  method connect-draw (
     $obj,
     $signal = 'draw',
     &handler?
@@ -170,7 +170,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GdkDragContext, GtkDragResult, gpointer
-  method connect-drag-leave(
+  method connect-drag-leave (
     $obj,
     $signal = 'drag-leave',
     &handler?
@@ -193,7 +193,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GdkDragContext
-  method connect-widget-drag(
+  method connect-widget-drag (
     $obj,
     $signal,
     &handler?
@@ -216,7 +216,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GdkDragContext, GtkSelectionData, guint, guint, gpointer --> void
-  method connect-drag-data-get(
+  method connect-drag-data-get (
     $obj,
     $signal = 'drag-data-get',
     &handler?
@@ -240,7 +240,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
 
   # GtkWidget, GdkDragContext, gint, gint, GtkSelectionData, guint, guint, gpointer
   # --> void
-  method connect-drag-data-received(
+  method connect-drag-data-received (
     $obj,
     $signal = 'drag-data-received',
     &handler?
@@ -263,7 +263,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GtkSelectionData, guint, guint, gpointer --> void
-  method connect-selection-get(
+  method connect-selection-get (
     $obj,
     $signal = 'selection-get',
     &handler?
@@ -286,7 +286,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GtkSelectionData, guint, gpointer --> void
-  method connect-selection-received(
+  method connect-selection-received (
     $obj,
     $signal = 'selection-received',
     &handler?
@@ -309,7 +309,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GdkRectangle, gpointer --> void
-  method connect-size-allocate(
+  method connect-size-allocate (
     $obj,
     $signal = 'size-allocate',
     &handler?
@@ -332,7 +332,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   }
 
   # GtkWidget, GtkStyle, gpointer --> void
-  method connect-style-set(
+  method connect-style-set (
     $obj,
     $signal = 'style-set',
     &handler?
@@ -356,7 +356,7 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
 
 }
 
-sub g-connect-widget-event(
+sub g-connect-widget-event (
   Pointer $app,
   Str     $name,
           &handler (GtkWidget, GdkEvent, Pointer --> uint32),
