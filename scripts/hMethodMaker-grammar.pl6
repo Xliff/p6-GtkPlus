@@ -199,19 +199,30 @@ sub MAIN (
     ]*
   }
 
-  my token decl { (<[A..Z]>+)+ %% '_' <nested-parens>? }
+  my token mname { <[A..Za..z0..9_]>+ }
+  my token decl  { (<[A..Z]>+)+ %% '_' <nested-parens>? }
+  my token args  { '(' <-[)]>+ ')' }
 
   # Remove extraneous, non-necessary bits!
-
   # Comments
-  $contents ~~ s:g/ ^^ '#define' <.ws> <decl> <.ws> <nested-parens>          //;
+
+  $contents ~~ s:g/ '\\' $$ \s+ .+? $$ //;
+
+  $contents ~~
+    s:g/
+      ^^ '#define'    <.ws>
+      <decl> <args>?  <.ws>
+      <mname>?        <.ws>
+      <nested-parens>
+    //;
+
   $contents ~~ s:g/ ^^ '#define' <.ws> <decl> <.ws>  .+? $$                  //;
   $contents ~~ s:g/ ^^ '#' .+? $$                                            //;
   $contents ~~ s:g/ <[A..Z]>+ [ '_BEGIN_DECLS' || '_END_DECLS' ]             //;
   $contents ~~ s:g/ '/*' ~ '*/' (.+?)                                        //;
   $contents ~~ s:g/ 'G_STMT_START'  .+? 'G_STMT_END'                         //;
   # Multi line defines;
-  $contents ~~ s:g/ '\\' $$ \s+ .+? $$                                       //;
+
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
   $contents ~~ s:g/'typedef' .+? ';'                                         //;
   $contents ~~ s:g/ ^ .+? '\\' $                                             //;
