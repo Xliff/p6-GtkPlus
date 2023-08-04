@@ -3,6 +3,7 @@ use v6.c;
 use NativeCall;
 
 use GLib::Raw::Definitions;
+use GLib::Raw::Object;
 use Pango::Raw::Definitions;
 use GDK::Raw::Definitions;
 use GLib::Raw::Structs;
@@ -147,3 +148,13 @@ class GtkRecentData is repr('CStruct') does GLib::Roles::Pointers is export {
 }
 
 our constant GtkAllocation is export := GdkRectangle;
+
+class GtkWidgetStruct is repr('CStruct') does GLib::Roles::Pointers is export {
+  HAS GObject  $!parent;
+  has gpointer $!private;
+}
+
+class GtkDrawingAreaStruct is repr('CStruct') does GLib::Roles::Pointers is export {
+  HAS GtkWidgetStruct $!parent;
+  has gpointer        $!private;
+}
