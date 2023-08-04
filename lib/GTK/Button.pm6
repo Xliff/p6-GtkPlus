@@ -30,20 +30,7 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
   }
 
   submethod BUILD(:$button) {
-    given $button {
-      when ButtonAncestry {
-        self.setButton($button);
-      }
-
-      when GTK::Button {
-        my $c = ::?CLASS.^name;
-        warn "To copy a { $c } object, use { $c }.clone.";
-      }
-
-      default {
-        # DO NOT throw an exception!
-      }
-    }
+    self.setGtkButton($button) if $button;
   }
 
   method GTK::Raw::Definitions::GtkButton
@@ -53,7 +40,7 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
     >
   { $!b }
 
-  method setButton(ButtonAncestry $_) {
+  method setButton (ButtonAncestry $_) is also<setGtkButton> {
     my $to-parent;
     $!b = do {
       when GtkButton {
