@@ -28,13 +28,7 @@ class GTK::Scale:ver<3.0.1146> is GTK::Range {
   }
 
   submethod BUILD(:$scale) {
-    given $scale {
-
-      when GTK::Scale {
-      }
-      default {
-      }
-    }
+    self.setGtkScale($scale) if $scale;
   }
 
   method setGtkScale (GtkScaleAncestry $_) {
