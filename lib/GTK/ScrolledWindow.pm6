@@ -326,6 +326,12 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
   }
 
   # method policy is rw to call set_policy and get_policy?
+  method policy is rw {
+    Proxy.new:
+      FETCH => -> $  { self.get_policy      },
+      STORE => -> \v { self.set_policy( v ) }
+  }
+
 
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
@@ -356,21 +362,23 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
     is also<get-policy>
   { * }
 
-  # Only no-arg methods get to have an alias without the get[-_] prefix.
-  multi method get_policy is also<policy> {
+  multi method get_policy {
     my @r = samewith($, $, :all);
 
-    @r[0] ?? @r[1..*] !! Nil;
+    @r[0] ?? @r.skip(1) !! Nil;
   }
   multi method get_policy (
-    $hscrollbar_policy is rw,      # GtkPolicyType
-    $vscrollbar_policy is rw,      # GtkPolicyType
-    :$all = False
+     $hscrollbar_policy is rw,
+     $vscrollbar_policy is rw,
+    :$all                      = False,
+    :$enum                     = True
   ) {
     my uint32 ($hp, $vp) = 0 xx 2;
     my $rc = gtk_scrolled_window_get_policy($!sw, $hp, $vp);
 
-    ($hscrollbar_policy, $vscrollbar_policy) = ($hp, $vp);
+    ($hscrollbar_policy, $vscrollbar_policy) =
+      ($hp, $vp).map({ $enum ?? $_ !! GtkPolicyTypeEnum($_) });
+
     $all.not ?? $rc !! ($rc, $hscrollbar_policy, $vscrollbar_policy);
   }
 
@@ -391,10 +399,18 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
     self.ReturnWidget($w, $raw, $widget);
   }
 
-  method set_policy (Int() $hscrollbar_policy, Int() $vscrollbar_policy)
+  proto method set_policy (|)
     is also<set-policy>
-  {
-    my uint32 ($hp, $vp) = ($hscrollbar_policy, $vscrollbar_policy);
+  { * }
+
+  multi method set_policy (@policies) {
+    samewith( |@policies );
+  }
+  multi method set_policy (
+    Int() $hscrollbar_policy,
+    Int() $vscrollbar_policy
+  ) {
+    my GtkPolicyType ($hp, $vp) = ($hscrollbar_policy, $vscrollbar_policy);
 
     gtk_scrolled_window_set_policy($!sw, $hp, $vp);
   }
