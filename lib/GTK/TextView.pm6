@@ -17,6 +17,8 @@ use GTK::Roles::Signals::TextView:ver<3.0.1146>;
 our subset TextViewAncestry is export of Mu
   where GtkTextView  | GtkScrollable | ContainerAncestry;
 
+constant GtkTextViewAncestry is export = TextViewAncestry;
+
 class GTK::TextView:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::TextView;
@@ -30,12 +32,8 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     $o;
   }
 
-  submethod BUILD(:$textview) {
-    given $textview {
-      when TextViewAncestry { self.setTextView($textview) }
-      when GTK::TextView    { }
-      default               { }
-    }
+  submethod BUILD( :$textview ) {
+    self.setGtkTextView($textview) if $textview;
   }
 
   method GTK::Raw::Definitions::GtkTextView
@@ -45,7 +43,7 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     >
   { $!tv }
 
-  method setTextView($view) {
+  method setTextView($view) is also<setGtkTextView> {
     my $to-parent;
     $!tv = do given $view {
       when GtkTextView {
@@ -674,7 +672,7 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     is also<move-visually>
   {
     my gint $c = $count;
-    
+
     gtk_text_view_move_visually($!tv, $iter, $c);
   }
 
