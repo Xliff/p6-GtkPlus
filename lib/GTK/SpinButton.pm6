@@ -240,7 +240,7 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
     is also<get-increments>
   { * }
 
-  multi method get_increments {
+  multi method get_increments is also<increments> {
     samewith($, $);
   }
   multi method get_increments ($step is rw, $page is rw)  {
@@ -252,10 +252,13 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
 
   proto method get_range (|)
     is also<get-range>
+    is DEPRECATED<.adjustment>
   {  }
 
   multi method get_range {
-    samewith($, $);
+    my ($n, $x);
+
+    samewith($n, $x);
   }
   multi method get_range ($min is rw, $max is rw) {
     my gdouble ($mn, $mx) = 0e0 xx 2;
