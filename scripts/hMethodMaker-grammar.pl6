@@ -111,7 +111,7 @@ sub MAIN (
   Str  :$remove-from-start  is copy,   #= Remove colon separated prefix strings from all lines
   Str  :$remove-from-end    is copy,   #= Remove colon separate suffix strings from all lines
   Str  :$lib                is copy,   #= Library name to use
-  Str  :$delete,                       #= Comma separated list of lines to delete
+       :$delete             =  '',      #= Comma separated list of lines to delete
   Str  :$output             =  'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
   Bool :$extreme            =  False,  #= Use extreme cleanup methods
   Bool :$internal           =  False,  #= Add checking for INTERNAL methods
@@ -120,6 +120,7 @@ sub MAIN (
   Bool :$raw-methods        =  False,  #= Use method format for raw invocations (NFYI)
   Bool :x11(:$X11)          =  False   #= Use GUI mode (must have a valid DISPLAY)
 ) {
+
   parse-file($CONFIG-NAME);
 
   # Get specific option values from configuration file, if it exists,
