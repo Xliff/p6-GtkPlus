@@ -3,6 +3,7 @@ use v6.c;
 use Config::INI;
 use File::Find;
 use Dependency::Sort;
+use HashArray;
 
 unit package GTKScripts;
 
@@ -11,9 +12,10 @@ our %config           is export;
 our $GTK-SCRIPT-DEBUG is export;
 
 my %config-defaults = (
-  prefix  => '/',
-  libdirs => 'lib',
-  exec    => 'p6gtkexec'
+  prefix              => '/',
+  libdirs             => 'lib',
+  exec                => 'p6gtkexec',
+  excluded-namespaces => ''
 );
 
 sub getConfigEntry ($k) is export {
@@ -24,7 +26,7 @@ sub getLibDirs is export {
   getConfigEntry('libdirs');
 }
 
-sub parse-file ($filename = $CONFIG-NAME) is export {
+sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
   return Nil unless $filename && $filename.IO.r;
 
   %config = Config::INI::parse_file($filename)<_>;
@@ -40,19 +42,66 @@ sub parse-file ($filename = $CONFIG-NAME) is export {
     %config{$nk} := %config{$_};
   }
 
-  %config<libdirs> //= 'lib';
+  %config{ .key } //= .value for %config-defaults.pairs;
 
   # Handle comma separated
-  %config{$_} = (%config{$_} // '').split(',').Array
+  %config{$_} = (%config{$_} // '').split(',').grep( *.chars ).Array
     if %config{$_}:exists
   for <
     backups
     modules
     build-exclude
+    build-additional
+    include-exclude
+    include-include
   >;
+
+  if $program {
+    # cw: This violates all sorts of directives against the space/time
+    #     continuum.
+    #
+    #     WICKED!
+    for %config.keys.grep( *.starts-with("{ $program }-") ) {
+      my $var = .split('-').tail;
+      OUTER::{$var} = %config{$_}
+    }
+  }
 
   %config;
 }
+
+# cw: Thank you SO MUCH!
+# https://stackoverflow.com/questions/47124405/parsing-a-possibly-nested-braced-item-using-a-grammar
+our token nested-parens is export {
+   '(' ~ ')' [
+     || <- [()] >+
+     || <.before '('> <~~>
+   ]*
+}
+
+our token nested-braces is export {
+   '{' ~ '}' $<before>=[
+     || ( <- [{}] >+ )
+     || <.before '{'> <~~>
+   ]*
+}
+
+ our rule class-def is export {
+  'class'
+    $<name>=[ \S+ ]
+    [ $<misc>=(<-[{]>+) ]?
+  <nested-braces>
+}
+
+our regex method-def is export {
+  $<mod>=[ [ 'proto' | 'multi' ] <.ws> ]?
+  $<m>=[ 'sub'?'method' ]        <.ws>
+  $<name>=(<-[)(}{\s]>+)         <.ws>
+  $<args>=<nested-parens>?       <.ws>
+  [ $<misc>=(<-[{]>+) ]?
+  <nested-braces>
+}
+
 
 my token d { <[0..9 x]> }
 my token m { '-' }
@@ -74,6 +123,22 @@ my token     mod { 'unsigned' | 'long' }
 my token    mod2 { 'const' | 'struct' | 'enum' }
 my rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
 my rule      var { <t> [ '[' (.+?)? ']' ]? }
+
+our token classname is export {
+  [ \w+ ]+ % '::' [':' [\w+'<'.+?'>']+ % ':' ]?
+}
+our token parent is export {
+  <classname>
+}
+our token typename is export { \w+ }
+
+our rule also-does is export {
+  'also' 'does' <classname> ';'
+}
+
+our rule class-start is export {
+  'class' <classname> ['is' <parent>]? '{'
+}
 
 our rule struct-entry is export {
   <type> <var>+ %% ','
@@ -360,10 +425,11 @@ sub compute-module-dependencies (
 )
 	is export
 {
-  my @build-exclude = getConfigEntry('build-exclude').split( /',' \s*/ )
-                                                     .grep( *.chars );
+  my @build-exclude    = getConfigEntry('build-exclude');
+  my @build-additional = getConfigEntry('build-additional');
+
   say "BE: { @build-exclude }";
-  my @modules = @files
+  my @modules = ( |@files, |@build-additional )
     .map( *.path )
     .map({
       my ($u, $m) = $_ xx 2;
@@ -395,7 +461,7 @@ sub compute-module-dependencies (
   my @others;
   my @other-provided = (%config<other_provided> // '').split(',');
   for %nodes.pairs.sort( *.key ) -> $p {
-    say "Processing requirements for module { $p.key }...";
+    say "Processing requirements for { $p.key }...";
 
     my token useneed    { 'use' | 'need'  }
     my token modulename {
@@ -414,41 +480,61 @@ sub compute-module-dependencies (
 
     my $m = $contents ~~
       m:g/^^ \s* <useneed> \s+ <modulename>[\s+.+\s*]?';'/;
+
     for $m.list -> $mm {
-      my $mn = $mm;
+      my $mn = $mm.trim;
+
+      next if $mn eq <nqp experimental>.any;
+
+      next if $mn ~~ / ^ 'v' \d+ /;
 
       #say "MN: { $mn.gist }";
 
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
       my @prefixes     = getConfigEntry('prefix').split(',');
-      my @non-prefixes = getConfigEntry('excluded-namespaces').split(',');
+      my @non-prefixes = getConfigEntry('excluded-namespaces').split(',')
+                                                              .grep( *.chars );
+
+      my $part-of-project = [&&](
+        $mn.starts-with( @prefixes.any ).so,
+        $mn.starts-with( @non-prefixes.none ).so
+      );
+
       if $mn ~~ /<modulename>/ {
         $mn = $/<modulename>[0].Str;
-        unless
-          $mn.starts-with( @prefixes.any )         &&
-          $mn.starts-with( @non-prefixes.any ).not
-        {
-          next if $mn ~~ / 'v6''.'? (.+)? /;
-          @others.push: $mn;
-          next;
+        unless $part-of-project {
+          sub doOther {
+            next if $mn ~~ / 'v6''.'? (.+)? /;
+            @others.push: $mn;
+            next;
+          }
+
+          if $mn.starts-with( @prefixes.any ).so {
+            doOther() if +@non-prefixes && $mn.starts-with( @non-prefixes.any );
+            %nodes{$p.key}<edges>.push: $mn;
+          } else {
+            doOther();
+          }
         }
-        %nodes{$p.key}<edges>.push: $mn;
       }
 
       if $mn eq @other-provided.any {
         @others.push: $mn;
       } else {
-        if $mn.starts-with( @prefixes.any ) {
+        if $part-of-project {
           die qq:to/DIE/ unless %nodes{$mn}:exists;
             { $mn }, used by { $p.key }, does not exist!
             DIE
         }
 
+        say "Adding {$mn} as a dependency for { $p.key }..."
+          if %*ENV<P6_GTK_DEBUG>;
+
         $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
       }
     }
-    #say "P: { $p.key } / { %nodes{$p.key}.gist }";
+    # say "P: { $p.key } / { %nodes{$p.key}.gist }";
   }
 
   if %*ENV<P6_GTK_DEBUG> {
@@ -484,18 +570,27 @@ sub compute-module-dependencies (
   }
 
   # Solidify Seq results
-  my @return-array = $s.result;
+  my @return-array = $s.result.grep({
+    [&&](
+      |(
+        .ends-with('.pl6'),
+        .ends-with('.p6'),
+        .ends-with('.raku')
+      ).map( *.not )
+    )
+  });
 
   if $extra-output {
     say "\nA resolution order is:";
-    say "»»»»»» { @return-array.elems } Modules resolved";
+    say "»»»»»» { @return-array.elems } Modules resolved. ( {
+         @others.elems } non-project modules)";
   }
 
   if $build-list {
     @others = @others.unique.sort;
     my $list = @others.join("\n") ~ "\n";
     $list ~= @return-array.map( *<name> ).join("\n");
-    "BuildList".IO.open(:w).say($list);
+    'BuildList'.IO.open(:w).say($list);
     say $list;
   }
 
@@ -504,22 +599,27 @@ sub compute-module-dependencies (
     @return-array.map({ ( "\"{ .<name> }\"", "\"{ .<filename> }\"" ) }).cache
   ) if $meta-file;
 
-  (@return-array, @others);
+  my $r = HashArray.new( hash => %nodes, array => @return-array );
+
+  ($r, @others);
 }
 
 INIT {
-  $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
-  $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
-                 $*ENV<X11_PROJECT_FILE> //
-                 do {
-                   '.'.IO.dir.grep({
-                     .starts-with('.') &&
-                     .ends-with('-project')
-                   })[0].absolute
-                 }
+  unless %*ENV<GTK_SCRIPTS_NO_INIT> {
+    $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
+    $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
+                   $*ENV<X11_PROJECT_FILE> //
+                   do {
+                     '.'.IO.dir.grep({
+                        .starts-with('.')             &&
+                        .ends-with('-project')        &&
+                        .starts-with('.finished').not
+                     }).head.absolute
+                   }
 
- die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
-   unless $CONFIG-NAME.IO.e;
+   die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
+     unless $CONFIG-NAME.IO.e;
 
-  parse-file;
+    parse-file;
+  }
 }
