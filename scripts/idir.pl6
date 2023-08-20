@@ -73,8 +73,6 @@ multi sub MAIN (
 		take $_ for $s[];
 	}
 
-	@done.gist.say;
-
 	my @exclude = ($exclude // '').split(',').grep( *.chars );
 
 	FILE: for @*files[] -> $n {
