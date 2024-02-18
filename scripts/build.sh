@@ -29,7 +29,7 @@ perl6 scripts/backup_results.pl6 $name
 
 
 /usr/bin/time -p /bin/bash -c '(
-  echo "Build started for: ";
+  echo "Build started for project `pwd` revision `git rev-parse HEAD` using:"
   ./'$exec' -v;
   '"i=$ln"'; n=`wc -l BuildList | cut -f1 -d\ `; for a in `cat BuildList.now`; do
     (
