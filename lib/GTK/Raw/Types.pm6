@@ -7,11 +7,12 @@ use GIO::Raw::Exports;
 use GDK::Raw::Exports;
 use GTK::Raw::Exports:ver<3.0.1146>;
 
-my constant forced = 145;
+my constant forced = 193;
 
 unit package GTK::Raw::Types:ver<3.0.1146>;
 
 need Cairo;
+need GLib::Raw::Debug;
 need GLib::Raw::Definitions;
 need GLib::Raw::Enums;
 need GLib::Raw::Exceptions;
