@@ -59,7 +59,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
         nativecast(GtkWindow, $_);
       }
     }
-    self.setBin($to-parent);
+    self.setGtkBin($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkWindow

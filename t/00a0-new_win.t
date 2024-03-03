@@ -19,17 +19,22 @@ sub new-win () {
 	$app.add_window: $window;
 }
 
-$app.activate.tap({
+$app.activate.tap( SUB {
   my $box = GTK::Box.new-vbox(6);
   my GTK::Button $new-win .= new_with_label: <new-win>;
 
-  $new-win.clicked.tap: { new-win };
+  $new-win.clicked.tap: SUB { new-win };
   $box.pack_start($new-win, False, True, 0);
 
-  $app.window.destroy-signal.tap: { $app.exit };
+  $app.window.destroy-signal.tap: SUB { $app.exit };
 
   $app.window.add: $box;
   $app.show_all;
 });
 
 $app.run;
+
+INIT {
+	.say for MY::.keys.sort;
+}
+	

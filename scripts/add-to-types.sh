@@ -1,14 +1,13 @@
 #!/usr/bin/env raku
 
 sub MAIN ($new-compunit) {
-  my $dirs = `$*HOME/bin/get-project-dirs.sh`;
+  for qqx«{ $*HOME }/bin/get-project-dirs.sh».split(/ \s /) {
+    chdir($_);
 
-  for $dirs {
-    chdir($dirs);
     {
       use GTKScripts;
 
-      my $type-io   = "lib/{ %config<prefix> }/Raw/Types.pm6".IO;
+      my $type-io   = "lib/{ %config<prefix>.subst('::', '') }/Raw/Types.pm6".IO;
       my $type-file = $type-io.slurp;
 
       $type-file ~~ m:g/ ^^ 'need' .+? $$/;
@@ -22,3 +21,4 @@ sub MAIN ($new-compunit) {
       $type-io.spurt: $type-file;
     }
   }
+}

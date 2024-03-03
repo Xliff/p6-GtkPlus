@@ -15,7 +15,7 @@ sub MAIN ($filename, :aliases(:$with-aliases) = False ) {
   /;
 
   my $e = $c ~~ m:g /
-    'method ' (.+?) \s* [ <trait> \s* ]?
+    'method ' (.+?) \s* [ <trait> \s* ]+?
     <[({]> <params>?
   /;
 

@@ -45,7 +45,7 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
   %config{ .key } //= .value for %config-defaults.pairs;
 
   # Handle comma separated
-  %config{$_} = (%config{$_} // '').split(',').grep( *.chars ).Array
+  %config{$_} = (%config{$_} // '').split(',').grep( *.chars )
     if %config{$_}:exists
   for <
     backups
@@ -66,6 +66,9 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
       OUTER::{$var} = %config{$_}
     }
   }
+
+  # Handle aliases.
+  %config<include-directory> //= %config<include-dir>;
 
   %config;
 }
@@ -109,20 +112,21 @@ my token L { 'L' }
 my token w { <[A..Za..z0..9 _]> }
 
 my rule comment {
-  '/*' .+? '*/'
+  '/*'$<text>=.+?'*/'
 }
 
 my regex name {
   <[_ A..Z a..z]>+
 }
 
-my token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
-my token       n { <[\w _]>+ }
-my token       t { <n> | '(' '*' <n> ')' }
-my token     mod { 'unsigned' | 'long' }
-my token    mod2 { 'const' | 'struct' | 'enum' }
-my rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
-my rule      var { <t> [ '[' (.+?)? ']' ]? }
+my token       p  { [ '*' [ \s* 'const' \s* ]? ]+ }
+my token       n  { <[\w _]>+ }
+my token       t  { <n> | '(' '*' <n> ')' }
+my token     mod  { 'unsigned' | 'long' }
+my token    mod2  { 'const' | 'struct' | 'enum' }
+my rule     type  { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
+my rule array-def { '['$<size>=.+?']' }
+my rule       var { <t><array-def>? }
 
 our token classname is export {
   [ \w+ ]+ % '::' [':' [\w+'<'.+?'>']+ % ':' ]?
@@ -404,7 +408,22 @@ sub write-meta-file ($file, $modules) {
 
   if $file.IO.e {
     my $meta = $file.IO.slurp;
-    $meta ~~ s/ '"provides": ' '{' ~ '}' <-[\}]>+ /"provides": \{\n{$table}\n    }/;
+
+    my $match = $meta ~~ /'"provides":'\s+'{' ~ '}' <-[\}]>+ /;
+    $match.gist.say;
+    $modules.gist.say;
+
+    unless $table {
+	    $table = $modules.map({ "    { .head }: { .tail }" }).join(",\n");
+	    $table.gist.say;
+    }
+
+    if $match {
+	    $meta.substr-rw($match.from, $match.to - $match.from) = qq«    "provides": \{\n{ $table }\n    \}»;
+	    $file.say;
+    } else {
+	    die 'Could not find "provides" section in META6.json! Aborting.';
+    }
     $file.IO.rename("{ $file }.bak");
     my $fh = $file.IO.open(:w);
     $fh.printf: $meta;
@@ -425,24 +444,29 @@ sub compute-module-dependencies (
 )
 	is export
 {
-  my @build-exclude    = getConfigEntry('build-exclude');
-  my @build-additional = getConfigEntry('build-additional');
+  # cw: The .grep has to be performed AGAIN...why?
+  my @build-exclude    = getConfigEntry('build-exclude').grep( *.chars );
+  my @build-additional = getConfigEntry('build-additional').grep( *.chars );
 
   say "BE: { @build-exclude }";
-  my @modules = ( |@files, |@build-additional )
-    .map( *.path )
-    .map({
-      my ($u, $m) = $_ xx 2;
-      for getLibDirs().split(',') -> $d is copy {
-        $d ~= '/' unless $d.ends-with('/');
-        $m .= subst($d, '');
-      }
-      my $a = [
-        $u,
-        $m.subst('.pm6', '').split('/').Array.join('::')
-      ];
-      $a;
-    });
+
+  my @modules = @files;
+  @modules.append: @build-additional.map( *.IO ) if +@build-additional;
+
+  say "M: { @modules }";
+
+  @modules = @modules.map({
+    my ($u, $m) = .path xx 2;
+    for getLibDirs().split(',') -> $d is copy {
+      $d ~= '/' unless $d.ends-with('/');
+      $m .= subst($d, '');
+    }
+    my $a = [
+      $u,
+      $m.subst('.pm6', '').split('/').Array.join('::')
+    ];
+    $a;
+  });
 
   my %nodes;
   my $item-id = 0;
@@ -594,10 +618,8 @@ sub compute-module-dependencies (
     say $list;
   }
 
-  write-meta-file(
-    $meta-file,
-    @return-array.map({ ( "\"{ .<name> }\"", "\"{ .<filename> }\"" ) }).cache
-  ) if $meta-file;
+  my $module-table = @return-array.map({ ( "\"{ .<name> }\"", "\"{ .<filename> }\"" ) }).cache;
+  write-meta-file( $meta-file, $module-table) if $meta-file;
 
   my $r = HashArray.new( hash => %nodes, array => @return-array );
 

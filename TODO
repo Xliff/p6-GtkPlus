@@ -439,6 +439,8 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 
 - Consider Pulse Audio bindings -- /usr/include/pulse
 
+- GLibTop...although the documents SUCK!
+
 - Extract all non-GLib functions into a project explicitly for the purpose of implementing the MethodMaker pattern. This shall include:
   - All non-GLib specific functions from GLib::Raw::Subs and all other ::Raw::Sub CompUnits from the entire suite
   - All non-GLib structures from GLib::Raw::Structs and all other ::Raw::Struct CompUnits from the entire suite

@@ -18,6 +18,7 @@ our subset GtkScrolledWindowAncestry is export
 our constant ScrolledWindowAncestry is export = GtkScrolledWindowAncestry;
 
 class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
+
   also does GTK::Roles::Signals::ScrolledWindow;
 
   has GtkScrolledWindow $!sw is implementor;
@@ -45,7 +46,7 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
   { $!sw }
 
   method setScrolledWindow ($scrolled) {
-    self.setGtkScrolledWindow($scrolled);
+    self.setGtkScrolledWindow($scrolled) if $scrolled;
   }
 
   method setGtkScrolledWindow (GtkScrolledWindowAncestry $_) {
@@ -403,6 +404,9 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
     is also<set-policy>
   { * }
 
+  multi method set_policy ( :auto(:$automatic) is required where *.so ) {
+    samewith(GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
+  }
   multi method set_policy (@policies) {
     samewith( |@policies );
   }

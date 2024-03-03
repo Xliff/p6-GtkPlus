@@ -38,6 +38,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
   has $!window-class;
   has $!application-window-class;
   has $!window-flags;
+  has $!window-title;
 
   submethod BUILD(
     :$app,
@@ -47,6 +48,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     :$height                       = 200,
     :window_type(:$window-type)   = 'application',
     :$window,
+    :$window-title                = Str,
     :$window-flags                = GTK_WINDOW_TOPLEVEL,
     :$application-window-class    = GTK::ApplicationWindow,
     :$window-class                = GTK::Window
@@ -62,6 +64,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     $!window-class               = $window-class;
     $!application-window-class   = $application-window-class;
     $!window-flags               = $window-flags;
+    $!window-title               = $window-title if $window-title;
 
     $!window = $window if $window;
 
@@ -100,6 +103,8 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
 
       unless $window {
         $!window = do given $!wtype {
+          when 'none' { }
+
           when 'application' {
             say "Using application window of type {
                  $!application-window-class.^name }...";
@@ -112,7 +117,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
             my $type = $!window-flags;
 
             $!window-class.new(
-              :$!title,
+              :$!window-title,
               :$!width,
               :$!height
               :$type
@@ -136,7 +141,7 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
         }) unless $!wtype eq 'custom';
       } else {
         warn "Application window is undefined! Type was intended to be '{
-              $!wtype }'"
+              $!wtype }'" unless $!wtype eq 'none';
       }
 
       $!init.keep;
@@ -175,10 +180,11 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     $o;
   }
   multi method new(
-    Str :$title   = 'org.genex.application',
-    Int :$flags   = 0,
-    Int :$width   = 200,
-    Int :$height  = 200,
+    Str :title(:$name)                = 'org.genex.application',
+    Str :window_title(:$window-title) = Str,
+    Int :$flags                       = 0,
+    Int :$width                       = 200,
+    Int :$height                      = 200,
     :$pod,
     :$ui,
     :$window-type,
@@ -195,19 +201,19 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     GTK::Application.init;
 
     # Use raw GTK calls here since the object model will be used by the callers.
-    my $app = gtk_application_new($title, $f);
+    my $app = gtk_application_new($name, $f);
 
     return Nil unless $app;
 
     self.bless(
       :$app,
-      :$title,
       :flags($f),
       :width($w),
       :height($h)
       :$pod,
       :$ui,
       :$window,
+      :$window-title,
       :$window-type,
       :$window_type,
       :$window-flags,

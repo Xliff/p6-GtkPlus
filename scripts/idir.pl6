@@ -51,10 +51,16 @@ multi sub MAIN (
 	die 'Cannot use --avail and --completed (or their aliases) at the same time!'
 		if $avail && $completed;
 
-	my @f = find(
-		dir  => 'lib',
+	my %find-opts = (
+		dir => 'lib',
 		name => *.ends-with('.pm6')
-	);
+        );
+     	%find-opts<exclude> = *.absolute.contains(%config<idir-exclude>)
+		if %config<idir-exclude>;
+
+	my @f = find( |%find-opts );
+
+	my @extensions = ( '.h', |%config<extension> ).grep( *.defined );
 
 	my @done = do gather for @f {
 		next unless .defined;
@@ -64,10 +70,15 @@ multi sub MAIN (
 					  .grep( *.starts-with("###") );
 
 		next unless $s;
-
+		
 		$s .= map({
-			.subst("### ", '')
-			.subst('.h', '')
+			my $f = $_;
+			$f = $f.subst("### ", '');
+			for @extensions -> $e is copy {
+				$e //= '';
+				$f = $f.subst($e.trim, '');
+			}
+			$f;
 		});
 
 		take $_ for $s[];
@@ -75,6 +86,7 @@ multi sub MAIN (
 
 	my @exclude = ($exclude // '').split(',').grep( *.chars );
 
+	my ($mf, $i) = (@*files.elems, 1);
 	FILE: for @*files[] -> $n {
 
 		if $only {
@@ -99,17 +111,22 @@ multi sub MAIN (
 
 		next unless $n.defined;
 		next if     $n.contains('private');
-		next unless $n.ends-with('.h');
+		
+		if @extensions && +@extensions {
+			next unless $n.ends-with( @extensions.any );
+		}
+
 		next if     [&&]( +@exclude, $n.contains( @exclude.any ) );
 
 		my $colorize = @done.first({
-			.ends-with( $n.extension('').basename )
+			
+			.lc.ends-with( $n.extension('').basename.lc )
 		}, :k).defined;
 
 		next if $avail && $colorize;
 
 		say [~](
-			$num      ?? ($++).succ ~ ') ' !! '',
+			$num      ?? ($i++).fmt("\%0{ $mf.chars }d") ~ ') ' !! '',
 			$colorize ?? t.green           !! '',
 			$n.&list-file,
 			$colorize ?? t.text-reset      !! ''

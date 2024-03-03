@@ -15,7 +15,7 @@ my $a = GTK::Application.new(
   :height(400)
 );
 
-$a.activate.tap({
+$a.activate.tap(-> *@a {
   my $t = GTK::TextView.new();
   my $v = GTK::Box.new-vbox;
   my $f = GTK::Frame.new(' TextView ');
@@ -31,16 +31,16 @@ $a.activate.tap({
   $f.add($t);
   $v.add($_) for $f, $tb, $bb;
 
-  $bb.clicked.tap({
+  $bb.clicked.tap( SUB {
     $t.buffer.append("Every good boy deserves fudge!\n".encode);
   });
-  $tb.clicked.tap({
+  $tb.clicked.tap( SUB {
     $t.buffer.append(qq:to/T/);
 Now is the time for all good men to come to the aid of their country!
 T
   });
 
-  $a.window.destroy-signal.tap({
+  $a.window.destroy-signal.tap( SUB {
     say $t.text;
   });
 

@@ -9,13 +9,15 @@ use Dependency::Sort;
 constant DEFAULT_MAX_THREADS = %*ENV<P6_GLIB_CONCURRENCY_LEVEL> //
                                $*KERNEL.cpu-cores;
 
-my (%nodes, @threads);
+my ($nodes, @threads);
 
 sub space($a) {
   ' ' x ($a.chars % 8);
 }
 
 my atomicint $c = 1;
+
+my ($LOG, $runningLog);
 
 sub MAIN (
   :$force,                                          #= Force dependency generation
@@ -33,15 +35,45 @@ sub MAIN (
 
   my $*rakast = $rakuast;
 
-  sub writeLog {
-    if $*name && $log && $no-save.not {
-      'stats'.IO.add($*name).spurt($*LOG);
-      # Also write to the historical default for error checking purposes!
-      $*CWD.add(
-        ($log ~~ Bool && $log) ?? 'LastBuildResults' !! $log
-      ).spurt($*LOG);
-    }
-  }
+  my ($*I, $start, $idx) = (0, DateTime.now, 0);
+
+  $runningLog = 'ParallelBuildResults'.IO.open(:w);
+
+  signal($_).tap({ exit }) for SIGINT, SIGTERM;
+
+  my @files = get-module-files.sort( *.modified );
+
+  my ($nodes, @others) = |compute-module-dependencies(@files).map( |* );
+
+  my $build-count = $nodes.elems;
+  my $*ERROR      = False;
+  my $*SKIP       = $start-at ??
+    ( $start-at.Int ~~ Failure ??
+      do {
+        my $i = $nodes.first($start-at, :k);
+        unless $i {
+          my @c = $nodes.map({ $_ => levenshtein($_, $start-at).abs })
+                        .sort( *.value );
+          my $cm = @c[0] .key;
+
+          die "Could not find module '$start-at' did you mean '{$cm}'!"
+            unless $i;
+        }
+        #$i.say;
+        $i;
+      }
+      !!
+      $start-at
+    )
+    !!
+    0;
+
+  my $remaining = $nodes.elems - $*SKIP;
+
+  output(
+    "Parallel build started for Raku { $*RAKU.compiler.version } on MoarVM {
+     $*VM.version }"
+  );
 
   {
     my $*name;
@@ -52,52 +84,17 @@ sub MAIN (
       @threads .= grep({ .status ~~ Planned });
     }
 
-    signal($_).tap({ writeLog; exit }) for SIGINT, SIGTERM;
+    WHILE: while $nodes.elems && $*ERROR.not {
+      my $node = $nodes.shift;
+      my $n    = $node<name>;
 
-    my @files = get-module-files.sort( *.modified );
-
-    my $buildList   = |compute-module-dependencies(@files).map( |* );
-    $buildList      = $buildList.cache.Array;
-
-    say "BuildList: { $buildList.gist }";
-
-    my $build-count = $buildList.elems;
-    my $*ERROR      = False;
-    my $*SKIP       = $start-at ??
-      ( $start-at.Int ~~ Failure ??
-        do {
-          my $i = $buildList.first($start-at, :k);
-          unless $i {
-            my @c = $buildList.map({ $_ => levenshtein($_, $start-at).abs })
-                              .sort( *.value );
-            my $cm = @c[0] .key;
-
-            die "Could not find module '$start-at' did you mean '{$cm}'!"
-              unless $i;
-          }
-          $i.say;
-          $i;
-        }
-        !!
-        $start-at
-      )
-      !!
-      0;
-    my $remaining = $buildList.elems - $*SKIP;
-
-    my ($*I, $*LOG, $start, $idx) = (0, '', DateTime.now, 0);
-    output(
-      "Parallel build started for Raku { $*RAKU.compiler.version } on MoarVM {
-       $*VM.version }"
-    );
-
-    say "B: { $buildList.gist }";
-
-    while +$buildList && $*ERROR.not {
-      my $n = $buildList.shift;
+      if $n.contains('::Deprecated::') {
+        $c⚛++;
+        next WHILE
+      }
 
       # Wait out jobs until the next set of dependencies are cleared.
-      while %nodes{$n}<edges> && @threads.elems {
+      while $node<edges> && @threads.elems {
         await Promise.anyof(@threads);
         @threads .= grep({ .status ~~ Planned });
         say "W: »»»»»»»»»»»»»» { @threads.elems }";
@@ -105,11 +102,11 @@ sub MAIN (
 
       # If no more compile jobs and still dependencies, then something is
       # very wrong!
-      if %nodes{$n} && %nodes{$n}<edges>.elems && !@threads {
-        $buildList.unshift: $_ for %nodes{$n}<edges>[];
-        %nodes{$n}<recompiles>++;
-        my $remaining-nodes = %nodes{$n}<edges>.join(', ');
-        if (%nodes{$n}<recompiles> // 0) < 5 {
+      if $node && $node<edges>.elems && !@threads {
+        $nodes.unshift: $_ for $node<edges>[];
+        $node<recompiles>++;
+        my $remaining-nodes = $node<edges>.join(', ');
+        if ($node<recompiles> // 0) < 5 {
           say "Attempting to recompile missed dependencies for $n:\n{
                 $remaining-nodes }";
         } else {
@@ -120,8 +117,9 @@ sub MAIN (
       }
 
       # Start threads until we have a blocker...or we run out of threads.
-      if !%nodes{$n} || %nodes{$n}<edges>.elems.not {
-        say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 } R: { --$remaining }";
+      if !$node || $node<edges>.elems.not {
+        say "A ({ $n }): »»»»»»»»»»»»»» { @threads.elems + 1 } R: {
+             --$remaining }";
         my $t = start { run-compile($n, $t, $build-count) }
         @threads.push: $t;
       }
@@ -154,11 +152,10 @@ sub MAIN (
       }
       $*name = getName;
     }
-
-    LEAVE writeLog;
   }
 }
 
+my $ERROR;
 sub run-compile ($module, $thread, $num = 0) {
   if ++$*I > $*SKIP {
     my $cs = DateTime.now;
@@ -169,30 +166,33 @@ sub run-compile ($module, $thread, $num = 0) {
     my $proc = run "./{ $exec }", '-e',  $cmd, :out, :err;
     #my $proc = run "./p6gtkexec", '-e',  "use $module", :out, :err;
 
-    if $proc.exitcode {
-      say "ERROR!\n{ $proc.err.slurp }";
-      .break for @threads;
-      exit 1;
+    unless $ERROR {
+      output(
+        $module,
+        $num,
+        $proc.out.slurp( :close )                          ~ "\n" ~
+        $proc.err.slurp( :close )                          ~ "\n" ~
+        "{ $module } compile time: { DateTime.now - $cs }"
+      );
     }
 
-    output(
-      $module,
-      $num,
-      $proc.out.slurp( :close )                          ~ "\n" ~
-      $proc.err.slurp( :close )                          ~ "\n" ~
-      "{ $module } compile time: { DateTime.now - $cs }"
-    ) if $*ERROR.not or $proc.exitcode;
+    if $proc.exitcode {
+      $ERROR = True;
+      .break for @threads;
+      await Promise.allof(@threads);
+    }
   }
 
-  if %nodes{$module} {
+
+  if $nodes{$module} {
     #say "Checking { $module }...";
-    for %nodes{$module}<kids>[] {
+    for $nodes{$module}<kids>[] {
       # Mute all until we are sure there are no more Nils!
       quietly {
         next unless [&&](
           $_,
-          %nodes{$_},
-          %nodes{$_}<edges>:exists
+          $nodes{$_},
+          $nodes{$_}<edges>:exists
         );
         prune($_, $module);
       }
@@ -200,18 +200,20 @@ sub run-compile ($module, $thread, $num = 0) {
   }
 }
 
-my $lock = Lock.new;
+my @locks = Lock.new xx 2;
 multi sub output ($data) {
-  $*LOG ~= "\n";
-  ($*LOG ~= $data).say;
-  $*LOG ~= "\n";
+  @locks.head.protect: {
+    my $saying = "\n{ $data }\n";
+
+    .say($saying) for $*OUT, $runningLog;
+  };
 }
 
-multi sub output ($module, $n, $data) {
-  $lock.protect({
-    say ($*LOG ~= " === {$module} ({$c⚛++}/{$n}) === ") if $module;
+multi sub output ($module, $n, $data is copy) {
+  @locks.tail.protect: {
+    $data = " === {$module} ({$c⚛++}/{$n}) === \n{ $data }" if $module;
     output($data);
-  });
+  };
 }
 
 
@@ -223,6 +225,6 @@ sub prune ($_, $module) {
   %locks{$_}.protect({
     # Prunning should be behind a lock as well!
     #say "Pruning {$node}...";
-    %nodes{$_}<edges> .= grep({ $_ ne $module });
+    $nodes{$_}<edges> .= grep({ $_ ne $module });
   });
 }

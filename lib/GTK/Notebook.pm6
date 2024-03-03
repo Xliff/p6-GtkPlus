@@ -53,7 +53,7 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
     self.setGtkNotebook($notebook) if $notebook;
   }
 
-  method setGtkNotebook (GtkNotebookAncestry $_) {
+  method setGtkNotebook (GtkNotebookAncestry $_) is also<NotebookAncestry> {
     my $to-parent;
 
     $!n = do {

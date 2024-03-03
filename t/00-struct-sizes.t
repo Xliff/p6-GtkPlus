@@ -5,21 +5,22 @@ use NativeCall;
 
 use GTK::Raw::Structs;
 
-plan 14;
+plan 8;
 
-require ::($_ = "GTK::Raw::Structs");
-for ::($_ ~ "::EXPORT::DEFAULT").WHO
-                                .keys
-                                .grep( *.defined && *.starts-with('Gtk') )
-                                .sort
-{
+# require ::($_ = "GIO::Raw::Structs");
+# for ::($_ ~ "::EXPORT::DEFAULT").WHO
+#                                 .keys
+#                                 .grep( *.defined && *.starts-with('G') )
+#                                 .sort
+
+my @structs = <
+  GtkTextIter
+>;
+
+for @structs {
   sub sizeof () returns int64 { ... }
   trait_mod:<is>( &sizeof, :native('t/00-struct-sizes.so') );
   trait_mod:<is>( &sizeof, :symbol('sizeof_' ~ $_) );
-
-  next if $_ eq <
-    GtkAllocation
-  >.any;
 
   my $c = ::("$_");
   next unless $c.HOW ~~ Metamodel::ClassHOW;

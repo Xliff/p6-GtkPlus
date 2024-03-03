@@ -169,6 +169,7 @@ sub MAIN (
   my $contents = $fn.IO.open.slurp-rest;
 
   my ($out-file, $out-raw-file, $item);
+  $lib = %config<library> // %config<lib>;
   if $files {
     $item     = $filename.split('.').head.split('-').tail.tc;
     $lib      = $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;
@@ -180,7 +181,7 @@ sub MAIN (
     $out-raw-file = $head.add($out-file).open(:w);
     $out-file     = $head.parent.add($out-file).open(:w);
   }
-  $lib = %config<library> // %config<lib> // 'gtk' unless $lib;
+  $lib = 'gtk' unless $lib;
 
   # cw: Remove all struct definitions;
   $contents ~~ m:g/<struct>/;

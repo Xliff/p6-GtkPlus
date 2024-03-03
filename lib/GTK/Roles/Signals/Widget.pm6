@@ -9,16 +9,19 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   has %!signals-widget;
 
   method connect-widget-event (
-    $obj,
-    $signal,
-    &handler?
+     $obj,
+     $signal,
+     &handler?,
+    :$raw       = False
   ) {
     my $hid;
     %!signals-widget{$signal} //= do {
       my $s = Supplier.new;
       $hid = g-connect-widget-event($obj, $signal,
-        -> $, $e, $ud --> uint32 {
+        -> $, $e is copy, $ud --> uint32 {
           CATCH { default { note($_) } }
+
+          $e = GDK::Event.new($e) unless $raw;
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);

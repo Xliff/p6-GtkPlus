@@ -87,6 +87,21 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     $textview ??self.bless(:$textview) !! Nil;
   }
 
+  multi method new (
+    :$text      is required,
+    :$wrap-mode               = GTK_WRAP_WORD
+  ) {
+    my $o = self.new_with_buffer(
+      do {
+        my $b = GTK::TextBuffer.new;
+        $b.text = $text;
+        $b;
+      }
+    );
+    $o.wrap-mode = $wrap-mode;
+    $o;
+  }
+
   method new_with_buffer (GtkTextBuffer() $buffer)
     is also<new-with-buffer>
   {

@@ -34,7 +34,7 @@ class GTK::Bin is GTK::Container {
     >
   { $!bin }
 
-  method setBin (GtkBinAncestry $_) {
+  method setGtkBin (GtkBinAncestry $_) is also<setBin> {
     return unless $_;
 
     my $to-parent;
@@ -52,7 +52,7 @@ class GTK::Bin is GTK::Container {
 
     say "BIN: { $!bin // 'NIL' }";
     say "BIN-TP: { $to-parent // 'NIL' }";
-    self.setContainer($to-parent);
+    self.setGtkContainer($to-parent);
   }
 
   method new (GtkBinAncestry $bin, :$ref = True) {

@@ -6,6 +6,7 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::Context;
 use Pango::Layout;
+use Pango::FontDescription;
 
 use GLib::Value;
 
@@ -51,7 +52,7 @@ class GTK::Widget:ver<3.0.1146> {
   my ($t, $n);
 
   submethod BUILD (:$widget) {
-    self.setWidget($widget) if $widget
+    self.setGtkWidget($widget) if $widget
   }
 
   # Check all widgets to insure that %!signals is left for THIS object
@@ -69,7 +70,7 @@ class GTK::Widget:ver<3.0.1146> {
     self.disconnect-all($_) for %!signals, %!signals-widget
   }
 
-  method setWidget (GtkWidgetAncestry $_) is also<setGtkWidget> {
+  method setGtkWidget (GtkWidgetAncestry $_) is also<setWidget> {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
     $!w = do {
@@ -1487,10 +1488,42 @@ class GTK::Widget:ver<3.0.1146> {
     gtk_widget_override_background_color($!w, $s, $color);
   }
 
-  method override_font (PangoFontDescription() $font)
-    is also<override-font>
+  method override_font ($font)
+    is also<
+      override-font
+      set-font
+      set_font
+    >
   {
-    gtk_widget_override_font($!w, $font);
+    my $fd = do given $font {
+      when .^can('PangoFontDescription') && $_ !~~ PangoFontDescription {
+        .PangoFontDescription
+      }
+
+      when .^can('Str') && $_ !~~ Str {
+        $_ = .Str;
+        proceed
+      }
+
+      when Str {
+        Pango::FontDescription.new_from_string($_)
+      }
+
+      when PangoFontDescription { $_ }
+
+      default {
+        say "Cannot use a { .^name } as a font override!";
+        return Nil;
+      }
+    }
+
+    # cw: The above shenanigans are for the ability to return a
+    #     Pango::FontDefinition object. The real call logic is below
+    my $ufd = $fd;
+    $ufd .= PangoFontDescription if $ufd ~~ Pango::FontDescription;
+
+    gtk_widget_override_font($!w, $ufd);
+    $fd;
   }
 
   method trigger_tooltip_query is also<trigger-tooltip-query> {
@@ -2546,6 +2579,12 @@ class GTK::Widget:ver<3.0.1146> {
     is also<unstable-get-type>
   {
     unstable_get_type(::?CLASS.^name, &sub, $n, $t);
+  }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_widget_get_type, $n, $t );
   }
 
 }

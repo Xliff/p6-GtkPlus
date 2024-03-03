@@ -27,12 +27,15 @@ class GTK::TextIter:ver<3.0.1146> {
 
   has GtkTextIter $!ti is implementor;
 
-  submethod BUILD(:$textiter) {
-    $!ti = $textiter;
+  submethod BUILD ( :$textiter ) {
+    $!ti = $textiter if $textiter;
   }
 
   method GTK::Raw::Structs::GtkTextIter
-    is also<TextIter>
+    is also<
+      TextIter
+      GtkTextIter
+    >
   { $!ti }
 
   multi method new (GtkTextIter $textiter) {
@@ -42,10 +45,8 @@ class GTK::TextIter:ver<3.0.1146> {
   }
   multi method new {
     my $textiter = GtkTextIter.new;
-    # On the unlikely chance that Raku can't allocate...
-    return unless $textiter;
 
-    self.bless(:$textiter);
+    $textiter ?? self.bless(:$textiter) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

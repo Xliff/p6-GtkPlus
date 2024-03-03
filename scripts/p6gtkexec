@@ -25,7 +25,7 @@ INCLUDES="\
 -I${P6_GTK_HOME}/P6-Data-Dump-Tree/lib  \
 -I${P6_GTK_HOME}/p6-ICal/lib            \
 -I${P6_GTK_HOME}/p6-GLib/lib            \
--I${P6_GTK_HOME}/p6-ICal-GLib/lib       \
+-I${P6_GTK_HOME}/p6-ICal_GLib/lib       \
 -I${P6_GTK_HOME}/p6-ATK/lib             \
 -I${P6_GTK_HOME}/p6-JSON-GLib/lib       \
 -I${P6_GTK_HOME}/p6-GIR/lib             \
@@ -68,5 +68,5 @@ if [[ -z "${PARALLEL_BUILD}" ]]; then
     ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@"
   fi
 else
-  ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@" 2>&1 | perl -pe 's/^/$$ /'
+  ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@" 
 fi

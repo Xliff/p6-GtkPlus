@@ -1494,3 +1494,9 @@ sub gtk_widget_set_margin_end (GtkWidget $widget, gint $margin)
   is native(gtk)
   is export
 { * }
+
+sub gtk_widget_get_type
+  returns GType
+  is      native(gtk)
+  is      export
+{ * }

@@ -34,10 +34,11 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
         nativecast(GtkDialog, $_);
       }
     }
-    self.setWindow($to-parent);
+    self.setGtkWindow($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkDialog
+    is also<GtkDialog>
   { $!d }
 
   multi method new (DialogAncestry $dialog, :$ref = True) {
@@ -58,19 +59,18 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   { * }
 
   multi method new_with_buttons(
-    Str()       $title,
-    GtkWindow() $parent,
-    Int()       $flags,          # GtkDialogFlags $flags
+    Str()        $title,
+    GtkWindow() :$parent = GtkWindow,
+    Int()       :$flags  = GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,
     *%buttons
   ) {
-    samewith($title, $parent, $flags, %buttons.pairs.Array);
+    samewith($title, %buttons.pairs.Array, :$parent, :$flags);
   }
-
   multi method new_with_buttons (
-    Str()       $title,
-    GtkWindow() $parent,
-    Int()       $flags,          # GtkDialogFlags $flags
-    @buttons
+    Str()        $title,
+                 @buttons,
+    Int()       :$flags    = GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,          # GtkDialogFlags $flags
+    GtkWindow() :$parent   = GtkWindow
   ) {
     die '@buttons cannot be empty' unless +@buttons;
     die '\@buttons is not an array of pair objects!'
@@ -164,7 +164,13 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     gtk_dialog_add_button($!d, $button_text, $ri);
   }
 
-  method get_action_area ( :$raw = False ) is also<get-action-area> {
+  method get_action_area ( :$raw = False )
+    is also<
+      get-action-area
+      action_area
+      action-area
+    >
+  {
     my $b = gtk_dialog_get_action_area($!d);
 
     $b ??

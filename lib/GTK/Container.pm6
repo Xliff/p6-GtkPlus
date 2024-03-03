@@ -54,7 +54,7 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
     }
     say "CONTAINER: { $!c }";
     say "CONTAINER-TP: { $to-parent }";
-    self.setWidget($to-parent);
+    self.setGtkWidget($to-parent);
   }
 
   method GTK::Raw::Definition::GtkContainer
@@ -64,7 +64,7 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
     >
   { $!c }
 
-  method new (ContainerAncestry $container, :$ref = True) {
+  method new (GtkContainerAncestry $container, :$ref = True) {
     return Nil unless $container;
 
     my $o = self.bless(:$container);

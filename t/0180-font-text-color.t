@@ -20,7 +20,7 @@ my $a = GTK::Application.new(
   :height(500)
 );
 
-$a.activate.tap({
+$a.activate.tap(SUB {
   # Create controls and dialogs.
   my $t   = GTK::TextView.new;
   my $bb  = GTK::ButtonBox.new-hbox;
@@ -56,12 +56,12 @@ $a.activate.tap({
   $bf.add($bb);
 
   # OK Button Event
-  $ob.clicked.tap({
+  $ob.clicked.tap(SUB {
     say $t.text;
     $a.exit;
   });
   # Font Button Event
-  $fb.clicked.tap({
+  $fb.clicked.tap(SUB {
     my $rc = $fcd.run;
     say "Font Dialog Response: " ~ $rc;
     if $rc == GTK_RESPONSE_OK {
@@ -71,7 +71,7 @@ $a.activate.tap({
     $fcd.hide;
   });
   # Color Button Event
-  $cb.clicked.tap({
+  $cb.clicked.tap(SUB {
     my $rc = $ccd.run;
     say "Color Dialog Response: " ~ $rc;
     if $rc == GTK_RESPONSE_OK {
@@ -99,12 +99,12 @@ $a.activate.tap({
   #
   # Proposed solution:
   my $shutdown-latch = False;
-  $a.window.destroy-signal.tap({
+  $a.window.destroy-signal.tap(SUB {
     # If exited by corner close button.
     $shutdown-latch = True;
     $t.text;
   });
-  $a.shutdown.tap({
+  $a.shutdown.tap(SUB {
     # If exited by OK Button
     unless $shutdown-latch {
       #...
