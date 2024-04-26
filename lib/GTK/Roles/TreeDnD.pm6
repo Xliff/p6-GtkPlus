@@ -9,6 +9,13 @@ use GTK::Raw::Types:ver<3.0.1146>;
 role GTK::Roles::TreeDragSource:ver<3.0.1146>  {
   has GtkTreeDragSource $!ds;
 
+  method !roleInit-GtkTreeDragSource {
+    return if $!ds;
+
+    my \i = findProperImplementor(self.^attributes);
+    $!ds  = cast( GtkTreeDragSource, i.get_value(self) );
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -39,6 +46,13 @@ role GTK::Roles::TreeDragSource:ver<3.0.1146>  {
 
 role GTK::Roles::TreeDragDest:ver<3.0.1146>  {
   has GtkTreeDragDest $!dd;
+
+  method !roleInit-GtkTreeDragDest {
+    return if $!dd;
+
+    my \i = findProperImplementor(self.^attributes);
+    $!dd  = cast( GtkTreeDragDest, i.get_value(self) );
+  }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
