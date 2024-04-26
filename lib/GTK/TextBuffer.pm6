@@ -54,7 +54,7 @@ class GTK::TextBuffer:ver<3.0.1146> {
     $buffer ?? self.bless(:$buffer) !! Nil;
   }
 
-  method !resolve-text-arg($val is copy) {
+  method !resolve-text-arg($val is copy, :$encoding = 'utf8') {
     # First check if object can be coerced, then coerce it to a supported
     # type
     if $val.^can('Buf').elems {
@@ -63,8 +63,8 @@ class GTK::TextBuffer:ver<3.0.1146> {
       $val .= Str;
     }
     do given $val {
-      when Buf { .decode }
-      when Str { $_      }
+      when Buf { .decode($encoding) }
+      when Str { $_                 }
 
       default {
         die qq:to/D/.chomp;
@@ -284,7 +284,7 @@ D
   }
 
   # Type: gchar
-  method text is rw  {
+  method text ( :$encoding = 'utf8' ) is rw  {
     my GLib::Value $gv .= new( G_TYPE_STRING );
     Proxy.new(
       FETCH => sub ($) {
@@ -294,7 +294,7 @@ D
         $gv.string;
       },
       STORE => -> $, $val is copy {
-        $gv.string = self!resolve-text-arg($val);
+        $gv.string = self!resolve-text-arg($val, :$encoding);
         self.prop_set('text', $gv);
       }
     );
@@ -857,8 +857,8 @@ D
   }
 
   # Convenience
-  multi method append (Buf $text) {
-    samewith($text.encode);
+  multi method append (Buf $text, :$encoding = 'utf8') {
+    samewith( $text.decode($encoding) );
   }
   multi method append (
     Str() $text,
@@ -868,8 +868,8 @@ D
   }
 
   # Convenience
-  multi method prepend(Buf $text) {
-    samewith($text.decode);
+  multi method prepend(Buf $text, :$encoding = 'utf8') {
+    samewith( $text.decode($encoding) );
   }
   multi method prepend (
     Str() $text,
@@ -879,15 +879,16 @@ D
   }
 
   multi method insert (
-    GtkTextIter() $iter,
-    Buf $text
+    GtkTextIter()  $iter,
+    Buf            $text,
+                  :$encoding = 'utf8'
   ) {
-    samewith($iter, $text.encode);
+    samewith( $iter, $text.decode($encoding) );
   }
   multi method insert (
     GtkTextIter() $iter,
-    Str() $text,
-    Int() $len = $text.chars      # gint $len
+    Str()         $text,
+    Int()         $len = $text.chars      # gint $len
   ) {
     my gint $l = $len;
 
@@ -898,8 +899,8 @@ D
     is also<insert-at-cursor>
   { * }
 
-  multi method insert_at_cursor (Buf $text) {
-    samewith($text.encode)
+  multi method insert_at_cursor (Buf $text, :$encoding = 'utf8') {
+    samewith( $text.decode($encoding) )
   }
   multi method insert_at_cursor (
     Str() $text,
@@ -925,20 +926,22 @@ D
 
   multi method insert_interractive (
     GtkTextIter() $iter,
-    Buf $text,
-    Int() $default_editable
+    Buf    $text,
+    Int()  $default_editable,
+          :$encoding          = 'utf8'
   ) {
-    my $t = $text.encode;
+    my $t = $text.decode($encoding);
 
     samewith($iter, $t, $t.chars, $default_editable);
   }
   multi method insert_interactive (
-    GtkTextIter() $iter,
-    Str() $text,
-    Int() $len is copy,           # gint $len,
-    Int() $default_editable       # gboolean $default_editable
+    GtkTextIter()  $iter,
+    Str()          $text,
+    Int()          $len is copy,            # gint $len,
+    Int()          $default_editable,       # gboolean $default_editable
+                  :$encoding           = 'utf8'
   ) {
-    $text = self!resolve-text-arg($text);
+    $text = self!resolve-text-arg($text, :$encoding);
     $len //= $text.chars;
     my gint $l = $len;
     my gboolean $de = $default_editable.so.Int;
@@ -951,10 +954,11 @@ D
   { * }
 
   multi method insert_interractive_at_cursor (
-    Buf $text,
-    Int() $default_editable
+    Buf    $text,
+    Int()  $default_editable,
+          :$encoding          = 'utf8'
   ) {
-    my $t = $text.encode;
+    my $t = $text.decode($encoding);
 
     samewith($t, $t.chars, $default_editable);
   }
@@ -964,6 +968,7 @@ D
     Int() $default_editable       # gboolean $default_editable
   ) {
     $len //= $text.chars;
+
     my gint     $l  = $len;
     my gboolean $de = $default_editable.so.Int;
 
@@ -980,26 +985,28 @@ D
   { * }
 
   multi method insert_markup (
-    GtkTextIter() $iter,
-    Buf           $markup
+    GtkTextIter()  $iter,
+    Buf            $markup,
+                  :$encoding = 'utf8'
   ) {
-    my $t = $markup.decode;
-    samewith($iter, $t, $t.chars);
+    my $t = $markup.decode($encoding);
+    samewith($iter, $t);
   }
   multi method insert_markup (
-    GtkTextIter() $iter,
-    Str()         $markup is copy,
-    Int()         $len    =  $markup.chars
+    GtkTextIter()  $iter,
+    Str()          $markup   is copy,
+    Int()          $len               =  $markup.chars,
+                  :$encoding          = 'utf8'
   ) {
     my gint $l = $len;
 
-    $markup = self!resolve-text-arg($markup);
+    $markup = self!resolve-text-arg($markup, :$encoding);
     gtk_text_buffer_insert_markup($!tb, $iter, $markup, $l);
   }
 
   method insert_pixbuf_at_iter (
     GtkTextIter() $iter,
-    GdkPixbuf $pixbuf
+    GdkPixbuf()  $pixbuf
   )
     is also<insert-pixbuf-at-iter>
   {
@@ -1210,7 +1217,7 @@ D
     samewith($name, |self.get-bounds);
   }
   multi method remove_tag_by_name (
-    Str() $name,
+    Str()         $name,
     GtkTextIter() $start,
     GtkTextIter() $end
   ) {
@@ -1224,12 +1231,13 @@ D
   }
 
   method set_text (
-    $text is copy,
-    Int $len? is copy
+           $text       is copy,
+    Int()  $len?       is copy,
+          :$encoding            = 'utf8'
   )
     is also<set-text>
   {
-    $text = self!resolve-text-arg($text);
+    $text = self!resolve-text-arg($text, :$encoding);
     $len //= $text.chars;
     my gint $l = $len;
 
