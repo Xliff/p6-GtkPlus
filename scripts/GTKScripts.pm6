@@ -1,77 +1,15 @@
 use v6.c;
 
-use Config::INI;
+use CompUnit::Util :re-export;
+
+use ScriptConfig;
 use File::Find;
 use Dependency::Sort;
 use HashArray;
 
 unit package GTKScripts;
 
-our $CONFIG-NAME      is export;
-our %config           is export;
 our $GTK-SCRIPT-DEBUG is export;
-
-my %config-defaults = (
-  prefix              => '/',
-  libdirs             => 'lib',
-  exec                => 'p6gtkexec',
-  excluded-namespaces => ''
-);
-
-sub getConfigEntry ($k) is export {
-  %config{$k} // %config-defaults{$k} // ''
-}
-
-sub getLibDirs is export {
-  getConfigEntry('libdirs');
-}
-
-sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
-  return Nil unless $filename && $filename.IO.r;
-
-  %config = Config::INI::parse_file($filename)<_>;
-
-  my &searcher = sub ($_) {
-    .defined && $_ ?? .contains('-' | '_') !! False
-  };
-
-  my @keys = %config.keys.grep(&searcher);
-  for @keys {
-    my $nk = $_;
-    $nk ~~ tr<_-><-_>;
-    %config{$nk} := %config{$_};
-  }
-
-  %config{ .key } //= .value for %config-defaults.pairs;
-
-  # Handle comma separated
-  %config{$_} = (%config{$_} // '').split(',').grep( *.chars )
-    if %config{$_}:exists
-  for <
-    backups
-    modules
-    build-exclude
-    build-additional
-    include-exclude
-    include-include
-  >;
-
-  if $program {
-    # cw: This violates all sorts of directives against the space/time
-    #     continuum.
-    #
-    #     WICKED!
-    for %config.keys.grep( *.starts-with("{ $program }-") ) {
-      my $var = .split('-').tail;
-      OUTER::{$var} = %config{$_}
-    }
-  }
-
-  # Handle aliases.
-  %config<include-directory> //= %config<include-dir>;
-
-  %config;
-}
 
 # cw: Thank you SO MUCH!
 # https://stackoverflow.com/questions/47124405/parsing-a-possibly-nested-braced-item-using-a-grammar
@@ -454,6 +392,7 @@ sub compute-module-dependencies (
   @modules.append: @build-additional.map( *.IO ) if +@build-additional;
 
   say "M: { @modules }";
+  say "S: { @modules.grep( *.contains('Sort') ).gist }";
 
   @modules = @modules.map({
     my ($u, $m) = .path xx 2;
@@ -471,7 +410,10 @@ sub compute-module-dependencies (
   my %nodes;
   my $item-id = 0;
   for @modules {
-    next if +@build-exclude && .[1].starts-with( @build-exclude.any );
+    if +@build-exclude && .[1].starts-with( @build-exclude.any ) {
+      say "Excluding { .[1] }...";
+      next;
+    }
 
     %nodes{ .[1] } = (
       itemid   => $item-id++,
@@ -629,19 +571,7 @@ sub compute-module-dependencies (
 INIT {
   unless %*ENV<GTK_SCRIPTS_NO_INIT> {
     $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
-    $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
-                   $*ENV<X11_PROJECT_FILE> //
-                   do {
-                     '.'.IO.dir.grep({
-                        .starts-with('.')             &&
-                        .ends-with('-project')        &&
-                        .starts-with('.finished').not
-                     }).head.absolute
-                   }
-
-   die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
-     unless $CONFIG-NAME.IO.e;
-
-    parse-file;
   }
 }
+
+re-export-everything('ScriptConfig');
