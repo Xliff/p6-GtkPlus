@@ -1,5 +1,7 @@
 use v6.c;
 
+use GLib::Raw::Traits;
+
 use GTK::CheckMenuItem:ver<3.0.1146>;
 use GTK::Menu:ver<3.0.1146>;
 use GTK::MenuBar:ver<3.0.1146>;
@@ -9,6 +11,8 @@ use GTK::RadioMenuItem:ver<3.0.1146>;
 use GTK::SeparatorMenuItem:ver<3.0.1146>;
 
 class GTK::Utils::MenuBuilder:ver<3.0.1146> {
+  also does NotInManifest;
+  
   has $!menu;
   has $!items;
 

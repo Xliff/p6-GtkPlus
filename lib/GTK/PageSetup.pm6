@@ -8,9 +8,13 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::PaperSize:ver<3.0.1146>;
 
+use GLib::Roles::Implementor;
+
 # BOXED TYPE
 
 class GTK::PageSetup:ver<3.0.1146> {
+  also does GLib::Roles::Implementor;
+
   has GtkPageSetup $!ps is implementor;
 
   submethod BUILD(:$page) {

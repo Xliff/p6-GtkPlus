@@ -19,10 +19,12 @@ use GTK::TextMark:ver<3.0.1146>;
 use GTK::TextTag:ver<3.0.1146>;
 
 use GLib::Roles::ListData;
+use GLib::Roles::Implementor;
 
 # BOXED TYPE
 
 class GTK::TextIter:ver<3.0.1146> {
+  also does GLib::Roles::Implementor;
   also does GTK::Roles::Types;
 
   has GtkTextIter $!ti is implementor;

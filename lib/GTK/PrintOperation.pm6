@@ -10,19 +10,37 @@ use GLib::Value;
 use GTK::PageSetup:ver<3.0.1146>;
 use GTK::PrintSettings:ver<3.0.1146>;
 
-use GLib::Roles::Properties;
-use GTK::Roles::Signals::Generic:ver<3.0.1146>;
+use GLib::Roles::Object;
 use GTK::Roles::Signals::PrintOperation:ver<3.0.1146>;
 
+our subset GtkPrintOperationAncestry is export of Mu
+  where GtkPrintOperation | GObject;
+
 class GTK::PrintOperation:ver<3.0.1146> {
-  also does GLib::Roles::Properties;
-  also does GTK::Roles::Signals::Generic;
+  also does GLib::Roles::Object;
   also does GTK::Roles::Signals::PrintOperation;
 
   has GtkPrintOperation $!po is implementor;
 
-  submethod BUILD(:$op) {
-    self!setObject($!po = $op);               # GLib::Roles::Properties
+  submethod BUILD ( :$gtk-print-op ) {
+    self.setGtkPrintOperation($gtk-print-op) if $gtk-print-op
+  }
+
+  method setGtkPrintOperation (GtkPrintOperationAncestry $_) {
+    my $to-parent;
+
+    $!po = do {
+      when GtkPrintOperation {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkPrintOperation, $_);
+      }
+    }
+    self!setObject($to-parent);
   }
 
   submethod DESTROY {
@@ -36,13 +54,17 @@ class GTK::PrintOperation:ver<3.0.1146> {
     >
   { $!po }
 
-  multi method new (GtkPrintOperation $op) {
-    $op ?? self.bless(:$op) !! Nil;
+  multi method new ($gtk-print-op where * ~~ GtkPrintOperationAncestry , :$ref = True) {
+    return unless $gtk-print-op;
+
+    my $o = self.bless( :$gtk-print-op );
+    $o.ref if $ref;
+    $o;
   }
   multi method new {
-    my $op = gtk_print_operation_new();
+    my $gtk-print-op = gtk_print_operation_new();
 
-    $op ?? self.bless(:$op) !! Nil;
+    $gtk-print-op ?? self.bless( :$gtk-print-op ) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

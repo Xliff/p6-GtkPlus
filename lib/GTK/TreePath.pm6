@@ -7,9 +7,13 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::Roles::Types:ver<3.0.1146>;
 
+use GLib::Roles::Implementor;
+
 # BOXED TYPE
 
 class GTK::TreePath:ver<3.0.1146> {
+  also does GLib::Roles::Implementor;
+  
   also does GTK::Roles::Types;
 
   has GtkTreePath $!tp is implementor;

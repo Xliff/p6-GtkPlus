@@ -2,17 +2,24 @@ use v6.c;
 
 use Method::Also;
 
-use GTK::Raw::Types:ver<3.0.1146>;
-
+use GLib::Raw::Definitions;
+use GLib::Raw::Enums;
+use GLib::Raw::Subs;
+use GTK::Raw::Enums;
 use GTK::Raw::WidgetPath:ver<3.0.1146>;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+# use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::GList;
 
 use GLib::Roles::ListData;
+use GLib::Roles::Implementor;
 
 # Opaque struct.
 
 class GTK::WidgetPath:ver<3.0.1146> {
+  also does GLib::Roles::Implementor;
+
   has GtkWidgetPath $!wp is implementor;
 
   submethod BUILD(:$path) {

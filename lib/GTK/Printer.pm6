@@ -10,19 +10,35 @@ use GTK::Raw::Types:ver<3.0.1146>;
 use GLib::Value;
 use GTK::PageSetup:ver<3.0.1146>;
 
-use GLib::Roles::Properties;
-use GTK::Roles::Signals::Generic:ver<3.0.1146>;
-use GTK::Roles::Types:ver<3.0.1146>;
+use GLib::Roles::Object;
+
+our subset GtkPrinterAncestry is export of Mu
+  where GtkPrinter | GObject;
 
 class GTK::Printer:ver<3.0.1146> {
-  also does GLib::Roles::Properties;
-  also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Types;
+  also does GLib::Roles::Object;
 
   has GtkPrinter $!prn is implementor;
 
-  submethod BUILD(:$printer) {
-    self!setObject($!prn = $printer);
+  submethod BUILD ( :$gtk-printer ) {
+    self.setGtkPrinter($gtk-printer) if $gtk-printer
+  }
+
+  method setGtkPrinter (GtkPrinterAncestry $_) {
+    my $to-parent;
+
+    $!prn = do {
+      when GtkPrinter {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkPrinter, $_);
+      }
+    }
+    self!setObject($to-parent);
   }
 
   submethod DESTROY {
@@ -36,19 +52,27 @@ class GTK::Printer:ver<3.0.1146> {
     >
   { $!prn }
 
-  multi method new (GtkPrinter $printer) {
-    $printer ?? self.bless(:$printer) !! Nil;
+  multi method new (
+    $gtk-printer where * ~~ GtkPrinterAncestry,
+
+    :$ref = True
+  ) {
+    return unless $gtk-printer;
+
+    my $o = self.bless( :$gtk-printer );
+    $o.ref if $ref;
+    $o;
   }
   multi method new (
-    Str $name,
+    Str()             $name,
     GtkPrintBackend() $backend,
-    Int() $virtual
+    Int()             $virtual
   ) {
     my gboolean $v = $virtual.so.Int;
 
-    my $printer = gtk_printer_new($name, $backend, $v);
+    my $gtk-printer = gtk_printer_new($name, $backend, $v);
 
-    $printer ?? self.bless(:$printer) !! Nil;
+    $gtk-printer ?? self.bless( :$gtk-printer ) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

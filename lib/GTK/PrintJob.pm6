@@ -11,23 +11,35 @@ use GTK::PageSetup:ver<3.0.1146>;
 use GTK::PrintSettings:ver<3.0.1146>;
 use GTK::Printer:ver<3.0.1146>;
 
-use GLib::Roles::Properties;
-use GTK::Roles::Signals::Generic:ver<3.0.1146>;
-use GTK::Roles::Types:ver<3.0.1146>;
+use GLib::Roles::Object;
+
+our subset GtkPrintJobAncestry is export of Mu
+  where GtkPrintJob | GObject;
 
 class GTK::PrintJob:ver<3.0.1146> {
-  also does GLib::Roles::Properties;
-  also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Types;
+  also does GLib::Roles::Object;
 
   has GtkPrintJob $!prnjob is implementor;
 
-  submethod BUILD(:$job) {
-    self!setObject($!prnjob = $job);
+  submethod BUILD ( :$gtk-print-job ) {
+    self.setGtkPrintJob($gtk-print-job) if $gtk-print-job
   }
 
-  submethod DESTROY {
-    self.disconnect-all($_) for %!signals;
+  method setGtkPrintJob (GtkPrintJobAncestry $_) {
+    my $to-parent;
+
+    $!prnjob = do {
+      when GtkPrintJob {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkPrintJob, $_);
+      }
+    }
+    self!setObject($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkPrintJob
@@ -37,18 +49,35 @@ class GTK::PrintJob:ver<3.0.1146> {
     >
   { $!prnjob }
 
-  multi method new(GtkPrintJob() $job) {
-    $job ?? self.bless(:$job) !! Nil;
+  submethod DESTROY {
+    self.disconnect-all($_) for %!signals;
+  }
+
+  multi method new (
+    $gtk-print-job where * ~~ GtkPrintJobAncestry,
+
+    :$ref = True
+  ) {
+    return unless $gtk-print-job;
+
+    my $o = self.bless( :$gtk-print-job );
+    $o.ref if $ref;
+    $o;
   }
   multi method new (
-    Str() $title,
-    GtkPrinter() $printer,
+    Str()              $title,
+    GtkPrinter()       $printer,
     GtkPrintSettings() $settings,
-    GtkPageSetup() $page_setup
+    GtkPageSetup()     $page_setup
   ) {
-    my $job = gtk_print_job_new($title, $printer, $settings, $page_setup);
+    my $gtk-print-job = gtk_print_job_new(
+      $title,
+      $printer,
+      $settings,
+      $page_setup
+    );
 
-    $job ?? self.bless(:$job) !! Nil;
+    $gtk-print-job ?? self.bless( $gtk-print-job ) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -278,20 +307,28 @@ class GTK::PrintJob:ver<3.0.1146> {
     gtk_print_job_get_page_ranges($!prnjob, $nr);
   }
 
-  method get_printer
+  method get_printer ( :$raw = False )
     is also<
       get-printer
     >
   {
-    gtk_print_job_get_printer($!prnjob);
+    propReturnObject(
+      gtk_print_job_get_printer($!prnjob),
+      $raw,
+      |GTK::Printer.getTypePair
+    );
   }
 
-  method get_settings
+  method get_settings ( :$raw = False )
     is also<
       get-settings
     >
   {
-    gtk_print_job_get_settings($!prnjob);
+    propReturnObject(
+      gtk_print_job_get_settings($!prnjob),
+      $raw,
+      |GTK::PrintSettings.getTypePair
+    );
   }
 
   method get_status
@@ -329,7 +366,7 @@ class GTK::PrintJob:ver<3.0.1146> {
   }
 
   method send (
-    &callback,
+             &callback,
     gpointer $user_data = gpointer,
     GDestroyNotify $dnotify = GDestroyNotify
   ) {
@@ -348,7 +385,7 @@ class GTK::PrintJob:ver<3.0.1146> {
   }
   multi method set_page_ranges (
     Pointer $ranges,
-    Int() $n_ranges
+    Int()   $n_ranges
   ) {
     my gint $nr = $n_ranges;
 
@@ -356,7 +393,7 @@ class GTK::PrintJob:ver<3.0.1146> {
   }
 
   method set_source_fd (
-    Int() $fd,
+    Int()                   $fd,
     CArray[Pointer[GError]] $error = gerror
   )
     is also<set-source-fd>
@@ -369,8 +406,8 @@ class GTK::PrintJob:ver<3.0.1146> {
   }
 
   method set_source_file (
-    Str() $filename,
-    CArray[Pointer[GError]] $error = gerror
+    Str()                   $filename,
+    CArray[Pointer[GError]] $error     = gerror
   )
     is also<set-source-file>
   {

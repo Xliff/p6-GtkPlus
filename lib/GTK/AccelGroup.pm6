@@ -10,28 +10,56 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Roles::StaticClass;
 
+use GLib::Roles::Object;
+
+our subset GtkAccelGroupAncestry is export of Mu
+  where GtkAccelGroup | GObject;
+
 class GTK::AccelGroup:ver<3.0.1146> {
+  also does GLib::Roles::Object;
+
   has GtkAccelGroup $!ag is implementor;
 
-  submethod BUILD(:$group) {
-    $!ag = $group;
+  submethod BUILD ( :$gtk-accel-group ) {
+    self.setGtkAccelGroup($gtk-accel-group) if $gtk-accel-group
+  }
+
+  method setGtkAccelGroup (GtkAccelGroupAncestry $_) {
+    my $to-parent;
+
+    $!ag = do {
+      when GtkAccelGroup {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkAccelGroup, $_);
+      }
+    }
+    self!setObject($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkAccelGroup
     is also<GtkAccelGroup>
   { $!ag }
 
-  multi method new (GtkAccelGroup $group, :$ref = True) {
-    return Nil unless $group;
+  multi method new (
+     $gtk-accel-group where * ~~ GtkAccelGroupAncestry,
 
-    my $o = self.bless(:$group);
+    :$ref = True
+  ) {
+    return unless $gtk-accel-group;
+
+    my $o = self.bless( :$gtk-accel-group );
     $o.ref if $ref;
     $o;
   }
   multi method new {
-    my $group = gtk_accel_group_new();
+    my $gtk-accel-group = gtk_accel_group_new();
 
-    $group ?? self.bless(:$group) !! Nil;
+    $gtk-accel-group ?? self.bless(:$gtk-accel-group) !! Nil;
   }
 
 
@@ -92,25 +120,25 @@ class GTK::AccelGroup:ver<3.0.1146> {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method activate (
-    GQuark $accel_quark,
+    GQuark    $accel_quark,
     GObject() $acceleratable,
-    Int() $accel_key,
-    Int() $accel_mods
+    Int()     $accel_key,
+    Int()     $accel_mods
   ) {
-    my guint $ak = $accel_key;
+    my guint           $ak = $accel_key;
     my GdkModifierType $am = $accel_mods;
 
     so gtk_accel_group_activate($!ag, $accel_quark, $acceleratable, $ak, $am);
   }
 
-  method connect (
-    Int() $accel_key,
-    Int() $accel_mods,
-    Int() $accel_flags,
+  multi method connect (
+    Int()      $accel_key,
+    Int()      $accel_mods,
+    Int()      $accel_flags,
     GClosure() $closure
   ) {
-    my guint $ak = $accel_key;
-    my guint $af = $accel_flags; # GtkAccelFlags
+    my guint           $ak = $accel_key;
+    my guint           $af = $accel_flags; # GtkAccelFlags
     my GdkModifierType $am = $accel_mods;
 
     gtk_accel_group_connect($!ag, $ak, $am, $af, $closure);
@@ -288,11 +316,12 @@ class GTK::Accelerator:ver<3.0.1146> {
   }
   multi method parse_with_keycode (
     Str() $accelerator,
-    $accelerator_key   is rw,
-    $accelerator_codes is rw,
-    $accelerator_mods  is rw
+          $accelerator_key   is rw,
+          $accelerator_codes is rw,
+          $accelerator_mods  is rw
   ) {
     my guint $ak = 0;
+
     my $ac = CArray[CArray[guint]].new;
     $ac[0] = CArray[guint];
     my GdkModifierType $am = 0;
@@ -312,7 +341,7 @@ class GTK::Accelerator:ver<3.0.1146> {
   }
 
   method valid (Int() $keyval, Int() $modifiers) {
-    my guint $k = $keyval;
+    my guint           $k = $keyval;
     my GdkModifierType $m = $modifiers;
 
     so gtk_accelerator_valid($k, $modifiers);
