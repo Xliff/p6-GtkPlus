@@ -67,6 +67,10 @@
   Gtk..., must have a way to convert those names to the proper object name.
   Propose <Project>::Builder::Registry, with static .register method that
   provides pair mapping detected_name => proper_name.
+    - This is now being roled into GLib::Object as the TypeManifest system.
+      all objects register their "implementor => object-name" pairs 
+      into THIS system, not GtkBuilder
+    - GTK::Builder shall be modified to use THIS system!
 + Complete implementation of GTK::Compat::Roles::GFile (now GIO::Roles::GFile!)
    - (Wrapper class is unnecessary as long as a method new is provided)
    - Role can have submethod BUILD, but will be overrided by any implementing
