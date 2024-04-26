@@ -2,35 +2,36 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
 
 unit package GTK::Raw::WidgetPath:ver<3.0.1146>;
 
 sub gtk_widget_path_append_for_widget (
   GtkWidgetPath $path,
-  GtkWidget $widget
+  GtkWidget     $widget
 )
   returns gint
-  is native(gtk)
-  is export
-  { * }
+  is      native(gtk)
+  is      export
+{ * }
 
 sub gtk_widget_path_append_type (GtkWidgetPath $path, GType $type)
   returns gint
-  is native(gtk)
-  is export
-  { * }
+  is      native(gtk)
+  is      export
+{ * }
 
 sub gtk_widget_path_append_with_siblings (
   GtkWidgetPath $path,
   GtkWidgetPath $siblings,
-  guint $sibling_index
+  guint         $sibling_index
 )
   returns gint
-  is native(gtk)
-  is export
-  { * }
+  is      native(gtk)
+  is      export
+{ * }
 
 sub gtk_widget_path_copy (GtkWidgetPath $path)
   returns GtkWidgetPath
