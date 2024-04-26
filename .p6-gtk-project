@@ -2,3 +2,4 @@ prefix=GTK
 modules=GTK::Raw::Types
 backups=backup,bitbucket,google-backup,azure-backupm,hut
 build_exclude=GTKAll,GTKNonWidgets,GTKWidgets
+manifest-blacklist=GTK::Dialog::Raw::
