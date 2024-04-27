@@ -6,7 +6,8 @@ use GLib::Roles::StaticClass;
 
 my %typeManifest;
 
-sub MAIN ( :$prefix = %config<prefix> ) {
+sub MAIN ( :$prefix is copy = %config<prefix>, :$quiet = False ) {
+  $prefix .= subst(/'::' $/, '');
 
   sub outputManifest {
     my $max-key-size = %typeManifest.keys.map( *.chars ).max;
@@ -18,12 +19,23 @@ sub MAIN ( :$prefix = %config<prefix> ) {
       class { $prefix }::TypeManifest does TypeManifest \{
 
         method manifest \{
-          (
+          %(
       {
         %typeManifest.pairs.sort( *.key ).map({
-          "      { .key.fmt("\%-{ $max-key-size }s") } => '{ .value }'"
+          "      { .key.fmt("\%-{ $max-key-size }s") } => '{ .value<obj> }'"
         }).join(",\n")
       }
+          )
+        \}
+
+        method mro {
+          %(
+        {
+           %typeManifest.pairs.sort( *.key ).map({
+            "      { .key.fmt("\%-{ $max-key-size }s") } => [{
+              .value<mro>.map({ "'{ .^name }'" }).join('. ') }]"
+          }).join(",\n")
+        }
           )
         \}
 
@@ -36,18 +48,20 @@ sub MAIN ( :$prefix = %config<prefix> ) {
   die 'BuildList must exist. Please run scripts/dependencies.pl6'
     unless $bl.r;
 
-  my @items = $bl.slurp.lines.grep(sub ($_) {
+  my @items = $bl.slurp.lines.grep(sub ($pi) {
     my $ns =
-      .starts-with("{ $prefix }::")
+      ( $pi.starts-with("{ $prefix }::") || $pi eq $prefix )
       &&
-      .starts-with(
+      $pi.starts-with(
         "{ $prefix }::Raw::"    |
         "{ $prefix }::Roles::"
       ).not;
     return False unless $ns;
 
     if %config<manifest-blacklist> {
-      return False if .starts-with( %config<manifest-blacklist>.any )
+      for %config<manifest-blacklist>[] {
+        return False if $pi.starts-with( $_ )
+      }
     }
     True
   });
@@ -82,8 +96,15 @@ sub MAIN ( :$prefix = %config<prefix> ) {
     my @p = $o.getTypePair.Array;
     @p.head = @p.head.^shortname;
     @p.tail = @p.tail.^name;
-    |@p;
+
+    |(
+      @p.head,
+      %(
+        obj => @p.tail,
+        mro => $o.^mro
+      )
+    );
   }
 
-  outputManifest.say
+  outputManifest.say unless $quiet
 }
