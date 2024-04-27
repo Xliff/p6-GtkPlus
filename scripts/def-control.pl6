@@ -2,6 +2,7 @@ use v6;
 
 use lib 'scripts';
 
+use ScriptConfig;
 use GTKScripts;
 
 sub line ($m) {

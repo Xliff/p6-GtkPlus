@@ -3,6 +3,7 @@ use v6.d;
 
 use lib 'scripts';
 
+use ScriptConfig;
 use GTKScripts;
 
 sub MAIN (:$force, :$all) {

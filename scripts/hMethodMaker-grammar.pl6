@@ -6,6 +6,7 @@ use IO::Capture::Simple;
 
 use lib <. scripts>;
 
+use ScriptConfig;
 use GTKScripts;
 
 my %do_output;
@@ -52,7 +53,7 @@ grammar C-Function-Def {
     [ <postdec>+ % \s* ]?';'';'?
   }
 
-  regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ }
+  regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ | '&' }
   token       n { <[\w _]>+ }
   token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
   token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
@@ -169,7 +170,7 @@ sub MAIN (
   my $contents = $fn.IO.open.slurp-rest;
 
   my ($out-file, $out-raw-file, $item);
-  $lib = %config<library> // %config<lib>;
+  $lib = %config<library> // %config<lib> // '';
   if $files {
     $item     = $filename.split('.').head.split('-').tail.tc;
     $lib      = $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;

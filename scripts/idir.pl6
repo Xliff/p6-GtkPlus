@@ -1,6 +1,7 @@
 #!./p6gtkexec -Iscripts
 use v6;
 
+use ScriptConfig;
 use GTKScripts;
 use File::Find;
 
@@ -22,7 +23,7 @@ proto sub MAIN (|c) {
 	%c<size>    := %c<s>;
 	%c<reverse> := %c<r>;
 
-	my @d = (c<dir> || %config<include-directory>).&rdir;
+	my @d = ( c<dir> || %config<include-directory> ).&rdir;
 	if %c<reverse> {
 		%c<size> ?? @d .= sort( - *.s )
 		         !! @d .= sort({ $^b.basename cmp $^a.basename })
@@ -60,18 +61,23 @@ multi sub MAIN (
 
 	my @f = find( |%find-opts );
 
+	my @t = do gather for @f.grep(
+		*.basename.ends-with('Traps.pm6')
+	).reverse.kv -> $k, $v {
+		@f.splice($k, 1);
+		take $v;
+	}
+
 	my @extensions = ( '.h', |%config<extension> ).grep( *.defined );
 
-	my @done = do gather for @f {
-		next unless .defined;
-
+	sub process-file ($_) {
 		my $s = .slurp
-					  .lines
-					  .grep( *.starts-with("###") );
+						.lines
+						.grep( *.starts-with("###") );
 
 		next unless $s;
-		
-		$s .= map({
+
+		$s.map({
 			my $f = $_;
 			$f = $f.subst("### ", '');
 			for @extensions -> $e is copy {
@@ -80,8 +86,16 @@ multi sub MAIN (
 			}
 			$f;
 		});
+	}
 
-		take $_ for $s[];
+	my @trapped = do gather for @t {
+		next unless .defined;
+		take $_ for process-file($_)[];
+	}
+
+	my @done = do gather for @f {
+		next unless .defined;
+		take $_ for process-file($_)[];
 	}
 
 	my @exclude = ($exclude // '').split(',').grep( *.chars );
@@ -111,25 +125,32 @@ multi sub MAIN (
 
 		next unless $n.defined;
 		next if     $n.contains('private');
-		
+
 		if @extensions && +@extensions {
 			next unless $n.ends-with( @extensions.any );
 		}
 
 		next if     [&&]( +@exclude, $n.contains( @exclude.any ) );
 
-		my $colorize = @done.first({
-			
-			.lc.ends-with( $n.extension('').basename.lc )
-		}, :k).defined;
+		sub will-color ($_) {
+			.first({
+				.lc.ends-with( $n.extension('').basename.lc )
+			}, :k).defined;
+		}
 
-		next if $avail && $colorize;
+		my $d-colorize = @done.&will-color;
+		my $t-colorize = @trapped.&will-color;
+
+		sub is-colored { $d-colorize || $t-colorize }
+
+		next if $avail && is-colored;
 
 		say [~](
 			$num      ?? ($i++).fmt("\%0{ $mf.chars }d") ~ ') ' !! '',
-			$colorize ?? t.green           !! '',
+			$d-colorize  ?? t.green         !! '',
+			$t-colorize  ?? t.red           !! '',
 			$n.&list-file,
-			$colorize ?? t.text-reset      !! ''
+			is-colored() ?? t.text-reset    !! ''
 		);
 	}
 }

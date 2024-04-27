@@ -2,6 +2,7 @@
 
 use lib 'scripts';
 
+use ScriptConfig;
 use GTKScripts;
 
 my %interior-classes = (

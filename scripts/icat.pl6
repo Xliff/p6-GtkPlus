@@ -1,6 +1,7 @@
 #!p6gtkexec -Iscripts
 use v6;
 
+use ScriptConfig;
 use GTKScripts;
 
 my $f = @*ARGS.head;
