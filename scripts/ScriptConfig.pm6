@@ -2,6 +2,8 @@ use v6.c;
 
 use Config::INI;
 
+unit package ScriptConfig;
+
 our $CONFIG-NAME      is export;
 our %config           is export;
 
@@ -49,7 +51,6 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
     include-exclude
     include-include
     manifest-blacklist
-    manifest_blacklist
   >;
 
   if $program {
@@ -83,5 +84,6 @@ INIT {
   die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
    unless $CONFIG-NAME.IO.e;
 
+  %config = ();
   parse-file;
 }

@@ -573,5 +573,3 @@ INIT {
     $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
   }
 }
-
-re-export-everything('ScriptConfig');
