@@ -5,6 +5,8 @@ use NativeCall;
 use GTK::Raw::Types:ver<3.0.1146>;
 use GLib::Raw::ReturnedValue;
 
+use GDK::Event;
+
 role GTK::Roles::Signals::Widget:ver<3.0.1146> {
   has %!signals-widget;
 
