@@ -61,7 +61,7 @@ sub MAIN ($filename, :aliases(:$with-aliases) = False ) {
     }
 
     say qq:to/ATTRIB/ ;
-      method { $_ } is rw{$wa} is g-property \{
+      method { $_ } is rw{$wa} is g-pseudo-property \{
         Proxy.new:
           FETCH => -> \$     \{ self.get_{ $_ }    \},
           STORE => -> \$, \\v \{ self.set_{ $_ }(v) \}
