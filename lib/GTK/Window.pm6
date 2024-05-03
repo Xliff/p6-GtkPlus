@@ -46,8 +46,6 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
   {
     my $to-parent;
 
-    say "setGtkWindow = { $_ } ";
-
     $!win = do {
       when GtkWindow {
         $to-parent = nativecast(GtkBin, $_);
@@ -95,8 +93,6 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
   ) {
     my guint $t      = $type;
     my       $window = gtk_window_new($t);
-
-    say "GtkWindow.new = { $window }";
 
     samewith($window, :$title, :$width, :$height);
   }
@@ -1071,8 +1067,10 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
 
   use GTK::Roles::Signals::Widget;
 
-  method makeTransparent ( :$button-press ) {
+  method makeTransparent ( :$button-press = True, :$paint = True ) {
     my $win-obj := self.GObject;
+
+    # cw: Convert to method!
     g-connect-draw(
       cast(Pointer, $win-obj),
       'draw',
@@ -1089,7 +1087,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
       },
       gpointer,
       0
-    );
+    ) if $paint;
 
     my $screen-changed = -> *@a {
       CATCH { default { .message.say; .backtrace.concise.say } }
@@ -1100,6 +1098,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
          !! say 'No visual!';
     }
 
+    # cw: Convert to method!
     g-connect-screen-changed(
       cast(Pointer, $win-obj),
       'screen-changed',
@@ -1113,22 +1112,25 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     self.decorated = 0;
     self.add_events(GDK_BUTTON_PRESS_MASK);
 
+    # cw: Convert to method!
     g-connect-widget-event(
       cast(Pointer, $win-obj),
       'button-press-event',
-      -> *@a {
+      -> *@a --> gboolean {
         CATCH { default { .message.say; .backtrace.concise.say } }
 
-        if $button-press -> &p {
-          &p( |@a );
+        if $button-press ~~ Callable {
+          $button-press( |@a ) if $button-press;
         } else {
           self.decorated = self.decorated.not;
-          0
         }
+
+        my guint $r = 0;
+        $r;
       },
       gpointer,
       0
-    );
+    ) if $button-press;
 
     $screen-changed(self.GtkWindow);
   }
