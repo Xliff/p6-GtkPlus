@@ -1279,9 +1279,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('composite-child', $gv)
-        );
+        self.prop_get('composite-child', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1296,9 +1294,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('expand', $gv)
-        );
+        self.prop_get('expand', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1318,9 +1314,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('has-focus', $gv)
-        );
+        self.prop_get('has-focus', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1335,9 +1329,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('height-request', $gv)
-        );
+        self.prop_get('height-request', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1352,7 +1344,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get('is-focus', $gv) );
+        self.prop_get('is-focus', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1367,7 +1359,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get('margin', $gv) );
+        self.prop_get('margin', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1382,9 +1374,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get(
-          $!w, 'scale-factor', $gv)
-        );
+        self.prop_get('scale-factor', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1411,12 +1401,10 @@ class GTK::Widget:ver<3.0.1146> {
 
   # Type: gint
   method width-request is rw is also<width_request> {
-    my GValue $gv .= new(G_TYPE_INT);
+    my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get(
-          $!w, 'width-request', $gv)
-        );
+        self.prop_get('width-request', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
