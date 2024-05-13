@@ -23,6 +23,7 @@ else
 fi
 
 INCLUDES="\
+-I/home/cbwood/.raku                    \
 -I${P6_GTK_HOME}/cairo-p6/lib           \
 -I${P6_GTK_HOME}/Method-Also/lib        \
 -I${P6_GTK_HOME}/P6-Data-Dump-Tree/lib  \
