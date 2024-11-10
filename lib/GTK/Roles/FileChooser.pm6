@@ -18,9 +18,11 @@ role GTK::Roles::FileChooser:ver<3.0.1146> {
 
   has GtkFileChooser $!fc;
 
-  method roleInit-FileChooser {
-    my \i = findProperImplementor(self.^attributes);
+  method roleInit-GtkFileChooser {
+    return if $!fc;
 
+    my \i = findProperImplementor(self.^attributes);
+    
     $!fc = cast( GtkFileChooser, i.get_value(self) );
   }
 
