@@ -1,6 +1,5 @@
 use v6.c;
 
-use Cairo;
 use Method::Also;
 use NativeCall;
 
@@ -25,12 +24,6 @@ sub gtk_drawing_area_new ()
 
 class GTK::DrawingArea:ver<3.0.1146> is GTK::Widget {
   has GtkDrawingArea $!da is implementor;
-
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
 
   submethod BUILD( :$draw ) {
     self.setGtkDrawingArea($draw) if $draw;
