@@ -18,7 +18,11 @@ use GTK::Roles::TreeSortable:ver<3.0.1146>;
 
 my subset GValues where GLib::Value | GValue;
 
+our subset GtkListStoreAncestry is export of Mu
+  where GtkListStore | GObject;
+
 # YYY - This compunit needs another review! cw - 2019 01 24
+#       cw: Ancestry review performed 2024/10/24, still needs full top down.
 
 class GTK::ListStore:ver<3.0.1146> {
   also does GLib::Roles::Object;
@@ -28,17 +32,50 @@ class GTK::ListStore:ver<3.0.1146> {
   also does GTK::Roles::TreeSortable;
 
   has GtkListStore $!ls is implementor;
+
   has $!accessed = False;
-  has $!columns;
+  has $.columns;
 
   submethod BUILD(:$liststore, :$columns) {
-    self!setObject($!ls = $liststore);          # GLib::Roles::Object
+    self.setGtkListStore($liststore, :$columns) if $liststore;
+  }
 
-    $!columns = $columns;
+  method setGtkListStore (GtkListStoreAncestry $_, :$!columns) {
+    my $to-parent;
 
-    $!b  = nativecast(GtkBuildable, $!ls);      # GTK::Roles::Buildable
-    $!ts = nativecast(GtkTreeSortable, $!ls);   # GTK::Roles::TreeSortable
-    $!tm = nativecast(GtkTreeModel, $!ls);      # GTK::Roles::TreeSortable
+    $!ls = do {
+      when GtkListStore {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      when GtkBuildable {
+        $to-parent = cast(GObject, $_);
+        $!b  = nativecast(GtkBuildable, $!ls);
+        cast(GtkListStore, $_);
+      }
+
+      when GtkTreeSortable {
+        $to-parent = cast(GObject, $_);
+        $!ts = nativecast(GtkTreeSortable, $!ls);
+        cast(GtkListStore, $_);
+      }
+
+      when GtkTreeModel {
+        $to-parent = cast(GObject, $_);
+        $!tm = nativecast(GtkTreeModel, $!ls);
+        cast(GtkListStore, $_);
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkListStore, $_);
+      }
+    }
+    self!setObject($to-parent);
+    self.roleInit-GtkBuildable;
+    self.roleInit-GtkTreeSortable;
+    self.roleInit-GtkTreeModel;
   }
 
   method GTK::Raw::Definitions::GtkListStore
@@ -48,7 +85,18 @@ class GTK::ListStore:ver<3.0.1146> {
     >
   { $!ls }
 
-  method new (*@types) {
+   multi method new (
+     $liststore where * ~~ GtkListStoreAncestry,
+
+    :$ref = True
+  ) {
+    return unless $liststore;
+
+    my $o = self.bless( :$liststore );
+    $o.ref if $ref;
+    $o;
+  }
+  multi method new (*@types) {
     for @types {
       next if $_ ~~ (Int, IntStr).any || .^can('Int').elems;
       my $v = .Int;
