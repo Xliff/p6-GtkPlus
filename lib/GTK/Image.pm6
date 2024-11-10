@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use Cairo;
 use GDK::Pixbuf;
 
 use GTK::Raw::Types:ver<3.0.1146>;
@@ -11,7 +12,9 @@ use GTK::Raw::Image:ver<3.0.1146>;
 use GLib::Value;
 use GTK::Widget:ver<3.0.1146>;
 
-our subset ImageAncestry is export where GtkImage | GtkWidgetAncestry;
+our subset GtkImageAncestry is export where GtkImage | GtkWidgetAncestry;
+
+constant ImageAncestry is export := GtkImageAncestry;
 
 class GTK::Image:ver<3.0.1146> is GTK::Widget {
   has GtkImage $!i is implementor;
@@ -22,27 +25,24 @@ class GTK::Image:ver<3.0.1146> is GTK::Widget {
     $o;
   }
 
-  submethod BUILD(:$image) {
+  submethod BUILD( :image(:$gtk-image) ) {
+    self.setGtkImage($gtk-image) if $gtk-image;
+  }
+
+  method setGtkImage (GtkImageAncestry $_) {
     my $to-parent;
-    given $image {
-      when ImageAncestry {
-        $!i = do {
-          when GtkImage {
-            $to-parent = nativecast(GtkWidget, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkImage, $_);
-          }
-        }
-        self.setWidget($to-parent);
+    $!i = do {
+      when GtkImage {
+        $to-parent = nativecast(GtkWidget, $_);
+        $_;
       }
-      when GTK::Image {
-      }
+
       default {
+        $to-parent = $_;
+        nativecast(GtkImage, $_);
       }
     }
+    self.setWidget($to-parent);
   }
 
   method GDK::Raw::Definitions::GdkPixbuf
@@ -104,15 +104,13 @@ class GTK::Image:ver<3.0.1146> is GTK::Widget {
   )
     is also<new-from-icon-name>
   {
-    my guint32 $s = $size;
-    my $image = gtk_image_new_from_icon_name($name, $s);
+    my guint32 $s     = $size;
+    my         $image = gtk_image_new_from_icon_name($name, $s);
 
     $image ?? self.bless(:$image) !! Nil;
   }
 
-  method new_from_pixbuf (
-    GdkPixbuf() $pixbuf = GdkPixbuf
-  )
+  method new_from_pixbuf ( GdkPixbuf() $pixbuf = GdkPixbuf )
     is also<new-from-pixbuf>
   {
     my $image = gtk_image_new_from_pixbuf($pixbuf);
@@ -130,7 +128,9 @@ class GTK::Image:ver<3.0.1146> is GTK::Widget {
   #  gtk_image_new_from_stock($stock_id, $size);
   #}
 
-  method new_from_surface (cairo_surface_t $surface = cairo_surface_t)
+  method new_from_surface (
+    Cairo::cairo_surface_t() $surface = cairo_surface_t
+  )
     is also<new-from-surface>
   {
     my $image = gtk_image_new_from_surface($surface);
@@ -303,16 +303,18 @@ class GTK::Image:ver<3.0.1146> is GTK::Widget {
   }
 
   # Type: CairoSurface
-  method surface is rw {
+  method surface ( :$raw = False ) is rw {
     my GLib::Value $gv .= new( G_TYPE_POINTER );
     Proxy.new(
       FETCH => sub ($) {
         $gv = GLib::Value.new(
           self.prop_get('surface', $gv)
         );
-        nativecast(cairo_surface_t, $gv.pointer);
+        my $surface = nativecast(cairo_surface_t, $gv.pointer);
+        return $surface if $raw;
+        Cairo::Surface.new( :$surface );
       },
-      STORE => -> $, cairo_surface_t $val is copy {
+      STORE => -> $, Cairo::cairo_surface_t $val is copy {
         $gv.pointer = $val;
         self.prop_set('surface', $gv);
       }
@@ -524,7 +526,9 @@ class GTK::Image:ver<3.0.1146> is GTK::Widget {
     gtk_image_set_from_stock($!i, $stock_id, $s);
   }
 
-  method set_from_surface (cairo_surface_t $surface = cairo_surface_t)
+  method set_from_surface (
+    Cairo::cairo_surface_t() $surface = cairo_surface_t
+  )
     is also<set-from-surface>
   {
     gtk_image_set_from_surface($!i, $surface);
