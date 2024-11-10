@@ -24,18 +24,8 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
   has %!obj-track;
   has %!obj-manifest;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD(:$grid) {
-    given $grid {
-      when GridAncestry { self.setGrid($grid) }
-      when GTK::Grid    { }
-      default           { }
-    }
+    self.setGrid($grid) if $grid;
   }
 
   method setGrid (GridAncestry $_) is also<setGtkGrid> {
@@ -78,10 +68,12 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
     $o.ref if $ref;
     $o;
   }
-  multi method new {
+  multi method new ( *%a ) {
     my $grid = gtk_grid_new();
 
-    $grid ?? self.bless(:$grid) !! Nil;
+    my $o = $grid ?? self.bless(:$grid) !! Nil;
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
   multi method new ( :v(:ver(:vert(:$vertical))) is required ) {
     ::?CLASS.new-vgrid;
@@ -322,9 +314,13 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
 
   method spacing is rw {
     Proxy.new:
-      FETCH => sub ($) { (self.row_spacing, self.column_spacing).max },
-      STORE => -> $, Int() $val {
-        (self.row_spacing, self.column_spacing) = $val xx 2;
+      FETCH => -> $ {
+        (self.row_spacing, self.column_spacing)
+      },
+      STORE => -> $, $val is copy {
+        $val = $val xx 2 if $val ~~ Int;
+
+        (self.row_spacing, self.column_spacing) = $val;
       };
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
@@ -371,6 +367,46 @@ class GTK::Grid:ver<3.0.1146> is GTK::Container {
     is also<attach-next-to>
     { * }
 
+  multi method attach_next_to (
+     $child,
+     $sibling,
+     $width    = 1,
+     $height   = 1,
+
+    :r(:$right) is required
+  ) {
+    samewith($child, $sibling, GTK_POS_RIGHT, $width, $height);
+  }
+  multi method attach_next_to (
+     $child,
+     $sibling,
+     $width    = 1,
+     $height   = 1,
+
+    :l(:$left) is required
+  ) {
+    samewith($child, $sibling, GTK_POS_LEFT, $width, $height);
+  }
+  multi method attach_next_to (
+     $child,
+     $sibling,
+     $width    = 1,
+     $height   = 1,
+
+    :t(:u(:up(:$top))) is required
+  ) {
+    samewith($child, $sibling, GTK_POS_TOP, $width, $height);
+  }
+  multi method attach_next_to (
+     $child,
+     $sibling,
+     $width    = 1,
+     $height   = 1,
+
+    :b(:d(:down(:$bottom))) is required
+  ) {
+    samewith($child, $sibling, GTK_POS_BOTTOM, $width, $height);
+  }
   multi method attach_next_to (
     GTK::Widget $child,
     GTK::Widget $sibling,
