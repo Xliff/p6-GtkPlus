@@ -26,33 +26,35 @@ class GTK::ColorButton:ver<3.0.1146> is GTK::Button {
     $o;
   }
 
-  submethod BUILD(:$button) {
+  method setGtkColorButton (ColorButtonAncestry $_) {
     my $to-parent;
-    given $button {
-      when ColorButtonAncestry {
-        $!cb = do {
-          when GtkColorButton {
-            $to-parent = cast(GtkButton, $_);
-            $_;
-          }
-          when GtkColorChooser {
-            $!cc = $_;
-            $to-parent = cast(GtkButton, $_);
-            cast(GtkColorButton, $_);
-          }
-          when ButtonAncestry {
-            $to-parent = $_;
-            cast(GtkColorButton, $_);
-          }
-        };
-        self.setButton($to-parent);
-        $!cc //= cast(GtkColorChooser, $!cb);
+
+    when ColorButtonAncestry {
+      $!cb = do {
+        when GtkColorButton {
+          $to-parent = cast(GtkButton, $_);
+          $_;
+        }
+
+        when GtkColorChooser {
+          $!cc       = $_;
+          $to-parent = cast(GtkButton, $_);
+          cast(GtkColorButton, $_);
+        }
+
+        when ButtonAncestry {
+          $to-parent = $_;
+          cast(GtkColorButton, $_);
+        }
+
       }
-      when GTK::Button {
-      }
-      default {
-      }
+      self.setButton($to-parent);
+      self.roleInit-GtkColorChooser;
     }
+  }
+
+  submethod BUILD( :$gtk-color-button ) {
+    self.setGtkColorButton( $gtk-color-button ) if $gtk-color-button;
   }
 
   multi method new (ColorButtonAncestry $button, :$ref = True) {
@@ -63,24 +65,29 @@ class GTK::ColorButton:ver<3.0.1146> is GTK::Button {
     $o;
   }
   multi method new {
-    my $button = gtk_color_button_new();
+    my $gtk-color-button = gtk_color_button_new();
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-color-button ?? self.bless( :$gtk-color-button ) !! Nil;
+  }
+  multi method new-from-hex (Str() $h) {
+    ( my $c = GDK::RGBA.new ).parse($h);
+
+    self.new_with_rgba($c);
   }
 
-  method new_with_color (GdkColor $color)
+  method new_with_color (GdkColor() $color)
     is DEPRECATED
     is also<new-with-color>
   {
-    my $button = gtk_color_button_new_with_color($color);
+    my $gtk-color-button = gtk_color_button_new_with_color($color);
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-color-button ?? self.bless( :$gtk-color-button ) !! Nil;
   }
 
   method new_with_rgba (GDK::RGBA $color) is also<new-with-rgba> {
-    my $button = gtk_color_button_new_with_rgba($color);
+    my $gtk-color-button = gtk_color_button_new_with_rgba($color);
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-color-button ?? self.bless( :$gtk-color-button ) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
