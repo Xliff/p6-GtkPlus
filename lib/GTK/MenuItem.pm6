@@ -9,57 +9,49 @@ use GTK::Roles::Actionable:ver<3.0.1146>;
 
 use GTK::Bin:ver<3.0.1146>;
 
-our subset MenuItemAncestry is export
-  where GtkMenuItem | GtkActionable | BinAncestry;
+our subset GtkMenuItemAncestry is export
+  where GtkMenuItem | GtkActionable | GtkBinAncestry;
 
 class GTK::MenuItem:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Actionable;
 
   has GtkMenuItem $!mi is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  submethod BUILD ( :$menuitem ) {
+    self.setGtkMenuItem($menuitem) if $menuitem;
   }
 
-  submethod BUILD (
-    :$menuitem,
+  submethod TWEAK (
     :$submenu,
     :$clicked,
     :$activate,
     :$right
   ) {
-    given $menuitem {
-      when MenuItemAncestry { self.setMenuItem($menuitem) }
-      when GTK::MenuItem    { }
-      default               { }
-    }
-
     if $submenu {
-      # Error checking for a GTK::Menu without a circular dependency?
-      # Otherwise, GtkWidget is the best we can do.
-      self.submenu = $submenu if $submenu ~~ (GtkWidget, GTK::Widget).any;
+      self.submenu = $submenu if $submenu ~~ ( GtkMenu, ::('GTK::Menu') ).any;
     }
 
     # $clicked and $activate do the same thing.
     # DON'T GO OVERBOARD.
-    self.activate.tap({ $clicked();  }) with $clicked;
-    self.activate.tap({ $activate(); }) with $activate;
+    self.activate.tap: SUB { $clicked()  } with $clicked;
+    self.activate.tap: SUB { $activate() } with $activate && $clicked.not;
     self.right_justified = True if $right;
     self.show;
   }
 
-  method setMenuItem($menuitem) {
+  method setGtkMenuItem (GtkMenuItemAncestry $_) is also<setMenuItem> {
+    say "Menu Item is a { .^name }";
+
     my $to-parent;
-    $!mi = do given $menuitem {
+
+    $!mi = do {
       when GtkMenuItem {
         $to-parent = cast(GtkBin, $_);
         $_;
       }
 
       when GtkActionable {
-        $!action = $_;                            # GTK::Roles::Actionable
+        $!action   = $_;                            # GTK::Roles::Actionable
         $to-parent = cast(GtkBin, $_);
         cast(GtkMenuItem, $_);
       }
@@ -70,15 +62,15 @@ class GTK::MenuItem:ver<3.0.1146> is GTK::Bin {
       }
 
     }
-    $!action //= cast(GtkActionable, $!mi); # GTK::Roles::Actionable
-    self.setBin($to-parent);
+    self.roleInit-GtkActionable;
+    self.setGtkBin($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkMenuItem
     is also<GtkMenuItem>
   { $!mi }
 
-  multi method new (MenuItemAncestry $menuitem, :$ref = True) {
+  multi method new (GtkMenuItemAncestry $menuitem, :$ref = True) {
     return Nil unless $menuitem;
 
     my $o = self.bless(:$menuitem);
@@ -215,19 +207,6 @@ class GTK::MenuItem:ver<3.0.1146> is GTK::Bin {
     );
   }
 
-  method right_justified is DEPRECATED is rw is also<right-justified> {
-    Proxy.new(
-      FETCH => sub ($) {
-        so gtk_menu_item_get_right_justified($!mi);
-      },
-      STORE => sub ($, Int() $right_justified is copy) {
-        my gboolean $rj = $right_justified.so.Int;
-
-        gtk_menu_item_set_right_justified($!mi, $rj);
-      }
-    );
-  }
-
   method submenu (:$raw = False, :$widget = False) is rw {
     # We can't bring in MenuShellAncestry without causing all kinds of bad,
     # so we reproduce it here. In a set of bad options, it's the one that's
@@ -262,6 +241,10 @@ class GTK::MenuItem:ver<3.0.1146> is GTK::Bin {
     );
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
+
+  method right-justified is also<right_justified> {
+    ($.hexpand, $.halign) = (True, GTK_ALIGN_END);
+  }
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method emit-activate is also<emit_activate> {
