@@ -3,8 +3,10 @@ use v6.c;
 use Cairo;
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions;
+use GTK::Raw::Structs;
 
 unit package GTK::Raw::Container:ver<3.0.1146>;
 
