@@ -9,6 +9,8 @@ role GTK::Roles::Buildable:ver<3.0.1146> {
   has GtkBuildable $!b;
 
   method roleInit-GtkBuildable {
+    return if $!b;
+    
     my \i = findProperImplementor(self.^attributes);
     $!b   = cast( GtkBuildable, i.get_value(self) );
   }
