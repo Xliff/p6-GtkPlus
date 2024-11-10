@@ -3,58 +3,48 @@ use v6.c;
 use Method::Also;
 
 use GTK::Raw::Types:ver<3.0.1146>;
-
 use GTK::Raw::RecentChooserMenu:ver<3.0.1146>;
 
 use GTK::Roles::RecentChooser:ver<3.0.1146>;
 
 use GTK::Menu:ver<3.0.1146>;
 
-our subset RecentChooserMenuAncestry
-  where GtkRecentChooserMenu | GtkRecentChooser | MenuAncestry;
+our subset GtkRecentChooserMenuAncestry
+  where GtkRecentChooserMenu | GtkRecentChooser | GtkMenuAncestry;
 
 class GTK::RecentChooserMenu:ver<3.0.1146> is GTK::Menu {
   also does GTK::Roles::RecentChooser;
 
   has GtkRecentChooserMenu $!rcm is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  submethod BUILD (:$recentmenu) {
+    self.setGtkRecentChooserMenu($recentmenu) if $recentmenu;
   }
 
-  submethod BUILD (:$recentmenu) {
-    given $recentmenu {
-      when RecentChooserMenuAncestry {
-        my $to-parent;
-        $!rcm = do {
-          when GtkRecentChooserMenu {
-            $to-parent = cast(GtkMenu, $_);
-            $_;
-          }
-          when GtkRecentChooser {
-            $to-parent = cast(GtkMenu, $_);
-            $!rc = $_;
-            cast(GtkRecentChooserMenu, $_);
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkRecentChooserMenu, $_);
-          }
-        }
-        self.setMenu($to-parent);
-        self.roleInit-RecentChooser unless $!rc;
+  method setGtkRecentChooserMenu {
+    my $to-parent;
+    $!rcm = do {
+      when GtkRecentChooserMenu {
+        $to-parent = cast(GtkMenu, $_);
+        $_;
       }
-      when GTK::RecentChooserMenu {
+
+      when GtkRecentChooser {
+        $!rc       = $_;
+        $to-parent = cast(GtkMenu, $_);
+        cast(GtkRecentChooserMenu, $_);
       }
+
       default {
+        $to-parent = $_;
+        cast(GtkRecentChooserMenu, $_);
       }
     }
-
+    self.setGtkMenu($to-parent);
+    self.roleInit-GtkRecentChooser unless $!rc;
   }
 
-  multi method new (RecentChooserMenuAncestry $recentmenu, :$ref = True) {
+  multi method new (GtkRecentChooserMenuAncestry $recentmenu, :$ref = True) {
     return Nil unless $recentmenu;
 
     my $o = self.bless(:$recentmenu);
