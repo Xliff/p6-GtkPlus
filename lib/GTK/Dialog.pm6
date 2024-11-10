@@ -10,20 +10,23 @@ use GTK::Box:ver<3.0.1146>;
 use GTK::HeaderBar:ver<3.0.1146>;
 use GTK::Window:ver<3.0.1146>;
 
-our subset DialogAncestry is export of Mu
-  where GtkDialog | WindowAncestry;
+our subset GtkDialogAncestry is export of Mu
+  where GtkDialog | GtkWindowAncestry;
 
-constant GtkDialogAncestry is export = DialogAncestry;
+constant DialogAncestry is export = GtkDialogAncestry;
 
 class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   has GtkDialog $!d is implementor;
 
-  submethod BUILD(:$dialog) {
+  submethod BUILD ( :$dialog ) {
     self.setGtkDialog($dialog) if $dialog;
   }
 
-  method setDialog(DialogAncestry $_) is also<setGtkDialog> {
+  method setGtkDialog ($_) is also<setDialog> {
     my $to-parent;
+
+    say "Dialog is a { .^name }";
+
     $!d = do {
       when GtkDialog {
         $to-parent = nativecast(GtkWindow, $_);
@@ -41,7 +44,7 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     is also<GtkDialog>
   { $!d }
 
-  multi method new (DialogAncestry $dialog, :$ref = True) {
+  multi method new (GtkDialogAncestry $dialog, :$ref = True) {
     return Nil unless $dialog;
 
     my $o = self.bless(:$dialog);
@@ -58,11 +61,11 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     is also<new-with-buttons>
   { * }
 
-  multi method new_with_buttons(
+  multi method new_with_buttons (
     Str()        $title,
-    GtkWindow() :$parent = GtkWindow,
-    Int()       :$flags  = GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,
-    *%buttons
+    GtkWindow() :$parent  = GtkWindow,
+    Int()       :$flags   = GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,
+                *%buttons
   ) {
     samewith($title, %buttons.pairs.Array, :$parent, :$flags);
   }
@@ -73,8 +76,10 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     GtkWindow() :$parent   = GtkWindow
   ) {
     die '@buttons cannot be empty' unless +@buttons;
+
     die '\@buttons is not an array of pair objects!'
       unless @buttons.all ~~ Pair;
+
     my $fb = @buttons.shift;
     my $o = GTK::Dialog.new_with_button(
       $title,
@@ -99,8 +104,8 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   )
     is also<new-with-button>
   {
-    my gint $br = $button_response_id;
-    my GtkDialogFlags $f = $flags;
+    my gint           $br = $button_response_id;
+    my GtkDialogFlags $f  = $flags;
 
     my $dialog = gtk_dialog_new_with_buttons(
       $title,
