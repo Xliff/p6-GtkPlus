@@ -14,6 +14,13 @@ role GTK::Roles::CellLayout:ver<3.0.1146> {
 
   has GtkCellLayout $!cl;
 
+  method roleInit-GtkCellLayout {
+    return if $!cl;
+
+    my \i = findProperImplementor(self.^attributes);
+    $!cl  = cast( GtkCellLayout, i.get_value(self) );
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
   # ↑↑↑↑ SIGNALS ↑↑↑↑
 
@@ -23,10 +30,11 @@ role GTK::Roles::CellLayout:ver<3.0.1146> {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_attribute (
     GtkCellRenderer() $cell,
-    gchar $attribute,
-    Int() $column
+    Str()             $attribute,
+    Int()             $column
   ) {
     my gint $c = $column;
+
     gtk_cell_layout_add_attribute($!cl, $cell, $attribute, $c);
   }
 
@@ -52,7 +60,7 @@ role GTK::Roles::CellLayout:ver<3.0.1146> {
 
   multi method layout_pack_end (
     GTK::CellRenderer $cell,
-    Int() $expand = 0
+    Int()             $expand = 0
   ) {
     self.unshift-end: $cell;
     self.SET-LATCH;
@@ -60,10 +68,11 @@ role GTK::Roles::CellLayout:ver<3.0.1146> {
   }
   multi method layout_pack_end (
     GtkCellRenderer $cell,
-    Int() $expand = 0
+    Int()           $expand = 0
   ) {
     self.unshift-end: $cell unless self.IS-LATCHED;
     self.UNSET-LATCH;
+
     my gboolean $e = $expand.so.Int;
 
     gtk_cell_layout_pack_end($!cl, $cell, $e);
@@ -71,7 +80,7 @@ role GTK::Roles::CellLayout:ver<3.0.1146> {
 
   multi method layout_pack_start (
     GTK::CellRenderer $cell,
-    Int() $expand = 0
+    Int()             $expand = 0
   ) {
     self.push-start: $cell;
     self.SET-LATCH;
@@ -79,10 +88,11 @@ role GTK::Roles::CellLayout:ver<3.0.1146> {
   }
   multi method layout_pack_start (
     GtkCellRenderer $cell,
-    Int() $expand = 0
+    Int()           $expand = 0
   ) {
     self.push-start: $cell unless self.IS-LATCHED;
     self.UNSET-LATCH;
+
     my gboolean $e = $expand.so.Int;
 
     gtk_cell_layout_pack_start($!cl, $cell, $e);
@@ -104,11 +114,13 @@ role GTK::Roles::CellLayout:ver<3.0.1146> {
     gtk_cell_layout_set_attributes($!cl, $cell, $attribute, $c, Str);
   }
 
+  my constant DC := %DEFAULT-CALLBACKS;
+
   method set_cell_data_func (
-    GtkCellRenderer() $cell,
+    GtkCellRenderer()     $cell,
     GtkCellLayoutDataFunc $func,
-    gpointer $func_data,
-    &destroy = &g_destroy_none
+    gpointer              $func_data = gpointer,
+                          &destroy   = DC<GDestroyNotify>
   ) {
     gtk_cell_layout_set_cell_data_func(
       $!cl,
