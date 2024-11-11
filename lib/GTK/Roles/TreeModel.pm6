@@ -15,7 +15,7 @@ my %typeData;
 role GTK::Roles::TreeModel:ver<3.0.1146> {
   has GtkTreeModel $!tm;
 
-  method !roleInit-GtkTreeModel {
+  method roleInit-GtkTreeModel {
     return if $!tm;
 
     my \i = findProperImplementor(self.^attributes);
