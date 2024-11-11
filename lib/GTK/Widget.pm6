@@ -113,6 +113,10 @@ class GTK::Widget:ver<3.0.1146> {
     >
   { $!w }
 
+  method GDK::Raw::Definitions::GdkWindow
+    is also<GdkWindow>
+  { self.window(:raw) }
+
   # proto new(|) { * }
   multi method new(|c) {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
@@ -2098,7 +2102,8 @@ class GTK::Widget:ver<3.0.1146> {
   {
     my $w = gtk_widget_get_toplevel($!w);
 
-    ReturnWidget($w, $raw, $widget);
+    return Nil unless $w;
+    $raw ?? $w !! ::('GTK::Window').new($w);
   }
 
   method set_device_events (GdkDevice() $device, Int() $events)
@@ -2124,7 +2129,7 @@ class GTK::Widget:ver<3.0.1146> {
     is also<
       queue-draw
       redraw
-      invalidatge
+      invalidate
     >
   {
     gtk_widget_queue_draw($!w);
@@ -2559,7 +2564,8 @@ class GTK::Widget:ver<3.0.1146> {
   }
 
   method ReturnWidget ($w, $raw, $widget = False) {
-    ReturnWidget($w, $raw, $widget);
+    say 'rw';
+    ReturnWidget($w, $raw, :$widget);
   }
 
   # Remove all $n, $t from instances!
