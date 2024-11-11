@@ -13,21 +13,15 @@ use GDK::Window;
 use GTK::Bin:ver<3.0.1146>;
 use GTK::Widget:ver<3.0.1146>;
 
-our subset ButtonAncestry is export of Mu
+our subset GtkButtonAncestry is export of Mu
   where GtkButton | BinAncestry;
 
-constant GtkButtonAncestry is export = ButtonAncestry;
+constant ButtonAncestry is export = GtkButtonAncestry;
 
 class GTK::Button:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Actionable;
 
   has GtkButton $!b is implementor;
-
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
 
   submethod BUILD(:$button) {
     self.setGtkButton($button) if $button;
@@ -40,7 +34,7 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
     >
   { $!b }
 
-  method setButton (ButtonAncestry $_) is also<setGtkButton> {
+  method setGtkButton (ButtonAncestry $_) is also<setButton> {
     my $to-parent;
     $!b = do {
       when GtkButton {
@@ -49,7 +43,7 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
       }
 
       when GtkActionable {
-        $!action = cast(GtkActionable, $_);    # GTK::Roles::Actionable
+        $!action   = $_;
         $to-parent = cast(GtkBin, $_);
         cast(GtkButton, $_);
       }
@@ -60,23 +54,23 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
       }
     };
     self.setBin($to-parent);
-    $!action //= cast(GtkActionable, $!b);        # GTK::Roles::Actionable
+    self.roleInit-GtkActionable;
   }
 
   proto method new (|)
   { * }
 
-  multi method new(ButtonAncestry $button, :$ref = True) {
-    return Nil unless $button;
+  multi method new(GtkButtonAncestry $gtk-button, :$ref = True) {
+    return Nil unless $gtk-button;
 
-    my $o = self.bless(:$button);
+    my $o = self.bless(:$gtk-button);
     $o.ref if $ref;
     $o;
   }
   multi method new {
-    my $button = gtk_button_new();
+    my $gtk-button = gtk_button_new();
 
-    $button ?? self.bless( :$button ) !! Nil;
+    $gtk-button ?? self.bless( :$gtk-button ) !! Nil;
   }
   multi method new(|c) {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
@@ -86,9 +80,9 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
   method new_with_mnemonic (GTK::Button:U: Str() $label)
     is also<new-with-mnemonic>
   {
-    my $button = gtk_button_new_with_mnemonic($label);
+    my $gtk-button = gtk_button_new_with_mnemonic($label);
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-button ?? self.bless(:$gtk-button) !! Nil;
   }
 
   method new_from_icon_name (
@@ -98,9 +92,10 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
     is also<new-from-icon-name>
   {
     my GtkIconSize $s = $size;
-    my $button = gtk_button_new_from_icon_name($icon_name, $s);
 
-    $button ?? self.bless(:$button) !! Nil;
+    my $gtk-button = gtk_button_new_from_icon_name($icon_name, $s);
+
+    $gtk-button ?? self.bless(:$gtk-button) !! Nil;
   }
 
   method new_from_stock (
@@ -108,9 +103,9 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
   )
     is also<new-from-stock>
   {
-    my $button = gtk_button_new_from_stock($stock_id);
+    my $gtk-button = gtk_button_new_from_stock($stock_id);
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-button ?? self.bless(:$gtk-button) !! Nil;
   }
 
   method new_with_label (
@@ -118,9 +113,9 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
   )
     is also<new-with-label>
   {
-    my $button = gtk_button_new_with_label($label);
+    my $gtk-button = gtk_button_new_with_label($label);
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-button ?? self.bless(:$gtk-button) !! Nil;
   }
 
   method always_show_image is rw is also<always-show-image> {
