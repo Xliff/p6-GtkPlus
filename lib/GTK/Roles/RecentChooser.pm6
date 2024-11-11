@@ -7,6 +7,7 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::Raw::RecentChooser:ver<3.0.1146>;
 
+use GLib::GList;
 use GTK::RecentFilter:ver<3.0.1146>;
 use GTK::RecentInfo:ver<3.0.1146>;
 
@@ -17,7 +18,9 @@ role GTK::Roles::RecentChooser:ver<3.0.1146> {
 
   has GtkRecentChooser $!rc;
 
-  method roleInit-RecentChooser {
+  method roleInit-GtkRecentChooser {
+    return if $!rc;
+    
     my \i = findProperImplementor(self.^attributes);
 
     $!rc = cast( GtkRecentChooser, i.get_value(self) );
@@ -189,13 +192,12 @@ role GTK::Roles::RecentChooser:ver<3.0.1146> {
       items
     >
   {
-    my $i = gtk_recent_chooser_get_items($!rc);
-
-    return Nil unless $i;
-    return $i if $glist;
-
-    $i = GLib::List.new($i) but GLib::Roles::ListData[GtkRecentInfo];
-    $raw ?? $i.Array !! $i.Array.map({ GTK::RecentInfo.new($_) });
+    returnGList(
+      gtk_recent_chooser_get_items($!rc),
+      $raw,
+      $glist,
+      |GTK::RecentInfo.getTypePair
+    )
   }
 
   method get_type is also<get-type> {
@@ -213,13 +215,12 @@ role GTK::Roles::RecentChooser:ver<3.0.1146> {
   }
 
   method list_filters (:$glist = False, :$raw = False) is also<list-filters> {
-    my $fl = gtk_recent_chooser_list_filters($!rc);
-
-    return Nil unless $fl;
-    return $fl if $glist;
-
-    $fl = GDK::GList.new($fl) but GLib::Roles::ListData[GtkRecentFilter];
-    $raw ?? $fl.Array !! $fl.Array.map({ GTK::RecentFilter.new($_) });
+    returnGList(
+      gtk_recent_chooser_list_filters($!rc),
+      $raw,
+      $glist,
+      |GTK::RecentChooser.getTypePair
+    );
   }
 
   method remove_filter (GtkRecentFilter() $filter) is also<remove-filter> {
@@ -231,7 +232,7 @@ role GTK::Roles::RecentChooser:ver<3.0.1146> {
   }
 
   method select_uri (
-    Str() $uri,
+    Str()                   $uri,
     CArray[Pointer[GError]] $error = gerror()
   )
     is also<select-uri>
@@ -243,7 +244,7 @@ role GTK::Roles::RecentChooser:ver<3.0.1146> {
   }
 
   method set_current_uri (
-    Str() $uri,
+    Str()                   $uri,
     CArray[Pointer[GError]] $error = gerror()
   )
     is also<set-current-uri>
@@ -256,8 +257,8 @@ role GTK::Roles::RecentChooser:ver<3.0.1146> {
 
   method set_sort_func (
     GtkRecentSortFunc $sort_func,
-    gpointer $sort_data          = Pointer,
-    GDestroyNotify $data_destroy = Pointer
+    gpointer          $sort_data    = Pointer,
+    GDestroyNotify    $data_destroy = Pointer
   )
     is also<set-sort-func>
   {
