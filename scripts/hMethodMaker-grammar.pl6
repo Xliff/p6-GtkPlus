@@ -170,11 +170,11 @@ sub MAIN (
   my $contents = $fn.IO.open.slurp-rest;
 
   my ($out-file, $out-raw-file, $item);
-  $lib = %config<library> // %config<lib> // '';
+  $lib = $lib // %config<library> // %config<lib> // '';
   if $files {
-    $item     = $filename.split('.').head.split('-').tail.tc;
-    $lib      = $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;
-    $out-file = $item.subst('/', '-', :g)  ~ '.pm6';
+    $item       = $filename.split('.').head.split('-').tail.tc;
+    $lib      ||= $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;
+    $out-file   = $item.subst('/', '-', :g)  ~ '.pm6';
 
     use File::Find;
 
@@ -250,6 +250,7 @@ sub MAIN (
   $contents ~~ s:g/ 'extern "C" {' //;
 
   $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC' \s* '(' .+? ',' .+? ')' //;
+  $contents ~~ s:g/<[A..Z]>+'_DECLARE_'['FINAL' || 'DERIVABLE']'_TYPE'\s*\(.+?\)//;
 
   $contents ~~ s:g/ 'GType' /\nGType/;
 
@@ -748,6 +749,16 @@ sub MAIN (
   outputMethods;
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
+
+    O-Raw( qq:to/RAW/ );
+      use v6.c;
+
+      use NativeCall;
+
+      use GLib::Raw::Definitions;
+      use { %config<prefix> }::Raw::Definitions;
+      RAW
+
     O-Raw( "\n\n### { $fn }\n" );
     outputSub( %methods{$_}    , $raw-methods) for %methods.keys.sort;
     outputSub( %getset{$_}<get>, $raw-methods) for  %getset.keys.sort;

@@ -1,5 +1,7 @@
 use v6.c;
 
+#no precompilation;
+
 use Config::INI;
 
 unit package ScriptConfig;
@@ -15,7 +17,7 @@ my %config-defaults = (
 );
 
 sub getConfigEntry ($k) is export {
-  %config{$k} // %config-defaults{$k} // ''
+  OUTER::<%config>{$k} // %config-defaults{$k} // ''
 }
 
 sub getLibDirs is export {
@@ -25,24 +27,24 @@ sub getLibDirs is export {
 sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
   return Nil unless $filename && $filename.IO.r;
 
-  %config = Config::INI::parse_file($filename)<_>;
+  my $config = Config::INI::parse_file($filename)<_>;
 
   my &searcher = sub ($_) {
     .defined && $_ ?? .contains('-' | '_') !! False
   };
 
-  my @keys = %config.keys.grep(&searcher);
+  my @keys = OUTER::<%config>.keys.grep(&searcher);
   for @keys {
     my $nk = $_;
     $nk ~~ tr<_-><-_>;
-    %config{$nk} := %config{$_};
+    $config{$nk} := $config{$_};
   }
 
-  %config{ .key } //= .value for %config-defaults.pairs;
+  $config{ .key } //= .value for %config-defaults.pairs;
 
   # Handle comma separated
-  %config{$_} = (%config{$_} // '').split(',').grep( *.chars )
-    if %config{$_}:exists
+  $config{$_} = ($config{$_} // '').split(',').grep( *.chars )
+    if $config{$_}:exists
   for <
     backups
     modules
@@ -58,32 +60,38 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
     #     continuum.
     #
     #     WICKED!
-    for %config.keys.grep( *.starts-with("{ $program }-") ) {
+    for $config.keys.grep( *.starts-with("{ $program }-") ) {
       my $var = .split('-').tail;
-      OUTER::{$var} = %config{$_}
+      OUTER::OUTER::OUTER::{$var} = OUTER::<%config>{$_}
+        if OUTER::OUTER::OUTER::{$var}:exists;
     }
   }
 
   # Handle aliases.
-  %config<include-directory> //= %config<include-dir>;
+  $config<include-directory> //= $config<include-dir>;
 
-  %config;
+  $config;
 }
 
 INIT {
-  $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
-                 $*ENV<X11_PROJECT_FILE> //
-                 do {
-                   '.'.IO.dir.grep({
-                      .starts-with('.')             &&
-                      .ends-with('-project')        &&
-                      .starts-with('.finished').not
-                   }).head.absolute
-                 }
+   $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
+                  $*ENV<X11_PROJECT_FILE> //
+                  do {
+                    '.'.IO.dir.grep({
+                       .starts-with('.')             &&
+                       .ends-with('-project')        &&
+                       .starts-with('.finished').not
+                    }).head.absolute
+                  }
 
-  die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
-   unless $CONFIG-NAME.IO.e;
+   if $CONFIG-NAME.IO.r {
+     $*ERR.say: "Parsing file..." if $*ENV<SCRIPT_CONFIG_DEBUG>;
 
-  %config = ();
-  parse-file;
+
+
+     %config = parse-file;
+     %config<created-on> = DateTime.now;
+
+     #OUTER::<%config>.gist.say;
+   }
 }

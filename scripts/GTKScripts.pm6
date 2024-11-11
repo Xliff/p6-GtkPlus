@@ -7,9 +7,15 @@ use File::Find;
 use Dependency::Sort;
 use HashArray;
 
+#
+
 unit package GTKScripts;
 
 our $GTK-SCRIPT-DEBUG is export;
+
+constant MAX_MANIFEST_THREADS = $*KERNEL.cpu-cores / 2;
+
+our token useneed { 'use' | 'need'  }
 
 # cw: Thank you SO MUCH!
 # https://stackoverflow.com/questions/47124405/parsing-a-possibly-nested-braced-item-using-a-grammar
@@ -74,6 +80,14 @@ our token parent is export {
 }
 our token typename is export { \w+ }
 
+our token modulename is export {
+  ((\w<[a..zA..Z0..9]>+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']?
+}
+
+our token use-module is export {
+  ^^ \s* <useneed> \s+ <modulename>[\s+.+\s*]?';'
+};
+
 our rule also-does is export {
   'also' 'does' <classname> ';'
 }
@@ -120,6 +134,63 @@ my rule solo-enum is export {
 
 my rule enum is export {
   [ 'typedef' <solo-enum> <rn=name> | <solo-enum> ] ';'
+}
+
+sub getModuleManifest ($filename, :$threads = MAX_MANIFEST_THREADS)
+  is export
+{
+  my (@used-threads, %manifest);
+
+  my  @file-list = [ $filename ];
+
+  sub search-file ($f is copy) {
+    say "SF: { $f }";
+    if $f.contains('::') {
+      if $*REPO.repo-chain.first( *.?candidates($f) )  -> $p {
+        $f = $p.add( $f.subst('::', $p.SPEC.dir-sep, :g) ~ '.pm6' );
+        $f .= extension('rakumod') unless $f.r;
+      } else {
+        die "Cannot find '{ $f }' in Raku repository!'";
+      }
+    }
+
+    die "Cannot find '{ $f }' in Raku repository!'" unless $f.IO.r;
+
+    say "Checking { $f.IO.absolute }...";
+
+    if $f.IO.slurp ~~ m:g/ <use-module> / -> $m {
+      for $m.List {
+        my $mn = .<use-module><modulename>.Str;
+        next if $mn eq <v6>.any;
+
+        say "MN: {$mn}";
+
+        unless %manifest{$mn}:exists {
+          say "UMN: { $mn }";
+          @file-list.push($mn);
+          %manifest{$mn}++;
+        }
+      }
+    }
+  }
+
+  sub start-threads {
+    while my $f = @file-list.pop {
+      say "F: { $f }";
+      @used-threads.push: start search-file($f);
+      last if     @used-threads.elems > $threads;
+      last unless +@file-list;
+    }
+  }
+
+  while +@file-list || +@used-threads {
+    start-threads;
+    await Promise.anyof(@used-threads);
+    @used-threads .= grep({ .status ~~ Planned })
+  }
+  await Promise.allof(@used-threads);
+  say "FFL: { @file-list.gist }";
+  %manifest;
 }
 
 sub find-files (
@@ -190,17 +261,17 @@ sub find-files (
   }
 }
 
-sub get-lib-files (:$pattern, :$extension) is export {
+sub get-lib-files (:$pattern, :$extension, :$exclude) is export {
   die 'get-lib-files() must be called with a :$pattern and/or an :$extension'
     unless $pattern.defined || $extension.defined;
 
   (do gather for getLibDirs().split(',') {
-    take find-files($_, :$pattern, :$extension);
+    take find-files($_, :$pattern, :$extension, :$exclude);
   }).flat;
 }
 
 sub get-module-files is export {
-  get-lib-files( extension => 'pm6' );
+  get-lib-files( extension => 'pm6', exclude => 'nqp' );
 }
 
 sub get-raw-module-files is export {
@@ -348,8 +419,8 @@ sub write-meta-file ($file, $modules) {
     my $meta = $file.IO.slurp;
 
     my $match = $meta ~~ /'"provides":'\s+'{' ~ '}' <-[\}]>+ /;
-    $match.gist.say;
-    $modules.gist.say;
+    #$match.gist.say;
+    #$modules.gist.say;
 
     unless $table {
 	    $table = $modules.map({ "    { .head }: { .tail }" }).join(",\n");
@@ -428,11 +499,6 @@ sub compute-module-dependencies (
   my @other-provided = (%config<other_provided> // '').split(',');
   for %nodes.pairs.sort( *.key ) -> $p {
     say "Processing requirements for { $p.key }...";
-
-    my token useneed    { 'use' | 'need'  }
-    my token modulename {
-      ((\w<[a..zA..Z0..9]>+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']?
-    }
     my $f = $p.value<filename>;
 
     # cw: Remove pod sections in case they have embedded use statements
@@ -444,8 +510,7 @@ sub compute-module-dependencies (
       }
     }
 
-    my $m = $contents ~~
-      m:g/^^ \s* <useneed> \s+ <modulename>[\s+.+\s*]?';'/;
+    my $m = $contents ~~ m:g/ <use-module> /;
 
     for $m.list -> $mm {
       my $mn = $mm.trim;
@@ -561,6 +626,7 @@ sub compute-module-dependencies (
   }
 
   my $module-table = @return-array.map({ ( "\"{ .<name> }\"", "\"{ .<filename> }\"" ) }).cache;
+
   write-meta-file( $meta-file, $module-table) if $meta-file;
 
   my $r = HashArray.new( hash => %nodes, array => @return-array );

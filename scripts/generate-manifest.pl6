@@ -1,17 +1,38 @@
 use v6;
 
+use lib <scripts .>;
+
 use ScriptConfig;
 use GLib::Raw::Traits;
 use GLib::Roles::StaticClass;
 
 my %typeManifest;
 
-sub MAIN ( :$prefix is copy = %config<prefix>, :$quiet = False ) {
+sub MAIN (
+  :$prefix is copy = %config<prefix>,
+  :$quiet         = False,
+  :file(:$files)  = False
+) {
   $prefix .= subst(/'::' $/, '');
 
   sub outputManifest {
     my $max-key-size = %typeManifest.keys.map( *.chars ).max;
-    qq:to/MANIFEST/
+
+    my $manifest = %typeManifest.pairs.sort( *.key ).map({
+       "      { .key.fmt("\%-{ $max-key-size }s") } => '{ .value<obj> }'"
+     }).join(",\n");
+
+    my $mro = %typeManifest.pairs.sort( *.key ).map({
+     "      { .key.fmt("\%-{ $max-key-size }s") } => [{
+       .value<mro>.map({ "'{ .^name }'" }).join(', ') }]"
+    }).join(",\n");
+
+    my $roles = %typeManifest.pairs.sort( *.key ).map({
+     "      { .key.fmt("\%-{ $max-key-size }s") } => [{
+       .value<roles>.map({ "'{ .^name }'" }).join(', ') }]"
+    }).join(",\n");
+
+    qq:to/MANIFEST/;
       use v6.c;
 
       use GLib::Raw::Traits;
@@ -20,23 +41,20 @@ sub MAIN ( :$prefix is copy = %config<prefix>, :$quiet = False ) {
 
         method manifest \{
           %(
-      {
-        %typeManifest.pairs.sort( *.key ).map({
-          "      { .key.fmt("\%-{ $max-key-size }s") } => '{ .value<obj> }'"
-        }).join(",\n")
-      }
-          )
+      { $manifest }
+          );
         \}
 
-        method mro {
+        method mro \{
           %(
-        {
-           %typeManifest.pairs.sort( *.key ).map({
-            "      { .key.fmt("\%-{ $max-key-size }s") } => [{
-              .value<mro>.map({ "'{ .^name }'" }).join('. ') }]"
-          }).join(",\n")
-        }
-          )
+      { $mro }
+          );
+        \}
+
+        method roles \{
+          %(
+      { $roles }
+          );
         \}
 
       \}
@@ -66,7 +84,7 @@ sub MAIN ( :$prefix is copy = %config<prefix>, :$quiet = False ) {
     True
   });
 
-  %typeManifest = do for @items -> $cu {
+  for @items -> $cu {
     # CATCH {
     #   default {
     #     outputManifest;
@@ -78,33 +96,52 @@ sub MAIN ( :$prefix is copy = %config<prefix>, :$quiet = False ) {
     next if $cu.ends-with('TypeClass' | 'Enums');
 
     $*ERR.say: "Checking { $cu }...";
-    my $o;
-    $o = try require ::($cu);
 
+    my ($o, @cu);
+    $o = try require ::($cu);
     $o = ::($cu);
 
-    next if $o ~~ GLib::Roles::StaticClass;
-    next if $o ~~ TypeManifest;
-    next if $o ~~ NotInManifest;
-
-    if $o ~~ Failure {
-      my $e = $o.exception;
-      $o.^name.say;
-      $o.message.say;
+    if $o.HOW ~~ Metamodel::PackageHOW {
+      my $v =  try ::($cu).WHO.values;
+      next if $v ~~ Failure;
+      @cu.push: |$v;
+    } else {
+      @cu.push: $o;
     }
-    #next unless $o.HOW ~~ Metamodel::ClassHOW;
-    my @p = $o.getTypePair.Array;
-    @p.head = @p.head.^shortname;
-    @p.tail = @p.tail.^name;
 
-    |(
-      @p.head,
-      %(
-        obj => @p.tail,
-        mro => $o.^mro
-      )
-    );
+    do for @cu -> $o {
+      next if $o ~~ GLib::Roles::StaticClass;
+      next if $o ~~ TypeManifest;
+      next if $o ~~ NotInManifest;
+
+
+      if $o ~~ Failure {
+        my $e = $o.exception;
+        $o.^name.say;
+        $o.message.say;
+      }
+      #next unless $o.HOW ~~ Metamodel::ClassHOW;
+      my @p = $o.getTypePair.Array;
+      @p.head = @p.head.^shortname;
+      @p.tail = @p.tail.^name;
+
+      %typeManifest{ @p.head } = {
+        obj   => @p.tail,
+        mro   => $o.^mro,
+        roles => $o.^roles
+      }
+    }
   }
 
-  outputManifest.say unless $quiet
+  if $files {
+    my $dir = '.'.IO;
+
+    $dir = 'lib'.IO.add($prefix) if $dir.basename ne $prefix;
+    $dir .= add('TypeManifest.pm6');
+    $dir.spurt: outputManifest;
+
+    say "Written to { $dir }";
+  } else {
+    outputManifest.say unless $quiet
+  }
 }

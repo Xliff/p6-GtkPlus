@@ -21,7 +21,7 @@ else
 fi
 
 INCLUDES="\
--I/home/cbwood/.raku                     \
+-I${HOME}/.raku                          \
 -I${P6_GTK_HOME}/cairo-p6/lib            \
 -I${P6_GTK_HOME}/Method-Also/lib         \
 -I${P6_GTK_HOME}/raku-Duration-Units/lib \
@@ -56,6 +56,7 @@ INCLUDES="\
 -I${P6_GTK_HOME}/p6-ICal-GLib/lib        \
 -I${P6_GTK_HOME}/raku-GDK4/lib           \
 -I${P6_GTK_HOME}/raku-GSK4/lib           \
+-I${P6_GTK_HOME}/raku-GTK4/lib           \
 -Ilib -Ibin"
 
 # Handle any extra directories in project file.
