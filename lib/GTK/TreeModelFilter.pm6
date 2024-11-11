@@ -55,8 +55,8 @@ class GTK::TreeModelFilter:ver<3.0.1146> {
       }
     }
     self!setObject($to-parent);
-    # self.roleInit-GtkTreeModel;
-    # self.roleInit-GtkTreeDragSource
+    self.roleInit-GtkTreeModel;
+    self.roleInit-GtkTreeDragSource
   }
 
   method GTK::Raw::Definitions::GtkTreeModelFilter
