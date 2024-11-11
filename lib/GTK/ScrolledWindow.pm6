@@ -23,13 +23,6 @@ class GTK::ScrolledWindow:ver<3.0.1146> is GTK::Bin {
 
   has GtkScrolledWindow $!sw is implementor;
 
-  method bless (*%attrinit) {
-    use nqp;
-    my $o = nqp::create(self).BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD (:$scrolled) {
     self.setGtkScrolledWindow($scrolled) if $scrolled;
   }
