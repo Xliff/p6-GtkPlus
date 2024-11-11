@@ -813,7 +813,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     is also<get-size>
   { * }
 
-  multi method get_size {
+  multi method get_size is also<size> {
     samewith($, $);
   }
   multi method get_size ($width is rw, $height is rw) {
