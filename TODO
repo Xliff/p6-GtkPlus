@@ -444,7 +444,8 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 
 - Consider Pulse Audio bindings -- /usr/include/pulse
 
-- GLibTop...although the documents SUCK!
++ GLibTop...although the documents SUCK!
+- Is it possible that the Blender Python API could be modified for use by Raku?
 
 - Extract all non-GLib functions into a project explicitly for the purpose of implementing the MethodMaker pattern. This shall include:
   - All non-GLib specific functions from GLib::Raw::Subs and all other ::Raw::Sub CompUnits from the entire suite
@@ -452,4 +453,10 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
   - If there are any Glib-specific scripts in scripts, then they are to be made non-GLib specific via a yet-to-be-specified callback
     mechanism
   - If there are any GLib-specific scripts in project-scripts, then they are to be made non-GLib specific via a yet-to-be-speified callback
+
+- Port Manette - Controllers for Raku!
+
+- Add a journal to cairo_t in libcairo
+
+- Consider a port of TBOX to Raku: https://opencollective.com/tbox
     mechanism
