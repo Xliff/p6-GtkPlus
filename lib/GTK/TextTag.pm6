@@ -66,25 +66,14 @@ class GTK::TextTag:ver<3.0.1146>  {
     $o.ref if $ref;
     $o;
   }
-  multi method new (Str() $name) {
+  multi method new (Str() $name, *%a) {
     my $tag = gtk_text_tag_new($name);
 
-    $tag ?? self.bless(:$tag) !! Nil;
+    my $o = $tag ?? self.bless(:$tag) !! Nil;
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
-  multi method new (Str() $name, *%attributes) {
-    samewith($name, %attributes);
-  }
-  multi method new (Str() $name, %attributes) {
-    my $tt = self.new($name);
-
-    for %attributes.pairs {
-      die "Invalid attribute '{ .name }' given when creating a text tag!"
-        unless .key eq @gtktexttag-valid-attributes.any;
-      $tt."{ .key }"() = .value;
-    }
-    $tt
-  }
-
+  
   method GTK::Raw::Definitions::GtkTextTag
     is also<
       TextTag
