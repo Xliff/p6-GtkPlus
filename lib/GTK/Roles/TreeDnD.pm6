@@ -9,7 +9,7 @@ use GTK::Raw::Types:ver<3.0.1146>;
 role GTK::Roles::TreeDragSource:ver<3.0.1146>  {
   has GtkTreeDragSource $!ds;
 
-  method !roleInit-GtkTreeDragSource {
+  method roleInit-GtkTreeDragSource {
     return if $!ds;
 
     my \i = findProperImplementor(self.^attributes);
