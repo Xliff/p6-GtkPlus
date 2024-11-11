@@ -149,19 +149,22 @@ role GTK::Roles::Signals::Widget:ver<3.0.1146> {
 
   # GtkWidget, cairo_t, gpointer --> gboolean
   method connect-draw (
-    $obj,
-    $signal = 'draw',
-    &handler?
+     $obj,
+     $signal     = 'draw',
+     &handler?,
+    :$raw        = False
   ) {
     %!signals-widget{$signal} //= do {
       my $s = Supplier.new;
       g-connect-draw($obj, $signal,
-        -> $, $cr, $ud --> uint32 {
+        -> $, $c is copy, $ud --> uint32 {
           CATCH { default { note($_) } }
+
+          $c = Cairo::Context.new($c) unless $raw;
 
           my ReturnedValue $r .= new;
           my @valid-types = (Bool, Int);
-          $s.emit( [self, $cr, $ud, $r] );
+          $s.emit( [self, $c, $ud, $r] );
           #die 'Invalid return type' if $r.r ~~ @valid-types.any;
           #$r.r = .Int if $r.r ~~ @valid-types.any;
           $r.r;
