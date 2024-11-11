@@ -9,6 +9,14 @@ use GTK::Raw::Types:ver<3.0.1146>;
 role GTK::Roles::TreeSortable:ver<3.0.1146> {
   has GtkTreeSortable $!ts;
 
+  method roleInit-GtkTreeSortable {
+    return if $!ts;
+
+    my \i = findProperImplementor(self.^attributes);
+
+    $!ts = cast( GtkTreeSortable, i.get_value(self) );
+  }
+
   # ↓↓↓↓ SIGNALS ↓↓↓↓
 
   # Is originally:
