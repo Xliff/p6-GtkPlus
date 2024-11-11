@@ -11,47 +11,39 @@ use GTK::Dialog:ver<3.0.1146>;
 
 use GTK::Roles::FontChooser:ver<3.0.1146>;
 
-our subset FontChooserDialogAncestry
-  where GtkFontChooserDialog | GtkFontChooser | DialogAncestry;
+our subset GtkFontChooserDialogAncestry
+  where GtkFontChooserDialog | GtkFontChooser | GtkDialogAncestry;
+
+constant FontChooserDialogAncestry is export = GtkFontChooserDialogAncestry;
 
 class GTK::Dialog::FontChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::FontChooser;
 
   has GtkFontChooserDialog $!fcd is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
-    $o;
+  submethod BUILD ( :$gtk-font-dialog ) {
+    self.setGtkFontChooserDialog($gtk-font-dialog) if $gtk-font-dialog;
   }
 
-  submethod BUILD(:$dialog) {
+  method setGtkFontChooserDialog (GtkFontChooserDialogAncestry $_) {
     my $to-parent;
-    given $dialog {
-      when FontChooserDialogAncestry {
-        $!fcd = do {
-          when GtkFontChooserDialog {
-            $to-parent = nativecast(GtkDialog, $_);
-            $_;
-          }
-          when GtkFontChooser {
-            $!fc = $_;                          # For GTK::Roles::GtkFontChooser
-            $to-parent = nativecast(GtkDialog, $_);
-            nativecast(GtkFontChooserDialog, $_);
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkFontChooserDialog, $_);
-          }
-        }
-        self.setDialog($to-parent);
+    $!fcd = do {
+      when GtkFontChooserDialog {
+        $to-parent = nativecast(GtkDialog, $_);
+        $_;
       }
-      when GTK::Dialog::FontChooser {
+      when GtkFontChooser {
+        $!fc = $_;                          # For GTK::Roles::GtkFontChooser
+        $to-parent = nativecast(GtkDialog, $_);
+        nativecast(GtkFontChooserDialog, $_);
       }
       default {
+        $to-parent = $_;
+        nativecast(GtkFontChooserDialog, $_);
       }
     }
-    $!fc = nativecast(GtkFontChooser, $!fcd);   # For GTK::Roles::GtkFontChooser
+    self.setGtkDialog($to-parent);
+    self.roleInit-GtkFontChooser;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -61,19 +53,29 @@ class GTK::Dialog::FontChooser:ver<3.0.1146> is GTK::Dialog {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_type is also<get-type> {
-    state ($n, $t);
-    GTK::Widget.unstable_get_type( &gtk_font_chooser_dialog_get_type, $n, $t );
-  }
-
-  multi method new(FontChooserDialogAncestry $dialog) {
-    my $o = self.bless(:$dialog);
+  multi method new(GtkFontChooserDialogAncestry $gtk-font-dialog) {
+    my $o = self.bless( :$gtk-font-dialog );
     $o.upref;
     $o;
   }
-  multi method new (Str() $title, GtkWindow() $parent) {
-    my $dialog = gtk_font_chooser_dialog_new($title, $parent);
-    self.bless(:$dialog);
+  multi method new (Str() $title, GtkWindow() $parent, *%a) {
+    my $gtk-font-dialog = gtk_font_chooser_dialog_new($title, $parent);
+
+    # Do not allow attributes to override positional parameters.
+    if %a<parent title>:delete {
+      $*ERR.say: "PARENT and TITLE named parameters are ignored when {
+                  '' } creating a new GtkFontChooserDialog!";
+    }
+
+    my $o = $gtk-font-dialog ?? self.bless( :$gtk-font-dialog ) !! Nil
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
+  }
+
+  method get_type is also<get-type> {
+    state ($n, $t);
+
+    unstable_get_type( &gtk_font_chooser_dialog_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 

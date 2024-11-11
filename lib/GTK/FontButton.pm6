@@ -9,70 +9,65 @@ use GTK::Button:ver<3.0.1146>;
 
 use GTK::Roles::FontChooser:ver<3.0.1146>;
 
-my subset FontButtonAncestry is export
+my subset GtkFontButtonAncestry is export
   where GtkFontButton | GtkFontChooser | ButtonAncestry;
+
+constant FontButtonAncestry is export = GtkFontButtonAncestry;
 
 class GTK::FontButton:ver<3.0.1146> is GTK::Button {
   also does GTK::Roles::FontChooser;
 
   has GtkFontButton $!fb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  submethod BUILD(:$gtk-font-button) {
+    self.setGtkFontButton($gtk-font-button) if $gtk-font-button;
   }
 
-  submethod BUILD(:$button) {
+  method setGtkFontButton (GtkFontButtonAncestry $_) {
     my $to-parent;
-    given $button {
-      when FontButtonAncestry {
-        $!fb = do {
-          when GtkFontButton {
-            $to-parent = cast(GtkButton, $_);
-            $_;
-          }
-          when GtkFontChooser {
-            $!fc = $_;                            # GTK::Roles::FontChooser
-            $to-parent = cast(GtkButton, $_);
-            cast(GtkFontButton, $_);
-          }
-          when ButtonAncestry {
-            $to-parent = $_;
-            cast(GtkFontButton, $_);
-          }
-        };
-        self.setButton($to-parent);
-        $!fc //= cast(GtkFontChooser, $!fb);    # GTK::Roles::FontChooser
+
+    $!fb = do {
+      when GtkFontButton {
+        $to-parent = cast(GtkButton, $_);
+        $_;
       }
-      when GTK::Button {
+
+      when GtkFontChooser {
+        $!fnt-c    = $_;                            # GTK::Roles::FontChooser
+        $to-parent = cast(GtkButton, $_);
+        cast(GtkFontButton, $_);
       }
-      default {
+
+      when ButtonAncestry {
+        $to-parent = $_;
+        cast(GtkFontButton, $_);
       }
     }
+    self.setGtkButton($to-parent);
+    self.roleInit-GtkFontChooser;
   }
 
   method GTK::Raw::Definitions::GtkFontButton
     is also<GtkFontButton>
   { $!fb }
 
-  multi method new (FontButtonAncestry $button, :$ref = False) {
-    return Nil unless $button;
+  multi method new (GtkFontButtonAncestry $gtk-font-button, :$ref = False) {
+    return Nil unless $gtk-font-button;
 
-    my $o = self.bless(:$button);
+    my $o = self.bless(:$gtk-font-button);
     $o.ref if $ref;
     $o;
   }
   multi method new {
-    my $button = gtk_font_button_new();
+    my $gtk-font-button = gtk_font_button_new();
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-font-button ?? self.bless(:$gtk-font-button) !! Nil;
   }
 
-  method new_with_font (Str $font) is also<new-with-font> {
-    my $button = gtk_font_button_new_with_font($font);
+  method new_with_font (Str() $font) is also<new-with-font> {
+    my $gtk-font-button = gtk_font_button_new_with_font($font);
 
-    $button ?? self.bless(:$button) !! Nil;
+    $gtk-font-button ?? self.bless(:$gtk-font-button) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
