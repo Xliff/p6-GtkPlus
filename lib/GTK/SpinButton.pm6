@@ -23,12 +23,6 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
 
   has GtkSpinButton $!sp is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD (:$spinbutton) {
     self.setGtkSpinButton($spinbutton) if $spinbutton;
   }
@@ -79,9 +73,19 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
     $spinbutton ?? self.bless(:$spinbutton) !! Nil;
   }
 
-  method new_with_range (Num() $min, Num() $max, Num() $step)
+  proto method new_with_range (|)
     is also<new-with-range>
-  {
+  { * }
+
+  multi method new_with_range (Range() $range, :$step = 1) {
+    my ($min, $max) = ( .min, .max ) given $range;
+    $min .= succ if $range.excludes-min;
+    $max .= pred if $range.excludes-max;
+    return Nil if $min > $max;
+    
+    samewith( $min, $max, $step ) given $range;
+  }
+  multi method new_with_range (Num() $min, Num() $max, Num() $step) {
     my gdouble ($mn, $mx, $st) = ($min, $max, $step);
 
     my $spinbutton = gtk_spin_button_new_with_range($mn, $mx, $st);
