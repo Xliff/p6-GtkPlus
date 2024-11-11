@@ -76,15 +76,18 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     $o;
   }
 
-  multi method new (GtkTextBuffer() $buffer) {
+  multi method new (GtkTextBuffer() $buffer, *%a) {
     return Nil unless $buffer;
 
-    GTK::TextView.new_with_buffer($buffer);
+    GTK::TextView.new_with_buffer($buffer, |%a);
   }
-  multi method new {
+  multi method new ( *%a ) {
     my $textview = gtk_text_view_new();
 
-    $textview ??self.bless(:$textview) !! Nil;
+    my $o = $textview ?? self.bless(:$textview) !! Nil;
+    $o.buffer.setAttributes(%a) if       +%a;
+    $o.setAttributes(%a)        if $o && +%a;
+    $o;
   }
 
   multi method new (
