@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::RecentFilter:ver<3.0.1146>;
 
@@ -14,7 +16,7 @@ sub gtk_recent_filter_add_age (GtkRecentFilter $filter, gint $days)
 
 sub gtk_recent_filter_add_application (
   GtkRecentFilter $filter,
-  gchar $application
+  Str $application
 )
   is native(gtk)
   is export
@@ -31,20 +33,20 @@ sub gtk_recent_filter_add_custom (
   is export
   { * }
 
-sub gtk_recent_filter_add_group (GtkRecentFilter $filter, gchar $group)
+sub gtk_recent_filter_add_group (GtkRecentFilter $filter, Str $group)
   is native(gtk)
   is export
   { * }
 
 sub gtk_recent_filter_add_mime_type (
   GtkRecentFilter $filter,
-  gchar $mime_type
+  Str $mime_type
 )
   is native(gtk)
   is export
   { * }
 
-sub gtk_recent_filter_add_pattern (GtkRecentFilter $filter, gchar $pattern)
+sub gtk_recent_filter_add_pattern (GtkRecentFilter $filter, Str $pattern)
   is native(gtk)
   is export
   { * }
@@ -87,7 +89,7 @@ sub gtk_recent_filter_get_name (GtkRecentFilter $filter)
   is export
   { * }
 
-sub gtk_recent_filter_set_name (GtkRecentFilter $filter, gchar $name)
+sub gtk_recent_filter_set_name (GtkRecentFilter $filter, Str $name)
   is native(gtk)
   is export
   { * }

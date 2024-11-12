@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::PageSetup:ver<3.0.1146>;
 
@@ -93,7 +95,7 @@ sub gtk_page_setup_get_type ()
 
 sub gtk_page_setup_load_file (
   GtkPageSetup $setup,
-  gchar $file_name,
+  Str $file_name,
   GError $error
 )
   returns uint32
@@ -104,7 +106,7 @@ sub gtk_page_setup_load_file (
 sub gtk_page_setup_load_key_file (
   GtkPageSetup $setup,
   GKeyFile $key_file,
-  gchar $group_name,
+  Str $group_name,
   GError $error
 )
   returns uint32
@@ -118,7 +120,7 @@ sub gtk_page_setup_new ()
   is export
   { * }
 
-sub gtk_page_setup_new_from_file (gchar $file_name, GError $error)
+sub gtk_page_setup_new_from_file (Str $file_name, GError $error)
   returns GtkPageSetup
   is native(gtk)
   is export
@@ -132,7 +134,7 @@ sub gtk_page_setup_new_from_gvariant (GVariant $variant)
 
 sub gtk_page_setup_new_from_key_file (
   GKeyFile $key_file,
-  gchar $group_name,
+  Str $group_name,
   GError $error
 )
   returns GtkPageSetup
@@ -186,7 +188,7 @@ sub gtk_page_setup_set_top_margin (
 
 sub gtk_page_setup_to_file (
   GtkPageSetup $setup,
-  gchar $file_name,
+  Str $file_name,
   GError $error
 )
   returns uint32
@@ -203,7 +205,7 @@ sub gtk_page_setup_to_gvariant (GtkPageSetup $setup)
 sub gtk_page_setup_to_key_file (
   GtkPageSetup $setup,
   GKeyFile $key_file,
-  gchar $group_name
+  Str $group_name
 )
   is native(gtk)
   is export

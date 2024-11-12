@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::PaperSize:ver<3.0.1146>;
 
@@ -126,15 +128,15 @@ sub gtk_paper_size_is_ipp (GtkPaperSize $size)
   is export
   { * }
 
-sub gtk_paper_size_new (gchar $name)
+sub gtk_paper_size_new (Str $name)
   returns GtkPaperSize
   is native(gtk)
   is export
   { * }
 
 sub gtk_paper_size_new_custom (
-  gchar $name,
-  gchar $display_name,
+  Str $name,
+  Str $display_name,
   gdouble $width,
   gdouble $height,
   uint32 $unit                  # GtkUnit $unit
@@ -151,7 +153,7 @@ sub gtk_paper_size_new_from_gvariant (GVariant $variant)
   { * }
 
 sub gtk_paper_size_new_from_ipp (
-  gchar $ipp_name,
+  Str $ipp_name,
   gdouble $width,
   gdouble $height
 )
@@ -162,7 +164,7 @@ sub gtk_paper_size_new_from_ipp (
 
 sub gtk_paper_size_new_from_key_file (
   GKeyFile $key_file,
-  gchar $group_name,
+  Str $group_name,
   GError $error
 )
   returns GtkPaperSize
@@ -171,8 +173,8 @@ sub gtk_paper_size_new_from_key_file (
   { * }
 
 sub gtk_paper_size_new_from_ppd (
-  gchar $ppd_name,
-  gchar $ppd_display_name,
+  Str $ppd_name,
+  Str $ppd_display_name,
   gdouble $width,
   gdouble $height
 )
@@ -200,7 +202,7 @@ sub gtk_paper_size_to_gvariant (GtkPaperSize $paper_size)
 sub gtk_paper_size_to_key_file (
   GtkPaperSize $size,
   GKeyFile $key_file,
-  gchar $group_name
+  Str $group_name
 )
   is native(gtk)
   is export

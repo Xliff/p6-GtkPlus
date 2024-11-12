@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::GtkRadioToolButton:ver<3.0.1146>;
 
@@ -19,7 +21,7 @@ sub gtk_radio_tool_button_new (GSList $group)
   is export
   { * }
 
-sub gtk_radio_tool_button_new_from_stock (GSList $group, gchar $stock_id)
+sub gtk_radio_tool_button_new_from_stock (GSList $group, Str $stock_id)
   returns GtkToolItem
   is native(gtk)
   is export
@@ -33,7 +35,7 @@ sub gtk_radio_tool_button_new_from_widget (GtkRadioToolButton $group)
 
 sub gtk_radio_tool_button_new_with_stock_from_widget (
   GtkRadioToolButton $group,
-  gchar $stock_id
+  Str $stock_id
 )
   returns GtkToolItem
   is native(gtk)

@@ -2,14 +2,16 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 use Pango::Raw::Types;
 
 unit package GTK::Raw::Scale:ver<3.0.1146>;
 
-# (GtkScale $scale, gdouble $value, GtkPositionType $position, gchar $markup)
-sub gtk_scale_add_mark (GtkScale $scale, gdouble $value, uint32 $position, gchar $markup)
+# (GtkScale $scale, gdouble $value, GtkPositionType $position, Str $markup)
+sub gtk_scale_add_mark (GtkScale $scale, gdouble $value, uint32 $position, Str $markup)
   is native(gtk)
   is export
   { * }

@@ -2,15 +2,19 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Popover:ver<3.0.1146>;
 
 sub gtk_popover_bind_model (
   GtkPopover $popover,
   GMenuModel $model,
-  gchar $action_namespace
+  Str $action_namespace
 )
   is native(gtk)
   is export

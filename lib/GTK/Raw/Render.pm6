@@ -2,15 +2,20 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use Cairo;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
 use Pango::Raw::Types;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Render:ver<3.0.1146>;
 
 sub gtk_render_activity (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -22,7 +27,7 @@ sub gtk_render_activity (
 
 sub gtk_render_arrow (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $angle,
   gdouble $x,
   gdouble $y,
@@ -34,7 +39,7 @@ sub gtk_render_arrow (
 
 sub gtk_render_background (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -58,7 +63,7 @@ sub gtk_render_background_get_clip (
 
 sub gtk_render_check (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -70,7 +75,7 @@ sub gtk_render_check (
 
 sub gtk_render_expander (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -82,7 +87,7 @@ sub gtk_render_expander (
 
 sub gtk_render_extension (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -95,7 +100,7 @@ sub gtk_render_extension (
 
 sub gtk_render_focus (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -107,7 +112,7 @@ sub gtk_render_focus (
 
 sub gtk_render_frame (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -119,7 +124,7 @@ sub gtk_render_frame (
 
 sub gtk_render_frame_gap (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -134,7 +139,7 @@ sub gtk_render_frame_gap (
 
 sub gtk_render_handle (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -146,7 +151,7 @@ sub gtk_render_handle (
 
 sub gtk_render_icon (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   GdkPixbuf $pixbuf,
   gdouble $x,
   gdouble $y
@@ -167,7 +172,7 @@ sub gtk_render_icon_pixbuf (
 
 sub gtk_render_icon_surface (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   cairo_surface_t $surface,
   gdouble $x,
   gdouble $y
@@ -178,7 +183,7 @@ sub gtk_render_icon_surface (
 
 sub gtk_render_layout (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   PangoLayout $layout
@@ -189,7 +194,7 @@ sub gtk_render_layout (
 
 sub gtk_render_line (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x0,
   gdouble $y0,
   gdouble $x1,
@@ -201,7 +206,7 @@ sub gtk_render_line (
 
 sub gtk_render_option (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -213,7 +218,7 @@ sub gtk_render_option (
 
 sub gtk_render_slider (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   gdouble $width,
@@ -226,7 +231,7 @@ sub gtk_render_slider (
 
 sub gtk_render_insertion_cursor (
   GtkStyleContext $context,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   gdouble $x,
   gdouble $y,
   uint32 $l,                      # PangoLayout $layout

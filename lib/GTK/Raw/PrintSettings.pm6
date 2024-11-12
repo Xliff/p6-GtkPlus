@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::PrintSettings:ver<3.0.1146>;
 
@@ -24,7 +26,7 @@ sub gtk_print_settings_foreach (
 
 sub gtk_print_settings_get (
   GtkPrintSettings $settings,
-  gchar $key
+  Str $key
 )
   returns Str
   is native(gtk)
@@ -33,7 +35,7 @@ sub gtk_print_settings_get (
 
 sub gtk_print_settings_get_bool (
   GtkPrintSettings $settings,
-  gchar $key
+  Str $key
 )
   returns uint32
   is native(gtk)
@@ -42,7 +44,7 @@ sub gtk_print_settings_get_bool (
 
 sub gtk_print_settings_get_double (
   GtkPrintSettings $settings,
-  gchar $key
+  Str $key
 )
   returns gdouble
   is native(gtk)
@@ -51,7 +53,7 @@ sub gtk_print_settings_get_double (
 
 sub gtk_print_settings_get_double_with_default (
   GtkPrintSettings $settings,
-  gchar $key,
+  Str $key,
   gdouble $def
 )
   returns gdouble
@@ -61,7 +63,7 @@ sub gtk_print_settings_get_double_with_default (
 
 sub gtk_print_settings_get_int (
   GtkPrintSettings $settings,
-  gchar $key
+  Str $key
 )
   returns gint
   is native(gtk)
@@ -70,7 +72,7 @@ sub gtk_print_settings_get_int (
 
 sub gtk_print_settings_get_int_with_default (
   GtkPrintSettings $settings,
-  gchar $key,
+  Str $key,
   gint $def
 )
   returns gint
@@ -80,7 +82,7 @@ sub gtk_print_settings_get_int_with_default (
 
 sub gtk_print_settings_get_length (
   GtkPrintSettings $settings,
-  gchar $key,
+  Str $key,
   uint32 $unit                # GtkUnit $unit
 )
   returns gdouble
@@ -139,7 +141,7 @@ sub gtk_print_settings_get_type ()
 
 sub gtk_print_settings_has_key (
   GtkPrintSettings $settings,
-  gchar $key
+  Str $key
 )
   returns uint32
   is native(gtk)
@@ -148,7 +150,7 @@ sub gtk_print_settings_has_key (
 
 sub gtk_print_settings_load_file (
   GtkPrintSettings $settings,
-  gchar $file_name,
+  Str $file_name,
   GError $error
 )
   returns uint32
@@ -159,7 +161,7 @@ sub gtk_print_settings_load_file (
 sub gtk_print_settings_load_key_file (
   GtkPrintSettings $settings,
   GKeyFile $key_file,
-  gchar $group_name,
+  Str $group_name,
   GError $error
 )
   returns uint32
@@ -174,7 +176,7 @@ sub gtk_print_settings_new ()
   { * }
 
 sub gtk_print_settings_new_from_file (
-  gchar $file_name,
+  Str $file_name,
   GError $error
 )
   returns GtkPrintSettings
@@ -190,7 +192,7 @@ sub gtk_print_settings_new_from_gvariant (GVariant $variant)
 
 sub gtk_print_settings_new_from_key_file (
   GKeyFile $key_file,
-  gchar $group_name,
+  Str $group_name,
   GError $error
 )
   returns GtkPrintSettings
@@ -200,8 +202,8 @@ sub gtk_print_settings_new_from_key_file (
 
 sub gtk_print_settings_set (
   GtkPrintSettings $settings,
-  gchar $key,
-  gchar $value
+  Str $key,
+  Str $value
 )
   is native(gtk)
   is export
@@ -209,7 +211,7 @@ sub gtk_print_settings_set (
 
 sub gtk_print_settings_set_bool (
   GtkPrintSettings $settings,
-  gchar $key,
+  Str $key,
   gboolean $value
 )
   is native(gtk)
@@ -218,7 +220,7 @@ sub gtk_print_settings_set_bool (
 
 sub gtk_print_settings_set_double (
   GtkPrintSettings $settings,
-  gchar $key,
+  Str $key,
   gdouble $value
 )
   is native(gtk)
@@ -227,7 +229,7 @@ sub gtk_print_settings_set_double (
 
 sub gtk_print_settings_set_int (
   GtkPrintSettings $settings,
-  gchar $key,
+  Str $key,
   gint $value
 )
   is native(gtk)
@@ -236,7 +238,7 @@ sub gtk_print_settings_set_int (
 
 sub gtk_print_settings_set_length (
   GtkPrintSettings $settings,
-  gchar $key,
+  Str $key,
   gdouble $value,
   uint32 $unit                # GtkUnit $unit
 )
@@ -282,7 +284,7 @@ sub gtk_print_settings_set_resolution_xy (
 
 sub gtk_print_settings_to_file (
   GtkPrintSettings $settings,
-  gchar $file_name,
+  Str $file_name,
   GError $error
 )
   returns uint32
@@ -299,7 +301,7 @@ sub gtk_print_settings_to_gvariant (GtkPrintSettings $settings)
 sub gtk_print_settings_to_key_file (
   GtkPrintSettings $settings,
   GKeyFile $key_file,
-  gchar $group_name
+  Str $group_name
 )
   is native(gtk)
   is export
@@ -307,7 +309,7 @@ sub gtk_print_settings_to_key_file (
 
 sub gtk_print_settings_unset (
   GtkPrintSettings $settings,
-  gchar $key
+  Str $key
 )
   is native(gtk)
   is export
@@ -461,7 +463,7 @@ sub gtk_print_settings_set_print_pages (
 
 sub gtk_print_settings_set_output_bin (
   GtkPrintSettings $settings,
-  gchar $output_bin
+  Str $output_bin
 )
   is native(gtk)
   is export
@@ -469,7 +471,7 @@ sub gtk_print_settings_set_output_bin (
 
 sub gtk_print_settings_set_finishings (
   GtkPrintSettings $settings,
-  gchar $finishings
+  Str $finishings
 )
   is native(gtk)
   is export
@@ -501,7 +503,7 @@ sub gtk_print_settings_set_collate (
 
 sub gtk_print_settings_set_dither (
   GtkPrintSettings $settings,
-  gchar $dither
+  Str $dither
 )
   is native(gtk)
   is export
@@ -509,7 +511,7 @@ sub gtk_print_settings_set_dither (
 
 sub gtk_print_settings_set_media_type (
   GtkPrintSettings $settings,
-  gchar $media_type
+  Str $media_type
 )
   is native(gtk)
   is export
@@ -565,7 +567,7 @@ sub gtk_print_settings_set_scale (
 
 sub gtk_print_settings_set_printer (
   GtkPrintSettings $settings,
-  gchar $printer
+  Str $printer
 )
   is native(gtk)
   is export
@@ -589,7 +591,7 @@ sub gtk_print_settings_set_resolution (
 
 sub gtk_print_settings_set_default_source (
   GtkPrintSettings $settings,
-  gchar $default_source
+  Str $default_source
 )
   is native(gtk)
   is export

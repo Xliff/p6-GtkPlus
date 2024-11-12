@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use Cairo;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::PrintJob:ver<3.0.1146>;
 
@@ -35,7 +38,7 @@ sub gtk_print_job_get_surface (
   GtkPrintJob $job,
   CArray[Pointer[GError]] $error
 )
-  returns cairo_surface_t
+  returns Cairo::cairo_surface_t
   is native(gtk)
   is export
   { * }
@@ -53,7 +56,7 @@ sub gtk_print_job_get_type ()
   { * }
 
 sub gtk_print_job_new (
-  gchar $title,
+  Str $title,
   GtkPrinter $printer,
   GtkPrintSettings $settings,
   GtkPageSetup $page_setup
@@ -94,7 +97,7 @@ sub gtk_print_job_set_source_fd (
 
 sub gtk_print_job_set_source_file (
   GtkPrintJob $job,
-  gchar $filename,
+  Str $filename,
   CArray[Pointer[GError]] $error
 )
   returns uint32

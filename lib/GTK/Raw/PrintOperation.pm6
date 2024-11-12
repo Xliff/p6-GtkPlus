@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::PrintOperation:ver<3.0.1146>;
 
@@ -117,7 +119,7 @@ sub gtk_print_operation_set_current_page (
 
 sub gtk_print_operation_set_custom_tab_label (
   GtkPrintOperation $op,
-  gchar $label
+  Str $label
 )
   is native(gtk)
   is export
@@ -130,7 +132,7 @@ sub gtk_print_operation_set_defer_drawing (GtkPrintOperation $op)
 
 sub gtk_print_operation_set_export_filename (
   GtkPrintOperation $op,
-  gchar $filename
+  Str $filename
 )
   is native(gtk)
   is export
@@ -138,7 +140,7 @@ sub gtk_print_operation_set_export_filename (
 
 sub gtk_print_operation_set_job_name (
   GtkPrintOperation $op,
-  gchar $job_name
+  Str $job_name
 )
   is native(gtk)
   is export
