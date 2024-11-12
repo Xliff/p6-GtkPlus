@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::NoteBook:ver<3.0.1146>;
 
@@ -222,7 +224,7 @@ sub gtk_notebook_set_menu_label (
 sub gtk_notebook_set_menu_label_text (
   GtkNotebook $notebook,
   GtkWidget $child,
-  gchar $menu_text
+  Str $menu_text
 )
   is native(gtk)
   is export
@@ -249,7 +251,7 @@ sub gtk_notebook_set_tab_label (
 sub gtk_notebook_set_tab_label_text (
   GtkNotebook $notebook,
   GtkWidget $child,
-  gchar $tab_text
+  Str $tab_text
 )
   is native(gtk)
   is export
@@ -313,7 +315,7 @@ sub gtk_notebook_set_tab_pos (
   is export
   { * }
 
-sub gtk_notebook_set_group_name (GtkNotebook $notebook, gchar $group_name)
+sub gtk_notebook_set_group_name (GtkNotebook $notebook, Str $group_name)
   is native(gtk)
   is export
   { * }

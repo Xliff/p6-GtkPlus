@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::FileFilter:ver<3.0.1146>;
 
@@ -18,12 +20,12 @@ sub gtk_file_filter_add_custom (
   is export
   { * }
 
-sub gtk_file_filter_add_mime_type (GtkFileFilter $filter, gchar $mime_type)
+sub gtk_file_filter_add_mime_type (GtkFileFilter $filter, Str $mime_type)
   is native(gtk)
   is export
   { * }
 
-sub gtk_file_filter_add_pattern (GtkFileFilter $filter, gchar $pattern)
+sub gtk_file_filter_add_pattern (GtkFileFilter $filter, Str $pattern)
   is native(gtk)
   is export
   { * }
@@ -80,7 +82,7 @@ sub gtk_file_filter_get_name (GtkFileFilter $filter)
   is export
   { * }
 
-sub gtk_file_filter_set_name (GtkFileFilter $filter, gchar $name)
+sub gtk_file_filter_set_name (GtkFileFilter $filter, Str $name)
   is native(gtk)
   is export
   { * }

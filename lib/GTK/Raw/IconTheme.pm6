@@ -3,13 +3,18 @@ use v6.c;
 use NativeCall;
 
 use GDK::RGBA;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::IconTheme:ver<3.0.1146>;
 
 sub gtk_icon_theme_add_builtin_icon (
-  gchar $icon_name,
+  Str $icon_name,
   gint $size,
   GdkPixbuf $pixbuf
 )
@@ -17,12 +22,12 @@ sub gtk_icon_theme_add_builtin_icon (
   is export
   { * }
 
-sub gtk_icon_theme_add_resource_path (GtkIconTheme $icon_theme, gchar $path)
+sub gtk_icon_theme_add_resource_path (GtkIconTheme $icon_theme, Str $path)
   is native(gtk)
   is export
   { * }
 
-sub gtk_icon_theme_append_search_path (GtkIconTheme $icon_theme, gchar $path)
+sub gtk_icon_theme_append_search_path (GtkIconTheme $icon_theme, Str $path)
   is native(gtk)
   is export
   { * }
@@ -53,7 +58,7 @@ sub gtk_icon_theme_get_for_screen (GdkScreen $screen)
 
 sub gtk_icon_theme_get_icon_sizes (
   GtkIconTheme $icon_theme,
-  gchar $icon_name
+  Str $icon_name
 )
   returns gint
   is native(gtk)
@@ -300,7 +305,7 @@ sub gtk_icon_info_set_raw_coordinates (
   is export
   { * }
 
-sub gtk_icon_theme_has_icon (GtkIconTheme $icon_theme, gchar $icon_name)
+sub gtk_icon_theme_has_icon (GtkIconTheme $icon_theme, Str $icon_name)
   returns uint32
   is native(gtk)
   is export
@@ -312,7 +317,7 @@ sub gtk_icon_theme_list_contexts (GtkIconTheme $icon_theme)
   is export
   { * }
 
-sub gtk_icon_theme_list_icons (GtkIconTheme $icon_theme, gchar $context)
+sub gtk_icon_theme_list_icons (GtkIconTheme $icon_theme, Str $context)
   returns GList
   is native(gtk)
   is export
@@ -320,7 +325,7 @@ sub gtk_icon_theme_list_icons (GtkIconTheme $icon_theme, gchar $context)
 
 sub gtk_icon_theme_load_icon (
   GtkIconTheme $icon_theme,
-  gchar $icon_name,
+  Str $icon_name,
   gint $size,
   uint32 $flags,                # GtkIconLookupFlags $flags,
   CArray[Pointer[GError]] $error
@@ -332,7 +337,7 @@ sub gtk_icon_theme_load_icon (
 
 sub gtk_icon_theme_load_icon_for_scale (
   GtkIconTheme $icon_theme,
-  gchar $icon_name,
+  Str $icon_name,
   gint $size,
   gint $scale,
   uint32 $flags,                # GtkIconLookupFlags $flags,
@@ -345,7 +350,7 @@ sub gtk_icon_theme_load_icon_for_scale (
 
 sub gtk_icon_theme_load_surface (
   GtkIconTheme $icon_theme,
-  gchar $icon_name,
+  Str $icon_name,
   gint $size,
   gint $scale,
   GdkWindow $for_window,
@@ -382,7 +387,7 @@ sub gtk_icon_theme_lookup_by_gicon_for_scale (
 
 sub gtk_icon_theme_lookup_icon (
   GtkIconTheme $icon_theme,
-  gchar $icon_name,
+  Str $icon_name,
   gint $size,
   uint32 $flags                 # GtkIconLookupFlags $flags
 )
@@ -393,7 +398,7 @@ sub gtk_icon_theme_lookup_icon (
 
 sub gtk_icon_theme_lookup_icon_for_scale (
   GtkIconTheme $icon_theme,
-  gchar $icon_name,
+  Str $icon_name,
   gint $size,
   gint $scale,
   uint32 $flags                 # GtkIconLookupFlags $flags
@@ -411,7 +416,7 @@ sub gtk_icon_theme_new ()
 
 sub gtk_icon_theme_prepend_search_path (
   GtkIconTheme $icon_theme,
-  gchar $path
+  Str $path
 )
   is native(gtk)
   is export
@@ -425,7 +430,7 @@ sub gtk_icon_theme_rescan_if_needed (GtkIconTheme $icon_theme)
 
 sub gtk_icon_theme_set_custom_theme (
   GtkIconTheme $icon_theme,
-  gchar $theme_name
+  Str $theme_name
 )
   is native(gtk)
   is export

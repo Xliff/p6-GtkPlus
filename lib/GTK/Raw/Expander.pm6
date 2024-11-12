@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Expander:ver<3.0.1146>;
 
@@ -13,13 +15,13 @@ sub gtk_expander_get_type ()
   is export
   { * }
 
-sub gtk_expander_new (gchar $label)
+sub gtk_expander_new (Str $label)
   returns GtkWidget
   is native(gtk)
   is export
   { * }
 
-sub gtk_expander_new_with_mnemonic (gchar $label)
+sub gtk_expander_new_with_mnemonic (Str $label)
   returns GtkWidget
   is native(gtk)
   is export
@@ -89,7 +91,7 @@ sub gtk_expander_set_use_underline (
   is export
   { * }
 
-sub gtk_expander_set_label (GtkExpander $expander, gchar $label)
+sub gtk_expander_set_label (GtkExpander $expander, Str $label)
   is native(gtk)
   is export
   { * }

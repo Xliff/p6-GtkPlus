@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 use Pango::Raw::Types;
 
 unit package GTK::Raw::Label:ver<3.0.1146>;
@@ -64,22 +66,22 @@ sub gtk_label_select_region (GtkLabel $l, gint $start_offset, gint $end_offset)
   is export
   { * }
 
-sub gtk_label_set_markup (GtkLabel $l, gchar $str)
+sub gtk_label_set_markup (GtkLabel $l, Str $str)
   is native(gtk)
   is export
   { * }
 
-sub gtk_label_set_markup_with_mnemonic (GtkLabel $l, gchar $str)
+sub gtk_label_set_markup_with_mnemonic (GtkLabel $l, Str $str)
   is native(gtk)
   is export
   { * }
 
-sub gtk_label_set_pattern (GtkLabel $l, gchar $pattern)
+sub gtk_label_set_pattern (GtkLabel $l, Str $pattern)
   is native(gtk)
   is export
   { * }
 
-sub gtk_label_set_text_with_mnemonic (GtkLabel $l, gchar $str)
+sub gtk_label_set_text_with_mnemonic (GtkLabel $l, Str $str)
   is native(gtk)
   is export
   { * }
@@ -208,7 +210,7 @@ sub gtk_label_set_use_markup (GtkLabel $l, gboolean $setting)
   is export
   { * }
 
-sub gtk_label_set_label (GtkLabel $l, gchar $str)
+sub gtk_label_set_label (GtkLabel $l, Str $str)
   is native(gtk)
   is export
   { * }
@@ -255,7 +257,7 @@ sub gtk_label_set_selectable (GtkLabel $l, gboolean $setting)
   is export
   { * }
 
-sub gtk_label_set_text (GtkLabel $l, gchar $str)
+sub gtk_label_set_text (GtkLabel $l, Str $str)
   is native(gtk)
   is export
   { * }

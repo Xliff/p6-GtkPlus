@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::FileChooser:ver<3.0.1146>;
 
@@ -14,7 +16,7 @@ sub gtk_file_chooser_button_get_type ()
   { * }
 
 sub gtk_file_chooser_button_new (
-  gchar $title,
+  Str $title,
   uint32 $action                # GtkFileChooserAction $action
 )
   returns GtkWidget
@@ -64,7 +66,7 @@ sub gtk_file_chooser_button_set_focus_on_click (
 
 sub gtk_file_chooser_button_set_title (
   GtkFileChooserButton $button,
-  gchar $title
+  Str $title
 )
   is native(gtk)
   is export

@@ -3,8 +3,10 @@ use v6.c;
 use NativeCall;
 
 use Pango::Raw::Types;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::FontChooser:ver<3.0.1146>;
 
@@ -72,7 +74,7 @@ sub gtk_font_chooser_get_font_desc (GtkFontChooser $fontchooser)
   is export
   { * }
 
-sub gtk_font_chooser_set_font (GtkFontChooser $fontchooser, gchar $fontname)
+sub gtk_font_chooser_set_font (GtkFontChooser $fontchooser, Str $fontname)
   is native(gtk)
   is export
   { * }
@@ -95,7 +97,7 @@ sub gtk_font_chooser_set_show_preview_entry (
 
 sub gtk_font_chooser_set_preview_text (
   GtkFontChooser $fontchooser,
-  gchar $text
+  Str $text
 )
   is native(gtk)
   is export

@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::MenuItem:ver<3.0.1146>;
 
@@ -29,13 +31,13 @@ sub gtk_menu_item_new ()
   is      export
 { * }
 
-sub gtk_menu_item_new_with_label (gchar $label)
+sub gtk_menu_item_new_with_label (Str $label)
   returns GtkMenuItem
   is      native(gtk)
   is      export
 { * }
 
-sub gtk_menu_item_new_with_mnemonic (gchar $label)
+sub gtk_menu_item_new_with_mnemonic (Str $label)
   returns GtkMenuItem
   is      native(gtk)
   is      export
@@ -98,12 +100,12 @@ sub gtk_menu_item_get_use_underline (GtkMenuItem $menu_item)
   is      export
 { * }
 
-sub gtk_menu_item_set_label (GtkMenuItem $menu_item, gchar $label)
+sub gtk_menu_item_set_label (GtkMenuItem $menu_item, Str $label)
   is      native(gtk)
   is      export
 { * }
 
-sub gtk_menu_item_set_accel_path (GtkMenuItem $menu_item, gchar $accel_path)
+sub gtk_menu_item_set_accel_path (GtkMenuItem $menu_item, Str $accel_path)
   is      native(gtk)
   is      export
 { * }

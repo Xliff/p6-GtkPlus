@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::FontButton:ver<3.0.1146>;
 
@@ -19,7 +21,7 @@ sub gtk_font_button_new ()
   is export
   { * }
 
-sub gtk_font_button_new_with_font (gchar $fontname)
+sub gtk_font_button_new_with_font (Str $fontname)
   returns GtkWidget
   is native(gtk)
   is export
@@ -81,13 +83,13 @@ sub gtk_font_button_set_show_size (GtkFontButton $font_button, gboolean $show_si
   is export
   { * }
 
-sub gtk_font_button_set_font_name (GtkFontButton $font_button, gchar $fontname)
+sub gtk_font_button_set_font_name (GtkFontButton $font_button, Str $fontname)
   returns uint32
   is native(gtk)
   is export
   { * }
 
-sub gtk_font_button_set_title (GtkFontButton $font_button, gchar $title)
+sub gtk_font_button_set_title (GtkFontButton $font_button, Str $title)
   is native(gtk)
   is export
   { * }

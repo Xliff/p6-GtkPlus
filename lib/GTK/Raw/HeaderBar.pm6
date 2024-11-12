@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::HeaderBar:ver<3.0.1146>;
 
@@ -75,17 +77,17 @@ sub gtk_header_bar_set_show_close_button (GtkHeaderBar $bar, gboolean $setting)
   is export
   { * }
 
-sub gtk_header_bar_set_title (GtkHeaderBar $bar, gchar $title)
+sub gtk_header_bar_set_title (GtkHeaderBar $bar, Str $title)
   is native(gtk)
   is export
   { * }
 
-sub gtk_header_bar_set_decoration_layout (GtkHeaderBar $bar, gchar $layout)
+sub gtk_header_bar_set_decoration_layout (GtkHeaderBar $bar, Str $layout)
   is native(gtk)
   is export
   { * }
 
-sub gtk_header_bar_set_subtitle (GtkHeaderBar $bar, gchar $subtitle)
+sub gtk_header_bar_set_subtitle (GtkHeaderBar $bar, Str $subtitle)
   is native(gtk)
   is export
   { * }

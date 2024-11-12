@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Frame:ver<3.0.1146>;
 
@@ -22,7 +24,7 @@ sub gtk_frame_get_type ()
   is export
   { * }
 
-sub gtk_frame_new (gchar $label)
+sub gtk_frame_new (Str $label)
   returns GtkWidget
   is native(gtk)
   is export
@@ -64,7 +66,7 @@ sub gtk_frame_set_shadow_type (
   is export
   { * }
 
-sub gtk_frame_set_label (GtkFrame $frame, gchar $label)
+sub gtk_frame_set_label (GtkFrame $frame, Str $label)
   is native(gtk)
   is export
   { * }

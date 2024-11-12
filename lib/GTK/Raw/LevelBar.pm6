@@ -2,14 +2,16 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::LevelBar:ver<3.0.1146>;
 
 sub gtk_level_bar_get_offset_value (
   GtkLevelBar $self,
-  gchar $name,
+  Str $name,
   gdouble $value
 )
   returns uint32
@@ -75,7 +77,7 @@ sub gtk_level_bar_set_max_value (GtkLevelBar $self, gdouble $value)
   is export
   { * }
 
-sub gtk_level_bar_remove_offset_value (GtkLevelBar $self, gchar $name)
+sub gtk_level_bar_remove_offset_value (GtkLevelBar $self, Str $name)
   is native(gtk)
   is export
   { * }
@@ -95,7 +97,7 @@ sub gtk_level_bar_set_mode (
 
 sub gtk_level_bar_add_offset_value (
   GtkLevelBar $self,
-  gchar $name,
+  Str $name,
   gdouble $value
 )
   is native(gtk)

@@ -1,9 +1,14 @@
 use v6.c;
 
 use NativeCall;
-
-use GTK::Raw::Types:ver<3.0.1146>;
-use Pango::Raw::Types;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use Pango::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::GtkEntry:ver<3.0.1146>;
 
@@ -179,8 +184,8 @@ sub gtk_entry_set_icon_from_gicon (GtkEntry $entry, uint32 $icon_pos, GIcon $ico
   is export
   { * }
 
-# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $icon_name)
-sub gtk_entry_set_icon_from_icon_name (GtkEntry $entry, uint32 $icon_pos, gchar $icon_name)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, Str $icon_name)
+sub gtk_entry_set_icon_from_icon_name (GtkEntry $entry, uint32 $icon_pos, Str $icon_name)
   is native(gtk)
   is export
   { * }
@@ -191,8 +196,8 @@ sub gtk_entry_set_icon_from_pixbuf (GtkEntry $entry, uint32 $icon_pos, GdkPixbuf
   is export
   { * }
 
-# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $stock_id)
-sub gtk_entry_set_icon_from_stock (GtkEntry $entry, uint32 $icon_pos, gchar $stock_id)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, Str $stock_id)
+sub gtk_entry_set_icon_from_stock (GtkEntry $entry, uint32 $icon_pos, Str $stock_id)
   is native(gtk)
   is export
   { * }
@@ -203,14 +208,14 @@ sub gtk_entry_set_icon_sensitive (GtkEntry $entry, uint32 $icon_pos, gboolean $s
   is export
   { * }
 
-# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $tooltip)
-sub gtk_entry_set_icon_tooltip_markup (GtkEntry $entry, uint32 $icon_pos, gchar $tooltip)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, Str $tooltip)
+sub gtk_entry_set_icon_tooltip_markup (GtkEntry $entry, uint32 $icon_pos, Str $tooltip)
   is native(gtk)
   is export
   { * }
 
-# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, gchar $tooltip)
-sub gtk_entry_set_icon_tooltip_text (GtkEntry $entry, uint32 $icon_pos, gchar $tooltip)
+# (GtkEntry $entry, GtkEntryIconPosition $icon_pos, Str $tooltip)
+sub gtk_entry_set_icon_tooltip_text (GtkEntry $entry, uint32 $icon_pos, Str $tooltip)
   is native(gtk)
   is export
   { * }
@@ -417,7 +422,7 @@ sub gtk_entry_set_max_width_chars (GtkEntry $entry, gint $n_chars)
   is export
   { * }
 
-sub gtk_entry_set_text (GtkEntry $entry, gchar $text)
+sub gtk_entry_set_text (GtkEntry $entry, Str $text)
   is native(gtk)
   is export
   { * }
@@ -443,7 +448,7 @@ sub gtk_entry_set_input_hints (GtkEntry $entry, uint32 $hints)
   is export
   { * }
 
-sub gtk_entry_set_placeholder_text (GtkEntry $entry, gchar $text)
+sub gtk_entry_set_placeholder_text (GtkEntry $entry, Str $text)
   is native(gtk)
   is export
   { * }
