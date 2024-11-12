@@ -11,7 +11,7 @@ my $app = GTK::Application.new( title => 'org.genex.grid' );
 # Ported from the Python example found in section 6.2.1 from:
 # https://python-gtk-3-tutorial.readthedocs.io/en/latest/layout.html
 
-$app.activate.tap({
+$app.activate.tap: SUB {
   my @b = gather for 'Button ' «~« (1...6) {
     take GTK::Button.new-with-label($_);
   }
@@ -27,6 +27,6 @@ $app.activate.tap({
 
   $app.window.add($g);
   $app.window.show_all;
-});
+}
 
 $app.run;
