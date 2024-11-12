@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Object;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Buildable:ver<3.0.1146>;
 
@@ -11,7 +14,7 @@ sub gtk_buildable_add_child (
   GtkBuildable $buildable,
   GtkBuilder $builder,
   GObject $child,
-  gchar $type
+  Str $type
 )
   is native(gtk)
   is export
@@ -20,7 +23,7 @@ sub gtk_buildable_add_child (
 sub gtk_buildable_construct_child (
   GtkBuildable $buildable,
   GtkBuilder $builder,
-  gchar $name
+  Str $name
 )
   returns GObject
   is native(gtk)
@@ -31,7 +34,7 @@ sub gtk_buildable_custom_finished (
   GtkBuildable $buildable,
   GtkBuilder $builder,
   GObject $child,
-  gchar $tagname,
+  Str $tagname,
   gpointer $data
 )
   is native(gtk)
@@ -42,7 +45,7 @@ sub gtk_buildable_custom_tag_end (
   GtkBuildable $buildable,
   GtkBuilder $builder,
   GObject $child,
-  gchar $tagname,
+  Str $tagname,
   gpointer $data
 )
   is native(gtk)
@@ -53,7 +56,7 @@ sub gtk_buildable_custom_tag_start (
   GtkBuildable $buildable,
   GtkBuilder $builder,
   GObject $child,
-  gchar $tagname,
+  Str $tagname,
   GMarkupParser $parser,
   gpointer $data
 )
@@ -65,7 +68,7 @@ sub gtk_buildable_custom_tag_start (
 sub gtk_buildable_get_internal_child (
   GtkBuildable $buildable,
   GtkBuilder $builder,
-  gchar $childname
+  Str $childname
 )
   returns GObject
   is native(gtk)
@@ -89,7 +92,7 @@ sub gtk_buildable_parser_finished (
 sub gtk_buildable_set_buildable_property (
   GtkBuildable $buildable,
   GtkBuilder $builder,
-  gchar $name,
+  Str $name,
   GValue $value
 )
   is native(gtk)
@@ -102,7 +105,7 @@ sub gtk_buildable_get_name (GtkBuildable $buildable)
   is export
   { * }
 
-sub gtk_buildable_set_name (GtkBuildable $buildable, gchar $name)
+sub gtk_buildable_set_name (GtkBuildable $buildable, Str $name)
   is native(gtk)
   is export
   { * }

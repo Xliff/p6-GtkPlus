@@ -3,8 +3,12 @@ use v6.c;
 use NativeCall;
 
 use GDK::RGBA;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::CellView:ver<3.0.1146>;
 
@@ -39,7 +43,7 @@ sub gtk_cell_view_new_with_context (
   is export
   { * }
 
-sub gtk_cell_view_new_with_markup (gchar $markup)
+sub gtk_cell_view_new_with_markup (Str $markup)
   returns GtkWidget
   is native(gtk)
   is export
@@ -51,7 +55,7 @@ sub gtk_cell_view_new_with_pixbuf (GdkPixbuf $pixbuf)
   is export
   { * }
 
-sub gtk_cell_view_new_with_text (gchar $text)
+sub gtk_cell_view_new_with_text (Str $text)
   returns GtkWidget
   is native(gtk)
   is export

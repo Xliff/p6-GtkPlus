@@ -2,21 +2,23 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ComboBoxText:ver<3.0.1146>;
 
 sub gtk_combo_box_text_append (
   GtkComboBoxText $combo_box,
-  gchar $id,
-  gchar $text
+  Str $id,
+  Str $text
 )
   is native(gtk)
   is export
   { * }
 
-sub gtk_combo_box_text_append_text (GtkComboBoxText $combo_box, gchar $text)
+sub gtk_combo_box_text_append_text (GtkComboBoxText $combo_box, Str $text)
   is native(gtk)
   is export
   { * }
@@ -36,8 +38,8 @@ sub gtk_combo_box_text_get_type ()
 sub gtk_combo_box_text_insert (
   GtkComboBoxText $combo_box,
   gint $position,
-  gchar $id,
-  gchar $text
+  Str $id,
+  Str $text
 )
   is native(gtk)
   is export
@@ -46,7 +48,7 @@ sub gtk_combo_box_text_insert (
 sub gtk_combo_box_text_insert_text (
   GtkComboBoxText $combo_box,
   gint $position,
-  gchar $text
+  Str $text
 )
   is native(gtk)
   is export
@@ -66,14 +68,14 @@ sub gtk_combo_box_text_new_with_entry ()
 
 sub gtk_combo_box_text_prepend (
   GtkComboBoxText $combo_box,
-  gchar $id,
-  gchar $text
+  Str $id,
+  Str $text
 )
   is native(gtk)
   is export
   { * }
 
-sub gtk_combo_box_text_prepend_text (GtkComboBoxText $combo_box, gchar $text)
+sub gtk_combo_box_text_prepend_text (GtkComboBoxText $combo_box, Str $text)
   is native(gtk)
   is export
   { * }

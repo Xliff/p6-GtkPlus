@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::CSSProvider:ver<3.0.1146>;
 
@@ -19,7 +22,7 @@ sub gtk_css_provider_get_default ()
   is export
   { * }
 
-sub gtk_css_provider_get_named (gchar $name, gchar $variant)
+sub gtk_css_provider_get_named (Str $name, Str $variant)
   returns GtkCSSProvider
   is native(gtk)
   is export
@@ -33,7 +36,7 @@ sub gtk_css_provider_get_type ()
 
 sub gtk_css_provider_load_from_data (
   GtkCSSProvider $css_provider,
-  gchar $data,
+  Str $data,
   gssize $length,
   CArray[Pointer[GError]] $error
 )
@@ -54,7 +57,7 @@ sub gtk_css_provider_load_from_file (
 
 sub gtk_css_provider_load_from_path (
   GtkCSSProvider $css_provider,
-  gchar $path,
+  Str $path,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -64,7 +67,7 @@ sub gtk_css_provider_load_from_path (
 
 sub gtk_css_provider_load_from_resource (
   GtkCSSProvider $css_provider,
-  gchar $resource_path
+  Str $resource_path
 )
   is native(gtk)
   is export

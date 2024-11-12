@@ -2,16 +2,19 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Application:ver<3.0.1146>;
 
 # GtkVariant $parameter
 sub gtk_application_add_accelerator (
   GtkApplication $application,
-  gchar $accelerator,
-  gchar $action_name,
+  Str $accelerator,
+  Str $action_name,
   uint32 $parameter
 )
   is native(gtk)
@@ -23,13 +26,13 @@ sub gtk_application_add_window (GtkApplication $application, GtkWindow $window)
   is export
   { * }
 
-sub gtk_application_get_accels_for_action (GtkApplication $application, gchar $detailed_action_name)
+sub gtk_application_get_accels_for_action (GtkApplication $application, Str $detailed_action_name)
   returns CArray[Str]
   is native(gtk)
   is export
   { * }
 
-sub gtk_application_get_actions_for_accel (GtkApplication $application, gchar $accel)
+sub gtk_application_get_actions_for_accel (GtkApplication $application, Str $accel)
   returns CArray[Str]
   is native(gtk)
   is export
@@ -41,7 +44,7 @@ sub gtk_application_get_active_window (GtkApplication $application)
   is export
   { * }
 
-sub gtk_application_get_menu_by_id (GtkApplication $application, gchar $id)
+sub gtk_application_get_menu_by_id (GtkApplication $application, Str $id)
   returns GMenu
   is native(gtk)
   is export
@@ -66,7 +69,7 @@ sub gtk_application_get_windows (GtkApplication $application)
   { * }
 
 # GtkApplicationInhibitFlats $reason
-sub gtk_application_inhibit (GtkApplication $application, GtkWindow $window, uint32 $flags, gchar $reason)
+sub gtk_application_inhibit (GtkApplication $application, GtkWindow $window, uint32 $flags, Str $reason)
   returns guint
   is native(gtk)
   is export
@@ -86,7 +89,7 @@ sub gtk_application_list_action_descriptions (GtkApplication $application)
   { * }
 
 # GtkApplicationFlags $flags
-sub gtk_application_new (gchar $application_id, uint32 $flags)
+sub gtk_application_new (Str $application_id, uint32 $flags)
   returns GtkApplication
   is native(gtk)
   is export
@@ -99,7 +102,7 @@ sub gtk_application_prefers_app_menu (GtkApplication $application)
   { * }
 
 # GVariant $param
-sub gtk_application_remove_accelerator (GtkApplication $application, gchar $action_name, uint32 $parameter)
+sub gtk_application_remove_accelerator (GtkApplication $application, Str $action_name, uint32 $parameter)
   is native(gtk)
   is export
   { * }

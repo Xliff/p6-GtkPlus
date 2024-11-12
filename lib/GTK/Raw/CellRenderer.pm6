@@ -2,8 +2,13 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use Cairo;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Enums:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::CellRenderer:ver<3.0.1146>;
 
@@ -11,7 +16,7 @@ sub gtk_cell_renderer_activate (
   GtkCellRenderer $cell,
   GdkEvent $event,
   GtkWidget $widget,
-  gchar $path,
+  Str $path,
   GdkRectangle $background_area,
   GdkRectangle $cell_area,
   uint32 $flags                 # GtkCellRendererState $flags
@@ -149,7 +154,7 @@ sub gtk_cell_renderer_is_activatable (GtkCellRenderer $cell)
 
 sub gtk_cell_renderer_render (
   GtkCellRenderer $cell,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   GtkWidget $widget,
   GdkRectangle $background_area,
   GdkRectangle $cell_area,
@@ -190,7 +195,7 @@ sub gtk_cell_renderer_start_editing (
   GtkCellRenderer $cell,
   GdkEvent $event,
   GtkWidget $widget,
-  gchar $path,
+  Str $path,
   GdkRectangle $background_area,
   GdkRectangle $cell_area,
   uint32 $flags                 # GtkCellRendererState $flags

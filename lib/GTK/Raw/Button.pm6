@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Button:ver<3.0.1146>;
 
@@ -40,25 +43,25 @@ sub gtk_button_new ()
   { * }
 
 # GtkIconSize $size
-sub gtk_button_new_from_icon_name (gchar $icon_name, uint32 $size)
+sub gtk_button_new_from_icon_name (Str $icon_name, uint32 $size)
   returns GtkWidget
   is native(gtk)
   is export
   { * }
 
-sub gtk_button_new_from_stock (gchar $stock_id)
+sub gtk_button_new_from_stock (Str $stock_id)
   returns GtkWidget
   is native(gtk)
   is export
   { * }
 
-sub gtk_button_new_with_label (gchar $label)
+sub gtk_button_new_with_label (Str $label)
   returns GtkWidget
   is native(gtk)
   is export
   { * }
 
-sub gtk_button_new_with_mnemonic (gchar $label)
+sub gtk_button_new_with_mnemonic (Str $label)
   returns GtkWidget
   is native(gtk)
   is export
@@ -130,7 +133,7 @@ sub gtk_button_set_use_stock (GtkButton $button, gboolean $use_stock)
   is export
   { * }
 
-sub gtk_button_set_label (GtkButton $button, gchar $label)
+sub gtk_button_set_label (GtkButton $button, Str $label)
   is native(gtk)
   is export
   { * }
