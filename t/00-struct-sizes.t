@@ -1,17 +1,30 @@
 use v6.c;
 
+use lib <scripts ../scripts>;
+
 use Test;
 use NativeCall;
 
-use GTK::Raw::Structs;
+use ScriptConfig;
 
 plan 8;
 
-# require ::($_ = "GIO::Raw::Structs");
-# for ::($_ ~ "::EXPORT::DEFAULT").WHO
-#                                 .keys
-#                                 .grep( *.defined && *.starts-with('G') )
-#                                 .sort
+my $prefix  = %config<prefix>.subst('::', '');
+my $cu      = "{ $prefix }::Raw::Structs";
+my $o = try require ::($cu);
+
+#$cu ~= '::EXPORT::DEFAULT';
+my @classes =
+  ::("$cu").WHO
+           .keys
+           .grep({
+             .defined
+             &&
+             .starts-with(%config<struct-prefix> // $prefix)
+            })
+           .sort;
+@classes.push: (%config<extra-test-classes> // '').split(',');
+
 
 my @structs = <
   GtkTextIter
