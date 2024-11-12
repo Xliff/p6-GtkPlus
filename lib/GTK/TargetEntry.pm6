@@ -5,7 +5,11 @@ use Method::Also;
 use GTK::Raw::TargetEntry:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 
+use GLib::Roles::Implementor;
+
 class GTK::TargetEntry:ver<3.0.1146> {
+  also does GLib::Roles::Implementor;
+
   has GtkTargetEntry $!te is implementor;
 
   submethod BUILD(:$entry) {
@@ -22,7 +26,7 @@ class GTK::TargetEntry:ver<3.0.1146> {
   multi method new {
     my $entry = GtkTargetEntry.new;
 
-     die 'Could not create a GtkTargetEntry structure!' unless $entry;
+    die 'Could not create a GtkTargetEntry structure!' unless $entry;
 
     self.bless($entry);
   }

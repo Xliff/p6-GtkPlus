@@ -14,6 +14,8 @@ use GTK::Range:ver<3.0.1146>;
 our subset ScaleAncestry is export
   where GtkScale | RangeAncestry;
 
+our constant GtkScaleAncestry is export = ScaleAncestry;
+
 class GTK::Scale:ver<3.0.1146> is GTK::Range {
   also does GTK::Roles::Signals::Scale;
 
@@ -26,26 +28,23 @@ class GTK::Scale:ver<3.0.1146> is GTK::Range {
   }
 
   submethod BUILD(:$scale) {
+    self.setGtkScale($scale) if $scale;
+  }
+
+  method setGtkScale (GtkScaleAncestry $_) {
     my $to-parent;
-    given $scale {
-      when ScaleAncestry {
-        $!s = do {
-          when GtkScale {
-            $to-parent = cast(GtkRange, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkScale, $_);
-          }
-        };
-        self.setRange($to-parent);
-      }
-      when GTK::Scale {
+
+    $!s = do {
+      when GtkScale {
+        $to-parent = cast(GtkRange, $_);
+        $_;
       }
       default {
+        $to-parent = $_;
+        cast(GtkScale, $_);
       }
-    }
+    };
+    self.setGtkRange($to-parent);
   }
 
   submethod DESTROY {

@@ -1,13 +1,96 @@
-#!/usr/bin/env Raku
+#!p6gtkexec
+use v6.c;
 
-use GLib::Roles::Pointers;
+use GTK::Raw::Types;
 use File::Find;
 
 use lib <. scripts>;
 
 use GTKScripts;
 
-sub MAIN (:$prefix = %config<prefix>) {
+my $prefix = %config<prefix>.subst('::', '');
+
+sub writeFile ($name, %ct) {
+  my $max-key = %ct.keys.map( *.chars ).max;
+
+  my $spurt = qq:to/SPURT/;
+    use v6.c;
+
+    use { $prefix }::Raw::Types;
+
+    unit package { $prefix }::{ $name };
+
+    our \%{ $prefix }-{ $name } is export;
+
+    BEGIN \%{ $prefix }-{ $name } = (
+      {
+        %ct.pairs.map({
+          my $type = .value.head;
+          do if $type ne <Positional Associative>.any {
+            qq«    "{ .key.fmt("%-{ $max-key }s") }" => ["{
+                      .value.join(', ') }"],»
+          }
+        }).sort.join("\n")
+      }
+    );
+    SPURT
+
+  $spurt ~= qq:to/SPURT2/;
+    INIT \{
+      update{ $name }( { '%' ~ $prefix }-{ $name } )
+    \}
+    SPURT2
+
+  "lib/{ $prefix }/{ $name }.pm6".IO.spurt($spurt);
+}
+
+multi sub MAIN {
+  samewith( prefix => $prefix );
+}
+
+multi sub MAIN ( :$type-origin is required ) {
+  my @a =  ::("MY").WHO
+                   .values
+                   .grep({
+                     .^name.starts-with(%config<struct-prefix> // $prefix)
+                   })
+                   .map( *.^name )
+                   .unique
+                   .sort
+                   .map({
+                      my $sn = .split('::').Array
+                      my $n  = $sn.tail ~~ m:g/ <[A..Z]>[ <[a..z]>+ ]?/;
+                      [ $sn, $/ ]
+                    });
+
+ # cw: Hey? ... maybe?
+ # 'say "GZlibDecompressor" ~~
+ # (｢G｣ ｢Zlib｣ ｢Decompressor｣)
+
+  my (%t, $k);
+  my $max-key = 0;
+  for @a {
+    #next unless .head eq $prefix || .elems == 1;
+    #next unless .tail.starts-with(%config<struct-prefix> // $prefix);
+
+    unless .ends-with('Enum') {
+      $k = .pop;
+      $max-key .= &max($k.chars);
+
+      my $v = .join('::');
+      %t{$k} = $v if $v;
+      next;
+    }
+
+    $k = .subst( / 'Enum' $ /, '' );
+    $max-key .= &max($k.chars);
+    %t{$k} = "{ $prefix }::Raw::Enums";
+  }
+
+  writeFile('TypeOrigin', %t);
+}
+
+multi sub MAIN (:$prefix is required) {
   die 'Must specify --prefix!' unless $prefix;
 
   my %ct;
@@ -21,14 +104,20 @@ sub MAIN (:$prefix = %config<prefix>) {
     find(
       dir => "lib",
       exclude => {
-          / "Raw"      |
-            ".precomp" |
-            ".ref-ba""c"?"k" |
-            "Compat" |
-            "Class" |
-            "Object" |
-            ".bak" |
-            "TypeClass.pm6"
+          /
+            'Raw'                   |
+            '.precomp'              |
+            ".ref-ba""c"?"k"        |
+            'Compat'                |
+            'Class'                 |
+            'Object'                |
+            '.bak'                  |
+            '.bump'                 |
+            'TypeClass.pm6'         |
+            'MenuBuilder'           |
+            'MRO.pm6'               |
+            '-template'             |
+            '.template'
           /
       }
     ).sort( *.basename )
@@ -40,47 +129,53 @@ sub MAIN (:$prefix = %config<prefix>) {
                      .subst('.pm6',  '')
                      .subst('/',     '::', :g);
 
-    next unless $f.contains('::');
+    next unless $f.contains('::') || $f.contains('/Signals/');
 
     require ::("$f");
     my \o = ::("$f");
     print " { o.exception.message } " if o ~~ Failure;
-    print " ({o.^name}) ";
-
-    unless +o.^attributes {
+    my \oName = o.^name;
+    print " ({oName}) ";
+    my $how = o.HOW;
+    if $how ~~ Metamodel::PackageHOW {
       print "\n";
       next;
-    };
-
-    my $tn = findProperImplementor(o.^attributes).type.^shortname;
-    say " -----> { $tn}"; unless o ~~ Failure { %ct{$f} = $tn; }
-
-  }
-
-  my $spurt = qq:to/SPURT/;
-    use v6.c;
-
-    use GLib::Raw::Types;
-
-    unit package { $prefix }::TypeClass;
-
-    our \%{ $prefix }-typeClass is export;
-
-    BEGIN \%typeClass = (
-      {
-        %ct.antipairs.map({
-          qq«    "{ .key }" => "{ .value }",»
-        }).join("\n")
-      }
-    );
-    SPURT
-
-  $spurt ~= qq:to/SPURT2/;
-    INIT {
-      updateTypeClass( \%{ $prefix }-typeClass )
     }
-    SPURT2
 
-  "lib/{ $prefix }/TypeClass.pm6".IO.spurt($spurt);
+    my $attrs = do {
+      CATCH { default { .message.say; (); } }
+      o.^attributes;
+    }
+
+    sub nextRound {
+      say "...skipping...\n";
+      next;
+    }
+
+    nextRound unless $attrs !~~ Failure && ( $attrs // () ).elems;
+
+    my $t          = findProperImplementor($attrs).?type;
+    my ($tn, $tnl) = (.^shortname, .^name) given $t;
+
+    nextRound if $tn eq <
+      int32
+      int64
+      uint32
+      uint64
+      num32
+      num64
+      Associative
+    >.any;
+
+    next if $tn eq <Any Nil>.any;
+    my $cu = $tnl.split('::')[0 .. * - 2].join('::')
+      if $tnl.contains('::');
+    say " -----> { $tn }, { $cu // '' }";
+    unless o ~~ Failure {
+      %ct{$tn} = [ qq«"{ $f }"», qq«"{ $cu }"» ]
+    }
+
+    writeFile('TypeClass', %ct)
+  }
 
 }

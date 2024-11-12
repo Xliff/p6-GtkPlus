@@ -17,6 +17,8 @@ use GTK::Roles::Signals::TextView:ver<3.0.1146>;
 our subset TextViewAncestry is export of Mu
   where GtkTextView  | GtkScrollable | ContainerAncestry;
 
+constant GtkTextViewAncestry is export = TextViewAncestry;
+
 class GTK::TextView:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Scrollable;
   also does GTK::Roles::Signals::TextView;
@@ -30,12 +32,8 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     $o;
   }
 
-  submethod BUILD(:$textview) {
-    given $textview {
-      when TextViewAncestry { self.setTextView($textview) }
-      when GTK::TextView    { }
-      default               { }
-    }
+  submethod BUILD( :$textview ) {
+    self.setGtkTextView($textview) if $textview;
   }
 
   method GTK::Raw::Definitions::GtkTextView
@@ -45,7 +43,7 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     >
   { $!tv }
 
-  method setTextView($view) {
+  method setTextView($view) is also<setGtkTextView> {
     my $to-parent;
     $!tv = do given $view {
       when GtkTextView {
@@ -78,15 +76,33 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     $o;
   }
 
-  multi method new (GtkTextBuffer() $buffer) {
+  multi method new (GtkTextBuffer() $buffer, *%a) {
     return Nil unless $buffer;
 
-    GTK::TextView.new_with_buffer($buffer);
+    GTK::TextView.new_with_buffer($buffer, |%a);
   }
-  multi method new {
+  multi method new ( *%a ) {
     my $textview = gtk_text_view_new();
 
-    $textview ??self.bless(:$textview) !! Nil;
+    my $o = $textview ?? self.bless(:$textview) !! Nil;
+    $o.buffer.setAttributes(%a) if       +%a;
+    $o.setAttributes(%a)        if $o && +%a;
+    $o;
+  }
+
+  multi method new (
+    :$text      is required,
+    :$wrap-mode               = GTK_WRAP_WORD
+  ) {
+    my $o = self.new_with_buffer(
+      do {
+        my $b = GTK::TextBuffer.new;
+        $b.text = $text;
+        $b;
+      }
+    );
+    $o.wrap-mode = $wrap-mode;
+    $o;
   }
 
   method new_with_buffer (GtkTextBuffer() $buffer)
@@ -674,7 +690,7 @@ class GTK::TextView:ver<3.0.1146> is GTK::Container {
     is also<move-visually>
   {
     my gint $c = $count;
-    
+
     gtk_text_view_move_visually($!tv, $iter, $c);
   }
 

@@ -2,12 +2,14 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Stack:ver<3.0.1146>;
 
-sub gtk_stack_add_named (GtkStack $stack, GtkWidget $child, gchar $name)
+sub gtk_stack_add_named (GtkStack $stack, GtkWidget $child, Str $name)
   is native(gtk)
   is export
   { * }
@@ -15,14 +17,14 @@ sub gtk_stack_add_named (GtkStack $stack, GtkWidget $child, gchar $name)
 sub gtk_stack_add_titled (
   GtkStack $stack,
   GtkWidget $child,
-  gchar $name,
-  gchar $title
+  Str $name,
+  Str $title
 )
   is native(gtk)
   is export
   { * }
 
-sub gtk_stack_get_child_by_name (GtkStack $stack, gchar $name)
+sub gtk_stack_get_child_by_name (GtkStack $stack, Str $name)
   returns GtkWidget
   is native(gtk)
   is export
@@ -48,7 +50,7 @@ sub gtk_stack_new ()
 
 sub gtk_stack_set_visible_child_full (
   GtkStack $stack,
-  gchar $name,
+  Str $name,
   uint32 $transition            # GtkStackTransitionType $transition
 )
   is native(gtk)
@@ -116,7 +118,7 @@ sub gtk_stack_set_visible_child (GtkStack $stack, GtkWidget $child)
   is export
   { * }
 
-sub gtk_stack_set_visible_child_name (GtkStack $stack, gchar $name)
+sub gtk_stack_set_visible_child_name (GtkStack $stack, Str $name)
   is native(gtk)
   is export
   { * }

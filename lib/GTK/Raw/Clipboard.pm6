@@ -2,8 +2,12 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Object;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Clipboard:ver<3.0.1146>;
 
@@ -138,7 +142,7 @@ sub gtk_clipboard_set_image (
 
 sub gtk_clipboard_set_text (
   GtkClipboard $clipboard,
-  gchar $text,
+  Str $text,
   gint $len
 )
   is native(gtk)

@@ -13,7 +13,7 @@ use GTK::Roles::Orientable:ver<3.0.1146>;
 
 use GTK::Roles::Signals::SpinButton:ver<3.0.1146>;
 
-my subset GtkSpinButtonAncestry is export of Mu
+our subset GtkSpinButtonAncestry of Mu
   where GtkSpinButton | GtkOrientable | GtkEntry  | GtkCellEditable |
         GtkEditable   | GtkBuildable  | GtkWidget;
 
@@ -23,14 +23,8 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
 
   has GtkSpinButton $!sp is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
-  submethod BUILD(:$spinbutton) {
-    self.setGtkSpinButton( :$spinbutton ) if $spinbutton;
+  submethod BUILD (:$spinbutton) {
+    self.setGtkSpinButton($spinbutton) if $spinbutton;
   }
 
   method setGtkSpinButton (GtkSpinButtonAncestry $_) {
@@ -41,19 +35,17 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
         $to-parent = cast(GtkEntry, $_);
         $_;
       }
-
       when GtkOrientable {
+        $!or = $_;                                  # GTK::Roles::Orientable
         $to-parent = cast(GtkEntry, $_);
-        $!or       = $_;
         cast(GtkSpinButton, $_);
       }
-
       when GtkWidget {
         $to-parent = $_;
         cast(GtkSpinButton, $_);
       }
-    };
-    self.setEntry($_);
+    }
+    self.setEntry($to-parent);
     self.roleInit-GtkOrientable;
   }
 
@@ -75,16 +67,27 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
   ) {
     my gdouble $cr = $climb_rate;
     my guint   $d  = $digits;
+
     my $spinbutton = gtk_spin_button_new($adjustment, $cr, $d);
 
     $spinbutton ?? self.bless(:$spinbutton) !! Nil;
   }
 
-  method new_with_range (Num() $min, Num() $max, Num() $step)
+  proto method new_with_range (|)
     is also<new-with-range>
-  {
+  { * }
+
+  multi method new_with_range (Range() $range, :$step = 1) {
+    my ($min, $max) = ( .min, .max ) given $range;
+    $min .= succ if $range.excludes-min;
+    $max .= pred if $range.excludes-max;
+    return Nil if $min > $max;
+
+    samewith( $min, $max, $step ) given $range;
+  }
+  multi method new_with_range (Num() $min, Num() $max, Num() $step) {
     my gdouble ($mn, $mx, $st) = ($min, $max, $step);
-    
+
     my $spinbutton = gtk_spin_button_new_with_range($mn, $mx, $st);
 
     $spinbutton ?? self.bless(:$spinbutton) !! Nil;
@@ -228,10 +231,10 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method configure (
     GtkAdjustment() $adjustment,
-    Num() $climb_rate,
-    Int() $digits
+    Num()           $climb_rate,
+    Int()           $digits
   ) {
-    my guint $d = $digits;
+    my guint   $d  = $digits;
     my gdouble $cr = $climb_rate;
 
     gtk_spin_button_configure($!sp, $adjustment, $cr, $d);
@@ -241,7 +244,7 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
     is also<get-increments>
   { * }
 
-  multi method get_increments {
+  multi method get_increments is also<increments> {
     samewith($, $);
   }
   multi method get_increments ($step is rw, $page is rw)  {
@@ -253,10 +256,13 @@ class GTK::SpinButton:ver<3.0.1146> is GTK::Entry {
 
   proto method get_range (|)
     is also<get-range>
+    is DEPRECATED<.adjustment>
   {  }
 
   multi method get_range {
-    samewith($, $);
+    my ($n, $x);
+
+    samewith($n, $x);
   }
   multi method get_range ($min is rw, $max is rw) {
     my gdouble ($mn, $mx) = 0e0 xx 2;

@@ -1,5 +1,7 @@
 use v6.c;
 
+use GLib::Raw::Traits;
+
 use GTK::CheckMenuItem:ver<3.0.1146>;
 use GTK::Menu:ver<3.0.1146>;
 use GTK::MenuBar:ver<3.0.1146>;
@@ -9,6 +11,8 @@ use GTK::RadioMenuItem:ver<3.0.1146>;
 use GTK::SeparatorMenuItem:ver<3.0.1146>;
 
 class GTK::Utils::MenuBuilder:ver<3.0.1146> {
+  also does NotInManifest;
+
   has $!menu;
   has $!items;
 
@@ -48,20 +52,22 @@ class GTK::Utils::MenuBuilder:ver<3.0.1146> {
 
             # Last chance to modify/validate %opts
             my $menu_item_id = %opts<id>:delete;
-            my $group_id;
-            $late-opts<sensitive> = %opts<sensitive>:delete;
-            $late-opts<can-focus> = %opts<can-focus>:delete;
+            my $group-id;
+            $late-opts<sensitive>   = %opts<sensitive>:delete;
+            $late-opts<can-focus>   = %opts<can-focus>:delete;
             $late-opts<can-focus> //= %opts<focus>:delete;
             # RadioMenuItem validation.
             with %opts<group> {
               if %opts<group> ~~ Pair {
-                $group_id = %opts<group>.key;
-                %groups{ %opts<group>.key } //= %opts<group>.val;
-                %opts<group> = %groups{ %opts<group>.key };
+                $group-id = %opts<group>.key;
+                %groups{ $group-id } = %groups{ $group-id }:exists
+                  ?? %groups{ $group-id }
+                  !! $item-type;
+                %opts<group> = %groups{ $group-id }<items>
               } else {
                 die 'Cannot use a group menu item without a proper value'
                   if %opts<group> ~~ Bool || ! %opts<group>;
-                %opts<group> = %groups{$group_id = %opts<group>};
+                %opts<group> = %groups{$group-id = %opts<group>}<items>;
               }
             }
             # 'clicked' alias handling.
@@ -71,23 +77,25 @@ class GTK::Utils::MenuBuilder:ver<3.0.1146> {
             # Remove unnecessary items.
             %opts<check toggle>:delete;
 
+            say "---- Menu Builder attempting to create a { $item-type }";
+
             @sm.push: ::($item-type).new($ii.key, |%opts);
 
-            with $group_id {
-              %groups{$group_id} = @sm[* - 1] without %groups{$group_id};
+            with $group-id {
+              %groups{$group-id}<items>.push( @sm.tail );
             }
             with $menu_item_id {
               if %named_items{ $menu_item_id }:exists {
                 die "Cannod add duplicate ID <{ $menu_item_id }> to menu tracking!";
               } else {
-                @sm[* - 1].name = $menu_item_id;
-                %named_items{ $menu_item_id } = @sm[* - 1];
+                @sm.tail.name = $menu_item_id;
+                %named_items{ $menu_item_id } = @sm.tail;
               }
             }
             # Handle late options. More can be added, but the logic will
             # become more complex
             for <sensitive can-focus> {
-              @sm[* - 1]."$_"() = $late-opts{$_} with $late-opts{$_}
+              @sm.tail."$_"() = $late-opts{$_} with $late-opts{$_}
             }
           }
           @m.push: GTK::MenuItem.new($i.key, :submenu(GTK::Menu.new(@sm)));

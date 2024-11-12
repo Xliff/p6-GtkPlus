@@ -2,8 +2,12 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use Cairo;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::CellArea:ver<3.0.1146>;
 
@@ -61,7 +65,7 @@ sub gtk_cell_area_apply_attributes (
 sub gtk_cell_area_attribute_connect (
   GtkCellArea $area,
   GtkCellRenderer $renderer,
-  gchar $attribute,
+  Str $attribute,
   gint $column
 )
   is native(gtk)
@@ -71,7 +75,7 @@ sub gtk_cell_area_attribute_connect (
 sub gtk_cell_area_attribute_disconnect (
   GtkCellArea $area,
   GtkCellRenderer $renderer,
-  gchar $attribute
+  Str $attribute
 )
   is native(gtk)
   is export
@@ -80,7 +84,7 @@ sub gtk_cell_area_attribute_disconnect (
 sub gtk_cell_area_attribute_get_column (
   GtkCellArea $area,
   GtkCellRenderer $renderer,
-  gchar $attribute
+  Str $attribute
 )
   returns gint
   is native(gtk)
@@ -90,7 +94,7 @@ sub gtk_cell_area_attribute_get_column (
 sub gtk_cell_area_cell_get_property (
   GtkCellArea $area,
   GtkCellRenderer $renderer,
-  gchar $property_name,
+  Str $property_name,
   GValue $value
 )
   is native(gtk)
@@ -100,7 +104,7 @@ sub gtk_cell_area_cell_get_property (
 # sub gtk_cell_area_cell_get_valist (
 #   GtkCellArea $area,
 #   GtkCellRenderer $renderer,
-#   gchar $first_property_name,
+#   Str $first_property_name,
 #   va_list $var_args
 # )
 #   is native(gtk)
@@ -110,7 +114,7 @@ sub gtk_cell_area_cell_get_property (
 sub gtk_cell_area_cell_set_property (
   GtkCellArea $area,
   GtkCellRenderer $renderer,
-  gchar $property_name,
+  Str $property_name,
   GValue $value
 )
   is native(gtk)
@@ -120,7 +124,7 @@ sub gtk_cell_area_cell_set_property (
 # sub gtk_cell_area_cell_set_valist (
 #   GtkCellArea $area,
 #   GtkCellRenderer $renderer,
-#   gchar $first_property_name,
+#   Str $first_property_name,
 #   va_list $var_args
 # )
 #   is native(gtk)
@@ -129,7 +133,7 @@ sub gtk_cell_area_cell_set_property (
 
 # sub gtk_cell_area_class_find_cell_property (
 #   GtkCellAreaClass $aclass,
-#    gchar $property_name
+#    Str $property_name
 # )
 #   returns GParamSpec
 #   is native(gtk)
@@ -386,7 +390,7 @@ sub gtk_cell_area_render (
   GtkCellArea $area,
   GtkCellAreaContext $context,
   GtkWidget $widget,
-  cairo_t $cr,
+  Cairo::cairo_t $cr,
   GdkRectangle $background_area,
   GdkRectangle $cell_area,
   uint32 $flags,                # GtkCellRendererState $flags,

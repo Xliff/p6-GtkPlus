@@ -10,7 +10,7 @@ use GTK::Label:ver<3.0.1146>;
 
 use GTK::Roles::Signals::Notebook:ver<3.0.1146>;
 
-our subset NotebookAncestry is export
+our subset GtkNotebookAncestry is export
   where GtkNotebook | ContainerAncestry;
 
 class X::GTK::Notebook::InvalidPageParams is Exception {
@@ -50,29 +50,24 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
   }
 
   submethod BUILD (:$notebook) {
+    self.setGtkNotebook($notebook) if $notebook;
+  }
+
+  method setGtkNotebook (GtkNotebookAncestry $_) is also<NotebookAncestry> {
     my $to-parent;
-    given $notebook {
-      when NotebookAncestry {
-        $!n = do {
-          when GtkNotebook {
-            $to-parent = cast(GtkContainer, $_);
-            $_;
-          }
 
-          when ContainerAncestry {
-            $to-parent = $_;
-            cast(GtkNotebook, $_);
-          }
-        }
-        self.setContainer($to-parent);
-      }
-
-      when GTK::Notebook {
+    $!n = do {
+      when GtkNotebook {
+        $to-parent = cast(GtkContainer, $_);
+        $_;
       }
 
       default {
+        $to-parent = $_;
+        cast(GtkNotebook, $_);
       }
     }
+    self.setGtkContainer($to-parent);
   }
 
   submethod DESTROY {
@@ -86,7 +81,7 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
     >
   { $!n }
 
-  multi method new (NotebookAncestry $notebook, :$ref = False) {
+  multi method new (GtkNotebookAncestry $notebook, :$ref = False) {
     return Nil unless $notebook;
 
     my $o = self.bless(:$notebook);
@@ -280,9 +275,9 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
   }
 
   method get_action_widget (
-    Int() $pack_type,
-    :$raw    = False,
-    :$widget = False
+    Int()  $pack_type,
+          :$raw        = False,
+          :$widget     = False
   )
     is also<get-action-widget>
   {
@@ -390,7 +385,7 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
     GtkWidget() $child,
     GtkWidget() $tab-label,
     GtkWidget() $menu_label,
-    Int() $position               # gint $position
+    Int()       $position               # gint $position
   )
     is also<insert-page-menu>
   {
@@ -469,7 +464,7 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
 
   method set_action_widget (
     GtkWidget() $widget,
-    Int() $pack_type              # GtkPackType $pack_type)
+    Int()       $pack_type              # GtkPackType $pack_type)
   )
     is also<set-action-widget>
   {
@@ -493,7 +488,7 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
 
   method set_tab_detachable (
     GtkWidget() $child,
-    Int() $detachable             # gboolean $detachable
+    Int()       $detachable             # gboolean $detachable
   )
     is also<set-tab-detachable>
   {
@@ -526,7 +521,7 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
-  method child-set(GtkWidget() $c, *@propval) {
+  method child-set (GtkWidget() $c, *@propval) {
     my @notfound;
     @notfound = gather for @propval -> $p, $v {
       given $p {

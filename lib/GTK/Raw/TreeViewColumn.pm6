@@ -2,15 +2,18 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::TreeViewColumn:ver<3.0.1146>;
 
 sub gtk_tree_view_column_add_attribute (
   GtkTreeViewColumn $tree_column,
   GtkCellRenderer $cell_renderer,
-  gchar $attribute,
+  Str $attribute,
   gint $column
 )
   is native(gtk)
@@ -297,7 +300,7 @@ sub gtk_tree_view_column_set_reorderable (
 
 sub gtk_tree_view_column_set_title (
   GtkTreeViewColumn $tree_column,
-  gchar $title
+  Str $title
 )
   is native(gtk)
   is export

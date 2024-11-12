@@ -2,12 +2,20 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::AppButton:ver<3.0.1146>;
 
-sub gtk_app_chooser_button_append_custom_item (GtkAppChooserButton $self, gchar $name, gchar $label, GIcon $icon)
+sub gtk_app_chooser_button_append_custom_item (
+  GtkAppChooserButton $self,
+  Str $name,
+  Str $label,
+  GIcon $icon
+)
   is native(gtk)
   is export
   { * }
@@ -23,13 +31,16 @@ sub gtk_app_chooser_button_get_type ()
   is export
   { * }
 
-sub gtk_app_chooser_button_new (gchar $content_type)
+sub gtk_app_chooser_button_new (Str $content_type)
   returns GtkWidget
   is native(gtk)
   is export
   { * }
 
-sub gtk_app_chooser_button_set_active_custom_item (GtkAppChooserButton $self, gchar $name)
+sub gtk_app_chooser_button_set_active_custom_item (
+  GtkAppChooserButton $self,
+  Str $name
+)
   is native(gtk)
   is export
   { * }
@@ -52,17 +63,26 @@ sub gtk_app_chooser_button_get_show_dialog_item (GtkAppChooserButton $self)
   is export
   { * }
 
-sub gtk_app_chooser_button_set_heading (GtkAppChooserButton $self, gchar $heading)
+sub gtk_app_chooser_button_set_heading (
+  GtkAppChooserButton $self,
+  Str $heading
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_app_chooser_button_set_show_default_item (GtkAppChooserButton $self, gboolean $setting)
+sub gtk_app_chooser_button_set_show_default_item (
+  GtkAppChooserButton $self,
+  gboolean $setting
+)
   is native(gtk)
   is export
   { * }
 
-sub gtk_app_chooser_button_set_show_dialog_item (GtkAppChooserButton $self, gboolean $setting)
+sub gtk_app_chooser_button_set_show_dialog_item (
+  GtkAppChooserButton $self,
+  gboolean $setting
+)
   is native(gtk)
   is export
   { * }

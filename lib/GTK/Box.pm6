@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GLib::Raw::Traits;
 use GTK::Raw::Box:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 
@@ -23,11 +24,11 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
 
   has GtkBox $!b is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
 
   submethod BUILD (:$box) {
     self.setGtkBox($box) if $box;
@@ -86,7 +87,7 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
 
   method new-hbox (Int $spacing = $default-spacing) is also<new_hbox> {
     my gint $s = $spacing;
-    
+
     my $box = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, $s);
 
     $box ?? self.bless( :$box ) !! Nil;
@@ -99,7 +100,7 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
     $box ?? self.bless( :$box ) !! Nil;
   }
 
-  method default_spacing (GTK::Box:U: ) is rw is also<default-spacing> {
+  method default_spacing is static is rw is also<default-spacing> {
     Proxy.new:
       FETCH => -> $           { $default-spacing     },
       STORE => -> $, Int() \i { $default-spacing = i }

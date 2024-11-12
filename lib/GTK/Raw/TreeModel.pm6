@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Object;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::TreeModel:ver<3.0.1146>;
 
@@ -106,7 +109,7 @@ sub gtk_tree_model_get_iter_first (GtkTreeModel $tree_model, GtkTreeIter $iter)
 sub gtk_tree_model_get_iter_from_string (
   GtkTreeModel $tree_model,
   GtkTreeIter $iter,
-  gchar $path_string
+  Str $path_string
 )
   returns uint32
   is native(gtk)
@@ -356,7 +359,7 @@ sub gtk_tree_path_new_from_indicesv (gint $indices, gsize $length)
   is export
   { * }
 
-sub gtk_tree_path_new_from_string (gchar $path)
+sub gtk_tree_path_new_from_string (Str $path)
   returns GtkTreePath
   is native(gtk)
   is export

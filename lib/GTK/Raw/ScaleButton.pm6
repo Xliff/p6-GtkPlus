@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ScaleButton:ver<3.0.1146>;
 
@@ -31,7 +33,7 @@ sub gtk_scale_button_get_type ()
   is export
   { * }
 
-# (GtkIconSize $size, gdouble $min, gdouble $max, gdouble $step, gchar $icons)
+# (GtkIconSize $size, gdouble $min, gdouble $max, gdouble $step, Str $icons)
 sub gtk_scale_button_new (
   uint32      $size,
   gdouble     $min,

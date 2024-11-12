@@ -8,19 +8,33 @@ use GTK::Raw::Types:ver<3.0.1146>;
 use GLib::Value;
 use GTK::CellArea:ver<3.0.1146>;
 
-use GLib::Roles::Properties;
+our subset GtkCellAreaContextAncestry is export of Mu
+  where GtkCellAreaContext | GObject;
 
 class GTK::CellAreaContext:ver<3.0.1146> {
-  also does GLib::Roles::Properties;
+  also does GLib::Roles::Object;
 
   has GtkCellAreaContext $!cac is implementor;
 
-  submethod BUILD (:$context) {
-    self.setCellAreaContext($context);
+  submethod BUILD ( :$gtk-cell-ctx ) {
+    self.setGtkCellAreaContext($gtk-cell-ctx) if $gtk-cell-ctx
   }
 
-  method setCellAreaContext(GtkCellAreaContext $context) {
-    self!setObject($!cac = $context);
+  method setGtkCellAreaContext (GtkCellAreaContextAncestry $_) {
+    my $to-parent;
+
+    $!cac = do {
+      when GtkCellAreaContext {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkCellAreaContext, $_);
+      }
+    }
+    self!setObject($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkCellAreaContext
@@ -30,7 +44,14 @@ class GTK::CellAreaContext:ver<3.0.1146> {
     >
   { $!cac }
 
-  method new (GtkCellAreaContext $context) {
+  multi method new ($gtk-cell-ctx where * ~~ GtkCellAreaContextAncestry , :$ref = True) {
+    return unless $gtk-cell-ctx;
+
+    my $o = self.bless( :$gtk-cell-ctx );
+    $o.ref if $ref;
+    $o;
+  }
+  multi method new (GtkCellAreaContext $context) {
     $context ?? self.bless(:$context) !! Nil;
   }
 

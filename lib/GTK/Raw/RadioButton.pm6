@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::RadioButton:ver<3.0.1146>;
 
@@ -33,7 +35,7 @@ sub gtk_radio_button_new_from_widget (GtkRadioButton $radio_group_member)
   is export
   { * }
 
-sub gtk_radio_button_new_with_label (GSList $group, gchar $label)
+sub gtk_radio_button_new_with_label (GSList $group, Str $label)
   returns GtkWidget
   is native(gtk)
   is export
@@ -41,14 +43,14 @@ sub gtk_radio_button_new_with_label (GSList $group, gchar $label)
 
 sub gtk_radio_button_new_with_label_from_widget (
   GtkRadioButton $radio_group_member,
-  gchar $label
+  Str $label
 )
   returns GtkWidget
   is native(gtk)
   is export
   { * }
 
-sub gtk_radio_button_new_with_mnemonic (GSList $group, gchar $label)
+sub gtk_radio_button_new_with_mnemonic (GSList $group, Str $label)
   returns GtkWidget
   is native(gtk)
   is export
@@ -56,7 +58,7 @@ sub gtk_radio_button_new_with_mnemonic (GSList $group, gchar $label)
 
 sub gtk_radio_button_new_with_mnemonic_from_widget (
   GtkRadioButton $radio_group_member,
-  gchar $label
+  Str $label
 )
   returns GtkWidget
   is native(gtk)

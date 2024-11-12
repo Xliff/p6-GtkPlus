@@ -12,6 +12,9 @@ use GTK::Roles::Orientable:ver<3.0.1146>;
 our subset PaneAncestry is export
   where GtkPaned | GtkOrientable | ContainerAncestry;
 
+constant GtkPaneAncestry  is export = PaneAncestry;
+constant GtkPanedAncestry is export = PaneAncestry;
+
 class GTK::Pane:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Orientable;
 

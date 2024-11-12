@@ -2,8 +2,12 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::TextBuffer:ver<3.0.1146>;
 
@@ -36,7 +40,7 @@ sub gtk_text_buffer_apply_tag (
 
 sub gtk_text_buffer_apply_tag_by_name (
   GtkTextBuffer $buffer,
-  gchar $name,
+  Str $name,
   GtkTextIter $start,
   GtkTextIter $end
 )
@@ -73,7 +77,7 @@ sub gtk_text_buffer_create_child_anchor (GtkTextBuffer $buffer, GtkTextIter $ite
 
 sub gtk_text_buffer_create_mark (
   GtkTextBuffer $buffer,
-  gchar $mark_name,
+  Str $mark_name,
   GtkTextIter $where,
   gboolean $left_gravity
 )
@@ -116,7 +120,7 @@ sub gtk_text_buffer_delete_mark (GtkTextBuffer $buffer, GtkTextMark $mark)
   is export
   { * }
 
-sub gtk_text_buffer_delete_mark_by_name (GtkTextBuffer $buffer, gchar $name)
+sub gtk_text_buffer_delete_mark_by_name (GtkTextBuffer $buffer, Str $name)
   is native(gtk)
   is export
   { * }
@@ -236,7 +240,7 @@ sub gtk_text_buffer_get_line_count (GtkTextBuffer $buffer)
   is export
   { * }
 
-sub gtk_text_buffer_get_mark (GtkTextBuffer $buffer, gchar $name)
+sub gtk_text_buffer_get_mark (GtkTextBuffer $buffer, Str $name)
   returns GtkTextMark
   is native(gtk)
   is export
@@ -306,14 +310,14 @@ sub gtk_text_buffer_get_type ()
 sub gtk_text_buffer_insert (
   GtkTextBuffer $buffer,
   GtkTextIter $iter,
-  gchar $text,
+  Str $text,
   gint $len
 )
   is native(gtk)
   is export
   { * }
 
-sub gtk_text_buffer_insert_at_cursor (GtkTextBuffer $buffer, gchar $text, gint $len)
+sub gtk_text_buffer_insert_at_cursor (GtkTextBuffer $buffer, Str $text, gint $len)
   is native(gtk)
   is export
   { * }
@@ -330,7 +334,7 @@ sub gtk_text_buffer_insert_child_anchor (
 sub gtk_text_buffer_insert_interactive (
   GtkTextBuffer $buffer,
   GtkTextIter $iter,
-  gchar $text,
+  Str $text,
   gint $len,
   gboolean $default_editable
 )
@@ -341,7 +345,7 @@ sub gtk_text_buffer_insert_interactive (
 
 sub gtk_text_buffer_insert_interactive_at_cursor (
   GtkTextBuffer $buffer,
-  gchar $text,
+  Str $text,
   gint $len,
   gboolean $default_editable
 )
@@ -353,7 +357,7 @@ sub gtk_text_buffer_insert_interactive_at_cursor (
 sub gtk_text_buffer_insert_markup (
   GtkTextBuffer $buffer,
   GtkTextIter $iter,
-  gchar $markup,
+  Str $markup,
   gint $len
 )
   is native(gtk)
@@ -402,7 +406,7 @@ sub gtk_text_buffer_move_mark (
 
 sub gtk_text_buffer_move_mark_by_name (
   GtkTextBuffer $buffer,
-  gchar $name,
+  Str $name,
   GtkTextIter $where
 )
   is native(gtk)
@@ -459,7 +463,7 @@ sub gtk_text_buffer_remove_tag (
 
 sub gtk_text_buffer_remove_tag_by_name (
   GtkTextBuffer $buffer,
-  gchar $name,
+  Str $name,
   GtkTextIter $start,
   GtkTextIter $end
 )
@@ -476,7 +480,7 @@ sub gtk_text_buffer_select_range (
   is export
   { * }
 
-sub gtk_text_buffer_set_text (GtkTextBuffer $buffer, gchar $text, gint $len)
+sub gtk_text_buffer_set_text (GtkTextBuffer $buffer, Str $text, gint $len)
   is native(gtk)
   is export
   { * }

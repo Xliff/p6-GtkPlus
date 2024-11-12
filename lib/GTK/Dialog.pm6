@@ -10,28 +10,23 @@ use GTK::Box:ver<3.0.1146>;
 use GTK::HeaderBar:ver<3.0.1146>;
 use GTK::Window:ver<3.0.1146>;
 
-our subset DialogAncestry is export of Mu
-  where GtkDialog | WindowAncestry;
+our subset GtkDialogAncestry is export of Mu
+  where GtkDialog | GtkWindowAncestry;
+
+constant DialogAncestry is export = GtkDialogAncestry;
 
 class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   has GtkDialog $!d is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  submethod BUILD ( :$dialog ) {
+    self.setGtkDialog($dialog) if $dialog;
   }
 
-  submethod BUILD(:$dialog) {
-    given $dialog {
-      when DialogAncestry { self.setDialog($dialog) }
-      when GTK::Dialog    { }
-      default             { }
-    }
-  }
-
-  method setDialog(DialogAncestry $_) {
+  method setGtkDialog ($_) is also<setDialog> {
     my $to-parent;
+
+    say "Dialog is a { .^name }";
+
     $!d = do {
       when GtkDialog {
         $to-parent = nativecast(GtkWindow, $_);
@@ -42,10 +37,14 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
         nativecast(GtkDialog, $_);
       }
     }
-    self.setWindow($to-parent);
+    self.setGtkWindow($to-parent);
   }
 
-  multi method new (DialogAncestry $dialog, :$ref = True) {
+  method GTK::Raw::Definitions::GtkDialog
+    is also<GtkDialog>
+  { $!d }
+
+  multi method new (GtkDialogAncestry $dialog, :$ref = True) {
     return Nil unless $dialog;
 
     my $o = self.bless(:$dialog);
@@ -62,24 +61,25 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     is also<new-with-buttons>
   { * }
 
-  multi method new_with_buttons(
-    Str()       $title,
-    GtkWindow() $parent,
-    Int()       $flags,          # GtkDialogFlags $flags
-    *%buttons
-  ) {
-    samewith($title, $parent, $flags, %buttons.pairs.Array);
-  }
-
   multi method new_with_buttons (
-    Str()       $title,
-    GtkWindow() $parent,
-    Int()       $flags,          # GtkDialogFlags $flags
-    @buttons
+    Str()        $title,
+    GtkWindow() :$parent  = GtkWindow,
+    Int()       :$flags   = GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,
+                *%buttons
+  ) {
+    samewith($title, %buttons.pairs.Array, :$parent, :$flags);
+  }
+  multi method new_with_buttons (
+    Str()        $title,
+                 @buttons,
+    Int()       :$flags    = GTK_DIALOG_MODAL +| GTK_DIALOG_DESTROY_WITH_PARENT,          # GtkDialogFlags $flags
+    GtkWindow() :$parent   = GtkWindow
   ) {
     die '@buttons cannot be empty' unless +@buttons;
+
     die '\@buttons is not an array of pair objects!'
       unless @buttons.all ~~ Pair;
+
     my $fb = @buttons.shift;
     my $o = GTK::Dialog.new_with_button(
       $title,
@@ -104,8 +104,8 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
   )
     is also<new-with-button>
   {
-    my gint $br = $button_response_id;
-    my GtkDialogFlags $f = $flags;
+    my gint           $br = $button_response_id;
+    my GtkDialogFlags $f  = $flags;
 
     my $dialog = gtk_dialog_new_with_buttons(
       $title,
@@ -169,7 +169,13 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     gtk_dialog_add_button($!d, $button_text, $ri);
   }
 
-  method get_action_area ( :$raw = False ) is also<get-action-area> {
+  method get_action_area ( :$raw = False )
+    is also<
+      get-action-area
+      action_area
+      action-area
+    >
+  {
     my $b = gtk_dialog_get_action_area($!d);
 
     $b ??
@@ -214,12 +220,16 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     GTK::Widget.unstable_get_type( &gtk_dialog_get_type, $n, $t );
   }
 
-  method get_widget_for_response (Int() $response_id)
+  method get_widget_for_response (Int() $response_id, :$raw = False)
     is also<get-widget-for-response>
   {
     my gint $ri = $response_id;
 
-    gtk_dialog_get_widget_for_response($!d, $ri);
+    propReturnObject(
+      gtk_dialog_get_widget_for_response($!d, $ri),
+      $raw,
+      |GTK::Widget.getTypePair
+    );
   }
 
   # Class method.. but deprecated

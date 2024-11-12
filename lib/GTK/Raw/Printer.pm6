@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Printer:ver<3.0.1146>;
 
@@ -150,7 +152,7 @@ sub gtk_printer_list_papers (GtkPrinter $printer)
   { * }
 
 sub gtk_printer_new (
-  gchar $name,
+  Str $name,
   GtkPrintBackend $backend,
   gboolean $virtual
 )

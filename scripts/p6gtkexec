@@ -1,5 +1,7 @@
 #!/bin/bash
 
+
+RAKU=`which raku`
 if [ "$1" = "--debug" ]; then
   echo "Running perl6 script in debug mode..."
   EXEC=perl6-gdb-m
@@ -13,19 +15,21 @@ elif [ "$1" = "--rr" ]; then
   shift
 elif [ "$1" = "--pbuild" ]; then
   PARALLEL_BUILD=1
-  EXEC=raku
+  EXEC=$RAKU
   shift
 else
   #echo "Running perl6 script..."
-  EXEC=raku
+  EXEC=$RAKU
 fi
 
 INCLUDES="\
+-I${HOME}/.raku                    \
+-I${P6_GTK_HOME}/cairo-p6/lib           \
 -I${P6_GTK_HOME}/Method-Also/lib        \
 -I${P6_GTK_HOME}/P6-Data-Dump-Tree/lib  \
 -I${P6_GTK_HOME}/p6-ICal/lib            \
 -I${P6_GTK_HOME}/p6-GLib/lib            \
--I${P6_GTK_HOME}/p6-ICal-GLib/lib       \
+-I${P6_GTK_HOME}/p6-ICal_GLib/lib       \
 -I${P6_GTK_HOME}/p6-ATK/lib             \
 -I${P6_GTK_HOME}/p6-JSON-GLib/lib       \
 -I${P6_GTK_HOME}/p6-GIR/lib             \
@@ -35,7 +39,7 @@ INCLUDES="\
 -I${P6_GTK_HOME}/p6-Pango/lib           \
 -I${P6_GTK_HOME}/p6-GIO/lib             \
 -I${P6_GTK_HOME}/p6-GDK/lib             \
--I${P6_GTK_HOME}/p6-GtkPlus/lib         \
+-I${P6_GTK_HOME}/p6-GtkPlus/lib  \
 -I${P6_GTK_HOME}/p6-GtkBuilder/lib      \
 -I${P6_GTK_HOME}/p6-WebkitGTK/lib       \
 -I${P6_GTK_HOME}/p6-SourceViewGTK/lib   \
@@ -49,15 +53,16 @@ INCLUDES="\
 -I${P6_GTK_HOME}/p6-COGL/lib            \
 -I${P6_GTK_HOME}/p6-GStreamer/lib       \
 -I${P6_GTK_HOME}/p6-RSVG/lib            \
--I${P6_GTK_HOME}/p6-GtkSheet/lib	      \
+-I${P6_GTK_HOME}/p6-GtkSheet/lib	\
 -I${P6_GTK_HOME}/p6-VTE/lib             \
 -I${P6_GTK_HOME}/p6-ICal-GLib/lib       \
+-I${P6_GTK_HOME}/cairo-p6/lib           \
 -Ilib -Ibin"
 
 # Handle any extra directories in project file.
 MOREI=`grep libdir .p6-gtk-project | \
 cut -d= -f 2 | \
-raku -ne '.say for .lines.split(",")'`
+$RAKU -ne '.say for .lines.split(",")'`
 for a in $MOREI; do INCLUDES="-I$a $INCLUDES"; done
 
 if [[ -z "${PARALLEL_BUILD}" ]]; then
@@ -67,5 +72,5 @@ if [[ -z "${PARALLEL_BUILD}" ]]; then
     ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@"
   fi
 else
-  ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@" 2>&1 | perl -pe 's/^/$$ /'
+  ${EXEC} --stagestats ${EXTRAS} ${INCLUDES} "$@" 
 fi

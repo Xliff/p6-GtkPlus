@@ -1,8 +1,13 @@
 use v6.c;
 
 use NativeCall;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use Cairo;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::IconView:ver<3.0.1146>;
 
@@ -18,7 +23,7 @@ sub gtk_icon_view_convert_widget_to_bin_window_coords (
   { * }
 
 sub gtk_icon_view_create_drag_icon (GtkIconView $icon_view, GtkTreePath $path)
-  returns cairo_surface_t
+  returns Cairo::cairo_surface_t
   is native(gtk)
   is export
   { * }
@@ -158,19 +163,19 @@ sub gtk_icon_view_item_activated (GtkIconView $icon_view, GtkTreePath $path)
   { * }
 
 sub gtk_icon_view_new ()
-  returns GtkWidget
+  returns GtkIconView
   is native(gtk)
   is export
   { * }
 
 sub gtk_icon_view_new_with_area (GtkCellArea $area)
-  returns GtkWidget
+  returns GtkIconView
   is native(gtk)
   is export
   { * }
 
 sub gtk_icon_view_new_with_model (GtkTreeModel $model)
-  returns GtkWidget
+  returns GtkIconView
   is native(gtk)
   is export
   { * }

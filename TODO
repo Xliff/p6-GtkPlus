@@ -67,6 +67,11 @@
   Gtk..., must have a way to convert those names to the proper object name.
   Propose <Project>::Builder::Registry, with static .register method that
   provides pair mapping detected_name => proper_name.
+    - This is now being roled into GLib::Object as the TypeManifest system.
+      all objects register their "implementor => object-name" pairs
+      into THIS system, not GtkBuilder
+    - GTK::Builder shall be modified to use THIS system!
+    - Manifest generator shall be modified to handle Roles!
 + Complete implementation of GTK::Compat::Roles::GFile (now GIO::Roles::GFile!)
    - (Wrapper class is unnecessary as long as a method new is provided)
    - Role can have submethod BUILD, but will be overrided by any implementing
@@ -357,6 +362,10 @@ INITIAL specification for the format of %*ENV<P6_GTK_DEBUG>:
   return of the int64 value and return a DateTime if $raw.not -- also consider a :$both
   that will return both values if specified.
 
+- IMPORTANT NOTE FOR MEMORY MANAGEMENT - Currently, we have an identity constructor that takes a :$ref parameter.
+  We should be tracking that value for proper object destruction. If we do not REF the object, we should not be
+  UNREFing the object at DESTROY time!
+
 Applications
 ============
 √ A text editor in Perl6. Think about using it as a visual Regex tester
@@ -400,6 +409,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 + LibSecret
 - LibGWeather
 + LibGDA
+- GCR/GCK (https://gitlab.gnome.org/GNOME/gcr) -- [Needed by Gnome Shell!]
 - LibGVC
 - LibGOM
 - Gnome Keyring
@@ -408,12 +418,45 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 + Evolution Data Server (https://developer.gnome.org/eds/stable/EDataCal.html)
 + GOA (GNOME Online Accounts) (https://developer.gnome.org/goa/stable/index.html)
 + Handy
++ AT-SPI (In progress. Please complete)
 - LibFolks
 - Libnm
 - libportal (XDP)
 - LibUpower
-- Adwaita (GTK v4 port of Handy)
-- GTK Layer Shell
++ Adwaita (GTK v4 port of Handy)
+- GTK Layer Shell (v3 AND v4)
+- Consider Festival (it's small) - (https://www.cstr.ed.ac.uk/projects/festival/manual/festival_28.html#SEC133)
 - Consider Avahi. Be prepared to write another code-generator for another coding paradigm
+- Consider EFL: https://www.enlightenment.org/develop/guides/c/start.md (might work best as method chains)
+- Modernize GSSDP and GUPnP! Neither of the existing projects will work due to the switchover to SOUP3!
+
 
 - A basic backup utility written using p6-GtkPlus and friends.
+
+- DESIGN and port ASpell. YOU VILL DO ZIS!
+
+- ARE YOU INSANE?! -- Consider UE5. Docs here: https://docs.unrealengine.com/5.0/en-US/API/Runtime/
+  - Code generator will need to parse the docs.
+  - Will need to do ALL of the structs. Then compile a C++ lib to get the mangled signature for each struct/type in iso.
+    This is KEY, as it will open up C++ projects to NativeCall.o
+
+- Don't consider. DO - https://gitlab.gnome.org/GNOME/template-glib/
+
+- Consider Pulse Audio bindings -- /usr/include/pulse
+
++ GLibTop...although the documents SUCK!
+- Is it possible that the Blender Python API could be modified for use by Raku?
+
+- Extract all non-GLib functions into a project explicitly for the purpose of implementing the MethodMaker pattern. This shall include:
+  - All non-GLib specific functions from GLib::Raw::Subs and all other ::Raw::Sub CompUnits from the entire suite
+  - All non-GLib structures from GLib::Raw::Structs and all other ::Raw::Struct CompUnits from the entire suite
+  - If there are any Glib-specific scripts in scripts, then they are to be made non-GLib specific via a yet-to-be-specified callback
+    mechanism
+  - If there are any GLib-specific scripts in project-scripts, then they are to be made non-GLib specific via a yet-to-be-speified callback
+
+- Port Manette - Controllers for Raku!
+
+- Add a journal to cairo_t in libcairo
+
+- Consider a port of TBOX to Raku: https://opencollective.com/tbox
+    mechanism

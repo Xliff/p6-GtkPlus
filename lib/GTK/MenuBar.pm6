@@ -8,32 +8,24 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::MenuShell:ver<3.0.1146>;
 
-our subset MenuBarAncestry is export
-  where GtkMenuBar | MenuShellAncestry;
+our subset GtkMenuBarAncestry is export
+  where GtkMenuBar | GtkMenuShellAncestry;
 
 class GTK::MenuBar:ver<3.0.1146> is GTK::MenuShell {
   has GtkMenuBar $!mb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  submethod BUILD ( :$menubar ) {
+    self.setGtkMenuBar($menubar) if $menubar;
   }
 
-  submethod BUILD(:$menubar, :@items) {
-    given $menubar {
-      when MenuBarAncestry { self.setMenuBar($menubar, :@items) }
-      when GTK::MenuBar    { }
-      default              { }
-    }
-
-    # Cannot be done until after self.setMenuShell()
-    self.append-widgets(|@items) if @items;
+  submethod TWEAK ( :@items ) {
+    self.append-widgets(|@items) if +@items;
   }
 
-  method setMenuBar($menubar) {
+  method setGtkMenuBar (GtkMenuBarAncestry $_) {
     my $to-parent;
-    $!mb = do given $menubar {
+
+    $!mb = do {
       when GtkMenuBar {
         $to-parent = cast(GtkMenuShell, $_);
         $_;
@@ -44,7 +36,7 @@ class GTK::MenuBar:ver<3.0.1146> is GTK::MenuShell {
         cast(GtkMenuBar, $_);
       }
     }
-    self.setMenuShell($to-parent);
+    self.setGtkMenuShell($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkMenuBar
@@ -54,7 +46,7 @@ class GTK::MenuBar:ver<3.0.1146> is GTK::MenuShell {
     >
   { $!mb }
 
-  multi method new (MenuBarAncestry $menubar, :$ref = True) {
+  multi method new (GtkMenuBarAncestry $menubar, :$ref = True) {
     return Nil unless $menubar;
 
     my $o = self.bless(:$menubar);

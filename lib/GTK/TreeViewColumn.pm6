@@ -9,26 +9,54 @@ use GLib::Value;
 use GTK::CellArea:ver<3.0.1146>;
 use GTK::Widget:ver<3.0.1146>;
 
+use GLib::Roles::Object;
 use GTK::Roles::Buildable:ver<3.0.1146>;
 use GTK::Roles::CellLayout:ver<3.0.1146>;
-use GLib::Roles::Properties;
 use GTK::Roles::Types:ver<3.0.1146>;
 
+our subset GtkTreeViewColumnAncestry is export of Mu
+  where GtkTreeViewColumn | GtkBuildable | GtkCellLayout | GObject;
+
 class GTK::TreeViewColumn:ver<3.0.1146> {
+  also does GLib::Roles::Object;
   also does GTK::Roles::Buildable;
   also does GTK::Roles::CellLayout;
-  also does GLib::Roles::Properties;
-
-  # Using GTK::Raw::Utils to prevent circular role dependency between
-  # CellLayout and Types
 
   has GtkTreeViewColumn $!tvc is implementor;
 
-  submethod BUILD(:$treeview) {
-    self!setObject($!tvc = $treeview);
+  submethod BUILD ( :$tree-view-column ) {
+    self.setGtkTreeViewColumn($tree-view-column) if $tree-view-column
+  }
 
-    $!b   = cast(GtkBuildable,  $!tvc);   # GTK::Roles::Buildable
-    $!cl  = cast(GtkCellLayout, $!tvc);   # GTK::Roles::CellLayout
+  method setGtkTreeViewColumn (GtkTreeViewColumnAncestry $_) {
+    my $to-parent;
+
+    $!tvc = do {
+      when GtkTreeViewColumn {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      when GtkBuildable {
+        $to-parent = cast(GObject, $_);
+        $!b        = $_;
+        cast(GtkTreeViewColumn, $_);
+      }
+
+      when GtkCellLayout {
+        $to-parent = cast(GObject, $_);
+        $!cl       = $_;
+        cast(GtkTreeViewColumn, $_);
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkTreeViewColumn, $_);
+      }
+    }
+    self!setObject($to-parent);
+    self.roleInit-GtkBuildable;
+    self.roleInit-GtkCellLayout;
   }
 
   method GTK::Raw::Definitions::GtkTreeViewColumn
@@ -38,19 +66,31 @@ class GTK::TreeViewColumn:ver<3.0.1146> {
     >
   { $!tvc }
 
-  multi method new (GtkTreeViewColumn $treeview) {
-    $treeview ?? self.bless(:$treeview) !! Nil;
+  multi method new (
+    $tree-view-column where * ~~ GtkTreeViewColumnAncestry,
+
+    :$ref = True
+  ) {
+    return unless $tree-view-column;
+
+    my $o = self.bless( :$tree-view-column );
+    $o.ref if $ref;
+    $o;
   }
-  multi method new {
-    my $treeview = gtk_tree_view_column_new();
+  multi method new ( *%a ) {
+    my $tree-view-column = gtk_tree_view_column_new();
 
-    $treeview ?? self.bless(:$treeview) !! Nil;
+    my $o = $tree-view-column ?? self.bless( :$tree-view-column ) !! Nil;
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
 
-  method new_with_area(GtkCellArea() $area) is also<new-with-area> {
-    my $treeview = gtk_tree_view_column_new_with_area($area);
+  method new_with_area (GtkCellArea() $area, *%a) is also<new-with-area> {
+    my $tree-view-column = gtk_tree_view_column_new_with_area($area);
 
-    $treeview ?? self.bless(:$treeview) !! Nil;
+    my $o = $tree-view-column ?? self.bless( :$tree-view-column ) !! Nil;
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
 
   proto method new_with_attributes (|)
@@ -346,8 +386,8 @@ class GTK::TreeViewColumn:ver<3.0.1146> {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_attribute (
     GtkCellRenderer() $cell_renderer,
-    Str() $attribute,
-    Int() $column
+    Str()             $attribute,
+    Int()             $column
   )
     is also<add-attribute>
   {
@@ -358,8 +398,8 @@ class GTK::TreeViewColumn:ver<3.0.1146> {
 
   method cell_get_position (
     GtkCellRenderer() $cell_renderer,
-    Int() $x_offset,
-    Int() $width
+    Int()             $x_offset,
+    Int()             $width
   )
     is also<cell-get-position>
   {
@@ -370,10 +410,10 @@ class GTK::TreeViewColumn:ver<3.0.1146> {
 
   method cell_get_size (
     GdkRectangle() $cell_area,
-    Int() $x_offset,
-    Int() $y_offset,
-    Int() $width,
-    Int() $height
+    Int()          $x_offset,
+    Int()          $y_offset,
+    Int()          $width,
+    Int()          $height
   )
     is also<cell-get-size>
   {
@@ -388,9 +428,9 @@ class GTK::TreeViewColumn:ver<3.0.1146> {
 
   method cell_set_cell_data (
     GtkTreeModel() $tree_model,
-    GtkTreeIter() $iter,
-    Int() $is_expander = 0,
-    Int() $is_expanded = 0
+    GtkTreeIter()  $iter,
+    Int()          $is_expander = 0,
+    Int()          $is_expanded = 0
   )
     is also<cell-set-cell-data>
   {
@@ -474,9 +514,9 @@ class GTK::TreeViewColumn:ver<3.0.1146> {
 
   method set_cell_data_func (
     GtkCellRenderer() $cell_renderer,
-    &func,
-    gpointer $func_data     = gpointer,
-    GDestroyNotify $destroy = GDestroyNotify
+                      &func,
+    gpointer          $func_data     = gpointer,
+    GDestroyNotify    $destroy       = GDestroyNotify
   )
     is also<set-cell-data-func>
   {

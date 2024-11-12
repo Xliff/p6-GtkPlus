@@ -43,17 +43,24 @@ class GTK::Dialog::Message:ver<3.0.1146> is GTK::Dialog {
     self.setDialog($to-parent);
   }
 
-  multi method new (GtkMessageDialogAncestry $dialog, :$ref = True) {
-    return Nil unless $dialog;
+  multi method new (GtkMessageDialogAncestry $message-dialog, :$ref = True) {
+    return Nil unless $message-dialog;
 
-    my $o = self.bless(:$dialog);
+    my $o = self.bless( :$message-dialog );
     $o.ref if $ref;
     $o;
   }
+
+  proto method new (|)
+  { * }
+
   multi method new (
-    GtkWindow() $parent,
-    Str         $message,
-    Int()       :$flags    = GTK_DIALOG_DESTROY_WITH_PARENT,
+    GtkWindow() :$parent   = GtkWindow,
+    Str         :$message  = '',
+    Int()       :$flags    = [+|](
+                               GTK_DIALOG_DESTROY_WITH_PARENT,
+                               GTK_DIALOG_MODAL
+                             ),
     Int()       :$type     = GTK_MESSAGE_INFO,
     Int()       :$buttons  = GTK_BUTTONS_CLOSE
   ) {
@@ -77,7 +84,7 @@ class GTK::Dialog::Message:ver<3.0.1146> is GTK::Dialog {
       $message_format
     );
 
-    $message-dialog ?? self.bless(:$message-dialog) !! Nil;
+    $message-dialog ?? self.bless( :$message-dialog ) !! Nil;
   }
 
   method new_with_markup (

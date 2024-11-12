@@ -6,6 +6,7 @@ use NativeCall;
 use Pango::Raw::Types;
 use Pango::Context;
 use Pango::Layout;
+use Pango::FontDescription;
 
 use GLib::Value;
 
@@ -15,6 +16,7 @@ use GDK::Screen;
 
 use GDK::Window;
 
+use GLib::Raw::Traits;
 use GTK::Raw::DnD:ver<3.0.1146>;
 use GTK::Raw::DragDest:ver<3.0.1146>;
 use GTK::Raw::DragSource:ver<3.0.1146>;
@@ -50,7 +52,7 @@ class GTK::Widget:ver<3.0.1146> {
   my ($t, $n);
 
   submethod BUILD (:$widget) {
-    self.setWidget($widget) if $widget
+    self.setGtkWidget($widget) if $widget
   }
 
   # Check all widgets to insure that %!signals is left for THIS object
@@ -68,7 +70,7 @@ class GTK::Widget:ver<3.0.1146> {
     self.disconnect-all($_) for %!signals, %!signals-widget
   }
 
-  method setWidget (GtkWidgetAncestry $_) {
+  method setGtkWidget (GtkWidgetAncestry $_) is also<setWidget> {
 #    "setWidget".say;
     # cw: Consider at least a warning if $!w has already been set.
     $!w = do {
@@ -110,6 +112,10 @@ class GTK::Widget:ver<3.0.1146> {
       widget
     >
   { $!w }
+
+  method GDK::Raw::Definitions::GdkWindow
+    is also<GdkWindow>
+  { self.window(:raw) }
 
   # proto new(|) { * }
   multi method new(|c) {
@@ -171,10 +177,10 @@ class GTK::Widget:ver<3.0.1146> {
     gtk_cairo_transform_to_window($cr, $!w, $window);
   }
 
-  method default_direction is rw is also<default-direction> {
+  method allocation is rw is g-property {
     Proxy.new:
-      FETCH => -> $           { GTK::Widget.get_default_direction    },
-      STORE => -> $, Int() \d { GTK::Widget.set_default_direction(d) }
+      FETCH => -> $     { self.get_allocation    },
+      STORE => -> $, \v { self.set_allocation(v) }
   }
 
   method get_default_direction (GTK::Widget:U: )
@@ -1277,9 +1283,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('composite-child', $gv)
-        );
+        self.prop_get('composite-child', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1294,9 +1298,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('expand', $gv)
-        );
+        self.prop_get('expand', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1316,9 +1318,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('has-focus', $gv)
-        );
+        self.prop_get('has-focus', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1333,9 +1333,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new(
-          self.prop_get('height-request', $gv)
-        );
+        self.prop_get('height-request', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1350,7 +1348,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_BOOLEAN);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get('is-focus', $gv) );
+        self.prop_get('is-focus', $gv);
         $gv.boolean;
       },
       STORE => -> $, Int() $val is copy {
@@ -1365,7 +1363,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get('margin', $gv) );
+        self.prop_get('margin', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1380,9 +1378,7 @@ class GTK::Widget:ver<3.0.1146> {
     my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get(
-          $!w, 'scale-factor', $gv)
-        );
+        self.prop_get('scale-factor', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1409,12 +1405,10 @@ class GTK::Widget:ver<3.0.1146> {
 
   # Type: gint
   method width-request is rw is also<width_request> {
-    my GValue $gv .= new(G_TYPE_INT);
+    my GLib::Value $gv .= new(G_TYPE_INT);
     Proxy.new(
       FETCH => sub ($) {
-        $gv = GLib::Value.new( self.prop_get(
-          $!w, 'width-request', $gv)
-        );
+        self.prop_get('width-request', $gv);
         $gv.int;
       },
       STORE => -> $, Int() $val is copy {
@@ -1486,10 +1480,42 @@ class GTK::Widget:ver<3.0.1146> {
     gtk_widget_override_background_color($!w, $s, $color);
   }
 
-  method override_font (PangoFontDescription() $font)
-    is also<override-font>
+  method override_font ($font)
+    is also<
+      override-font
+      set-font
+      set_font
+    >
   {
-    gtk_widget_override_font($!w, $font);
+    my $fd = do given $font {
+      when .^can('PangoFontDescription') && $_ !~~ PangoFontDescription {
+        .PangoFontDescription
+      }
+
+      when .^can('Str') && $_ !~~ Str {
+        $_ = .Str;
+        proceed
+      }
+
+      when Str {
+        Pango::FontDescription.new_from_string($_)
+      }
+
+      when PangoFontDescription { $_ }
+
+      default {
+        say "Cannot use a { .^name } as a font override!";
+        return Nil;
+      }
+    }
+
+    # cw: The above shenanigans are for the ability to return a
+    #     Pango::FontDefinition object. The real call logic is below
+    my $ufd = $fd;
+    $ufd .= PangoFontDescription if $ufd ~~ Pango::FontDescription;
+
+    gtk_widget_override_font($!w, $ufd);
+    $fd;
   }
 
   method trigger_tooltip_query is also<trigger-tooltip-query> {
@@ -2076,7 +2102,8 @@ class GTK::Widget:ver<3.0.1146> {
   {
     my $w = gtk_widget_get_toplevel($!w);
 
-    ReturnWidget($w, $raw, $widget);
+    return Nil unless $w;
+    $raw ?? $w !! ::('GTK::Window').new($w);
   }
 
   method set_device_events (GdkDevice() $device, Int() $events)
@@ -2098,7 +2125,13 @@ class GTK::Widget:ver<3.0.1146> {
       Nil;
   }
 
-  method queue_draw is also<queue-draw> {
+  method queue_draw
+    is also<
+      queue-draw
+      redraw
+      invalidate
+    >
+  {
     gtk_widget_queue_draw($!w);
   }
 
@@ -2531,7 +2564,8 @@ class GTK::Widget:ver<3.0.1146> {
   }
 
   method ReturnWidget ($w, $raw, $widget = False) {
-    ReturnWidget($w, $raw, $widget);
+    say 'rw';
+    ReturnWidget($w, $raw, :$widget);
   }
 
   # Remove all $n, $t from instances!
@@ -2539,6 +2573,12 @@ class GTK::Widget:ver<3.0.1146> {
     is also<unstable-get-type>
   {
     unstable_get_type(::?CLASS.^name, &sub, $n, $t);
+  }
+
+  method get_type {
+    state ($n, $t);
+
+    unstable_get_type( self.^name, &gtk_widget_get_type, $n, $t );
   }
 
 }

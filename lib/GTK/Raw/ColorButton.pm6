@@ -3,8 +3,11 @@ use v6.c;
 use NativeCall;
 
 use GDK::RGBA;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ColorButton:ver<3.0.1146>;
 
@@ -75,7 +78,7 @@ sub gtk_color_button_set_use_alpha (GtkColorButton $button, gboolean $use_alpha)
   is export
   { * }
 
-sub gtk_color_button_set_title (GtkColorButton $button, gchar $title)
+sub gtk_color_button_set_title (GtkColorButton $button, Str $title)
   is native(gtk)
   is export
   { * }

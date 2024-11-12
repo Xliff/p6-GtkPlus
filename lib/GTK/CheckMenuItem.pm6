@@ -7,29 +7,14 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::MenuItem:ver<3.0.1146>;
 
-our subset CheckMenuItemAncestry is export
-  where GtkCheckMenuItem | MenuItemAncestry;
+our subset GtkCheckMenuItemAncestry is export
+  where GtkCheckMenuItem | GtkMenuItemAncestry;
 
 class GTK::CheckMenuItem:ver<3.0.1146> is GTK::MenuItem {
   has GtkCheckMenuItem $!cmi is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD(:$checkmenuitem) {
-    my $to-parent;
-    given $checkmenuitem {
-      when CheckMenuItemAncestry {
-        self.setCheckMenuItem($checkmenuitem);
-      }
-      when GTK::CheckMenuItem {
-      }
-      default {
-      }
-    }
+    self.setGtkCheckMenuItem($checkmenuitem) if $checkmenuitem;
   }
 
   method GTK::Raw::Definitions::GtkCheckMenuItem
@@ -39,22 +24,26 @@ class GTK::CheckMenuItem:ver<3.0.1146> is GTK::MenuItem {
     >
   { $!cmi }
 
-  method setCheckMenuItem(CheckMenuItemAncestry $checkmenuitem) {
+  method setGtkCheckMenuItem ($_) {
+    say "Check Menu Item is { .^name }";
+
     my $to-parent;
-    $!cmi = do given $checkmenuitem {
+
+    $!cmi = do {
       when GtkCheckMenuItem {
         $to-parent = cast(GtkMenuItem, $_);
         $_;
       }
-      when MenuItemAncestry {
+
+      when GtkMenuItemAncestry {
         $to-parent = $_;
         cast(GtkCheckMenuItem, $_);
       }
     }
-    self.setMenuItem($to-parent);
+    self.setGtkMenuItem($to-parent);
   }
 
-  multi method new (CheckMenuItemAncestry $checkmenuitem, :$ref = True) {
+  multi method new (GtkCheckMenuItemAncestry $checkmenuitem, :$ref = True) {
     my $o = self.bless(:$checkmenuitem);
     $o.ref if $ref;
     $o;
@@ -76,9 +65,9 @@ class GTK::CheckMenuItem:ver<3.0.1146> is GTK::MenuItem {
     $checkmenuitem ?? self.bless(:$checkmenuitem) !! Nil
   }
   multi method new (
-    Str() $label,
-    :$clicked,
-    :$toggled,
+    Str()  $label,
+          :$clicked,
+          :$toggled,
   ) {
     my $checkmenuitem = gtk_check_menu_item_new_with_label($label);
     my $o = $checkmenuitem ?? self.bless(:$checkmenuitem) !! Nil;

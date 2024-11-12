@@ -2,11 +2,17 @@ use v6.c;
 
 use NativeCall;
 
+use GLib::Raw::Traits;
+
 use GLib::Roles::Pointers;
 
 unit package GTK::Raw::Definitions:ver<3.0.1146>;
 
 constant gtk is export := 'gtk-3',v0;
+
+sub GTK-Distribution is export is DistributionProvider {
+  $?DISTRIBUTION;
+}
 
 # Look into replacing these with subsets to see how they would look.
 # Example:

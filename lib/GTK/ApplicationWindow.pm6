@@ -20,11 +20,11 @@ class GTK::ApplicationWindow:ver<3.0.1146> is GTK::Window {
 
   has GtkApplicationWindow $!aw is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
+  # method bless(*%attrinit) {
+  #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
+  #   $o.setType($o.^name);
+  #   $o;
+  # }
 
   submethod BUILD ( :$appwindow ) {
     say "AW: { $appwindow // 'NIL' }";

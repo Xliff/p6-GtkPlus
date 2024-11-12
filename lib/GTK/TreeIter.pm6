@@ -5,6 +5,8 @@ use Method::Also;
 use GTK::Raw::Types:ver<3.0.1146>;
 use GTK::Raw::TreeModel:ver<3.0.1146>;
 
+use GLib::Roles::Implementor;
+
 # BOXED TYPE
 
 class GTK::TreeIter:ver<3.0.1146> is export {

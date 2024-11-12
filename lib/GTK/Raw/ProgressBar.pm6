@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ProgressBar:ver<3.0.1146>;
 
@@ -86,7 +88,7 @@ sub gtk_progress_bar_set_fraction (GtkProgressBar $pbar, gdouble $fraction)
   is export
   { * }
 
-sub gtk_progress_bar_set_text (GtkProgressBar $pbar, gchar $text)
+sub gtk_progress_bar_set_text (GtkProgressBar $pbar, Str $text)
   is native(gtk)
   is export
   { * }

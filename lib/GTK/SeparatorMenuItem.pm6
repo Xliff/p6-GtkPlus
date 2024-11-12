@@ -7,42 +7,34 @@ use GTK::Raw::SeparatorMenuItem:ver<3.0.1146>;
 
 use GTK::MenuItem:ver<3.0.1146>;
 
-our subset SeparatorMenuItemAncestry
-  where GtkSeparatorMenuItem | MenuItemAncestry;
+our subset GtkSeparatorMenuItemAncestry
+  where GtkSeparatorMenuItem | GtkMenuItemAncestry;
 
 class GTK::SeparatorMenuItem:ver<3.0.1146> is GTK::MenuItem {
   has GtkSeparatorMenuItem $!smi is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType(self.^name);
-    $o;
+  submethod BUILD( :$separator ) {
+    self.setGtkSeparatorMenuItem($separator) if $separator;
   }
 
-  submethod BUILD(:$separator) {
+  method setGtkSeparatorMenuItem (GtkSeparatorMenuItemAncestry $_) {
     my $to-parent;
-    given $separator {
-      when SeparatorMenuItemAncestry {
-        $!smi = do {
-          when GtkSeparatorMenuItem {
-            $to-parent = cast(GtkMenuItem, $_);
-            $_;
-          }
-          default {
-            $to-parent = $_;
-            cast(GtkSeparatorMenuItem, $_);
-          }
-        }
-        self.setMenuItem($to-parent);
+
+    $!smi = do {
+      when GtkSeparatorMenuItem {
+        $to-parent = cast(GtkMenuItem, $_);
+        $_;
       }
-      when GTK::SeparatorMenuItem {
-      }
+
       default {
+        $to-parent = $_;
+        cast(GtkSeparatorMenuItem, $_);
       }
     }
+    self.setGtkMenuItem($to-parent);
   }
 
-  multi method new (SeparatorMenuItemAncestry $separator, :$ref = True) {
+  multi method new (GtkSeparatorMenuItemAncestry $separator, :$ref = True) {
     return Nil unless $separator;
 
     my $o = self.bless(:$separator);
@@ -55,7 +47,7 @@ class GTK::SeparatorMenuItem:ver<3.0.1146> is GTK::MenuItem {
     $separator ?? self.bless(:$separator) !! Nil;
   }
   multi method new (
-    Str() $label, 
+    Str() $label,
     # For compatibility with GTK::Utils::MenuBuilder
     *%dummy_opts
   ) {

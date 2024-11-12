@@ -7,11 +7,12 @@ use GIO::Raw::Exports;
 use GDK::Raw::Exports;
 use GTK::Raw::Exports:ver<3.0.1146>;
 
-my constant forced = 124;
+my constant forced = 205;
 
 unit package GTK::Raw::Types:ver<3.0.1146>;
 
 need Cairo;
+need GLib::Raw::Debug;
 need GLib::Raw::Definitions;
 need GLib::Raw::Enums;
 need GLib::Raw::Exceptions;
@@ -20,6 +21,7 @@ need GLib::Raw::Structs;
 need GLib::Raw::Struct_Subs;
 need GLib::Raw::Subs;
 need GLib::Roles::Pointers;
+need GLib::Roles::Implementor;
 need ATK::Raw::Definitions;
 need ATK::Raw::Enums;
 need ATK::Raw::Structs;

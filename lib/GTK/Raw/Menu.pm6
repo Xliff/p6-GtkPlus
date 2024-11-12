@@ -2,8 +2,13 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Menu:ver<3.0.1146>;
 
@@ -202,12 +207,12 @@ sub gtk_menu_set_accel_group (GtkMenu $menu, GtkAccelGroup $accel_group)
   is export
   { * }
 
-sub gtk_menu_set_title (GtkMenu $menu, gchar $title)
+sub gtk_menu_set_title (GtkMenu $menu, Str $title)
   is native(gtk)
   is export
   { * }
 
-sub gtk_menu_set_accel_path (GtkMenu $menu, gchar $accel_path)
+sub gtk_menu_set_accel_path (GtkMenu $menu, Str $accel_path)
   is native(gtk)
   is export
   { * }

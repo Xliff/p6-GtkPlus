@@ -3,53 +3,20 @@ use v6.c;
 
 use lib 'scripts';
 
+use ScriptConfig;
 use GTKScripts;
 
-my regex name {
-  <[_ A..Z a..z]>+
-}
+my %values;
 
-# my rule enum_entry {
-#   <[A..Z]>+ [ '=' [ \d+ | \d+ '<<' \d+ ] ]? ','
-# }
-
-my token d { <[0..9 x]> }
-my token m { '-' }
-my token L { 'L' }
-my token w { <[A..Za..z0..9 _]> }
-
-my rule comment {
-  '/*' .+? '*/'
-}
-
-my rule enum-entry {
-  \s* ( <w>+ ) (
-    [ '=' '('?
-      [
-        <m>?<d>+<L>?
-        |
-        <w>+
-      ]
-      [ '<<' ( [<d>+ | <w>+] ) ]?
-      ')'?
-    ]?
-  ) ','?
-  <comment>?
-  \v*
-}
-
-my rule solo-enum {
-  'enum' <n=name>? <comment>? \v* '{'
-  <comment>? \v* [ <comment> | <enum-entry> ]+ \v*
-  '}'
-}
-
-my rule enum {
-  'typedef' <solo-enum> <rn=name> | <solo-enum>
-}
-
-sub MAIN ($dir = %config<include-directory>, :$file) {
+sub MAIN (
+   $dir = %config<include-directory>,
+  :$file,
+  :$only     is copy,
+  :$exclude
+) {
   my (%enums, @files);
+
+  $only = $only.split(',').cache if $only;
 
   unless $dir ^^ $file {
     say qq:to/SAY/;
@@ -72,12 +39,20 @@ sub MAIN ($dir = %config<include-directory>, :$file) {
     die "Directory '$dir' either does not exist, or is not a directory"
       unless $dir.IO.e && $dir.IO.d;
 
-    @files = find-files($dir, extension => 'h');
+    @files = find-files( $dir, :$exclude, extension => 'h' );
   }
 
-  my %etype;
-  for @files -> $file {
-    say "Checking { $file } ...";
+  my (%etype, %values);
+  FILE: for @files -> $file {
+    if $only {
+      TOCONT: for 1 {
+        for $only[] {
+          last TOCONT if $file.contains($_);
+        }
+        next FILE;
+      }
+    }
+    $*ERR.say: "Checking { $file } ...";
 
     # cw: Hardcoded skip of file that crashes Raku with 'Makformed UTF-8' error
     next if $file.ends-with('Xge.h');
@@ -85,13 +60,16 @@ sub MAIN ($dir = %config<include-directory>, :$file) {
     my $contents = $file.IO.slurp;
 
     # Remove preprocessor directives.
-    $contents ~~ s:g/^^'#' .+? $$//;
+    $contents ~~ s:g| ^^ '#'  .+?      $$ ||;
+    # Remove comments
+    $contents ~~ s:g|    '//' .+?      $$ ||;
+    $contents ~~ s:g|    '/*' .+? '*/'    ||;
 
     my $m = $contents ~~ m:g/<enum>/;
     for $m.Array -> $l {
       my @e;
-      my ($etype, $neg, $long, $enum-rn) =
-        (32, False, False, $l<enum><rn> // $l<enum><solo-enum><n>);
+      my ($etype, $neg, $long, $enum-rn, $named) =
+        (32, False, False, $l<enum><rn> // $l<enum><solo-enum><n>, False);
 
       next unless $enum-rn;
 
@@ -99,27 +77,41 @@ sub MAIN ($dir = %config<include-directory>, :$file) {
         if $enum-rn.contains('_');
 
       for $l<enum><solo-enum><enum-entry> -> $el {
-
         for $el -> $e {
+          $named = False;
           # Handle 32 vs 64 bit by literal.
           if $e[1][0] && $e[1][0].Numeric !~~ Failure {
             $long = True if $e[1]<L> || $e[1][0].Int > 31;
+          } else {
+            # Value is a named constant.
+            $named = True;
           }
           # Handle signed vs unsigned.
           $neg  = True if $e[1]<m>;
 
           ((my $n = $e[1].Str.trim) ~~ s/'='//);
-          $n ~~ s/'<<'/+</;
+          $n ~~ s/ '<<' / +< /;
+          $n ~~ s/  '|' / +| /;
+
           my $ee;
           $ee.push: $e[0].Str.trim;
-          $ee.push: $n if $n.chars;
+
+          # if $n.chars {
+          #   if $named {
+          #     $n ~~ s:g/ ( <{ %values.keys }> ) /{ %values{ $/[0] } }/;
+          #   }
+          #   $ee.push: $n;
+          # }
+          #
+          # %values{ $ee.head } = $ee.tail;
+
           @e.push: $ee;
         }
         %enums{$enum-rn} = @e;
       }
       $etype = 64      if $long;
       $etype = -$etype if $neg;
-      %etype{$enum-rn} = $etype;
+      %etype{$enum-rn} =  $etype;
     }
   }
 

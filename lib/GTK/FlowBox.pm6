@@ -32,7 +32,7 @@ class GTK::FlowBox:ver<3.0.1146> is GTK::Container {
     $o;
   }
 
-  submethod BUILD(:$flowbox) {
+  submethod BUILD (:$flowbox) {
     my $to-parent;
     given $flowbox {
       when FlowBoxAncestry {
@@ -78,10 +78,23 @@ class GTK::FlowBox:ver<3.0.1146> is GTK::Container {
   multi method new {
     my $flowbox = gtk_flow_box_new();
 
-    $flowbox ?? self.bless(:$flowbox) !! Nil;
+    $flowbox ?? self.bless( :$flowbox ) !! Nil;
+  }
+  multi method new (Int() $orientation, Int() $spacing) {
+    my $o = self.new;
+    ( .orientation, .spacing ) = ($orientation, $spacing) given $o;
+    $o;
   }
 
-  method !resolve-selected-child($child) {
+  multi method new-hbox (Int() $spacing = 0) {
+    self.new(GTK_ORIENTATION_HORIZONTAL, $spacing);
+  }
+
+  multi method new-vbox (Int() $spacing = 0) {
+    self.new(GTK_ORIENTATION_VERTICAL, $spacing);
+  }
+
+  method !resolve-selected-child ($child) {
     do given $child {
       when GTK::FlowBoxChild { $_.FlowBoxChild                }
       when GtkFlowBoxChild   { $_                             }
@@ -124,6 +137,13 @@ class GTK::FlowBox:ver<3.0.1146> is GTK::Container {
     self.connect($!fb, 'unselect-all');
   }
   # ↑↑↑↑ SIGNALS ↑↑↑↑
+
+  # cw: QoL
+  method spacing is rw {
+    Proxy.new:
+      FETCH => -> $     { (self.row_spacing, self.column_spacing).max   },
+      STORE => -> $, \v { .row_spacing = .column-spacing = v with self; }
+  }
 
   # ↓↓↓↓ ATTRIBUTES ↓↓↓↓
   method activate_on_single_click is rw is also<activate-on-single-click> {
@@ -218,7 +238,7 @@ class GTK::FlowBox:ver<3.0.1146> is GTK::Container {
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
-  method get_children(:$wrap is copy, :$unwrap is copy)
+  method get_children (:$wrap is copy, :$unwrap is copy)
     is also<get-children>
   {
     die
@@ -233,7 +253,7 @@ class GTK::FlowBox:ver<3.0.1146> is GTK::Container {
   }
 
   # Override.
-  method add($widget) {
+  method add ($widget) {
     say 'Flowbox add';
     my $adding = do given $widget {
       when GTK::FlowBoxChild { $_ }

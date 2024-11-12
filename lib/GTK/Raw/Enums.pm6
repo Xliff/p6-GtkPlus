@@ -4,6 +4,8 @@ use GLib::Raw::Definitions;
 
 unit package GTK::Raw::Enums:ver<3.0.1146>;
 
+# cw: Write script to sort!
+
 constant GtkAccelFlags is export := guint32;
 our enum GtkAccelFlagsEnum is export <
   GTK_ACCEL_VISIBLE

@@ -24,7 +24,7 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::LatchedContents;
 
   # Maybe this should be done as the base class.
-  has GtkContainer $!c;
+  has GtkContainer $!c is implementor;
 
   # Even though an abstract class, we have to be able to instantiate from
   # a lowest common denominator amongst descendants.
@@ -54,7 +54,7 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
     }
     say "CONTAINER: { $!c }";
     say "CONTAINER-TP: { $to-parent }";
-    self.setWidget($to-parent);
+    self.setGtkWidget($to-parent);
   }
 
   method GTK::Raw::Definition::GtkContainer
@@ -64,7 +64,7 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
     >
   { $!c }
 
-  method new (ContainerAncestry $container, :$ref = True) {
+  method new (GtkContainerAncestry $container, :$ref = True) {
     return Nil unless $container;
 
     my $o = self.bless(:$container);
@@ -88,6 +88,8 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
   method check-resize is also<check_resize> {
     self.connect($!c, 'check-resize');
   }
+
+
 
   # Signal - Last
   method set-focus-child is also<set_focus_child> {
@@ -469,8 +471,8 @@ D
 
     $cl = GLib::GList.new($cl) but GLib::Roles::ListData[GtkWidget];
     $raw ?? $cl.Array
-         !! ( $widget ?? $cl.Array.new({ GTK::Widget.new($_) })
-                      !! $cl.Array.new({ GTK::Widget.CreateObject($_) }) );
+         !! ( $widget ?? $cl.Array.map({ GTK::Widget.new($_) })
+                      !! $cl.Array.map({ GTK::Widget.CreateObject($_) }) );
   }
 
   method get_focus_chain (GList $focusable_widgets)

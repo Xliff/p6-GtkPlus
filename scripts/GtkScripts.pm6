@@ -230,14 +230,18 @@ sub get-longest-prefix (@words) is export {
 }
 
 INIT {
-  $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
-  $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
-                 $*ENV<X11_PROJECT_FILE> //
-                 do {
-                   ".".IO.dir.grep({
-                     .starts-with('.') &&
-                     .ends-with('-project')
-                   })[0].absolute
-                 }
-  parse-file if $CONFIG-NAME.IO.e;
+  say ":P";
+
+  unless %*ENV<GTK_SCRIPTS_NO_INIT> {
+    $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
+    $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
+                   $*ENV<X11_PROJECT_FILE> //
+                   do {
+                     ".".IO.dir.grep({
+                       .starts-with('.') &&
+                       .ends-with('-project')
+                     })[0].absolute
+                   }
+    parse-file if $CONFIG-NAME.IO.e;
+  }
 }

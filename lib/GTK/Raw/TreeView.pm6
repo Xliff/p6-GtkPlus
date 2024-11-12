@@ -2,8 +2,13 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use Cairo;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::TreeView:ver<3.0.1146>;
 
@@ -105,7 +110,7 @@ sub gtk_tree_view_create_row_drag_icon (
   GtkTreeView $tree_view,
   GtkTreePath $path
 )
-  returns cairo_surface_t
+  returns Cairo::cairo_surface_t
   is native(gtk)
   is export
   { * }
@@ -317,7 +322,7 @@ sub gtk_tree_view_insert_column (
 sub gtk_tree_view_insert_column_with_data_func (
   GtkTreeView $tree_view,
   gint $position,
-  gchar $title,
+  Str $title,
   GtkCellRenderer $cell,
   &func (GtkTreeViewColumn, GtkCellRenderer, GtkTreeModel, GtkTreeIter, Pointer),
   gpointer $data,

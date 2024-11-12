@@ -6,6 +6,7 @@ use IO::Capture::Simple;
 
 use lib <. scripts>;
 
+use ScriptConfig;
 use GTKScripts;
 
 my %do_output;
@@ -52,7 +53,7 @@ grammar C-Function-Def {
     [ <postdec>+ % \s* ]?';'';'?
   }
 
-  regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ }
+  regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ | '&' }
   token       n { <[\w _]>+ }
   token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
   token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
@@ -101,6 +102,7 @@ my token availability {
 
 sub MAIN (
         $filename,                     #= Filename to process
+       :$files,                        #= Send output to files
   Str  :$remove,                       #= Prefix to remove from method names
   Str  :$var,                          #= Class variable name [defaults to '$!w']. If not specified class methods will be generated.
   Str  :$output-only,                  #= Only output methods and attributes matching the given pattern. Pattern should be placed in quotes.
@@ -110,17 +112,17 @@ sub MAIN (
   Str  :$remove-from-start  is copy,   #= Remove colon separated prefix strings from all lines
   Str  :$remove-from-end    is copy,   #= Remove colon separate suffix strings from all lines
   Str  :$lib                is copy,   #= Library name to use
-  Str  :$delete,                       #= Comma separated list of lines to delete
+       :$delete             =  '',      #= Comma separated list of lines to delete
   Str  :$output             =  'all',  #= Type of output: 'methods', 'attributes', 'subs' or 'all'
+  Bool :$extreme            =  False,  #= Use extreme cleanup methods
   Bool :$internal           =  False,  #= Add checking for INTERNAL methods
   Bool :$bland              =  True,   #= Do NOT attempt to process preprocessor prefixes to subroutines
   Bool :$get-set            =  False,  #= Convert simple get/set routine to "attribute" code.
   Bool :$raw-methods        =  False,  #= Use method format for raw invocations (NFYI)
   Bool :x11(:$X11)          =  False   #= Use GUI mode (must have a valid DISPLAY)
 ) {
-  parse-file($CONFIG-NAME);
 
-  $lib = %config<library> // %config<lib> // 'gtk' unless $lib;
+  parse-file($CONFIG-NAME);
 
   # Get specific option values from configuration file, if it exists,
   # and those keys are defined.
@@ -167,6 +169,21 @@ sub MAIN (
   my @detected;
   my $contents = $fn.IO.open.slurp-rest;
 
+  my ($out-file, $out-raw-file, $item);
+  $lib = $lib // %config<library> // %config<lib> // '';
+  if $files {
+    $item       = $filename.split('.').head.split('-').tail.tc;
+    $lib      ||= $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;
+    $out-file   = $item.subst('/', '-', :g)  ~ '.pm6';
+
+    use File::Find;
+
+    my $head      = find( dir => 'lib', type => 'dir', name => 'Raw' ).head;
+    $out-raw-file = $head.add($out-file).open(:w);
+    $out-file     = $head.parent.add($out-file).open(:w);
+  }
+  $lib = 'gtk' unless $lib;
+
   # cw: Remove all struct definitions;
   $contents ~~ m:g/<struct>/;
   if $/ {
@@ -178,21 +195,46 @@ sub MAIN (
     }
   }
 
+  my token nested-parens {
+    '(' ~ ')' [
+      || <- [()] >+
+      || <.before '('> <~~>
+    ]*
+  }
+
+  my token mname { <[A..Za..z0..9_]>+ }
+  my token decl  { (<[A..Z]>+)+ %% '_' <nested-parens>? }
+  my token args  { '(' <-[)]>+ ')' }
+
   # Remove extraneous, non-necessary bits!
-  $contents ~~ s:g/ '/*' ~ '*/' (.+?)//; # Comments
-  $contents ~~ s:g/ 'G_STMT_START {' .+? '} G_STMT_END'//;
-  $contents ~~ s:g/ '\\' $$ \s+ .+? $$//;  # Multi line defines;
-  $contents ~~ s:g/ ^^ \s* '#' .+? $$//;
-  $contents ~~ s:g/ ^^ \s* <[A..Z]>+ '_' [ 'BEGIN' | 'END' ] '_DECLS' \s* $$ //;
+  # Comments
+
+  $contents ~~ s:g/ '\\' $$ \s+ .+? $$ //;
+
+  $contents ~~
+    s:g/
+      ^^ '#define'    <.ws>
+      <decl> <args>?  <.ws>
+      <mname>?        <.ws>
+      <nested-parens>
+    //;
+
+  $contents ~~ s:g/ ^^ '#define' <.ws> <decl> <.ws>  .+? $$                  //;
+  $contents ~~ s:g/ ^^ '#' .+? $$                                            //;
+  $contents ~~ s:g/ <[A..Z]>+ [ '_BEGIN_DECLS' || '_END_DECLS' ]             //;
+  $contents ~~ s:g/ '/*' ~ '*/' (.+?)                                        //;
+  $contents ~~ s:g/ 'G_STMT_START'  .+? 'G_STMT_END'                         //;
+  # Multi line defines;
+
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
-  $contents ~~ s:g/'typedef' .+? ';'//;
-  $contents ~~ s:g/ ^ .+? '\\' $//;
-  $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$ //;
+  $contents ~~ s:g/'typedef' .+? ';'                                         //;
+  $contents ~~ s:g/ ^ .+? '\\' $                                             //;
+  $contents ~~ s:g/ ^^ <.ws> '}' <.ws>? $$                                   //;
   $contents ~~ s:g/<!after ';'>\n/ /;
-  $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$ //;
+  $contents ~~ s:g/ ^^ 'GIMPVAR' .+? $$                                      //;
 
   # cw: Too permissive, but will work for most things. Needs an anchor to $$!
-  $contents ~~ s:g/ 'G_GNUC_' <[A..Z]>+ //;
+  $contents ~~ s:g/ 'G_GNUC_' (<[A..Z]>+)+ %% '_' //;
 
   $contents ~~ s:g/ 'gst_byte_reader_' [
                        'dup' | 'peek' | 'skip' | 'get'
@@ -204,10 +246,22 @@ sub MAIN (
   $contents ~~ s:g/ '((obj), ' .+? '))'//;
   $contents ~~ s:g/ '((cls), ' .+? '))'//;
   $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
-  $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC (' .+? ', g_object_unref)' //;
   $contents ~~ s:g/ 'G_DECLARE_' [ <[A..Z]>+ ]+ % '_' ' (' <-[)]>+ ')' //;
+  $contents ~~ s:g/ 'extern "C" {' //;
+
+  $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC' \s* '(' .+? ',' .+? ')' //;
+  $contents ~~ s:g/<[A..Z]>+'_DECLARE_'['FINAL' || 'DERIVABLE']'_TYPE'\s*\(.+?\)//;
+
+  $contents ~~ s:g/ 'GType' /\nGType/;
+
+  # Should be put behind an --extreme flag
+  if $extreme {
+    $contents ~~ s:g/ '#'\w+         //;
+    $contents ~~ s:g/ ')' \s+        / );\n /;
+  }
 
   $contents ~~ s:g/<availability>// if $bland;
+  $contents ~~ s:g/<enum>//;
 
   if $remove-from-start {
     # Remove unnecessary whitespace
@@ -217,7 +271,7 @@ sub MAIN (
     $remove-from-start ~~ s:g/\s\s+/:/;
     for ( $remove-from-start // () ).split(':') -> $r {
       #$*ERR.say: "Removing { $r } from start of line...";
-      say: "Removing { $r } from start of line...";
+      say "Removing { $r } from start of line...";
       $contents ~~ s:g/ ^^ \s* <{ $r }> <[\s\r\n]>* //;
     }
   }
@@ -234,23 +288,28 @@ sub MAIN (
     $contents ~~ s:g/ <!before ';'> <?{ $/.Str.chars }> $$/;/;
   }
 
+  $contents.say;
+
   $contents = $contents.lines.skip($trim-start).join("\n")
     if $trim-start;
   $contents = $contents.lines.reverse.skip($trim-end).reverse.join("\n")
     if $trim-end;
 
   my regex range { (\d+) '-' (\d+) }
-  my $s-fmt = '%0' ~ $contents.lines.log(10).Int + 1 ~ 'd';
-  $contents = (gather for $contents.lines.kv -> $k, $v {
-    # Last chance removal by line prefix.
-    next if $v.starts-with('extern');
 
-    # Last chance to clean up artifacts left by processing:
-    my $val = $v;
-    $val .= subst( /\s*';'/ , ';' );
+  if $contents.lines.elems -> $e {
+    my $s-fmt = '%0' ~ $e.log(10).Int + 1 ~ 'd';
+    $contents = (gather for $contents.lines.kv -> $k, $v {
+      # Last chance removal by line prefix.
+      next if $v.starts-with('extern');
 
-    take "{ ($k + 1).fmt($s-fmt) }: { $val }"
-  }).join("\n");\
+      # Last chance to clean up artifacts left by processing:
+      my $val = $v;
+      $val .= subst( /\s*';'/ , ';' );
+
+      take "{ ($k + 1).fmt($s-fmt) }: { $val }"
+    }).join("\n");
+  }
 
   # Check for multiple semi-colons on a line and split that line.
   # This is a pain in the ass, as we have to re-perform operations that
@@ -326,6 +385,7 @@ sub MAIN (
     exit 1;
   }
 
+  my %first-params;
   for $matched{$func-rule}[] -> $m {
     my $av = $bland ??
       { pre-definitions => ($m<pre-definitions> // '').Str } !!
@@ -377,8 +437,15 @@ sub MAIN (
         }
       }
     });
-    my @t = @p.map({ resolve-type(.[0] ) });
-    my $o_call = (@t [Z] @v).join(', ');
+    my @t     = @p.map({ resolve-type(.[0] ) });
+
+    %first-params{ @t.head }++ if @t.head.chars;
+
+    my $tmax  = @t.map( *.chars ).max;
+    my @t-sd  = @t.map( *.fmt("  %-{ $tmax }s") );
+
+    my $o_call = (@t-sd [Z] @v).join(",\n");
+
     my $sub = $m<func_def><sub>.Str.trim;
     $o_call ~= ', ...' if $m<func_def><va>;
 
@@ -418,7 +485,7 @@ sub MAIN (
            'sub' => $sub,
           params => @p,
           o_call => $o_call,
-            call => $call,
+            call => $call.subst(' is rw', '', :g),
              sig => $sig,
        call_vars => @v,
       call_types => @t,
@@ -444,7 +511,7 @@ sub MAIN (
         'uint32';
       }
       when 'gchar' | 'guchar' | 'char' {
-        # This logic may no longer be necessary.
+        # This logic may no longer be n.join('')ecessary.
         #$p++;
         'Str';
       }
@@ -531,8 +598,27 @@ sub MAIN (
     }
   }
 
+  sub O ($str, :$file = $out-file) {
+    use nqp;
+
+    say $str;
+    $file.say: nqp::hllize($str) if $file;
+  }
+  sub O-Raw ($str, :$raw-file = $out-raw-file) {
+    O($str, file => $raw-file);
+  }
+
   sub outputSub ($m, $method = False) {
-    my $subcall = "sub $m<original> ({ $m<o_call> })";
+    my $o_call = $m<o_call>
+      ?? ( $m<o_call>.lines == 1
+        ?? "({ $m<o_call>.substr(2) })"
+        !! "(\n{ $m<o_call> }\n)"
+      )
+      !! '';
+
+    my $subcall = qq:to/CALL/.chomp;
+      sub { $m<original> } { $o_call }
+      CALL
 
     # if $method {
     #   # This should be done, above.
@@ -542,21 +628,24 @@ sub MAIN (
     # }
 
     my $r = '';
-    $r ~= "\n  is DEPRECATED"                 if $m<avail>.not;
-    $r ~= "\n  returns { $m<p6_return> }"     if $m<p6_return> &&
-                                                 $m<p6_return> ne 'void';
-    $r ~= "\n  is symbol('{ $m<original> }')" if $method;
+    $r ~= "\n  is      DEPRECATED"                 if $m<avail>.not;
+    $r ~= "\n  returns { $m<p6_return> }"          if $m<p6_return> &&
+                                                      $m<p6_return> ne 'void';
+    $r ~= "\n  is      symbol('{ $m<original> }')" if $method;
 
-    say qq:to/SUB/;
+    O-Raw( qq:to/SUB/ );
       $subcall {
       $r }
-        is native({ $lib })
-        is export
+        is      native({ $lib })
+        is      export
       \{ * \}
       SUB
   }
 
   sub outputMethods {
+    my $invocant = $var ?? %first-params.pairs.sort( *.value ).head.key
+                        !! '';
+
     say "\nMETHODS\n-------" unless $no-headers;
     if %do_output<all> || %do_output<methods> {
       for %methods.keys.sort -> $m {
@@ -580,8 +669,23 @@ sub MAIN (
         #     >.none;
 
         my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
-        my $params = %methods{$m}<call_types>.elems ?? " ({ $sig })" !! '';
-        say qq:to/METHOD/.chomp;
+        my @lines = %methods{$m}<o_call>.lines;
+
+        if +@lines {
+          #say "Pre-Lines: { @lines.gist }";
+
+          @lines .= skip(1) if @lines.head.trim.split(/ \s+ /).head eq
+                               $invocant;
+
+          #say "Post Invocant ({ $invocant }): { @lines.gist }";
+        }
+        my $params = %methods{$m}<call_types>.elems
+          ?? ( +@lines == 1
+            ?? " ({ @lines.head.substr(2) })"
+            !! " (\n{ @lines.map( "  " ~  * ).join("\n") }\n  )"
+          )
+          !! '';
+        O( qq:to/METHOD/.chomp );
           { $mult }method { %methods{$m}<sub> }{ $params } { $dep }\{
             { %methods{$m}<original> }({ $call });
           \}
@@ -606,14 +710,14 @@ sub MAIN (
           my $params = @pa.grep( * ).elems ?? " ({ $os })" !! '';
 
           # { @pa.elems }
-          say qq:to/METHOD/.chomp;
+          O( qq:to/METHOD/.chomp )
             { $mult }method { %methods{$m}<sub> }{ $params }  \{
               samewith({ $oc });
             \}
           METHOD
 
         }
-        say '';
+        O( '' );
       }
     }
   }
@@ -645,7 +749,17 @@ sub MAIN (
   outputMethods;
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
-    say "\n\n### { $fn }\n";
+
+    O-Raw( qq:to/RAW/ );
+      use v6.c;
+
+      use NativeCall;
+
+      use GLib::Raw::Definitions;
+      use { %config<prefix> }::Raw::Definitions;
+      RAW
+
+    O-Raw( "\n\n### { $fn }\n" );
     outputSub( %methods{$_}    , $raw-methods) for %methods.keys.sort;
     outputSub( %getset{$_}<get>, $raw-methods) for  %getset.keys.sort;
     outputSub( %getset{$_}<set>, $raw-methods) for  %getset.keys.sort;
@@ -672,4 +786,15 @@ sub MAIN (
     $a.run;
   }
 
+  LAST {
+    if $out-raw-file {
+      $out-raw-file.close;
+      say "Sub definitions written to { $out-raw-file }";
+    }
+
+    if $out-file {
+      $out-file.close;
+      say "Methods written to { $out-file }.";
+    }
+  }
 }

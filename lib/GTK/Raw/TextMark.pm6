@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::TextMark:ver<3.0.1146>;
 
@@ -37,7 +39,7 @@ sub gtk_text_mark_get_type ()
   is export
   { * }
 
-sub gtk_text_mark_new (gchar $name, gboolean $left_gravity)
+sub gtk_text_mark_new (Str $name, gboolean $left_gravity)
   returns GtkTextMark
   is native(gtk)
   is export

@@ -11,6 +11,8 @@ use GTK::Bin:ver<3.0.1146>;
 
 our subset FrameAncestry is export where GtkFrame | BinAncestry;
 
+constant GtkFrameAncestry is export = FrameAncestry;
+
 class GTK::Frame:ver<3.0.1146> is GTK::Bin {
   has GtkFrame $!f is implementor;
 
@@ -21,29 +23,25 @@ class GTK::Frame:ver<3.0.1146> is GTK::Bin {
   }
 
   submethod BUILD(:$frame) {
-    my $to-parent;
-    given $frame {
-      when FrameAncestry {
-        $!f = do {
-          when GtkFrame {
-            $to-parent = nativecast(GtkBin, $_);
-            $_;
-          }
-          when BinAncestry {
-            $to-parent = $_;
-            nativecast(GtkFrame, $_);
-          }
-        };
-        self.setBin($to-parent);
-      }
-      when GTK::Frame {
-      }
-      default {
-      }
-    }
+    self.setGtkFrame($frame) if $frame;
   }
 
-  multi method new (FrameAncestry $frame, :$ref = True) {
+  method setGtkFrame (GtkFrameAncestry $_) {
+    my $to-parent;
+    $!f = do {
+      when GtkFrame {
+        $to-parent = nativecast(GtkBin, $_);
+        $_;
+      }
+      when BinAncestry {
+        $to-parent = $_;
+        nativecast(GtkFrame, $_);
+      }
+    };
+    self.setBin($to-parent);
+  }
+
+  multi method new (GtkFrameAncestry $frame, :$ref = True) {
     return Nil unless $frame;
 
     my $o = self.bless(:$frame);

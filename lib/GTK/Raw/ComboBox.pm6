@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ComboBox:ver<3.0.1146>;
 
@@ -229,7 +232,7 @@ sub gtk_combo_box_set_add_tearoffs (
 
 sub gtk_combo_box_set_active_id (
   GtkComboBox $combo_box,
-  gchar $active_id
+  Str $active_id
 )
   returns uint32
   is native(gtk)
@@ -244,7 +247,7 @@ sub gtk_combo_box_set_popup_fixed_width (
   is export
   { * }
 
-sub gtk_combo_box_set_title (GtkComboBox $combo_box, gchar $title)
+sub gtk_combo_box_set_title (GtkComboBox $combo_box, Str $title)
   is native(gtk)
   is export
   { * }

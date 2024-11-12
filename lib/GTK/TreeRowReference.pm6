@@ -7,9 +7,13 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GTK::Roles::TreeModel:ver<3.0.1146>;
 
+use GLib::Roles::Implementor;
+
 # BOXED TYPE
 
 class GTK::TreeRowReference:ver<3.0.1146> {
+  also does GLib::Roles::Implementor;
+
   has GtkTreeRowReference $!tr is implementor;
 
   submethod BUILD(:$row) {

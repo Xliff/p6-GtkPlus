@@ -3,13 +3,17 @@ use v6.c;
 use NativeCall;
 
 use GDK::RGBA;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 use Pango::Raw::Types;
 
 unit package GTK::Raw::StyleContext:ver<3.0.1146>;
 
-sub gtk_style_context_add_class (GtkStyleContext $context, gchar $class_name)
+sub gtk_style_context_add_class (GtkStyleContext $context, Str $class_name)
   is native(gtk)
   is export
   { * }
@@ -34,7 +38,7 @@ sub gtk_style_context_add_provider_for_screen (
 
 sub gtk_style_context_add_region (
   GtkStyleContext $context,
-  gchar $region_name,
+  Str $region_name,
   uint32 $flags                 # GtkRegionFlags $flags
 )
   is native(gtk)
@@ -114,7 +118,7 @@ sub gtk_style_context_get_padding (
 
 sub gtk_style_context_get_property (
   GtkStyleContext $context,
-  gchar $property,
+  Str $property,
   uint32 $flags,                # GtkStateFlags $state,
   GValue $value
 )
@@ -122,7 +126,7 @@ sub gtk_style_context_get_property (
   is export
   { * }
 
-sub gtk_style_context_get_section (GtkStyleContext $context, gchar $property)
+sub gtk_style_context_get_section (GtkStyleContext $context, Str $property)
   returns GtkCssSection
   is native(gtk)
   is export
@@ -130,7 +134,7 @@ sub gtk_style_context_get_section (GtkStyleContext $context, gchar $property)
 
 sub gtk_style_context_get_style_property (
   GtkStyleContext $context,
-  gchar $property_name,
+  Str $property_name,
   GValue $value
 )
   is native(gtk)
@@ -209,7 +213,7 @@ sub gtk_render_insertion_cursor (
 
 sub gtk_style_context_has_class (
   GtkStyleContext $context,
-  gchar $class_name
+  Str $class_name
 )
   returns uint32
   is native(gtk)
@@ -218,7 +222,7 @@ sub gtk_style_context_has_class (
 
 sub gtk_style_context_has_region (
   GtkStyleContext $context,
-  gchar $region_name,
+  Str $region_name,
   uint32 $flags                 # GtkRegionFlags $flags_return
 )
   returns uint32
@@ -245,7 +249,7 @@ sub gtk_style_context_list_regions (GtkStyleContext $context)
 
 sub gtk_style_context_lookup_color (
   GtkStyleContext $context,
-  gchar $color_name,
+  Str $color_name,
   GdkRGBA $color
 )
   returns uint32
@@ -255,7 +259,7 @@ sub gtk_style_context_lookup_color (
 
 sub gtk_style_context_lookup_icon_set (
   GtkStyleContext $context,
-  gchar $stock_id
+  Str $stock_id
 )
   returns GtkIconSet
   is native(gtk)
@@ -294,7 +298,7 @@ sub gtk_style_context_push_animatable_region (
 
 sub gtk_style_context_remove_class (
   GtkStyleContext $context,
-  gchar $class_name
+  Str $class_name
 )
   is native(gtk)
   is export
@@ -318,7 +322,7 @@ sub gtk_style_context_remove_provider_for_screen (
 
 sub gtk_style_context_remove_region (
   GtkStyleContext $context,
-  gchar $region_name
+  Str $region_name
 )
   is native(gtk)
   is export

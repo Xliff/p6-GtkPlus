@@ -2,15 +2,17 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::CellLayout:ver<3.0.1146>;
 
 sub gtk_cell_layout_add_attribute (
   GtkCellLayout $cell_layout,
   GtkCellRenderer $cell,
-  gchar $attribute,
+  Str $attribute,
   gint $column
 )
   is native(gtk)

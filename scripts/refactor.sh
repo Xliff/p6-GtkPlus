@@ -11,7 +11,7 @@ if [ "$1" == "--clean" ]; then
 fi
 
 # Should also exclude $1, but that's not really required.
-for a in pm6 pl6 t; do
+for a in pm6 pl6 t conf; do
   filelist=`find $1 \
     \( \
       -name examples \

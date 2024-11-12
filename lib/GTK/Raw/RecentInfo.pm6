@@ -2,14 +2,18 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::RecentInfo:ver<3.0.1146>;
 
 sub gtk_recent_info_create_app_info (
-  GtkRecentInfo $info, 
-  Str $app_name, 
+  GtkRecentInfo $info,
+  Str $app_name,
   CArray[Pointer[GError]] $error
 )
   returns GAppInfo
@@ -36,10 +40,10 @@ sub gtk_recent_info_get_age (GtkRecentInfo $info)
   { * }
 
 sub gtk_recent_info_get_application_info (
-  GtkRecentInfo $info, 
-  Str $app_name, 
-  Str $app_exec, 
-  guint $count, 
+  GtkRecentInfo $info,
+  Str $app_name,
+  Str $app_exec,
+  guint $count,
   uint64 $time
 )
   returns uint32
@@ -48,7 +52,7 @@ sub gtk_recent_info_get_application_info (
   { * }
 
 sub gtk_recent_info_get_applications (
-  GtkRecentInfo $info, 
+  GtkRecentInfo $info,
   gsize $length
 )
   returns CArray[Str]
@@ -176,8 +180,8 @@ sub gtk_recent_info_unref (GtkRecentInfo $info)
   { * }
 
 sub gtk_recent_manager_add_full (
-  GtkRecentManager $manager, 
-  Str $uri, 
+  GtkRecentManager $manager,
+  Str $uri,
   GtkRecentData $recent_data
 )
   returns uint32
@@ -222,8 +226,8 @@ sub gtk_recent_manager_has_item (GtkRecentManager $manager, Str $uri)
   { * }
 
 sub gtk_recent_manager_lookup_item (
-  GtkRecentManager $manager, 
-  Str $uri, 
+  GtkRecentManager $manager,
+  Str $uri,
   CArray[Pointer[GError]] $error
 )
   returns GtkRecentInfo
@@ -232,9 +236,9 @@ sub gtk_recent_manager_lookup_item (
   { * }
 
 sub gtk_recent_manager_move_item (
-  GtkRecentManager $manager, 
-  Str $uri, 
-  Str $new_uri, 
+  GtkRecentManager $manager,
+  Str $uri,
+  Str $new_uri,
   CArray[Pointer[GError]] $error
 )
   returns uint32
@@ -249,7 +253,7 @@ sub gtk_recent_manager_new ()
   { * }
 
 sub gtk_recent_manager_purge_items (
-  GtkRecentManager $manager, 
+  GtkRecentManager $manager,
   CArray[Pointer[GError]] $error
 )
   returns gint
@@ -258,10 +262,10 @@ sub gtk_recent_manager_purge_items (
   { * }
 
 sub gtk_recent_manager_remove_item (
-  GtkRecentManager $manager, 
-  Str $uri, 
+  GtkRecentManager $manager,
+  Str $uri,
   CArray[Pointer[GError]] $error
-)  
+)
   returns uint32
   is native(gtk)
   is export

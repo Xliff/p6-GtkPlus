@@ -3,6 +3,7 @@ use v6.c;
 
 use lib 'scripts';
 
+use ScriptConfig;
 use GTKScripts;
 
 # This grammar, brought to you by the letter r, the number 10 and the #raku

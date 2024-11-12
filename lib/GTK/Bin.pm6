@@ -6,15 +6,16 @@ use NativeCall;
 use GTK::Raw::Bin:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 
-use GTK::Container:ver<3.0.1146>;
+use GTK::Container;
+use GTK::Widget;
 
 our subset GtkBinAncestry is export of Mu
   where GtkBin | ContainerAncestry;
 
 constant BinAncestry is export := GtkBinAncestry;
 
-class GTK::Bin:ver<3.0.1146> is GTK::Container {
-  has GtkBin $!bin;   # Implementor in GTK::Widget
+class GTK::Bin is GTK::Container {
+  has GtkBin $!bin is implementor;
 
   # method bless(*%attrinit) {
   #   my $o = self.CREATE.BUILDALL(Empty, %attrinit);
@@ -33,7 +34,7 @@ class GTK::Bin:ver<3.0.1146> is GTK::Container {
     >
   { $!bin }
 
-  method setBin (GtkBinAncestry $_) {
+  method setGtkBin (GtkBinAncestry $_) is also<setBin> {
     return unless $_;
 
     my $to-parent;
@@ -42,14 +43,16 @@ class GTK::Bin:ver<3.0.1146> is GTK::Container {
         $to-parent = cast(GtkContainer, $_);
         $_;
       }
+
       when ContainerAncestry {
         $to-parent = $_;
         cast(GtkBin, $_);
       }
-    };
+    }
+
     say "BIN: { $!bin // 'NIL' }";
     say "BIN-TP: { $to-parent // 'NIL' }";
-    self.setContainer($to-parent);
+    self.setGtkContainer($to-parent);
   }
 
   method new (GtkBinAncestry $bin, :$ref = True) {

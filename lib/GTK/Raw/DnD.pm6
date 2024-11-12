@@ -1,9 +1,13 @@
 use v6.c;
 
 use NativeCall;
-
-use GTK::Raw::Types:ver<3.0.1146>;
-
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::DnD:ver<3.0.1146>;
 
@@ -98,7 +102,7 @@ sub gtk_drag_set_icon_gicon (
 
 sub gtk_drag_set_icon_name (
   GdkDragContext $context,
-  gchar $icon_name,
+  Str $icon_name,
   gint $hot_x,
   gint $hot_y
 )
@@ -118,7 +122,7 @@ sub gtk_drag_set_icon_pixbuf (
 
 sub gtk_drag_set_icon_stock (
   GdkDragContext $context,
-  gchar $stock_id,
+  Str $stock_id,
   gint $hot_x,
   gint $hot_y
 )

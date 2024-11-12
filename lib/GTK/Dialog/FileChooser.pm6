@@ -9,97 +9,116 @@ use GTK::Dialog:ver<3.0.1146>;
 
 use GTK::Roles::FileChooser:ver<3.0.1146>;
 
-our subset FileChooserDialogAncestry is export
-  where GtkFileChooserDialog | GtkFileChooser | DialogAncestry;
+our subset GtkFileChooserDialogAncestry is export
+  where GtkFileChooserDialog | GtkFileChooser | GtkDialogAncestry;
 
 class GTK::Dialog::FileChooser:ver<3.0.1146> is GTK::Dialog {
   also does GTK::Roles::FileChooser;
 
   has GtkFileChooserDialog $!fcd is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  submethod BUILD ( :$gtk-file-dialog ) {
+    self.setGtkFileChooserDialog($gtk-file-dialog) if $gtk-file-dialog
   }
 
-  submethod BUILD(:$dialog) {
+  method setGtkFileChooserDialog (GtkFileChooserDialog $_) {
     my $to-parent;
-    given $dialog {
-      when FileChooserDialogAncestry {
-        $!fcd = do {
-          when GtkFileChooserDialog  {
-            $to-parent = nativecast(GtkDialog, $_);
-            $_;
-          }
-          when GtkFileChooser {
-            $!fc = $_;                            # GTK::Roles::FileChooser
-            $to-parent = nativecast(GtkDialog, $_);
-            nativecast(GtkFileChooserDialog, $_);
-          }
-          default {
-            $to-parent = $_;
-            nativecast(GtkFileChooserDialog, $_);
-          }
-        }
-        self.setDialog($to-parent);
+
+    say "File Chooser Dialog is a { .^name }";
+
+    $!fcd = do {
+      when GtkFileChooserDialog  {
+        $to-parent = nativecast(GtkDialog, $_);
+        $_;
       }
-      when GTK::Dialog::FileChooser {
+
+      when GtkFileChooser {
+        $!fc       = $_;                            # GTK::Roles::FileChooser
+        $to-parent = nativecast(GtkDialog, $_);
+        nativecast(GtkFileChooserDialog, $_);
       }
+
       default {
+        $to-parent = $_;
+        nativecast(GtkFileChooserDialog, $_);
       }
     }
-    $!fc //= nativecast(GtkFileChooser, $!fcd);   # GTK::Roles::FileChooser
+    self.roleInit-GtkFileChooser;
+    self.setGtkDialog($to-parent);
   }
 
-  proto method new (|) { * }
+  proto method new (|)
+  { * }
 
-  multi method new (FileChooserDialogAncestry $dialog) {
-    my $o = self.bless(:$dialog);
+  multi method new (GtkFileChooserDialogAncestry $gtk-file-dialog) {
+    return Nil unless $gtk-file-dialog;
+
+    my $o = self.bless( :$gtk-file-dialog );
     $o.upref;
     $o;
   }
   multi method new (
-    Str() $title,
+    Str()       $title,
     GtkWindow() $parent,
-    Int() $action,              # GtkFileChooserAction  $action,
-    Str() $text,
-    Int() $response
+    Int()       $action,              # GtkFileChooserAction  $action,
+    Str()       $text,
+    Int()       $response
   ) {
     my uint32 $a = $action;
-    my gint $r = $response;
-    my $dialog = gtk_file_chooser_dialog_new(
-      $title, $parent, $a, $text, $r, Str
+    my gint   $r = $response;
+
+    my $gtk-file-dialog = gtk_file_chooser_dialog_new(
+      $title,
+      $parent,
+      $a,
+      $text,
+      $r,
+      Str
     );
-    self.bless(:$dialog);
+
+    $gtk-file-dialog ?? self.bless( :$gtk-file-dialog ) !! Nil;
   }
   multi method new (
-    Str() $title,
+    Str()       $title,
     GtkWindow() $parent,
-    Int() $action               # GtkFileChooserAction  $action,
+    Int()       $action               # GtkFileChooserAction  $action,
   ) {
-    samewith($title, $parent, $action, (
-      '_OK'      => GTK_RESPONSE_OK,
-      '_Cancel'  => GTK_RESPONSE_CANCEL
-    ));
+    samewith(
+      $title,
+      $parent,
+      $action,
+      (
+        '_OK'      => GTK_RESPONSE_OK,
+        '_Cancel'  => GTK_RESPONSE_CANCEL
+      )
+    );
   }
   multi method new (
-    Str() $title,
+    Str()       $title,
     GtkWindow() $parent,
-    Int() $action,              # GtkFileChooserAction  $action,
-    @buttons is copy,
+    Int()       $action,              # GtkFileChooserAction  $action,
+                @buttons is copy
   ) {
     die '@buttons cannot be empty' unless +@buttons;
+
     die '\@buttons is not an array of Pair objects!'
       unless @buttons.all ~~ Pair;
-    my $f = @buttons.shift;
+
+    my        $f = @buttons.shift;
     my uint32 $a = $action;
-    my gint $r = $f.value;
-    my $dialog = gtk_file_chooser_dialog_new(
-      $title, $parent, $a, $f.key, $r, Str
+    my gint   $r = $f.value;
+
+    my $gtk-file-dialog = gtk_file_chooser_dialog_new(
+      $title,
+      $parent,
+      $a,
+      $f.key,
+      $r,
+      Str
     );
-    my $o = self.bless(:$dialog);
-    $o.add_buttons(@buttons);
+
+    my $o = $gtk-file-dialog ?? self.bless( :$gtk-file-dialog ) !! Nil;
+    $o.add_buttons(@buttons) if $o;
     $o;
   }
 
@@ -133,18 +152,18 @@ class GTK::Dialog::FileChooser:ver<3.0.1146> is GTK::Dialog {
 
 
 sub gtk_file_chooser_dialog_new (
-  Str $title,
+  Str       $title,
   GtkWindow $parent,
-  uint32 $action,               # GtkFileChooserAction  $action,
-  Str $first_button_text,
-  gint $button_response_id,
+  uint32    $action,               # GtkFileChooserAction  $action,
+  Str       $first_button_text,
+  gint      $button_response_id,
   Str
 )
-returns GtkFileChooserDialog
-  is native(gtk)
-  { * }
+  returns GtkFileChooserDialog
+  is      native(gtk)
+{ * }
 
 sub gtk_file_chooser_dialog_get_type ()
   returns GType
-  is native(gtk)
-  { * }
+  is      native(gtk)
+{ * }

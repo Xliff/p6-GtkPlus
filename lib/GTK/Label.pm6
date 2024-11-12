@@ -21,12 +21,6 @@ class GTK::Label:ver<3.0.1146> is GTK::Widget {
   has GtkLabel $!l is implementor;
   has $!markup;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD (:$label) {
     self.setGtkLabel($label) if $label;
   }
@@ -62,7 +56,12 @@ class GTK::Label:ver<3.0.1146> is GTK::Widget {
     $o.ref if $ref;
     $o;
   }
-  multi method new ($text is copy = Str) {
+  multi method new ( *%a ) {
+    my $o = samewith(Str);
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
+  }
+  multi method new ($text is copy) {
     $text .= Str if $text && $text.^can('Str').elems;
 
     die "Cannot create a label from a { $text.^name } object."

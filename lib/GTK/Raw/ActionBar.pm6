@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ActionBar:ver<3.0.1146>;
 
@@ -14,7 +16,7 @@ sub gtk_action_bar_get_type ()
   { * }
 
 sub gtk_action_bar_new ()
-  returns GtkWidget
+  returns GtkActionBar
   is native(gtk)
   is export
   { * }

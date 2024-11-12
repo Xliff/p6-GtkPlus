@@ -21,19 +21,13 @@ use GTK::Roles::Signals::Entry:ver<3.0.1146>;
 our subset GtkEntryAncestry is export
   where GtkEntry | GtkEditable | GtkWidgetAncestry;
 
-constant EntryAncestry is export := GtkEntryAncestry;
+constant EntryAncestry is export = GtkEntryAncestry;
 
 class GTK::Entry:ver<3.0.1146> is GTK::Widget {
   also does GTK::Roles::Editable;
   also does GTK::Roles::Signals::Entry;
 
   has GtkEntry $!e is implementor;
-
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
 
   submethod BUILD( :$gtk-entry ) {
     self.setGtkEntry($gtk-entry) if $gtk-entry;
@@ -67,25 +61,32 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
     self.disconnect-all($_) for %!signals-e;
   }
 
-  multi method new (GtkEntryAncestry $gtk-entry, :$ref = True) {
-    return Nil unless $gtk-entry;
+  multi method new (GtkEntryAncestry $gtk-entry, :$ref = True) {\
+    return Nil unless $entry;
 
     my $o = self.bless(:$gtk-entry);
     $o.ref if $ref;
     $o;
   }
-  multi method new {
-    my $gtk-entry = gtk_entry_new();
+  multi method new ( *%a ) {
+    my $entry = gtk_entry_new();
 
-    $gtk-entry ?? self.bless( :$gtk-entry ) !! Nil;
+    my $o = $gtk-entry ?? self.bless(:$gtk-entry) !! Nil;
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
 
-  multi method new_with_buffer (GtkEntryBuffer() $b)
+  multi method new_with_buffer (GtkEntryBuffer() $b, *%a)
     is also<new-with-buffer>
   {
     my $gtk-entry = gtk_entry_new_with_buffer($b);
 
-    $gtk-entry ?? self.bless( :$gtk-entry) !! Nil;
+    # Do not allow an override of the given buffer.
+    %a<buffer>:delete;
+
+    my $o = $entry ?? self.bless(:$gtk-entry) !! Nil;
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
 
   method GTK::Raw::Definitions::GtkEntry

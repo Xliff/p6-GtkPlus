@@ -10,8 +10,8 @@ use GTK::MenuItem:ver<3.0.1146>;
 
 use GTK::Roles::Signals::MenuShell:ver<3.0.1146>;
 
-our subset MenuShellAncestry is export
-  where GtkMenuShell | ContainerAncestry;
+our subset GtkMenuShellAncestry is export
+  where GtkMenuShell | GtkContainerAncestry;
 
 class GTK::MenuShell:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Signals::MenuShell;
@@ -33,21 +33,23 @@ class GTK::MenuShell:ver<3.0.1146> is GTK::Container {
     die 'Cannot instantiate a GTK::MenuShell object.';
   }
 
-  method setMenuShell(MenuShellAncestry $menushell) {
-    self.IS-PROTECTED;
-
+  method setGtkMenuShell (GtkMenuShellAncestry $_)
+    is also<setMenuShell>
+  {
     my $to-parent;
-    $!ms = do given $menushell {
+
+    $!ms = do {
       when GtkMenuShell {
         $to-parent = cast(GtkContainer, $_);
-        $menushell;
+        $_;
       }
-      when GtkWidget {
+
+      default {
         $to-parent = $_;
         cast(GtkMenuShell, $_);
       }
     }
-    self.setContainer($to-parent);
+    self.setGtkContainer($to-parent);
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -120,7 +122,7 @@ class GTK::MenuShell:ver<3.0.1146> is GTK::Container {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method activate_item (
     GtkWidget() $menu_item,
-    Int() $force_deactivate
+    Int()       $force_deactivate
   )
     is also<activate-item>
   {

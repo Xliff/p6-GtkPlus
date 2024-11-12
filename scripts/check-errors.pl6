@@ -7,7 +7,16 @@ sub MAIN (
   my $max-chars = %*ENV<PROJECTS>.words.map( *.chars ).max;
 
   for %*ENV<PROJECTS>.words {
-    my $lbr = "{$*HOME}/Projects/p6-{ $_ }/{ $log }".IO;
+    my $pio = "{ $*HOME }/Projects".IO;
+    my $lbr = do { 
+	my $io = $pio.add("p6-{ $_ }");
+	if $io.d {
+		$io .= add($log);
+	} elsif ( $io = $pio.add("raku-{ $_ }") ).d {
+		$io .= add($log)
+	} 
+	$io
+    }
     unless $lbr.r {
       say "No build results for { $_ }. Skipping...";
       next;

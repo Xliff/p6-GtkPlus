@@ -11,6 +11,8 @@ use GDK::Pixbuf;
 use GTK::WindowGroup:ver<3.0.1146>;
 
 use GDK::Screen;
+
+use GLib::Raw::Traits;
 use GTK::Raw::Types:ver<3.0.1146>;
 use GTK::Raw::Window:ver<3.0.1146>;
 
@@ -39,26 +41,28 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     }
   }
 
-  method setGtkWindow(WindowAncestry $window)
+  method setGtkWindow (WindowAncestry $_)
     is also<setWindow>
   {
     my $to-parent;
-    $!win = do given $window {
+
+    $!win = do {
       when GtkWindow {
         $to-parent = nativecast(GtkBin, $_);
         $_;
       }
-      when BinAncestry {
+
+      default {
         $to-parent = $_;
         nativecast(GtkWindow, $_);
       }
     }
-    self.setBin($to-parent);
+    self.setGtkBin($to-parent);
   }
 
   method GTK::Raw::Definitions::GtkWindow
     is also<
-      window
+      Window
       GtkWindow
     >
   { $!win }
@@ -87,12 +91,13 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     Int :$width  = 200,
     Int :$height = 200
   ) {
-    my guint $t = $type;
-    my $window = gtk_window_new($t);
+    my guint $t      = $type;
+    my       $window = gtk_window_new($t);
+
     samewith($window, :$title, :$width, :$height);
   }
   multi method new (
-    GtkWindow $window,
+    GtkWindow  $window,
     Str       :$title = 'Window',
     Int       :$width  = 200,
     Int       :$height = 200
@@ -628,6 +633,36 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
   }
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
+  method default_icon_list is rw is also<default-icon-list> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_icon_list    },
+      STORE => -> $, \v { self.set_default_icon_list(v) }
+  }
+
+  method default_icon_name is rw is also<default-icon-name> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_icon_name    },
+      STORE => -> $, \v { self.set_default_icon_name(v) }
+  }
+
+  method default_size is rw is also<default-size> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_size    },
+      STORE => -> $, \v { self.set_default_size(v) }
+  }
+
+  method position is rw is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_position    },
+      STORE => -> $, \v { self.set_position(v) }
+  }
+
+  method default_widget is rw is also<default-widget> is g-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_default_widget },
+      STORE => -> $, \v { self.set_default(v)     }
+  }
+
   method activate_default_widget is also<activate-default-widget> {
     gtk_window_activate_default($!win);
   }
@@ -731,8 +766,18 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     ($width, $height) = ($w, $h);
   }
 
-  method get_default_widget is also<get-default-widget> {
-    gtk_window_get_default_widget($!win);
+  method get_default_widget ( :$raw = False )
+    is also<
+      get_default
+      get-default
+      get-default-widget
+    >
+  {
+    propReturnObject(
+      gtk_window_get_default_widget($!win),
+      $raw,
+      |GTK::Widget.getTypePair
+    );
   }
 
   method get_group (:$raw = False) is also<get-group> {
@@ -744,10 +789,18 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
       Nil;
   }
 
-  method get_position (Int() $root_x, Int() $root_y) is also<get-position> {
-    my gint ($rx, $ry) = ($root_x, $root_y);
+  proto method get_position (|)
+    is also<get-position>
+  { * }
+
+  multi method get_position {
+    samewith($, $);
+  }
+  multi method get_position ($root_x is rw, $root_y is rw) {
+    my gint ($rx, $ry) = 0 xx 2;
 
     gtk_window_get_position($!win, $rx, $ry);
+    ($root_x, $root_y) = ($rx, $ry);
   }
 
   method get_resize_grip_area (GdkRectangle() $rect)
@@ -760,7 +813,7 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     is also<get-size>
   { * }
 
-  multi method get_size {
+  multi method get_size is also<size> {
     samewith($, $);
   }
   multi method get_size ($width is rw, $height is rw) {
@@ -897,7 +950,11 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
   # }
 
   method set_default (GtkWidget() $default_widget)
-    is also<set-default>
+    is also<
+      set-default
+      set_default_widget
+      set-default-widget
+    >
   {
     gtk_window_set_default($!win, $default_widget);
   }
@@ -1001,6 +1058,81 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
 
   method unstick {
     gtk_window_unstick($!win);
+  }
+
+  use GDK::Raw::Cairo;
+  use GDK::Raw::Screen;
+  use GLib::Raw::Signal;
+  use GTK::Raw::Widget;
+
+  use GTK::Roles::Signals::Widget;
+
+  method makeTransparent ( :$button-press = True, :$paint = True ) {
+    my $win-obj := self.GObject;
+
+    # cw: Convert to method!
+    g-connect-draw(
+      cast(Pointer, $win-obj),
+      'draw',
+      -> *@a {
+        CATCH { default { .message.say; .backtrace.concise.say } }
+
+        my $c = gdk_cairo_create( gtk_widget_get_window( @a[0] ) );
+        $c.set_source_rgba(1.0.Num, 1.0.Num, 1.0.Num, 0.0.Num);
+        $c.set_operator(OPERATOR_SOURCE.Int);
+        $c.paint;
+        $c.destroy;
+
+        0;
+      },
+      gpointer,
+      0
+    ) if $paint;
+
+    my $screen-changed = -> *@a {
+      CATCH { default { .message.say; .backtrace.concise.say } }
+
+      my $s = gtk_widget_get_screen( @a[0] );
+      my $v = gdk_screen_get_rgba_visual($s);
+      $v ?? gtk_widget_set_visual( @a[0], $v)
+         !! say 'No visual!';
+    }
+
+    # cw: Convert to method!
+    g-connect-screen-changed(
+      cast(Pointer, $win-obj),
+      'screen-changed',
+      -> *@a {
+        $screen-changed( |@a );
+      },
+      gpointer,
+      0
+    );
+
+    self.decorated = 0;
+    self.add_events(GDK_BUTTON_PRESS_MASK);
+
+    # cw: Convert to method!
+    g-connect-widget-event(
+      cast(Pointer, $win-obj),
+      'button-press-event',
+      -> *@a --> gboolean {
+        CATCH { default { .message.say; .backtrace.concise.say } }
+
+        if $button-press ~~ Callable {
+          $button-press( |@a ) if $button-press;
+        } else {
+          self.decorated = self.decorated.not;
+        }
+
+        my guint $r = 0;
+        $r;
+      },
+      gpointer,
+      0
+    ) if $button-press;
+
+    $screen-changed(self.GtkWindow);
   }
 
 }

@@ -2,6 +2,7 @@ use v6.c;
 
 use Method::Also;
 
+use GLib::Raw::Traits;
 use GTK::Raw::Menu:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 
@@ -12,43 +13,37 @@ use GTK::AccelGroup:ver<3.0.1146>;
 use GTK::MenuShell:ver<3.0.1146>;
 use GTK::Widget:ver<3.0.1146>;
 
-our subset MenuAncestry is export where GtkMenu | MenuShellAncestry;
+our subset GtkMenuAncestry is export
+  where GtkMenu | GtkMenuShellAncestry;
 
 class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
   also does GTK::Roles::Signals::Menu;
 
   has GtkMenu $!m is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
+  submethod BUILD ( :$menu ) {
+    self.setGtkMenu($menu) if $menu;
   }
 
-  submethod BUILD(:$menu, :@items) {
-    given $menu {
-      when MenuAncestry { self.setMenu($_) }
-      when GTK::Menu    { }
-      default           { }
-    }
-
+  submethod TWEAK ( :@items ) {
     # Type check is done inside.
     self.append-widgets(|@items) if @items;
   }
 
-  method setMenu (MenuAncestry $menu) {
+  method setGtkMenu (GtkMenuAncestry $_) {
     my $to-parent;
-    $!m = do given $menu {
+    $!m = do {
       when GtkMenu {
         $to-parent = cast(GtkMenuShell, $_);
         $_;
       }
+
       default {
         $to-parent = $_;
         cast(GtkMenu, $_);
       }
-    };
-    self.setMenuShell($to-parent);
+    }
+    self.setGtkMenuShell($to-parent);
   }
 
   submethod DESTROY {
@@ -62,7 +57,7 @@ class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
     >
   { $!m }
 
-  multi method new (MenuAncestry $menu, :$ref = True) {
+  multi method new (GtkMenuAncestry $menu, :$ref = True) {
     return Nil unless $menu;
 
     my $o = self.bless(:$menu);
@@ -199,10 +194,10 @@ class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method attach (
     GtkWidget() $child,
-    Int() $left_attach,
-    Int() $right_attach,
-    Int() $top_attach,
-    Int() $bottom_attach
+    Int()       $left_attach,
+    Int()       $right_attach,
+    Int()       $top_attach,
+    Int()       $bottom_attach
   ) {
     my guint ($la, $ra, $ta, $ba) =
       ($left_attach, $right_attach, $top_attach, $bottom_attach);
@@ -212,7 +207,7 @@ class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
 
   method attach_to_widget (
     GtkWidget() $attach_widget,
-    &detacher = Callable
+                &detacher       = Callable
   )
     is also<attach-to-widget>
   {
@@ -236,12 +231,12 @@ class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
   }
 
   method get_for_attach_widget (
-    GTK::Menu:U:
-    GtkWidget() $w,
-    :$glist  = False,
-    :$raw    = False,
-    :$widget = False
+    GtkWidget()  $w,
+                :$glist  = False,
+                :$raw    = False,
+                :$widget = False
   )
+    is static
     is also<get-for-attach-widget>
   {
     my $wl = gtk_menu_get_for_attach_widget($w);
@@ -276,11 +271,11 @@ class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
   }
 
   method popup_at_rect (
-    GdkWindow() $rect_window,
+    GdkWindow()    $rect_window,
     GdkRectangle() $rect,
-    Int() $rect_anchor,
-    Int() $menu_anchor,
-    GdkEvent() $trigger_event = GdkEvent
+    Int()          $rect_anchor,
+    Int()          $menu_anchor,
+    GdkEvent()     $trigger_event = GdkEvent
   )
     is also<popup-at-rect>
   {
@@ -298,9 +293,9 @@ class GTK::Menu:ver<3.0.1146> is GTK::MenuShell {
 
   method popup_at_widget (
     GtkWidget() $widget,
-    Int() $widget_anchor,
-    Int() $menu_anchor,
-    GdkEvent() $trigger_event = GdkEvent
+    Int()       $widget_anchor,
+    Int()       $menu_anchor,
+    GdkEvent()  $trigger_event  = GdkEvent
   )
     is also<popup-at-widget>
   {

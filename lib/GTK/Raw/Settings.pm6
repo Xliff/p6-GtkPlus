@@ -2,8 +2,11 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Settings:ver<3.0.1146>;
 
@@ -88,16 +91,16 @@ sub gtk_settings_install_property_parser (
   is export
   { * }
 
-sub gtk_settings_reset_property (GtkSettings $settings, gchar $name)
+sub gtk_settings_reset_property (GtkSettings $settings, Str $name)
   is native(gtk)
   is export
   { * }
 
 sub gtk_settings_set_double_property (
   GtkSettings $settings,
-  gchar $name,
+  Str $name,
   gdouble $v_double,
-  gchar $origin
+  Str $origin
 )
   is native(gtk)
   is export
@@ -105,9 +108,9 @@ sub gtk_settings_set_double_property (
 
 sub gtk_settings_set_long_property (
   GtkSettings $settings,
-  gchar $name,
+  Str $name,
   glong $v_long,
-  gchar $origin
+  Str $origin
 )
   is native(gtk)
   is export
@@ -115,7 +118,7 @@ sub gtk_settings_set_long_property (
 
 sub gtk_settings_set_property_value (
   GtkSettings $settings,
-  gchar $name,
+  Str $name,
   GtkSettingsValue $svalue
 )
   is native(gtk)
@@ -124,9 +127,9 @@ sub gtk_settings_set_property_value (
 
 sub gtk_settings_set_string_property (
   GtkSettings $settings,
-  gchar $name,
-  gchar $v_string,
-  gchar $origin
+  Str $name,
+  Str $v_string,
+  Str $origin
 )
   is native(gtk)
   is export

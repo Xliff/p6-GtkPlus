@@ -1,25 +1,39 @@
 use v6.c;
 
+use lib <scripts ../scripts>;
+
 use Test;
 use NativeCall;
 
-use GTK::Raw::Structs;
+use ScriptConfig;
 
-plan 14;
+plan 8;
 
-require ::($_ = "GTK::Raw::Structs");
-for ::($_ ~ "::EXPORT::DEFAULT").WHO
-                                .keys
-                                .grep( *.defined && *.starts-with('Gtk') )
-                                .sort
-{
+my $prefix  = %config<prefix>.subst('::', '');
+my $cu      = "{ $prefix }::Raw::Structs";
+my $o = try require ::($cu);
+
+#$cu ~= '::EXPORT::DEFAULT';
+my @classes =
+  ::("$cu").WHO
+           .keys
+           .grep({
+             .defined
+             &&
+             .starts-with(%config<struct-prefix> // $prefix)
+            })
+           .sort;
+@classes.push: (%config<extra-test-classes> // '').split(',');
+
+
+my @structs = <
+  GtkTextIter
+>;
+
+for @structs {
   sub sizeof () returns int64 { ... }
   trait_mod:<is>( &sizeof, :native('t/00-struct-sizes.so') );
   trait_mod:<is>( &sizeof, :symbol('sizeof_' ~ $_) );
-
-  next if $_ eq <
-    GtkAllocation
-  >.any;
 
   my $c = ::("$_");
   next unless $c.HOW ~~ Metamodel::ClassHOW;

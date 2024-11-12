@@ -2,8 +2,12 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Image:ver<3.0.1146>;
 
@@ -28,7 +32,7 @@ sub gtk_image_get_gicon (
   is export
   { * }
 
-#(GtkImage $image, gchar $icon_name, GtkIconSize $size)
+#(GtkImage $image, Str $icon_name, GtkIconSize $size)
 sub gtk_image_get_icon_name (
   GtkImage $image,
   CArray[Str] $icon_name,
@@ -53,10 +57,10 @@ sub gtk_image_get_pixbuf (GtkImage $image)
   is export
   { * }
 
-# (GtkImage $image, gchar $stock_id, GtkIconSize $size)
+# (GtkImage $image, Str $stock_id, GtkIconSize $size)
 sub gtk_image_get_stock (
   GtkImage $image,
-  gchar $stock_id,
+  Str $stock_id,
   uint32 $size is rw
 )
   is native(gtk)
@@ -87,7 +91,7 @@ sub gtk_image_new_from_animation (GdkPixbufAnimation $animation)
   is export
   { * }
 
-sub gtk_image_new_from_file (gchar $filename)
+sub gtk_image_new_from_file (Str $filename)
   returns GtkWidget
   is native(gtk)
   is export
@@ -100,8 +104,8 @@ sub gtk_image_new_from_gicon (GIcon $icon, uint32 $size)
   is export
   { * }
 
-# (gchar $icon_name, GtkIconSize $size)
-sub gtk_image_new_from_icon_name (gchar $icon_name, uint32 $size)
+# (Str $icon_name, GtkIconSize $size)
+sub gtk_image_new_from_icon_name (Str $icon_name, uint32 $size)
   returns GtkWidget
   is native(gtk)
   is export
@@ -120,14 +124,14 @@ sub gtk_image_new_from_pixbuf (GdkPixbuf $pixbuf)
   is export
   { * }
 
-sub gtk_image_new_from_resource (gchar $resource_path)
+sub gtk_image_new_from_resource (Str $resource_path)
   returns GtkWidget
   is native(gtk)
   is export
   { * }
 
-# (gchar $stock_id, GtkIconSize $size)
-sub gtk_image_new_from_stock (gchar $stock_id, uint32 $size)
+# (Str $stock_id, GtkIconSize $size)
+sub gtk_image_new_from_stock (Str $stock_id, uint32 $size)
   returns GtkWidget
   is native(gtk)
   is export
@@ -147,7 +151,7 @@ sub gtk_image_set_from_animation (
   is export
   { * }
 
-sub gtk_image_set_from_file (GtkImage $image, gchar $filename)
+sub gtk_image_set_from_file (GtkImage $image, Str $filename)
   is native(gtk)
   is export
   { * }
@@ -158,10 +162,10 @@ sub gtk_image_set_from_gicon (GtkImage $image, GIcon $icon, uint32 $size)
   is export
   { * }
 
-# (GtkImage $image, gchar $icon_name, GtkIconSize $size)
+# (GtkImage $image, Str $icon_name, GtkIconSize $size)
 sub gtk_image_set_from_icon_name (
   GtkImage $image,
-  gchar $icon_name,
+  Str $icon_name,
   uint32 $size
 )
   is native(gtk)
@@ -183,15 +187,15 @@ sub gtk_image_set_from_pixbuf (GtkImage $image, GdkPixbuf $pixbuf)
   is export
   { * }
 
-sub gtk_image_set_from_resource (GtkImage $image, gchar $resource_path)
+sub gtk_image_set_from_resource (GtkImage $image, Str $resource_path)
   is native(gtk)
   is export
   { * }
 
-# (GtkImage $image, gchar $stock_id, GtkIconSize $size)
+# (GtkImage $image, Str $stock_id, GtkIconSize $size)
 sub gtk_image_set_from_stock (
   GtkImage $image,
-  gchar $stock_id,
+  Str $stock_id,
   uint32 $size
 )
   is native(gtk)

@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Editable:ver<3.0.1146>;
 
@@ -59,7 +61,7 @@ sub gtk_editable_get_type ()
 
 sub gtk_editable_insert_text (
   GtkEditable $editable,
-  gchar $new_text,
+  Str $new_text,
   gint $new_text_length,
   gint $position
 )

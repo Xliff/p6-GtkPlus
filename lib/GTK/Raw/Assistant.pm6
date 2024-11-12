@@ -1,8 +1,11 @@
 use v6.c;
 
 use NativeCall;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Assistant:ver<3.0.1146>;
 
@@ -197,7 +200,7 @@ sub gtk_assistant_set_page_side_image (
 sub gtk_assistant_set_page_title (
   GtkAssistant $assistant,
   GtkWidget $page,
-  gchar $title
+  Str $title
 )
   is native(gtk)
   is export

@@ -1,66 +1,100 @@
 use v6.c;
 
-use Config::INI;
+use CompUnit::Util :re-export;
+
+use ScriptConfig;
 use File::Find;
 use Dependency::Sort;
+use HashArray;
+
+#
 
 unit package GTKScripts;
 
-our $CONFIG-NAME      is export;
-our %config           is export;
 our $GTK-SCRIPT-DEBUG is export;
 
-my %config-defaults = (
-  prefix  => '/',
-  libdirs => 'lib',
-  exec    => 'p6gtkexec'
-);
+constant MAX_MANIFEST_THREADS = $*KERNEL.cpu-cores / 2;
 
-sub getConfigEntry ($k) is export {
-  %config{$k} // %config-defaults{$k} // ''
+our token useneed { 'use' | 'need'  }
+
+# cw: Thank you SO MUCH!
+# https://stackoverflow.com/questions/47124405/parsing-a-possibly-nested-braced-item-using-a-grammar
+our token nested-parens is export {
+   '(' ~ ')' [
+     || <- [()] >+
+     || <.before '('> <~~>
+   ]*
 }
 
-sub getLibDirs is export {
-  getConfigEntry('libdirs');
+our token nested-braces is export {
+   '{' ~ '}' $<before>=[
+     || ( <- [{}] >+ )
+     || <.before '{'> <~~>
+   ]*
 }
 
-sub parse-file ($filename = $CONFIG-NAME) is export {
-  return Nil unless $filename && $filename.IO.r;
-
-  %config = Config::INI::parse_file($filename)<_>;
-
-  # Handle comma separated
-  %config{$_} = (%config{$_} // '').split(',').Array for <
-    backups
-    modules
-    build_exclude
-  >;
-
-  %config<libdirs> //= 'lib';
-
-  %config;
+ our rule class-def is export {
+  'class'
+    $<name>=[ \S+ ]
+    [ $<misc>=(<-[{]>+) ]?
+  <nested-braces>
 }
+
+our regex method-def is export {
+  $<mod>=[ [ 'proto' | 'multi' ] <.ws> ]?
+  $<m>=[ 'sub'?'method' ]        <.ws>
+  $<name>=(<-[)(}{\s]>+)         <.ws>
+  $<args>=<nested-parens>?       <.ws>
+  [ $<misc>=(<-[{]>+) ]?
+  <nested-braces>
+}
+
 
 my token d { <[0..9 x]> }
 my token m { '-' }
 my token L { 'L' }
-my token w { <[A..Za..z _]> }
+my token w { <[A..Za..z0..9 _]> }
 
 my rule comment {
-  '/*' .+? '*/'
+  '/*'$<text>=.+?'*/'
 }
 
 my regex name {
   <[_ A..Z a..z]>+
 }
 
-my token       p { [ '*' [ \s* 'const' \s* ]? ]+ }
-my token       n { <[\w _]>+ }
-my token       t { <n> | '(' '*' <n> ')' }
-my token     mod { 'unsigned' | 'long' }
-my token    mod2 { 'const' | 'struct' | 'enum' }
-my rule     type { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
-my rule      var { <t> [ '[' (.+?)? ']' ]? }
+my token       p  { [ '*' [ \s* 'const' \s* ]? ]+ }
+my token       n  { <[\w _]>+ }
+my token       t  { <n> | '(' '*' <n> ')' }
+my token     mod  { 'unsigned' | 'long' }
+my token    mod2  { 'const' | 'struct' | 'enum' }
+my rule     type  { <mod2>? [ <mod>+ ]? $<n>=\w+ <p>? }
+my rule array-def { '['$<size>=.+?']' }
+my rule       var { <t><array-def>? }
+
+our token classname is export {
+  [ \w+ ]+ % '::' [':' [\w+'<'.+?'>']+ % ':' ]?
+}
+our token parent is export {
+  <classname>
+}
+our token typename is export { \w+ }
+
+our token modulename is export {
+  ((\w<[a..zA..Z0..9]>+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']?
+}
+
+our token use-module is export {
+  ^^ \s* <useneed> \s+ <modulename>[\s+.+\s*]?';'
+};
+
+our rule also-does is export {
+  'also' 'does' <classname> ';'
+}
+
+our rule class-start is export {
+  'class' <classname> ['is' <parent>]? '{'
+}
 
 our rule struct-entry is export {
   <type> <var>+ %% ','
@@ -74,6 +108,89 @@ our rule solo-struct is export {
 
 our rule struct is export {
   'typedef'? <solo-struct> <rn=name>? ';'
+}
+
+my rule enum-entry is export {
+  \s* ( <w>+ ) (
+    [ '=' '('?
+      [
+        <m>?<d>+<L>?
+        |
+        <w>+
+      ]
+      [ '<<' ( [<d>+ | <w>+] ) ]?
+      ')'?
+    ]?
+  ) ','?
+  <comment>?
+  \v*
+}
+
+my rule solo-enum is export {
+  'enum' <n=name>? <comment>? \v* '{'
+  <comment>? \v* [ <comment> | <enum-entry> ]+ \v*
+  '}'
+}
+
+my rule enum is export {
+  [ 'typedef' <solo-enum> <rn=name> | <solo-enum> ] ';'
+}
+
+sub getModuleManifest ($filename, :$threads = MAX_MANIFEST_THREADS)
+  is export
+{
+  my (@used-threads, %manifest);
+
+  my  @file-list = [ $filename ];
+
+  sub search-file ($f is copy) {
+    say "SF: { $f }";
+    if $f.contains('::') {
+      if $*REPO.repo-chain.first( *.?candidates($f) )  -> $p {
+        $f = $p.add( $f.subst('::', $p.SPEC.dir-sep, :g) ~ '.pm6' );
+        $f .= extension('rakumod') unless $f.r;
+      } else {
+        die "Cannot find '{ $f }' in Raku repository!'";
+      }
+    }
+
+    die "Cannot find '{ $f }' in Raku repository!'" unless $f.IO.r;
+
+    say "Checking { $f.IO.absolute }...";
+
+    if $f.IO.slurp ~~ m:g/ <use-module> / -> $m {
+      for $m.List {
+        my $mn = .<use-module><modulename>.Str;
+        next if $mn eq <v6>.any;
+
+        say "MN: {$mn}";
+
+        unless %manifest{$mn}:exists {
+          say "UMN: { $mn }";
+          @file-list.push($mn);
+          %manifest{$mn}++;
+        }
+      }
+    }
+  }
+
+  sub start-threads {
+    while my $f = @file-list.pop {
+      say "F: { $f }";
+      @used-threads.push: start search-file($f);
+      last if     @used-threads.elems > $threads;
+      last unless +@file-list;
+    }
+  }
+
+  while +@file-list || +@used-threads {
+    start-threads;
+    await Promise.anyof(@used-threads);
+    @used-threads .= grep({ .status ~~ Planned })
+  }
+  await Promise.allof(@used-threads);
+  say "FFL: { @file-list.gist }";
+  %manifest;
 }
 
 sub find-files (
@@ -117,7 +234,7 @@ sub find-files (
           if $exclude.defined {
             given $exclude {
               when Array    { next if $elem.absolute ~~ .any         }
-              when Str      { next if $elem.absolute ~~ / <{ $_ }> / }
+              when Str      { next if $elem.absolute.contains($_)    }
               when Regex    { next if $elem.absolute ~~ $_           }
               when Callable { next if $_($elem)                      }
 
@@ -144,17 +261,21 @@ sub find-files (
   }
 }
 
-sub get-lib-files (:$pattern, :$extension) is export {
+sub get-lib-files (:$pattern, :$extension, :$exclude) is export {
   die 'get-lib-files() must be called with a :$pattern and/or an :$extension'
     unless $pattern.defined || $extension.defined;
 
   (do gather for getLibDirs().split(',') {
-    take find-files($_, :$pattern, :$extension);
+    take find-files($_, :$pattern, :$extension, :$exclude);
   }).flat;
 }
 
 sub get-module-files is export {
-  get-lib-files( extension => 'pm6' );
+  get-lib-files( extension => 'pm6', exclude => 'nqp' );
+}
+
+sub get-raw-module-files is export {
+  get-lib-files( pattern => / '/Raw/' /, extension => 'pm6' )
 }
 
 sub levenshtein-nqp ($a, $b) is export {
@@ -296,7 +417,22 @@ sub write-meta-file ($file, $modules) {
 
   if $file.IO.e {
     my $meta = $file.IO.slurp;
-    $meta ~~ s/ '"provides": ' '{' ~ '}' <-[\}]>+ /"provides": \{\n{$table}\n    }/;
+
+    my $match = $meta ~~ /'"provides":'\s+'{' ~ '}' <-[\}]>+ /;
+    #$match.gist.say;
+    #$modules.gist.say;
+
+    unless $table {
+	    $table = $modules.map({ "    { .head }: { .tail }" }).join(",\n");
+	    $table.gist.say;
+    }
+
+    if $match {
+	    $meta.substr-rw($match.from, $match.to - $match.from) = qq«    "provides": \{\n{ $table }\n    \}»;
+	    $file.say;
+    } else {
+	    die 'Could not find "provides" section in META6.json! Aborting.';
+    }
     $file.IO.rename("{ $file }.bak");
     my $fh = $file.IO.open(:w);
     $fh.printf: $meta;
@@ -314,26 +450,42 @@ sub compute-module-dependencies (
   :$extra-output = True,
   :$build-list   = True,
   :$meta-file    = 'META6.json'
-) is export {
-  my @build-exclude = getConfigEntry('build-exclude').split( /',' \s+/ );
-  my @modules = @files
-    .map( *.path )
-    .map({
-      my ($u, $m) = $_ xx 2;
-      for getLibDirs().split(',') -> $d is copy {
-        $d ~= '/' unless $d.ends-with('/');
-        $m .= subst($d, '');
-      }
-      my $a = [
-        $u,
-        $m.subst('.pm6', '').split('/').Array.join('::')
-      ];
-      $a;
-    });
+)
+	is export
+{
+  # cw: The .grep has to be performed AGAIN...why?
+  my @build-exclude    = getConfigEntry('build-exclude').grep( *.chars );
+  my @build-additional = getConfigEntry('build-additional').grep( *.chars );
+
+  say "BE: { @build-exclude }";
+
+  my @modules = @files;
+  @modules.append: @build-additional.map( *.IO ) if +@build-additional;
+
+  say "M: { @modules }";
+  say "S: { @modules.grep( *.contains('Sort') ).gist }";
+
+  @modules = @modules.map({
+    my ($u, $m) = .path xx 2;
+    for getLibDirs().split(',') -> $d is copy {
+      $d ~= '/' unless $d.ends-with('/');
+      $m .= subst($d, '');
+    }
+    my $a = [
+      $u,
+      $m.subst('.pm6', '').split('/').Array.join('::')
+    ];
+    $a;
+  });
 
   my %nodes;
   my $item-id = 0;
   for @modules {
+    if +@build-exclude && .[1].starts-with( @build-exclude.any ) {
+      say "Excluding { .[1] }...";
+      next;
+    }
+
     %nodes{ .[1] } = (
       itemid   => $item-id++,
       filename => .[0],
@@ -346,10 +498,7 @@ sub compute-module-dependencies (
   my @others;
   my @other-provided = (%config<other_provided> // '').split(',');
   for %nodes.pairs.sort( *.key ) -> $p {
-    say "Processing requirements for module { $p.key }...";
-
-    my token useneed    { 'use' | 'need'  }
-    my token modulename { ((\w+)+ % '::') [':' 'ver<' (\d+)+ % '.' '>']? }
+    say "Processing requirements for { $p.key }...";
     my $f = $p.value<filename>;
 
     # cw: Remove pod sections in case they have embedded use statements
@@ -361,39 +510,62 @@ sub compute-module-dependencies (
       }
     }
 
-    my $m = $contents ~~
-      m:g/^^ \s* <useneed> \s+ <modulename>[\s+.+\s*]?';'/;
+    my $m = $contents ~~ m:g/ <use-module> /;
+
     for $m.list -> $mm {
-      my $mn = $mm;
+      my $mn = $mm.trim;
+
+      next if $mn eq <nqp experimental>.any;
+
+      next if $mn ~~ / ^ 'v' \d+ /;
 
       #say "MN: { $mn.gist }";
 
       $mn ~~ s/<useneed> \s+//;
       $mn ~~ s/';' $//;
-      my @prefixes = getConfigEntry('prefix').split(',');
+      my @prefixes     = getConfigEntry('prefix').split(',');
+      my @non-prefixes = getConfigEntry('excluded-namespaces').split(',')
+                                                              .grep( *.chars );
+
+      my $part-of-project = [&&](
+        $mn.starts-with( @prefixes.any ).so,
+        $mn.starts-with( @non-prefixes.none ).so
+      );
+
       if $mn ~~ /<modulename>/ {
         $mn = $/<modulename>[0].Str;
-        unless $mn.starts-with( @prefixes.any ) {
-          next if $mn ~~ / 'v6''.'? (.+)? /;
-          @others.push: $mn;
-          next;
+        unless $part-of-project {
+          sub doOther {
+            next if $mn ~~ / 'v6''.'? (.+)? /;
+            @others.push: $mn;
+            next;
+          }
+
+          if $mn.starts-with( @prefixes.any ).so {
+            doOther() if +@non-prefixes && $mn.starts-with( @non-prefixes.any );
+            %nodes{$p.key}<edges>.push: $mn;
+          } else {
+            doOther();
+          }
         }
-        %nodes{$p.key}<edges>.push: $mn;
       }
 
       if $mn eq @other-provided.any {
         @others.push: $mn;
       } else {
-        if $mn.starts-with( @prefixes.any ) {
+        if $part-of-project {
           die qq:to/DIE/ unless %nodes{$mn}:exists;
             { $mn }, used by { $p.key }, does not exist!
             DIE
         }
 
+        say "Adding {$mn} as a dependency for { $p.key }..."
+          if %*ENV<P6_GTK_DEBUG>;
+
         $s.add_dependency(%nodes{$p.key}, %nodes{$mn});
       }
     }
-    #say "P: { $p.key } / { %nodes{$p.key}.gist }";
+    # say "P: { $p.key } / { %nodes{$p.key}.gist }";
   }
 
   if %*ENV<P6_GTK_DEBUG> {
@@ -429,42 +601,41 @@ sub compute-module-dependencies (
   }
 
   # Solidify Seq results
-  my @return-array = $s.result;
+  my @return-array = $s.result.grep({
+    [&&](
+      |(
+        .ends-with('.pl6'),
+        .ends-with('.p6'),
+        .ends-with('.raku')
+      ).map( *.not )
+    )
+  });
 
   if $extra-output {
     say "\nA resolution order is:";
-    say "»»»»»» { @return-array.elems } Modules resolved";
+    say "»»»»»» { @return-array.elems } Modules resolved. ( {
+         @others.elems } non-project modules)";
   }
 
   if $build-list {
     @others = @others.unique.sort;
     my $list = @others.join("\n") ~ "\n";
     $list ~= @return-array.map( *<name> ).join("\n");
-    "BuildList".IO.open(:w).say($list);
+    'BuildList'.IO.open(:w).say($list);
     say $list;
   }
 
-  write-meta-file(
-    $meta-file,
-    @return-array.map({ ( "\"{ .<name> }\"", "\"{ .<filename> }\"" ) }).cache
-  ) if $meta-file;
+  my $module-table = @return-array.map({ ( "\"{ .<name> }\"", "\"{ .<filename> }\"" ) }).cache;
 
-  (@return-array, @others);
+  write-meta-file( $meta-file, $module-table) if $meta-file;
+
+  my $r = HashArray.new( hash => %nodes, array => @return-array );
+
+  ($r, @others);
 }
 
 INIT {
-  $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
-  $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
-                 $*ENV<X11_PROJECT_FILE> //
-                 do {
-                   '.'.IO.dir.grep({
-                     .starts-with('.') &&
-                     .ends-with('-project')
-                   })[0].absolute
-                 }
-
- die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
-   unless $CONFIG-NAME.IO.e;
-
-  parse-file;
+  unless %*ENV<GTK_SCRIPTS_NO_INIT> {
+    $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
+  }
 }

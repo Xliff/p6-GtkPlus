@@ -26,13 +26,7 @@ class GTK::ComboBox:ver<3.0.1146> is GTK::Bin {
   also does GTK::Roles::Signals::ComboBox;
 
   has GtkComboBox $!cb is implementor;
-
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
+  
   submethod BUILD(:$combobox) {
     self.setComboBox($combobox) if $combobox;
   }

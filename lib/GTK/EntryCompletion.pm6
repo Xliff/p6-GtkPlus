@@ -16,6 +16,7 @@ use GTK::Roles::TreeModel:ver<3.0.1146>;
 # here.
 
 class GTK::EntryCompletion:ver<3.0.1146> {
+  also does GLib::Roles::Object;
   also does GTK::Roles::CellLayout;
   also does GTK::Roles::Signals::Generic;
   also does GTK::Roles::Signals::EntryCompletion;

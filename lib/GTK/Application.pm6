@@ -15,13 +15,14 @@ use GTK::ApplicationWindow:ver<3.0.1146>;
 use GTK::Window:ver<3.0.1146>;
 use GTK::Widget:ver<3.0.1146>;
 
-use GTK::Roles::Signals::Generic:ver<3.0.1146>;
 use GTK::Roles::Signals::Application:ver<3.0.1146>;
 
 our subset GtkApplicationAncestry is export of Mu
   where GtkApplication | GApplicationAncestry;
 
 class GTK::Application:ver<3.0.1146> is GIO::Application {
+  also does GTK::Roles::Signals::Application;
+
   my $gapp;
 
   has GtkApplication $!app     is implementor; # GtkApplication
@@ -36,6 +37,8 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
 
   has $!window-class;
   has $!application-window-class;
+  has $!window-flags;
+  has $!window-title;
 
   submethod BUILD(
     :$app,
@@ -43,10 +46,12 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     :$flags                        = 0,
     :$width                        = 200,
     :$height                       = 200,
-    :window_type(:$window-type),
+    :window_type(:$window-type)   = 'application',
     :$window,
-    :$application-window-class,
-    :$window-class
+    :$window-title                = Str,
+    :$window-flags                = GTK_WINDOW_TOPLEVEL,
+    :$application-window-class    = GTK::ApplicationWindow,
+    :$window-class                = GTK::Window
   ) {
     say "{ self.^name }.{ &?ROUTINE.name } - ENTER";
     self.setGtkApplication($app, :$window) if $app;
@@ -58,6 +63,8 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     $!wtype                      = $window-type // 'application';
     $!window-class               = $window-class;
     $!application-window-class   = $application-window-class;
+    $!window-flags               = $window-flags;
+    $!window-title               = $window-title if $window-title;
 
     $!window = $window if $window;
 
@@ -92,19 +99,28 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
 
   method !set-default-event ($window) {
     self.activate.tap(-> *@a {
+      say "Activating from GTK... ($!wtype)";
+
       unless $window {
         $!window = do given $!wtype {
+          when 'none' { }
+
           when 'application' {
+            say "Using application window of type {
+                 $!application-window-class.^name }...";
             my $w = $!application-window-class.new($!app);
             $w.set_size_request($!width, $!height) if $!width && $!height;
             $w;
           }
 
           when 'window' {
+            my $type = $!window-flags;
+
             $!window-class.new(
-              :$!title,
+              :$!window-title,
               :$!width,
               :$!height
+              :$type
             );
           }
 
@@ -118,10 +134,16 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
       }
 
       if $!window {
-        say "WindowType is { $!wtype }: { $!window }" if $DEBUG;
-        $!window.destroy-signal.tap( -> *@a { self.exit } )
-          unless $!wtype eq 'custom';
+        say "WindowType is { $!wtype }: { $!window }"; # if $DEBUG;
+        $!window.destroy-signal.tap( -> *@a {
+          say 'Exiting...';
+          self.quit( :gio )
+        }) unless $!wtype eq 'custom';
+      } else {
+        warn "Application window is undefined! Type was intended to be '{
+              $!wtype }'" unless $!wtype eq 'none';
       }
+
       $!init.keep;
     });
   }
@@ -137,7 +159,6 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     state $init-called = False;
 
     return if $init-called;
-
     my $args = CArray[Str].new;
     $args[0] = $*PROGRAM.Str;
 
@@ -159,14 +180,16 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     $o;
   }
   multi method new(
-    Str :$title   = 'org.genex.application',
-    Int :$flags   = 0,
-    Int :$width   = 200,
-    Int :$height  = 200,
+    Str :title(:$name)                = 'org.genex.application',
+    Str :window_title(:$window-title) = Str,
+    Int :$flags                       = 0,
+    Int :$width                       = 200,
+    Int :$height                      = 200,
     :$pod,
     :$ui,
     :$window-type,
     :$window_type,
+    :window_flags(:$window-flags),
     :$window,
     :$style,
     *%others
@@ -178,21 +201,22 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
     GTK::Application.init;
 
     # Use raw GTK calls here since the object model will be used by the callers.
-    my $app = gtk_application_new($title, $f);
+    my $app = gtk_application_new($name, $f);
 
     return Nil unless $app;
 
     self.bless(
       :$app,
-      :$title,
       :flags($f),
       :width($w),
       :height($h)
       :$pod,
       :$ui,
       :$window,
+      :$window-title,
       :$window-type,
       :$window_type,
+      :$window-flags,
       :$style,
       |%others
     );
@@ -248,11 +272,15 @@ class GTK::Application:ver<3.0.1146> is GIO::Application {
 
   # Static methods for main loop termination
   multi method quit {
+    say '...using GTK';
+
     gtk_main_quit();
   }
   # To use g_application_quit, you must have an invocant!
   multi method quit (GTK::Application:D: :$gio is required ) {
-    nextsame;
+    say '...using GIO';
+
+    self.GIO::Application::quit( :gio );
   }
 
   # Non static main loop start.

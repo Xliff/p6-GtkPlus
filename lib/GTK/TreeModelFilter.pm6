@@ -8,23 +8,55 @@ use GTK::Raw::Types:ver<3.0.1146>;
 
 use GLib::Value;
 
-use GLib::Roles::Properties;
+use GLib::Roles::Object;
 use GTK::Roles::TreeModel:ver<3.0.1146>;
 use GTK::Roles::TreeDnD:ver<3.0.1146>;
 use GTK::Roles::Types:ver<3.0.1146>;
 
+
+our subset GtkTreeModelFilterAncestry is export of Mu
+  where GtkTreeModelFilter | GtkTreeModel | GtkTreeDragSource | GObject;
+
 class GTK::TreeModelFilter:ver<3.0.1146> {
-  also does GLib::Roles::Properties;
+  also does GLib::Roles::Object;
   also does GTK::Roles::TreeModel;
   also does GTK::Roles::TreeDragSource;
 
   has GtkTreeModelFilter $!tmf is implementor;
 
-  submethod BUILD(:$treefilter) {
-    self!setObject($!tmf = $treefilter);            # GLib::Roles::Properties
+  submethod BUILD ( :$gtk-tree-filter ) {
+    self.setGtkTreeModelFilter($gtk-tree-filter) if $gtk-tree-filter
+  }
 
-    $!tm = nativecast(GtkTreeModel, $!tmf);         # GTK::Roles::TreeModel
-    $!ds = nativecast(GtkTreeDragSource, $!tmf);    # GTK::Roles::TreeDragSource
+  method setGtkTreeModelFilter (GtkTreeModelFilterAncestry $_) {
+    my $to-parent;
+
+    $!tmf = do {
+      when GtkTreeModelFilter {
+        $to-parent = cast(GObject, $_);
+        $_;
+      }
+
+      when GtkTreeModel {
+        $to-parent = cast(GObject, $_);
+        $!tm       = $_;
+        cast(GtkTreeModelFilter, $_);
+      }
+
+      when GtkTreeDragSource {
+        $to-parent = cast(GObject, $_);
+        $!ds       = $_;
+        cast(GtkTreeModelFilter, $_);
+      }
+
+      default {
+        $to-parent = $_;
+        cast(GtkTreeModelFilter, $_);
+      }
+    }
+    self!setObject($to-parent);
+    self.roleInit-GtkTreeModel;
+    self.roleInit-GtkTreeDragSource
   }
 
   method GTK::Raw::Definitions::GtkTreeModelFilter
@@ -34,10 +66,21 @@ class GTK::TreeModelFilter:ver<3.0.1146> {
     >
   { $!tmf }
 
-  method new (GtkTreeModel() $model, GtkTreePath() $root) {
-    my $treefilter = gtk_tree_model_filter_new($model, $root);
+  multi method new (
+    $gtk-tree-filter where * ~~ GtkTreeModelFilterAncestry,
 
-    $treefilter ?? self.bless( :$treefilter ) !! Nil;
+    :$ref = True
+  ) {
+    return unless $gtk-tree-filter;
+
+    my $o = self.bless( :$gtk-tree-filter );
+    $o.ref if $ref;
+    $o;
+  }
+  multi method new (GtkTreeModel() $model, GtkTreePath() $root) {
+    my $gtk-tree-filter = gtk_tree_model_filter_new($model, $root);
+
+    $gtk-tree-filter ?? self.bless( :$gtk-tree-filter ) !! Nil;
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓

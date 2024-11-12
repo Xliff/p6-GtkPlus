@@ -17,6 +17,11 @@ role GTK::Roles::ColorChooser:ver<3.0.1146> {
   has GtkColorChooser $!cc;
 
   method roleInit-ColorChooser {
+    self.roleInit-GtkColorChooser
+  }
+  method roleInit-GtkColorChooser {
+    return if $!cc;
+    
     my \i = findProperImplementor(self.^attributes);
 
     $!cc = cast( GtkColorChooser, i.get_value(self) );

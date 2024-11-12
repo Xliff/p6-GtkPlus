@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ToolItem:ver<3.0.1146>;
 
@@ -27,7 +29,7 @@ sub gtk_tool_item_get_orientation (GtkToolItem $tool_item)
 
 sub gtk_tool_item_get_proxy_menu_item (
   GtkToolItem $tool_item,
-  gchar $menu_item_id
+  Str $menu_item_id
 )
   returns GtkWidget
   is native(gtk)
@@ -89,19 +91,19 @@ sub gtk_tool_item_retrieve_proxy_menu_item (GtkToolItem $tool_item)
 
 sub gtk_tool_item_set_proxy_menu_item (
   GtkToolItem $tool_item,
-  gchar $menu_item_id,
+  Str $menu_item_id,
   GtkWidget $menu_item
 )
   is native(gtk)
   is export
   { * }
 
-sub gtk_tool_item_set_tooltip_markup (GtkToolItem $tool_item, gchar $markup)
+sub gtk_tool_item_set_tooltip_markup (GtkToolItem $tool_item, Str $markup)
   is native(gtk)
   is export
   { * }
 
-sub gtk_tool_item_set_tooltip_text (GtkToolItem $tool_item, gchar $text)
+sub gtk_tool_item_set_tooltip_text (GtkToolItem $tool_item, Str $text)
   is native(gtk)
   is export
   { * }

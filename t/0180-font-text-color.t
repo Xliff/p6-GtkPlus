@@ -6,6 +6,7 @@ use GTK::Application;
 use GTK::Box;
 use GTK::Button;
 use GTK::ButtonBox;
+use GTK::ColorButton;
 use GTK::CSSProvider;
 use GTK::Dialog::ColorChooser;
 use GTK::Dialog::FontChooser;
@@ -20,13 +21,15 @@ my $a = GTK::Application.new(
   :height(500)
 );
 
-$a.activate.tap({
+$a.activate.tap: SUB {
+  my $rc = sprintf('#%02x%02x%02x', |( (40..200).pick xx 3 ) );
+
   # Create controls and dialogs.
   my $t   = GTK::TextView.new;
   my $bb  = GTK::ButtonBox.new-hbox;
   my $vb  = GTK::Box.new-vbox;
   my $fb  = GTK::Button.new_from_icon_name('gtk-select-font', GTK_ICON_SIZE_BUTTON);
-  my $cb  = GTK::Button.new_from_icon_name('gtk-color-picker', GTK_ICON_SIZE_BUTTON);
+  my $cb  = GTK::ColorButton.new-from-hex($rc);
   my $ob  = GTK::Button.new_from_icon_name('gtk-ok', GTK_ICON_SIZE_BUTTON);
   my $f   = GTK::Frame.new(' TextView ');
   my $bf  = GTK::Frame.new(' Buttons ' );
@@ -49,19 +52,20 @@ $a.activate.tap({
   $f.add($s);
 
   # Add buttons to button frame.
-  ($fb.label, $cb.label, $ob.label) = <Font Color OK>;
+  #($fb.label, $cb.label, $ob.label) = <Font Color OK>;
+  ($fb.label, $ob.label) = <Font OK>;
   ($fb.margin_bottom, $cb.margin_bottom, $ob.margin_bottom) = 10 xx 3;
   ($bb.border_width, $bb.layout, $bb.spacing) = (5, GTK_BUTTONBOX_SPREAD, 20);
   $bb.add($_) for ($fb, $cb, $ob);
   $bf.add($bb);
 
   # OK Button Event
-  $ob.clicked.tap({
+  $ob.clicked.tap(SUB {
     say $t.text;
     $a.exit;
   });
   # Font Button Event
-  $fb.clicked.tap({
+  $fb.clicked.tap(SUB {
     my $rc = $fcd.run;
     say "Font Dialog Response: " ~ $rc;
     if $rc == GTK_RESPONSE_OK {
@@ -71,20 +75,20 @@ $a.activate.tap({
     $fcd.hide;
   });
   # Color Button Event
-  $cb.clicked.tap({
-    my $rc = $ccd.run;
-    say "Color Dialog Response: " ~ $rc;
-    if $rc == GTK_RESPONSE_OK {
-      my $c = $ccd.rgba.to_string;
-      my $css = GTK::CSSProvider.new;
-      my $css-s = "#tview text \{ color: { $c }; \}";
-
-      say "Selected color: " ~ $c;
-      $css.load_from_data($css-s);
-    };
-
-    $ccd.hide;
-  });
+  # $cb.clicked.tap(SUB {
+  #   my $rc = $ccd.run;
+  #   say "Color Dialog Response: " ~ $rc;
+  #   if $rc == GTK_RESPONSE_OK {
+  #     my $c = $ccd.rgba.to_string;
+  #     my $css = GTK::CSSProvider.new;
+  #     my $css-s = "#tview text \{ color: { $c }; \}";
+  #
+  #     say "Selected color: " ~ $c;
+  #     $css.load_from_data($css-s);
+  #   };
+  #
+  #   $ccd.hide;
+  # });
 
   $vb.pack_start($_, False, False, 0) for ($f, $bf);
 
@@ -99,23 +103,24 @@ $a.activate.tap({
   #
   # Proposed solution:
   my $shutdown-latch = False;
-  $a.window.destroy-signal.tap({
+  $a.window.destroy-signal.tap: SUB {
     # If exited by corner close button.
     $shutdown-latch = True;
     $t.text;
-  });
-  $a.shutdown.tap({
+  }
+
+  $a.shutdown.tap: SUB {
     # If exited by OK Button
     unless $shutdown-latch {
       #...
     }
-  });
+  }
   # Of course, an even simpler solution would be to put the shutdown logic
   # In the handler for the OK button AND in destroy-signal, and leave
   # application.shutdown for resource cleanup!!
 
   $a.window.add($vb);
   $a.window.show_all;
-});
+}
 
 $a.run;

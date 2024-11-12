@@ -1,5 +1,7 @@
 use v6.c;
 
+use GLib::Raw::Subs;
+
 use GTK::Application;
 use GTK::Box;
 use GTK::Menu;
@@ -8,9 +10,9 @@ use GTK::MenuItem;
 
 my $a = GTK::Application.new( title => 'org.genex.menus' );
 
-$a.activate.tap({
+$a.activate.tap: SUB {
   CATCH { default { .message.say } }
-  
+
   sub open-menu  { ... }
   sub close-menu { ... }
   sub help       { ... }
@@ -60,6 +62,6 @@ $a.activate.tap({
 
   $a.window.add($vbox);
   $a.window.show_all;
-});
+}
 
 $a.run;

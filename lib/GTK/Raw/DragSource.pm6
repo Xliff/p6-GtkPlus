@@ -2,8 +2,12 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::DragSource:ver<3.0.1146>;
 
@@ -38,7 +42,7 @@ sub gtk_drag_source_set_icon_gicon (GtkWidget $widget, GIcon $icon)
   is export
   { * }
 
-sub gtk_drag_source_set_icon_name (GtkWidget $widget, gchar $icon_name)
+sub gtk_drag_source_set_icon_name (GtkWidget $widget, Str $icon_name)
   is native(gtk)
   is export
   { * }
@@ -48,7 +52,7 @@ sub gtk_drag_source_set_icon_pixbuf (GtkWidget $widget, GdkPixbuf $pixbuf)
   is export
   { * }
 
-sub gtk_drag_source_set_icon_stock (GtkWidget $widget, gchar $stock_id)
+sub gtk_drag_source_set_icon_stock (GtkWidget $widget, Str $stock_id)
   is native(gtk)
   is export
   { * }

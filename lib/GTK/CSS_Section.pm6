@@ -7,10 +7,13 @@ use GTK::Raw::CSS_Section:ver<3.0.1146>;
 
 use GTK::CSSProvider:ver<3.0.1146>;
 
-# BOXED TYPE
+use GLib::Roles::Implementor;
 
+# BOXED TYPE
 class GTK::CSS_Section:ver<3.0.1146> {
-  has GtkCssSection $!css_s;
+  also does GLib::Roles::Implementor;
+
+  has GtkCssSection $!css_s is implementor;
 
   submethod BUILD (:$section) {
     $!css_s = $section;

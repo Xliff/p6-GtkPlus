@@ -2,7 +2,8 @@
 
 use lib <. scripts>;
 
-use GTKScripts;
+use ScriptConfig;
+#
 
 sub MAIN ($entry) {
   say getConfigEntry($entry);

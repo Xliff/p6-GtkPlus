@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::InfoBar:ver<3.0.1146>;
 
@@ -12,7 +14,7 @@ sub gtk_info_bar_add_action_widget (GtkInfoBar $info_bar, GtkWidget $child, gint
   is export
   { * }
 
-sub gtk_info_bar_add_button (GtkInfoBar $info_bar, gchar $button_text, gint $response_id)
+sub gtk_info_bar_add_button (GtkInfoBar $info_bar, Str $button_text, gint $response_id)
   returns GtkWidget
   is native(gtk)
   is export

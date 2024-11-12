@@ -13,8 +13,8 @@ role GTK::Roles::Actionable:ver<3.0.1146> {
   method roleInit-GtkActionable {
     return if $!action;
 
-    my \i = findProperImplementor( self.^attributes );
-    i = cast( GtkActionable, i.get_value(self) );
+    my \i    = findProperImplementor( self.^attributes );
+    $!action = cast( GtkActionable, i.get_value(self) );
   }
 
   method GTK::Raw::Definitions::GtkActionable
