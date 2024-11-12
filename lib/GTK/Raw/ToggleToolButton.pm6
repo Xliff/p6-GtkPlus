@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ToggleToolButton:ver<3.0.1146>;
 
@@ -19,7 +21,7 @@ sub gtk_toggle_tool_button_new ()
   is export
   { * }
 
-sub gtk_toggle_tool_button_new_from_stock (gchar $stock_id)
+sub gtk_toggle_tool_button_new_from_stock (Str $stock_id)
   returns GtkToolItem
   is native(gtk)
   is export

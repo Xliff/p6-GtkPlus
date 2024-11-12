@@ -1,8 +1,12 @@
 use v6.c;
 
 use NativeCall;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Window:ver<3.0.1146>;
 
@@ -214,7 +218,7 @@ sub gtk_window_new (uint32 $type)
   is export
 { * }
 
-sub gtk_window_parse_geometry (GtkWindow $window, gchar $geometry)
+sub gtk_window_parse_geometry (GtkWindow $window, Str $geometry)
   returns uint32
   is native(gtk)
   is export
@@ -288,7 +292,7 @@ sub gtk_window_set_default_icon (GdkPixbuf $icon)
 { * }
 
 sub gtk_window_set_default_icon_from_file (
-  gchar $filename,
+  Str $filename,
   CArray[Pointer[GError]] $err
 )
   returns uint32
@@ -301,7 +305,7 @@ sub gtk_window_set_default_icon_list (GList $list)
   is export
 { * }
 
-sub gtk_window_set_default_icon_name (gchar $name)
+sub gtk_window_set_default_icon_name (Str $name)
   is native(gtk)
   is export
 { * }
@@ -327,7 +331,7 @@ sub gtk_window_set_has_user_ref_count (GtkWindow $window, gboolean $setting)
   is export
 { * }
 
-sub gtk_window_set_icon_from_file (GtkWindow $window, gchar $filename, GError $err)
+sub gtk_window_set_icon_from_file (GtkWindow $window, Str $filename, GError $err)
   returns uint32
   is native(gtk)
   is export
@@ -354,15 +358,15 @@ sub gtk_window_set_position (GtkWindow $window, uint32 $position)
   is export
 { * }
 
-sub gtk_window_set_startup_id (GtkWindow $window, gchar $startup_id)
+sub gtk_window_set_startup_id (GtkWindow $window, Str $startup_id)
   is native(gtk)
   is export
 { * }
 
 sub gtk_window_set_wmclass (
   GtkWindow $window,
-  gchar $wmclass_name,
-  gchar $wmclass_class
+  Str $wmclass_name,
+  Str $wmclass_class
 )
   is native(gtk)
   is export
@@ -578,7 +582,7 @@ sub gtk_window_set_modal (GtkWindow $window, gboolean $modal)
   is export
 { * }
 
-sub gtk_window_set_icon_name (GtkWindow $window, gchar $name)
+sub gtk_window_set_icon_name (GtkWindow $window, Str $name)
   is native(gtk)
   is export
 { * }
@@ -598,7 +602,7 @@ sub gtk_window_set_focus_visible (GtkWindow $window, gboolean $setting)
   is export
 { * }
 
-sub gtk_window_set_title (GtkWindow $window, gchar $title)
+sub gtk_window_set_title (GtkWindow $window, Str $title)
   is native(gtk)
   is export
 { * }
@@ -680,7 +684,7 @@ sub gtk_window_set_destroy_with_parent (GtkWindow $window, gboolean $setting)
   is export
 { * }
 
-sub gtk_window_set_role (GtkWindow $window, gchar $role)
+sub gtk_window_set_role (GtkWindow $window, Str $role)
   is native(gtk)
   is export
 { * }

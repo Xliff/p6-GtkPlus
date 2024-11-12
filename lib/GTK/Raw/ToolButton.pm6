@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::ToolButton:ver<3.0.1146>;
 
@@ -13,13 +15,13 @@ sub gtk_tool_button_get_type ()
   is export
   { * }
 
-sub gtk_tool_button_new (GtkWidget $icon_widget, gchar $label)
+sub gtk_tool_button_new (GtkWidget $icon_widget, Str $label)
   returns GtkToolItem
   is native(gtk)
   is export
   { * }
 
-sub gtk_tool_button_new_from_stock (gchar $stock_id)
+sub gtk_tool_button_new_from_stock (Str $stock_id)
   returns GtkToolItem
   is native(gtk)
   is export
@@ -61,7 +63,7 @@ sub gtk_tool_button_get_label (GtkToolButton $button)
   is export
   { * }
 
-sub gtk_tool_button_set_icon_name (GtkToolButton $button, gchar $icon_name)
+sub gtk_tool_button_set_icon_name (GtkToolButton $button, Str $icon_name)
   is native(gtk)
   is export
   { * }
@@ -76,7 +78,7 @@ sub gtk_tool_button_set_icon_widget (GtkToolButton $button, GtkWidget $icon_widg
   is export
   { * }
 
-sub gtk_tool_button_set_stock_id (GtkToolButton $button, gchar $stock_id)
+sub gtk_tool_button_set_stock_id (GtkToolButton $button, Str $stock_id)
   is native(gtk)
   is export
   { * }
@@ -86,7 +88,7 @@ sub gtk_tool_button_set_label_widget (GtkToolButton $button, GtkWidget $label_wi
   is export
   { * }
 
-sub gtk_tool_button_set_label (GtkToolButton $button, gchar $label)
+sub gtk_tool_button_set_label (GtkToolButton $button, Str $label)
   is native(gtk)
   is export
   { * }

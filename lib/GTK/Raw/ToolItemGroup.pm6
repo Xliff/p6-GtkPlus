@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::GtkToolItemGroup:ver<3.0.1146>;
 
@@ -56,7 +58,7 @@ sub gtk_tool_item_group_insert (
   is export
   { * }
 
-sub gtk_tool_item_group_new (gchar $label)
+sub gtk_tool_item_group_new (Str $label)
   returns GtkWidget
   is native(gtk)
   is export
@@ -111,7 +113,7 @@ sub gtk_tool_item_group_set_ellipsize (
 
 sub gtk_tool_item_group_set_label (
   GtkToolItemGroup $group,
-  gchar $label
+  Str $label
 )
   is native(gtk)
   is export

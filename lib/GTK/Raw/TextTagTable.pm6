@@ -2,8 +2,10 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::TextTagTable:ver<3.0.1146>;
 
@@ -34,7 +36,7 @@ sub gtk_text_tag_table_get_type ()
   is export
   { * }
 
-sub gtk_text_tag_table_lookup (GtkTextTagTable $table, gchar $name)
+sub gtk_text_tag_table_lookup (GtkTextTagTable $table, Str $name)
   returns GtkTextTag
   is native(gtk)
   is export

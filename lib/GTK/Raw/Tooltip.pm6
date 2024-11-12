@@ -2,8 +2,13 @@ use v6.c;
 
 use NativeCall;
 
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
+use GIO::Raw::Definitions;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Tooltip:ver<3.0.1146>;
 
@@ -34,7 +39,7 @@ sub gtk_tooltip_set_icon_from_gicon (
 
 sub gtk_tooltip_set_icon_from_icon_name (
   GtkTooltip $tooltip,
-  gchar $icon_name,
+  Str $icon_name,
   uint32 $s                     # GtkIconSize $size
 )
   is native(gtk)
@@ -43,19 +48,19 @@ sub gtk_tooltip_set_icon_from_icon_name (
 
 sub gtk_tooltip_set_icon_from_stock (
   GtkTooltip $tooltip,
-  gchar $stock_id,
+  Str $stock_id,
   uint32 $s                     # GtkIconSize $size
 )
   is native(gtk)
   is export
   { * }
 
-sub gtk_tooltip_set_markup (GtkTooltip $tooltip, gchar $markup)
+sub gtk_tooltip_set_markup (GtkTooltip $tooltip, Str $markup)
   is native(gtk)
   is export
   { * }
 
-sub gtk_tooltip_set_text (GtkTooltip $tooltip, gchar $text)
+sub gtk_tooltip_set_text (GtkTooltip $tooltip, Str $text)
   is native(gtk)
   is export
   { * }

@@ -3,9 +3,13 @@ use v6.c;
 use NativeCall;
 
 use GDK::RGBA;
-
-use GTK::Raw::Types:ver<3.0.1146>;
+use GLib::Raw::Definitions;
+use GLib::Raw::Structs;
 use Pango::Raw::Types;
+use GDK::Raw::Definitions;
+use GDK::Raw::Structs;
+use GTK::Raw::Definitions:ver<3.0.1146>;
+use GTK::Raw::Structs:ver<3.0.1146>;
 
 unit package GTK::Raw::Widget:ver<3.0.1146>;
 
@@ -21,7 +25,7 @@ sub gtk_widget_set_device_events (
 # cw: var_args is out of scope!
 # sub gtk_widget_style_get_valist (
 #   GtkWidget $widget,
-#   gchar     $first_property_name,
+#   Str     $first_property_name,
 #   va_list   $var_args
 # )
 #   is native(gtk)
@@ -72,7 +76,7 @@ sub gtk_widget_get_allocated_baseline (GtkWidget $widget)
   is export
 { * }
 
-#sub gtk_widget_class_set_template_from_resource (GtkWidgetClass $widget_class, gchar $resource_name)
+#sub gtk_widget_class_set_template_from_resource (GtkWidgetClass $widget_class, Str $resource_name)
 #  is native(gtk)
 #  is export
 #{ * }
@@ -236,7 +240,7 @@ sub gtk_widget_add_mnemonic_label (GtkWidget $widget, GtkWidget $label)
   is export
 { * }
 
-#sub gtk_widget_class_bind_template_child_full (GtkWidgetClass $widget_class, gchar $name, gboolean $internal_child, gssize $struct_offset)
+#sub gtk_widget_class_bind_template_child_full (GtkWidgetClass $widget_class, Str $name, gboolean $internal_child, gssize $struct_offset)
 #  is native(gtk)
 #  is export
 #{ * }
@@ -322,7 +326,7 @@ sub gtk_widget_hide_on_delete (GtkWidget $widget)
 # GtkIconSize $size
 sub gtk_widget_render_icon_pixbuf (
   GtkWidget $widget,
-  gchar $stock_id,
+  Str $stock_id,
   uint32 $size
 )
   returns GdkPixbuf
@@ -432,7 +436,7 @@ sub gtk_widget_get_device_enabled (GtkWidget $widget, GdkDevice $device)
   is export
 { * }
 
-sub gtk_widget_get_action_group (GtkWidget $widget, gchar $prefix)
+sub gtk_widget_get_action_group (GtkWidget $widget, Str $prefix)
   returns GActionGroup
   is native(gtk)
   is export
@@ -464,7 +468,7 @@ sub gtk_widget_translate_coordinates (
 
 sub gtk_widget_style_get_property (
   GtkWidget $widget,
-  gchar $property_name,
+  Str $property_name,
   GValue $value
 )
   is native(gtk)
@@ -508,7 +512,7 @@ sub gtk_widget_init_template (GtkWidget $widget)
 sub gtk_widget_get_template_child (
   GtkWidget $widget,
   GType $widget_type,
-  gchar $name
+  Str $name
 )
   returns GObject
   is native(gtk)
@@ -546,7 +550,7 @@ sub gtk_widget_compute_expand (GtkWidget $widget, uint32 $orientation)
   is export
 { * }
 
-sub gtk_widget_create_pango_layout (GtkWidget $widget, gchar $text)
+sub gtk_widget_create_pango_layout (GtkWidget $widget, Str $text)
   returns PangoLayout
   is native(gtk)
   is export
@@ -658,7 +662,7 @@ sub gtk_widget_in_destruction (GtkWidget $widget)
   is export
 { * }
 
-#sub gtk_widget_class_bind_template_callback_full (GtkWidgetClass $widget_class, gchar $callback_name, GCallback $callback_symbol)
+#sub gtk_widget_class_bind_template_callback_full (GtkWidgetClass $widget_class, Str $callback_name, GCallback $callback_symbol)
 #  is native(gtk)
 #  is export
 #{ * }
@@ -694,14 +698,14 @@ sub gtk_widget_draw (GtkWidget $widget, cairo_t $cr)
 
 sub gtk_widget_override_symbolic_color (
   GtkWidget $widget,
-  gchar $name,
+  Str $name,
   GDK::RGBA $color
 )
   is native(gtk)
   is export
 { * }
 
-#sub gtk_widget_class_find_style_property (GtkWidgetClass $klass, gchar $property_name)
+#sub gtk_widget_class_find_style_property (GtkWidgetClass $klass, Str $property_name)
 #  returns GParamSpec
 #  is native(gtk)
 #  is export
@@ -735,7 +739,7 @@ sub gtk_widget_thaw_child_notify (GtkWidget $widget)
   is export
 { * }
 
-sub gtk_widget_child_notify (GtkWidget $widget, gchar $child_property)
+sub gtk_widget_child_notify (GtkWidget $widget, Str $child_property)
   is native(gtk)
   is export
 { * }
@@ -767,7 +771,7 @@ sub gtk_widget_get_request_mode (GtkWidget $widget)
 
 sub gtk_widget_set_accel_path (
   GtkWidget $widget,
-  gchar $accel_path,
+  Str $accel_path,
   GtkAccelGroup $accel_group
 )
   is native(gtk)
@@ -874,7 +878,7 @@ sub gtk_widget_trigger_tooltip_query (GtkWidget $widget)
 
 sub gtk_widget_insert_action_group (
   GtkWidget $widget,
-  gchar $name,
+  Str $name,
   GActionGroup $group
 )
   is native(gtk)
@@ -944,7 +948,7 @@ sub gtk_widget_send_expose (GtkWidget $widget, GdkEvent $event)
 # GtkAccelGroup $accel_group
 sub gtk_widget_add_accelerator (
   GtkWidget $widget,
-  gchar $accel_signal,
+  Str $accel_signal,
   GtkAccelGroup $accel_group,
   guint $accel_key,
   uint32 $accel_mods,           # GdkModifierType $accel_mods,
@@ -1294,7 +1298,7 @@ sub gtk_widget_set_valign (GtkWidget $widget, uint32 $align)
   is export
 { * }
 
-sub gtk_widget_set_tooltip_text (GtkWidget $widget, gchar $text)
+sub gtk_widget_set_tooltip_text (GtkWidget $widget, Str $text)
   is native(gtk)
   is export
 { * }
@@ -1305,7 +1309,7 @@ sub gtk_widget_unset_state_flags (GtkWidget $widget, uint32 $flags)
   is export
 { * }
 
-sub gtk_widget_set_composite_name (GtkWidget $widget, gchar $name)
+sub gtk_widget_set_composite_name (GtkWidget $widget, Str $name)
   is native(gtk)
   is export
 { * }
@@ -1413,7 +1417,7 @@ sub gtk_widget_set_tooltip_window (
   is export
 { * }
 
-sub gtk_widget_set_name (GtkWidget $widget, gchar $name)
+sub gtk_widget_set_name (GtkWidget $widget, Str $name)
   is native(gtk)
   is export
 { * }
@@ -1485,7 +1489,7 @@ sub gtk_widget_set_font_options (
   is export
 { * }
 
-sub gtk_widget_set_tooltip_markup (GtkWidget $widget, gchar $markup)
+sub gtk_widget_set_tooltip_markup (GtkWidget $widget, Str $markup)
   is native(gtk)
   is export
 { * }
