@@ -9,6 +9,8 @@ unit package ScriptConfig;
 our $CONFIG-NAME      is export;
 our %config           is export;
 
+my $SERIAL = 1;
+
 my %config-defaults = (
   prefix              => '/',
   libdirs             => 'lib',
@@ -43,7 +45,7 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
   $config{ .key } //= .value for %config-defaults.pairs;
 
   # Handle comma separated
-  $config{$_} = ($config{$_} // '').split(',').grep( *.chars )
+  $config{$_} = ($config{$_} // '').split(',').grep( *.chars ).cache
     if $config{$_}:exists
   for <
     backups
@@ -53,6 +55,10 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
     include-exclude
     include-include
     manifest-blacklist
+    include-directory
+    include-dirs
+    extension
+    extensions
   >;
 
   if $program {
@@ -83,15 +89,15 @@ INIT {
                        .starts-with('.finished').not
                     }).head.absolute
                   }
+		  
+   with $CONFIG-NAME {
+     if .IO.r {
+       $*ERR.say: "Parsing file..." if $*ENV<SCRIPT_CONFIG_DEBUG>;
 
-   if $CONFIG-NAME.IO.r {
-     $*ERR.say: "Parsing file..." if $*ENV<SCRIPT_CONFIG_DEBUG>;
+       %config = parse-file;
+       %config<created-on> = DateTime.now;
 
-
-
-     %config = parse-file;
-     %config<created-on> = DateTime.now;
-
-     #OUTER::<%config>.gist.say;
+       #OUTER::<%config>.gist.say;
+     }
    }
 }

@@ -57,9 +57,10 @@ grammar C-Function-Def {
   token       n { <[\w _]>+ }
   token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
   token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
-  rule     type { [ <mod>+ %% \s ]? <n>? <p>? }
-  rule      var { <t> [ '[' (.+?)? ']' ]? }
-  token returns { [ <mod>+ %% \s]? <.ws> <t> \s* <p>? }
+  rule     type { 'unsigned' | [ <mod>+ %% \s ]? <n>?' const'? <p>? }
+  token     arr { '['  .+?  ']'  }
+  rule      var { <t>[ \s*<arr> ]? }
+  token returns { [ <mod>+ %% \s]? <.ws> <t> [\s* 'const']? \s* <p>? }
   token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
   token      ad { 'AVAILABLE' | 'DEPRECATED' }
 
@@ -181,6 +182,9 @@ sub MAIN (
     my $head      = find( dir => 'lib', type => 'dir', name => 'Raw' ).head;
     $out-raw-file = $head.add($out-file).open(:w);
     $out-file     = $head.parent.add($out-file).open(:w);
+
+    say "Using files { $out-file.path } and {
+         $out-raw-file.path } for output!";
   }
   $lib = 'gtk' unless $lib;
 
@@ -415,6 +419,7 @@ sub MAIN (
       $t ~~ s/^float/gfloat/;
       $t ~~ s/^double/gdouble/;
       $t ~~ s/void/Pointer/;
+      $t ~~ s/'unsigned'/unsigned int/;
       $t ~~ s/GError/Pointer[GError]/;
 
       # By testing time, $np should only contain the count of '*' in the Match

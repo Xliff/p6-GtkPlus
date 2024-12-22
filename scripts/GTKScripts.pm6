@@ -201,6 +201,8 @@ sub find-files (
   :$depth
 ) is export {
   my @pattern-arg;
+
+  return Nil unless $dir.IO.r;
   my @targets = dir($dir);
 
   with $pattern {

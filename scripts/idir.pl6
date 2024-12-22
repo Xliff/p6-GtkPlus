@@ -27,7 +27,11 @@ proto sub MAIN (|c) {
 	%c<size>    := %c<s>;
 	%c<reverse> := %c<r>;
 
-	my @d = ( c<dir> || %CONFIG<include-directory> ).&rdir;
+	my $directories = c<dir> || %CONFIG<include-directory>;
+
+	my @d;
+	@d.append: rdir($_) for $directories[];
+
 	if %c<reverse> {
 		%c<size> ?? @d .= sort( - *.s )
 		         !! @d .= sort({ $^b.basename cmp $^a.basename })
@@ -79,8 +83,7 @@ multi sub MAIN (
 		take $v;
 	}
 
-	my @extensions = ( '.h', |%CONFIG<extension> ).grep( *.defined );
-
+	my @extensions = %CONFIG<extension>[];
 	sub process-file ($_) {
 		my $s = .slurp
 						.lines
@@ -109,11 +112,10 @@ multi sub MAIN (
 		take $_ for process-file($_)[];
 	}
 
-	my @exclude = ($exclude // '').split(',').grep( *.chars );
+	my @exclude = $exclude // [];
 
 	my ($mf, $i) = (@*files.elems, 1);
 	FILE: for @*files[] -> $n {
-
 		if $only {
 			next FILE unless $n.contains($only);
 		}
@@ -156,7 +158,7 @@ multi sub MAIN (
 
 		next if $avail && is-colored;
 
-	        my $bn = "{ %CONFIG<include-directory> }/";
+	  my $bn = "{ $n.dirname }/";
 		my $rn = $n.absolute.subst("{ $bn }", '');
 
 		say [~](
