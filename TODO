@@ -460,3 +460,5 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 
 - Consider a port of TBOX to Raku: https://opencollective.com/tbox
     mechanism
+
+- For Containers, treat like positional and use .push(:$expand, :$fill, :$spacing, :$end) !
