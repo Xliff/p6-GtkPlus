@@ -1,5 +1,7 @@
 use v6.c;
 
+use GTK::Raw::Types;
+
 use GTK::Application;
 use GTK::Box;
 use GTK::Button;
@@ -13,7 +15,7 @@ sub exit-app($e) {
   $a.exit;
 }
 
-$a.activate.tap({
+$a.activate.tap: SUB {
   my $title  = GTK::Label.new;
   my $vbox1  = GTK::Box.new-vbox(6);
   my $hbox   = GTK::Box.new-hbox(2);
@@ -34,6 +36,6 @@ MARK
   $vbox1.pack_start($_) for $title, $hbox;
   $a.window.add($vbox1);
   $a.window.show-all;
-});
+}
 
 $a.run;

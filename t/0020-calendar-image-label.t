@@ -11,7 +11,7 @@ use GTK::Label;
 
 my $a = GTK::Application.new( :title('org.genex.calendar_example') );
 
-$a.activate.tap({
+$a.activate.tap: SUB {
   my $vbox = GTK::Box.new-vbox();
   my $hbox = GTK::Box.new-hbox();
   my $label = GTK::Label.new();
@@ -26,15 +26,15 @@ $a.activate.tap({
 
   sub format_date {
     $calendar.get_date.map( *.fmt('%02d') ).join(' / ');
-  };
+  }
 
-  $calendar.day-selected.tap({
+  $calendar.day-selected.tap: SUB { 
     $entry.text = "(click) { &format_date() }";
-  });
+  }
 
-  $calendar.day-selected-double-click.tap({
+  $calendar.day-selected-double-click.tap: SUB {
     $entry.text = "(dbl-click) { &format_date() }";
-  });
+  }
 
   $label.set_markup(qq:to/MARK/);
   <span font="Liberation Sans Narrow 24" weight="bold" color="#0066ff">
@@ -50,6 +50,6 @@ $a.activate.tap({
   $a.window.add($vbox);
 
   $a.window.show_all;
-});
+}
 
 $a.run;

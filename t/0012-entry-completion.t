@@ -13,7 +13,7 @@ use GTK::ListStore;
 
 my $a = GTK::Application.new( title => 'org.genex.entry-completion' );
 
-$a.activate.tap({
+$a.activate.tap: SUB {
   $a.wait-for-init;
 
   my $vbox   = GTK::Box.new-vbox;
@@ -79,6 +79,6 @@ $a.activate.tap({
   $a.window.add($vbox);
   $a.window.title = 'GTK::EntryCompletion';
   $a.window.show_all;
-});
+}
 
 $a.run;
