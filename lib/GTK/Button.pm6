@@ -23,8 +23,8 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
 
   has GtkButton $!b is implementor;
 
-  submethod BUILD(:$button) {
-    self.setGtkButton($button) if $button;
+  submethod BUILD( :$gtk-button) {
+    self.setGtkButton($gtk-button) if $gtk-button;
   }
 
   method GTK::Raw::Definitions::GtkButton
