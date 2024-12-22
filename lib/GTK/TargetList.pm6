@@ -20,7 +20,6 @@ class GTK::TargetList:ver<3.0.1146> {
 
   submethod BUILD( :$targetlist ) {
     self.setGtkTargetList($targetlist) if $targetlist;
-
   }
 
   method setGtkTargetEntry (GtkTargetListAncestry $_) {
@@ -48,26 +47,7 @@ class GTK::TargetList:ver<3.0.1146> {
   { $!tl }
 
   method new (@target_entries) {
-    my $te_list = CArray[GtkTargetEntry].new;
-    for @target_entries.kv -> $i, $te {
-      given $te {
-        when GTK::TargetEntry {
-          $te_list[$i] = .GtkTargetEntry;
-        }
-
-        when GtkTargetEntry   {
-          $te_list[$i] = $_;
-        }
-
-        default {
-          warn qq:to/WARN/
-            Ignored element #{ $i } of the target entries due to invalid{
-            } type: { .^name }
-            WARN
-        }
-      }
-    }
-
+    my $te_list    = newCArray(@target_entries, typed => GtkTargetList);
     my $targetlist = gtk_target_list_new($te_list, $te_list.elems);
 
     $targetlist ?? self.bless(:$targetlist) !! Nil;
@@ -95,8 +75,8 @@ class GTK::TargetList:ver<3.0.1146> {
   }
 
   method add_rich_text_targets (
-    Int() $info,
-    Int() $deserializable,
+    Int()           $info,
+    Int()           $deserializable,
     GtkTextBuffer() $buffer
   )
     is also<add-rich-text-targets>
@@ -107,10 +87,10 @@ class GTK::TargetList:ver<3.0.1146> {
     gtk_target_list_add_rich_text_targets($!tl, $i, $d, $buffer);
   }
 
-  method add_table (GtkTargetEntry @targets) is also<add-table> {
+  method add_table (@targets) is also<add-table> {
     gtk_target_list_add_table(
       $!tl,
-      ArrayToCArray(GtkTargetEntry, @targets);
+      newCArray(@targets, typed => GtkTargetEntry);
       @targets.elems
     );
   }
@@ -141,6 +121,7 @@ class GTK::TargetList:ver<3.0.1146> {
 
   method ref is also<upref> {
     gtk_target_list_ref($!tl);
+    self;
   }
 
   method remove (GdkAtom $target) {
