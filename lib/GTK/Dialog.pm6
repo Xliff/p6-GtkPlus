@@ -3,6 +3,7 @@ use v6.c;
 use Method::Also;
 use NativeCall;
 
+use GLib::Raw::Traits;
 use GTK::Raw::Dialog:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 
@@ -117,6 +118,77 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
     );
 
     $dialog ?? self.bless( :$dialog ) !! Nil;
+  }
+
+  # Type: int
+  method action-area-border is rw  is g-property {
+    my $gv = GLib::Value.new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => sub ($) {
+        self.prop_get('action-area-border', $gv);
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'action-area-border does not allow writing'
+      }
+    );
+  }
+
+  # Type: int
+  method button-spacing is rw  is g-property {
+    my $gv = GLib::Value.new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => sub ($) {
+        self.prop_get('button-spacing', $gv);
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'button-spacing does not allow writing'
+      }
+    );
+  }
+
+  # Type: int
+  method content-area-border is rw  is g-property {
+    my $gv = GLib::Value.new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => sub ($) {
+        self.prop_get('content-area-border', $gv);
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'content-area-border does not allow writing'
+      }
+    );
+  }
+
+  # Type: int
+  method content-area-spacing is rw  is g-property {
+    my $gv = GLib::Value.new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => sub ($) {
+        self.prop_get('content-area-spacing', $gv);
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        warn 'content-area-spacing does not allow writing'
+      }
+    );
+  }
+
+  # Type: int
+  method use-header-bar is rw  is g-property {
+    my $gv = GLib::Value.new( G_TYPE_INT );
+    Proxy.new(
+      FETCH => sub ($) {
+        self.prop_get('use-header-bar', $gv);
+        $gv.int;
+      },
+      STORE => -> $, Int() $val is copy {
+        $gv.int = $val;
+        self.prop_set('use-header-bar', $gv);
+      }
+    );
   }
 
   # ↓↓↓↓ SIGNALS ↓↓↓↓
@@ -257,12 +329,12 @@ class GTK::Dialog:ver<3.0.1146> is GTK::Window {
 
   method set_alternative_button_order_from_array (
     Int() $n_params,
-    Int @new_order
+    Int   @new_order
   )
     is DEPRECATED
     is also<set-alternative-button-order-from-array>
   {
-    my gint $np = $n_params;
+    my gint         $np = $n_params;
     my CArray[gint] $no = CArray[gint].new;
     my $i = 0;
     $no[$i++] = $_ for @new_order;
