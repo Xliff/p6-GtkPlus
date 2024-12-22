@@ -18,12 +18,6 @@ my subset GtkMessageDialogAncestry
 class GTK::Dialog::Message:ver<3.0.1146> is GTK::Dialog {
   has GtkMessageDialog $!md is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD(:$message-dialog) {
     self.setGtkMessageDialog($message-dialog) if $message-dialog;
   }
@@ -62,16 +56,18 @@ class GTK::Dialog::Message:ver<3.0.1146> is GTK::Dialog {
                                GTK_DIALOG_MODAL
                              ),
     Int()       :$type     = GTK_MESSAGE_INFO,
-    Int()       :$buttons  = GTK_BUTTONS_CLOSE
+    Int()       :$buttons  = GTK_BUTTONS_CLOSE,
+                *%a
   ) {
-    samewith($parent, $flags, $type, $buttons, $message);
+    samewith($parent, $flags, $type, $buttons, $message, |%a);
   }
   multi method new (
-    GtkWindow() $parent,
-    Int()       $flags,             # GtkDialogFlags flags
-    Int()       $type,              # GtkMessageType type
-    Int()       $buttons,           # GtkButtonsType buttons
-    Str         $message_format
+    GtkWindow()  $parent,
+    Int()        $flags,             # GtkDialogFlags flags
+    Int()        $type,              # GtkMessageType type
+    Int()        $buttons,           # GtkButtonsType buttons
+    Str          $message_format,
+                *%a
   ) {
     #my @u = ($flags, $type, $buttons);
     # Can't use type resolution since it's the constructor.
@@ -84,7 +80,9 @@ class GTK::Dialog::Message:ver<3.0.1146> is GTK::Dialog {
       $message_format
     );
 
-    $message-dialog ?? self.bless( :$message-dialog ) !! Nil;
+    my $o = $message-dialog ?? self.bless( :$message-dialog ) !! Nil;
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
 
   method new_with_markup (
