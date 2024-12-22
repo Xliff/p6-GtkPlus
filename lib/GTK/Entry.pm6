@@ -62,14 +62,14 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
   }
 
   multi method new (GtkEntryAncestry $gtk-entry, :$ref = True) {\
-    return Nil unless $entry;
+    return Nil unless $gtk-entry;
 
     my $o = self.bless(:$gtk-entry);
     $o.ref if $ref;
     $o;
   }
   multi method new ( *%a ) {
-    my $entry = gtk_entry_new();
+    my $gtk-entry = gtk_entry_new();
 
     my $o = $gtk-entry ?? self.bless(:$gtk-entry) !! Nil;
     $o.setAttributes(%a) if $o && +%a;
@@ -84,7 +84,7 @@ class GTK::Entry:ver<3.0.1146> is GTK::Widget {
     # Do not allow an override of the given buffer.
     %a<buffer>:delete;
 
-    my $o = $entry ?? self.bless(:$gtk-entry) !! Nil;
+    my $o = $gtk-entry ?? self.bless(:$gtk-entry) !! Nil;
     $o.setAttributes(%a) if $o && +%a;
     $o;
   }
