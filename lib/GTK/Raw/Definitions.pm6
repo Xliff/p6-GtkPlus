@@ -227,6 +227,7 @@ class GtkTextMark             is repr<CPointer> does GLib::Roles::Pointers is ex
 class GtkTextTag              is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkTextTagTable         is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkTextView             is repr<CPointer> does GLib::Roles::Pointers is export { }
+class GtkToggleAction         is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkToggleButton         is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkToggleToolButton     is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkToolbar              is repr<CPointer> does GLib::Roles::Pointers is export { }
