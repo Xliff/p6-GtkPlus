@@ -33,7 +33,7 @@ class GTK::Dialog::FontChooser:ver<3.0.1146> is GTK::Dialog {
         $_;
       }
       when GtkFontChooser {
-        $!fc = $_;                          # For GTK::Roles::GtkFontChooser
+        $!fnt-c = $_;                          # For GTK::Roles::GtkFontChooser
         $to-parent = nativecast(GtkDialog, $_);
         nativecast(GtkFontChooserDialog, $_);
       }
@@ -53,7 +53,7 @@ class GTK::Dialog::FontChooser:ver<3.0.1146> is GTK::Dialog {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  multi method new(GtkFontChooserDialogAncestry $gtk-font-dialog) {
+  multi method new (GtkFontChooserDialogAncestry $gtk-font-dialog) {
     my $o = self.bless( :$gtk-font-dialog );
     $o.upref;
     $o;
@@ -67,7 +67,7 @@ class GTK::Dialog::FontChooser:ver<3.0.1146> is GTK::Dialog {
                   '' } creating a new GtkFontChooserDialog!";
     }
 
-    my $o = $gtk-font-dialog ?? self.bless( :$gtk-font-dialog ) !! Nil
+    my $o = $gtk-font-dialog ?? self.bless( :$gtk-font-dialog ) !! Nil;
     $o.setAttributes(%a) if $o && +%a;
     $o;
   }
