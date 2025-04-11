@@ -13,12 +13,6 @@ our subset ToggleButtonAncestry is export
 class GTK::ToggleButton:ver<3.0.1146> is GTK::Button {
   has GtkToggleButton $!tb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD(:$togglebutton) {
     do given $togglebutton {
       when ToggleButtonAncestry { self.setToggleButton($togglebutton) }
@@ -35,8 +29,6 @@ class GTK::ToggleButton:ver<3.0.1146> is GTK::Button {
   { $!tb }
 
   method setToggleButton(ToggleButtonAncestry $togglebutton) {
-    self.IS-PROTECTED;
-
     my $to-parent;
     $!tb = do given $togglebutton {
       when GtkToggleButton {
