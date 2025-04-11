@@ -353,8 +353,8 @@ class GTK::Widget:ver<3.0.1146> {
   # Multi to allow for method draw(cairo_t)
   # Is originally:
   # GtkWidget, cairo_t, gpointer --> gboolean
-  multi method draw {
-    self.connect-draw($!w);
+  multi method draw ( :$raw = False ) {
+    self.connect-draw($!w, :$raw);
   }
 
   # Signal gboolean Run Last
@@ -1628,7 +1628,7 @@ class GTK::Widget:ver<3.0.1146> {
       Nil;
   }
 
-  method create_pango_layout(Str() $text, :$raw = False)
+  method create_pango_layout(Str() $text = '', :$raw = False)
     is also<create-pango-layout>
   {
     my $pl = gtk_widget_create_pango_layout($!w, $text);
@@ -1967,7 +1967,13 @@ class GTK::Widget:ver<3.0.1146> {
     so gtk_widget_is_composited($!w);
   }
 
-  method get_pango_context (:$raw = False) is also<get-pango-context> {
+  method get_pango_context (:$raw = False)
+    is also<
+      get-pango-context
+      pango_context
+      pango-context
+    >
+  {
     my $pc = gtk_widget_get_pango_context($!w);
 
     $pc ??
