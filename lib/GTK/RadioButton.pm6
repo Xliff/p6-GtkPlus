@@ -20,12 +20,6 @@ constant RadioButtonAncestry is export = GtkRadioButtonAncestry;
 class GTK::RadioButton:ver<3.0.1146> is GTK::CheckButton {
   has GtkRadioButton $!rb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD(:$radiobutton) {
     self.setRadioButton($radiobutton) if $radiobutton;
   }
