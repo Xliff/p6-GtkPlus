@@ -198,12 +198,7 @@ class GTK::CSSProvider:ver<3.0.1146> {
     so gtk_css_provider_load_from_resource($!css, $resource_path);
   }
 
-  method to_string
-    is also<
-      to-string
-      Str
-    >
-  {
+  method to_string is also<to-string> {
     gtk_css_provider_to_string($!css);
   }
 
