@@ -13,12 +13,6 @@ our subset ToggleToolButtonAncestry
 class GTK::ToggleToolButton:ver<3.0.1146> is GTK::ToolButton {
   has GtkToggleToolButton $!ttb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   submethod BUILD(:$toggletoolbutton) {
     given $toggletoolbutton {
       when ToggleToolButtonAncestry {
@@ -32,7 +26,6 @@ class GTK::ToggleToolButton:ver<3.0.1146> is GTK::ToolButton {
   }
 
   method setToggleToolButton(ToggleToolButtonAncestry $toggletoolbutton) {
-    self.IS-PROTECTED;
 
     my $to-parent;
     $!ttb = do given $toggletoolbutton {
