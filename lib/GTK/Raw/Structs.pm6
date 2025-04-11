@@ -154,7 +154,38 @@ class GtkWidgetStruct is repr('CStruct') does GLib::Roles::Pointers is export {
   has gpointer $!private;
 }
 
+class GtkContainer is repr('CStruct') does GLib::Roles::Pointers is export {
+  HAS GtkWidgetStruct $.parent;
+  has gpointer        $!priv;
+}
+class GtkBinStruct is repr<CStruct> does GLib::Roles::Pointers is export {
+  HAS GtkContainer $.parent;
+  has gpointer     $.private;
+}
+class GtkBox is repr<CStruct> does GLib::Roles::Pointers is export {
+  HAS GtkContainer $.parent;
+  has gpointer     $!private;
+}
+class GtkLayout is repr('CStruct') does GLib::Roles::Pointers is export {
+  HAS GtkContainer $.parent;
+  has gpointer     $!priv;
+}
+
+class GtkButtonStruct is repr<CStruct> does GLib::Roles::Pointers is export {
+  HAS GtkBinStruct  $.parent;
+  has gpointer      $!priv;
+}
+
 class GtkDrawingAreaStruct is repr('CStruct') does GLib::Roles::Pointers is export {
   HAS GtkWidgetStruct $!parent;
   has gpointer        $!private;
+}
+
+class GtkMenuShellStruct is repr<CStruct> does GLib::Roles::Pointers is export {
+  HAS GtkContainer $.parent;
+  has gpointer     $!private;
+}
+class GtkMenuStruct is repr<CStruct> does GLib::Roles::Pointers is export {
+  HAS GtkMenuShellStruct $.parent;
+  has gpointer           $!private;
 }
