@@ -26,13 +26,7 @@ constant WindowAncestry is export := GtkWindowAncestry;
 class GTK::Window:ver<3.0.1146> is GTK::Bin {
   has GtkWindow $!win is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
-  submethod BUILD(:$window, :$title, :$width, :$height) {
+  submethod BUILD (:$window, :$title, :$width, :$height) {
     if $window {
       self.setWindow($window);
       # This still isn't working!
@@ -80,8 +74,9 @@ class GTK::Window:ver<3.0.1146> is GTK::Bin {
     Int :$width  = 200,
     Int :$height = 200
   ) {
-    my guint $t = $type;
-    my $window = gtk_window_new($t);
+    my guint $t       = $type;
+    my        $window = gtk_window_new($t);
+    
     samewith($window, :$title, :$width, :$height);
   }
   # This multi could be deprecated.
