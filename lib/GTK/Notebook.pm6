@@ -39,21 +39,17 @@ class X::GTK::Notebook::InvalidPageParams is Exception {
 
 class GTK::Notebook:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Signals::Notebook;
+  also does Positional;
+  also does Iterable;
 
   has GtkNotebook $!n is implementor;
   has @!labels;
-
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
 
   submethod BUILD (:$notebook) {
     self.setGtkNotebook($notebook) if $notebook;
   }
 
-  method setGtkNotebook (GtkNotebookAncestry $_) is also<NotebookAncestry> {
+  method setGtkNotebook (GtkNotebookAncestry $_) {
     my $to-parent;
 
     $!n = do {
@@ -312,7 +308,11 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
     gtk_notebook_get_n_pages($!n);
   }
 
-  method get_nth_page (Int() $page_num, :$raw = False, :$widget = False)
+  method get_nth_page (
+    Int()  $page_num,
+          :$raw       = False,
+          :$widget    = False
+  )
     is also<get-nth-page>
   {
     my gint $pn = $page_num;
@@ -321,6 +321,32 @@ class GTK::Notebook:ver<3.0.1146> is GTK::Container {
     self.ReturnWidget($w, $raw, $widget);
   }
 
+  method Array {
+    (
+      do for self {
+        $_;
+      }
+    ).Array;
+  }
+
+  method AT-POS (\k) {
+    $.get_nth_page(k);
+  }
+
+  method iterator {
+    my $s = self;
+    generate-iterator(
+      self,
+      SUB      { $s.elems },
+      sub (\k) { $s[k]    }
+    );
+  }
+
+  method remove-all-pages {
+    for (^self.elems).reverse {
+      $.remove_page($_);
+    }
+  }
   method get_tab_detachable (GtkWidget() $child)
     is also<get-tab-detachable>
   {
