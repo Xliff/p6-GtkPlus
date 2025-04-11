@@ -9,7 +9,7 @@ unit package ScriptConfig;
 our $CONFIG-NAME      is export;
 our %config           is export;
 
-my $SERIAL = 1;
+my $SERIAL = 17;
 
 my %config-defaults = (
   prefix              => '/',
@@ -45,8 +45,6 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
   $config{ .key } //= .value for %config-defaults.pairs;
 
   # Handle comma separated
-  $config{$_} = ($config{$_} // '').split(',').grep( *.chars ).cache
-    if $config{$_}:exists
   for <
     backups
     modules
@@ -56,10 +54,21 @@ sub parse-file ($filename = $CONFIG-NAME, :$program = '') is export {
     include-include
     manifest-blacklist
     include-directory
+    include_directory
     include-dirs
     extension
     extensions
-  >;
+    struct_prefix
+    struct-prefix
+    struct_prefixes
+    struct-prefixes
+  > {
+    	if $config{$_}:exists {
+  		$config{$_} = ($config{$_} // '').split(',').grep( *.chars ).cache;
+		say "{ $_ }: { $config{$_} }" if %*ENV<RAKU_GLIB_SCRIPT_DEBUG>;
+	}
+
+  }
 
   if $program {
     # cw: This violates all sorts of directives against the space/time
@@ -89,7 +98,7 @@ INIT {
                        .starts-with('.finished').not
                     }).head.absolute
                   }
-		  
+
    with $CONFIG-NAME {
      if .IO.r {
        $*ERR.say: "Parsing file..." if $*ENV<SCRIPT_CONFIG_DEBUG>;
