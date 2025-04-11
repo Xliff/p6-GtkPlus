@@ -240,6 +240,22 @@ class GTK::Box:ver<3.0.1146> is GTK::Container {
     samewith($child.Widget, $expand, $fill, $padding);
   }
 
+  method push (
+    :s(:$start)         = True,
+    :e(:$end)           = $start.not,
+    :ex(:$expand)       = False,
+    :f(:$fill)          = False,
+    :p(:pad(:$padding)) = 0,
+    *@a
+  ) {
+    # cw: If $start and $end are specified, only $end is used.
+    if $end {
+      self.pack_end($_, $expand, $fill, $padding) for @a;
+    } else {
+      self.pack_start($_, $expand, $fill, $padding) for @a;
+    }
+  }
+
   proto method query_child_packing (|)
     is also<query-child-packing>
   { * }
