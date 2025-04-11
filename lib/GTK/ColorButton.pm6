@@ -20,12 +20,6 @@ class GTK::ColorButton:ver<3.0.1146> is GTK::Button {
 
   has GtkColorButton $!cb is implementor;
 
-  method bless(*%attrinit) {
-    my $o = self.CREATE.BUILDALL(Empty, %attrinit);
-    $o.setType($o.^name);
-    $o;
-  }
-
   method setGtkColorButton (ColorButtonAncestry $_) {
     my $to-parent;
 
@@ -64,10 +58,12 @@ class GTK::ColorButton:ver<3.0.1146> is GTK::Button {
     $o.ref if $ref;
     $o;
   }
-  multi method new {
+  multi method new ( *%a ) {
     my $gtk-color-button = gtk_color_button_new();
 
-    $gtk-color-button ?? self.bless( :$gtk-color-button ) !! Nil;
+    my $o = $gtk-color-button ?? self.bless( :$gtk-color-button ) !! Nil;
+    $o.setAttributes( %a ) if $o && +%a;
+    $o;
   }
   multi method new-from-hex (Str() $h) {
     ( my $c = GDK::RGBA.new ).parse($h);
@@ -136,9 +132,9 @@ class GTK::ColorButton:ver<3.0.1146> is GTK::Button {
   # ↑↑↑↑ ATTRIBUTES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_color (GdkColor $color) is DEPRECATED is also<get-color> {
-    gtk_color_button_get_color($!cb, $color);
-  }
+  # method get_color (GdkColor $color) is DEPRECATED is also<get-color> {
+  #   gtk_color_button_get_color($!cb, $color);
+  # }
 
   method get_type is also<get-type> {
     state ($n, $t);
@@ -146,9 +142,9 @@ class GTK::ColorButton:ver<3.0.1146> is GTK::Button {
     GTK::Widget.unstable_get_type( &gtk_color_button_get_type, $n, $t );
   }
 
-  method set_color (GdkColor $color) is DEPRECATED is also<set-color> {
-    gtk_color_button_set_color($!cb, $color);
-  }
+  # method set_color (GdkColor $color) is DEPRECATED is also<set-color> {
+  #   gtk_color_button_set_color($!cb, $color);
+  # }
   # ↑↑↑↑ METHODS ↑↑↑↑
 
 }
