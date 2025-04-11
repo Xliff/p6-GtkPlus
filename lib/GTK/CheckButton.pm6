@@ -39,8 +39,6 @@ class GTK::CheckButton:ver<3.0.1146> is GTK::ToggleButton {
   { $!cb }
 
   method setCheckButton(CheckButtonAncestry $checkbutton) {
-    self.IS-PROTECTED;
-
     my $to-parent;
     $!cb = do given $checkbutton {
       when GtkCheckButton {
@@ -87,7 +85,7 @@ class GTK::CheckButton:ver<3.0.1146> is GTK::ToggleButton {
   # ↓↓↓↓ METHODS ↓↓↓↓
   method get_type is also<get-type> {
     state ($n, $t);
-    
+
     GTK::Widget.unstable_get_type( &gtk_check_button_get_type, $n, $t );
   }
   # ↑↑↑↑ METHODS ↑↑↑↑
