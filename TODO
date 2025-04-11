@@ -394,7 +394,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
   * Also - http://getfr.org/pub/dragonfly-release/usr-local-share/doc/gegl/api.html#The_GEGL_API
 - Consider the potential for libav bindings
 - Consider Apache C-API bindings, along with a potential module creation script from Raku sources.
-- Consider Mutter bindings (https://developer.gnome.org/meta/stable/)
++ Consider Mutter bindings (https://developer.gnome.org/meta/stable/)
 + ATK bindings!
 - Consider Togra bindings (http://togra.sourceforge.net/screenshots.html),
   however this may be more of a port from Python, rather than a set of bindings.
@@ -429,6 +429,7 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - Consider Avahi. Be prepared to write another code-generator for another coding paradigm
 - Consider EFL: https://www.enlightenment.org/develop/guides/c/start.md (might work best as method chains)
 - Modernize GSSDP and GUPnP! Neither of the existing projects will work due to the switchover to SOUP3!
+- Poppler - PDF Rendering
 
 
 - A basic backup utility written using p6-GtkPlus and friends.
@@ -461,4 +462,6 @@ x Perl6 GIMP Library bindings! (On hold until GIMP is ported to GTK3)
 - Consider a port of TBOX to Raku: https://opencollective.com/tbox
     mechanism
 
-- For Containers, treat like positional and use .push(:$expand, :$fill, :$spacing, :$end) !
++ For Containers, treat like positional and use .push(:$expand, :$fill, :$spacing, :$end) !
+
+- Consider GRDP: https://gitlab.gnome.org/GNOME/gtk-frdp/-/tree/master/src?ref_type=heads
