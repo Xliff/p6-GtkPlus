@@ -5,7 +5,7 @@ use GLib::Raw::Traits;
 class GTK::TypeManifest does TypeManifest {
 
   method manifest {
-    (
+    %(
       GdkDragContext          => 'GTK::DragContext',
       GtkAboutDialog          => 'GTK::Dialog::About',
       GtkAccelGroup           => 'GTK::AccelGroup',
@@ -170,8 +170,18 @@ class GTK::TypeManifest does TypeManifest {
       GtkWidgetPath           => 'GTK::WidgetPath',
       GtkWindow               => 'GTK::Window',
       GtkWindowGroup          => 'GTK::WindowGroup'
-    )
+    );
+  }
+
+  method aliases {
+    %(
+      GtkHPaned     => 'GTK::Pane',
+      GtkVPaned     => 'GTK::Pane',
+      GtkHBox       => 'GTK::Box',
+      GtkVBox       => 'GTK::Box',
+      GtkHButtonBox => 'GTK::ButtonBox',
+      GtkVButtonBox => 'GTK::ButtonBox'
+    );
   }
 
 }
-
