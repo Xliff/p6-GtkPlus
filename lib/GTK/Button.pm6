@@ -67,15 +67,18 @@ class GTK::Button:ver<3.0.1146> is GTK::Bin {
     $o.ref if $ref;
     $o;
   }
-  multi method new {
+  multi method new (*%a) {
     my $gtk-button = gtk_button_new();
 
-    $gtk-button ?? self.bless( :$gtk-button ) !! Nil;
+    return Nil unless $gtk-button;
+    my $o = self.bless( :$gtk-button );
+    $o.setAttributes(%a) if $o && +%a;
+    $o;
   }
+  # cw: Create an exception type for this?!
   multi method new(|c) {
     die "No matching constructor for: ({ c.map( *.^name ).join(', ') })";
   }
-
 
   method new_with_mnemonic (GTK::Button:U: Str() $label)
     is also<new-with-mnemonic>
