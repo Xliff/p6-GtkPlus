@@ -57,7 +57,7 @@ class GTK::Container:ver<3.0.1146> is GTK::Widget {
     self.setGtkWidget($to-parent);
   }
 
-  method GTK::Raw::Definition::GtkContainer
+  method GTK::Raw::Structs::GtkContainer
     is also<
       Container
       GtkContainer

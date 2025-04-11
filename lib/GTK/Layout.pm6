@@ -2,6 +2,7 @@ use v6.c;
 
 use Method::Also;
 
+use GLib::Raw::Traits;
 use GTK::Raw::Layout:ver<3.0.1146>;
 use GTK::Raw::Types:ver<3.0.1146>;
 
@@ -11,8 +12,10 @@ use GTK::Container:ver<3.0.1146>;
 
 use GTK::Roles::Scrollable:ver<3.0.1146>;
 
-our subset LayoutAncestry is export
-  where GtkLayout | GtkScrollable | ContainerAncestry;
+our subset GtkLayoutAncestry is export
+  where GtkLayout | GtkScrollable | GtkContainerAncestry;
+
+constant LayoutAncestry := GtkLayoutAncestry;
 
 class GTK::Layout:ver<3.0.1146> is GTK::Container {
   also does GTK::Roles::Scrollable;
@@ -33,14 +36,16 @@ class GTK::Layout:ver<3.0.1146> is GTK::Container {
     }
   }
 
-  method GTK::Raw::Definitions::GtkLayout
+  method GTK::Raw::Structs::GtkLayout
     is also<
       Layout
       GtkLayout
     >
   { $!l }
 
-  method setLayout(LayoutAncestry $layout) {
+  method setGtkLayout(GtkLayoutAncestry $layout)
+    is also<setLayout>
+  {
     my $to-parent;
     $!l = do {
       given $layout {
@@ -63,7 +68,7 @@ class GTK::Layout:ver<3.0.1146> is GTK::Container {
     self.setContainer($to-parent);
   }
 
-  multi method new (LayoutAncestry $layout, :$ref = True) {
+  multi method new (GtkLayoutAncestry $layout, :$ref = True) {
     return Nil unless $layout;
 
     my $o = self.bless(:$layout);
@@ -102,6 +107,12 @@ class GTK::Layout:ver<3.0.1146> is GTK::Container {
     );
   }
 
+  method size is rw is g-pseudo-property {
+    Proxy.new:
+      FETCH => -> $     { self.get_size    },
+      STORE => -> $, \v { self.set_size(v) }
+  }
+
   # Type: guint
   method width is rw {
     my GLib::Value $gv .= new( G_TYPE_INT );
@@ -120,7 +131,13 @@ class GTK::Layout:ver<3.0.1146> is GTK::Container {
   # ↑↑↑↑ PROPERTIES ↑↑↑↑
 
   # ↓↓↓↓ METHODS ↓↓↓↓
-  method get_bin_window (:$raw = False) is also<get-bin-window> {
+  method get_bin_window (:$raw = False)
+    is also<
+      get-bin-window
+      bin_window
+      bin-window
+    >
+  {
     my $gw = gtk_layout_get_bin_window($!l);
 
     $gw ??
