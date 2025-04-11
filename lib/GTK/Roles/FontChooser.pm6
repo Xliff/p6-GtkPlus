@@ -22,7 +22,7 @@ role GTK::Roles::FontChooser:ver<3.0.1146> {
 
     my \i = findProperImplementor(self.^attributes);
 
-    $!fnt-c = cast( GtkFileChooser, i.get_value(self) );
+    $!fnt-c = cast( GtkFontChooser, i.get_value(self) );
   }
 
   method GTK::Raw::Definitions::GtkFontChooser
