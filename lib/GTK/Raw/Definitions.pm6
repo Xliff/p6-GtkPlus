@@ -82,7 +82,7 @@ class GtkApplicationWindow    is repr<CPointer> does GLib::Roles::Pointers is ex
 class GtkAspectFrame          is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkAssistant            is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkBin                  is repr<CPointer> does GLib::Roles::Pointers is export { }
-class GtkBox                  is repr<CPointer> does GLib::Roles::Pointers is export { }
+#class GtkBox                  is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkBuildable            is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkBuilder              is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkButton               is repr<CPointer> does GLib::Roles::Pointers is export { }
@@ -113,7 +113,7 @@ class GtkColorChooserDialog   is repr<CPointer> does GLib::Roles::Pointers is ex
 class GtkColorChooserWidget   is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkComboBox             is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkComboBoxText         is repr<CPointer> does GLib::Roles::Pointers is export { }
-class GtkContainer            is repr<CPointer> does GLib::Roles::Pointers is export { }
+#class GtkContainer            is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkCSSProvider          is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkCssSection           is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkDialog               is repr<CPointer> does GLib::Roles::Pointers is export { }
@@ -147,7 +147,7 @@ class GtkIconView             is repr<CPointer> does GLib::Roles::Pointers is ex
 class GtkImage                is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkInfoBar              is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkLabel                is repr<CPointer> does GLib::Roles::Pointers is export { }
-class GtkLayout               is repr<CPointer> does GLib::Roles::Pointers is export { }
+#class GtkLayout               is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkLevelBar             is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkLinkButton           is repr<CPointer> does GLib::Roles::Pointers is export { }
 class GtkListBox              is repr<CPointer> does GLib::Roles::Pointers is export { }
