@@ -1,7 +1,6 @@
 #!/usr/bin/env perl6
 use lib 'scripts';
 
-use ScriptConfig;
 use GTKScripts;
 
 sub MAIN (

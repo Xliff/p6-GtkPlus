@@ -3,7 +3,6 @@ use lib "{%*ENV<P6_GTK_HOME>}/p6-GLib/lib";
 
 use lib 'scripts';
 
-use ScriptConfig;
 use GTKScripts;
 use GLib::Raw::Definitions;
 

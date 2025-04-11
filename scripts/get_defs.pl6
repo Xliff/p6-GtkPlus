@@ -1,6 +1,5 @@
 use v6;
 
-use ScriptConfig;
 use GTKScripts;
 
 sub fragments ($p) {

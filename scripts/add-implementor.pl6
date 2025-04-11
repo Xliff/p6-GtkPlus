@@ -2,7 +2,6 @@ use v6.c;
 
 use lib 'scripts';
 
-use ScriptConfig;
 use GTKScripts;
 
 sub MAIN ($filename = '.') {

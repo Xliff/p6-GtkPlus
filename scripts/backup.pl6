@@ -15,7 +15,7 @@ sub MAIN (:$force, :$all) {
         next unless $_ eq @valid-backups.any;
         my @items = «git push $_»;
         @items.push: '--force' if $force;
-	@items.push: '--all'   if $all;
+	      @items.push: '--all'   if $all;
 
         my $proc = Proc::Async.new( |@items );
         $proc.stdout.tap(-> $o { $o.say; });

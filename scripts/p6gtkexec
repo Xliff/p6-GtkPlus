@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-RAKU=`which raku`
 if [ "$1" = "--debug" ]; then
   echo "Running perl6 script in debug mode..."
   EXEC=perl6-gdb-m
@@ -15,16 +13,14 @@ elif [ "$1" = "--rr" ]; then
   shift
 elif [ "$1" = "--pbuild" ]; then
   PARALLEL_BUILD=1
-  EXEC=$RAKU
+  EXEC=raku
   shift
 else
   #echo "Running perl6 script..."
-  EXEC=$RAKU
+  EXEC=raku
 fi
 
 INCLUDES="\
--I${HOME}/.raku                    \
--I${P6_GTK_HOME}/cairo-p6/lib           \
 -I${P6_GTK_HOME}/Method-Also/lib        \
 -I${P6_GTK_HOME}/P6-Data-Dump-Tree/lib  \
 -I${P6_GTK_HOME}/p6-ICal/lib            \
@@ -62,7 +58,7 @@ INCLUDES="\
 # Handle any extra directories in project file.
 MOREI=`grep libdir .p6-gtk-project | \
 cut -d= -f 2 | \
-$RAKU -ne '.say for .lines.split(",")'`
+raku -ne '.say for .lines.split(",")'`
 for a in $MOREI; do INCLUDES="-I$a $INCLUDES"; done
 
 if [[ -z "${PARALLEL_BUILD}" ]]; then

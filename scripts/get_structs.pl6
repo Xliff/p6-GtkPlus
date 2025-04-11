@@ -3,7 +3,6 @@ use v6.c;
 
 use lib 'scripts';
 
-use ScriptConfig;
 use GTKScripts;
 use Data::Dump::Tree;
 

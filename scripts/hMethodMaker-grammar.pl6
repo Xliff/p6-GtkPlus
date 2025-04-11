@@ -11,6 +11,9 @@ use GTKScripts;
 
 my %do_output;
 
+
+use Grammar::Tracer;
+
 grammar C-Function-Def {
   regex TOP { <top-bland> }
 
@@ -30,7 +33,7 @@ grammar C-Function-Def {
       'G_GNUC_WARN_UNUSED_RESULT'                            |
       'G_GNUC_INTERNAL'                                      |
       <[A..Z]>+ '_DEPRECATED' [ '_IN_' (\d+)+ % '_' ]?
-      '_FOR' \s* '(' <[\w _]>+ ')'
+      '_FOR' \s* '(' (<-[)]>+) ')'
   }
 
   rule parameters {
@@ -53,14 +56,13 @@ grammar C-Function-Def {
     [ <postdec>+ % \s* ]?';'';'?
   }
 
-  regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ | '&' }
-  token       n { <[\w _]>+ }
+  regex       p { [ '*' [ \s* 'const' <!before '_'> \s* ]? ]+ }
+  token       n { 'const '? <[\w _]>+ }
   token       t { <n> | '(' <p> <n>? ')' \s* <parameters> }
   token     mod { 'extern' | 'unsigned' | 'long' | 'const' | 'struct' | 'enum' }
-  rule     type { 'unsigned' | [ <mod>+ %% \s ]? <n>?' const'? <p>? }
-  token     arr { '['  .+?  ']'  }
-  rule      var { <t>[ \s*<arr> ]? }
-  token returns { [ <mod>+ %% \s]? <.ws> <t> [\s* 'const']? \s* <p>? }
+  rule     type { [ <mod>+ %% \s ]? <n>? <p>? }
+  rule      var { <t> [ '[' (.+?)? ']' ]? }
+  token returns { [ <mod>+ %% \s]? <.ws> <t> \s* <p>? }
   token postdec { (<[A..Z0..9]>+)+ %% '_' \s* [ '(' .+? ')' ]? }
   token      ad { 'AVAILABLE' | 'DEPRECATED' }
 
@@ -171,20 +173,17 @@ sub MAIN (
   my $contents = $fn.IO.open.slurp-rest;
 
   my ($out-file, $out-raw-file, $item);
-  $lib = $lib // %config<library> // %config<lib> // '';
+  $lib = %config<library> // %config<lib>;
   if $files {
-    $item       = $filename.split('.').head.split('-').tail.tc;
-    $lib      ||= $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;
-    $out-file   = $item.subst('/', '-', :g)  ~ '.pm6';
+    $item     = $filename.split('.').head.split('-').tail.tc;
+    $lib      = $item.split('/').head.lc.subst(/ ^ 'lib'/, '') unless $lib;
+    $out-file = $item.subst('/', '-', :g)  ~ '.pm6';
 
     use File::Find;
 
     my $head      = find( dir => 'lib', type => 'dir', name => 'Raw' ).head;
     $out-raw-file = $head.add($out-file).open(:w);
     $out-file     = $head.parent.add($out-file).open(:w);
-
-    say "Using files { $out-file.path } and {
-         $out-raw-file.path } for output!";
   }
   $lib = 'gtk' unless $lib;
 
@@ -230,6 +229,7 @@ sub MAIN (
   $contents ~~ s:g/ 'G_STMT_START'  .+? 'G_STMT_END'                         //;
   # Multi line defines;
 
+  $contents ~~ s:g/ 'const ' //;
   $contents ~~ s:g/ [ 'struct' | 'union' ] <.ws> <[\w _]>+ <.ws> '{' .+? '};'//;
   $contents ~~ s:g/'typedef' .+? ';'                                         //;
   $contents ~~ s:g/ ^ .+? '\\' $                                             //;
@@ -250,11 +250,12 @@ sub MAIN (
   $contents ~~ s:g/ '((obj), ' .+? '))'//;
   $contents ~~ s:g/ '((cls), ' .+? '))'//;
   $contents ~~ s:g/ '((obj), ' .+? ',' .+? '))'//;
-  $contents ~~ s:g/ 'G_DECLARE_' [ <[A..Z]>+ ]+ % '_' ' (' <-[)]>+ ')' //;
-  $contents ~~ s:g/ 'extern "C" {' //;
 
+  $contents ~~ s:g/ 'G_DECLARE_' [ <[A..Z]>+ ]+ % '_' ' (' <-[)]>+ ')' //;
+  $contents ~~ s:g/ 'G_DECLARE_FINAL_TYPE('<-[)]>+')'//;
+
+  $contents ~~ s:g/ 'extern "C" {' //;
   $contents ~~ s:g/ 'G_DEFINE_AUTOPTR_CLEANUP_FUNC' \s* '(' .+? ',' .+? ')' //;
-  $contents ~~ s:g/<[A..Z]>+'_DECLARE_'['FINAL' || 'DERIVABLE']'_TYPE'\s*\(.+?\)//;
 
   $contents ~~ s:g/ 'GType' /\nGType/;
 
@@ -264,7 +265,7 @@ sub MAIN (
     $contents ~~ s:g/ ')' \s+        / );\n /;
   }
 
-  $contents ~~ s:g/<availability>// if $bland;
+  # $contents ~~ s:g/<availability>// if $bland;
   $contents ~~ s:g/<enum>//;
 
   if $remove-from-start {
@@ -400,6 +401,14 @@ sub MAIN (
         !!
       ($av<ad> // '') ne '_DEPRECATED';
 
+    say "----------- PREDEF\n{ $m<pre-definitions>.gist }";
+
+    my $dep-for = do if $m<pre-definitions>[1] -> $df {
+      $df.Str;
+    } else {
+      '';
+    }
+
     my @p;
     my $orig = $m<func_def><sub>.Str.trim;
     my @tv = ($m<func_def><parameters><type> [Z] $m<func_def><parameters><var>);
@@ -419,7 +428,6 @@ sub MAIN (
       $t ~~ s/^float/gfloat/;
       $t ~~ s/^double/gdouble/;
       $t ~~ s/void/Pointer/;
-      $t ~~ s/'unsigned'/unsigned int/;
       $t ~~ s/GError/Pointer[GError]/;
 
       # By testing time, $np should only contain the count of '*' in the Match
@@ -485,6 +493,7 @@ sub MAIN (
 
     my $h = {
            avail => $avail,
+         dep-for => $dep-for,
         original => $orig.trim,
          returns => $m<func_def><returns>,
            'sub' => $sub,
@@ -633,10 +642,10 @@ sub MAIN (
     # }
 
     my $r = '';
-    $r ~= "\n  is      DEPRECATED"                 if $m<avail>.not;
-    $r ~= "\n  returns { $m<p6_return> }"          if $m<p6_return> &&
-                                                      $m<p6_return> ne 'void';
-    $r ~= "\n  is      symbol('{ $m<original> }')" if $method;
+    $r ~= "\n  returns { $m<p6_return> }"           if $m<p6_return> &&
+                                                       $m<p6_return> ne 'void';
+    $r ~= "\n  is      DEPRECATED({ $m<dep-for> })" if $m<dep-for>;
+    $r ~= "\n  is      symbol('{ $m<original> }')"  if $method;
 
     O-Raw( qq:to/SUB/ );
       $subcall {
@@ -673,7 +682,11 @@ sub MAIN (
         #       GtkTreeIter
         #     >.none;
 
-        my $dep = %methods{$m}<avail> ?? '' !! 'is DEPRECATED ';
+        my $dep = %methods{$m}<avail>
+          ?? ''
+          !! "IS DEPRECATED{ %methods{$m}<dep-for> ?? "({
+              %methods{$m}<dep-for>.subst($remove, '') }) " !! ' '}";
+
         my @lines = %methods{$m}<o_call>.lines;
 
         if +@lines {
@@ -754,16 +767,6 @@ sub MAIN (
   outputMethods;
   if %do_output<all> || %do_output<subs> {
     say "\nSUBS\n----\n" unless $no-headers;
-
-    O-Raw( qq:to/RAW/ );
-      use v6.c;
-
-      use NativeCall;
-
-      use GLib::Raw::Definitions;
-      use { %config<prefix> }::Raw::Definitions;
-      RAW
-
     O-Raw( "\n\n### { $fn }\n" );
     outputSub( %methods{$_}    , $raw-methods) for %methods.keys.sort;
     outputSub( %getset{$_}<get>, $raw-methods) for  %getset.keys.sort;
