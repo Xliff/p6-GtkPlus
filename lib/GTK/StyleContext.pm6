@@ -1002,7 +1002,7 @@ class GTK::StyleContext:ver<3.0.1146> {
     gtk_style_context_state_is_running($!sc, $s, $pp);
   }
 
-  method to_string (Int() $flags = self.state) is also<to-string Str> {
+  method to_string (Int() $flags = self.state) is also<to-string> {
     my guint $f = $flags;
 
     gtk_style_context_to_string($!sc, $f);
