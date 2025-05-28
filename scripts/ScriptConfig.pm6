@@ -9,7 +9,7 @@ unit package ScriptConfig;
 our $CONFIG-NAME      is export;
 our %config           is export;
 
-my $SERIAL = 17;
+my $SERIAL = 20;
 
 my %config-defaults = (
   prefix              => '/',
@@ -106,7 +106,9 @@ INIT {
        %config = parse-file;
        %config<created-on> = DateTime.now;
 
-       #OUTER::<%config>.gist.say;
+       #%config.gist.say;
      }
    }
+
+   Nil;
 }
