@@ -28,7 +28,7 @@ class ProgressLine {
   }
 
   method set-label ($t is copy, :$draw = False) {
-    $t = $t.substr(0, 29) ~ '…' if $t.chars > 30;
+    $t = '…' ~ $t.substr(* - 29, 29)  if $t.chars > 30;
     $!text = $t;
     T.current-grid.set-span-text(0, $!row, ' ' x 30 );
     T.current-grid.set-span-text(0, $!row, $!text);
