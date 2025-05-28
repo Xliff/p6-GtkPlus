@@ -21,7 +21,7 @@ role GTK::Roles::ColorChooser:ver<3.0.1146> {
   }
   method roleInit-GtkColorChooser {
     return if $!cc;
-    
+
     my \i = findProperImplementor(self.^attributes);
 
     $!cc = cast( GtkColorChooser, i.get_value(self) );
@@ -61,9 +61,9 @@ role GTK::Roles::ColorChooser:ver<3.0.1146> {
 
   # ↓↓↓↓ METHODS ↓↓↓↓
   method add_palette (
-    Int() $orientation,
-    Int() $colors_per_line,
-    Int() $n_colors,
+    Int()     $orientation,
+    Int()     $colors_per_line,
+    Int()     $n_colors,
     GDK::RGBA $colors
   )
     is also<add-palette>
