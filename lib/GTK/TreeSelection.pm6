@@ -17,8 +17,6 @@ use GTK::Roles::TreeModel:ver<3.0.1146>;
 # BOXED TYPE
 
 class GTK::TreeSelection:ver<3.0.1146> {
-  also does GTK::Roles::Signals::Generic;
-  also does GTK::Roles::Types;
   also does GLib::Roles::Object;
 
   has GtkTreeSelection $!ts is implementor;
