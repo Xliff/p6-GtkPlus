@@ -13,7 +13,7 @@
       "lib/linux/libtree-helper.so",
       "lib/windows/treehelper.dll"
     ],
-                                                                                                                                                                                                        "provides": {
+                                                                                                                                                                                                                                                                            "provides": {
       "GTK::Raw::Definitions"                  :  "lib/GTK/Raw/Definitions.pm6"                 ,
       "GTK::Raw::Enums"                        :  "lib/GTK/Raw/Enums.pm6"                       ,
       "GTK::Raw::Structs"                      :  "lib/GTK/Raw/Structs.pm6"                     ,
