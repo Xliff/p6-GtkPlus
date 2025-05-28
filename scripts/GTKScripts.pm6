@@ -572,22 +572,3 @@ sub compute-module-dependencies (
   ($r, @others);
 }
 
-INIT {
-  unless %*ENV<GTK_SCRIPTS_NO_INIT> {
-    $GTK-SCRIPT-DEBUG = %*ENV<P6_GTKSCRIPTS_DEBUG>;
-    $CONFIG-NAME = %*ENV<P6_PROJECT_FILE>  //
-                   $*ENV<X11_PROJECT_FILE> //
-                   do {
-                     '.'.IO.dir.grep({
-                        .starts-with('.')             &&
-                        .ends-with('-project')        &&
-                        .starts-with('.finished').not
-                     }).head.absolute
-                   }
-
-   die "Project configuration file '{ $CONFIG-NAME }' doesn't exist!"
-     unless $CONFIG-NAME.IO.e;
-
-    parse-file;
-  }
-}
